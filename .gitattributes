@@ -1,1 +1,4 @@
 * text=auto !eol
+gemsfit/gemsfit.pro -text
+gemsfitgui-build/stylesheet.qss -text
+gemsfitgui/gemsfit-gui.pro -text
