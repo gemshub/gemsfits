@@ -1,3 +1,38 @@
+##############################################################################################																							 
+#	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)						
+#	 This file is part of the thermodynamic fitting program GEMSFIT
+#        developed by FFH as part of his PhD project at ETHZ and PSI						 
+#																							 
+#    GEMSFIT is free software: you can redistribute it and/or modify						 
+#    it under the terms of the GNU Lesser General Public License as published by			
+#    the Free Software Foundation, either version 3 of the License, or						
+#    (at your option) any later version.													
+#																							 
+#    GEMSFIT is distributed in the hope that it will be useful,								 
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of							
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the							
+#    GNU Lesser General Public License for more details.									
+#																							 
+#    You should have received a copy of the GNU Lesser General Public License				
+#    along with GEMSFIT.  If not, see <http://www.gnu.org/licenses/>.	
+#   
+#    GEMSFIT uses the GEMS3K solver of geochemical equilibria 
+#    (C) 2012 by GEMS Developer Team (http://gems.web.psi.ch/GEMS3K)
+#    GEMSFIT is available under GNU Lesser General Public License v.3	
+#
+#    GEMSFIT uses Postgresql ...
+#
+#    GESMFIT uses Dislin ...
+#
+#    GEMSFIT uses ...				
+#																							 
+#   This is the qmake project file for generation of static GEMSFIT application 					
+#  	configure serial, release version:      qmake "CONFIG += serial release" gemsfit.pro 
+#  	configure parallelized, debug version:	qmake "CONFIG += mpi debug" gemsfit.pro      
+#   for optional debug output add DEFINES += GEMSFIT_DEBUG                                   
+##############################################################################################
+
+
 TEMPLATE	= app
 #LANGUAGE        = C++
 TARGET		= gemsfit
