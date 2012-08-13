@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SQLscript</class>
+ <widget class="QDialog" name="SQLscript">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>SQLscript</string>
+  </property>
+  <widget class="QTreeWidget" name="treeWidget_sqlscripts">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>10</y>
+     <width>331</width>
+     <height>271</height>
+    </rect>
+   </property>
+   <column>
+    <property name="text">
+     <string>PostgreSQL scripts</string>
+    </property>
+   </column>
+   <item>
+    <property name="text">
+     <string>Update table</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Drop table</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Create table from another table</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Copy data from csv file into table</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Insert values into table</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Truncate table</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Create procedural language</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Select distinct </string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Drop function with cascade</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Count query return values</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Export table to csv</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Export specific data from table to csv</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Select distinct values and subtract value </string>
+    </property>
+   </item>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>

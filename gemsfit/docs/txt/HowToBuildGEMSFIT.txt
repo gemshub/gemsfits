@@ -1,0 +1,52 @@
+1. Checkout svn+ssh://<user>@savannah01.psi.ch/repos/gems/GEMSFIT/kernel/trunk to /home/<user>/Developer/GEMSFIT
+
+2. In ubuntu: in Program Center, search for psql and install libqt4-sql-psql  and postgresql-client.
+   search for libecpg and install packages libecpg6 and libecpg-dev.
+   search for libboost and istall libboost-all-dev.
+   search for liblapack and install liblapack3gf and liblapack-dev.
+   check if libblas and install are installed by liblapack installer, if needed, install libblas3gf and libblas-dev.
+   search for libmotif and install libmotif4 and libmotif-dev.
+
+3. Go to http://arma.sourceforge.net and download Armadillo C++ library stable version armadillo-2.4.2.tar.gz.
+   Unpack it, change into the directory that was created by unpacking the armadillo archive, and type the following
+  commands:
+  
+  cmake .
+  make 
+  sudo make install
+
+4. Go to http://ab-initio.mit.edu/wiki/index.php/NLopt#Download_and_installation and download nlopt-2.2.4.tar.gz
+   Unpack it, go into the nlopt directory and execute
+   ./configure
+   make
+   sudo make install
+
+5. Go to http://www.mps.mpg.de/dislin/linux.html and download DISLIN distribution i586_64 for ubuntu >= 7.04 
+   unpack archive dislin-10.2.linux.i586_64.tar.gz
+   in /home/<user>/.bashrc, add lines at the end:
+
+   DISLIN=~/bin/dislin
+   export DISLIN
+   PATH=${PATH}:${DISLIN}/bin
+   LD_LIBRARY_PATH=$DISLIN:$LD_LIBRARY_PATH
+   export LD_LIBRARY_PATH
+
+   save and execute the commands
+   source /home/parallels/.bashrc
+   ./INSTALL
+
+6. Check in the GEMSFIT.pro that links to postgresql and dislin libraries are correct (change if necessary). 
+   locate ecpglib.h in the system and check in the GEMSFIT.pro that the correct link is provided. 
+
+7. To build GEMSFIT, execute
+   qmake "CONFIG += serial release" GEMSFIT.pro
+   make
+   
+It is possible to use debug instead of release key, and mpi instead of serial (then openmpi libraries must be istalled first). 
+To run GEMSFIT, cd into trunk/GEMSFIT/target_GEMSFIT and run ./gemsfit
+
+
+
+ 
+
+
