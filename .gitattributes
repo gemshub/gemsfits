@@ -1,6 +1,7 @@
 * text=auto !eol
 gemsfit/docs/txt/HowToBuildGEMSFIT.txt -text
 gemsfit/gemsfit.pro -text
+gemsfit/gemsfits.pro -text
 gemsfit/src-fit/data_manager.cpp -text
 gemsfit/src-fit/data_manager.h -text
 gemsfit/src-fit/fit.pri -text
