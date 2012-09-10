@@ -1,0 +1,613 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta content="text/html; charset=ISO-8859-1"
+      http-equiv="Content-Type">
+    <title>Developing GEMSFIT(GUI)/GEMS3K</title>
+  </head>
+  <body>
+    <h1>How to add new functionality to GEMSFIT(GUI)</h1>
+    <h4>Starting from GEMSFIT svn revision 72 &nbsp; &nbsp; &nbsp;&nbsp;
+      &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; by DK, DM
+      &amp; FFH&nbsp; 10.09.2012&nbsp;&nbsp; (Draft 1)<br>
+    </h4>
+    <table class="wiki" height="2586" width="907">
+      <tbody>
+        <tr>
+          <td>1. </td>
+          <td><strong>Define a development task</strong><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="text-align: center"> <br>
+          </td>
+          <td> Prepare the algorithms to add to GEMSFIT and/or
+            GEMSFIT-GUI, and additions/modifications to data structures
+            (and perhaps access methods in TNode class in GEMS3K)<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="text-align: center"> <br>
+          </td>
+          <td> Give the development task a short ID (e.g. "devExtFit").
+            In the following, replace 'DK' with your user login name.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">2.<br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-weight:
+              bold;">Create development branches in svn repository </span>(main
+
+
+
+
+            developer for the task)<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">2a<br>
+          </td>
+          <td style="vertical-align: top;">&nbsp;In the GEMSFIT svn
+            repository, create a new branch "ExtModel" from trunk using
+            the svn copy command (linux):<br>
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp;
+              svn copy
+              svn+ssh://DK@savannah01.psi.ch/repos/gems/GEMSFIT/trunk \</span><br
+              style="font-family: monospace;">
+            <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+              svn+ssh://DK@savannah01.psi.ch/repos/gems/GEMSFIT/branches/devExtFit
+
+
+
+
+              \</span><br style="font-family: monospace;">
+            <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+              -m "DK created a new development branch devExtFit of
+              GEMSFIT trunk"</span><br>
+            or use the equivalent operation in your svn client of
+            choice.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">2b<br>
+          </td>
+          <td style="vertical-align: top;">In the GEMS3K svn repository,
+            if appropriate, create a new branch "ExtFit" from trunk
+            using the svn copy command<br>
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp;
+              svn copy
+              svn+ssh://DK@savannah01.psi.ch/repos/gems/GEMSTANDALONE/trunk
+              \</span><br style="font-family: monospace;">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+            <span style="font-family: monospace;">svn+ssh://DK@savannah01.psi.ch/repos/gems/GEMSTANDALONE/branches/devExtFit
+
+
+
+
+              \</span><br style="font-family: monospace;">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+            <span style="font-family: monospace;">-m "DK created a new
+              development branch devExtFit of GEMSTANDALONE trunk"</span><br>
+            or use the equivalent operation in your svn client.<br>
+          </td>
+        </tr>
+        <tr>
+          <td> 3. </td>
+          <td><strong>Checkout new development branches from the svn
+              repository</strong> </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">3a<br>
+          </td>
+          <td style="vertical-align: top;">Every developer involved in
+            this development task must create a local directory for this
+            branch, e.g. <br>
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp; cd
+              /home/DK/DevGEMSFIT</span><br style="font-family:
+              monospace;">
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp;
+              mkdir devExtFit</span><br style="font-family: monospace;">
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp; cd
+              devExtFit</span><br>
+            and checkout new branches to her local PC: <br>
+          </td>
+        </tr>
+        <tr>
+          <td style="text-align: center"> 3b<br>
+          </td>
+          <td> Checkout GEMSFIT<span style="font-family: monospace;">:<br>
+            </span><span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp;
+
+
+
+
+              mkdir GFIT<br>
+              $&nbsp;&nbsp;&nbsp; svn checkout </span><span
+              style="font-family: monospace;">svn+ssh://DK@savannah01.psi.ch/repos/gems/GEMSFIT/branches/devExtFit
+
+
+
+
+              GFIT</span><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="text-align: center"> 3c<br>
+          </td>
+          <td> Checkout GEMS3K development branch (if related changes in
+            TNode access methods must be made):<span style="font-family:
+              monospace;"></span><br style="font-family: monospace;">
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp;
+              mkdir standalone</span><span style="font-family:
+              monospace;"></span><br style="font-family: monospace;">
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp;
+              svn checkout
+              svn+ssh://DK@savannah01.psi.ch/repos/gems/GEMSTANDALONE/branches/devExtFit
+
+
+
+
+              standalone</span> <br>
+            <div style="margin-left: 40px;"><span style="font-family:
+                monospace;"></span></div>
+            <span style="font-family: monospace;"></span></td>
+        </tr>
+        <tr>
+          <td valign="top">3d<br>
+          </td>
+          <td valign="top">Alternatively, checkout GEMS3K trunk (if no
+            changes in GEMS3K are necessary):<span style="font-family:
+              monospace;"></span><br style="font-family: monospace;">
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp;
+              mkdir standalone</span><span style="font-family:
+              monospace;"></span><br style="font-family: monospace;">
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp;
+              svn checkout
+              svn+ssh://DK@savannah01.psi.ch/repos/gems/GEMSTANDALONE/trunk
+              standalone</span> </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><br>
+          </td>
+          <td style="vertical-align: top;">Build and test the GEMSFIT
+            and optionally the GEMSFIT-GUI project. We strongly
+            recommend using QtSDK 1.2.1 (http:\\qt.nokia.com) under LGPL
+            (installed in your home directory). Set there the shadow
+            build in <tt>gemsfit-build</tt> subfolder for the GEMSFIT
+            project; in <tt>gemsfits-build</tt> for the GEMSFITS
+            project (uses pre-compiled libgems3k); and in <tt>gemsfitgui-build</tt>
+            subfolder for
+            the GEMSFT-GUI project. These subfolders (including test
+            data) are provided in the svn repository. <br>
+          </td>
+        </tr>
+        <tr>
+          <td> 4. </td>
+          <td><strong>Change the source code in the branch working copy</strong>
+          </td>
+        </tr>
+        <tr>
+          <td style="text-align: center"> <br>
+          </td>
+          <td> Do your changes in this working copy of the devExtFit
+            branches (of both GEMSFIT(GUI) and GEMS3K). </td>
+        </tr>
+        <tr>
+          <td style="text-align: center"> <br>
+          </td>
+          <td> When committing changes to svn repository, mark every
+            commit with your initials and the branch ID, e.g.<br>
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp; cd
+              GFIT</span><br style="font-family: monospace;">
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp;
+              svn commit -m "DK devExtFit: Implemented extension A in
+              the GEMSFIT task data structure."<br>
+            </span> </td>
+        </tr>
+        <tr>
+          <td> 5. </td>
+          <td><strong>Sync merge the development branch with the trunk<br>
+            </strong> </td>
+        </tr>
+        <tr>
+          <td style="text-align: center"> 5a<br>
+          </td>
+          <td> You know that other people have made relevant bugfixes or
+            extensions to the trunk. To make sure that your development
+            in ExtFit branch(es) are consistent with those changes,
+            first make sure that your working copy has no uncommitted
+            local changes by executing once more the usual svn work
+            cycle: <br>
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp; cd
+              GFIT</span><br style="font-family: monospace;">
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp;
+              svn update</span><br style="font-family: monospace;">
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp;
+              svn commit -m "DK devExtFit: Preparing for sync merge with
+              the trunk"<br>
+              $&nbsp;&nbsp;&nbsp; svn status</span><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">5b<br>
+          </td>
+          <td style="vertical-align: top;">Then perform the sync merge:<span
+              style="font-family: monospace;"><br>
+              $&nbsp;&nbsp;&nbsp; cd GFIT<br>
+              $&nbsp;&nbsp;&nbsp; svn merge
+              svn+ssh://DK@savannah01.psi.ch/repos/gems/GEMSFIT/trunk</span><span
+              style="font-family: monospace;"></span><br>
+            <div style="margin-left: 40px;"><span style="font-family:
+                monospace;"></span></div>
+            <span style="font-family: monospace;"></span></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">5c<br>
+          </td>
+          <td style="vertical-align: top;">If there were independent
+            changes in the GEMS3K trunk then perform the same procedure
+            for GEMS3K branch: <br>
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp; cd
+              ../standalone</span><br style="font-family: monospace;">
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp;
+              svn update</span><br style="font-family: monospace;">
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp;
+              svn commit -m "DK devExtFit: Preparing for sync merge with
+              the trunk"<br>
+              $&nbsp;&nbsp;&nbsp; svn status</span><br>
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp;
+              svn merge svn+ssh://DK@savannah01.psi.ch/repos/gems/</span><span
+              style="font-family: monospace;">GEMSTANDALONE</span><span
+              style="font-family: monospace;">/trunk<br>
+              $&nbsp;&nbsp;&nbsp; cd ../GFIT<br>
+            </span> </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><br>
+          </td>
+          <td style="vertical-align: top;">Build your project(s) and
+            test them to make sure that your changes to the branch work
+            together with the later changes of others to the trunk.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="text-align: center"> 6. </td>
+          <td> <strong></strong><span style="font-weight: bold;">Documentation,
+
+
+
+
+              benchmarking and testing</span><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><br>
+          </td>
+          <td style="vertical-align: top;">When the development in the
+            devExtFit task reaches maturity and the extension of the
+            code are up and running, it's time for benchmarking and
+            testing. The initial series of tests in the /tests/cases
+            subdirectory came with the originally copied trunk variants.
+            Run the tests and compare results with the results provided
+            in /tests/results subfolder. Resolve discrepances, if any
+            (this may involve other developers and take time).&nbsp;
+            &nbsp; <br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><br>
+          </td>
+          <td style="vertical-align: top;">Add test cases related to
+            newly-developed functionality to /tests/cases; run the test
+            cases, verify results, and add them&nbsp; to the
+            /tests/results; make sure that test cases and results are
+            added (recursively) to branch(es) in svn repository.&nbsp; <span
+              style="font-family: monospace;"><br>
+            </span></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><br>
+          </td>
+          <td style="vertical-align: top;">Extend documentation files
+            (or add new) to the /docs subdirectory, add new files there
+            to svn repository. <br>
+            Add descriptions of new tests to 'Test Book' on GEMS Wiki or
+            on GEMS3K and GEMSFIT web pages (as appropriate). <br>
+            &nbsp;<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">7.<br>
+          </td>
+          <td style="vertical-align: top;"><strong>Re-integrate your
+              extended code functionality into the trunk</strong></td>
+        </tr>
+        <tr>
+          <td style="text-align: center"> <br>
+          </td>
+          <td>Now you feel that it is time to add your new
+            functionality, tests and verified results to the main
+            trunk(s). <span style="font-family: monospace;"></span><br>
+            For that, first sync merge your development branch with the
+            trunk again, as described in section 5. Build and test the
+            code, update test results files, and commit:<br>
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp;
+              svn commit -m "DK devExtFit: Final sync merge with the
+              trunk before re-integration"</span><br>
+            <span style="font-family: monospace;"> $&nbsp;&nbsp;&nbsp;
+              svn status</span><br>
+            <div style="margin-left: 40px;"> <span style="font-family:
+                monospace;"></span></div>
+            <span style="font-family: monospace;"> </span></td>
+        </tr>
+        <tr>
+          <td style="text-align: center"> 7a<br>
+          </td>
+          <td> Now you need a clean working copy of the trunk: <br>
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp; cd
+              /home/DK/DevGEMSFIT</span><br style="font-family:
+              monospace;">
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp;
+              mkdir trunk</span><br style="font-family: monospace;">
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp; cd
+              trunk</span><br>
+            <span style="font-family: monospace;"></span> <span
+              style="font-family: monospace;">$&nbsp;&nbsp;&nbsp; mkdir
+              GFIT<br>
+              $&nbsp;&nbsp;&nbsp; svn checkout </span><span
+              style="font-family: monospace;">svn+ssh://DK@savannah01.psi.ch/repos/gems/GEMSFIT/trunk
+
+              GFIT </span><br>
+            If you also have a development branch of GEMS3K, check-out
+            its trunk: <span style="font-family: monospace;"></span><br>
+            <span style="font-family: monospace;"> $&nbsp;&nbsp;&nbsp;
+              mkdir standalone</span><span style="font-family:
+              monospace;"></span><br>
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp;
+              svn checkout </span><span style="font-family: monospace;">svn+ssh://DK@savannah01.psi.ch/repos/gems/GEMSTANDALONE/trunk
+
+
+
+
+              standalone</span><br>
+            <div style="margin-left: 40px;"> <span style="font-family:
+                monospace;"></span></div>
+            <span style="font-family: monospace;"> </span><span
+              style="font-family: monospace;"></span></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">7b<br>
+          </td>
+          <td style="vertical-align: top;">Now make sure that the trunk
+            working copy is up to date, and re-integrate your
+            development branch into the trunk working copy: <br>
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp; cd
+              /home/DK/DevGEMSFIT/trunk/GFIT</span><br
+              style="font-family: monospace;">
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp;
+              svn update<br>
+              $&nbsp;&nbsp;&nbsp; svn merge --reintegrate </span><span
+              style="font-family: monospace;">\ <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              svn+ssh://DK@savannah01.psi.ch/repos/gems/GEMSFIT/branches/devExtFit<br>
+            </span>Do also the same with the trunk working copy of
+            GEMS3K, if appropriate: <br style="font-family: monospace;">
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp; cd
+              ../standalone</span><br>
+            <span style="font-family: monospace;"></span> <span
+              style="font-family: monospace;">$&nbsp;&nbsp;&nbsp; svn
+              update<br>
+            </span><span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp;
+
+
+
+
+              svn merge --reintegrate </span><span style="font-family:
+              monospace;">\ <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+svn+ssh://DK@savannah01.psi.ch/repos/gems/GEMSTANDALONE/branches/devExtFit<br>
+              $&nbsp;&nbsp;&nbsp; cd ..</span><br>
+            Build, test, and verify the re-integrated trunk versions of
+            the codes.&nbsp; &nbsp;&nbsp;&nbsp; </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">7c<br>
+          </td>
+          <td style="vertical-align: top;">When everything is ready,
+            commit the new trunk version(s): <br>
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp; cd
+              GFIT</span><br style="font-family: monospace;">
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp;
+              svn commit -m "DK Merged devExtFit branch into trunk"</span><br>
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp; cd
+              ../standalone</span><br style="font-family: monospace;">
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp;
+              svn commit -m "DK Merged devExtFit branch into trunk"<br>
+              $&nbsp;&nbsp;&nbsp; cd ..</span><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="text-align: center"> 7d<br>
+          </td>
+          <td> Note that, after re-integration, the development branch
+            is not usable anymore; hence, it is recommended to delete it
+            (the svn history will be retained though): <br>
+            <span style="font-family: monospace;"></span><span
+              style="font-family: monospace;">$&nbsp;&nbsp;&nbsp; cd
+              GFIT</span><br>
+            <span style="font-family: monospace;"> $&nbsp;&nbsp;&nbsp;
+              svn delete </span><span style="font-family: monospace;">svn+ssh://DK@savannah01.psi.ch/repos/gems/GEMSFIT/branches/devExtFit
+
+
+
+
+              \</span><br style="font-family: monospace;">
+            <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+              -m "Removed the devExtFit development branch after
+              re-integration to GEMSFIT trunk"</span><br>
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp; cd
+              ../standalone</span><br>
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp;
+              svn delete </span><span style="font-family: monospace;">svn+ssh://DK@savannah01.psi.ch/repos/gems/GEMSTANDALONE/branches/devExtFit
+
+
+
+
+              \</span><br style="font-family: monospace;">
+            <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+              -m "Removed the devExtFit development branch after
+              re-integration to GEMS3K trunk"</span><br>
+            If any further development (even in the devExtFit area)
+            needs to be done, a new development branch (even with the
+            same name devExtFit) has to be done as a copy of the trunk,
+            and the whole development cycle repeated, as described in
+            sections 2 to 5. <br>
+          </td>
+        </tr>
+        <tr>
+          <td style="text-align: center"> 7e<br>
+          </td>
+          <td> <span style="font-weight: bold;">Inform </span>(e.g. by
+            e-mail) all co-developers of the entire GEMS project that a
+            new version of the trunk has been made; eventually launch an
+            automated testing sequence. This&nbsp; is especially
+            important when extensions in GEMS3K kernel have been made. <br>
+          </td>
+        </tr>
+        <tr>
+          <td> 8. </td>
+          <td><strong>Create release (distribution) tag (admins/leaders
+              only)</strong> </td>
+        </tr>
+        <tr>
+          <td style="text-align: center"> <br>
+          </td>
+          <td> When the new trunk is ready, you may wish to keep its
+            'frozen state' that corresponds to a distribution/release
+            code version. This can be achieved by copying the current
+            trunk into the /tags section of the SVN repository. Make
+            sure that all collaborators are aware that any commits into
+            tagged directories are prohibited. <br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">8a<br>
+          </td>
+          <td style="vertical-align: top;">To tag the current trunk for
+            a distribution version of GEMSFIT, run<br>
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp;
+              svn copy
+              svn+ssh://DK@savannah01.psi.ch/repos/gems/GEMSFIT/trunk \</span><br
+              style="font-family: monospace;">
+            <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+              svn+ssh://DK@savannah01.psi.ch/repos/gems/GEMSFIT/tags/Stable-v-1.1.0
+
+
+
+
+              \</span><br style="font-family: monospace;">
+            <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+              -m "Tagged a 1.1.0 release of GEMSFIT(GUI) code"</span><br>
+            To tag also the current trunk for a distribution version of
+            GEMS3K, run<br>
+            <span style="font-family: monospace;">$&nbsp;&nbsp;&nbsp;
+              svn copy
+              svn+ssh://DK@savannah01.psi.ch/repos/gems/GEMSTANDALONE/trunk
+              \</span><br style="font-family: monospace;">
+            <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+              svn+ssh://DK@savannah01.psi.ch/repos/gems/GEMSTANDALONE/tags/Stable-v-3.2.0
+
+
+
+
+              \</span><br style="font-family: monospace;">
+            <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+              -m "Tagged a 3.2.0 release of GEMS3K code"</span> </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">8b<br>
+          </td>
+          <td style="vertical-align: top;">To build and distribute the
+            release, checkout working copies of those tags to your local
+            PC, build the code, and prepare the installer file. <br>
+          </td>
+        </tr>
+        <tr>
+          <td> 9. </td>
+          <td><strong>Announcement</strong> </td>
+        </tr>
+        <tr>
+          <td style="text-align: center"> <br>
+          </td>
+          <td> Inform the community that a new release is ready,
+            providing summary of the new functionality e.g. on GEMS wiki
+            or web pages. </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">10.<br>
+          </td>
+          <td style="vertical-align: top;"><b>Troubleshooting</b><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><br>
+          </td>
+          <td style="vertical-align: top;">In case of svn errors while
+            performing operations described in sections 2 to 8, to
+            resolve the problems, please refer to the svn "red beans"
+            book,&nbsp; <a href="http://svnbook.red-bean.com/">http://svnbook.red-bean.com/</a>.<br>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+    <br>
+    <br>
+  </body>
+</html>

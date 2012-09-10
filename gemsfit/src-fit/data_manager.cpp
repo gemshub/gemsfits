@@ -1,3 +1,35 @@
+/* 
+*	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
+*
+*	 This file is part of the thermodynamic fitting program GEMSFIT.
+*
+*    GEMSFIT is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    GEMSFIT is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU  General Public License for more details.
+*
+*    You should have received a copy of the GNU General Public License
+*    along with GEMSFIT.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+ *	@file data_manager.cpp
+ *
+ *	@brief this source file contains the implementation of the data manager class, 
+ *	which retrieves and stores data from thre GEMSFIT input file as well as
+ *	the measurement data file or PostgreSQL server. 
+ *
+ *	@author Ferdinand F. Hingerl
+ *
+ * 	@date 09.04.2012 
+ *
+ */
+
 #include "data_manager.h"
 
 // Constructor
@@ -9,6 +41,7 @@ Data_Manager::Data_Manager( )
 	
 	// Read measurement data from PosgreSQL server
 	sysdata = new measdata;
+
 
 	if( !datasource )
 	{
@@ -64,6 +97,13 @@ void Data_Manager::get_db_specs( )
 	for( i=0; i < (int) data.size(); i++ )
 	alldata += data[i];
 
+	// GEMSFIT logfile
+	const char path[200] = "output_GEMSFIT/GEMSFIT.log";
+	ofstream fout;
+	fout.open(path, ios::app);						
+	if( fout.fail() )
+	{ cout<<"Output fileopen error"<<endl; exit(1); }
+
 
 	// get measurement data from CSV file (0) or PostgreSQL database (1)
 	// Database name
@@ -74,7 +114,7 @@ void Data_Manager::get_db_specs( )
 	istringstream datasource_ss(datasource_s);
         datasource_ss >> sub_datasource;
 		datasource = atoi( sub_datasource.c_str() );
-	cout<<"datasource = "<<datasource<<endl;
+	fout<<"datasource = "<<datasource<<endl;
 
 	if( datasource == 0 )
 	{
@@ -87,7 +127,7 @@ void Data_Manager::get_db_specs( )
 		istringstream csv_ss(csv_s);
 		csv_ss >> sub_csv;
 			CSVfile = sub_csv;
-		cout<<"CSVfile = "<<CSVfile<<endl;
+		fout<<"CSVfile = "<<CSVfile<<endl;
 	}
 	else if( datasource == 1 )
 	{
@@ -99,7 +139,7 @@ void Data_Manager::get_db_specs( )
 		istringstream dbname_ss(dbname_s);
 		dbname_ss >> sub_dbname;
 			DBname = sub_dbname;
-		cout<<"DBname = "<<DBname<<endl;
+		fout<<"DBname = "<<DBname<<endl;
 
 
 		// Table name
@@ -110,7 +150,7 @@ void Data_Manager::get_db_specs( )
 		istringstream table_ss(table_s);
 		table_ss >> sub_table;
 			tablename = sub_table;
-		cout<<"tablename = "<<tablename<<endl;
+		fout<<"tablename = "<<tablename<<endl;
 
 
 		// User name
@@ -121,7 +161,7 @@ void Data_Manager::get_db_specs( )
 		istringstream username_ss(username_s);
 		username_ss >> sub_username;
 			username = sub_username;
-		cout<<"username = "<<username<<endl;
+		fout<<"username = "<<username<<endl;
 
 
 		// Password
@@ -132,7 +172,7 @@ void Data_Manager::get_db_specs( )
 		istringstream passwd_ss(passwd_s);
 		passwd_ss >> sub_passwd;
 			passwd = sub_passwd;
-		cout<<"passwd = "<<passwd<<endl;
+		fout<<"passwd = "<<passwd<<endl;
 	
 		// Server
 		string sub_server;
@@ -142,7 +182,7 @@ void Data_Manager::get_db_specs( )
 		istringstream server_ss(server_s);
 		server_ss >> sub_server;
 			psql_server = sub_server;
-		cout<<"psql_server = "<<psql_server<<endl;
+		fout<<"psql_server = "<<psql_server<<endl;
 	}
 	else
 	{
@@ -152,6 +192,7 @@ void Data_Manager::get_db_specs( )
 		cout << endl;
 	}
 
+	fout.close();
 }
 
 
@@ -159,8 +200,6 @@ void Data_Manager::get_ic( measdata* sysdata )
 {
 	size_t pos1, pos2, pos3, pos4;
 	int i;
-
-	cout << " species_1_1[0] = " << sysdata->species_1_1[0] << endl;
 
 	sysdata->ic_1.resize( (int) sysdata->species_1_1.size() ); 
 	sysdata->ic_2.resize( (int) sysdata->species_1_1.size() ); 

@@ -1,3 +1,37 @@
+/* 
+*	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
+*
+*	 This file is part of the thermodynamic fitting program GEMSFIT.
+*
+*    GEMSFIT is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    GEMSFIT is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU  General Public License for more details.
+*
+*    You should have received a copy of the GNU General Public License
+*    along with GEMSFIT.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+/**
+ *	@file optimization.cpp
+ *
+ *	@brief this source file contains implementations of the Optimization class as well as the derived ActivityModel class. 
+ * Member funtions read configuration parameters needed by the optimization algorithm from the GEMSFIT input file.     
+ * This file contains all function implementations needed for the optimization such as assignment of bounds and constraints, initialization of the nlopt object as well as thje functions dealing with the actual parameter optimization.    
+ *
+ *	@author Ferdinand F. Hingerl
+ *
+ * 	@date 09.04.2012 
+ *
+ */
+
+
 #include <vector>
 #include <string>
 #include <iostream>
@@ -10,7 +44,6 @@
 
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/split.hpp>
-
 #include <boost/foreach.hpp>
 
 #include "node.h"
@@ -42,7 +75,7 @@ int p = 1;
 namespace opti
 {
 
-	Optimization::Optimization()
+	Optimization::Optimization( const vector<double> vec_opt )
 	{ 
 		constraint_data = new my_constraint_data;
 
@@ -59,13 +92,20 @@ namespace opti
 		delete Plot_ActMod;
 	}
 
-
+	// Read in all optimization parameters from GEMSFIT_input.dat 
 	void Optimization::set_nlopt_param()
-	{}
+	{
+	}
 	
+	// Normalize bounds and init guess vector
+	void Optimization::normalize_params( const vector<double> initguesses )
+	{
+	}
+
 	// NLopt return codes
 	void Optimization::print_return_message( const int result )
-	{}	
+	{
+	}	
 
 	// virtual constraint function of base class Optimization
 	double Optimization::constraint_function(const std::vector<double> &, std::vector<double> &, void *)
@@ -87,8 +127,8 @@ namespace opti
 	}
 
 	// Initialize multistart optimization object and assign constraints and bounds
-    	void Optimization::init_optim_multistart( std::vector<double> &optv_, std::vector<System_Properties*> *systems, int &countit, double &sum_of_squares )
-    	{
+    void Optimization::init_optim_multistart( std::vector<double> &optv_, std::vector<System_Properties*> *systems, int &countit, double &sum_of_squares )
+	{
 	}
 
 	// Print part of the fit results
@@ -104,7 +144,7 @@ namespace opti
 	// // // //  
 	// ActivityModel class (derived from base class Optimization)
 
-	ActivityModel::ActivityModel() : Optimization()
+	ActivityModel::ActivityModel( const vector<double> vec_opt ) : Optimization( vec_opt ), opt_vec(vec_opt)
 	{ 	
 		constraint_data = new my_constraint_data;
 
@@ -157,6 +197,9 @@ namespace opti
 		string s19("<OptNmultistart>");
 		string s20("<OptHybridAlgo>");
 		string s21("<OptInitStep>");
+		string s22("<OptScaleParam>");
+		string s23("<OptNormParam>");
+		string s24("<OptBoundPerc>");
 		string hash("#");
 		string Hp("+H");
 		string Hm("-H");
@@ -177,6 +220,14 @@ namespace opti
 		for( i=0; i < data.size(); i++ )
 		allparam += data[i];
 
+
+		const char path[200] = "output_GEMSFIT/GEMSFIT.log";
+		ofstream fout;
+		fout.open(path, ios::app);						
+		if( fout.fail() )
+		{ cout<<"Output fileopen error"<<endl; exit(1); }
+
+
 		// Algorithm name
  		string Algo_s, sub_Algo;
 		pos_start = allparam.find(s1);
@@ -187,8 +238,8 @@ namespace opti
 		{
 		    Algo_ss >> sub_Algo;
 			OptAlgo = sub_Algo;
-		};	
-cout<<"OptAlgo = "<<OptAlgo<<endl;
+		}	
+		fout<<"OptAlgo = "<<OptAlgo<<endl;
 
 		// Number of threads
 		string Threads_s, sub_Threads;
@@ -200,74 +251,107 @@ cout<<"OptAlgo = "<<OptAlgo<<endl;
 		{
 		    Threads_ss >> sub_Threads;
 			OptThreads = atoi(sub_Threads.c_str());
-		};	
-cout<<"OptThreads = "<<OptThreads<<endl;
+		}	
+		fout<<"OptThreads = "<<OptThreads<<endl;
 
-		// Upper bounds
-		string OptUpBounds_s, sub_OptUpBounds;
-		pos_start = allparam.find(s3);
-		pos_end   = allparam.find(s4,pos_start);
-		OptUpBounds_s = allparam.substr((pos_start+s3.length()),(pos_end-pos_start-s3.length()));
-		istringstream OptUpBounds_ss(OptUpBounds_s);
-		do
-		{
-		    OptUpBounds_ss >> sub_OptUpBounds;
-			if( sub_OptUpBounds.empty() )
-			{ 
-				cout<<"Note: no upper bounds specified ..."<<endl; break; 
-			}
-			else if( !sub_OptUpBounds.compare(Hp) )
-			{
-				OptUpBounds.push_back(BIGVAL);				
-			}
-			else
-			{
-				OptUpBounds.push_back(atof(sub_OptUpBounds.c_str()));
-			};
-		}while(OptUpBounds_ss);	
-if( !OptUpBounds.empty() )
-{ 
-	OptUpBounds.pop_back();
-	cout << "OptUpBounds.size() = " << OptUpBounds.size() << endl;
-	for( i=0; i< (int) OptUpBounds.size(); i++ )
-	 cout<<"OptUpBounds["<<i<<"] = "<<OptUpBounds[i]<<endl;
-}		
-		// Lower bounds
-		string OptLoBounds_s, sub_OptLoBounds;
-		pos_start = allparam.find(s4);
+
+		// Generate bounds from initial guess vector: <OptBoundPerc> gives percentage deviation 
+		string BP_s, sub_BP;
+		pos_start = allparam.find(s24);
 		pos_end   = allparam.find(hash,pos_start);
-		OptLoBounds_s = allparam.substr((pos_start+s4.length()),(pos_end-pos_start-s4.length()));
-		istringstream OptLoBounds_ss(OptLoBounds_s);
-		do
+		BP_s = allparam.substr((pos_start+s24.length()),(pos_end-pos_start-s24.length()));
+		istringstream BP_ss(BP_s);
+		BP_ss >> sub_BP;
+		if( atof(sub_BP.c_str()) < 0. )
 		{
-		    OptLoBounds_ss >> sub_OptLoBounds;
-			if( sub_OptLoBounds.empty() )
+			fout<<"Note: no OptBoundPerc specified. Using user defined bounds ..."<<endl;
+			OptBoundPerc = -1.; 
+		}
+		else
+		{
+			OptBoundPerc = atof(sub_BP.c_str());
+		}
+		fout<<"OptBoundPerc = "<<OptBoundPerc<<endl;
+
+		if( OptBoundPerc > 0. )
+		{
+			OptUpBounds.resize( opt_vec.size() );
+			OptLoBounds.resize( opt_vec.size() );
+			for( i=0; i<opt_vec.size(); i++ )
+			{
+				OptUpBounds[i] = opt_vec[i] + fabs( opt_vec[i]*OptBoundPerc/100. ); 
+				OptLoBounds[i] = opt_vec[i] - fabs( opt_vec[i]*OptBoundPerc/100. );
+			}
+		}
+		else
+		{
+			// Upper bounds
+			string OptUpBounds_s, sub_OptUpBounds;
+			pos_start = allparam.find(s3);
+			pos_end   = allparam.find(s4,pos_start);
+			OptUpBounds_s = allparam.substr((pos_start+s3.length()),(pos_end-pos_start-s3.length()));
+			istringstream OptUpBounds_ss(OptUpBounds_s);
+			do
+			{
+				OptUpBounds_ss >> sub_OptUpBounds;
+				if( sub_OptUpBounds.empty() )
+				{ 
+					fout<<"Note: no upper bounds specified ..."<<endl; break; 
+				}
+				else if( !sub_OptUpBounds.compare(Hp) )
+				{
+					OptUpBounds.push_back(BIGVAL);				
+				}
+				else
+				{
+					OptUpBounds.push_back(atof(sub_OptUpBounds.c_str()));
+				};
+			}while(OptUpBounds_ss);	
+			if( !OptUpBounds.empty() )
 			{ 
-				cout<<"Note: no lower bounds specified ..."<<endl; 
-				break; 
-			}
-			else if( !sub_OptLoBounds.compare(Hm) )
+				OptUpBounds.pop_back();
+				fout << "OptUpBounds.size() = " << OptUpBounds.size() << endl;
+				for( i=0; i< (int) OptUpBounds.size(); i++ )
+					fout<<"OptUpBounds["<<i<<"] = "<<OptUpBounds[i]<<endl;
+			}		
+
+			// Lower bounds
+			string OptLoBounds_s, sub_OptLoBounds;
+			pos_start = allparam.find(s4);
+			pos_end   = allparam.find(hash,pos_start);
+			OptLoBounds_s = allparam.substr((pos_start+s4.length()),(pos_end-pos_start-s4.length()));
+			istringstream OptLoBounds_ss(OptLoBounds_s);
+			do
 			{
-				OptLoBounds.push_back(-BIGVAL);				
+				OptLoBounds_ss >> sub_OptLoBounds;
+				if( sub_OptLoBounds.empty() )
+				{ 
+					fout<<"Note: no lower bounds specified ..."<<endl; 
+					break; 
+				}
+				else if( !sub_OptLoBounds.compare(Hm) )
+				{
+					OptLoBounds.push_back(-BIGVAL);				
+				}
+				else
+				{
+					OptLoBounds.push_back(atof(sub_OptLoBounds.c_str()));
+				};
+			}while(OptLoBounds_ss);	
+
+			if( !OptLoBounds.empty() )
+			{	
+				OptLoBounds.pop_back();
+				for( i=0; i< (int) OptLoBounds.size(); i++ )
+					fout<<"OptLoBounds["<<i<<"] = "<<OptLoBounds[i]<<endl;
 			}
-			else
-			{
-				OptLoBounds.push_back(atof(sub_OptLoBounds.c_str()));
-			};
-		}while(OptLoBounds_ss);	
-if( !OptLoBounds.empty() )
-{	
-	OptLoBounds.pop_back();
-	for( i=0; i< (int) OptLoBounds.size(); i++ )
-		cout<<"OptLoBounds["<<i<<"] = "<<OptLoBounds[i]<<endl;
-}
 			// Check if all lower bounds are smaller than the corresponding upper bounds
 			if( OptLoBounds.size() != OptUpBounds.size() )
 			{ 	
 				cout<<endl;
 				cout<<"upper and lower bounds must have same number of elements !! "<<endl;
-			       	cout<<"exiting now ..."<<endl;
-			       	cout<<endl;	
+				   	cout<<"exiting now ..."<<endl;
+				   	cout<<endl;	
 				exit(1); 
 			}		
 			for( i=0; i<OptLoBounds.size(); i++ )
@@ -277,10 +361,12 @@ if( !OptLoBounds.empty() )
 					cout<<endl;
 					cout<<"Inconsistence in bounds: OptLoBounds["<<i<<"] = "<<OptLoBounds[i]<<" has a bigger value than OptUpBounds["<<i<<"] = "<<OptUpBounds[i]<<endl;
 					cout<<" !! exiting now ..."<<endl;
-				        cout<<endl;	
+					    cout<<endl;	
 					exit(1);
-				};
-			};
+				}
+			}
+		}
+
 
 		// Relative optimization tolerance
 		string Tol_s, sub_Tol;
@@ -293,7 +379,7 @@ if( !OptLoBounds.empty() )
 		    Tol_ss >> sub_Tol;
 			if( sub_Tol.empty() )
 			{
-				cout<<"Note: no OptTolRel specified. using default value: 1e-04 ..."<<endl;
+				fout<<"Note: no OptTolRel specified. using default value: 1e-04 ..."<<endl;
 				OptTolRel = 1e-04; 
 				break; 				
 			}
@@ -302,7 +388,7 @@ if( !OptLoBounds.empty() )
 				OptTolRel = atof(sub_Tol.c_str());
 			};
 		};	
-cout<<"OptTolRel = "<<OptTolRel<<endl;
+		fout<<"OptTolRel = "<<OptTolRel<<endl;
 
 		// Absolute optimization tolerance
 		string TolA_s, sub_TolA;
@@ -315,7 +401,7 @@ cout<<"OptTolRel = "<<OptTolRel<<endl;
 		    TolA_ss >> sub_TolA;
 			if( sub_TolA.empty() )
 			{
-				cout<<"Note: no OptTolAbs specified. using default value: 1e-04 ..."<<endl;
+				fout<<"Note: no OptTolAbs specified. using default value: 1e-04 ..."<<endl;
 				OptTolAbs = 1e-04; 
 				break; 				
 			}
@@ -324,7 +410,7 @@ cout<<"OptTolRel = "<<OptTolRel<<endl;
 				OptTolAbs = atof(sub_TolA.c_str());
 			};
 		};	
-cout<<"OptTolAbs = "<<OptTolAbs<<endl;
+		fout<<"OptTolAbs = "<<OptTolAbs<<endl;
 
 		// Max number of evaluations
 		string MaxEval_s, sub_MaxEval;
@@ -337,7 +423,7 @@ cout<<"OptTolAbs = "<<OptTolAbs<<endl;
 		    MaxEval_ss >> sub_MaxEval;
 			OptMaxEval = atoi(sub_MaxEval.c_str());
 		};	
-cout<<"OptMaxEval = "<<OptMaxEval<<endl;
+		fout<<"OptMaxEval = "<<OptMaxEval<<endl;
 
 
 		// Specify whether to apply constraints or no not
@@ -351,7 +437,7 @@ cout<<"OptMaxEval = "<<OptMaxEval<<endl;
 		    Constr_ss >> sub_Constr;
 			OptConstraints = atoi(sub_Constr.c_str());
 		};	
-cout<<"OptConstraints = "<<OptConstraints<<endl;
+		fout<<"OptConstraints = "<<OptConstraints<<endl;
 		
 		if( OptConstraints )
 		{
@@ -372,8 +458,8 @@ cout<<"OptConstraints = "<<OptConstraints<<endl;
 			    OptUpConstraints_ss >> sub_OptUpConstraints;
 				if( sub_OptUpConstraints.empty() )
 				{ 
-					cout<<endl;
-					cout<<"Note: no upper constraints specified ..."<<endl;
+					fout<<endl;
+					fout<<"Note: no upper constraints specified ..."<<endl;
 				        cout<<endl;	
 					break; 
 				}
@@ -397,9 +483,9 @@ cout<<"OptConstraints = "<<OptConstraints<<endl;
 			    OptLoConstraints_ss >> sub_OptLoConstraints;
 				if( sub_OptUpConstraints.empty() )
 				{ 
-					cout<<endl;
-					cout<<"Note: no lower constraints specified ..."<<endl; 
-					cout<<endl;
+					fout<<endl;
+					fout<<"Note: no lower constraints specified ..."<<endl; 
+					fout<<endl;
 					break; 
 				}
 				else
@@ -441,11 +527,11 @@ for( i=0; i<constraint_data_v.size(); i++ )
 			// Check if all lower constraints are smaller than the corresponding upper constraints
 			if( OptUpConstraints_.size() != OptLoConstraints_.size() )
 			{ 
-				cout<<endl;
-				cout<<"WARNING: upper and lower constraints do not have same number of elements !!"<<endl; 
-				cout<<"OptUpConstraints.size() = "<<OptUpConstraints_.size()<<" <-> OptLoConstraints.size() = "<<OptLoConstraints_.size()<<endl;
-				cout<<"hope that's ok, proceeding now ..."<<endl; 
-				cout<<endl;
+				fout<<endl;
+				fout<<"WARNING: upper and lower constraints do not have same number of elements !!"<<endl; 
+				fout<<"OptUpConstraints.size() = "<<OptUpConstraints_.size()<<" <-> OptLoConstraints.size() = "<<OptLoConstraints_.size()<<endl;
+				fout<<"hope that's ok, proceeding now ..."<<endl; 
+				fout<<endl;
 			}		
 			for( i=0; i<OptLoConstraints_.size(); i++ )
 			{
@@ -472,7 +558,7 @@ for( i=0; i<constraint_data_v.size(); i++ )
 		    DoWhat_ss >> sub_DoWhat;
 			OptDoWhat = atoi(sub_DoWhat.c_str());
 		};	
-cout<<"OptDoWhat = "<<OptDoWhat<<endl;
+		fout<<"OptDoWhat = "<<OptDoWhat<<endl;
 
 
 		// If performing only statistics, provide best fit values
@@ -486,8 +572,8 @@ cout<<"OptDoWhat = "<<OptDoWhat<<endl;
 			StatOnly_ss >> sub_StatOnly;
 			OptStatOnlyBestFitParam.push_back( atof(sub_StatOnly.c_str()) );
 		}while(StatOnly_ss);	
-for( i=0; i<OptStatOnlyBestFitParam.size(); i++ )
-cout<<"OptStatOnlyBestFitParam["<<i<<"] = "<<OptStatOnlyBestFitParam[i]<<endl;
+		for( i=0; i<OptStatOnlyBestFitParam.size(); i++ )
+		fout<<"OptStatOnlyBestFitParam["<<i<<"] = "<<OptStatOnlyBestFitParam[i]<<endl;
 
 
 		// If performing only statistics, provide SSR from fit
@@ -501,7 +587,7 @@ cout<<"OptStatOnlyBestFitParam["<<i<<"] = "<<OptStatOnlyBestFitParam[i]<<endl;
 		    bestSSR_ss >> sub_bestSSR;
 			OptStatOnlySSR = atof(sub_bestSSR.c_str());
 		};	
-cout<<"OptStatOnlySSR = "<<OptStatOnlySSR<<endl;
+		fout<<"OptStatOnlySSR = "<<OptStatOnlySSR<<endl;
 
 
 		// If performing only statistics, provide SSR from fit
@@ -512,7 +598,7 @@ cout<<"OptStatOnlySSR = "<<OptStatOnlySSR<<endl;
 		istringstream EQ_ss(EQ_s);
 	    EQ_ss >> sub_EQ;
 		OptEquil = atof(sub_EQ.c_str());
-cout<<"OptEquil = "<<OptEquil<<endl;
+		fout<<"OptEquil = "<<OptEquil<<endl;
 
 
 		// Perform hybrid optimization
@@ -523,7 +609,7 @@ cout<<"OptEquil = "<<OptEquil<<endl;
 		istringstream Hybrid_ss(Hybrid_s);
 	    Hybrid_ss >> sub_Hybrid;
 		OptHybridMode = atoi(sub_Hybrid.c_str());
-cout<<"OptHybridMode = "<<OptHybridMode<<endl;
+		fout<<"OptHybridMode = "<<OptHybridMode<<endl;
 
 
 		if( OptHybridMode ) 
@@ -537,7 +623,7 @@ cout<<"OptHybridMode = "<<OptHybridMode<<endl;
 			istringstream HAlgo_ss(HAlgo_s);
 			HAlgo_ss >> sub_HAlgo;
 			OptHybridAlgo = sub_HAlgo;
-cout<<"OptHybridAlgo = "<<OptHybridAlgo<<endl;
+			fout<<"OptHybridAlgo = "<<OptHybridAlgo<<endl;
 
 
 			// Relative hybride optimization tolerance
@@ -551,7 +637,7 @@ cout<<"OptHybridAlgo = "<<OptHybridAlgo<<endl;
 				TolH_ss >> sub_TolH;
 				if( sub_Tol.empty() )
 				{
-					cout<<"Note: no OptHybridTolRel specified. using default value: 1e-04 ..."<<endl;
+					fout<<"Note: no OptHybridTolRel specified. using default value: 1e-04 ..."<<endl;
 					OptHybridTolRel = 1e-04; 
 					break; 				
 				}
@@ -560,7 +646,7 @@ cout<<"OptHybridAlgo = "<<OptHybridAlgo<<endl;
 					OptHybridTolRel = atof(sub_TolH.c_str());
 				};
 			};	
-cout<<"OptHybridTolRel = "<<OptHybridTolRel<<endl;
+			fout<<"OptHybridTolRel = "<<OptHybridTolRel<<endl;
 
 			// Absolute hybride optimization tolerance
 			string TolAH_s, sub_TolAH;
@@ -573,7 +659,7 @@ cout<<"OptHybridTolRel = "<<OptHybridTolRel<<endl;
 				TolAH_ss >> sub_TolAH;
 				if( sub_TolAH.empty() )
 				{
-					cout<<"Note: no OptHybridTolAbs specified. using default value: 1e-04 ..."<<endl;
+					fout<<"Note: no OptHybridTolAbs specified. using default value: 1e-04 ..."<<endl;
 					OptHybridTolAbs = 1e-04; 
 					break; 				
 				}
@@ -582,7 +668,7 @@ cout<<"OptHybridTolRel = "<<OptHybridTolRel<<endl;
 					OptHybridTolAbs = atof(sub_TolAH.c_str());
 				};
 			};	
-cout<<"OptHybridTolAbs = "<<OptHybridTolAbs<<endl;
+			fout<<"OptHybridTolAbs = "<<OptHybridTolAbs<<endl;
 
 			// Max number of hybride evaluations
 			string MaxEvalH_s, sub_MaxEvalH;
@@ -595,23 +681,19 @@ cout<<"OptHybridTolAbs = "<<OptHybridTolAbs<<endl;
 				MaxEvalH_ss >> sub_MaxEvalH;
 				OptHybridMaxEval = atoi(sub_MaxEvalH.c_str());
 			};	
-cout<<"OptHybridMaxEval = "<<OptHybridMaxEval<<endl;
-		
-			// Number of multistart runs
-			string NMulti_s, sub_NMulti;
-			pos_start = allparam.find(s19);
-			pos_end   = allparam.find(hash,pos_start);
-			NMulti_s = allparam.substr((pos_start+s19.length()),(pos_end-pos_start-s19.length()));
-			istringstream NMulti_ss(NMulti_s);
-			for( i=0; i<1; i++)
-			{
-				NMulti_ss >> sub_NMulti;
-				OptNmultistart = atoi(sub_NMulti.c_str());
-			};	
-cout<<"OptNmultistart = "<<OptNmultistart<<endl;
-
-
+			fout<<"OptHybridMaxEval = "<<OptHybridMaxEval<<endl;
 		}
+
+		// Number of multistart runs
+		string NMulti_s, sub_NMulti;
+		pos_start = allparam.find(s19);
+		pos_end   = allparam.find(hash,pos_start);
+		NMulti_s = allparam.substr((pos_start+s19.length()),(pos_end-pos_start-s19.length()));
+		istringstream NMulti_ss(NMulti_s);
+		NMulti_ss >> sub_NMulti;
+		OptNmultistart = atoi(sub_NMulti.c_str());	
+		fout<<"OptNmultistart = "<<OptNmultistart<<endl;
+
 
 
 		// Initial stepsize in percent (this percentage will be applied to all parameters)
@@ -623,22 +705,109 @@ cout<<"OptNmultistart = "<<OptNmultistart<<endl;
 		InS_ss >> sub_InS;
 		if( sub_InS.empty() )
 		{
-			cout<<"Note: no OptInitStep specified. using default heurustic value computed by NLOPT ..."<<endl;
+			fout<<"Note: no OptInitStep specified. using default heurustic value computed by NLOPT ..."<<endl;
 			OptInitStep = -1; 
 		}
 		else
 		{
 			OptInitStep = atof(sub_InS.c_str());
 		}
-cout<<"OptInitStep = "<<OptInitStep<<endl;
+		fout<<"OptInitStep = "<<OptInitStep<<endl;
 
 
+		// Initial stepsize in percent (this percentage will be applied to all parameters)
+		string SP_s, sub_SP;
+		pos_start = allparam.find(s22);
+		pos_end   = allparam.find(hash,pos_start);
+		SP_s = allparam.substr((pos_start+s22.length()),(pos_end-pos_start-s22.length()));
+		istringstream SP_ss(SP_s);
+		SP_ss >> sub_SP;
+		if( sub_SP.empty() )
+		{
+			fout<<"Note: no OptScaleParam specified. Not using scaling of parameters ..."<<endl;
+			OptScaleParam = 0; 
+		}
+		else
+		{
+			OptScaleParam = atof(sub_SP.c_str());
+		}
+		fout<<"OptScaleParam = "<<OptScaleParam<<endl;
 
+
+		// Normalize bounds/fitting parameters with initial guess vector
+		string NP_s, sub_NP;
+		pos_start = allparam.find(s23);
+		pos_end   = allparam.find(hash,pos_start);
+		NP_s = allparam.substr((pos_start+s23.length()),(pos_end-pos_start-s23.length()));
+		istringstream NP_ss(NP_s);
+		NP_ss >> sub_NP;
+		if( sub_NP.empty() )
+		{
+			fout<<"Note: no OptNormParam specified. Not using m of parameters ..."<<endl;
+			OptNormParam = 0; 
+		}
+		else
+		{
+			OptNormParam = atoi(sub_NP.c_str());
+		}
+		fout<<"OptNormParam = "<<OptNormParam<<endl;
 
 		param_stream.close();
+		fout.close();
+
 	}//set_nlopt_param() 
 
+
 	
+	// Normalize bounds and init guess vector
+	void ActivityModel::normalize_params( const vector<double> initguesses )
+	{
+		unsigned int i= 0;
+
+		// GEMSFIT logfile
+		const char path[200] = "output_GEMSFIT/GEMSFIT.log";
+		ofstream fout;
+		fout.open(path, ios::app);						
+		if( fout.fail() )
+		{ cout<<"Output fileopen error"<<endl; exit(1); }
+
+		fout << " ... performing parameter normalization ... " << endl;
+		
+
+		// Normalize init guess vector
+		optv.resize( initguesses.size() );
+		for(i=0; i<optv.size(); i++)
+		{
+			optv[i] = initguesses[i] / abs(initguesses[i]); 
+		}
+
+		// Normalize upper bounds vector
+		for(i=0; i<OptUpBounds.size(); i++)
+		{
+			fout << "Init guess ["<<i<<"] = " << initguesses[i] << endl;
+			fout << "Upper Bound old ["<<i<<"]= " << OptUpBounds[i] << endl;
+			OptUpBounds[i] = OptUpBounds[i] / abs(initguesses[i]);
+			fout << "Upper Bound new ["<<i<<"]= " << OptUpBounds[i] << endl;
+		}
+		
+		// Normalize lower bounds vector
+		for(i=0; i<OptLoBounds.size(); i++)
+		{
+			fout << "Init guess ["<<i<<"] = " << initguesses[i] << endl;
+			fout << "Lower Bound old ["<<i<<"]= " << OptLoBounds[i] << endl;
+			OptLoBounds[i] = OptLoBounds[i] / abs(initguesses[i]); 
+			fout << "Lower Bound new ["<<i<<"]= " << OptLoBounds[i] << endl;
+		}
+
+		// Normalize constraints vector
+		for(i=0; i<constraint_data_v.size(); i++)
+		{
+			constraint_data_v[i].Constraints = constraint_data_v[i].Constraints / abs(initguesses[i]); 
+		}
+		
+		fout.close();
+	}
+
 
 	// NLopt return codes
 	void ActivityModel::print_return_message( const int result )
@@ -685,8 +854,17 @@ cout<<"OptInitStep = "<<OptInitStep<<endl;
     void ActivityModel::init_optim_multistart( std::vector<double> &optv_, std::vector<System_Properties*> *systems, int &countit, double &sum_of_squares )
     {
         unsigned int i;
-	int j;
+		int j;
         std::vector<double> grad;
+
+		// GEMSFIT logfile
+		const char path[200] = "output_GEMSFIT/GEMSFIT.log";
+		ofstream ffout;
+		ffout.open(path, ios::app);						
+		if( ffout.fail() )
+		{ cout<<"Output fileopen error"<<endl; exit(1); }
+
+		ffout << " ... entering multi-start optimization routines ... " << endl;
 
         // Reset counter to zero
         master_counter = 0;
@@ -694,7 +872,18 @@ cout<<"OptInitStep = "<<OptInitStep<<endl;
         // Instantiate nlopt::opt object
         nlopt::opt opt_actmod( nlopt::GN_ISRES, optv_.size() );
 
-        optv = optv_;
+ 		// normalize parameters is OptNormParam Flag is set to yes (=1) and 
+		// if the program is not in printing mode (printfile = 0)
+		if( OptNormParam && !systems->at(0)->printfile )
+		{
+			normalize_params( optv_ );
+			systems->at(0)->sysparam->NormParams = true;
+		}
+		else // do not normalize parameters
+		{
+			optv = optv_;
+		}
+		
 
         // check if initial guesses have same number of elements as bound and check if initial guesses are within the bounds
         if( optv.size() != OptUpBounds.size() )
@@ -756,15 +945,15 @@ cout<<"OptInitStep = "<<OptInitStep<<endl;
                         opt_actmod.add_inequality_constraint( ActMod_constraint_function_callback, &constraint_data_v[j], 1e-4);
         }
 
-	if( OptInitStep > 0 )
-	{
-		vector<double> inistep( optv.size(), 0. );
-		for( j=0; j<(int) optv.size(); j++ )
+		if( OptInitStep > 0 )
 		{
-			inistep[j] = optv[j] * OptInitStep;
+			vector<double> inistep( optv.size(), 0. );
+			for( j=0; j<(int) optv.size(); j++ )
+			{
+				inistep[j] = optv[j] * OptInitStep;
+			}
+			opt_actmod.set_initial_step( inistep );
 		}
-		opt_actmod.set_initial_step( inistep );
-	}
 
 
 
@@ -851,8 +1040,8 @@ cout<<"OptInitStep = "<<OptInitStep<<endl;
 
             // RUN OPTIMIZATION 
             nlopt::result result = opt_actmod.optimize( optv, sum_of_squares );
-            cout<<"optv[0] = "<<optv[0]<<endl;
-            cout<<"size of optv = "<<optv.size()<<endl;
+            ffout<<"optv[0] = "<<optv[0]<<endl;
+            ffout<<"size of optv = "<<optv.size()<<endl;
 
 
             // check results
@@ -938,7 +1127,7 @@ cout<<"OptInitStep = "<<OptInitStep<<endl;
      			s << i;
 				string new_directory("./output_RUNS");
 				new_directory += "/run_" + s.str(); 
-				boost::filesystem3::copy_directory(boost::filesystem::path("./output_GEMSFIT"), boost::filesystem::path( new_directory.c_str() ));
+//                boost::filesystem::copy_directory(boost::filesystem::path("./output_GEMSFIT"), boost::filesystem::path( new_directory.c_str() ));
 
 				// empty output_GEMSFIT directory
 				boost::filesystem::path outFIT("output_GEMSFIT");
@@ -951,8 +1140,8 @@ cout<<"OptInitStep = "<<OptInitStep<<endl;
 
                 // run optimization 
                 nlopt::result result = opt_actmod.optimize( optv, sum_of_squares );
-                cout<<"optv[0] = "<<optv[0]<<endl;
-                cout<<"size of optv = "<<optv.size()<<endl;
+                ffout<<"optv[0] = "<<optv[0]<<endl;
+                ffout<<"size of optv = "<<optv.size()<<endl;
 
 
                 // check results
@@ -992,7 +1181,7 @@ cout<<"OptInitStep = "<<OptInitStep<<endl;
                 std::cout<<" after "<< master_counter <<" evaluations"<<std::endl;
 		}
 #endif
-
+	ffout.close();
     }
 
 
@@ -1044,11 +1233,43 @@ cout<<"OptInitStep = "<<OptInitStep<<endl;
 		int j = 0;
 		std::vector<double> grad;
 
+		// GEMSFIT logfile
+		const char path[200] = "output_GEMSFIT/GEMSFIT.log";
+		ofstream ffout;
+		ffout.open(path, ios::app);						
+		if( ffout.fail() )
+		{ cout<<"Output fileopen error"<<endl; exit(1); }
+
+		ffout << " ... initializing optimization object ... " << endl;
+
+		
+
 		// Reset counter to zero
 		master_counter = 0;
 
+/*		// Do not normalize parameters
+		if( systems->at(0)->printfile || !OptNormParam )
+		{
+			optv = optv_;
+		}
+		else // normalize parameters
+		{
+			normalize_params( optv_ );
+			systems->at(0)->sysparam->NormParams = true;
+		}*/
+		
+ 		// normalize parameters is OptNormParam Flag is set to yes (=1) and 
+		// if the program is not in printing mode (printfile = 0)
+		if( OptNormParam && !systems->at(0)->printfile )
+		{
+			normalize_params( optv_ );
+			systems->at(0)->sysparam->NormParams = true;
+		}
+		else // do not normalize parameters
+		{
+			optv = optv_;
+		}
 
-		optv = optv_;
 
 		// check if initial guesses have same number of elements as bound and check if initial guesses are within the bounds
 		if( optv.size() != OptUpBounds.size() )
@@ -1070,8 +1291,8 @@ cout<<"OptInitStep = "<<OptInitStep<<endl;
 				cout<<" .... exiting now .... "<<endl;
 			        cout<<endl;	
 				exit(1);
-			};
-		};
+			}
+		}
 
 		
 		// assign bounds
@@ -1136,10 +1357,10 @@ cout<<"OptInitStep = "<<OptInitStep<<endl;
 				// MASTER
 				if( !pid )
 				{
-                                        // run optimization -> perform MPI_Send() in global activity model callback
+                    // run optimization -> perform MPI_Send() in global activity model callback
 					nlopt::result result = opt_actmod.optimize( optv, sum_of_squares );
-					cout<<"optv[0] = "<<optv[0]<<endl;
-					cout<<"size of optv = "<<optv.size()<<endl;
+					ffout<<"optv[0] = "<<optv[0]<<endl;
+					ffout<<"size of optv = "<<optv.size()<<endl;
 			
 
 				// check results
@@ -1254,13 +1475,26 @@ cout<<"OptInitStep = "<<OptInitStep<<endl;
 				// Send the values generated by the master process to all other threads
 				ierr = MPI_Bcast( &sum_of_squares, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD );
 #endif		
-				cout<<"pid "<<pid<<" is out of loop ..."<<endl;
+				ffout<<"pid "<<pid<<" is out of loop ..."<<endl;
+
+				// copy resulting vector back to incoming optv vector (needed for printing results)
+				if( !OptNormParam )
+				{
+					optv_ = optv;
+				}
+				else
+				{
+					for( i=0; i<optv.size(); i++ )
+					{
+						optv_[i] = optv[i] * abs(systems->at(0)->sysparam->init_guesses[i]);
+					}
+				}
 		} 
 		else // DO NOT PARALLELIZE LOOP OVER MEASUREMENTS IN OBJECTIVE FUNCTION if in printing mode (function: ActivityModel::print_results()) OR in Monte Carlo mode (function: Statistics::MC_confidence_interval())
 		{
 				nlopt::result result = opt_actmod.optimize( optv, sum_of_squares );
-				cout<<"optv[0] = "<<optv[0]<<endl;
-				cout<<"size of optv = "<<optv.size()<<endl;
+				ffout<<"optv[0] = "<<optv[0]<<endl;
+				ffout<<"size of optv = "<<optv.size()<<endl;
 			
 				// check results
 				if( result < 0 ) 
@@ -1297,12 +1531,15 @@ cout<<"OptInitStep = "<<OptInitStep<<endl;
 					std::cout<<") = "<<sum_of_squares<<std::endl;
 				}
 				std::cout<<" after "<< master_counter <<" evaluations"<<std::endl;
-				
+
 				// copy resulting vector back to incoming optv vector (needed for printing results)
-				optv_ = optv;
+				optv_ = optv;				
+
+
 		}
 		//opt_actmod.destroy();
 	
+	ffout.close();
 	countit = master_counter;
 	}
 
@@ -1313,11 +1550,21 @@ cout<<"OptInitStep = "<<OptInitStep<<endl;
 		int j = 0;
 		std::vector<double> grad;
 
+		// GEMSFIT logfile
+		const char path[200] = "output_GEMSFIT/GEMSFIT.log";
+		ofstream ffout;
+		ffout.open(path, ios::app);						
+		if( ffout.fail() )
+		{ cout<<"Output fileopen error"<<endl; exit(1); }
+
+		ffout << " ... initializing hybrid optimization procedure ... " << endl;
+
+
 		// Reset counter to zero
 		master_counter = 0;
 
-
 		optv = optv_;
+		
 
 		// check if initial guesses have same number of elements as bound and check if initial guesses are within the bounds
 		if( optv.size() != OptUpBounds.size() )
@@ -1339,8 +1586,8 @@ cout<<"OptInitStep = "<<OptInitStep<<endl;
 				cout<<" .... exiting now .... "<<endl;
 			        cout<<endl;	
 				exit(1);
-			};
-		};
+			}
+		}
 
 		
 		// assign bounds
@@ -1394,8 +1641,8 @@ cout<<"OptInitStep = "<<OptInitStep<<endl;
 
 		// run optimization 
 		nlopt::result result = opt_hybrid_actmod.optimize( optv, sum_of_squares );
-		cout<<"optv[0] = "<<optv[0]<<endl;
-		cout<<"size of optv = "<<optv.size()<<endl;
+		ffout<<"optv[0] = "<<optv[0]<<endl;
+		ffout<<"size of optv = "<<optv.size()<<endl;
 			
 
 		// check results
@@ -1435,9 +1682,10 @@ cout<<"OptInitStep = "<<OptInitStep<<endl;
 		std::cout<<" after "<< master_counter <<" evaluations"<<std::endl;
 			
 		// copy resulting vector back to incoming optv vector (needed for printing results)
-		optv_ = optv;
+		optv_ = optv;;
 
 	countit = master_counter;
+	ffout.close();
 	}
 	
 

@@ -1,3 +1,37 @@
+/* 
+*	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
+*
+*	 This file is part of the thermodynamic fitting program GEMSFIT.
+*
+*    GEMSFIT is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    GEMSFIT is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU  General Public License for more details.
+*
+*    You should have received a copy of the GNU General Public License
+*    along with GEMSFIT.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+/**
+ *	@file optimization.h
+ *
+ *	@brief this header file contains definitions of the Optimization class as well as the derived ActivityModel class. 
+ * Member funtions read configuration parameters needed by the optimization algorithm from the GEMSFIT input file.     
+ * This file contains all function declarations needed for the optimization such as assignment of bounds and constraints, initialization of the nlopt object as well as thje functions dealing with the actual parameter optimization.    
+ *
+ *	@author Ferdinand F. Hingerl
+ *
+ * 	@date 09.04.2012 
+ *
+ */
+
+
 #ifndef _optimization_h_
 #define _optimization_h_
 
@@ -35,105 +69,195 @@ namespace bmpi = boost::mpi;
 
 namespace opti
 {
-
+	/// the Optimization class provides a generic framework for initializiating and performing parameter optimization with the nlopt library.  
 	class Optimization : public PlotFit
 	{
 		public:
-			// Constructor
-			Optimization();
+			/**
+			* Constructor of the Optimization class. Create pointer to constraint_data and PlotFit object. Read parameters needed by nlopt library from GEMSFIT configuration file.
+			* @param vec_opt       optimization vector
+			* @author FFH
+			* @date 09.04.2012
+			*/				
+			Optimization( const vector<double> vec_opt );
 	
-			// Destructor
+			/**
+			* Destructor of the Optimization class. Delete pointer to constraint_data and PlotFit object.
+			* @author FFH
+			* @date 09.04.2012
+			*/				
 			virtual ~Optimization();
 
-			// nlopt instance
+			/// instance of the nlopt optmization object
 			nlopt::opt opt_actmod;
 
 			// configuration data for nlopt instance (get from GEMSFIT_input.dat)
+			/// name of the optimizaiton algorithm
 			string OptAlgo;
+			/// number of computing threads ofr parallel computation
 			int OptThreads;
+			/// stopping criteria: relative tolerance on function value
 			double OptTolRel;
+			/// stopping criteria: absolute tolerance on function value.
 			double OptTolAbs;
+			/// stopping criteria: maximuma number of evaluations
 			int OptMaxEval; 		
+			/// 
 			int OptConstraints;
+			/// perform optimization and statistics (0), only optimization with basic Statistics (1), only Statistics (2) with initial guesses as best fit parametters
 			int OptDoWhat;
+			/// run hybrid optimization yes (1) / no (0)
 			int OptHybridMode;
+			/// hybrid stopping criterion -> specify relative tolerance (default = 1e-04) of function value
 			double OptHybridTolRel;
+			/// hybrid stopping criterion -> specify absolute tolerance (default = 1e-04) of function value
 			double OptHybridTolAbs;
+			/// max number of hybrid evaluations
 			int OptHybridMaxEval; 		
+			/// number of multistart runs (deactivate with 0)
 			int OptNmultistart;
+			/// hybrid algorithm GN_ISRES, LN_COBYLA or LN_BOBYQA
 			string OptHybridAlgo;
+			/// initial stepsize for local minimizers (factor will be multiplied to all optimization parameters); 0 => use default
 			double OptInitStep;
+			/// initial stepsize in percent (this percentage will be applied to all parameters)
+			double OptScaleParam;
+			/// normalize bounds/constraints/fitting parameters with initial guess vector => yes=1, no=0
+			bool OptNormParam;
+			/// percentage deviation used to generate bounds from initial guess vector
+			double OptBoundPerc;
 
 			// optimization vector and bounds (get from GEMSFIT_input.dat)
-			std::vector<double> optv; 
+			/// optimization vector
+			std::vector<double> optv;
+			/// vector of upper bounds 
 			std::vector<double> OptUpBounds;
+			/// vector of lower bounds
 			std::vector<double> OptLoBounds;
 
 			// printing information (get from GEMSFIT_input.dat)
 			PlotFit* Plot_ActMod;
 
-/*			typedef struct 
-			{
-				std::vector<double> print_temperatures; 
-				std::vector<double> print_pressures; 
-				std::vector<double> print_molalities; 
-				string print_filename;
-				string print_format;
-				int print_code;
-				string print_xlabel;
-				string print_ylabel;
-				string print_head;
-			} my_plotting_info;
-			my_plotting_info* plotting_info;
-*/
-
-			// struct keeping the constraint data (get from GEMSFIT_input.dat)
-/*			typedef struct 
-			{    
+			/// struct holding constraint values (retrieved from GEMSFIT_input.dat)
+			typedef struct 
+			{   
+				/// index of constraint
 			    int id;
-		    	double OptUpConstraints;
-    			double OptLoConstraints;
-			} my_constraint_data;
-*/			typedef struct 
-			{    
-			    int id;
+				/// value of constraint
 		    	double Constraints;
 			} my_constraint_data;
 			my_constraint_data* constraint_data;
 			std::vector<my_constraint_data> constraint_data_v;
 
-			// Populate nlopt instance
+			/**
+			* populate nlopt instance: set bounds, constraints, stopping criteria
+			*
+			* @author FFH
+			* @date 09.04.2012
+			*/	
 			virtual void set_nlopt_param( );			
 
-			// NLopt return codes
+			/**
+			* normalize init vector, bounds and constraints 		
+			*
+			* @param initguesses         vector containing initial guesses
+			* @author FFH
+			* @date 09.04.2012
+			*/	
+			virtual void normalize_params( const vector<double> initguesses );
+
+			/**
+			* print message associated with nlopt return code
+			*
+			* @param result              nlopt return code
+			* @author FFH
+			* @date 09.04.2012
+			*/	
 			virtual void print_return_message( const int result );
 
-			// Constraint function
+			/**
+			* implementation of the constraint function
+			*
+			* @param x					optimization vector
+			* @param grad				gradient vector (can be NULL)
+			* @param data				general data that are needed by the constraint function
+			* @author FFH
+			* @date 09.04.2012
+			*/	
 			virtual double constraint_function(const std::vector<double> &x, std::vector<double> &grad, void *data);
 
-			// Initialize optimization object and assign constraints and bounds
+			/**
+			* initialize optimization object and assign constraints and bounds.
+			* performs the optimization.
+			* @param opt_actmod			nlopt optimization object
+			* @param optv_              optimization vector
+			* @param systems            data object that holds the data of the current System_Properties struct 
+			* @param countit			global counter of runs over the measurement data 
+			* @param sum_of_squares		sum of squared residuals
+			* @author FFH
+			* @date 09.04.2012
+			*/				
 			virtual void build_optim( nlopt::opt &opt_actmod, std::vector<double> &optv_, std::vector<System_Properties*> *systems, int &countit, double &sum_of_squares );
 		
-			// Initialize hybrid optimization object and assign constraints and bounds
+			/**
+			* initialize hybrid optimization object and assign constraints and bounds.
+			* performs the optimization.
+			* @param opt_hybrid_actmod	nlopt hybrid optimization object
+			* @param optv_              optimization vector
+			* @param systems            data object that holds the data of the current System_Properties struct 
+			* @param countit			global counter of runs over the measurement data 
+			* @param sum_of_squares		sum of squared residuals
+			* @author FFH
+			* @date 09.04.2012
+			*/				
 			virtual void build_hybrid_optim( nlopt::opt &opt_hybrid_actmod, std::vector<double> &optv_, std::vector<System_Properties*> *systems, int &countit, double &sum_of_squares );
 
+			/**
+			* initialize optimization object and call build_optim(...)
+			*
+			* @param optv_              optimization vector
+			* @param sys                data object that holds the data of the current System_Properties struct 
+			* @param countit			global counter of runs over the measurement data 
+			* @param sum_of_squares		sum of squared residuals
+			* @author FFH
+			* @date 09.04.2012
+			*/				
             virtual void init_optim( std::vector<double> &optv_, std::vector<System_Properties*> *sys, int &countit, double &sum_of_squares );
 
-            // Initialize multistart optimization object and assign constraints and bounds
+			/**
+			* initialize multistart optimization object, generate several initial guesses and call build_optim(...).
+			*
+			* @param optv_              optimization vector
+			* @param sys                data object that holds the data of the current System_Properties struct 
+			* @param countit			global counter of runs over the measurement data 
+			* @param sum_of_squares		sum of squared residuals
+			* @author FFH
+			* @date 09.04.2012
+			*/				
             virtual void init_optim_multistart( std::vector<double> &optv_, std::vector<System_Properties*> *sys, int &countit, double &sum_of_squares );
 
-			// Print results to file
+			/**
+			* print results of the optimization to file
+			*
+			* @param optv_              optimization vector
+			* @param systems            data object that holds the data of the current System_Properties struct 
+			* @author FFH
+			* @date 09.04.2012
+			*/				
 			virtual void print_results( std::vector<double> &optv_, std::vector<System_Properties*> *systems );
 
 	};
 
 
-	
+	/// the ActivityModel class provides a generic framework for initializiating and performing parameter optimization of TSolMod derived classes with the nlopt library.  
 	class ActivityModel : public Optimization 
 	{
 		public:
+			// opt vector			
+			vector<double> opt_vec;
+
 			// Constructor
-			ActivityModel(); 
+			ActivityModel( const vector<double> vec_opt ); 
 
 			// Destructor
 			virtual ~ActivityModel();
@@ -142,8 +266,11 @@ namespace opti
 			nlopt::opt opt_actmod;
 
 			// configuration data for nlopt instance (get from GEMSFIT_input.dat)
+			/// name of the optimization algorithm from NLOPT library
 			string OptAlgo;
+			/// number of threads for parallel execution
 			int OptThreads;
+			/// 
 			double OptTolRel;
 			double OptTolAbs;
 			int OptMaxEval; 		
@@ -156,11 +283,13 @@ namespace opti
 			int OptNmultistart;
 			string OptHybridAlgo;
 			double OptInitStep;
-
+			double OptScaleParam;
+			bool OptNormParam;
+			double OptBoundPerc;
+			
 			vector<double> OptStatOnlyBestFitParam;
 			double OptStatOnlySSR;
 			bool OptEquil;
-
 
 			bool test;
 
@@ -172,29 +301,9 @@ namespace opti
 			// printing information (get from GEMSFIT_input.dat)
 			PlotFit* Plot_ActMod;
 
-/*			typedef struct 
-			{
-				std::vector<double> print_temperatures; 
-				std::vector<double> print_pressures; 
-				std::vector<double> print_molalities; 
-				string print_filename;
-				string print_format;
-				int print_code;
-				string print_xlabel;
-				string print_ylabel;
-				string print_head;
-			} my_plotting_info;
-			my_plotting_info* plotting_info;
-*/
 
-			// struct keeping the constraint data (get from GEMSFIT_input.dat)
-/*			typedef struct 
-			{    
-			    int id;
-		    	double OptUpConstraints;
-    			double OptLoConstraints;
-			} my_constraint_data;
-*/			typedef struct 
+			/// struct holding constraint values (retrieved from GEMSFIT_input.dat)
+			typedef struct 
 			{    
 			    int id;
 		    	double Constraints;
@@ -204,6 +313,9 @@ namespace opti
 
 			// Populate nlopt instance
 			virtual void set_nlopt_param( );			
+
+			// Normalize init vector, bounds and constraints
+			virtual void normalize_params( const vector<double> initguesses );
 
 			// NLopt return codes
 			virtual void print_return_message( const int result );
@@ -217,6 +329,7 @@ namespace opti
 			// Initialize hybrid optimization object and assign constraints and bounds
 			virtual void build_hybrid_optim( nlopt::opt &opt_hybrid_actmod, std::vector<double> &optv_, std::vector<System_Properties*> *systems, int &countit, double &sum_of_squares );
 
+			// initialize optimization 
 			virtual void init_optim( std::vector<double> &optv_, std::vector<System_Properties*> *sys, int &countit, double &sum_of_squares );			
 
             // Initialize multistart optimization object and assign constraints and bounds

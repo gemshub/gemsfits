@@ -1,9 +1,36 @@
-#include <stdio.h> // ??
+/* 
+*	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
+*
+*	 This file is part of the thermodynamic fitting program GEMSFIT.
+*
+*    GEMSFIT is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    GEMSFIT is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU  General Public License for more details.
+*
+*    You should have received a copy of the GNU General Public License
+*    along with GEMSFIT.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+/**
+	@mainpage GEMSFIT - fitting thermodynamic data
+	@ author Ferdinand F. Hingerl
+ 	
+	GEMFSIT - fitting tool for thermodynamic data
+*/
+
+#include <stdio.h>
 #include <iostream>
 #include <vector>
 #include <string>
 #include <cmath>
-#include <nlopt.hpp> // nonlinear optimization library http://openopt.org/nlopt ab initio
+#include <nlopt.hpp>
 
 #ifdef USE_MPI
 #include <mpi.h>
@@ -28,13 +55,6 @@ namespace bfs=boost::filesystem;
 
 int countit = 0;
 
-System_Specifications sysspec;
-
-
-typedef struct
-{
-	double a,b,c,d;
-}my_constraint_data;
 
 void debug( System_Properties* , Opt_Vector, vector<System_Properties*> systems ); 
 
@@ -44,6 +64,8 @@ void debug( System_Properties* , Opt_Vector, vector<System_Properties*> systems 
  
 int main( int argc, char *argv[] )
 {
+
+
 	// Create output directory
 	if ( !bfs::exists( "output_GEMSFIT" ) )
 		bfs::create_directory("output_GEMSFIT");
@@ -85,16 +107,10 @@ cout<<"48"<<endl;
 	elapsed_time = - MPI_Wtime();
 #endif	
 
-cout<<"54"<<endl;
-	// Create instance of ActivityModel class (in future versions: choose between different derived classes from base class Optimization)
-	opti::ActivityModel elvis;
-
 
 	// Define first system
-	sysspec.meas_db_ 	 = "cacl2_meas_temp";
-	sysspec.param_file_	 = "CaCl2-param.dat";
-	System_Properties* newsys = new System_Properties( sysspec );
-	 
+	System_Properties* newsys = new System_Properties();
+
 	// Define further systems
 
 		
@@ -108,6 +124,9 @@ cout<<"54"<<endl;
 	// Create optimization_vector class and pass pointers to systems
 	Opt_Vector optim( systems );
 
+	// Create instance of ActivityModel class (in future versions: choose between different derived classes from base class Optimization)
+	opti::ActivityModel elvis( optim.opt );
+
 	
 	// DEBUG: print some variables	
 	debug( newsys, optim, systems);
@@ -115,7 +134,6 @@ cout<<"54"<<endl;
 
 	if( optim.opt.size()>0 )
 	{	
-cout << " main 118 " << endl;	
 		// 0 = optimization with full statistics, 1 = optimization with only basic statistics 
 		if( elvis.OptDoWhat == 0 || elvis.OptDoWhat == 1 )
 		{
@@ -150,26 +168,17 @@ cout << " main 118 " << endl;
 			cout<<endl;
 
 
-			// Print part of the resulting fit
-			elvis.print_results( optim.opt, &systems );
 
 			cout<<"pid : "<<pid<<" after print_results, back in main, sum_of_squares "<<sum_of_squares<<endl;
 		}
 	}
-	else
+	else // Compute Residuals directly without fitting
 	{
-cout << " main 140 " << endl;	
 
 		// Directly call TSolMod wrapper
 		opti::ActMod_tsolmod_wrap( sum_of_squares, optim.opt, newsys );
 
-		// Print part of the resulting fit
-		elvis.print_results( optim.opt, &systems );
-	
 	}	
-
-
-
 
 
 	// Perform statistical analysis: Instantiate object of Statistics class
@@ -180,6 +189,10 @@ cout << " main 140 " << endl;
 	// perform basic statistical analysis
 	stat_elvis.basic_stat( optim.opt, &systems );
 
+	// Print part of the resulting fit
+	elvis.print_results( optim.opt, &systems );
+
+
 	countit = 0;		
 
 	// 0 = optimization with full statistics, 2 = only statistics
@@ -188,6 +201,7 @@ cout << " main 140 " << endl;
 		
 		if( stat_elvis.MCbool == 1 )
 		{
+			cout << " ... performing Monte Carlo based confidence interval generation ... " << endl;
 			// Generate confidence intervals by Monte Carlo Simulation
 			stat_elvis.MC_confidence_interval( &elvis, optim.opt, &systems, countit );
 		}
@@ -225,25 +239,35 @@ return 0;
 
 void debug( System_Properties* cacl2, Opt_Vector optim, vector<System_Properties*> systems )
 {
-	cout<<"cacl2->sysdata->temperature[10] = "<<cacl2->sysdata->temperature[10]<<endl;
-	cout<<"cacl2->sysparam->aIPc[10] = "<<cacl2->sysparam->aIPc[10]<<endl;
-	cout<<"cacl2->phase_name = "<<cacl2->phase_name<<endl;
+	// GEMSFIT logfile
+	const char path[200] = "output_GEMSFIT/GEMSFIT.log";
+	ofstream fout;
+	fout.open(path, ios::app);						
+	if( fout.fail() )
+	{ cout<<"Output fileopen error"<<endl; exit(1); }
 
-	cout<<"systems[0]->sysdata->temperature[10] = "<<systems[0]->sysdata->temperature[10]<<endl;
-	cout<<"systems[0]->phase_name = "<<systems[0]->phase_name<<endl;
 
-	cout<<"optim.opt.size()="<<optim.opt.size()<<endl;
+	fout<<"cacl2->sysdata->temperature[10] = "<<cacl2->sysdata->temperature[10]<<endl;
+	fout<<"cacl2->sysparam->aIPc[10] = "<<cacl2->sysparam->aIPc[10]<<endl;
+	fout<<"cacl2->phase_name = "<<cacl2->phase_name<<endl;
+
+	fout<<"systems[0]->sysdata->temperature[10] = "<<systems[0]->sysdata->temperature[10]<<endl;
+	fout<<"systems[0]->phase_name = "<<systems[0]->phase_name<<endl;
+
+	fout<<"optim.opt.size()="<<optim.opt.size()<<endl;
 	for( unsigned int i=0; i<optim.opt.size(); i++)
 	{
-		cout<<i<<endl;
-		cout<<"optim.opt["<<i<<"] = "<<optim.opt[i]<<endl;
-		cout<<"optim.fit_param_type["<<i<<"] = "<<optim.fit_param_type[i]<<endl;
-		cout<<"optim.fit_param_col["<<i<<"] = "<<optim.fit_param_col[i]<<endl;
-		cout<<"optim.fit_species[0]["<<i<<"] = "<<optim.fit_species[0][i]<<endl;
-		cout<<"optim.fit_species[1]["<<i<<"] = "<<optim.fit_species[1][i]<<endl;	
-		cout<<"cacl2->fit_indices[0]["<<i<<"] = "<<cacl2->fit_indices[0][i]<<endl;
-		cout<<"cacl2->fit_indices[1]["<<i<<"] = "<<cacl2->fit_indices[1][i]<<endl;
-	};
+		fout<<i<<endl;
+		fout<<"optim.opt["<<i<<"] = "<<optim.opt[i]<<endl;
+		fout<<"optim.fit_param_type["<<i<<"] = "<<optim.fit_param_type[i]<<endl;
+		fout<<"optim.fit_param_col["<<i<<"] = "<<optim.fit_param_col[i]<<endl;
+		fout<<"optim.fit_species[0]["<<i<<"] = "<<optim.fit_species[0][i]<<endl;
+		fout<<"optim.fit_species[1]["<<i<<"] = "<<optim.fit_species[1][i]<<endl;	
+		fout<<"cacl2->fit_indices[0]["<<i<<"] = "<<cacl2->fit_indices[0][i]<<endl;
+		fout<<"cacl2->fit_indices[1]["<<i<<"] = "<<cacl2->fit_indices[1][i]<<endl;
+	}
+
+	fout.close();
 }
 
 

@@ -1,3 +1,35 @@
+/* 
+*	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
+*
+*	 This file is part of the thermodynamic fitting program GEMSFIT.
+*
+*    GEMSFIT is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    GEMSFIT is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU  General Public License for more details.
+*
+*    You should have received a copy of the GNU General Public License
+*    along with GEMSFIT.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+/**
+ *	@file system_properties.cpp
+ *
+ *	@brief this source file contains implementations of the System_Properties class, 
+ *	which retrievs and stores data related to the chemical system setup.    
+ *
+ *	@author Ferdinand F. Hingerl
+ *
+ * 	@date 09.04.2012 
+ *
+ */
+
 #include <iostream>
 #include <cstdlib>
 #include <vector>
@@ -9,15 +41,10 @@
 
 using namespace std;
 
-System_Properties::System_Properties( System_Specifications system_ ) // constructor
+System_Properties::System_Properties( )
 {
-	if( system_.meas_db_.empty() )
-	{
-		cout<<" Class System_Properties not correctly initialized !! "<<endl;
-		exit(1); 
-	};
-	meas_db	    = system_.meas_db_;
-//	param_file  = system_.param_file_;
+
+	param_file  = "GEMSFIT_input.dat";
 	
 	// For parameter optimization do not use printing of results
 	printfile = false;
@@ -25,8 +52,8 @@ System_Properties::System_Properties( System_Specifications system_ ) // constru
 	// For parameter optimization do not use parallelization of the Monte Carlo loop (=true). Instead, execute loop over measurements within objective function in parallel (=false). 
 	MC_MPI = false;
 
-
-	data_meas = new Data_Manager;  // allocate memory for data_meas of class Data Manager
+	// Initialize data storage class
+	data_meas = new Data_Manager;
 
 	// Initialize pointer to instance of sysparam object
 	sysparam = new parameters;
@@ -45,12 +72,10 @@ System_Properties::~System_Properties()
 void System_Properties::getparam( parameters* sysparam )
 {	
 
-cout<<"line 48"<<endl;
-
 	// Variable declarations
 	vector<string> data, aIPc_s1, aDCc_s1;
 	string line, allparam;
-    	string aIPc_s, aDCc_s, aIPx_s, sub_aIPc, sub_aDCc, sub_aIPx, ActName_s;
+    string aIPc_s, aDCc_s, aIPx_s, sub_aIPc, sub_aDCc, sub_aIPx, ActName_s;
 	string LsMod_s, LsMdc_s, SysName_s, PhaName_s, SpecName_s, SpecCharge_s; 
 	string sub_LsMod, sub_LsMdc, sub_SysName, sub_SpecCharge, sub_PhaName, sub_SpecName, sub_ActName;
 	int pos_start, pos_end;
@@ -58,8 +83,8 @@ cout<<"line 48"<<endl;
  	ifstream param_stream;
 
 
-	// Keywords to locate in the input file - position
-	string f7("<SystemName>");	
+	// Keywords
+	string f7("<SystemName>");		
 	string f8("<PhaseName>");		
 	string f9("<DepComp>");	
 	string f10("<DepCompCharge>");		
@@ -74,10 +99,7 @@ cout<<"line 48"<<endl;
 
 
 	// Read parameter file into string 
-	//param_stream.open("NaCl-param.dat");
-    cout<<"param_file.c_str() = "<<param_file.c_str()<<endl;
-	//param_stream.open(param_file.c_str());	
-	param_stream.open("GEMSFIT_input.dat");	
+	param_stream.open(param_file.c_str());	
 	if( param_stream.fail() )
 	{
 		cout << "Opening of file "<<param_file<<" failed !!"<<endl;
@@ -85,11 +107,18 @@ cout<<"line 48"<<endl;
 	}
 	while( getline(param_stream, line) ) 
 	{
-		data.push_back(line); // puts each line into data (vector<string>)??
+		data.push_back(line);
 	} 
 	param_stream.close();
 	for( i=0; i < data.size(); i++ )
-	allparam += data[i]; // adds each line to the string allparam
+	allparam += data[i];
+
+	// GEMSFIT logfile
+	const char path[200] = "output_GEMSFIT/GEMSFIT.log";
+	ofstream fout;
+	fout.open(path, ios::app);						
+	if( fout.fail() )
+	{ cout<<"Output fileopen error"<<endl; exit(1); }
 
 
 	// System name
@@ -101,20 +130,20 @@ cout<<"line 48"<<endl;
 	{
         SysName_ss >> sub_SysName;
 		system_name = sub_SysName;
-	};	
-	cout<<"system_name = "<<system_name<<endl;
+	}	
+	fout<<"system_name = "<<system_name<<endl;
 
 	// Phase name
 	pos_start = allparam.find(f8);
-	pos_end   = allparam.find(f4,pos_start); // search from position start on 
-	PhaName_s = allparam.substr((pos_start+f8.length()),(pos_end-pos_start-f8.length())); // makes a substring from first arg with a length of the second arg
-	istringstream PhaName_ss(PhaName_s); // Input string stream class
+	pos_end   = allparam.find(f4,pos_start);
+	PhaName_s = allparam.substr((pos_start+f8.length()),(pos_end-pos_start-f8.length()));
+	istringstream PhaName_ss(PhaName_s);
 	for( i=0; i<1; i++)
 	{
         PhaName_ss >> sub_PhaName;
-		phase_name = sub_PhaName; // Names stored in phase_name
-	};	
-	cout<<"phase_name = "<<phase_name<<endl;
+		phase_name = sub_PhaName;
+	}	
+	fout<<"phase_name = "<<phase_name<<endl;
 
 
 	//species
@@ -125,9 +154,9 @@ cout<<"line 48"<<endl;
 	do
 	{
         SpecName_ss >> sub_SpecName;
-		species.push_back(sub_SpecName); // species is a vector
+		species.push_back(sub_SpecName);
 	}while(SpecName_ss);	
-	cout<<"species[0] = "<<species[0]<<" | species[1] = "<<species[1]<<" | species[2] = "<<species[2]<<endl;
+	fout<<"species[0] = "<<species[0]<<" | species[1] = "<<species[1]<<" | species[2] = "<<species[2]<<endl;
 
 
 	//charges
@@ -141,10 +170,10 @@ cout<<"line 48"<<endl;
 		charges.push_back(atof(sub_SpecCharge.c_str()));
 	}while(SpecCharge_ss);
 	charges.pop_back();
-	cout<<"charges[0] = "<<charges[0]<<" | charges[1] = "<<charges[1]<<" | charges[2] = "<<charges[2]<<endl;
+	fout<<"charges[0] = "<<charges[0]<<" | charges[1] = "<<charges[1]<<" | charges[2] = "<<charges[2]<<endl;
 
 
-	// dimensionalities of the parameter arrays // They are stored in a calss/struct parameters
+	// dimensionalities of the parameter arrays
 	pos_start = allparam.find(f5);
 	pos_end   = allparam.find(f4,pos_start);
 	LsMod_s = allparam.substr((pos_start+f5.length()),(pos_end-pos_start-f5.length()));
@@ -152,11 +181,11 @@ cout<<"line 48"<<endl;
 	for( i=0; i<3; i++)
 	{
         LsMod_ss >> sub_LsMod;
-		if( i==0 ){	sysparam->rows_aIPc = atoi(sub_LsMod.c_str()); }; //sysparam a pointer of class parameters  that contain rows_aIPc ...etc
+		if( i==0 ){	sysparam->rows_aIPc = atoi(sub_LsMod.c_str()); };
 		if( i==1 ){	sysparam->cols_aIPx = atoi(sub_LsMod.c_str()); };
 		if( i==2 ){	sysparam->cols_aIPc = atoi(sub_LsMod.c_str()); };		
-	};	
-	cout<<"sysparam->rows_aIPc = "<<sysparam->rows_aIPc<<endl;
+	}	
+	fout<<"sysparam->rows_aIPc = "<<sysparam->rows_aIPc<<endl;
 	
 	pos_start = allparam.find(f6);
 	pos_end   = allparam.find(f4,pos_start);
@@ -166,8 +195,8 @@ cout<<"line 48"<<endl;
 	{
         LsMdc_ss >> sub_LsMdc;
 		sysparam->cols_aDCc = atoi(sub_LsMdc.c_str());
-	};	
-	cout<<"sysparam->cols_aDCc = "<<sysparam->cols_aDCc<<endl;
+	}	
+	fout<<"sysparam->cols_aDCc = "<<sysparam->cols_aDCc<<endl;
 
 	// Get aIPx vector
 	pos_start = allparam.find(f1);
@@ -178,7 +207,7 @@ cout<<"line 48"<<endl;
 	{
 		aIPx_ss >> sub_aIPx;
 		//cout<<"sub_aIPx = "<<sub_aIPx<<endl;
-		sysparam->aIPx.push_back(atoi(sub_aIPx.c_str())); // vector of type class parameters
+		sysparam->aIPx.push_back(atoi(sub_aIPx.c_str()));
 	} while(aIPx_ss);
 	sysparam->aIPx.pop_back();
 	//cout<<sysparam->aIPx[0]<<" "<<sysparam->aIPx[1]<<" "<<sysparam->aIPx[2]<<" "<<sysparam->aIPx[3]<<endl;
@@ -195,6 +224,7 @@ cout<<"line 48"<<endl;
 	{
 		aIPc_ss >> sub_aIPc;
 		aIPc_s1.push_back(sub_aIPc);
+		//cout<<"sub_aIPc = "<<sub_aIPc<<endl;
 		if( aIPc_s1[aIPc_s1.size()-1].compare(0,1,sd) == 0 )
 		{
 			sysparam->aIPc_fit_ind.push_back(aIPc_s1.size()-1);
@@ -235,7 +265,7 @@ cout<<"line 48"<<endl;
 	ActName_s = allparam.substr((pos_start+f11.length()),(pos_end-pos_start-f11.length()));
 	istringstream ActName_ss(ActName_s);
         ActName_ss >> sub_ActName;
-	if( ! strncmp( sub_ActName.c_str(), "ELVIS", 20 ) ) // string compare 20 max number of characters to compare, if found returns 0
+	if( ! strncmp( sub_ActName.c_str(), "ELVIS", 20 ) )
 	{
 		activity_model = ELVIS;
 	}
@@ -246,6 +276,10 @@ cout<<"line 48"<<endl;
 	else if( ! strncmp( sub_ActName.c_str(), "EUNIQUAC", 20 ) )
 	{
 		activity_model = EUNIQUAC;
+	}	
+	else if( ! strncmp( sub_ActName.c_str(), "SIT", 20 ) )
+	{
+		activity_model = SIT;
 	}
 	else
 	{
@@ -254,7 +288,7 @@ cout<<"line 48"<<endl;
 		exit(1);
 	}
 	
-	cout<<"activity_model = "<< activity_model <<endl;	
+	fout<<"activity_model = "<< activity_model <<endl;	
 
 
 	// Assert that the parameter given in the GEMSFIT chemical system input file are compatible with the corresponding values in the GEMS3K input file 
@@ -281,7 +315,7 @@ cout<<"line 48"<<endl;
 		if( index_phase < 0 )
 			throw index_phase;
 	}
-	catch( long e ) // somehow in catch enters a integer then it means the indexes between GEMSFIT and GEMS3K don't match??
+	catch( long e )
 	{
 		cout<<endl;
 		cout<<" Phase name in GEMSFIT chemical system file has no corresponding phase name in GEMS3K input file !!!! "<<endl;
@@ -293,7 +327,7 @@ cout<<"line 48"<<endl;
 		
 
 	// Get parameter array dimension as specified in GEMS3K input file
-    node->Get_NPar_NPcoef_MaxOrd_NComp_NP_DC ( &NPar, &NPcoef, &MaxOrd, &NComp, &NP_DC, &index_phase );
+	node->Get_NPar_NPcoef_MaxOrd_NComp_NP_DC ( NPar, NPcoef, MaxOrd, NComp, NP_DC, index_phase );
 	if( (sysparam->cols_aDCc * charges.size()) != (NComp*NP_DC) )
 	{
 		cout<<endl;     	   
@@ -328,8 +362,8 @@ cout<<"line 48"<<endl;
 	}
 
 
-	// Check if temperature and pressure is in the DATACH lookup array. Input vs GEMS3K
-	for( i=0; i<sysdata->pressure.size(); i++ )	// sysdata is a pointer of class measdata
+	// Check if temperature and pressure is in the DATACH lookup array
+	for( i=0; i<sysdata->pressure.size(); i++ )	
 	{	
         if( (node->check_TP( sysdata->temperature.at(i), 100000 * sysdata->pressure.at(i)) == false &&  node->check_grid_TP( sysdata->temperature.at(i), 100000 * sysdata->pressure.at(i) ) < 0. ) /*&& node->check_grid_TP( sysdata->temperature.at(i), 100000 * sysdata->pressure.at(i) ) < 0*/ )
 		{
@@ -345,6 +379,6 @@ cout<<"line 48"<<endl;
 
 	param_stream.close();
 
-cout<<"line 303"<<endl;
+	fout.close();
 
 }

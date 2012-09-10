@@ -1,4 +1,34 @@
+/* 
+*	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
+*
+*	 This file is part of the thermodynamic fitting program GEMSFIT.
+*
+*    GEMSFIT is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    GEMSFIT is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU  General Public License for more details.
+*
+*    You should have received a copy of the GNU General Public License
+*    along with GEMSFIT.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
+
+/**
+ *	@file plot_class.cpp
+ *
+ *	@brief this source file contains the implementation of the PlotFit class, 
+ *	which ia a wrapper for the dislin librarby and contains functions for data plotting.   
+ *
+ *	@author Ferdinand F. Hingerl
+ *
+ * 	@date 09.04.2012 
+ *
+ */
 #include "plot_class.h"
 
 
@@ -66,6 +96,14 @@ void PlotFit::set_plotfit_vars()
 		allparam += data[i];
 
 
+		// GEMSFIT logfile
+		const char path[200] = "output_GEMSFIT/GEMSFIT.log";
+		ofstream fout;
+		fout.open(path, ios::app);						
+		if( fout.fail() )
+		{ cout<<"Output fileopen error"<<endl; exit(1); }
+
+
 				// Printing: temperatures
 		string PrintTemps_s;
 		std::vector<std::string> tokens;
@@ -76,15 +114,15 @@ void PlotFit::set_plotfit_vars()
 
 		if( PrintTemps_s.empty() )
 		{
-			std::cout<<"Note: no temperatures for printing specified ..."<<endl;
+			fout<<"Note: no temperatures for printing specified ..."<<endl;
 		}
 		
 		BOOST_FOREACH( const std::string& i, tokens ) 
 		{
 		    plotting_info->print_temperatures.push_back(atof(i.c_str()));
 		}
-for( i=0; i< (int) plotting_info->print_temperatures.size(); i++ )
-	cout<<"plotting_info->print_temperatures["<<i<<"] = "<<plotting_info->print_temperatures[i]<<endl;
+		for( i=0; i< (int) plotting_info->print_temperatures.size(); i++ )
+			fout<<"plotting_info->print_temperatures["<<i<<"] = "<<plotting_info->print_temperatures[i]<<endl;
 
 
 		// Printing: pressures
@@ -98,7 +136,7 @@ for( i=0; i< (int) plotting_info->print_temperatures.size(); i++ )
 		    PrintPress_ss >> sub_PrintPress;
 			if( sub_PrintPress.empty() )
 			{ 
-				cout<<"Note: no pressures for printing specified ..."<<endl; break; 
+				fout<<"Note: no pressures for printing specified ..."<<endl; break; 
 			}
 			else
 			{
@@ -106,8 +144,8 @@ for( i=0; i< (int) plotting_info->print_temperatures.size(); i++ )
 			}
 		}while(PrintPress_ss);	
 		plotting_info->print_pressures.pop_back();
-for( i=0; i< (int) plotting_info->print_pressures.size(); i++ )
-	cout<<"plotting_info->print_pressures["<<i<<"] = "<<plotting_info->print_pressures[i]<<endl;
+		for( i=0; i< (int) plotting_info->print_pressures.size(); i++ )
+			fout<<"plotting_info->print_pressures["<<i<<"] = "<<plotting_info->print_pressures[i]<<endl;
 
 
 		// Printing: molalities
@@ -121,7 +159,7 @@ for( i=0; i< (int) plotting_info->print_pressures.size(); i++ )
 		    PrintMols_ss >> sub_PrintMols;
 			if( sub_PrintMols.empty() )
 			{ 
-				cout<<"Note: no molalities for printing specified ..."<<endl; break; 
+				fout<<"Note: no molalities for printing specified ..."<<endl; break; 
 			}
 			else if( sub_PrintMols == "-" ) 
 			{
@@ -133,8 +171,8 @@ for( i=0; i< (int) plotting_info->print_pressures.size(); i++ )
 			}
 		}while(PrintMols_ss);	
 		plotting_info->print_molalities.pop_back();
-for( i=0; i< (int) plotting_info->print_molalities.size(); i++ )
-	cout<<"plotting_info->print_molalities["<<i<<"] = "<<plotting_info->print_molalities[i]<<endl;
+		for( i=0; i< (int) plotting_info->print_molalities.size(); i++ )
+			fout<<"plotting_info->print_molalities["<<i<<"] = "<<plotting_info->print_molalities[i]<<endl;
 
 
 		// Printing: output file format
@@ -144,10 +182,10 @@ for( i=0; i< (int) plotting_info->print_molalities.size(); i++ )
 		PrintForm_s = allparam.substr((pos_start+s3.length()),(pos_end-pos_start-s3.length()));
 		if( PrintForm_s.empty() )
 		{
-			std::cout<<"Note: no output format for printing specified ..."<<endl;
+			fout<<"Note: no output format for printing specified ..."<<endl;
 		}
 		plotting_info->print_format = PrintForm_s;
-cout<<"print_format = "<<plotting_info->print_format<<endl;
+		fout<<"print_format = "<<plotting_info->print_format<<endl;
 
 
 		// Printing: output filename
@@ -157,10 +195,10 @@ cout<<"print_format = "<<plotting_info->print_format<<endl;
 		PrintFname_s = allparam.substr((pos_start+s4.length()),(pos_end-pos_start-s4.length()));
 		if( PrintFname_s.empty() )
 		{
-			std::cout<<"Note: no filename for printing specified ..."<<endl;
+			fout<<"Note: no filename for printing specified ..."<<endl;
 		}
 		plotting_info->print_filename = PrintFname_s + "." + plotting_info->print_format;
-cout<<"plotting_info->print_filename = "<<plotting_info->print_filename<<endl;
+		fout<<"plotting_info->print_filename = "<<plotting_info->print_filename<<endl;
 
 
 		// Printing: code of measurement values that need to be printed (e.g. 0 -> only activity coefficient data will be printed)
@@ -170,10 +208,10 @@ cout<<"plotting_info->print_filename = "<<plotting_info->print_filename<<endl;
 		PrintCode_s = allparam.substr((pos_start+s5.length()),(pos_end-pos_start-s5.length()));
 		if( PrintCode_s.empty() )
 		{
-			std::cout<<"Note: no code given for measurement values which have to be printed ..."<<endl;
+			fout<<"Note: no code given for measurement values which have to be printed ..."<<endl;
 		}
 		plotting_info->print_code = atoi(PrintCode_s.c_str());
-cout<<"plotting_info->print_code = "<<plotting_info->print_code<<endl;
+		fout<<"plotting_info->print_code = "<<plotting_info->print_code<<endl;
 
 
 		// Printing: label of x-axis
@@ -183,10 +221,10 @@ cout<<"plotting_info->print_code = "<<plotting_info->print_code<<endl;
 		PrintXaxis_s = allparam.substr((pos_start+s6.length()),(pos_end-pos_start-s6.length()));
 		if( PrintXaxis_s.empty() )
 		{
-			std::cout<<"Note: no label for x-axis for printing specified ..."<<endl;
+			fout<<"Note: no label for x-axis for printing specified ..."<<endl;
 		}
 		plotting_info->print_xlabel = PrintXaxis_s;
-cout<<"plotting_info->print_xlabel = "<<plotting_info->print_xlabel<<endl;
+		fout<<"plotting_info->print_xlabel = "<<plotting_info->print_xlabel<<endl;
 
 
 		// Printing: label of y-axis
@@ -196,10 +234,10 @@ cout<<"plotting_info->print_xlabel = "<<plotting_info->print_xlabel<<endl;
 		PrintYaxis_s = allparam.substr((pos_start+s7.length()),(pos_end-pos_start-s7.length()));
 		if( PrintYaxis_s.empty() )
 		{
-			std::cout<<"Note: no label for y-axis for printing specified ..."<<endl;
+			fout<<"Note: no label for y-axis for printing specified ..."<<endl;
 		}
 		plotting_info->print_ylabel = PrintYaxis_s;
-cout<<"plotting_info->print_ylabel = "<<plotting_info->print_ylabel<<endl;
+		fout<<"plotting_info->print_ylabel = "<<plotting_info->print_ylabel<<endl;
 
 
 		// Printing: headline of plot
@@ -209,14 +247,14 @@ cout<<"plotting_info->print_ylabel = "<<plotting_info->print_ylabel<<endl;
 		PrintHead_s = allparam.substr((pos_start+s8.length()),(pos_end-pos_start-s8.length()));
 		if( PrintHead_s.empty() )
 		{
-			std::cout<<"Note: no headline of plot for printing specified ..."<<endl;
+			fout<<"Note: no headline of plot for printing specified ..."<<endl;
 		}
 		plotting_info->print_head = PrintHead_s;
-cout<<"plotting_info->print_head = "<<plotting_info->print_head<<endl;
-
+		fout<<"plotting_info->print_head = "<<plotting_info->print_head<<endl;
 
 
 		param_stream.close();
+		fout.close();
 }
 
 

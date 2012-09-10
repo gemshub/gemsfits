@@ -1,3 +1,35 @@
+/* 
+*	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
+*
+*	 This file is part of the thermodynamic fitting program GEMSFIT.
+*
+*    GEMSFIT is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    GEMSFIT is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU  General Public License for more details.
+*
+*    You should have received a copy of the GNU General Public License
+*    along with GEMSFIT.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+ *	@file data_manager.h
+ *
+ *	@brief this header file contains defitions of the data manager class, 
+ *	which retrieves and stores data from thre GEMSFIT input file as well as
+ *	the measurement data file or PostgreSQL server. 
+ *
+ *	@author Ferdinand F. Hingerl
+ *
+ * 	@date 09.04.2012 
+ *
+ */
+
 #ifndef _data_manager_h_
 #define _data_manager_h_
 
@@ -24,20 +56,33 @@ using namespace std;
 using namespace boost;
 
 
-// Manager of the Measured data from different type of files
 
-
+///	The Data_Manager class retrieves and stores optimization-specific data from the GEMSFIT input file as well as measurement data from a *.csv file or PostgreSQL server. 
 class Data_Manager
 {
 
 	public:
-		// Constructor
+		/** 
+		* Constructor for the Data_Manager class. 
+		* Function reads parameters for database connection from GEMSFIT_input.dat,
+		* creates a pointer to an instance of the measurement data struct object (measdata),
+		* then it retrieves measurement data from the PosgreSQL server or a CSV file.
+		* Finally, the species from database are retrived and form vectors of independent component names
+		*
+		* @author FFH
+		* @date 09.04.2012
+		*/	
 		Data_Manager( );
 
-		// Destructor		
+		/**
+		* Destructor of the Data_Manager class. This functions deletes frees the memory reserved for the measurement data struct creates by the constructor of Data_Manager.		
+		*
+		* @author FFH
+		* @date 09.04.2012
+		*/	
 		virtual ~Data_Manager( );
 
-		// struct holding measurement data
+		/// struct holding measurement data
 		struct measdata
 		{
 			typedef vector<int>     int_v;
@@ -82,40 +127,59 @@ class Data_Manager
 
 		measdata* sysdata;
 
-		// get PostgreSQL database connection parameters
+		/** 
+		* get PostgreSQL database connection parameters
+		* @author FFH
+		* @date 09.04.2012
+		*/	
 		void get_db_specs( );
 
-		// retrieve data from PostgreSQL database
+		/** 
+		* Read measurement data from PosgreSQL server
+		* @author FFH
+		* @param sysdata   pointer to measdata struct which holds all measurement data.
+		* @date 09.04.2012
+		*/	
 		void get_DB( measdata* sysdata );	
 
-		// retrieve data from CSV file	// comma separated values
+		/** 
+		* Read measurement data from CSV file
+		* @author FFH
+		* @param sysdata   pointer to measdata struct which holds all measurement data.
+		* @date 09.04.2012
+		*/	
 		void get_CSV( measdata* sysdata );
 		
-		// read species from database and form vectors of independent component names
+		/** 
+		* read species from database and form vectors of independent component names
+		* @author FFH
+		* @param sysdata   pointer to measdata struct which holds all measurement data.
+		* @date 09.04.2012
+		*/	
 		void get_ic( measdata* sysdata );
 
 	private:
 
-		// get measurement data from CSV file (0) or PostgreSQL database (1)
+		/// get measurement data from CSV file (0) or PostgreSQL database (1)
 		int datasource;
 
-		// name of CSV file containing measurement data
+		/// name of CSV file containing measurement data
 		string CSVfile;
 
 		// Database connection parameters
-		// database name			
+		/// PostgreSQL database: database name			
 		string DBname;
 
-		// table name
+		/// PostgreSQL database: table name
 		string tablename;
 
-		// username
+		/// PostgreSQL database: username
 		string username;
 
-		// password
+		/// PostgreSQL database: password
 		string passwd;
 	
-        // psql server
+        /// PostgreSQL database: URL of psql server
         string psql_server;    
 
 };

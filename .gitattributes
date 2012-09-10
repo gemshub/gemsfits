@@ -1,4 +1,6 @@
 * text=auto !eol
+docs/Developing[!!-~]GEMSFIT(GUI)_GEMS3K.pdf -text
+docs/HowToDevelopGEMSFIT(GUI).html -text
 gemsfit/docs/txt/HowToBuildGEMSFIT.txt -text
 gemsfit/gemsfit.pro -text
 gemsfit/gemsfits.pro -text

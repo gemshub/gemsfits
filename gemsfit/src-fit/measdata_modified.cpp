@@ -1,3 +1,35 @@
+/* 
+*	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
+*
+*	 This file is part of the thermodynamic fitting program GEMSFIT.
+*
+*    GEMSFIT is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    GEMSFIT is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU  General Public License for more details.
+*
+*    You should have received a copy of the GNU General Public License
+*    along with GEMSFIT.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+/**
+ *	@file measdata_modified.cpp
+ *
+ *	@brief this source file contains the implementation of the functions of data manager class, 
+ *	which retrieve measurement data from the measurement data *csv file or PostgreSQL server. 
+ *
+ *	@author Ferdinand F. Hingerl
+ *
+ * 	@date 09.04.2012 
+ *
+ */
+
 /* Processed by ecpg (4.7.0) */
 /* These include files are added by the preprocessor */
 #include <ecpglib.h>
@@ -20,6 +52,15 @@ void Data_Manager::get_CSV( measdata* sysdata )
 	string line, alldata, headline;
  	ifstream data_stream;
 	vector<string> data;
+
+	// GEMSFIT logfile
+	const char path[200] = "output_GEMSFIT/GEMSFIT.log";
+	ofstream fout;
+	fout.open(path, ios::app);						
+	if( fout.fail() )
+	{ cout<<"Output fileopen error"<<endl; exit(1); }
+
+
 
 	// datatypes that should be stored in measurement data file
 	vector<string> columns;
@@ -65,8 +106,6 @@ void Data_Manager::get_CSV( measdata* sysdata )
 	replace_all( headline, "\"", "");
 	replace_all( headline, ";", " ");
 
-	cout << headline << endl;
-
 	string buf;                  // buffer string
 	stringstream ss( headline ); // Insert the string into a stream
 
@@ -76,7 +115,6 @@ void Data_Manager::get_CSV( measdata* sysdata )
 		tokens.push_back(buf);
 
 	cols = (int) tokens.size();
-	cout << " 67: cols = " << cols << endl;
 
 
 	// read data
@@ -85,7 +123,7 @@ void Data_Manager::get_CSV( measdata* sysdata )
 	while( getline(data_stream, line, ';') ) 
 	{
 		data.push_back(line);
-		cout << data.at(i)<<endl;
+		fout << data.at(i)<<endl;
 		i++; 
 	} 
 	data_stream.close();
@@ -106,7 +144,7 @@ void Data_Manager::get_CSV( measdata* sysdata )
 	catch ( int excp )	
 	{
 
-		cout << endl;
+		fout << endl;
 		cout << " Something wrong with reading the CSV file ! " << endl;
 		switch( excp )
 		{
@@ -303,7 +341,7 @@ void Data_Manager::get_CSV( measdata* sysdata )
 	}
 
 
-
+	fout.close();
 }
 
 
@@ -311,6 +349,14 @@ void Data_Manager::get_CSV( measdata* sysdata )
 //void System_Properties::get_DB( measdata* sysdata, string tablename )
 void Data_Manager::get_DB( measdata* sysdata )
 {
+
+	// GEMSFIT logfile
+	const char path[200] = "output_GEMSFIT/GEMSFIT.log";
+	ofstream fout;
+	fout.open(path, ios::app);						
+	if( fout.fail() )
+	{ cout<<"Output fileopen error"<<endl; exit(1); }
+
 
 	 int i=0;
 	 char dbname [ 256 ] ;	
@@ -410,7 +456,9 @@ void Data_Manager::get_DB( measdata* sysdata )
 		if (sqlca.sqlcode < 0) exit(1);		
 	}
 
-	printf("succesfully established connection to postgresql server ...\n");
+
+	fout << "succesfully established connection to postgresql server ... " << endl;
+
 
 	// Count number of rows 
 	{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, meas_table, ECPGt_EOIT, 
@@ -422,7 +470,7 @@ if (sqlca.sqlwarn[0] == 'W') sqlprint();
 
 if (sqlca.sqlcode < 0) sqlprint();
 if (sqlca.sqlcode < 0) exit(1);}
-	cout<<"rows = "<<rows<<endl;
+	fout<<"rows = "<<rows<<endl;
 	
 
 	 // Initialize vectors
@@ -472,7 +520,7 @@ if (sqlca.sqlwarn[0] == 'W') sqlprint();
 if (sqlca.sqlcode < 0) sqlprint();
 if (sqlca.sqlcode < 0) exit(1);}
 
-//	cout<<"current database: "<<dbname<<endl;
+//	fout<<"current database: "<<dbname<<endl;
 
 	
 	// Declare cursor functions for retrieving all values from the meas table
@@ -814,8 +862,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current id: %s\n", id_);	
 		if( id_i==0  ){	sysdata->id[i] = id_; };
-		if( id_i>0  ){	sysdata->id[i] = id_; cout<<"id was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->id["<<i<<"] = "<<sysdata->id[i]<<endl;
+		if( id_i>0  ){	sysdata->id[i] = id_; fout<<"id was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->id["<<i<<"] = "<<sysdata->id[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_temperature", ECPGt_EOIT, 
 	ECPGt_double,&(temperature_),(long)1,(long)1,sizeof(double), 
@@ -830,8 +878,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current temperature: %f\n", temperature_);	
 		if( temperature_i==0 ){ sysdata->temperature[i] = temperature_; };
-		if( temperature_i>0 ){ sysdata->temperature[i] = temperature_; cout<<"temperature was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->temperature["<<i<<"] = "<<sysdata->temperature[i]<<endl;
+		if( temperature_i>0 ){ sysdata->temperature[i] = temperature_; fout<<"temperature was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->temperature["<<i<<"] = "<<sysdata->temperature[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_pressure", ECPGt_EOIT, 
 	ECPGt_double,&(pressure_),(long)1,(long)1,sizeof(double), 
@@ -846,8 +894,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current pressure: %f\n", pressure_);	
 		if( pressure_i==0 ){ sysdata->pressure[i] = pressure_; };
-		if( pressure_i>0 ){ sysdata->pressure[i] = pressure_; cout<<"pressure was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->pressure["<<i<<"] = "<<sysdata->pressure[i]<<endl;
+		if( pressure_i>0 ){ sysdata->pressure[i] = pressure_; fout<<"pressure was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->pressure["<<i<<"] = "<<sysdata->pressure[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_molality_1", ECPGt_EOIT, 
 	ECPGt_double,&(molality_1_),(long)1,(long)1,sizeof(double), 
@@ -862,8 +910,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current molality_1: %f\n", molality_1_);	
 		if( molality_1_i==0 ){ sysdata->molality_1[i] = molality_1_; };	
-		if( molality_1_i>0 ){ sysdata->molality_1[i] = molality_1_; cout<<"molality_1 was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->molality_1["<<i<<"] = "<<sysdata->molality_1[i]<<endl;
+		if( molality_1_i>0 ){ sysdata->molality_1[i] = molality_1_; fout<<"molality_1 was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->molality_1["<<i<<"] = "<<sysdata->molality_1[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_molality_2", ECPGt_EOIT, 
 	ECPGt_double,&(molality_2_),(long)1,(long)1,sizeof(double), 
@@ -878,8 +926,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current molality_2: %f\n", molality_2_);	
 		if( molality_2_i==0 ){ sysdata->molality_2[i] = molality_2_; };
-		if( molality_2_i>0 ){ sysdata->molality_2[i] = molality_2_; cout<<"molality_2 was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->molality_2["<<i<<"] = "<<sysdata->molality_2[i]<<endl;
+		if( molality_2_i>0 ){ sysdata->molality_2[i] = molality_2_; fout<<"molality_2 was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->molality_2["<<i<<"] = "<<sysdata->molality_2[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_code", ECPGt_EOIT, 
 	ECPGt_int,&(code_),(long)1,(long)1,sizeof(int), 
@@ -894,7 +942,7 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current code: %i\n", code_);	
 		if( code_i==0 ){ sysdata->code[i] = code_; };
-		if( code_i>0 ){ sysdata->code[i] = code_; cout<<"code was truncated while storing in host variable !!!"<<endl; };
+		if( code_i>0 ){ sysdata->code[i] = code_; fout<<"code was truncated while storing in host variable !!!"<<endl; };
 //		cout<<"sysdata->code["<<i<<"] = "<<sysdata->code[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_val", ECPGt_EOIT, 
@@ -910,8 +958,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current val: %i\n", val_);	
 		if( val_i==0 ){ sysdata->val[i] = val_; };
-		if( val_i>0 ){ sysdata->val[i] = val_; cout<<"val was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->val["<<i<<"] = "<<sysdata->val[i]<<endl;
+		if( val_i>0 ){ sysdata->val[i] = val_; fout<<"val was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->val["<<i<<"] = "<<sysdata->val[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_other_1", ECPGt_EOIT, 
 	ECPGt_double,&(other_1_),(long)1,(long)1,sizeof(double), 
@@ -926,8 +974,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current other_1: %d\n", other_1_);	
 		if( other_1_i==0 ){ sysdata->other_1[i] = other_1_; };
-		if( other_1_i>0 ){ sysdata->other_1[i] = other_1_; cout<<"other_1 was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->other_1["<<i<<"] = "<<sysdata->other_1[i]<<endl;
+		if( other_1_i>0 ){ sysdata->other_1[i] = other_1_; fout<<"other_1 was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->other_1["<<i<<"] = "<<sysdata->other_1[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_other_2", ECPGt_EOIT, 
 	ECPGt_double,&(other_2_),(long)1,(long)1,sizeof(double), 
@@ -942,8 +990,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current other_2: %d\n", other_2_);	
 		if( other_2_i==0 ){ sysdata->other_2[i] = other_2_; };
-		if( other_2_i>0 ){ sysdata->other_2[i] = other_2_; cout<<"other_2 was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->other_2["<<i<<"] = "<<sysdata->other_2[i]<<endl;
+		if( other_2_i>0 ){ sysdata->other_2[i] = other_2_; fout<<"other_2 was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->other_2["<<i<<"] = "<<sysdata->other_2[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_other_3", ECPGt_EOIT, 
 	ECPGt_double,&(other_3_),(long)1,(long)1,sizeof(double), 
@@ -958,8 +1006,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current other_3: %d\n", other_3_);	
 		if( other_3_i==0 ){ sysdata->other_3[i] = other_3_; };
-		if( other_3_i>0 ){ sysdata->other_3[i] = other_3_; cout<<"other_3 was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->other_3["<<i<<"] = "<<sysdata->other_3[i]<<endl;
+		if( other_3_i>0 ){ sysdata->other_3[i] = other_3_; fout<<"other_3 was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->other_3["<<i<<"] = "<<sysdata->other_3[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_other_4", ECPGt_EOIT, 
 	ECPGt_double,&(other_4_),(long)1,(long)1,sizeof(double), 
@@ -974,8 +1022,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current other_4: %d\n", other_4_);	
 		if( other_4_i==0 ){ sysdata->other_4[i] = other_4_; };
-		if( other_4_i>0 ){ sysdata->other_4[i] = other_4_; cout<<"other_4 was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->other_4["<<i<<"] = "<<sysdata->other_4[i]<<endl;
+		if( other_4_i>0 ){ sysdata->other_4[i] = other_4_; fout<<"other_4 was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->other_4["<<i<<"] = "<<sysdata->other_4[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_error", ECPGt_EOIT, 
 	ECPGt_double,&(error_),(long)1,(long)1,sizeof(double), 
@@ -990,8 +1038,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current error: %d\n", error_);	
 		if( error_i==0 ){ sysdata->error[i] = error_; };
-		if( error_i>0 ){ sysdata->error[i] = error_; cout<<"error was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->error["<<i<<"] = "<<sysdata->error[i]<<endl;
+		if( error_i>0 ){ sysdata->error[i] = error_; fout<<"error was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->error["<<i<<"] = "<<sysdata->error[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_species_1_1", ECPGt_EOIT, 
 	ECPGt_char,(species_1_1_),(long)25,(long)1,(25)*sizeof(char), 
@@ -1006,8 +1054,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current species_1_1: %s\n", species_1_1_);	
 		if( species_1_1_i==0 ){ sysdata->species_1_1[i] = species_1_1_; };
-		if( species_1_1_i>0 ){ sysdata->species_1_1[i] = species_1_1_; cout<<"species_1_1 was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->species_1_1["<<i<<"] = "<<sysdata->species_1_1[i]<<endl;
+		if( species_1_1_i>0 ){ sysdata->species_1_1[i] = species_1_1_; fout<<"species_1_1 was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->species_1_1["<<i<<"] = "<<sysdata->species_1_1[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_species_1_2", ECPGt_EOIT, 
 	ECPGt_char,(species_1_2_),(long)25,(long)1,(25)*sizeof(char), 
@@ -1022,8 +1070,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current species_1_2: %s\n", species_1_2_);	
 		if( species_1_2_i==0 ){ sysdata->species_1_2[i] = species_1_2_; };
-		if( species_1_2_i>0 ){ sysdata->species_1_2[i] = species_1_2_; cout<<"species_1_2 was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->species_1_2["<<i<<"] = "<<sysdata->species_1_2[i]<<endl;
+		if( species_1_2_i>0 ){ sysdata->species_1_2[i] = species_1_2_; fout<<"species_1_2 was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->species_1_2["<<i<<"] = "<<sysdata->species_1_2[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_species_1_3", ECPGt_EOIT, 
 	ECPGt_char,(species_1_3_),(long)25,(long)1,(25)*sizeof(char), 
@@ -1038,8 +1086,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current species_1_3: %s\n", species_1_3_);	
 		if( species_1_3_i==0 ){ sysdata->species_1_3[i] = species_1_3_; };
-		if( species_1_3_i>0 ){ sysdata->species_1_3[i] = species_1_3_; cout<<"species_1_3 was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->species_1_3["<<i<<"] = "<<sysdata->species_1_3[i]<<endl;
+		if( species_1_3_i>0 ){ sysdata->species_1_3[i] = species_1_3_; fout<<"species_1_3 was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->species_1_3["<<i<<"] = "<<sysdata->species_1_3[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_species_1_4", ECPGt_EOIT, 
 	ECPGt_char,(species_1_4_),(long)25,(long)1,(25)*sizeof(char), 
@@ -1054,8 +1102,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current species_1_4: %s\n", species_1_4_);	
 		if( species_1_4_i==0 ){ sysdata->species_1_4[i] = species_1_4_; };
-		if( species_1_4_i>0 ){ sysdata->species_1_4[i] = species_1_4_; cout<<"species_1_4 was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->species_1_4["<<i<<"] = "<<sysdata->species_1_4[i]<<endl;
+		if( species_1_4_i>0 ){ sysdata->species_1_4[i] = species_1_4_; fout<<"species_1_4 was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->species_1_4["<<i<<"] = "<<sysdata->species_1_4[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_species_2_1", ECPGt_EOIT, 
 	ECPGt_char,(species_2_1_),(long)25,(long)1,(25)*sizeof(char), 
@@ -1070,8 +1118,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current species_2_1: %s\n", species_2_1_);	
 		if( species_2_1_i==0 ){ sysdata->species_2_1[i] = species_2_1_; };
-		if( species_2_1_i>0 ){ sysdata->species_2_1[i] = species_2_1_; cout<<"species_2_1 was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->species_2_1["<<i<<"] = "<<sysdata->species_2_1[i]<<endl;
+		if( species_2_1_i>0 ){ sysdata->species_2_1[i] = species_2_1_; fout<<"species_2_1 was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->species_2_1["<<i<<"] = "<<sysdata->species_2_1[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_species_2_2", ECPGt_EOIT, 
 	ECPGt_char,(species_2_2_),(long)25,(long)1,(25)*sizeof(char), 
@@ -1086,8 +1134,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current species_2_2: %s\n", species_2_2_);	
 		if( species_2_2_i==0 ){ sysdata->species_2_2[i] = species_2_2_; };
-		if( species_2_2_i>0 ){ sysdata->species_2_2[i] = species_2_2_; cout<<"species_2_2 was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->species_2_2["<<i<<"] = "<<sysdata->species_2_2[i]<<endl;
+		if( species_2_2_i>0 ){ sysdata->species_2_2[i] = species_2_2_; fout<<"species_2_2 was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->species_2_2["<<i<<"] = "<<sysdata->species_2_2[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_species_2_3", ECPGt_EOIT, 
 	ECPGt_char,(species_2_3_),(long)25,(long)1,(25)*sizeof(char), 
@@ -1102,8 +1150,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current species_2_3: %s\n", species_2_3_);	
 		if( species_2_3_i==0 ){ sysdata->species_2_3[i] = species_2_3_; };
-		if( species_2_3_i>0 ){ sysdata->species_2_3[i] = species_2_3_; cout<<"species_2_3 was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->species_2_3["<<i<<"] = "<<sysdata->species_2_3[i]<<endl;
+		if( species_2_3_i>0 ){ sysdata->species_2_3[i] = species_2_3_; fout<<"species_2_3 was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->species_2_3["<<i<<"] = "<<sysdata->species_2_3[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_species_2_4", ECPGt_EOIT, 
 	ECPGt_char,(species_2_4_),(long)25,(long)1,(25)*sizeof(char), 
@@ -1118,8 +1166,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current species_2_4: %s\n", species_2_4_);	
 		if( species_2_4_i==0 ){ sysdata->species_2_4[i] = species_2_4_; };
-		if( species_2_4_i>0 ){ sysdata->species_2_4[i] = species_2_4_; cout<<"species_2_4 was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->species_2_4["<<i<<"] = "<<sysdata->species_2_4[i]<<endl;
+		if( species_2_4_i>0 ){ sysdata->species_2_4[i] = species_2_4_; fout<<"species_2_4 was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->species_2_4["<<i<<"] = "<<sysdata->species_2_4[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_stoic_1_1", ECPGt_EOIT, 
 	ECPGt_int,&(stoic_1_1_),(long)1,(long)1,sizeof(int), 
@@ -1134,8 +1182,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current stoic_1_1: %i\n", stoic_1_1_);	
 		if( stoic_1_1_i==0 ){ sysdata->stoic_1_1[i] = stoic_1_1_; };
-		if( stoic_1_1_i>0 ){ sysdata->stoic_1_1[i] = stoic_1_1_; cout<<"stoic_1_1 was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->stoic_1_1["<<i<<"] = "<<sysdata->stoic_1_1[i]<<endl;
+		if( stoic_1_1_i>0 ){ sysdata->stoic_1_1[i] = stoic_1_1_; fout<<"stoic_1_1 was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->stoic_1_1["<<i<<"] = "<<sysdata->stoic_1_1[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_stoic_1_2", ECPGt_EOIT, 
 	ECPGt_int,&(stoic_1_2_),(long)1,(long)1,sizeof(int), 
@@ -1150,8 +1198,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current stoic_1_2: %i\n", stoic_1_2_);	
 		if( stoic_1_2_i==0 ){ sysdata->stoic_1_2[i] = stoic_1_2_; };
-		if( stoic_1_2_i>0 ){ sysdata->stoic_1_2[i] = stoic_1_2_; cout<<"stoic_1_2 was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->stoic_1_2["<<i<<"] = "<<sysdata->stoic_1_2[i]<<endl;
+		if( stoic_1_2_i>0 ){ sysdata->stoic_1_2[i] = stoic_1_2_; fout<<"stoic_1_2 was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->stoic_1_2["<<i<<"] = "<<sysdata->stoic_1_2[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_stoic_1_3", ECPGt_EOIT, 
 	ECPGt_int,&(stoic_1_3_),(long)1,(long)1,sizeof(int), 
@@ -1166,8 +1214,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current stoic_1_3: %i\n", stoic_1_3_);	
 		if( stoic_1_3_i==0 ){ sysdata->stoic_1_3[i] = stoic_1_3_; };
-		if( stoic_1_3_i>0 ){ sysdata->stoic_1_3[i] = stoic_1_3_; cout<<"stoic_1_3 was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->stoic_1_3["<<i<<"] = "<<sysdata->stoic_1_3[i]<<endl;
+		if( stoic_1_3_i>0 ){ sysdata->stoic_1_3[i] = stoic_1_3_; fout<<"stoic_1_3 was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->stoic_1_3["<<i<<"] = "<<sysdata->stoic_1_3[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_stoic_1_4", ECPGt_EOIT, 
 	ECPGt_int,&(stoic_1_4_),(long)1,(long)1,sizeof(int), 
@@ -1182,8 +1230,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current stoic_1_4: %i\n", stoic_1_4_);	
 		if( stoic_1_4_i==0 ){ sysdata->stoic_1_4[i] = stoic_1_4_; };
-		if( stoic_1_4_i>0 ){ sysdata->stoic_1_4[i] = stoic_1_4_; cout<<"stoic_1_4 was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->stoic_1_4["<<i<<"] = "<<sysdata->stoic_1_4[i]<<endl;
+		if( stoic_1_4_i>0 ){ sysdata->stoic_1_4[i] = stoic_1_4_; fout<<"stoic_1_4 was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->stoic_1_4["<<i<<"] = "<<sysdata->stoic_1_4[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_stoic_2_1", ECPGt_EOIT, 
 	ECPGt_int,&(stoic_2_1_),(long)1,(long)1,sizeof(int), 
@@ -1198,8 +1246,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current stoic_2_1: %i\n", stoic_2_1_);	
 		if( stoic_2_1_i==0 ){ sysdata->stoic_2_1[i] = stoic_2_1_; };
-		if( stoic_2_1_i>0 ){ sysdata->stoic_2_1[i] = stoic_2_1_; cout<<"stoic_2_1 was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->stoic_2_1["<<i<<"] = "<<sysdata->stoic_2_1[i]<<endl;
+		if( stoic_2_1_i>0 ){ sysdata->stoic_2_1[i] = stoic_2_1_; fout<<"stoic_2_1 was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->stoic_2_1["<<i<<"] = "<<sysdata->stoic_2_1[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_stoic_2_2", ECPGt_EOIT, 
 	ECPGt_int,&(stoic_2_2_),(long)1,(long)1,sizeof(int), 
@@ -1214,8 +1262,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current stoic_2_2: %i\n", stoic_2_2_);	
 		if( stoic_2_2_i==0 ){ sysdata->stoic_2_2[i] = stoic_2_2_; };
-		if( stoic_2_2_i>0 ){ sysdata->stoic_2_2[i] = stoic_2_2_; cout<<"stoic_2_2 was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->stoic_2_2["<<i<<"] = "<<sysdata->stoic_2_2[i]<<endl;
+		if( stoic_2_2_i>0 ){ sysdata->stoic_2_2[i] = stoic_2_2_; fout<<"stoic_2_2 was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->stoic_2_2["<<i<<"] = "<<sysdata->stoic_2_2[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_stoic_2_3", ECPGt_EOIT, 
 	ECPGt_int,&(stoic_2_3_),(long)1,(long)1,sizeof(int), 
@@ -1230,8 +1278,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current stoic_2_3: %i\n", stoic_2_3_);	
 		if( stoic_2_3_i==0 ){ sysdata->stoic_2_3[i] = stoic_2_3_; };
-		if( stoic_2_3_i>0 ){ sysdata->stoic_2_3[i] = stoic_2_3_; cout<<"stoic_2_3 was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->stoic_2_3["<<i<<"] = "<<sysdata->stoic_2_3[i]<<endl;
+		if( stoic_2_3_i>0 ){ sysdata->stoic_2_3[i] = stoic_2_3_; fout<<"stoic_2_3 was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->stoic_2_3["<<i<<"] = "<<sysdata->stoic_2_3[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_stoic_2_4", ECPGt_EOIT, 
 	ECPGt_int,&(stoic_2_4_),(long)1,(long)1,sizeof(int), 
@@ -1246,8 +1294,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current stoic_2_4: %i\n", stoic_2_4_);	
 		if( stoic_2_4_i==0 ){ sysdata->stoic_2_4[i] = stoic_2_4_; };
-		if( stoic_2_4_i>0 ){ sysdata->stoic_2_4[i] = stoic_2_4_; cout<<"stoic_2_4 was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->stoic_2_4["<<i<<"] = "<<sysdata->stoic_2_4[i]<<endl;
+		if( stoic_2_4_i>0 ){ sysdata->stoic_2_4[i] = stoic_2_4_; fout<<"stoic_2_4 was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->stoic_2_4["<<i<<"] = "<<sysdata->stoic_2_4[i]<<endl;
 
 		{ ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch f_ende", ECPGt_EOIT, 
 	ECPGt_int,&(ende_),(long)1,(long)1,sizeof(int), 
@@ -1262,8 +1310,8 @@ if (sqlca.sqlcode < 0) exit(1);}
 
 		//printf("current intval: %i\n", ende_);	
 		if( ende_i==0 ){ sysdata->ende[i] = ende_; };
-		if( ende_i>0 ){ sysdata->ende[i] = ende_; cout<<"ende was truncated while storing in host variable !!!"<<endl; };
-//		cout<<"sysdata->ende["<<i<<"] = "<<sysdata->ende[i]<<endl;
+		if( ende_i>0 ){ sysdata->ende[i] = ende_; fout<<"ende was truncated while storing in host variable !!!"<<endl; };
+//		fout<<"sysdata->ende["<<i<<"] = "<<sysdata->ende[i]<<endl;
 
 	}
 	
@@ -1490,5 +1538,5 @@ if (sqlca.sqlcode < 0) exit(1);}
 	}
 
 
-
+	fout.close();
 }

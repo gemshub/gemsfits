@@ -1,3 +1,38 @@
+/* 
+*	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
+*
+*	 This file is part of the thermodynamic fitting program GEMSFIT.
+*
+*    GEMSFIT is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    GEMSFIT is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU  General Public License for more details.
+*
+*    You should have received a copy of the GNU General Public License
+*    along with GEMSFIT.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+/**
+ *	@file gemsfit_global_functions.cpp
+ *
+ *	@brief this source file contains implementations of global functions needed for  optimization. 
+ *	Since the nlopt library needs a function pointer to the objective and constraint
+ *  functions, these functions need to be globally accessible and can not be implemented 
+ *  as member functions. This source file contains mainly these implementations of the 
+ *  respective callback functions.  
+ *
+ *	@author Ferdinand F. Hingerl
+ *
+ * 	@date 09.04.2012 
+ *
+ */
+
 #include <vector>
 #include <numeric>
 #include <math.h>
@@ -67,6 +102,24 @@ namespace opti
 	  free (array_2d_float);
 	}
 
+
+/*
+	// Signal catcher for brute force GEMSFIT termination (Ctrl+C)	
+	void catch_int( int sig_num ) 
+	{ 
+
+		signal(sig_num, SIG_IGN);
+
+		cout << " ... GEMSFIT terminated by users's brute force ... " << endl; 
+	
+
+		// brute force stop of NLOPT
+		nlopt_result nlopt_force_stop( opt_actmod );
+
+		//exit(0);
+	} 
+*/
+	
 	
 	bool barrier( int NP_DC, int NPar, int MaxOrd, int NPcoef, int NComp, double Tk, double Pbar, double* aDCc, double* aIPc, long int* aIPx, double Xw )
 	{
@@ -126,6 +179,10 @@ namespace opti
 	// Wrapper loaded by "objective_function". Talks to GEMS' node class 
 	void ActMod_tsolmod_wrap( double &sum_of_squared_residuals_sys, const vector<double> &opt, System_Properties* sys )
 	{
+
+			// Signal catcher for brute force GEMSFIT termination (Ctrl+C)
+			//signal(SIGINT, opti::catch_int); 
+
 			if( !pid )
 			{
 				master_counter++;
@@ -311,7 +368,6 @@ for( i=0; i<sys->sysparam->aIPc.size(); i++)
 }
 cout<<endl;
 #endif
-
 				// get system file list name
 				strcpy(input_system_file_list_name, sys->system_name.c_str());
 
@@ -486,6 +542,10 @@ cout << "tsolmod wrapper: sys->sysdata->molality_1.at("<<i<<") = "<<sys->sysdata
 							{
 								activity_model_point = new TEUNIQUAC( &sd, aM, aZ, Rhow, Epsw ); 
 							}
+							else if( sys->activity_model == 4 )
+							{
+								activity_model_point = new TSIT( &sd, aM, aZ, Rhow, Epsw ); 
+							}
 							else
 							{
 								cout<<" The activity model you entered is not implemented ! "<<endl;
@@ -541,6 +601,55 @@ cout << "tsolmod wrapper: sys->sysdata->molality_1.at("<<i<<") = "<<sys->sysdata
 
 								residual = pow( (computed_value - measured_value), 2) / measured_value; 
 							} 
+			// ------------------------------------------------------------------------ //
+			// code = 2 : osmotic coefficient of solvent -> compute by integration of the Bjeruum relation for multi-eletrolyte solutions
+							else if( meas_data_type > 1.9 && meas_data_type < 2.1 )
+							{	
+	std::cout<<"Before Bjerrum:	mean ln_gamma = "<<(sd.arlnGam[ dc_id_1_1 ] * StoicIons[0] + sd.arlnGam[ dc_id_1_2  ] * StoicIons[1])/(StoicIons[0]+StoicIons[1])<<" |  aM[0] = "<<aM[0]<<std::endl;
+
+#ifdef GEMSFIT_DEBUG
+	std::cout<<"Before Bjerrum:	aM[0] = "<<aM[0]<<" | aM[1] = "<<aM[1]<<std::endl;
+	std::cout<<"Before Bjerrum:	sd.arlnGam[0] = "<<sd.arlnGam[0]<<" | sd.arlnGam[1] = "<<sd.arlnGam[1]<<std::endl;
+#endif
+
+								double sum_M = 0.0;
+							   	double osm_int = 0.0;
+				                for( k=0; k<(ncomps-1); k++ )
+								{    
+									sum_M += aM[k];
+								}
+
+								// k : number of species to consider	
+								
+								SolutionData sdc = sd;
+								double species_gamma_id=0.0, species_conc_id=0.0;
+
+								for( species_gamma_id=0; species_gamma_id<2; species_gamma_id++ )
+								{
+									for( species_conc_id=0; species_conc_id<2; species_conc_id++ )
+									{
+										osm_int += Osm_coeff_Bjerrum( species_gamma_id, species_conc_id, sdc, aM, aZ, Rhow, Epsw );
+									}
+								}			
+
+								computed_value = 1 + osm_int / sum_M; 
+								//computed_value = 1 + osm_int / aM[0]; 
+
+#ifdef GEMSFIT_DEBUG
+
+	std::cout<<"After Bjerrum: mean ln_gamma = "<<(sd.arlnGam[ dc_id_1_1 ] * StoicIons[0] + sd.arlnGam[ dc_id_1_2  ] * StoicIons[1])/(StoicIons[0]+StoicIons[1])<<std::endl;
+	std::cout<<"After Bjerrum:	aM[0] = "<<aM[0]<<" | aM[1] = "<<aM[1]<<std::endl;
+	std::cout<<"After Bjerrum:	sd.arlnGam[0] = "<<sd.arlnGam[0]<<" | sd.arlnGam[1] = "<<sd.arlnGam[1]<<std::endl;
+	std::cout<<"osm coeff meas = "<<sys->sysdata->val.at(i)<<std::endl;
+	std::cout<<"osm coeff calc = "<<computed_value<<std::endl;
+
+#endif
+//exit(1);
+								measured_value = sys->sysdata->val.at(i);
+
+								residual = pow( (computed_value - measured_value), 2) / measured_value; 
+			
+							}
 			// ------------------------------------------------------------------------ //
 			// Apparent molar volumes 
 							else if( meas_data_type > 2.9 && meas_data_type < 3.1 )
@@ -664,7 +773,7 @@ cout << "tsolmod wrapper: sys->sysdata->molality_1.at("<<i<<") = "<<sys->sysdata
 								residual = pow( (computed_value - measured_value), 2) / measured_value; 
 							}
 	#ifdef GEMSFIT_DEBUG	
-	std::cout<<"residual = "<<residual<<std::endl;
+	std::cout<<"residual = "<<residual<<" | i = " <<i<<std::endl;
 	#endif
 	
 
@@ -689,8 +798,8 @@ cout << "tsolmod wrapper: sys->sysdata->molality_1.at("<<i<<") = "<<sys->sysdata
 							// Store residuals for statistical analysis
 							computed_residuals_temp.push_back(measured_value - computed_value);
 
-							// Sum of squares
-							sum_of_squared_residuals_sys_ = sum_of_squared_residuals_sys_ + residual;
+							// Sum of squared residuals
+							sum_of_squared_residuals_sys_ = sum_of_squared_residuals_sys_ + residual *  100 ;
 
 							delete activity_model_point;
 					// ------------------------------------------------------------------------ //
@@ -729,6 +838,23 @@ cout << "tsolmod wrapper: sys->sysdata->molality_1.at("<<i<<") = "<<sys->sysdata
 					{
 						fout << sys->sysdata->temperature.at(k) << ";" << sys->sysdata->molality_1.at(k) << ";" << computed_values_temp.at(k) << ";" << measured_values_temp.at(k) << ";" << sys->sysdata->species_1_1.at(k) << ";" << sys->sysdata->species_1_2.at(k) << ";" << (100.0-(computed_values_temp.at(k)/measured_values_temp.at(k))*100.0) << endl;
 					}
+
+#ifdef GEMSFIT_DEBUG
+					for( i=0; i<sys->sysparam->aDCc.size(); i++)
+					{
+						fout<<"sd.arDCc["<<i<<"] = "<<sd.arDCc[i]<<" "<<" | ardcc = "<<ardcc[i]<<endl;
+					}
+					fout<<endl;	
+
+					for( i=0; i<sys->sysparam->aIPc.size(); i++)
+					{
+						fout<<"sd.arIPc = "<<sd.arIPc[i]<<" | aripc = "<<aripc[i]<<endl;
+					}
+					fout<<endl;
+#endif
+
+
+
 					fout.close();
 				}	
 
@@ -1354,11 +1480,29 @@ param_residual_out.close();
 		double sum_of_squared_residuals_sys = 0.0;
 
 		
-        for( i=0; i<sys->size(); i++)
-	   	{
-			// call tsolmod wrapper
-			ActMod_tsolmod_wrap( sum_of_squared_residuals_sys, opt, sys->at(i) );
-			sum_of_squared_residuals_allsys = sum_of_squared_residuals_allsys + sum_of_squared_residuals_sys;
+		// Rescale optimization to unconvert normalization of parameters
+		if( sys->at(0)->sysparam->NormParams )
+		{	
+			vector<double> optV( opt.size() );
+			for( i=0; i<opt.size(); i++ )
+			{
+				optV[i] = opt[i] * abs(sys->at(0)->sysparam->init_guesses[i]);
+			}
+		    for( i=0; i<sys->size(); i++)
+		   	{
+				// call tsolmod wrapper
+				ActMod_tsolmod_wrap( sum_of_squared_residuals_sys, optV, sys->at(i) );
+				sum_of_squared_residuals_allsys = sum_of_squared_residuals_allsys + sum_of_squared_residuals_sys;
+			}
+		}
+		else
+		{			
+		    for( i=0; i<sys->size(); i++)
+		   	{
+				// call tsolmod wrapper
+				ActMod_tsolmod_wrap( sum_of_squared_residuals_sys, opt, sys->at(i) );
+				sum_of_squared_residuals_allsys = sum_of_squared_residuals_allsys + sum_of_squared_residuals_sys;
+			}
 		}
 
 	return sum_of_squared_residuals_allsys;
@@ -1393,12 +1537,29 @@ param_residual_out.close();
 		double sum_of_squared_residuals_allsys = 0.0;
 		double sum_of_squared_residuals_sys = 0.0;
 
-		
-        for( i=0; i<sys->size(); i++)
-	   	{
-			// call tsolmod wrapper
-			ActMod_gems3k_wrap( sum_of_squared_residuals_sys, opt, sys->at(i) );
-			sum_of_squared_residuals_allsys = sum_of_squared_residuals_allsys + sum_of_squared_residuals_sys;
+		// Rescale optimization to unconvert normalization of parameters
+		if( sys->at(0)->sysparam->NormParams )
+		{	
+			vector<double> optV( opt.size() );
+			for( i=0; i<opt.size(); i++ )
+			{
+				optV[i] = opt[i] * abs(sys->at(0)->sysparam->init_guesses[i]);
+			}
+		    for( i=0; i<sys->size(); i++)
+		   	{
+				// call tsolmod wrapper
+				ActMod_gems3k_wrap( sum_of_squared_residuals_sys, optV, sys->at(i) );
+				sum_of_squared_residuals_allsys = sum_of_squared_residuals_allsys + sum_of_squared_residuals_sys;
+			}	
+		}
+		else
+		{			
+		    for( i=0; i<sys->size(); i++)
+		   	{
+				// call tsolmod wrapper
+				ActMod_gems3k_wrap( sum_of_squared_residuals_sys, opt, sys->at(i) );
+				sum_of_squared_residuals_allsys = sum_of_squared_residuals_allsys + sum_of_squared_residuals_sys;
+			}
 		}
 
 	return sum_of_squared_residuals_allsys;
@@ -1527,26 +1688,6 @@ param_residual_out.close();
 	}
 
 	
-
-
-/*
-	double Int_OsmCoeff()
-	{
-		    double osm_coeff   = 0.0;
-		    double m_infdil    = 1.1e-6;
-		    double bjerrum     = 0.0;
-		    // calc osmotic coefficient via Bjerrum relation
-		    long int j = 0;
-
-		    // bjerrum : \int_{m_k=0}^{m_k=m[j]} m_k  d log_gam(m_k)
-		    bjerrum = qsimp( m_infdil, m[j], j, 0 );
-	//		cout<<" integral between "<<m_infdil<<" and "<<m[j]<<" is : "<<bjerrum<<endl;
-		    osm_coeff = 1 + bjerrum/m[j];
-		    cout<<" Osmotic coefficient = "<<osm_coeff<<endl;
-	return osm_coeff;
-	}
-*/
-
 	double Get_Vex_from_actmod( SolutionData &sd, double* aM, double* aZ, double* Rhow, double* Epsw, TNode* node_pointer, int* StoicIons )
 	{
 		int i;
@@ -1613,11 +1754,12 @@ cout << "Vex = " << Vex << endl;
 	{
 		    // add to app_molar_vol_part the stst molar volume of the electrolyte (outside ELVIS class) !!!!
 		    long int j      = 0;
+			long int not_used_value	= 0;
 		    double m_infdil = 1.1e-6;
 		    double m_el 	= node_pointer->DC_n( j ); 	// concentration of electrolyte
 			double result, error;
 			const double R_CONST = 8.31451;
-			double app_molar_vol_part = R_CONST * (node_pointer->cTK()) * qsimp( m_infdil, m_el, j, 1, sd, aM, aZ, Rhow, Epsw, node_pointer, StoicIons )/m_el;
+			double app_molar_vol_part = R_CONST * (node_pointer->cTK()) * qsimp( m_infdil, m_el, j, not_used_value, 1, sd, aM, aZ, Rhow, Epsw, node_pointer, StoicIons )/m_el;
 
 		    // partial molar excess volume
 		    // double part_molar_excess_vol = R_CONST*Tk*FinDiffVol( m[j], j );
@@ -1626,58 +1768,98 @@ cout << "Vex = " << Vex << endl;
 		return app_molar_vol_part; // To get the apparent molar volume of the solute, add the stst partial molar volume to 'app_molar_vol_part'
 	}
 	
-
-	double FinDiff( double m_j, int j, SolutionData &sd, double* aM, double* aZ, double* Rhow, double* Epsw, TNode* node_pointer, int* StoicIons  )
+/*
+	double Int_OsmCoeff()
 	{
-		    double h = 1e-4;
-		    double DactDm;
-		    double m_old1 = node_pointer->DC_n( j );
-/*		    double m_old2 = m[j+1];
-		// Central Finite Difference
-//	cout<<"m["<<j<<"] = "<<m[j]<<endl;
-//		    m[j] = m_j - h;
-//	cout<<"m["<<j<<"] = "<<m[j]<<endl;
-//		    CalcAct();
-//		    act_low = lnGamma[j];
-//		    m[j] = m_j + h;
-//	cout<<"m["<<j<<"] = "<<m[j]<<endl;
-//		    CalcAct();
-//		    DactDm = (lnGamma[j]-act_low)/(2*h);
-//	
-		    // Forward Finite Difference
-		    double gam_1,gam_2,gam_3;
-	//cout<<"FD base 	m["<<j<<"] = "<<m[j]<<endl;
-		    m[j] 	= m_j;
-		    m[j+1] 	= m_j;
-		    molfrac_update();
-	//cout<<"FD 1 	m["<<j<<"] = "<<m[j]<<endl;
-		    lnGamma[j] = 0.0;
-		    CalcAct();
-		    gam_1 = 0.5*(lnGamma[j]+lnGamma[j+1]);
+		    double osm_coeff   = 0.0;
+		    double m_infdil    = 1.1e-6;
+		    double bjerrum     = 0.0;
+		    // calc osmotic coefficient via Bjerrum relation
+		    long int j = 0;
 
-		    m[j] 	= m_j + h;
-		    m[j+1]	= m_j + h;
-		    molfrac_update();
-		    lnGamma[j] = 0.0;
-		    lnGamma[j] = 0.0;
-	//cout<<"FD 2		m["<<j<<"] = "<<m[j]<<endl;
-		    CalcAct();
-		    gam_2 = 0.5*(lnGamma[j]+lnGamma[j+1]);
+		    // bjerrum : \int_{m_k=0}^{m_k=m[j]} m_k  d log_gam(m_k)
+		    bjerrum = qsimp( m_infdil, m[j], j, 0 );
+	//		cout<<" integral between "<<m_infdil<<" and "<<m[j]<<" is : "<<bjerrum<<endl;
+		    osm_coeff = 1 + bjerrum/m[j];
+		    cout<<" Osmotic coefficient = "<<osm_coeff<<endl;
+	return osm_coeff;
+	}
+*/
 
-		    m[j] 	= m_j + h + h;
-		    m[j+1]	= m_j + h + h;
-		    molfrac_update();
-		    lnGamma[j] 		= 0.0;
-		    lnGamma[j+1] 	= 0.0;
-	//cout<<"FD 3 	m["<<j<<"] = "<<m[j]<<endl;
-		    CalcAct();
-		    gam_3 = 0.5*(lnGamma[j]+lnGamma[j+1]);
+	double Osm_coeff_Bjerrum( long int species_gamma_id, long int species_conc_id, SolutionData sdc, double* aM, double* aZ, double* Rhow, double* Epsw )
+	{
+		double lower_bound = 1e-16;
+		double upper_bound = aM[ species_conc_id ];
+		double bjerrum = 0.;
 
-		    DactDm = (-3*gam_1 + 4*gam_2 - gam_3)/(2*h);
+	    // bjerrum : \int_{m_i=0}^{m_i=m_i_f} m_i  d log_gam(m_i)
+		bjerrum = qsimp( lower_bound, upper_bound, species_gamma_id, species_conc_id, 0, sdc, aM, aZ, Rhow, Epsw, NULL, NULL );
 
-		    m[j] 	= m_old1;
-		    m[j+1] 	= m_old2;
-*/	return DactDm * m_j; // for the Bjerrum relation, multiply the derivative with m_j (integrand)
+		return bjerrum;
+	}
+
+
+
+	double FinDiff( double m_spec_current, long int species_gamma_id, long int species_conc_id, SolutionData &sdc1, double* aM, double* aZ, double* Rhow, double* Epsw  )
+	{
+	    double h = 1e-4;
+	    double DlnactDm;
+	    double m_old = aM[ species_conc_id ];
+
+	    // Forward Finite Difference
+	    double gam_1=0., gam_2=0., gam_3=0.;
+
+cout << "FinDiff:	aM["<< species_conc_id << "] = " << m_spec_current << endl;
+cout << "FinDiff:	aM[0] = " << aM[0] << endl;
+cout << "FinDiff:	aM[1] = " << aM[1] << endl;
+
+
+	aM[ species_conc_id ] 	= m_spec_current;
+	    //aM[ 0 ] 	= m_spec_current;
+	    //aM[ 1 ] 	= m_spec_current;
+		TSolMod* activity_model_point_1 = new TELVIS( &sdc1, aM, aZ, Rhow, Epsw );
+		activity_model_point_1->PTparam();
+		activity_model_point_1->MixMod();
+	    gam_1 = sdc1.arlnGam[ species_gamma_id ]; 
+	    //gam_1 = 0.5 * (sdc1.arlnGam[ 0 ] + sdc1.arlnGam[ 1 ]);
+cout<<"FD 1 	aM["<<species_conc_id<<"] = "<< aM[ species_conc_id ] <<" | gam_1 = "<< gam_1 <<endl;
+cout<<"ln_gamma mean = "<< 0.5*(sdc1.arlnGam[ 0 ] + sdc1.arlnGam[ 1 ]) << endl;
+		delete activity_model_point_1;
+		
+
+	aM[ species_conc_id ] 	= m_spec_current + h;
+		//aM[ 0 ] 	= m_spec_current + h;
+	    //aM[ 1 ] 	= m_spec_current + h;
+		TSolMod* activity_model_point_2 = new TELVIS( &sdc1, aM, aZ, Rhow, Epsw );
+		activity_model_point_2->PTparam();
+		activity_model_point_2->MixMod();
+	    gam_2 = sdc1.arlnGam[ species_gamma_id ];
+	    //gam_2 = 0.5 * (sdc1.arlnGam[ 0 ] + sdc1.arlnGam[ 1 ]);
+cout<<"FD 2		aM["<<species_conc_id<<"] = "<< aM[ species_conc_id ]<<" | gam_2 = "<< gam_2 <<endl;
+		delete activity_model_point_2;	    
+
+
+	aM[ species_conc_id ] 	= m_spec_current + h + h;
+		//aM[ 0 ] 	= m_spec_current + h + h;
+	    //aM[ 1 ] 	= m_spec_current + h + h;
+		TSolMod* activity_model_point_3 = new TELVIS( &sdc1, aM, aZ, Rhow, Epsw );
+		activity_model_point_3->PTparam();
+		activity_model_point_3->MixMod();
+	    gam_3 = sdc1.arlnGam[ species_gamma_id ];
+	    //gam_3 = 0.5 * (sdc1.arlnGam[ 0 ] + sdc1.arlnGam[ 1 ]);
+cout<<"FD 3 	aM["<<species_conc_id<<"] = "<< aM[ species_conc_id ]<<" | gam_3 = "<< gam_3 <<endl;
+		delete activity_model_point_3;
+
+
+	    DlnactDm = ( -3*gam_1 + 4*gam_2 - gam_3 )/( 2*h );
+	    //DlnactDm = ( gam_2 - gam_1 ) / h ;
+
+		// integrate over molality of species multiplied with the derivative of the natural logarithm of activity coefficient of species 
+	    DlnactDm = m_spec_current * DlnactDm;
+
+	    aM[ species_conc_id ] 	= m_old;
+
+	return DlnactDm;
 	}
 
 
@@ -1868,7 +2050,7 @@ cout<<"FinDiffVolume = "<<FinDiffVolume<<endl;
 
 
 	// Numerical Integration code from Numerical recipes in C (4th edition).
-	double trapzd( const double m_infdil, const double m_j, int& n, long int& species, int select, SolutionData &sd, double* aM, double* aZ, double* Rhow, double* Epsw, TNode* node_pointer, int* StoicIons )
+	double trapzd( const double m_infdil, const double m_j, int& n, long int& species_gamma_id, long int& species_conc_id, int select, SolutionData &sdc2, double* aM, double* aZ, double* Rhow, double* Epsw, TNode* node_pointer, int* StoicIons )
 	{
 		    double x,tnm,sum,del = 0.0;
 		    static double s;
@@ -1879,7 +2061,7 @@ cout<<"FinDiffVolume = "<<FinDiffVolume<<endl;
 		    {
 		            if( n == 1 )
 		            {
-		                    return (s=0.5*(m_j-m_infdil)*( FinDiff( m_infdil, species, sd, aM, aZ, Rhow, Epsw, node_pointer, StoicIons ) + FinDiff( m_j, species, sd, aM, aZ, Rhow, Epsw, node_pointer, StoicIons ) ));
+		                    return (s=0.5*(m_j-m_infdil)*( FinDiff( m_infdil, species_gamma_id, species_conc_id, sdc2, aM, aZ, Rhow, Epsw ) + FinDiff( m_j, species_gamma_id, species_conc_id, sdc2, aM, aZ, Rhow, Epsw ) ));
 		            }
 		            else
 		            {
@@ -1888,7 +2070,7 @@ cout<<"FinDiffVolume = "<<FinDiffVolume<<endl;
 		                    del=(m_j-m_infdil)/tnm;
 		    //		This is the spacing of the points to be added.
 		                    x=m_infdil+0.5*del;
-		                    for (sum=0.0,j=1;j<=it;j++,x+=del) sum += FinDiff( x, species, sd, aM, aZ, Rhow, Epsw, node_pointer, StoicIons );
+		                    for (sum=0.0,j=1;j<=it;j++,x+=del) sum += FinDiff( x, species_gamma_id, species_conc_id, sdc2, aM, aZ, Rhow, Epsw );
 		                    s=0.5*(s+(m_j-m_infdil)*sum/tnm);
 		    //		This replaces s by its refined value.
 		                            return s;
@@ -1900,8 +2082,8 @@ cout<<"FinDiffVolume = "<<FinDiffVolume<<endl;
 
 		            if (n == 1)
 		            {
-		                    double lower_bound = FinDiffVol( m_infdil, species, sd, aM, aZ, Rhow, Epsw, node_pointer, StoicIons );
-		                    double upper_bound = FinDiffVol( m_j, species, sd, aM, aZ, Rhow, Epsw, node_pointer, StoicIons );
+		                    double lower_bound = FinDiffVol( m_infdil, species_conc_id, sdc2, aM, aZ, Rhow, Epsw, node_pointer, StoicIons );
+		                    double upper_bound = FinDiffVol( m_j, species_conc_id, sdc2, aM, aZ, Rhow, Epsw, node_pointer, StoicIons );
 		                    return (s=0.5*(m_j-m_infdil)*(lower_bound+upper_bound));
 		            }
 		            else
@@ -1911,7 +2093,7 @@ cout<<"FinDiffVolume = "<<FinDiffVolume<<endl;
 		                    del=(m_j-m_infdil)/tnm;
 		    //		This is the spacing of the points to be added.
 		                    x=m_infdil+0.5*del;
-		                    for (sum=0.0,j=1;j<=it;j++,x+=del) sum += FinDiffVol( x, species, sd, aM, aZ, Rhow, Epsw, node_pointer, StoicIons );
+		                    for (sum=0.0,j=1;j<=it;j++,x+=del) sum += FinDiffVol( x, species_conc_id, sdc2, aM, aZ, Rhow, Epsw, node_pointer, StoicIons );
 		                    s=0.5*(s+(m_j-m_infdil)*sum/tnm);
 		    //		This replaces s by its refined value.
 		                            return s;
@@ -1924,23 +2106,23 @@ cout<<"FinDiffVolume = "<<FinDiffVolume<<endl;
 	//	desired fractional accuracy and JMAX so that 2 to the power JMAX-1 is the maximum allowed
 	//	number of steps. Integration is performed by Simpson’s rule.
 	// Numerical Integration code from Numerical recipes in C (4th edition).
-	double qsimp( const double m_infdil, const double m_j, long int& species, int select, SolutionData &sd, double* aM, double* aZ, double* Rhow, double* Epsw, TNode* node_pointer, int* StoicIons )
+	double qsimp( const double m_infdil, const double m_j, long int& species_gamma_id, long int& species_conc_id, int select, SolutionData &sdc3, double* aM, double* aZ, double* Rhow, double* Epsw, TNode* node_pointer, int* StoicIons )
 	{
 		    int k;
 		    double s,st,ost,os,EPS,JMAX;
-		    EPS = 1.0e-6;
+		    EPS = 1.0e-5;
 		    JMAX = 15;
 		    ost = os = -1.0e30;
 
 		    for( k=1;k<=JMAX;k++ )
 		    {
-		            st=trapzd( m_infdil, m_j, k, species, select, sd, aM, aZ, Rhow, Epsw, node_pointer, StoicIons );
+		            st=trapzd( m_infdil, m_j, k, species_gamma_id, species_conc_id, select, sdc3, aM, aZ, Rhow, Epsw, node_pointer, StoicIons );
 		            if( isnan(st) ) break;
 		
-			s=(4.0*st-ost)/3.0;
-		                    if( k > 6 )
-		            //		Avoid spurious early convergence.
-		                            if( fabs(s-os) < EPS*fabs(os) || (s == 0.0 && os == 0.0) ) return s;
+					s=(4.0*st-ost)/3.0;
+				    	if( k > 6 )
+		            //	Avoid spurious early convergence.
+		                if( fabs(s-os) < EPS*fabs(os) || (s == 0.0 && os == 0.0) ) return s;
 		            os=s;
 		            ost=st;
 		    }
@@ -1951,8 +2133,218 @@ cout<<"FinDiffVolume = "<<FinDiffVolume<<endl;
 
 
 
+	// Compute Law-of-Mass-Action
+	void LMA_basic( vector<double> CompMol, vector<double> MeasMol, SolutionData& sd, double* aM, double* aZ, double* RhoW, double* EpsW, vector<int> Stoic, vector<int> DC_id, double Ksp, int nH2O )
+	{
+
+		typedef struct 
+		{
+		 	vector<double> CompMol; 
+		 	vector<double> MeasMol; 
+			SolutionData& sd;
+			double* aM; 
+			double* aZ; 
+			double* RhoW; 
+			double* EpsW; 
+			vector<int> Stoic; 
+			vector<int> DC_id;
+			double Ksp; 
+			int nH2O;
+		} LMA_data;
+
+		LMA_data *lma_data = NULL;
+
+		// copy data into container
+	 	lma_data->CompMol = CompMol; 
+	 	lma_data->MeasMol = MeasMol; 
+		lma_data->sd = sd;
+		lma_data->aM = aM; 
+		lma_data->aZ = aZ; 
+		lma_data->RhoW = RhoW; 
+		lma_data->EpsW = EpsW; 
+		lma_data->Stoic = Stoic; 
+		lma_data->Ksp = Ksp; 
+		lma_data->nH2O = nH2O;
+
+		// sum of squared residuals
+		double SSR = 0.;
+
+		// guess vector -> use values of measurements as initial guesses
+		vector<double> optv = MeasMol;
+
+		// initialize boundaries
+		vector<double> OptLoBounds(1e-10,MeasMol.size());
+		vector<double> OptUpBounds(100,MeasMol.size());
+
+		// initialize optimization object
+		nlopt::opt opt_lma( nlopt::LN_COBYLA, MeasMol.size() ); 
+
+		// empty gradient container
+		std::vector<double> grad;
+
+		// assign bounds
+		opt_lma.set_lower_bounds( OptLoBounds );
+		opt_lma.set_upper_bounds( OptUpBounds );
+
+		// specify relative tolerance tolerance on function value
+		opt_lma.set_xtol_rel( 1e-6 );
+		
+		// specify absolute tolerance on function value
+		opt_lma.set_xtol_abs( 1e-6 );
+
+		// maximum number of iterations
+		opt_lma.set_maxeval( 100000 );
+
+		// call LMA wrapper
+		opt_lma.set_min_objective( LMA_objective_function_callback, lma_data );
+
+        // run optimization 
+		nlopt::result result = opt_lma.optimize( optv, SSR );
+
+		// check results
+			if( result < 0 ) 
+			{
+				std::cout<<endl;
+				std::cout<<"   !!!  nlopt failed  !!!   "<<std::endl;
+				std::cout<<"   !!!  error code:   "<<result<<std::endl;
+
+				switch (result)
+				{
+					case -5:
+						cout<<" Halted because of a forced termination: the user called nlopt_force_stop(opt) on the optimization’s nlopt_opt object opt from the user’s objective function or constraints. "<<endl;
+						break;
+					case -4:
+						cout<<" Halted because roundoff errors limited progress. (In this case, the optimization still typically returns a useful result.) "<<endl;
+						break;
+					case -3:
+						cout<<" Ran out of memory. "<<endl;
+						break;
+					case -2:
+						cout<<" Invalid arguments (e.g. lower bounds are bigger than upper bounds, an unknown algorithm was specified, etc.). "<<endl;
+						break;
+					case -1:
+						cout<<" Generic failure code. "<<endl;
+						break;
+				}		
+				std::cout<<endl;
+			}
+			else 
+			{
+
+				const char path[200] = "output_GEMSFIT/myFIT.out";
+				ofstream fout;
+				fout.open(path, ios::app);						
+
+				if( fout.fail() )
+				{ cout<<"Output fileopen error"<<endl; exit(1); }
+
+				fout<<" LMA: NLopt return code: "<<result<<endl;
+
+				switch (result)
+				{
+					case 1:
+						fout<<" Generic success return value. "<<endl;
+						break;
+					case 2:
+						fout<<" Optimization stopped because stopval was reached. "<<endl;
+						break;
+					case 3:
+						fout<<" Optimization stopped because ftol_rel or ftol_abs was reached. "<<endl;
+						break;
+					case 4:
+						fout<<" Optimization stopped because xtol_rel or xtol_abs was reached. "<<endl;
+						break;
+					case 5:
+						fout<<" Optimization stopped because maxeval was reached. "<<endl;
+						break;
+					case 6:
+						fout<<" Optimization stopped because maxtime was reached. "<<endl;
+						break;
+				}		
+
+				fout<<"pid "<<pid<<", found minimum at <<f( "; 			
+				for( int i=0; i< (int) optv.size(); i++ )
+				{	
+					fout<<optv[i]<<" "; 
+				}
+				fout<<") = "<< SSR <<std::endl;
+				fout.close();
+			}
+
+		// copy optimized values to CompMol
+		CompMol = optv;		
+	}
 
 
+
+	double LMA_objective_function_callback( const std::vector<double> &opt, std::vector<double> &grad, void *struc_data )
+	{
+
+		// 
+		double water_activity = 0.;
+		double computed_value = 0.;
+
+
+		typedef struct 
+		{
+			vector<double> CompMol;
+		 	vector<double> MeasMol; 
+			SolutionData& sd;
+			double* aM; 
+			double* aZ; 
+			double* RhoW; 
+			double* EpsW; 
+			vector<int> Stoic; 
+			vector<int> DC_id; 
+			double Ksp; 
+			int nH2O;
+		} LMA_data;
+
+		LMA_data *lma_data = reinterpret_cast<LMA_data*>(struc_data);
+
+		// Sum of Squared Residuals
+		double SSR = 0.;
+
+		// Put guess values into molality vector
+		lma_data->aM[ lma_data->DC_id[2] ] = opt[0] * lma_data->Stoic[2];
+		lma_data->aM[ lma_data->DC_id[3] ] = opt[0] * lma_data->Stoic[3];
+	
+		// vector of computed activity coefficients
+		vector<double> comp_actcoeff;	
+
+		// initialize instance of TSolMod subclass 
+		TSolMod* activities = new TELVIS( &lma_data->sd, lma_data->aM, lma_data->aZ, lma_data->RhoW, lma_data->EpsW );
+		
+		// Correct SolMod instance to the new pressure and temperature
+		activities->PTparam();
+
+		// Compute activity coefficient at new T-P-X
+		activities->MixMod();
+
+#ifdef GEMSFIT_DEBUG
+cout << " LMA wrapper: sd.arlnGam[0] = " << sd.arlnGam[0] <<endl;
+#endif
+
+		// store computed activity coefficients 
+		comp_actcoeff.push_back( exp( lma_data->sd.arlnGam[ lma_data->DC_id[2] ] ) );
+		comp_actcoeff.push_back( exp( lma_data->sd.arlnGam[ lma_data->DC_id[3] ] ) );
+
+
+		// compute water activity
+		if( lma_data->nH2O )
+		{
+			// compute water activity
+		}
+		
+		// compute solubility 
+		computed_value = sqrt( lma_data->Ksp / ( exp( comp_actcoeff[0] * comp_actcoeff[1] * pow( water_activity, lma_data->nH2O ) ) ) );
+
+		SSR = ( lma_data->MeasMol[0] - computed_value ) * ( lma_data->MeasMol[0] - computed_value );
+
+		delete activities;
+
+	return SSR;
+	}
 
 
 

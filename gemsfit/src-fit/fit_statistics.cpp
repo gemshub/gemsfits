@@ -1,3 +1,35 @@
+/* 
+*	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
+*
+*	 This file is part of the thermodynamic fitting program GEMSFIT.
+*
+*    GEMSFIT is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    GEMSFIT is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU  General Public License for more details.
+*
+*    You should have received a copy of the GNU General Public License
+*    along with GEMSFIT.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+/**
+ *	@file fit_statistics.cpp
+ *
+ *	@brief this source file contains the implementation of the Statistics class, 
+ *	which evaluates the fitted parameters and performs statistcal analysis.   
+ *
+ *	@author Ferdinand F. Hingerl
+ *
+ * 	@date 09.04.2012 
+ *
+ */
+
 #include <fstream>
 
 #include <vector>
@@ -10,9 +42,6 @@
 #include <boost/random/normal_distribution.hpp>
 
 #include "fit_statistics.h"
-//#include "system_properties.h"
-//#include "optimization.h"
-//#include "gemsfit_global_functions.h"
 
 
 // Constructor
@@ -35,10 +64,10 @@ cout<<"pid : "<<pid<<" Statistics Constructor: sum of squares: "<<sum_of_squares
 
 cout<<"pid : "<<pid<<" Statistics Constructor: number_of_parameters: "<<number_of_parameters<<endl;
 
-	// Populater data members
+	/// Populate data members
 	get_stat_param();
 
-	// Instantiate pointer to PlotFit class to print results
+	/// Instantiate pointer to PlotFit class to print results
 	Plot_Stat = new PlotFit();
 
 }
@@ -104,7 +133,7 @@ cout<<"num_of_MC_runs = "<<num_of_MC_runs<<endl;
 cout<<"sensitivity_points = "<<sensitivity_points<<endl;
 
 
-		// Number of bars for histogram displaying the results from Monte Carlo confidence interval generation
+		// Number of bars for the histogram which displays the results from Monte Carlo confidence interval generation
 		string nMCbars_s, sub_nMCbars;
 		pos_start = allparam.find(s3);
 		pos_end   = allparam.find(hash,pos_start);
@@ -156,7 +185,7 @@ void Statistics::basic_stat( std::vector<double> &optv_, std::vector<System_Prop
 
 	for( i=0; i< (int) systems->at(0)->computed_values_v.size(); i++ )	
 	{	
-		ResSumSquares += pow( (systems->at(0)->computed_values_v[i] - systems->at(0)->computed_values_v[i]), 2);
+		ResSumSquares += pow( (systems->at(0)->measured_values_v[i] - systems->at(0)->computed_values_v[i]), 2);
 		TotalSumSquares += pow( (systems->at(0)->measured_values_v[i] - mean), 2);
 	}	
 

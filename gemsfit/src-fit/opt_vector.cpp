@@ -1,3 +1,35 @@
+/* 
+*	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
+*
+*	 This file is part of the thermodynamic fitting program GEMSFIT.
+*
+*    GEMSFIT is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    GEMSFIT is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU  General Public License for more details.
+*
+*    You should have received a copy of the GNU General Public License
+*    along with GEMSFIT.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+/**
+ *	@file opt_vector.cpp
+ *
+ *	@brief this header file contains the implementations of the Opt_Vector class, 
+ *	which creates and hosts the optimization vector.   
+ *
+ *	@author Ferdinand F. Hingerl
+ *
+ * 	@date 09.04.2012 
+ *
+ */
+
 #include <cmath>
 #include <vector>
 #include <string>
@@ -104,7 +136,9 @@ void Opt_Vector::make_opt_vector( vector<System_Properties*> vect_of_sys_props )
 	//cout<<"opt.size() = "<<opt.size()<<endl;
 	
 	// Load initial guess vector, which will be used for normalization of the opt vector
-	optv0 = opt; 						
+	optv0 = opt;
+	vect_of_sys_props[0]->sysparam->init_guesses = opt;
+	 						
 }
 
 

@@ -75,7 +75,7 @@ CONFIG( serial, serial|mpi ) {
         QMAKE_CXX	= g++
         QMAKE_CFLAGS +=
         QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions
-        LIBS += -L/usr/lib/postgresql/9.1/lib/ -L/usr/local/dislin/ -ldislin -lXm -lecpg -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz
+        LIBS += -L/usr/lib/postgresql/9.1/lib/ -L/home/parallels/bin/dislin -ldislin -lXm -lecpg -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz
 }
 
 FIT_CPP      =  ./src-fit
