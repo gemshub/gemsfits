@@ -1,14 +1,14 @@
-HEADERS +=  $$FITGUI_H/mainwindow.h \
-            $$FITGUI_H/system_properties.h \
-            $$FITGUI_H/sqldbmanager.h \
-            $$FITGUI_H/sqlscript.h
+HEADERS +=  $$GFITGUI_H/mainwindow.h \
+            $$GFITGUI_H/system_properties.h \
+            $$GFITGUI_H/sqldbmanager.h \
+            $$GFITGUI_H/sqlscript.h
 
-SOURCES +=  $$FITGUI_CPP/main.cpp \
-            $$FITGUI_CPP/mainwindow.cpp \
-            $$FITGUI_CPP/system_properties.cpp \
-            $$FITGUI_CPP/sqldbmanager.cpp \
-            $$FITGUI_CPP/sqlscript.cpp
+SOURCES +=  $$GFITGUI_CPP/main.cpp \
+            $$GFITGUI_CPP/mainwindow.cpp \
+            $$GFITGUI_CPP/system_properties.cpp \
+            $$GFITGUI_CPP/sqldbmanager.cpp \
+            $$GFITGUI_CPP/sqlscript.cpp
 
-FORMS +=    $$FITGUI_FORMS/mainwindow.ui \
-            $$FITGUI_FORMS/sqlscript.ui
+FORMS +=    $$GFITGUI_FORMS/mainwindow.ui \
+            $$GFITGUI_FORMS/sqlscript.ui
 

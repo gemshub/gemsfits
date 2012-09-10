@@ -4,7 +4,7 @@
 
 TEMPLATE = app
 
-TARGET = gemsfit-gui
+TARGET = gfitgui
 
 OBJECTS_DIR = obj
 
@@ -16,14 +16,14 @@ DESTDIR =
 
 QT += sql
 
-GUI_CPP      =   ./src-gui
-GUI_FORMS    =   ./forms
+GFITGUI_CPP      =   ./src-gui
+GFITGUI_FORMS    =   ./forms
 
-GUI_H     =   $$GUI_CPP
+GFITGUI_H     =   $$GFITGUI_CPP
 
-DEPENDPATH   +=  $$GUI_H
-DEPENDPATH   +=  $$GUI_FORMS
+DEPENDPATH   +=  $$GFITGUI_H
+DEPENDPATH   +=  $$GFITGUI_FORMS
 
-INCLUDEPATH  +=  . $$GUI_H
+INCLUDEPATH  +=  . $$GFITGUI_H
 
-include($$GUI_CPP/gui.pri)
+include($$GFITGUI_CPP/gui.pri)
