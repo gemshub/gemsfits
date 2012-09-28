@@ -65,7 +65,7 @@ CONFIG( mpi, serial|mpi ) {
         QMAKE_CXX	= mpic++
         QMAKE_CFLAGS += $$system(mpicc --showme:compile)
         QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions $$system(mpic++ --showme:compile) -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions
-        LIBS += -L/usr/lib/postgresql/9.1/lib/ -L/home/parallels/bin/dislin $$system(mpic++ --showme:link) -ldislin -lXm -lecpg -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz
+        LIBS += -L/home/parallels/DevGEMSFIT/trunk/standalone/lib-gems3k -L/usr/lib/postgresql/9.1/lib/ -L/home/parallels/bin/dislin $$system(mpic++ --showme:link) -lgems3k -ldislin -lXm -lecpg -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz
 }
 
 #contains( CONFIG, serial ) {
@@ -92,7 +92,7 @@ DEPENDPATH   += $$GEMS3K_LIB
 
 INCLUDEPATH  += $$FIT_H
 INCLUDEPATH  += $$GEMS3K_H   
-ICLUDEPATH   += $$GEMS3K_LIB
+INCLUDEPATH  += $$GEMS3K_LIB
 INCLUDEPATH  += . /usr/include/postgresql /home/parallels/bin/dislin
 
 OBJECTS_DIR       = obj
