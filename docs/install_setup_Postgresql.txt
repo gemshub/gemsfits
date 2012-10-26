@@ -1,0 +1,77 @@
+Istall Postgresql 9.1
+
+1. download appropriate version (9.1.0): http://www.postgresql.org/ftp/source/
+
+2. Install
+
+# tar xvfz postgresql-9.1.0.tar.gz
+
+# cd postgresql-9.1.0
+
+# ./configure --without-readline
+
+# make
+
+# sudo make install
+
+2. Create user account 'postgres'
+
+# sudo adduser postgres
+
+3. Create data directory where SQL is installed and change ownership
+
+# sudo mkdir /usr/local/pgsql/data
+
+# sudo chown postgres:postgres /usr/local/pgsql/data
+
+command to check the ownership
+# ls -ld /usr/local/pgsql/data  
+drwxr-xr-x 2 postgres postgres 4096 ..... /usr/local/pgsql/data
+
+4. Initialize data directory
+
+login to user postgres
+# su - postgres
+
+command for initialization
+# /usr/local/pgsql/bin/initdb -D /usr/local/pgsql/data/
+
+5. Start Postgresql postmaster
+
+this coomand has to pe executed every time after restarting Ubuntu, before using the database, being loged-in as user potgres
+otherwhise add it to the ubuntu startup
+$ /usr/local/pgsql/bin/postmaster -D /usr/local/pgsql/data >logfile 2>&1 &
+
+6. create database
+
+$ /usr/local/pgsql/bin/createdb <nameofdb>
+
+$ /usr/local/pgsql/bin/psql <nameofdb> - to access
+
+7. Use pgAdmin 3 for GUI database management.
+http://www.pgadmin.org/
+to connect use add a connection to a server.
+enter a name and for host 'localhost'
+leave user postgres and enter your postgres password
+
+Adding tables and data using sql scripts:
+
+Open pgAdmin3 click on the name of the database then click on the 6th icon 'Execute arbitrary SQL queries'
+SQL editor opens. Use file open and add the provied SQL script file for adding the tables to the tadabase:
+create_nacl_actcoeff_table.sql
+
+ALTER TABLE <name_of_the_table>
+
+In the lower part OWNER TO <user> - user that has access rights to the daabase (e.g. postgres)
+
+Click RUN (green arrow)
+
+After running the script you should see the new table under the database name->public->Tables->
+
+For adding data from a CSV another script is needed: load_NaCl_ambient_from_csv.sql
+In this script should be the name of the table, the collumns, the path to the csv file and the type of delimiter.
+
+
+
+
+

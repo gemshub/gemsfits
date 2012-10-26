@@ -265,11 +265,11 @@ void System_Properties::getparam( parameters* sysparam )
 	ActName_s = allparam.substr((pos_start+f11.length()),(pos_end-pos_start-f11.length()));
 	istringstream ActName_ss(ActName_s);
         ActName_ss >> sub_ActName;
-	if( ! strncmp( sub_ActName.c_str(), "ELVIS", 20 ) )
+/*	if( ! strncmp( sub_ActName.c_str(), "ELVIS", 20 ) )
 	{
 		activity_model = ELVIS;
 	}
-	else if( ! strncmp( sub_ActName.c_str(), "PITZER", 20 ) )
+    else*/ if( ! strncmp( sub_ActName.c_str(), "PITZER", 20 ) )
 	{
 		activity_model = Pitzer;
 	}

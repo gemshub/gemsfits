@@ -1,6 +1,10 @@
 * text=auto !eol
 docs/Developing[!!-~]GEMSFIT(GUI)_GEMS3K.pdf -text
 docs/HowToDevelopGEMSFIT(GUI).html -text
+docs/create_nacl_actcoeff_table.sql -text
+docs/install_setup_Postgresql.txt -text
+docs/load_NaCl_ambient_from_csv.sql -text
+docs/nacl_298k.csv -text
 gemsfit/docs/txt/HowToBuildGEMSFIT.txt -text
 gemsfit/gemsfit.pro -text
 gemsfit/gemsfits.pro -text

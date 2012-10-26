@@ -533,7 +533,7 @@ cout << "tsolmod wrapper: sys->sysdata->molality_1.at("<<i<<") = "<<sys->sysdata
 
 							if( sys->activity_model == 1 )
 							{
-								activity_model_point = new TELVIS( &sd, aM, aZ, Rhow, Epsw );
+//								activity_model_point = new TELVIS( &sd, aM, aZ, Rhow, Epsw );
 							}		
 							else if( sys->activity_model == 2 )
 							{
@@ -1732,7 +1732,7 @@ cout << "EpsW[3] = " << EpsW[3] << endl;
 		}
 
 
-		activity_model_point = new TELVIS( &sd, aM, aZ, Rhow, Epsw );
+//		activity_model_point = new TELVIS( &sd, aM, aZ, Rhow, Epsw );
 		activity_model_point->PTparam();
 		activity_model_point->MixMod();
 		
@@ -1817,38 +1817,38 @@ cout << "FinDiff:	aM[1] = " << aM[1] << endl;
 	aM[ species_conc_id ] 	= m_spec_current;
 	    //aM[ 0 ] 	= m_spec_current;
 	    //aM[ 1 ] 	= m_spec_current;
-		TSolMod* activity_model_point_1 = new TELVIS( &sdc1, aM, aZ, Rhow, Epsw );
-		activity_model_point_1->PTparam();
-		activity_model_point_1->MixMod();
+//		TSolMod* activity_model_point_1 = new TELVIS( &sdc1, aM, aZ, Rhow, Epsw );
+//		activity_model_point_1->PTparam();
+//		activity_model_point_1->MixMod();
 	    gam_1 = sdc1.arlnGam[ species_gamma_id ]; 
 	    //gam_1 = 0.5 * (sdc1.arlnGam[ 0 ] + sdc1.arlnGam[ 1 ]);
 cout<<"FD 1 	aM["<<species_conc_id<<"] = "<< aM[ species_conc_id ] <<" | gam_1 = "<< gam_1 <<endl;
 cout<<"ln_gamma mean = "<< 0.5*(sdc1.arlnGam[ 0 ] + sdc1.arlnGam[ 1 ]) << endl;
-		delete activity_model_point_1;
+//		delete activity_model_point_1;
 		
 
 	aM[ species_conc_id ] 	= m_spec_current + h;
 		//aM[ 0 ] 	= m_spec_current + h;
 	    //aM[ 1 ] 	= m_spec_current + h;
-		TSolMod* activity_model_point_2 = new TELVIS( &sdc1, aM, aZ, Rhow, Epsw );
-		activity_model_point_2->PTparam();
-		activity_model_point_2->MixMod();
+//		TSolMod* activity_model_point_2 = new TELVIS( &sdc1, aM, aZ, Rhow, Epsw );
+//		activity_model_point_2->PTparam();
+//		activity_model_point_2->MixMod();
 	    gam_2 = sdc1.arlnGam[ species_gamma_id ];
 	    //gam_2 = 0.5 * (sdc1.arlnGam[ 0 ] + sdc1.arlnGam[ 1 ]);
 cout<<"FD 2		aM["<<species_conc_id<<"] = "<< aM[ species_conc_id ]<<" | gam_2 = "<< gam_2 <<endl;
-		delete activity_model_point_2;	    
+//		delete activity_model_point_2;
 
 
 	aM[ species_conc_id ] 	= m_spec_current + h + h;
 		//aM[ 0 ] 	= m_spec_current + h + h;
 	    //aM[ 1 ] 	= m_spec_current + h + h;
-		TSolMod* activity_model_point_3 = new TELVIS( &sdc1, aM, aZ, Rhow, Epsw );
-		activity_model_point_3->PTparam();
-		activity_model_point_3->MixMod();
+//		TSolMod* activity_model_point_3 = new TELVIS( &sdc1, aM, aZ, Rhow, Epsw );
+//		activity_model_point_3->PTparam();
+//		activity_model_point_3->MixMod();
 	    gam_3 = sdc1.arlnGam[ species_gamma_id ];
 	    //gam_3 = 0.5 * (sdc1.arlnGam[ 0 ] + sdc1.arlnGam[ 1 ]);
 cout<<"FD 3 	aM["<<species_conc_id<<"] = "<< aM[ species_conc_id ]<<" | gam_3 = "<< gam_3 <<endl;
-		delete activity_model_point_3;
+//		delete activity_model_point_3;
 
 
 	    DlnactDm = ( -3*gam_1 + 4*gam_2 - gam_3 )/( 2*h );
@@ -1924,7 +1924,7 @@ cout << "epsW = " << epsW << endl;
 		}		
 		Rhow[0]	=	rhoW/1000;
 		Epsw[0]	=  	epsW;
-		activity_model_point = new TELVIS( &sd, aM, aZ, Rhow, Epsw );
+//        activity_model_point = new TELVIS( &sd, aM, aZ, Rhow, Epsw );
 		activity_model_point->PTparam();
 		activity_model_point->MixMod();
 		activity_model_point->Get_lnGamma( lngam );
@@ -1955,7 +1955,7 @@ cout << "Cation: lnGam_high = " << lnGam_high << endl;
 		}		
 		Rhow[0]	=	rhoW/1000;
 		Epsw[0]	=  	epsW;
-		activity_model_point = new TELVIS( &sd, aM, aZ, Rhow, Epsw );
+//		activity_model_point = new TELVIS( &sd, aM, aZ, Rhow, Epsw );
 		activity_model_point->PTparam();
 		activity_model_point->MixMod();
 		activity_model_point->Get_lnGamma( lngam );
@@ -1992,7 +1992,7 @@ cout<<"FinDiff_cation = "<<FinDiff_cation<<endl;
 		}		
 		Rhow[0]	=	rhoW/1000;
 		Epsw[0]	=  	epsW;
-		activity_model_point = new TELVIS( &sd, aM, aZ, Rhow, Epsw );
+//		activity_model_point = new TELVIS( &sd, aM, aZ, Rhow, Epsw );
 		activity_model_point->PTparam();
 		activity_model_point->MixMod();
 		activity_model_point->Get_lnGamma( lngam );
@@ -2020,7 +2020,7 @@ cout<<"FinDiff_cation = "<<FinDiff_cation<<endl;
 		}		
 		Rhow[0]	=	rhoW/1000;
 		Epsw[0]	=  	epsW;
-		activity_model_point = new TELVIS( &sd, aM, aZ, Rhow, Epsw );
+//		activity_model_point = new TELVIS( &sd, aM, aZ, Rhow, Epsw );
 		activity_model_point->PTparam();
 		activity_model_point->MixMod();
 		activity_model_point->Get_lnGamma( lngam );
@@ -2313,13 +2313,13 @@ cout<<"FinDiffVolume = "<<FinDiffVolume<<endl;
 		vector<double> comp_actcoeff;	
 
 		// initialize instance of TSolMod subclass 
-		TSolMod* activities = new TELVIS( &lma_data->sd, lma_data->aM, lma_data->aZ, lma_data->RhoW, lma_data->EpsW );
+//		TSolMod* activities = new TELVIS( &lma_data->sd, lma_data->aM, lma_data->aZ, lma_data->RhoW, lma_data->EpsW );
 		
 		// Correct SolMod instance to the new pressure and temperature
-		activities->PTparam();
+//		activities->PTparam();
 
 		// Compute activity coefficient at new T-P-X
-		activities->MixMod();
+//		activities->MixMod();
 
 #ifdef GEMSFIT_DEBUG
 cout << " LMA wrapper: sd.arlnGam[0] = " << sd.arlnGam[0] <<endl;
@@ -2341,7 +2341,7 @@ cout << " LMA wrapper: sd.arlnGam[0] = " << sd.arlnGam[0] <<endl;
 
 		SSR = ( lma_data->MeasMol[0] - computed_value ) * ( lma_data->MeasMol[0] - computed_value );
 
-		delete activities;
+//		delete activities;
 
 	return SSR;
 	}

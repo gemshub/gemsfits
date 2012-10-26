@@ -50,12 +50,14 @@ CONFIG += serial release
 
 CONFIG( release,  debug|release ) {
         message( "Configuring for release build ..." )
-        QMAKE_CFLAGS_RELEASE = -O3
-        QMAKE_CXXFLAGS_RELEASE = -O3
+        QMAKE_CFLAGS_RELEASE = -g -pedantic
+        QMAKE_CXXFLAGS_RELEASE = -g -pedantic
 }
 
 CONFIG( debug,  debug|release ) {
         DEFINES += GEMSFIT_DEBUG
+        QMAKE_CFLAGS_DEBUG = -g
+        QMAKE_CXXFLAGS_DEBUG = -g
         message( "Configuring for debug build ..." )
 }
 
@@ -75,7 +77,7 @@ CONFIG( serial, serial|mpi ) {
         QMAKE_CXX	= g++
         QMAKE_CFLAGS +=
         QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions
-        LIBS += -L/usr/lib/postgresql/9.1/lib/ -L/home/parallels/bin/dislin -ldislin -lXm -lecpg -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz
+        LIBS += -L/usr/lib/postgresql/9.1/lib/ -L/usr/local/dislin/ -ldislin -lXm -lecpg -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz
 }
 
 FIT_CPP      =  ./src-fit
@@ -89,10 +91,11 @@ DEPENDPATH   += $$GEMS3K_H
 
 INCLUDEPATH  += $$FIT_H
 INCLUDEPATH  += $$GEMS3K_H   
-INCLUDEPATH  += . /usr/include/postgresql /home/parallels/bin/dislin
+INCLUDEPATH  += . /usr/include/postgresql /usr/local/dislin/
 
 OBJECTS_DIR       = obj
 
 include($$FIT_CPP/fit.pri)
 include($$GEMS3K_CPP/gems3k.pri)
+
 
