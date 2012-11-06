@@ -1,4 +1,4 @@
-/* 
+/*
 *	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
 *
 *	 This file is part of the thermodynamic fitting program GEMSFIT.
@@ -40,6 +40,172 @@
 #include "system_properties.h"
 
 using namespace std;
+
+SS_System_Properties::SS_System_Properties( )
+{
+
+    param_file  = "SS_INPUT/SS_GEMSFIT_input.dat";
+
+    // For parameter optimization do not use printing of results
+    printfile = false;
+
+    // For parameter optimization do not use parallelization of the Monte Carlo loop (=true). Instead, execute loop over measurements within objective function in parallel (=false).
+    MC_MPI = false;
+
+    // Initialize data storage class
+//    data_meas = new SS_Data_Manager;
+
+    // Initialize pointer to instance of sysprop object
+    sysprop = new std_prop;
+    getsysprop( sysprop );
+
+}
+
+SS_System_Properties::~SS_System_Properties()
+{
+    // delete data_meas;
+    delete sysprop;
+}
+
+// Function reads tandard state properties of the chemical system. This function reads from the input file the system properties
+// and retrives from GEMS3K the standard state thermodynamic properites.
+void SS_System_Properties::getsysprop( std_prop* sysprop )
+{
+
+    // Variable declarations
+    vector<string> data;
+    string line, allparam;
+    string SysName_s, SpecName_s;
+    string sub_SysName, sub_SpecName;
+    int pos_start, pos_end;
+    unsigned int i;
+    ifstream param_stream;
+
+    // Keywords
+    string f7("<SystemName>");
+    string f9("<FitSpeciesName>");
+    string f4("#");
+
+
+    // Read parameter file into string
+    param_stream.open(param_file.c_str());
+    if( param_stream.fail() )
+    {
+        cout << "Opening of file "<<param_file<<" failed !!"<<endl;
+        exit(1);
+    }
+    while( getline(param_stream, line) )
+    {
+        data.push_back(line);
+    }
+    param_stream.close();
+    for( i=0; i < data.size(); i++ )
+    allparam += data[i];
+
+    // GEMSFIT logfile
+    const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
+    ofstream fout;
+    fout.open(path, ios::app);
+    if( fout.fail() )
+    { cout<<"Output fileopen error"<<endl; exit(1); }
+
+
+    // System name
+    pos_start = allparam.find(f7);
+    pos_end   = allparam.find(f4,pos_start);
+    SysName_s = allparam.substr((pos_start+f7.length()),(pos_end-pos_start-f7.length()));
+    istringstream SysName_ss(SysName_s);
+    for( i=0; i<1; i++)
+    {
+        SysName_ss >> sub_SysName;
+        system_name = sub_SysName;
+    }
+    fout<<"system_name = "<<system_name<<endl;
+
+    //species
+    pos_start = allparam.find(f9);
+    pos_end   = allparam.find(f4,pos_start);
+    SpecName_s = allparam.substr((pos_start+f9.length()),(pos_end-pos_start-f9.length()));
+    istringstream SpecName_ss(SpecName_s);
+    do
+    {
+        SpecName_ss >> sub_SpecName;
+        to_fit_species.push_back(sub_SpecName);
+    }while(SpecName_ss);
+    to_fit_species.pop_back(); // goes back a spot in the vector so there is no doubling of the last entry. Don't know whit it doubles??
+    for ( i=0; i<to_fit_species.size(); i++)
+    {
+    fout<<"species["<<i<<"] = "<<to_fit_species[i]<<" | "<<endl;
+    }
+
+
+
+    // Assert that the parameter given in the GEMSFIT chemical system input file are compatible with the corresponding values in the GEMS3K input file
+    long index_species = -1;
+    char input_system_file_list_name[256];
+
+
+    // get system file list name // system name is the same ast the GMS3K input .lst file
+    strcpy(input_system_file_list_name, system_name.c_str());
+
+    // call GEM_init to read GEMS3K input files
+    TNode* node  = new TNode();
+    // call GEM_init     --> read in input files
+    if( (node->GEM_init( input_system_file_list_name )) == 1 )
+    {
+        cout<<" .. ERROR occurred while reading input files !!! ..."<<endl;
+        exit(1);
+    }
+
+    for ( i=0; i<to_fit_species.size(); ++i )
+    {
+    // Get index of to_fit_species of interest
+    try
+    {
+        index_species = node->DC_name_to_xCH( to_fit_species[i].c_str() );
+        if( index_species < 0 )
+        {
+            throw index_species;
+        }
+        else
+        {
+            fit_species_ind.push_back(index_species);
+        }
+    }
+    catch( long e )
+    {
+        cout<<endl;
+        cout<<" Phase name in GEMSFIT chemical system file has no corresponding phase name in GEMS3K input file !!!! "<<endl;
+        cout<<" Phase name given in GEMSFIT_input.dat: "<<to_fit_species[i]<<endl;
+        cout<<" Can not proceed ... Bailing out now ... "<<endl;
+        cout<<endl;
+        exit(1);
+    }
+    }
+
+//    // Check if temperature and pressure is in the DATACH lookup array
+//	for( i=0; i<sysdata->pressure.size(); i++ )
+//	{
+//        if( (node->check_TP( sysdata->temperature.at(i), 100000 * sysdata->pressure.at(i)) == false &&  node->check_grid_TP( sysdata->temperature.at(i), 100000 * sysdata->pressure.at(i) ) < 0. ) /*&& node->check_grid_TP( sysdata->temperature.at(i), 100000 * sysdata->pressure.at(i) ) < 0*/ )
+//		{
+//			cout<<endl;
+//			cout<<" Measurement data: temperature "<<sysdata->temperature.at(i)<<" together with pressure "<<100000 * sysdata->pressure.at(i)<<" does not appear in the DATACH structure of GEMS3K !!!!"<<endl;
+//			//cout<<" bailing out now ... "<<endl;
+//			cout<<endl;
+//			//exit(1);
+//		}
+//	}
+
+    /// implement Get STD G0 at TP of the experiments
+
+    delete node;
+
+    param_stream.close();
+
+    fout.close();
+
+
+}
 
 System_Properties::System_Properties( )
 {

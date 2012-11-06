@@ -54,6 +54,90 @@
 using namespace std;
 using namespace boost;
 
+/// DM the (Standard State) SS_System_Properties class retrieves and stores data related to the chemical system setup.
+class SS_System_Properties /*: public SS_Data_Manager*/
+{
+    public:
+    /**
+    * Constructor for the SS_System_Properties class.
+    * Function reads parameters of the chemical system from SS_GEMSFIT_input.dat.
+    * // Most of these parameters (such as parameter array dimensions) appear also in the GEMS3K input files and must therefore be identical.
+    * // Examples for these parameters are the aIPc, aDCc and aIPx array.
+    *
+    * @author DM
+    * @date 30.10.2012
+    */
+    SS_System_Properties( );
+    /**
+    * Destructor for the SS_System_Properties class.
+    *
+    * @author DM
+    * @date 30.10.2012
+    */
+    virtual ~SS_System_Properties( );
+
+    typedef vector<double> vd;        // vector of double
+    typedef vector<vector<double> > vvd;  // 2D vector of double
+    typedef vector<string> vs;        // vector of string
+    typedef vector<int> vi;           // vecotr of integer
+    typedef vector<vector<int> > vvi; // 2D vector of integer
+
+    /// name of the chemical system e.g. qtz_h2o_nacl-dat.lst (name of lst file exported by GEMS3K)
+    string system_name;
+    /// name of the measurement database
+    string meas_db;
+    /// the GEMSFIT configuration file (fixed to SS_GEMSFIT_input.dat)
+    string param_file;
+    /// name of species to be fitted.
+    vs to_fit_species; // Dependent components in GEMS3K except solid phases which are taken form HP database
+    vi fit_species_ind; // indices of the fitted species in GEMS3K - read form node class after reading the experimental data.
+//    /// the GEMSFIT configuration file (fixed to GEMSFIT_input.dat)
+//    string param_file;
+
+    /// Printing Flag: if this flag is set to one, the result of the optimization will be printed to file (via optimization.cpp)
+    bool printfile;
+
+    /// Monte Carlo flag: if true, then the MPI commands within the objective function call will not be executed. Instead, the loop over Monte Carlo runs is parallelized
+    bool MC_MPI;
+
+    /// Computed values for Monte Carlo confidence interval generation
+    vd computed_values_v;
+    /// Measurement values for Monte Carlo confidence interval generation
+    vd measured_values_v;
+
+    /// Computed residuals
+    vd computed_residuals_v;
+
+    // Position of G0_fit parameters in opt vector
+    vvi fit_indices;
+    vi fit_ind_opt;
+    vi fit_ind_sys;
+
+
+    // Pointer to SS_Data_Manager class containing measurement data
+//    SS_Data_Manager* data_meas;
+
+    /// Structure that holds the standard theromdynamic properties of the species to be fitted
+    // implemented only for Gibbs energy
+    struct std_prop
+    {
+        vd std_gibbs;   // standard state Gibbs free energy of the species to be fitted at T=25 C and P=1 bar
+        vvd std_gibbsTP; // standard state Gibbs free energy of the species to be fitted at T and P of the experiemnts [specie][TPpair]
+        std::vector<vector<int[2]> > TP_pairs; // TP pairs of the experiments.< Only >The unique values will be extracted form the database.
+        vd dif_biggs;   // difference dif_gibbs = std_gibbsTP-std_gibbs. This difference is set once after rertiving std_gibbs and std_gibbsTP form GEMS3K;
+    };
+    std_prop* sysprop; // Pointer to std_prop struct that holds the stdandard state properties of the species to be fitted
+
+    /**
+    * Function reads standard state properties of the chemical system form GEMS3K input files
+    *
+    * @param sysprop		Structure that holds the standard theromdynamic properties of the species to be fitted
+    * @author DM
+    * @date 30.10.2012
+    */
+    void getsysprop( std_prop* sysprop );
+};
+
 /// the System_Properties class retrieves and stores data related to the chemical system setup.
 class System_Properties : public Data_Manager
 {
@@ -104,7 +188,7 @@ class System_Properties : public Data_Manager
 		};
 		act_model activity_model;
 	
-		/// Printing Flag: if this flag is set to one, the result of the optimization will be printed to file (via optimization.cpp)
+        /// Printing Flag: if this flag is set to one, the result of the optimization will be printed to file (via optimization.cpp)
 		bool printfile;
 
 		/// Monte Carlo flag: if true, then the MPI commands within the objective function call will not be executed. Instead, the loop over Monte Carlo runs is parallelized
@@ -129,7 +213,7 @@ class System_Properties : public Data_Manager
 
 
 		/// Struct with system specific measurement data
-		struct parameters
+        struct parameters
 		{
 			/// number of columns of the interaction parameter array
 			int cols_aIPc;

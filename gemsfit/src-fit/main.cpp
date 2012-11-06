@@ -107,7 +107,14 @@ cout<<"48"<<endl;
 	elapsed_time = - MPI_Wtime();
 #endif	
 
+int do_what = 1;
 
+if (do_what) {
+    SS_System_Properties* ss_newsys = new SS_System_Properties();
+    delete ss_newsys;
+}
+else
+{
 	// Define first system
 	System_Properties* newsys = new System_Properties();
 
@@ -218,6 +225,7 @@ cout<<"48"<<endl;
 
 	// Call destructor of ActivityModel class
 	delete newsys;
+}
 
 
 #ifdef USE_MPI
