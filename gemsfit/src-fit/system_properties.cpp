@@ -21,10 +21,10 @@
 /**
  *	@file system_properties.cpp
  *
- *	@brief this source file contains implementations of the System_Properties class, 
+ *	@brief this source file contains implementations of the System_Properties and SS_System_Properties class,
  *	which retrievs and stores data related to the chemical system setup.    
  *
- *	@author Ferdinand F. Hingerl
+ *	@author Ferdinand F. Hingerl, G. Dan Miron
  *
  * 	@date 09.04.2012 
  *
@@ -53,7 +53,7 @@ SS_System_Properties::SS_System_Properties( )
     MC_MPI = false;
 
     // Initialize data storage class
-//    data_meas = new SS_Data_Manager;
+    data_meas = new SS_Data_Manager;
 
     // Initialize pointer to instance of sysprop object
     sysprop = new std_prop;
@@ -135,7 +135,7 @@ void SS_System_Properties::getsysprop( std_prop* sysprop )
     to_fit_species.pop_back(); // goes back a spot in the vector so there is no doubling of the last entry. Don't know whit it doubles??
     for ( i=0; i<to_fit_species.size(); i++)
     {
-    fout<<"species["<<i<<"] = "<<to_fit_species[i]<<" | "<<endl;
+    fout<<"species["<<i<<"] = "<<to_fit_species[i]<<" | ";
     }
 
 
@@ -183,6 +183,8 @@ void SS_System_Properties::getsysprop( std_prop* sysprop )
     }
     }
 
+    fout << " Number of species: " << fit_species_ind.size() << endl;
+
 //    // Check if temperature and pressure is in the DATACH lookup array
 //	for( i=0; i<sysdata->pressure.size(); i++ )
 //	{
@@ -196,7 +198,7 @@ void SS_System_Properties::getsysprop( std_prop* sysprop )
 //		}
 //	}
 
-    /// implement Get STD G0 at TP of the experiments
+    /// implement Get STD G0 at TP of the experiments and the std G0 at 273 and 1 bar
 
     delete node;
 
@@ -204,8 +206,11 @@ void SS_System_Properties::getsysprop( std_prop* sysprop )
 
     fout.close();
 
-
 }
+
+// ----------------------------------------------- END SS_System_Properties CLASS -----------------------------------------------//
+
+
 
 System_Properties::System_Properties( )
 {

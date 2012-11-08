@@ -21,10 +21,10 @@
 /**
  *	@file system_properties.h
  *
- *	@brief this header file contains definitions of the System_Properties class, 
+ *	@brief this header file contains definitions of the System_Properties and SS_System_Properties class,
  *	which retrieves and stores data related to the chemical system setup.    
  *
- *	@author Ferdinand F. Hingerl
+ *	@author Ferdinand F. Hingerl, G. Dan Miron
  *
  * 	@date 09.04.2012 
  *
@@ -61,8 +61,6 @@ class SS_System_Properties /*: public SS_Data_Manager*/
     /**
     * Constructor for the SS_System_Properties class.
     * Function reads parameters of the chemical system from SS_GEMSFIT_input.dat.
-    * // Most of these parameters (such as parameter array dimensions) appear also in the GEMS3K input files and must therefore be identical.
-    * // Examples for these parameters are the aIPc, aDCc and aIPx array.
     *
     * @author DM
     * @date 30.10.2012
@@ -115,7 +113,7 @@ class SS_System_Properties /*: public SS_Data_Manager*/
 
 
     // Pointer to SS_Data_Manager class containing measurement data
-//    SS_Data_Manager* data_meas;
+    SS_Data_Manager* data_meas;
 
     /// Structure that holds the standard theromdynamic properties of the species to be fitted
     // implemented only for Gibbs energy
