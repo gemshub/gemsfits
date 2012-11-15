@@ -248,6 +248,96 @@ namespace opti
 
 	};
 
+    /// the StdStateProp class provides a generic framework for initializiating and performing std G0 (at 25 deg C and 1 bar) optimization with the nlopt library.
+    class StdStateProp : public Optimization
+    {
+    public:
+        // opt vector
+        vector<double> opt_vec;
+
+        // Constructor
+        StdStateProp( const vector<double> vec_opt );
+
+        // Destructor
+        virtual ~StdStateProp();
+
+        // nlopt instance
+        nlopt::opt opt_actmod;
+
+        // configuration data for nlopt instance (get from GEMSFIT_input.dat)
+        /// name of the optimization algorithm from NLOPT library
+        string OptAlgo;
+        /// number of threads for parallel execution
+        int OptThreads;
+        ///
+        double OptTolRel;
+        double OptTolAbs;
+        int OptMaxEval;
+        int OptConstraints;
+        int OptDoWhat;
+        int OptHybridMode;
+        double OptHybridTolRel;
+        double OptHybridTolAbs;
+        int OptHybridMaxEval;
+        int OptNmultistart;
+        string OptHybridAlgo;
+        double OptInitStep;
+        double OptScaleParam;
+        bool OptNormParam;
+        double OptBoundPerc;
+
+        vector<double> OptStatOnlyBestFitParam;
+        double OptStatOnlySSR;
+        bool OptEquil;
+
+        bool test;
+
+        // optimization vector and bounds (get from SS_GEMSFIT_input.dat)
+        std::vector<double> optv;
+        std::vector<double> OptUpBounds;
+        std::vector<double> OptLoBounds;
+
+        // printing information (get from SS_GEMSFIT_input.dat)
+        PlotFit* Plot_ActMod;
+
+
+        /// struct holding constraint values (retrieved from SS_GEMSFIT_input.dat)
+        typedef struct
+        {
+            int id;
+            double Constraints;
+        } my_constraint_data;
+        my_constraint_data* constraint_data;
+        vector<my_constraint_data> constraint_data_v;
+
+        // Populate nlopt instance
+        virtual void set_nlopt_param( );
+
+        // Normalize init vector, bounds and constraints
+        virtual void normalize_params( const vector<double> initguesses );
+
+        // NLopt return codes
+        virtual void print_return_message( const int result );
+
+        // Constraint function
+        virtual double constraint_function(const std::vector<double> &x, std::vector<double> &grad, void *data);
+
+        // Initialize optimization object and assign constraints and bounds
+        virtual void build_optim( nlopt::opt &opt_actmod, std::vector<double> &optv_, std::vector<SS_System_Properties*> *systems, int &countit, double &sum_of_squares );
+
+        // Initialize hybrid optimization object and assign constraints and bounds
+        virtual void build_hybrid_optim( nlopt::opt &opt_hybrid_actmod, std::vector<double> &optv_, std::vector<SS_System_Properties*> *systems, int &countit, double &sum_of_squares );
+
+        // initialize optimization
+        virtual void init_optim( std::vector<double> &optv_, std::vector<SS_System_Properties*> *sys, int &countit, double &sum_of_squares );
+
+        // Initialize multistart optimization object and assign constraints and bounds
+        virtual void init_optim_multistart( std::vector<double> &optv_, std::vector<SS_System_Properties*> *sys, int &countit, double &sum_of_squares );
+
+        // Print results to file
+        virtual void print_results( std::vector<double> &optv_, std::vector<SS_System_Properties*> *sys );
+    };
+
 
 	/// the ActivityModel class provides a generic framework for initializiating and performing parameter optimization of TSolMod derived classes with the nlopt library.  
 	class ActivityModel : public Optimization 

@@ -121,8 +121,7 @@ class SS_System_Properties /*: public SS_Data_Manager*/
     {
         vd std_gibbs;   // standard state Gibbs free energy of the species to be fitted at T=25 C and P=1 bar
         vvd std_gibbsTP; // standard state Gibbs free energy of the species to be fitted at T and P of the experiemnts [specie][TPpair]
-        std::vector<vector<int[2]> > TP_pairs; // TP pairs of the experiments.< Only >The unique values will be extracted form the database.
-        vd dif_biggs;   // difference dif_gibbs = std_gibbsTP-std_gibbs. This difference is set once after rertiving std_gibbs and std_gibbsTP form GEMS3K;
+        vvd dif_gibbs;   // difference dif_gibbs = std_gibbsTP-std_gibbs. This difference is set once after rertiving std_gibbs and std_gibbsTP form GEMS3K [specie][TPpair];
     };
     std_prop* sysprop; // Pointer to std_prop struct that holds the stdandard state properties of the species to be fitted
 

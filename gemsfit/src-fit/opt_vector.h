@@ -49,7 +49,55 @@ using namespace std;
 
 #include "system_properties.h"
 
-/// The Opt_Vector creates and hosts the optimization vector.   
+/// The Opt_Vector creates and hosts the optimization vector.
+// ============================ SS_Opt_Vector =========================== //
+
+class SS_Opt_Vector
+{
+    public:
+        /**
+        * Constructor of the SS_Opt_Vector class.
+        * Function creates and hosts the optimization vector of std state G0's.
+        *
+        * @param systems vector of pointers to instances of System_Properties structs
+        * @author DM
+        * @date 14.11.2012
+        */
+        SS_Opt_Vector( vector<SS_System_Properties*> systems );
+        /**
+        * Destructor of the Opt_Vector class.
+        *
+        * @author DM
+        * @date 14.11.2012
+        */
+        virtual ~SS_Opt_Vector();
+
+        /// vector containing optimization values
+        vector<double> opt; // position 0 specie 0 etc.
+
+        /// vector containing the first guesses for normalization of the opt vector
+        vector<double> optv0;
+
+        /// vector indicating which species is the respective position in the opt vector is referring to
+        vector<string> fit_species;
+//        vector<vector<string> >::iterator iter_spec1; vector<string>::iterator iter_spec2;
+//        /// col of parameter which is at respective position in opt vector
+//        vector<int> fit_param_col;
+//        /// type of parameter which is at respective position in opt vector
+//        vector<int> fit_param_type;
+
+        /**
+        * Function creates the opt, species and param_types vectors
+        *
+        * @param vect_of_sys_props vector of pointers to instances of System_Properties structs
+        * @author DM
+        * @date 14.11.2012
+        */
+        void make_opt_vector( vector<SS_System_Properties*> vect_of_sys_props );
+};
+// ============================ END SS_Opt_Vector =========================== //
+
+
 class Opt_Vector
 {
 	public:

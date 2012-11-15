@@ -47,6 +47,58 @@ using namespace std;
 #include "system_properties.h"
 #include "opt_vector.h"
 
+// ============================ SS_Opt_Vector =========================== //
+
+SS_Opt_Vector::SS_Opt_Vector( vector<SS_System_Properties*> vect_of_sys_props )
+{
+    make_opt_vector( vect_of_sys_props );
+}
+
+void SS_Opt_Vector::make_opt_vector( vector<SS_System_Properties*> vect_of_sys_props )
+{
+
+    unsigned int i,j;
+
+    // Loop over systems - curetnly only one system
+    for( i=0; i<vect_of_sys_props.size(); i++ )
+    {
+        cout<<" ... now in make_opt_vector"<<endl;
+
+        if( i==0 )
+        {
+            // Loop over aIPc_fit_* of each system
+            for( j=0; j<vect_of_sys_props[i]->fit_species_ind.size(); j++ )
+            {
+
+                // store first guesses of aIPc arrays in opt vector
+                opt.push_back(vect_of_sys_props[i]->sysprop->std_gibbs[j]);
+                fit_species.push_back(vect_of_sys_props[i]->to_fit_species[j]);
+            };
+
+        } // all other systems
+        else
+        {
+            // add only parameters to the optimization vector that do not show up in other systems
+
+        };
+    };
+
+    //cout<<"opt.size() = "<<opt.size()<<endl;
+
+    // Load initial guess vector, which will be used for normalization of the opt vector
+    optv0 = opt;
+
+}
+
+
+// Destructor
+SS_Opt_Vector::~SS_Opt_Vector( )
+{
+    //
+}
+
+// ============================ END SS_Opt_Vector =========================== //
+
 Opt_Vector::Opt_Vector( vector<System_Properties*> vect_of_sys_props )
 {
 	make_opt_vector( vect_of_sys_props );

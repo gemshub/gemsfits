@@ -24,7 +24,7 @@ miron64766
 
 # DataManager: database name
 <DatDB>
-ss_gemfit
+solubility
 
 # DataManager: database server
 <DatServer>
@@ -33,7 +33,11 @@ localhost
 # DataManager: data table name
 #cacl2_meas_373K_1bar
 <DatTable>
-nacl_act_coeff_298k_1bar 
+qtz_h2o_nacl 
+
+# DataManager: Reaction dependent species table name
+<DatRDCTable>
+RDCqtz_h2o_nacl
 
 # name of the system that will be fitted
 <SystemName>
@@ -41,7 +45,7 @@ SS_INPUT/qtz_h2o_nacl-dat.lst
 
 # name of the species that will be fitted
 <FitSpeciesName>
-Na+ NaCl@ NaOH@ Na(HSiO3)@ HSiO3- SiO2@ SiO3-2 ClO- HClO@ ClO2- HClO2@ ClO3- ClO4- Cl-
+Na+ NaCl@ NaOH@ Na(HSiO3)@ HSiO3- SiO2@ SiO3-2 ClO- HClO@ ClO2- HClO2@ ClO3- ClO4- Cl- Amor-Sl
 
 # Dependent components names
 <DepComp>

@@ -43,6 +43,12 @@ using namespace std;
 
 SS_System_Properties::SS_System_Properties( )
 {
+    // GEMSFIT logfile
+    const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
+    ofstream fout;
+    fout.open(path, ios::app);
+    if( fout.fail() )
+    { cout<<"Output fileopen error"<<endl; exit(1); }
 
     param_file  = "SS_INPUT/SS_GEMSFIT_input.dat";
 
@@ -53,11 +59,15 @@ SS_System_Properties::SS_System_Properties( )
     MC_MPI = false;
 
     // Initialize data storage class
+    fout << "2. system_properties.cpp line 63. Creating new SS_Data_Manager data_meas" << endl;
     data_meas = new SS_Data_Manager;
 
     // Initialize pointer to instance of sysprop object
     sysprop = new std_prop;
+    fout << "8. system_properties.cpp line 68. getsysprop( sysprop ); reads system properties form the input file." << endl;
     getsysprop( sysprop );
+
+    fout.close();
 
 }
 
@@ -78,7 +88,7 @@ void SS_System_Properties::getsysprop( std_prop* sysprop )
     string SysName_s, SpecName_s;
     string sub_SysName, sub_SpecName;
     int pos_start, pos_end;
-    unsigned int i;
+    unsigned int i, j;
     ifstream param_stream;
 
     // Keywords
@@ -120,7 +130,7 @@ void SS_System_Properties::getsysprop( std_prop* sysprop )
         SysName_ss >> sub_SysName;
         system_name = sub_SysName;
     }
-    fout<<"system_name = "<<system_name<<endl;
+    fout<<endl<<"system_name = "<<system_name<<endl;
 
     //species
     pos_start = allparam.find(f9);
@@ -135,10 +145,8 @@ void SS_System_Properties::getsysprop( std_prop* sysprop )
     to_fit_species.pop_back(); // goes back a spot in the vector so there is no doubling of the last entry. Don't know whit it doubles??
     for ( i=0; i<to_fit_species.size(); i++)
     {
-    fout<<"species["<<i<<"] = "<<to_fit_species[i]<<" | ";
+    fout<<"species["<<i<<"] = "<<to_fit_species[i]<<"; ";
     }
-
-
 
     // Assert that the parameter given in the GEMSFIT chemical system input file are compatible with the corresponding values in the GEMS3K input file
     long index_species = -1;
@@ -183,22 +191,52 @@ void SS_System_Properties::getsysprop( std_prop* sysprop )
     }
     }
 
-    fout << " Number of species: " << fit_species_ind.size() << endl;
+    fout << endl << "Number of species to be fitted : " << fit_species_ind.size() << endl;
 
-//    // Check if temperature and pressure is in the DATACH lookup array
-//	for( i=0; i<sysdata->pressure.size(); i++ )
-//	{
-//        if( (node->check_TP( sysdata->temperature.at(i), 100000 * sysdata->pressure.at(i)) == false &&  node->check_grid_TP( sysdata->temperature.at(i), 100000 * sysdata->pressure.at(i) ) < 0. ) /*&& node->check_grid_TP( sysdata->temperature.at(i), 100000 * sysdata->pressure.at(i) ) < 0*/ )
-//		{
-//			cout<<endl;
-//			cout<<" Measurement data: temperature "<<sysdata->temperature.at(i)<<" together with pressure "<<100000 * sysdata->pressure.at(i)<<" does not appear in the DATACH structure of GEMS3K !!!!"<<endl;
-//			//cout<<" bailing out now ... "<<endl;
-//			cout<<endl;
-//			//exit(1);
-//		}
-//	}
+    // Check if temperature and pressure is in the DATACH lookup array
+    for( i=0; i<data_meas->TP_pairs[0].size(); i++ )
+    {
+        if( (node->check_TP( (data_meas->TP_pairs[0][i]+273.15), (100000*data_meas->TP_pairs[1][i])) == false &&  node->check_grid_TP( data_meas->TP_pairs[0][i]+273.15, 100000 * data_meas->TP_pairs[1][i] ) < 0. ) /*&& node->check_grid_TP( sysdata->temperature.at(i), 100000 * sysdata->pressure.at(i) ) < 0*/ )
+        {
+            cout<<endl;
+            cout<<" Measurement data: temperature "<<data_meas->TP_pairs[0][i]<<" together with pressure "<<data_meas->TP_pairs[1][i]<<" does not appear in the DATACH structure of GEMS3K !!!!"<<endl;
+            //cout<<" bailing out now ... "<<endl;
+            cout<<endl;
+            //exit(1);
+        }
+    }
 
-    /// implement Get STD G0 at TP of the experiments and the std G0 at 273 and 1 bar
+
+    /// Get STD G0 at TP of the experiments and the std G0 at 273 and 1 bar and at the unique TP_pairs of the experiments
+    fout << endl << "9. system_properties.cpp line 211. Getting G0 at 25 deg. C and 1 bar and at the unique TP pairs of the experiments into sysprop member of SS_System_properties : std_prop" << endl;
+    // initializing std_gibbs for each specie std_gibbs[0] = the value for first specie
+    for (i=0; i<fit_species_ind.size(); i++) {
+        sysprop->std_gibbs.push_back(0.0);
+//        cout.setf(ios::fixed); // print without scientific notation
+        sysprop->std_gibbs[i] =  node->DC_G0(fit_species_ind[i], 1e+05, 298.15, false); // Get G0 at 1 bar (1e+05 Pa) and 25 degrees C (298.15 K)
+//        cout << "The standard GO for " << to_fit_species[i] << " with index "<< fit_species_ind[i] << " is " << sysprop->std_gibbs[i] << endl;
+    }
+//    cout<< sysprop->std_gibbs.size() << endl;
+
+    for (i=0; i<fit_species_ind.size(); i++) { // loops trough all species
+        vector<double> temp_v1, temp_v2;
+//            cout << " For " << to_fit_species[i] << endl;
+        for (j=0; j<data_meas->TP_pairs[0].size(); j++) { // loops trough all unique TP_pairs
+            temp_v1.push_back(0.0);
+            temp_v2.push_back(0.0);
+//            cout << " P = " << data_meas->TP_pairs[1][j]*100000 << " T = " << data_meas->TP_pairs[0][j]+273.15 << " ";
+            temp_v1[j] = node->DC_G0(fit_species_ind[i], data_meas->TP_pairs[1][j]*100000, data_meas->TP_pairs[0][j]+273.15, false);
+//            cout << temp_v[j] << endl;
+            temp_v2[j]= temp_v1[j] - sysprop->std_gibbs[i]; // a. deltaG T,P = GT,P - G298, 1 (N=0) N – number of iterations
+        }
+        sysprop->std_gibbsTP.push_back(temp_v1);
+        sysprop->dif_gibbs.push_back(temp_v2);
+    }
+//    cout.setf(ios::fixed); // print without scientific notation
+//    cout << "The STD G0 at T= " << data_meas->TP_pairs[0][0] <<" P= " << data_meas->TP_pairs[1][0] << " of " << to_fit_species[2] << " = " << sysprop->std_gibbsTP[2][0] << endl;
+
+
+
 
     delete node;
 

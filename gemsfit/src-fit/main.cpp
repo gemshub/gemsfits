@@ -1,4 +1,4 @@
-/* 
+/*
 *	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
 *
 *	 This file is part of the thermodynamic fitting program GEMSFIT.
@@ -110,8 +110,32 @@ cout<<"48"<<endl;
 int do_what = 1;
 
 if (do_what) {
+
+
+    // GEMSFIT logfile
+    const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
+    ofstream fout;
+    fout.open(path, ios::app);
+    if( fout.fail() )
+    { cout<<"Output fileopen error"<<endl; exit(1); }
+    fout << "1. main.cpp line 124. Creating new SS_System_Properties" << endl;
+
+    // Reading in the data //
     SS_System_Properties* ss_newsys = new SS_System_Properties();
+
+    fout << "10. main.cpp line 126. Finished reading input data and experimental data from the database." << endl;
+
+    // Collect pointers to systems
+    vector<SS_System_Properties*> ss_systems;
+        ss_systems.push_back(ss_newsys);
+
+    fout << "11. main.cpp line 134. Create optimization vector and pass the values to it." << endl;
+    // Create optimization_vector class and pass pointers to systems
+    SS_Opt_Vector optim( ss_systems );
+
+
     delete ss_newsys;
+    fout.close();
 }
 else
 {
@@ -120,8 +144,6 @@ else
 
 	// Define further systems
 
-		
-	
 
 	// Collect pointers to systems 
 	vector<System_Properties*> systems;

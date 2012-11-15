@@ -80,6 +80,9 @@ class SS_Data_Manager
         */
         virtual ~SS_Data_Manager( );
 
+        std::vector<int> TP_pairs[2]; // TP pairs of the experiments.< Only >The unique values will be extracted form the database.
+        // TP_pairs[0] temperature; TP_pairs[1] pressure
+
         /// struct holding 1 experiment data
         struct experiment
         {
@@ -93,9 +96,11 @@ class SS_Data_Manager
             string_v units;                // g, moles - for salts
             double_v component_amount;     // like b vector in GEMS - here in grams or moles
             // vector<string> elements - for withc solubility is measured
-            int_v sol_is_measured;         // for each element if solubility is measured experimentally = true, this way we know for which solubilities to ask GEMS to provide.
-            double_v solubility;           // related to components, if not measured = 0;
-            string_v sol_units;            // log molality
+           // int_v sol_is_measured;         // for each element if solubility is measured experimentally = true, this way we know for which solubilities to ask GEMS to provide.
+            string_v name_elem;             // name of the element for which the solubility is measured
+            double_v solubility;           // related to components
+            double_v log_solubility;
+            // string_v sol_units;            // log molality
             double_v error_sol;            // error in the measured solubility
             int TC;                        // temperature in C
             int PG;                        // pressure in bars

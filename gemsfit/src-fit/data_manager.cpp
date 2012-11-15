@@ -35,12 +35,19 @@
 // Constructor
 SS_Data_Manager::SS_Data_Manager( )
 {
+    // GEMSFIT logfile
+    const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
+    ofstream fout;
+    fout.open(path, ios::app);
+    if( fout.fail() )
+    { cout<<"Output fileopen error"<<endl; exit(1); }
 
     // Read parameters for database connection
+    fout << "3. data_manager.cpp line 47. Reading database parameter get_db_specs(); " << endl;
     get_db_specs();
 
     // Read measurement data from PosgreSQL server
-
+    fout << "4. data_manager.cpp line 51. alldata.push_back(new experiment) - empty; " << endl;
     alldata.push_back(new experiment);
 
 
@@ -50,11 +57,13 @@ SS_Data_Manager::SS_Data_Manager( )
     }
     else
     {
+        fout << "5. data_manager.cpp line 61. Getting data form the database get_DB ( alldata ); " << endl;
         get_DB( alldata );
     }
 
     // read species from database and form vectors of independent component names
 //    get_ic( alldata );
+    fout.close();
 
 }
 
