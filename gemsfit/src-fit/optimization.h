@@ -1,4 +1,4 @@
-/* 
+/*
 *	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
 *
 *	 This file is part of the thermodynamic fitting program GEMSFIT.
@@ -248,6 +248,8 @@ namespace opti
 
 	};
 
+    // ============================ StdStateProp =========================== //
+
     /// the StdStateProp class provides a generic framework for initializiating and performing std G0 (at 25 deg C and 1 bar) optimization with the nlopt library.
     class StdStateProp : public Optimization
     {
@@ -262,7 +264,7 @@ namespace opti
         virtual ~StdStateProp();
 
         // nlopt instance
-        nlopt::opt opt_actmod;
+        nlopt::opt stdstate;
 
         // configuration data for nlopt instance (get from GEMSFIT_input.dat)
         /// name of the optimization algorithm from NLOPT library
@@ -298,7 +300,7 @@ namespace opti
         std::vector<double> OptLoBounds;
 
         // printing information (get from SS_GEMSFIT_input.dat)
-        PlotFit* Plot_ActMod;
+//        PlotFit* Plot_ActMod;
 
 
         /// struct holding constraint values (retrieved from SS_GEMSFIT_input.dat)
@@ -323,7 +325,7 @@ namespace opti
         virtual double constraint_function(const std::vector<double> &x, std::vector<double> &grad, void *data);
 
         // Initialize optimization object and assign constraints and bounds
-        virtual void build_optim( nlopt::opt &opt_actmod, std::vector<double> &optv_, std::vector<SS_System_Properties*> *systems, int &countit, double &sum_of_squares );
+        virtual void build_optim( nlopt::opt &stdstate, std::vector<double> &optv_, std::vector<SS_System_Properties*> *systems, int &countit, double &sum_of_squares );
 
         // Initialize hybrid optimization object and assign constraints and bounds
         virtual void build_hybrid_optim( nlopt::opt &opt_hybrid_actmod, std::vector<double> &optv_, std::vector<SS_System_Properties*> *systems, int &countit, double &sum_of_squares );
@@ -331,13 +333,15 @@ namespace opti
         // initialize optimization
         virtual void init_optim( std::vector<double> &optv_, std::vector<SS_System_Properties*> *sys, int &countit, double &sum_of_squares );
 
-        // Initialize multistart optimization object and assign constraints and bounds
-        virtual void init_optim_multistart( std::vector<double> &optv_, std::vector<SS_System_Properties*> *sys, int &countit, double &sum_of_squares );
+//        // Initialize multistart optimization object and assign constraints and bounds
+//        virtual void init_optim_multistart( std::vector<double> &optv_, std::vector<SS_System_Properties*> *sys, int &countit, double &sum_of_squares );
 
         // Print results to file
-        virtual void print_results( std::vector<double> &optv_, std::vector<SS_System_Properties*> *sys );
+//        virtual void print_results( std::vector<double> &optv_, std::vector<SS_System_Properties*> *sys );
     };
 
+
+    // ============================ END StdStateProp =========================== //
 
 	/// the ActivityModel class provides a generic framework for initializiating and performing parameter optimization of TSolMod derived classes with the nlopt library.  
 	class ActivityModel : public Optimization 
@@ -426,7 +430,7 @@ namespace opti
             virtual void init_optim_multistart( std::vector<double> &optv_, std::vector<System_Properties*> *sys, int &countit, double &sum_of_squares );
 
 			// Print results to file
-			virtual void print_results( std::vector<double> &optv_, std::vector<System_Properties*> *sys );
+            virtual void print_results( std::vector<double> &optv_, std::vector<System_Properties*> *sys );
 
 	};
 

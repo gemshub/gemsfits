@@ -133,6 +133,105 @@ if (do_what) {
     // Create optimization_vector class and pass pointers to systems
     SS_Opt_Vector optim( ss_systems );
 
+    // Create instance of StdStateProp class derived from base class Optimization)
+    opti::StdStateProp gibbs( optim.opt );
+
+    // DEBUG: print some variables
+//    debug( ss_newsys, optim, ss_systems);
+
+    fout << "13. in main.cpp line 143. Preparing for optimization." << endl;
+    if( optim.opt.size()>0 )
+    {
+        // 0 = optimization with full statistics, 1 = optimization with only basic statistics
+        if( gibbs.OptDoWhat == 0 || gibbs.OptDoWhat == 1 )
+        {
+            // Prepare streaming file for live surveillance of master_counter, SSR and fitting parameters
+            const char path[200] = "output_GEMSFIT/ss_fitting_stream.out";
+            ofstream fout;
+            fout.open(path);
+            if( fout.fail() )
+            { cout<<"Output fileopen error"<<endl; exit(1); }
+            fout << "##;##" << endl;
+            fout << "counter;SSR";
+            for( int i=0; i<optim.opt.size(); i++)
+                fout << ";" << "param_" <<i+1;
+            fout << endl;
+            fout.close();
+
+            if( !gibbs.OptNmultistart )
+            {
+                // GEMSFIT logfile
+                const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
+                ofstream fout;
+                fout.open(path, ios::app);
+                if( fout.fail() )
+                { cout<<"Output fileopen error"<<endl; exit(1); }
+
+                // prepare optimization problem
+                fout << "14. in main.cpp line 165. Preparing optimization problem init_optim()." << endl << endl;
+                gibbs.init_optim( optim.opt, &ss_systems, countit, sum_of_squares );
+            }
+            else
+            {
+                // prepare multistart optimization problem
+//                gibbs.init_optim_multistart( optim.opt, &ss_systems, countit, sum_of_squares );
+            }
+
+            cout<<endl<<" back in main ..."<<endl;
+            cout.setf(ios::fixed);
+            for( int i=0; i< (int) optim.opt.size(); i++ )
+                cout<<"optim.opt["<<i<<"] = "<<optim.opt[i]<<endl;
+            cout<<"pid : "<<pid<<", sum of squares = "<<sum_of_squares<<endl;
+            cout<<endl;
+
+
+
+            cout<<"pid : "<<pid<<" after print_results, back in main, sum_of_squares "<<sum_of_squares<<endl;
+        }
+    }
+    else // Compute Residuals directly without fitting
+    {
+
+        // Directly call TSolMod wrapper
+    //	opti::StdState_tsolmod_wrap( sum_of_squares, optim.opt, newsys );
+
+    }
+
+
+//	// Perform statistical analysis: Instantiate object of Statistics class
+//	Statistics stat_elvis( &systems, sum_of_squares, (int) optim.opt.size(), countit );
+
+//	cout<<"pid : "<<pid<<" back in main, sum_of_squares "<<sum_of_squares<<endl;
+
+//	// perform basic statistical analysis
+//	stat_elvis.basic_stat( optim.opt, &systems );
+
+//	// Print part of the resulting fit
+//	elvis.print_results( optim.opt, &systems );
+
+
+    countit = 0;
+
+    // 0 = optimization with full statistics, 2 = only statistics
+//	if( elvis.OptDoWhat == 0 || elvis.OptDoWhat == 2 )
+//	{
+
+//		if( stat_elvis.MCbool == 1 )
+//		{
+//			cout << " ... performing Monte Carlo based confidence interval generation ... " << endl;
+//			// Generate confidence intervals by Monte Carlo Simulation
+//			stat_elvis.MC_confidence_interval( &elvis, optim.opt, &systems, countit );
+//		}
+
+//		// Plot residuals of minimization
+//		stat_elvis.plot_residuals( optim.opt, &systems );
+
+//		// Plot results from sensitivity analysis
+//		stat_elvis.sensitivity_correlation( optim.opt, &systems );
+
+//	}
+
+
 
     delete ss_newsys;
     fout.close();

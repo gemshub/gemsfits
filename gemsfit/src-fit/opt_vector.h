@@ -63,7 +63,7 @@ class SS_Opt_Vector
         * @author DM
         * @date 14.11.2012
         */
-        SS_Opt_Vector( vector<SS_System_Properties*> systems );
+        SS_Opt_Vector( vector<SS_System_Properties*> vect_of_sys_props );
         /**
         * Destructor of the Opt_Vector class.
         *
@@ -109,7 +109,7 @@ class Opt_Vector
 		* @author FFH
 		* @date 09.04.2012
 		*/	
-		Opt_Vector( vector<System_Properties*> systems );
+        Opt_Vector( vector<System_Properties*> systems );
 		/** 
 		* Destructor of the Opt_Vector class. 
 		*

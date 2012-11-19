@@ -1,4 +1,4 @@
-/* 
+/*
 *	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
 *
 *	 This file is part of the thermodynamic fitting program GEMSFIT.
@@ -104,10 +104,53 @@ namespace opti
 	// Signal handler for brute force termination of GEMSFIT
 	void catch_int( int sig_num );
 
-	
-	// global functions for ActivityModel instance
+    // global functions for StandardStateProp instance
 
-		// TSolMod and GEMS3K wrapper functions		
+    // TSolMod and GEMS3K wrapper functions
+        /**
+        * Callback function for TSolMod wrapper. The arguments of this function must not be
+        * modified since the nlopt library expects exactly this format.
+        * @param opt             optimization vector
+        * @param grad            vector holding function gradients (can be NULL)
+        * @param obj_func_data   a general data object will holds all the data needed by the obejctive function. The data will be cat to the necessary identity within the function.
+        * @author DM
+        * @date 16.11.2012
+        */
+        double StdState_objective_function_callback( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data );
+
+        // callback function for GEMS3K wrapper
+        /**
+        * Callback function for the constraint functions referring to the GEMS3 solver. The arguments of this function must not be
+        * modified since the nlopt library expects exactly this format.
+        * @param opt             optimization vector
+        * @param grad            vector holding function gradients (can be NULL)
+        * @param obj_func_data   a general data object will holds all the data needed by the onbejctive function. The data will be cat to the necessary identity within the function.
+        * @author DM
+        * @date 16.11.2012
+        */
+        double StdStateEquil_objective_function_callback( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data );
+
+
+
+
+        // Constraint function wrapper
+        /**
+        * Callback function for the constraint functions referring to the TSolMod functions. The arguments of this function must not be
+        * modified since the nlopt library expects exactly this format.
+        * @param opt             optimization vector
+        * @param grad            vector holding function gradients (can be NULL)
+        * @param obj_func_data   a general data object will holds all the data needed by the obejctive function. The data will be cat to the necessary identity within the function.
+        * @author DM
+        * @date 16.11.2012
+        */
+        double ActMod_constraint_function_callback( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data );
+
+//======================================== END StandrardStateProp instance ========================================== //
+
+        // global functions for ActivityModel instance
+
+        // TSolMod and GEMS3K wrapper functions
+
 			/** 
 			* Callback function for TSolMod wrapper. The arguments of this function must not be
 			* modified since the nlopt library expects exactly this format. 

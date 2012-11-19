@@ -66,7 +66,7 @@ void SS_Opt_Vector::make_opt_vector( vector<SS_System_Properties*> vect_of_sys_p
 
         if( i==0 )
         {
-            // Loop over aIPc_fit_* of each system
+            // Loop over all species of each system
             for( j=0; j<vect_of_sys_props[i]->fit_species_ind.size(); j++ )
             {
 
@@ -87,6 +87,7 @@ void SS_Opt_Vector::make_opt_vector( vector<SS_System_Properties*> vect_of_sys_p
 
     // Load initial guess vector, which will be used for normalization of the opt vector
     optv0 = opt;
+    vect_of_sys_props[0]->sysprop->init_guesses = opt;
 
 }
 

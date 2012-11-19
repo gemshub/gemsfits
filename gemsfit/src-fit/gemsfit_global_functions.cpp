@@ -176,6 +176,65 @@ namespace opti
 
 
 
+    double StdStateEquil_objective_function_callback( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data )
+    {
+        // If Master process enters function callback, he sends a signal to the others processes which makes them in turn calling ActMod_objective_function_callback directly. They are waiting for this signal in the init_optim function.
+#ifdef USE_MPI
+        MPI_Status status;
+#endif
+        int continue_or_exit = 1;
+        int pid_;
+
+        vector<SS_System_Properties*> *sys = reinterpret_cast<vector<SS_System_Properties*>*>(obj_func_data);
+
+#ifdef USE_MPI
+        // Master: send only when not in Monte Carlo mode (generation of confidence intervals)
+        if( !sys->at(0)->MC_MPI )
+        {
+            if( !pid )
+            {
+                for( pid_=1; pid_<p; pid_++ )
+                    MPI_Send( &continue_or_exit, 1, MPI_INT, pid_, 0,  MPI_COMM_WORLD );
+            }
+        }
+#endif
+
+        unsigned int i;
+        double sum_of_squared_residuals_allsys = 0.0;
+        double sum_of_squared_residuals_sys = 0.0;
+
+        // Rescale optimization to unconvert normalization of parameters
+        if( sys->at(0)->sysprop->NormParams )
+        {
+            vector<double> optV( opt.size() );
+            for( i=0; i<opt.size(); i++ )
+            {
+                optV[i] = opt[i] * abs(sys->at(0)->sysprop->init_guesses[i]);
+            }
+            for( i=0; i<sys->size(); i++)
+            {
+                // call tsolmod wrapper
+    ///			ActMod_gems3k_wrap( sum_of_squared_residuals_sys, optV, sys->at(i) );
+                sum_of_squared_residuals_allsys = sum_of_squared_residuals_allsys + sum_of_squared_residuals_sys;
+            }
+        }
+        else
+        {
+            for( i=0; i<sys->size(); i++)
+            {
+                // call tsolmod wrapper
+///				ActMod_gems3k_wrap( sum_of_squared_residuals_sys, opt, sys->at(i) );
+                sum_of_squared_residuals_allsys = sum_of_squared_residuals_allsys + sum_of_squared_residuals_sys;
+            }
+        }
+
+    return sum_of_squared_residuals_allsys;
+    }
+
+
+//======================================== END StandrardStateProp instance ========================================== //
+
+
 	// Wrapper loaded by "objective_function". Talks to GEMS' node class 
 	void ActMod_tsolmod_wrap( double &sum_of_squared_residuals_sys, const vector<double> &opt, System_Properties* sys )
 	{

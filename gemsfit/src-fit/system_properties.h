@@ -122,6 +122,11 @@ class SS_System_Properties /*: public SS_Data_Manager*/
         vd std_gibbs;   // standard state Gibbs free energy of the species to be fitted at T=25 C and P=1 bar
         vvd std_gibbsTP; // standard state Gibbs free energy of the species to be fitted at T and P of the experiemnts [specie][TPpair]
         vvd dif_gibbs;   // difference dif_gibbs = std_gibbsTP-std_gibbs. This difference is set once after rertiving std_gibbs and std_gibbsTP form GEMS3K [specie][TPpair];
+
+        /// normalize parameters flag
+        bool NormParams;
+        /// initial guess vector for normalization of bounds
+        vd init_guesses;
     };
     std_prop* sysprop; // Pointer to std_prop struct that holds the stdandard state properties of the species to be fitted
 
