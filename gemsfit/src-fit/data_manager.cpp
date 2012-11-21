@@ -58,7 +58,7 @@ SS_Data_Manager::SS_Data_Manager( )
     else
     {
         fout << "5. data_manager.cpp line 61. Getting data form the database get_DB ( alldata ); " << endl;
-        get_DB( alldata );
+        get_DB( /*alldata*/ );
     }
 
     // read species from database and form vectors of independent component names

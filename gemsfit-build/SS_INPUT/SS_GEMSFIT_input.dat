@@ -47,6 +47,9 @@ SS_INPUT/qtz_h2o_nacl-dat.lst
 <FitSpeciesName>
 Na+ NaCl@ NaOH@ Na(HSiO3)@ HSiO3- SiO2@ SiO3-2 ClO- HClO@ ClO2- HClO2@ ClO3- ClO4- Cl-
 
+# Solubility comparison as log solubility 1 or molality 0
+<LogSolubility>
+0
 
 # Optimization: specify vector oupper and lower bounds
 <OptUpBounds> 

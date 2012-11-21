@@ -124,7 +124,7 @@ class SS_Data_Manager
         * @author DM
         * @date 06.11.2012
         */
-        void get_DB( vector<experiment*> alldata );
+        void get_DB( /*vector<experiment *> alldata*/ );
 
         /**
         * Read measurement data from CSV file

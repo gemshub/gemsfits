@@ -1,4 +1,4 @@
-/* 
+/*
 *	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
 *
 *	 This file is part of the thermodynamic fitting program GEMSFIT.
@@ -127,6 +127,9 @@ class SS_System_Properties /*: public SS_Data_Manager*/
         bool NormParams;
         /// initial guess vector for normalization of bounds
         vd init_guesses;
+
+        /// 0 - molality; 1 - log_molality
+        bool log_solubility;
     };
     std_prop* sysprop; // Pointer to std_prop struct that holds the stdandard state properties of the species to be fitted
 

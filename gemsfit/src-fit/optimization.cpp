@@ -1,4 +1,4 @@
-/* 
+/*
 *	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
 *
 *	 This file is part of the thermodynamic fitting program GEMSFIT.
@@ -50,6 +50,7 @@
 #include "system_properties.h"
 #include "opt_vector.h"
 #include "optimization.h"
+//#include "gemsfit_global_functions.h"
 #include "gemsfit_global_functions.h"
 #include "plot_class.h"
 
@@ -1029,6 +1030,11 @@ namespace opti
         int continue_or_exit;
 
         ffout << "xx. in optimization.cpp line 1033. Performing optimization."<<endl;
+
+        //===== For testing the objective function without oprimization =====//
+        sum_of_squares = StdStateEquil_objective_function_callback(optv, grad, ss_systems);
+
+
         // Perform optimization -> perform MPI call only when NOT in printing mode (function: StdStateProp::print_results()) AND NOT in Monte Carlo mode (function: Statistics::MC_confidence_interval())
 //        if( !ss_systems->at(0)->printfile && !ss_systems->at(0)->MC_MPI )
 //        {

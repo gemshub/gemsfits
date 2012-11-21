@@ -106,18 +106,6 @@ namespace opti
 
     // global functions for StandardStateProp instance
 
-    // TSolMod and GEMS3K wrapper functions
-        /**
-        * Callback function for TSolMod wrapper. The arguments of this function must not be
-        * modified since the nlopt library expects exactly this format.
-        * @param opt             optimization vector
-        * @param grad            vector holding function gradients (can be NULL)
-        * @param obj_func_data   a general data object will holds all the data needed by the obejctive function. The data will be cat to the necessary identity within the function.
-        * @author DM
-        * @date 16.11.2012
-        */
-        double StdState_objective_function_callback( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data );
-
         // callback function for GEMS3K wrapper
         /**
         * Callback function for the constraint functions referring to the GEMS3 solver. The arguments of this function must not be
@@ -130,7 +118,17 @@ namespace opti
         */
         double StdStateEquil_objective_function_callback( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data );
 
-
+        // GEMS3K wrapper
+        /**
+        * Call to the GEMS3K wrapper. The arguments of this function must not be
+        * modified since the nlopt library expects exactly this format.
+        * @param opt      optimization vector
+        * @param residual sum of squared residuals being returned from the function
+        * @param sys      data object that holds the data of the current System_Properties struct
+        * @author DM
+        * @date 19.11.2012
+        */
+        void StdState_gems3k_wrap( double &residual, const std::vector<double> &opt, SS_System_Properties *sys );
 
 
         // Constraint function wrapper
@@ -143,7 +141,7 @@ namespace opti
         * @author DM
         * @date 16.11.2012
         */
-        double ActMod_constraint_function_callback( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data );
+        double StdState_constraint_function_callback( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data );
 
 //======================================== END StandrardStateProp instance ========================================== //
 

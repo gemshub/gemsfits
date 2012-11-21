@@ -85,14 +85,15 @@ void SS_System_Properties::getsysprop( std_prop* sysprop )
     // Variable declarations
     vector<string> data;
     string line, allparam;
-    string SysName_s, SpecName_s;
-    string sub_SysName, sub_SpecName;
+    string SysName_s, SpecName_s, LogSolubility_s;
+    string sub_SysName, sub_SpecName, sub_LogSolubility;
     int pos_start, pos_end;
     unsigned int i, j;
     ifstream param_stream;
 
     // Keywords
     string f7("<SystemName>");
+    string f8("<LogSolubility>");
     string f9("<FitSpeciesName>");
     string f4("#");
 
@@ -131,6 +132,17 @@ void SS_System_Properties::getsysprop( std_prop* sysprop )
         system_name = sub_SysName;
     }
     fout<<endl<<"system_name = "<<system_name<<endl;
+
+    // Log Solubility
+    pos_start = allparam.find(f8);
+    pos_end   = allparam.find(f4,pos_start);
+    LogSolubility_s = allparam.substr((pos_start+f8.length()),(pos_end-pos_start-f8.length()));
+    istringstream LogSolubility_ss(LogSolubility_s);
+    for( i=0; i<1; i++)
+    {
+        LogSolubility_ss >> sub_LogSolubility;
+        sysprop->log_solubility = atoi(sub_LogSolubility.c_str());
+    }
 
     //species
     pos_start = allparam.find(f9);

@@ -46,7 +46,7 @@
 //#include "system_properties.h"
 #include "data_manager.h"
 
-void SS_Data_Manager::get_DB( vector<experiment*> alldata )
+void SS_Data_Manager::get_DB(  )
 {
 
     // GEMSFIT logfile
@@ -179,9 +179,10 @@ void SS_Data_Manager::get_DB( vector<experiment*> alldata )
      }
 
      // Declare cursors for experiments table//
+     string tablenamex = "experiments ORDER BY id"; // to have order in the experimetns, avoid some strange sql behaviour
 
      /* declare id_exp cursor for select id from db_meas_table */
-     strcat(id_exp_ecpg_1, tablename.c_str());
+     strcat(id_exp_ecpg_1, tablenamex.c_str());
      id_exp_ecpg = id_exp_ecpg_1; // cursor, given to a const char
      { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, id_exp_ecpg, ECPGt_EOIT, ECPGt_EORT);
  if (sqlca.sqlwarn[0] == 'W') sqlprint();
@@ -189,7 +190,7 @@ void SS_Data_Manager::get_DB( vector<experiment*> alldata )
  if (sqlca.sqlcode < 0) exit(1);}
 
      /* declare name_exp cursor for select name from db_meas_table */
-     strcat(name_exp_ecpg_1, tablename.c_str());
+     strcat(name_exp_ecpg_1, tablenamex.c_str());
      name_exp_ecpg = name_exp_ecpg_1; // cursor, given to a const char
      { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, name_exp_ecpg, ECPGt_EOIT, ECPGt_EORT);
  if (sqlca.sqlwarn[0] == 'W') sqlprint();
@@ -197,7 +198,7 @@ void SS_Data_Manager::get_DB( vector<experiment*> alldata )
  if (sqlca.sqlcode < 0) exit(1);}
 
      /* declare T_exp cursor for select temperature from db_meas_table */
-     strcat(T_exp_ecpg_1, tablename.c_str());
+     strcat(T_exp_ecpg_1, tablenamex.c_str());
      T_exp_ecpg = T_exp_ecpg_1; // cursor, given to a const char
      { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, T_exp_ecpg, ECPGt_EOIT, ECPGt_EORT);
  if (sqlca.sqlwarn[0] == 'W') sqlprint();
@@ -205,7 +206,7 @@ void SS_Data_Manager::get_DB( vector<experiment*> alldata )
  if (sqlca.sqlcode < 0) exit(1);}
 
      /* declare P_exp cursor for select pressure from db_meas_table */
-     strcat(P_exp_ecpg_1, tablename.c_str());
+     strcat(P_exp_ecpg_1, tablenamex.c_str());
      P_exp_ecpg = P_exp_ecpg_1; // cursor, given to a const char
      { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, P_exp_ecpg, ECPGt_EOIT, ECPGt_EORT);
  if (sqlca.sqlwarn[0] == 'W') sqlprint();
@@ -213,7 +214,7 @@ void SS_Data_Manager::get_DB( vector<experiment*> alldata )
  if (sqlca.sqlcode < 0) exit(1);}
 
      /* declare ref_exp cursor for select reference from db_meas_table */
-     strcat(ref_exp_ecpg_1, tablename.c_str());
+     strcat(ref_exp_ecpg_1, tablenamex.c_str());
      ref_exp_ecpg = ref_exp_ecpg_1; // cursor, given to a const char
      { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, ref_exp_ecpg, ECPGt_EOIT, ECPGt_EORT);
  if (sqlca.sqlwarn[0] == 'W') sqlprint();
@@ -228,7 +229,7 @@ void SS_Data_Manager::get_DB( vector<experiment*> alldata )
  if (sqlca.sqlcode < 0) sqlprint();
  if (sqlca.sqlcode < 0) exit(1);}
 
-     // // // // // // // Reading unique TP_pairs from the database // // // // // // //
+     // // // // // // // Reading unique TP_pairs from the database - they are not in the same order as the experiments // // // // // // //
 
      // reading from database
      for (j=0; j<rows_c; j++) {

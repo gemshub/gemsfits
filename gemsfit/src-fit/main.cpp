@@ -180,7 +180,7 @@ if (do_what) {
             cout<<endl<<" back in main ..."<<endl;
             cout.setf(ios::fixed);
             for( int i=0; i< (int) optim.opt.size(); i++ )
-                cout<<"optim.opt["<<i<<"] = "<<optim.opt[i]<<endl;
+                cout<<"optim.opt["<<ss_newsys->to_fit_species[i]<<"] = "<<optim.opt[i]<<endl;
             cout<<"pid : "<<pid<<", sum of squares = "<<sum_of_squares<<endl;
             cout<<endl;
 
@@ -230,7 +230,6 @@ if (do_what) {
 //		stat_elvis.sensitivity_correlation( optim.opt, &systems );
 
 //	}
-
 
 
     delete ss_newsys;
