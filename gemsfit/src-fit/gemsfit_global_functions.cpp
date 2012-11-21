@@ -338,6 +338,8 @@ for (i=0; i<sys->fit_species_ind.size(); i++) { // loops trough all species
     }
 }
 
+// ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- //
+
 
 // ---- // ---- // ---- // CENTRAL LOOP OVER MEASUREMENTS // ---- // ---- // ---- //
 
@@ -358,7 +360,7 @@ for (i=0; i<sys->fit_species_ind.size(); i++) { // loops trough all species
 // ########################################################################################### //
 //        cout << sys->data_meas->alldata.size() << endl;
 
-        for( i = 0; i < sys->data_meas->alldata.size() ; ++i )
+        for( i = start; i < sys->data_meas->alldata.size() ; i +=step )
         {
 
                 // Set amount of dependent components (GEMS3K: DBR indexing)
@@ -410,17 +412,17 @@ for (i=0; i<sys->fit_species_ind.size(); i++) { // loops trough all species
                     node->GEM_write_dbr( "dbr_before_GEM_from_MT.out", false, true );
 
 
-                // Set temperature and pressure
+                // ---- // ---- // Set temperature and pressure // ---- // ---- //
                 P_pa = 100000 * sys->data_meas->alldata[i]->PG;
 
-                // Transfer new temperature, pressure and b-vector to GEMS3K
+                // ---- // ---- // Transfer new temperature, pressure and b-vector to GEMS3K // ---- // ---- //
                 T_k = 273.15 + sys->data_meas->alldata[i]->TC;
 #ifdef GEMSFIT_DEBUG
 cout << " P_pa = " << P_pa << endl;
 cout << " T_k  = " << T_k  << endl;
 #endif
 
-                // ================= set the new amount of IC and T & P from experiment i ========================= //
+                // ---- // ---- // set the new amount of IC and T & P from experiment i // ---- // ---- //
                 // in the future - implement a Tnode function that stes just T, P and bIC vector of amount of independent components.
                 node->GEM_from_MT( NodeHandle, NodeStatusCH, T_k, P_pa, 0., 0., new_moles_IC, xDC_up, xDC_lo, Ph_surf );
 

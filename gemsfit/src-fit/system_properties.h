@@ -45,14 +45,14 @@
 #include <limits>
 #include <iomanip>
 
-#include <boost/algorithm/string.hpp>
-#include <boost/algorithm/string/find.hpp>
+//#include <boost/algorithm/string.hpp>
+//#include <boost/algorithm/string/find.hpp>
 
 #include "node.h"
 #include "data_manager.h"
 
 using namespace std;
-using namespace boost;
+//using namespace boost;
 
 /// DM the (Standard State) SS_System_Properties class retrieves and stores data related to the chemical system setup.
 class SS_System_Properties /*: public SS_Data_Manager*/

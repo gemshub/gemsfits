@@ -44,9 +44,9 @@
 #include "gemsfit_global_functions.h"
 
 
-#define BOOST_FILESYSTEM_VERSION 3
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-#include <boost/filesystem.hpp>
+//#define BOOST_FILESYSTEM_VERSION 3
+//#define BOOST_FILESYSTEM_NO_DEPRECATED
+//#include <boost/filesystem.hpp>
 
 
 using namespace std;
@@ -54,6 +54,7 @@ using namespace std;
 namespace bfs=boost::filesystem;
 
 int countit = 0;
+int count_r = 0;
 
 
 void debug( System_Properties* , Opt_Vector, vector<System_Properties*> systems ); 
@@ -85,6 +86,7 @@ int main( int argc, char *argv[] )
 
 	int ierr = 0;
 	double elapsed_time = 0.0, sum_of_squares = 0.0;
+    clockid_t startTime = clock();
 
 cout<<"37"<<endl;
 
@@ -197,14 +199,18 @@ if (do_what) {
 
     }
 
-
-//	// Perform statistical analysis: Instantiate object of Statistics class
-//	Statistics stat_elvis( &systems, sum_of_squares, (int) optim.opt.size(), countit );
+//    cout << ss_systems.at(0)->computed_residuals_v[1] << endl;
+    // Perform statistical analysis: Instantiate object of Statistics class
+    StdStatistics stat_gibbs( &ss_systems, sum_of_squares, (int) optim.opt.size(), countit );
 
 //	cout<<"pid : "<<pid<<" back in main, sum_of_squares "<<sum_of_squares<<endl;
 
 //	// perform basic statistical analysis
-//	stat_elvis.basic_stat( optim.opt, &systems );
+    stat_gibbs.std_basic_stat( optim.opt, &ss_systems );
+    for (count_r=0; count_r<ss_newsys->computed_residuals_v.size(); ++count_r)
+    {
+        fout << "For experiment "<<count_r+1<<" " <<fabs(ss_newsys->computed_residuals_v[count_r]) << endl;
+    }
 
 //	// Print part of the resulting fit
 //	elvis.print_results( optim.opt, &systems );
@@ -356,6 +362,8 @@ else
 	// Destroy all MPI jobs
 	ierr = MPI_Finalize();
 #endif
+
+    cout << double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
 
 return 0;
 }

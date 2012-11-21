@@ -1,4 +1,4 @@
-/* 
+/*
 *	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
 *
 *	 This file is part of the thermodynamic fitting program GEMSFIT.
@@ -42,6 +42,219 @@
 #include <boost/random/normal_distribution.hpp>
 
 #include "fit_statistics.h"
+
+
+// Constructor
+StdStatistics::StdStatistics( vector<SS_System_Properties*> *systems, double sum_of_squares_, int num_of_params_, int num_of_runs_ )
+{
+
+    number_of_measurements = 0;
+    for( int i=0; i< (int) systems->size(); i++)
+    {
+        number_of_measurements += systems->at(i)->computed_values_v.size();
+    }
+
+    sum_of_squares 		= sum_of_squares_;
+
+    num_of_runs		= num_of_runs_;
+
+cout<<"pid : "<<pid<<" Statistics Constructor: sum of squares: "<<sum_of_squares<<endl;
+
+    number_of_parameters   = num_of_params_;
+
+cout<<"pid : "<<pid<<" Statistics Constructor: number_of_parameters: "<<number_of_parameters<<endl;
+
+    /// Populate data members
+    std_get_stat_param();
+
+    /// Instantiate pointer to PlotFit class to print results
+    Plot_Stat = new PlotFit();
+
+}
+
+
+// Destructor
+StdStatistics::~StdStatistics()
+{
+    delete Plot_Stat;
+
+}
+
+
+void StdStatistics::std_get_stat_param( )
+{
+        string OptParamFile("SS_INPUT/SS_GEMSFIT_input.dat");
+        int pos_start, pos_end, i;
+        ifstream param_stream;
+        vector<string> data;
+        string line, allparam;
+        string s1("<StatMCruns>");
+        string s2("<StatSensitivity>");
+        string s3("<StatMCbars>");
+        string s4("<StatMCbool>");
+
+        string hash("#");
+
+        // Open configuration file for GEMSFIT run
+        param_stream.open(OptParamFile.c_str());
+        if( param_stream.fail() )
+        {
+            cout << "Opening of file "<<OptParamFile<<" failed !!"<<endl;
+            exit(1);
+        }
+        while( getline(param_stream, line) )
+        {
+            data.push_back(line);
+        }
+        param_stream.close();
+        for( i=0; i < (int) data.size(); i++ )
+            allparam += data[i];
+
+
+        // Number of Monte Carlo runs for confidence interval evaluation
+        string nMC_s, sub_nMC;
+        pos_start = allparam.find(s1);
+        pos_end   = allparam.find(hash,pos_start);
+        nMC_s = allparam.substr((pos_start+s1.length()),(pos_end-pos_start-s1.length()));
+        istringstream nMC_ss(nMC_s);
+            nMC_ss >> sub_nMC;
+        num_of_MC_runs = atoi(sub_nMC.c_str());
+cout<<"num_of_MC_runs = "<<num_of_MC_runs<<endl;
+
+
+        // Number of evaluations points per parameter for sensitivity evaluation
+        string nSens_s, sub_nSens;
+        pos_start = allparam.find(s2);
+        pos_end   = allparam.find(hash,pos_start);
+        nSens_s = allparam.substr((pos_start+s2.length()),(pos_end-pos_start-s2.length()));
+        istringstream nSens_ss(nSens_s);
+            nSens_ss >> sub_nSens;
+        sensitivity_points = atoi(sub_nSens.c_str());
+cout<<"sensitivity_points = "<<sensitivity_points<<endl;
+
+
+        // Number of bars for the histogram which displays the results from Monte Carlo confidence interval generation
+        string nMCbars_s, sub_nMCbars;
+        pos_start = allparam.find(s3);
+        pos_end   = allparam.find(hash,pos_start);
+        nMCbars_s = allparam.substr((pos_start+s3.length()),(pos_end-pos_start-s3.length()));
+        istringstream nMCbars_ss(nMCbars_s);
+            nMCbars_ss >> sub_nMCbars;
+        MC_number_of_bars = atoi(sub_nMCbars.c_str());
+cout<<"MC_number_of_bars = "<<MC_number_of_bars<<endl;
+
+
+        // Perform Monte Carlo runs yes (1) / no (0)
+        string nMCb_s, sub_nMCb;
+        pos_start = allparam.find(s4);
+        pos_end   = allparam.find(hash,pos_start);
+        nMCb_s = allparam.substr((pos_start+s4.length()),(pos_end-pos_start-s4.length()));
+        istringstream nMCb_ss(nMCb_s);
+            nMCb_ss >> sub_nMCb;
+        MCbool = atoi(sub_nMCb.c_str());
+cout<<"MCbool = "<<MCbool<<endl;
+
+
+        param_stream.close();
+}
+
+
+
+// Perform basic statistical analysis
+void StdStatistics::std_basic_stat( std::vector<double> &optv_, std::vector<SS_System_Properties*> *systems )
+{
+    // Variable declarations
+    int i;
+    double mean = 0.;
+    double ResSumSquares = 0., TotalSumSquares = 0.;
+
+
+    // Degrees of freedom
+    degrees_of_freedom = number_of_measurements-number_of_parameters;
+
+
+    // Compute standard deviation of residuals
+    SD_of_residuals = sqrt( (sum_of_squares/(number_of_measurements-number_of_parameters)) );
+
+
+    // Compute R^2: coefficient of determination
+    mean = ( accumulate(systems->at(0)->measured_values_v.begin(), systems->at(0)->measured_values_v.end(), 0) ) / systems->at(0)->measured_values_v.size();
+
+    assert( systems->at(0)->computed_values_v.size() == systems->at(0)->measured_values_v.size() );
+
+
+    for( i=0; i< (int) systems->at(0)->computed_values_v.size(); i++ )
+    {
+        ResSumSquares += pow( (systems->at(0)->measured_values_v[i] - systems->at(0)->computed_values_v[i]), 2);
+        TotalSumSquares += pow( (systems->at(0)->measured_values_v[i] - mean), 2);
+    }
+
+    coeff_of_determination = 1 - ResSumSquares / TotalSumSquares;
+
+
+    // Pearson Chi Square test
+    Pearsons_chi_square = 0.;
+    for( i=0;  i< (int) systems->at(0)->computed_values_v.size(); i++ )
+    {
+        Pearsons_chi_square += (systems->at(0)->computed_values_v[i] - systems->at(0)->measured_values_v[i])*(systems->at(0)->computed_values_v[i] - systems->at(0)->measured_values_v[i]) / systems->at(0)->measured_values_v[i];
+    }
+
+
+    // Reduced Chi Square
+    reduced_chi_square = sum_of_squares / degrees_of_freedom;
+
+
+    // Write first statistcs to file
+    if( !pid )
+    {
+
+#ifdef BOOST_MPI
+        ofstream myStat;
+        ostringstream pb;
+        pb << proc_id_boost;
+        string out_fit("./output_GEMSFIT")
+        out_fit += "_" + pb.str() + "/myFitStatistics.txt";
+        myStat.open( out_fit.c_str(), ios::app );
+#endif
+
+#ifndef BOOST_MPI
+        ofstream myStat;
+        myStat.open("output_GEMSFIT/myFitStatistics.txt",ios::app);
+#endif
+        myStat << " # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # " << endl;
+        myStat << " - - - - - - - RESULTS FROM GEMSFIT STANDARD G0 PARAMETER REGRESSION - - - - - - - " << endl;
+        myStat << " # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # " << endl;
+        myStat << endl;
+                myStat << " Number of measurements :              	" << number_of_measurements     << endl;
+        myStat << endl;
+        myStat << " Number of parameters :                	" << number_of_parameters 	<< endl;
+        myStat << endl;
+                myStat << " Number of runs needed for regression :      " << num_of_runs 		<< endl;
+        myStat << endl;
+        myStat << " Degrees of freedom :                  	" << degrees_of_freedom	 	<< endl;
+        myStat << endl;
+        myStat << " Sum of squares :                      	" << sum_of_squares 		<< endl;
+        myStat << endl;
+        myStat << " Reduced_chi_square :                  	" << reduced_chi_square 	<< endl;
+        myStat << endl;
+        myStat << " Standard deviation of the residuals : 	" << SD_of_residuals 		<< endl;
+        myStat << endl;
+                myStat << " Coefficient of determination R^2 :    	" << coeff_of_determination     << endl;
+        myStat << endl;
+        myStat << " Pearson's Chi Square test :           	" << Pearsons_chi_square   	<< endl;
+        myStat << endl;
+                myStat << " Best fit results for parameters from regression : "                         <<endl;
+        for( i=0; i< (int) optv_.size(); i++ ) // cols
+        {
+            // Print optimized parameter values to file
+            myStat <<"			parameter "<< i <<" :	           " << optv_[i] << endl;
+
+        }
+        myStat << endl;
+        myStat.close();
+    }
+
+}
 
 
 // Constructor
