@@ -131,8 +131,9 @@ void SS_Data_Manager::get_DB(  )
     // // // // // // // END Connect to database // // // // // // //
 
 
-     string tablename("experiments");
-     strcat(meas, tablename.c_str());
+     string tablename("experiments ORDER BY pressure");
+     string tablename2("experiments");
+     strcat(meas, tablename2.c_str());
      meas_table = meas;
 
      // Count number of experiments
@@ -595,8 +596,23 @@ if (sqlca.sqlwarn[0] == 'W') sqlprint();
 if (sqlca.sqlcode < 0) sqlprint();
 if (sqlca.sqlcode < 0) exit(1);}
 
-    fout << "7. in measdata_modified.cpp line 419. Finised reading experimental data form the database. " << endl;
+    fout << "7. in measdata_modified.cpp line 598. Finised reading experimental data form the database. " << endl;
 
+    fout.close();
+
+    // Unique TP file
+    const char path2[200] = "output_GEMSFIT/TP.csv";
+//    ofstream fout;
+    fout.open(path2, ios::app);
+    if( fout.fail() )
+    { cout<<"Output fileopen error"<<endl; exit(1); }
+
+    for (i=0; i<TP_pairs[1].size(); ++i)
+    {
+        fout <<TP_pairs[1][i]<<";"<<TP_pairs[0][i]<<endl;
+    }
+
+    fout << TP_pairs[1].size() <<endl;
     fout.close();
 }
 

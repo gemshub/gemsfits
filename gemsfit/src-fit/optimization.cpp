@@ -1032,7 +1032,7 @@ namespace opti
         ffout << "xx. in optimization.cpp line 1033. Performing optimization."<<endl;
 
         //===== For testing the objective function without oprimization =====//
-        sum_of_squares = StdStateEquil_objective_function_callback(optv, grad, ss_systems);
+//        sum_of_squares = StdStateEquil_objective_function_callback(optv, grad, ss_systems);
 
 
         // Perform optimization -> perform MPI call only when NOT in printing mode (function: StdStateProp::print_results()) AND NOT in Monte Carlo mode (function: Statistics::MC_confidence_interval())
@@ -1041,47 +1041,47 @@ namespace opti
 //                // MASTER
 //                if( !pid )
 //                {
-//                    // run optimization -> perform MPI_Send() in global activity model callback
-//                    nlopt::result result = stdstate.optimize( optv, sum_of_squares );
-//                    ffout<<"optv[0] = "<<optv[0]<<endl;
-//                    ffout<<"size of optv = "<<optv.size()<<endl;
+                    // run optimization -> perform MPI_Send() in global activity model callback
+                    nlopt::result result = stdstate.optimize( optv, sum_of_squares );
+                    ffout<<"optv[0] = "<<optv[0]<<endl;
+                    ffout<<"size of optv = "<<optv.size()<<endl;
 
 
-//                // check results
-//                    if( result < 0 )
-//                    {
-//                        std::cout<<endl;
-//                        std::cout<<"   !!!  nlopt failed  !!!   "<<std::endl;
-//                        std::cout<<"   !!!  error code:   "<<result<<std::endl;
-//                        print_return_message( result );
-//                        std::cout<<endl;
-//                    }
-//                    else
-//                    {
-//                        std::cout<<" NLopt return code: "<<result<<endl;
-//                        print_return_message( result );
-//                        const char path[200] = "output_GEMSFIT/SS_myFIT.out";
-//                        ofstream fout;
-//                        fout.open(path, ios::app);
-//                        if( fout.fail() )
-//                        { cout<<"Output fileopen error"<<endl; exit(1); }
-//                        fout<<"pid "<<pid<<", found minimum at <<f( ";
-//                        for( unsigned i=0; i<optv.size(); i++ )
-//                        {
-//                            fout<<optv[i]<<" ";
-//                        }
-//                        fout<<") = "<<sum_of_squares<<std::endl;
-//                        fout<<" after "<< master_counter <<" evaluations."<<std::endl;
-//                        fout.close();
+                // check results
+                    if( result < 0 )
+                    {
+                        std::cout<<endl;
+                        std::cout<<"   !!!  nlopt failed  !!!   "<<std::endl;
+                        std::cout<<"   !!!  error code:   "<<result<<std::endl;
+                        print_return_message( result );
+                        std::cout<<endl;
+                    }
+                    else
+                    {
+                        std::cout<<" NLopt return code: "<<result<<endl;
+                        print_return_message( result );
+                        const char path[200] = "output_GEMSFIT/SS_myFIT.out";
+                        ofstream fout;
+                        fout.open(path, ios::app);
+                        if( fout.fail() )
+                        { cout<<"Output fileopen error"<<endl; exit(1); }
+                        fout<<"pid "<<pid<<", found minimum at <<f( ";
+                        for( unsigned i=0; i<optv.size(); i++ )
+                        {
+                            fout<<optv[i]<<" ";
+                        }
+                        fout<<") = "<<sum_of_squares<<std::endl;
+                        fout<<" after "<< master_counter <<" evaluations."<<std::endl;
+                        fout.close();
 
-//                        std::cout<<"found minimum at <<f( ";
-//                        for( unsigned i=0; i<optv.size(); i++ )
-//                        {
-//                            std::cout<<optv[i]<<" ";
-//                        }
-//                        std::cout<<") = "<<sum_of_squares<<std::endl;
-//                    }
-//                    std::cout<<" after "<< master_counter <<" evaluations"<<std::endl;
+                        std::cout<<"found minimum at <<f( ";
+                        for( unsigned i=0; i<optv.size(); i++ )
+                        {
+                            std::cout<<optv[i]<<" ";
+                        }
+                        std::cout<<") = "<<sum_of_squares<<std::endl;
+                    }
+                    std::cout<<" after "<< master_counter <<" evaluations"<<std::endl;
 
 
 //                    // run hybrid optimization mode with gradient-based optimization
@@ -1134,8 +1134,8 @@ namespace opti
 //                    }
 //#endif
 
-//                    // copy resulting vector back to incoming optv vector (needed for printing results)
-//                    optv_ = optv;
+                    // copy resulting vector back to incoming optv vector (needed for printing results)
+                    optv_ = optv;
 //                }
 //                else // SLAVES
 //                {
@@ -1161,18 +1161,18 @@ namespace opti
 //#endif
 //                ffout<<"pid "<<pid<<" is out of loop ..."<<endl;
 
-//                // copy resulting vector back to incoming optv vector (needed for printing results)
-//                if( !OptNormParam )
-//                {
-//                    optv_ = optv;
-//                }
-//                else
-//                {
-//                    for( i=0; i<optv.size(); i++ )
-//                    {
-//                        optv_[i] = optv[i] * abs(ss_systems->at(0)->sysprop->init_guesses[i]);
-//                    }
-//                }
+                // copy resulting vector back to incoming optv vector (needed for printing results)
+                if( !OptNormParam )
+                {
+                    optv_ = optv;
+                }
+                else
+                {
+                    for( i=0; i<optv.size(); i++ )
+                    {
+                        optv_[i] = optv[i] * abs(ss_systems->at(0)->sysprop->init_guesses[i]);
+                    }
+                }
 //        }
 //        else // DO NOT PARALLELIZE LOOP OVER MEASUREMENTS IN OBJECTIVE FUNCTION if in printing mode (function: ActivityModel::print_results()) OR in Monte Carlo mode (function: Statistics::MC_confidence_interval())
 //        {

@@ -405,6 +405,13 @@ for (i=0; i<sys->fit_species_ind.size(); i++) { // loops trough all species
 //                }
             }
 
+// Add small amount of H for convergence of simple systems qtz_h2o
+//            if (sys->data_meas->alldata[i]->name == "qtz_h2o")
+//            {
+//                ICndx = node->IC_name_to_xDB("H");
+//                new_moles_IC[ICndx] +=2.6e-05;
+//            }
+
 
                 // vector of dependent components which contains the differences in concentration compared to the B vector
 
@@ -448,6 +455,7 @@ cout << " T_k  = " << T_k  << endl;
                 {
                     // possible return status analysis, error message
                     node->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
+                    cout<<"For experiment "<<i+1<< endl;
                     cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
                 }
 
@@ -459,9 +467,9 @@ cout << " T_k  = " << T_k  << endl;
                 if( fout.fail() )
                 { cout<<"Output fileopen error"<<endl; exit(1); }
 
-                fout << "For experiment "<< i+1 << " at T= "<<T_k<< " and P="<< P_pa << endl;
+//                fout << "For experiment "<< i+1 << " at T= "<<T_k<< " and P="<< P_pa << endl;
 
-                // Getting the solubilities of elements in experiemnts i and calculating the residuals
+                // Getting the solubilities of elements j in experiemnts i and calculating the residuals
                 for (j=0; j<sys->data_meas->alldata[i]->name_elem.size(); ++j)
                 {
 
@@ -471,7 +479,7 @@ cout << " T_k  = " << T_k  << endl;
                     elem_name = sys->data_meas->alldata[i]->name_elem[j].c_str();
                     ICndx = node->IC_name_to_xDB(elem_name);
                     computed_value = node->Get_mIC(ICndx);
-                    fout << "Element " << elem_name << " has solubility = " << computed_value << endl;
+//                    fout << "Element " << elem_name << " has solubility = " << computed_value << endl;
                     residual = pow( (computed_value - sys->data_meas->alldata[i]->solubility[j]), 2) / sys->data_meas->alldata[i]->solubility[j];
 
 

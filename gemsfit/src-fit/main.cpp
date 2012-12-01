@@ -186,8 +186,16 @@ if (do_what) {
             cout<<"pid : "<<pid<<", sum of squares = "<<sum_of_squares<<endl;
             cout<<endl;
 
-
-
+            // GEMSFIT logfile
+            const char path_[200] = "output_GEMSFIT/FIT.csv";
+            ofstream fout_;
+            fout_.open(path_, ios::app);
+            if( fout_.fail() )
+            { cout<<"Output fileopen error"<<endl; exit(1); }
+            for (int k=0; k<ss_systems[0]->measured_values_v.size(); ++k) {
+            fout_<<"exp "<<k+1<<";"<<ss_systems[0]->computed_values_v[k]<<";"<<ss_systems[0]->measured_values_v[k]<<endl;
+            }
+            fout_.close();
             cout<<"pid : "<<pid<<" after print_results, back in main, sum_of_squares "<<sum_of_squares<<endl;
         }
     }

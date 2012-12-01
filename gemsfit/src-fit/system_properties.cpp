@@ -210,10 +210,10 @@ void SS_System_Properties::getsysprop( std_prop* sysprop )
     {
         if( (node->check_TP( (data_meas->TP_pairs[0][i]+273.15), (100000*data_meas->TP_pairs[1][i])) == false &&  node->check_grid_TP( data_meas->TP_pairs[0][i]+273.15, 100000 * data_meas->TP_pairs[1][i] ) < 0. ) /*&& node->check_grid_TP( sysdata->temperature.at(i), 100000 * sysdata->pressure.at(i) ) < 0*/ )
         {
-            cout<<endl;
-            cout<<" Measurement data: temperature "<<data_meas->TP_pairs[0][i]<<" together with pressure "<<data_meas->TP_pairs[1][i]<<" does not appear in the DATACH structure of GEMS3K !!!!"<<endl;
+            fout<<endl;
+            fout<<" Measurement data: temperature "<<data_meas->TP_pairs[0][i]<<" together with pressure "<<data_meas->TP_pairs[1][i]<<" does not appear in the DATACH structure of GEMS3K !!!!"<<endl;
             //cout<<" bailing out now ... "<<endl;
-            cout<<endl;
+            fout<<endl;
             //exit(1);
         }
     }
