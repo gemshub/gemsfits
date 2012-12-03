@@ -11,6 +11,10 @@ gemsfit-build/SS_INPUT/qtz_h2o_nacl-dat.lst -text
 gemsfit-build/SS_INPUT/qtz_h2o_nacl-dbr-0-0000.dat -text
 gemsfit-build/SS_INPUT/qtz_h2o_nacl-dch.dat -text
 gemsfit-build/SS_INPUT/qtz_h2o_nacl-ipm.dat -text
+gemsfit-build/SS_INPUT/qtz_h2o_test-dat.lst -text
+gemsfit-build/SS_INPUT/qtz_h2o_test-dbr-0-0000.dat -text
+gemsfit-build/SS_INPUT/qtz_h2o_test-dch.dat -text
+gemsfit-build/SS_INPUT/qtz_h2o_test-ipm.dat -text
 gemsfit/docs/txt/HowToBuildGEMSFIT.txt -text
 gemsfit/gemsfit.pro -text
 gemsfit/gemsfits.pro -text
