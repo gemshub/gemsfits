@@ -1,6 +1,7 @@
 * text=auto !eol
 docs/Developing[!!-~]GEMSFIT(GUI)_GEMS3K.pdf -text
 docs/HowToDevelopGEMSFIT(GUI).html -text
+docs/copy_database_to_other_PC-server.txt -text
 docs/create_nacl_actcoeff_table.sql -text
 docs/install_setup_Postgresql.txt -text
 docs/load_NaCl_ambient_from_csv.sql -text
