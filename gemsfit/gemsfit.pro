@@ -65,9 +65,9 @@ CONFIG( mpi, serial|mpi ) {
         message( "Configuring for OPEN_MPI build ..." )
         QMAKE_CC	= mpicc
         QMAKE_CXX	= mpic++
-        QMAKE_CFLAGS += $$system(mpicc --showme:compile)
-        QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions $$system(mpic++ --showme:compile) -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions
-        LIBS += -L/usr/lib/postgresql/9.1/lib/ -L/usr/local/dislin/ $$system(mpic++ --showme:link) -ldislin -lXm -lecpg -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz
+        QMAKE_CFLAGS += $$system(mpicc --showme:compile) -fopenmp
+        QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions $$system(mpic++ --showme:compile) -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions -fopenmp
+        LIBS += -L/usr/lib/postgresql/9.1/lib/ -L/usr/local/dislin/ $$system(mpic++ --showme:link) -ldislin -lXm -lecpg -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp
 }
 
 #contains( CONFIG, serial ) {
@@ -75,9 +75,9 @@ CONFIG( serial, serial|mpi ) {
         message( "Configuring for serial build ..." )
         QMAKE_CC	= gcc
         QMAKE_CXX	= g++
-        QMAKE_CFLAGS +=
-        QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions
-        LIBS += -L/usr/lib/postgresql/9.1/lib/ -L/usr/local/dislin/ -ldislin -lXm -lecpg -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz
+        QMAKE_CFLAGS += -fopenmp
+        QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions -fopenmp
+        LIBS += -L/usr/lib/postgresql/9.1/lib/ -L/usr/local/dislin/ -ldislin -lXm -lecpg -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp
 }
 
 FIT_CPP      =  ./src-fit

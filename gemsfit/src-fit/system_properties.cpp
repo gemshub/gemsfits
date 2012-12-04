@@ -247,9 +247,6 @@ void SS_System_Properties::getsysprop( std_prop* sysprop )
 //    cout.setf(ios::fixed); // print without scientific notation
 //    cout << "The STD G0 at T= " << data_meas->TP_pairs[0][0] <<" P= " << data_meas->TP_pairs[1][0] << " of " << to_fit_species[2] << " = " << sysprop->std_gibbsTP[2][0] << endl;
 
-
-
-
     delete node;
 
     param_stream.close();

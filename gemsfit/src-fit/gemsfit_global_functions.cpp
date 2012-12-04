@@ -291,28 +291,28 @@ cout<<"in ActMod_gems3k_wrap ..."<<endl;
 //		bIC = new double[ nIC ];
 
 
-        // Asking GEM to run with automatic initial approximation
-        dBR->NodeStatusCH = NEED_GEM_AIA;
+//        // Asking GEM to run with automatic initial approximation
+//        dBR->NodeStatusCH = NEED_GEM_AIA;
 
 
-        // PERFORM TEST RUN WITH DBR file
-        NodeStatusCH = node->GEM_run( false );
+//        // PERFORM TEST RUN WITH DBR file
+//        NodeStatusCH = node->GEM_run( false );
 
-#ifdef GEMSFIT_DEBUG
-cout << " NodeStatusCH = "<<NodeStatusCH<<endl;
-cout << "   node temperature from dbr file: " << node->cTK() << endl;
-cout << "   node pressure from dbr file: " << node->cP() << endl;
-#endif
-        if( NodeStatusCH == OK_GEM_AIA || NodeStatusCH == OK_GEM_SIA  )
-        {
-            node->GEM_print_ipm( "SS_GEMS3K_log.out" );
-        }
-        else
-        {
-            // possible return status analysis, error message
-            node->GEM_print_ipm( "SS_GEMS3K_log.out" );   // possible debugging printout
-            cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
-        }
+//#ifdef GEMSFIT_DEBUG
+//cout << " NodeStatusCH = "<<NodeStatusCH<<endl;
+//cout << "   node temperature from dbr file: " << node->cTK() << endl;
+//cout << "   node pressure from dbr file: " << node->cP() << endl;
+//#endif
+//        if( NodeStatusCH == OK_GEM_AIA || NodeStatusCH == OK_GEM_SIA  )
+//        {
+//            node->GEM_print_ipm( "SS_GEMS3K_log.out" );
+//        }
+//        else
+//        {
+//            // possible return status analysis, error message
+//            node->GEM_print_ipm( "SS_GEMS3K_log.out" );   // possible debugging printout
+//            cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
+//        }
 
 
 #ifdef GEMSFIT_DEBUG
@@ -338,6 +338,30 @@ for (i=0; i<sys->fit_species_ind.size(); i++) { // loops trough all species
     }
 }
 
+// Asking GEM to run with automatic initial approximation after changing the G0, if not it will always take the values of the exp form which the 0000dbr file is made.
+dBR->NodeStatusCH = NEED_GEM_AIA;
+
+
+// PERFORM TEST RUN WITH DBR file
+NodeStatusCH = node->GEM_run( false );
+
+#ifdef GEMSFIT_DEBUG
+cout << " NodeStatusCH = "<<NodeStatusCH<<endl;
+cout << "   node temperature from dbr file: " << node->cTK() << endl;
+cout << "   node pressure from dbr file: " << node->cP() << endl;
+#endif
+if( NodeStatusCH == OK_GEM_AIA || NodeStatusCH == OK_GEM_SIA  )
+{
+    node->GEM_print_ipm( "SS_GEMS3K_log.out" );
+}
+else
+{
+    // possible return status analysis, error message
+    node->GEM_print_ipm( "SS_GEMS3K_log.out" );   // possible debugging printout
+    cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
+}
+
+
 // ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- //
 
 
@@ -360,6 +384,8 @@ for (i=0; i<sys->fit_species_ind.size(); i++) { // loops trough all species
 // ########################################################################################### //
 //        cout << sys->data_meas->alldata.size() << endl;
 
+//        omp_set_num_threads(2);
+//        #pragma omp parallel for
         for( i = start; i < sys->data_meas->alldata.size() ; i +=step )
         {
 
@@ -367,10 +393,10 @@ for (i=0; i<sys->fit_species_ind.size(); i++) { // loops trough all species
             // go trough all acomponents and calculate the mole amounts of the IC
             for (j=0; j<sys->data_meas->alldata[i]->component_name.size(); ++j)
             {
-                if (sys->data_meas->alldata[i]->component_name[j] == "Aqua")
+                if (sys->data_meas->alldata[i]->component_name[j] == "H2O")
                 {
                     ICndx = node->IC_name_to_xDB("H");
-                    new_moles_IC[ICndx] += 2*sys->data_meas->alldata[i]->component_amount[j]/18.01528;
+                    new_moles_IC[ICndx] += 2*sys->data_meas->alldata[i]->component_amount[j]/18.01528 + 2*sys->data_meas->alldata[i]->component_amount[j]/1000*1e-05;
 //                    cout << new_moles_IC[ICndx] << endl;
                     ICndx = node->IC_name_to_xDB("O");
                     new_moles_IC[ICndx] +=  sys->data_meas->alldata[i]->component_amount[j]/18.01528;
@@ -460,14 +486,14 @@ cout << " T_k  = " << T_k  << endl;
                 }
 
 
-                // GEMSFIT logfile
-                const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
+                // log fie containing calculated solubilities form all itterations
+                const char path[200] = "output_GEMSFIT/Fit_itterations.csv";
                 ofstream fout;
                 fout.open(path, ios::app);
                 if( fout.fail() )
                 { cout<<"Output fileopen error"<<endl; exit(1); }
 
-//                fout << "For experiment "<< i+1 << " at T= "<<T_k<< " and P="<< P_pa << endl;
+                fout << "For experiment "<< i+1 << " at T= "<<T_k<< " and P="<< P_pa << ";";
 
                 // Getting the solubilities of elements j in experiemnts i and calculating the residuals
                 for (j=0; j<sys->data_meas->alldata[i]->name_elem.size(); ++j)
@@ -479,7 +505,7 @@ cout << " T_k  = " << T_k  << endl;
                     elem_name = sys->data_meas->alldata[i]->name_elem[j].c_str();
                     ICndx = node->IC_name_to_xDB(elem_name);
                     computed_value = node->Get_mIC(ICndx);
-//                    fout << "Element " << elem_name << " has solubility = " << computed_value << endl;
+                    fout << computed_value << endl;
                     residual = pow( (computed_value - sys->data_meas->alldata[i]->solubility[j]), 2) / sys->data_meas->alldata[i]->solubility[j];
 
 
@@ -528,6 +554,7 @@ cout << " T_k  = " << T_k  << endl;
 
 fout.close();
         } // END for loop over measurement points
+
 // ########################################################################################### //
 //	- - - // - - -	// END MPI LOOP : loop over measurements //	- - - // - - - // - - - //
 // ########################################################################################### //

@@ -31,6 +31,7 @@
 #include <string>
 #include <cmath>
 #include <nlopt.hpp>
+#include <ctime>
 
 #ifdef USE_MPI
 #include <mpi.h>
@@ -70,19 +71,21 @@ int main( int argc, char *argv[] )
 	// Create output directory
 	if ( !bfs::exists( "output_GEMSFIT" ) )
 		bfs::create_directory("output_GEMSFIT");
+    if ( !bfs::exists( "results_GEMSFIT" ) )
+        bfs::create_directory("results_GEMSFIT");
 	
 	// empty directory
-	bfs::path fi("output_GEMSFIT");
-	if(!bfs::exists(fi) || !bfs::is_directory(fi))
-	{
-		std::cout<<"output_GEMSFIT could not be created or is not a directory. Exiting now ... "<<endl;
-		exit(-1);
-	}
-	bfs::directory_iterator dir_iter(fi), dir_end;
-	for(;dir_iter != dir_end; ++dir_iter)
-	{
-		bfs::remove(*dir_iter);
-	}
+    bfs::path fi("output_GEMSFIT");
+    if(!bfs::exists(fi) || !bfs::is_directory(fi))
+    {
+        std::cout<<"output_GEMSFIT could not be created or is not a directory. Exiting now ... "<<endl;
+        exit(-1);
+    }
+    bfs::directory_iterator dir_iter(fi), dir_end;
+    for(;dir_iter != dir_end; ++dir_iter)
+    {
+        bfs::remove(*dir_iter);
+    }
 
 	int ierr = 0;
 	double elapsed_time = 0.0, sum_of_squares = 0.0;
@@ -121,6 +124,16 @@ if (do_what) {
     if( fout.fail() )
     { cout<<"Output fileopen error"<<endl; exit(1); }
     fout << "1. main.cpp line 124. Creating new SS_System_Properties" << endl;
+
+    // GEMSFIT results file for all test runs. The file has to be deleted manually for new empty one.
+    const char path_[200] = "results_GEMSFIT/FIT.csv";
+    ofstream fout_;
+    fout_.open(path_, ios::app);
+    if( fout_.fail() )
+    { cout<<"Output fileopen error"<<endl; exit(1); }
+    time_t now = time(0);
+    char* dt = ctime(&now);
+    fout_<<dt<<endl;
 
     // Reading in the data //
     SS_System_Properties* ss_newsys = new SS_System_Properties();
@@ -179,22 +192,22 @@ if (do_what) {
 //                gibbs.init_optim_multistart( optim.opt, &ss_systems, countit, sum_of_squares );
             }
 
-            cout<<endl<<" back in main ..."<<endl;
-            cout.setf(ios::fixed);
-            for( int i=0; i< (int) optim.opt.size(); i++ )
-                cout<<"optim.opt["<<ss_newsys->to_fit_species[i]<<"] = "<<optim.opt[i]<<endl;
-            cout<<"pid : "<<pid<<", sum of squares = "<<sum_of_squares<<endl;
-            cout<<endl;
 
-            // GEMSFIT logfile
-            const char path_[200] = "output_GEMSFIT/FIT.csv";
-            ofstream fout_;
-            fout_.open(path_, ios::app);
-            if( fout_.fail() )
-            { cout<<"Output fileopen error"<<endl; exit(1); }
+            fout_<<endl<<" back in main ..."<<endl;
+            fout_.setf(ios::fixed);
+            for( int i=0; i< (int) optim.opt.size(); i++ )
+                fout_<<"optim.opt["<<ss_newsys->to_fit_species[i]<<"] = "<<optim.opt[i]<<endl;
+            fout_<<"pid : "<<pid<<", sum of squares = "<<sum_of_squares<<endl;
+            fout_<<endl;
+
+
+            fout_<<"Reference Year Tcelsius Pbars measured computed residuals" << endl;
+
             for (int k=0; k<ss_systems[0]->measured_values_v.size(); ++k) {
-            fout_<<"exp "<<k+1<<";"<<ss_systems[0]->computed_values_v[k]<<";"<<ss_systems[0]->measured_values_v[k]<<endl;
+
+                fout_<< ss_systems[0]->data_meas->alldata[k]->reference<<";"<< ss_systems[0]->data_meas->alldata[k]->TC<<";"<< ss_systems[0]->data_meas->alldata[k]->PG<<";"<<ss_systems[0]->measured_values_v[k]<<";"<<ss_systems[0]->computed_values_v[k]<<";"<< fabs(ss_newsys->computed_residuals_v[k]) << endl;
             }
+            fout_<<endl<<endl;
             fout_.close();
             cout<<"pid : "<<pid<<" after print_results, back in main, sum_of_squares "<<sum_of_squares<<endl;
         }
@@ -215,10 +228,6 @@ if (do_what) {
 
 //	// perform basic statistical analysis
     stat_gibbs.std_basic_stat( optim.opt, &ss_systems );
-    for (count_r=0; count_r<ss_newsys->computed_residuals_v.size(); ++count_r)
-    {
-        fout << "For experiment "<<count_r+1<<" " <<fabs(ss_newsys->computed_residuals_v[count_r]) << endl;
-    }
 
 //	// Print part of the resulting fit
 //	elvis.print_results( optim.opt, &systems );

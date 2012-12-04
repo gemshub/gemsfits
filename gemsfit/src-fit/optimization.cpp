@@ -237,6 +237,11 @@ namespace opti
         fout.open(path, ios::app);
         if( fout.fail() )
         { cout<<"Output fileopen error"<<endl; exit(1); }
+        const char path1[200] = "results_GEMSFIT/FIT.csv";
+        ofstream fout_;
+        fout_.open(path1, ios::app);
+        if( fout_.fail() )
+        { cout<<"Output fileopen error"<<endl; exit(1); }
 
 
         // Algorithm name
@@ -251,6 +256,7 @@ namespace opti
             OptAlgo = sub_Algo;
         }
         fout<<"OptAlgo = "<<OptAlgo<<endl;
+        fout_<<"OptAlgo = "<<OptAlgo<<endl;
 
         // Number of threads
         string Threads_s, sub_Threads;
@@ -283,6 +289,7 @@ namespace opti
             OptBoundPerc = atof(sub_BP.c_str());
         }
         fout<<"OptBoundPerc = "<<OptBoundPerc<<endl;
+        fout_<<"OptBoundPerc = "<<OptBoundPerc<<endl;
 
         if( OptBoundPerc > 0. )
         {
@@ -400,6 +407,7 @@ namespace opti
             };
         };
         fout<<"OptTolRel = "<<OptTolRel<<endl;
+        fout_<<"OptTolRel = "<<OptTolRel<<endl;
 
         // Absolute optimization tolerance
         string TolA_s, sub_TolA;
@@ -422,6 +430,8 @@ namespace opti
             };
         };
         fout<<"OptTolAbs = "<<OptTolAbs<<endl;
+        fout_<<"OptTolAbs = "<<OptTolAbs<<endl;
+        fout_.close();
 
         // Max number of evaluations
         string MaxEval_s, sub_MaxEval;
@@ -1029,7 +1039,7 @@ namespace opti
         //ierr = MPI_Comm_size( MPI_COMM_WORLD, &p );
         int continue_or_exit;
 
-        ffout << "xx. in optimization.cpp line 1033. Performing optimization."<<endl;
+        ffout << "16. in optimization.cpp line 1040. Performing optimization."<<endl;
 
         //===== For testing the objective function without oprimization =====//
 //        sum_of_squares = StdStateEquil_objective_function_callback(optv, grad, ss_systems);

@@ -43,6 +43,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
+#include <omp.h>
 
 
 #include <unistd.h>    /* standard unix functions, like getpid()         */ 

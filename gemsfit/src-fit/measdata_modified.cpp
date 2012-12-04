@@ -56,6 +56,12 @@ void SS_Data_Manager::get_DB(  )
     if( fout.fail() )
     { cout<<"Output fileopen error"<<endl; exit(1); }
 
+    const char path1[200] = "results_GEMSFIT/FIT.csv";
+    ofstream fout_;
+    fout_.open(path1, ios::app);
+    if( fout_.fail() )
+    { cout<<"Output fileopen error"<<endl; exit(1); }
+
     fout << "6. in measdata_modified.cpp line 59. Continuing with reading from database." << endl << endl;
 
 
@@ -146,6 +152,8 @@ void SS_Data_Manager::get_DB(  )
  if (sqlca.sqlcode < 0) sqlprint();
  if (sqlca.sqlcode < 0) exit(1);}
      fout<<"Number of experiments = "<<rows<<endl;
+     fout_<<"Number of experiments = "<<rows<<endl;
+     fout_.close();
 
      // Count number of unique TP_pairs
      { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, unique_TP, ECPGt_EOIT,
