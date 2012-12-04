@@ -26,7 +26,7 @@ miron64766
 <DatDB>
 solubility
 
-# DataManager: database server
+# DataManager: database server 129.132.137.60
 <DatServer>
 localhost
 
@@ -78,7 +78,7 @@ HSiO3- SiO2@
 
 # Optimization: specify algorithm GN_ISRES GN_ORIG_DIRECT GN_ORIG_DIRECT_L LN_COBYLA LN_BOBYQA GN_ISRES
 <OptAlgo>
-LN_COBYLA
+LN_BOBYQA
 
 # Optimization: Number of threads (default=1)
 <OptThreads>
@@ -86,11 +86,11 @@ LN_COBYLA
 
 # Optimization: stopping criterion -> specify relative tolerance (default = 1e-04) of function value
 <OptTolRel>
-1e-04
+1e-06
 
 # Optimization: stopping criterion -> specify absolute tolerance (default = 1e-04) of function value
 <OptTolAbs>
-1e-04
+1e-06
 
 # Optimization: specify max number of evaluations
 <OptMaxEval>
