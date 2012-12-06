@@ -1,5 +1,7 @@
 /* 
 *	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
+*    Modified for fitting standard state properties (2012)
+*    by G. Dan Miron (mirondanro@yahoo.com)
 *
 *	 This file is part of the thermodynamic fitting program GEMSFIT.
 *
@@ -80,11 +82,6 @@ class SS_Opt_Vector
 
         /// vector indicating which species is the respective position in the opt vector is referring to
         vector<string> fit_species;
-//        vector<vector<string> >::iterator iter_spec1; vector<string>::iterator iter_spec2;
-//        /// col of parameter which is at respective position in opt vector
-//        vector<int> fit_param_col;
-//        /// type of parameter which is at respective position in opt vector
-//        vector<int> fit_param_type;
 
         /**
         * Function creates the opt, species and param_types vectors

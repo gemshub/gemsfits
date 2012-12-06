@@ -160,7 +160,7 @@
 ## (5) Data arrays which are provided neither in DCH nor in DBR files
 # B: Full total bulk composition (vector b), moles [nIC] (will be partially re-written from DBR files)
 <B>
-1e-09 1e-09 3330.50239972939 1e-09 1e-09 1698.53776502205 16.6432825786777 0 
+1e-09 1e-09 3330.50299972939 1e-09 1e-09 1698.53776502205 16.6432825786777 0 
 
 # Initial data for DCs - see DATACH file for dimensions nDC, nDCs
 # Pparc: Partial pressures or fugacities of pure Dependent Components [nDC] (reserved)

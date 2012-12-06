@@ -1,5 +1,7 @@
 /*
 *	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
+*    Modified for fitting standard state properties (2012)
+*    by G. Dan Miron (mirondanro@yahoo.com)
 *
 *	 This file is part of the thermodynamic fitting program GEMSFIT.
 *
@@ -21,6 +23,7 @@
 /**
 	@mainpage GEMSFIT - fitting thermodynamic data
 	@ author Ferdinand F. Hingerl
+    @ modified G. Dan Miron
  	
 	GEMFSIT - fitting tool for thermodynamic data
 */
@@ -68,13 +71,13 @@ int main( int argc, char *argv[] )
 {
 
 
-	// Create output directory
+    // Create output for log files and results directory
 	if ( !bfs::exists( "output_GEMSFIT" ) )
 		bfs::create_directory("output_GEMSFIT");
     if ( !bfs::exists( "results_GEMSFIT" ) )
         bfs::create_directory("results_GEMSFIT");
 	
-	// empty directory
+    // empty output directory
     bfs::path fi("output_GEMSFIT");
     if(!bfs::exists(fi) || !bfs::is_directory(fi))
     {
@@ -125,7 +128,7 @@ if (do_what) {
     { cout<<"Output fileopen error"<<endl; exit(1); }
     fout << "1. main.cpp line 124. Creating new SS_System_Properties" << endl;
 
-    // GEMSFIT results file for all test runs. The file has to be deleted manually for new empty one.
+    // GEMSFIT results file for all test runs. Keeps a log of all runs. The file has to be deleted manually.
     const char path_[200] = "results_GEMSFIT/FIT.csv";
     ofstream fout_;
     fout_.open(path_, ios::app);
@@ -133,7 +136,7 @@ if (do_what) {
     { cout<<"Output fileopen error"<<endl; exit(1); }
     time_t now = time(0);
     char* dt = ctime(&now);
-    fout_<<dt<<endl;
+    fout_<<dt<<endl; // writes the date and time of the run in the result file
 
     // Reading in the data //
     SS_System_Properties* ss_newsys = new SS_System_Properties();
@@ -142,17 +145,14 @@ if (do_what) {
 
     // Collect pointers to systems
     vector<SS_System_Properties*> ss_systems;
-        ss_systems.push_back(ss_newsys);
+    ss_systems.push_back(ss_newsys);
 
     fout << "11. main.cpp line 134. Create optimization vector and pass the values to it." << endl;
     // Create optimization_vector class and pass pointers to systems
     SS_Opt_Vector optim( ss_systems );
 
-    // Create instance of StdStateProp class derived from base class Optimization)
+    // Create instance of StdStateProp class derived from base class Optimization
     opti::StdStateProp gibbs( optim.opt );
-
-    // DEBUG: print some variables
-//    debug( ss_newsys, optim, ss_systems);
 
     fout << "13. in main.cpp line 143. Preparing for optimization." << endl;
     if( optim.opt.size()>0 )
@@ -205,7 +205,7 @@ if (do_what) {
 
             for (int k=0; k<ss_systems[0]->measured_values_v.size(); ++k) {
 
-                fout_<< ss_systems[0]->data_meas->alldata[k]->reference<<";"<< ss_systems[0]->data_meas->alldata[k]->TC<<";"<< ss_systems[0]->data_meas->alldata[k]->PG<<";"<<ss_systems[0]->measured_values_v[k]<<";"<<ss_systems[0]->computed_values_v[k]<<";"<< fabs(ss_newsys->computed_residuals_v[k]) << endl;
+                fout_<< ss_systems[0]->data_meas->allexp[k]->reference<<";"<< ss_systems[0]->data_meas->allexp[k]->TC<<";"<< ss_systems[0]->data_meas->allexp[k]->PG<<";"<<ss_systems[0]->measured_values_v[k]<<";"<<ss_systems[0]->computed_values_v[k]<<";"<< fabs(ss_newsys->computed_residuals_v[k]) << endl;
             }
             fout_<<endl<<endl;
             fout_.close();
@@ -236,23 +236,27 @@ if (do_what) {
     countit = 0;
 
     // 0 = optimization with full statistics, 2 = only statistics
-//	if( elvis.OptDoWhat == 0 || elvis.OptDoWhat == 2 )
-//	{
+    if( gibbs.OptDoWhat == 0 || gibbs.OptDoWhat == 2 )
+    {
 
-//		if( stat_elvis.MCbool == 1 )
-//		{
-//			cout << " ... performing Monte Carlo based confidence interval generation ... " << endl;
-//			// Generate confidence intervals by Monte Carlo Simulation
-//			stat_elvis.MC_confidence_interval( &elvis, optim.opt, &systems, countit );
-//		}
+//        if( stat_gibbs.MCbool == 1 )
+//        {
+//            cout << " ... performing Monte Carlo based confidence interval generation ... " << endl;
+//            // Generate confidence intervals by Monte Carlo Simulation
+//            // Create optimization_vector class and pass pointers to systems
+//            //            SS_Opt_Vector optim( ss_systems );
+//            //            // Create instance of StdStateProp class derived from base class Optimization
+//            //            opti::StdStateProp gibbs( optim.opt );
+//            stat_gibbs.SS_MC_confidence_interval( &gibbs, optim.opt, &ss_systems, countit );
+//        }
 
 //		// Plot residuals of minimization
 //		stat_elvis.plot_residuals( optim.opt, &systems );
 
-//		// Plot results from sensitivity analysis
-//		stat_elvis.sensitivity_correlation( optim.opt, &systems );
+        // Plot results from sensitivity analysis
+        stat_gibbs.SS_sensitivity_correlation( optim.opt, &ss_systems );
 
-//	}
+    }
 
 
     delete ss_newsys;

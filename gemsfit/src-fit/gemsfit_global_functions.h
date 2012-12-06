@@ -1,5 +1,7 @@
 /*
 *	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
+*    Modified for fitting standard state properties (2012)
+*    by G. Dan Miron (mirondanro@yahoo.com)
 *
 *	 This file is part of the thermodynamic fitting program GEMSFIT.
 *

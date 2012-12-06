@@ -1,5 +1,7 @@
 /*
 *	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
+*    Modified for fitting standard state properties (2012)
+*    by G. Dan Miron (mirondanro@yahoo.com)
 *
 *	 This file is part of the thermodynamic fitting program GEMSFIT.
 *
@@ -80,10 +82,10 @@ class SS_Data_Manager
         */
         virtual ~SS_Data_Manager( );
 
-        std::vector<int> TP_pairs[2]; // TP pairs of the experiments.< Only >The unique values will be extracted form the database.
+        std::vector<int> TP_pairs[2]; // UNIQUE!!! TP pairs of the experiments.< Only >The unique values will be extracted form the database.
         // TP_pairs[0] temperature; TP_pairs[1] pressure
 
-        /// struct holding 1 experiment data
+        /// struct holding experiment data for each experiment
         struct experiment
         {
             typedef vector<int>     int_v;
@@ -91,25 +93,20 @@ class SS_Data_Manager
             typedef vector<string>  string_v;
 
             int id_exp;
-            string name;
+            string name;                   // e.g. qtz_h2o - contains the chemical system info
             string_v component_name;       // name of the input components xa_ in GEMS
             string_v units;                // g, moles - for salts
             double_v component_amount;     // like b vector in GEMS - here in grams or moles
-            // vector<string> elements - for withc solubility is measured
-           // int_v sol_is_measured;         // for each element if solubility is measured experimentally = true, this way we know for which solubilities to ask GEMS to provide.
-            string_v name_elem;             // name of the element for which the solubility is measured
-            double_v solubility;           // related to components
-            double_v log_solubility;
-            // string_v sol_units;            // log molality
+            string_v name_elem;            // name of the element for which the solubility is measured
+            double_v solubility;           // measured value in mols/kg
+            double_v log_solubility;       // log units of solubility
             double_v error_sol;            // error in the measured solubility
             int TC;                        // temperature in C
             int PG;                        // pressure in bars
-            string reference;              // reference name or code?
-
+            string reference;              // reference Authors and year
         };
 
-
-        vector<experiment*> alldata;       // vector with pointers to the all experiments
+        vector<experiment*> allexp;        // vector with pointers to the all experiments
 
         /**
         * get PostgreSQL database connection parameters
@@ -124,31 +121,17 @@ class SS_Data_Manager
         * @author DM
         * @date 06.11.2012
         */
-        void get_DB( /*vector<experiment *> alldata*/ );
+        void get_DB( /*vector<experiment *> allexp*/ );
 
-        /**
-        * Read measurement data from CSV file
-        * @param sysdata   pointer to measdata struct which holds all measurement data.
-        * @author DM
-        * @date 06.11.2012
-        */
-        void get_CSV( vector<experiment*> alldata );
-
-        /**
-        * read species from database and form vectors of independent component names
-        * @param sysdata   pointer to measdata struct which holds all measurement data.
-        * @author DM
-        * @date 06.11.2012
-        */
-        void get_ic( vector<experiment*> alldata );
+//        /**
+//        * Read measurement data from CSV file
+//        * @param sysdata   pointer to measdata struct which holds all measurement data.
+//        * @author DM
+//        * @date 06.11.2012
+//        */
+//        void get_CSV( vector<experiment*> allexp );
 
     private:
-
-        /// get measurement data from CSV file (0) or PostgreSQL database (1)
-        int datasource;
-
-        /// name of CSV file containing measurement data
-        string CSVfile;
 
         // Database connection parameters
         /// PostgreSQL database: database name

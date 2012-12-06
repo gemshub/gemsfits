@@ -1,5 +1,7 @@
 /*
 *	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
+*    Modified for fitting standard state properties (2012)
+*    by G. Dan Miron (mirondanro@yahoo.com)
 *
 *	 This file is part of the thermodynamic fitting program GEMSFIT.
 *
@@ -266,7 +268,7 @@ namespace opti
         // nlopt instance
         nlopt::opt stdstate;
 
-        // configuration data for nlopt instance (get from GEMSFIT_input.dat)
+        // configuration data for nlopt instance (get from SS_GEMSFIT_input.dat)
         /// name of the optimization algorithm from NLOPT library
         string OptAlgo;
         /// number of threads for parallel execution
@@ -333,11 +335,11 @@ namespace opti
         // initialize optimization
         virtual void init_optim( std::vector<double> &optv_, std::vector<SS_System_Properties*> *sys, int &countit, double &sum_of_squares );
 
-//        // Initialize multistart optimization object and assign constraints and bounds
-//        virtual void init_optim_multistart( std::vector<double> &optv_, std::vector<SS_System_Properties*> *sys, int &countit, double &sum_of_squares );
+//      // Initialize multistart optimization object and assign constraints and bounds
+//      virtual void init_optim_multistart( std::vector<double> &optv_, std::vector<SS_System_Properties*> *sys, int &countit, double &sum_of_squares );
 
         // Print results to file
-//        virtual void print_results( std::vector<double> &optv_, std::vector<SS_System_Properties*> *sys );
+//      virtual void print_results( std::vector<double> &optv_, std::vector<SS_System_Properties*> *sys );
     };
 
 

@@ -1,5 +1,7 @@
 /*
 *	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
+*    Modified for fitting standard state properties (2012)
+*    by G. Dan Miron (mirondanro@yahoo.com)
 *
 *	 This file is part of the thermodynamic fitting program GEMSFIT.
 *
@@ -87,10 +89,8 @@ class SS_System_Properties /*: public SS_Data_Manager*/
     /// the GEMSFIT configuration file (fixed to SS_GEMSFIT_input.dat)
     string param_file;
     /// name of species to be fitted.
-    vs to_fit_species; // Dependent components in GEMS3K except solid phases which are taken form HP database
-    vi fit_species_ind; // indices of the fitted species in GEMS3K - read form node class after reading the experimental data.
-//    /// the GEMSFIT configuration file (fixed to GEMSFIT_input.dat)
-//    string param_file;
+    vs to_fit_species; // Dependent components in GEMS3K
+    vi fit_species_ind; // indices of the fitted species in GEMS3K - read from node class after reading the experimental data.
 
     /// Printing Flag: if this flag is set to one, the result of the optimization will be printed to file (via optimization.cpp)
     bool printfile;
@@ -119,7 +119,7 @@ class SS_System_Properties /*: public SS_Data_Manager*/
     // implemented only for Gibbs energy
     struct std_prop
     {
-        vd std_gibbs;   // standard state Gibbs free energy of the species to be fitted at T=25 C and P=1 bar
+        vd  std_gibbs;   // standard state Gibbs free energy of the species to be fitted at T=25 C and P=1 bar
         vvd std_gibbsTP; // standard state Gibbs free energy of the species to be fitted at T and P of the experiemnts [specie][TPpair]
         vvd dif_gibbs;   // difference dif_gibbs = std_gibbsTP-std_gibbs. This difference is set once after rertiving std_gibbs and std_gibbsTP form GEMS3K [specie][TPpair];
 
@@ -129,7 +129,7 @@ class SS_System_Properties /*: public SS_Data_Manager*/
         vd init_guesses;
 
         /// 0 - molality; 1 - log_molality
-        bool log_solubility;
+        bool log_solubility; // in which form the solubility is compared
     };
     std_prop* sysprop; // Pointer to std_prop struct that holds the stdandard state properties of the species to be fitted
 

@@ -152,25 +152,25 @@ class StdStatistics : public PlotFit
 //		*/
 //		void plot_residuals( std::vector<double> &optv_, std::vector<System_Properties*> *systems );
 
-//		/**
-//		* Compute confidence intervals using Mone Carlo.
-//		* @author FFH
-//		* @param actmod   pointer to instance of ActivityModel object.
-//		* @param optv_    optimization vector
-//		* @param systems  vector of pointers to instances of System_Properties structs
-//		* @param countit  global counter of runs over measurement data
-//		* @date 09.04.2012
-//		*/
-//		void MC_confidence_interval( opti::ActivityModel* actmod, std::vector<double> &optv_, std::vector<System_Properties*> *systems, int &countit );
+        /**
+        * Compute confidence intervals using Mone Carlo.
+        * @author DM
+        * @param actmod   pointer to instance of ActivityModel object.
+        * @param optv_    optimization vector
+        * @param systems  vector of pointers to instances of System_Properties structs
+        * @param countit  global counter of runs over measurement data
+        * @date 05.12.2012
+        */
+        void SS_MC_confidence_interval( opti::StdStateProp* gibbs, std::vector<double> &optv_, std::vector<SS_System_Properties*> *systems, int &countit );
 
-//		/**
-//		* Perform sensitivity analysis of selected parameters.
-//		* @author FFH
-//		* @param optv_    optimization vector
-//		* @param systems  vector of pointers to instances of System_Properties structs
-//		* @date 09.04.2012
-//		*/
-//		void sensitivity_correlation( const std::vector<double> &optv_, std::vector<System_Properties*> *systems );
+        /**
+        * Perform sensitivity analysis of selected parameters.
+        * @author DM
+        * @param optv_    optimization vector
+        * @param systems  vector of pointers to instances of System_Properties structs
+        * @date 06.12.2012
+        */
+        void SS_sensitivity_correlation( const std::vector<double> &optv_, std::vector<SS_System_Properties*> *systems );
 
 //		// Compute Pearson's sample correlation coefficient
 //		//void correlation(  );

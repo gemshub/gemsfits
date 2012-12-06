@@ -1,5 +1,7 @@
 /*
 *	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
+*    Modified for fitting standard state properties (2012)
+*    by G. Dan Miron (mirondanro@yahoo.com)
 *
 *	 This file is part of the thermodynamic fitting program GEMSFIT.
 *
@@ -50,6 +52,7 @@ SS_System_Properties::SS_System_Properties( )
     if( fout.fail() )
     { cout<<"Output fileopen error"<<endl; exit(1); }
 
+    // file containing the input parameters of the system and of the optimization class
     param_file  = "SS_INPUT/SS_GEMSFIT_input.dat";
 
     // For parameter optimization do not use printing of results
@@ -63,6 +66,7 @@ SS_System_Properties::SS_System_Properties( )
     data_meas = new SS_Data_Manager;
 
     // Initialize pointer to instance of sysprop object
+    // std_prop is a struc containing the standard state properties at TP of exp and at reference value + other associated variables
     sysprop = new std_prop;
     fout << "8. system_properties.cpp line 68. getsysprop( sysprop ); reads system properties form the input file." << endl;
     getsysprop( sysprop );
@@ -120,7 +124,6 @@ void SS_System_Properties::getsysprop( std_prop* sysprop )
     if( fout.fail() )
     { cout<<"Output fileopen error"<<endl; exit(1); }
 
-
     // System name
     pos_start = allparam.find(f7);
     pos_end   = allparam.find(f4,pos_start);
@@ -164,7 +167,6 @@ void SS_System_Properties::getsysprop( std_prop* sysprop )
     long index_species = -1;
     char input_system_file_list_name[256];
 
-
     // get system file list name // system name is the same ast the GMS3K input .lst file
     strcpy(input_system_file_list_name, system_name.c_str());
 
@@ -179,7 +181,7 @@ void SS_System_Properties::getsysprop( std_prop* sysprop )
 
     for ( i=0; i<to_fit_species.size(); ++i )
     {
-    // Get index of to_fit_species of interest
+    // Get form GEMS the index of to_fit_species of interest
     try
     {
         index_species = node->DC_name_to_xCH( to_fit_species[i].c_str() );
@@ -219,33 +221,37 @@ void SS_System_Properties::getsysprop( std_prop* sysprop )
     }
 
 
-    /// Get STD G0 at TP of the experiments and the std G0 at 273 and 1 bar and at the unique TP_pairs of the experiments
+    // Get STD G0 at TP of the experiments and the std G0 at 273 and 1 bar and at the unique TP_pairs of the experiments
     fout << endl << "9. system_properties.cpp line 211. Getting G0 at 25 deg. C and 1 bar and at the unique TP pairs of the experiments into sysprop member of SS_System_properties : std_prop" << endl;
-    // initializing std_gibbs for each specie std_gibbs[0] = the value for first specie
-    for (i=0; i<fit_species_ind.size(); i++) {
-        sysprop->std_gibbs.push_back(0.0);
-//        cout.setf(ios::fixed); // print without scientific notation
-        sysprop->std_gibbs[i] =  node->DC_G0(fit_species_ind[i], 1e+05, 298.15, false); // Get G0 at 1 bar (1e+05 Pa) and 25 degrees C (298.15 K)
-//        cout << "The standard GO for " << to_fit_species[i] << " with index "<< fit_species_ind[i] << " is " << sysprop->std_gibbs[i] << endl;
-    }
-//    cout<< sysprop->std_gibbs.size() << endl;
 
-    for (i=0; i<fit_species_ind.size(); i++) { // loops trough all species
+    // initializing std_gibbs for each specie std_gibbs[0] = the value for first specie
+    for (i=0; i<fit_species_ind.size(); i++)
+    {
+        sysprop->std_gibbs.push_back(0.0);
+    //        cout.setf(ios::fixed); // print without scientific notation
+        sysprop->std_gibbs[i] =  node->DC_G0(fit_species_ind[i], 1e+05, 298.15, false); // Get G0 at 1 bar (1e+05 Pa) and 25 degrees C (298.15 K)
+    //        cout << "The standard GO for " << to_fit_species[i] << " with index "<< fit_species_ind[i] << " is " << sysprop->std_gibbs[i] << endl;
+    }
+    //    cout<< sysprop->std_gibbs.size() << endl;
+
+    // Gets the G0 at T and P of experiment for each specie
+    for (i=0; i<fit_species_ind.size(); i++) // loops trough all species
+    {
         vector<double> temp_v1, temp_v2;
-//            cout << " For " << to_fit_species[i] << endl;
+     //            cout << " For " << to_fit_species[i] << endl;
         for (j=0; j<data_meas->TP_pairs[0].size(); j++) { // loops trough all unique TP_pairs
             temp_v1.push_back(0.0);
             temp_v2.push_back(0.0);
-//            cout << " P = " << data_meas->TP_pairs[1][j]*100000 << " T = " << data_meas->TP_pairs[0][j]+273.15 << " ";
+     //            cout << " P = " << data_meas->TP_pairs[1][j]*100000 << " T = " << data_meas->TP_pairs[0][j]+273.15 << " ";
             temp_v1[j] = node->DC_G0(fit_species_ind[i], data_meas->TP_pairs[1][j]*100000, data_meas->TP_pairs[0][j]+273.15, false);
-//            cout << temp_v[j] << endl;
+     //            cout << temp_v[j] << endl;
             temp_v2[j]= temp_v1[j] - sysprop->std_gibbs[i]; // a. deltaG T,P = GT,P - G298, 1 (N=0) N – number of iterations
         }
         sysprop->std_gibbsTP.push_back(temp_v1);
         sysprop->dif_gibbs.push_back(temp_v2);
     }
-//    cout.setf(ios::fixed); // print without scientific notation
-//    cout << "The STD G0 at T= " << data_meas->TP_pairs[0][0] <<" P= " << data_meas->TP_pairs[1][0] << " of " << to_fit_species[2] << " = " << sysprop->std_gibbsTP[2][0] << endl;
+    //    cout.setf(ios::fixed); // print without scientific notation
+    //    cout << "The STD G0 at T= " << data_meas->TP_pairs[0][0] <<" P= " << data_meas->TP_pairs[1][0] << " of " << to_fit_species[2] << " = " << sysprop->std_gibbsTP[2][0] << endl;
 
     delete node;
 

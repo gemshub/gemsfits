@@ -1,5 +1,7 @@
 /*
 *	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
+*    Modified for fitting standard state properties (2012)
+*    by G. Dan Miron (mirondanro@yahoo.com)
 *
 *	 This file is part of the thermodynamic fitting program GEMSFIT.
 *
@@ -43,28 +45,17 @@ SS_Data_Manager::SS_Data_Manager( )
     { cout<<"Output fileopen error"<<endl; exit(1); }
 
     // Read parameters for database connection
-    fout << "3. data_manager.cpp line 47. Reading database parameter get_db_specs(); " << endl;
+    fout << "3. data_manager.cpp line 46. Reading database parameter get_db_specs(); " << endl;
     get_db_specs();
 
     // Read measurement data from PosgreSQL server
-    fout << "4. data_manager.cpp line 51. alldata.push_back(new experiment) - empty; " << endl;
-    alldata.push_back(new experiment);
+    fout << "4. data_manager.cpp line 50. allexp.push_back(new experiment) - empty; " << endl;
+    allexp.push_back( new experiment );
 
+    fout << "5. data_manager.cpp line 53. Getting data form the database get_DB ( allexp ); " << endl;
+    get_DB( /*allexp*/ );
 
-    if( !datasource )
-    {
-       // get_CSV( alldata );
-    }
-    else
-    {
-        fout << "5. data_manager.cpp line 61. Getting data form the database get_DB ( alldata ); " << endl;
-        get_DB( /*alldata*/ );
-    }
-
-    // read species from database and form vectors of independent component names
-//    get_ic( alldata );
     fout.close();
-
 }
 
 
@@ -72,8 +63,9 @@ SS_Data_Manager::SS_Data_Manager( )
 SS_Data_Manager::~SS_Data_Manager( )
 {
     // Delete measurement data vector of experiments
-    for (int i=0; i<alldata.size(); ++i) {
-                    delete alldata[i];
+    for (unsigned int i=0; i<allexp.size(); ++i)
+    {
+        delete allexp[i];
     }
 }
 
@@ -81,7 +73,7 @@ SS_Data_Manager::~SS_Data_Manager( )
 void SS_Data_Manager::get_db_specs( )
 {
     int pos_start, pos_end, i;
-    string line, alldatax;
+    string line, allexpx;
     ifstream data_stream;
     vector<string> data;
 
@@ -90,8 +82,6 @@ void SS_Data_Manager::get_db_specs( )
     string f8("<DatRDCTable>");
     string f3("<DatUsername>");
     string f4("<DatPasswd>");
-    string f5("<DatSource>");
-    string f6("<DatCSVfile>");
     string f7("<DatServer>");
     string hash("#");
 
@@ -108,7 +98,7 @@ void SS_Data_Manager::get_db_specs( )
     }
     data_stream.close();
     for( i=0; i < (int) data.size(); i++ )
-    alldatax += data[i];
+    allexpx += data[i];
 
     // GEMSFIT logfile
     const char path[200] = "output_GEMSFIT/GEMSFIT.log";
@@ -117,38 +107,11 @@ void SS_Data_Manager::get_db_specs( )
     if( fout.fail() )
     { cout<<"Output fileopen error"<<endl; exit(1); }
 
-
-    // get measurement data from CSV file (0) or PostgreSQL database (1)
-    // Database name
-    string sub_datasource;
-    pos_start = alldatax.find(f5);
-    pos_end   = alldatax.find(hash,pos_start);
-    string datasource_s = alldatax.substr((pos_start+f5.length()),(pos_end-pos_start-f5.length()));
-    istringstream datasource_ss(datasource_s);
-        datasource_ss >> sub_datasource;
-        datasource = atoi( sub_datasource.c_str() );
-    fout<<"datasource = "<<datasource<<endl;
-
-    if( datasource == 0 )
-    {
-        // name of CSV file containing measurement data
-        // Database name
-        string sub_csv;
-        pos_start = alldatax.find(f6);
-        pos_end   = alldatax.find(hash,pos_start);
-        string csv_s = alldatax.substr((pos_start+f6.length()),(pos_end-pos_start-f6.length()));
-        istringstream csv_ss(csv_s);
-        csv_ss >> sub_csv;
-            CSVfile = sub_csv;
-        fout<<"CSVfile = "<<CSVfile<<endl;
-    }
-    else if( datasource == 1 )
-    {
         // Database name
         string sub_dbname;
-        pos_start = alldatax.find(f1);
-        pos_end   = alldatax.find(hash,pos_start);
-        string dbname_s = alldatax.substr((pos_start+f1.length()),(pos_end-pos_start-f1.length()));
+        pos_start = allexpx.find(f1);
+        pos_end   = allexpx.find(hash,pos_start);
+        string dbname_s = allexpx.substr((pos_start+f1.length()),(pos_end-pos_start-f1.length()));
         istringstream dbname_ss(dbname_s);
         dbname_ss >> sub_dbname;
             DBname = sub_dbname;
@@ -157,9 +120,9 @@ void SS_Data_Manager::get_db_specs( )
 
         // Table name
         string sub_table;
-        pos_start = alldatax.find(f2);
-        pos_end   = alldatax.find(hash,pos_start);
-        string table_s = alldatax.substr((pos_start+f2.length()),(pos_end-pos_start-f2.length()));
+        pos_start = allexpx.find(f2);
+        pos_end   = allexpx.find(hash,pos_start);
+        string table_s = allexpx.substr((pos_start+f2.length()),(pos_end-pos_start-f2.length()));
         istringstream table_ss(table_s);
         table_ss >> sub_table;
             tablename = sub_table;
@@ -168,9 +131,9 @@ void SS_Data_Manager::get_db_specs( )
 
         // RDCTable name
         string sub_RDCtable;
-        pos_start = alldatax.find(f8);
-        pos_end   = alldatax.find(hash,pos_start);
-        string RDCtable_s = alldatax.substr((pos_start+f8.length()),(pos_end-pos_start-f8.length()));
+        pos_start = allexpx.find(f8);
+        pos_end   = allexpx.find(hash,pos_start);
+        string RDCtable_s = allexpx.substr((pos_start+f8.length()),(pos_end-pos_start-f8.length()));
         istringstream RDCtable_ss(RDCtable_s);
         RDCtable_ss >> sub_RDCtable;
             RDCtablename = sub_RDCtable;
@@ -179,9 +142,9 @@ void SS_Data_Manager::get_db_specs( )
 
         // User name
         string sub_username;
-        pos_start = alldatax.find(f3);
-        pos_end   = alldatax.find(hash,pos_start);
-        string username_s = alldatax.substr((pos_start+f3.length()),(pos_end-pos_start-f3.length()));
+        pos_start = allexpx.find(f3);
+        pos_end   = allexpx.find(hash,pos_start);
+        string username_s = allexpx.substr((pos_start+f3.length()),(pos_end-pos_start-f3.length()));
         istringstream username_ss(username_s);
         username_ss >> sub_username;
             username = sub_username;
@@ -190,9 +153,9 @@ void SS_Data_Manager::get_db_specs( )
 
         // Password
         string sub_passwd;
-        pos_start = alldatax.find(f4);
-        pos_end   = alldatax.find(hash,pos_start);
-        string passwd_s = alldatax.substr((pos_start+f4.length()),(pos_end-pos_start-f4.length()));
+        pos_start = allexpx.find(f4);
+        pos_end   = allexpx.find(hash,pos_start);
+        string passwd_s = allexpx.substr((pos_start+f4.length()),(pos_end-pos_start-f4.length()));
         istringstream passwd_ss(passwd_s);
         passwd_ss >> sub_passwd;
             passwd = sub_passwd;
@@ -200,21 +163,13 @@ void SS_Data_Manager::get_db_specs( )
 
         // Server
         string sub_server;
-        pos_start = alldatax.find(f7);
-        pos_end   = alldatax.find(hash,pos_start);
-        string server_s = alldatax.substr((pos_start+f7.length()),(pos_end-pos_start-f7.length()));
+        pos_start = allexpx.find(f7);
+        pos_end   = allexpx.find(hash,pos_start);
+        string server_s = allexpx.substr((pos_start+f7.length()),(pos_end-pos_start-f7.length()));
         istringstream server_ss(server_s);
         server_ss >> sub_server;
             psql_server = sub_server;
         fout<<"psql_server = "<<psql_server<<endl;
-    }
-    else
-    {
-        cout << endl;
-        cout << " You entered code for datasource = " << datasource << " is not implemented. Enter either (0) for CSV file or (1) for PostgreSQL database. " << endl;
-        cout << " ... bailing out now ... " << endl;
-        cout << endl;
-    }
 
     fout.close();
 }
@@ -259,7 +214,7 @@ Data_Manager::~Data_Manager( )
 void Data_Manager::get_db_specs( )
 {
 	int pos_start, pos_end, i;
-	string line, alldata;
+    string line, allexp;
  	ifstream data_stream;
 	vector<string> data;
 
@@ -285,7 +240,7 @@ void Data_Manager::get_db_specs( )
 	} 
 	data_stream.close();
 	for( i=0; i < (int) data.size(); i++ )
-	alldata += data[i];
+    allexp += data[i];
 
 	// GEMSFIT logfile
 	const char path[200] = "output_GEMSFIT/GEMSFIT.log";
@@ -298,9 +253,9 @@ void Data_Manager::get_db_specs( )
 	// get measurement data from CSV file (0) or PostgreSQL database (1)
 	// Database name
 	string sub_datasource;
-	pos_start = alldata.find(f5);
-	pos_end   = alldata.find(hash,pos_start);
-	string datasource_s = alldata.substr((pos_start+f5.length()),(pos_end-pos_start-f5.length()));
+    pos_start = allexp.find(f5);
+    pos_end   = allexp.find(hash,pos_start);
+    string datasource_s = allexp.substr((pos_start+f5.length()),(pos_end-pos_start-f5.length()));
 	istringstream datasource_ss(datasource_s);
         datasource_ss >> sub_datasource;
 		datasource = atoi( sub_datasource.c_str() );
@@ -311,9 +266,9 @@ void Data_Manager::get_db_specs( )
 		// name of CSV file containing measurement data
 		// Database name
 		string sub_csv;
-		pos_start = alldata.find(f6);
-		pos_end   = alldata.find(hash,pos_start);
-		string csv_s = alldata.substr((pos_start+f6.length()),(pos_end-pos_start-f6.length()));
+        pos_start = allexp.find(f6);
+        pos_end   = allexp.find(hash,pos_start);
+        string csv_s = allexp.substr((pos_start+f6.length()),(pos_end-pos_start-f6.length()));
 		istringstream csv_ss(csv_s);
 		csv_ss >> sub_csv;
 			CSVfile = sub_csv;
@@ -323,9 +278,9 @@ void Data_Manager::get_db_specs( )
 	{
 		// Database name
 		string sub_dbname;
-		pos_start = alldata.find(f1);
-		pos_end   = alldata.find(hash,pos_start);
-		string dbname_s = alldata.substr((pos_start+f1.length()),(pos_end-pos_start-f1.length()));
+        pos_start = allexp.find(f1);
+        pos_end   = allexp.find(hash,pos_start);
+        string dbname_s = allexp.substr((pos_start+f1.length()),(pos_end-pos_start-f1.length()));
 		istringstream dbname_ss(dbname_s);
 		dbname_ss >> sub_dbname;
 			DBname = sub_dbname;
@@ -334,9 +289,9 @@ void Data_Manager::get_db_specs( )
 
 		// Table name
 		string sub_table;
-		pos_start = alldata.find(f2);
-		pos_end   = alldata.find(hash,pos_start);
-		string table_s = alldata.substr((pos_start+f2.length()),(pos_end-pos_start-f2.length()));
+        pos_start = allexp.find(f2);
+        pos_end   = allexp.find(hash,pos_start);
+        string table_s = allexp.substr((pos_start+f2.length()),(pos_end-pos_start-f2.length()));
 		istringstream table_ss(table_s);
 		table_ss >> sub_table;
 			tablename = sub_table;
@@ -345,9 +300,9 @@ void Data_Manager::get_db_specs( )
 
 		// User name
 		string sub_username;
-		pos_start = alldata.find(f3);
-		pos_end   = alldata.find(hash,pos_start);
-		string username_s = alldata.substr((pos_start+f3.length()),(pos_end-pos_start-f3.length()));
+        pos_start = allexp.find(f3);
+        pos_end   = allexp.find(hash,pos_start);
+        string username_s = allexp.substr((pos_start+f3.length()),(pos_end-pos_start-f3.length()));
 		istringstream username_ss(username_s);
 		username_ss >> sub_username;
 			username = sub_username;
@@ -356,9 +311,9 @@ void Data_Manager::get_db_specs( )
 
 		// Password
 		string sub_passwd;
-		pos_start = alldata.find(f4);
-		pos_end   = alldata.find(hash,pos_start);
-		string passwd_s = alldata.substr((pos_start+f4.length()),(pos_end-pos_start-f4.length()));
+        pos_start = allexp.find(f4);
+        pos_end   = allexp.find(hash,pos_start);
+        string passwd_s = allexp.substr((pos_start+f4.length()),(pos_end-pos_start-f4.length()));
 		istringstream passwd_ss(passwd_s);
 		passwd_ss >> sub_passwd;
 			passwd = sub_passwd;
@@ -366,9 +321,9 @@ void Data_Manager::get_db_specs( )
 	
 		// Server
 		string sub_server;
-		pos_start = alldata.find(f7);
-		pos_end   = alldata.find(hash,pos_start);
-		string server_s = alldata.substr((pos_start+f7.length()),(pos_end-pos_start-f7.length()));
+        pos_start = allexp.find(f7);
+        pos_end   = allexp.find(hash,pos_start);
+        string server_s = allexp.substr((pos_start+f7.length()),(pos_end-pos_start-f7.length()));
 		istringstream server_ss(server_s);
 		server_ss >> sub_server;
 			psql_server = sub_server;

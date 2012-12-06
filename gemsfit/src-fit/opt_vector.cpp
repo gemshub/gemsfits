@@ -1,5 +1,7 @@
 /* 
 *	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
+*    Modified for fitting standard state properties (2012)
+*    by G. Dan Miron (mirondanro@yahoo.com)
 *
 *	 This file is part of the thermodynamic fitting program GEMSFIT.
 *
@@ -69,8 +71,7 @@ void SS_Opt_Vector::make_opt_vector( vector<SS_System_Properties*> vect_of_sys_p
             // Loop over all species of each system
             for( j=0; j<vect_of_sys_props[i]->fit_species_ind.size(); j++ )
             {
-
-                // store first guesses of aIPc arrays in opt vector
+                // store first guesses in opt vector
                 opt.push_back(vect_of_sys_props[i]->sysprop->std_gibbs[j]);
                 fit_species.push_back(vect_of_sys_props[i]->to_fit_species[j]);
             };
@@ -170,11 +171,6 @@ void Opt_Vector::make_opt_vector( vector<System_Properties*> vect_of_sys_props )
 		else
 		{
 			// add only parameters to the optimization vector that do not show up in other systems
-
-
-
-
-
 
 
 		};	

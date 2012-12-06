@@ -1,5 +1,7 @@
 /*
 *	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
+*    Modified for fitting standard state properties (2012)
+*    by G. Dan Miron (mirondanro@yahoo.com)
 *
 *	 This file is part of the thermodynamic fitting program GEMSFIT.
 *
@@ -180,7 +182,7 @@ namespace opti
     {
         // Call GEMS3K and run GEM_run();
 #ifdef GEMSFIT_DEBUG
-cout<<"in ActMod_gems3k_wrap ..."<<endl;
+cout<<"in StdState_gems3k_wrap ..."<<endl;
 #endif
         if( !pid )
         {
@@ -204,14 +206,14 @@ cout<<"in ActMod_gems3k_wrap ..."<<endl;
         sys->computed_residuals_v.clear();
 
 
-        unsigned i, k;
-        int j, start, step, ierr, ICndx;
+        unsigned i;
+        int j, start, step, ierr;
         long int NodeStatusCH, NodeHandle;
         double sum_of_squared_residuals_sys_ = 0.0, residual = 0.0, P_pa, T_k, computed_value, log_computed_value, measured_value;
         char input_system_file_list_name[256];
 
         // DATACH structure content
-        int nIC, nDC, nPH;
+        int nIC, nDC, nPH, ICndx;
         double* new_moles_IC;
         double* xDC_up;
         double* xDC_lo;
@@ -319,47 +321,49 @@ cout<<"in ActMod_gems3k_wrap ..."<<endl;
 cout<<"gems3 wrap line 636"<<endl;
 #endif
 
-// ---- // ---- // ---- // Recalculating the new G0 at TP of experiments from optv and sending them to GEMS // ---- // ---- // ---- //
+    // ---- // ---- // ---- // Recalculating the new G0 at TP of experiments from optv and sending them to GEMS // ---- // ---- // ---- //
 
-// Giving the new G0 at 25 C and 1 bar form the optv to sysprop->std_gibbs
-sys->sysprop->std_gibbs = opt;
+    // Giving the new G0 at 25 C and 1 bar form the optv to sysprop->std_gibbs
+    sys->sysprop->std_gibbs = opt;
 
-// Recalculating the new G0 at the unique P T of the experiments and changing them in gems
-for (i=0; i<sys->fit_species_ind.size(); i++) { // loops trough all species
-//            cout << " For " << to_fit_species[i] << endl;
-    for (j=0; j<sys->data_meas->TP_pairs[0].size(); j++) { // loops trough all unique TP_pairs
-        sys->sysprop->std_gibbsTP[i][j] = sys->sysprop->std_gibbs[i] + sys->sysprop->dif_gibbs[i][j]; // new G0 at TP for specie i and TP pair j
-//            cout << " P = " << data_meas->TP_pairs[1][j]*100000 << " T = " << data_meas->TP_pairs[0][j]+273.15 << " ";
+    // Recalculating the new G0 at the unique P T of the experiments and changing them in gems
+    for (i=0; i<sys->fit_species_ind.size(); i++)            // loops trough all species
+    {
+        // cout << " For " << to_fit_species[i] << endl;
+        for (j=0; j<sys->data_meas->TP_pairs[0].size(); j++) // loops trough all unique TP_pairs
+        {
+            sys->sysprop->std_gibbsTP[i][j] = sys->sysprop->std_gibbs[i] + sys->sysprop->dif_gibbs[i][j]; // new G0 at TP for specie i and TP pair j
+            // cout << " P = " << data_meas->TP_pairs[1][j]*100000 << " T = " << data_meas->TP_pairs[0][j]+273.15 << " ";
 
-        // Set the new G0 in GEMS
-        node->Set_DC_G0(sys->fit_species_ind[i], sys->data_meas->TP_pairs[1][j]*100000, sys->data_meas->TP_pairs[0][j]+273.15, sys->sysprop->std_gibbsTP[i][j]);
-//            cout << temp_v[j] << endl;
+            // Set the new G0 in GEMS
+            node->Set_DC_G0(sys->fit_species_ind[i], sys->data_meas->TP_pairs[1][j]*100000, sys->data_meas->TP_pairs[0][j]+273.15, sys->sysprop->std_gibbsTP[i][j]);
+            // cout << temp_v[j] << endl;
 
+        }
     }
-}
 
-// Asking GEM to run with automatic initial approximation after changing the G0, if not it will always take the values of the exp form which the 0000dbr file is made.
-dBR->NodeStatusCH = NEED_GEM_AIA;
+    // Asking GEM to run with automatic initial approximation after changing the G0, if not it will always take the values of the exp form which the 0000dbr file is made.
+    dBR->NodeStatusCH = NEED_GEM_AIA;
 
 
-// PERFORM TEST RUN WITH DBR file
-NodeStatusCH = node->GEM_run( false );
+    // PERFORM TEST RUN WITH DBR file
+    NodeStatusCH = node->GEM_run( false );
 
 #ifdef GEMSFIT_DEBUG
 cout << " NodeStatusCH = "<<NodeStatusCH<<endl;
 cout << "   node temperature from dbr file: " << node->cTK() << endl;
 cout << "   node pressure from dbr file: " << node->cP() << endl;
 #endif
-if( NodeStatusCH == OK_GEM_AIA || NodeStatusCH == OK_GEM_SIA  )
-{
-    node->GEM_print_ipm( "SS_GEMS3K_log.out" );
-}
-else
-{
-    // possible return status analysis, error message
-    node->GEM_print_ipm( "SS_GEMS3K_log.out" );   // possible debugging printout
-    cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
-}
+    if( NodeStatusCH == OK_GEM_AIA || NodeStatusCH == OK_GEM_SIA  )
+    {
+        node->GEM_print_ipm( "SS_GEMS3K_log.out" );
+    }
+    else
+    {
+        // possible return status analysis, error message
+        node->GEM_print_ipm( "SS_GEMS3K_log.out" );   // possible debugging printout
+        cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
+    }
 
 
 // ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- // ---- //
@@ -382,46 +386,45 @@ else
 // ########################################################################################### //
 //	- - - // - - -	// MPI LOOP : loop over measurements //	- - - // - - - // - - - //
 // ########################################################################################### //
-//        cout << sys->data_meas->alldata.size() << endl;
+//        cout << sys->data_meas->allexp.size() << endl;
 
 //        omp_set_num_threads(2);
 //        #pragma omp parallel for
-        for( i = start; i < sys->data_meas->alldata.size() ; i +=step )
+        for( i = start; i < sys->data_meas->allexp.size() ; i +=step )
         {
-
-                // Set amount of dependent components (GEMS3K: DBR indexing)
-            // go trough all acomponents and calculate the mole amounts of the IC
-            for (j=0; j<sys->data_meas->alldata[i]->component_name.size(); ++j)
+            // Set amount of dependent components (GEMS3K: DBR indexing)
+            // go trough all acomponents and calculate the mole amounts of the IC for the b vector in GEMS
+            for (j=0; j<sys->data_meas->allexp[i]->component_name.size(); ++j)
             {
-                if (sys->data_meas->alldata[i]->component_name[j] == "H2O")
+                if (sys->data_meas->allexp[i]->component_name[j] == "H2O")
                 {
                     ICndx = node->IC_name_to_xDB("H");
-                    new_moles_IC[ICndx] += 2*sys->data_meas->alldata[i]->component_amount[j]/18.01528 + 2*sys->data_meas->alldata[i]->component_amount[j]/1000*1e-05;
-//                    cout << new_moles_IC[ICndx] << endl;
+                    new_moles_IC[ICndx] += 2*sys->data_meas->allexp[i]->component_amount[j]/18.01528 + 2*sys->data_meas->allexp[i]->component_amount[j]/1000*1e-05; // adds 1e-05 moles of H2 for each kg og H2O
+                    // cout << new_moles_IC[ICndx] << endl;
                     ICndx = node->IC_name_to_xDB("O");
-                    new_moles_IC[ICndx] +=  sys->data_meas->alldata[i]->component_amount[j]/18.01528;
+                    new_moles_IC[ICndx] +=  sys->data_meas->allexp[i]->component_amount[j]/18.01528;
                 }
-                else if (sys->data_meas->alldata[i]->component_name[j] == "SiO2")
+                else if (sys->data_meas->allexp[i]->component_name[j] == "SiO2")
                 {
                     ICndx = node->IC_name_to_xDB("Si");
-                    new_moles_IC[ICndx] +=  sys->data_meas->alldata[i]->component_amount[j]/60.0843;
+                    new_moles_IC[ICndx] +=  sys->data_meas->allexp[i]->component_amount[j]/60.0843;
                     ICndx = node->IC_name_to_xDB("O");
-                    new_moles_IC[ICndx] +=  2*sys->data_meas->alldata[i]->component_amount[j]/60.0843;
+                    new_moles_IC[ICndx] +=  2*sys->data_meas->allexp[i]->component_amount[j]/60.0843;
                 }
-                else if (sys->data_meas->alldata[i]->component_name[j] == "Al2O3")
+                else if (sys->data_meas->allexp[i]->component_name[j] == "Al2O3")
                 {
                     ICndx = node->IC_name_to_xDB("Al");
                     if (ICndx > 0) {
-                    new_moles_IC[ICndx] +=  2*sys->data_meas->alldata[i]->component_amount[j]/101.9612772; }
+                    new_moles_IC[ICndx] +=  2*sys->data_meas->allexp[i]->component_amount[j]/101.9612772; }
                     ICndx = node->IC_name_to_xDB("O");
-                    new_moles_IC[ICndx] +=  3*sys->data_meas->alldata[i]->component_amount[j]/101.9612772;
+                    new_moles_IC[ICndx] +=  3*sys->data_meas->allexp[i]->component_amount[j]/101.9612772;
                 }
-                else if (sys->data_meas->alldata[i]->component_name[j] == "NaCl")
+                else if (sys->data_meas->allexp[i]->component_name[j] == "NaCl")
                 {
                     ICndx = node->IC_name_to_xDB("Na");
-                    new_moles_IC[ICndx] +=  sys->data_meas->alldata[i]->component_amount[j];
+                    new_moles_IC[ICndx] +=  sys->data_meas->allexp[i]->component_amount[j];
                     ICndx = node->IC_name_to_xDB("Cl");
-                    new_moles_IC[ICndx] +=  sys->data_meas->alldata[i]->component_amount[j];
+                    new_moles_IC[ICndx] +=  sys->data_meas->allexp[i]->component_amount[j];
                 }
 //                else
 //                {
@@ -432,127 +435,107 @@ else
             }
 
 // Add small amount of H for convergence of simple systems qtz_h2o
-//            if (sys->data_meas->alldata[i]->name == "qtz_h2o")
+//            if (sys->data_meas->allexp[i]->name == "qtz_h2o")
 //            {
 //                ICndx = node->IC_name_to_xDB("H");
 //                new_moles_IC[ICndx] +=2.6e-05;
 //            }
 
+            // ---- // ---- // Set temperature and pressure // ---- // ---- //
+            P_pa = 100000 * sys->data_meas->allexp[i]->PG;
+            T_k = 273.15 + sys->data_meas->allexp[i]->TC;
 
-                // vector of dependent components which contains the differences in concentration compared to the B vector
-
-                // FOR DEBUGGING
-                    node->GEM_write_dbr( "dbr_before_GEM_from_MT.out", false, true );
-
-
-                // ---- // ---- // Set temperature and pressure // ---- // ---- //
-                P_pa = 100000 * sys->data_meas->alldata[i]->PG;
-
-                // ---- // ---- // Transfer new temperature, pressure and b-vector to GEMS3K // ---- // ---- //
-                T_k = 273.15 + sys->data_meas->alldata[i]->TC;
 #ifdef GEMSFIT_DEBUG
 cout << " P_pa = " << P_pa << endl;
 cout << " T_k  = " << T_k  << endl;
 #endif
 
-                // ---- // ---- // set the new amount of IC and T & P from experiment i // ---- // ---- //
-                // in the future - implement a Tnode function that stes just T, P and bIC vector of amount of independent components.
-                node->GEM_from_MT( NodeHandle, NodeStatusCH, T_k, P_pa, 0., 0., new_moles_IC, xDC_up, xDC_lo, Ph_surf );
+            // ---- // ---- // set the new amount of IC and T & P from experiment i // ---- // ---- //
+            // in the future - implement a Tnode function that stes just T, P and bIC vector of amount of independent components.
+            // ---- // ---- // Transfer new temperature, pressure and b-vector to GEMS3K // ---- // ---- //
+            node->GEM_from_MT( NodeHandle, NodeStatusCH, T_k, P_pa, 0., 0., new_moles_IC, xDC_up, xDC_lo, Ph_surf );
 
-                // FOR DEBUGGING
-                    node->GEM_write_dbr( "dbr_before_GEM_run.out", false, true );
+            // Asking GEM to run with automatic initial approximation
+            dBR->NodeStatusCH = NEED_GEM_AIA;
 
-                                // Asking GEM to run with automatic initial approximation
-                                dBR->NodeStatusCH = NEED_GEM_AIA;
+            // RUN GEMS3K
+            NodeStatusCH = node->GEM_run( false );
 
-                // RUN GEMS3K
-                                NodeStatusCH = node->GEM_run( false );
+            if( NodeStatusCH == OK_GEM_AIA || NodeStatusCH == OK_GEM_SIA  )
+            {
+                node->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
+            }
+            else
+            {
+                // possible return status analysis, error message
+                node->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
+                cout<<"For experiment "<<i+1<< endl;
+                cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
+            }
 
+            // log fie containing calculated solubilities form all itterations
+            const char path[200] = "output_GEMSFIT/Fit_itterations.csv";
+            ofstream fout;
+            fout.open(path, ios::app);
+            if( fout.fail() )
+            { cout<<"Output fileopen error"<<endl; exit(1); }
 
-                // FOR DEBUGGING
-                    node->GEM_write_dbr( "dbr_after_GEM_run.out", false, true );
+            fout << "For experiment "<< i+1 << " at T= "<<T_k<< " and P="<< P_pa << ";";
 
+            // Getting the solubilities of elements j in experiemnts i and calculating the residuals
+            for (j=0; j<sys->data_meas->allexp[i]->name_elem.size(); ++j)
+            {
 
-                if( NodeStatusCH == OK_GEM_AIA || NodeStatusCH == OK_GEM_SIA  )
+                if (!sys->sysprop->log_solubility)
                 {
-                    node->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
-                }
-                else
-                {
-                    // possible return status analysis, error message
-                    node->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
-                    cout<<"For experiment "<<i+1<< endl;
-                    cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
-                }
-
-
-                // log fie containing calculated solubilities form all itterations
-                const char path[200] = "output_GEMSFIT/Fit_itterations.csv";
-                ofstream fout;
-                fout.open(path, ios::app);
-                if( fout.fail() )
-                { cout<<"Output fileopen error"<<endl; exit(1); }
-
-                fout << "For experiment "<< i+1 << " at T= "<<T_k<< " and P="<< P_pa << ";";
-
-                // Getting the solubilities of elements j in experiemnts i and calculating the residuals
-                for (j=0; j<sys->data_meas->alldata[i]->name_elem.size(); ++j)
-                {
-
-                    if (!sys->sysprop->log_solubility)
-                    {
                     const char *elem_name;
-                    elem_name = sys->data_meas->alldata[i]->name_elem[j].c_str();
+                    elem_name = sys->data_meas->allexp[i]->name_elem[j].c_str();
                     ICndx = node->IC_name_to_xDB(elem_name);
                     computed_value = node->Get_mIC(ICndx);
                     fout << computed_value << endl;
-                    residual = pow( (computed_value - sys->data_meas->alldata[i]->solubility[j]), 2) / sys->data_meas->alldata[i]->solubility[j];
+                    residual = pow( (computed_value - sys->data_meas->allexp[i]->solubility[j]), 2) / sys->data_meas->allexp[i]->solubility[j];
 
 
                     //                // Store computed and measured values for Monte Carlo confidence interval generation
                                     computed_values_temp.push_back(computed_value);
-                                    measured_values_temp.push_back(sys->data_meas->alldata[i]->solubility[j]);
+                                    measured_values_temp.push_back(sys->data_meas->allexp[i]->solubility[j]);
 
                     //                // Store residuals for statistical analysis
-                                    computed_residuals_temp.push_back(sys->data_meas->alldata[i]->solubility[j] - computed_value);
-                    }
-                    else // for log solubility - have to think about -log and +log values
-                    {
-                        const char *elem_name;
-                        elem_name = sys->data_meas->alldata[i]->name_elem[j].c_str();
-                        ICndx = node->IC_name_to_xDB(elem_name);
-                        log_computed_value = log10 (node->Get_mIC(ICndx));
-                        fout << "Element " << elem_name << " has log solubility = " << log_computed_value << endl;
-                        residual = pow (log_computed_value - log10(sys->data_meas->alldata[i]->solubility[j]), 2) / log10(sys->data_meas->alldata[i]->solubility[j]);
+                                    computed_residuals_temp.push_back(sys->data_meas->allexp[i]->solubility[j] - computed_value);
+                 }
+                 else // for log solubility - have to think about -log and +log values
+                 {
+                     const char *elem_name;
+                     elem_name = sys->data_meas->allexp[i]->name_elem[j].c_str();
+                     ICndx = node->IC_name_to_xDB(elem_name);
+                     log_computed_value = log10 (node->Get_mIC(ICndx));
+                     fout << "Element " << elem_name << " has log solubility = " << log_computed_value << endl;
+                     residual = pow (log_computed_value - log10(sys->data_meas->allexp[i]->solubility[j]), 2) / log10(sys->data_meas->allexp[i]->solubility[j]);
 
 
                         //                // Store computed and measured values for Monte Carlo confidence interval generation
                                         computed_values_temp.push_back(log_computed_value);
-                                        measured_values_temp.push_back(log10(sys->data_meas->alldata[i]->solubility[j]));
+                                        measured_values_temp.push_back(log10(sys->data_meas->allexp[i]->solubility[j]));
 
                         //                // Store residuals for statistical analysis
-                                        computed_residuals_temp.push_back(log10(sys->data_meas->alldata[i]->solubility[j]) - log_computed_value);
-                    }
-                }
+                                        computed_residuals_temp.push_back(log10(sys->data_meas->allexp[i]->solubility[j]) - log_computed_value);
+                 }
+             }
 
-                        #ifdef GEMSFIT_DEBUG
-                        std::cout<<"residual = "<<residual<<std::endl;
-                        #endif
+#ifdef GEMSFIT_DEBUG
+std::cout<<"residual = "<<residual<<std::endl;
+#endif
 
+            // Sum of squares
+            sum_of_squared_residuals_sys_ = sum_of_squared_residuals_sys_ + residual;
 
+            for (j=0; j<nIC; j++) // assigining default values for all IC (1e-09 - absent component); 0 for charge.
+            {
+                new_moles_IC[j]=1e-09;
+                if (j==nIC-1) { new_moles_IC[j]=0.; }
+            }
 
-//                // Sum of squares
-                sum_of_squared_residuals_sys_ = sum_of_squared_residuals_sys_ + residual;
-
-                for (j=0; j<nIC; j++) // assigining default values for all IC (1e-09 - absent component); 0 for charge.
-                {
-                    new_moles_IC[j]=1e-09;
-                    if (j==nIC-1) {
-                        new_moles_IC[j]=0.;
-                    }
-                }
-
-fout.close();
+            fout.close();
         } // END for loop over measurement points
 
 // ########################################################################################### //
@@ -606,8 +589,8 @@ std::cout<<"pid "<<pid<<" : sum_of_squared_residuals_sys_ = "<<sum_of_squared_re
 
     }
 
+// +++++++++++++++++++++++++++++++++++++ StdStateEquil_objective_function_callback ++++++++++++++++++++++++++++++++++++++++ //
 
-    // +++++++++++++++++++++++++++++++++++++ StdStateEquil_objective_function_callback ++++++++++++++++++++++++++++++++++++++++ //
 
     double StdStateEquil_objective_function_callback( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data )
     {

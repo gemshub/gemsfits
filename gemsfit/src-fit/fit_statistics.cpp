@@ -257,6 +257,680 @@ void StdStatistics::std_basic_stat( std::vector<double> &optv_, std::vector<SS_S
 }
 
 
+void StdStatistics::SS_MC_confidence_interval( opti::StdStateProp* gibbs, std::vector<double> &optv_, std::vector<SS_System_Properties*> *systems, int &countit )
+{
+
+cout<<"pid : "<<pid<<" entered Statistics::MC_confidence_interval ..."<<endl;
+
+    int i,ierr,n_param,id,imc;
+    int j,k;
+    double sum_of_squares_MC;
+    double residual = 0.0;
+    double residual_sys = 0.0;
+    std::vector<double> scatter_v;
+    std::vector<std::vector<double> > measured_values_backup;
+    std::vector<std::vector<double> > computed_values_backup;
+
+    scatter_v.resize(number_of_measurements);
+
+    // Uncheck parallelization of for-loop within objective function. Parallelize the for loop over MC runs instead.
+    for( i=0; i<(int) systems->size(); i++ )
+        systems->at(i)->MC_MPI = true;
+
+cout<<"pid : "<<pid<<" entered Statistics::MC_confidence_interval | line 120"<<endl;
+
+    // loop over systems and backup measurement values and computed values
+    for( j=0; j< (int) systems->size(); j++ )
+    {
+        // Store originals measurements and computed values
+        computed_values_backup.push_back( systems->at(j)->computed_values_v );
+        measured_values_backup.push_back( systems->at(j)->measured_values_v );
+    }
+
+    // Check if number of MC runs has zero modulo. If not increase num_of_MC_runs till it can be equally divided by the processes
+    num_of_MC_runs = num_of_MC_runs + p - (num_of_MC_runs % p);
+
+    for( i=0; i<(int) optv_.size(); i++ )
+        cout<<"optv_["<<i<<"] = "<<optv_[i]<<endl;
+    n_param = (int) optv_.size();
+cout<<"pid : "<<pid<<" entered Statistics::MC_confidence_interval | line 133 | num_of_MC_runs = "<<num_of_MC_runs<<", n_param = "<<n_param<<endl;
+
+
+    // Allocate dynamic arrays to contain the fitted parameters	( MUST BE ALLOCATED WITH CONTINUOUS LOCATIONSIN MEMORY !!!!)
+//	double **MC_fitted_parameters_all = opti::alloc_2d_double( num_of_MC_runs, n_param );
+//	double **MC_fitted_parameters_pid = opti::alloc_2d_double( num_of_MC_runs/p, n_param );
+
+    double*  MC_fitted_parameters_all_storage = (double *) malloc ( num_of_MC_runs * n_param * sizeof(double) );
+    double** MC_fitted_parameters_all		  = (double **) malloc ( num_of_MC_runs * sizeof(double *) );
+    for( i=0; i<num_of_MC_runs; i++ )
+        MC_fitted_parameters_all[i] = &MC_fitted_parameters_all_storage[ i * n_param ];
+
+    double*  MC_fitted_parameters_pid_storage = (double *) malloc ( num_of_MC_runs/p * n_param * sizeof(double) );
+    double** MC_fitted_parameters_pid		  = (double **) malloc ( num_of_MC_runs/p * sizeof(double *) );
+    for( i=0; i<(num_of_MC_runs/p); i++ )
+        MC_fitted_parameters_pid[i] = &MC_fitted_parameters_pid_storage[ i * n_param ];
+
+
+
+
+    double* scatter_all 	  = new double[ number_of_measurements * num_of_MC_runs ];
+    double* scatter_pid_MCrun = new double[ number_of_measurements * num_of_MC_runs / p ];
+
+
+    // Master creates normally distributed random numbers and scatters them to all processes
+    // normal distribution with mean of 0.0 and standard deviation of SD_of_residuals
+    if( !pid )
+    {
+        // mersenne twister generator
+        typedef boost::mt19937 RNGType;
+        RNGType rng;
+
+        boost::normal_distribution<> rdist(0.0, SD_of_residuals);
+
+        boost::variate_generator< RNGType, boost::normal_distribution<> > get_rand(rng, rdist);
+
+        // for each MC run generate number_of_measurements random variables
+            ofstream myScatter_all;
+            myScatter_all.open("output_GEMSFIT/myScatter_all.txt");
+        for( i=0; i<(number_of_measurements * num_of_MC_runs); i++ )
+        {
+            scatter_all[i] = get_rand();
+            myScatter_all << " scatter_all["<<i<<"] : "<< scatter_all[i] <<endl;
+        }
+            myScatter_all.close();
+    }
+
+
+    // Scatter the generated random numbers to all processes
+    int count = number_of_measurements * num_of_MC_runs / p;
+
+#ifdef USE_MPI
+    ierr = MPI_Scatter( &scatter_all[0], count, MPI_DOUBLE, &scatter_pid_MCrun[0], count, MPI_DOUBLE, 0, MPI_COMM_WORLD );
+#endif
+
+    if(!pid)
+    {
+#ifdef GEMSFIT_DEBUG
+        for( i=0; i<number_of_measurements; i++ )
+            cout<<" pid "<<pid<<", scatter_pid_MCrun["<<i<<"] = "<<scatter_pid_MCrun[i]<<endl;
+#endif
+    }
+cout<<" pid "<<pid<<", line 206"<<endl;
+
+
+    id = 0;
+    // Perform Monte Carlo runs
+    for( imc=pid; imc<num_of_MC_runs; imc += p)
+    {
+        sum_of_squares_MC = 0.;
+
+        for( i=0; i<number_of_measurements; i++ )
+        {
+            int it = number_of_measurements * imc/p + i;
+#ifdef GEMSFIT_DEBUG
+            cout<<"pid : "<<pid<<" line 210, imc = "<<imc<<", i = "<<i<<", pid = "<<pid<<", imc/p = "<<imc/p<<", it = "<<it<<endl;
+#endif
+            scatter_v[i] = scatter_pid_MCrun[ (imc/p * number_of_measurements + i) ];
+        }
+#ifdef GEMSFIT_DEBUG
+        cout<<"pid : "<<pid<<" scatter_v[0] = "<<scatter_v[0]<<endl;
+#endif
+
+        if( !pid )
+        {
+            ofstream myScatter_pid_0;
+            myScatter_pid_0.open("output_GEMSFIT/myScatter_pid_0.txt",ios::app);
+            for( i=0; i<number_of_measurements; i++ )
+            {
+                myScatter_pid_0 << " scatter_v["<<i<<"] : "<<scatter_v[i]<<endl;
+            }
+            myScatter_pid_0 << endl;
+            myScatter_pid_0.close();
+        }
+        else if( pid==1 )
+        {
+            ofstream myScatter_pid_1;
+            myScatter_pid_1.open("output_GEMSFIT/myScatter_pid_1.txt");
+            for( i=0; i<number_of_measurements; i++ )
+            {
+                myScatter_pid_1 << " scatter_v["<<i<<"] : "<<scatter_v[i]<<endl<<endl;
+            }
+                myScatter_pid_1.close();
+        }
+
+
+        // loop over systems and add MC scatter to simulated measurements to simulate new set of experimental data
+        for( j=0; j< (int) systems->size(); j++ )
+        {
+            int size = systems->at(j)->data_meas->allexp.size();
+            vector<double> simulated_measurements;
+            for (k=0; k<size; k++)
+            {
+                simulated_measurements.push_back(0.0);
+            }
+
+            // Add scatter to the computed values vector of each system
+            for( k=0; k< (int) systems->at(j)->data_meas->allexp.size(); k++ )
+
+            {
+                simulated_measurements[k] = (systems->at(j)->computed_values_v[k] + scatter_v[k]);
+            }
+
+            for( k=0; k< (int) systems->at(j)->data_meas->allexp.size(); k++ )
+
+            {
+                cout << scatter_v[k];
+                simulated_measurements[k] += scatter_v[k];
+            }
+
+
+            // Copy the simulated experiments onto the measurement value vector
+#ifdef GEMSFIT_DEBUG
+            cout<<"pid : "<<pid<<" systems->at(j)->sysdata->val.size() = "<<systems->at(j)->sysdata->val.size()<<endl;
+            cout<<"pid : "<<pid<<" line 260: systems->at(j)->sysdata->val[0] = "<<systems->at(j)->sysdata->val[0]<<endl;
+            cout<<"pid : "<<pid<<" line 260: systems->at(j)->computed_values_v[0] = "<<systems->at(j)->computed_values_v[0]<<endl;
+            cout<<"pid : "<<pid<<" line 261: scatter_v[0] = "<<scatter_v[0]<<endl;
+#endif
+            for( k=0; k< (int) systems->at(j)->data_meas->allexp.size(); k++)
+            {
+                systems->at(j)->data_meas->allexp[k]->solubility[0] = simulated_measurements[k];
+#ifdef GEMSFIT_DEBUG
+            cout<<"pid : "<<pid<<" line 266: updated systems->at(j)->sysdata->val[0] = "<<systems->at(j)->sysdata->val[0]<<endl;
+#endif
+            }
+//            delete[] simulated_measurements;
+        }
+#ifdef GEMSFIT_DEBUG
+            cout<<"pid : "<<pid<<" entered Statistics::MC_confidence_interval | line 170"<<endl;
+#endif
+
+        // perform optimization
+        gibbs->init_optim( optv_, systems, countit, sum_of_squares_MC);
+#ifdef GEMSFIT_DEBUG
+            cout<<"pid : "<<pid<<" entered Statistics::MC_confidence_interval | line 174"<<endl;
+#endif
+        if( isnan(sum_of_squares) )
+        {
+            cout<<" sum of squares from objective function is NaN !!! "<<endl;
+            cout<<" system measurement values (modified by Monte Carlo algorithm for confidence analysis): "<<endl;
+            for( i=0; i< (int) systems->at(j)->data_meas->allexp.size(); i++)
+                cout<<"pid : "<<pid<<" fit_statistics.cpp: systems->at(j)->data_meas->allexp["<<i<<"]->solubility = "<<systems->at(j)->data_meas->allexp[k]->solubility[0]<<endl;
+            exit(1);
+        }
+
+        // Store fitted parameters of each run in process specific array
+        for( j=0; j<n_param; j++ )
+        {
+            MC_fitted_parameters_pid[ id ][ j ] = optv_[ j ];
+#ifdef GEMSFIT_DEBUG
+            cout<<"pid : "<<pid<<" MC_fitted_parameters_pid["<<id<<"]["<<j<<"] = "<<MC_fitted_parameters_pid[ id ][ j ]<<endl;
+#endif
+
+//			MC_fitted_parameters_pid[ id * num_of_MC_runs/p + j ] = optv_[ j ];
+//#ifdef GEMSFIT_DEBUG
+//			cout<<"pid : "<<pid<<" MC_fitted_parameters_pid["<<id<<"]["<<j<<"] = "<<MC_fitted_parameters_pid[ id * num_of_MC_runs/p + j ]<<endl;
+//#endif
+        }
+
+
+        // loop over systems and subtract MC scatter to retain the original measurement data
+        for( j=0; j< (int) systems->size(); j++ )
+        {
+            // Retain original computed values
+            systems->at(j)->computed_values_v = computed_values_backup[j];
+            // Retain original measurements
+            systems->at(j)->data_meas->allexp[j]->solubility = measured_values_backup[j];
+        }
+
+    id++;
+    }// end Monte Carlo for-loop
+
+
+#ifdef USE_MPI
+    // Collect all MC results in array MC_fitted_parameters_all
+    ierr = MPI_Gather( &MC_fitted_parameters_pid_storage[0], (n_param*num_of_MC_runs/p), MPI_DOUBLE, &MC_fitted_parameters_all_storage[0], (n_param*num_of_MC_runs/p), MPI_DOUBLE, 0, MPI_COMM_WORLD );
+    cout<<"ierr = "<<ierr<<endl;
+#endif
+
+    // Analysis of results (plot histogram, evaluate confidence intervals, ...)
+    if( !pid )
+    {
+#ifdef GEMSFIT_DEBUG
+        for( i=0; i<num_of_MC_runs/p; i++ ) // rows
+            for( j=0; j<n_param; j++ ) // cols
+                cout<<"pid "<<pid<<", MC_fitted_parameters_pid["<<i<<"]["<<j<<"] = "<<MC_fitted_parameters_pid[ i ][ j ]<<endl;
+
+        for( i=0; i<num_of_MC_runs; i++ ) // rows
+            for( j=0; j<n_param; j++ ) // cols
+                cout<<"pid "<<pid<<", MC_fitted_parameters_all["<<i<<"]["<<j<<"] = "<<MC_fitted_parameters_all[ i ][ j ]<<endl;
+#endif
+
+
+        double StandardDeviation = 0.;
+        arma::vec MCparams( num_of_MC_runs );
+
+#ifdef BOOST_MPI
+        ofstream myStat;
+        ostringstream pb;
+        pb << proc_id_boost;
+        string out_fit("./output_GEMSFIT")
+        out_fit += "_" + pb.str() + "/myFitStatistics.txt";
+        myStat.open( out_fit.c_str(), ios::app );
+#endif
+
+#ifndef BOOST_MPI
+        ofstream myStat;
+        myStat.open("output_GEMSFIT/myFitStatistics.txt",ios::app);
+#endif
+
+        myStat << " Confidence intervals of MC parameters : "<<endl;
+        myStat << " -> standard deviation of parameters generated during Monte Carlo runs "<<endl;
+        for( j=0; j<n_param; j++ ) // cols
+        {
+            for( i=0; i<num_of_MC_runs; i++ ) // rows
+            {
+                MCparams(i) = MC_fitted_parameters_all[ i ][ j ];
+            }
+            // compute standard deviation of generated parameters
+            StandardDeviation = arma::stddev( MCparams, 0 );
+
+            // Print Standard Deviations of parameters generated during MC runs to file
+            myStat <<"			parameter "<< j <<" :	           " << StandardDeviation << endl;
+
+        }
+        myStat << endl;
+        myStat.close();
+
+    }
+
+
+
+
+    if( !pid )
+    {
+
+        // generate and plot histogram
+        print_histogram( optv_, MC_fitted_parameters_all, num_of_MC_runs, MC_number_of_bars );
+
+    }
+
+
+    // Free dynamic memory
+
+    //opti::free_2d_double( MC_fitted_parameters_pid );
+    //opti::free_2d_double( MC_fitted_parameters_all );
+    //delete[] MC_fitted_parameters_pid;
+    //delete[] MC_fitted_parameters_all;
+
+    free (MC_fitted_parameters_pid[0]);
+    free (MC_fitted_parameters_pid);
+
+    free (MC_fitted_parameters_all[0]);
+    free (MC_fitted_parameters_all);
+
+    delete[] scatter_all;
+    delete[] scatter_pid_MCrun;
+
+
+#ifdef USE_MPI
+    // To prevent confusion, wait for all threads
+    MPI_Barrier(MPI_COMM_WORLD);
+#endif
+
+}// end of function MC_confidence_interval
+
+// perform sensitivity analysis of selected parameters
+void StdStatistics::SS_sensitivity_correlation( const std::vector<double> &optv_, std::vector<SS_System_Properties*> *systems )
+{
+        int i, j, k, l, jj, ll, len_meas;
+        double residual_sys;
+
+        std::vector<double> computed_up;
+        std::vector<double> computed_lo;
+        std::vector<double> opt_scan;
+        std::vector<double> ssr_param;
+        std::vector<double> opt_scan_v;
+
+
+        opt_scan.resize( optv_.size() );
+        ssr_param.resize( sensitivity_points );
+        opt_scan_v.resize( sensitivity_points );
+        std::vector< std::vector< double> > array_ssr;
+
+
+
+        // Generate systematic variations in the G0 values from the optimization vector and loop over them
+
+        if( !pid )
+        {
+
+            // Set printfile bool to true in order to deactivate to parallelization of the loop over measurements within the StdState_gems3k_wrap() function
+            systems->at(0)->printfile = true;
+
+            for( i=0; i< (int) optv_.size(); i++ )
+            {
+                for( j=0; j< sensitivity_points; j++ )
+                {
+                    // Copy original values into opt_scan
+                    opt_scan = optv_;
+
+                    // add/subtract up to 25% of the original parameter value
+                    opt_scan[i] = optv_[i] + optv_[i] * ( j - sensitivity_points/2  ) / 200;
+
+                    // compute sum of squared residuals
+                    residual_sys = 0.;
+                    opti::StdState_gems3k_wrap( residual_sys, opt_scan, systems->at(0) );
+cout<<"residual_sys = "<<residual_sys<<endl;
+                    opt_scan_v[j] = opt_scan[i];
+                    ssr_param[j]  = residual_sys;
+                }
+                // add rows with 'sensitivity_points' columns
+                array_ssr.push_back( opt_scan_v );
+                array_ssr.push_back( ssr_param );
+            }
+
+
+            print_vectors_curve( optv_, array_ssr, sensitivity_points );
+
+
+        len_meas = (int) systems->at(0)->data_meas->allexp.size();
+
+        // Compute Jacobian matrix (= Sensitivity matrix)
+        arma::mat SensitivityMatrix( len_meas, (int) optv_.size() );
+        arma::mat DimensionlessScaledSensitivities( len_meas, (int) optv_.size() );
+        arma::vec CompositeScaledSensitivities = arma::zeros<arma::vec>( (int) optv_.size(), 1 );
+        arma::vec ParameterStandardDeviation = arma::zeros<arma::vec>( (int) optv_.size(), 1 );
+        arma::vec CoefficientOfVariation = arma::zeros<arma::vec>( (int) optv_.size(), 1 );
+        arma::vec Parameter_t_Statistic = arma::zeros<arma::vec>( (int) optv_.size(), 1 );
+
+
+        double delta = 0.001;
+        for( i=0; i< (int) optv_.size(); i++ )
+        {
+            opt_scan = optv_;
+
+            // Central finite differences:
+            opt_scan[i] = optv_[i] + optv_[i]*delta;
+            residual_sys = 0.;
+            opti::StdState_gems3k_wrap( residual_sys, opt_scan, systems->at(0) );
+cout<<"residual_sys = "<<residual_sys<<endl;
+            computed_up = systems->at(0)->computed_values_v;
+
+            opt_scan[i] = optv_[i] - optv_[i]*delta;
+            residual_sys = 0.;
+            opti::StdState_gems3k_wrap( residual_sys, opt_scan, systems->at(0) );
+cout<<"residual_sys = "<<residual_sys<<endl;
+            computed_lo = systems->at(0)->computed_values_v;
+
+            for( k=0; k< len_meas; k++ )
+            {
+                SensitivityMatrix(k,i) 	 			  = ( computed_up[k] - computed_lo[k] ) / ( optv_[i]*delta*2 );
+                DimensionlessScaledSensitivities(k,i) = SensitivityMatrix(k,i) * fabs( optv_[i] ) * sqrt( 1.0 / systems->at(0)->data_meas->allexp[k]->error_sol[0] );
+                CompositeScaledSensitivities(i)      += sqrt( DimensionlessScaledSensitivities(k,i)*DimensionlessScaledSensitivities(k,i)/len_meas );
+            }
+        }
+
+
+#ifdef BOOST_MPI
+        ofstream myStat;
+        ostringstream pb;
+        pb << proc_id_boost;
+        string out_fit("./output_GEMSFIT")
+        out_fit += "_" + pb.str() + "/myFitStatistics.txt";
+        myStat.open( out_fit.c_str(), ios::app );
+#endif
+
+#ifndef BOOST_MPI
+        ofstream myStat;
+        myStat.open("output_GEMSFIT/myFitStatistics.txt",ios::app);
+#endif
+
+
+/*		myStat << " Sensitivity matrix over each measurement point: "<<endl;
+        for( i=0; i< (int) optv_.size(); i++ )
+        {
+            for( j=0; j< (int) computed_up.size(); j++ )
+            {
+                // Write sensitivities to file
+                myStat <<" "<< i <<" "<< j <<" :	" << SensitivityMatrix(j,i)	<< endl;
+            }
+        }
+*/
+        myStat << " Composite Scaled Sensitivities: "<<endl;
+        for( i=0; i< (int) optv_.size(); i++ )
+        {
+            // Write sensitivities to file
+            myStat <<"			parameter "<< i <<" :	           " << CompositeScaledSensitivities(i)	<< endl;
+        }
+        myStat << endl;
+
+        // Plot results with DISLIN
+//        print_sensitivity( (int) computed_up.size(), (int) optv_.size(), SensitivityMatrix , systems->at(0)->sysdata->molality_1 );
+
+
+SensitivityMatrix.print("SensitivityMatrix:");
+
+        // Get transpose of sensitivity matrix
+        arma::mat SensitivityMatrix_T = arma::trans(SensitivityMatrix);
+
+SensitivityMatrix_T.print("SensitivityMatrix_T:");
+
+        // Compute Fisher matrix (is a proxy for the Hessian matrix)
+        arma::mat FisherMatrix = SensitivityMatrix_T * SensitivityMatrix;
+
+FisherMatrix.print("Fisher Matrix:");
+
+        // Compute variance-covariance matrix
+        arma::mat VarCovarMatrix = SD_of_residuals * arma::inv( FisherMatrix, false );
+
+VarCovarMatrix.print("Variance Covariance Matrix:");
+
+        // Correlation matrix
+        arma::mat CorellationMatrix( (int) optv_.size(), (int) optv_.size() );
+
+        for( i=0; i<(int) optv_.size(); i++ )
+        {
+            for( k=i; k<(int) optv_.size(); k++ )
+            {
+                // 			 			 Covar(i,k)          / sqrt( Var(k,k)            * Var(i,i)            )
+                CorellationMatrix(i,k) = VarCovarMatrix(i,k) / sqrt( VarCovarMatrix(k,k) * VarCovarMatrix(i,i) );
+                CorellationMatrix(k,i) = CorellationMatrix(i,k);
+            }
+            ParameterStandardDeviation(i) = sqrt(VarCovarMatrix(i,i));
+            CoefficientOfVariation(i) 	  = ParameterStandardDeviation(i) / optv_[i];
+            Parameter_t_Statistic(i) 	  = 1. / CoefficientOfVariation(i);
+        }
+        CorellationMatrix.print("CorellationMatrix = ");
+
+CorellationMatrix.print("Corellation Matrix:");
+
+        // Print Variance-Covariance matrix to file
+        myStat << " Variance-Covariance matrix: "<<endl;
+        for( i=0; i< (int) optv_.size(); i++ )
+        {
+            if( i== 0 )
+                myStat <<"								parameter "<< i;
+            else
+                myStat <<"			parameter "<< i;
+        }
+        myStat << endl;
+        for( i=0; i< (int) optv_.size(); i++ )
+        {
+            myStat <<"			parameter "<< i <<" : ";
+            for( j=0; j< (int) optv_.size(); j++ )
+            {
+                if( j==0 )
+                    myStat <<"			   " <<VarCovarMatrix(i,j);
+                else
+                    myStat <<"		    " <<VarCovarMatrix(i,j);
+            }
+            myStat << endl;
+        }
+        myStat << endl;
+
+        // Print Parameter Standard Deviations to file
+        myStat << " Parameter Standard Deviations/Errors: "<<endl;
+        for( i=0; i< (int) optv_.size(); i++ )
+        {
+            myStat <<"			parameter "<< i <<" :	           " << ParameterStandardDeviation(i) << endl;
+        }
+        myStat << endl;
+
+
+        double T, w;
+        int DegreesOfFreedom = number_of_measurements - number_of_parameters;
+        double alpha[] = { 0.5, 0.25, 0.1, 0.05, 0.01 };
+        boost::math::students_t dist( DegreesOfFreedom );
+        for( j=0; j< (int) optv_.size(); j++ )
+        {
+            myStat <<"			parameter "<< j << " :	           ";
+            myStat << endl;
+            myStat <<    "___________________________________________________________________" << endl;
+            myStat <<    "Confidence       T           Interval          Lower          Upper" << endl;
+            myStat <<    " Value (%)     Value          Width            Limit          Limit" << endl;
+            myStat <<    "___________________________________________________________________" << endl;
+
+            for( i = 0; i < int (sizeof(alpha)/sizeof(alpha[0])); ++i)
+            {
+                // Confidence value:
+                myStat << fixed << setprecision(3) << setw(10) << right << 100 * (1-alpha[i]);
+                // calculate T:
+                T = boost::math::quantile(boost::math::complement(dist, alpha[i] / 2));
+                // Print T:
+                myStat << fixed << setprecision(3) << setw(10) << right << T;
+                // Calculate width of interval (one sided):
+                w = T * ParameterStandardDeviation(j) / sqrt(double( number_of_measurements ));
+                // Print width:
+                if(w < 0.01)
+                    myStat << scientific << setprecision(3) << setw(17) << right << w;
+                else
+                    myStat << fixed << setprecision(3) << setw(17) << right << w;
+                // Print Limits:
+                myStat << fixed << setprecision(5) << setw(15) << right << optv_[j] - w;
+                myStat << fixed << setprecision(5) << setw(15) << right << optv_[j] + w << endl;
+            }
+            myStat << endl;
+
+        }
+
+
+
+        // Print Parameter Standard Deviations to file
+        myStat << " Coefficient of Variation: "<<endl;
+        for( i=0; i< (int) optv_.size(); i++ )
+        {
+            myStat <<"			parameter "<< i <<" :	           " << CoefficientOfVariation(i) << endl;
+        }
+        myStat << endl;
+
+        // Print Parameter Standard Deviations to file
+        myStat << " Parameter t-statistic: "<<endl;
+        for( i=0; i< (int) optv_.size(); i++ )
+        {
+            myStat <<"			parameter "<< i <<" :	           " << Parameter_t_Statistic(i) << endl;
+        }
+        myStat << endl;
+
+        // Print Correlation matrix to file
+        myStat << " Correlation matrix: "<<endl;
+        for( i=0; i< (int) optv_.size(); i++ )
+        {
+            if( i== 0 )
+                myStat <<"								parameter "<< i;
+            else
+                myStat <<"			parameter "<< i;
+        }
+        myStat << endl;
+        for( i=0; i< (int) optv_.size(); i++ )
+        {
+            myStat <<"			parameter "<< i <<" : ";
+            for( j=0; j< (int) optv_.size(); j++ )
+            {
+                if( j==0 )
+                    myStat <<"			   " <<CorellationMatrix(i,j);
+                else
+                    myStat <<"		   			" <<CorellationMatrix(i,j);
+            }
+            myStat << endl;
+        }
+        myStat << endl;
+
+        myStat.close();
+
+
+//        // allocate synamic 4D memory for holding parameter-pair specific SSR with varying parameters
+//        int points_per_axis = 100;
+//        float* SSR_surface;
+//        SSR_surface = new float [ points_per_axis * points_per_axis ];
+//        double* param_1_ray;
+//        double* param_2_ray;
+//        param_1_ray = new double [ points_per_axis ];
+//        param_2_ray = new double [ points_per_axis ];
+//        int param_pair[2];
+
+//        for( i=0; i< (int) optv_.size()-1; i++ )			// loop over
+//        {													// first parameter and
+//            for( k=i+1; k< (int) optv_.size(); k++ )		// loop over
+//            {												// second parameter and
+//                for( jj=0; jj<points_per_axis; jj++ )		// vary +- 25%
+//                {
+//                    for( ll=0; ll<points_per_axis; ll++ )	// vary +- 25%
+//                    {
+//                        j = jj * 5;
+//                        l = ll * 5;
+
+//                        // parameter 1: add/subtract up to 25% of the original parameter value
+//                        opt_scan[i] = optv_[i] + optv_[i] * ( 0.5 / points_per_axis * jj - 0.25 );
+//                        param_1_ray[jj] = opt_scan[i];
+
+//                        // parameter 2: add/subtract up to 25% of the original parameter value
+//                        opt_scan[k] = optv_[k] + optv_[k] * ( 0.5 / points_per_axis * ll - 0.25 );
+//                        param_2_ray[ll] = opt_scan[k];
+
+//                        residual_sys = 0.;
+//                        opti::StdState_gems3k_wrap( residual_sys, opt_scan, systems->at(0) );
+
+//                        // Compute and store values of sruface matrix
+//                        SSR_surface[ points_per_axis*jj + ll ] 	 = residual_sys ;
+//                    }
+//                }
+//                // Print a contour plot for every parameter pair
+//                param_pair[0] = i;
+//                param_pair[1] = k;
+
+//                print_SSR_contour( param_pair, (int) optv_.size(), points_per_axis, SSR_surface, param_1_ray, param_2_ray );
+//            }
+//        }
+
+
+//        // free dynamicaly allocated memory
+//        delete[] SSR_surface;
+//        delete[] param_1_ray;
+//        delete[] param_2_ray;
+
+
+
+        }// if( !pid )
+
+//exit(1);//STOP
+
+        // In case later on parallelization of measurement over for loop is wished, set printfile bool to false
+        systems->at(0)->printfile = false;
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
 // Constructor
 Statistics::Statistics( vector<System_Properties*> *systems, double sum_of_squares_, int num_of_params_, int num_of_runs_ )
 {

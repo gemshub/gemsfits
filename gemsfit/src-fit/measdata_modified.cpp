@@ -1,5 +1,7 @@
 /*
 *	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
+*    Modified for fitting standard state properties (2012)
+*    by G. Dan Miron (mirondanro@yahoo.com)
 *
 *	 This file is part of the thermodynamic fitting program GEMSFIT.
 *
@@ -67,9 +69,8 @@ void SS_Data_Manager::get_DB(  )
 
      int i=0; // counts in primary experiments table
      int j=0; // counts in secondary tables
-     char dbname [ 256 ] ;
      int rows; // rows of primary experiments table
-     int rows_c; // rows of secondary tables
+     int rows_c; // rows of secondary tables e.g. exp_comp or results
 
      int id_exp_;               int id_exp_i;
      char name_exp_[256];       int name_exp_i;
@@ -98,9 +99,12 @@ void SS_Data_Manager::get_DB(  )
      char P_exp_ecpg_1[256] = "declare P_exp cursor for SELECT pressure FROM "; const char * P_exp_ecpg;
      char ref_exp_ecpg_1[256] = "declare ref_exp cursor for SELECT reference FROM "; const char * ref_exp_ecpg;
 
+     // gets unique TP pairs from the database
      char unique_TP_ecpg_1[256] = "declare unique_TP cursor for SELECT DISTINCT temperature, pressure FROM "; const char * unique_TP_ecpg;
 
-     char meas[100] = "SELECT COUNT ( * ) id FROM "; const char* meas_table;        // sql query to select all data form experiments table
+     // sql query to select and count all data form experiments table
+     char meas[100] = "SELECT COUNT ( * ) id FROM "; const char* meas_table;
+     // sql query to select and count all unique TP experiments table
      char unique_TP[120] ="SELECT COUNT ( * ) pressure FROM ( SELECT DISTINCT temperature, pressure FROM experiments ) AS unique_TP";
 
 
@@ -137,8 +141,9 @@ void SS_Data_Manager::get_DB(  )
     // // // // // // // END Connect to database // // // // // // //
 
 
-     string tablename("experiments ORDER BY pressure");
-     string tablename2("experiments");
+     string tablename  ( "experiments ORDER BY pressure" ); // for sorted values
+     string tablename2 ( "experiments" );
+     string tablenamex ( "experiments ORDER BY id" ); // to have order in the experimetns, avoid some strange sql behaviour
      strcat(meas, tablename2.c_str());
      meas_table = meas;
 
@@ -153,7 +158,7 @@ void SS_Data_Manager::get_DB(  )
  if (sqlca.sqlcode < 0) exit(1);}
      fout<<"Number of experiments = "<<rows<<endl;
      fout_<<"Number of experiments = "<<rows<<endl;
-     fout_.close();
+     fout_.close(); // end of writing in the results FIT.csv file
 
      // Count number of unique TP_pairs
      { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, unique_TP, ECPGt_EOIT,
@@ -168,11 +173,11 @@ void SS_Data_Manager::get_DB(  )
 
      // Initializing the experiments
      for (i=1; i<rows; i++) {
-         alldata.push_back(new experiment);
+         allexp.push_back(new experiment);
      }
 
-     if (!(rows == alldata.size())) {
-        fout << "Size of experiments vector different form number of experiments!! " << alldata.size() << endl;
+     if (!(rows == allexp.size())) {
+        fout << "Size of experiments vector different form number of experiments!! " << allexp.size() << endl;
         exit(1);
      }
 
@@ -182,14 +187,12 @@ void SS_Data_Manager::get_DB(  )
          TP_pairs[1].push_back(0); // pressure
      }
 
-     if (!(rows == alldata.size())) {
-        fout << "Size of experiments vector different form number of experiments!! " << alldata.size() << endl;
+     if (!(rows == allexp.size())) {
+        fout << "Size of experiments vector different form number of experiments!! " << allexp.size() << endl;
         exit(1);
      }
 
      // Declare cursors for experiments table//
-     string tablenamex = "experiments ORDER BY id"; // to have order in the experimetns, avoid some strange sql behaviour
-
      /* declare id_exp cursor for select id from db_meas_table */
      strcat(id_exp_ecpg_1, tablenamex.c_str());
      id_exp_ecpg = id_exp_ecpg_1; // cursor, given to a const char
@@ -238,137 +241,116 @@ void SS_Data_Manager::get_DB(  )
  if (sqlca.sqlcode < 0) sqlprint();
  if (sqlca.sqlcode < 0) exit(1);}
 
-     // // // // // // // Reading unique TP_pairs from the database - they are not in the same order as the experiments // // // // // // //
-
+// // // // // // // Reading unique TP_pairs from the database - they are not in the same order as the experiments // // // // // // //
      // reading from database
-     for (j=0; j<rows_c; j++) {
+     for (j=0; j<rows_c; j++) // going trough all rows of unique TP
+     {
 
          // reading unique_TP //
          { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch unique_TP", ECPGt_EOIT,
-     ECPGt_int,&(uT_exp_),(long)1,(long)1,sizeof(int),            // temperature
-     ECPGt_int,&(uT_exp_i),(long)1,(long)1,sizeof(int),
-     ECPGt_int,&(uP_exp_),(long)1,(long)1,sizeof(int),            // pressure
-     ECPGt_int,&(uP_exp_i),(long)1,(long)1,sizeof(int), ECPGt_EORT);
+         ECPGt_int,&(uT_exp_),(long)1,(long)1,sizeof(int),            // temperature
+         ECPGt_int,&(uT_exp_i),(long)1,(long)1,sizeof(int),
+         ECPGt_int,&(uP_exp_),(long)1,(long)1,sizeof(int),            // pressure
+         ECPGt_int,&(uP_exp_i),(long)1,(long)1,sizeof(int), ECPGt_EORT);
 
- if (sqlca.sqlcode == ECPG_NOT_FOUND) sqlprint();
-
- if (sqlca.sqlwarn[0] == 'W') sqlprint();
-
- if (sqlca.sqlcode < 0) sqlprint();
- if (sqlca.sqlcode < 0) exit(1);}
+         if (sqlca.sqlcode == ECPG_NOT_FOUND) sqlprint();
+         if (sqlca.sqlwarn[0] == 'W') sqlprint();
+         if (sqlca.sqlcode < 0) sqlprint();
+         if (sqlca.sqlcode < 0) exit(1);}
 
          if( uT_exp_i==0 ){ TP_pairs[0][j] = uT_exp_; };
          if( uT_exp_i>0 ){ TP_pairs[0][j] = uT_exp_; fout<<"uT_exp was truncated while storing in host variable !!!"<<endl; };
 
          if( uP_exp_i==0 ){ TP_pairs[1][j] = uP_exp_; };
          if( uP_exp_i>0 ){ TP_pairs[1][j] = uP_exp_; fout<<"uP_exp was truncated while storing in host variable !!!"<<endl; };
-
-//         cout <<j+1 <<" unique TP_pair has temperature = "<< TP_pairs[0][j] << " and pressure = "<< TP_pairs[1][j] << endl;
+         //  cout <<j+1 <<" unique TP_pair has temperature = "<< TP_pairs[0][j] << " and pressure = "<< TP_pairs[1][j] << endl;
 
 
      }
 
-//    cout << TP_pairs[0].size();
+ //cout << TP_pairs[0].size();
 
-     // close unique_TP cursor cursor
-     { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "close unique_TP", ECPGt_EOIT, ECPGt_EORT);
+ // close unique_TP cursor cursor
+ { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "close unique_TP", ECPGt_EOIT, ECPGt_EORT);
 
  if (sqlca.sqlwarn[0] == 'W') sqlprint();
-
  if (sqlca.sqlcode < 0) sqlprint();
  if (sqlca.sqlcode < 0) exit(1);}
 
-     // // // // // // // Reading in the experimetns form the database // // // // // // //
-
+// // // // // // // Reading in the experimetns form the database // // // // // // //
      for (i=0; i<rows; i++)
      {
          // reading id_exp //
          { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch id_exp", ECPGt_EOIT,
-     ECPGt_int,&(id_exp_),(long)1,(long)1,sizeof(int),
-     ECPGt_int,&(id_exp_i),(long)1,(long)1,sizeof(int), ECPGt_EORT);
+         ECPGt_int,&(id_exp_),(long)1,(long)1,sizeof(int),
+         ECPGt_int,&(id_exp_i),(long)1,(long)1,sizeof(int), ECPGt_EORT);
 
- if (sqlca.sqlcode == ECPG_NOT_FOUND) sqlprint();
+         if (sqlca.sqlcode == ECPG_NOT_FOUND) sqlprint();
+         if (sqlca.sqlwarn[0] == 'W') sqlprint();
+         if (sqlca.sqlcode < 0) sqlprint();
+         if (sqlca.sqlcode < 0) exit(1);}
 
- if (sqlca.sqlwarn[0] == 'W') sqlprint();
-
- if (sqlca.sqlcode < 0) sqlprint();
- if (sqlca.sqlcode < 0) exit(1);}
-
-         if( id_exp_i==0 ){ alldata[i]->id_exp = id_exp_; };
-         if( id_exp_i>0 ){ alldata[i]->id_exp = id_exp_; fout<<"id_exp was truncated while storing in host variable !!!"<<endl; };
-
-        // fout<<"id on row "<<i+1<<" = "<<alldata[i]->id_exp <<endl;
+         if( id_exp_i==0 ){ allexp[i]->id_exp = id_exp_; };
+         if( id_exp_i>0 ){ allexp[i]->id_exp = id_exp_; fout<<"id_exp was truncated while storing in host variable !!!"<<endl; };
+         // cout<<"id on row "<<i+1<<" = "<<allexp[i]->id_exp <<endl;
 
          // reading name_exp //
          { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch name_exp", ECPGt_EOIT,
-     ECPGt_char,&(name_exp_),(long)256,(long)1,(256)*sizeof(char),
-     ECPGt_int,&(name_exp_i),(long)1,(long)1,sizeof(int), ECPGt_EORT);
+         ECPGt_char,&(name_exp_),(long)256,(long)1,(256)*sizeof(char),
+         ECPGt_int,&(name_exp_i),(long)1,(long)1,sizeof(int), ECPGt_EORT);
 
- if (sqlca.sqlcode == ECPG_NOT_FOUND) sqlprint();
+         if (sqlca.sqlcode == ECPG_NOT_FOUND) sqlprint();
+         if (sqlca.sqlwarn[0] == 'W') sqlprint();
+         if (sqlca.sqlcode < 0) sqlprint();
+         if (sqlca.sqlcode < 0) exit(1);}
 
- if (sqlca.sqlwarn[0] == 'W') sqlprint();
-
- if (sqlca.sqlcode < 0) sqlprint();
- if (sqlca.sqlcode < 0) exit(1);}
-
-         if( name_exp_i==0 ){ alldata[i]->name = name_exp_; };
-         if( name_exp_i>0 ){ alldata[i]->name = name_exp_; fout<<"name_exp was truncated while storing in host variable !!!"<<endl; };
-
-//         cout<<"id on row "<<i+1<<" = "<<alldata[i]->name <<endl;
+         if( name_exp_i==0 ){ allexp[i]->name = name_exp_; };
+         if( name_exp_i>0 ){ allexp[i]->name = name_exp_; fout<<"name_exp was truncated while storing in host variable !!!"<<endl; };
+         // cout<<"id on row "<<i+1<<" = "<<allexp[i]->name <<endl;
 
          // reading T_exp //
          { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch T_exp", ECPGt_EOIT,
-     ECPGt_int,&(T_exp_),(long)1,(long)1,sizeof(int),
-     ECPGt_int,&(T_exp_i),(long)1,(long)1,sizeof(int), ECPGt_EORT);
+         ECPGt_int,&(T_exp_),(long)1,(long)1,sizeof(int),
+         ECPGt_int,&(T_exp_i),(long)1,(long)1,sizeof(int), ECPGt_EORT);
 
- if (sqlca.sqlcode == ECPG_NOT_FOUND) sqlprint();
+         if (sqlca.sqlcode == ECPG_NOT_FOUND) sqlprint();
+         if (sqlca.sqlwarn[0] == 'W') sqlprint();
+         if (sqlca.sqlcode < 0) sqlprint();
+         if (sqlca.sqlcode < 0) exit(1);}
 
- if (sqlca.sqlwarn[0] == 'W') sqlprint();
-
- if (sqlca.sqlcode < 0) sqlprint();
- if (sqlca.sqlcode < 0) exit(1);}
-
-         if( T_exp_i==0 ){ alldata[i]->TC = T_exp_; };
-         if( T_exp_i>0 ){ alldata[i]->TC = T_exp_; fout<<"T_exp was truncated while storing in host variable !!!"<<endl; };
-
-//         cout<<"temp in experiment "<<i+1<<" = "<<alldata[i]->TC <<endl;
+         if( T_exp_i==0 ){ allexp[i]->TC = T_exp_; };
+         if( T_exp_i>0 ){ allexp[i]->TC = T_exp_; fout<<"T_exp was truncated while storing in host variable !!!"<<endl; };
+         // cout<<"temp in experiment "<<i+1<<" = "<<allexp[i]->TC <<endl;
 
          // reading P_exp //
          { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch P_exp", ECPGt_EOIT,
-     ECPGt_int,&(P_exp_),(long)1,(long)1,sizeof(int),
-     ECPGt_int,&(P_exp_i),(long)1,(long)1,sizeof(int), ECPGt_EORT);
+         ECPGt_int,&(P_exp_),(long)1,(long)1,sizeof(int),
+         ECPGt_int,&(P_exp_i),(long)1,(long)1,sizeof(int), ECPGt_EORT);
 
- if (sqlca.sqlcode == ECPG_NOT_FOUND) sqlprint();
+         if (sqlca.sqlcode == ECPG_NOT_FOUND) sqlprint();
+         if (sqlca.sqlwarn[0] == 'W') sqlprint();
+         if (sqlca.sqlcode < 0) sqlprint();
+         if (sqlca.sqlcode < 0) exit(1);}
 
- if (sqlca.sqlwarn[0] == 'W') sqlprint();
-
- if (sqlca.sqlcode < 0) sqlprint();
- if (sqlca.sqlcode < 0) exit(1);}
-
-         if( P_exp_i==0 ){ alldata[i]->PG = P_exp_; };
-         if( P_exp_i>0 ){ alldata[i]->PG = P_exp_; fout<<"P_exp was truncated while storing in host variable !!!"<<endl; };
-
-//         cout<<"pressure in experiment "<<i+1<<" = "<<alldata[i]->PG <<endl;
+         if( P_exp_i==0 ){ allexp[i]->PG = P_exp_; };
+         if( P_exp_i>0 ){ allexp[i]->PG = P_exp_; fout<<"P_exp was truncated while storing in host variable !!!"<<endl; };
+         //  cout<<"pressure in experiment "<<i+1<<" = "<<allexp[i]->PG <<endl;
 
          // reading ref_exp //
          { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch ref_exp", ECPGt_EOIT,
-     ECPGt_char,&(ref_exp_),(long)256,(long)1,(256)*sizeof(char),
-     ECPGt_int,&(ref_exp_i),(long)1,(long)1,sizeof(int), ECPGt_EORT);
+         ECPGt_char,&(ref_exp_),(long)256,(long)1,(256)*sizeof(char),
+         ECPGt_int,&(ref_exp_i),(long)1,(long)1,sizeof(int), ECPGt_EORT);
 
- if (sqlca.sqlcode == ECPG_NOT_FOUND) sqlprint();
+         if (sqlca.sqlcode == ECPG_NOT_FOUND) sqlprint();
+         if (sqlca.sqlwarn[0] == 'W') sqlprint();
+         if (sqlca.sqlcode < 0) sqlprint();
+         if (sqlca.sqlcode < 0) exit(1);}
 
- if (sqlca.sqlwarn[0] == 'W') sqlprint();
+         if( ref_exp_i==0 ){ allexp[i]->reference = ref_exp_; };
+         if( ref_exp_i>0 ){ allexp[i]->reference = ref_exp_; fout<<"ref_exp was truncated while storing in host variable !!!"<<endl; };
+         //  cout<<"reference in experiment "<<i+1<<" = "<<allexp[i]->reference <<endl;
 
- if (sqlca.sqlcode < 0) sqlprint();
- if (sqlca.sqlcode < 0) exit(1);}
-
-         if( ref_exp_i==0 ){ alldata[i]->reference = ref_exp_; };
-         if( ref_exp_i>0 ){ alldata[i]->reference = ref_exp_; fout<<"ref_exp was truncated while storing in host variable !!!"<<endl; };
-
-//         cout<<"reference in experiment "<<i+1<<" = "<<alldata[i]->reference <<endl;
-
-
-// ++++++++++++++++++++++++++  // reading components // +++++++++++++++++++++++++++++++++ //
+         // ++++++++++++++++++++++++++  // reading components // +++++++++++++++++++++++++++++++++ //
 
          std::stringstream ss;
          ss << i+1;
@@ -383,7 +365,6 @@ void SS_Data_Manager::get_DB(  )
 
          count_name_comp_ecpg = count_name_comp_ecpg_1;
          name_comp_ecpg = name_comp_ecpg_1;
-
          // cout << name_comp_ecpg << endl;
 
          // Count number of componentes
@@ -391,74 +372,67 @@ void SS_Data_Manager::get_DB(  )
          ECPGt_int,&(rows_c),(long)1,(long)1,sizeof(int),
          ECPGt_NO_INDICATOR, NULL , 0L, 0L, 0L, ECPGt_EORT);
 
-     if (sqlca.sqlcode == ECPG_NOT_FOUND) sqlprint();
-     if (sqlca.sqlwarn[0] == 'W') sqlprint();
-     if (sqlca.sqlcode < 0) sqlprint();
-     if (sqlca.sqlcode < 0) exit(1);}
-
-//         cout<<"Number of components for experiment " <<i+1<<" = "<<rows_c<<endl;
+         if (sqlca.sqlcode == ECPG_NOT_FOUND) sqlprint();
+         if (sqlca.sqlwarn[0] == 'W') sqlprint();
+         if (sqlca.sqlcode < 0) sqlprint();
+         if (sqlca.sqlcode < 0) exit(1);}
+         // cout<<"Number of components for experiment " <<i+1<<" = "<<rows_c<<endl;
 
          // Initializing the experiments
-         for (j=0; j<rows_c; j++) {
-             alldata[i]->component_name.push_back("");
-             alldata[i]->component_amount.push_back(0.0);
-             alldata[i]->units.push_back("");
+         for (j=0; j<rows_c; j++)
+         {
+             allexp[i]->component_name.push_back("");
+             allexp[i]->component_amount.push_back(0.0);
+             allexp[i]->units.push_back("");
          }
-
-//         cout << alldata[i]->component_name.size() << endl;
+         //  cout << allexp[i]->component_name.size() << endl;
 
          /* declare name_comp cursor for select components and their amount assigned to each experiemnt from the components table */
-          { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, name_comp_ecpg, ECPGt_EOIT, ECPGt_EORT);
-      if (sqlca.sqlwarn[0] == 'W') sqlprint();
-      if (sqlca.sqlcode < 0) sqlprint();
-      if (sqlca.sqlcode < 0) exit(1);}
+         { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, name_comp_ecpg, ECPGt_EOIT, ECPGt_EORT);
+         if (sqlca.sqlwarn[0] == 'W') sqlprint();
+         if (sqlca.sqlcode < 0) sqlprint();
+         if (sqlca.sqlcode < 0) exit(1);}
 
          // reading from database
-         for (j=0; j<rows_c; j++) {
-
+         for (j=0; j<rows_c; j++)
+         {
              // reading name_comp //
              { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch all_comp", ECPGt_EOIT,
-         ECPGt_char,&(name_comp_),(long)256,(long)1,(256)*sizeof(char),         // components name
-         ECPGt_int,&(name_comp_i),(long)1,(long)1,sizeof(int),
-         ECPGt_double,&(quant_comp_),(long)1,(long)1,sizeof(double),            // components quantity
-         ECPGt_int,&(quant_comp_i),(long)1,(long)1,sizeof(int),
-         ECPGt_char,&(units_comp_),(long)5,(long)1,(5)*sizeof(char),            // components units
-         ECPGt_int,&(units_comp_i),(long)1,(long)1,sizeof(int), ECPGt_EORT);
+             ECPGt_char,&(name_comp_),(long)256,(long)1,(256)*sizeof(char),         // components name
+             ECPGt_int,&(name_comp_i),(long)1,(long)1,sizeof(int),
+             ECPGt_double,&(quant_comp_),(long)1,(long)1,sizeof(double),            // components quantity
+             ECPGt_int,&(quant_comp_i),(long)1,(long)1,sizeof(int),
+             ECPGt_char,&(units_comp_),(long)5,(long)1,(5)*sizeof(char),            // components units
+             ECPGt_int,&(units_comp_i),(long)1,(long)1,sizeof(int), ECPGt_EORT);
 
-     if (sqlca.sqlcode == ECPG_NOT_FOUND) sqlprint();
+             if (sqlca.sqlcode == ECPG_NOT_FOUND) sqlprint();
+             if (sqlca.sqlwarn[0] == 'W') sqlprint();
+             if (sqlca.sqlcode < 0) sqlprint();
+             if (sqlca.sqlcode < 0) exit(1);}
 
-     if (sqlca.sqlwarn[0] == 'W') sqlprint();
+             if( name_comp_i==0 ){ allexp[i]->component_name[j] = name_comp_; };
+             if( name_comp_i>0 ){ allexp[i]->component_name[j] = name_comp_; fout<<"name_comp was truncated while storing in host variable !!!"<<endl; };
+             //  cout<<"component nr. "<<j+1<<" from experiment "<<i+1<<" = "<<allexp[i]->component_name[j] <<endl;
 
-     if (sqlca.sqlcode < 0) sqlprint();
-     if (sqlca.sqlcode < 0) exit(1);}
+             if( quant_comp_i==0 ){ allexp[i]->component_amount[j] = quant_comp_; };
+             if( quant_comp_i>0 ){ allexp[i]->component_amount[j] = quant_comp_; fout<<"quant_comp was truncated while storing in host variable !!!"<<endl; };
+             //  cout<<"component "<<allexp[i]->component_name[j]<<" from experiment "<<i+1<<" = "<<allexp[i]->component_amount[j] <<endl;
 
-             if( name_comp_i==0 ){ alldata[i]->component_name[j] = name_comp_; };
-             if( name_comp_i>0 ){ alldata[i]->component_name[j] = name_comp_; fout<<"name_comp was truncated while storing in host variable !!!"<<endl; };
-
-//             cout<<"component nr. "<<j+1<<" from experiment "<<i+1<<" = "<<alldata[i]->component_name[j] <<endl;
-
-             if( quant_comp_i==0 ){ alldata[i]->component_amount[j] = quant_comp_; };
-             if( quant_comp_i>0 ){ alldata[i]->component_amount[j] = quant_comp_; fout<<"quant_comp was truncated while storing in host variable !!!"<<endl; };
-
-//             cout<<"component "<<alldata[i]->component_name[j]<<" from experiment "<<i+1<<" = "<<alldata[i]->component_amount[j] <<endl;
-
-             if( units_comp_i==0 ){ alldata[i]->units[j] = units_comp_; };
-             if( units_comp_i>0 ){ alldata[i]->units[j] = units_comp_; fout<<"units_comp was truncated while storing in host variable !!!"<<endl; };
-
-//             cout<<"component "<<alldata[i]->component_name[j]<<" from experiment "<<i+1<<" has unit:  "<<alldata[i]->units[j] <<endl;
+             if( units_comp_i==0 ){ allexp[i]->units[j] = units_comp_; };
+             if( units_comp_i>0 ){ allexp[i]->units[j] = units_comp_; fout<<"units_comp was truncated while storing in host variable !!!"<<endl; };
+             //  cout<<"component "<<allexp[i]->component_name[j]<<" from experiment "<<i+1<<" has unit:  "<<allexp[i]->units[j] <<endl;
          }
 
          // close name_comp cursor cursor
          { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "close all_comp", ECPGt_EOIT, ECPGt_EORT);
 
-     if (sqlca.sqlwarn[0] == 'W') sqlprint();
+         if (sqlca.sqlwarn[0] == 'W') sqlprint();
+         if (sqlca.sqlcode < 0) sqlprint();
+         if (sqlca.sqlcode < 0) exit(1);}
 
-     if (sqlca.sqlcode < 0) sqlprint();
-     if (sqlca.sqlcode < 0) exit(1);}
+         // ++++++++++++++++++++++++++  // END reading components // +++++++++++++++++++++++++++++++++ //
 
-// ++++++++++++++++++++++++++  // END reading components // +++++++++++++++++++++++++++++++++ //
-
-// ++++++++++++++++++++++++++  // reading results        // +++++++++++++++++++++++++++++++++ //
+         // ++++++++++++++++++++++++++  // reading results        // +++++++++++++++++++++++++++++++++ //
 
          /* declare name_comp cursor variables */
          char name_elem_ecpg_1[256] ="declare all_elem cursor for SELECT elements.name, results.solubility, results.log_solubility, results.error FROM results LEFT JOIN elements ON elements.id = results.id_elem WHERE results.id_exp = "; const char * name_elem_ecpg;
@@ -469,7 +443,6 @@ void SS_Data_Manager::get_DB(  )
 
          count_name_elem_ecpg = count_name_elem_ecpg_1;
          name_elem_ecpg = name_elem_ecpg_1;
-
          // cout << name_comp_ecpg << endl;
 
          // Count number of componentes
@@ -477,151 +450,132 @@ void SS_Data_Manager::get_DB(  )
          ECPGt_int,&(rows_c),(long)1,(long)1,sizeof(int),
          ECPGt_NO_INDICATOR, NULL , 0L, 0L, 0L, ECPGt_EORT);
 
-     if (sqlca.sqlcode == ECPG_NOT_FOUND) sqlprint();
-     if (sqlca.sqlwarn[0] == 'W') sqlprint();
-     if (sqlca.sqlcode < 0) sqlprint();
-     if (sqlca.sqlcode < 0) exit(1);}
-
-//         cout<<"Number of elements for experiment " <<i+1<<" = "<<rows_c<<endl;
+         if (sqlca.sqlcode == ECPG_NOT_FOUND) sqlprint();
+         if (sqlca.sqlwarn[0] == 'W') sqlprint();
+         if (sqlca.sqlcode < 0) sqlprint();
+         if (sqlca.sqlcode < 0) exit(1);}
+         //  cout<<"Number of elements for experiment " <<i+1<<" = "<<rows_c<<endl;
 
          // Initializing the elements
-         for (j=0; j<rows_c; j++) {
-             alldata[i]->name_elem.push_back("");
-             alldata[i]->solubility.push_back(0.0);
-             alldata[i]->log_solubility.push_back(0.0);
-             alldata[i]->error_sol.push_back(0.0);
+         for (j=0; j<rows_c; j++)
+         {
+             allexp[i]->name_elem.push_back("");
+             allexp[i]->solubility.push_back(0.0);
+             allexp[i]->log_solubility.push_back(0.0);
+             allexp[i]->error_sol.push_back(0.0);
          }
 
          /* declare all_elem cursor for select elements and their solubility assigned to each experiemnt from the elements table */
-          { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, name_elem_ecpg, ECPGt_EOIT, ECPGt_EORT);
-      if (sqlca.sqlwarn[0] == 'W') sqlprint();
-      if (sqlca.sqlcode < 0) sqlprint();
-      if (sqlca.sqlcode < 0) exit(1);}
-
+         { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, name_elem_ecpg, ECPGt_EOIT, ECPGt_EORT);
+         if (sqlca.sqlwarn[0] == 'W') sqlprint();
+         if (sqlca.sqlcode < 0) sqlprint();
+         if (sqlca.sqlcode < 0) exit(1);}
 
          // reading from database
-         for (j=0; j<rows_c; j++) {
-
+         for (j=0; j<rows_c; j++)
+         {
              // reading name_elem //
              { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch all_elem", ECPGt_EOIT,
-         ECPGt_char,&(name_elem_),(long)256,(long)1,(256)*sizeof(char),         // elements name
-         ECPGt_int,&(name_elem_i),(long)1,(long)1,sizeof(int),
-         ECPGt_double,&(sol_elem_),(long)1,(long)1,sizeof(double),            // elements solubility
-         ECPGt_int,&(sol_elem_i),(long)1,(long)1,sizeof(int),
-         ECPGt_double,&(logsol_elem_),(long)1,(long)1,sizeof(double),            // components units
-         ECPGt_int,&(logsol_elem_i),(long)1,(long)1,sizeof(int),
-         ECPGt_double,&(errsol_elem_),(long)1,(long)1,sizeof(double),            // components units
-         ECPGt_int,&(errsol_elem_i),(long)1,(long)1,sizeof(int), ECPGt_EORT);
+             ECPGt_char,&(name_elem_),(long)256,(long)1,(256)*sizeof(char),         // elements name
+             ECPGt_int,&(name_elem_i),(long)1,(long)1,sizeof(int),
+             ECPGt_double,&(sol_elem_),(long)1,(long)1,sizeof(double),              // elements solubility
+             ECPGt_int,&(sol_elem_i),(long)1,(long)1,sizeof(int),
+             ECPGt_double,&(logsol_elem_),(long)1,(long)1,sizeof(double),           // components units
+             ECPGt_int,&(logsol_elem_i),(long)1,(long)1,sizeof(int),
+             ECPGt_double,&(errsol_elem_),(long)1,(long)1,sizeof(double),           // components units
+             ECPGt_int,&(errsol_elem_i),(long)1,(long)1,sizeof(int), ECPGt_EORT);
 
-     if (sqlca.sqlcode == ECPG_NOT_FOUND) sqlprint();
+             if (sqlca.sqlcode == ECPG_NOT_FOUND) sqlprint();
+             if (sqlca.sqlwarn[0] == 'W') sqlprint();
+             if (sqlca.sqlcode < 0) sqlprint();
+             if (sqlca.sqlcode < 0) exit(1);}
 
-     if (sqlca.sqlwarn[0] == 'W') sqlprint();
+             if( name_elem_i==0 ){ allexp[i]->name_elem[j] = name_elem_; };
+             if( name_elem_i>0 ){ allexp[i]->name_elem[j] = name_elem_; fout<<"name_elem was truncated while storing in host variable !!!"<<endl; };
+             //  cout<<"element nr. "<<j+1<<" from experiment "<<i+1<<" = "<<allexp[i]->name_elem[j] <<endl;
 
-     if (sqlca.sqlcode < 0) sqlprint();
-     if (sqlca.sqlcode < 0) exit(1);}
+             if( sol_elem_i==0 ){ allexp[i]->solubility[j] = sol_elem_; };
+             if( sol_elem_i>0 ){ allexp[i]->solubility[j] = sol_elem_; fout<<"sol_elem was truncated while storing in host variable !!!"<<endl; };
+             //  cout<<"the solubility of element "<<allexp[i]->name_elem[j] <<" from experiment "<<i+1<<" = "<<allexp[i]->solubility[j] <<endl;
 
-             if( name_elem_i==0 ){ alldata[i]->name_elem[j] = name_elem_; };
-             if( name_elem_i>0 ){ alldata[i]->name_elem[j] = name_elem_; fout<<"name_elem was truncated while storing in host variable !!!"<<endl; };
+             if( logsol_elem_i==0 ){ allexp[i]->log_solubility[j] = logsol_elem_; };
+             if( logsol_elem_i>0 ){ allexp[i]->log_solubility[j] = logsol_elem_; fout<<"logsol_elem was truncated while storing in host variable !!!"<<endl; };
+             //  cout<<"the log solubility of element "<<allexp[i]->name_elem[j] <<" from experiment "<<i+1<<" = "<<allexp[i]->log_solubility[j] <<endl;
 
-//             cout<<"element nr. "<<j+1<<" from experiment "<<i+1<<" = "<<alldata[i]->name_elem[j] <<endl;
-
-             if( sol_elem_i==0 ){ alldata[i]->solubility[j] = sol_elem_; };
-             if( sol_elem_i>0 ){ alldata[i]->solubility[j] = sol_elem_; fout<<"sol_elem was truncated while storing in host variable !!!"<<endl; };
-
-//             cout<<"the solubility of element "<<alldata[i]->name_elem[j] <<" from experiment "<<i+1<<" = "<<alldata[i]->solubility[j] <<endl;
-
-             if( logsol_elem_i==0 ){ alldata[i]->log_solubility[j] = logsol_elem_; };
-             if( logsol_elem_i>0 ){ alldata[i]->log_solubility[j] = logsol_elem_; fout<<"logsol_elem was truncated while storing in host variable !!!"<<endl; };
-
-//             cout<<"the log solubility of element "<<alldata[i]->name_elem[j] <<" from experiment "<<i+1<<" = "<<alldata[i]->log_solubility[j] <<endl;
-
-             if( errsol_elem_i==0 ){ alldata[i]->error_sol[j] = errsol_elem_; };
-             if( errsol_elem_i>0 ){ alldata[i]->error_sol[j] = errsol_elem_; fout<<"errsol_elem was truncated while storing in host variable !!!"<<endl; };
-
-//             cout<<"the solubility error of element "<<alldata[i]->name_elem[j]<<" from experiment "<<i+1<<" = "<<alldata[i]->error_sol[j] <<endl;
+             if( errsol_elem_i==0 ){ allexp[i]->error_sol[j] = errsol_elem_; };
+             if( errsol_elem_i>0 ){ allexp[i]->error_sol[j] = errsol_elem_; fout<<"errsol_elem was truncated while storing in host variable !!!"<<endl; };
+             //  cout<<"the solubility error of element "<<allexp[i]->name_elem[j]<<" from experiment "<<i+1<<" = "<<allexp[i]->error_sol[j] <<endl;
          }
 
-         // close all_elem cursor cursor
-         { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "close all_elem", ECPGt_EOIT, ECPGt_EORT);
+     // close all_elem cursor cursor
+     { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "close all_elem", ECPGt_EOIT, ECPGt_EORT);
 
      if (sqlca.sqlwarn[0] == 'W') sqlprint();
-
      if (sqlca.sqlcode < 0) sqlprint();
      if (sqlca.sqlcode < 0) exit(1);}
 
-// ++++++++++++++++++++++++++  // END reading results // +++++++++++++++++++++++++++++++++ //
+     // ++++++++++++++++++++++++++  // END reading results // +++++++++++++++++++++++++++++++++ //
 
      }
+ // // // // // // // END Reading in the experimetns form the database // // // // // // //
 
+ int c_comp= allexp[allexp.size()-1]->component_name.size()-1;
+ fout << "TEST: There is "<< allexp[allexp.size()-1]->component_amount[c_comp] <<" "<< allexp[allexp.size()-1]->units[c_comp] <<" " <<allexp[allexp.size()-1]->component_name[c_comp]<<" in experiment " << allexp.size() <<" " << allexp[allexp.size()-1]->name << endl << endl;
 
-     int c_comp= alldata[alldata.size()-1]->component_name.size()-1;
-     fout << "TEST: There is "<< alldata[alldata.size()-1]->component_amount[c_comp] <<" "<< alldata[alldata.size()-1]->units[c_comp] <<" " <<alldata[alldata.size()-1]->component_name[c_comp]<<" in experiment " << alldata.size() <<" " << alldata[alldata.size()-1]->name << endl << endl;
-
-
-     // close cursors for reading form experiments table //
+ // close cursors for reading form experiments table //
 
      { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "close id_exp", ECPGt_EOIT, ECPGt_EORT);
 
  if (sqlca.sqlwarn[0] == 'W') sqlprint();
-
  if (sqlca.sqlcode < 0) sqlprint();
  if (sqlca.sqlcode < 0) exit(1);}
 
      { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "close name_exp", ECPGt_EOIT, ECPGt_EORT);
 
  if (sqlca.sqlwarn[0] == 'W') sqlprint();
-
  if (sqlca.sqlcode < 0) sqlprint();
  if (sqlca.sqlcode < 0) exit(1);}
 
      { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "close T_exp", ECPGt_EOIT, ECPGt_EORT);
 
  if (sqlca.sqlwarn[0] == 'W') sqlprint();
-
  if (sqlca.sqlcode < 0) sqlprint();
  if (sqlca.sqlcode < 0) exit(1);}
 
      { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "close P_exp", ECPGt_EOIT, ECPGt_EORT);
 
  if (sqlca.sqlwarn[0] == 'W') sqlprint();
-
  if (sqlca.sqlcode < 0) sqlprint();
  if (sqlca.sqlcode < 0) exit(1);}
 
      { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "close ref_exp", ECPGt_EOIT, ECPGt_EORT);
 
  if (sqlca.sqlwarn[0] == 'W') sqlprint();
-
  if (sqlca.sqlcode < 0) sqlprint();
  if (sqlca.sqlcode < 0) exit(1);}
 
-
-     // disconnecting form the database //
+ // disconnecting form the database //
     { ECPGdisconnect(__LINE__, "ALL");
 
-if (sqlca.sqlwarn[0] == 'W') sqlprint();
+ if (sqlca.sqlwarn[0] == 'W') sqlprint();
+ if (sqlca.sqlcode < 0) sqlprint();
+ if (sqlca.sqlcode < 0) exit(1);}
 
-if (sqlca.sqlcode < 0) sqlprint();
-if (sqlca.sqlcode < 0) exit(1);}
+ fout << "7. in measdata_modified.cpp line 598. Finised reading experimental data form the database. " << endl;
+ fout.close();
 
-    fout << "7. in measdata_modified.cpp line 598. Finised reading experimental data form the database. " << endl;
-
-    fout.close();
-
-    // Unique TP file
-    const char path2[200] = "output_GEMSFIT/TP.csv";
-//    ofstream fout;
-    fout.open(path2, ios::app);
-    if( fout.fail() )
+ // Write Unique TP file for use to get GEMS lookup array of G0 at TP
+ const char path2[200] = "output_GEMSFIT/TP.csv";
+ fout.open(path2, ios::app);
+ if( fout.fail() )
     { cout<<"Output fileopen error"<<endl; exit(1); }
 
-    for (i=0; i<TP_pairs[1].size(); ++i)
+ for (i=0; i<TP_pairs[1].size(); ++i)
     {
         fout <<TP_pairs[1][i]<<";"<<TP_pairs[0][i]<<endl;
     }
-
-    fout << TP_pairs[1].size() <<endl;
-    fout.close();
+ fout << TP_pairs[1].size() <<endl;
+ fout.close();
 }
 
 // ----------------------------------------------- END SS_Data_Manager get data function CLASS -----------------------------------------------//
@@ -629,7 +583,7 @@ if (sqlca.sqlcode < 0) exit(1);}
 void Data_Manager::get_CSV( measdata* sysdata )
 {
 	int i, j, pos, cols, rows;
-	string line, alldata, headline;
+	string line, allexp, headline;
  	ifstream data_stream;
 	vector<string> data;
 

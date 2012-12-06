@@ -795,6 +795,7 @@ namespace opti
         fout << " ... performing parameter normalization ... " << endl;
 
 
+
         // Normalize init guess vector
         optv.resize( initguesses.size() );
         for(i=0; i<optv.size(); i++)
@@ -929,24 +930,20 @@ namespace opti
 
         ffout << " ... initializing optimization object in build_optim() ... " << endl;
 
-
+//        if( OptBoundPerc > 0. )
+//        {
+//            OptUpBounds.resize( opt_vec.size() );
+//            OptLoBounds.resize( opt_vec.size() );
+//            for( i=0; i<opt_vec.size(); i++ )
+//            {
+//                OptUpBounds[i] = opt_vec[i] + fabs( opt_vec[i]*OptBoundPerc/100. );
+//                OptLoBounds[i] = opt_vec[i] - fabs( opt_vec[i]*OptBoundPerc/100. );
+//            }
+//        }
 
         // Reset counter to zero
         master_counter = 0;
 
-/*		// Do not normalize parameters
-        if( ss_systems->at(0)->printfile || !OptNormParam )
-        {
-            optv = optv_;
-        }
-        else // normalize parameters
-        {
-            normalize_params( optv_ );
-            ss_systems->at(0)->sysparam->NormParams = true;
-        }*/
-
-        // normalize parameters is OptNormParam Flag is set to yes (=1) and
-        // if the program is not in printing mode (printfile = 0)
         if( OptNormParam && !ss_systems->at(0)->printfile )
         {
             normalize_params( optv_ );
@@ -956,7 +953,6 @@ namespace opti
         {
             optv = optv_;
         }
-
 
         // check if initial guesses have same number of elements as bound and check if initial guesses are within the bounds
         if( optv.size() != OptUpBounds.size() )
@@ -1000,17 +996,7 @@ namespace opti
 
         /// specify objective function
         ffout << endl << "15. in optimization.cpp line 991. Setting minimizing objective function." << endl;
-//		if( !OptEquil )
-//		{
-//			// call wrapper for TSolMod class -> do not perform chemical equilibrium computation
-//			stdstate.set_min_objective( StdState_objective_function_callback, ss_systems );
-//		}
-//		else if( OptEquil==1 )
-//		{
-            // call GEMS3K wrapper -> perform chemical equilibrium computation
-            stdstate.set_min_objective( StdStateEquil_objective_function_callback, ss_systems );
-////		}
-
+        stdstate.set_min_objective( StdStateEquil_objective_function_callback, ss_systems );
 
 //        if( OptConstraints )
 //        {
@@ -1018,7 +1004,6 @@ namespace opti
 //            for( int j=0; j< ((int) constraint_data_v.size()); j++ )
 //                stdstate.add_inequality_constraint( StdStateProp_constraint_function_callback, &constraint_data_v[j], 1e-4);
 //        }
-
 
         // Set initial stepsize
         if( OptInitStep > 0 )
@@ -1031,18 +1016,16 @@ namespace opti
             stdstate.set_initial_step( inistep );
         }
 
-
-
         // Only the Master process runs the optimization library. The other processes only run the callback function (copying the newly generated guess values from process 0).
         int ierr;
         //ierr = MPI_Comm_rank( MPI_COMM_WORLD, &pid );
         //ierr = MPI_Comm_size( MPI_COMM_WORLD, &p );
         int continue_or_exit;
 
-        ffout << "16. in optimization.cpp line 1040. Performing optimization."<<endl;
+        ffout << "16. in optimization.cpp line 1015. Performing optimization."<<endl;
 
         //===== For testing the objective function without oprimization =====//
-//        sum_of_squares = StdStateEquil_objective_function_callback(optv, grad, ss_systems);
+        //        sum_of_squares = StdStateEquil_objective_function_callback(optv, grad, ss_systems);
 
 
         // Perform optimization -> perform MPI call only when NOT in printing mode (function: StdStateProp::print_results()) AND NOT in Monte Carlo mode (function: Statistics::MC_confidence_interval())
@@ -1144,8 +1127,8 @@ namespace opti
 //                    }
 //#endif
 
-                    // copy resulting vector back to incoming optv vector (needed for printing results)
-                    optv_ = optv;
+       // copy resulting vector back to incoming optv vector (needed for printing results)
+       optv_ = optv;
 //                }
 //                else // SLAVES
 //                {
@@ -1171,18 +1154,19 @@ namespace opti
 //#endif
 //                ffout<<"pid "<<pid<<" is out of loop ..."<<endl;
 
-                // copy resulting vector back to incoming optv vector (needed for printing results)
-                if( !OptNormParam )
-                {
-                    optv_ = optv;
-                }
-                else
-                {
-                    for( i=0; i<optv.size(); i++ )
-                    {
-                        optv_[i] = optv[i] * abs(ss_systems->at(0)->sysprop->init_guesses[i]);
-                    }
-                }
+      // copy resulting vector back to incoming optv vector (needed for printing results)
+      if( !OptNormParam )
+          {
+              optv_ = optv;
+          }
+      else
+          {
+              for( i=0; i<optv.size(); i++ )
+                  {
+                      optv_[i] = optv[i] * abs(ss_systems->at(0)->sysprop->init_guesses[i]);
+                  }
+          }
+//      opt_vec = optv_; // for MC
 //        }
 //        else // DO NOT PARALLELIZE LOOP OVER MEASUREMENTS IN OBJECTIVE FUNCTION if in printing mode (function: ActivityModel::print_results()) OR in Monte Carlo mode (function: Statistics::MC_confidence_interval())
 //        {
