@@ -16,7 +16,7 @@
 # NodeStatusCH: Node status code and control in GEM input and output; see typedef NODECODECH
 <NodeStatusCH>  1
 # IterDone:  Number of iterations performed by GEM IPM in the last run (GEM output)
-<IterDone>  74
+<IterDone>  60
 
 ## (2) Chemical scalar properies of the node system
 # TK: Node temperature T, Kelvin. This value must always be provided (GEM input)
@@ -36,7 +36,7 @@
 # Hi: Total enthalpy of inert subsystem, J (reserved, mass transport) 
 <Hi>  0
 # Gs: Total Gibbs energy of the reactive subsystem, J/(RT) (GEM output)
-<Gs>  -92269.2
+<Gs>  -92267.9
 # IS: Effective aqueous ionic strength, molal (GEM output)
 <IS>  2.44515e-06
 # pH: pH of aqueous solution in molal activity scale (GEM output)
@@ -60,7 +60,7 @@
 
 # rMB: Mass balance residuals, moles (GEM output) [nICb]
 <rMB>
--6.65664794280845e-26 2.04908051721818e-26 -1.14725572696764e-12 -8.47813034513351e-28 -5.52372083871316e-26 6.81183087887036e-13 0 0 
+-1.12361252812619e-25 1.41098816951451e-25 -1.81898940354586e-12 5.2386674993917e-26 -1.64777265882565e-25 4.05009359383257e-13 1.77635683940025e-15 1.35525271560688e-20 
 
 # uIC: Chemical potentials of ICs in equilibrium (dual solution), J/(RT) (GEM output) [nICb]
 <uIC>
@@ -118,6 +118,6 @@
 # bPS: Bulk elemental compositions of multicomponent phases, moles (GEM output) [nPSb*nICb]
 #  'Al' 'Cl' 'H' 'K' 'Na' 'O' 'Si' 'Zz' 
 <bPS>
-9.99999982840288e-10 9.99999999127441e-10 3330.50299972939 9.99999997408312e-10 9.99999996335459e-10 1667.45835987851 1.10358000690587 -2.35489720686961e-17 
+9.99999982840288e-10 9.9999999912744e-10 3330.50299972939 9.99999997408312e-10 9.99999996335459e-10 1667.45835987851 1.10358000690587 -2.35678447244037e-17 
 
 # End of file

@@ -135,7 +135,7 @@ LN_COBYLA
 
 # Optimization: perform optimization and statistics (0), only optimization with basic Statistics (1), only Statistics (2) with initial guesses as best fit parametters
 <OptDoWhat>
-1
+0
 
 # Opitmization: if only Statistics is to be computed (no optimization) then enter best fit values here
 <OptStatOnlyBestFitParam>
