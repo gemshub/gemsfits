@@ -42,17 +42,20 @@ this coomand has to pe executed every time after restarting Ubuntu, before using
 otherwhise add it to the ubuntu startup
 $ /usr/local/pgsql/bin/postmaster -D /usr/local/pgsql/data >logfile 2>&1 &
 
-6. create database
-
-$ /usr/local/pgsql/bin/createdb <nameofdb>
-
-$ /usr/local/pgsql/bin/psql <nameofdb> - to access
-
-7. Use pgAdmin 3 for GUI database management.
+6. Use pgAdmin 3 for GUI database management.
 http://www.pgadmin.org/
 to connect use add a connection to a server.
 enter a name and for host 'localhost'
 leave user postgres and enter your postgres password
+
+7. After connecting to a server create a new database:
+click on databases, right click new database 
+
+8. To load the test database for Tests:
+Right-click on new database --> Restore
+
+9. Database ready to work with test gemsfit input files form Tests/Input files
+
 
 Adding tables and data using sql scripts:
 

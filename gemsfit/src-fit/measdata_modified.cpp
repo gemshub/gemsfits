@@ -48,6 +48,177 @@
 //#include "system_properties.h"
 #include "data_manager.h"
 
+
+void SS_Data_Manager::get_CSV(  )
+{
+    int i, j, pos, cols, rows;
+    string line, headline;
+    ifstream data_stream;
+    vector<string> data;
+
+    // GEMSFIT logfile
+    const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
+    ofstream fout;
+    fout.open(path, ios::app);
+    if( fout.fail() )
+    { cout<<"Output fileopen error"<<endl; exit(1); }
+
+    fout << "6. in measdata_modified.cpp line 66. Continuing with reading CSV file." << endl << endl;
+
+    // datatypes that should be stored in measurement data file
+    vector<string> columns;
+    columns.push_back("id");
+    columns.push_back("temperature");
+    columns.push_back("pressure");
+    columns.push_back("element");
+    columns.push_back("solubility");
+
+    // Find column number which corresponds to each datatype
+    // Read parameter file into string
+    data_stream.open( CSVfile.c_str() );
+    if( data_stream.fail() )
+    {
+        cout << "Opening of file "<<CSVfile<<" failed !!"<<endl;
+        exit(1);
+    }
+    getline(data_stream, headline);
+    replace_all( headline, "\"", "");
+    replace_all( headline, ";", " ");
+
+    string buf;                  // buffer string
+    stringstream ss( headline ); // Insert the string into a stream
+
+    vector<string> tokens;       // Create vector to hold strings
+
+    while (ss >> buf)
+        tokens.push_back(buf);
+
+    cols = (int) tokens.size();
+
+
+    // read data
+    data.clear();
+    i=0;
+    while( getline(data_stream, line, ';') )
+    {
+        data.push_back(line);
+//        fout << data.at(i)<<endl;
+        i++;
+    }
+    data_stream.close();
+
+    cols =  ( cols - 1 );
+
+    try
+    {
+        if( cols < 3 )
+            throw 1;
+
+        rows = data.size() / cols;
+
+        if( ! (data.size() % cols) )
+            throw 2;
+
+    }
+    catch ( int excp )
+    {
+
+        fout << endl;
+        cout << " Something wrong with reading the CSV file ! " << endl;
+        switch( excp )
+        {
+            case 1:
+            {
+                cout << " At least three columns are needed as measurement input (temperature, pressure and molality_1 ) " << endl;
+                cout << " You entered only "<<cols<<" columns . " << endl;
+                cout << " Sorry can't proceed, bailing out now ... " << endl;
+                cout << endl;
+                exit(1);
+            }
+            case 2:
+            {
+                cout << " The number of data elements from the measurement file does not match the column number, " << endl;
+                cout << " data.size() = " << data.size() << endl;
+                cout << " rows = " << data.size() / cols << endl;
+                cout << " Something went wrong here ... " << endl;
+                cout << " Sorry can't proceed, bailing out now ... " << endl;
+                cout << endl;
+                exit(1);
+            }
+        }
+    }
+
+    // Initializing the experiments
+    fout << "Number of experiments = " << rows << endl;
+    for (i=1; i<rows; i++) {
+        allexp.push_back(new experiment);
+    }
+
+    // loop over columns that ought to be present in measurement file
+    for( j=0; j<columns.size(); j++ )
+    {
+        // loop over measurement data cols
+        for( i=0; i<=cols; i++ )
+        {
+            // find position of datatype in measurement file
+            if( ! columns.at(j).compare( tokens.at(i) ) )
+            {
+                pos = i;
+            }
+        }
+        for( i=0; i<rows; i++ )
+        {
+            switch( pos )
+            {
+                case 0:
+                    allexp[i]->id_exp = atoi(data.at(pos + i * cols ).c_str());
+                    break;
+                case 1:
+                    allexp[i]->TC = atoi(data.at( pos + i * cols ).c_str());
+                    TP_pairs[0].push_back(allexp[i]->TC); // temperature
+                    break;
+                case 2:
+                    allexp[i]->PG = atoi(data.at( pos + i * cols ).c_str());
+                    TP_pairs[1].push_back(allexp[i]->PG); // pressure
+                    break;
+                case 3:
+                    allexp[i]->name_elem.push_back(data.at( pos + i * cols ).c_str());
+                    break;
+                case 4:
+                    allexp[i]->solubility.push_back(atof(data.at( pos + i * cols ).c_str()));
+                    allexp[i]->error_sol.push_back(0.0);
+                    break;
+
+            }
+        }
+    }
+
+
+//    // Remove apostrophes from species strings
+//    for( int i=0; i< (int) sysdata->species_1_1.size(); i++ )
+//    {
+//        erase_all(sysdata->species_1_1.at(i), "'");
+//        erase_all(sysdata->species_1_2.at(i), "'");
+//        erase_all(sysdata->species_1_3.at(i), "'");
+//        erase_all(sysdata->species_1_4.at(i), "'");
+//        erase_all(sysdata->species_1_1.at(i), "\"");
+//        erase_all(sysdata->species_1_2.at(i), "\"");
+//        erase_all(sysdata->species_1_3.at(i), "\"");
+//        erase_all(sysdata->species_1_4.at(i), "\"");
+//    }
+
+
+#ifdef GEMSFIT_DEBUG
+    for( i=0; i<sysdata->temperature.size(); i++ )
+    {
+        cout << sysdata->temperature.at(i) << endl;
+//        cout << sysdata->species_1_1.at(i) << endl;
+    }
+#endif
+    fout << "7. in measdata_modified.cpp line 216. Finised reading experimental data form CSV file. " << endl;
+    fout.close();
+}
+
 void SS_Data_Manager::get_DB(  )
 {
 
@@ -64,7 +235,7 @@ void SS_Data_Manager::get_DB(  )
     if( fout_.fail() )
     { cout<<"Output fileopen error"<<endl; exit(1); }
 
-    fout << "6. in measdata_modified.cpp line 59. Continuing with reading from database." << endl << endl;
+    fout << "6. in measdata_modified.cpp line 236. Continuing with reading from database." << endl << endl;
 
 
      int i=0; // counts in primary experiments table
@@ -561,7 +732,7 @@ void SS_Data_Manager::get_DB(  )
  if (sqlca.sqlcode < 0) sqlprint();
  if (sqlca.sqlcode < 0) exit(1);}
 
- fout << "7. in measdata_modified.cpp line 598. Finised reading experimental data form the database. " << endl;
+ fout << "7. in measdata_modified.cpp line 733. Finised reading experimental data form the database. " << endl;
  fout.close();
 
  // Write Unique TP file for use to get GEMS lookup array of G0 at TP

@@ -45,15 +45,23 @@ SS_Data_Manager::SS_Data_Manager( )
     { cout<<"Output fileopen error"<<endl; exit(1); }
 
     // Read parameters for database connection
-    fout << "3. data_manager.cpp line 46. Reading database parameter get_db_specs(); " << endl;
+    fout << "3. data_manager.cpp line 48. Reading database parameter get_db_specs(); " << endl;
     get_db_specs();
 
     // Read measurement data from PosgreSQL server
-    fout << "4. data_manager.cpp line 50. allexp.push_back(new experiment) - empty; " << endl;
+    fout << "4. data_manager.cpp line 52. allexp.push_back(new experiment) - empty; " << endl;
     allexp.push_back( new experiment );
 
-    fout << "5. data_manager.cpp line 53. Getting data form the database get_DB ( allexp ); " << endl;
-    get_DB( /*allexp*/ );
+    if( !datasource )
+    {
+        fout << "5. data_manager.cpp line 57. Getting data form CSV get_CSV ( allexp ); " << endl;
+        get_CSV( /*allexp*/ );
+    }
+    else
+    {
+        fout << "5. data_manager.cpp line 62. Getting data form the database get_DB ( allexp ); " << endl;
+        get_DB( /*allexp*/ );
+    }
 
     fout.close();
 }
@@ -82,6 +90,8 @@ void SS_Data_Manager::get_db_specs( )
     string f8("<DatRDCTable>");
     string f3("<DatUsername>");
     string f4("<DatPasswd>");
+    string f5("<DatSource>");
+    string f6("<DatCSVfile>");
     string f7("<DatServer>");
     string hash("#");
 
@@ -101,11 +111,37 @@ void SS_Data_Manager::get_db_specs( )
     allexpx += data[i];
 
     // GEMSFIT logfile
-    const char path[200] = "output_GEMSFIT/GEMSFIT.log";
+    const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
     ofstream fout;
     fout.open(path, ios::app);
     if( fout.fail() )
     { cout<<"Output fileopen error"<<endl; exit(1); }
+
+    // get measurement data from CSV file (0) or PostgreSQL database (1)
+    string sub_datasource;
+    pos_start = allexpx.find(f5);
+    pos_end   = allexpx.find(hash,pos_start);
+    string datasource_s = allexpx.substr((pos_start+f5.length()),(pos_end-pos_start-f5.length()));
+    istringstream datasource_ss(datasource_s);
+        datasource_ss >> sub_datasource;
+        datasource = atoi( sub_datasource.c_str() );
+    fout<<"datasource = "<<datasource<<endl;
+
+    if( datasource == 0 )
+    {
+        // name of CSV file containing measurement data
+        // Database name
+        string sub_csv;
+        pos_start = allexpx.find(f6);
+        pos_end   = allexpx.find(hash,pos_start);
+        string csv_s = allexpx.substr((pos_start+f6.length()),(pos_end-pos_start-f6.length()));
+        istringstream csv_ss(csv_s);
+        csv_ss >> sub_csv;
+            CSVfile = sub_csv;
+        fout<<"CSVfile = "<<CSVfile<<endl;
+    }
+    else if( datasource == 1 )
+    {
 
         // Database name
         string sub_dbname;
@@ -170,6 +206,8 @@ void SS_Data_Manager::get_db_specs( )
         server_ss >> sub_server;
             psql_server = sub_server;
         fout<<"psql_server = "<<psql_server<<endl;
+    }
+
 
     fout.close();
 }

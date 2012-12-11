@@ -123,15 +123,21 @@ class SS_Data_Manager
         */
         void get_DB( /*vector<experiment *> allexp*/ );
 
-//        /**
-//        * Read measurement data from CSV file
-//        * @param sysdata   pointer to measdata struct which holds all measurement data.
-//        * @author DM
-//        * @date 06.11.2012
-//        */
-//        void get_CSV( vector<experiment*> allexp );
+        /**
+        * Read measurement data from CSV file
+        * @param sysdata   pointer to measdata struct which holds all measurement data.
+        * @author DM
+        * @date 06.11.2012
+        */
+        void get_CSV( /*vector<experiment*> allexp*/ );
+
+        /// get measurement data from CSV file (0) or PostgreSQL database (1)
+        int datasource;
 
     private:
+
+        /// name of CSV file containing measurement data
+        string CSVfile;
 
         // Database connection parameters
         /// PostgreSQL database: database name

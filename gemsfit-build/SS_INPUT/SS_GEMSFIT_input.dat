@@ -2,17 +2,14 @@
 ##########       Standard state GEMSFIT configuration file       ##############
 ###############################################################################
 
+
 # DataManager: get measurement data from CSV file (0) or PostgreSQL database (1)
 <DatSource>
-1
-
-?# Optimization: call TSolMod wrapper (0) or perform full equilibrium computation with GEMS3K (1)
-<OptEqSolv>
 0
 
 # DataManager: if <DatSource> == 0 then enter name of CSV file
 <DatCSVfile>
-cacl2_meas_lowconc.csv
+SS_INPUT_CSV/solubility.csv
 
 # DataManager: username
 <DatUsername>
@@ -39,13 +36,13 @@ qtz_h2o_nacl
 <DatRDCTable>
 RDCqtz_h2o_nacl
 
-# name of the system that will be fitted
+# name of the system that will be fitted SS_INPUT_CSV/qtz_h2o_csv_test-dat.lst for CSV file use SS_INPUT_CSV folder
 <SystemName>
-SS_INPUT/qtz_h2o_test-dat.lst
+SS_INPUT_CSV/qtz_h2o_csv_test-dat.lst
 
 # name of the species that will be fitted
 <FitSpeciesName>
-HSiO3- SiO2@
+SiO2@
 
 # Solubility comparison as log solubility 1 or molality 0
 <LogSolubility>
@@ -159,7 +156,7 @@ LN_COBYLA
 
 # Statistics: number of evaluations points per parameter for sensitivity evaluation
 <StatSensitivity>
-500
+50
 
 # Statistics: number of function evaluations per axis (total value will be StatSSRSensitivity squared)
 <StatSSRSensitivity>

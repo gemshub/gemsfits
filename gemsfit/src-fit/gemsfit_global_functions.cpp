@@ -211,6 +211,7 @@ cout<<"in StdState_gems3k_wrap ..."<<endl;
         long int NodeStatusCH, NodeHandle;
         double sum_of_squared_residuals_sys_ = 0.0, residual = 0.0, P_pa, T_k, computed_value, log_computed_value, measured_value;
         char input_system_file_list_name[256];
+        string input_dbr_file_name;
 
         // DATACH structure content
         int nIC, nDC, nPH, ICndx;
@@ -392,6 +393,41 @@ cout << "   node pressure from dbr file: " << node->cP() << endl;
 //        #pragma omp parallel for
         for( i = start; i < sys->data_meas->allexp.size() ; i +=step )
         {
+
+            if ( !sys->data_meas->datasource )
+            {
+                int lenght = sys->system_name.size();
+                input_dbr_file_name = sys->system_name.substr(0, lenght-7);
+
+                std::stringstream ss;
+                ss << i;
+                std::string I = ss.str();
+                std::stringstream sdbr;
+
+                if (!(i/10))
+                {
+                    sdbr << "dbr-0-000";
+                }
+                else if ((i/10) < 10)
+                {
+                    sdbr << "dbr-0-00";
+                }
+                else if((i/10) <100)
+                {
+                    sdbr << "dbr-0-0";
+                }
+                else if((i/10) <1000)
+                {
+                    sdbr << "dbr-0-";
+                }
+                string dbr = sdbr.str();
+                string endf = ".dat";
+                input_dbr_file_name = input_dbr_file_name + dbr.c_str()+I.c_str()+endf.c_str();
+
+                node->GEM_read_dbr(input_dbr_file_name.c_str());
+            }
+            else
+            {
             // Set amount of dependent components (GEMS3K: DBR indexing)
             // go trough all acomponents and calculate the mole amounts of the IC for the b vector in GEMS
             for (j=0; j<sys->data_meas->allexp[i]->component_name.size(); ++j)
@@ -454,6 +490,9 @@ cout << " T_k  = " << T_k  << endl;
             // in the future - implement a Tnode function that stes just T, P and bIC vector of amount of independent components.
             // ---- // ---- // Transfer new temperature, pressure and b-vector to GEMS3K // ---- // ---- //
             node->GEM_from_MT( NodeHandle, NodeStatusCH, T_k, P_pa, 0., 0., new_moles_IC, xDC_up, xDC_lo, Ph_surf );
+
+            }
+
 
             // Asking GEM to run with automatic initial approximation
             dBR->NodeStatusCH = NEED_GEM_AIA;
