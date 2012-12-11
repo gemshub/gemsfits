@@ -1,4 +1,10 @@
 * text=auto !eol
+Tests/SS_INPUT/SS_GEMSFIT_input.dat -text
+Tests/SS_INPUT/qtz_h2o_test-dat.lst -text
+Tests/SS_INPUT/qtz_h2o_test-dbr-0-0000.dat -text
+Tests/SS_INPUT/qtz_h2o_test-dbr.lst -text
+Tests/SS_INPUT/qtz_h2o_test-dch.dat -text
+Tests/SS_INPUT/qtz_h2o_test-ipm.dat -text
 Tests/SS_INPUT_CSV/qtz_h2o_csv_test-dat.lst -text
 Tests/SS_INPUT_CSV/qtz_h2o_csv_test-dbr-0-0000.dat -text
 Tests/SS_INPUT_CSV/qtz_h2o_csv_test-dbr-0-0001.dat -text
