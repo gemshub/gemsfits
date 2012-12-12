@@ -27,11 +27,6 @@ solubility
 <DatServer>
 localhost
 
-# DataManager: data table name
-#cacl2_meas_373K_1bar
-<DatTable>
-qtz_h2o_nacl 
-
 # DataManager: Reaction dependent species table name
 <DatRDCTable>
 RDCqtz_h2o_nacl
@@ -52,11 +47,8 @@ SiO2@
 <OptUpBounds> 
 10 10 10 10
  
- 
 <OptLoBounds> 
- 
 -10 -10 -10 -10
-
 
 # Optimization: apply constraints (1=yes, 0=no)
 <OptConstraints>
@@ -65,8 +57,6 @@ SiO2@
 # Optimization: specify parameter vectors for constraint function
 <OptUpConstraints>
 15000.0 15000.0  
-
-
 
 <OptLoConstraints>
 -10000.0 -10000.0 
@@ -163,7 +153,7 @@ LN_COBYLA
 100
 
 
-# Printing information: specifiy which datapoints to print to file and format of output file
+# Printing information: specifiy which datapoints to print to file and format of output file - !!!!NOT IMLEMENTED IN Std State fitting (DM)!!!!
 <PrintTemperatures>
 298.15
 
