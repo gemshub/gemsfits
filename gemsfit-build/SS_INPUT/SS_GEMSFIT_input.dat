@@ -5,7 +5,7 @@
 
 # DataManager: get measurement data from CSV file (0) or PostgreSQL database (1)
 <DatSource>
-0
+1
 
 # DataManager: if <DatSource> == 0 then enter name of CSV file
 <DatCSVfile>
@@ -33,7 +33,7 @@ RDCqtz_h2o_nacl
 
 # name of the system that will be fitted SS_INPUT_CSV/qtz_h2o_csv_test-dat.lst for CSV file use SS_INPUT_CSV folder
 <SystemName>
-SS_INPUT_CSV/qtz_h2o_csv_test-dat.lst
+SS_INPUT/sol07jan2013-dat.lst
 
 # name of the species that will be fitted
 <FitSpeciesName>
@@ -65,7 +65,7 @@ SiO2@
 
 # Optimization: specify algorithm GN_ISRES GN_ORIG_DIRECT GN_ORIG_DIRECT_L LN_COBYLA LN_BOBYQA GN_ISRES
 <OptAlgo>
-LN_BOBYQA
+LN_COBYLA
 
 # Optimization: Number of threads (default=1)
 <OptThreads>
