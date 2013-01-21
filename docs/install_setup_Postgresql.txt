@@ -1,4 +1,4 @@
-Istall Postgresql 9.1
+Install Postgresql 9.1
 
 1. download appropriate version (9.1.0): http://www.postgresql.org/ftp/source/
 
@@ -36,16 +36,17 @@ login to user postgres
 command for initialization
 # /usr/local/pgsql/bin/initdb -D /usr/local/pgsql/data/
 
-5. Start Postgresql postmaster
+5. Login to user postgres (if not done yet) ans start Postgresql postmaster:
 
-this coomand has to pe executed every time after restarting Ubuntu, before using the database, being loged-in as user potgres
-otherwhise add it to the ubuntu startup
 $ /usr/local/pgsql/bin/postmaster -D /usr/local/pgsql/data >logfile 2>&1 &
 
-6. Use pgAdmin 3 for GUI database management.
-http://www.pgadmin.org/
-to connect use add a connection to a server.
-enter a name and for host 'localhost'
+this command has to be executed every time after restarting Ubuntu, before using the database, being logged-in as user postgres (if not logged in, type 
+  # su - postgres
+and then enter password). Or add this command to the ubuntu startup (how?).
+
+6. Use pgAdmin 3 for GUI database management.     http://www.pgadmin.org/
+to connect, use "add a connection to a server" (see also http://www.w3resource.com/PostgreSQL/create-table.php).
+enter a name and for host 'localhost'. 
 leave user postgres and enter your postgres password
 
 7. After connecting to a server create a new database:
@@ -60,19 +61,19 @@ Right-click on new database --> Restore
 Adding tables and data using sql scripts:
 
 Open pgAdmin3 click on the name of the database then click on the 6th icon 'Execute arbitrary SQL queries'
-SQL editor opens. Use file open and add the provied SQL script file for adding the tables to the tadabase:
+SQL editor opens. Use file open and add the provided SQL script file for adding the tables to the tadabase:
 create_nacl_actcoeff_table.sql
 
 ALTER TABLE <name_of_the_table>
 
-In the lower part OWNER TO <user> - user that has access rights to the daabase (e.g. postgres)
+In the lower part OWNER TO <user> - user that has access rights to the database (e.g. postgres)
 
 Click RUN (green arrow)
 
 After running the script you should see the new table under the database name->public->Tables->
 
 For adding data from a CSV another script is needed: load_NaCl_ambient_from_csv.sql
-In this script should be the name of the table, the collumns, the path to the csv file and the type of delimiter.
+In this script should be the name of the table, the columns, the path to the csv file and the type of delimiter.
 
 
 
