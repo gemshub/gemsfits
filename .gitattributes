@@ -1,4 +1,6 @@
 * text=auto !eol
+Tests/CASH/CSH-gc65-data.xls -text
+Tests/CASH/solcash.backup -text
 Tests/SS_INPUT/SS_GEMSFIT_input.dat -text
 Tests/SS_INPUT/qtz_h2o_test-dat.lst -text
 Tests/SS_INPUT/qtz_h2o_test-dbr-0-0000.dat -text
