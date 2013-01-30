@@ -25,7 +25,7 @@ ALTER TABLE impdata.expcsd
 
 COPY impdata.expcsd ( ExpSetID, P_bar, T_C, C_S_solid, si_w_g_L,
   H2O_L, SiO2, CaOH2, AlOH3, NaOH, KOH, CO2, ende ) 
-FROM '/home/parallels/DevGEMSFIT/devDanFit/gemsfit/Tests/CASH/CSH-gc65-exp_comp.csv'
+FROM '/home/mirondanro/DevGEMSFIT/devDanFit/gemfit/Tests/CASH/CSH-gc65-exp_comp.csv'
 WITH DELIMITER ','
 CSV HEADER;
 
