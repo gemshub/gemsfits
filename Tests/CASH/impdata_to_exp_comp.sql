@@ -1,16 +1,18 @@
-﻿-- fills in the experiments table
+﻿-- fills in the experiments table, for more components you have to copy paste the query for H2O and do the necessary changes for the new component in the
+-- SELECT  h2o_l <-- name of new component column in the impdata.expcsd table, WHERE c.name = 'SiO2' <-- name of new component in the public.components table.
+--DELETE FROM public.results_aq;
+--DELETE FROM public.results_ss;
 --DELETE FROM public.exp_comp;
 --DELETE FROM public.experiments;
---ALTER SEQUENCE experiments_experiment_id_seq RESTART WITH SELECT COUNT(*) FROM experiments;
+--ALTER SEQUENCE experiments_experiment_id_seq RESTART WITH 1; -- restarts the serial counter from 1
 
-SELECT SETVAL((SELECT pg_get_serial_sequence('experiments', 'experiment_id')), (SELECT max(experiment_id) FROM experiments)+1, false);
+SELECT SETVAL((SELECT pg_get_serial_sequence('experiments', 'experiment_id')), (SELECT max(experiment_id) FROM experiments)+1, false); -- keeps the serial counter at the highest id+1.
 
 INSERT INTO public.experiments (temperature, pressure, reference) SELECT t_c, p_bar, expsetid FROM impdata.expcsd;
 
-
 -- fills in the exp_comp table
-DROP TABLE temp1;
-CREATE TABLE temp1
+DROP TABLE impdata.temp1;
+CREATE TABLE impdata.temp1
 (
   ID serial,
   id_exp integer, 
@@ -20,10 +22,10 @@ CREATE TABLE temp1
 WITH (
   OIDS=TRUE
 );
-ALTER TABLE temp1
+ALTER TABLE impdata.temp1
   OWNER TO postgres;
-DROP TABLE temp2;
-CREATE TABLE temp2
+DROP TABLE impdata.temp2;
+CREATE TABLE impdata.temp2
 (
   ID serial,
   id_exp integer, 
@@ -33,63 +35,120 @@ CREATE TABLE temp2
 WITH (
   OIDS=TRUE
 );
-ALTER TABLE temp2
+ALTER TABLE impdata.temp2
   OWNER TO postgres;
 
- -- H2O
-
-DELETE FROM temp1;
-INSERT INTO temp1 (id_exp) 
+-- H2O
+-- adds id_exp column to temp1
+DELETE FROM impdata.temp1;
+INSERT INTO impdata.temp1 (id_exp) 
 SELECT  experiment_id FROM public.experiments WHERE experiment_id > ((SELECT count(*) FROM public.experiments) - (SELECT count(*) FROM impdata.expcsd)) ORDER BY experiment_id;
-
-DELETE FROM temp2;
-INSERT INTO temp2 (quantity) 
+-- adds column quantity to temp2
+DELETE FROM impdata.temp2;
+INSERT INTO impdata.temp2 (quantity) 
 SELECT  h2o_l FROM impdata.expcsd;
-
-UPDATE temp1 SET quantity = temp2.quantity FROM temp2 WHERE temp1.id=temp2.id;
-UPDATE temp1 SET id_comp = (SELECT component_id from public.components c WHERE c.name = 'H2O');
-
-SELECT * FROM temp1;
-
-INSERT INTO public.exp_comp (id_exp, id_comp, quantity) SELECT id_exp, id_comp, quantity FROM temp1;
+-- joins temp1 and temp2
+UPDATE impdata.temp1 SET quantity = 1000*temp2.quantity FROM impdata.temp2 WHERE temp1.id=temp2.id;
+UPDATE impdata.temp1 SET id_comp = (SELECT component_id from public.components c WHERE c.name = 'H2O');
+-- adds the joined table to exp_comp
+INSERT INTO public.exp_comp (id_exp, id_comp, quantity) SELECT id_exp, id_comp, quantity FROM impdata.temp1;
 
  -- SiO2
 
-DELETE FROM temp1;
-INSERT INTO temp1 (id_exp) 
+DELETE FROM impdata.temp1;
+INSERT INTO impdata.temp1 (id_exp) 
 SELECT  experiment_id FROM public.experiments WHERE experiment_id > ((SELECT count(*) FROM public.experiments) - (SELECT count(*) FROM impdata.expcsd)) ORDER BY experiment_id;
 
-DELETE FROM temp2;
-INSERT INTO temp2 (quantity) 
+DELETE FROM impdata.temp2;
+INSERT INTO impdata.temp2 (quantity) 
 SELECT  sio2 FROM impdata.expcsd;
 
-UPDATE temp1 SET quantity = temp2.quantity FROM temp2 WHERE temp1.id=temp2.id;
-UPDATE temp1 SET id_comp = (SELECT component_id from public.components c WHERE c.name = 'SiO2');
+UPDATE impdata.temp1 SET quantity = 60.0843*temp2.quantity FROM impdata.temp2 WHERE temp1.id=temp2.id;
+UPDATE impdata.temp1 SET id_comp = (SELECT component_id from public.components c WHERE c.name = 'SiO2');
 
-SELECT * FROM temp1;
-
-INSERT INTO public.exp_comp (id_exp, id_comp, quantity) SELECT id_exp, id_comp, quantity FROM temp1;
+INSERT INTO public.exp_comp (id_exp, id_comp, quantity) SELECT id_exp, id_comp, quantity FROM impdata.temp1;
 
  -- Ca(OH)2
 
-DELETE FROM temp1;
-INSERT INTO temp1 (id_exp) 
+DELETE FROM impdata.temp1;
+INSERT INTO impdata.temp1 (id_exp) 
 SELECT  experiment_id FROM public.experiments WHERE experiment_id > ((SELECT count(*) FROM public.experiments) - (SELECT count(*) FROM impdata.expcsd)) ORDER BY experiment_id;
 
-DELETE FROM temp2;
-INSERT INTO temp2 (quantity) 
+DELETE FROM impdata.temp2;
+INSERT INTO impdata.temp2 (quantity) 
 SELECT  caoh2 FROM impdata.expcsd;
 
-UPDATE temp1 SET quantity = temp2.quantity FROM temp2 WHERE temp1.id=temp2.id;
-UPDATE temp1 SET id_comp = (SELECT component_id from public.components c WHERE c.name = 'Ca(OH)2');
+UPDATE impdata.temp1 SET quantity = 74.09268*temp2.quantity FROM impdata.temp2 WHERE temp1.id=temp2.id;
+UPDATE impdata.temp1 SET id_comp = (SELECT component_id from public.components c WHERE c.name = 'Ca(OH)2');
 
-SELECT * FROM temp1;
+INSERT INTO public.exp_comp (id_exp, id_comp, quantity) SELECT id_exp, id_comp, quantity FROM impdata.temp1;
 
-INSERT INTO public.exp_comp (id_exp, id_comp, quantity) SELECT id_exp, id_comp, quantity FROM temp1;
+
+ -- Al(OH)3
+
+DELETE FROM impdata.temp1;
+INSERT INTO impdata.temp1 (id_exp) 
+SELECT  experiment_id FROM public.experiments WHERE experiment_id > ((SELECT count(*) FROM public.experiments) - (SELECT count(*) FROM impdata.expcsd)) ORDER BY experiment_id;
+
+DELETE FROM impdata.temp2;
+INSERT INTO impdata.temp2 (quantity) 
+SELECT  aloh3 FROM impdata.expcsd;
+
+UPDATE impdata.temp1 SET quantity = 78.0035586*temp2.quantity FROM impdata.temp2 WHERE temp1.id=temp2.id;
+UPDATE impdata.temp1 SET id_comp = (SELECT component_id from public.components c WHERE c.name = 'Al(OH)3');
+
+INSERT INTO public.exp_comp (id_exp, id_comp, quantity) SELECT id_exp, id_comp, quantity FROM impdata.temp1;
+
+
+ -- NaOH
+
+DELETE FROM impdata.temp1;
+INSERT INTO impdata.temp1 (id_exp) 
+SELECT  experiment_id FROM public.experiments WHERE experiment_id > ((SELECT count(*) FROM public.experiments) - (SELECT count(*) FROM impdata.expcsd)) ORDER BY experiment_id;
+
+DELETE FROM impdata.temp2;
+INSERT INTO impdata.temp2 (quantity) 
+SELECT  naoh FROM impdata.expcsd;
+
+UPDATE impdata.temp1 SET quantity = 39.99710928*temp2.quantity FROM impdata.temp2 WHERE temp1.id=temp2.id;
+UPDATE impdata.temp1 SET id_comp = (SELECT component_id from public.components c WHERE c.name = 'NaOH');
+
+INSERT INTO public.exp_comp (id_exp, id_comp, quantity) SELECT id_exp, id_comp, quantity FROM impdata.temp1;
+
+
+ -- KOH
+
+DELETE FROM impdata.temp1;
+INSERT INTO impdata.temp1 (id_exp) 
+SELECT  experiment_id FROM public.experiments WHERE experiment_id > ((SELECT count(*) FROM public.experiments) - (SELECT count(*) FROM impdata.expcsd)) ORDER BY experiment_id;
+
+DELETE FROM impdata.temp2;
+INSERT INTO impdata.temp2 (quantity) 
+SELECT  koh FROM impdata.expcsd;
+
+UPDATE impdata.temp1 SET quantity = 56.10564*temp2.quantity FROM impdata.temp2 WHERE temp1.id=temp2.id;
+UPDATE impdata.temp1 SET id_comp = (SELECT component_id from public.components c WHERE c.name = 'KOH');
+
+INSERT INTO public.exp_comp (id_exp, id_comp, quantity) SELECT id_exp, id_comp, quantity FROM impdata.temp1;
+
+ -- CO2
+
+DELETE FROM impdata.temp1;
+INSERT INTO impdata.temp1 (id_exp) 
+SELECT  experiment_id FROM public.experiments WHERE experiment_id > ((SELECT count(*) FROM public.experiments) - (SELECT count(*) FROM impdata.expcsd)) ORDER BY experiment_id;
+
+DELETE FROM impdata.temp2;
+INSERT INTO impdata.temp2 (quantity) 
+SELECT  co2 FROM impdata.expcsd;
+
+UPDATE impdata.temp1 SET quantity = 44.0095*temp2.quantity FROM impdata.temp2 WHERE temp1.id=temp2.id;
+UPDATE impdata.temp1 SET id_comp = (SELECT component_id from public.components c WHERE c.name = 'CO2');
+
+INSERT INTO public.exp_comp (id_exp, id_comp, quantity) SELECT id_exp, id_comp, quantity FROM impdata.temp1;
+
+DELETE FROM public.exp_comp WHERE quantity IS NULL; -- deletes empty element fields
 
 -- sql queries for deleting experiments if by mistake we executed the same querie 2 times
-
 --DELETE FROM public.exp_comp WHERE id_exp > ((SELECT count(*) FROM public.experiments) - 2*(SELECT count(*) FROM impdata.expcsd));
-
 --DELETE FROM public.experiments WHERE experiment_id > ((SELECT count(*) FROM public.experiments) - 2*(SELECT count(*) FROM impdata.expcsd));
 

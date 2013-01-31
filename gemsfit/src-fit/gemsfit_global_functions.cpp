@@ -290,6 +290,9 @@ cout<<"in StdState_gems3k_wrap ..."<<endl;
             if (i==nIC-1) {
                 new_moles_IC[i]=0.;
             }
+            if (i==2) {
+                new_moles_IC[i]=2; // NITT
+            }
         }
 //		bIC = new double[ nIC ];
 
@@ -394,7 +397,7 @@ cout << "   node pressure from dbr file: " << node->cP() << endl;
         for( i = start; i < sys->data_meas->allexp.size() ; i +=step )
         {
 
-            if ( !sys->data_meas->datasource )
+            if ( !sys->data_meas->datasource || sys->data_meas->datasource == 2 )
             {
                 int lenght = sys->system_name.size();
                 input_dbr_file_name = sys->system_name.substr(0, lenght-7);
@@ -435,25 +438,71 @@ cout << "   node pressure from dbr file: " << node->cP() << endl;
                 if (sys->data_meas->allexp[i]->component_name[j] == "H2O")
                 {
                     ICndx = node->IC_name_to_xDB("H");
-                    new_moles_IC[ICndx] += 2*sys->data_meas->allexp[i]->component_amount[j]/18.01528 + 2*sys->data_meas->allexp[i]->component_amount[j]/1000*1e-05; // adds 1e-05 moles of H2 for each kg og H2O
+                    new_moles_IC[ICndx] += 2*sys->data_meas->allexp[i]->component_amount[j]/18.01528 + 2.123456*sys->data_meas->allexp[i]->component_amount[j]/1000*1e-05; // adds 1e-05 moles of H2 for each kg og H2O
                     // cout << new_moles_IC[ICndx] << endl;
                     ICndx = node->IC_name_to_xDB("O");
-                    new_moles_IC[ICndx] +=  sys->data_meas->allexp[i]->component_amount[j]/18.01528;
+                    new_moles_IC[ICndx] +=  sys->data_meas->allexp[i]->component_amount[j]/18.01528 /*+ 3*sys->data_meas->allexp[i]->component_amount[j]/1000*1e-03*/;
                 }
                 else if (sys->data_meas->allexp[i]->component_name[j] == "SiO2")
                 {
                     ICndx = node->IC_name_to_xDB("Si");
                     new_moles_IC[ICndx] +=  sys->data_meas->allexp[i]->component_amount[j]/60.0843;
+                   // cout << new_moles_IC[ICndx]<<endl;
                     ICndx = node->IC_name_to_xDB("O");
                     new_moles_IC[ICndx] +=  2*sys->data_meas->allexp[i]->component_amount[j]/60.0843;
                 }
                 else if (sys->data_meas->allexp[i]->component_name[j] == "Al2O3")
                 {
                     ICndx = node->IC_name_to_xDB("Al");
-                    if (ICndx > 0) {
-                    new_moles_IC[ICndx] +=  2*sys->data_meas->allexp[i]->component_amount[j]/101.9612772; }
+                    new_moles_IC[ICndx] +=  2*sys->data_meas->allexp[i]->component_amount[j]/101.9612772;
                     ICndx = node->IC_name_to_xDB("O");
                     new_moles_IC[ICndx] +=  3*sys->data_meas->allexp[i]->component_amount[j]/101.9612772;
+                }
+                else if (sys->data_meas->allexp[i]->component_name[j] == "Al(OH)3")
+                {
+                    ICndx = node->IC_name_to_xDB("Al");
+                    new_moles_IC[ICndx] +=  1*sys->data_meas->allexp[i]->component_amount[j]/78.0035586;
+                    ICndx = node->IC_name_to_xDB("H");
+                    new_moles_IC[ICndx] +=  3*sys->data_meas->allexp[i]->component_amount[j]/78.0035586;
+                    ICndx = node->IC_name_to_xDB("O");
+                    new_moles_IC[ICndx] +=  3*sys->data_meas->allexp[i]->component_amount[j]/78.0035586;
+                }
+                else if (sys->data_meas->allexp[i]->component_name[j] == "Ca(OH)2")
+                {
+                    ICndx = node->IC_name_to_xDB("Ca");
+                    new_moles_IC[ICndx] +=  1*sys->data_meas->allexp[i]->component_amount[j]/74.09268;
+                   // cout << new_moles_IC[ICndx]<<endl;
+                    ICndx = node->IC_name_to_xDB("H");
+                    new_moles_IC[ICndx] +=  2*sys->data_meas->allexp[i]->component_amount[j]/74.09268;
+                   // cout << new_moles_IC[ICndx]<<endl;
+                    ICndx = node->IC_name_to_xDB("O");
+                    //cout << new_moles_IC[ICndx]<<endl;
+                    new_moles_IC[ICndx] +=  2*sys->data_meas->allexp[i]->component_amount[j]/74.09268;
+                }
+                else if (sys->data_meas->allexp[i]->component_name[j] == "NaOH")
+                {
+                    ICndx = node->IC_name_to_xDB("Na");
+                    new_moles_IC[ICndx] +=  1*sys->data_meas->allexp[i]->component_amount[j]/39.99710928;
+                    ICndx = node->IC_name_to_xDB("H");
+                    new_moles_IC[ICndx] +=  1*sys->data_meas->allexp[i]->component_amount[j]/39.99710928;
+                    ICndx = node->IC_name_to_xDB("O");
+                    new_moles_IC[ICndx] +=  1*sys->data_meas->allexp[i]->component_amount[j]/39.99710928;
+                }
+                else if (sys->data_meas->allexp[i]->component_name[j] == "KOH")
+                {
+                    ICndx = node->IC_name_to_xDB("K");
+                    new_moles_IC[ICndx] +=  1*sys->data_meas->allexp[i]->component_amount[j]/56.10564;
+                    ICndx = node->IC_name_to_xDB("H");
+                    new_moles_IC[ICndx] +=  1*sys->data_meas->allexp[i]->component_amount[j]/56.10564;
+                    ICndx = node->IC_name_to_xDB("O");
+                    new_moles_IC[ICndx] +=  1*sys->data_meas->allexp[i]->component_amount[j]/56.10564;
+                }
+                else if (sys->data_meas->allexp[i]->component_name[j] == "CO2")
+                {
+                    ICndx = node->IC_name_to_xDB("C");
+                    new_moles_IC[ICndx] +=  1*sys->data_meas->allexp[i]->component_amount[j]/44.0095;
+                    ICndx = node->IC_name_to_xDB("O");
+                    new_moles_IC[ICndx] +=  2*sys->data_meas->allexp[i]->component_amount[j]/44.0095;
                 }
                 else if (sys->data_meas->allexp[i]->component_name[j] == "NaCl")
                 {
@@ -529,10 +578,17 @@ cout << " T_k  = " << T_k  << endl;
                 {
                     const char *elem_name;
                     elem_name = sys->data_meas->allexp[i]->name_elem[j].c_str();
+                    if (sys->data_meas->allexp[i]->name_elem[j] == "pH")
+                    {
+                    computed_value = pow(10,(-(node->Get_pH())));
+                    }
+                    else
+                    {
                     ICndx = node->IC_name_to_xDB(elem_name);
                     computed_value = node->Get_mIC(ICndx);
-                    fout << computed_value << endl;
-                    residual = pow( (computed_value - sys->data_meas->allexp[i]->solubility[j]), 2) / sys->data_meas->allexp[i]->solubility[j];
+                    }
+                    fout << elem_name << " " << computed_value << endl;
+                    residual = pow( (computed_value - sys->data_meas->allexp[i]->solubility[j]), 2) / /*pow(*/sys->data_meas->allexp[i]->solubility[j]/*, 2)*/;
 
 
                     //                // Store computed and measured values for Monte Carlo confidence interval generation

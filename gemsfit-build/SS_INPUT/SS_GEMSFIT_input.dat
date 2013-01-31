@@ -3,7 +3,7 @@
 ###############################################################################
 
 
-# DataManager: get measurement data from CSV file (0) or PostgreSQL database (1)
+# DataManager: get measurement data from CSV + dbr files (0), PostgreSQL database (1), PostgreSQL database + dbr files (2).
 <DatSource>
 1
 
@@ -21,7 +21,7 @@ miron64766
 
 # DataManager: database name
 <DatDB>
-solubility
+solcash
 
 # DataManager: database server 129.132.137.60
 <DatServer>
@@ -33,11 +33,11 @@ RDCqtz_h2o_nacl
 
 # name of the system that will be fitted SS_INPUT_CSV/qtz_h2o_csv_test-dat.lst for CSV file use SS_INPUT_CSV folder
 <SystemName>
-SS_INPUT/sol07jan2013-dat.lst
+SS_INPUT/AllDa3T-fwd-dat.lst
 
 # name of the species that will be fitted
 <FitSpeciesName>
-SiO2@
+CSH-T5C CSH-T2C CSH-TobH
 
 # Solubility comparison as log solubility 1 or molality 0
 <LogSolubility>
@@ -65,7 +65,7 @@ SiO2@
 
 # Optimization: specify algorithm GN_ISRES GN_ORIG_DIRECT GN_ORIG_DIRECT_L LN_COBYLA LN_BOBYQA GN_ISRES
 <OptAlgo>
-LN_COBYLA
+LN_BOBYQA
 
 # Optimization: Number of threads (default=1)
 <OptThreads>
@@ -73,11 +73,11 @@ LN_COBYLA
 
 # Optimization: stopping criterion -> specify relative tolerance (default = 1e-04) of function value
 <OptTolRel>
-1e-06
+1e-08
 
 # Optimization: stopping criterion -> specify absolute tolerance (default = 1e-04) of function value
 <OptTolAbs>
-1e-06
+1e-08
 
 # Optimization: specify max number of evaluations
 <OptMaxEval>

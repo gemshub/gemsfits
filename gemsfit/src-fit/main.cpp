@@ -129,7 +129,7 @@ if (do_what) {
     fout << "1. main.cpp line 124. Creating new SS_System_Properties" << endl;
 
     // GEMSFIT results file for all test runs. Keeps a log of all runs. The file has to be deleted manually.
-    const char path_[200] = "results_GEMSFIT/FIT.csv";
+    const char path_[200] = "results_GEMSFIT/FIT_results.csv";
     ofstream fout_;
     fout_.open(path_, ios::app);
     if( fout_.fail() )
@@ -203,9 +203,18 @@ if (do_what) {
 
             fout_<<"Reference Year Tcelsius Pbars measured computed residuals" << endl;
 
+            int k=0;
+            for (int l=0; l<ss_systems[0]->data_meas->allexp.size(); ++l) {
+                for (int m=0; m<ss_systems[0]->data_meas->allexp[l]->solubility.size(); ++m){
+                fout_<< ss_systems[0]->data_meas->allexp[l]->reference<<";"<< ss_systems[0]->data_meas->allexp[l]->TC<<";"<< ss_systems[0]->data_meas->allexp[l]->PG<<";" << ss_systems[0]->data_meas->allexp[l]->name_elem[m] <<";"<<setprecision(15)<<ss_systems[0]->measured_values_v[k]<<";"<<ss_systems[0]->computed_values_v[k]<<";"<< fabs(ss_newsys->computed_residuals_v[k]) << endl;
+                ++k;
+                }
+            }
+
+
             for (int k=0; k<ss_systems[0]->measured_values_v.size(); ++k) {
 
-                fout_<< ss_systems[0]->data_meas->allexp[k]->reference<<";"<< ss_systems[0]->data_meas->allexp[k]->TC<<";"<< ss_systems[0]->data_meas->allexp[k]->PG<<";"<<ss_systems[0]->measured_values_v[k]<<";"<<ss_systems[0]->computed_values_v[k]<<";"<< fabs(ss_newsys->computed_residuals_v[k]) << endl;
+             //    fout_<< ss_systems[0]->data_meas->allexp[k]->reference<<";"<< ss_systems[0]->data_meas->allexp[k]->TC<<";"<< ss_systems[0]->data_meas->allexp[k]->PG<<";"<<ss_systems[0]->measured_values_v[k]<<";"<<ss_systems[0]->computed_values_v[k]<<";"<< fabs(ss_newsys->computed_residuals_v[k]) << endl;
             }
             fout_<<endl<<endl;
             fout_.close();

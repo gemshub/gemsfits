@@ -1,6 +1,6 @@
 ﻿-- fills in the results_ss table
-DROP TABLE temp1;
-CREATE TABLE temp1
+DROP TABLE impdata.temp1;
+CREATE TABLE impdata.temp1
 (
   ID serial,
   id_exp integer, 
@@ -13,11 +13,11 @@ CREATE TABLE temp1
 WITH (
   OIDS=TRUE
 );
-ALTER TABLE temp1
+ALTER TABLE impdata.temp1
   OWNER TO postgres;
 
-DROP TABLE temp2;
-CREATE TABLE temp2
+DROP TABLE impdata.temp2;
+CREATE TABLE impdata.temp2
 (
   ID serial,
   amount real
@@ -25,11 +25,11 @@ CREATE TABLE temp2
 WITH (
   OIDS=TRUE
 );
-ALTER TABLE temp2
+ALTER TABLE impdata.temp2
   OWNER TO postgres;
 
-DROP TABLE temp3;
-CREATE TABLE temp3
+DROP TABLE impdata.temp3;
+CREATE TABLE impdata.temp3
 (
   ID serial,
   log_amount real
@@ -37,11 +37,11 @@ CREATE TABLE temp3
 WITH (
   OIDS=TRUE
 );
-ALTER TABLE temp3
+ALTER TABLE impdata.temp3
   OWNER TO postgres;
 
-DROP TABLE temp4;
-CREATE TABLE temp4
+DROP TABLE impdata.temp4;
+CREATE TABLE impdata.temp4
 (
   ID serial,
   error real
@@ -49,11 +49,11 @@ CREATE TABLE temp4
 WITH (
   OIDS=TRUE
 );
-ALTER TABLE temp4
+ALTER TABLE impdata.temp4
   OWNER TO postgres;
 
-DROP TABLE temp5;
-CREATE TABLE temp5
+DROP TABLE impdata.temp5;
+CREATE TABLE impdata.temp5
 (
   ID serial,
   log_error real
@@ -61,31 +61,31 @@ CREATE TABLE temp5
 WITH (
   OIDS=TRUE
 );
-ALTER TABLE temp3
+ALTER TABLE impdata.temp3
   OWNER TO postgres;
 
---DELETE FROM public.results_ss;
+--DELETE FROM public.results_ss; -- to start with empty table
   
  -- Si
 
-DELETE FROM temp1;
-INSERT INTO temp1 (id_exp) 
+DELETE FROM impdata.temp1;
+INSERT INTO impdata.temp1 (id_exp) 
 SELECT  experiment_id FROM public.experiments WHERE experiment_id > ((SELECT count(*) FROM public.experiments) - (SELECT count(*) FROM impdata.expcsd)) ORDER BY experiment_id;
 
-DELETE FROM temp2;
-INSERT INTO temp2 (amount) 
+DELETE FROM impdata.temp2;
+INSERT INTO impdata.temp2 (amount) 
 SELECT  si_csh_mol FROM impdata.expresss;
 
-UPDATE temp1 SET amount = temp2.amount FROM temp2 WHERE temp1.id=temp2.id;
-UPDATE temp1 SET id_elem = (SELECT element_id from public.elements e WHERE e.name = 'Si');
+UPDATE impdata.temp1 SET amount = temp2.amount FROM impdata.temp2 WHERE temp1.id=temp2.id;
+UPDATE impdata.temp1 SET id_elem = (SELECT element_id from public.elements e WHERE e.name = 'Si');
 
 --DELETE FROM temp3;
 --INSERT INTO temp3 (log_solubility)
 --SELECT  ph_aq FROM impdata.expresaq;
 --UPDATE temp1 SET log_solubility = temp3.log_solubility FROM temp3 WHERE temp1.id=temp3.id;
 
-DELETE FROM temp4;
-INSERT INTO temp4 (error) 
+DELETE FROM impdata.temp4;
+INSERT INTO impdata.temp4 (error) 
 SELECT  ca_csh_error FROM impdata.expresss;
 --UPDATE temp1 SET error = temp4.error FROM temp4 WHERE temp1.id=temp4.id;
 
@@ -94,43 +94,142 @@ SELECT  ca_csh_error FROM impdata.expresss;
 --SELECT  ph_error FROM impdata.expresaq;
 --UPDATE temp1 SET log_error = temp5.log_error FROM temp5 WHERE temp1.id=temp5.id;
 
-SELECT * FROM temp1;
+SELECT * FROM impdata.temp1;
 INSERT INTO public.results_ss (id_exp, id_elem, amount) 
-SELECT id_exp, id_elem, amount FROM temp1;
+SELECT id_exp, id_elem, amount FROM impdata.temp1;
 
 
  -- Ca
 
-DELETE FROM temp1;
-INSERT INTO temp1 (id_exp) 
+DELETE FROM impdata.temp1;
+INSERT INTO impdata.temp1 (id_exp) 
 SELECT  experiment_id FROM public.experiments WHERE experiment_id > ((SELECT count(*) FROM public.experiments) - (SELECT count(*) FROM impdata.expcsd)) ORDER BY experiment_id;
 
-DELETE FROM temp2;
-INSERT INTO temp2 (amount) 
+DELETE FROM impdata.temp2;
+INSERT INTO impdata.temp2 (amount) 
 SELECT  ca_csh_mol FROM impdata.expresss;
 
-UPDATE temp1 SET amount = temp2.amount FROM temp2 WHERE temp1.id=temp2.id;
-UPDATE temp1 SET id_elem = (SELECT element_id from public.elements e WHERE e.name = 'Ca');
+UPDATE impdata.temp1 SET amount = temp2.amount FROM impdata.temp2 WHERE temp1.id=temp2.id;
+UPDATE impdata.temp1 SET id_elem = (SELECT element_id from public.elements e WHERE e.name = 'Ca');
 
 --DELETE FROM temp3;
 --INSERT INTO temp3 (log_solubility)
 --SELECT  ph_aq FROM impdata.expresaq;
 --UPDATE temp1 SET log_solubility = temp3.log_solubility FROM temp3 WHERE temp1.id=temp3.id;
 
-DELETE FROM temp4;
-INSERT INTO temp4 (error) 
+DELETE FROM impdata.temp4;
+INSERT INTO impdata.temp4 (error) 
 SELECT  ca_csh_error FROM impdata.expresss;
-UPDATE temp1 SET error = temp4.error FROM temp4 WHERE temp1.id=temp4.id;
+UPDATE impdata.temp1 SET error = temp4.error FROM impdata.temp4 WHERE temp1.id=temp4.id;
 
 --DELETE FROM temp5;
 --INSERT INTO temp5 (log_error)
 --SELECT  ph_error FROM impdata.expresaq;
 --UPDATE temp1 SET log_error = temp5.log_error FROM temp5 WHERE temp1.id=temp5.id;
 
-SELECT * FROM temp1;
+SELECT * FROM impdata.temp1;
 INSERT INTO public.results_ss (id_exp, id_elem, amount, error) 
-SELECT id_exp, id_elem, amount, error FROM temp1;
+SELECT id_exp, id_elem, amount, error FROM impdata.temp1;
 
+
+ -- Al
+
+DELETE FROM impdata.temp1;
+INSERT INTO impdata.temp1 (id_exp) 
+SELECT  experiment_id FROM public.experiments WHERE experiment_id > ((SELECT count(*) FROM public.experiments) - (SELECT count(*) FROM impdata.expcsd)) ORDER BY experiment_id;
+
+DELETE FROM impdata.temp2;
+INSERT INTO impdata.temp2 (amount) 
+SELECT  al_csh_mol FROM impdata.expresss;
+
+UPDATE impdata.temp1 SET amount = temp2.amount FROM impdata.temp2 WHERE temp1.id=temp2.id;
+UPDATE impdata.temp1 SET id_elem = (SELECT element_id from public.elements e WHERE e.name = 'Al');
+
+--DELETE FROM temp3;
+--INSERT INTO temp3 (log_solubility)
+--SELECT  ph_aq FROM impdata.expresaq;
+--UPDATE temp1 SET log_solubility = temp3.log_solubility FROM temp3 WHERE temp1.id=temp3.id;
+
+DELETE FROM impdata.temp4;
+INSERT INTO impdata.temp4 (error) 
+SELECT  al_csh_error FROM impdata.expresss;
+UPDATE impdata.temp1 SET error = temp4.error FROM impdata.temp4 WHERE temp1.id=temp4.id;
+
+--DELETE FROM temp5;
+--INSERT INTO temp5 (log_error)
+--SELECT  ph_error FROM impdata.expresaq;
+--UPDATE temp1 SET log_error = temp5.log_error FROM temp5 WHERE temp1.id=temp5.id;
+
+SELECT * FROM impdata.temp1;
+INSERT INTO public.results_ss (id_exp, id_elem, amount, error) 
+SELECT id_exp, id_elem, amount, error FROM impdata.temp1;
+
+ -- Na
+
+DELETE FROM impdata.temp1;
+INSERT INTO impdata.temp1 (id_exp) 
+SELECT  experiment_id FROM public.experiments WHERE experiment_id > ((SELECT count(*) FROM public.experiments) - (SELECT count(*) FROM impdata.expcsd)) ORDER BY experiment_id;
+
+DELETE FROM impdata.temp2;
+INSERT INTO impdata.temp2 (amount) 
+SELECT  na_csh_mol FROM impdata.expresss;
+
+UPDATE impdata.temp1 SET amount = temp2.amount FROM impdata.temp2 WHERE temp1.id=temp2.id;
+UPDATE impdata.temp1 SET id_elem = (SELECT element_id from public.elements e WHERE e.name = 'Na');
+
+--DELETE FROM temp3;
+--INSERT INTO temp3 (log_solubility)
+--SELECT  ph_aq FROM impdata.expresaq;
+--UPDATE temp1 SET log_solubility = temp3.log_solubility FROM temp3 WHERE temp1.id=temp3.id;
+
+DELETE FROM impdata.temp4;
+INSERT INTO impdata.temp4 (error) 
+SELECT  na_csh_error FROM impdata.expresss;
+UPDATE impdata.temp1 SET error = temp4.error FROM impdata.temp4 WHERE temp1.id=temp4.id;
+
+--DELETE FROM temp5;
+--INSERT INTO temp5 (log_error)
+--SELECT  ph_error FROM impdata.expresaq;
+--UPDATE temp1 SET log_error = temp5.log_error FROM temp5 WHERE temp1.id=temp5.id;
+
+SELECT * FROM impdata.temp1;
+INSERT INTO public.results_ss (id_exp, id_elem, amount, error) 
+SELECT id_exp, id_elem, amount, error FROM impdata.temp1;
+
+
+ -- K
+
+DELETE FROM impdata.temp1;
+INSERT INTO impdata.temp1 (id_exp) 
+SELECT  experiment_id FROM public.experiments WHERE experiment_id > ((SELECT count(*) FROM public.experiments) - (SELECT count(*) FROM impdata.expcsd)) ORDER BY experiment_id;
+
+DELETE FROM impdata.temp2;
+INSERT INTO impdata.temp2 (amount) 
+SELECT  k_csh_mol FROM impdata.expresss;
+
+UPDATE impdata.temp1 SET amount = temp2.amount FROM impdata.temp2 WHERE temp1.id=temp2.id;
+UPDATE impdata.temp1 SET id_elem = (SELECT element_id from public.elements e WHERE e.name = 'K');
+
+--DELETE FROM temp3;
+--INSERT INTO temp3 (log_solubility)
+--SELECT  ph_aq FROM impdata.expresaq;
+--UPDATE temp1 SET log_solubility = temp3.log_solubility FROM temp3 WHERE temp1.id=temp3.id;
+
+DELETE FROM impdata.temp4;
+INSERT INTO impdata.temp4 (error) 
+SELECT  k_csh_error FROM impdata.expresss;
+UPDATE impdata.temp1 SET error = temp4.error FROM impdata.temp4 WHERE temp1.id=temp4.id;
+
+--DELETE FROM temp5;
+--INSERT INTO temp5 (log_error)
+--SELECT  ph_error FROM impdata.expresaq;
+--UPDATE temp1 SET log_error = temp5.log_error FROM temp5 WHERE temp1.id=temp5.id;
+
+SELECT * FROM impdata.temp1;
+INSERT INTO public.results_ss (id_exp, id_elem, amount, error) 
+SELECT id_exp, id_elem, amount, error FROM impdata.temp1;
+
+DELETE FROM public.results_ss WHERE amount IS NULL; -- deletes empty element fields
 
 -- sql queries for deleting experiments if by mistake we executed the same querie 2 times
 

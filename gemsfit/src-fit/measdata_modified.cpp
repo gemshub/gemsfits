@@ -264,7 +264,7 @@ void SS_Data_Manager::get_DB(  )
 
      // Declare cursor variables - SQL comands for geting and selecting data form the db //
 
-     char id_exp_ecpg_1[256] = "declare id_exp cursor for SELECT id FROM "; const char * id_exp_ecpg;
+     char id_exp_ecpg_1[256] = "declare id_exp cursor for SELECT experiment_id FROM "; const char * id_exp_ecpg;
      char name_exp_ecpg_1[256] = "declare name_exp cursor for SELECT name FROM "; const char * name_exp_ecpg;
      char T_exp_ecpg_1[256] = "declare T_exp cursor for SELECT temperature FROM "; const char * T_exp_ecpg;
      char P_exp_ecpg_1[256] = "declare P_exp cursor for SELECT pressure FROM "; const char * P_exp_ecpg;
@@ -274,7 +274,7 @@ void SS_Data_Manager::get_DB(  )
      char unique_TP_ecpg_1[256] = "declare unique_TP cursor for SELECT DISTINCT temperature, pressure FROM "; const char * unique_TP_ecpg;
 
      // sql query to select and count all data form experiments table
-     char meas[100] = "SELECT COUNT ( * ) id FROM "; const char* meas_table;
+     char meas[100] = "SELECT COUNT ( * ) experiment_id FROM "; const char* meas_table;
      // sql query to select and count all unique TP experiments table
      char unique_TP[120] ="SELECT COUNT ( * ) pressure FROM ( SELECT DISTINCT temperature, pressure FROM experiments ) AS unique_TP";
 
@@ -314,7 +314,7 @@ void SS_Data_Manager::get_DB(  )
 
      string tablename  ( "experiments ORDER BY pressure" ); // for sorted values
      string tablename2 ( "experiments" );
-     string tablenamex ( "experiments ORDER BY id" ); // to have order in the experimetns, avoid some strange sql behaviour
+     string tablenamex ( "experiments ORDER BY experiment_id" ); // to have order in the experimetns, avoid some strange sql behaviour
      strcat(meas, tablename2.c_str());
      meas_table = meas;
 
@@ -528,8 +528,8 @@ void SS_Data_Manager::get_DB(  )
          std::string I = ss.str(); // transforming the i th experiment counter into a string
 
          /* declare name_comp cursor variables */
-         char name_comp_ecpg_1[256] ="declare all_comp cursor for SELECT components.name, exp_comp.quantity, exp_comp.units FROM exp_comp LEFT JOIN components ON components.id = exp_comp.id_comp WHERE exp_comp.id_exp = "; const char * name_comp_ecpg;
-         char count_name_comp_ecpg_1[256] ="SELECT COUNT (*) id_comp FROM exp_comp LEFT JOIN components ON components.id = exp_comp.id_comp WHERE exp_comp.id_exp = "; const char * count_name_comp_ecpg;
+         char name_comp_ecpg_1[256] ="declare all_comp cursor for SELECT components.name, exp_comp.quantity, exp_comp.units FROM exp_comp LEFT JOIN components ON components.component_id = exp_comp.id_comp WHERE exp_comp.id_exp = "; const char * name_comp_ecpg;
+         char count_name_comp_ecpg_1[256] ="SELECT COUNT (*) id_comp FROM exp_comp LEFT JOIN components ON components.component_id = exp_comp.id_comp WHERE exp_comp.id_exp = "; const char * count_name_comp_ecpg;
 
          strcat(name_comp_ecpg_1, I.c_str()); // adding the I string to the SQL comand
          strcat(count_name_comp_ecpg_1, I.c_str());
@@ -606,8 +606,8 @@ void SS_Data_Manager::get_DB(  )
          // ++++++++++++++++++++++++++  // reading results        // +++++++++++++++++++++++++++++++++ //
 
          /* declare name_comp cursor variables */
-         char name_elem_ecpg_1[256] ="declare all_elem cursor for SELECT elements.name, results.solubility, results.log_solubility, results.error FROM results LEFT JOIN elements ON elements.id = results.id_elem WHERE results.id_exp = "; const char * name_elem_ecpg;
-         char count_name_elem_ecpg_1[256] ="SELECT COUNT (*) id_elem FROM results LEFT JOIN elements ON elements.id = results.id_elem WHERE results.id_exp = "; const char * count_name_elem_ecpg;
+         char name_elem_ecpg_1[256] ="declare all_elem cursor for SELECT elements.name, results_aq.solubility, results_aq.log_solubility, results_aq.error FROM results_aq LEFT JOIN elements ON elements.element_id = results_aq.id_elem WHERE results_aq.id_exp = "; const char * name_elem_ecpg;
+         char count_name_elem_ecpg_1[256] ="SELECT COUNT (*) id_elem FROM results_aq LEFT JOIN elements ON elements.element_id = results_aq.id_elem WHERE results_aq.id_exp = "; const char * count_name_elem_ecpg;
 
          strcat(name_elem_ecpg_1, I.c_str()); // adding the I string to the SQL comand
          strcat(count_name_elem_ecpg_1, I.c_str());

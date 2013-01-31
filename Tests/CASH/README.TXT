@@ -12,8 +12,11 @@ The csv files will be imported, respectively, into work tables
 	impdata.expresss
 
 3. After the data for the exeprimental dataset were successfully imported, the following SQL scripts need to be executed in order to distribute the data over the main tables in "solcash" database: 
-(TBD by Dan)
 
+- to distribute data from table impdata.expcsd into table experiments and exp_comp execute impdata_to_exp_comp.sql
+- to distrubute data from table impdata.expresaq into table results_aq execute impdata_to_resultsaq.sql
+- to distrubute data from table impdata.expresss into table results_ss execute impdata_to_resultsss.sql
+(TBD if all queries should go into one sql file?)
 
 4. The input GEMS3K files for starting GEMSFIT calculations (for now, CSH3T model only) are provided in the "GEMS3K-files" folder. 
    	 

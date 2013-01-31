@@ -253,9 +253,25 @@ void SS_System_Properties::getsysprop( std_prop* sysprop )
     //    cout.setf(ios::fixed); // print without scientific notation
     //    cout << "The STD G0 at T= " << data_meas->TP_pairs[0][0] <<" P= " << data_meas->TP_pairs[1][0] << " of " << to_fit_species[2] << " = " << sysprop->std_gibbsTP[2][0] << endl;
 
+
+    // Density of H2O
+    const char pathr[200] = "output_GEMSFIT/RHOH2O.txt";
+    ofstream foutr;
+    foutr.open(pathr, ios::app);
+    if( foutr.fail() )
+    { cout<<"Output fileopen error"<<endl; exit(1); }
+
+    for (i=0; i<data_meas->allexp.size(); i++)
+    {
+        vector <double> DensAW;
+
+        foutr << data_meas->allexp[i]->PG <<" " << data_meas->allexp[i]->TC << " " << node->DenH2Ow(data_meas->allexp[i]->PG*100000, data_meas->allexp[i]->TC+273.15) << endl;
+    }
     delete node;
 
     param_stream.close();
+
+    foutr.close();
 
     fout.close();
 
