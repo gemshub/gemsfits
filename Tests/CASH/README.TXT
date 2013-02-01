@@ -19,4 +19,10 @@ The csv files will be imported, respectively, into work tables
 (TBD if all queries should go into one sql file?)
 
 4. The input GEMS3K files for starting GEMSFIT calculations (for now, CSH3T model only) are provided in the "GEMS3K-files" folder. 
+
+5. Add the GEMS3K files into the gemsfit-build SS_INPUT folder where you have also the SS_GEMSFIT_input.dat file used for changing settings in GEMSFIT
+
+6. The temporary output files (log, statistics, plots, etc.) of one FIT run are found in output_GEMSFIT folder (the folder is emptied before each run!!)
+
+7. The results of each run are stored in the FIT_results file in the results_GEMSFIT folder 
    	 
