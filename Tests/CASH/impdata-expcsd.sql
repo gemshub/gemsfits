@@ -8,13 +8,13 @@ CREATE TABLE impdata.expcsd
   T_C real,
   C_S_solid real, -- C/S ratio in solid part
   si_w_g_L real,
-  H2O_L real,
-  SiO2 real,
-  CaOH2 real,
-  AlOH3 real,
-  NaOH real,
-  KOH real,
-  CO2 real,
+  H2O_L real, -- in litres
+  SiO2 real, -- in moles
+  CaOH2 real, -- in moles
+  AlOH3 real, -- in moles
+  NaOH real, -- in moles
+  KOH real, -- in moles
+  CO2 real, -- in moles
   ende integer
 )
 WITH (

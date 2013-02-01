@@ -1,0 +1,187 @@
+###############################################################################
+##########       Standard state GEMSFIT configuration file       ##############
+###############################################################################
+
+
+# DataManager: get measurement data from CSV + dbr files (0), PostgreSQL database (1), PostgreSQL database + dbr files (2).
+<DatSource>
+1
+
+# DataManager: if <DatSource> == 0 then enter name of CSV file
+<DatCSVfile>
+SS_INPUT_CSV/solubility.csv
+
+# DataManager: username
+<DatUsername>
+postgres		  
+
+# DataManager: database password
+<DatPasswd>
+D1aph0rite
+
+# DataManager: database name
+<DatDB>
+solcash
+
+# DataManager: database server 129.132.137.60
+<DatServer>
+localhost
+
+# DataManager: Reaction dependent species table name
+<DatRDCTable>
+RDCqtz_h2o_nacl
+
+# name of the system that will be fitted SS_INPUT_CSV/qtz_h2o_csv_test-dat.lst for CSV file use SS_INPUT_CSV folder
+<SystemName>
+SS_INPUT/AllDa3T-fwd-dat.lst
+
+# name of the species that will be fitted
+<FitSpeciesName>
+CSH-T5C 
+# CSH-T2C CSH-TobH
+
+# Solubility comparison as log solubility 1 or molality 0
+<LogSolubility>
+0
+
+# Optimization: specify vector upper and lower bounds
+<OptUpBounds> 
+10 10 10 10
+ 
+<OptLoBounds> 
+-10 -10 -10 -10
+
+# Optimization: apply constraints (1=yes, 0=no)
+<OptConstraints>
+0
+
+# Optimization: specify parameter vectors for constraint function
+<OptUpConstraints>
+15000.0 15000.0  
+
+<OptLoConstraints>
+-10000.0 -10000.0 
+-10000.0 -10000.0 
+-10000.0 -10000.0 
+
+# Optimization: specify algorithm GN_ISRES GN_ORIG_DIRECT GN_ORIG_DIRECT_L LN_COBYLA LN_BOBYQA GN_ISRES
+<OptAlgo>
+LN_BOBYQA
+
+# Optimization: Number of threads (default=1)
+<OptThreads>
+1
+
+# Optimization: stopping criterion -> specify relative tolerance (default = 1e-04) of function value
+<OptTolRel>
+1e-08
+
+# Optimization: stopping criterion -> specify absolute tolerance (default = 1e-04) of function value
+<OptTolAbs>
+1e-08
+
+# Optimization: specify max number of evaluations
+<OptMaxEval>
+50000
+
+
+# Optimization: run hybrid optimization yes (1) / no (0)
+<OptHybridMode>
+0
+
+# Optimization: specify hybrid algorithm GN_ISRES LN_COBYLA LN_BOBYQA
+<OptHybridAlgo>
+LN_COBYLA
+
+# Optimization: hybrid stopping criterion -> specify relative tolerance (default = 1e-04) of function value
+<OptHybridTolRel>
+1e-03
+
+# Optimization: hybrid stopping criterion -> specify absolute tolerance (default = 1e-04) of function value
+<OptHybridTolAbs>
+1e-03
+
+# Optimization: specify max number of hybrid evaluations
+<OptHybridMaxEval>
+5000000 
+
+# Optimization: specify number of multistart runs (deactivate with 0)
+<OptNmultistart>
+0
+
+# Optimization: specify initial stepsize for local minimizers (factor will be multiplied to all optimization parameters); 0 => use default
+<OptInitStep>
+0
+
+# Optimization: Normalize bounds/constraints/fitting parameters with initial guess vector
+<OptNormParam>
+1
+
+# Generate bounds from initial guess vector: specify percentage deviation (user specific, user-defined bounds when set to -1)
+<OptBoundPerc>
+20
+
+# Optimization: perform optimization and statistics (0), only optimization with basic Statistics (1), only Statistics (2) with initial guesses as best fit parametters
+<OptDoWhat>
+0
+
+# Opitmization: if only Statistics is to be computed (no optimization) then enter best fit values here
+<OptStatOnlyBestFitParam>
+
+
+# Opitmization: if only Statistics is to be computed (no optimization) then enter best fit values here
+<OptStatOnlySSR>
+
+
+# Statistics: perform Monte Carlo runs -> yes (1)/no (0)
+<StatMCbool>
+0
+
+# Statistics: number of Monte Carlo runs for confidence interval generation
+<StatMCruns>
+10
+
+# Statistics: number of bars for printing results from Monte Carlo confidence interval generation
+<StatMCbars>
+10
+
+# Statistics: number of evaluations points per parameter for sensitivity evaluation
+<StatSensitivity>
+50
+
+# Statistics: number of function evaluations per axis (total value will be StatSSRSensitivity squared)
+<StatSSRSensitivity>
+10
+
+
+# Printing information: specifiy which datapoints to print to file and format of output file - !!!!NOT IMLEMENTED IN Std State fitting (DM)!!!!
+<PrintTemperatures>
+298.15
+
+<PrintPressures>
+1 
+
+<PrintMolalities>
+0.0001 - 4.5		
+
+<PrintFormat>
+eps
+
+<PrintFilename>
+Comp_vs_Meas
+
+<PrintMeasValueCode>
+0
+
+<PrintLabelXaxis>
+molality
+
+<PrintLabelYaxis>
+activity coefficient
+
+<PrintHead>
+System: test plot
+
+
+
+#
