@@ -8,7 +8,8 @@ CREATE TABLE impdata.temp1
   amount real,
   log_amount real,
   error real,
-  log_error real
+  log_error real,
+  id_phase integer
 )
 WITH (
   OIDS=TRUE
@@ -64,7 +65,7 @@ WITH (
 ALTER TABLE impdata.temp5
   OWNER TO postgres;
 
---DELETE FROM public.results_ss; -- to start with empty table
+DELETE FROM public.results_ss; -- to start with empty table
   
  -- Si
 
@@ -253,7 +254,13 @@ SELECT * FROM impdata.temp1;
 INSERT INTO public.results_ss (id_exp, id_elem, amount, error) 
 	SELECT id_exp, id_elem, amount, error FROM impdata.temp1;
 
+
+UPDATE public.results_ss SET id_phase = exp_phase.id_phase FROM public.exp_phase WHERE results_ss.id_exp = exp_phase.id_exp;
+
 DELETE FROM public.results_ss WHERE amount IS NULL; 
+
+
+
 -- deletes all rows with empty element fields
 
 -- sql queries for deleting experiments if by mistake we executed the same querie 2 times
