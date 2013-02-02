@@ -30,7 +30,7 @@ ALTER TABLE impdata.temp2
 
 
 
-DELETE FROM public.exp_phase;
+DELETE FROM public.phase_exp;
 ---DELETE FROM public.phase_elem;
 -- C-S-solid
 -- adds id_exp column to temp1
@@ -45,6 +45,6 @@ SELECT  c_s_solid FROM impdata.expcsd;
 UPDATE impdata.temp1 SET amount = temp2.amount FROM impdata.temp2 WHERE temp1.id=temp2.id;
 UPDATE impdata.temp1 SET id_phase = (SELECT phase_id from public.phases p WHERE p.name = 'C-S-H-3T-2');
 -- adds the joined table to exp_comp
-INSERT INTO public.exp_phase (id_exp, id_phase, amount) SELECT id_exp, id_phase, amount FROM impdata.temp1;
+INSERT INTO public.phase_exp (id_exp, id_phase, amount) SELECT id_exp, id_phase, amount FROM impdata.temp1;
 
 
