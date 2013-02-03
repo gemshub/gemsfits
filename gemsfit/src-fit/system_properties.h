@@ -89,6 +89,8 @@ class SS_System_Properties /*: public SS_Data_Manager*/
     /// the GEMSFIT configuration file (fixed to SS_GEMSFIT_input.dat)
     string param_file;
     /// name of species to be fitted.
+    bool weight_error;
+
     vs to_fit_species; // Dependent components in GEMS3K
     vi fit_species_ind; // indices of the fitted species in GEMS3K - read from node class after reading the experimental data.
 

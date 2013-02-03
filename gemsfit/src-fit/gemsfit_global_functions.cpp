@@ -588,7 +588,12 @@ cout << " T_k  = " << T_k  << endl;
                     computed_value = node->Get_mIC(ICndx);
                     }
                     fout << elem_name << " " << computed_value << endl;
-                    residual = pow( (computed_value - sys->data_meas->allexp[i]->solubility[j]), 2) / /*pow(*/sys->data_meas->allexp[i]->solubility[j]/*, 2)*/;
+                    residual = pow( (computed_value - sys->data_meas->allexp[i]->solubility[j]), 2) / pow(sys->data_meas->allexp[i]->solubility[j], 2);
+
+                    if ( (sys->data_meas->allexp[i]->error_sol[j] != 0) && sys->weight_error)
+                    {
+                        residual = residual*1/ /*pow(*/sys->data_meas->allexp[i]->error_sol[j]/*, 2)*/;
+                    }
 
 
                     //                // Store computed and measured values for Monte Carlo confidence interval generation

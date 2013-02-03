@@ -240,8 +240,10 @@ void SS_Data_Manager::get_DB(  )
 
      int i=0; // counts in primary experiments table
      int j=0; // counts in secondary tables
+     int k=0;
      int rows; // rows of primary experiments table
      int rows_c; // rows of secondary tables e.g. exp_comp or results
+     int rows_e; // count elements per pahse
 
      int id_exp_;               int id_exp_i;
      char name_exp_[256];       int name_exp_i;
@@ -255,6 +257,8 @@ void SS_Data_Manager::get_DB(  )
      char name_comp_[256];      int name_comp_i;
      double quant_comp_;        int quant_comp_i;
      char units_comp_[1];       int units_comp_i;
+     char name_phase_[256];     int name_phase_i;
+     double amount_phase_;      int amount_phase_i;
 
      char name_elem_[256];      int name_elem_i;
      double sol_elem_;          int sol_elem_i;
@@ -602,6 +606,158 @@ void SS_Data_Manager::get_DB(  )
          if (sqlca.sqlcode < 0) exit(1);}
 
          // ++++++++++++++++++++++++++  // END reading components // +++++++++++++++++++++++++++++++++ //
+
+         // ++++++++++++++++++++++++++  // reading phases // +++++++++++++++++++++++++++++++++ //
+
+
+         /* declare name_comp cursor variables */
+         char name_phase_ecpg_1[256] ="declare all_phases cursor for SELECT phases.name, phase_exp.amount FROM phase_exp LEFT JOIN phases ON phases.phase_id = phase_exp.id_phase WHERE phase_exp.id_exp = "; const char * name_phase_ecpg;
+         char count_name_phase_ecpg_1[256] ="SELECT COUNT (*) id_phase FROM phase_exp LEFT JOIN phases ON phases.phase_id = phase_exp.id_phase WHERE phase_exp.id_exp = "; const char * count_name_phase_ecpg;
+
+         strcat(name_phase_ecpg_1, I.c_str()); // adding the I string to the SQL comand
+         strcat(count_name_phase_ecpg_1, I.c_str());
+
+         count_name_phase_ecpg = count_name_phase_ecpg_1;
+         name_phase_ecpg = name_phase_ecpg_1;
+         // cout << name_phase_ecpg << endl;
+
+         // Count number of phases
+         { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, count_name_phase_ecpg, ECPGt_EOIT,
+         ECPGt_int,&(rows_c),(long)1,(long)1,sizeof(int),
+         ECPGt_NO_INDICATOR, NULL , 0L, 0L, 0L, ECPGt_EORT);
+
+         if (sqlca.sqlcode == ECPG_NOT_FOUND) sqlprint();
+         if (sqlca.sqlwarn[0] == 'W') sqlprint();
+         if (sqlca.sqlcode < 0) sqlprint();
+         if (sqlca.sqlcode < 0) exit(1);}
+         // cout<<"Number of phases for experiment " <<i+1<<" = "<<rows_c<<endl;
+
+         // Initializing the phases
+         for (j=0; j<rows_c; j++)
+         {
+             // allexp.push_back(new experiment);
+             allexp[i]->exp_phase.push_back(new experiment::phase);
+
+         }
+         //  cout << allexp[i]->component_name.size() << endl;
+
+         /* declare name_comp cursor for select phases and their amount assigned to each experiemnt from the phases table */
+         { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, name_phase_ecpg, ECPGt_EOIT, ECPGt_EORT);
+         if (sqlca.sqlwarn[0] == 'W') sqlprint();
+         if (sqlca.sqlcode < 0) sqlprint();
+         if (sqlca.sqlcode < 0) exit(1);}
+
+         // reading from database
+         for (j=0; j<rows_c; j++)
+         {
+             // reading name_comp //
+             { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch all_phases", ECPGt_EOIT,
+             ECPGt_char,&(name_phase_),(long)256,(long)1,(256)*sizeof(char),         // phase name
+             ECPGt_int,&(name_phase_i),(long)1,(long)1,sizeof(int),
+             ECPGt_double,&(amount_phase_),(long)1,(long)1,sizeof(double),            // phase amount
+             ECPGt_int,&(amount_phase_i),(long)1,(long)1,sizeof(int), ECPGt_EORT);
+
+             if (sqlca.sqlcode == ECPG_NOT_FOUND) sqlprint();
+             if (sqlca.sqlwarn[0] == 'W') sqlprint();
+             if (sqlca.sqlcode < 0) sqlprint();
+             if (sqlca.sqlcode < 0) exit(1);}
+
+             if( name_phase_i==0 ){ allexp[i]->exp_phase[j]->nameph = name_phase_; };
+             if( name_phase_i>0 ){ allexp[i]->exp_phase[j]->nameph = name_phase_; fout<<"name_comp was truncated while storing in host variable !!!"<<endl; };
+             //  cout<<"component nr. "<<j+1<<" from experiment "<<i+1<<" = "<<allexp[i]->component_name[j] <<endl;
+
+             if( amount_phase_i==0 ){ allexp[i]->exp_phase[j]->amount = amount_phase_; };
+             if( amount_phase_i>0 ){ allexp[i]->exp_phase[j]->amount = amount_phase_; fout<<"quant_comp was truncated while storing in host variable !!!"<<endl; };
+             //  cout<<"component "<<allexp[i]->component_name[j]<<" from experiment "<<i+1<<" = "<<allexp[i]->component_amount[j] <<endl;
+
+
+             // ++++++++++++++++++++++++++  // reading phases compoistions        // +++++++++++++++++++++++++++++++++ //
+             /// not yet implemented corectly works only for one phase per experiment
+
+             /* declare name_comp cursor variables */
+             char name_elem_ecpg_1[256] ="declare all_elemph cursor for SELECT elements.name, results_ss.amount, results_ss.error FROM results_ss LEFT JOIN elements ON elements.element_id = results_ss.id_elem WHERE results_ss.id_exp = "; const char * name_elem_ecpg;
+             char count_name_elem_ecpg_1[256] ="SELECT COUNT (*) id_elem FROM results_ss LEFT JOIN elements ON elements.element_id = results_ss.id_elem WHERE results_ss.id_exp = "; const char * count_name_elem_ecpg;
+
+             strcat(name_elem_ecpg_1, I.c_str()); // adding the I string to the SQL comand
+             strcat(count_name_elem_ecpg_1, I.c_str());
+
+             count_name_elem_ecpg = count_name_elem_ecpg_1;
+             name_elem_ecpg = name_elem_ecpg_1;
+             // cout << name_comp_ecpg << endl;
+
+             // Count number of componentes
+             { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, count_name_elem_ecpg, ECPGt_EOIT,
+             ECPGt_int,&(rows_e),(long)1,(long)1,sizeof(int),
+             ECPGt_NO_INDICATOR, NULL , 0L, 0L, 0L, ECPGt_EORT);
+
+             if (sqlca.sqlcode == ECPG_NOT_FOUND) sqlprint();
+             if (sqlca.sqlwarn[0] == 'W') sqlprint();
+             if (sqlca.sqlcode < 0) sqlprint();
+             if (sqlca.sqlcode < 0) exit(1);}
+             //  cout<<"Number of elements for experiment " <<i+1<<" = "<<rows_c<<endl;
+
+             // Initializing the elements
+             for (k=0; k<rows_e; k++)
+             {
+                 allexp[i]->exp_phase[j]->ph_name_elem.push_back("");
+                 allexp[i]->exp_phase[j]->ph_elem_amount.push_back(0.0);
+                 allexp[i]->exp_phase[j]->ph_error.push_back(0.0);
+             }
+
+             /* declare all_elem cursor for select elements and their solubility assigned to each experiemnt from the elements table */
+             { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, name_elem_ecpg, ECPGt_EOIT, ECPGt_EORT);
+             if (sqlca.sqlwarn[0] == 'W') sqlprint();
+             if (sqlca.sqlcode < 0) sqlprint();
+             if (sqlca.sqlcode < 0) exit(1);}
+
+             // reading from database
+             for (k=0; k<rows_e; k++)
+             {
+                 // reading name_elem //
+                 { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "fetch all_elemph", ECPGt_EOIT,
+                 ECPGt_char,&(name_elem_),(long)256,(long)1,(256)*sizeof(char),         // elements name
+                 ECPGt_int,&(name_elem_i),(long)1,(long)1,sizeof(int),
+                 ECPGt_double,&(sol_elem_),(long)1,(long)1,sizeof(double),              // elements amount
+                 ECPGt_int,&(sol_elem_i),(long)1,(long)1,sizeof(int),
+                 ECPGt_double,&(errsol_elem_),(long)1,(long)1,sizeof(double),           // error
+                 ECPGt_int,&(errsol_elem_i),(long)1,(long)1,sizeof(int), ECPGt_EORT);
+
+                 if (sqlca.sqlcode == ECPG_NOT_FOUND) sqlprint();
+                 if (sqlca.sqlwarn[0] == 'W') sqlprint();
+                 if (sqlca.sqlcode < 0) sqlprint();
+                 if (sqlca.sqlcode < 0) exit(1);}
+
+                 if( name_elem_i==0 ){ allexp[i]->exp_phase[j]->ph_name_elem[k] = name_elem_; };
+                 if( name_elem_i>0 ){ allexp[i]->exp_phase[j]->ph_name_elem[k] = name_elem_; fout<<"name_elem was truncated while storing in host variable !!!"<<endl; };
+                 //  cout<<"element nr. "<<j+1<<" from experiment "<<i+1<<" = "<<allexp[i]->name_elem[j] <<endl;
+
+                 if( sol_elem_i==0 ){ allexp[i]->exp_phase[j]->ph_elem_amount[k] = sol_elem_; };
+                 if( sol_elem_i>0 ){ allexp[i]->exp_phase[j]->ph_elem_amount[k] = sol_elem_; fout<<"sol_elem was truncated while storing in host variable !!!"<<endl; };
+                 //  cout<<"the solubility of element "<<allexp[i]->name_elem[j] <<" from experiment "<<i+1<<" = "<<allexp[i]->solubility[j] <<endl;
+
+                 if( errsol_elem_i==0 ){ allexp[i]->exp_phase[j]->ph_error[k] = errsol_elem_; };
+                 if( errsol_elem_i>0 ){ allexp[i]->exp_phase[j]->ph_error[k] = errsol_elem_; fout<<"errsol_elem was truncated while storing in host variable !!!"<<endl; };
+                 //  cout<<"the solubility error of element "<<allexp[i]->name_elem[j]<<" from experiment "<<i+1<<" = "<<allexp[i]->error_sol[j] <<endl;
+             }
+
+         // close all_elem cursor cursor
+         { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "close all_elemph", ECPGt_EOIT, ECPGt_EORT);
+
+         if (sqlca.sqlwarn[0] == 'W') sqlprint();
+         if (sqlca.sqlcode < 0) sqlprint();
+         if (sqlca.sqlcode < 0) exit(1);}
+
+         // ++++++++++++++++++++++++++  // END reading phases composition // +++++++++++++++++++++++++++++++++ //
+         }
+
+         // close name_phase cursor cursor
+         { ECPGdo(__LINE__, 0, 0, NULL, 0, ECPGst_normal, "close all_phases", ECPGt_EOIT, ECPGt_EORT);
+
+         if (sqlca.sqlwarn[0] == 'W') sqlprint();
+         if (sqlca.sqlcode < 0) sqlprint();
+         if (sqlca.sqlcode < 0) exit(1);}
+
+         // ++++++++++++++++++++++++++  // END reading phases // +++++++++++++++++++++++++++++++++ //
 
          // ++++++++++++++++++++++++++  // reading results        // +++++++++++++++++++++++++++++++++ //
 

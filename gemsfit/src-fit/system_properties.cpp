@@ -89,13 +89,14 @@ void SS_System_Properties::getsysprop( std_prop* sysprop )
     // Variable declarations
     vector<string> data;
     string line, allparam;
-    string SysName_s, SpecName_s, LogSolubility_s;
-    string sub_SysName, sub_SpecName, sub_LogSolubility;
+    string SysName_s, SpecName_s, LogSolubility_s, Weightederror_s;
+    string sub_SysName, sub_SpecName, sub_LogSolubility, sub_Weightederror;
     int pos_start, pos_end;
     unsigned int i, j;
     ifstream param_stream;
 
     // Keywords
+    string f6("<WeightedErrors>");
     string f7("<SystemName>");
     string f8("<LogSolubility>");
     string f9("<FitSpeciesName>");
@@ -145,6 +146,17 @@ void SS_System_Properties::getsysprop( std_prop* sysprop )
     {
         LogSolubility_ss >> sub_LogSolubility;
         sysprop->log_solubility = atoi(sub_LogSolubility.c_str());
+    }
+
+    // Weighted errors
+    pos_start = allparam.find(f6);
+    pos_end   = allparam.find(f4,pos_start);
+    Weightederror_s = allparam.substr((pos_start+f6.length()),(pos_end-pos_start-f6.length()));
+    istringstream Weightederror_ss(Weightederror_s);
+    for( i=0; i<1; i++)
+    {
+        Weightederror_ss >> sub_Weightederror;
+        weight_error = atoi(sub_Weightederror.c_str());
     }
 
     //species

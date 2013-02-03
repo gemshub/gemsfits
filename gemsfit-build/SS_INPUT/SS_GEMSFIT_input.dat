@@ -35,9 +35,13 @@ RDCqtz_h2o_nacl
 <SystemName>
 SS_INPUT/AllDa3T-fwd-dat.lst
 
-# name of the species that will be fitted
+# name of the species that will be fitted CSH-T2C CSH-TobH
 <FitSpeciesName>
-CSH-T5C CSH-T2C CSH-TobH
+CSH-TobH CSH-T2C CSH-T5C
+
+# Use weight errors 0 (false), 1 (true)
+<WeightedErrors>
+0
 
 # Solubility comparison as log solubility 1 or molality 0
 <LogSolubility>

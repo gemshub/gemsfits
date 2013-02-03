@@ -104,6 +104,19 @@ class SS_Data_Manager
             int TC;                        // temperature in C
             int PG;                        // pressure in bars
             string reference;              // reference Authors and year
+
+            struct phase
+            {
+                typedef vector<double>  double_v;
+                typedef vector<string>  string_v;
+
+                string nameph;
+                double amount;
+                string_v ph_name_elem;       // name of element in a phase
+                double_v ph_elem_amount;     // amount of an element in a phase
+                double_v ph_error;           // error of amount
+            };
+            vector<phase*> exp_phase;      // vector of phases measured in one experiment
         };
 
         vector<experiment*> allexp;        // vector with pointers to the all experiments
