@@ -100,7 +100,7 @@
 
 # vPS: Volumes of multicomponent phases, m3 (GEM output) [nPSb]
 <vPS>
-0.000984864648889926 0.0247986743993325 6.59697762700602e-05 
+0.000984864648877126 0.0247986743993325 6.59697762700602e-05 
 
 # mPS: Masses of multicomponent phases, kg (GEM output) [nPSb]
 <mPS>

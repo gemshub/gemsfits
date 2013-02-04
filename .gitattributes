@@ -1,4 +1,5 @@
 * text=auto !eol
+Tests/CASH/CSH-ch04-data.xls -text
 Tests/CASH/CSH-gc65-data.xls -text
 Tests/CASH/impdata_to_exp_comp.sql -text
 Tests/CASH/impdata_to_exp_phases.sql -text
@@ -6,6 +7,7 @@ Tests/CASH/impdata_to_resultsaq.sql -text
 Tests/CASH/impdata_to_resultsaqsql -text
 Tests/CASH/impdata_to_resultsss.sql -text
 Tests/CASH/solcash.backup -text
+Tests/CASH/solcash_gs65.backup -text
 Tests/CASH/solcash_new.backup -text
 Tests/SS_INPUT/SS_GEMSFIT_input.dat -text
 Tests/SS_INPUT/qtz_h2o_test-dat.lst -text

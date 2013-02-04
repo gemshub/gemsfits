@@ -65,7 +65,7 @@ WITH (
 ALTER TABLE impdata.temp5
   OWNER TO postgres;
 
-DELETE FROM public.results_ss; -- to start with empty table
+--DELETE FROM public.results_ss; -- to start with empty table
   
  -- Si
 
@@ -255,7 +255,7 @@ INSERT INTO public.results_ss (id_exp, id_elem, amount, error)
 	SELECT id_exp, id_elem, amount, error FROM impdata.temp1;
 
 
-UPDATE public.results_ss SET id_phase = exp_phase.id_phase FROM public.exp_phase WHERE results_ss.id_exp = exp_phase.id_exp;
+--UPDATE public.results_ss SET id_phase = exp_phase.id_phase FROM public.exp_phase WHERE results_ss.id_exp = exp_phase.id_exp;
 
 DELETE FROM public.results_ss WHERE amount IS NULL; 
 

@@ -5,6 +5,7 @@
 --DELETE FROM public.results_aq;
 --DELETE FROM public.results_ss;
 --DELETE FROM public.exp_comp;
+--DELETE FROM public.phase_exp;
 --DELETE FROM public.experiments;
 --ALTER SEQUENCE experiments_experiment_id_seq RESTART WITH 1; 
 -- restarts the serial counter from 1

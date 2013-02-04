@@ -35,15 +35,19 @@ RDCqtz_h2o_nacl
 <SystemName>
 SS_INPUT/AllDa3T-fwd-dat.lst
 
-# name of the species that will be fitted CSH-T2C CSH-TobH
+# name of the species whose g0 input values will be fitted    CSH-T2C CSH-TobH
 <FitSpeciesName>
-CSH-T5C  
+CSH-T5C
+
+# Use weight errors 0 (false), 1 (true)
+<WeightedErrors>
+0
 
 # Solubility comparison as log solubility 1 or molality 0
 <LogSolubility>
 0
 
-# Optimization: specify vector upper and lower bounds
+# Optimization: specify vector oupper and lower bounds
 <OptUpBounds> 
 10 10 10 10
  
@@ -118,7 +122,7 @@ LN_COBYLA
 
 # Generate bounds from initial guess vector: specify percentage deviation (user specific, user-defined bounds when set to -1)
 <OptBoundPerc>
-20
+0.1
 
 # Optimization: perform optimization and statistics (0), only optimization with basic Statistics (1), only Statistics (2) with initial guesses as best fit parametters
 <OptDoWhat>
@@ -150,7 +154,7 @@ LN_COBYLA
 
 # Statistics: number of function evaluations per axis (total value will be StatSSRSensitivity squared)
 <StatSSRSensitivity>
-10
+100
 
 
 # Printing information: specifiy which datapoints to print to file and format of output file - !!!!NOT IMLEMENTED IN Std State fitting (DM)!!!!

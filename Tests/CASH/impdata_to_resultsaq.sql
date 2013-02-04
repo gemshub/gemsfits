@@ -89,12 +89,12 @@ UPDATE impdata.temp1 SET log_solubility = temp3.log_solubility
 DELETE FROM impdata.temp4;
 INSERT INTO impdata.temp4 (error) 
 	SELECT  ph_error FROM impdata.expresaq;
---UPDATE impdata.temp1 SET error = 10^(-temp4.error) FROM impdata.temp4 WHERE impdata.temp1.id=temp4.id;
+UPDATE impdata.temp1 SET error = temp4.error*temp1.solubility FROM impdata.temp4 WHERE impdata.temp1.id=temp4.id;
 
 DELETE FROM impdata.temp5;
 INSERT INTO impdata.temp5 (log_error)
 	SELECT  ph_error FROM impdata.expresaq;
---UPDATE impdata.temp1 SET log_error = temp5.log_error FROM impdata.temp5 WHERE temp1.id=temp5.id;
+UPDATE impdata.temp1 SET log_error = temp5.log_error FROM impdata.temp5 WHERE temp1.id=temp5.id;
 
 SELECT * FROM impdata.temp1;
 INSERT INTO public.results_aq (id_exp, id_elem, solubility, 
@@ -128,7 +128,7 @@ UPDATE impdata.temp1 SET log_solubility = temp3.log_solubility
 DELETE FROM impdata.temp4;
 INSERT INTO impdata.temp4 (error) 
 	SELECT  lgsi_error FROM impdata.expresaq;
-UPDATE impdata.temp1 SET error = 10^temp4.error 
+UPDATE impdata.temp1 SET error = temp4.error*temp1.solubility 
 	FROM impdata.temp4 WHERE temp1.id=temp4.id;
 
 DELETE FROM impdata.temp5;
@@ -169,7 +169,7 @@ UPDATE impdata.temp1 SET log_solubility = temp3.log_solubility
 DELETE FROM impdata.temp4;
 INSERT INTO impdata.temp4 (error) 
 	SELECT  lgca_error FROM impdata.expresaq;
-UPDATE impdata.temp1 SET error = 10^temp4.error 
+UPDATE impdata.temp1 SET error = temp4.error*temp1.solubility 
 	FROM impdata.temp4 WHERE temp1.id=temp4.id;
 
 DELETE FROM impdata.temp5;
@@ -210,7 +210,7 @@ UPDATE impdata.temp1 SET log_solubility = temp3.log_solubility
 DELETE FROM impdata.temp4;
 INSERT INTO impdata.temp4 (error) 
 SELECT  lgal_error FROM impdata.expresaq;
-UPDATE impdata.temp1 SET error = 10^temp4.error FROM impdata.temp4 
+UPDATE impdata.temp1 SET error = temp4.error*temp1.solubility FROM impdata.temp4 
 	WHERE temp1.id=temp4.id;
 
 DELETE FROM impdata.temp5;
@@ -251,7 +251,7 @@ UPDATE impdata.temp1 SET log_solubility = temp3.log_solubility
 DELETE FROM impdata.temp4;
 INSERT INTO impdata.temp4 (error) 
 	SELECT  lgna_error FROM impdata.expresaq;
-UPDATE impdata.temp1 SET error = 10^temp4.error FROM impdata.temp4 
+UPDATE impdata.temp1 SET error = temp4.error*temp1.solubility FROM impdata.temp4 
 	WHERE temp1.id=temp4.id;
 
 DELETE FROM impdata.temp5;
@@ -292,7 +292,7 @@ UPDATE impdata.temp1 SET log_solubility = temp3.log_solubility
 DELETE FROM impdata.temp4;
 INSERT INTO impdata.temp4 (error) 
 	SELECT  lgk_error FROM impdata.expresaq;
-UPDATE impdata.temp1 SET error = 10^temp4.error FROM impdata.temp4 
+UPDATE impdata.temp1 SET error = temp4.error*temp1.solubility FROM impdata.temp4 
 	WHERE temp1.id=temp4.id;
 
 DELETE FROM impdata.temp5;
@@ -333,7 +333,7 @@ UPDATE impdata.temp1 SET log_solubility = temp3.log_solubility
 DELETE FROM impdata.temp4;
 INSERT INTO impdata.temp4 (error) 
 	SELECT  lgc_error FROM impdata.expresaq;
-UPDATE impdata.temp1 SET error = 10^temp4.error FROM impdata.temp4 
+UPDATE impdata.temp1 SET error = temp4.error*temp1.solubility FROM impdata.temp4 
 	WHERE temp1.id=temp4.id;
 
 DELETE FROM impdata.temp5;

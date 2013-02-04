@@ -30,7 +30,7 @@ ALTER TABLE impdata.temp2
 
 
 
-DELETE FROM public.phase_exp;
+--DELETE FROM public.phase_exp;
 ---DELETE FROM public.phase_elem;
 -- C-S-solid
 -- adds id_exp column to temp1
