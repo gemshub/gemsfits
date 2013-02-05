@@ -89,13 +89,14 @@ void SS_System_Properties::getsysprop( std_prop* sysprop )
     // Variable declarations
     vector<string> data;
     string line, allparam;
-    string SysName_s, SpecName_s, LogSolubility_s, Weightederror_s;
-    string sub_SysName, sub_SpecName, sub_LogSolubility, sub_Weightederror;
+    string SysName_s, SpecName_s, LogSolubility_s, Weightederror_s, Usesolidsolution_s;
+    string sub_SysName, sub_SpecName, sub_LogSolubility, sub_Weightederror, sub_Usesolidsolution;
     int pos_start, pos_end;
     unsigned int i, j;
     ifstream param_stream;
 
     // Keywords
+    string f5("<UseSolidSolutionComposition>");
     string f6("<WeightedErrors>");
     string f7("<SystemName>");
     string f8("<LogSolubility>");
@@ -157,6 +158,17 @@ void SS_System_Properties::getsysprop( std_prop* sysprop )
     {
         Weightederror_ss >> sub_Weightederror;
         weight_error = atoi(sub_Weightederror.c_str());
+    }
+
+    // Use solid solution composition
+    pos_start = allparam.find(f5);
+    pos_end   = allparam.find(f4,pos_start);
+    Usesolidsolution_s = allparam.substr((pos_start+f5.length()),(pos_end-pos_start-f5.length()));
+    istringstream Usesolidsolution_ss(Usesolidsolution_s);
+    for( i=0; i<1; i++)
+    {
+        Usesolidsolution_ss >> sub_Usesolidsolution;
+        use_solidsolution = atoi(sub_Usesolidsolution.c_str());
     }
 
     //species

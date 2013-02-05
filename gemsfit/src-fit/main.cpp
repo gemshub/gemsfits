@@ -209,6 +209,17 @@ if (do_what) {
                 fout_<< ss_systems[0]->data_meas->allexp[l]->reference<<";"<< ss_systems[0]->data_meas->allexp[l]->TC<<";"<< ss_systems[0]->data_meas->allexp[l]->PG<<";" << ss_systems[0]->data_meas->allexp[l]->name_elem[m] <<";"<<setprecision(15)<<ss_systems[0]->measured_values_v[k]<<";"<<ss_systems[0]->computed_values_v[k]<<";"<< fabs(ss_newsys->computed_residuals_v[k]) << endl;
                 ++k;
                 }
+
+                if (ss_systems[0]->use_solidsolution){
+                for (int m=0; m<ss_systems[0]->data_meas->allexp[l]->exp_phase.size(); ++m)
+                {
+                    for (int n=0; n<ss_systems[0]->data_meas->allexp[l]->exp_phase[m]->ph_name_elem.size(); ++n) {
+                        fout_<< ss_systems[0]->data_meas->allexp[l]->reference<<";"<< ss_systems[0]->data_meas->allexp[l]->TC<<";"<< ss_systems[0]->data_meas->allexp[l]->PG<<";" << ss_systems[0]->data_meas->allexp[l]->exp_phase[m]->ph_name_elem[n]<<"/Si" <<";"<<setprecision(15)<<ss_systems[0]->measured_values_v[k]<<";"<<ss_systems[0]->computed_values_v[k]<<";"<< fabs(ss_newsys->computed_residuals_v[k]) << endl;
+                        ++k;
+
+                    }
+                }
+                }
             }
 
 

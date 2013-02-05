@@ -197,7 +197,7 @@ cout<<"in StdState_gems3k_wrap ..."<<endl;
         // Temporary storage vectors
         vector<double> computed_values_temp;
         vector<double> measured_values_temp;
-        vector<double> computed_residuals_temp;
+        vector<double> computed_residuals_temp, computed_leastsquare_temp;
 
 
         // Clear already stored results
@@ -206,15 +206,16 @@ cout<<"in StdState_gems3k_wrap ..."<<endl;
         sys->computed_residuals_v.clear();
 
 
-        unsigned i;
-        int j, start, step, ierr;
+        unsigned i, j, k;
+        int start, step, ierr;
         long int NodeStatusCH, NodeHandle;
+        const char *elem_name, *phase_name;
         double sum_of_squared_residuals_sys_ = 0.0, residual = 0.0, P_pa, T_k, computed_value, log_computed_value, measured_value;
         char input_system_file_list_name[256];
         string input_dbr_file_name;
 
         // DATACH structure content
-        int nIC, nDC, nPH, ICndx;
+        int nIC, nDC, nPH, ICndx, PHndx;
         double* new_moles_IC;
         double* xDC_up;
         double* xDC_lo;
@@ -290,9 +291,12 @@ cout<<"in StdState_gems3k_wrap ..."<<endl;
             if (i==nIC-1) {
                 new_moles_IC[i]=0.;
             }
-            if (i==2) {
-                new_moles_IC[i]=2; // NITT
-            }
+        }
+
+        // if Nitt present assign two moles
+        if (node->IC_name_to_xDB("Nit") > -1) {
+            ICndx = node->IC_name_to_xDB("Nit");
+            new_moles_IC[ICndx]=2;
         }
 //		bIC = new double[ nIC ];
 
@@ -576,7 +580,6 @@ cout << " T_k  = " << T_k  << endl;
 
                 if (!sys->sysprop->log_solubility)
                 {
-                    const char *elem_name;
                     elem_name = sys->data_meas->allexp[i]->name_elem[j].c_str();
                     if (sys->data_meas->allexp[i]->name_elem[j] == "pH")
                     {
@@ -588,8 +591,10 @@ cout << " T_k  = " << T_k  << endl;
                     computed_value = node->Get_mIC(ICndx);
                     }
                     fout << elem_name << " " << computed_value << endl;
+
                     residual = pow( (computed_value - sys->data_meas->allexp[i]->solubility[j]), 2) / pow(sys->data_meas->allexp[i]->solubility[j], 2);
 
+                    // adding weight
                     if ( (sys->data_meas->allexp[i]->error_sol[j] != 0) && sys->weight_error)
                     {
                         residual = residual*1/ /*pow(*/sys->data_meas->allexp[i]->error_sol[j]/*, 2)*/;
@@ -602,32 +607,93 @@ cout << " T_k  = " << T_k  << endl;
 
                     //                // Store residuals for statistical analysis
                                     computed_residuals_temp.push_back(sys->data_meas->allexp[i]->solubility[j] - computed_value);
+                                    computed_leastsquare_temp.push_back(residual);
+
+                                    // Sum of squares
+                                    sum_of_squared_residuals_sys_ = sum_of_squared_residuals_sys_ + residual;
                  }
                  else // for log solubility - have to think about -log and +log values
                  {
-                     const char *elem_name;
-                     elem_name = sys->data_meas->allexp[i]->name_elem[j].c_str();
-                     ICndx = node->IC_name_to_xDB(elem_name);
-                     log_computed_value = log10 (node->Get_mIC(ICndx));
-                     fout << "Element " << elem_name << " has log solubility = " << log_computed_value << endl;
-                     residual = pow (log_computed_value - log10(sys->data_meas->allexp[i]->solubility[j]), 2) / log10(sys->data_meas->allexp[i]->solubility[j]);
 
+                     elem_name = sys->data_meas->allexp[i]->name_elem[j].c_str();
+                     if (sys->data_meas->allexp[i]->name_elem[j] == "pH")
+                     {
+                         log_computed_value = node->Get_pH();
+                     }
+                     else
+                     {
+                         ICndx = node->IC_name_to_xDB(elem_name);
+                         log_computed_value = log10 (node->Get_mIC(ICndx));
+                     }
+
+                     fout << "Element " << elem_name << " has log solubility = " << log_computed_value << endl;
+                     residual = pow (log_computed_value - sys->data_meas->allexp[i]->log_solubility[j], 2) / pow(sys->data_meas->allexp[i]->log_solubility[j], 2);
+//                     if ( (sys->data_meas->allexp[i]->error_sol[j] != 0) && sys->weight_error)
+//                     {
+//                         residual = residual*1/ /*pow(*/sys->data_meas->allexp[i]->error_sol[j]/*, 2)*/;
+//                     }
 
                         //                // Store computed and measured values for Monte Carlo confidence interval generation
                                         computed_values_temp.push_back(log_computed_value);
-                                        measured_values_temp.push_back(log10(sys->data_meas->allexp[i]->solubility[j]));
+                                        measured_values_temp.push_back(sys->data_meas->allexp[i]->log_solubility[j]);
 
                         //                // Store residuals for statistical analysis
-                                        computed_residuals_temp.push_back(log10(sys->data_meas->allexp[i]->solubility[j]) - log_computed_value);
+                                        computed_residuals_temp.push_back(sys->data_meas->allexp[i]->log_solubility[j] - log_computed_value);
+                                        computed_leastsquare_temp.push_back(residual);
+
+                                        // Sum of squares
+                                        sum_of_squared_residuals_sys_ = sum_of_squared_residuals_sys_ + residual;
                  }
              }
+
+
+
+             // Getting the amounts of elements k in phases j form experiments i and calculating the residuals
+            if (sys->use_solidsolution) {
+            for (j=0; j<sys->data_meas->allexp[i]->exp_phase.size(); ++j)
+             {
+                 phase_name =sys->data_meas->allexp[i]->exp_phase[j]->nameph.c_str();
+                 PHndx = node->Ph_name_to_xDB(phase_name);
+                 double* IC_in_PH;
+                 IC_in_PH = new double[ nIC ];
+                 node->Ph_BC(PHndx, IC_in_PH);
+
+                 for (k=0; k<sys->data_meas->allexp[i]->exp_phase[j]->ph_name_elem.size(); ++k)
+                 {
+                     int Sindx = node->IC_name_to_xDB("Si");
+                     elem_name = sys->data_meas->allexp[i]->exp_phase[j]->ph_name_elem[k].c_str();
+                     ICndx = node->IC_name_to_xDB(elem_name);
+                     computed_value = IC_in_PH[ICndx]/IC_in_PH[Sindx];
+
+                     fout << "In phase " << phase_name << " Element/Si molar ratio " << elem_name << "  = " << computed_value << endl;
+                     residual = pow( (computed_value - sys->data_meas->allexp[i]->exp_phase[j]->ph_elem_amount[k]), 2) / pow(sys->data_meas->allexp[i]->exp_phase[j]->ph_elem_amount[k], 2);
+                     if ( (sys->data_meas->allexp[i]->exp_phase[j]->ph_error[k] != 0) && sys->weight_error)
+                     {
+                         residual = residual*1/ /*pow(*/sys->data_meas->allexp[i]->exp_phase[j]->ph_error[k]/*, 2)*/;
+                     }
+
+                     //                // Store computed and measured values for Monte Carlo confidence interval generation
+                                     computed_values_temp.push_back(computed_value);
+                                     measured_values_temp.push_back(sys->data_meas->allexp[i]->exp_phase[j]->ph_elem_amount[k]);
+
+                     //                // Store residuals for statistical analysis
+                                     computed_residuals_temp.push_back(sys->data_meas->allexp[i]->exp_phase[j]->ph_elem_amount[k] - computed_value);
+                                     computed_leastsquare_temp.push_back(residual);
+
+
+                                     // Sum of squares
+                                     sum_of_squared_residuals_sys_ = sum_of_squared_residuals_sys_ + residual;
+                 }
+                 delete[] IC_in_PH;
+             }
+            }
 
 #ifdef GEMSFIT_DEBUG
 std::cout<<"residual = "<<residual<<std::endl;
 #endif
 
-            // Sum of squares
-            sum_of_squared_residuals_sys_ = sum_of_squared_residuals_sys_ + residual;
+//            // Sum of squares
+//            sum_of_squared_residuals_sys_ = sum_of_squared_residuals_sys_ + residual;
 
             for (j=0; j<nIC; j++) // assigining default values for all IC (1e-09 - absent component); 0 for charge.
             {
