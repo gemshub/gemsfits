@@ -1,4 +1,4 @@
-/* 
+/*
 *	 Copyright (C) 2012 by Ferdinand F. Hingerl (hingerl@hotmail.com)
 *    Modified for fitting standard state properties (2012)
 *    by G. Dan Miron (mirondanro@yahoo.com)
@@ -91,6 +91,28 @@ class SS_Opt_Vector
         * @date 14.11.2012
         */
         void make_opt_vector( vector<SS_System_Properties*> vect_of_sys_props );
+
+
+        /////// for fitting interaction parameters //////
+
+        /// vector indicating which species is the respective position in the opt vector is referring to
+        vector<vector<string> > fit_species_inter;
+        vector<vector<string> >::iterator iter_spec1; vector<string>::iterator iter_spec2;
+        /// col of parameter which is at respective position in opt vector
+        vector<int> fit_param_col;
+        /// type of parameter which is at respective position in opt vector
+        vector<int> fit_param_type;
+
+        /**
+        * Function creates the opt, species and param_types vectors
+        *
+        * @param vect_of_sys_props vector of pointers to instances of System_Properties structs
+        * @author FFH
+        * @date 09.04.2012
+        */
+        void make_opt_vector_inter( vector<SS_System_Properties*> vect_of_sys_props );
+
+
 };
 // ============================ END SS_Opt_Vector =========================== //
 

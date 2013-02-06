@@ -206,6 +206,10 @@ cout<<"in StdState_gems3k_wrap ..."<<endl;
         sys->computed_residuals_v.clear();
 
 
+        long NPar, NPcoef, MaxOrd, NComp, NP_DC, index_phase, dc_id_1, dc_id_2;
+        long index_phase_aIPx, index_phase_aIPc, index_phase_aDCc;
+
+
         unsigned i, j, k;
         int start, step, ierr;
         long int NodeStatusCH, NodeHandle;
@@ -331,6 +335,15 @@ cout<<"gems3 wrap line 636"<<endl;
 
     // ---- // ---- // ---- // Recalculating the new G0 at TP of experiments from optv and sending them to GEMS // ---- // ---- // ---- //
 
+long int len;
+vector<double> aipc;
+vector<int> aipx;
+vector<double> adcc;
+
+
+/// Fitting G0
+if (sys->fit_std) {
+
     // Giving the new G0 at 25 C and 1 bar form the optv to sysprop->std_gibbs
     sys->sysprop->std_gibbs = opt;
 
@@ -349,6 +362,66 @@ cout<<"gems3 wrap line 636"<<endl;
 
         }
     }
+}
+
+/// Fitting interaction parameters
+else
+{
+    len = (long int) sys->sysparam->aIPc.size();
+    aipc.resize( len );
+    aipx.resize( len );
+    len = (long int) sys->sysparam->aDCc.size();
+    adcc.resize( len );
+
+
+
+    // Assign new guesses to aIPc/aDCc vectors
+    // loop over fit_ind_opt (position of parameter in opt vector) and assign to corresponding parameter of system (fit_ind_sys)
+
+    for( i=0; i<sys->sysparam->aIPc.size(); i++)
+    {
+        aipc[i] = sys->sysparam->aIPc[i];
+    }
+//    for( i=0; i<sys->sysparam->aIPx.size(); i++)
+//    {
+//        aipx[i] = sys->sysparam->aIPx[i];
+//    }
+    for( i=0; i<sys->sysparam->aDCc.size(); i++)
+    {
+        adcc[i] = sys->sysparam->aDCc[i];
+    }
+
+    for( i=0; i<sys->fit_ind_opt.size(); i++ )
+    {
+        // fit_ind_sys(i) gives position in opt vector that correspond to the position in the parameter a**c_fit_ind (first looping over aIPc_ind and then over aDCc_fit_ind vector)
+        if( i<(sys->sysparam->aIPc_fit_ind.size()) )
+        {
+            aipc[sys->sysparam->aIPc_fit_ind[ sys->fit_ind_sys[i]] ] = opt_[sys->fit_ind_opt[i]];
+        }else
+        {
+            adcc[sys->sysparam->aDCc_fit_ind[ (sys->fit_ind_sys[i] - sys->sysparam->aIPc_fit_ind.size())] ] = opt_[sys->fit_ind_opt[i]];
+        }
+    }
+
+
+    // Get index of phase of interest
+    index_phase = node->Ph_name_to_xCH( sys->phase_name.c_str() );
+
+    // Get parameter array dimension as specified in GEMS3K input file
+    node->Get_NPar_NPcoef_MaxOrd_NComp_NP_DC ( NPar, NPcoef, MaxOrd, NComp, NP_DC, index_phase );
+
+    // Get indices of parameter start position as given in GEMS3K input file
+    node->Get_IPc_IPx_DCc_indices( index_phase_aIPx, index_phase_aIPc, index_phase_aDCc, index_phase );
+
+    // Set aIPc parameter array
+    node->Set_aIPc( aipc, index_phase_aIPc, index_phase );
+
+    // Set aDCc parameter array
+    node->Set_aDCc( adcc, index_phase_aDCc, index_phase );
+
+
+}
+
 
     // Asking GEM to run with automatic initial approximation after changing the G0, if not it will always take the values of the exp form which the 0000dbr file is made.
     dBR->NodeStatusCH = NEED_GEM_AIA;
@@ -578,7 +651,7 @@ cout << " T_k  = " << T_k  << endl;
             for (j=0; j<sys->data_meas->allexp[i]->name_elem.size(); ++j)
             {
 
-                if (!sys->sysprop->log_solubility)
+                if (!sys->log_solubility)
                 {
                     elem_name = sys->data_meas->allexp[i]->name_elem[j].c_str();
                     if (sys->data_meas->allexp[i]->name_elem[j] == "pH")
@@ -755,6 +828,9 @@ std::cout<<"pid "<<pid<<" : sum_of_squared_residuals_sys_ = "<<sum_of_squared_re
 
     }
 
+
+
+
 // +++++++++++++++++++++++++++++++++++++ StdStateEquil_objective_function_callback ++++++++++++++++++++++++++++++++++++++++ //
 
 
@@ -813,7 +889,59 @@ std::cout<<"pid "<<pid<<" : sum_of_squared_residuals_sys_ = "<<sum_of_squared_re
     }
 
 
+    double IntParamEquil_objective_function_callback( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data )
+    {
+        // If Master process enters function callback, he sends a signal to the others processes which makes them in turn calling ActMod_objective_function_callback directly. They are waiting for this signal in the init_optim function.
+#ifdef USE_MPI
+        MPI_Status status;
+#endif
+        int continue_or_exit = 1;
+        int pid_;
 
+        vector<SS_System_Properties*> *sys = reinterpret_cast<vector<SS_System_Properties*>*>(obj_func_data);
+
+#ifdef USE_MPI
+        // Master: send only when not in Monte Carlo mode (generation of confidence intervals)
+        if( !sys->at(0)->MC_MPI )
+        {
+            if( !pid )
+            {
+                for( pid_=1; pid_<p; pid_++ )
+                    MPI_Send( &continue_or_exit, 1, MPI_INT, pid_, 0,  MPI_COMM_WORLD );
+            }
+        }
+#endif
+
+        unsigned int i;
+        double sum_of_squared_residuals_allsys = 0.0;
+        double sum_of_squared_residuals_sys = 0.0;
+
+        // Rescale optimization to unconvert normalization of parameters
+        if( sys->at(0)->sysparam->NormParams )
+        {
+            vector<double> optV( opt.size() );
+            for( i=0; i<opt.size(); i++ )
+            {
+                optV[i] = opt[i] * abs(sys->at(0)->sysparam->init_guesses[i]);
+            }
+            for( i=0; i<sys->size(); i++)
+            {
+                // call tsolmod wrapper
+                StdState_gems3k_wrap( sum_of_squared_residuals_sys, optV, sys->at(i) );
+                sum_of_squared_residuals_allsys = sum_of_squared_residuals_allsys + sum_of_squared_residuals_sys;
+            }
+        }
+        else
+        {
+            for( i=0; i<sys->size(); i++)
+            {
+                // call tsolmod wrapper
+                StdState_gems3k_wrap( sum_of_squared_residuals_sys, opt, sys->at(i) );
+                sum_of_squared_residuals_allsys = sum_of_squared_residuals_allsys + sum_of_squared_residuals_sys;
+            }
+        }
+    return sum_of_squared_residuals_allsys;
+    }
 
 //======================================== END StandrardStateProp instance ========================================== //
 

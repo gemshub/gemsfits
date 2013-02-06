@@ -195,10 +195,21 @@ if (do_what) {
 
             fout_<<endl<<" back in main ..."<<endl;
             fout_.setf(ios::fixed);
+
+            if (ss_newsys->fit_std) {
             for( int i=0; i< (int) optim.opt.size(); i++ )
                 fout_<<"optim.opt["<<ss_newsys->to_fit_species[i]<<"] = "<<optim.opt[i]<<endl;
             fout_<<"pid : "<<pid<<", sum of squares = "<<sum_of_squares<<endl;
             fout_<<endl;
+            }
+            else
+            {
+
+            for( int i=0; i< (int) optim.opt.size(); i++ )
+                cout<<"optim.opt["<<i<<"] = "<<optim.opt[i]<<endl;
+            cout<<"pid : "<<pid<<", sum of squares = "<<sum_of_squares<<endl;
+            cout<<endl;
+            }
 
 
             fout_<<"Reference Year Tcelsius Pbars measured computed residuals" << endl;

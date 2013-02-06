@@ -947,7 +947,15 @@ namespace opti
         if( OptNormParam && !ss_systems->at(0)->printfile )
         {
             normalize_params( optv_ );
+            /// Fitting G0
+            if (ss_systems->at(0)->fit_std) {
             ss_systems->at(0)->sysprop->NormParams = true;
+            }
+            /// Fitting interaction parameters
+            else
+            {
+                ss_systems->at(0)->sysparam->NormParams = true;
+            }
         }
         else // do not normalize parameters
         {
@@ -996,7 +1004,15 @@ namespace opti
 
         /// specify objective function
         ffout << endl << "15. in optimization.cpp line 991. Setting minimizing objective function." << endl;
-        stdstate.set_min_objective( StdStateEquil_objective_function_callback, ss_systems );
+        /// Fitting G0
+        if (ss_systems->at(0)->fit_std) {
+            stdstate.set_min_objective( StdStateEquil_objective_function_callback, ss_systems );
+        }
+        /// Fitting interaction parameters
+        else
+        {
+            stdstate.set_min_objective( IntParamEquil_objective_function_callback, ss_systems );
+        }
 
 //        if( OptConstraints )
 //        {
@@ -1163,7 +1179,15 @@ namespace opti
           {
               for( i=0; i<optv.size(); i++ )
                   {
+                  /// Fitting G0
+                  if (ss_systems->at(0)->fit_std) {
                       optv_[i] = optv[i] * abs(ss_systems->at(0)->sysprop->init_guesses[i]);
+                  }
+                  /// Fitting interaction parameters
+                  else
+                  {
+                      optv_[i] = optv[i] * abs(ss_systems->at(0)->sysparam->init_guesses[i]);
+                  }
                   }
           }
 //      opt_vec = optv_; // for MC

@@ -121,6 +121,18 @@ namespace opti
         */
         double StdStateEquil_objective_function_callback( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data );
 
+        // callback function for GEMS3K wrapper for fitting interaction parameters
+        /**
+        * Callback function for the constraint functions referring to the GEMS3 solver. The arguments of this function must not be
+        * modified since the nlopt library expects exactly this format.
+        * @param opt             optimization vector
+        * @param grad            vector holding function gradients (can be NULL)
+        * @param obj_func_data   a general data object will holds all the data needed by the onbejctive function. The data will be cat to the necessary identity within the function.
+        * @author DM
+        * @date 06.02.2013
+        */
+        double IntParamEquil_objective_function_callback( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data );
+
         // GEMS3K wrapper
         /**
         * Call to the GEMS3K wrapper. The arguments of this function must not be

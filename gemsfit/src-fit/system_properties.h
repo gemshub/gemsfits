@@ -88,11 +88,18 @@ class SS_System_Properties /*: public SS_Data_Manager*/
     string meas_db;
     /// the GEMSFIT configuration file (fixed to SS_GEMSFIT_input.dat)
     string param_file;
-    /// name of species to be fitted.
-    bool weight_error;
-    bool use_solidsolution;
-    // implement to chose which one
 
+    /// 0 - not use weights; 1 - use weights // olny 1/sigma implemented !!! not working for solid solution
+    bool weight_error;
+    /// use solid solution measured composition
+    bool use_solidsolution;
+    /// 0 - fit interaction parameters; 1 - fit G0
+    bool fit_std;
+    /// 0 - molality; 1 - log_molality
+    bool log_solubility; // in which form the solubility is compared
+
+
+    /// name of species to be fitted.
     vs to_fit_species; // Dependent components in GEMS3K
     vi fit_species_ind; // indices of the fitted species in GEMS3K - read from node class after reading the experimental data.
 
@@ -109,6 +116,7 @@ class SS_System_Properties /*: public SS_Data_Manager*/
 
     /// Computed residuals
     vd computed_residuals_v;
+
 
     // Position of G0_fit parameters in opt vector
     vvi fit_indices;
@@ -132,8 +140,6 @@ class SS_System_Properties /*: public SS_Data_Manager*/
         /// initial guess vector for normalization of bounds
         vd init_guesses;
 
-        /// 0 - molality; 1 - log_molality
-        bool log_solubility; // in which form the solubility is compared
     };
     std_prop* sysprop; // Pointer to std_prop struct that holds the stdandard state properties of the species to be fitted
 
@@ -145,6 +151,73 @@ class SS_System_Properties /*: public SS_Data_Manager*/
     * @date 30.10.2012
     */
     void getsysprop( std_prop* sysprop );
+
+    ///////////////// for fiting interaction parameters ////////////////////////
+
+    /// name of the chemical phase
+    string phase_name;
+    /// name of species
+    vs species;
+    /// vector of charges of the dependent components
+    vd charges;
+
+    /// enumeration of possible activity models that can be fitted
+    enum act_model
+    {
+      ELVIS = 1,
+      Pitzer,
+      EUNIQUAC,
+      SIT
+    };
+    act_model activity_model;
+
+    /// Struct with system specific measurement data
+    struct parameters
+    {
+        /// number of columns of the interaction parameter array
+        int cols_aIPc;
+        /// number of rows of the interaction parameter array
+        int rows_aIPc;
+        /// number of columns of the interaction parameter indices array
+        int cols_aIPx;
+        /// number of columns of the species-specific parameter array
+        int cols_aDCc;
+
+        /// vector of interaction parameters
+        vector<double> aIPc;
+        /// vector of species-specific parameters
+        vector<double> aDCc;
+        /// vector of interaction parameter indices vector
+        vector<int> aIPx;
+
+        /// vectors of first guesses of aIPc arrays
+        vector<double> aIPc_fit_val;
+        /// vectors of first guesses of aDCc arrays
+        vector<double> aDCc_fit_val;
+
+        /// vectors contains the position indices of the values that will be fitted in the aIPc arrays
+        vector<int> aIPc_fit_ind;
+        /// vectors contains the position indices of the values that will be fitted in the aDCc arrays
+        vector<int> aDCc_fit_ind;
+
+        /// initial guess vector for normalization of bounds
+        vd init_guesses;
+
+        /// normalize parameters flag
+        bool NormParams;
+
+    };
+    parameters* sysparam;
+
+    /**
+    * Function reads parameters of the chemical system
+    *
+    * @param sysparam		struct with system specific measurement data
+    * @author FFH
+    * @date 09.04.2012
+    */
+    void getparam( parameters* sysparam );
+
 };
 
 /// the System_Properties class retrieves and stores data related to the chemical system setup.
