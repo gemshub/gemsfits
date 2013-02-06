@@ -1,10 +1,17 @@
 ###############################################################################
-##########       Standard state GEMSFIT configuration file       ##############
+##########                      GEMSFIT configuration file       ##############
 ###############################################################################
 
+######################################################
+#>>>>>>>>>>>>>> Data source parameters >>>>>>>>>>>>>>#
+######################################################
 
 # DataManager: get measurement data from CSV + dbr files (0), PostgreSQL database (1), PostgreSQL database + dbr files (2).
 <DatSource>
+1
+
+# (0) Fit interaction parameters; (1) Fit G0
+<WhatToFit>
 1
 
 # DataManager: if <DatSource> == 0 then enter name of CSV file
@@ -35,24 +42,81 @@ RDCqtz_h2o_nacl
 <SystemName>
 SS_INPUT/AllDa3T-fwd-dat.lst
 
-# name of the species that will be fitted CSH-T2C CSH-TobH
-<FitSpeciesName>
-CSH-TobH CSH-T2C CSH-T5C
+########################################################################
+#>>>>>>>>>>>>>> Input for fitting interaction parameters >>>>>>>>>>>>>>#
+########################################################################
 
-# Use weight errors 0 (false), 1 (true)
-<WeightedErrors>
+# mark the parameters you want to be fitteed with F
+
+# name of the phase that will be fitted
+<PhaseName>
+C-S-H-3T-2
+
+# LsMod:	description of sizes of aIDc, aIPc and aIPx arrays
+<LsMod>
+2 0 4 
+0 0 0 
+2 4 3  
+
+# IPxPH:  Collected indexation table for interaction parameters of non-ideal solutions.
+<IPxPH> 
+0 2 0 0 
+1 3 0 0 
+
+# PMc: Collected interaction parameter coefficients for the (built-in) non-ideal mixing models -313.072
+<PMc>  
+F1 0 0 
+F1 0 0 
+
+
+# LsMod: Dimensions of <IPxPH> and <PMc> arrays [nPS*3]
+<LsMdc>
+0 0 0 
+0 0 0 
+1 2 4
+
+# DMc: Collected parameters per phase component for the non-ideal mixing models 
+# ELVIS: Q effRad R
+<DMc> 
+
+########################################################################### 
+#>>>>>>>>>>>>>> Input for fitting standard state properties >>>>>>>>>>>>>>#
+###########################################################################
+
+# name of the species whose g0 input values will be fitted    CSH-T2C CSH-TobH
+<FitSpeciesName>
+CSH-T5C
+
+########################################################
+#>>>>>>>>>>>>>> Other fitting parameters >>>>>>>>>>>>>>#
+########################################################
+
+# Optimization: perform optimization and statistics (0), only optimization with basic Statistics (1), only Statistics (2) with initial guesses as best fit parametters
+<OptDoWhat>
 0
+
+# Use solid solution composition in the fitting proceudre 0 (false), 1 (true)
+<UseSolidSolutionComposition>
+1
 
 # Solubility comparison as log solubility 1 or molality 0
 <LogSolubility>
+1
+
+# Use weight errors 0 (false), 1 (true) !!!NOT WORKING CORECTLY YET!!!
+<WeightedErrors>
 0
+
+# Generate bounds from initial guess vector: specify percentage deviation (user specific, user-defined bounds when set to -1)
+<OptBoundPerc>
+0.1
 
 # Optimization: specify vector oupper and lower bounds
 <OptUpBounds> 
-10 10 10 10
+100 100 
  
 <OptLoBounds> 
--10 -10 -10 -10
+-10 -10
 
 # Optimization: apply constraints (1=yes, 0=no)
 <OptConstraints>
@@ -77,15 +141,24 @@ LN_BOBYQA
 
 # Optimization: stopping criterion -> specify relative tolerance (default = 1e-04) of function value
 <OptTolRel>
-1e-08
+1e-04
 
 # Optimization: stopping criterion -> specify absolute tolerance (default = 1e-04) of function value
 <OptTolAbs>
-1e-08
+1e-04
 
 # Optimization: specify max number of evaluations
 <OptMaxEval>
 50000
+
+# Optimization: Normalize bounds/constraints/fitting parameters with initial guess vector
+<OptNormParam>
+1
+
+
+
+
+
 
 
 # Optimization: run hybrid optimization yes (1) / no (0)
@@ -116,17 +189,6 @@ LN_COBYLA
 <OptInitStep>
 0
 
-# Optimization: Normalize bounds/constraints/fitting parameters with initial guess vector
-<OptNormParam>
-1
-
-# Generate bounds from initial guess vector: specify percentage deviation (user specific, user-defined bounds when set to -1)
-<OptBoundPerc>
-20
-
-# Optimization: perform optimization and statistics (0), only optimization with basic Statistics (1), only Statistics (2) with initial guesses as best fit parametters
-<OptDoWhat>
-0
 
 # Opitmization: if only Statistics is to be computed (no optimization) then enter best fit values here
 <OptStatOnlyBestFitParam>
