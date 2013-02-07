@@ -12,7 +12,7 @@
 
 # (0) Fit interaction parameters; (1) Fit G0
 <WhatToFit>
-1
+0
 
 # DataManager: if <DatSource> == 0 then enter name of CSV file
 <DatCSVfile>
@@ -65,9 +65,10 @@ C-S-H-3T-2
 
 # PMc: Collected interaction parameter coefficients for the (built-in) non-ideal mixing models -313.072
 <PMc>  
-F1 0 0 
-F1 0 0 
-
+0 0 0 0 
+0 0 0 0 
+F0.1 0 0 
+F0.1 0 0 
 
 # LsMod: Dimensions of <IPxPH> and <PMc> arrays [nPS*3]
 <LsMdc>
@@ -78,6 +79,7 @@ F1 0 0
 # DMc: Collected parameters per phase component for the non-ideal mixing models 
 # ELVIS: Q effRad R
 <DMc> 
+0 0 0
 
 ########################################################################### 
 #>>>>>>>>>>>>>> Input for fitting standard state properties >>>>>>>>>>>>>>#

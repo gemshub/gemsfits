@@ -206,8 +206,8 @@ cout<<"in StdState_gems3k_wrap ..."<<endl;
         sys->computed_residuals_v.clear();
 
 
-        long NPar, NPcoef, MaxOrd, NComp, NP_DC, index_phase, dc_id_1, dc_id_2;
-        long index_phase_aIPx, index_phase_aIPc, index_phase_aDCc;
+        long int NPar, NPcoef, MaxOrd, NComp, NP_DC, index_phase, dc_id_1, dc_id_2;
+        long int ipaIPx, ipaIPc, ipaDCc;
 
 
         unsigned i, j, k;
@@ -337,7 +337,7 @@ cout<<"gems3 wrap line 636"<<endl;
 
 long int len;
 vector<double> aipc;
-vector<int> aipx;
+vector<long int> aipx;
 vector<double> adcc;
 
 
@@ -367,13 +367,28 @@ if (sys->fit_std) {
 /// Fitting interaction parameters
 else
 {
+    // Get index of phase of interest
+    index_phase = node->Ph_name_to_xCH( sys->phase_name.c_str() );
+    cout << sys->phase_name.c_str() << " index " << index_phase << endl;
+
+    // Get parameter array dimensions as specified in GEMS3K input file
+    node->Get_NPar_NPcoef_MaxOrd_NComp_NP_DC ( NPar, NPcoef, MaxOrd, NComp, NP_DC, index_phase );
+
+    // Get indices of parameter start position as given in GEMS3K input file
+    node->Get_IPc_IPx_DCc_indices( ipaIPx, ipaIPc, ipaDCc, index_phase );
+    cout << " ipaIPx= " << ipaIPx <<  "  ipaIPc= " << ipaIPc << "  ipaDCc= " << ipaDCc << endl;
+
+    // Get aIPc parameter array
+    node->Get_aIPc( aipc, ipaIPc, index_phase );
+
+    // Get aDCc parameter array
+    node->Get_aDCc( adcc, ipaDCc, index_phase );
+
     len = (long int) sys->sysparam->aIPc.size();
-    aipc.resize( len );
-    aipx.resize( len );
+//    aipc.resize( len );
+//    aipx.resize( len );
     len = (long int) sys->sysparam->aDCc.size();
-    adcc.resize( len );
-
-
+//    adcc.resize( len );
 
     // Assign new guesses to aIPc/aDCc vectors
     // loop over fit_ind_opt (position of parameter in opt vector) and assign to corresponding parameter of system (fit_ind_sys)
@@ -403,21 +418,23 @@ else
         }
     }
 
-
+/*  Commented out by DK on 7.02.2013
     // Get index of phase of interest
     index_phase = node->Ph_name_to_xCH( sys->phase_name.c_str() );
+    cout << sys->phase_name.c_str() << " index " << index_phase << endl;
 
-    // Get parameter array dimension as specified in GEMS3K input file
+    // Get parameter array dimensions as specified in GEMS3K input file
     node->Get_NPar_NPcoef_MaxOrd_NComp_NP_DC ( NPar, NPcoef, MaxOrd, NComp, NP_DC, index_phase );
 
     // Get indices of parameter start position as given in GEMS3K input file
-    node->Get_IPc_IPx_DCc_indices( index_phase_aIPx, index_phase_aIPc, index_phase_aDCc, index_phase );
+    node->Get_IPc_IPx_DCc_indices( ipaIPx, ipaIPc, ipaDCc, index_phase );
+    cout << " ipaIPx= " << ipaIPx <<  "  ipaIPc= " << ipaIPc << "  ipaDCc= " << ipaDCc << endl;
+*/
+    // Set new aIPc parameter array into GEM IPM work structure
+    node->Set_aIPc( aipc, ipaIPc, index_phase );
 
-    // Set aIPc parameter array
-    node->Set_aIPc( aipc, index_phase_aIPc, index_phase );
-
-    // Set aDCc parameter array
-    node->Set_aDCc( adcc, index_phase_aDCc, index_phase );
+    // Set aDCc parameter array into GEM IPM work structure
+    node->Set_aDCc( adcc, ipaDCc, index_phase );
 
 
 }
