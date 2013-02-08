@@ -1,0 +1,458 @@
+Suggestion on how to produce a template GEMSFIT configuration file from GEMS3K I/O files (DK 08.02.2013)
+
+1. There should be a special mode of starting GEMSFIT with command-line parameters as
+
+>$ gemsfit -init <path to <GeMS3K>-dat.lst> -conf <path to GEMSFIT input config file> 
+
+Example: >$ gemsfit -init ./SS_INPUT/AllDa3T-fwd-dat.lst -conf ./SS_INPUT/SS_GEMSFIT_input.dat
+
+The <path to <GeMS3K>-dat.lst> is a path to the list of GEMS3K DCH, IPM and DBR input files as exported from GEM-Selektor code package. 
+
+The <path to GEMSFIT input config file> is a path to the template GEMSFIT input configuration file to be generated. 
+
+
+2. Using GEMSFIT, one should be able to fit any combination of standard state properties and non-ideality model interaction parameters, system T, P, bulk composition, i.e. any combination of GEMIPM input parameters. 
+
+Each input property selected for fitting must have at least the start value, lower and upper constraint, optional reaction constraints given in the "Parameters to Fit" section of the GEMSFIT input configuration file. 
+
+In the "Data to Compare" section of this file, it should also be clearly specified which GEMIPM output values (pH, Eh, concentrations, activities, their functions such as osmotic coefficients) should be compared with which respective experimental values; what type of the objective function (least-squares, ...), what kind of weights of samples should be used; and from which .csv file or which subset of PostgreSQL database these experimental values should be selected. 
+
+In the "Optimization Methods" section, the rest of specifications should be collected, e.g. choice of the algorithm, threads, statistics, etc. 
+
+In the "Fitting Results" section, all the modes of output of fitting results (output file paths), verbosity, print, and graphic formats should be collected. 
+
+
+3. To generate the template GEMSFIT input configuration file, the program should combine fragments of GEMS3K DCH, IPM and DBR files into the "Fitting Task" section; fragment of DBR file into "Experimental Data" section; append the default "Optimization Methods" and "Fitting Results" sections. In the comment lines, all options must be visible. 
+
+A generated file must be edited by the user to mark what to fit and what to compare in the target function. Discussions are needed to develop "markup language" for that.  The example template file is provided at the end of this file. 
+
+
+------ Example generated template GEMSFIT configuration file -------- 
+
+###############################################################################
+##########      GEMSFIT configuration file template v.0.1        ##############
+###############################################################################
+
+######################################################
+#>>>>>>>>>>>>>>  Data sources section  >>>>>>>>>>>>>>#
+######################################################
+
+# DataManager: get the experimental data from CSV file (0), PostgreSQL database (1), MongoDB database (2)
+<DatSource>
+1
+
+# DataManager: if <DatSource> == 0 then enter the path name of CSV file
+<DatCSVfile>
+SS_INPUT_CSV/solubility.csv
+
+# DataManager: database server 129.132.137.60
+<DatServer>
+localhost
+
+# DataManager: database server username (if <DatSource> > 0)
+<DatUsername>
+postgres		  
+
+# DataManager: database server password (if <DatSource> > 0)
+<DatPasswd>
+miron64766
+
+# DataManager: database name (if <DatSource> > 0)
+<DatDB>
+solcash
+
+# DataManager: Keyword(s) of experimental data sets to extract from data base (if <DatSource> > 0)
+<DataSets>
+GC65 [ Cea04 … ]
+
+# Enter the path to the GEMS3K input files list (*.dch, *.ipm, *.dbr files must be in the same folder):
+<SystemFiles>
+./AllDa3T-fwd-dat.lst
+
+# Enter path to DBR files list with compositions of experimental systems (*.dbr files must be in the same folder):
+<RecipeFiles>
+./AllDa3T-fwd-dbr.lst 
+# if nothing or . is specified then the experimental compositions are specified in the database 
+
+
+######################################################
+#>>>>>>>>>>>  Parameters to Fit section  >>>>>>>>>>>>#
+######################################################
+# Prepend the parameters to be fitted with F. Rule: this parameter must have the form:
+# F|<start value>[|<lower bound>|<upper bound>] ([] means optional; no spaces or commas in between) 
+
+#---- This part is taken from the *DCH.dat file -----
+
+# ICNL: List of Independent Component names (<=4 characters per name) [nIC]
+<ICNL>
+'Ca' 'H' 'Nit' 'O' 'Si' 'Zz' 
+
+# DCNL: Name list of Dependent Components (<=16 characters per name) [nDC]
+<DCNL>
+'Ca+2' 'CaOH+' 'Ca(HSiO3)+' 'CaSiO3@' 'HSiO3-' 'SiO2@' 'SiO3-2' 'H2@' 'N2@' 'O2@' 'OH-' 'H+' 'H2O@' 'H2' 'N2' 'O2' 'CSH-T2C' 'CSH-T5C' 'CSH-TobH' 'Portlandite' 'Amor-Sl'
+
+# PHNL: List of Phase names (<=16 characters per name) [nPH]
+<PHNL>
+'aq_gen' 'gas_gen' 'C-S-H-3T-2' 'Portlandite' 'Silica-amorph' 
+# ccPH: Codes of phase aggregate state [nPH]
+<ccPH>
+'a' 'g' 's' 's' 's' 
+# nDCinPH: Number of DCs included in each phase [nPH]
+<nDCinPH>
+13 3 3 1 1 
+
+########################################################################### 
+#>>>>>>>>>>  To be discussed (G0 for the first TKval only?)  >>>>>>>>>>>#
+###########################################################################
+
+# TKval: Temperature values, K for lookup arrays of thermodynamic data [nTp]
+<TKval>
+298.15 295.15 
+# Pval: Pressure values, Pa for lookup arrays of thermodynamic data [nPp]
+<Pval>
+100000 100000 
+# G0: Look-up array for DC molar Gibbs energy function g(T,P), J/mol [nDC*nPp*nTp]
+<G0>
+-552790.00065054 -552958.97587437 
+-717024.00023652 -716939.98339458 
+-1574238.0003068 -1574265.0795068 
+-1517557 -1517966.3411034 
+-1014598.010816 -1014533.9038507 
+-833411 -833287.32755495 
+-938510 -938750.37188671 
+17729.00010995 17899.671138935 
+18194.000182443 18477.864649704 
+16446.000207431 16769.277249735 
+-157270.00090727 -157300.03154223 
+0 0 
+-237181.38483664 -236972.75354578 
+0 391.612574113 
+0 574.38890202258 
+0 614.96718340517 
+-4931878.7456321 -4930880.5401546 
+-5027157.2910962 -5026200.9031099 
+-5121922.1127774 -5121007.5422824 
+-897013 -896764.12318402 
+-848903 -848780.67095473 
+
+########################################################################### 
+#>>>>>>>>>>>>>> Input for fitting standard state properties >>>>>>>>>>>>>>#
+###########################################################################
+
+# name of the species whose g0 input values will be fitted    CSH-T2C CSH-TobH
+<FitSpeciesName>
+CSH-T5C
+
+# DataManager: Reaction dependent species table name (whatever is is?)
+<DatRDCTable>
+RDCqtz_h2o_nacl
+
+########################################################################### 
+#>>>>>>>>>>>>>>  Input for fitting non-ideality parameters  >>>>>>>>>>>>>>#
+###########################################################################
+#---- This part is taken from the *IPM.dat file -----
+
+## (4) Initial data for multicomponent phases (see DCH file for dimension nPHs)
+# sMod: Codes for TSolMod built-in  models of mixing in multicomponent phases [nPS*6]
+<sMod>
+'DNNSNN' 'INNINN' 'BNNSNN' 
+
+# LsMod: Dimensions of TSolMod <IPxPH> and <PMc> data arrays [nPS*3]. In each row (for phase):
+# [0] number of interaction parameters (rows in <IPx>); [1] max. parameter order (columns in <IPx>);
+# [2] number of coefficients per interaction parameter in <PMc> array
+<LsMod>
+2 0 4 
+0 0 0 
+2 4 3 
+
+# IPxPH: Index lists (in TSolMod convention) for interaction parameters of non-ideal solutions
+<IPxPH>
+0 2 0 0 1 3 0 0 
+
+# PMc: Tables (in TSolMod convention) of interaction parameter coefficients  for non-ideal solutions
+<PMc>
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+
+# LsMdc: Dimensions of TSolMod <DMc> and <MoiSN> arrays [nPS*3]: In each row (for phase):
+# [0] number of parameters per component; [1] 0; [2] 0. For multi-site (sublattice) models: 
+#   [1] number of sublattices nS; [2] total number of moieties nM acting in sublattice sites
+<LsMdc>
+0 0 0 
+0 0 0 
+1 2 4 
+
+# DMc: Tables (in TSolMod convention) of  parameter coefficients for dependent components
+<DMc>
+0 0 0 
+
+# MoiSN:  end member moiety / site multiplicity number tables (in TSolMod convention) 
+<MoiSN>
+1 0 0 0 0 1 0 0 0 0 1 0 0 1 0 0 0 0 1 0 0 0 0 1 
+
+# Initial data for DCs - see DATACH file for dimensions nDC, nDCs
+# fDQF: DQF parameters of end members or pure gas fugacities, (J/mol/(RT) [nDC]
+<fDQF>
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+
+# ---- This part is taken from the *DBR.dat file -----
+
+# <bIC> and/or <xDC> elements can be used for fitting the input bulk composition 
+
+# TK: Node temperature T, Kelvin. This value must always be provided (GEM input)
+<TK>  298.15
+# P:  Node Pressure P, Pa. This value must always be provided (GEM input)
+<P>  100000
+
+## (4) Data for Independent Components
+#  'Ca' 'H' 'Nit' 'O' 'Si' 'Zz' 
+# bIC: Bulk composition of reactive subsystem (main GEM input), moles of ICs [nICb]
+<bIC>
+1.00000002513381 113.016746705914 2 59.5103733770907 1.000000001 0 
+
+## (5) Data for Dependent Components
+#  'Ca+2' 'CaOH+' 'Ca(HSiO3)+' 'CaSiO3@' 'HSiO3-' 'SiO2@' 'SiO3-2' 'H2@' 'N2@' 'O2@' 'OH-' 'H+' 'H2O@' 'H2' 'N2' 'O2' 'CSH-T2C' 'CSH-T5C' 'CSH-TobH' 'Portlandite' 'Amor-Sl' 
+# xDC: Speciation - amounts of DCs in equilibrium (primal solution), moles (GEM output/input) [nDCb]
+<xDC>
+0.00211414690151572 0.000102279025652252 6.93611937999773e-06 0.000282007709021412 0.000286707073042359 4.50153099771094e-06 6.54705000414675e-06 0 0.000637155066080237 1.28883054526704e-06 0.00403770777785058 2.8375415819891e-12 54.5092485810618 0 0.99936284493392 0.000998709669449552 0.188394960001679 0.0206730252364914 0.19031360614099 0 0 
+
+# dll: Lower metastability restrictions on amounts of DCs, moles (GEM input) [nDCb]
+<dll>
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+
+# dul: Upper metastability constraints on amounts of DCs, moles (GEM input) [nDCb]
+<dul>
+1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 
+
+## (6) Data for Phases
+#  'aq_gen' 'gas_gen' 'C-S-H-3T-2' 'Portlandite' 'Silica-amorph' 
+# aPH: Specific surface areas of phases, m2/kg (GEM input) [nPHb]
+<aPH>
+0 0 0 0 0 
+
+######################################################
+#>>>>>>>>>>>>  Data to Compare section  >>>>>>>>>>>>>#
+###################################################### 
+
+# Needs a discussion on how exactly to specify what GEM output to compare with what experimental data
+
+# ---- This part is taken from the *DBR.dat file -----
+
+# Vs: Volume V of reactive subsystem, m3 (GEM output)
+<Vs>  0.0258495
+# Ms: Mass of reactive subsystem, kg (GEM output)
+<Ms>  1.16222
+# Gs: Total Gibbs energy of the reactive subsystem, J/(RT) (GEM output)
+<Gs>  -6026.91
+# IS: Effective aqueous ionic strength, molal (GEM output)
+<IS>  0.00657658
+# pH: pH of aqueous solution in molal activity scale (GEM output)
+<pH>  11.5765
+# pe: pe of aqueous solution in molal activity scale (GEM output)
+<pe>  8.4494
+# Eh: Eh of aqueous solution, V (GEM output)
+<Eh>  0.498856
+
+## (4) Data for Independent Components
+#  'Ca' 'H' 'Nit' 'O' 'Si' 'Zz' 
+# uIC: Chemical potentials of ICs in equilibrium (dual solution), J/(RT) (GEM output) [nICb]
+<uIC>
+-268.387594923588 -46.1113904018458 -0.000499423723309459 -3.45470393857459 -341.575816808364 19.4554667625578 
+
+# bSP: Output bulk composition of the equilibrium solid part of the system, moles 
+<bSP>
+0.997494655378244 3.9938159137916 0 4.99322921530915 0.999413301517555 0 
+
+## (5) Data for Dependent Components
+#  'Ca+2' 'CaOH+' 'Ca(HSiO3)+' 'CaSiO3@' 'HSiO3-' 'SiO2@' 'SiO3-2' 'H2@' 'N2@' 'O2@' 'OH-' 'H+' 'H2O@' 'H2' 'N2' 'O2' 'CSH-T2C' 'CSH-T5C' 'CSH-TobH' 'Portlandite' 'Amor-Sl' 
+# xDC: Speciation - amounts of DCs in equilibrium (primal solution), moles (GEM output/input) [nDCb]
+<xDC>
+0.00211414690151572 0.000102279025652252 6.93611937999773e-06 0.000282007709021412 0.000286707073042359 4.50153099771094e-06 6.54705000414675e-06 0 0.000637155066080237 1.28883054526704e-06 0.00403770777785058 2.8375415819891e-12 54.5092485810618 0 0.99936284493392 0.000998709669449552 0.188394960001679 0.0206730252364914 0.19031360614099 0 0 
+
+# gam: Activity coefficients of DCs in their respective phases (GEM output/input) [nDCb]
+<gam>
+0.708916384512715 0.917590165819487 0.917590165819487 0.999999990588271 0.917590165819487 0.999999990588271 0.708916384512715 0.999999990588271 0.999999990588271 0.999999990588271 0.917590165819487 0.917590165819487 0.999999981175681 1 1 1 0.523479273334078 5.34257213026233 0.5282833158356 1 1 
+
+## (6) Data for Phases
+#  'aq_gen' 'gas_gen' 'C-S-H-3T-2' 'Portlandite' 'Silica-amorph' 
+
+# xPH: Amounts of phases in equilibrium state, moles (GEM output) [nPHb]
+<xPH>
+54.5167278581487 1.00036155460337 0.39938159137916 0 0 
+
+# vPS: Volumes of multicomponent phases, m3 (GEM output) [nPSb]
+<vPS>
+0.000984864648877126 0.0247986743993325 6.59697762700602e-05 
+
+# mPS: Masses of multicomponent phases, kg (GEM output) [nPSb]
+<mPS>
+0.982234040652106 0.0280275077562236 0.151960851656592 
+
+# xPA: Amount of carrier (sorbent or solvent) in multicomponent phases, moles (GEM output) [nPSb]
+<xPA>
+54.5092485810618 0 0 
+
+# bPS: Bulk elemental compositions of multicomponent phases, moles (GEM output) [nPSb*nICb]
+#  'Ca' 'H' 'Nit' 'O' 'Si' 'Zz' 
+<bPS>
+0.00250536975556938 109.022930792122 0.00127431013216047 54.5151467424427 0.000586699482445626 -1.50205075667255e-20 
+0 0 1.99872568986784 0.0019974193388991 0 0 
+0.997494655378244 3.9938159137916 0 4.99322921530915 0.999413301517555 0 
+
+######################################################
+#>>>>>>>>>>  Optimization Methods section  >>>>>>>>>>#
+###################################################### 
+
+# Optimization: perform optimization and statistics (0), only optimization with basic Statistics (1), only Statistics (2) with initial guesses as best fit parameters
+<OptDoWhat>
+0
+
+# Use solid solution composition in the fitting procedure 0 (false), 1 (true)
+<UseSolidSolutionComposition>
+1
+
+# Solubility comparison as log solubility 1 or molality 0
+<LogSolubility>
+1
+
+# Use weight errors 0 (false), 1 (true) !!!NOT WORKING CORRECTLY YET!!!
+<WeightedErrors>
+0
+
+# Generate bounds from initial guess vector: specify percentage deviation (user specific, user-defined bounds when set to -1)
+<OptBoundPerc>
+0.1
+
+# Optimization: specify vector oupper and lower bounds
+<OptUpBounds> 
+100 100 
+ 
+<OptLoBounds> 
+-10 -10
+
+# Optimization: apply constraints (1=yes, 0=no)
+<OptConstraints>
+0
+
+# Optimization: specify parameter vectors for constraint function
+<OptUpConstraints>
+15000.0 15000.0  
+
+<OptLoConstraints>
+-10000.0 -10000.0 
+-10000.0 -10000.0 
+-10000.0 -10000.0 
+
+# Optimization: specify algorithm GN_ISRES GN_ORIG_DIRECT GN_ORIG_DIRECT_L LN_COBYLA LN_BOBYQA GN_ISRES
+<OptAlgo>
+LN_BOBYQA
+
+# Optimization: Number of threads (default=1)
+<OptThreads>
+1
+
+# Optimization: stopping criterion -> specify relative tolerance (default = 1e-04) of function value
+<OptTolRel>
+1e-04
+
+# Optimization: stopping criterion -> specify absolute tolerance (default = 1e-04) of function value
+<OptTolAbs>
+1e-04
+
+# Optimization: specify max number of evaluations
+<OptMaxEval>
+50000
+
+# Optimization: Normalize bounds/constraints/fitting parameters with initial guess vector
+<OptNormParam>
+1
+
+# Optimization: run hybrid optimization yes (1) / no (0)
+<OptHybridMode>
+0
+
+# Optimization: specify hybrid algorithm GN_ISRES LN_COBYLA LN_BOBYQA
+<OptHybridAlgo>
+LN_COBYLA
+
+# Optimization: hybrid stopping criterion -> specify relative tolerance (default = 1e-04) of function value
+<OptHybridTolRel>
+1e-03
+
+# Optimization: hybrid stopping criterion -> specify absolute tolerance (default = 1e-04) of function value
+<OptHybridTolAbs>
+1e-03
+
+# Optimization: specify max number of hybrid evaluations
+<OptHybridMaxEval>
+5000000 
+
+# Optimization: specify number of multistart runs (deactivate with 0)
+<OptNmultistart>
+0
+
+# Optimization: specify initial stepsize for local minimizers (factor will be multiplied to all optimization parameters); 0 => use default
+<OptInitStep>
+0
+
+# Opitmization: if only Statistics is to be computed (no optimization) then enter best fit values here
+<OptStatOnlyBestFitParam>
+
+# Opitmization: if only Statistics is to be computed (no optimization) then enter best fit values here
+<OptStatOnlySSR>
+
+# Statistics: perform Monte Carlo runs -> yes (1)/no (0)
+<StatMCbool>
+0
+
+# Statistics: number of Monte Carlo runs for confidence interval generation
+<StatMCruns>
+10
+
+# Statistics: number of bars for printing results from Monte Carlo confidence interval generation
+<StatMCbars>
+10
+
+# Statistics: number of evaluations points per parameter for sensitivity evaluation
+<StatSensitivity>
+50
+
+# Statistics: number of function evaluations per axis (total value will be StatSSRSensitivity squared)
+<StatSSRSensitivity>
+100
+
+
+######################################################
+#>>>>>>>>>>>>  Fitting Results section  >>>>>>>>>>>>>#
+###################################################### 
+
+# Printing information: specifiy which datapoints to print to file and format of output file - !!!!NOT IMPLEMENTED IN Std State fitting (DM)!!!!
+<PrintTemperatures>
+298.15
+
+<PrintPressures>
+1 
+
+<PrintMolalities>
+0.0001 - 4.5		
+
+<PrintFormat>
+eps
+
+<PrintFilename>
+Comp_vs_Meas
+
+<PrintMeasValueCode>
+0
+
+<PrintLabelXaxis>
+molality
+
+<PrintLabelYaxis>
+activity coefficient
+
+<PrintHead>
+System: test plot
+
+
+# End of File 
+
