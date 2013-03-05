@@ -1003,7 +1003,7 @@ namespace opti
 
 
         /// specify objective function
-        ffout << endl << "15. in optimization.cpp line 991. Setting minimizing objective function." << endl;
+        ffout << endl << "15. in optimization.cpp line 1006. Setting minimizing objective function." << endl;
         /// Fitting G0
         if (ss_systems->at(0)->fit_std) {
             stdstate.set_min_objective( StdStateEquil_objective_function_callback, ss_systems );
@@ -1038,7 +1038,7 @@ namespace opti
         //ierr = MPI_Comm_size( MPI_COMM_WORLD, &p );
         int continue_or_exit;
 
-        ffout << "16. in optimization.cpp line 1015. Performing optimization."<<endl;
+        ffout << "16. in optimization.cpp line 1041. Performing optimization."<<endl;
 
         //===== For testing the objective function without oprimization =====//
         //        sum_of_squares = StdStateEquil_objective_function_callback(optv, grad, ss_systems);

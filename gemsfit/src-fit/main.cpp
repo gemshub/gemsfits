@@ -154,7 +154,7 @@ if (do_what) {
     // Create instance of StdStateProp class derived from base class Optimization
     opti::StdStateProp gibbs( optim.opt );
 
-    fout << "13. in main.cpp line 143. Preparing for optimization." << endl;
+    fout << "13. in main.cpp line 157. Preparing for optimization." << endl;
     if( optim.opt.size()>0 )
     {
         // 0 = optimization with full statistics, 1 = optimization with only basic statistics
@@ -183,7 +183,7 @@ if (do_what) {
                 { cout<<"Output fileopen error"<<endl; exit(1); }
 
                 // prepare optimization problem
-                fout << "14. in main.cpp line 165. Preparing optimization problem init_optim()." << endl << endl;
+                fout << "14. in main.cpp line 186. Preparing optimization problem init_optim()." << endl << endl;
                 gibbs.init_optim( optim.opt, &ss_systems, countit, sum_of_squares );
             }
             else

@@ -150,7 +150,7 @@ class StdStatistics : public PlotFit
 //		* @param systems vector of pointers to instances of System_Properties structs
 //		* @date 09.04.2012
 //		*/
-//		void plot_residuals( std::vector<double> &optv_, std::vector<System_Properties*> *systems );
+//		void SS_plot_residuals( std::vector<double> &optv_, std::vector<SS_System_Properties*> *systems );
 
         /**
         * Compute confidence intervals using Mone Carlo.

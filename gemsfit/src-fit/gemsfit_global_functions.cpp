@@ -718,10 +718,10 @@ cout << " T_k  = " << T_k  << endl;
 
                      fout << "Element " << elem_name << " has log solubility = " << log_computed_value << endl;
                      residual = pow (log_computed_value - sys->data_meas->allexp[i]->log_solubility[j], 2) / pow(sys->data_meas->allexp[i]->log_solubility[j], 2);
-//                     if ( (sys->data_meas->allexp[i]->error_sol[j] != 0) && sys->weight_error)
-//                     {
-//                         residual = residual*1/ /*pow(*/sys->data_meas->allexp[i]->error_sol[j]/*, 2)*/;
-//                     }
+                     if ( (sys->data_meas->allexp[i]->error_sol[j] != 0) && sys->weight_error)
+                     {
+                         residual = residual*1/ /*pow(*/sys->data_meas->allexp[i]->error_sol[j]/*, 2)*/;
+                     }
 
                         //                // Store computed and measured values for Monte Carlo confidence interval generation
                                         computed_values_temp.push_back(log_computed_value);

@@ -98,6 +98,14 @@ class SS_System_Properties /*: public SS_Data_Manager*/
     /// 0 - molality; 1 - log_molality
     bool log_solubility; // in which form the solubility is compared
 
+    /// parameter related variables
+    bool G0_handle; // true for fitting G0
+        int G0_count; // number of G0 parameters
+        int G0_start; // start position of the G0 parameters in the opt vector
+    bool intparam_handle; // true for fitting interaction parameters
+        int intparam_count; // number of interaction parameters
+        int intparam_start; // start position of the intercation parameters in the opt vector
+
 
     /// name of species to be fitted.
     vs to_fit_species; // Dependent components in GEMS3K
