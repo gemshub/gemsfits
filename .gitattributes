@@ -43,6 +43,7 @@ Tests/SS_INPUT_CSV/solubility.csv -text
 Tests/soldata.backup -text
 Tests/test.backup -text
 docs/Developing[!!-~]GEMSFIT(GUI)_GEMS3K.pdf -text
+docs/GEMSFIT_help.doc -text
 docs/HowToBuildGEMSFIT.txt -text
 docs/HowToDevelopGEMSFIT(GUI).html -text
 docs/RDBMS[!!-~]structure.pptx -text
