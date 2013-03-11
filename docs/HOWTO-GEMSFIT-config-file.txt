@@ -1,21 +1,71 @@
-Suggestion on how to produce a template GEMSFIT configuration file from GEMS3K I/O files (DK 08.02.2013)
+Suggestion on how to produce a template GEMSFIT configuration file from GEMS3K I/O files (DK DM SD 11.03.2013)
 
 1. There should be a special mode of starting GEMSFIT with command-line parameters as
 
->$ gemsfit -init <path to <GeMS3K>-dat.lst> -conf <path to GEMSFIT input config file> 
+>$ gemsfit -init <path to <GEMS3K>-dat.lst> -conf <path to GEMSFIT input config file> 
 
-Example: >$ gemsfit -init ./SS_INPUT/AllDa3T-fwd-dat.lst -conf ./SS_INPUT/SS_GEMSFIT_input.dat
+Example: >$ gemsfit -init ./SS_INPUT/AllDa3T-fwd-dat.lst -conf ./SS_INPUT/SS_GEMSFIT_AllDa3T_input.dat
 
-The <path to <GeMS3K>-dat.lst> is a path to the list of GEMS3K DCH, IPM and DBR input files as exported from GEM-Selektor code package. 
+In this mode, GEMSFIT will generate a template input configuration file. This file should be edited by the user to indicate (1) what parameters to fit and (2) what GEM output to compare with the experimental data to be loaded from the input .csv file or from the external database. 
+ 
+<path to <GEMS3K>-dat.lst> is a path to the list of GEMS3K DCH, IPM and DBR input files as exported from the GEM-Selektor code package. 
 
-The <path to GEMSFIT input config file> is a path to the template GEMSFIT input configuration file to be generated. 
+<path to GEMSFIT input config file> is a path to the template GEMSFIT input configuration file to be generated. 
 
 
 2. Using GEMSFIT, one should be able to fit any combination of standard state properties and non-ideality model interaction parameters, system T, P, bulk composition, i.e. any combination of GEMIPM input parameters. 
 
-Each input property selected for fitting must have at least the start value, lower and upper constraint, optional reaction constraints given in the "Parameters to Fit" section of the GEMSFIT input configuration file. 
+Each GEM input property selected for fitting must have at least the start value, lower and upper constraint, optional reaction constraints given in the "Parameters to Fit" section of the GEMSFIT input configuration file. 
+
+F<initval>   # assumed default low, upper boundaries, and 'i' meaning 'independently fitted'
+
+F{"IV":<initval>, "LB":<lowbound>, "UB":<upperbound>, "PD":'i' }    # explicit properties of fitting 
+
+Example 1: Inverse titration with H2SO4 and HCl to reach the prescribed pH:
+
+For IC 'S':   F{ "IV":0.1, "LB":0.09, "UB":0.11, "PD":'i' }        # independent parameter
+For IC 'Cl':  F{ "IV":0.01, "LB":0.009, "UB":0.011, "PD":'i' }     # independent parameter
+For IC 'H':   L{ "IV":113, "LB":112,
+                   [ { "LF":1, "LN": 'Cl', "LP":"bIC" }, 
+                     { "LF":2, "LN": 'S', "LP":"bIC" } ]
+		}   # linked parameter (hard link with coeff. 1.0)
+For IC 'O':   L{ "IV": 55.51, "LB": 112,  [ { "LF": 4, "LN": 'S', "LP":"bIC" } ] }
+
+
+Example 2: Fitting G0 value of KOH@ under reaction constraint to G0 of K+ (fitting parameter) and G0 of H2O@. 
+
+For DC 'K+' in G0 at 1,298:   F{"IV": -298074, "LB": -303000, "UB": -295000, "PD":'i'}  
+For DC 'KOH@': R{ "IV": -437107, "logK": -14.46, "Ref": "SUPCRT92", "nC": 4, 
+    [ { 'K+': -1 },  
+      { 'H2O@': -1 },
+      { 'H+': 1 },
+      { 'KOH@': 1 } ]
+}
 
 In the "Data to Compare" section of this file, it should also be clearly specified which GEMIPM output values (pH, Eh, concentrations, activities, their functions such as osmotic coefficients) should be compared with which respective experimental values; what type of the objective function (least-squares, ...), what kind of weights of samples should be used; and from which .csv file or which subset of PostgreSQL database these experimental values should be selected. 
+
+"DT": "bPS", "PN": "aqueous", "
+
+JSON notation example of the target (objective) function for parameter fitting
+
+{ "Target": 'name', "TT": 'lsq', "WT": 'inverr', "OFUN": 
+  [ 
+    { "OPH": 'aq_gen', "ON": 'Si', "OP": 'bXs',     "OFU": 'log_m',  
+      "EPH": 'aq_gen', "EN": 'Si',  "Eval": 'log_solubility', "Eerr": 'log_error' }
+    { "OPH": 'aq_gen', "ON": 'Al', "OP": 'bXs',     "OFU": 'log_m',  
+      "EPH": 'aq_gen', "EN": 'Al',  "Eval": 'log_solubility', "Eerr": 'log_error' }
+    { "OPH": 'aq_gen', "OP": 'pH',   
+      "EPH": 'aq_gen', "EN": 'pH', "Eval": 'log_solubility', "Eerr": 'log_error' }
+  ]
+}
+
+JSON notation example of the subset of experimental data to be selected
+
+{
+
+
+} 
+
 
 In the "Optimization Methods" section, the rest of specifications should be collected, e.g. choice of the algorithm, threads, statistics, etc. 
 
@@ -24,7 +74,7 @@ In the "Fitting Results" section, all the modes of output of fitting results (ou
 
 3. To generate the template GEMSFIT input configuration file, the program should combine fragments of GEMS3K DCH, IPM and DBR files into the "Fitting Task" section; fragment of DBR file into "Experimental Data" section; append the default "Optimization Methods" and "Fitting Results" sections. In the comment lines, all options must be visible. 
 
-A generated file must be edited by the user to mark what to fit and what to compare in the target function. Discussions are needed to develop "markup language" for that.  The example template file is provided at the end of this file. 
+A generated file must be edited by the user to mark what to fit and what to compare in the target function. Discussions are needed to develop "markup language" for that. The example template file is provided at the end of this file. 
 
 
 ------ Example generated template GEMSFIT configuration file -------- 
