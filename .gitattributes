@@ -1,5 +1,12 @@
 * text=auto !eol
 Tests/CASH/CASH-data-LHopital/CASH-EL01-data.xls -text
+Tests/CASH/CASH-data-LHopital/impdata-expcsd.sql -text
+Tests/CASH/CASH-data-LHopital/impdata-expresaq.sql -text
+Tests/CASH/CASH-data-LHopital/impdata-expresss.sql -text
+Tests/CASH/CASH-data-LHopital/impdata_to_exp_comp.sql -text
+Tests/CASH/CASH-data-LHopital/impdata_to_exp_phases.sql -text
+Tests/CASH/CASH-data-LHopital/impdata_to_resultsaq.sql -text
+Tests/CASH/CASH-data-LHopital/impdata_to_resultsss.sql -text
 Tests/CASH/CSH-ch04-data.xls -text
 Tests/CASH/CSH-gc65-data.xls -text
 Tests/CASH/impdata_to_exp_comp.sql -text
