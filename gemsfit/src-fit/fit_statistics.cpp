@@ -177,8 +177,17 @@ void StdStatistics::std_basic_stat( std::vector<double> &optv_, std::vector<SS_S
     SD_of_residuals = sqrt( (sum_of_squares/(number_of_measurements-number_of_parameters)) );
 
 
+    // Modified by DM on 12.03.2012 due to errorneus calculation of R^2 when using log_solubility data.
+//    // Compute R^2: coefficient of determination
+//    mean = ( accumulate(systems->at(0)->measured_values_v.begin(), systems->at(0)->measured_values_v.end(), 0) ) / systems->at(0)->measured_values_v.size();
+
+    mean = 0;
     // Compute R^2: coefficient of determination
-    mean = ( accumulate(systems->at(0)->measured_values_v.begin(), systems->at(0)->measured_values_v.end(), 0) ) / systems->at(0)->measured_values_v.size();
+    for (i=0; i< systems->at(0)->measured_values_v.size(); i++)
+    {
+        mean += systems->at(0)->measured_values_v[i];
+    }
+    mean = mean / systems->at(0)->measured_values_v.size();
 
     assert( systems->at(0)->computed_values_v.size() == systems->at(0)->measured_values_v.size() );
 
