@@ -2,7 +2,7 @@ Suggestion on how to produce a template GEMSFIT configuration file from GEMS3K I
 
 1. There should be a special mode of starting GEMSFIT with command-line parameters as
 
->$ gemsfit -init <path to <GEMS3K>-dat.lst> -conf <path to GEMSFIT input config file> 
+>$ gemsfit -init <path to <GEMS3K>-dat.lst> -conf <path to GEMSFIT input config file to be generated> 
 
 Example: >$ gemsfit -init ./SS_INPUT/AllDa3T-fwd-dat.lst -conf ./SS_INPUT/SS_GEMSFIT_AllDa3T_input.dat
 
@@ -10,12 +10,21 @@ In this mode, GEMSFIT will generate a template input configuration file. This f
  
 <path to <GEMS3K>-dat.lst> is a path to the list of GEMS3K DCH, IPM and DBR input files as exported from the GEM-Selektor code package. 
 
-<path to GEMSFIT input config file> is a path to the template GEMSFIT input configuration file to be generated. 
+<path to GEMSFIT input config file to be generated> is a path to the template GEMSFIT input configuration file to be generated (if exists, will be overwritten). This file has to be edited by the user before running GEMSFIT for this task.
 
 
 2. Using GEMSFIT, one should be able to fit any combination of standard state properties and non-ideality model interaction parameters, system T, P, bulk composition, i.e. any combination of GEMIPM input parameters. 
 
-Each GEM input property selected for fitting must have at least the start value, lower and upper constraint, optional reaction constraints given in the "Parameters to Fit" section of the GEMSFIT input configuration file. 
+To run GEMSFIT, a path to the the input configuration file should be given in the command line:
+
+>$ gemsfit -run <path to GEMSFIT input config file> 
+
+Example: >$ gemsfit -run ./SS_INPUT/SS_GEMSFIT_AllDa3T_input.dat
+
+The GEMSFIT output files will be written into the "output_GEMSFIT" and the "results_GEMSFIT" subfolders located in the same folder where the GEMSFIT input config file is located. 
+
+
+3. Each GEM input property selected for fitting must have at least the start value, lower and upper constraint, optional reaction constraints given in the "Parameters to Fit" section of the GEMSFIT input configuration file. 
 
 F<initval>   # assumed default low, upper boundaries, and 'i' meaning 'independently fitted'
 
