@@ -33,14 +33,15 @@
  */
 
 #include "data_manager.h"
+#include "gemsfit_iofiles.h"
 
 // Constructor
 SS_Data_Manager::SS_Data_Manager( )
 {
     // GEMSFIT logfile
-    const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
+    //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
     ofstream fout;
-    fout.open(path, ios::app);
+    fout.open(gpf->FITLogFile().c_str(), ios::app);
     if( fout.fail() )
     { cout<<"Output fileopen error"<<endl; exit(1); }
 
@@ -96,7 +97,7 @@ void SS_Data_Manager::get_db_specs( )
     string hash("#");
 
     // Read parameter file into string
-    data_stream.open( "SS_INPUT/SS_GEMSFIT_input.dat" );
+    data_stream.open( gpf->OptParamFile().c_str() );
     if( data_stream.fail() )
     {
         cout << "Opening of file GEMSFIT_input.dat failed !!"<<endl;
@@ -111,9 +112,9 @@ void SS_Data_Manager::get_db_specs( )
     allexpx += data[i];
 
     // GEMSFIT logfile
-    const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
+    //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
     ofstream fout;
-    fout.open(path, ios::app);
+    fout.open(gpf->FITLogFile().c_str(), ios::app);
     if( fout.fail() )
     { cout<<"Output fileopen error"<<endl; exit(1); }
 
@@ -281,9 +282,9 @@ void Data_Manager::get_db_specs( )
     allexp += data[i];
 
 	// GEMSFIT logfile
-	const char path[200] = "output_GEMSFIT/GEMSFIT.log";
+    //const char path[200] = "output_GEMSFIT/GEMSFIT.log";
 	ofstream fout;
-	fout.open(path, ios::app);						
+    fout.open(gpf->FITLogFile().c_str(), ios::app);
 	if( fout.fail() )
 	{ cout<<"Output fileopen error"<<endl; exit(1); }
 

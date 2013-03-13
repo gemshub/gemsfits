@@ -47,6 +47,7 @@
 
 //#include "system_properties.h"
 #include "data_manager.h"
+#include "gemsfit_iofiles.h"
 
 
 void SS_Data_Manager::get_CSV(  )
@@ -57,9 +58,9 @@ void SS_Data_Manager::get_CSV(  )
     vector<string> data;
 
     // GEMSFIT logfile
-    const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
+    //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
     ofstream fout;
-    fout.open(path, ios::app);
+    fout.open(gpf->FITLogFile().c_str(), ios::app);
     if( fout.fail() )
     { cout<<"Output fileopen error"<<endl; exit(1); }
 
@@ -223,15 +224,15 @@ void SS_Data_Manager::get_DB(  )
 {
 
     // GEMSFIT logfile
-    const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
+    //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
     ofstream fout;
-    fout.open(path, ios::app);
+    fout.open(gpf->FITLogFile().c_str(), ios::app);
     if( fout.fail() )
     { cout<<"Output fileopen error"<<endl; exit(1); }
 
-    const char path1[200] = "results_GEMSFIT/FIT.csv";
+    //const char path1[200] = "results_GEMSFIT/FIT.csv";
     ofstream fout_;
-    fout_.open(path1, ios::app);
+    fout_.open(gpf->FITFile().c_str(), ios::app);
     if( fout_.fail() )
     { cout<<"Output fileopen error"<<endl; exit(1); }
 
@@ -892,8 +893,9 @@ void SS_Data_Manager::get_DB(  )
  fout.close();
 
  // Write Unique TP file for use to get GEMS lookup array of G0 at TP
- const char path2[200] = "output_GEMSFIT/TP.csv";
- fout.open(path2, ios::app);
+ string path2 = gpf->OutputDirPath();
+        path2+= "TP.csv";
+ fout.open(path2.c_str(), ios::app);
  if( fout.fail() )
     { cout<<"Output fileopen error"<<endl; exit(1); }
 
@@ -915,9 +917,9 @@ void Data_Manager::get_CSV( measdata* sysdata )
 	vector<string> data;
 
 	// GEMSFIT logfile
-	const char path[200] = "output_GEMSFIT/GEMSFIT.log";
+    //const char path[200] = "output_GEMSFIT/GEMSFIT.log";
 	ofstream fout;
-	fout.open(path, ios::app);						
+    fout.open(gpf->FITLogFile().c_str(), ios::app);
 	if( fout.fail() )
 	{ cout<<"Output fileopen error"<<endl; exit(1); }
 
@@ -1212,9 +1214,9 @@ void Data_Manager::get_DB( measdata* sysdata )
 {
 
 	// GEMSFIT logfile
-	const char path[200] = "output_GEMSFIT/GEMSFIT.log";
+    //const char path[200] = "output_GEMSFIT/GEMSFIT.log";
 	ofstream fout;
-	fout.open(path, ios::app);						
+    fout.open(gpf->FITLogFile().c_str(), ios::app);
 	if( fout.fail() )
 	{ cout<<"Output fileopen error"<<endl; exit(1); }
 

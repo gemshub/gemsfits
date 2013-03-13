@@ -46,6 +46,7 @@
 #include "optimization.h"
 #include "fit_statistics.h"
 #include "gemsfit_global_functions.h"
+#include "gemsfit_iofiles.h"
 
 
 //#define BOOST_FILESYSTEM_VERSION 3
@@ -69,16 +70,19 @@ void debug( System_Properties* , Opt_Vector, vector<System_Properties*> systems 
  
 int main( int argc, char *argv[] )
 {
+    gpf = new TGfitPath(argc, argv);
 
+    if( gpf->isInitMode() )
+      return 0;
 
     // Create output for log files and results directory
-	if ( !bfs::exists( "output_GEMSFIT" ) )
-		bfs::create_directory("output_GEMSFIT");
-    if ( !bfs::exists( "results_GEMSFIT" ) )
-        bfs::create_directory("results_GEMSFIT");
+    if ( !bfs::exists( gpf->OutputDirPath() ) )
+        bfs::create_directory(gpf->OutputDirPath() );
+    if ( !bfs::exists( gpf->ResultDir() ) )
+        bfs::create_directory(gpf->ResultDir());
 	
     // empty output directory
-    bfs::path fi("output_GEMSFIT");
+    bfs::path fi(gpf->OutputDirPath() );
     if(!bfs::exists(fi) || !bfs::is_directory(fi))
     {
         std::cout<<"output_GEMSFIT could not be created or is not a directory. Exiting now ... "<<endl;
@@ -121,17 +125,17 @@ if (do_what) {
 
 
     // GEMSFIT logfile
-    const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
+    //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
     ofstream fout;
-    fout.open(path, ios::app);
+    fout.open(gpf->FITLogFile().c_str(), ios::app);
     if( fout.fail() )
     { cout<<"Output fileopen error"<<endl; exit(1); }
     fout << "1. main.cpp line 124. Creating new SS_System_Properties" << endl;
 
     // GEMSFIT results file for all test runs. Keeps a log of all runs. The file has to be deleted manually.
-    const char path_[200] = "results_GEMSFIT/FIT_results.csv";
+    string path_ = gpf->ResultDir()+"FIT_results.csv";
     ofstream fout_;
-    fout_.open(path_, ios::app);
+    fout_.open(path_.c_str(), ios::app);
     if( fout_.fail() )
     { cout<<"Output fileopen error"<<endl; exit(1); }
     time_t now = time(0);
@@ -161,9 +165,10 @@ if (do_what) {
         if( gibbs.OptDoWhat == 0 || gibbs.OptDoWhat == 1 )
         {
             // Prepare streaming file for live surveillance of master_counter, SSR and fitting parameters
-            const char path[200] = "output_GEMSFIT/ss_fitting_stream.out";
+            string path = gpf->OutputDirPath() ;
+                   path += "ss_fitting_stream.out";
             ofstream fout;
-            fout.open(path);
+            fout.open(path.c_str());
             if( fout.fail() )
             { cout<<"Output fileopen error"<<endl; exit(1); }
             fout << "##;##" << endl;
@@ -176,9 +181,9 @@ if (do_what) {
             if( !gibbs.OptNmultistart )
             {
                 // GEMSFIT logfile
-                const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
+                //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
                 ofstream fout;
-                fout.open(path, ios::app);
+                fout.open(gpf->FITLogFile().c_str(), ios::app);
                 if( fout.fail() )
                 { cout<<"Output fileopen error"<<endl; exit(1); }
 
@@ -323,9 +328,10 @@ else
 		if( elvis.OptDoWhat == 0 || elvis.OptDoWhat == 1 )
 		{
 			// Prepare streaming file for live surveillance of master_counter, SSR and fitting parameters 
-			const char path[200] = "output_GEMSFIT/fitting_stream.out";
+            string path = gpf->OutputDirPath();
+                path += "fitting_stream.out";
 			ofstream fout;
-			fout.open(path);						
+            fout.open(path.c_str());
 			if( fout.fail() )
 			{ cout<<"Output fileopen error"<<endl; exit(1); }
 			fout << "##;##" << endl;
@@ -428,9 +434,9 @@ return 0;
 void debug( System_Properties* cacl2, Opt_Vector optim, vector<System_Properties*> systems )
 {
 	// GEMSFIT logfile
-	const char path[200] = "output_GEMSFIT/GEMSFIT.log";
+    //const char path[200] = "output_GEMSFIT/GEMSFIT.log";
 	ofstream fout;
-	fout.open(path, ios::app);						
+    fout.open(gpf->FITLogFile().c_str(), ios::app);
 	if( fout.fail() )
 	{ cout<<"Output fileopen error"<<endl; exit(1); }
 

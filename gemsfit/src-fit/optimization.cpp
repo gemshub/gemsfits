@@ -53,6 +53,7 @@
 //#include "gemsfit_global_functions.h"
 #include "gemsfit_global_functions.h"
 #include "plot_class.h"
+#include "gemsfit_iofiles.h"
 
 #define BIGVAL 1e20
 
@@ -148,9 +149,9 @@ namespace opti
     StdStateProp::StdStateProp( const vector<double> vec_opt ) : Optimization( vec_opt ), opt_vec(vec_opt)
     {
         // GEMSFIT logfile
-        const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
+        //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
         ofstream fout;
-        fout.open(path, ios::app);
+        fout.open(gpf->FITLogFile().c_str(), ios::app);
         if( fout.fail() )
         { cout<<"Output fileopen error"<<endl; exit(1); }
 
@@ -181,7 +182,7 @@ namespace opti
 
     void StdStateProp::set_nlopt_param( )
     {
-        string OptParamFile("SS_INPUT/SS_GEMSFIT_input.dat");
+        string OptParamFile(gpf->OptParamFile().c_str());
         int pos_start, pos_end;
         unsigned int i;
         ifstream param_stream;
@@ -232,14 +233,14 @@ namespace opti
         allparam += data[i];
 
 
-        const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
+        //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
         ofstream fout;
-        fout.open(path, ios::app);
+        fout.open(gpf->FITLogFile().c_str(), ios::app);
         if( fout.fail() )
         { cout<<"Output fileopen error"<<endl; exit(1); }
-        const char path1[200] = "results_GEMSFIT/FIT.csv";
+        //const char path1[200] = "results_GEMSFIT/FIT.csv";
         ofstream fout_;
-        fout_.open(path1, ios::app);
+        fout_.open(gpf->FITFile().c_str(), ios::app);
         if( fout_.fail() )
         { cout<<"Output fileopen error"<<endl; exit(1); }
 
@@ -786,9 +787,9 @@ namespace opti
         unsigned int i= 0;
 
         // GEMSFIT logfile
-        const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
+        //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
         ofstream fout;
-        fout.open(path, ios::app);
+        fout.open(gpf->FITLogFile().c_str(), ios::app);
         if( fout.fail() )
         { cout<<"Output fileopen error"<<endl; exit(1); }
 
@@ -922,9 +923,9 @@ namespace opti
         std::vector<double> grad;
 
         // GEMSFIT logfile
-        const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
+        //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
         ofstream ffout;
-        ffout.open(path, ios::app);
+        ffout.open(gpf->FITLogFile().c_str(), ios::app);
         if( ffout.fail() )
         { cout<<"Output fileopen error"<<endl; exit(1); }
 
@@ -1069,9 +1070,10 @@ namespace opti
                     {
                         std::cout<<" NLopt return code: "<<result<<endl;
                         print_return_message( result );
-                        const char path[200] = "output_GEMSFIT/SS_myFIT.out";
+                        string path = gpf->OutputDirPath();
+                               path +=  "SS_myFIT.out";
                         ofstream fout;
-                        fout.open(path, ios::app);
+                        fout.open(path.c_str(), ios::app);
                         if( fout.fail() )
                         { cout<<"Output fileopen error"<<endl; exit(1); }
                         fout<<"pid "<<pid<<", found minimum at <<f( ";
@@ -1255,9 +1257,9 @@ namespace opti
         std::vector<double> grad;
 
         // GEMSFIT logfile
-        const char path[200] = "output_GEMSFIT/GEMSFIT.log";
+        //const char path[200] = "output_GEMSFIT/GEMSFIT.log";
         ofstream ffout;
-        ffout.open(path, ios::app);
+        ffout.open(gpf->FITLogFile().c_str(), ios::app);
         if( ffout.fail() )
         { cout<<"Output fileopen error"<<endl; exit(1); }
 
@@ -1362,9 +1364,10 @@ namespace opti
         {
             std::cout<<" NLopt return code: "<<result<<endl;
             print_return_message( result );
-            const char path[200] = "output_GEMSFIT/myFIT.out";
+            string path = gpf->OutputDirPath();
+                   path += "myFIT.out";
             ofstream fout;
-            fout.open(path, ios::app);
+            fout.open(path.c_str(), ios::app);
             if( fout.fail() )
             { cout<<"Output fileopen error"<<endl; exit(1); }
             fout<<"pid "<<pid<<", found minimum at <<f( ";
@@ -1476,9 +1479,9 @@ namespace opti
 		allparam += data[i];
 
 
-		const char path[200] = "output_GEMSFIT/GEMSFIT.log";
+        //const char path[200] = "output_GEMSFIT/GEMSFIT.log";
 		ofstream fout;
-		fout.open(path, ios::app);						
+        fout.open(gpf->FITLogFile().c_str(), ios::app);
 		if( fout.fail() )
 		{ cout<<"Output fileopen error"<<endl; exit(1); }
 
@@ -2020,9 +2023,9 @@ for( i=0; i<constraint_data_v.size(); i++ )
 		unsigned int i= 0;
 
 		// GEMSFIT logfile
-		const char path[200] = "output_GEMSFIT/GEMSFIT.log";
+        //const char path[200] = "output_GEMSFIT/GEMSFIT.log";
 		ofstream fout;
-		fout.open(path, ios::app);						
+        fout.open(gpf->FITLogFile().c_str(), ios::app);
 		if( fout.fail() )
 		{ cout<<"Output fileopen error"<<endl; exit(1); }
 
@@ -2113,9 +2116,9 @@ for( i=0; i<constraint_data_v.size(); i++ )
         std::vector<double> grad;
 
 		// GEMSFIT logfile
-		const char path[200] = "output_GEMSFIT/GEMSFIT.log";
+        //const char path[200] = "output_GEMSFIT/GEMSFIT.log";
 		ofstream ffout;
-		ffout.open(path, ios::app);						
+        ffout.open(gpf->FITLogFile().c_str(), ios::app);
 		if( ffout.fail() )
 		{ cout<<"Output fileopen error"<<endl; exit(1); }
 
@@ -2280,7 +2283,7 @@ for( i=0; i<constraint_data_v.size(); i++ )
 			pb << proc_id_boost;
 			string new_directory("./output_RUNS");
 			new_directory += "/run_" + s.str(); 
-			string out_fit("./output_GEMSFIT")
+            string out_fit(gpf->OutputDirPath())
 			out_fit += "_" + pb.str();
 			boost::filesystem3::copy_directory(boost::filesystem::path( out_fit ), boost::filesystem::path( new_directory.c_str() ));
 
@@ -2316,7 +2319,7 @@ for( i=0; i<constraint_data_v.size(); i++ )
 					ofstream fout;
 					ostringstream pb; 
 					pb << proc_id_boost;
-					string out_fit_plot("./output_GEMSFIT")
+                    string out_fit_plot(gpf->OutputDirPath())
 					out_fit_plot += "_" + pb.str() + "/myFIT.out";
 					fout.open( out_fit_plot.c_str(), ios::app );
 
@@ -2382,10 +2385,10 @@ for( i=0; i<constraint_data_v.size(); i++ )
      			s << i;
 				string new_directory("./output_RUNS");
 				new_directory += "/run_" + s.str(); 
-//                boost::filesystem::copy_directory(boost::filesystem::path("./output_GEMSFIT"), boost::filesystem::path( new_directory.c_str() ));
+//                boost::filesystem::copy_directory(boost::filesystem::path(gpf->OutputDirPath(), boost::filesystem::path( new_directory.c_str() ));
 
 				// empty output_GEMSFIT directory
-				boost::filesystem::path outFIT("output_GEMSFIT");
+                boost::filesystem::path outFIT(gpf->OutputDirPath());
 				boost::filesystem::directory_iterator dir_iter_G(outFIT), dir_end_G;
 				for(;dir_iter_G != dir_end_G; ++dir_iter_G)
 				{
@@ -2489,9 +2492,9 @@ for( i=0; i<constraint_data_v.size(); i++ )
 		std::vector<double> grad;
 
 		// GEMSFIT logfile
-		const char path[200] = "output_GEMSFIT/GEMSFIT.log";
+        //const char path[200] = "output_GEMSFIT/GEMSFIT.log";
 		ofstream ffout;
-		ffout.open(path, ios::app);						
+        ffout.open(gpf->FITLogFile().c_str(), ios::app);
 		if( ffout.fail() )
 		{ cout<<"Output fileopen error"<<endl; exit(1); }
 
@@ -2631,9 +2634,10 @@ for( i=0; i<constraint_data_v.size(); i++ )
 					{
 						std::cout<<" NLopt return code: "<<result<<endl;
 						print_return_message( result );
-						const char path[200] = "output_GEMSFIT/myFIT.out";
+                        string path = gpf->OutputDirPath();
+                               path += "myFIT.out";
 						ofstream fout;
-						fout.open(path, ios::app);						
+                        fout.open(path.c_str(), ios::app);
 						if( fout.fail() )
 						{ cout<<"Output fileopen error"<<endl; exit(1); }
 						fout<<"pid "<<pid<<", found minimum at <<f( "; 			
@@ -2764,9 +2768,10 @@ for( i=0; i<constraint_data_v.size(); i++ )
 				{
 					std::cout<<" NLopt return code: "<<result<<endl;
 					print_return_message( result );
-					const char path[200] = "output_GEMSFIT/myFIT.out";
+                    string path = gpf->OutputDirPath();
+                           path +="myFIT.out";
 					ofstream fout;
-					fout.open(path, ios::app);						
+                    fout.open(path.c_str(), ios::app);
 					if( fout.fail() )
 					{ cout<<"Output fileopen error"<<endl; exit(1); }
 					fout<<"pid "<<pid<<", found minimum at <<f( "; 			
@@ -2806,9 +2811,9 @@ for( i=0; i<constraint_data_v.size(); i++ )
 		std::vector<double> grad;
 
 		// GEMSFIT logfile
-		const char path[200] = "output_GEMSFIT/GEMSFIT.log";
+        //const char path[200] = "output_GEMSFIT/GEMSFIT.log";
 		ofstream ffout;
-		ffout.open(path, ios::app);						
+        ffout.open(gpf->FITLogFile().c_str(), ios::app);
 		if( ffout.fail() )
 		{ cout<<"Output fileopen error"<<endl; exit(1); }
 
@@ -2913,9 +2918,10 @@ for( i=0; i<constraint_data_v.size(); i++ )
 		{
 			std::cout<<" NLopt return code: "<<result<<endl;
 			print_return_message( result );
-			const char path[200] = "output_GEMSFIT/myFIT.out";
+            string path = gpf->OutputDirPath();
+                   path +="myFIT.out";
 			ofstream fout;
-			fout.open(path, ios::app);						
+            fout.open(path.c_str(), ios::app);
 			if( fout.fail() )
 			{ cout<<"Output fileopen error"<<endl; exit(1); }
 			fout<<"pid "<<pid<<", found minimum at <<f( "; 			

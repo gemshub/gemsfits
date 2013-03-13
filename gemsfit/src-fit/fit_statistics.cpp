@@ -42,7 +42,7 @@
 #include <boost/random/normal_distribution.hpp>
 
 #include "fit_statistics.h"
-
+#include "gemsfit_iofiles.h"
 
 // Constructor
 StdStatistics::StdStatistics( vector<SS_System_Properties*> *systems, double sum_of_squares_, int num_of_params_, int num_of_runs_ )
@@ -83,7 +83,7 @@ StdStatistics::~StdStatistics()
 
 void StdStatistics::std_get_stat_param( )
 {
-        string OptParamFile("SS_INPUT/SS_GEMSFIT_input.dat");
+        string OptParamFile(gpf->OptParamFile().c_str());
         int pos_start, pos_end, i;
         ifstream param_stream;
         vector<string> data;
@@ -221,14 +221,14 @@ void StdStatistics::std_basic_stat( std::vector<double> &optv_, std::vector<SS_S
         ofstream myStat;
         ostringstream pb;
         pb << proc_id_boost;
-        string out_fit("./output_GEMSFIT")
+        string out_fit(gpf->OutputDirPath().c_str())
         out_fit += "_" + pb.str() + "/myFitStatistics.txt";
         myStat.open( out_fit.c_str(), ios::app );
 #endif
 
 #ifndef BOOST_MPI
         ofstream myStat;
-        myStat.open("output_GEMSFIT/myFitStatistics.txt",ios::app);
+        myStat.open(gpf->FITStatisticsFile().c_str(),ios::app);
 #endif
         myStat << " # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # " << endl;
         myStat << " - - - - - - - RESULTS FROM GEMSFIT STANDARD G0 PARAMETER REGRESSION - - - - - - - " << endl;
@@ -340,7 +340,9 @@ cout<<"pid : "<<pid<<" entered Statistics::MC_confidence_interval | line 133 | n
 
         // for each MC run generate number_of_measurements random variables
             ofstream myScatter_all;
-            myScatter_all.open("output_GEMSFIT/myScatter_all.txt");
+            string path_ = gpf->OutputDirPath();
+            path_ += "myScatter_all.txt";
+            myScatter_all.open(path_.c_str());
         for( i=0; i<(number_of_measurements * num_of_MC_runs); i++ )
         {
             scatter_all[i] = get_rand();
@@ -388,7 +390,9 @@ cout<<" pid "<<pid<<", line 206"<<endl;
         if( !pid )
         {
             ofstream myScatter_pid_0;
-            myScatter_pid_0.open("output_GEMSFIT/myScatter_pid_0.txt",ios::app);
+            string path_ = gpf->OutputDirPath();
+            path_ += "myScatter_pid_0.txt";
+            myScatter_pid_0.open(path_.c_str(),ios::app);
             for( i=0; i<number_of_measurements; i++ )
             {
                 myScatter_pid_0 << " scatter_v["<<i<<"] : "<<scatter_v[i]<<endl;
@@ -399,7 +403,10 @@ cout<<" pid "<<pid<<", line 206"<<endl;
         else if( pid==1 )
         {
             ofstream myScatter_pid_1;
-            myScatter_pid_1.open("output_GEMSFIT/myScatter_pid_1.txt");
+
+            string path_ = gpf->OutputDirPath();
+            path_ += "myScatter_pid_1.txt";
+            myScatter_pid_1.open(path_.c_str());
             for( i=0; i<number_of_measurements; i++ )
             {
                 myScatter_pid_1 << " scatter_v["<<i<<"] : "<<scatter_v[i]<<endl<<endl;
@@ -522,14 +529,14 @@ cout<<" pid "<<pid<<", line 206"<<endl;
         ofstream myStat;
         ostringstream pb;
         pb << proc_id_boost;
-        string out_fit("./output_GEMSFIT")
+        string out_fit(gpf->OutputDirPath())
         out_fit += "_" + pb.str() + "/myFitStatistics.txt";
         myStat.open( out_fit.c_str(), ios::app );
 #endif
 
 #ifndef BOOST_MPI
         ofstream myStat;
-        myStat.open("output_GEMSFIT/myFitStatistics.txt",ios::app);
+        myStat.open(gpf->FITStatisticsFile().c_str(),ios::app);
 #endif
 
         myStat << " Confidence intervals of MC parameters : "<<endl;
@@ -684,14 +691,14 @@ cout<<"residual_sys = "<<residual_sys<<endl;
         ofstream myStat;
         ostringstream pb;
         pb << proc_id_boost;
-        string out_fit("./output_GEMSFIT")
+        string out_fit(gpf->OutputDirPath())
         out_fit += "_" + pb.str() + "/myFitStatistics.txt";
         myStat.open( out_fit.c_str(), ios::app );
 #endif
 
 #ifndef BOOST_MPI
         ofstream myStat;
-        myStat.open("output_GEMSFIT/myFitStatistics.txt",ios::app);
+        myStat.open(gpf->FITStatisticsFile().c_str(),ios::app);
 #endif
 
 
@@ -1108,14 +1115,14 @@ void Statistics::basic_stat( std::vector<double> &optv_, std::vector<System_Prop
 		ofstream myStat;
 		ostringstream pb; 
 		pb << proc_id_boost;
-		string out_fit("./output_GEMSFIT")
+        string out_fit(gpf->OutputDirPath())
 		out_fit += "_" + pb.str() + "/myFitStatistics.txt";
 		myStat.open( out_fit.c_str(), ios::app );
 #endif
 
 #ifndef BOOST_MPI
 		ofstream myStat;
-		myStat.open("output_GEMSFIT/myFitStatistics.txt",ios::app);
+        myStat.open(gpf->FITStatisticsFile().c_str(),ios::app);
 #endif
 		myStat << " # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # " << endl;  		
 		myStat << " - - - - - - - RESULTS FROM GEMSFIT PARAMETER REGRESSION - - - - - - - " << endl;  
@@ -1308,14 +1315,14 @@ cout << "plot_residuals 297 " << endl;
 		ofstream myStat;
 		ostringstream pb; 
 		pb << proc_id_boost;
-		string out_fit("./output_GEMSFIT")
+        string out_fit(gpf->OutputDirPath())
 		out_fit += "_" + pb.str() + "/myFitStatistics.txt";
 		myStat.open( out_fit.c_str(), ios::app );
 #endif
 
 #ifndef BOOST_MPI
 		ofstream myStat;
-		myStat.open("output_GEMSFIT/myFitStatistics.txt",ios::app);
+        myStat.open(gpf->FITStatisticsFile().c_str(),ios::app);
 #endif
 
 		myStat << " D'Agostino K square test: "<<endl;		
@@ -1404,7 +1411,9 @@ cout<<"pid : "<<pid<<" entered Statistics::MC_confidence_interval | line 133 | n
 	 
 		// for each MC run generate number_of_measurements random variables 
 			ofstream myScatter_all;
-			myScatter_all.open("output_GEMSFIT/myScatter_all.txt");		
+            string path_ = gpf->OutputDirPath();
+            path_ += "myScatter_all.txt";
+            myScatter_all.open(path_.c_str());
 		for( i=0; i<(number_of_measurements * num_of_MC_runs); i++ )
 		{
 			scatter_all[i] = get_rand();
@@ -1452,7 +1461,9 @@ cout<<" pid "<<pid<<", line 206"<<endl;
 		if( !pid )
 		{
 			ofstream myScatter_pid_0;
-			myScatter_pid_0.open("output_GEMSFIT/myScatter_pid_0.txt",ios::app);		
+            string path_ = gpf->OutputDirPath();
+            path_ += "myScatter_pid_0.txt";
+            myScatter_pid_0.open(path_.c_str(),ios::app);
 			for( i=0; i<number_of_measurements; i++ )
 			{
 				myScatter_pid_0 << " scatter_v["<<i<<"] : "<<scatter_v[i]<<endl;				
@@ -1463,7 +1474,9 @@ cout<<" pid "<<pid<<", line 206"<<endl;
 		else if( pid==1 )
 		{
 			ofstream myScatter_pid_1;
-			myScatter_pid_1.open("output_GEMSFIT/myScatter_pid_1.txt");		
+            string path_ = gpf->OutputDirPath();
+            path_ += "myScatter_pid_1.txt";
+            myScatter_pid_1.open(path_.c_str());
 			for( i=0; i<number_of_measurements; i++ )
 			{
 				myScatter_pid_1 << " scatter_v["<<i<<"] : "<<scatter_v[i]<<endl<<endl;				
@@ -1572,14 +1585,14 @@ cout<<" pid "<<pid<<", line 206"<<endl;
 		ofstream myStat;
 		ostringstream pb; 
 		pb << proc_id_boost;
-		string out_fit("./output_GEMSFIT")
+        string out_fit(gpf->OutputDirPath())
 		out_fit += "_" + pb.str() + "/myFitStatistics.txt";
 		myStat.open( out_fit.c_str(), ios::app );
 #endif
 
 #ifndef BOOST_MPI
 		ofstream myStat;
-		myStat.open("output_GEMSFIT/myFitStatistics.txt",ios::app);
+        myStat.open(gpf->FITStatisticsFile().c_str(),ios::app);
 #endif
 
 		myStat << " Confidence intervals of MC parameters : "<<endl;		
@@ -1736,14 +1749,14 @@ cout<<"residual_sys = "<<residual_sys<<endl;
 		ofstream myStat;
 		ostringstream pb; 
 		pb << proc_id_boost;
-		string out_fit("./output_GEMSFIT")
+        string out_fit(gpf->OutputDirPath())
 		out_fit += "_" + pb.str() + "/myFitStatistics.txt";
 		myStat.open( out_fit.c_str(), ios::app );
 #endif
 
 #ifndef BOOST_MPI
 		ofstream myStat;
-		myStat.open("output_GEMSFIT/myFitStatistics.txt",ios::app);
+        myStat.open(gpf->FITStatisticsFile().c_str(),ios::app);
 #endif
 
 

@@ -5,7 +5,8 @@ HEADERS +=  $$FIT_H/gemsfit_global_variables.h \
             $$FIT_H/plot_class.h \
             $$FIT_H/optimization.h \
             $$FIT_H/gemsfit_global_functions.h \
-            $$FIT_H/fit_statistics.h
+            $$FIT_H/fit_statistics.h \
+            $$FIT_H/gemsfit_iofiles.h
 
 SOURCES += $$FIT_CPP/system_properties.cpp \
            $$FIT_CPP/data_manager.cpp \
@@ -15,4 +16,6 @@ SOURCES += $$FIT_CPP/system_properties.cpp \
            $$FIT_CPP/optimization.cpp \
            $$FIT_CPP/gemsfit_global_functions.cpp \
            $$FIT_CPP/fit_statistics.cpp \
-           $$FIT_CPP/main.cpp
+           $$FIT_CPP/main.cpp \
+           $$FIT_CPP/gemsfit_iofiles.cpp
+

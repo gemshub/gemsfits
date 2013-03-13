@@ -30,6 +30,7 @@
  *
  */
 #include "plot_class.h"
+#include "gemsfit_iofiles.h"
 
 
 using namespace std;
@@ -97,9 +98,9 @@ void PlotFit::set_plotfit_vars()
 
 
 		// GEMSFIT logfile
-		const char path[200] = "output_GEMSFIT/GEMSFIT.log";
+        //const char path[200] = "output_GEMSFIT/GEMSFIT.log";
 		ofstream fout;
-		fout.open(path, ios::app);						
+        fout.open(gpf->FITLogFile().c_str(), ios::app);
 		if( fout.fail() )
 		{ cout<<"Output fileopen error"<<endl; exit(1); }
 
@@ -262,7 +263,7 @@ void PlotFit::set_plotfit_vars()
 void PlotFit::print_qqplot( const std::vector<double> &residuals_v, const std::vector<double> &quantiles_v )
 {
 
-	plotting_info->print_filename = "output_GEMSFIT/QQ_plot.";
+    plotting_info->print_filename = gpf->OutputDirPath() + "QQ_plot.";
 	plotting_info->print_filename = plotting_info->print_filename + plotting_info->print_format;
 	plotting_info->print_xlabel   = "Normal quantiles";
 	plotting_info->print_ylabel   = "Residual quantiles";
@@ -412,7 +413,7 @@ void PlotFit::print_vectors_curve( const int &id, const std::vector<System_Prope
 {
 
 
-	plotting_info->print_filename = "output_GEMSFIT/" + plotting_info->print_filename;
+    plotting_info->print_filename = gpf->OutputDirPath() + plotting_info->print_filename;
 	
 	if( id == 0 ) // plot part of the fitting result : call done by function ActivityModel::print_results(...)
 	{
@@ -420,7 +421,7 @@ void PlotFit::print_vectors_curve( const int &id, const std::vector<System_Prope
 	}
 	else if( id == 1 ) // plot residuals
 	{
-		plotting_info->print_filename = "output_GEMSFIT/residuals_curve.";
+        plotting_info->print_filename = gpf->OutputDirPath()+"residuals_curve.";
 		plotting_info->print_filename = plotting_info->print_filename + plotting_info->print_format;
 		plotting_info->print_xlabel   = "molality";
 		plotting_info->print_ylabel   = "residuals";
@@ -578,7 +579,7 @@ void PlotFit::print_vectors_curve( const int &id, const std::vector<System_Prope
 void PlotFit::print_vectors_scatter( const int &id, const std::vector<System_Properties*> *systems, const std::vector< std::vector<double> > &plot_array )
 {
 
-	plotting_info->print_filename = "output_GEMSFIT/Scatter_" + plotting_info->print_filename;
+    plotting_info->print_filename = gpf->OutputDirPath()+"Scatter_" + plotting_info->print_filename;
 	
 	if( id == 0 ) // plot part of the fitting result : call done by function ActivityModel::print_results(...)
 	{
@@ -586,7 +587,7 @@ void PlotFit::print_vectors_scatter( const int &id, const std::vector<System_Pro
 	}
 	else if( id == 1 ) // plot residuals
 	{
-		plotting_info->print_filename = "output_GEMSFIT/residuals_scatter.";
+        plotting_info->print_filename = gpf->OutputDirPath()+ "residuals_scatter.";
 		plotting_info->print_filename = plotting_info->print_filename + plotting_info->print_format;
 		plotting_info->print_xlabel   = "molality";
 		plotting_info->print_ylabel   = "residuals";
@@ -756,7 +757,7 @@ void PlotFit::print_vectors_scatter( const int &id, const std::vector<System_Pro
 
 	if( id == 1 ) // plot percentage residuals
 	{
-		plotting_info->print_filename = "output_GEMSFIT/residuals_percentage_scatter.";
+        plotting_info->print_filename = gpf->OutputDirPath()+"residuals_percentage_scatter.";
 		plotting_info->print_filename = plotting_info->print_filename + plotting_info->print_format;
 		plotting_info->print_xlabel   = "molality";
 		plotting_info->print_ylabel   = "( computed / measured ) * 100 - 100";
@@ -874,7 +875,7 @@ void PlotFit::print_vectors_curve( const std::vector<double> &optv_, const std::
 {
 //	plotting_info->print_filename = "output_GEMSFIT/" + plotting_info->print_filename;
 	
-	plotting_info->print_filename = "output_GEMSFIT/sensitivities.";
+    plotting_info->print_filename = gpf->OutputDirPath()+"sensitivities.";
 	plotting_info->print_filename = plotting_info->print_filename + plotting_info->print_format;
 	plotting_info->print_xlabel   = "parameter value";
 	plotting_info->print_ylabel   = "sum of squared residuals";
@@ -1052,7 +1053,7 @@ void PlotFit::print_histogram( std::vector<double> &optv_, double** MC_fitted_pa
 	int num_digits = 0;	
 	float XA, XE, XOR, XSTEP, YA, YE, YOR, YSTEP; 
 	float width_bars, low;
-	string filename("output_GEMSFIT/MonteCarlo_histogram_parameter_");
+    string filename(gpf->OutputDirPath()+"MonteCarlo_histogram_parameter_");
 
 	// allocate dynamic memory
 	vector<double> xrayv;
@@ -1326,7 +1327,7 @@ cout<<"y1ray["<<i<<"] = "<<y1ray[i]<<endl;
 		dislin::metafl(plotting_info->print_format.c_str());		
 
 		std::string ks = boost::lexical_cast<std::string>(k);
-		string filename( "output_GEMSFIT/Sensitivity_param_" + ks + "." + plotting_info->print_format );
+        string filename( gpf->OutputDirPath()+"Sensitivity_param_" + ks + "." + plotting_info->print_format );
 		dislin::setfil(filename.c_str());
 
 		// Initialize DISLIN object -> set Level to 1
@@ -1546,7 +1547,7 @@ cout<<" XA = "<<XA<<", XE = "<<XE<<", XOR = "<<XOR<<", XSTEP = "<<XSTEP<<", YA =
 	dislin::metafl( plotting_info->print_format.c_str() );		
 
 	// output filename
-	string filename_c( "output_GEMSFIT/SSR_contour_param_" + is + "_" + ks + "." + plotting_info->print_format );
+    string filename_c( gpf->OutputDirPath()+"SSR_contour_param_" + is + "_" + ks + "." + plotting_info->print_format );
 	dislin::setfil(filename_c.c_str());
 
 	dislin::setpag("da4l");
@@ -1604,7 +1605,7 @@ cout<<" XA = "<<XA<<", XE = "<<XE<<", XOR = "<<XOR<<", XSTEP = "<<XSTEP<<", YA =
 	// output filename
 	ks = boost::lexical_cast<std::string>(param_pair[0]);
 	is = boost::lexical_cast<std::string>(param_pair[1]);
-	string filename( "output_GEMSFIT/SSR_3D_param_" + is + "_" + ks + "." + plotting_info->print_format );
+    string filename( gpf->OutputDirPath()+ "SSR_3D_param_" + is + "_" + ks + "." + plotting_info->print_format );
 	dislin::setfil(filename.c_str());
 
 	// Initialize DISLIN object -> set Level to 1

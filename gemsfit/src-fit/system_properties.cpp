@@ -40,6 +40,7 @@
 
 
 #include "system_properties.h"
+#include "gemsfit_iofiles.h"
 
 using namespace std;
 
@@ -59,15 +60,15 @@ SS_System_Properties::SS_System_Properties( )
 
 
     // GEMSFIT logfile
-    const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
+    //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
     ofstream fout;
-    fout.open(path, ios::app);
+    fout.open(gpf->FITLogFile().c_str(), ios::app);
     if( fout.fail() )
     { cout<<"Output fileopen error"<<endl; exit(1); }
 
 
     // file containing the input parameters of the system and of the optimization class
-    param_file  = "SS_INPUT/SS_GEMSFIT_input.dat";
+    param_file  = gpf->OptParamFile().c_str();
 
     // For parameter optimization do not use printing of results
     printfile = false;
@@ -171,9 +172,9 @@ void SS_System_Properties::getsysprop( std_prop* sysprop )
     allparam += data[i];
 
     // GEMSFIT logfile
-    const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
+    //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
     ofstream fout;
-    fout.open(path, ios::app);
+    fout.open(gpf->FITLogFile().c_str(), ios::app);
     if( fout.fail() )
     { cout<<"Output fileopen error"<<endl; exit(1); }
 
@@ -330,9 +331,9 @@ void SS_System_Properties::getsysprop( std_prop* sysprop )
 
 
     // Density of H2O at experimental conditions
-    const char pathr[200] = "output_GEMSFIT/RHOH2O.txt";
+    string pathr = gpf->OutputDirPath()+"RHOH2O.txt";
     ofstream fout_rho;
-    fout_rho.open(pathr, ios::app);
+    fout_rho.open(pathr.c_str(), ios::app);
     if( fout_rho.fail() )
     { cout<<"Output fileopen error"<<endl; exit(1); }
 
@@ -398,9 +399,9 @@ void SS_System_Properties::getparam( parameters* sysparam )
     allparam += data[i];
 
     // GEMSFIT logfile
-    const char path[200] = "output_GEMSFIT/GEMSFIT.log";
+    //const char path[200] = "output_GEMSFIT/GEMSFIT.log";
     ofstream fout;
-    fout.open(path, ios::app);
+    fout.open(gpf->FITLogFile().c_str(), ios::app);
     if( fout.fail() )
     { cout<<"Output fileopen error"<<endl; exit(1); }
 
@@ -757,9 +758,9 @@ void System_Properties::getparam( parameters* sysparam )
 	allparam += data[i];
 
 	// GEMSFIT logfile
-	const char path[200] = "output_GEMSFIT/GEMSFIT.log";
+    //const char path[200] = "output_GEMSFIT/GEMSFIT.log";
 	ofstream fout;
-	fout.open(path, ios::app);						
+    fout.open(gpf->FITLogFile().c_str(), ios::app);
 	if( fout.fail() )
 	{ cout<<"Output fileopen error"<<endl; exit(1); }
 

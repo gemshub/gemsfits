@@ -46,7 +46,7 @@
 
 
 #include "gemsfit_global_functions.h"
-
+#include "gemsfit_iofiles.h"
 
 //int master_counter = 0;
 //int slave_counter = 0;
@@ -656,9 +656,10 @@ cout << " T_k  = " << T_k  << endl;
             }
 
             // log fie containing calculated solubilities form all itterations
-            const char path[200] = "output_GEMSFIT/Fit_itterations.csv";
+            string path = gpf->OutputDirPath();
+                   path += "Fit_itterations.csv";
             ofstream fout;
-            fout.open(path, ios::app);
+            fout.open(path.c_str(), ios::app);
             if( fout.fail() )
             { cout<<"Output fileopen error"<<endl; exit(1); }
 
@@ -1608,15 +1609,16 @@ cout << "tsolmod wrapper: sys->sysdata->molality_1.at("<<i<<") = "<<sys->sysdata
 					ofstream fout;
 					ostringstream pb; 
 					pb << proc_id_boost;
-					string out_fit_plot("./output_GEMSFIT")
+                    string out_fit_plot(gpf->OutputDirPath())
 					out_fit_plot += "_" + pb.str() + "/myFIT_PLOT.out";
 					fout.open( out_fit_plot.c_str(), ios::app );
 #endif
 
 #ifndef BOOST_MPI
-					const char path[200] = "output_GEMSFIT/myFIT_PLOT.out";
+                    string path = gpf->OutputDirPath();
+                           path += "myFIT_PLOT.out";
 					ofstream fout;
-					fout.open(path, ios::app);						
+                    fout.open(path.c_str(), ios::app);
 #endif
 					if( fout.fail() )
 					{ cout<<"Output fileopen error"<<endl; exit(1); }
@@ -1697,15 +1699,16 @@ std::cout<<"pid "<<pid<<" : sum_of_squared_residuals_sys_ = "<<sum_of_squared_re
 			ofstream fout;
 			ostringstream pb; 
 			pb << proc_id_boost;
-			string out_fit_plot("./output_GEMSFIT")
+            string out_fit_plot(gpf->OutputDirPath())
 			out_fit_plot += "_" + pb.str() + "/fitting_stream.out";
 			fout.open( out_fit_plot.c_str(), ios::app );
 #endif
 
 #ifndef BOOST_MPI
-			const char path[200] = "output_GEMSFIT/fitting_stream.out";
+            string path = gpf->OutputDirPath();
+                   path += "fitting_stream.out";
 			ofstream fout;
-			fout.open(path, ios::app);						
+            fout.open(path.c_str(), ios::app);
 #endif
 
 			if( fout.fail() )
@@ -2089,9 +2092,10 @@ std::cout<<"ln meas = "<<log(sys->sysdata->val.at(i))<<std::endl;
 
 						if( sys->printfile )
 						{
-							const char path[200] = "output_GEMSFIT/myFIT_PLOT.out";
+                            string path = gpf->OutputDirPath();
+                                   path += "myFIT_PLOT.out";
 							ofstream fout;
-							fout.open(path, ios::app);						
+                            fout.open(path.c_str(), ios::app);
 							if( fout.fail() )
 							{ cout<<"Output fileopen error"<<endl; exit(1); }
 							fout << right << setw(20) << sys->sysdata->molality_1.at(i) << right << setw(20) << computed_value << right << setw(20) << ln_mean_gam_m << endl;
@@ -3018,9 +3022,10 @@ cout<<"FinDiffVolume = "<<FinDiffVolume<<endl;
 			else 
 			{
 
-				const char path[200] = "output_GEMSFIT/myFIT.out";
+                string path = gpf->OutputDirPath();
+                       path += "myFIT.out";
 				ofstream fout;
-				fout.open(path, ios::app);						
+                fout.open(path.c_str(), ios::app);
 
 				if( fout.fail() )
 				{ cout<<"Output fileopen error"<<endl; exit(1); }
