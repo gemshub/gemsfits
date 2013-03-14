@@ -316,6 +316,9 @@ namespace opti
 
         // Populate nlopt instance
         virtual void set_nlopt_param( );
+        virtual void set_nlopt_param_txt( );
+        virtual void out_nlopt_param_txt(  bool with_comments, bool brief_mode );
+        virtual void define_nlopt_param( );
 
         // Normalize init vector, bounds and constraints
         virtual void normalize_params( const vector<double> initguesses );

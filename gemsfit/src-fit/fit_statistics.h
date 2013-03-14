@@ -132,6 +132,16 @@ class StdStatistics : public PlotFit
         void std_get_stat_param( );
 
         /**
+        * Read statistical input specifications from GEMSFIT_input.dat
+        *
+        * @author SD
+        * @date 14.03.2013
+        */
+void std_get_stat_param_txt( );
+void out_stat_param_txt( bool with_comments, bool brief_mode );
+void default_stat_param();
+
+        /**
         * Perform basic statistical test (R^2, SD of residuals, ...)
         *
         * @author DM, FFH

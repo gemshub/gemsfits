@@ -127,6 +127,14 @@ class SS_Data_Manager
         * @date 06.11.2012
         */
         void get_db_specs( );
+        /**
+        * get PostgreSQL database connection parameters
+        * @author SD
+        * @date 14.03.2013
+        */
+        void get_db_specs_txt( );
+        void out_db_specs_txt( bool with_comments, bool brief_mode );
+        void define_db_specs( );
 
         /**
         * Read measurement data from PosgreSQL server
