@@ -72,8 +72,8 @@ int main( int argc, char *argv[] )
 {
     gpf = new TGfitPath(argc, argv);
 
-    if( gpf->isInitMode() )
-      return 0;
+//    if( gpf->isInitMode() )
+//      return 0;
 
     // Create output for log files and results directory
     if ( !bfs::exists( gpf->OutputDirPath() ) )

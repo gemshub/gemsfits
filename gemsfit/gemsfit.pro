@@ -67,7 +67,7 @@ CONFIG( mpi, serial|mpi ) {
         QMAKE_CXX	= mpic++
         QMAKE_CFLAGS += $$system(mpicc --showme:compile) -fopenmp
         QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions $$system(mpic++ --showme:compile) -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions -fopenmp
-        LIBS += -L/usr/lib/postgresql/9.1/lib/ -L/usr/local/dislin/ $$system(mpic++ --showme:link) -ldislin -lXm -lecpg -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp
+        LIBS += -L/usr/lib/postgresql/9.1/lib/ -L/usr/local/dislin/ $$system(mpic++ --showme:link) -ldislin -lXm -lecpg -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp -ljansson
 }
 
 #contains( CONFIG, serial ) {
@@ -77,7 +77,7 @@ CONFIG( serial, serial|mpi ) {
         QMAKE_CXX	= g++
         QMAKE_CFLAGS += -fopenmp
         QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions -fopenmp
-        LIBS += -L/usr/lib/postgresql/9.1/lib/ -L/usr/local/dislin/ -ldislin -lXm -lecpg -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp
+        LIBS += -L/usr/lib/postgresql/9.1/lib/ -L/usr/local/dislin/ -ldislin -lXm -lecpg -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp -ljansson
 }
 
 FIT_CPP      =  ./src-fit
@@ -97,5 +97,3 @@ OBJECTS_DIR       = obj
 
 include($$FIT_CPP/fit.pri)
 include($$GEMS3K_CPP/gems3k.pri)
-
-

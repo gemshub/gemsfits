@@ -37,6 +37,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include "jansson.h"
 
 
 #include "system_properties.h"
@@ -109,10 +110,12 @@ SS_System_Properties::SS_System_Properties( )
 
     if (fit_std) {
     sysprop = new std_prop;
+//    reaction = new rdc_species;
     fout << "8. system_properties.cpp line 111. getsysprop( sysprop ); reads system properties form the input file." << endl;
     // Initialize pointer to instance of sysprop object
     // std_prop is a struc containing the standard state properties at TP of exp and at reference value + other associated variables
     getsysprop( sysprop );
+    getRDC(  );
     }
     /// Fitting interaction parameters
     else
@@ -131,6 +134,185 @@ SS_System_Properties::~SS_System_Properties()
 {
     // delete data_meas;
     delete sysprop;
+    // Delete measurement data vector of experiments
+    for (unsigned int i=0; i<reaction.size(); ++i)
+    {
+        delete reaction[i];
+    }
+}
+
+void SS_System_Properties::getRDC(/* rdc_species *reaction*/ )
+{
+    char *text;
+
+    json_t *root; json_t *data; json_t *Ref; json_t *logK; json_t *nC; json_t *specie; json_t *RC; json_t *Rcoef;
+    json_error_t error;
+
+    // Variable declarations
+    vector<string> vdata;
+    string line, allparam;
+    string json_s;
+    string sub_json;
+    int pos_start, pos_end;
+    unsigned int i, j;
+    ifstream param_stream;
+
+    // Keywords
+    string f7("<REACDC>");
+    string f4("#");
+
+    // Read parameter file into string
+    param_stream.open(param_file.c_str());
+    if( param_stream.fail() )
+    {
+        cout << "Opening of file "<<param_file<<" failed !!"<<endl;
+        exit(1);
+    }
+    while( getline(param_stream, line) )
+    {
+        vdata.push_back(line);
+    }
+    param_stream.close();
+    for( i=0; i < vdata.size(); i++ )
+    allparam += vdata[i];
+
+    // GEMSFIT logfile
+//    const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
+    ofstream fout;
+    fout.open(gpf->FITLogFile().c_str(), ios::app);
+    if( fout.fail() )
+    { cout<<"Output fileopen error"<<endl; exit(1); }
+
+    // RDC
+    pos_start = allparam.find(f7);
+    pos_end   = allparam.find(f4,pos_start);
+    json_s = allparam.substr((pos_start+f7.length()),(pos_end-pos_start-f7.length()));
+    istringstream json_ss(json_s);
+
+    const char * JSON = json_s.c_str();
+    root = json_loads(JSON, 0, &error);
+
+    if (root)
+{
+    if(!root)
+    {
+        fprintf(stderr, "error: on line %d: %s\n", error.line, error.text);
+    }
+    if(!json_is_array(root))
+    {
+        fprintf(stderr, "error: root is not an array\n");
+    }
+
+    for (i=0; i <json_array_size(root); i++ )
+    {
+        reaction.push_back(new rdc_species);
+    }
+
+    for(i = 0; i < json_array_size(root); i++)
+    {
+        data = json_array_get(root, i);
+        if(!json_is_object(data))
+        {
+            fprintf(stderr, "error: commit data %d is not an object\n", i + 1);
+        }
+
+        logK = json_object_get(data, "logK");
+            if(!json_is_real(logK))
+            {
+                fprintf(stderr, "error: commit %d: message is not real\n", i + 1);
+            }
+            reaction[i]->logK = json_real_value(logK);
+        nC = json_object_get(data, "nC");
+            if(!json_is_integer(nC))
+            {
+                fprintf(stderr, "error: commit %d: message is not integer\n", i + 1);
+            }
+            reaction[i]->nC = json_integer_value(nC);
+
+        Ref = json_object_get(data, "Ref");
+            if(!json_is_string(Ref))
+            {
+                fprintf(stderr, "error: commit %d: message is not a string\n", i + 1);
+            }
+            reaction[i]->Ref = json_string_value(Ref);
+
+        RC = json_object_get(data, "RC");
+        for (int j = 0; j < json_array_size(RC); j++)
+        {
+            specie = json_array_get(RC,j);
+            reaction[i]->rdc_species.push_back(json_string_value(specie));
+        }
+
+        Rcoef = json_object_get(data, "Rcoef");
+        if (json_array_size(RC) != json_array_size(Rcoef))
+        {
+            cout << "The number of raction species doesn't mach the number of reaction coeficients!!"<<endl;
+            exit(1);
+        }
+        for (int j = 0; j < json_array_size(Rcoef); j++)
+        {
+            specie = json_array_get(Rcoef,j);
+            reaction[i]->rdc_species_coef.push_back(json_integer_value(specie));
+        }
+    }
+
+
+    // Getting the species index using TNode class
+    // Assert that the parameter given in the GEMSFIT chemical system input file are compatible with the corresponding values in the GEMS3K input file
+    long index_species = -1;
+    char input_system_file_list_name[256];
+
+    // get system file list name // system name is the same ast the GMS3K input .lst file
+    strcpy(input_system_file_list_name, system_name.c_str());
+
+    // call GEM_init to read GEMS3K input files
+    TNode* node  = new TNode();
+    // call GEM_init     --> read in input files
+    if( (node->GEM_init( input_system_file_list_name )) == 1 )
+    {
+        cout<<" .. ERROR occurred while reading input files !!! ..."<<endl;
+        exit(1);
+    }
+
+    for (int j = 0; j < reaction.size(); ++j )
+    {
+        for ( i=0; i<reaction[j]->rdc_species.size(); ++i )
+        {
+        // Get form GEMS the index of to_fit_species of interest
+        try
+        {
+            index_species = node->DC_name_to_xCH( reaction[j]->rdc_species[i].c_str() );
+            if( index_species < 0 )
+            {
+                throw index_species;
+            }
+            else
+            {
+                reaction[j]->rdc_species_ind.push_back(index_species);
+            }
+        }
+        catch( long e )
+        {
+            cout<<endl;
+            cout<<" Phase name in GEMSFIT chemical system file has no corresponding phase name in GEMS3K input file !!!! "<<endl;
+            cout<<" Phase name given in GEMSFIT_input.dat: "<<to_fit_species[i]<<endl;
+            cout<<" Can not proceed ... Bailing out now ... "<<endl;
+            cout<<endl;
+            exit(1);
+        }
+        }
+    }
+
+}
+
+//    for( i=0; i<1; i++)
+//    {
+//        SysName_ss >> sub_SysName;
+//        system_name = sub_SysName;
+//    }
+//    fout<<endl<<"system_name = "<<system_name<<endl;
+
+
 }
 
 // Function reads tandard state properties of the chemical system. This function reads from the input file the system properties

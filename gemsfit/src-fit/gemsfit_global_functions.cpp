@@ -350,6 +350,10 @@ if (sys->fit_std) {
     // Recalculating the new G0 at the unique P T of the experiments and changing them in gems
     for (i=0; i<sys->fit_species_ind.size(); i++)            // loops trough all species
     {
+
+        // Setting the new values for T 298.15 P 1
+        node->Set_DC_G0(sys->fit_species_ind[i],1*100000, 25+273.15, sys->sysprop->std_gibbs[i]);
+
         // cout << " For " << to_fit_species[i] << endl;
         for (j=0; j<sys->data_meas->TP_pairs[0].size(); j++) // loops trough all unique TP_pairs
         {
@@ -362,6 +366,44 @@ if (sys->fit_std) {
 
         }
     }
+
+    // Recalulating G0 of the species fixed using logK
+    if (sys->reaction.size() > 0)
+    {
+        for (i=0; i < sys->reaction.size(); ++i )
+        {
+            double new_G0=0;
+            double delta_G=0;
+            double R=8.314472;
+            double delta_G0old_G0new;
+            int species_index = sys->reaction[i]->rdc_species_ind[sys->reaction[i]->rdc_species_ind.size()-1];
+
+            for ( j=0; j < sys->reaction[i]->rdc_species.size()-1; ++j ) // calculates DG without the last species which is the constrained one
+            {
+                delta_G += sys->reaction[i]->rdc_species_coef[j] * node->DC_G0(sys->reaction[i]->rdc_species_ind[j], 1e+05, 298.15, false);
+            }
+
+            new_G0 = (-R*298.15*2.302585093*sys->reaction[i]->logK) - delta_G;
+            delta_G0old_G0new = node->DC_G0(species_index, 1e+05, 298.15, false) - new_G0;
+            node->Set_DC_G0(species_index,1*100000, 25+273.15, new_G0);
+            sys->reaction[i]->std_gibbs = new_G0;
+
+            for (j=0; j<sys->data_meas->TP_pairs[0].size(); j++) // loops trough all unique TP_pairs
+            {
+                new_G0 = delta_G0old_G0new + node->DC_G0(species_index, sys->data_meas->TP_pairs[1][j]*100000, sys->data_meas->TP_pairs[0][j]+273.15, false);
+                // Set the new G0 in GEMS
+                node->Set_DC_G0(species_index, sys->data_meas->TP_pairs[1][j]*100000, sys->data_meas->TP_pairs[0][j]+273.15, new_G0);
+                // cout << temp_v[j] << endl;
+            }
+
+
+
+
+
+        }
+    }
+
+
 }
 
 /// Fitting interaction parameters

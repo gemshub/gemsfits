@@ -256,9 +256,16 @@ void StdStatistics::std_basic_stat( std::vector<double> &optv_, std::vector<SS_S
         for( i=0; i< (int) optv_.size(); i++ ) // cols
         {
             // Print optimized parameter values to file
-            myStat <<"			parameter "<< i <<" :	           " << optv_[i] << endl;
+            myStat <<"			parameter "<< i <<" : "<< systems->at(0)->to_fit_species[i]<<"	           " << optv_[i] << endl;
 
         }
+        // Reaction constrained parameter
+            myStat << " Reaction constrained parameter: "  <<endl;
+            for ( i=0; i < systems->at(0)->reaction.size(); ++i )
+            {
+                myStat <<" " <<systems->at(0)->reaction[i]->rdc_species[systems->at(0)->reaction[i]->rdc_species.size()-1] <<" : " << systems->at(0)->reaction[i]->std_gibbs <<endl;
+            }
+
         myStat << endl;
         myStat.close();
     }

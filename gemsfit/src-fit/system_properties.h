@@ -151,6 +151,19 @@ class SS_System_Properties /*: public SS_Data_Manager*/
     };
     std_prop* sysprop; // Pointer to std_prop struct that holds the stdandard state properties of the species to be fitted
 
+    struct rdc_species
+    {
+        double logK; // log K of the reaction
+        int nC; // number of components
+        vs rdc_species; // Names of species involved in reaction (the last one is the fixed species)
+        vi rdc_species_ind; // indices of RDC species in GEMS3K - read from node class after reading the experimental data
+        vi rdc_species_coef; // reaction coeficients
+        string Ref; // reference for log K
+        double std_gibbs; // standard state Gibbs free energy of the reaction constrained species at T=25 C and P=1 bar
+    }; 
+    vector<rdc_species*> reaction; // Vector of pointer to reactions (rdc_species struct that hold the reaction dependent species and the reaction properties)
+
+
     /**
     * Function reads standard state properties of the chemical system form GEMS3K input files
     *
@@ -159,6 +172,15 @@ class SS_System_Properties /*: public SS_Data_Manager*/
     * @date 30.10.2012
     */
     void getsysprop( std_prop* sysprop );
+
+    /**
+    * Function reads standard state properties of the chemical system form GEMS3K input files
+    *
+    * @param sysprop		Structure that holds the standard theromdynamic properties of the species to be fitted
+    * @author DM
+    * @date 30.10.2012
+    */
+    void getRDC( /*rdc_species* reaction*/ );
 
     ///////////////// for fiting interaction parameters ////////////////////////
 
