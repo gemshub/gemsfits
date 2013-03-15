@@ -62,6 +62,7 @@ docs/load_NaCl_ambient_from_csv.sql -text
 docs/nacl_298k.csv -text
 gemsfit-build/GEMSFIT_input.dat -text
 gemsfit-build/SS_INPUT/SS_GEMSFIT_input.dat -text
+gemsfit-build/SS_INPUT/SS_GEMSFIT_input_withRDC.dat -text
 gemsfit-build/SS_INPUT/qtz_h2o_nacl-dat.lst -text
 gemsfit-build/SS_INPUT/qtz_h2o_nacl-dbr-0-0000.dat -text
 gemsfit-build/SS_INPUT/qtz_h2o_nacl-dch.dat -text
