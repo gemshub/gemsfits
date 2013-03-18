@@ -38,7 +38,11 @@ const char *OPT_PARAM_FILE = "SS_INPUT/SS_GEMSFIT_input.dat";
 const char *FIT_CSV_FILE = "FIT.csv";
 const char *FIT_STATISTIC = "MyFitStatistics.txt";
 const char *FIT_LOGFILE = "SS_GEMSFIT.log";
+
 void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode );
+void get_gems_fit_multi_txt( TNode* node );
+void get_gems_fit_DCH_txt( TNode* node );
+void get_gems_fit_DBR_txt( TNode* node );
 
 StdStateProp::StdStateProp()
 {
@@ -49,25 +53,20 @@ StdStateProp::StdStateProp()
 // Constructor
 PlotFit::PlotFit(int)
 {
-
     // allocate dynamic memory for my_plotting_info struct
     plotting_info = new my_plotting_info;
-
     // Populate member variables
     define_plotfit_vars();
-
 }
 
 // Constructor
 StdStatistics::StdStatistics():PlotFit(1)
 {
-
     number_of_measurements = 0;
     sum_of_squares 		= 0;
     num_of_runs		= 0;
     number_of_parameters   = 0;
     define_plotfit_vars();
-
 }
 
 // Constructor
@@ -76,11 +75,12 @@ SS_Data_Manager::SS_Data_Manager( int )
     define_db_specs();
 }
 
-// Mode GEMSFIT will generate input configuration file
+/// Mode GEMSFIT to generate input configuration file
 int generateConfig()
 {
    try
    {
+
      // call GEM_init to read GEMS3K input files
      TNode* node  = new TNode();
 
@@ -91,39 +91,45 @@ int generateConfig()
             return 1;
         }
 
-    // Writting to the data
-    cout << "Start"<< endl;
-    SS_Data_Manager *data_meas = new SS_Data_Manager(1);
-    data_meas->out_db_specs_txt(true, false);
-    cout << "SS_Data_Manager"<< endl;
+    bool with_comments = true;
+    bool brief_mode = false;
 
-    out_gems_fit_txt( node, true, false );
+    // Writting to the data
+    cout << "Start writting"<< endl;
+
+    SS_Data_Manager *data_meas = new SS_Data_Manager(1);
+    data_meas->out_db_specs_txt(with_comments, brief_mode);
+
+    out_gems_fit_txt( node, with_comments, brief_mode );
 
     // Create instance of StdStateProp class derived from base class Optimization
     StdStateProp *gibbs = new StdStateProp();
-    gibbs->out_nlopt_param_txt(true, false);
-    //void StdStateProp::set_nlopt_param_txt( )
+    gibbs->out_nlopt_param_txt(with_comments, brief_mode);
 
-    cout << "StdStateProp"<< endl;
     StdStatistics *stat= new StdStatistics();
-    stat->out_stat_param_txt(true, false);
-    stat->out_plotfit_vars_txt(true, false);
-    //void StdStatistics::std_get_stat_param_txt( )
-    // PlotFit::set_plotfit_vars_txt( )
+    stat->out_stat_param_txt(with_comments, brief_mode);
+    stat->out_plotfit_vars_txt(with_comments, brief_mode);
 
-    // testing part
+    // test reading
+    cout << "Start testing"<< endl;
     data_meas->get_db_specs_txt();
     gibbs->set_nlopt_param_txt();
     stat->std_get_stat_param_txt();
     stat->set_plotfit_vars_txt();
+    get_gems_fit_multi_txt( node );
+    get_gems_fit_DCH_txt( node );
+    get_gems_fit_DBR_txt( node );
 
-    gpf->OptParamFileRename("t452.txt");
+
+    cout << "Finish " << endl;
+
+    /*gpf->OptParamFileRename("t452.txt");
     cout << gpf->OptParamFile() << endl;
     data_meas->out_db_specs_txt(true, false);
     gibbs->out_nlopt_param_txt(true, false);
     stat->out_stat_param_txt(true, false);
     stat->out_plotfit_vars_txt(true, false);
-
+    */
     } catch(TError& err)
       {
         cout << "Error:" << err.title.c_str() << ":" <<  err.mess.c_str() << endl;
@@ -182,7 +188,54 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
         ff << "#########################################################################" << endl;
     }
     TPrintArrays  prarIPM( 70, MULTI_dynamic_fields, ff);
-    // must be disscussion about IPM extern pointer in GEM3K
+    MULTI* pmp = node->pMulti()->GetPM();
+
+    if( pmp->FIs > 0 && pmp->Ls > 0 )
+    {
+      if( _comment )
+         ff << "\n\n## (4) Initial data for multicomponent phases (see DCH file for dimension nPHs)";
+      prarIPM.writeArrayF(  f_sMod, pmp->sMod[0], pmp->FIs, 6L, _comment, brief_mode );
+
+    long int LsModSum;
+    long int LsIPxSum;
+    long int LsMdcSum;
+    long int LsMsnSum;
+    long int LsSitSum;
+    node->pMulti()->getLsModsum( LsModSum, LsIPxSum );
+    node->pMulti()->getLsMdcsum( LsMdcSum, LsMsnSum, LsSitSum );
+
+     prarIPM.writeArray(  f_LsMod, pmp->LsMod, pmp->FIs*3, 3L, _comment, brief_mode);
+
+      if(LsIPxSum )
+      {
+       if( _comment )
+          ff << "\n\n# IPxPH: Index lists (in TSolMod convention) for interaction parameters of non-ideal solutions";
+       prarIPM.writeArray(  "IPxPH", pmp->IPx,  LsIPxSum);
+      }
+      if(LsModSum )
+       {
+         if( _comment )
+            ff << "\n\n# PMc: Tables (in TSolMod convention) of interaction parameter coefficients  for non-ideal solutions";
+        prarIPM.writeArray(  "PMc", pmp->PMc,  LsModSum);
+       }
+
+       prarIPM.writeArray(  f_LsMdc, pmp->LsMdc, pmp->FIs*3, 3L, _comment, brief_mode);
+       if(LsMdcSum )
+       {   if( _comment )
+              ff << "\n\n# DMc: Tables (in TSolMod convention) of  parameter coefficients for dependent components";
+        prarIPM.writeArray(  "DMc", pmp->DMc,  LsMdcSum);
+       }
+       if(LsMsnSum )
+       {   if( _comment )
+              ff << "\n\n# MoiSN:  end member moiety / site multiplicity number tables (in TSolMod convention) ";
+        prarIPM.writeArray(  "MoiSN", pmp->MoiSN,  LsMsnSum);
+       }
+    } // sMod
+    prarIPM.writeArray(  f_fDQF, pmp->fDQF,  pmp->L, -1L, _comment, brief_mode);
+
+
+    if( _comment )
+       ff << "\n\n# This part is taken from *DBR.dat\n";
 
     // from *DBR.dat
     TPrintArrays  prar(f_bSP+1/*52*/, DataBR_fields, ff);
@@ -258,6 +311,178 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
     }
 }
 
+/// Reading part MULTI structure from OptParamFile text file
+void get_gems_fit_multi_txt( TNode* node )
+{
+    // open file for reading
+    string fname = gpf->OptParamFile();
+    fstream ff(fname.c_str(), ios::in );
+    ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
+
+    TReadArrays  rddar(70, MULTI_dynamic_fields, ff);
+    MULTI* pmp = node->pMulti()->GetPM();
+
+    long int nfild = rddar.findNextNotAll();
+    while( nfild >=0 )
+        {
+          switch( nfild )
+          {
+          case f_sMod: if( !pmp->sMod )
+                          Error( "Error", "Array sMod is not used in this problem");
+                        rddar.readArray( "sMod" , pmp->sMod[0], pmp->FIs, 6 );
+                        break;
+          case f_LsMod:{ if( !pmp->LsMod )
+                          Error( "Error", "Array LsMod is not used in this problem");
+                        rddar.readArray( "LsMod" , pmp->LsMod, pmp->FIs*3) ;
+                        long int LsModSum;
+                        long int LsIPxSum;
+                        node->pMulti()->getLsModsum( LsModSum, LsIPxSum );
+                        if(LsIPxSum )
+                        { rddar.readNext( "IPxPH");
+                          if(!pmp->IPx )
+                            pmp->IPx = new long int[LsIPxSum];
+                          rddar.readArray( "IPxPH", pmp->IPx,  LsIPxSum);
+                        }
+                        if(LsModSum )
+                        { rddar.readNext( "PMc");
+                          if(!pmp->PMc )
+                            pmp->PMc = new double[LsModSum];
+                          rddar.readArray( "PMc", pmp->PMc,  LsModSum);
+                        }
+                        break;
+                       }
+                case f_LsMdc: { if( !pmp->LsMdc )
+                             Error( "Error", "Array LsMdc not used in this problem");
+                          rddar.readArray( "LsMdc" , pmp->LsMdc, pmp->FIs*3 );
+                          long int LsMdcSum;
+                          long int LsMsnSum;
+                          long int LsSitSum;
+                          node->pMulti()->getLsMdcsum( LsMdcSum,LsMsnSum, LsSitSum );
+                          if(LsMdcSum )
+                          { rddar.readNext( "DMc");
+                            if(!pmp->DMc )
+                               pmp->DMc = new double[LsMdcSum];
+                          rddar.readArray( "DMc", pmp->DMc,  LsMdcSum);
+                          }
+                        if(LsMsnSum )
+                        { rddar.readNext( "MoiSN");
+                          if(!pmp->MoiSN )
+                             pmp->MoiSN = new double[LsMsnSum];
+                        rddar.readArray( "MoiSN", pmp->MoiSN,  LsMsnSum);
+                        }
+                        break;
+                      }
+                case f_fDQF: rddar.readArray( "fDQF", pmp->fDQF,  pmp->L);
+                        break;
+          }
+          nfild = rddar.findNextNotAll();
+        }
+}
+
+/// Reading part dataCH structure from OptParamFile text file
+void get_gems_fit_DCH_txt( TNode* node )
+{
+    // open file for reading
+    string fname = gpf->OptParamFile();
+    fstream ff(fname.c_str(), ios::in );
+    ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
+
+    TReadArrays  rddar(30, DataCH_dynamic_fields, ff);
+    DATACH* CSD = node->pCSD();
+
+    long int nfild = rddar.findNextNotAll();
+    while( nfild >=0 )
+      {
+        switch( nfild )
+        {
+        case f_ICNL: rddar.readArray( "ICNL", CSD->ICNL[0], CSD->nIC, MaxICN );
+                break;
+        case f_DCNL: rddar.readArray( "DCNL", CSD->DCNL[0], CSD->nDC, MaxDCN );
+                break;
+        case f_PHNL: rddar.readArray( "PHNL", CSD->PHNL[0], CSD->nPH, MaxPHN );
+                break;
+        case f_ccPH: rddar.readArray( "ccPH", CSD->ccPH, CSD->nPH, 1 );
+                break;
+        case f_nDCinPH: rddar.readArray( "nDCinPH", CSD->nDCinPH, CSD->nPH);
+                break;
+        case f_TKval: rddar.readArray( "TKval", CSD->TKval, CSD->nTp );
+                break;
+        case f_Pval: rddar.readArray( "Pval", CSD->Pval, CSD->nPp );
+                  break;
+        case f_G0: rddar.readArray( "G0", CSD->G0, CSD->nDC*node->gridTP() );
+                  break;
+         }
+            nfild = rddar.findNextNotAll();
+        }
+}
+
+/// Reading part dataBR structure from OptParamFile text file
+void get_gems_fit_DBR_txt( TNode* node )
+{
+    // open file for reading
+    string fname = gpf->OptParamFile();
+    fstream ff(fname.c_str(), ios::in );
+    ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
+
+    TReadArrays  rdar(f_bSP+1/*52*/, DataBR_fields, ff);
+    DATACH* CSD = node->pCSD();
+    DATABR* CNode = node->pCNode();
+
+    long int nfild = rdar.findNextNotAll();
+    while( nfild >=0 )
+      {
+        switch( nfild )
+        {
+        case f_TK: rdar.readArray( "TK",  &CNode->TK, 1);
+                break;
+        case f_P: rdar.readArray( "P",  &CNode->P, 1);
+                break;
+        case f_Vs: rdar.readArray( "Vs", &CNode->Vs, 1);
+                break;
+        case f_Ms: rdar.readArray( "Ms",  &CNode->Ms, 1);
+                break;
+        case f_Hs: rdar.readArray( "Hs",  &CNode->Hs, 1);
+                break;
+        case f_Gs: rdar.readArray( "Gs",  &CNode->Gs, 1);
+                 break;
+        case f_IS: rdar.readArray( "IS",  &CNode->IC, 1);
+                break;
+        case f_pH: rdar.readArray( "pH",  &CNode->pH, 1);
+                break;
+        case f_pe: rdar.readArray( "pe",  &CNode->pe, 1);
+                break;
+        case f_Eh: rdar.readArray( "Eh",  &CNode->Eh, 1);
+                break;
+        case f_bIC: rdar.readArray( "bIC",  CNode->bIC, CSD->nICb );
+                break;
+        case f_uIC: rdar.readArray( "uIC",  CNode->uIC, CSD->nICb );
+                break;
+        case f_xDC: rdar.readArray( "xDC",  CNode->xDC, CSD->nDCb );
+                break;
+        case f_gam: rdar.readArray( "gam",  CNode->gam, CSD->nDCb );
+                break;
+        case f_dll: rdar.readArray( "dll",  CNode->dll, CSD->nDCb );
+                break;
+        case f_dul: rdar.readArray( "dul",  CNode->dul, CSD->nDCb );
+                break;
+        case f_aPH: rdar.readArray( "aPH",  CNode->aPH, CSD->nPHb );
+                break;
+        case f_xPH: rdar.readArray( "xPH",  CNode->xPH, CSD->nPHb );
+                break;
+        case f_vPS: rdar.readArray( "vPS",  CNode->vPS, CSD->nPSb );
+                break;
+        case f_mPS: rdar.readArray( "mPS",  CNode->mPS, CSD->nPSb );
+                break;
+        case f_bPS: rdar.readArray( "bPS",  CNode->bPS, CSD->nPSb*CSD->nICb );
+                break;
+        case f_xPA: rdar.readArray( "xPA",  CNode->xPA, CSD->nPSb );
+                break;
+        case f_bSP: rdar.readArray( "bSP",  CNode->bSP, CSD->nICb );
+               break;
+         }
+            nfild = rdar.findNextNotAll();
+        }
+}
 
 //----------------------------------------------------------------
 // TGfitPath  class implementation
@@ -364,7 +589,7 @@ TGfitPath *gpf;
 
 //-------------------------------------------------------------------------------------------------
 
-outField SS_Data_Manager_fields[8] =
+outField SS_Data_Manager_fields[10] =
 {
     { "DatDB",  0, 0, 1, "\n# DatDB: Comment"},
     { "DatTable",  0, 0, 1, "\n# DatTable: Comment"},
@@ -373,7 +598,9 @@ outField SS_Data_Manager_fields[8] =
     { "DatSource",  1, 0, 1, "\n# DatSource: Comment"},
     { "DatCSVfile",  0, 0, 1, "\n# DatCSVfile: Comment"},
     { "DatServer",  0, 0, 1, "\n# DatServer: Comment"},
-    { "DatRDCTable",  0, 0, 1, "\n# DatRDCTable: Comment"}
+    { "DatRDCTable",  0, 0, 1, "\n# DatRDCTable: Comment"},
+    { "SystemFiles",  0, 0, 1, "\n# SystemFiles: Comment"},
+    { "RecipeFiles",  0, 0, 1, "\n# RecipeFiles: Comment"}
 };
 
 typedef enum {  /// Field index into outField structure
@@ -384,9 +611,12 @@ typedef enum {  /// Field index into outField structure
     f_DatSource,
     f_DatCSVfile,
     f_DatServer,
-    f_DatRDCTable
+    f_DatRDCTable,
+    f_SystemFiles,
+    f_RecipeFiles
 } SS_Data_Manager_FIELDS;
 
+/// Set up default values for structure
 void SS_Data_Manager::define_db_specs( )
 {
    datasource = 0;
@@ -399,13 +629,14 @@ void SS_Data_Manager::define_db_specs( )
    RDCtablename="";
 }
 
+/// Writes  structure to  the GEMSFIT configuration file
 void SS_Data_Manager::out_db_specs_txt( bool with_comments, bool brief_mode )
 {
     string fname = gpf->OptParamFile();
-    fstream ff(fname.c_str(), ios::out|ios::app );
+    fstream ff(fname.c_str(), ios::out/*|ios::app*/ );
     ErrorIf( !ff.good() , fname.c_str(), "OptParamFile text open error");
 
-    TPrintArrays  prar(8, SS_Data_Manager_fields, ff);
+    TPrintArrays  prar(10, SS_Data_Manager_fields, ff);
     // define data must be written
     if( datasource == 0 )
     {
@@ -421,6 +652,13 @@ void SS_Data_Manager::out_db_specs_txt( bool with_comments, bool brief_mode )
         prar.setAlws( f_DatServer );
     }
 
+    if(with_comments )
+    {
+        ff << "\n\n#########################################################################" << endl;
+        ff << "#>>>>>>>>>>>>>>> Data sources section >>>>>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
+        ff << "#########################################################################" << endl;
+    }
+
     prar.writeField(f_DatSource, (long int)datasource, with_comments, brief_mode  );
     prar.writeField(f_DatCSVfile, CSVfile, with_comments, brief_mode  );
     prar.writeField(f_DatDB, DBname, with_comments, brief_mode  );
@@ -429,16 +667,20 @@ void SS_Data_Manager::out_db_specs_txt( bool with_comments, bool brief_mode )
     prar.writeField(f_DatPasswd, passwd, with_comments, brief_mode  );
     prar.writeField(f_DatServer, psql_server, with_comments, brief_mode  );
     prar.writeField(f_DatRDCTable, RDCtablename, with_comments, brief_mode  );
+    prar.writeField(f_SystemFiles, gpf->GEMS3LstFilePath(), with_comments, brief_mode  );
+    prar.writeField(f_RecipeFiles, "", with_comments, brief_mode  );
 }
 
+// get PostgreSQL database connection parameters
 void SS_Data_Manager::get_db_specs_txt( )
 {
     // open file for reading
+    string inputstr;
     string fname = gpf->OptParamFile();
     fstream ff(fname.c_str(), ios::in );
     ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
 
-    TReadArrays  rdar(8, SS_Data_Manager_fields, ff);
+    TReadArrays  rdar(10, SS_Data_Manager_fields, ff);
 
     long int nfild = rdar.findNextNotAll();
     while( nfild >=0 )
@@ -461,6 +703,12 @@ void SS_Data_Manager::get_db_specs_txt( )
               break;
            case f_DatRDCTable: rdar.readArray( "DatRDCTable",  RDCtablename );
               break;
+          case f_SystemFiles: rdar.readArray( "SystemFiles",  inputstr );
+              gpf->setGEMS3LstFilePath(inputstr.c_str() );
+             break;
+          case f_RecipeFiles: rdar.readArray( "RecipeFiles",  inputstr );
+              gpf->setGEMS3RecipeFilePath(inputstr.c_str());
+             break;
           }
           nfild = rdar.findNextNotAll();
         }
@@ -506,6 +754,7 @@ typedef enum {  /// Field index into outField structure
 } StdStatistics_FIELDS;
 
 
+/// Set up default values for structure
 void StdStatistics::default_stat_param()
 {
   num_of_MC_runs = 10;
@@ -514,7 +763,7 @@ void StdStatistics::default_stat_param()
   MCbool =  0;
 }
 
-
+/// Writes  structure to  the GEMSFIT configuration file
 void StdStatistics::out_stat_param_txt( bool with_comments, bool brief_mode )
 {
     string fname = gpf->OptParamFile();
@@ -528,6 +777,7 @@ void StdStatistics::out_stat_param_txt( bool with_comments, bool brief_mode )
     prar.writeField(f_StatMCbool, (long int)MCbool, with_comments, brief_mode  );
 }
 
+// Read statistical input specifications from configurator
 void StdStatistics::std_get_stat_param_txt( )
 {
     // open file for reading
@@ -626,6 +876,7 @@ typedef enum {  /// Field index into outField structure
 } StdStateProp_FIELDS;
 
 
+/// Set up default values for structure
 void StdStateProp::define_nlopt_param( )
 {
     OptAlgo = "LN_BOBYQA";
@@ -659,6 +910,7 @@ void StdStateProp::define_nlopt_param( )
 
 }
 
+/// Writes  structure to  the GEMSFIT configuration file
 void StdStateProp::out_nlopt_param_txt( bool with_comments, bool brief_mode )
 {
     string fname = gpf->OptParamFile();
@@ -694,19 +946,26 @@ void StdStateProp::out_nlopt_param_txt( bool with_comments, bool brief_mode )
         };
     }
 
+    if(with_comments )
+    {
+        ff << "\n\n#########################################################################" << endl;
+        ff << "#>>>>>>>>>>>>>>> Optimization Methods section >>>>>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
+        ff << "#########################################################################" << endl;
+    }
+
     prar.writeField( f_OptAlgo,  OptAlgo, with_comments, brief_mode );
     prar.writeField( f_OptThreads,  (long int)OptThreads, with_comments, brief_mode);
     prar.writeField( f_OptBoundPerc,  OptBoundPerc, with_comments, brief_mode );
-    prar.writeArray( f_OptUpBounds,  OptUpBounds, with_comments, brief_mode);
-    prar.writeArray( f_OptLoBounds,  OptLoBounds, with_comments, brief_mode );
+    prar.writeArray( f_OptUpBounds,  OptUpBounds, 2, with_comments, brief_mode);
+    prar.writeArray( f_OptLoBounds,  OptLoBounds, 2, with_comments, brief_mode );
     prar.writeField( f_OptTolRel,  OptTolRel, with_comments, brief_mode);
     prar.writeField( f_OptTolAbs,  OptTolAbs, with_comments, brief_mode);
     prar.writeField( f_OptMaxEval,  (long int)OptMaxEval, with_comments, brief_mode);
     prar.writeField( f_OptConstraints,  (long int)OptConstraints, with_comments, brief_mode);
-    prar.writeArray( f_OptUpConstraints,  OptUpConstraints_, with_comments, brief_mode);
-    prar.writeArray( f_OptLoConstraints,  OptLoConstraints_, with_comments, brief_mode );
+    prar.writeArray( f_OptUpConstraints,  OptUpConstraints_, 2, with_comments, brief_mode);
+    prar.writeArray( f_OptLoConstraints,  OptLoConstraints_, 2, with_comments, brief_mode );
     prar.writeField( f_OptDoWhat,  (long int)OptDoWhat, with_comments, brief_mode);
-    prar.writeArray( f_OptStatOnlyBestFitParam,  OptStatOnlyBestFitParam, with_comments, brief_mode);
+    prar.writeArray( f_OptStatOnlyBestFitParam,  OptStatOnlyBestFitParam, 2, with_comments, brief_mode);
     prar.writeField( f_OptStatOnlySSR,  OptStatOnlySSR, with_comments, brief_mode);
     prar.writeField( f_OptEqSolv,  (long int)OptEquil, with_comments, brief_mode);
     prar.writeField( f_OptHybridMode,  (long int)OptHybridMode, with_comments, brief_mode);
@@ -721,6 +980,7 @@ void StdStateProp::out_nlopt_param_txt( bool with_comments, bool brief_mode )
 
 }
 
+// populate nlopt instance: set bounds, constraints, stopping criteria
 void StdStateProp::set_nlopt_param_txt( )
 {
     // open file for reading
@@ -917,6 +1177,7 @@ typedef enum {  /// Field index into outField structure
     f_PrintHead
 } PlotFit_FIELDS;
 
+/// Set up default values for structure
 void PlotFit::define_plotfit_vars( )
 {
     plotting_info->print_temperatures.clear();
@@ -934,6 +1195,7 @@ void PlotFit::define_plotfit_vars( )
     plotting_info->print_head="Systems: test plot";
 }
 
+/// Writes  structure to  the GEMSFIT configuration file
 void PlotFit::out_plotfit_vars_txt( bool with_comments, bool brief_mode )
 {
     string fname = gpf->OptParamFile();
@@ -942,9 +1204,16 @@ void PlotFit::out_plotfit_vars_txt( bool with_comments, bool brief_mode )
 
     TPrintArrays  prar(9, PlotFit_fields, ff);
 
-    prar.writeArray(f_PrintTemperatures,  plotting_info->print_temperatures, with_comments, brief_mode );
-    prar.writeArray(f_PrintPressures,  plotting_info->print_pressures, with_comments, brief_mode );
-    prar.writeArray(f_PrintMolalities,  plotting_info->print_molalities, with_comments, brief_mode );
+    if(with_comments )
+    {
+        ff << "\n\n#########################################################################" << endl;
+        ff << "#>>>>>>>>>>>>>>> Fitting Results section >>>>>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
+        ff << "#########################################################################" << endl;
+    }
+
+    prar.writeArray(f_PrintTemperatures,  plotting_info->print_temperatures, 2, with_comments, brief_mode );
+    prar.writeArray(f_PrintPressures,  plotting_info->print_pressures, 2, with_comments, brief_mode );
+    prar.writeArray(f_PrintMolalities,  plotting_info->print_molalities, 2, with_comments, brief_mode );
     prar.writeField(f_PrintFormat,  plotting_info->print_format, with_comments, brief_mode );
     prar.writeField(f_PrintFilename,  plotting_info->print_filename, with_comments, brief_mode );
     prar.writeField(f_PrintMeasValueCode,  (long int)plotting_info->print_code, with_comments, brief_mode );
@@ -954,6 +1223,8 @@ void PlotFit::out_plotfit_vars_txt( bool with_comments, bool brief_mode )
 
 }
 
+/// Function populates member variables of the Plot_Fit
+/// class with data form the GEMSFIT configuration file
 void PlotFit::set_plotfit_vars_txt( )
 {
     // open file for reading

@@ -39,6 +39,7 @@ class TGfitPath
 
     string optParamFilePath;      /// from command line
     string gems3LstFilePath;      ///  Full path from command line
+    string gems3RecipeFilePath;      ///  Full path from command line
 
     string inputDir;
     string outputDir;
@@ -74,6 +75,18 @@ public:
 
     string GEMS3LstFilePath() const {
         return gems3LstFilePath;
+    }
+
+    void setGEMS3LstFilePath( const char* name)  {
+        gems3LstFilePath = name;
+    }
+
+    string GEMS3RecipeFilePath() const {
+        return gems3RecipeFilePath;
+    }
+
+    void setGEMS3RecipeFilePath( const char* name)  {
+        gems3RecipeFilePath = name;
     }
 
     string OptParamFile() const {

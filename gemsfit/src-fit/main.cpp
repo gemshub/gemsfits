@@ -63,7 +63,7 @@ int count_r = 0;
 
 
 void debug( System_Properties* , Opt_Vector, vector<System_Properties*> systems ); 
-int generateConfig();
+int generateConfig(); // Mode GEMSFIT to generate input configuration file
 
 
 // ---- // ---- // ---- // MAIN FUNCTION FOR GEMSFIT PROGRAM // ---- // ---- // ---- //
@@ -73,7 +73,7 @@ int main( int argc, char *argv[] )
     gpf = new TGfitPath(argc, argv);
 
 
-    if( gpf->isInitMode() )
+    if( gpf->isInitMode() ) // Mode GEMSFIT to generate input configuration file
       return generateConfig();
 
     // Create output for log files and results directory
