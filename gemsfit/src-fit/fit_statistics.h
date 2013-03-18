@@ -78,6 +78,7 @@ class StdStatistics : public PlotFit
         * @date 21.11.2012
         */
         StdStatistics( std::vector<SS_System_Properties*> *systems, double sum_of_squares_, int num_of_params_, int num_of_runs_  );
+        StdStatistics(); // init mode SD
 
         /**
         * Destructor of the Statistics class.

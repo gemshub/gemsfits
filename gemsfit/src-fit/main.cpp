@@ -63,7 +63,7 @@ int count_r = 0;
 
 
 void debug( System_Properties* , Opt_Vector, vector<System_Properties*> systems ); 
-
+int generateConfig();
 
 
 // ---- // ---- // ---- // MAIN FUNCTION FOR GEMSFIT PROGRAM // ---- // ---- // ---- //
@@ -72,8 +72,9 @@ int main( int argc, char *argv[] )
 {
     gpf = new TGfitPath(argc, argv);
 
-//    if( gpf->isInitMode() )
-//      return 0;
+
+    if( gpf->isInitMode() )
+      return generateConfig();
 
     // Create output for log files and results directory
     if ( !bfs::exists( gpf->OutputDirPath() ) )

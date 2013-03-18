@@ -27,6 +27,8 @@ using namespace std;
 #include "data_manager.h"
 #include "fit_statistics.h"
 #include "optimization.h"
+#include "plot_class.h"
+using namespace opti;
 
 // subfolder and file names default
 const char *INPUT_DIR = "SS_INPUT/";
@@ -36,6 +38,226 @@ const char *OPT_PARAM_FILE = "SS_INPUT/SS_GEMSFIT_input.dat";
 const char *FIT_CSV_FILE = "FIT.csv";
 const char *FIT_STATISTIC = "MyFitStatistics.txt";
 const char *FIT_LOGFILE = "SS_GEMSFIT.log";
+void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode );
+
+StdStateProp::StdStateProp()
+{
+    constraint_data = new my_constraint_data;
+    define_nlopt_param();
+}
+
+// Constructor
+PlotFit::PlotFit(int)
+{
+
+    // allocate dynamic memory for my_plotting_info struct
+    plotting_info = new my_plotting_info;
+
+    // Populate member variables
+    define_plotfit_vars();
+
+}
+
+// Constructor
+StdStatistics::StdStatistics():PlotFit(1)
+{
+
+    number_of_measurements = 0;
+    sum_of_squares 		= 0;
+    num_of_runs		= 0;
+    number_of_parameters   = 0;
+    define_plotfit_vars();
+
+}
+
+// Constructor
+SS_Data_Manager::SS_Data_Manager( int )
+{
+    define_db_specs();
+}
+
+// Mode GEMSFIT will generate input configuration file
+int generateConfig()
+{
+   try
+   {
+     // call GEM_init to read GEMS3K input files
+     TNode* node  = new TNode();
+
+     // call GEM_init     --> read in input files
+     if( (node->GEM_init( gpf->GEMS3LstFilePath().c_str() )) == 1 )
+        {
+            cout<<" .. ERROR occurred while reading GEMS3K input files !!! ..."<<endl;
+            return 1;
+        }
+
+    // Writting to the data
+    cout << "Start"<< endl;
+    SS_Data_Manager *data_meas = new SS_Data_Manager(1);
+    data_meas->out_db_specs_txt(true, false);
+    cout << "SS_Data_Manager"<< endl;
+
+    out_gems_fit_txt( node, true, false );
+
+    // Create instance of StdStateProp class derived from base class Optimization
+    StdStateProp *gibbs = new StdStateProp();
+    gibbs->out_nlopt_param_txt(true, false);
+    //void StdStateProp::set_nlopt_param_txt( )
+
+    cout << "StdStateProp"<< endl;
+    StdStatistics *stat= new StdStatistics();
+    stat->out_stat_param_txt(true, false);
+    stat->out_plotfit_vars_txt(true, false);
+    //void StdStatistics::std_get_stat_param_txt( )
+    // PlotFit::set_plotfit_vars_txt( )
+
+    // testing part
+    data_meas->get_db_specs_txt();
+    gibbs->set_nlopt_param_txt();
+    stat->std_get_stat_param_txt();
+    stat->set_plotfit_vars_txt();
+
+    gpf->OptParamFileRename("t452.txt");
+    cout << gpf->OptParamFile() << endl;
+    data_meas->out_db_specs_txt(true, false);
+    gibbs->out_nlopt_param_txt(true, false);
+    stat->out_stat_param_txt(true, false);
+    stat->out_plotfit_vars_txt(true, false);
+
+    } catch(TError& err)
+      {
+        cout << "Error:" << err.title.c_str() << ":" <<  err.mess.c_str() << endl;
+        return 1;
+      }
+      catch(...)
+      {
+        return -1;
+      }
+    return 0;
+
+}
+
+//extern outField DataCH_static_fields[14];
+extern outField DataCH_dynamic_fields[30];
+extern outField MULTI_dynamic_fields[70];
+extern outField DataBR_fields[f_lga+1/*58*/];
+
+void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
+{
+    DATACH* CSD = node->pCSD();
+    DATABR* CNode = node->pCNode();
+
+    string fname = gpf->OptParamFile();
+    fstream ff(fname.c_str(), ios::out|ios::app );
+    ErrorIf( !ff.good() , fname.c_str(), "OptParamFile text open error");
+
+    if(_comment )
+    {
+        ff << "\n\n#########################################################################" << endl;
+        ff << "#>>>>>>>>>>>>>>> Parameters to Fit section >>>>>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
+        ff << "#########################################################################" << endl;
+    }
+
+    TPrintArrays  prarCH(30, DataCH_dynamic_fields, ff);
+
+    if( _comment )
+        ff << "\n# ICNL: List of Independent Component names (<=4 characters per name) [nIC]";
+    prarCH.writeArray(  "ICNL", CSD->ICNL[0], CSD->nIC, MaxICN );
+    if( _comment )
+            ff << "\n# DCNL: Name list of Dependent Components (<=16 characters per name) [nDC]";
+    prarCH.writeArray(  "DCNL", CSD->DCNL[0], CSD->nDC, MaxDCN );
+    if( _comment )
+            ff << "\n# PHNL: List of Phase names (<=16 characters per name) [nPH]";
+    prarCH.writeArray(  "PHNL", CSD->PHNL[0], CSD->nPH, MaxPHN );
+    prarCH.writeArrayF(  f_ccPH, CSD->ccPH, CSD->nPH, 1L,_comment, brief_mode );
+    prarCH.writeArray(  f_nDCinPH, CSD->nDCinPH, CSD->nPH, -1L,_comment, brief_mode);
+    prarCH.writeArray(  f_TKval, CSD->TKval, CSD->nTp, -1L,_comment, brief_mode );
+    prarCH.writeArray(  f_Pval, CSD->Pval, CSD->nPp,  -1L,_comment, brief_mode );
+    prarCH.writeArray(  f_G0, CSD->G0, CSD->nDC*node->gridTP(), node->gridTP(), _comment, brief_mode );
+
+    if(_comment )
+    {
+        ff << "\n\n#########################################################################" << endl;
+        ff << "#>>>>>>>>>> Input for fitting non-ideality parametres >>>>>>>>>>>>>>>>>>#" << endl;
+        ff << "#########################################################################" << endl;
+    }
+    TPrintArrays  prarIPM( 70, MULTI_dynamic_fields, ff);
+    // must be disscussion about IPM extern pointer in GEM3K
+
+    // from *DBR.dat
+    TPrintArrays  prar(f_bSP+1/*52*/, DataBR_fields, ff);
+
+    prar.writeField(f_TK, CNode->TK, _comment, brief_mode  );
+    prar.writeField(f_P, CNode->P, _comment, brief_mode  );
+    if( _comment )
+     {   ff << "\n\n## (4) Data for Independent Components";
+         prar.writeArray(  NULL, CSD->ICNL[0], CSD->nIC, MaxICN );
+     }
+    prar.writeArray(  f_bIC,  CNode->bIC, CSD->nICb, -1L,_comment, brief_mode );
+    if( _comment )
+    {    ff << "\n\n## (5) Data for Dependent Components";
+         prar.writeArray(  NULL, CSD->DCNL[0], CSD->nDC, MaxDCN );
+     }
+    prar.writeArray(  f_xDC,  CNode->xDC, CSD->nDCb, -1L,_comment, brief_mode  );
+    prar.writeArray(  f_dll,  CNode->dll, CSD->nDCb, -1L,_comment, brief_mode  );
+    prar.writeArray(  f_dul,  CNode->dul, CSD->nDCb, -1L,_comment, brief_mode  );
+    if( _comment )
+    {    ff << "\n\n## (6) Data for Phases";
+          prar.writeArray(  NULL, CSD->PHNL[0], CSD->nPH, MaxPHN );
+    }
+    prar.writeArray(  f_aPH,  CNode->aPH, CSD->nPHb, -1L,_comment, brief_mode );
+
+    if(_comment )
+    {
+        ff << "\n\n#########################################################################" << endl;
+        ff << "#>>>>>>>>>>>>>>> Data to compare section >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
+        ff << "#########################################################################" << endl;
+    }
+
+    prar.writeField(f_Vs, CNode->Vs, _comment, brief_mode  );
+    prar.writeField(f_Ms, CNode->Ms, _comment, brief_mode  );
+    prar.writeField(f_Gs, CNode->Gs, _comment, brief_mode  );
+    if( CSD->ccPH[0] == PH_AQUEL )
+    {
+       prar.writeField(f_IS, CNode->IC, _comment, brief_mode  );
+       prar.writeField(f_pH, CNode->pH, _comment, brief_mode  );
+       prar.writeField(f_pe, CNode->pe, _comment, brief_mode  );
+       prar.writeField(f_Eh, CNode->Eh, _comment, brief_mode  );
+    }
+    if( _comment )
+     {
+         ff << "\n\n## (4) Data for Independent Components";
+         prar.writeArray(  NULL, CSD->ICNL[0], CSD->nIC, MaxICN );
+     }
+    prar.writeArray(  f_uIC,  CNode->uIC, CSD->nICb, -1L,_comment, brief_mode );
+    prar.writeArray(  f_bSP,  CNode->bSP, CSD->nICb, -1L,_comment, brief_mode );
+
+    if( _comment )
+    {    ff << "\n\n## (5) Data for Dependent Components";
+         prar.writeArray(  NULL, CSD->DCNL[0], CSD->nDC, MaxDCN );
+    }
+    //prar.writeArray(  f_xDC,  CNode->xDC, CSD->nDCb, -1L,_comment, brief_mode  );
+    prar.writeArray(  f_gam,  CNode->gam, CSD->nDCb, -1L,_comment, brief_mode  );
+
+    if( _comment )
+    {    ff << "\n\n## (6) Data for Phases";
+          prar.writeArray(  NULL, CSD->PHNL[0], CSD->nPH, MaxPHN );
+    }
+    prar.writeArray(  f_xPH,  CNode->xPH, CSD->nPHb, -1L,_comment, brief_mode );
+    prar.writeArray(  f_vPS,  CNode->vPS, CSD->nPSb, -1L,_comment, brief_mode );
+    prar.writeArray(  f_mPS,  CNode->mPS, CSD->nPSb, -1L,_comment, brief_mode );
+    prar.writeArray(  f_xPA,  CNode->xPA, CSD->nPSb, -1L,_comment, brief_mode );
+
+    if(!brief_mode || prar.getAlws( f_bPS ))
+    {  if( _comment )
+       {
+            ff << DataBR_fields[f_bPS].comment.c_str();
+        prar.writeArray(  NULL, CSD->ICNL[0], CSD->nIC, MaxICN );
+        }
+       prar.writeArray(  f_bPS,  CNode->bPS, CSD->nPSb*CSD->nICb, CSD->nICb,false, brief_mode );
+    }
+}
+
 
 //----------------------------------------------------------------
 // TGfitPath  class implementation
@@ -144,14 +366,14 @@ TGfitPath *gpf;
 
 outField SS_Data_Manager_fields[8] =
 {
-    { "DatDB",  0, 0, 1, "# DatDB: Comment"},
-    { "DatTable",  0, 0, 1, "# DatTable: Comment"},
-    { "DatUsername",  0, 0, 1, "# DatUsername: Comment"},
-    { "DatPasswd",  0, 0, 1, "# DatPasswd: Comment"},
-    { "DatSource",  1, 0, 1, "# DatSource: Comment"},
-    { "DatCSVfile",  0, 0, 1, "# DatCSVfile: Comment"},
-    { "DatServer",  0, 0, 1, "# DatServer: Comment"},
-    { "DatRDCTable",  0, 0, 1, "# DatRDCTable: Comment"}
+    { "DatDB",  0, 0, 1, "\n# DatDB: Comment"},
+    { "DatTable",  0, 0, 1, "\n# DatTable: Comment"},
+    { "DatUsername",  0, 0, 1, "\n# DatUsername: Comment"},
+    { "DatPasswd",  0, 0, 1, "\n# DatPasswd: Comment"},
+    { "DatSource",  1, 0, 1, "\n# DatSource: Comment"},
+    { "DatCSVfile",  0, 0, 1, "\n# DatCSVfile: Comment"},
+    { "DatServer",  0, 0, 1, "\n# DatServer: Comment"},
+    { "DatRDCTable",  0, 0, 1, "\n# DatRDCTable: Comment"}
 };
 
 typedef enum {  /// Field index into outField structure
@@ -180,7 +402,7 @@ void SS_Data_Manager::define_db_specs( )
 void SS_Data_Manager::out_db_specs_txt( bool with_comments, bool brief_mode )
 {
     string fname = gpf->OptParamFile();
-    fstream ff(fname.c_str(), ios::app );
+    fstream ff(fname.c_str(), ios::out|ios::app );
     ErrorIf( !ff.good() , fname.c_str(), "OptParamFile text open error");
 
     TPrintArrays  prar(8, SS_Data_Manager_fields, ff);
@@ -218,7 +440,7 @@ void SS_Data_Manager::get_db_specs_txt( )
 
     TReadArrays  rdar(8, SS_Data_Manager_fields, ff);
 
-    long int nfild = rdar.findNext();
+    long int nfild = rdar.findNextNotAll();
     while( nfild >=0 )
         {
           switch( nfild )
@@ -240,7 +462,7 @@ void SS_Data_Manager::get_db_specs_txt( )
            case f_DatRDCTable: rdar.readArray( "DatRDCTable",  RDCtablename );
               break;
           }
-          nfild = rdar.findNext();
+          nfild = rdar.findNextNotAll();
         }
 
     // define data must be read
@@ -270,10 +492,10 @@ void SS_Data_Manager::get_db_specs_txt( )
 
 outField StdStatistics_fields[4] =
 {
-    { "StatMCruns",  0, 0, 1, "# StatMCruns: Comment"},
-    { "StatSensitivity",  0, 0, 1, "# StatSensitivity: Comment"},
-    { "StatMCbars",  0, 0, 1, "# StatMCbars: Comment"},
-    { "StatMCbool",  0, 0, 1, "# StatMCbool: Comment"}
+    { "StatMCruns",  0, 0, 1, "\n# StatMCruns: Comment"},
+    { "StatSensitivity",  0, 0, 1, "\n# StatSensitivity: Comment"},
+    { "StatMCbars",  0, 0, 1, "\n# StatMCbars: Comment"},
+    { "StatMCbool",  0, 0, 1, "\n# StatMCbool: Comment"}
 };
 
 typedef enum {  /// Field index into outField structure
@@ -296,7 +518,7 @@ void StdStatistics::default_stat_param()
 void StdStatistics::out_stat_param_txt( bool with_comments, bool brief_mode )
 {
     string fname = gpf->OptParamFile();
-    fstream ff(fname.c_str(), ios::app );
+    fstream ff(fname.c_str(), ios::out|ios::app);
     ErrorIf( !ff.good() , fname.c_str(), "OptParamFile text open error");
 
     TPrintArrays  prar(4, StdStatistics_fields, ff);
@@ -315,7 +537,7 @@ void StdStatistics::std_get_stat_param_txt( )
 
     TReadArrays  rdar(4, StdStatistics_fields, ff);
 
-    long int nfild = rdar.findNext();
+    long int nfild = rdar.findNextNotAll();
     while( nfild >=0 )
         {
           switch( nfild )
@@ -333,7 +555,7 @@ void StdStatistics::std_get_stat_param_txt( )
                    }
                    break;
           }
-          nfild = rdar.findNext();
+          nfild = rdar.findNextNotAll();
         }
 
     // testing read
@@ -349,30 +571,30 @@ void StdStatistics::std_get_stat_param_txt( )
 
 outField StdStateProp_fields[24] =
 {
-    { "OptAlgo",  0, 0, 1, "# OptAlgo: Comment"},
-    { "OptThreads",  0, 0, 1, "# OptThreads: Comment"},
-    { "OptUpBounds",  0, 0, 1, "# OptUpBounds: Comment"},
-    { "OptLoBounds",  0, 0, 1, "# OptLoBounds: Comment"},
-    { "OptTolRel",  0, 0, 1, "# OptTolRel: Comment"},
-    { "OptMaxEval",  0, 0, 1, "# OptMaxEval: Comment"},
-    { "OptUpConstraints",  0, 0, 1, "# OptUpConstraints: Comment"},
-    { "OptLoConstraints",  0, 0, 1, "# OptLoConstraints: Comment"},
-    { "OptConstraints",  0, 0, 1, "# OptConstraints: Comment"},
-    { "OptDoWhat",  0, 0, 1, "# OptDoWhat: Comment"},
-    { "OptStatOnlyBestFitParam",  0, 0, 1, "# OptStatOnlyBestFitParam: Comment"},
-    { "OptStatOnlySSR",  0, 0, 1, "# OptStatOnlySSR: Comment"},
-    { "OptEqSolv",  0, 0, 1, "# OptEqSolv: Comment"},
-    { "OptTolAbs",  0, 0, 1, "# OptTolAbs: Comment"},
-    { "OptHybridTolRel",  0, 0, 1, "# OptHybridTolRel: Comment"},
-    { "OptHybridTolAbs",  0, 0, 1, "# OptHybridTolAbs: Comment"},
-    { "OptHybridMaxEval",  0, 0, 1, "# OptHybridMaxEval: Comment"},
-    { "OptHybridMode",  0, 0, 1, "# OptHybridMode: Comment"},
-    { "OptNmultistart",  0, 0, 1, "# OptNmultistart: Comment"},
-    { "OptHybridAlgo",  0, 0, 1, "# OptHybridAlgo: Comment"},
-    { "OptInitStep",  0, 0, 1, "# OptInitStep: Comment"},
-    { "OptScaleParam",  0, 0, 1, "# OptScaleParam: Comment"},
-    { "OptNormParam",  0, 0, 1, "# OptNormParam: Comment"},
-    { "OptBoundPerc",  0, 0, 1, "# OptBoundPerc: Comment"}
+    { "OptAlgo",  0, 0, 1, "\n# OptAlgo: Comment"},
+    { "OptThreads",  0, 0, 1, "\n# OptThreads: Comment"},
+    { "OptUpBounds",  0, 0, 1, "\n# OptUpBounds: Comment"},
+    { "OptLoBounds",  0, 0, 1, "\n# OptLoBounds: Comment"},
+    { "OptTolRel",  0, 0, 1, "\n# OptTolRel: Comment"},
+    { "OptMaxEval",  0, 0, 1, "\n# OptMaxEval: Comment"},
+    { "OptUpConstraints",  0, 0, 1, "\n# OptUpConstraints: Comment"},
+    { "OptLoConstraints",  0, 0, 1, "\n# OptLoConstraints: Comment"},
+    { "OptConstraints",  0, 0, 1, "\n# OptConstraints: Comment"},
+    { "OptDoWhat",  0, 0, 1, "\n# OptDoWhat: Comment"},
+    { "OptStatOnlyBestFitParam",  0, 0, 1, "\n# OptStatOnlyBestFitParam: Comment"},
+    { "OptStatOnlySSR",  0, 0, 1, "\n# OptStatOnlySSR: Comment"},
+    { "OptEqSolv",  0, 0, 1, "\n# OptEqSolv: Comment"},
+    { "OptTolAbs",  0, 0, 1, "\n# OptTolAbs: Comment"},
+    { "OptHybridTolRel",  0, 0, 1, "\n# OptHybridTolRel: Comment"},
+    { "OptHybridTolAbs",  0, 0, 1, "\n# OptHybridTolAbs: Comment"},
+    { "OptHybridMaxEval",  0, 0, 1, "\n# OptHybridMaxEval: Comment"},
+    { "OptHybridMode",  0, 0, 1, "\n# OptHybridMode: Comment"},
+    { "OptNmultistart",  0, 0, 1, "\n# OptNmultistart: Comment"},
+    { "OptHybridAlgo",  0, 0, 1, "\n# OptHybridAlgo: Comment"},
+    { "OptInitStep",  0, 0, 1, "\n# OptInitStep: Comment"},
+    { "OptScaleParam",  0, 0, 1, "\n# OptScaleParam: Comment"},
+    { "OptNormParam",  0, 0, 1, "\n# OptNormParam: Comment"},
+    { "OptBoundPerc",  0, 0, 1, "\n# OptBoundPerc: Comment"}
 };
 
 typedef enum {  /// Field index into outField structure
@@ -403,7 +625,6 @@ typedef enum {  /// Field index into outField structure
 
 } StdStateProp_FIELDS;
 
-using namespace opti;
 
 void StdStateProp::define_nlopt_param( )
 {
@@ -441,7 +662,7 @@ void StdStateProp::define_nlopt_param( )
 void StdStateProp::out_nlopt_param_txt( bool with_comments, bool brief_mode )
 {
     string fname = gpf->OptParamFile();
-    fstream ff(fname.c_str(), ios::app );
+    fstream ff(fname.c_str(), ios::out|ios::app );
     ErrorIf( !ff.good() , fname.c_str(), "OptParamFile text open error");
 
     vector<double> OptUpConstraints_;
@@ -512,7 +733,7 @@ void StdStateProp::set_nlopt_param_txt( )
     vector<double> OptUpConstraints_;
     vector<double> OptLoConstraints_;
 
-    long int nfild = rdar.findNext();
+    long int nfild = rdar.findNextNotAll();
     while( nfild >=0 )
         {
           switch( nfild )
@@ -576,7 +797,7 @@ void StdStateProp::set_nlopt_param_txt( )
                  }
                   break;
           }
-          nfild = rdar.findNext();
+          nfild = rdar.findNextNotAll();
         }
 
     if( OptBoundPerc > 0. )
@@ -669,5 +890,112 @@ void StdStateProp::set_nlopt_param_txt( )
          }
 }
 
+//-------------------------------------------------------------------------------------------------
+
+outField PlotFit_fields[9] =
+{
+    { "PrintTemperatures",  0, 0, 1, "\n# PrintTemperatures: Comment"},
+    { "PrintPressures",  0, 0, 1, "\n# PrintPressures: Comment"},
+    { "PrintMolalities",  0, 0, 1, "\n# PrintMolalities: Comment"},
+    { "PrintFormat",  0, 0, 1, "\n# PrintFormat: Comment"},
+    { "PrintFilename",  0, 0, 1, "\n# PrintFilename: Comment"},
+    { "PrintMeasValueCode",  0, 0, 1, "\n# PrintMeasValueCode: Comment"},
+    { "PrintLabelXaxis",  0, 0, 1, "\n# PrintLabelXaxis: Comment"},
+    { "PrintLabelYaxis",  0, 0, 1, "\n# PrintLabelYaxis: Comment"},
+    { "PrintHead",  0, 0, 1, "\n# PrintHead: Comment"}
+};
+
+typedef enum {  /// Field index into outField structure
+    f_PrintTemperatures= 0,
+    f_PrintPressures,
+    f_PrintMolalities,
+    f_PrintFormat,
+    f_PrintFilename,
+    f_PrintMeasValueCode,
+    f_PrintLabelXaxis,
+    f_PrintLabelYaxis,
+    f_PrintHead
+} PlotFit_FIELDS;
+
+void PlotFit::define_plotfit_vars( )
+{
+    plotting_info->print_temperatures.clear();
+    plotting_info->print_temperatures.push_back(298.15);
+    plotting_info->print_pressures.clear();
+    plotting_info->print_pressures.push_back(1);
+    plotting_info->print_molalities.clear();
+    plotting_info->print_molalities.push_back(0.0001);
+    plotting_info->print_molalities.push_back(-4.5);
+    plotting_info->print_format="eps";
+    plotting_info->print_filename="Comp_vs_Meas";
+    plotting_info->print_code=0;
+    plotting_info->print_xlabel="molality";
+    plotting_info->print_ylabel="activity coefficient";
+    plotting_info->print_head="Systems: test plot";
+}
+
+void PlotFit::out_plotfit_vars_txt( bool with_comments, bool brief_mode )
+{
+    string fname = gpf->OptParamFile();
+    fstream ff(fname.c_str(), ios::out|ios::app );
+    ErrorIf( !ff.good() , fname.c_str(), "OptParamFile text open error");
+
+    TPrintArrays  prar(9, PlotFit_fields, ff);
+
+    prar.writeArray(f_PrintTemperatures,  plotting_info->print_temperatures, with_comments, brief_mode );
+    prar.writeArray(f_PrintPressures,  plotting_info->print_pressures, with_comments, brief_mode );
+    prar.writeArray(f_PrintMolalities,  plotting_info->print_molalities, with_comments, brief_mode );
+    prar.writeField(f_PrintFormat,  plotting_info->print_format, with_comments, brief_mode );
+    prar.writeField(f_PrintFilename,  plotting_info->print_filename, with_comments, brief_mode );
+    prar.writeField(f_PrintMeasValueCode,  (long int)plotting_info->print_code, with_comments, brief_mode );
+    prar.writeField(f_PrintLabelXaxis,  plotting_info->print_xlabel, with_comments, brief_mode );
+    prar.writeField(f_PrintLabelYaxis,  plotting_info->print_ylabel, with_comments, brief_mode );
+    prar.writeField(f_PrintHead,  plotting_info->print_head, with_comments, brief_mode );
+
+}
+
+void PlotFit::set_plotfit_vars_txt( )
+{
+    // open file for reading
+    string fname = gpf->OptParamFile();
+    fstream ff(fname.c_str(), ios::in );
+    ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
+
+    TReadArrays  rdar(9, PlotFit_fields, ff);
+
+    long int nfild = rdar.findNextNotAll();
+    while( nfild >=0 )
+        {
+          switch( nfild )
+          {
+           case f_PrintTemperatures: rdar.readArray( "PrintTemperatures",  plotting_info->print_temperatures );
+                   break;
+           case f_PrintPressures: rdar.readArray( "PrintPressures",  plotting_info->print_pressures );
+                   break;
+           case f_PrintMolalities: rdar.readArray( "PrintMolalities",  plotting_info->print_molalities );
+                   break;
+          case f_PrintFormat: rdar.readArray( "PrintFormat",  plotting_info->print_format );
+                  break;
+          case f_PrintFilename: rdar.readArray( "PrintFilename",  plotting_info->print_filename );
+                  break;
+          case f_PrintMeasValueCode: rdar.readArray( "PrintMeasValueCode",  &plotting_info->print_code, 1 );
+                  break;
+          case f_PrintLabelXaxis: rdar.readArray( "PrintLabelXaxis",  plotting_info->print_xlabel );
+                  break;
+          case f_PrintLabelYaxis: rdar.readArray( "PrintLabelYaxis",  plotting_info->print_ylabel );
+                  break;
+          case f_PrintHead: rdar.readArray( "PrintHead",  plotting_info->print_head );
+                  break;
+          }
+          nfild = rdar.findNextNotAll();
+        }
+
+    // testing read
+        string ret = rdar.testRead();
+        if( !ret.empty() )
+         { ret += " - fields must be read from OptParamFile structure";
+           Error( "Error", ret);
+         }
+}
 
 // ----------- End of  visor.cpp ----------------------------

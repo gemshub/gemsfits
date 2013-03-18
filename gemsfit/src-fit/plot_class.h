@@ -66,6 +66,7 @@ class PlotFit
 		* @date 09.04.2012
 		*/	
 		PlotFit();
+        PlotFit(int);
 
 		/** 
 		* Destructor for the PlotFit class. 
@@ -108,6 +109,16 @@ class PlotFit
 		*/	
 		void set_plotfit_vars();
 	
+        /**
+        * Function populates member variables of the Plot_Fit class with data form the GEMSFIT configuration file.
+        *
+        * @author DS
+        * @date 15.03.2013
+        */
+        void set_plotfit_vars_txt();
+        void out_plotfit_vars_txt( bool with_comments, bool brief_mode );
+        void define_plotfit_vars( );
+
 		/** 
 		* Function prints Q-Q Plot for residuals 
 		*

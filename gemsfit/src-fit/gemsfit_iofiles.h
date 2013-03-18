@@ -80,6 +80,11 @@ public:
         return optParamFile;
     }
     
+    void OptParamFileRename( const char* name)  {
+        optParamFile = optParamFilePath+"/";
+        optParamFile +=name;
+    }
+
     string FITFile() const {
         return fitFile;
     }
@@ -92,6 +97,7 @@ public:
         return fitLogFile;
     }
     
+
 
   void deleteOutputDir( const char * dir);
   void makeOutputDir(const char *dir);

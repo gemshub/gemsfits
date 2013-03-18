@@ -82,7 +82,8 @@ namespace opti
 			* @date 09.04.2012
 			*/				
 			Optimization( const vector<double> vec_opt );
-	
+            Optimization():PlotFit(1){} // init mode constructor DS
+
 			/**
 			* Destructor of the Optimization class. Delete pointer to constraint_data and PlotFit object.
 			* @author FFH
@@ -261,6 +262,7 @@ namespace opti
 
         // Constructor
         StdStateProp( const vector<double> vec_opt );
+        StdStateProp(); // init mode constructor DS
 
         // Destructor
         virtual ~StdStateProp();

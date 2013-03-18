@@ -73,6 +73,7 @@ class SS_Data_Manager
         * @date 06.11.2012
         */
         SS_Data_Manager( );
+        SS_Data_Manager( int );
 
         /**
         * Destructor of the Data_Manager class. This functions deletes frees the memory reserved for the measurement data struct creates by the constructor of Data_Manager.
