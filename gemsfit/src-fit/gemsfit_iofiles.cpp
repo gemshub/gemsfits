@@ -96,7 +96,6 @@ int generateConfig()
 
     // Writting to the data
     cout << "Start writting"<< endl;
-
     SS_Data_Manager *data_meas = new SS_Data_Manager(1);
     data_meas->out_db_specs_txt(with_comments, brief_mode);
 
@@ -110,7 +109,7 @@ int generateConfig()
     stat->out_stat_param_txt(with_comments, brief_mode);
     stat->out_plotfit_vars_txt(with_comments, brief_mode);
 
-    // test reading
+    /* test reading
     cout << "Start testing"<< endl;
     data_meas->get_db_specs_txt();
     gibbs->set_nlopt_param_txt();
@@ -118,18 +117,9 @@ int generateConfig()
     stat->set_plotfit_vars_txt();
     get_gems_fit_multi_txt( node );
     get_gems_fit_DCH_txt( node );
-    get_gems_fit_DBR_txt( node );
-
-
+    get_gems_fit_DBR_txt( node ); */
     cout << "Finish " << endl;
 
-    /*gpf->OptParamFileRename("t452.txt");
-    cout << gpf->OptParamFile() << endl;
-    data_meas->out_db_specs_txt(true, false);
-    gibbs->out_nlopt_param_txt(true, false);
-    stat->out_stat_param_txt(true, false);
-    stat->out_plotfit_vars_txt(true, false);
-    */
     } catch(TError& err)
       {
         cout << "Error:" << err.title.c_str() << ":" <<  err.mess.c_str() << endl;
@@ -321,6 +311,7 @@ void get_gems_fit_multi_txt( TNode* node )
 
     TReadArrays  rddar(70, MULTI_dynamic_fields, ff);
     MULTI* pmp = node->pMulti()->GetPM();
+    vector<outFormat> vFormats;
 
     long int nfild = rddar.findNextNotAll();
     while( nfild >=0 )
@@ -347,7 +338,7 @@ void get_gems_fit_multi_txt( TNode* node )
                         { rddar.readNext( "PMc");
                           if(!pmp->PMc )
                             pmp->PMc = new double[LsModSum];
-                          rddar.readArray( "PMc", pmp->PMc,  LsModSum);
+                          rddar.readFormatArray( "PMc", pmp->PMc,  LsModSum, vFormats );
                         }
                         break;
                        }
@@ -362,7 +353,7 @@ void get_gems_fit_multi_txt( TNode* node )
                           { rddar.readNext( "DMc");
                             if(!pmp->DMc )
                                pmp->DMc = new double[LsMdcSum];
-                          rddar.readArray( "DMc", pmp->DMc,  LsMdcSum);
+                          rddar.readFormatArray( "DMc", pmp->DMc,  LsMdcSum, vFormats );
                           }
                         if(LsMsnSum )
                         { rddar.readNext( "MoiSN");
@@ -372,8 +363,19 @@ void get_gems_fit_multi_txt( TNode* node )
                         }
                         break;
                       }
-                case f_fDQF: rddar.readArray( "fDQF", pmp->fDQF,  pmp->L);
+                case f_fDQF: rddar.readFormatArray( "fDQF", pmp->fDQF,  pmp->L, vFormats );
                         break;
+          }
+
+          if( !vFormats.empty() )
+          {
+              // Hear you must write your code
+              for( int ii=0; ii<vFormats.size(); ii++ )
+              {    cout<< "Fied " << MULTI_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<
+                          " Index " << vFormats[ii].index << endl;
+                  cout<< vFormats[ii].format << endl;
+              }
+              vFormats.clear();
           }
           nfild = rddar.findNextNotAll();
         }
@@ -389,6 +391,7 @@ void get_gems_fit_DCH_txt( TNode* node )
 
     TReadArrays  rddar(30, DataCH_dynamic_fields, ff);
     DATACH* CSD = node->pCSD();
+    vector<outFormat> vFormats;
 
     long int nfild = rddar.findNextNotAll();
     while( nfild >=0 )
@@ -409,11 +412,24 @@ void get_gems_fit_DCH_txt( TNode* node )
                 break;
         case f_Pval: rddar.readArray( "Pval", CSD->Pval, CSD->nPp );
                   break;
-        case f_G0: rddar.readArray( "G0", CSD->G0, CSD->nDC*node->gridTP() );
+        case f_G0: rddar.readFormatArray( "G0", CSD->G0, CSD->nDC*node->gridTP(), vFormats );
                   break;
          }
-            nfild = rddar.findNextNotAll();
+
+        if( !vFormats.empty() )
+        {
+            // Hear you must write your code
+            for( int ii=0; ii<vFormats.size(); ii++ )
+            {    cout<< "Fied " << DataCH_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<
+                        " Index " << vFormats[ii].index << endl;
+                cout<< vFormats[ii].format << endl;
+            }
+            vFormats.clear();
         }
+
+        nfild = rddar.findNextNotAll();
+
+    }
 }
 
 /// Reading part dataBR structure from OptParamFile text file
@@ -427,60 +443,72 @@ void get_gems_fit_DBR_txt( TNode* node )
     TReadArrays  rdar(f_bSP+1/*52*/, DataBR_fields, ff);
     DATACH* CSD = node->pCSD();
     DATABR* CNode = node->pCNode();
+    vector<outFormat> vFormats;
 
     long int nfild = rdar.findNextNotAll();
     while( nfild >=0 )
       {
         switch( nfild )
         {
-        case f_TK: rdar.readArray( "TK",  &CNode->TK, 1);
+        case f_TK: rdar.readFormatArray( "TK",  &CNode->TK, 1, vFormats);
                 break;
-        case f_P: rdar.readArray( "P",  &CNode->P, 1);
+        case f_P: rdar.readFormatArray( "P",  &CNode->P, 1, vFormats);
                 break;
-        case f_Vs: rdar.readArray( "Vs", &CNode->Vs, 1);
+        case f_Vs: rdar.readFormatArray( "Vs", &CNode->Vs, 1, vFormats);
                 break;
-        case f_Ms: rdar.readArray( "Ms",  &CNode->Ms, 1);
+        case f_Ms: rdar.readFormatArray( "Ms",  &CNode->Ms, 1, vFormats);
                 break;
-        case f_Hs: rdar.readArray( "Hs",  &CNode->Hs, 1);
+        case f_Hs: rdar.readFormatArray( "Hs",  &CNode->Hs, 1, vFormats);
                 break;
-        case f_Gs: rdar.readArray( "Gs",  &CNode->Gs, 1);
+        case f_Gs: rdar.readFormatArray( "Gs",  &CNode->Gs, 1, vFormats);
                  break;
-        case f_IS: rdar.readArray( "IS",  &CNode->IC, 1);
+        case f_IS: rdar.readFormatArray( "IS",  &CNode->IC, 1, vFormats);
                 break;
-        case f_pH: rdar.readArray( "pH",  &CNode->pH, 1);
+        case f_pH: rdar.readFormatArray( "pH",  &CNode->pH, 1, vFormats);
                 break;
-        case f_pe: rdar.readArray( "pe",  &CNode->pe, 1);
+        case f_pe: rdar.readFormatArray( "pe",  &CNode->pe, 1, vFormats);
                 break;
-        case f_Eh: rdar.readArray( "Eh",  &CNode->Eh, 1);
+        case f_Eh: rdar.readFormatArray( "Eh",  &CNode->Eh, 1, vFormats);
                 break;
-        case f_bIC: rdar.readArray( "bIC",  CNode->bIC, CSD->nICb );
+        case f_bIC: rdar.readFormatArray( "bIC",  CNode->bIC, CSD->nICb, vFormats );
                 break;
-        case f_uIC: rdar.readArray( "uIC",  CNode->uIC, CSD->nICb );
+        case f_uIC: rdar.readFormatArray( "uIC",  CNode->uIC, CSD->nICb, vFormats );
                 break;
-        case f_xDC: rdar.readArray( "xDC",  CNode->xDC, CSD->nDCb );
+        case f_xDC: rdar.readFormatArray( "xDC",  CNode->xDC, CSD->nDCb, vFormats );
                 break;
-        case f_gam: rdar.readArray( "gam",  CNode->gam, CSD->nDCb );
+        case f_gam: rdar.readFormatArray( "gam",  CNode->gam, CSD->nDCb, vFormats );
                 break;
-        case f_dll: rdar.readArray( "dll",  CNode->dll, CSD->nDCb );
+        case f_dll: rdar.readFormatArray( "dll",  CNode->dll, CSD->nDCb, vFormats );
                 break;
-        case f_dul: rdar.readArray( "dul",  CNode->dul, CSD->nDCb );
+        case f_dul: rdar.readFormatArray( "dul",  CNode->dul, CSD->nDCb, vFormats );
                 break;
-        case f_aPH: rdar.readArray( "aPH",  CNode->aPH, CSD->nPHb );
+        case f_aPH: rdar.readFormatArray( "aPH",  CNode->aPH, CSD->nPHb, vFormats );
                 break;
-        case f_xPH: rdar.readArray( "xPH",  CNode->xPH, CSD->nPHb );
+        case f_xPH: rdar.readFormatArray( "xPH",  CNode->xPH, CSD->nPHb, vFormats );
                 break;
-        case f_vPS: rdar.readArray( "vPS",  CNode->vPS, CSD->nPSb );
+        case f_vPS: rdar.readFormatArray( "vPS",  CNode->vPS, CSD->nPSb, vFormats );
                 break;
-        case f_mPS: rdar.readArray( "mPS",  CNode->mPS, CSD->nPSb );
+        case f_mPS: rdar.readFormatArray( "mPS",  CNode->mPS, CSD->nPSb, vFormats );
                 break;
-        case f_bPS: rdar.readArray( "bPS",  CNode->bPS, CSD->nPSb*CSD->nICb );
+        case f_bPS: rdar.readFormatArray( "bPS",  CNode->bPS, CSD->nPSb*CSD->nICb, vFormats );
                 break;
-        case f_xPA: rdar.readArray( "xPA",  CNode->xPA, CSD->nPSb );
+        case f_xPA: rdar.readFormatArray( "xPA",  CNode->xPA, CSD->nPSb, vFormats );
                 break;
-        case f_bSP: rdar.readArray( "bSP",  CNode->bSP, CSD->nICb );
+        case f_bSP: rdar.readFormatArray( "bSP",  CNode->bSP, CSD->nICb, vFormats );
                break;
          }
-            nfild = rdar.findNextNotAll();
+        if( !vFormats.empty() )
+        {
+            // Hear you must write your code
+            for( int ii=0; ii<vFormats.size(); ii++ )
+            {    cout<< "Fied " << DataBR_fields[nfild].name << " Type " << vFormats[ii].type <<
+                        " Index " << vFormats[ii].index << endl;
+                cout<< vFormats[ii].format << endl;
+            }
+            vFormats.clear();
+        }
+
+        nfild = rdar.findNextNotAll();
         }
 }
 
