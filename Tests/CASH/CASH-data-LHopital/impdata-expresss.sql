@@ -1,4 +1,4 @@
-﻿-- Table: impdata.expcsd
+﻿-- Table: impdata.expresss
 DROP TABLE impdata.expresss;
 
 CREATE TABLE impdata.expresss
@@ -28,7 +28,7 @@ COPY impdata.expresss (
 ExpSetID, SampleID, C_S_solid, A_S_solid, Si_CSH_mol, Ca_CSH_mol, Ca_CSH_error,
 Al_CSH_mol, Al_CSH_error, Na_CSH_mol, Na_CSH_error, K_CSH_mol, K_CSH_error,
 SH, CH, AfmCO3_mol, C3AH6mol, CalVat_mol, Stratlingite, ende ) 
-FROM '/home/mirondanro/DevGEMSFIT/devDanFit/gemfit/Tests/CASH/CASH-data-LHopital/CASH-EL01-results_ss.csv'
+FROM '/home/parallels/DevGEMSFIT/devDanFit/gemsfit/Tests/CASH/CASH-data-LHopital/CASH-EL01-results_ss.csv'
 WITH DELIMITER ','
 CSV HEADER;
 

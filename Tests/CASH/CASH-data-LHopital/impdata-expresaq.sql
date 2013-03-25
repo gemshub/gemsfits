@@ -28,7 +28,7 @@ Ca_aq_mM, lgCa_aq, lgCa_error, Al_aq_mM, lgAl_aq, lgAl_error,
 Na_aq_mM, lgNa_aq, lgNa_error, K_aq_mM, lgK_aq, lgK_error,
 C_aq_mM, lgC_aq, lgC_error, ende
  ) 
-FROM '/home/mirondanro/DevGEMSFIT/devDanFit/gemfit/Tests/CASH/CASH-data-LHopital/CASH-EL01-results_aq.csv'
+FROM '/home/parallels/DevGEMSFIT/devDanFit/gemsfit/Tests/CASH/CASH-data-LHopital/CASH-EL01-results_aq.csv'
 WITH DELIMITER ','
 CSV HEADER;
 

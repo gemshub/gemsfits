@@ -55,6 +55,8 @@
 #include <boost/algorithm/string/erase.hpp>
 #include <boost/algorithm/string/find_format.hpp>
 
+#include "ejdb.h"
+
 using namespace std;
 using namespace boost;
 

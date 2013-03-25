@@ -24,7 +24,7 @@
 #
 #    GESMFIT uses Dislin ...
 #
-#    GEMSFIT uses ...				
+#    GEMSFIT uses EJDB (http://ejdb.org)
 #																							 
 #   This is the qmake project file for generation of static GEMSFIT application 					
 #  	configure serial, release version:      qmake "CONFIG += serial release" gemsfit.pro 
@@ -36,10 +36,12 @@
 TEMPLATE	= app
 #LANGUAGE        = C++
 TARGET		= gemsfit
-VERSION         = 1.0.1
+VERSION         = 2.0.0
 
 DEFINES         += IPMGEMPLUGIN
 #DEFINES         += NODEARRAYLEVEL
+
+DEFINES         += _MYNOZLIB
 
 QMAKE_LFLAGS  +=
 
@@ -80,20 +82,29 @@ CONFIG( serial, serial|mpi ) {
         LIBS += -L/usr/lib/postgresql/9.1/lib/ -L/usr/local/dislin/ -ldislin -lXm -lecpg -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp -ljansson
 }
 
+QMAKE_CXXFLAGS += -std=gnu99
+QMAKE_CFLAGS += -std=gnu99
+
 FIT_CPP      =  ./src-fit
 GEMS3K_CPP   =  ../../standalone/GEMS3K
+EJDB_CPP   =  ./tcejdb
+
 
 FIT_H        =   $$FIT_CPP
 GEMS3K_H     =   $$GEMS3K_CPP
+EJDB_H   =  $$EJDB_CPP
 
 DEPENDPATH   += $$FIT_H
-DEPENDPATH   += $$GEMS3K_H   
+DEPENDPATH   += $$GEMS3K_H
+DEPENDPATH   += $$EJDB_H
 
 INCLUDEPATH  += $$FIT_H
 INCLUDEPATH  += $$GEMS3K_H   
+INCLUDEPATH   += $$EJDB_H
 INCLUDEPATH  += . /usr/include/postgresql /usr/local/dislin/
 
 OBJECTS_DIR       = obj
 
 include($$FIT_CPP/fit.pri)
 include($$GEMS3K_CPP/gems3k.pri)
+include($$EJDB_CPP/tcejdb.pri)

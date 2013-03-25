@@ -122,6 +122,13 @@ gemsfit/src-fit/system_properties.cpp -text
 gemsfit/src-fit/system_properties.h -text
 gemsfit/src-fit/system_restart.cpp -text
 gemsfit/src-fit/system_restart.h -text
+gemsfit/tcejdb/bros/result.xls -text
+gemsfit/tcejdb/doc/benchmark.pdf -text
+gemsfit/tcejdb/doc/icon16.png -text
+gemsfit/tcejdb/doc/logo-ja.png -text
+gemsfit/tcejdb/doc/logo.png -text
+gemsfit/tcejdb/doc/tokyoproducts.pdf -text
+gemsfit/tcejdb/doc/tokyoproducts.ppt -text
 gemsfitgui-build/stylesheet.qss -text
 gemsfitgui-build/ui/ui_mainwindow.h -text
 gemsfitgui-build/ui/ui_sqlscript.h -text

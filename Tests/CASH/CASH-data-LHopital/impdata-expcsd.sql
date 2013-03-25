@@ -30,7 +30,7 @@ ALTER TABLE impdata.expcsd
 
 COPY impdata.expcsd ( ExpSetID, SampleID, P_bar, T_C, C_S_solid, A_S_solid, si_w_g_kg,
   H2O_kg, SiO2, CaOH2, CaO, AlOH3, CaO_Al2O3, NaOH, KOH, CO2, N2, ende ) 
-FROM '/home/mirondanro/DevGEMSFIT/devDanFit/gemfit/Tests/CASH/CASH-data-LHopital/CASH-EL01-exp_comp.csv'
+FROM '/home/parallels/DevGEMSFIT/devDanFit/gemsfit/Tests/CASH/CASH-data-LHopital/CASH-EL01-exp_comp.csv'
 WITH DELIMITER ','
 CSV HEADER;
 
