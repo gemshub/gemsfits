@@ -1,0 +1,113 @@
+Keywords for database storing experimental data in JSON format (DM draft 1 26.03.2013)
+
+expdataset
+expsample	// one experimental run
+sample		// code of experimental run
+sT		// temperature of experimental run
+sP		// pressure of experimental run
+sV		// volume of experimental run
+expphases	// phase in experiment
+phase		// phase name
+	phelem		// elements in a phase
+	phaseprop	// phase properties
+		pH		// pH
+		volume		// volume of phase
+		sarea		// surface area of phase
+element		// name of element
+amount		// quantity
+error		// error 
+unit		// unit of measurment
+samplecomp	// components (recipe in oxides; e.g. SiO2, H2O, Al2O3, etc.)
+comp 		// oxide formula
+P-range		// pressure range of experiments in a dataset
+V-range		// volume range
+T-range		// temperature range
+reference	// reference for the experimental dataset
+comment		// comment
+file		// file, e.g. image, word, 
+
+
+
+Example:
+{"expdataset": 'Kennedy1950',
+ "expsample":[{"sample":'K01', 
+	       "sT":400,
+	       "sP":2000, 
+	       "sV":'', 
+	       "expphases": [{"phase":'aq_gen', 
+			      "phelem":[{"element": "Si",
+					 "amount":0.1, 
+					 "error":0.001,
+					 "unit":'molality'},
+					{"element": "Al",
+					 "amount":0.001,
+					 "error":0.00001,
+					 "unit":'molality'}
+				       ],
+			      "phaseprop":[{"amount":55,
+					    "error":'',
+					    "unit":'mol'},
+					   {"pH":5,
+					    "error":'0.1',
+					    "unit":'log'},
+					   {"volume":'',
+					    "error":'',
+					    "unit":'cm^3'}
+					  ]
+			     },
+			     {"phase":'C-S-H',
+			      "phelem":[{"element":"Si", 
+					 "amount":1,
+					 "error":0.1,
+					 "unit":'mol'},
+					{"element":"Al",
+					 "amount":3,
+					 "error":0.1,
+					 "unit":'mol'},
+					{"element":"Ca",
+					 "amount":0.5,
+					 "error":0.1,
+					 "unit":'mol'}
+				       ],
+			      "phaseprop":[{"amount":3,
+					    "error":'0.2',
+					    "unit":'mol'},
+					   {"volume":'',
+					    "error":'',
+					    "unit":''},
+					   {"sarea":'',
+					    "error":'',
+					    "unit":''}
+                                          ]
+			      }
+		             ],
+	       "samplecomp": [{"comp":'SiO2', 
+			       "amount":100,
+			       "error":'',
+			       "unit":'g'},
+			      {"comp":'Al203',
+			       "amount":2,
+			       "error":'',
+			       "unit":'g'},
+			      {"comp":'CaO',
+			       "amount":10,
+			       "error":'',
+			       "unit":'g'},
+			      {"comp":'H2O',
+			       "amount":1000,
+			       "error":'',
+			       "unit":'g'},
+			      {"comp":'NaCl',
+                               "amount":0.1,
+			       "error":'',
+			       "unit":'mol'}
+			     ]
+	     }
+            ],
+ "P-range":'',
+ "T-range":'',
+ "V-range":'',
+ "reference":'Kennedy 1950',
+ "comment":'',
+ "file":''
+};
