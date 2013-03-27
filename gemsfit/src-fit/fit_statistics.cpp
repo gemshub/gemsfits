@@ -166,7 +166,9 @@ void StdStatistics::std_basic_stat( std::vector<double> &optv_, std::vector<SS_S
     // Variable declarations
     int i;
     double mean = 0.;
+    double mean_res = 0.;
     double ResSumSquares = 0., TotalSumSquares = 0.;
+    double Res = 0.;
 
 
     // Degrees of freedom
@@ -174,7 +176,21 @@ void StdStatistics::std_basic_stat( std::vector<double> &optv_, std::vector<SS_S
 
 
     // Compute standard deviation of residuals
-    SD_of_residuals = sqrt( (sum_of_squares/(number_of_measurements-number_of_parameters)) );
+    for (i=1; i<systems->at(0)->computed_residuals_v.size(); i++)
+    {
+        mean_res += systems->at(0)->computed_residuals_v[i];
+    }
+
+    mean_res = mean_res / number_of_measurements;
+
+    for (i=1; i<systems->at(0)->computed_residuals_v.size(); i++)
+    {
+        Res += pow((systems->at(0)->computed_residuals_v[i]-mean_res),2);
+    }
+
+
+    SD_of_residuals = sqrt((Res/degrees_of_freedom));
+    //SD_of_residuals = sqrt( (sum_of_squares/(number_of_measurements-number_of_parameters)) );
 
 
     // Modified by DM on 12.03.2012 due to errorneus calculation of R^2 when using log_solubility data.
@@ -744,7 +760,7 @@ SensitivityMatrix_T.print("SensitivityMatrix_T:");
 FisherMatrix.print("Fisher Matrix:");
 
         // Compute variance-covariance matrix
-        arma::mat VarCovarMatrix = SD_of_residuals * arma::inv( FisherMatrix, false );
+        arma::mat VarCovarMatrix = /*SD_of_residuals **/ arma::inv( FisherMatrix, false );
 
 VarCovarMatrix.print("Variance Covariance Matrix:");
 

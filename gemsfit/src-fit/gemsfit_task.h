@@ -34,7 +34,7 @@
 #define _gemsft_task.h_
 
 #include "node.h"
-
+#include "new_data_manger.h"
 // These structures are needed for implementation of Random Walk and
 // similar particle-based transport algorithms
 //enum  PTCODE /// Codes of particle type
@@ -52,6 +52,8 @@ class TGfitTask : public TNode
 protected:
 
     DATABR* (*NodT0);  ///< array of nodes
+    Data_Manager* alldata; /// pointer to Data_Manager class containing measurement data
+
 //    DATABR* (*NodT1);  ///< array of nodes for current time point
 
     long int anNodes;  ///< Number of allocated nodes (samples)
