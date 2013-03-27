@@ -113,6 +113,7 @@ gemsfit/src-fit/gemsfit_global_functions.h.new -text
 gemsfit/src-fit/gemsfit_global_variables.h -text
 gemsfit/src-fit/main.cpp -text
 gemsfit/src-fit/measdata_modified.cpp -text
+gemsfit/src-fit/new_data_manger.h -text
 gemsfit/src-fit/opt_vector.cpp -text
 gemsfit/src-fit/opt_vector.h -text
 gemsfit/src-fit/optimization.cpp -text
