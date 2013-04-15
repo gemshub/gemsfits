@@ -58,7 +58,7 @@ the whole pair <keyword>:<value> can be omitted.
 Example in JSON:
 
 #Collection 
-"experiments": [
+"experiments": [{
  	"expsample": { 
 		"sample":'K01', 
 		"expdataset": 'Kennedy1950', 
@@ -126,9 +126,9 @@ Example in JSON:
 					     "Qunit": 'm2/g' }
                                       ]
 			 }
-		],
-……
-]
+				]
+		}
+}]
 
 #Collection: 
 "expdatarefs": [
