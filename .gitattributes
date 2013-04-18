@@ -60,11 +60,13 @@ csvtoejdb/csvtoejdb-build/csvtoejdb -text
 csvtoejdb/csvtoejdb/csvtoejdb.pro -text
 csvtoejdb/csvtoejdb/csvtoejdb.pro.user -text
 csvtoejdb/csvtoejdb/main.cpp -text
-csvtoejdb/csvtoejdb/main/csv_praser.cpp -text
-csvtoejdb/csvtoejdb/main/csv_praser.h -text
+csvtoejdb/csvtoejdb/main/csv_parser.cpp -text
+csvtoejdb/csvtoejdb/main/csv_parser.h -text
 csvtoejdb/csvtoejdb/main/keywords.h -text
 csvtoejdb/csvtoejdb/main/main.cpp -text
 csvtoejdb/csvtoejdb/main/main.pri -text
+csvtoejdb/csvtoejdb/main/read_ejdb.cpp -text
+csvtoejdb/csvtoejdb/main/read_ejdb.h -text
 docs/Developing[!!-~]GEMSFIT(GUI)_GEMS3K.pdf -text
 docs/GEMSFIT_help.doc -text
 docs/GFIT-keywords_.txt -text

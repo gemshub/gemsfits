@@ -1,6 +1,8 @@
-HEADERS +=  $$MAIN_H/csv_praser.h \ 
-    main/keywords.h
+HEADERS +=  $$MAIN_H/csv_parser.h \
+    main/keywords.h \
+    main/read_ejdb.h
 
 
-SOURCES += $$MAIN_CPP/csv_praser.cpp \
-           $$MAIN_CPP/main.cpp 
+SOURCES += $$MAIN_CPP/csv_parser.cpp \
+           $$MAIN_CPP/main.cpp \ 
+    main/read_ejdb.cpp

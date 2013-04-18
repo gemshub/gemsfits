@@ -1,10 +1,12 @@
-#include <iostream>
-#include "csv_praser.h"
-#include <tcejdb/ejdb.h>
-#include <locale.h>
-#include "keywords.h"
+# include <iostream>
+# include "csv_parser.h"
+# include <ejdb.h>
+# include <locale.h>
+# include "read_ejdb.h"
+# include "keywords.h"
 
 using namespace std;
+//using namespace keys;
 
 static EJDB *jb;
 
@@ -99,10 +101,13 @@ int main(int argc, char *argv[])
                 bson_append_double(&exp, bQnt, atof(row[i].c_str()));
 
                 // checking if there are errors and units included in the CSV and adding tem in the database
-                if ((headline[i+1]==_error) && (!row[i+1].empty()))
+                if ((headline[i+1]==_error))
                 {
                     ++i;
+                    if ((!row[i].empty()))
+                    {
                     bson_append_double(&exp, Qerror, atof(row[i].c_str()));
+                    }
                 }
                 if ((headline[i+1]==_unit) && (!row[i+1].empty()))
                 {
@@ -138,10 +143,13 @@ int main(int argc, char *argv[])
                     bson_append_start_array(&exp, phprop);
                     bson_append_double(&exp, pQnt, atof(row[i].c_str()));
                     // checking if there are errors and units included in the CSV and adding tem in the database
-                    if ((headline[i+1]==_error) && (!row[i+1].empty()))
+                    if ((headline[i+1]==_error))
                     {
                         ++i;
-                        bson_append_double(&exp, _error, atof(row[i].c_str()));
+                        if ((!row[i].empty()))
+                        {
+                        bson_append_double(&exp, Qerror, atof(row[i].c_str()));
+                        }
                     }
                     if ((headline[i+1]==_unit) && (!row[i+1].empty()))
                     {
@@ -159,10 +167,13 @@ int main(int argc, char *argv[])
                     bson_append_start_array(&exp, phprop);
                     bson_append_double(&exp, pH, atof(row[i].c_str()));
                     // checking if there are errors and units included in the CSV and adding tem in the database
-                    if ((headline[i+1]==_error) && (!row[i+1].empty()))
+                    if ((headline[i+1]==_error))
                     {
                         ++i;
-                        bson_append_double(&exp, _error, atof(row[i].c_str()));
+                        if ((!row[i].empty()))
+                        {
+                        bson_append_double(&exp, Qerror, atof(row[i].c_str()));
+                        }
                     }
                     if ((headline[i+1]==_unit) && (!row[i+1].empty()))
                     {
@@ -179,10 +190,13 @@ int main(int argc, char *argv[])
                     bson_append_start_array(&exp, phprop);
                     bson_append_double(&exp, pH, atof(row[i].c_str()));
                     // checking if there are errors and units included in the CSV and adding tem in the database
-                    if ((headline[i+1]==_error) && (!row[i+1].empty()))
+                    if ((headline[i+1]==_error))
                     {
                         ++i;
-                        bson_append_double(&exp, _error, atof(row[i].c_str()));
+                        if ((!row[i].empty()))
+                        {
+                        bson_append_double(&exp, Qerror, atof(row[i].c_str()));
+                        }
                     }
                     if ((headline[i+1]==_unit) && (!row[i+1].empty()))
                     {
@@ -199,10 +213,13 @@ int main(int argc, char *argv[])
                     bson_append_start_array(&exp, phprop);
                     bson_append_double(&exp, Eh, atof(row[i].c_str()));
                     // checking if there are errors and units included in the CSV and adding tem in the database
-                    if ((headline[i+1]==_error) && (!row[i+1].empty()))
+                    if ((headline[i+1]==_error))
                     {
                         ++i;
-                        bson_append_double(&exp, _error, atof(row[i].c_str()));
+                        if ((!row[i].empty()))
+                        {
+                        bson_append_double(&exp, Qerror, atof(row[i].c_str()));
+                        }
                     }
                     if ((headline[i+1]==_unit) && (!row[i+1].empty()))
                     {
@@ -219,10 +236,13 @@ int main(int argc, char *argv[])
                     bson_append_start_array(&exp, phprop);
                     bson_append_double(&exp, IS, atof(row[i].c_str()));
                     // checking if there are errors and units included in the CSV and adding tem in the database
-                    if ((headline[i+1]==_error) && (!row[i+1].empty()))
+                    if ((headline[i+1]==_error))
                     {
                         ++i;
-                        bson_append_double(&exp, _error, atof(row[i].c_str()));
+                        if ((!row[i].empty()))
+                        {
+                        bson_append_double(&exp, Qerror, atof(row[i].c_str()));
+                        }
                     }
                     if ((headline[i+1]==_unit) && (!row[i+1].empty()))
                     {
@@ -239,10 +259,13 @@ int main(int argc, char *argv[])
                     bson_append_start_array(&exp, phprop);
                     bson_append_double(&exp, all, atof(row[i].c_str()));
                     // checking if there are errors and units included in the CSV and adding tem in the database
-                    if ((headline[i+1]==_error) && (!row[i+1].empty()))
+                    if ((headline[i+1]==_error))
                     {
                         ++i;
-                        bson_append_double(&exp, _error, atof(row[i].c_str()));
+                        if ((!row[i].empty()))
+                        {
+                        bson_append_double(&exp, Qerror, atof(row[i].c_str()));
+                        }
                     }
                     if ((headline[i+1]==_unit) && (!row[i+1].empty()))
                     {
@@ -259,10 +282,13 @@ int main(int argc, char *argv[])
                     bson_append_start_array(&exp, phprop);
                     bson_append_double(&exp, sArea, atof(row[i].c_str()));
                     // checking if there are errors and units included in the CSV and adding tem in the database
-                    if ((headline[i+1]==_error) && (!row[i+1].empty()))
+                    if ((headline[i+1]==_error))
                     {
                         ++i;
-                        bson_append_double(&exp, _error, atof(row[i].c_str()));
+                        if ((!row[i].empty()))
+                        {
+                        bson_append_double(&exp, Qerror, atof(row[i].c_str()));
+                        }
                     }
                     if ((headline[i+1]==_unit) && (!row[i+1].empty()))
                     {
@@ -284,10 +310,13 @@ int main(int argc, char *argv[])
                     bson_append_double(&exp, sQnt, atof(row[i].c_str()));
 
                     // if error and unit follow in the CSV they are added in the DB
-                    if ((headline[i+1]==_error) && (!row[i+1].empty()))
+                    if ((headline[i+1]==_error))
                     {
                         ++i;
+                        if ((!row[i].empty()))
+                        {
                         bson_append_double(&exp, Qerror, atof(row[i].c_str()));
+                        }
                     }
                     if ((headline[i+1]==_unit) && (!row[i+1].empty()))
                     {
@@ -310,10 +339,13 @@ int main(int argc, char *argv[])
                     bson_append_double(&exp, eQnt, atof(row[i].c_str()));
 
                     // if error and unit follow in the CSV they are added in the DB
-                    if ((headline[i+1]==_error) && (!row[i+1].empty()))
+                    if ((headline[i+1]==_error))
                     {
                         ++i;
+                        if ((!row[i].empty()))
+                        {
                         bson_append_double(&exp, Qerror, atof(row[i].c_str()));
+                        }
                     }
                     if ((headline[i+1]==_unit) && (!row[i+1].empty()))
                     {
@@ -344,13 +376,46 @@ int main(int argc, char *argv[])
     bson bq1;
     bson_init_as_query(&bq1);
     bson_append_start_object(&bq1, expdataset);
-    bson_append_string(&bq1, "$begin", "qCH");
+    bson_append_string(&bq1, "$begin", "CH");
     bson_append_finish_object(&bq1);
     bson_finish(&bq1);
     EJQ *q1 = ejdbcreatequery(jb, &bq1, NULL, 0, NULL);
 
+//    {   "sample" : "",
+//        "expdataset" : ["CHO4", "CH04D"],
+//        "sT" : [100, 1000],
+//        "sP" : [1, 2500]
+//    }
+
+    bson bq2;
+    bson_init_as_query(&bq2);
+    bson_append_start_object(&bq2, expdataset);
+    bson_append_start_array(&bq2, "$in");
+    bson_append_string(&bq2, "0", "CH04D");
+    bson_append_string(&bq2, "1", "CH04");
+    bson_append_finish_array(&bq2);
+    bson_append_finish_object(&bq2);
+
+    bson_append_start_object(&bq2, sT);
+    bson_append_start_array(&bq2, "$bt");
+    bson_append_string(&bq2, "0", "100");
+    bson_append_string(&bq2, "1", "1500");
+    bson_append_finish_array(&bq2);
+    bson_append_finish_object(&bq2);
+
+//    bson_append_start_array(&bq2, sT);
+//    bson_append_string(&bq2, "$bt", "10");
+//    bson_append_string(&bq2, "$bt", "1000");
+//    bson_append_finish_array(&bq2);
+//    bson_append_finish_object(&bq2);
+
+    bson_finish(&bq2);
+    EJQ *q2 = ejdbcreatequery(jb, &bq2, NULL, 0, NULL);
+
+
     uint32_t count;
     TCLIST *res = ejdbqryexecute(coll, q1, &count, 0, NULL);
+    TCLIST *res2 = ejdbqryexecute(coll, q2, &count, 0, NULL);
     fprintf(stderr, "\n\nRecords found: %d\n", count);
 
     //Now print the result set records
@@ -361,12 +426,27 @@ int main(int argc, char *argv[])
      }
      fprintf(stderr, "\n");
 
+//     for (int i = 0; i < TCLISTNUM(res2); ++i) {
+//         void *bsdata = TCLISTVALPTR(res2, i);
+//         char *bsdata_ = static_cast<char*>(bsdata);
+
+
+// testing data output!! still working on it
+//         bson_read_raw(stderr, bsdata_);
+//     }
+//     fprintf(stderr, "\n");
+
     //Dispose result set
     tclistdel(res);
+
+    tclistdel(res2);
 
     //Dispose query
     ejdbquerydel(q1);
     bson_destroy(&bq1);
+
+    ejdbquerydel(q2);
+    bson_destroy(&bq2);
 
     //Close database
     ejdbclose(jb);
