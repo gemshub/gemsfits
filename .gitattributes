@@ -50,15 +50,11 @@ Tests/SS_INPUT_CSV/qtz_h2o_csv_test-ipm.dat -text
 Tests/SS_INPUT_CSV/solubility.csv -text
 Tests/soldata.backup -text
 Tests/test.backup -text
-csvtoejdb/csvtoejdb-build/.~lock.CASH.csv# -text
 csvtoejdb/csvtoejdb-build/CASH/CASH.csv -text
 csvtoejdb/csvtoejdb-build/CASH/CASH.xls -text
 csvtoejdb/csvtoejdb-build/CASH/solcash -text
 csvtoejdb/csvtoejdb-build/CASH/solcash_experiments -text
-csvtoejdb/csvtoejdb-build/Makefile -text
-csvtoejdb/csvtoejdb-build/csvtoejdb -text
 csvtoejdb/csvtoejdb/csvtoejdb.pro -text
-csvtoejdb/csvtoejdb/csvtoejdb.pro.user -text
 csvtoejdb/csvtoejdb/main.cpp -text
 csvtoejdb/csvtoejdb/main/csv_parser.cpp -text
 csvtoejdb/csvtoejdb/main/csv_parser.h -text
