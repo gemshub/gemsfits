@@ -45,7 +45,7 @@ QMAKE_CXXFLAGS += -std=gnu99
 QMAKE_CFLAGS += -std=gnu99
 
 
-EJDB_CPP   =  ./tcejdb
+EJDB_CPP   =  ../../gemsfit/tcejdb
 MAIN_CPP      =  ./main
 
 EJDB_H   =  $$EJDB_CPP
