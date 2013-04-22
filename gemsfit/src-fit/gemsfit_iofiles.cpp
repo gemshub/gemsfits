@@ -94,8 +94,8 @@ int generateConfig()
     bool with_comments = true;
     bool brief_mode = false;
 
-    // Writting to the data
-    cout << "Start writting"<< endl;
+    // Writing to the data
+    cout << "Start writing"<< endl;
     SS_Data_Manager *data_meas = new SS_Data_Manager(1);
     data_meas->out_db_specs_txt(with_comments, brief_mode);
 
@@ -465,7 +465,7 @@ void get_gems_fit_DBR_txt( TNode* node )
                  break;
         case f_IS: rdar.readFormatArray( "IS",  &CNode->IC, 1, vFormats);
                 break;
-        case f_pH: rdar.readFormatArray( "pH",  &CNode->pH, 1, vFormats);
+        case f_pH: rdar.readFormatArray( "pH",  &CNode->pH, 1, vFormats); // o
                 break;
         case f_pe: rdar.readFormatArray( "pe",  &CNode->pe, 1, vFormats);
                 break;
@@ -473,11 +473,11 @@ void get_gems_fit_DBR_txt( TNode* node )
                 break;
         case f_bIC: rdar.readFormatArray( "bIC",  CNode->bIC, CSD->nICb, vFormats ); // i
                 break;
-        case f_uIC: rdar.readFormatArray( "uIC",  CNode->uIC, CSD->nICb, vFormats );
+        case f_uIC: rdar.readFormatArray( "uIC",  CNode->uIC, CSD->nICb, vFormats );  // o
                 break;
-        case f_xDC: rdar.readFormatArray( "xDC",  CNode->xDC, CSD->nDCb, vFormats );
+        case f_xDC: rdar.readFormatArray( "xDC",  CNode->xDC, CSD->nDCb, vFormats ); // o
                 break;
-        case f_gam: rdar.readFormatArray( "gam",  CNode->gam, CSD->nDCb, vFormats );
+        case f_gam: rdar.readFormatArray( "gam",  CNode->gam, CSD->nDCb, vFormats ); // o
                 break;
         case f_dll: rdar.readFormatArray( "dll",  CNode->dll, CSD->nDCb, vFormats );  // i
                 break;
@@ -500,7 +500,7 @@ void get_gems_fit_DBR_txt( TNode* node )
          }
         if( !vFormats.empty() )
         {
-            // Hear you must write your code
+            // Hear you must write your code   GF_analyze_parameter_to_fit( nfild )
             for( int ii=0; ii<vFormats.size(); ii++ )
             {    cout<< "Fied " << DataBR_fields[nfild].name << " Type " << vFormats[ii].type <<
                         " Index " << vFormats[ii].index << endl;
@@ -620,7 +620,7 @@ TGfitPath *gpf;
 
 outField SS_Data_Manager_fields[10] =
 {
-    { "DatDB",  0, 0, 1, "\n# DatDB: Comment"},
+    { "DatDB",  0, 0, 1, "\n# DatDB: DataManager: database name (if <DatSource> > 0)"},
     { "DatTable",  0, 0, 1, "\n# DatTable: Comment"},
     { "DatUsername",  0, 0, 1, "\n# DatUsername: Comment"},
     { "DatPasswd",  0, 0, 1, "\n# DatPasswd: Comment"},

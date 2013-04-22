@@ -12,7 +12,7 @@ static EJDB *jb;
 
 int main(int argc, char *argv[])
 {
-    // create EJDB databse object
+    // create EJDB database object
     jb = ejdbnew();
 
     // create directory for db if not existent
@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
     // getting headline
     csvline(headline, line, ',');
 
-    // getting the data form CSV line by line and porcessing it into BSON
+    // getting the data form CSV line by line and processing it into BSON
     while(getline(in, line)  && in.good() )
     {
         csvline(row, line, ',');
