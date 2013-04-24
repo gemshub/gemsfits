@@ -70,95 +70,99 @@ class Data_Manager
         typedef vector<int>     int_v;
         typedef vector<double>  double_v;
         typedef vector<string>  string_v;
+        typedef vector<bool>    bool_v;
 
         std::vector<int> TP_pairs[2]; // UNIQUE!!! TP pairs of the experiments.< Only >The unique values will be extracted form the database.
         // TP_pairs[0] temperature; TP_pairs[1] pressure
 
         /// structure holding one experimental set composed of more samples (experimental runs)
-        struct dataset
-        {
-            int idset;
-            string name;                // name of experimental dataset e.g. Kennedy1950
-            string P_range;             // P range of the experimental runs e.g. 0.5-5 kbar
-            string V_range;             // V range of the experimental runs e.g. 300-700 C
-            string reference;           // reference e.g. Anderson and Burnham 1967
-            string comment;             // free text
 
-            struct sample
+            struct samples                  // data for experimental samples
             {
                 int idsample;
-                string name;
-                int sT;
-                int sP;
-                int sV;
-                // recipe of the sample (experimental run)
-                string_v comp_name;         // name of the input components xa_ in GEMS
-                double_v comp_amount;       // like b vector in GEMS - here in grams or moles
-                double_v comp_error;        // error in measuring the components amount
-                string_v comp_units;        // g, moles - for salts
+                string sample;              // ID of this experimental sample
+                string expdataset;          // ID of set of experimental data
+                double sT;                  // temperature for this experimental sample
+                string Tunit;
+                double sP;                  // pressure for this experimental sample
+                string Punit;
+                double sV;                  // (system) volume for this experimental sample
+                string Vunit;
+                // defines bulk composition of chemical system for this experiment 2nd level in EJDB
+                string_v comp_name;         // formula defining PCO stoichiometry (GEM formula syntax)
+                double_v comp_bQnt;         // quantity (to be added to system bulk composition)
+                double_v comp_Qerror;       // error (uncertainty) of quantity in the same units
+                string_v comp_Qunit;        // units of measurement of quantity { 'g' or 'mol' (default) or … }
 
-                struct phase
+                struct phases                         // data for phases characterised (measured) in this experiment 2nd level in EJDB
                 {
                     int idphase;
-                    string name;
-                    string_v phaseprop;             // property of phase (pH, amount, volume, sarea, etc.)
-                    double_v prop_value;            // value
-                    double_v prop_error;            // error of the value
-                    string_v prop_units;            // units of the value
-                    // elements measured in a phase
-                    string_v element;               // name of element in a phase
-                    double_v elem_amount;           // amount of an element in a phase
-                    double_v elem_error;            // error of amount
-                    string_v elem_units;            // units of measurment
+                    string phase;                     // phase ID (name)
+                    // measured properties of a phase 3rd level in EJDB
+                    double pQnt;                      // Quantity of this phase in the sample system
+                    string_v phprop;                  // known bulk properties of the phase / property of phase (pH, amount, volume, sarea, etc.)
+                    double_v phprop_Qnt;              // value
+                    double_v phprop_Qerror;           // error
+                    string_v phprop_Qunit;            // units
+                    // elements measured in a phase 3rd level in EJDB
+                    string_v phcomp;                  // name of chemical element (e.g. 'Al')
+                    double_v phcomp_eQnt;             // measured quantity/concentration of element (in Qunit)
+                    double_v phcomp_Qerror;           // error
+                    string_v phcomp_Qunit;            // units of measurment
+                    // species (end member, phase component) 3rd level in EJDB
+                    string_v phspecies;               // name of chemical species (end member, phase component)
+                    double_v phsp_sQnt;               // measured quantity/concentration of phase species
+                    double_v phsp_Qerror;             // error
+                    string_v phsp_Qunit;              // units
+
                 };
-                vector<phase*> exp_phases;      // vector of phases measured in one experiment
+                vector<phases*> expphases;      // vector of phases measured in one experiment
             };
-            vector<sample*> exp_samples;         // vector of samples from one experimental dataset
-        };
-        vector<dataset*> exp_dataset;            // vector of experimental datasets - all measured data
+            vector<samples*> experiments;         // vector of samples from one experimental dataset
 
         /// Handle that marks available data in the experiments to compare with calculated data
-        struct Hdataset
-        {
-//            int idset;
-//            string name;                // name of experimental dataset e.g. Kennedy1950
-//            string P_range;             // P range of the experimental runs e.g. 0.5-5 kbar
-//            string V_range;             // V range of the experimental runs e.g. 300-700 C
-//            string reference;           // reference e.g. Anderson and Burnham 1967
-//            string comment;             // free text
-
-            struct Hsample
+            struct Hsamples                  // data for experimental samples
             {
-//                int idsample;
-//                string name;
-//                int sT;
-//                int sP;
-//                int sV;
-                // recipe of the sample (experimental run)
-                string_v comp_name;         // name of the input components xa_ in GEMS
-                double_v comp_amount;       // like b vector in GEMS - here in grams or moles
-                double_v comp_error;        // error in measuring the components amount
-                string_v comp_units;        // g, moles - for salts
+                int idsample;
+                string sample;              // ID of this experimental sample
+                string expdataset;          // ID of set of experimental data
+//                double sT;                  // temperature for this experimental sample
+//                string Tunit;
+//                double sP;                  // pressure for this experimental sample
+//                string Punit;
+//                double sV;                  // (system) volume for this experimental sample
+//                string Vunit;
+                // defines bulk composition of chemical system for this experiment 2nd level in EJDB
+                bool_v Hcomp_name;         // 0 if component not available
+//                double_v comp_bQnt;         // quantity (to be added to system bulk composition)
+                bool_v comp_Qerror;        // 0 if error not specified
+//                string_v comp_Qunit;        // units of measurement of quantity { 'g' or 'mol' (default) or … }
 
-                struct phase
+                struct Hphases                         // data for phases characterised (measured) in this experiment 2nd level in EJDB
                 {
                     int idphase;
-                    string name;
-                    string_v phaseprop;             // property of phase (pH, amount, volume, sarea, etc.)
-                    double_v prop_value;            // value
-                    double_v prop_error;            // error of the value
-                    string_v prop_units;            // units of the value
-                    // elements measured in a phase
-                    string_v element;               // name of element in a phase
-                    double_v elem_amount;           // amount of an element in a phase
-                    double_v elem_error;            // error of amount
-                    string_v elem_units;            // units of measurment
+                    bool phase;                       // 0 if phase not available
+                    // measured properties of a phase 3rd level in EJDB
+                    bool pQnt;                        // Quantity of this phase in the sample system
+                    bool_v phprop;                  // known bulk properties of the phase / property of phase (pH, amount, volume, sarea, etc.)
+//                    double_v phprop_Qnt;              // value
+                    bool_v phprop_Qerror;           // error
+//                    string_v phprop_Qunit;            // units
+                    // elements measured in a phase 3rd level in EJDB
+                    bool_v phcomp;                  // name of chemical element (e.g. 'Al')
+//                    double_v phcomp_eQnt;             // measured quantity/concentration of element (in Qunit)
+                    bool_v phcomp_Qerror;           // error
+//                    string_v phcomp_Qunit;            // units of measurment
+                    // species (end member, phase component) 3rd level in EJDB
+                    bool_v phspecies;               // name of chemical species (end member, phase component)
+//                    bool_v phsp_sQnt;               // measured quantity/concentration of phase species
+                    bool_v phsp_Qerror;             // error
+                    string_v phsp_Qunit;              // units
+
                 };
-                vector<phase*> exp_phases;      // vector of phases measured in one experiment
+                vector<Hphases*> Hexpphases;      // vector of phases measured in one experiment
             };
-            vector<sample*> exp_samples;         // vector of samples from one experimental dataset
-        };
-        vector<dataset*> exp_dataset;            // vector of experimental datasets - all measured data
+            vector<Hsamples*> Hexperiments;         // vector of samples from one experimental dataset
 
 
 
