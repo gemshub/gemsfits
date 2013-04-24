@@ -32,7 +32,8 @@ static const char *expphases = "expphases"; ///	                  1    	     arr
         static const char *sQnt = "sQnt"; ///	                  3	         float		        measured quantity/concentration of phase species
                         // with Qerror and Qunit
     static const char *phprop = "phprop"; ///	                  2   	     array		        known bulk properties of the phase
-       static const char *pH = "pH"; /// 	                      3          float		        pH (for aqueous phase only)
+        static const char *property = "property"; ///
+        static const char *pH = "pH"; /// 	                      3          float		        pH (for aqueous phase only)
         static const char *Eh = "Eh"; ///	                      3	         float		        Eh (for aqueous phase only)
         static const char *IS = "IS"; ///	                      3	         float 		        Ionic strength (molal)
         static const char *all = "all"; ///	                      3	         float		        Alkalinity (aqueous phase only)

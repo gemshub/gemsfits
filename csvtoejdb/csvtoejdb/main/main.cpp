@@ -4,6 +4,7 @@
 # include <locale.h>
 # include "read_ejdb.h"
 # include "keywords.h"
+#include <boost/lexical_cast.hpp>
 
 using namespace std;
 //using namespace keys;
@@ -12,7 +13,9 @@ static EJDB *jb;
 
 int main(int argc, char *argv[])
 {
-    // create EJDB database object
+    int ic=0;
+
+    // create EJDB databse object
     jb = ejdbnew();
 
     // create directory for db if not existent
@@ -57,7 +60,7 @@ int main(int argc, char *argv[])
     // getting headline
     csvline(headline, line, ',');
 
-    // getting the data form CSV line by line and processing it into BSON
+    // getting the data form CSV line by line and porcessing it into BSON
     while(getline(in, line)  && in.good() )
     {
         csvline(row, line, ',');
@@ -97,6 +100,8 @@ int main(int argc, char *argv[])
                 // array of components
                 //++ START array sbcomp ++//
                 bson_append_start_array(&exp, sbcomp);
+//                bson_append_start_object(&exp, boost::lexical_cast<string>(ic).c_str());
+//                ++ic;
                 bson_append_string(&exp, comp, component.c_str());
                 bson_append_double(&exp, bQnt, atof(row[i].c_str()));
 
@@ -115,6 +120,7 @@ int main(int argc, char *argv[])
                     bson_append_string(&exp, Qunit, row[i].c_str());
                 }
                 //++ END array sbcomp ++//
+//                bson_append_finish_object(&exp);
                 bson_append_finish_array(&exp);
             }
             // 2nd level - data for phases charactrised/measured in this experiment
@@ -137,10 +143,11 @@ int main(int argc, char *argv[])
                 ph_prop = headline[i].substr((pos_end+f1.length()),(headline[i].size()));
 
                 // qunatity of this pahse in the experiment
-                if ((ph_prop == pQnt) && (!row[i].empty()))
+                if (((ph_prop == pQnt) || (ph_prop == pH) || (ph_prop == pV) ||  (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) ||  (ph_prop == sArea)) && (!row[i].empty()))
                 {
                     //++ START array phprop ++//
                     bson_append_start_array(&exp, phprop);
+                    bson_append_string(&exp, property, ph_prop.c_str());
                     bson_append_double(&exp, pQnt, atof(row[i].c_str()));
                     // checking if there are errors and units included in the CSV and adding tem in the database
                     if ((headline[i+1]==_error))
@@ -160,144 +167,144 @@ int main(int argc, char *argv[])
                     bson_append_finish_array(&exp);
                 }
 
-                // pH of this pahse in the experiment
-                else if ((ph_prop == pH) && (!row[i].empty()))
-                {
-                    //++ START array phprop ++//
-                    bson_append_start_array(&exp, phprop);
-                    bson_append_double(&exp, pH, atof(row[i].c_str()));
-                    // checking if there are errors and units included in the CSV and adding tem in the database
-                    if ((headline[i+1]==_error))
-                    {
-                        ++i;
-                        if ((!row[i].empty()))
-                        {
-                        bson_append_double(&exp, Qerror, atof(row[i].c_str()));
-                        }
-                    }
-                    if ((headline[i+1]==_unit) && (!row[i+1].empty()))
-                    {
-                        ++i;
-                        bson_append_string(&exp, _unit, row[i].c_str());
-                    }
-                    //++ END array phprop ++//
-                    bson_append_finish_array(&exp);
-                }
-                // volume of this pahse in the experiment
-                else if ((ph_prop == pV) && (!row[i].empty()))
-                {
-                    //++ START array phprop ++//
-                    bson_append_start_array(&exp, phprop);
-                    bson_append_double(&exp, pH, atof(row[i].c_str()));
-                    // checking if there are errors and units included in the CSV and adding tem in the database
-                    if ((headline[i+1]==_error))
-                    {
-                        ++i;
-                        if ((!row[i].empty()))
-                        {
-                        bson_append_double(&exp, Qerror, atof(row[i].c_str()));
-                        }
-                    }
-                    if ((headline[i+1]==_unit) && (!row[i+1].empty()))
-                    {
-                        ++i;
-                        bson_append_string(&exp, _unit, row[i].c_str());
-                    }
-                    //++ END array phprop ++//
-                    bson_append_finish_array(&exp);
-                }
-                // Eh of this pahse in the experiment
-                else if ((ph_prop == Eh) && (!row[i].empty()))
-                {
-                    //++ START array phprop ++//
-                    bson_append_start_array(&exp, phprop);
-                    bson_append_double(&exp, Eh, atof(row[i].c_str()));
-                    // checking if there are errors and units included in the CSV and adding tem in the database
-                    if ((headline[i+1]==_error))
-                    {
-                        ++i;
-                        if ((!row[i].empty()))
-                        {
-                        bson_append_double(&exp, Qerror, atof(row[i].c_str()));
-                        }
-                    }
-                    if ((headline[i+1]==_unit) && (!row[i+1].empty()))
-                    {
-                        ++i;
-                        bson_append_string(&exp, _unit, row[i].c_str());
-                    }
-                    //++ END array phprop ++//
-                    bson_append_finish_array(&exp);
-                }
-                // IS (ionic strength) of this pahse in the experiment
-                else if ((ph_prop == IS) && (!row[i].empty()))
-                {
-                    //++ START array phprop ++//
-                    bson_append_start_array(&exp, phprop);
-                    bson_append_double(&exp, IS, atof(row[i].c_str()));
-                    // checking if there are errors and units included in the CSV and adding tem in the database
-                    if ((headline[i+1]==_error))
-                    {
-                        ++i;
-                        if ((!row[i].empty()))
-                        {
-                        bson_append_double(&exp, Qerror, atof(row[i].c_str()));
-                        }
-                    }
-                    if ((headline[i+1]==_unit) && (!row[i+1].empty()))
-                    {
-                        ++i;
-                        bson_append_string(&exp, _unit, row[i].c_str());
-                    }
-                    //++ END array phprop ++//
-                    bson_append_finish_array(&exp);
-                }
-                // Alkalinity of this pahse in the experiment
-                else if ((ph_prop == all) && (!row[i].empty()))
-                {
-                    //++ START array phprop ++//
-                    bson_append_start_array(&exp, phprop);
-                    bson_append_double(&exp, all, atof(row[i].c_str()));
-                    // checking if there are errors and units included in the CSV and adding tem in the database
-                    if ((headline[i+1]==_error))
-                    {
-                        ++i;
-                        if ((!row[i].empty()))
-                        {
-                        bson_append_double(&exp, Qerror, atof(row[i].c_str()));
-                        }
-                    }
-                    if ((headline[i+1]==_unit) && (!row[i+1].empty()))
-                    {
-                        ++i;
-                        bson_append_string(&exp, _unit, row[i].c_str());
-                    }
-                    //++ END array phprop ++//
-                    bson_append_finish_array(&exp);
-                }
-                // Surface area of this pahse in the experiment
-                else if ((ph_prop == sArea) && (!row[i].empty()))
-                {
-                    //++ START array phprop ++//
-                    bson_append_start_array(&exp, phprop);
-                    bson_append_double(&exp, sArea, atof(row[i].c_str()));
-                    // checking if there are errors and units included in the CSV and adding tem in the database
-                    if ((headline[i+1]==_error))
-                    {
-                        ++i;
-                        if ((!row[i].empty()))
-                        {
-                        bson_append_double(&exp, Qerror, atof(row[i].c_str()));
-                        }
-                    }
-                    if ((headline[i+1]==_unit) && (!row[i+1].empty()))
-                    {
-                        ++i;
-                        bson_append_string(&exp, _unit, row[i].c_str());
-                    }
-                    //++ END array phprop ++//
-                    bson_append_finish_array(&exp);
-                }
+//                // pH of this pahse in the experiment
+//                else if ((ph_prop == pH) && (!row[i].empty()))
+//                {
+//                    //++ START array phprop ++//
+//                    bson_append_start_array(&exp, phprop);
+//                    bson_append_double(&exp, pH, atof(row[i].c_str()));
+//                    // checking if there are errors and units included in the CSV and adding tem in the database
+//                    if ((headline[i+1]==_error))
+//                    {
+//                        ++i;
+//                        if ((!row[i].empty()))
+//                        {
+//                        bson_append_double(&exp, Qerror, atof(row[i].c_str()));
+//                        }
+//                    }
+//                    if ((headline[i+1]==_unit) && (!row[i+1].empty()))
+//                    {
+//                        ++i;
+//                        bson_append_string(&exp, _unit, row[i].c_str());
+//                    }
+//                    //++ END array phprop ++//
+//                    bson_append_finish_array(&exp);
+//                }
+//                // volume of this pahse in the experiment
+//                else if ((ph_prop == pV) && (!row[i].empty()))
+//                {
+//                    //++ START array phprop ++//
+//                    bson_append_start_array(&exp, phprop);
+//                    bson_append_double(&exp, pV, atof(row[i].c_str()));
+//                    // checking if there are errors and units included in the CSV and adding tem in the database
+//                    if ((headline[i+1]==_error))
+//                    {
+//                        ++i;
+//                        if ((!row[i].empty()))
+//                        {
+//                        bson_append_double(&exp, Qerror, atof(row[i].c_str()));
+//                        }
+//                    }
+//                    if ((headline[i+1]==_unit) && (!row[i+1].empty()))
+//                    {
+//                        ++i;
+//                        bson_append_string(&exp, _unit, row[i].c_str());
+//                    }
+//                    //++ END array phprop ++//
+//                    bson_append_finish_array(&exp);
+//                }
+//                // Eh of this pahse in the experiment
+//                else if ((ph_prop == Eh) && (!row[i].empty()))
+//                {
+//                    //++ START array phprop ++//
+//                    bson_append_start_array(&exp, phprop);
+//                    bson_append_double(&exp, Eh, atof(row[i].c_str()));
+//                    // checking if there are errors and units included in the CSV and adding tem in the database
+//                    if ((headline[i+1]==_error))
+//                    {
+//                        ++i;
+//                        if ((!row[i].empty()))
+//                        {
+//                        bson_append_double(&exp, Qerror, atof(row[i].c_str()));
+//                        }
+//                    }
+//                    if ((headline[i+1]==_unit) && (!row[i+1].empty()))
+//                    {
+//                        ++i;
+//                        bson_append_string(&exp, _unit, row[i].c_str());
+//                    }
+//                    //++ END array phprop ++//
+//                    bson_append_finish_array(&exp);
+//                }
+//                // IS (ionic strength) of this pahse in the experiment
+//                else if ((ph_prop == IS) && (!row[i].empty()))
+//                {
+//                    //++ START array phprop ++//
+//                    bson_append_start_array(&exp, phprop);
+//                    bson_append_double(&exp, IS, atof(row[i].c_str()));
+//                    // checking if there are errors and units included in the CSV and adding tem in the database
+//                    if ((headline[i+1]==_error))
+//                    {
+//                        ++i;
+//                        if ((!row[i].empty()))
+//                        {
+//                        bson_append_double(&exp, Qerror, atof(row[i].c_str()));
+//                        }
+//                    }
+//                    if ((headline[i+1]==_unit) && (!row[i+1].empty()))
+//                    {
+//                        ++i;
+//                        bson_append_string(&exp, _unit, row[i].c_str());
+//                    }
+//                    //++ END array phprop ++//
+//                    bson_append_finish_array(&exp);
+//                }
+//                // Alkalinity of this pahse in the experiment
+//                else if ((ph_prop == all) && (!row[i].empty()))
+//                {
+//                    //++ START array phprop ++//
+//                    bson_append_start_array(&exp, phprop);
+//                    bson_append_double(&exp, all, atof(row[i].c_str()));
+//                    // checking if there are errors and units included in the CSV and adding tem in the database
+//                    if ((headline[i+1]==_error))
+//                    {
+//                        ++i;
+//                        if ((!row[i].empty()))
+//                        {
+//                        bson_append_double(&exp, Qerror, atof(row[i].c_str()));
+//                        }
+//                    }
+//                    if ((headline[i+1]==_unit) && (!row[i+1].empty()))
+//                    {
+//                        ++i;
+//                        bson_append_string(&exp, _unit, row[i].c_str());
+//                    }
+//                    //++ END array phprop ++//
+//                    bson_append_finish_array(&exp);
+//                }
+//                // Surface area of this pahse in the experiment
+//                else if ((ph_prop == sArea) && (!row[i].empty()))
+//                {
+//                    //++ START array phprop ++//
+//                    bson_append_start_array(&exp, phprop);
+//                    bson_append_double(&exp, sArea, atof(row[i].c_str()));
+//                    // checking if there are errors and units included in the CSV and adding tem in the database
+//                    if ((headline[i+1]==_error))
+//                    {
+//                        ++i;
+//                        if ((!row[i].empty()))
+//                        {
+//                        bson_append_double(&exp, Qerror, atof(row[i].c_str()));
+//                        }
+//                    }
+//                    if ((headline[i+1]==_unit) && (!row[i+1].empty()))
+//                    {
+//                        ++i;
+//                        bson_append_string(&exp, _unit, row[i].c_str());
+//                    }
+//                    //++ END array phprop ++//
+//                    bson_append_finish_array(&exp);
+//                }
                 // 3rd level - name of chemical species (end member, pahse component)
                 else if ((strncmp(ph_prop.c_str(),"s", 1) == 0) && (!row[i].empty()))
                 {

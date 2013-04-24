@@ -1,3 +1,6 @@
+
+# CASH/ solcash CASH.csv
+
 TEMPLATE = app
 CONFIG += console
 CONFIG -= qt
@@ -45,7 +48,7 @@ QMAKE_CXXFLAGS += -std=gnu99
 QMAKE_CFLAGS += -std=gnu99
 
 
-EJDB_CPP   =  ../../gemsfit/tcejdb
+EJDB_CPP   =  ../../gemsfit2/tcejdb
 MAIN_CPP      =  ./main
 
 EJDB_H   =  $$EJDB_CPP
