@@ -1,6 +1,6 @@
 id,sample,comment,type,sT,sP,expdataset,comp.SiO2,error,unit,comp.H2O,unit,comp.Ca(OH)2,unit,phase.aq_gen.pH,error,unit,phase.aq_gen.Si,error,unit,phase.aq_gen.Ca,error,unit,phase.CSH.pQnt,unit,phase.CSH.Si,unit,phase.CSH.Ca,error,unit,phase.aq_gen.sSiO2-,error,unit
 1,CH04_1,,,22,1,CH04,10,,g,1000,g,36.99,g,,,,0.05,,molal,20.83,,molal,3.00,mol,1.000001,mol,1.50,0.05,mol,,,
-2,CH04_2,,,100,1,CH04,10,,g,1000,g,36.87,g,,,,0.04,,molal,20.59,0.1,molal,2.99,mol,1,mol,1.50,0.05,mol,,,
+2,CH04_2,,,100,1,CH04,10,,g,1000,g,36.87,g,,,,0.04,,molal,20.59,0.1,molal,2.99,mol,1,mol,1.50,0.05,mol,0.1,0.01,molal
 3,CH04_3,,,22,1,CH04,10,,g,1000,g,32.56,g,,,,0.05,,molal,19.22,,molal,2.64,mol,1,mol,1.50,0.05,mol,,,
 4,CH04_4,,,22,1,xxx,10,,g,1000,g,29.84,g,12.49,0.02,-loga,0.05,,molal,18.59,,molal,2.42,mol,1,mol,1.50,0.05,mol,,,
 5,CH04_5,,,22,1,xxx,10,,g,1000,g,23.06,g,12.43,0.02,-loga,0.05,,molal,15.86,,molal,1.87,mol,1,mol,1.50,0.05,mol,,,

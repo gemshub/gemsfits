@@ -13,8 +13,10 @@ static EJDB *jb;
 
 int main(int argc, char *argv[])
 {
-    int ic=0;
+    int ic=0, phc = 0;
     string ph_new, ph_old;
+    vector<string> phases;
+    bool h_phprop = false, h_phases = false, h_phcomp = false; // handle that is true if we have ph_prop in the CSV file
 
     // create EJDB databse object
     jb = ejdbnew();
@@ -65,13 +67,14 @@ int main(int argc, char *argv[])
     while(getline(in, line)  && in.good() )
     {
         ic = 0;
+        phc = 0; // keeps numnber of phases per line
         csvline(row, line, ',');
         // going trough the headline markers to identify the data type, based on which it is assigned into the database
         bson exp;
         bson_init(&exp);
 
         //first level objects: sample, expdataset, sT, sP.
-        for (int i=0; i<headline.size(); ++i)
+        for (unsigned int i=0; i<headline.size(); ++i)
         {
             if ((headline[i]==expsample) || (headline[i]==expdataset) || (headline[i]==Tunit) || (headline[i]==Punit)|| (headline[i]==Vunit) )
             {
@@ -88,11 +91,11 @@ int main(int argc, char *argv[])
 
          }
 
-            // 2nd level - bulk composition of chemical system for this experiment
+        // 2nd level - bulk composition of chemical system for this experiment
         // array of components
         //++ START array sbcomp ++//
         bson_append_start_array(&exp, sbcomp);
-        for (int i=0; i<headline.size(); ++i)
+        for (unsigned int i=0; i<headline.size(); ++i)
         {
             if ((strncmp(headline[i].c_str(),comp, 4) == 0) && (!row[i].empty()))
             {
@@ -132,13 +135,11 @@ int main(int argc, char *argv[])
         bson_append_finish_array(&exp);
         ic=0;
 
-
-
-            // 2nd level - data for phases charactrised/measured in this experiment
+        // 2nd level - data for phases charactrised/measured in this experiment
         //++ START array expphases ++//
         bson_append_start_array(&exp, expphases);
-
-        for (int i=0; i<headline.size(); ++i)
+        // going trough the headline and searching for "phase" keword
+        for (unsigned int i=0; i<headline.size(); ++i)
         {
             if ((strncmp(headline[i].c_str(),phase, 5) == 0) && (!row[i].empty()))
             {
@@ -151,174 +152,228 @@ int main(int argc, char *argv[])
                 pos_end   = headline[i].find(f1,pos_start+1);
                 phase_name = headline[i].substr((pos_start+f1.length()),(pos_end-pos_start-f1.length()));
                 ph_new = phase_name;
+                h_phases = false;
 
-                if (ph_new != ph_old)
+                // only if we have a new pahse name we add new pahse name string, as pahse names can appear multiple times as keys in the headline
+                if ((ph_new != ph_old))
                 {
-                    bson_append_string(&exp, phase, phase_name.c_str());
-                    ic = 0;
-
-                    //++ START array phprop ++//
-                    bson_append_start_array(&exp, phprop);
-
-                    // get phase poperties
-                    for (int j=0; j<headline.size(); ++j)
+                    // check if pahse name was not present before
+                    for (unsigned int j=0; j<phases.size(); ++j)
                     {
-                        if ((strncmp(headline[j].c_str(),phase, 5) == 0) && (!row[j].empty()))
+                        if (phase_name == phases[j])
                         {
-                        pos_start = headline[j].find(f1);
-                        pos_end   = headline[j].find(f1,pos_start+1);
-                        // getting the phase properties and composition
-                        if (phase_name == headline[j].substr((pos_start+f1.length()),(pos_end-pos_start-f1.length())))
-                        {
-                            // getting the name of the property phase e.g. Si from phase.aq_gen.Si, or pQunt from pahse.aq_gen.pQunt
-                            ph_prop = headline[j].substr((pos_end+f1.length()),(headline[j].size()));
+                            h_phases = true;
+                        }
+                    }
 
-                            // qunatity of this pahse in the experiment
-                            if (((ph_prop == pQnt) || (ph_prop == pH) || (ph_prop == pV) ||  (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) ||  (ph_prop == sArea)) && (!row[j].empty()))
+                    if (!h_phases) // START if h_phases
+                    {
+                        bson_append_start_object(&exp, boost::lexical_cast<string>(phc).c_str());
+                        phc++;
+                        bson_append_string(&exp, phase, phase_name.c_str());
+                        phases.push_back(phase_name);
+                        ic = 0;
+
+                        // START check if there is phprop & phcomp data in the CSV
+                        for (unsigned int j=0; j<headline.size(); ++j)
+                        {
+                            if ((strncmp(headline[j].c_str(),phase, 5) == 0) && (!row[j].empty()))
                             {
-                                bson_append_start_object(&exp, boost::lexical_cast<string>(ic).c_str());
-                                ic++;
-
-                                bson_append_string(&exp, property, ph_prop.c_str());
-                                bson_append_double(&exp, pQnt, atof(row[j].c_str()));
-                                // checking if there are errors and units included in the CSV and adding tem in the database
-                                if ((headline[j+1]==_error))
+                                pos_start = headline[j].find(f1);
+                                pos_end   = headline[j].find(f1,pos_start+1);
+                                // getting the phase properties and composition
+                                if (phase_name == headline[j].substr((pos_start+f1.length()),(pos_end-pos_start-f1.length())))
                                 {
-                                    ++j;
-                                    if ((!row[j].empty()))
+                                    // getting the name of the property phase e.g. Si from phase.aq_gen.Si, or pQunt from pahse.aq_gen.pQunt
+                                    ph_prop = headline[j].substr((pos_end+f1.length()),(headline[j].size()));
+
+                                    // qunatity of this pahse in the experiment
+                                    if (((ph_prop == pQnt) || (ph_prop == pH) || (ph_prop == pV) ||  (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) ||  (ph_prop == sArea)) && (!row[j].empty()))
                                     {
-                                    bson_append_double(&exp, Qerror, atof(row[j].c_str()));
+                                        h_phprop = true;
+                                    }
+
+                                    if (((ph_prop != pQnt) && (ph_prop != pH) && (ph_prop != pV) &&  (ph_prop != Eh) && (ph_prop != IS) && (ph_prop != all) &&  (ph_prop != sArea)) && (strncmp(ph_prop.c_str(),"s", 1) != 0) && (!row[j].empty()))
+                                    {
+                                        h_phcomp = true;
                                     }
                                 }
-                                if ((headline[j+1]==_unit) && (!row[j+1].empty()))
-                                {
-                                    ++j;
-                                    bson_append_string(&exp, _unit, row[j].c_str());
-                                }
-
-                                bson_append_finish_object(&exp);
-                                ph_old = phase_name;
                             }
-                        }
-                        }
-                    }
+                        } // END check
 
-                    //++ END array phprop ++//
-                    bson_append_finish_array(&exp);
-                    ic =0;
-
-                    //++ START array phcomp ++//
-                    bson_append_start_array(&exp, phcomp);
-                    // get phase comp
-                    for (int j=0; j<headline.size(); ++j)
-                    {
-                        if ((strncmp(headline[j].c_str(),phase, 5) == 0) && (!row[j].empty()))
+                        //++ START array phprop ++//
+                        if (h_phprop)
                         {
-                        pos_start = headline[j].find(f1);
-                        pos_end   = headline[j].find(f1,pos_start+1);
-                        // getting the phase properties and composition
-                        if (phase_name == headline[j].substr((pos_start+f1.length()),(pos_end-pos_start-f1.length())))
-                        {
-                            // getting the name of the property phase e.g. Si from phase.aq_gen.Si, or pQunt from pahse.aq_gen.pQunt
-                            ph_prop = headline[j].substr((pos_end+f1.length()),(headline[j].size()));
+                            bson_append_start_array(&exp, phprop);
 
-                            // qunatity of this pahse in the experiment
-                            if (((ph_prop != pQnt) && (ph_prop != pH) && (ph_prop != pV) &&  (ph_prop != Eh) && (ph_prop != IS) && (ph_prop != all) &&  (ph_prop != sArea)) && (strncmp(ph_prop.c_str(),"s", 1) != 0) && (!row[j].empty()))
+                            // get phase poperties
+                            for (unsigned int j=0; j<headline.size(); ++j)
                             {
-                                bson_append_start_object(&exp, boost::lexical_cast<string>(ic).c_str());
-                                ic++;
-
-                                bson_append_string(&exp, property, ph_prop.c_str());
-                                bson_append_double(&exp, pQnt, atof(row[j].c_str()));
-                                // checking if there are errors and units included in the CSV and adding tem in the database
-                                if ((headline[j+1]==_error))
+                                if ((strncmp(headline[j].c_str(),phase, 5) == 0) && (!row[j].empty()))
                                 {
-                                    ++j;
-                                    if ((!row[j].empty()))
+                                    pos_start = headline[j].find(f1);
+                                    pos_end   = headline[j].find(f1,pos_start+1);
+                                    // getting the phase properties and composition
+                                    if (phase_name == headline[j].substr((pos_start+f1.length()),(pos_end-pos_start-f1.length())))
                                     {
-                                    bson_append_double(&exp, Qerror, atof(row[j].c_str()));
+                                        // getting the name of the property phase e.g. Si from phase.aq_gen.Si, or pQunt from pahse.aq_gen.pQunt
+                                        ph_prop = headline[j].substr((pos_end+f1.length()),(headline[j].size()));
+
+                                        // qunatity of this pahse in the experiment
+                                        if (((ph_prop == pQnt) || (ph_prop == pH) || (ph_prop == pV) ||  (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) ||  (ph_prop == sArea)) && (!row[j].empty()))
+                                        {
+                                            bson_append_start_object(&exp, boost::lexical_cast<string>(ic).c_str());
+                                            ic++;
+
+                                            bson_append_string(&exp, property, ph_prop.c_str());
+                                            bson_append_double(&exp, pQnt, atof(row[j].c_str()));
+                                            // checking if there are errors and units included in the CSV and adding tem in the database
+                                            if ((headline[j+1]==_error))
+                                            {
+                                                ++j;
+                                                if ((!row[j].empty()))
+                                                {
+                                                bson_append_double(&exp, Qerror, atof(row[j].c_str()));
+                                                }
+                                            }
+                                            if ((headline[j+1]==_unit) && (!row[j+1].empty()))
+                                            {
+                                                ++j;
+                                                bson_append_string(&exp, _unit, row[j].c_str());
+                                            }
+
+                                            bson_append_finish_object(&exp);
+                                            ph_old = phase_name;
+                                        }
                                     }
                                 }
-                                if ((headline[j+1]==_unit) && (!row[j+1].empty()))
-                                {
-                                    ++j;
-                                    bson_append_string(&exp, _unit, row[j].c_str());
-                                }
-
-                                bson_append_finish_object(&exp);
-                                ph_old = phase_name;
-
                             }
-                        }
-                        }
-                    }
-                    //++ END array phcomp ++//
-                    bson_append_finish_array(&exp);
-                    ic = 0;
+                            //++ END array phprop ++//
+                            bson_append_finish_array(&exp);
+                            ic =0;
+                        } h_phprop = false;
 
-                    //++ START array phspecies ++//
-                    if ((strncmp(ph_prop.c_str(),"s", 1) == 0) && (!row[i].empty())) // check is there is species data in the CSV header
-                    {
-                    bson_append_start_array(&exp, phspecies);
-                    for (int j=0; j<headline.size(); ++j)
-                    {
-                        if ((strncmp(headline[j].c_str(),phase, 5) == 0) && (!row[j].empty()))
+                        //++ START array phcomp ++//
+                        if (h_phcomp)
                         {
-                        pos_start = headline[j].find(f1);
-                        pos_end   = headline[j].find(f1,pos_start+1);
-                        // getting the phase species
-                        if (phase_name == headline[j].substr((pos_start+f1.length()),(pos_end-pos_start-f1.length())))
-                        {
-                            ph_prop = headline[j].substr((pos_end+f1.length()),(headline[j].size()));
-
-                            // specie
-                            if ((strncmp(ph_prop.c_str(),"s", 1) == 0) && (!row[j].empty()))
+                            bson_append_start_array(&exp, phcomp);
+                            // get phase comp
+                            for (unsigned int j=0; j<headline.size(); ++j)
                             {
-                                bson_append_start_object(&exp, boost::lexical_cast<string>(ic).c_str());
-                                ic++;
-
-                                bson_append_string(&exp, species, ph_prop.c_str());
-                                bson_append_double(&exp, sQnt, atof(row[j].c_str()));
-
-                                // if error and unit follow in the CSV they are added in the DB
-                                if ((headline[j+1]==_error))
+                                if ((strncmp(headline[j].c_str(),phase, 5) == 0) && (!row[j].empty()))
                                 {
-                                    ++j;
-                                    if ((!row[j].empty()))
+                                pos_start = headline[j].find(f1);
+                                pos_end   = headline[j].find(f1,pos_start+1);
+                                // getting the phase_name properties and composition from CSV
+                                if (phase_name == headline[j].substr((pos_start+f1.length()),(pos_end-pos_start-f1.length())))
+                                {
+                                    // getting the name of the property phase e.g. Si from phase.aq_gen.Si, or pQunt from pahse.aq_gen.pQunt
+                                    ph_prop = headline[j].substr((pos_end+f1.length()),(headline[j].size()));
+
+                                    // qunatity of this pahse in the experiment
+                                    if (((ph_prop != pQnt) && (ph_prop != pH) && (ph_prop != pV) &&  (ph_prop != Eh) && (ph_prop != IS) && (ph_prop != all) &&  (ph_prop != sArea)) && (strncmp(ph_prop.c_str(),"s", 1) != 0) && (!row[j].empty()))
                                     {
-                                    bson_append_double(&exp, Qerror, atof(row[j].c_str()));
+                                        bson_append_start_object(&exp, boost::lexical_cast<string>(ic).c_str());
+                                        ic++;
+
+                                        bson_append_string(&exp, element, ph_prop.c_str());
+                                        bson_append_double(&exp, eQnt, atof(row[j].c_str()));
+                                        // checking if there are errors and units included in the CSV and adding tem in the database
+                                        if ((headline[j+1]==_error))
+                                        {
+                                            ++j;
+                                            if ((!row[j].empty()))
+                                            {
+                                            bson_append_double(&exp, Qerror, atof(row[j].c_str()));
+                                            }
+                                        }
+                                        if ((headline[j+1]==_unit) && (!row[j+1].empty()))
+                                        {
+                                            ++j;
+                                            bson_append_string(&exp, _unit, row[j].c_str());
+                                        }
+                                        bson_append_finish_object(&exp);
+                                        ph_old = phase_name;
                                     }
                                 }
-                                if ((headline[j+1]==_unit) && (!row[j+1].empty()))
-                                {
-                                    ++j;
-                                    bson_append_string(&exp, Qunit, row[j].c_str());
                                 }
-
-                                bson_append_finish_object(&exp);
-                                ph_old = phase_name;
-
                             }
+                            //++ END array phcomp ++//
+                            bson_append_finish_array(&exp);
+                            ic = 0;
+                        } h_phcomp = false;
+
+                        //++ START array phspecies ++//
+                        if ((strncmp(ph_prop.c_str(),"s", 1) == 0) && (!row[i].empty())) // check is there is species data in the CSV header
+                        {
+                            bson_append_start_array(&exp, phspecies);
+                            for (unsigned int j=0; j<headline.size(); ++j)
+                            {
+                                if ((strncmp(headline[j].c_str(),phase, 5) == 0) && (!row[j].empty()))
+                                {
+                                    pos_start = headline[j].find(f1);
+                                    pos_end   = headline[j].find(f1,pos_start+1);
+                                    // getting the phase species
+                                    if (phase_name == headline[j].substr((pos_start+f1.length()),(pos_end-pos_start-f1.length())))
+                                    {
+                                        ph_prop = headline[j].substr((pos_end+f1.length()),(headline[j].size()));
+
+                                        // specie
+                                        if ((strncmp(ph_prop.c_str(),"s", 1) == 0) && (!row[j].empty()))
+                                        {
+                                            bson_append_start_object(&exp, boost::lexical_cast<string>(ic).c_str());
+                                            ic++;
+
+                                            ph_prop = ph_prop.substr(1,ph_prop.length()); // deleting the "s"
+
+                                            bson_append_string(&exp, species, ph_prop.c_str());
+                                            bson_append_double(&exp, sQnt, atof(row[j].c_str()));
+
+                                            // if error and unit follow in the CSV they are added in the DB
+                                            if ((headline[j+1]==_error))
+                                            {
+                                                ++j;
+                                                if ((!row[j].empty()))
+                                                {
+                                                    bson_append_double(&exp, Qerror, atof(row[j].c_str()));
+                                                }
+                                            }
+                                            if ((headline[j+1]==_unit) && (!row[j+1].empty()))
+                                            {
+                                                ++j;
+                                                bson_append_string(&exp, Qunit, row[j].c_str());
+                                            }
+
+                                            bson_append_finish_object(&exp);
+                                            ph_old = phase_name;
+
+                                        }
+                                    }
+                                }
+                            }
+                            //++ END array phspecies ++//
+                            bson_append_finish_array(&exp);
                         }
-                        }
-                    }
-                    //++ END array phspecies ++//
-                    bson_append_finish_array(&exp);
-                    }
-                }
-            }
+                        // end object in the array phases
+                        bson_append_finish_object(&exp);
+                    } // END if h_phases
+
+                } // END ph_new != ph_old
+
+            } // END check for key pahse in the headline
+
         }
         //++ END array expphases ++//
         bson_append_finish_array(&exp);
+        ph_old = ""; // reseting the old phase name after adding one experiment
+        phases.clear(); // clearing the vector that holds the pahses in one experiment
+        h_phases = false; // reseting the phases handle that cheks if one phase key was not present before
+
 
         bson_finish(&exp);
         ejdbsavebson(coll, &exp, &oid);
         bson_destroy(&exp);
-
-//        for(int i=0, leng=row.size(); i<leng; i++)
-//           cout << row[i] << "\t";
-//           cout << endl;
-    }
+    } // END getting data from CSV
 
     in.close();
 
