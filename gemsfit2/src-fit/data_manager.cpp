@@ -141,7 +141,7 @@ void Data_Manager::parse_JSON_object(string query, const char* key, vector<strin
         object = json_object_get(root, key);
         if(json_is_array(object))
         {
-            for(int i = 0; i < json_array_size(object); i++)
+            for(unsigned int i = 0; i < json_array_size(object); i++)
             {
                 data = json_array_get(object, i);
                     if(json_is_string(data))
@@ -205,14 +205,14 @@ void Data_Manager::get_EJDB( )
     out.clear();
 
     parse_JSON_object(DataSelect, sT, out);
-    for (int i = 0 ; i < out.size() ; i++)
+    for (unsigned int i = 0 ; i < out.size() ; i++)
     {
         qsT.push_back( atoi(out.at(i).c_str()) ); // query for selecting T
     }
     out.clear();
 
     parse_JSON_object(DataSelect, sP, out);
-    for (int i = 0 ; i < out.size() ; i++)
+    for (unsigned int i = 0 ; i < out.size() ; i++)
     {
         qsP.push_back( atoi(out.at(i).c_str()) ); // query for selecting P
     }
@@ -240,7 +240,7 @@ void Data_Manager::get_EJDB( )
     {
         bson_append_start_object(&bq2, expdataset);
         bson_append_start_array(&bq2, "$in");
-        for (int j=0; j<qexpdataset.size(); ++j)
+        for (unsigned int j=0; j<qexpdataset.size(); ++j)
         {
             bson_append_string(&bq2, boost::lexical_cast<string>(j).c_str(), qexpdataset[j].c_str());
         }
@@ -254,7 +254,7 @@ void Data_Manager::get_EJDB( )
     {
         bson_append_start_object(&bq2, expsample);
         bson_append_start_array(&bq2, "$in");
-        for (int j=0; j<qexpdataset.size(); ++j)
+        for (unsigned int j=0; j<qexpdataset.size(); ++j)
         {
             bson_append_string(&bq2, boost::lexical_cast<string>(j).c_str(), qsample[j].c_str());
         }
@@ -273,7 +273,7 @@ void Data_Manager::get_EJDB( )
         bson_append_finish_array(&bq2);
         bson_append_finish_object(&bq2);
     } else
-        if (!qsT[0] == NULL)
+        if (!(qsT[0] == NULL))
         {
             bson_append_start_object(&bq2, sT);
             bson_append_start_array(&bq2, "$in");
@@ -296,7 +296,7 @@ void Data_Manager::get_EJDB( )
         bson_append_finish_array(&bq2);
         bson_append_finish_object(&bq2);
     } else
-        if (!qsP[0] == NULL)
+        if (!(qsP[0] == NULL))
         {
             bson_append_start_object(&bq2, sP);
             bson_append_start_array(&bq2, "$in");
@@ -333,6 +333,7 @@ void Data_Manager::get_EJDB( )
          experiments.at(j)->idsample= NULL;
          Hexperiments.push_back( new Hsamples ); // handels for marking data to compare
          // set Hexperiments variables false
+
      }
 
      for (int i = 0; i < TCLISTNUM(res); ++i) {
@@ -368,16 +369,14 @@ void Data_Manager::get_EJDB( )
 
 
 void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
-    bson_iterator i, j, k; // 1st, 2nd, 3rd level
+    bson_iterator i, j, k, d, d2; // 1st, 2nd, 3rd, 2-1, 3-1 level
     const char *key;
-    string key_, ph_new, ph_old, c_new, c_old, phc_new, phc_old;
-    int temp, ip = -1, ic = -1, ipc;
-    bson_timestamp_t ts;
-    char oidhex[25];
-    bson scope;
+    string key_;
+    int ip = -1, ic = -1, ipc, ipp, ips;
     bson_iterator_from_buffer(&i, data);
 
-    while (bson_iterator_next(&i)) {
+    while (bson_iterator_next(&i))
+    {
         bson_type t = bson_iterator_type(&i);
         if (t == 0)
             break;
@@ -389,11 +388,14 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
         {
             // adding expdataset
             experiments.at(pos)->expdataset = bson_iterator_string(&i);
+            Hexperiments.at(pos)->expdataset = bson_iterator_string(&i);
+
         } else
         if (key_ == expsample)
         {
             // adding sample name
             experiments.at(pos)->sample = bson_iterator_string(&i);
+            Hexperiments.at(pos)->sample = bson_iterator_string(&i);
         } else
         if (key_ == sT)
         {
@@ -410,144 +412,206 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
         if ((key_ == sbcomp) && (t == BSON_ARRAY))
         {
             bson_iterator_from_buffer(&j, bson_iterator_value(&i));
-            c_new = bson_iterator_string(&j);
-            if (c_new != c_old) // check for new component
+            while (bson_iterator_next(&j))
             {
+                bson_iterator_from_buffer(&d, bson_iterator_value(&j));
                 experiments.at(pos)->sbcomp.push_back( new samples::components );
+                Hexperiments.at(pos)->Hsbcomp.push_back( new Hsamples::Hcomponents );
                 ic++; // position of the component in sbcomp vector
                 experiments.at(pos)->sbcomp.at(ic)->bQnt = NULL; experiments.at(pos)->sbcomp.at(ic)->Qerror = NULL;
-            }
-            while (bson_iterator_next(&j)) {
-                t = bson_iterator_type(&j);
-                if (t == 0)
-                    break;
-                key = bson_iterator_key(&j);
-                key_ = key;
+                Hexperiments.at(pos)->Hsbcomp.at(ic)->comp = false;
 
-                if ((key_ == comp))
+                while (bson_iterator_next(&d))
                 {
-                    experiments.at(pos)->sbcomp.at(ic)->comp =  bson_iterator_string(&j) ;
-                    c_old = bson_iterator_string(&j);
-                } else
-                if ((key_ == bQnt))
-                {
-                    experiments.at(pos)->sbcomp.at(ic)->bQnt = bson_iterator_double(&j) ;
-                } else
-                if ((key_ == Qerror))
-                {
-                    experiments.at(pos)->sbcomp.at(ic)->Qerror = bson_iterator_double(&j) ;
-                } else
-                if ((key_ == Qunit))
-                {
-                    experiments.at(pos)->sbcomp.at(ic)->Qunit = bson_iterator_string(&j) ;
+                    t = bson_iterator_type(&d);
+                    if (t == 0)
+                        break;
+                    key = bson_iterator_key(&d);
+                    key_ = key;
+
+                    if ((key_ == comp))
+                    {
+                        experiments.at(pos)->sbcomp.at(ic)->comp =  bson_iterator_string(&d) ;
+                        Hexperiments.at(pos)->Hsbcomp.at(ic)->comp = true;
+                    } else
+                    if ((key_ == bQnt))
+                    {
+                        experiments.at(pos)->sbcomp.at(ic)->bQnt = bson_iterator_double(&d) ;
+                    } else
+                    if ((key_ == Qerror))
+                    {
+                        experiments.at(pos)->sbcomp.at(ic)->Qerror = bson_iterator_double(&d) ;
+                    } else
+                    if ((key_ == Qunit))
+                    {
+                        experiments.at(pos)->sbcomp.at(ic)->Qunit = bson_iterator_string(&d) ;
+                    }
                 }
             }
         } else
+
         // adding experimental phases
         if ((key_ == expphases) && (t == BSON_ARRAY))
         {
             bson_iterator_from_buffer(&j, bson_iterator_value(&i));
-            ph_new = bson_iterator_string(&j);
-            if (ph_new != ph_old) // check for new pahse
+            while (bson_iterator_next(&j))
             {
+                bson_iterator_from_buffer(&d, bson_iterator_value(&j));
                 experiments.at(pos)->expphases.push_back( new samples::phases );
+                Hexperiments.at(pos)->Hexpphases.push_back( new Hsamples::Hphases );
                 ip++; // position of the phase in expphases vector
                 ipc = -1; // phases components - reset to -1 for every new pahse
-                phc_old = ""; // reseting the old component name for each new pahse
+                ipp = -1; // phases properties
+                ips = -1; // phases species
                 experiments.at(pos)->expphases.at(ip)->idphase = NULL;
-            }
-            while (bson_iterator_next(&j)) {
-                t = bson_iterator_type(&j);
-                if (t == 0)
-                    break;
-                key = bson_iterator_key(&j);
-                key_ = key;
+                Hexperiments.at(pos)->Hexpphases.at(ip)->Hphase = false;
 
-                if ((key_ == phase))
+                while (bson_iterator_next(&d))
                 {
-                    experiments.at(pos)->expphases.at(ip)->phase =  bson_iterator_string(&j) ;
-                    ph_old = bson_iterator_string(&j);
-                } else
-                // adding phase components
-                if ((key_ == phcomp) && (t == BSON_ARRAY))
-                {
-                    bson_iterator_from_buffer(&k, bson_iterator_value(&j));
-                    phc_new = bson_iterator_string(&k);
-                    if (phc_new != phc_old) // checking for new component
+                    t = bson_iterator_type(&d);
+                    if (t == 0)
+                        break;
+                    key = bson_iterator_key(&d);
+                    key_ = key;
+
+                    if ((key_ == phase))
                     {
-                        experiments.at(pos)->expphases.at(ip)->phcomp.push_back( new samples::components );
-                        ipc++; // position of the component in phcomp vector
-                        experiments.at(pos)->expphases.at(ip)->phcomp.at(ipc)->Qerror = NULL;
-                        experiments.at(pos)->expphases.at(ip)->phcomp.at(ipc)->bQnt   = NULL;
-                    }
-                    while (bson_iterator_next(&k)) {
-                        t = bson_iterator_type(&k);
-                        if (t == 0)
-                            break;
-                        key = bson_iterator_key(&k);
-                        key_ = key;
+                        experiments.at(pos)->expphases.at(ip)->phase =  bson_iterator_string(&d) ;
+                        Hexperiments.at(pos)->Hexpphases.at(ip)->phase = bson_iterator_string(&d) ;
+                        Hexperiments.at(pos)->Hexpphases.at(ip)->Hphase = true;
+                    } else
 
-                        if ((key_ == element))
+                    // adding phase components
+                    if ((key_ == phcomp) && (t == BSON_ARRAY))
+                    {
+                        bson_iterator_from_buffer(&k, bson_iterator_value(&d));
+                        while (bson_iterator_next(&k))
                         {
-                            experiments.at(pos)->expphases.at(ip)->phcomp.at(ipc)->comp = bson_iterator_string(&k) ;
-                            cout << key << " is: "<< bson_iterator_string(&k) <<endl;
-                            phc_old = bson_iterator_string(&k);
-                        } else
-                        if ((key_ == eQnt))
-                        {
-                            experiments.at(pos)->expphases.at(ip)->phcomp.at(ipc)->bQnt = bson_iterator_double(&k) ;
-                        } else
-                        if ((key_ == Qerror))
-                        {
-                            experiments.at(pos)->expphases.at(ip)->phcomp.at(ipc)->Qerror = bson_iterator_double(&k) ;
-                        } else
-                        if ((key_ == Qunit))
-                        {
-                            experiments.at(pos)->expphases.at(ip)->phcomp.at(ipc)->Qunit = bson_iterator_string(&k) ;
+                            bson_iterator_from_buffer(&d2, bson_iterator_value(&k));
+                            experiments.at(pos)->expphases.at(ip)->phcomp.push_back( new samples::components );
+                            Hexperiments.at(pos)->Hexpphases.at(ip)->Hphcomp.push_back( new Hsamples::Hcomponents );
+                            ipc++; // position of the component in phcomp vector
+                            experiments.at(pos)->expphases.at(ip)->phcomp.at(ipc)->Qerror = NULL;
+                            experiments.at(pos)->expphases.at(ip)->phcomp.at(ipc)->bQnt   = NULL;
+                            Hexperiments.at(pos)->Hexpphases.at(ip)->Hphcomp.at(ipc)->comp= false;
+
+                            while (bson_iterator_next(&d2))
+                            {
+                                t = bson_iterator_type(&d2);
+                                if (t == 0)
+                                    break;
+                                key = bson_iterator_key(&d2);
+                                key_ = key;
+
+                                if ((key_ == element))
+                                {
+                                    experiments.at(pos)->expphases.at(ip)->phcomp.at(ipc)->comp = bson_iterator_string(&d2) ;
+                                    Hexperiments.at(pos)->Hexpphases.at(ip)->Hphcomp.at(ipc)->comp= true;
+                                } else
+                                if ((key_ == eQnt))
+                                {
+                                    experiments.at(pos)->expphases.at(ip)->phcomp.at(ipc)->bQnt = bson_iterator_double(&d2) ;
+                                } else
+                                if ((key_ == Qerror))
+                                {
+                                    experiments.at(pos)->expphases.at(ip)->phcomp.at(ipc)->Qerror = bson_iterator_double(&d2) ;
+                                } else
+                                if ((key_ == Qunit))
+                                {
+                                    experiments.at(pos)->expphases.at(ip)->phcomp.at(ipc)->Qunit = bson_iterator_string(&d2) ;
+                                }
+                            }
                         }
+                    } else
 
-                    }
-                } /*else
-                if ((key_ == phprop) && (t == BSON_ARRAY))
-                {
-                    cout << key << " is: "<< bson_iterator_string(&j) <<endl;
-                    bson_iterator_from_buffer(&k, bson_iterator_value(&j));
-                    while (bson_iterator_next(&k)) {
-                        t = bson_iterator_type(&k);
-                        if (t == 0)
-                            break;
-                        key = bson_iterator_key(&k);
-                        key_ = key;
+                    // adding phase properties
+                    if ((key_ == phprop) && (t == BSON_ARRAY))
+                    {
+                        bson_iterator_from_buffer(&k, bson_iterator_value(&d));
+                        while (bson_iterator_next(&k))
+                        {
+                            bson_iterator_from_buffer(&d2, bson_iterator_value(&k));
+                            experiments.at(pos)->expphases.at(ip)->phprop.push_back( new samples::phases::prop );
+                            Hexperiments.at(pos)->Hexpphases.at(ip)->Hphprop.push_back( new Hsamples::Hphases::Hprop );
+                            ipp++; // position of the component in phcomp vector
+                            experiments.at(pos)->expphases.at(ip)->phprop.at(ipp)->Qerror = NULL;
+                            experiments.at(pos)->expphases.at(ip)->phprop.at(ipp)->pQnt   = NULL;
+                            Hexperiments.at(pos)->Hexpphases.at(ip)->Hphprop.at(ipp)->property = false;
 
-                        if ((key_ == pQnt))
-                        {
-                            experiments.at(pos)->expphases.at(ip)->pQnt = bson_iterator_double(&j);
-                            cout << key << " is: "<< bson_iterator_string(&k) <<endl;
-                        } else
-                        if ((key_ == eQnt))
-                        {
-                            experiments.at(pos)->expphases.at(ip)->phcomp_eQnt.push_back( bson_iterator_double(&k) );
-                        } else
-                        if ((key_ == Qerror))
-                        {
-                            experiments.at(pos)->expphases.at(ip)->phcomp_Qerror.push_back( bson_iterator_double(&k) );
-                        } else
-                        if ((key_ == Qunit))
-                        {
-                            experiments.at(pos)->expphases.at(ip)->phcomp_Qunit.push_back( bson_iterator_string(&k) );
+                            while (bson_iterator_next(&d2))
+                            {
+                                t = bson_iterator_type(&d2);
+                                if (t == 0)
+                                    break;
+                                key = bson_iterator_key(&d2);
+                                key_ = key;
+
+                                if ((key_ == property))
+                                {
+                                    experiments.at(pos)->expphases.at(ip)->phprop.at(ipp)->property = bson_iterator_string(&d2) ;
+                                    Hexperiments.at(pos)->Hexpphases.at(ip)->Hphprop.at(ipp)->property = true;
+                                } else
+                                if ((key_ == pQnt))
+                                {
+                                    experiments.at(pos)->expphases.at(ip)->phprop.at(ipp)->pQnt = bson_iterator_double(&d2) ;
+                                } else
+                                if ((key_ == Qerror))
+                                {
+                                    experiments.at(pos)->expphases.at(ip)->phprop.at(ipp)->Qerror = bson_iterator_double(&d2) ;
+                                } else
+                                if ((key_ == Qunit))
+                                {
+                                    experiments.at(pos)->expphases.at(ip)->phprop.at(ipp)->Qunit = bson_iterator_string(&d2) ;
+                                }
+                            }
                         }
-
                     }
-                }*/
 
+                    // adding pahse species
+                    if ((key_ == phspecies) && (t == BSON_ARRAY))
+                    {
+                        bson_iterator_from_buffer(&k, bson_iterator_value(&d));
+                        while (bson_iterator_next(&k))
+                        {
+                            bson_iterator_from_buffer(&d2, bson_iterator_value(&k));
+                            experiments.at(pos)->expphases.at(ip)->phspecies.push_back( new samples::phases::species );
+                            Hexperiments.at(pos)->Hexpphases.at(ip)->Hphspecies.push_back( new Hsamples::Hphases::Hspecies );
+                            ips++; // position of the specie in phspecies vector
+                            experiments.at(pos)->expphases.at(ip)->phspecies.at(ips)->Qerror = NULL;
+                            experiments.at(pos)->expphases.at(ip)->phspecies.at(ips)->sQnt   = NULL;
+                            Hexperiments.at(pos)->Hexpphases.at(ip)->Hphspecies.at(ips)->formula = false;
 
+                            while (bson_iterator_next(&d2))
+                            {
+                                t = bson_iterator_type(&d2);
+                                if (t == 0)
+                                    break;
+                                key = bson_iterator_key(&d2);
+                                key_ = key;
+
+                                if ((key_ == species))
+                                {
+                                    experiments.at(pos)->expphases.at(ip)->phspecies.at(ips)->formula = bson_iterator_string(&d2) ;
+                                    Hexperiments.at(pos)->Hexpphases.at(ip)->Hphspecies.at(ips)->formula = true;
+                                } else
+                                if ((key_ == sQnt))
+                                {
+                                    experiments.at(pos)->expphases.at(ip)->phspecies.at(ips)->sQnt = bson_iterator_double(&d2) ;
+                                } else
+                                if ((key_ == Qerror))
+                                {
+                                    experiments.at(pos)->expphases.at(ip)->phspecies.at(ips)->Qerror = bson_iterator_double(&d2) ;
+                                } else
+                                if ((key_ == Qunit))
+                                {
+                                    experiments.at(pos)->expphases.at(ip)->phspecies.at(ips)->Qunit = bson_iterator_string(&d2) ;
+                                }
+                            }
+                        }
+                    }
+                }
             }
-
         }
-
-
-
-//        bson_fprintf(f, "\n");
     }
 }
 

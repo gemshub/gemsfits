@@ -239,7 +239,7 @@ int main(int argc, char *argv[])
                                             if ((headline[j+1]==_unit) && (!row[j+1].empty()))
                                             {
                                                 ++j;
-                                                bson_append_string(&exp, _unit, row[j].c_str());
+                                                bson_append_string(&exp, Qunit, row[j].c_str());
                                             }
 
                                             bson_append_finish_object(&exp);
@@ -290,7 +290,7 @@ int main(int argc, char *argv[])
                                         if ((headline[j+1]==_unit) && (!row[j+1].empty()))
                                         {
                                             ++j;
-                                            bson_append_string(&exp, _unit, row[j].c_str());
+                                            bson_append_string(&exp, Qunit, row[j].c_str());
                                         }
                                         bson_append_finish_object(&exp);
                                         ph_old = phase_name;
