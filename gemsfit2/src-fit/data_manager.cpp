@@ -59,10 +59,8 @@ Data_Manager::Data_Manager( )
 
     // Read measurement data from PosgreSQL server
     fout << "4. data_manager.cpp line 52. allexp.push_back(new experiment) - empty; " << endl;
-//    experiments.push_back( new samples );
-//    Hexperiments.push_back( new Hsamples ); // handels for marking data to compare
 
-    // Readin in the slection query
+    // Readin in the data slection query
     DataSelect = readin_JSON("<DatSelect>");
     // Getting the query result data into the Data_Manager class
     get_EJDB();
@@ -173,11 +171,10 @@ void Data_Manager::parse_JSON_object(string query, const char* key, vector<strin
                     result.push_back(boost::lexical_cast<string>(json_integer_value(object)));
                 }
         }
-
+    }
 }
-}
 
-// Reading data form EJDB database
+// Reading data from EJDB database
 void Data_Manager::get_EJDB( )
 {
     typedef vector<int>     int_v;
@@ -196,175 +193,166 @@ void Data_Manager::get_EJDB( )
     // processing DataSelect
     if (DataSelect != "all")
     {
-    parse_JSON_object(DataSelect, expsample, out);
-    qsample = out; // query for selecting samples
-    out.clear();
+        parse_JSON_object(DataSelect, expsample, out);
+        qsample = out; // query for selecting samples
+        out.clear();
 
-    parse_JSON_object(DataSelect, expdataset, out);
-    qexpdataset = out; // query for selecting expdatasets
-    out.clear();
+        parse_JSON_object(DataSelect, expdataset, out);
+        qexpdataset = out; // query for selecting expdatasets
+        out.clear();
 
-    parse_JSON_object(DataSelect, sT, out);
-    for (unsigned int i = 0 ; i < out.size() ; i++)
-    {
-        qsT.push_back( atoi(out.at(i).c_str()) ); // query for selecting T
-    }
-    out.clear();
-
-    parse_JSON_object(DataSelect, sP, out);
-    for (unsigned int i = 0 ; i < out.size() ; i++)
-    {
-        qsP.push_back( atoi(out.at(i).c_str()) ); // query for selecting P
-    }
-    out.clear();
-
-    // Build the query in EJDB format
-
-    // create EJDB databse object
-    static EJDB *jb;
-    jb = ejdbnew();
-    // open the database file as a writer JBOWRITER, create new is not existent JBOCREAT, and truncate db on open JBOTRUNC
-    if (!ejdbopen(jb, DBname.c_str(), JBOREADER)) {
-        cout << "Error opening the database" << endl; exit(1);
-
-    }
-    //Get or create collection 'experiments'
-    EJCOLL *coll = ejdbcreatecoll(jb, colection.c_str(), NULL);
-
-    // Creat bson query object
-    bson bq2;
-    bson_init_as_query(&bq2);
-
-    // for selecting expdatasets
-    if (!qexpdataset[0].empty())
-    {
-        bson_append_start_object(&bq2, expdataset);
-        bson_append_start_array(&bq2, "$in");
-        for (unsigned int j=0; j<qexpdataset.size(); ++j)
+        parse_JSON_object(DataSelect, sT, out);
+        for (unsigned int i = 0 ; i < out.size() ; i++)
         {
-            bson_append_string(&bq2, boost::lexical_cast<string>(j).c_str(), qexpdataset[j].c_str());
+            qsT.push_back( atoi(out.at(i).c_str()) ); // query for selecting T
         }
-        bson_append_finish_array(&bq2);
-        bson_append_finish_object(&bq2);
-    }
+        out.clear();
 
-    // for selecting samples
-    cout << qsample[0].c_str() <<  endl;
-    if (!qsample[0].empty())
-    {
-        bson_append_start_object(&bq2, expsample);
-        bson_append_start_array(&bq2, "$in");
-        for (unsigned int j=0; j<qexpdataset.size(); ++j)
+        parse_JSON_object(DataSelect, sP, out);
+        for (unsigned int i = 0 ; i < out.size() ; i++)
         {
-            bson_append_string(&bq2, boost::lexical_cast<string>(j).c_str(), qsample[j].c_str());
+            qsP.push_back( atoi(out.at(i).c_str()) ); // query for selecting P
         }
-        bson_append_finish_array(&bq2);
-        bson_append_finish_object(&bq2);
-    }
+        out.clear();
 
-    // for selection temperatures
-    if ((qsT.size() == 2))
-    {
-        // for selecting T interval
-        bson_append_start_object(&bq2, sT);
-        bson_append_start_array(&bq2, "$bt");
-        bson_append_int(&bq2, "0", qsT[0]);
-        bson_append_int(&bq2, "1", qsT[1]);
-        bson_append_finish_array(&bq2);
-        bson_append_finish_object(&bq2);
-    } else
-        if (!(qsT[0] == NULL))
+        // Build the query in EJDB format
+
+        // create EJDB databse object
+        static EJDB *jb;
+        jb = ejdbnew();
+        // open the database file as a writer JBOWRITER, create new is not existent JBOCREAT, and truncate db on open JBOTRUNC
+        if (!ejdbopen(jb, DBname.c_str(), JBOREADER)) {
+            cout << "Error opening the database" << endl; exit(1);
+
+        }
+        //Get or create collection 'experiments'
+        EJCOLL *coll = ejdbcreatecoll(jb, colection.c_str(), NULL);
+
+        // Creat bson query object
+        bson bq2;
+        bson_init_as_query(&bq2);
+
+        // for selecting expdatasets
+        if (!qexpdataset[0].empty())
         {
+            bson_append_start_object(&bq2, expdataset);
+            bson_append_start_array(&bq2, "$in");
+            for (unsigned int j=0; j<qexpdataset.size(); ++j)
+            {
+                bson_append_string(&bq2, boost::lexical_cast<string>(j).c_str(), qexpdataset[j].c_str());
+            }
+            bson_append_finish_array(&bq2);
+            bson_append_finish_object(&bq2);
+        }
+
+        // for selecting samples
+        cout << qsample[0].c_str() <<  endl;
+        if (!qsample[0].empty())
+        {
+            bson_append_start_object(&bq2, expsample);
+            bson_append_start_array(&bq2, "$in");
+            for (unsigned int j=0; j<qexpdataset.size(); ++j)
+            {
+                bson_append_string(&bq2, boost::lexical_cast<string>(j).c_str(), qsample[j].c_str());
+            }
+            bson_append_finish_array(&bq2);
+            bson_append_finish_object(&bq2);
+        }
+
+        // for selection temperatures
+        if ((qsT.size() == 2))
+        {
+            // for selecting T interval
             bson_append_start_object(&bq2, sT);
-            bson_append_start_array(&bq2, "$in");
-            for (int j=0; j<qsT.size(); ++j)
-            {
-                bson_append_int(&bq2, boost::lexical_cast<string>(j).c_str(), qsT[j]);
-            }
+            bson_append_start_array(&bq2, "$bt");
+            bson_append_int(&bq2, "0", qsT[0]);
+            bson_append_int(&bq2, "1", qsT[1]);
             bson_append_finish_array(&bq2);
             bson_append_finish_object(&bq2);
-        }
+        } else
+            if (!(qsT[0] == NULL))
+            {
+                bson_append_start_object(&bq2, sT);
+                bson_append_start_array(&bq2, "$in");
+                for (int j=0; j<qsT.size(); ++j)
+                {
+                    bson_append_int(&bq2, boost::lexical_cast<string>(j).c_str(), qsT[j]);
+                }
+                bson_append_finish_array(&bq2);
+                bson_append_finish_object(&bq2);
+            }
 
-    // for selection presures
-    if ((qsP.size() == 2))
-    {
-        // for selecting P interval
-        bson_append_start_object(&bq2, sP);
-        bson_append_start_array(&bq2, "$bt");
-        bson_append_int(&bq2, "0", qsP[0]);
-        bson_append_int(&bq2, "1", qsP[1]);
-        bson_append_finish_array(&bq2);
-        bson_append_finish_object(&bq2);
-    } else
-        if (!(qsP[0] == NULL))
+        // for selection presures
+        if ((qsP.size() == 2))
         {
+            // for selecting P interval
             bson_append_start_object(&bq2, sP);
-            bson_append_start_array(&bq2, "$in");
-            for (int j=0; j<qsP.size(); ++j)
-            {
-                bson_append_int(&bq2, boost::lexical_cast<string>(j).c_str(), qsP[j]);
-            }
+            bson_append_start_array(&bq2, "$bt");
+            bson_append_int(&bq2, "0", qsP[0]);
+            bson_append_int(&bq2, "1", qsP[1]);
             bson_append_finish_array(&bq2);
             bson_append_finish_object(&bq2);
-        }
+        } else
+            if (!(qsP[0] == NULL))
+            {
+                bson_append_start_object(&bq2, sP);
+                bson_append_start_array(&bq2, "$in");
+                for (int j=0; j<qsP.size(); ++j)
+                {
+                    bson_append_int(&bq2, boost::lexical_cast<string>(j).c_str(), qsP[j]);
+                }
+                bson_append_finish_array(&bq2);
+                bson_append_finish_object(&bq2);
+            }
 
-    // finish creading bson query object
-    bson_finish(&bq2);
-    EJQ *q2 = ejdbcreatequery(jb, &bq2, NULL, 0, NULL);
+        // finish creading bson query object
+        bson_finish(&bq2);
+        EJQ *q2 = ejdbcreatequery(jb, &bq2, NULL, 0, NULL);
 
-    uint32_t count;
-    TCLIST *res = ejdbqryexecute(coll, q2, &count, 0, NULL);
-    fprintf(stderr, "\n\nRecords found: %d\n", count);
+        uint32_t count;
+        TCLIST *res = ejdbqryexecute(coll, q2, &count, 0, NULL);
+        fprintf(stderr, "\n\nRecords found: %d\n", count);
 
-    //Now print the result set records
-     for (int i = 0; i < TCLISTNUM(res); ++i) {
-         void *bsdata = TCLISTVALPTR(res, i);
-         char *bsdata_ = static_cast<char*>(bsdata);
-         bson_print_raw(stderr, bsdata_, 0);
-     }
-     fprintf(stderr, "\n");
+        //Print the result set records
+         for (int i = 0; i < TCLISTNUM(res); ++i) {
+             void *bsdata = TCLISTVALPTR(res, i);
+             char *bsdata_ = static_cast<char*>(bsdata);
+             bson_print_raw(stderr, bsdata_, 0);
+         }
+         fprintf(stderr, "\n");
 
-     // adding data into Data_manager storage class
-     for (int j=0; j<count; j++)
-     {
-         experiments.push_back( new samples );
-         // set experiments variables empty
-         experiments.at(j)->sP = NULL; experiments.at(j)->sT = NULL; experiments.at(j)->sV= NULL;
-         experiments.at(j)->idsample= NULL;
-         Hexperiments.push_back( new Hsamples ); // handels for marking data to compare
-         // set Hexperiments variables false
+         // adding data into Data_manager storage class
+         for (int j=0; j<count; j++)
+         {
+             experiments.push_back( new samples );
+             // set experiments variables empty
+             experiments.at(j)->sP = NULL; experiments.at(j)->sT = NULL; experiments.at(j)->sV= NULL;
+             experiments.at(j)->idsample= NULL;
+             Hexperiments.push_back( new Hsamples ); // handels for marking data to compare
+             // set Hexperiments variables false
 
-     }
+         }
+         for (int i = 0; i < TCLISTNUM(res); ++i) {
+             void *bsdata = TCLISTVALPTR(res, i);
+             char *bsdata_ = static_cast<char*>(bsdata);
+             bson_to_Data_Manager(stderr, bsdata_, i); // addin the data
+         }
 
-     for (int i = 0; i < TCLISTNUM(res); ++i) {
-         void *bsdata = TCLISTVALPTR(res, i);
-         char *bsdata_ = static_cast<char*>(bsdata);
-         bson_to_Data_Manager(stderr, bsdata_, i);
-     }
+        //Dispose result set
+        tclistdel(res);
 
+        //Dispose query
+        ejdbquerydel(q2);
+        bson_destroy(&bq2);
 
-
-
-    //Dispose result set
-    tclistdel(res);
-
-    //Dispose query
-    ejdbquerydel(q2);
-    bson_destroy(&bq2);
-
-    //Close database
-    ejdbclose(jb);
-    ejdbdel(jb);
-
-
+        //Close database
+        ejdbclose(jb);
+        ejdbdel(jb);
     }
     else
     {
         // selec all
     }
-
-
-
 }
 
 

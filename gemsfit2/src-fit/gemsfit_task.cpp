@@ -204,7 +204,7 @@ void TGfitTask::allocMemory()
 // alloc memory for all nodes at current time point
     NodT0 = new  DATABRPTR[anNodes];
     for(  ii=0; ii<anNodes; ii++ )
-        NodT0[ii] = 0;
+//        NodT0[ii] = 0;
 /*
 // alloc memory for all nodes at previous time point
     NodT1 = new  DATABRPTR[anNodes];
@@ -273,6 +273,36 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     // For parameter optimization do not use parallelization of the Monte Carlo loop (=true). Instead, execute loop over measurements within objective function in parallel (=false).
     MC_MPI = false;
 
+    // nodes
+    anNodes = experiments.size();
+
+    get_nodes(experiments.size());
+
+//    GEM_init(gpf->GEMS3LstFilePath().c_str(), {0});
+
+    DATABRPTR* C0 = pNodT0();  // nodes at previous time point
+
+    cout << NodT0[0]->TK << endl;
+
+    long int xiSi = IC_name_to_xDB("Si");
+
+
+    for (int j=0; j<anNodes; j++)
+    {
+        NodT.push_back( new TNode );
+    }
+
+    // initialize nodes with the experimental data
+    setnodes ( );
+
+
+
+    cout << "ana" << endl;
+
+
+
+//    GEM_init(gpf->GEMS3LstFilePath().c_str());
+
 //    // Read parameters for database connection
 //    fout << "3. data_manager.cpp line 48. Reading database parameter get_db_specs(); " << endl;
 //    get_db_specs_txt();
@@ -280,6 +310,171 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
 //    // Read measurement data from PosgreSQL server
 //    fout << "4. data_manager.cpp line 52. allexp.push_back(new experiment) - empty; " << endl;
 //    experiments.push_back( new samples );
+
+}
+
+void TGfitTask::setnodes()
+{
+    int n, i, j;
+    // DATACH structure content
+    int nIC, nDC, nPH, ICndx, PHndx;
+    long int NodeStatusCH, NodeHandle;
+    double P_pa, T_k;
+    double* new_moles_IC;
+    double* xDC_up;
+    double* xDC_lo;
+    double* Ph_surf;
+
+    // initialize the nodes with the input GEMS3 file
+    for (n=0; n<NodT.size(); ++n)
+    {
+        if( NodT[n]->GEM_init( gpf->GEMS3LstFilePath().c_str() ) == 1 )
+        {
+            cout<<" .. ERROR occurred while reading input files !!! ..."<<endl;
+        }
+
+        // Getting direct access to work node DATABR structure which exchanges the
+        // data with GEMS3K (already filled out by reading the DBR input file)
+        DATABR* dBR = NodT[n]->pCNode();
+        DATACH* dCH = NodT[n]->pCSD();
+
+        nIC = dCH->nIC;	// nr of independent components
+        nDC = dCH->nDC;	// nr of dependent components
+        nPH = dCH->nPH;
+        xDC_up = new double[ nDC ];
+        xDC_lo = new double[ nDC ];
+        Ph_surf = new double[ nPH ];
+        new_moles_IC = new double [ nIC ]; // vector for holding the moles of independent components for each experiment
+
+        // lower and upper bounds for concentration of DC
+        for( i=0; i<nDC; i++ )
+        {
+            xDC_up[ i ]  = 1000000.;
+            xDC_lo[ i ]  = 0.;
+        }
+
+        // Surface energy of phases -> kinetics
+        for( i=0; i<nPH; i++ )
+            Ph_surf[i] = 0.;
+
+        for (i=0; i<nIC; i++) // assigining default values for all IC (1e-09 - absent component); 0 for charge.
+        {
+            new_moles_IC[i]=1e-09;
+            if (i==nIC-1) {
+                new_moles_IC[i]=0.;
+            }
+        }
+
+        // if Nitt present assign two moles
+        if (NodT[n]->IC_name_to_xDB("Nit") > -1) {
+            ICndx = NodT[n]->IC_name_to_xDB("Nit");
+            new_moles_IC[ICndx]=2;
+        }
+
+        // Set amount of dependent components (GEMS3K: DBR indexing)
+        // go trough all acomponents and calculate the mole amounts of the IC for the b vector in GEMS
+        for (j=0; j<experiments[n]->sbcomp.size(); ++j)
+        {
+            if (experiments[n]->sbcomp[j]->comp == "H2O")
+            {
+                ICndx = NodT[n]->IC_name_to_xDB("H");
+                new_moles_IC[ICndx] += 2*experiments[n]->sbcomp[j]->bQnt/18.01528 + 2.123456*experiments[n]->sbcomp[j]->bQnt/1000*1e-05; // adds 1e-05 moles of H2 for each kg og H2O
+                // cout << new_moles_IC[ICndx] << endl;
+                ICndx = NodT[n]->IC_name_to_xDB("O");
+                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->bQnt/18.01528 /*+ 3*experiments[n]->sbcomp[j]->bQnt/1000*1e-03*/;
+            }
+            else if (experiments[n]->sbcomp[j]->comp == "SiO2")
+            {
+                ICndx = NodT[n]->IC_name_to_xDB("Si");
+                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->bQnt/60.0843;
+               // cout << new_moles_IC[ICndx]<<endl;
+                ICndx = NodT[n]->IC_name_to_xDB("O");
+                new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->bQnt/60.0843;
+            }
+            else if (experiments[n]->sbcomp[j]->comp == "Al2O3")
+            {
+                ICndx = NodT[n]->IC_name_to_xDB("Al");
+                new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->bQnt/101.9612772;
+                ICndx = NodT[n]->IC_name_to_xDB("O");
+                new_moles_IC[ICndx] +=  3*experiments[n]->sbcomp[j]->bQnt/101.9612772;
+            }
+            else if (experiments[n]->sbcomp[j]->comp == "Al(OH)3")
+            {
+                ICndx = NodT[n]->IC_name_to_xDB("Al");
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/78.0035586;
+                ICndx = NodT[n]->IC_name_to_xDB("H");
+                new_moles_IC[ICndx] +=  3*experiments[n]->sbcomp[j]->bQnt/78.0035586;
+                ICndx = NodT[n]->IC_name_to_xDB("O");
+                new_moles_IC[ICndx] +=  3*experiments[n]->sbcomp[j]->bQnt/78.0035586;
+            }
+            else if (experiments[n]->sbcomp[j]->comp == "Ca(OH)2")
+            {
+                ICndx = NodT[n]->IC_name_to_xDB("Ca");
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/74.09268;
+               // cout << new_moles_IC[ICndx]<<endl;
+                ICndx = NodT[n]->IC_name_to_xDB("H");
+                new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->bQnt/74.09268;
+               // cout << new_moles_IC[ICndx]<<endl;
+                ICndx = NodT[n]->IC_name_to_xDB("O");
+                //cout << new_moles_IC[ICndx]<<endl;
+                new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->bQnt/74.09268;
+            }
+            else if (experiments[n]->sbcomp[j]->comp == "NaOH")
+            {
+                ICndx = NodT[n]->IC_name_to_xDB("Na");
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/39.99710928;
+                ICndx = NodT[n]->IC_name_to_xDB("H");
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/39.99710928;
+                ICndx = NodT[n]->IC_name_to_xDB("O");
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/39.99710928;
+            }
+            else if (experiments[n]->sbcomp[j]->comp == "KOH")
+            {
+                ICndx = NodT[n]->IC_name_to_xDB("K");
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/56.10564;
+                ICndx = NodT[n]->IC_name_to_xDB("H");
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/56.10564;
+                ICndx = NodT[n]->IC_name_to_xDB("O");
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/56.10564;
+            }
+            else if (experiments[n]->sbcomp[j]->comp == "CO2")
+            {
+                ICndx = NodT[n]->IC_name_to_xDB("C");
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/44.0095;
+                ICndx = NodT[n]->IC_name_to_xDB("O");
+                new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->bQnt/44.0095;
+            }
+            else if (experiments[n]->sbcomp[j]->comp == "NaCl")
+            {
+                ICndx = NodT[n]->IC_name_to_xDB("Na");
+                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->bQnt;
+                ICndx = NodT[n]->IC_name_to_xDB("Cl");
+                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->bQnt;
+            }
+                else
+                {
+                    cout<<" Unknown component in gemsfit_global_function.cpp line 343 !!!! "<<endl;
+                    cout<<" ... bail out now ... "<<endl;
+                    exit(1);
+                }
+        }
+
+        // ---- // ---- // Set temperature and pressure // ---- // ---- //
+        P_pa = 100000 * experiments[n]->sP;
+        T_k = 273.15 + experiments[n]->sT;
+
+        // ---- // ---- // set the new amount of IC and T & P from experiment i // ---- // ---- //
+        // in the future - implement a Tnode function that stes just T, P and bIC vector of amount of independent components.
+        // ---- // ---- // Transfer new temperature, pressure and b-vector to GEMS3K // ---- // ---- //
+        NodT[n]->GEM_from_MT( NodeHandle, NodeStatusCH, T_k, P_pa, 0., 0., new_moles_IC, xDC_up, xDC_lo, Ph_surf );
+
+        delete[] new_moles_IC;
+        delete[] xDC_up;
+        delete[] xDC_lo;
+        delete[] Ph_surf;
+
+    }
+
 
 }
 

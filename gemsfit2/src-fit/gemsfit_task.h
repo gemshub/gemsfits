@@ -53,7 +53,8 @@ class TGfitTask : public Data_Manager
 {
 protected:
 
-//    vector<DATABR*> NodT0;
+
+
     DATABR* (*NodT0);  ///< array of nodes
 //    vector<samples*> experiments;
 
@@ -87,7 +88,9 @@ public:
 
     ~TGfitTask();      /// Destructor
 
-   void get_nodes( long int nNod ); ///< Constructors for 1D arrangement of nodes
+    void get_nodes( long int nNod ); ///< Constructors for 1D arrangement of nodes
+
+    void  setnodes( );
 
     long int nNodes() const  /// Get total number of nodes in the node array
     { return anNodes; }
@@ -158,85 +161,85 @@ public:
 };
 
 //IC node data access macroses
-#define node0_bIC( nodex, ICx ) (TNodeArray::na->pNodT0()[(nodex)]->bIC[(ICx)])
-//#define node1_bIC( nodex, ICx ) (TNodeArray::na->pNodT1()[(nodex)]->bIC[(ICx)])
-#define node0_rMB( nodex, ICx ) (TNodeArray::na->pNodT0()[(nodex)]->rMB[(ICx)])
-//#define node1_rMB( nodex, ICx ) (TNodeArray::na->pNodT1()[(nodex)]->rMB[(ICx)])
-#define node0_uIC( nodex, ICx ) (TNodeArray::na->pNodT0()[(nodex)]->uIC[(ICx)])
-//#define node1_uIC( nodex, ICx ) (TNodeArray::na->pNodT1()[(nodex)]->uIC[(ICx)])
+#define node0_bIC( nodex, ICx ) (TGfitTask::pNodT0()[(nodex)]->bIC[(ICx)])
+//#define node1_bIC( nodex, ICx ) (TGfitTask::pNodT1()[(nodex)]->bIC[(ICx)])
+#define node0_rMB( nodex, ICx ) (TGfitTask::pNodT0()[(nodex)]->rMB[(ICx)])
+//#define node1_rMB( nodex, ICx ) (TGfitTask::pNodT1()[(nodex)]->rMB[(ICx)])
+#define node0_uIC( nodex, ICx ) (TGfitTask::pNodT0()[(nodex)]->uIC[(ICx)])
+//#define node1_uIC( nodex, ICx ) (TGfitTask::pNodT1()[(nodex)]->uIC[(ICx)])
 
 //DC node data access macroses
 
   // amount of DC with index DCx from T0 node with index nodex
-#define node0_xDC( nodex, DCx ) (TNodeArray::na->pNodT0()[(nodex)]->xDC[(DCx)])
+#define node0_xDC( nodex, DCx ) (TGfitTask::pNodT0()[(nodex)]->xDC[(DCx)])
   // amount of DC with index DCx from T1 node with index nodex
-//#define node1_xDC( nodex, DCx ) (TNodeArray::na->pNodT1()[(nodex)]->xDC[(DCx)])
+//#define node1_xDC( nodex, DCx ) (TGfitTask::pNodT1()[(nodex)]->xDC[(DCx)])
 
   // activity coefficient of DC with index DCx from T0 node with index nodex
-#define node0_gam( nodex, DCx ) (TNodeArray::na->pNodT0()[(nodex)]->gam[(DCx)])
+#define node0_gam( nodex, DCx ) (TGfitTask::pNodT0()[(nodex)]->gam[(DCx)])
   // activity coefficient of DC with index DCx from T1 node with index nodex
-//#define node1_gam( nodex, DCx ) (TNodeArray::na->pNodT1()[(nodex)]->gam[(DCx)])
+//#define node1_gam( nodex, DCx ) (TGfitTask::pNodT1()[(nodex)]->gam[(DCx)])
 
   // upper constraint on amount of DC with index DCx from T0 node with index nodex
-#define node0_dul( nodex, DCx ) (TNodeArray::na->pNodT0()[(nodex)]->dul[(DCx)])
+#define node0_dul( nodex, DCx ) (TGfitTask::pNodT0()[(nodex)]->dul[(DCx)])
   // upper constraint on amount of DC with index DCx from T1 node with index nodex
-//#define node1_dul( nodex, DCx ) (TNodeArray::na->pNodT1()[(nodex)]->dul[(DCx)])
+//#define node1_dul( nodex, DCx ) (TGfitTask::pNodT1()[(nodex)]->dul[(DCx)])
 
   // lower constraint on amount of DC with index DCx from T0 node with index nodex
-#define node0_dll( nodex, DCx ) (TNodeArray::na->pNodT0()[(nodex)]->dll[(DCx)])
+#define node0_dll( nodex, DCx ) (TGfitTask::pNodT0()[(nodex)]->dll[(DCx)])
   // lower constraint on amount of DC with index DCx from T1 node with index nodex
-//#define node1_dll( nodex, DCx ) (TNodeArray::na->pNodT1()[(nodex)]->dll[(DCx)])
+//#define node1_dll( nodex, DCx ) (TGfitTask::pNodT1()[(nodex)]->dll[(DCx)])
 
 //Phase node data access macroses
   // amount of phase with index PHx from T0 node with index nodex
-#define node0_xPH( nodex, PHx ) (TNodeArray::na->pNodT0()[(nodex)]->xPH[(PHx)])
+#define node0_xPH( nodex, PHx ) (TGfitTask::pNodT0()[(nodex)]->xPH[(PHx)])
   // amount of phase with index PHx from T1 node with index nodex
-///#define node1_xPH( nodex, PHx ) (TNodeArray::na->pNodT1()[(nodex)]->xPH[(PHx)])
+///#define node1_xPH( nodex, PHx ) (TGfitTask::pNodT1()[(nodex)]->xPH[(PHx)])
 
   // volume of multicomponent phase with index PHx from T0 node with index nodex
-#define node0_vPS( nodex, PHx ) (TNodeArray::na->pNodT0()[(nodex)]->vPS[(PHx)])
+#define node0_vPS( nodex, PHx ) (TGfitTask::pNodT0()[(nodex)]->vPS[(PHx)])
   // volume of multicomponent phase with index PHx from T1 node with index nodex
-//#define node1_vPS( nodex, PHx ) (TNodeArray::na->pNodT1()[(nodex)]->vPS[(PHx)])
+//#define node1_vPS( nodex, PHx ) (TGfitTask::pNodT1()[(nodex)]->vPS[(PHx)])
 
   // volume of single-component phase with index PHx from T0 node with index nodex
-#define node0_vPH( nodex, PHx ) (TNodeArray::na->get_vPH( 0, (nodex), (PHx)))
+#define node0_vPH( nodex, PHx ) (TGfitTask::get_vPH( 0, (nodex), (PHx)))
   // volume of single-component phase with index PHx from T1 node with index nodex
-//#define node1_vPH( nodex, PHx ) (TNodeArray::na->get_vPH( 1, (nodex), (PHx)))
+//#define node1_vPH( nodex, PHx ) (TGfitTask::get_vPH( 1, (nodex), (PHx)))
 
   // mass of multicomponent phase with index PHx from T0 node with index nodex
-#define node0_mPS( nodex, PHx ) (TNodeArray::na->pNodT0()[(nodex)]->mPS[(PHx)])
+#define node0_mPS( nodex, PHx ) (TGfitTask::pNodT0()[(nodex)]->mPS[(PHx)])
   // mass of multicomponent phase with index PHx from T1 node with index nodex
-//#define node1_mPS( nodex, PHx ) (TNodeArray::na->pNodT1()[(nodex)]->mPS[(PHx)])
+//#define node1_mPS( nodex, PHx ) (TGfitTask::pNodT1()[(nodex)]->mPS[(PHx)])
 
   // mass of single-component phase with index PHx from T0 node with index nodex
-#define node0_mPH( nodex, PHx )  (TNodeArray::na->get_mPH( 0, (nodex), (PHx)))
+#define node0_mPH( nodex, PHx )  (TGfitTask::get_mPH( 0, (nodex), (PHx)))
   // mass of single-component phase with index PHx from T1 node with index nodex
-//#define node1_mPH( nodex, PHx )  (TNodeArray::na->get_mPH( 1, (nodex), (PHx)))
+//#define node1_mPH( nodex, PHx )  (TGfitTask::get_mPH( 1, (nodex), (PHx)))
 
 
   // amount of solvent/sorbent in phase with index PHx from T0 node with index nodex
-#define node0_xPA( nodex, PHx ) (TNodeArray::na->pNodT0()[(nodex)]->xPA[(PHx)])
+#define node0_xPA( nodex, PHx ) (TGfitTask::pNodT0()[(nodex)]->xPA[(PHx)])
   // amount of solvent/sorbent in phase with index PHx from T1 node with index nodex
-//#define node1_xPA( nodex, PHx ) (TNodeArray::na->pNodT1()[(nodex)]->xPA[(PHx)])
+//#define node1_xPA( nodex, PHx ) (TGfitTask::pNodT1()[(nodex)]->xPA[(PHx)])
 
 // equilibrium bulk composition of solid part of the system, moles from T0 node
-#define node0_bSP( nodex, ICx ) (TNodeArray::na->pNodT0()[(nodex)]->bSP[(ICx)])
+#define node0_bSP( nodex, ICx ) (TGfitTask::pNodT0()[(nodex)]->bSP[(ICx)])
 // equilibrium bulk composition of solid part of the system, moles from T1 node
-//#define node1_bSP( nodex, ICx ) (TNodeArray::na->pNodT1()[(nodex)]->bSP[(ICx)])
+//#define node1_bSP( nodex, ICx ) (TGfitTask::pNodT1()[(nodex)]->bSP[(ICx)])
 
 
 // Phase compositions node data access macroses
 // amount of independent component ICx in multi-component phase PHx in T0 node nodex
-#define node0_bPS( nodex, PHx, ICx ) ( TNodeArray::na->pNodT0()[(nodex)]->bPS[ \
-                                       (PHx)*TNodeArray::na->pCSD()->nICb+(ICx)])
+#define node0_bPS( nodex, PHx, ICx ) ( TGfitTask::pNodT0()[(nodex)]->bPS[ \
+                                       (PHx)*TGfitTask::pCSD()->nICb+(ICx)])
 // amount of independent component ICx in multi-component phase PHx in T1 node nodex
-//#define node1_bPS( nodex, PHx, ICx ) ( TNodeArray::na->pNodT1()[(nodex)]->bPS[ \
-//                                       (PHx)*TNodeArray::na->pCSD()->nICb+(ICx)])
+//#define node1_bPS( nodex, PHx, ICx ) ( TGfitTask::pNodT1()[(nodex)]->bPS[ \
+//                                       (PHx)*TGfitTask::pCSD()->nICb+(ICx)])
 
 // amount of independent component ICx in single-component phase PHx in T0 node nodex
-#define node0_bPH( nodex, PHx, ICx )  (TNodeArray::na->get_bPH( 0, (nodex), (PHx), (ICx)))
+#define node0_bPH( nodex, PHx, ICx )  (TGfitTask::get_bPH( 0, (nodex), (PHx), (ICx)))
 // amount of independent component ICx in single-component phase PHx in T1 node nodex
-//#define node1_bPH( nodex, PHx, ICx )  (TNodeArray::na->get_bPH( 1, (nodex), (PHx), (ICx)))
+//#define node1_bPH( nodex, PHx, ICx )  (TGfitTask::get_bPH( 1, (nodex), (PHx), (ICx)))
 
 #endif   // _gemsft_task_
 
