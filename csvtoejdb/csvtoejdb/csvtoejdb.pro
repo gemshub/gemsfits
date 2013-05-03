@@ -11,6 +11,21 @@ CONFIG         += warn_on
 CONFIG         += console
 CONFIG         += serial release
 
+CONFIG( release,  debug|release ) {
+        message( "Configuring for release build ..." )
+        QMAKE_CFLAGS_RELEASE = -g -pedantic
+        QMAKE_CXXFLAGS_RELEASE = -g -pedantic
+}
+
+CONFIG( debug,  debug|release ) {
+        DEFINES += GEMSFIT_DEBUG
+        QMAKE_CFLAGS_DEBUG = -g
+        QMAKE_CXXFLAGS_DEBUG = -g
+        message( "Configuring for debug build ..." )
+}
+
+
+
 
 QMAKE_CC	= gcc
 QMAKE_CXX	= g++

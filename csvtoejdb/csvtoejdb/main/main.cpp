@@ -17,6 +17,9 @@ int main(int argc, char *argv[])
     vector<string> phases;
     bool h_phprop = false, h_phases = false, h_phcomp = false; // handle that is true if we have ph_prop in the CSV file
 
+    vector<int> TP[2], TP_pairs[2];
+    bool isfound = false, isfound2 = false;
+
     // create EJDB databse object
     jb = ejdbnew();
 
@@ -98,6 +101,14 @@ int main(int argc, char *argv[])
             else if  ((headline[i]==sT) || (headline[i]==sP))
             {
                 bson_append_int(&exp, headline[i].c_str(), atoi(row[i].c_str()));
+                if (headline[i]==sT)
+                {
+                    TP[0].push_back(atoi(row[i].c_str()));
+                }
+                if (headline[i]==sP)
+                {
+                    TP[1].push_back(atoi(row[i].c_str()));
+                }
             }
             else if (headline[i]==sV)
             {
@@ -426,16 +437,16 @@ int main(int argc, char *argv[])
 
     bson bq2;
     bson_init_as_query(&bq2);
-    bson_append_start_object(&bq2, expdataset);
-    bson_append_start_array(&bq2, "$in");
-    bson_append_string(&bq2, "0", "CH04D");
-    bson_append_string(&bq2, "1", "CH04");
-    bson_append_finish_array(&bq2);
-    bson_append_finish_object(&bq2);
+//    bson_append_start_object(&bq2, expdataset);
+//    bson_append_start_array(&bq2, "$in");
+//    bson_append_string(&bq2, "0", "CH04D");
+//    bson_append_string(&bq2, "1", "CH04");
+//    bson_append_finish_array(&bq2);
+//    bson_append_finish_object(&bq2);
 
     bson_append_start_object(&bq2, sT);
     bson_append_start_array(&bq2, "$bt");
-    bson_append_string(&bq2, "0", "100");
+    bson_append_string(&bq2, "0", "1");
     bson_append_string(&bq2, "1", "1500");
     bson_append_finish_array(&bq2);
     bson_append_finish_object(&bq2);
@@ -479,6 +490,53 @@ int main(int argc, char *argv[])
     //Close database
     ejdbclose(jb);
     ejdbdel(jb);
+
+
+    // get unique TP
+    for (int i=0; i<TP[0].size(); i++)
+    {
+        // check if TP pair is presnt more than once in the TP vector
+        for (int j=0; j<TP[0].size(); j++)
+        {
+            if ((TP[0][i] == TP[0][j]) && (TP[1][i] == TP[1][j]) && (i != j))
+            {
+                isfound = true;
+            }
+        }
+        // check if TP pair was added to the unique TP pairs container
+        for (int j=0; j<TP_pairs[0].size(); ++j)
+        {
+            if ((TP[0][i] == TP_pairs[0][j]) && (TP[1][i] == TP_pairs[1][j]))
+            {
+                isfound2 = true;
+            }
+        }
+        // add TP pair if it does not repeat itself or was not added already in the container
+        if ((!isfound) || (!isfound2))
+        {
+            TP_pairs[0].push_back(TP[0][i]);
+            TP_pairs[1].push_back(TP[1][i]);
+        }
+        isfound = false;
+        isfound2 = false;
+    }
+
+    ofstream fout;
+    string path2 = argv[1];
+    path2+= "distinctTP.csv";
+    fout.open(path2.c_str(), ios::app);
+    if( fout.fail() )
+    { cout<<"Output fileopen error"<<endl; exit(1); }
+
+    for (int i=0; i<TP_pairs[1].size(); ++i)
+    {
+        fout <<TP_pairs[1][i]<<";"<<TP_pairs[0][i]<<endl;
+    }
+    fout << TP_pairs[1].size() <<endl;
+    fout.close();
+
+
+cout << endl;
 
     return 0;
 }
