@@ -101,6 +101,7 @@ int generateConfig()
 
     out_gems_fit_txt( node, with_comments, brief_mode );
 
+
 //    // Create instance of StdStateProp class derived from base class Optimization
 //    StdStateProp *gibbs = new StdStateProp();
 //    gibbs->out_nlopt_param_txt(with_comments, brief_mode);
@@ -116,7 +117,9 @@ int generateConfig()
     stat->std_get_stat_param_txt();
     stat->set_plotfit_vars_txt();
     get_gems_fit_multi_txt( node ); */
-    get_gems_fit_DCH_txt( node );
+
+
+//    get_gems_fit_DCH_txt( node );
 //    get_gems_fit_DBR_txt( node );
     cout << "Finish " << endl;
 
@@ -636,10 +639,10 @@ outField Data_Manager_fields[10] =
 //    { "DatCSVfile",  0, 0, 1, "\n# DatCSVfile: Comment"},
 //    { "DatServer",  0, 0, 1, "\n# DatServer: Comment"},
     { "DatSelect", 0, 0, 1, "\n# DataSelect: query for selecting data form EJDB database in JSON format. Names of samples or expdatasets and temperature and pressure intervals. all - select all data"
-      "\n# { \"sample\" : \"\", "
-      "\n# \"expdataset\" : [\"CH04\", \"CH04D\"],"
-      "\n# \"sT\" : [100, 1000],"
-      "\n# \"sP\" : [1, 2500] \n# }"},
+      "\n { \"sample\" : \"\", "
+      "\n \"expdataset\" : [\"CH04\", \"CH04D\"],"
+      "\n \"sT\" : [100, 1000],"
+      "\n \"sP\" : [1, 2500] \n# }"},
     { "SystemFiles",  0, 0, 1, "\n# SystemFiles: Comment"},
     { "RecipeFiles",  0, 0, 1, "\n# RecipeFiles: Comment"}
 };

@@ -62,8 +62,11 @@ Data_Manager::Data_Manager( )
 
     // Readin in the data slection query
     DataSelect = readin_JSON("<DatSelect>");
+
     // Getting the query result data into the Data_Manager class
     get_EJDB();
+
+    get_distinct_TP();
 
     fout.close();
 }
@@ -603,3 +606,43 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
     }
 }
 
+
+void Data_Manager::get_distinct_TP( )
+{
+    vector<int> TP[2];
+    int i, j;
+    bool isfound = false, isfound2 = false;
+
+    for (i=0; i<experiments.size(); ++i)
+    {
+        TP[0].push_back(experiments[i]->sT);
+        TP[1].push_back(experiments[i]->sP);
+    }
+    for (i=0; i<TP[0].size(); i++)
+    {
+        // check if TP pair is presnt more than once in the TP vector
+        for (j=0; j<TP[0].size(); j++)
+        {
+            if ((TP[0][i] == TP[0][j]) && (TP[1][i] == TP[1][j]) && (i != j))
+            {
+                isfound = true;
+            }
+        }
+        // check if TP pair was added to the unique TP pairs container
+        for (j=0; j<TP_pairs[0].size(); ++j)
+        {
+            if ((TP[0][i] == TP_pairs[0][j]) && (TP[1][i] == TP_pairs[1][j]))
+            {
+                isfound2 = true;
+            }
+        }
+        // add TP pair if it does not repeat itself or was not added already in the container
+        if ((!isfound) || (!isfound2))
+        {
+            TP_pairs[0].push_back(TP[0][i]);
+            TP_pairs[1].push_back(TP[1][i]);
+        }
+        isfound = false;
+        isfound2 = false;
+    }
+}
