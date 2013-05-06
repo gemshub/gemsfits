@@ -25,6 +25,8 @@ using namespace std;
 #include "v_user.h"
 #include "io_arrays.h"
 #include "data_manager.h"
+#include "keywords.h"
+
 //#include "fit_statistics.h"
 //#include "optimization.h"
 //#include "plot_class.h"
@@ -43,6 +45,9 @@ const char *FIT_LOGFILE = "log_gemsfit.log";
 //void get_gems_fit_multi_txt( TNode* node );
 //void get_gems_fit_DCH_txt( TNode* node );
 //void get_gems_fit_DBR_txt( TNode* node );
+void F_to_OP (opti_vector *op, IOJFormat Jformat, string nfild);
+void F_to_OP (double val, opti_vector *op, IOJFormat Jformat, string nfild);
+void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat, string nfild);
 
 //StdStateProp::StdStateProp()
 //{
@@ -313,7 +318,7 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
 }
 
 /// Reading part MULTI structure from OptParamFile text file
-void get_gems_fit_multi_txt( TNode* node )
+void get_gems_fit_multi_txt(TNode* node, opti_vector *op )
 {
     // open file for reading
     string fname = gpf->OptParamFile();
@@ -385,6 +390,39 @@ void get_gems_fit_multi_txt( TNode* node )
               {    cout<< "Fied " << MULTI_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<
                           " Index " << vFormats[ii].index << endl;
                   cout<< vFormats[ii].format << endl;
+
+                  if ((vFormats[ii].type == ft_F))
+                  {
+                      if (vFormats[ii].format.size() >1)
+                      {
+                          F_to_OP(op, vFormats[ii], MULTI_dynamic_fields[nfild].name );
+                      } else
+                      {
+                          switch( nfild )
+                          {
+                          case f_sMod:
+                                       break;
+                          case f_LsMod:{ if( !pmp->LsMod )
+                                          Error( "Error", "Array LsMod is not used in this problem");
+//                                        rddar.readArray( "LsMod" , pmp->LsMod, pmp->FIs*3) ;
+                                        long int LsModSum;
+                                        long int LsIPxSum;
+                                        node->pMulti()->getLsModsum( LsModSum, LsIPxSum );
+                                        if(LsIPxSum )
+                                        {
+                                        }
+                                        if(LsModSum )
+                                            F_to_OP(pmp->PMc[vFormats[ii].index], op, vFormats[ii], MULTI_dynamic_fields[nfild].name );
+                                        break;
+                                       }
+                            case f_LsMdc:
+                                        break;
+                            case f_fDQF:
+                                        break;
+                          }
+
+                      }
+                  }
               }
               vFormats.clear();
           }
@@ -393,7 +431,7 @@ void get_gems_fit_multi_txt( TNode* node )
 }
 
 /// Reading part dataCH structure from OptParamFile text file
-void get_gems_fit_DCH_txt( TNode* node )
+void get_gems_fit_DCH_txt(TNode* node, opti_vector* op )
 {
     // open file for reading
     string fname = gpf->OptParamFile();
@@ -429,12 +467,35 @@ void get_gems_fit_DCH_txt( TNode* node )
 
         if( !vFormats.empty() )
         {
+            int nr = 0;
             // Hear you must write your code
             for( int ii=0; ii<vFormats.size(); ii++ )
             {
                 cout<< "Field " << DataCH_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<
                         " Index " << vFormats[ii].index << endl;
                 cout<< vFormats[ii].format << endl;
+
+                if ((vFormats[ii].type == ft_F))
+                {
+                    if (vFormats[ii].format.size() >1)
+                    {
+                        F_to_OP(op, vFormats[ii], DataCH_dynamic_fields[nfild].name );
+                    } else
+                    {
+                        switch( nfild )
+                        {
+                        case f_G0: F_to_OP(CSD->G0[vFormats[ii].index], op, vFormats[ii], DataCH_dynamic_fields[nfild].name );
+                                  break;
+                         }
+                    }
+                }
+                if (vFormats[ii].type == ft_R)
+                {
+                    op->reactions.push_back(new opti_vector::RDc);
+                    op->h_RDc = true;
+                    R_to_OP(op->reactions[nr], vFormats[ii], DataCH_dynamic_fields[nfild].name );
+                    nr++;
+                }
             }
             vFormats.clear();
         }
@@ -444,8 +505,9 @@ void get_gems_fit_DCH_txt( TNode* node )
     }
 }
 
+
 /// Reading part dataBR structure from OptParamFile text file
-void get_gems_fit_DBR_txt( TNode* node )
+void get_gems_fit_DBR_txt(TNode* node , opti_vector *op)
 {
     // open file for reading
     string fname = gpf->OptParamFile();
@@ -516,6 +578,11 @@ void get_gems_fit_DBR_txt( TNode* node )
             {    cout<< "Fied " << DataBR_fields[nfild].name << " Type " << vFormats[ii].type <<
                         " Index " << vFormats[ii].index << endl;
                 cout<< vFormats[ii].format << endl;
+
+                if ((vFormats[ii].type == ft_F) && (vFormats[ii].format.size() >1))
+                {
+                    F_to_OP(op, vFormats[ii], DataBR_fields[nfild].name );
+                }
             }
             vFormats.clear();
         }
@@ -1324,5 +1391,100 @@ void Data_Manager::get_db_specs_txt( )
 //           Error( "Error", ret);
 //         }
 //}
+
+
+void F_to_OP (opti_vector *op, IOJFormat Jformat, string nfild)
+{
+    vector<string> out;
+    Data_Manager *temp = new Data_Manager(1);
+    temp->parse_JSON_object(Jformat.format, IV, out);
+
+    op->opt.push_back( atof(out.at(0).c_str()) );
+    op->optv0.push_back( atof(out.at(0).c_str()) );
+    out.clear();
+
+    temp->parse_JSON_object(Jformat.format, UB, out);
+    op->UB.push_back( atof(out.at(0).c_str()) );
+    out.clear();
+
+    temp->parse_JSON_object(Jformat.format, LB, out);
+    op->LB.push_back( atof(out.at(0).c_str()) );
+    out.clear();
+
+    op->Ptype.push_back( nfild );
+    op->Pindex.push_back( Jformat.index );
+}
+
+void F_to_OP (double val, opti_vector *op, IOJFormat Jformat, string nfild)
+{
+    op->opt.push_back(val);
+    op->optv0.push_back(val);
+    op->LB.push_back(val-val*bperc/100);
+    op->UB.push_back(val+val*bperc/100);
+
+    op->Ptype.push_back( nfild );
+    op->Pindex.push_back( Jformat.index );
+}
+
+void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat, string nfild)
+{
+    vector<string> out;
+    Data_Manager *temp = new Data_Manager(1);
+
+    temp->parse_JSON_object(Jformat.format, IV, out);
+    r->IV = atof(out.at(0).c_str());
+    out.clear();
+
+    temp->parse_JSON_object(Jformat.format, Ref, out);
+    r->Ref = out.at(0);
+    out.clear();
+
+    temp->parse_JSON_object(Jformat.format, logK, out);
+    r->logK = atof(out.at(0).c_str());
+    out.clear();
+
+    temp->parse_JSON_object(Jformat.format, nC, out);
+    r->nC = atoi(out.at(0).c_str());
+    out.clear();
+
+    temp->parse_JSON_object(Jformat.format, species, out);
+    r->Dc_name = out.at(0);
+    out.clear();
+
+    temp->parse_JSON_object(Jformat.format, RC, out);
+    for (unsigned int i = 0 ; i < out.size() ; i++)
+    {
+        r->rdc_species.push_back( out.at(i) );
+    }
+    out.clear();
+
+    temp->parse_JSON_object(Jformat.format, Rcoef, out);
+    if (out.size() != r->rdc_species.size())
+    {
+        cout << "ERROR: Number of reaction components is not equal with the number of reaction coeficients" << endl;
+        exit(1);
+    }
+    for (unsigned int i = 0 ; i < out.size() ; i++)
+    {
+        r->rdc_species_coef.push_back( atof(out.at(i).c_str()) );
+    }
+
+    out.clear();
+
+//    op->opt.push_back( atof(out.at(0).c_str()) );
+//    op->optv0.push_back( atof(out.at(0).c_str()) );
+//    out.clear();
+
+//    temp->parse_JSON_object(Jformat.format, UB, out);
+//    op->UB.push_back( atof(out.at(0).c_str()) );
+//    out.clear();
+
+//    temp->parse_JSON_object(Jformat.format, LB, out);
+//    op->LB.push_back( atof(out.at(0).c_str()) );
+//    out.clear();
+
+//    op->Ptype.push_back( nfild );
+//    op->Pindex.push_back( Jformat.index );
+}
 
 // ----------- End of  visor.cpp ----------------------------

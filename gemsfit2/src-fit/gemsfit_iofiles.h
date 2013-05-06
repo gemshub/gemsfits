@@ -23,12 +23,15 @@
 
 #include <string>
 #include "node.h"
+#include "opt_vector.h"
+
 using namespace std;
 
+
 void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode );
-void get_gems_fit_multi_txt( TNode* node );
-void get_gems_fit_DCH_txt( TNode* node );
-void get_gems_fit_DBR_txt( TNode* node );
+void get_gems_fit_multi_txt(TNode* node, opti_vector* op );
+void get_gems_fit_DCH_txt(TNode* node , opti_vector *op);
+void get_gems_fit_DBR_txt(TNode* node, opti_vector *op );
 
 /// \enum MODES_GEMFIT codes with respect to gemFit calculations
 enum MODES_GEMFIT {

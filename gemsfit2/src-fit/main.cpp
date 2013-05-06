@@ -136,19 +136,21 @@ cout<<"48"<<endl;
     fout << "1. main.cpp line 138. Creating new TGfitTask" << endl;
     TGfitTask* gfittask = new TGfitTask();
 
-    // call GEM_init to read GEMS3K input files
-    TNode* node  = new TNode();
+//    // call GEM_init to read GEMS3K input files
+//    TNode* node  = new TNode();
 
-    // call GEM_init     --> read in input files
-    if( (node->GEM_init( gpf->GEMS3LstFilePath().c_str() )) == 1 )
-       {
-            cout << gpf->GEMS3LstFilePath().c_str() << endl;
+//    // call GEM_init     --> read in input files
+//    if( (node->GEM_init( gpf->GEMS3LstFilePath().c_str() )) == 1 )
+//       {
+//            cout << gpf->GEMS3LstFilePath().c_str() << endl;
 
-           cout<<" .. ERROR occurred while reading GEMS3K input files !!! ..."<<endl;
-           return 1;
-       }
+//           cout<<" .. ERROR occurred while reading GEMS3K input files !!! ..."<<endl;
+//           return 1;
+//       }
 
-    get_gems_fit_DCH_txt( node );
+//    get_gems_fit_DCH_txt( node );
+//    get_gems_fit_DBR_txt( node );
+//    get_gems_fit_multi_txt( node );
 
 
     fout << "10. main.cpp line 126. Finished reading input data and experimental data from the database." << endl;

@@ -276,16 +276,7 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     // nodes
     anNodes = experiments.size();
 
-    get_nodes(experiments.size());
-
-//    GEM_init(gpf->GEMS3LstFilePath().c_str(), {0});
-
-    DATABRPTR* C0 = pNodT0();  // nodes at previous time point
-
-    cout << NodT0[0]->TK << endl;
-
-    long int xiSi = IC_name_to_xDB("Si");
-
+//    get_nodes(experiments.size());
 
     for (int j=0; j<anNodes; j++)
     {
@@ -295,7 +286,8 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     // initialize nodes with the experimental data
     setnodes ( );
 
-
+    // getting the parameters to be optimized from DCH, DBR and multi structures
+    OParameters = new opti_vector ( );
 
     cout << "ana" << endl;
 

@@ -35,6 +35,7 @@
 
 
 #include "data_manager.h"
+#include "opt_vector.h"
 
 
 // These structures are needed for implementation of Random Walk and
@@ -61,6 +62,8 @@ protected:
 //    DATABR* (*NodT1);  ///< array of nodes for current time point
 
     long int anNodes;  ///< Number of allocated nodes (samples)
+
+    opti_vector *OParameters; ///< pointer to optimization vector class
 
 
     char* tcNode;      ///< Node type codes (see databr.h), size anNodes
