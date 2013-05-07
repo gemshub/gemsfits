@@ -28,9 +28,42 @@
 using namespace std;
 
 
+
+/**
+* Writes the gemsfit input file with default parameters
+* @author SD modified DM
+* @param node
+* @param _comment
+* @param brief_mode
+* @date 06.05.2013
+*/
 void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode );
+
+/**
+* Reads the (to be adjusted) multi parameters form the input file
+* @author SD modified DM
+* @param node
+* @param op pointer to the opti_vector class that stores ifromation about the fitted parameters
+* @date 06.05.2013
+*/
 void get_gems_fit_multi_txt(TNode* node, opti_vector* op );
+
+/**
+* Reads the (to be adjusted) DCH parameters form the input file
+* @author SD modified DM
+* @param node
+* @param op pointer to the opti_vector class that stores ifromation about the fitted parameters
+* @date 06.05.2013
+*/
 void get_gems_fit_DCH_txt(TNode* node , opti_vector *op);
+
+/**
+* Reads the (to be adjusted) DBR parameters form the input file
+* @author SD modified DM
+* @param node
+* @param op pointer to the opti_vector class that stores ifromation about the fitted parameters
+* @date 06.05.2013
+*/
 void get_gems_fit_DBR_txt(TNode* node, opti_vector *op );
 
 /// \enum MODES_GEMFIT codes with respect to gemFit calculations

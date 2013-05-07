@@ -1,12 +1,10 @@
 #include "opt_vector.h"
-#include "node.h"
 #include "gemsfit_iofiles.h"
 
 opti_vector::opti_vector( )
 {
     // call GEM_init to read GEMS3K input files
     TNode* node  = new TNode();
-    int index_species;
     // call GEM_init     --> read in input files
     if( (node->GEM_init( gpf->GEMS3LstFilePath().c_str() )) == 1 )
        {
@@ -16,37 +14,48 @@ opti_vector::opti_vector( )
        }
     this->h_RDc = false;
 
-    get_gems_fit_DCH_txt( node, this );
-    get_gems_fit_DBR_txt( node, this );
-    get_gems_fit_multi_txt( node, this );
+    get_gems_fit_DCH_txt( node, this ); // reading DCH parameters
+    get_gems_fit_DBR_txt( node, this ); // reading DBR parameters
+    get_gems_fit_multi_txt( node, this ); // reading multi parameters
+
+    // getting indexes of components in the DCH
 
     if (h_RDc)
     {
-        for (int j = 0; j < this->reactions.size(); ++j )
-        {
-            index_species = node->DC_name_to_xCH( this->reactions[j]->Dc_name.c_str() );
-            if( index_species < 0 )
-            {
-                throw index_species;
-            }
-            else
-            {
-                this->reactions[j]->DcIndex = index_species;
-            }
+        get_RDc_indexes (node, this);
+    }
 
-            for (int i=0; i<this->reactions[j]->rdc_species.size(); ++i )
-            {
+}
+
+
+void opti_vector::get_RDc_indexes (TNode *node, opti_vector *ov)
+{
+    int index_species;
+    for (int j = 0; j < ov->reactions.size(); ++j )
+    {
+        index_species = node->DC_name_to_xCH( ov->reactions[j]->Dc_name.c_str() );
+        if( index_species < 0 )
+        {
+            throw index_species;
+        }
+        else
+        {
+            ov->reactions[j]->DcIndex = index_species;
+        }
+
+        for (int i=0; i<ov->reactions[j]->rdc_species.size(); ++i )
+        {
             // Get form GEMS the index of to_fit_species of interest
             try
             {
-                index_species = node->DC_name_to_xCH( this->reactions[j]->rdc_species[i].c_str() );
+                index_species = node->DC_name_to_xCH( ov->reactions[j]->rdc_species[i].c_str() );
                 if( index_species < 0 )
                 {
                     throw index_species;
                 }
                 else
                 {
-                    this->reactions[j]->rdc_species_ind.push_back(index_species);
+                    ov->reactions[j]->rdc_species_ind.push_back(index_species);
                 }
             }
             catch( long e )
@@ -57,8 +66,6 @@ opti_vector::opti_vector( )
                 cout<<endl;
                 exit(1);
             }
-            }
         }
     }
-
 }

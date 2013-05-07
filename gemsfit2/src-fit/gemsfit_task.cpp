@@ -37,6 +37,9 @@
 #include <io.h>
 #endif
 
+
+using namespace std;
+
 istream& f_getline(istream& is, gstring& str, char delim);
 
 extern outField DataBR_fields[58];
@@ -255,7 +258,7 @@ void TGfitTask::freeMemory()
 //< Constructors for 1D arrangement of nodes
 TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
 {
-
+    sum_of_squares = 0.0;
     // GEMSFIT logfile
     //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
     ofstream fout;
@@ -289,6 +292,17 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     // getting the parameters to be optimized from DCH, DBR and multi structures
     OParameters = new opti_vector ( );
 
+    //
+    Opti = new optimization (OParameters);
+
+//    if (Optimization->OptBoundPerc > 0.)
+//    {
+//        OParameters->UB = Optimization->OptUpBounds;
+//        OParameters->LB = Optimization->OptLoBounds;
+//    }
+
+    init_optim (Opti->optv, sum_of_squares);
+
     cout << "ana" << endl;
 
 
@@ -304,6 +318,49 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
 //    experiments.push_back( new samples );
 
 }
+
+
+// Initialize optimization object and Run Optimization by calling build_optim
+void TGfitTask::init_optim( std::vector<double> &optv_, /*int &countit,*/ double &sum_of_squares )
+{
+
+    // Instantiate nlopt::opt object
+    if( Opti->OptAlgo.compare( "'LN_COBYLA'" ) == 0 )
+    {
+        nlopt::opt nlopti_( nlopt::LN_COBYLA, optv_.size() );
+//        build_optim( nlopti_, optv_, gfittask, countit, sum_of_squares );
+    }
+    else if( Opti->OptAlgo.compare( "'GN_ISRES'" ) == 0 )
+    {
+        nlopt::opt nlopti_( nlopt::GN_ISRES, optv_.size() );
+//        build_optim( nlopti_, optv_, gfittask, countit, sum_of_squares );
+    }
+    else if( Opti->OptAlgo.compare( "'LN_BOBYQA'" ) == 0 )
+    {
+        nlopt::opt nlopti_( nlopt::LN_BOBYQA, optv_.size() );
+//        build_optim( nlopti_, optv_, gfittask, countit, sum_of_squares );
+    }
+    else if( Opti->OptAlgo.compare( "'GN_ORIG_DIRECT'" ) == 0 )
+    {
+        nlopt::opt nlopti_( nlopt::GN_ORIG_DIRECT, optv_.size() );
+//        build_optim( nlopti_, optv_, gfittask, countit, sum_of_squares );
+    }
+    else if( Opti->OptAlgo.compare( "'GN_ORIG_DIRECT_L'" ) == 0 )
+    {
+        nlopt::opt nlopti_( nlopt::GN_ORIG_DIRECT_L, optv_.size() );
+//        build_optim( nlopti_, optv_, gfittask, countit, sum_of_squares );
+    }
+    else
+    {
+        cout<<" Unknown optimization algorithm !!!! "<<endl;
+        cout<<" ... bail out now ... "<<endl;
+        exit(1);
+    }
+
+
+}
+
+
 
 void TGfitTask::setnodes()
 {

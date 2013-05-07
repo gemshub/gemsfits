@@ -28,7 +28,7 @@ using namespace std;
 #include "keywords.h"
 
 //#include "fit_statistics.h"
-//#include "optimization.h"
+#include "optimization.h"
 //#include "plot_class.h"
 //using namespace opti;
 
@@ -49,11 +49,11 @@ void F_to_OP (opti_vector *op, IOJFormat Jformat, string nfild);
 void F_to_OP (double val, opti_vector *op, IOJFormat Jformat, string nfild);
 void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat, string nfild);
 
-//StdStateProp::StdStateProp()
-//{
-//    constraint_data = new my_constraint_data;
-//    define_nlopt_param();
-//}
+optimization::optimization()
+{
+    constraint_data = new my_constraint_data;
+    define_nlopt_param();
+}
 
 //// Constructor
 //PlotFit::PlotFit(int)
@@ -107,9 +107,9 @@ int generateConfig()
     out_gems_fit_txt( node, with_comments, brief_mode );
 
 
-//    // Create instance of StdStateProp class derived from base class Optimization
-//    StdStateProp *gibbs = new StdStateProp();
-//    gibbs->out_nlopt_param_txt(with_comments, brief_mode);
+    // Create instance of optimization class derived from base class Optimization
+    optimization *opti = new optimization();
+    opti->out_nlopt_param_txt(with_comments, brief_mode);
 
 //    StdStatistics *stat= new StdStatistics();
 //    stat->out_stat_param_txt(with_comments, brief_mode);
@@ -942,85 +942,85 @@ void Data_Manager::get_db_specs_txt( )
 
 ////-------------------------------------------------------------------------------------------------
 
-//outField StdStateProp_fields[24] =
-//{
-//    { "OptAlgo",  0, 0, 1, "\n# OptAlgo: Comment"},
-//    { "OptThreads",  0, 0, 1, "\n# OptThreads: Comment"},
-//    { "OptUpBounds",  0, 0, 1, "\n# OptUpBounds: Comment"},
-//    { "OptLoBounds",  0, 0, 1, "\n# OptLoBounds: Comment"},
-//    { "OptTolRel",  0, 0, 1, "\n# OptTolRel: Comment"},
-//    { "OptMaxEval",  0, 0, 1, "\n# OptMaxEval: Comment"},
-//    { "OptUpConstraints",  0, 0, 1, "\n# OptUpConstraints: Comment"},
-//    { "OptLoConstraints",  0, 0, 1, "\n# OptLoConstraints: Comment"},
-//    { "OptConstraints",  0, 0, 1, "\n# OptConstraints: Comment"},
-//    { "OptDoWhat",  0, 0, 1, "\n# OptDoWhat: Comment"},
-//    { "OptStatOnlyBestFitParam",  0, 0, 1, "\n# OptStatOnlyBestFitParam: Comment"},
-//    { "OptStatOnlySSR",  0, 0, 1, "\n# OptStatOnlySSR: Comment"},
-//    { "OptEqSolv",  0, 0, 1, "\n# OptEqSolv: Comment"},
-//    { "OptTolAbs",  0, 0, 1, "\n# OptTolAbs: Comment"},
-//    { "OptHybridTolRel",  0, 0, 1, "\n# OptHybridTolRel: Comment"},
-//    { "OptHybridTolAbs",  0, 0, 1, "\n# OptHybridTolAbs: Comment"},
-//    { "OptHybridMaxEval",  0, 0, 1, "\n# OptHybridMaxEval: Comment"},
-//    { "OptHybridMode",  0, 0, 1, "\n# OptHybridMode: Comment"},
-//    { "OptNmultistart",  0, 0, 1, "\n# OptNmultistart: Comment"},
-//    { "OptHybridAlgo",  0, 0, 1, "\n# OptHybridAlgo: Comment"},
-//    { "OptInitStep",  0, 0, 1, "\n# OptInitStep: Comment"},
-//    { "OptScaleParam",  0, 0, 1, "\n# OptScaleParam: Comment"},
-//    { "OptNormParam",  0, 0, 1, "\n# OptNormParam: Comment"},
-//    { "OptBoundPerc",  0, 0, 1, "\n# OptBoundPerc: Comment"}
-//};
+outField optimization_fields[24] =
+{
+    { "OptAlgo",  0, 0, 1, "\n# OptAlgo: specify algorithm GN_ISRES GN_ORIG_DIRECT GN_ORIG_DIRECT_L LN_COBYLA LN_BOBYQA "},
+    { "OptThreads",  0, 0, 1, "\n# OptThreads: Comment"},
+    { "OptUpBounds",  0, 0, 1, "\n# OptUpBounds: Comment"},
+    { "OptLoBounds",  0, 0, 1, "\n# OptLoBounds: Comment"},
+    { "OptTolRel",  0, 0, 1, "\n# OptTolRel: stopping criterion -> specify relative tolerance (default = 1e-04) of function value"},
+    { "OptMaxEval",  0, 0, 1, "\n# OptMaxEval: specify max number of evaluations"},
+    { "OptUpConstraints",  0, 0, 1, "\n# OptUpConstraints: specify parameter vectors for constraint function"},
+    { "OptLoConstraints",  0, 0, 1, "\n# OptLoConstraints: Comment"},
+    { "OptConstraints",  0, 0, 1, "\n# OptConstraints:  Optimization: apply constraints (1=yes, 0=no)"},
+    { "OptDoWhat",  0, 0, 1, "\n# OptDoWhat: perform optimization and statistics (0), only optimization with basic Statistics (1), only Statistics (2) with initial guesses as best fit parametters"},
+    { "OptStatOnlyBestFitParam",  0, 0, 1, "\n# OptStatOnlyBestFitParam: Comment"},
+    { "OptStatOnlySSR",  0, 0, 1, "\n# OptStatOnlySSR: Comment"},
+    { "OptEqSolv",  0, 0, 1, "\n# OptEqSolv: Comment"},
+    { "OptTolAbs",  0, 0, 1, "\n# OptTolAbs: stopping criterion -> specify absolute tolerance (default = 1e-04) of function value"},
+    { "OptHybridTolRel",  0, 0, 1, "\n# OptHybridTolRel: Comment"},
+    { "OptHybridTolAbs",  0, 0, 1, "\n# OptHybridTolAbs: Comment"},
+    { "OptHybridMaxEval",  0, 0, 1, "\n# OptHybridMaxEval: Comment"},
+    { "OptHybridMode",  0, 0, 1, "\n# OptHybridMode: Comment"},
+    { "OptNmultistart",  0, 0, 1, "\n# OptNmultistart: Comment"},
+    { "OptHybridAlgo",  0, 0, 1, "\n# OptHybridAlgo: Comment"},
+    { "OptInitStep",  0, 0, 1, "\n# OptInitStep: Comment"},
+    { "OptScaleParam",  0, 0, 1, "\n# OptScaleParam: Comment"},
+    { "OptNormParam",  0, 0, 1, "\n# OptNormParam: Normalize bounds/constraints/fitting parameters with initial guess vector"},
+    { "OptBoundPerc",  0, 0, 1, "\n# OptBoundPerc: Generate bounds from initial guess vector: specify percentage deviation (user specific, user-defined bounds when set to -1)"}
+};
 
-//typedef enum {  /// Field index into outField structure
-//    f_OptAlgo= 0,
-//    f_OptThreads,
-//    f_OptUpBounds,
-//    f_OptLoBounds,
-//    f_OptTolRel,
-//    f_OptMaxEval,
-//    f_OptUpConstraints,
-//    f_OptLoConstraints,
-//    f_OptConstraints,
-//    f_OptDoWhat,
-//    f_OptStatOnlyBestFitParam,
-//    f_OptStatOnlySSR,
-//    f_OptEqSolv,
-//    f_OptTolAbs,
-//    f_OptHybridTolRel,
-//    f_OptHybridTolAbs,
-//    f_OptHybridMaxEval,
-//    f_OptHybridMode,
-//    f_OptNmultistart,
-//    f_OptHybridAlgo,
-//    f_OptInitStep,
-//    f_OptScaleParam,
-//    f_OptNormParam,
-//    f_OptBoundPerc
+typedef enum {  /// Field index into outField structure
+    f_OptAlgo= 0,
+    f_OptThreads,
+    f_OptUpBounds,
+    f_OptLoBounds,
+    f_OptTolRel,
+    f_OptMaxEval,
+    f_OptUpConstraints,
+    f_OptLoConstraints,
+    f_OptConstraints,
+    f_OptDoWhat,
+    f_OptStatOnlyBestFitParam,
+    f_OptStatOnlySSR,
+    f_OptEqSolv,
+    f_OptTolAbs,
+    f_OptHybridTolRel,
+    f_OptHybridTolAbs,
+    f_OptHybridMaxEval,
+    f_OptHybridMode,
+    f_OptNmultistart,
+    f_OptHybridAlgo,
+    f_OptInitStep,
+    f_OptScaleParam,
+    f_OptNormParam,
+    f_OptBoundPerc
 
-//} StdStateProp_FIELDS;
+} optimization_FIELDS;
 
 
 ///// Set up default values for structure
-//void StdStateProp::define_nlopt_param( )
-//{
-//    OptAlgo = "LN_BOBYQA";
+void optimization::define_nlopt_param( )
+{
+    OptAlgo = "LN_BOBYQA";
 //    OptThreads = 1;
-//    OptBoundPerc = -0.1;
+    OptBoundPerc = -1.0;
 //    OptUpBounds.push_back(100);
 //    OptUpBounds.push_back(100);
 //    OptLoBounds.push_back(-10);
 //    OptLoBounds.push_back(-10);
-//    OptTolRel = 1e-4;
-//    OptTolAbs = 1e-4;
-//    OptMaxEval = 5000;
+    OptTolRel = 1e-4;
+    OptTolAbs = 1e-4;
+    OptMaxEval = 5000;
 
 //    OptConstraints = 0;
-//    //??OptUpConstraints;
-//    //??OptLoConstraints;
+    //??OptUpConstraints;
+    //??OptLoConstraints;
 
-//     OptDoWhat = 0;
-//    //OptStatOnlyBestFitParam;
-//    //OptStatOnlySSR;
-//    //OptEquil;
+     OptDoWhat = 0;
+    //OptStatOnlyBestFitParam;
+    //OptStatOnlySSR;
+    //OptEquil;
 //    OptHybridMode = 0;
 //    OptHybridAlgo = "LN_COBYLA";
 //    OptHybridTolRel = 1e-4;
@@ -1028,22 +1028,22 @@ void Data_Manager::get_db_specs_txt( )
 //    OptHybridMaxEval = 5000000;
 //    OptNmultistart = 0;
 //    OptInitStep = 0;
-//    //OptScaleParam;
-//    OptNormParam = 1;
+    //OptScaleParam;
+    OptNormParam = 1;
 
-//}
+}
 
 ///// Writes  structure to  the GEMSFIT configuration file
-//void StdStateProp::out_nlopt_param_txt( bool with_comments, bool brief_mode )
-//{
-//    string fname = gpf->OptParamFile();
-//    fstream ff(fname.c_str(), ios::out|ios::app );
-//    ErrorIf( !ff.good() , fname.c_str(), "OptParamFile text open error");
+void optimization::out_nlopt_param_txt( bool with_comments, bool brief_mode )
+{
+    string fname = gpf->OptParamFile();
+    fstream ff(fname.c_str(), ios::out|ios::app );
+    ErrorIf( !ff.good() , fname.c_str(), "OptParamFile text open error");
 
-//    vector<double> OptUpConstraints_;
-//    vector<double> OptLoConstraints_;
+    vector<double> OptUpConstraints_;
+    vector<double> OptLoConstraints_;
 
-//    TPrintArrays  prar(24, StdStateProp_fields, ff);
+    TPrintArrays  prar(24, optimization_fields, ff);
 
 //    if( OptHybridMode )
 //    {
@@ -1069,25 +1069,25 @@ void Data_Manager::get_db_specs_txt( )
 //        };
 //    }
 
-//    if(with_comments )
-//    {
-//        ff << "\n\n#########################################################################" << endl;
-//        ff << "#>>>>>>>>>>>>>>> Optimization Methods section >>>>>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
-//        ff << "#########################################################################" << endl;
-//    }
+    if(with_comments )
+    {
+        ff << "\n\n#########################################################################" << endl;
+        ff << "#>>>>>>>>>>>>>>> Optimization Methods section >>>>>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
+        ff << "#########################################################################" << endl;
+    }
 
-//    prar.writeField( f_OptAlgo,  OptAlgo, with_comments, brief_mode );
+    prar.writeField( f_OptDoWhat,  (long int)OptDoWhat, with_comments, brief_mode);
+    prar.writeField( f_OptAlgo,  OptAlgo, with_comments, brief_mode );
 //    prar.writeField( f_OptThreads,  (long int)OptThreads, with_comments, brief_mode);
-//    prar.writeField( f_OptBoundPerc,  OptBoundPerc, with_comments, brief_mode );
+    prar.writeField( f_OptBoundPerc,  OptBoundPerc, with_comments, brief_mode );
 //    prar.writeArray( f_OptUpBounds,  OptUpBounds, 2, with_comments, brief_mode);
 //    prar.writeArray( f_OptLoBounds,  OptLoBounds, 2, with_comments, brief_mode );
-//    prar.writeField( f_OptTolRel,  OptTolRel, with_comments, brief_mode);
-//    prar.writeField( f_OptTolAbs,  OptTolAbs, with_comments, brief_mode);
-//    prar.writeField( f_OptMaxEval,  (long int)OptMaxEval, with_comments, brief_mode);
+    prar.writeField( f_OptTolRel,  OptTolRel, with_comments, brief_mode);
+    prar.writeField( f_OptTolAbs,  OptTolAbs, with_comments, brief_mode);
+    prar.writeField( f_OptMaxEval,  (long int)OptMaxEval, with_comments, brief_mode);
 //    prar.writeField( f_OptConstraints,  (long int)OptConstraints, with_comments, brief_mode);
 //    prar.writeArray( f_OptUpConstraints,  OptUpConstraints_, 2, with_comments, brief_mode);
 //    prar.writeArray( f_OptLoConstraints,  OptLoConstraints_, 2, with_comments, brief_mode );
-//    prar.writeField( f_OptDoWhat,  (long int)OptDoWhat, with_comments, brief_mode);
 //    prar.writeArray( f_OptStatOnlyBestFitParam,  OptStatOnlyBestFitParam, 2, with_comments, brief_mode);
 //    prar.writeField( f_OptStatOnlySSR,  OptStatOnlySSR, with_comments, brief_mode);
 //    prar.writeField( f_OptEqSolv,  (long int)OptEquil, with_comments, brief_mode);
@@ -1099,53 +1099,53 @@ void Data_Manager::get_db_specs_txt( )
 //    prar.writeField( f_OptNmultistart,  (long int)OptNmultistart, with_comments, brief_mode);
 //    prar.writeField( f_OptInitStep,  OptInitStep, with_comments, brief_mode);
 //    prar.writeField( f_OptScaleParam,  OptScaleParam, with_comments, brief_mode);
-//    prar.writeField( f_OptNormParam,  (long int)OptNormParam, with_comments, brief_mode);
+    prar.writeField( f_OptNormParam,  (long int)OptNormParam, with_comments, brief_mode);
 
-//}
+}
 
 //// populate nlopt instance: set bounds, constraints, stopping criteria
-//void StdStateProp::set_nlopt_param_txt( )
-//{
-//    // open file for reading
-//    int i;
-//    string fname = gpf->OptParamFile();
-//    fstream ff(fname.c_str(), ios::in );
-//    ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
+void optimization::get_nlopt_param_txt(vector<double> optv)
+{
+    // open file for reading
+    int i;
+    string fname = gpf->OptParamFile();
+    fstream ff(fname.c_str(), ios::in );
+    ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
 
-//    TReadArrays  rdar(24, StdStateProp_fields, ff);
-//    vector<double> OptUpConstraints_;
-//    vector<double> OptLoConstraints_;
+    TReadArrays  rdar(24, optimization_fields, ff);
+    vector<double> OptUpConstraints_;
+    vector<double> OptLoConstraints_;
 
-//    long int nfild = rdar.findNextNotAll();
-//    while( nfild >=0 )
-//        {
-//          switch( nfild )
-//          {
-//          case f_OptAlgo: rdar.readArray( "OptAlgo",  OptAlgo );
-//                   break;
+    long int nfild = rdar.findNextNotAll();
+    while( nfild >=0 )
+        {
+          switch( nfild )
+          {
+          case f_OptAlgo: rdar.readArray( "OptAlgo",  OptAlgo );
+                   break;
 //          case f_OptThreads: rdar.readArray( "OptThreads",  &OptThreads, 1);
 //                  break;
-//          case f_OptBoundPerc: rdar.readArray( "OptBoundPerc",  &OptBoundPerc, 1 );
-//                  if( OptBoundPerc < 0.) OptBoundPerc = -1;
-//                 break;
+          case f_OptBoundPerc: rdar.readArray( "OptBoundPerc",  &OptBoundPerc, 1 );
+                  if( OptBoundPerc < 0.) OptBoundPerc = -1;
+                 break;
 //          case f_OptUpBounds: rdar.readArray( "OptUpBounds",  OptUpBounds);
 //                   break;
 //          case f_OptLoBounds: rdar.readArray( "OptLoBounds",  OptLoBounds );
 //                   break;
-//          case f_OptTolRel: rdar.readArray( "OptTolRel",  &OptTolRel, 1);
-//                   break;
-//          case f_OptTolAbs: rdar.readArray( "OptTolAbs",  &OptTolAbs, 1);
-//                  break;
-//          case f_OptMaxEval: rdar.readArray( "OptMaxEval",  &OptMaxEval, 1);
-//                  break;
+          case f_OptTolRel: rdar.readArray( "OptTolRel",  &OptTolRel, 1);
+                   break;
+          case f_OptTolAbs: rdar.readArray( "OptTolAbs",  &OptTolAbs, 1);
+                  break;
+          case f_OptMaxEval: rdar.readArray( "OptMaxEval",  &OptMaxEval, 1);
+                  break;
 //          case f_OptConstraints: rdar.readArray( "OptConstraints",  &OptConstraints, 1);
 //                  break;
 //          case f_OptUpConstraints: rdar.readArray( "OptUpConstraints",  OptUpConstraints_);
 //                   break;
 //          case f_OptLoConstraints: rdar.readArray( "OptLoConstraints",  OptLoConstraints_ );
 //                   break;
-//          case f_OptDoWhat: rdar.readArray( "OptDoWhat",  &OptDoWhat, 1);
-//                  break;
+          case f_OptDoWhat: rdar.readArray( "OptDoWhat",  &OptDoWhat, 1);
+                  break;
 //          case f_OptStatOnlyBestFitParam: rdar.readArray( "OptStatOnlyBestFitParam",  OptStatOnlyBestFitParam);
 //                   break;
 //          case f_OptStatOnlySSR: rdar.readArray( "OptStatOnlySSR",  &OptStatOnlySSR, 1);
@@ -1173,28 +1173,28 @@ void Data_Manager::get_db_specs_txt( )
 //                  break;
 //          case f_OptScaleParam: rdar.readArray( "OptScaleParam",  &OptScaleParam, 1);
 //                  break;
-//          case f_OptNormParam:{
-//                int bb;
-//                rdar.readArray( "OptNormParam",  &bb, 1);
-//                OptNormParam = bb;
-//                 }
-//                  break;
-//          }
-//          nfild = rdar.findNextNotAll();
-//        }
+          case f_OptNormParam:{
+                int bb;
+                rdar.readArray( "OptNormParam",  &bb, 1);
+                OptNormParam = bb;
+                 }
+                  break;
+          }
+          nfild = rdar.findNextNotAll();
+        }
 
-//    if( OptBoundPerc > 0. )
-//    {
-//        OptUpBounds.resize( opt_vec.size() );
-//        OptLoBounds.resize( opt_vec.size() );
-//        for(int i=0; i<opt_vec.size(); i++ )
-//        {
-//            OptUpBounds[i] = opt_vec[i] + fabs( opt_vec[i]*OptBoundPerc/100. );
-//            OptLoBounds[i] = opt_vec[i] - fabs( opt_vec[i]*OptBoundPerc/100. );
-//        }
-//    }
+    if( OptBoundPerc > 0. )
+    {
+        OptUpBounds.resize( optv.size() );
+        OptLoBounds.resize( optv.size() );
+        for(int i=0; i<optv.size(); i++ )
+        {
+            OptUpBounds[i] = optv[i] + fabs( optv[i]*OptBoundPerc/100. );
+            OptLoBounds[i] = optv[i] - fabs( optv[i]*OptBoundPerc/100. );
+        }
+    }
 
-//    // Check if all lower bounds are smaller than the corresponding upper bounds
+    // Check if all lower bounds are smaller than the corresponding upper bounds
 //    if( OptLoBounds.size() != OptUpBounds.size() )
 //    {
 //        cout<<endl;
@@ -1265,13 +1265,13 @@ void Data_Manager::get_db_specs_txt( )
 //            rdar.setAlws( f_OptHybridAlgo );
 //        }
 
-//        // testing read
-//        string ret = rdar.testRead();
-//        if( !ret.empty() )
-//         { ret += " - fields must be read from OptParamFile structure";
-//           Error( "Error", ret);
-//         }
-//}
+        // testing read
+        string ret = rdar.testRead();
+        if( !ret.empty() )
+         { ret += " - fields must be read from OptParamFile structure";
+           Error( "Error", ret);
+         }
+}
 
 ////-------------------------------------------------------------------------------------------------
 

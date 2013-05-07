@@ -228,9 +228,9 @@ class Data_Manager : public TNode
         /**
         * Puts the in BSON format (e.g. returned from an EJDB query) into Data Manager class
         * @author DM
-        * @param *f JSON object
-        * @param *data
-        * @param pos
+        * @param *f
+        * @param *data BSON object
+        * @param pos position of the BSON object in the vector experiments
         * @date 19.04.2013
         */
         void bson_to_Data_Manager(FILE *f, const char *data, int pos);
@@ -238,9 +238,6 @@ class Data_Manager : public TNode
         /**
         * Gest the distinct T-P pairs form the experimental data
         * @author DM
-        * @param *f JSON object
-        * @param *data
-        * @param pos
         * @date 19.04.2013
         */
         void get_distinct_TP( );

@@ -36,6 +36,8 @@
 
 #include "data_manager.h"
 #include "opt_vector.h"
+#include "optimization.h"
+#include <nlopt.hpp>
 
 
 // These structures are needed for implementation of Random Walk and
@@ -65,6 +67,8 @@ protected:
 
     opti_vector *OParameters; ///< pointer to optimization vector class
 
+    optimization *Opti; ///< pointer to optimization
+
 
     char* tcNode;      ///< Node type codes (see databr.h), size anNodes
     bool* iaNode;      ///< GEM IA status for all nodes (true: NEED_GEM_AIA, false: NEED_GEM_SIA)
@@ -84,12 +88,21 @@ public:
     /// Monte Carlo flag: if true, then the MPI commands within the objective function call will not be executed. Instead, the loop over Monte Carlo runs is parallelized
     bool MC_MPI;
 
-   static TGfitTask* gft;   ///< static pointer to this class
+    double sum_of_squares;
+
+    static TGfitTask* gft;   ///< static pointer to this class
 
 
    TGfitTask(  );   ///< Constructor
 
     ~TGfitTask();      /// Destructor
+
+   // initialize optimization
+   virtual void init_optim(vector<double> &optv_, /*int &countit,*/ double &sum_of_squares );
+
+
+
+
 
     void get_nodes( long int nNod ); ///< Constructors for 1D arrangement of nodes
 
