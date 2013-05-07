@@ -62,5 +62,19 @@ static const char *url = "url"; ///	                              1		     string
     static const char *_error = "error";
     static const char *_unit = "unit";
 
+// kewords for adjusted parameters marked in the input file
+    static const char *IV = "IV"; ///                                       double              initial value
+    static const char *UB = "UB"; ///                                       double              upper boundary
+    static const char *LB = "LB"; ///                                       double              lower boundary
+    // Reaction specific
+    static const char *Ref = "Ref"; ///                                     string              reference for logK
+    static const char *logK = "logK"; ///                                   double              reaction constant
+    static const char *nC = "nC"; ///                                       integer             number of components involved in the reaction
+                        // species
+    static const char *RC = "RC"; ///                                       array               array of components names
+    static const char *Rcoef = "Rcoef"; ///                                 array               array of reaction coeficients
+// optimization specific
+    static const int bperc = 10; ///                                        integer             default up/lo bound percentage of the parameters
+
 //}
 #endif // KEYWORDS_H
