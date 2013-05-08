@@ -1,3 +1,34 @@
+/// \file opt_vector.h
+/// Contains declaration of opti_vector class used in GEMSFIT for
+/// storing optimized vector information
+//
+/// \class opti_vector opt_vector.h
+///  The opti_vector class, retrieves and stores the adjusted paramaters and
+/// reaction constraints from the GEMSFIT input file.
+
+//
+// Copyright (C) 2013 G.D.Miron, D.Kulik
+// <GEMS Development Team, mailto:gems2.support@psi.ch>
+//
+// This file is part of the GEMSFIT code for parameterization of thermodynamic
+// data and models <http://gems.web.psi.ch/GEMSFIT/>
+//
+// GEMSIFT is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as
+// published by the Free Software Foundation, either version 3 of
+// the License, or (at your option) any later version.
+
+// GEMSFIT is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with GEMSFIT code. If not, see <http://www.gnu.org/licenses/>.
+//-------------------------------------------------------------------
+//
+
+
 #ifndef OPT_VECTOR_H
 #define OPT_VECTOR_H
 
@@ -46,6 +77,14 @@ public:
     vector<RDc*> reactions; /// Vector of pointer to reactions (rdc_species struct that hold the reaction dependent species and the reaction properties)
 
 
+
+    /**
+    * Gets the indexes of the RDc species
+    * @author DM
+    * @param node
+    * @param ov opti_vector class
+    * @date 06.05.2013
+    */
     void get_RDc_indexes (TNode *node, opti_vector *ov);
 
 };

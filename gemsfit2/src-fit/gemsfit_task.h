@@ -37,7 +37,9 @@
 #include "data_manager.h"
 #include "opt_vector.h"
 #include "optimization.h"
+#include "gemsfit_global_variables.h"
 #include <nlopt.hpp>
+
 
 
 // These structures are needed for implementation of Random Walk and
@@ -65,10 +67,7 @@ protected:
 
     long int anNodes;  ///< Number of allocated nodes (samples)
 
-    opti_vector *OParameters; ///< pointer to optimization vector class
-
-    optimization *Opti; ///< pointer to optimization
-
+//    opti_vector *OParameters; ///< pointer to optimization vector class
 
     char* tcNode;      ///< Node type codes (see databr.h), size anNodes
     bool* iaNode;      ///< GEM IA status for all nodes (true: NEED_GEM_AIA, false: NEED_GEM_SIA)
@@ -78,6 +77,8 @@ protected:
 
 
 public:
+
+    optimization *Opti; ///< pointer to optimization
 
     /// the GEMSFIT configuration file (fixed to SS_GEMSFIT_input.dat)
     string param_file;
@@ -90,18 +91,59 @@ public:
 
     double sum_of_squares;
 
+    /// normalize parameters flag
+    bool NormParams;
+
     static TGfitTask* gft;   ///< static pointer to this class
 
 
-   TGfitTask(  );   ///< Constructor
+    struct TargetFunction /// structure holding the target function information
+    {
+        string name; /// target function name
+        string type; /// target function type
+        string weight; /// type of weight
 
-    ~TGfitTask();      /// Destructor
+        struct obj_fun /// structure holding the information about the data to compare from the experiments
+        {
+            string exp_phase;
+            string exp_elem;
+            string exp_property;
+            string exp_unit;
+        };
+        vector<obj_fun*> objfun;
+    };
+
+    TargetFunction* Tfun; /// pointer to target function structure
+
+
+   TGfitTask ();   ///< Constructor
+
+   ~TGfitTask ();      /// Destructor
 
    // initialize optimization
+   /**
+   * Initializes the NLopt obeject and the optimization task
+   * @author DM
+   * @param optv_ vector of optimized parameters
+   * @param sum_of_squares
+   * @date 06.05.2013
+   */
    virtual void init_optim(vector<double> &optv_, /*int &countit,*/ double &sum_of_squares );
 
+   /**
+   * initialize optimization object and assign constraints and bounds.
+   * performs the optimization.
+   * @param NLopti			nlopt optimization object
+   * @param optv_              optimization vector
+   * @param sum_of_squares		sum of squared residuals
+   * @author DM
+   * @date 07.05.2013
+   */
+   virtual void build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, /*std::vector<System_Properties*> *systems, int &countit,*/ double &sum_of_squares );
 
 
+
+   void get_DatTarget ( );
 
 
     void get_nodes( long int nNod ); ///< Constructors for 1D arrangement of nodes

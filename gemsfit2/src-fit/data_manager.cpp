@@ -63,12 +63,15 @@ Data_Manager::Data_Manager( )
     // Readin in the data slection query
     DataSelect = readin_JSON("<DatSelect>");
 
+    DatTarget = readin_JSON("<DatTarget>");
+
     // Getting the query result data into the Data_Manager class
     get_EJDB();
 
     get_distinct_TP();
 
     fout.close();
+
 }
 
 
@@ -157,6 +160,10 @@ void Data_Manager::parse_JSON_object(string query, const char* key, vector<strin
                     {
                         result.push_back(boost::lexical_cast<string>(json_integer_value(data)));
                     }
+                    else if (json_is_object(data))
+                    {
+                        result.push_back("is object");
+                    }
              }
          }
         else
@@ -176,6 +183,65 @@ void Data_Manager::parse_JSON_object(string query, const char* key, vector<strin
         }
     }
 }
+
+void Data_Manager::parse_JSON_array_object( string data_, const char *arr , const char *key, vector<string> &result )
+{
+    json_t *root; json_t *data1; json_t *data; json_t *object;
+    json_error_t jerror;
+
+    const char * JSON = data_.c_str();
+    root = json_loads(JSON, 0, &jerror);
+
+    if(!root)
+    {
+        fprintf(stderr, "error: on line %d: %s\n", jerror.line, jerror.text);
+    }
+    else
+    {
+        object = json_object_get(root, arr);
+        if(json_is_array(object))
+        {
+            for(unsigned int i = 0; i < json_array_size(object); i++)
+            {
+                data1 = json_array_get(object, i);
+                if (json_is_object(data1))
+                {
+                    data = json_object_get(data1, key);
+                    if(json_is_string(data))
+                    {
+                        result.push_back(json_string_value(data));
+                    }
+                    else if (json_is_real(data))
+                    {
+                        result.push_back(boost::lexical_cast<string>(json_real_value(data)));
+                    }
+                    else if (json_is_integer(data))
+                    {
+                        result.push_back(boost::lexical_cast<string>(json_integer_value(data)));
+                    }
+                }
+             }
+         }
+        else
+        {
+            data = json_object_get(data1, key);
+                if(json_is_string(object))
+                {
+                    result.push_back(json_string_value(object));
+                }
+                else if (json_is_real(object))
+                {
+                    result.push_back(boost::lexical_cast<string>(json_real_value(object)));
+                }
+                else if (json_is_integer(object))
+                {
+                    result.push_back(boost::lexical_cast<string>(json_integer_value(object)));
+                }
+        }
+    }
+}
+
+
 
 // Reading data from EJDB database
 void Data_Manager::get_EJDB( )

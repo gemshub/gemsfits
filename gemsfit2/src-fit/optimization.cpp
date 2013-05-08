@@ -1,6 +1,6 @@
 #include "optimization.h"
 
-optimization::optimization(opti_vector* ov)
+optimization::optimization( )
 {
     // GEMSFIT logfile
     //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
@@ -12,17 +12,17 @@ optimization::optimization(opti_vector* ov)
     constraint_data = new my_constraint_data;
 
     // assigining the vector that stores the optimized parameters
-    optv = ov->opt;
+    optv = opt;
 
-    OptUpBounds = ov->UB;
-    OptLoBounds = ov->LB;
+    OptUpBounds = UB;
+    OptLoBounds = LB;
 
     get_nlopt_param_txt( optv );
 
     if (OptBoundPerc > 0.)
     {
-        ov->UB = OptUpBounds;
-        ov->LB = OptLoBounds;
+        UB = OptUpBounds;
+        LB = OptLoBounds;
     }
 
     // in build_optim

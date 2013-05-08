@@ -31,6 +31,8 @@
 #include "io_arrays.h"
 #include "gdatastream.h"
 #include "gemsfit_iofiles.h"
+#include "keywords.h"
+#include "gemsfit_global_functions.h"
 #include <cmath>
 
 #ifndef __unix
@@ -39,6 +41,8 @@
 
 
 using namespace std;
+
+int master_counter;
 
 istream& f_getline(istream& is, gstring& str, char delim);
 
@@ -289,17 +293,12 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     // initialize nodes with the experimental data
     setnodes ( );
 
-    // getting the parameters to be optimized from DCH, DBR and multi structures
-    OParameters = new opti_vector ( );
+    // getting the parameters to be optimized from DCH, DBR and multi structures, and optimization settings form the input file
+    Opti = new optimization ( );
 
-    //
-    Opti = new optimization (OParameters);
+    Tfun = new TargetFunction;
 
-//    if (Optimization->OptBoundPerc > 0.)
-//    {
-//        OParameters->UB = Optimization->OptUpBounds;
-//        OParameters->LB = Optimization->OptLoBounds;
-//    }
+    get_DatTarget ( );
 
     init_optim (Opti->optv, sum_of_squares);
 
@@ -319,6 +318,66 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
 
 }
 
+void TGfitTask::get_DatTarget ( )
+{
+    vector<string> out;
+    parse_JSON_array_object(DatTarget, "OFUN", "OPH", out);
+    out.clear();
+
+
+    parse_JSON_object(DatTarget, Target, out);
+    Tfun->name = out[0]; // Name of target function
+    out.clear();
+
+    parse_JSON_object(DatTarget, TT, out);
+    Tfun->type = out[0]; // Type of the target function
+    out.clear();
+
+    parse_JSON_object(DatTarget, WT, out);
+    Tfun->weight = out[0]; // Weight of target function
+    out.clear();
+
+    parse_JSON_object(DatTarget, OFUN, out);
+    for (unsigned int i = 0 ; i < out.size() ; i++)
+    {
+        Tfun->objfun.push_back(new TargetFunction::obj_fun); // initializing
+        Tfun->objfun[i]->exp_phase = "NULL";
+        Tfun->objfun[i]->exp_elem = "NULL";
+        Tfun->objfun[i]->exp_property = "NULL";
+        Tfun->objfun[i]->exp_unit = "NULL";
+    }
+    out.clear();
+
+    parse_JSON_array_object(DatTarget, OFUN, EPH, out);
+    for (unsigned int i = 0 ; i < out.size() ; i++)
+    {
+        Tfun->objfun[i]->exp_phase = out[i];
+    }
+    out.clear();
+
+    parse_JSON_array_object(DatTarget, OFUN, EN, out);
+    for (unsigned int i = 0 ; i < out.size() ; i++)
+    {
+        Tfun->objfun[i]->exp_elem = out[i];
+    }
+    out.clear();
+
+    parse_JSON_array_object(DatTarget, OFUN, EP, out);
+    for (unsigned int i = 0 ; i < out.size() ; i++)
+    {
+        Tfun->objfun[i]->exp_property = out[i];
+    }
+    out.clear();
+
+    parse_JSON_array_object(DatTarget, OFUN, Eunit, out);
+    for (unsigned int i = 0 ; i < out.size() ; i++)
+    {
+        Tfun->objfun[i]->exp_unit = out[i];
+    }
+    out.clear();
+
+}
+
 
 // Initialize optimization object and Run Optimization by calling build_optim
 void TGfitTask::init_optim( std::vector<double> &optv_, /*int &countit,*/ double &sum_of_squares )
@@ -328,27 +387,27 @@ void TGfitTask::init_optim( std::vector<double> &optv_, /*int &countit,*/ double
     if( Opti->OptAlgo.compare( "'LN_COBYLA'" ) == 0 )
     {
         nlopt::opt nlopti_( nlopt::LN_COBYLA, optv_.size() );
-//        build_optim( nlopti_, optv_, gfittask, countit, sum_of_squares );
+        build_optim( nlopti_, optv_, sum_of_squares );
     }
     else if( Opti->OptAlgo.compare( "'GN_ISRES'" ) == 0 )
     {
         nlopt::opt nlopti_( nlopt::GN_ISRES, optv_.size() );
-//        build_optim( nlopti_, optv_, gfittask, countit, sum_of_squares );
+        build_optim( nlopti_, optv_, sum_of_squares );
     }
     else if( Opti->OptAlgo.compare( "'LN_BOBYQA'" ) == 0 )
     {
         nlopt::opt nlopti_( nlopt::LN_BOBYQA, optv_.size() );
-//        build_optim( nlopti_, optv_, gfittask, countit, sum_of_squares );
+        build_optim( nlopti_, optv_, sum_of_squares );
     }
     else if( Opti->OptAlgo.compare( "'GN_ORIG_DIRECT'" ) == 0 )
     {
         nlopt::opt nlopti_( nlopt::GN_ORIG_DIRECT, optv_.size() );
-//        build_optim( nlopti_, optv_, gfittask, countit, sum_of_squares );
+        build_optim( nlopti_, optv_, sum_of_squares );
     }
     else if( Opti->OptAlgo.compare( "'GN_ORIG_DIRECT_L'" ) == 0 )
     {
         nlopt::opt nlopti_( nlopt::GN_ORIG_DIRECT_L, optv_.size() );
-//        build_optim( nlopti_, optv_, gfittask, countit, sum_of_squares );
+        build_optim( nlopti_, optv_, sum_of_squares );
     }
     else
     {
@@ -360,6 +419,165 @@ void TGfitTask::init_optim( std::vector<double> &optv_, /*int &countit,*/ double
 
 }
 
+
+// Initialize optimization object and Run Optimization
+void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, /*std::vector<SS_System_Properties*> *ss_systems, int &countit,*/ double &sum_of_squares )
+{
+    unsigned int i = 0;
+    int j = 0;
+    std::vector<double> grad;
+
+    // GEMSFIT logfile
+    //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
+    ofstream ffout;
+    ffout.open(gpf->FITLogFile().c_str(), ios::app);
+    if( ffout.fail() )
+    { cout<<"Output fileopen error"<<endl; exit(1); }
+
+    ffout << " ... initializing optimization object in build_optim() ... " << endl;
+
+//     Reset counter to zero
+    master_counter = 0;
+
+    if( Opti->OptNormParam && !printfile )
+    {
+        Opti->normalize_params( optv_ );
+        NormParams = true;
+    }
+    else // do not normalize parameters
+    {
+        Opti->optv = optv_;
+    }
+
+    // check if initial guesses have same number of elements as bound and check if initial guesses are within the bounds
+    if( Opti->optv.size() != Opti->OptUpBounds.size() )
+    {
+        cout<<endl;
+        cout<<"initial guess vector and bounds vector must have same number of elements !! "<<endl;
+        cout<<"optv.size() = "<<Opti->optv.size()<<" <-> OptUbBounds.size() = "<<Opti->OptUpBounds.size()<<endl;
+        cout<<" .... exiting now .... "<<endl;
+            cout<<endl;
+        exit(1);
+    }
+    for( i=0; i<Opti->OptLoBounds.size(); i++ )
+    {
+        if( Opti->optv[i]<Opti->OptLoBounds[i] || Opti->optv[i]>Opti->OptUpBounds[i] )
+        {
+            cout<<endl;
+            cout<<"Initial guess value is not within given bounds!!"<<endl;
+            cout<<"optv["<<i<<"] = "<<Opti->optv[i]<<" | OptLoBounds["<<i<<"] = "<<Opti->OptLoBounds[i]<<" | OptUpBounds["<<i<<"] = "<<Opti->OptUpBounds[i]<<endl;
+            cout<<" .... exiting now .... "<<endl;
+                cout<<endl;
+            exit(1);
+        }
+    }
+
+    ffout << "... assigning bounds and tollerance for optimization..." << endl;
+    // assign bounds
+    NLopti.set_lower_bounds( Opti->OptLoBounds );
+    NLopti.set_upper_bounds( Opti->OptUpBounds );
+
+    // specify relative tolerance tolerance on function value
+    NLopti.set_xtol_rel( Opti->OptTolRel );
+
+    // specify absolute tolerance on function value
+    NLopti.set_xtol_abs( Opti->OptTolAbs );
+
+    // maximum number of iterations
+    NLopti.set_maxeval( Opti->OptMaxEval );
+
+
+    /// specify objective function
+    ffout << endl << "15. in optimization.cpp line 1006. Setting minimizing objective function." << endl;
+    NLopti.set_min_objective( Equil_objective_function_callback, this );
+
+//        if( OptConstraints )
+//        {
+//            // apply inequality constraints
+//            for( int j=0; j< ((int) constraint_data_v.size()); j++ )
+//                stdstate.add_inequality_constraint( StdStateProp_constraint_function_callback, &constraint_data_v[j], 1e-4);
+//        }
+
+    // Set initial stepsize
+    if( Opti->OptInitStep > 0 )
+    {
+        vector<double> inistep( Opti->optv.size(), 0. );
+        for( j=0; j<(int) Opti->optv.size(); j++ )
+        {
+            inistep[j] = Opti->optv[j] * Opti->OptInitStep;
+        }
+        NLopti.set_initial_step( inistep );
+    }
+
+    // Only the Master process runs the optimization library. The other processes only run the callback function (copying the newly generated guess values from process 0).
+    int ierr;
+    //ierr = MPI_Comm_rank( MPI_COMM_WORLD, &pid );
+    //ierr = MPI_Comm_size( MPI_COMM_WORLD, &p );
+    int continue_or_exit;
+
+    ffout << "16. in optimization.cpp line 1041. Performing optimization."<<endl;
+
+    //===== For testing the objective function without oprimization =====//
+    //        sum_of_squares = StdStateEquil_objective_function_callback(optv, grad, ss_systems);
+
+/**
+//            // check results
+//                if( result < 0 )
+//                {
+//                    std::cout<<endl;
+//                    std::cout<<"   !!!  nlopt failed  !!!   "<<std::endl;
+//                    std::cout<<"   !!!  error code:   "<<result<<std::endl;
+//                    Opti->print_return_message( result );
+//                    std::cout<<endl;
+//                }
+//                else
+//                {
+//                    std::cout<<" NLopt return code: "<<result<<endl;
+//                    Opti->print_return_message( result );
+//                    string path = gpf->OutputDirPath();
+//                           path +=  "SS_myFIT.out";
+//                    ofstream fout;
+//                    fout.open(path.c_str(), ios::app);
+//                    if( fout.fail() )
+//                    { cout<<"Output fileopen error"<<endl; exit(1); }
+//                    fout<<"found minimum at <<f( ";
+//                    for( unsigned i=0; i<Opti->optv.size(); i++ )
+//                    {
+//                        fout<<Opti->optv[i]<<" ";
+//                    }
+//                    fout<<") = "<<sum_of_squares<<std::endl;
+//                    fout<<" after "<< master_counter <<" evaluations."<<std::endl;
+//                    fout.close();
+
+//                    std::cout<<"found minimum at <<f( ";
+//                    for( unsigned i=0; i<Opti->optv.size(); i++ )
+//                    {
+//                        std::cout<<Opti->optv[i]<<" ";
+//                    }
+//                    std::cout<<") = "<<sum_of_squares<<std::endl;
+//                }
+//                std::cout<<" after "<< master_counter <<" evaluations"<<std::endl;
+**/
+
+   // copy resulting vector back to incoming optv vector (needed for printing results)
+   optv_ = Opti->optv;
+
+  // copy resulting vector back to incoming optv vector (needed for printing results)
+  if( !Opti->OptNormParam )
+      {
+          optv_ = Opti->optv;
+      }
+  else
+      {
+          for( i=0; i<Opti->optv.size(); i++ )
+              {
+                  optv_[i] = Opti->optv[i] * abs(Opti->opt[i]);
+              }
+      }
+
+ffout.close();
+//countit = master_counter;
+}
 
 
 void TGfitTask::setnodes()
@@ -521,11 +739,9 @@ void TGfitTask::setnodes()
         delete[] xDC_up;
         delete[] xDC_lo;
         delete[] Ph_surf;
-
     }
-
-
 }
+
 
 void TGfitTask::get_nodes(long int nNod)
 {
@@ -545,7 +761,6 @@ TGfitTask::~TGfitTask(   )
 
 
 // Copying data for node ii from node array into work DATABR structure
-//
 void TGfitTask::CopyWorkNodeFromArray( long int ii, long int nNodes, DATABRPTR* arr_BR )
 {
   // from arr_BR[ii] to pCNode() structure
@@ -692,68 +907,6 @@ double TGfitTask::get_bPH( long int ia, long int nodex, long int PHx, long int I
 
   return val;
 }
-
-//---------------------------------------------------------
-
-//void TGfitTask::databr_to_vtk( fstream& ff, const char*name, double time, long int  cycle,
-//                          long int  nFilds, long int  (*Flds)[2])
-//{
-//   bool all = false;
-//   long int kk, ii, nf, nel, nel2;
-//   long int i, j,k;
-
-//   // write header of file
-//   kk = sizeM;
-//   if(sizeM==1 && sizeK==1) // 05.12.2012 workaround for 2D paraview
-//         kk=2;
-//   databr_head_to_vtk( ff, name, time, cycle, sizeN, kk, sizeK );
-
-//   if( nFilds < 1 || !Flds )
-//   {  all = true;
-//      nFilds = 51;
-//   }
-
-//   for( kk=0; kk<nFilds; kk++)
-//   {
-//       if( all )
-//         nf = kk;
-//       else nf= Flds[kk][0];
-
-//       databr_size_to_vtk(  nf, nel, nel2 );
-
-//      if( all )
-//        { ii=0;}
-//      else
-//        { ii = Flds[kk][1];
-//          nel = ii+1;
-//        }
-
-//       for( ; ii<nel; ii++ )
-//        {
-//        databr_name_to_vtk( ff, nf, ii, nel2 );
-
-//        // cycle for TNode array
-//        for( i = 0; i < sizeN; i++ )
-//          for( j = 0; j < sizeM; j++ )
-//            for( k = 0; k < sizeK; k++ )
-//            {
-//               int ndx = iNode( i, j, k );
-//               CopyWorkNodeFromArray( ndx, anNodes,  pNodT0() );
-//               databr_element_to_vtk( ff, CNode/*pNodT0()[(ndx)]*/, nf, ii );
-//            }
-//        if( sizeM==1 && sizeK==1)  // 05.12.2012 workaround for 2D paraview
-//        { for( i = 0; i < sizeN; i++ )
-//           for( j = 0; j < sizeM; j++ )
-//            for( k = 0; k < sizeK; k++ )
-//            {
-//               int ndx = iNode( i, j, k );
-//               CopyWorkNodeFromArray( ndx, anNodes,  pNodT0() );
-//               databr_element_to_vtk( ff, CNode/*pNodT0()[(ndx)]*/, nf, ii );
-//            }
-//         }
-//       }
-//   }
-//}
 
 //-----------------------End of gemsfit_task.cpp--------------------------
 

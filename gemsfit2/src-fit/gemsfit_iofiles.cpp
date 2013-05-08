@@ -49,7 +49,7 @@ void F_to_OP (opti_vector *op, IOJFormat Jformat, string nfild);
 void F_to_OP (double val, opti_vector *op, IOJFormat Jformat, string nfild);
 void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat, string nfild);
 
-optimization::optimization()
+optimization::optimization( int i)
 {
     constraint_data = new my_constraint_data;
     define_nlopt_param();
@@ -108,7 +108,7 @@ int generateConfig()
 
 
     // Create instance of optimization class derived from base class Optimization
-    optimization *opti = new optimization();
+    optimization *opti = new optimization(1);
     opti->out_nlopt_param_txt(with_comments, brief_mode);
 
 //    StdStatistics *stat= new StdStatistics();
@@ -709,7 +709,8 @@ outField Data_Manager_fields[10] =
       "\n { \"sample\" : \"\", "
       "\n \"expdataset\" : [\"CH04\", \"CH04D\"],"
       "\n \"sT\" : [100, 1000],"
-      "\n \"sP\" : [1, 2500] \n# }"},
+      "\n \"sP\" : [1, 2500] }\n#"},
+    { "DatTarget",  0, 0, 1, "\n# DatTarget: Target function for parmeter fitting"},
     { "SystemFiles",  0, 0, 1, "\n# SystemFiles: Comment"},
     { "RecipeFiles",  0, 0, 1, "\n# RecipeFiles: Comment"}
 };
@@ -723,6 +724,7 @@ typedef enum {  /// Field index into outField structure
 //    f_DatCSVfile,
 //    f_DatServer,
     f_DatSelect,
+    f_DatTarget,
     f_SystemFiles,
     f_RecipeFiles
 } Data_Manager_FIELDS;
@@ -738,6 +740,7 @@ void Data_Manager::define_db_specs( )
 //   passwd="";
 //   psql_server="";
    DataSelect ="all";
+   DatTarget ="";
 
 }
 
@@ -785,6 +788,7 @@ void Data_Manager::out_db_specs_txt( bool with_comments, bool brief_mode )
 //    prar.writeField(f_DatPasswd, passwd, with_comments, brief_mode  );
 //    prar.writeField(f_DatServer, psql_server, with_comments, brief_mode  );
     prar.writeField(f_DatSelect, DataSelect, with_comments, brief_mode );
+    prar.writeField(f_DatTarget, DatTarget, with_comments, brief_mode );
     prar.writeField(f_SystemFiles, gpf->GEMS3LstFilePath(), with_comments, brief_mode  );
     prar.writeField(f_RecipeFiles, "", with_comments, brief_mode  );
 }
@@ -820,6 +824,8 @@ void Data_Manager::get_db_specs_txt( )
 //           case f_DatServer: rdar.readArray( "DatServer",  psql_server );
               break;
           case f_DatSelect: rdar.readArray( "DatSelect",  DataSelect );
+             break;
+          case f_DatTarget: rdar.readArray( "DatTarget",  DatTarget );
              break;
           case f_SystemFiles: rdar.readArray( "SystemFiles",  inputstr );
               gpf->setGEMS3LstFilePath(inputstr.c_str() );
@@ -964,7 +970,7 @@ outField optimization_fields[24] =
     { "OptHybridMode",  0, 0, 1, "\n# OptHybridMode: Comment"},
     { "OptNmultistart",  0, 0, 1, "\n# OptNmultistart: Comment"},
     { "OptHybridAlgo",  0, 0, 1, "\n# OptHybridAlgo: Comment"},
-    { "OptInitStep",  0, 0, 1, "\n# OptInitStep: Comment"},
+    { "OptInitStep",  0, 0, 1, "\n# OptInitStep: specify initial stepsize for local minimizers (factor will be multiplied to all optimization parameters); 0 => use default"},
     { "OptScaleParam",  0, 0, 1, "\n# OptScaleParam: Comment"},
     { "OptNormParam",  0, 0, 1, "\n# OptNormParam: Normalize bounds/constraints/fitting parameters with initial guess vector"},
     { "OptBoundPerc",  0, 0, 1, "\n# OptBoundPerc: Generate bounds from initial guess vector: specify percentage deviation (user specific, user-defined bounds when set to -1)"}
@@ -1027,7 +1033,7 @@ void optimization::define_nlopt_param( )
 //    OptHybridTolAbs = 1e-4;
 //    OptHybridMaxEval = 5000000;
 //    OptNmultistart = 0;
-//    OptInitStep = 0;
+    OptInitStep = 0;
     //OptScaleParam;
     OptNormParam = 1;
 
@@ -1097,7 +1103,7 @@ void optimization::out_nlopt_param_txt( bool with_comments, bool brief_mode )
 //    prar.writeField( f_OptHybridTolAbs,  OptHybridTolAbs, with_comments, brief_mode);
 //    prar.writeField( f_OptHybridMaxEval,  (long int)OptHybridMaxEval, with_comments, brief_mode);
 //    prar.writeField( f_OptNmultistart,  (long int)OptNmultistart, with_comments, brief_mode);
-//    prar.writeField( f_OptInitStep,  OptInitStep, with_comments, brief_mode);
+    prar.writeField( f_OptInitStep,  OptInitStep, with_comments, brief_mode);
 //    prar.writeField( f_OptScaleParam,  OptScaleParam, with_comments, brief_mode);
     prar.writeField( f_OptNormParam,  (long int)OptNormParam, with_comments, brief_mode);
 
@@ -1169,8 +1175,8 @@ void optimization::get_nlopt_param_txt(vector<double> optv)
 //                  break;
 //          case f_OptNmultistart: rdar.readArray( "OptNmultistart",  &OptNmultistart, 1);
 //                  break;
-//          case f_OptInitStep: rdar.readArray( "OptInitStep",  &OptInitStep, 1);
-//                  break;
+          case f_OptInitStep: rdar.readArray( "OptInitStep",  &OptInitStep, 1);
+                  break;
 //          case f_OptScaleParam: rdar.readArray( "OptScaleParam",  &OptScaleParam, 1);
 //                  break;
           case f_OptNormParam:{

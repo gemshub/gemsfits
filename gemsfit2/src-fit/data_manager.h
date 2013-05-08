@@ -71,6 +71,12 @@ class Data_Manager : public TNode
         * @date 06.11.2012
         */
         Data_Manager( );
+        /**
+        * Constructor for the Data_Manager class.
+        * Used in the gemsfit2 -init mode
+        * @author DM
+        * @date 08.05.2013
+        */
         Data_Manager( int );
 
         /**
@@ -88,6 +94,9 @@ class Data_Manager : public TNode
         typedef vector<bool>    bool_v;
 
         vector<TNode*> NodT;
+
+        /// JSON object for building the target function
+        string DatTarget;
 
         std::vector<int> TP_pairs[2]; /// Stores unique TP pairs of the experiments. TP_pairs[0] temperature; TP_pairs[1] pressure.
 
@@ -140,9 +149,7 @@ class Data_Manager : public TNode
                         double Qerror;               /// error
                         string Qunit;                /// units
                     };
-
                     vector<species*> phspecies;
-
                 };
                 vector<phases*> expphases;      /// vector of phases measured in one experiment
             };
@@ -180,9 +187,7 @@ class Data_Manager : public TNode
                     {
                         bool formula;               /// name of chemical species (end member, phase component)
                     };
-
                     vector<Hspecies*> Hphspecies;
-
                 };
                 vector<Hphases*> Hexpphases;      /// vector of phases measured in one experiment
             };
@@ -213,7 +218,6 @@ class Data_Manager : public TNode
         */
         string readin_JSON (string key );
 
-
         /**
         * Interprets 1 level JSON object pointed by the variable key
         * @author DM
@@ -224,6 +228,16 @@ class Data_Manager : public TNode
         */
         void parse_JSON_object( string query, const char *key, vector<string> &result );
 
+        /**
+        * Interprets 2 level JSON object in the array arr pointed by the variable key
+        * @author DM
+        * @param data_ JSON object
+        * @param arr JSON array name that we want to parse
+        * @param key JSON array-object member that we want to have the value/s returned
+        * @param result vector of strings representing the values of the key in the JSON object
+        * @date 08.05.2013
+        */
+        void parse_JSON_array_object( string data_, const char *arr , const char *key, vector<string> &result );
 
         /**
         * Puts the in BSON format (e.g. returned from an EJDB query) into Data Manager class
@@ -276,6 +290,7 @@ class Data_Manager : public TNode
 
         /// EJDB data selection querie
         string DataSelect;
+
 
 };
 

@@ -66,7 +66,6 @@ int main( int argc, char *argv[] )
 {
     gpf = new TGfitPath(argc, argv);
 
-
     if( gpf->isInitMode() ) // Mode GEMSFIT to generate input configuration file
       return generateConfig();
 
@@ -95,26 +94,6 @@ int main( int argc, char *argv[] )
 
 cout<<"37"<<endl;
 
-#ifdef USE_MPI
-	// Initialize MPI environment
-	if( MPI_Init(&argc, &argv) != MPI_SUCCESS ) 
-	{
-		fprintf( stderr,"MPI_Init failed.\n");
-    }
-
-cout<<"42"<<endl;
-	// define MPI ranks and number of procceses	
-	ierr = MPI_Comm_rank( MPI_COMM_WORLD, &pid );
-	ierr = MPI_Comm_size( MPI_COMM_WORLD, &p );
-
-
-cout<<"48"<<endl;
-	// Get system time 
-	ierr = MPI_Barrier( MPI_COMM_WORLD );		
-	elapsed_time = - MPI_Wtime();
-#endif	
-
-
     // GEMSFIT logfile
     //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
     ofstream fout;
@@ -137,31 +116,7 @@ cout<<"48"<<endl;
     TGfitTask* gfittask = new TGfitTask();
 
 
-
-//    // call GEM_init to read GEMS3K input files
-//    TNode* node  = new TNode();
-
-//    // call GEM_init     --> read in input files
-//    if( (node->GEM_init( gpf->GEMS3LstFilePath().c_str() )) == 1 )
-//       {
-//            cout << gpf->GEMS3LstFilePath().c_str() << endl;
-
-//           cout<<" .. ERROR occurred while reading GEMS3K input files !!! ..."<<endl;
-//           return 1;
-//       }
-
-//    get_gems_fit_DCH_txt( node );
-//    get_gems_fit_DBR_txt( node );
-//    get_gems_fit_multi_txt( node );
-
-
     fout << "10. main.cpp line 126. Finished reading input data and experimental data from the database." << endl;
-
-//    // Collect pointers to systems
-//    vector<SS_System_Properties*> ss_systems;
-//    ss_systems.push_back(ss_newsys);
-
-
 
 
 

@@ -1,3 +1,35 @@
+/// \file optimization.h
+/// Contains declaration of optimization class used in GEMSFIT for
+/// storing configuration parameters for optimization algorithm as well as
+/// the vector of optimized parameters
+//
+/// \class optimization optimization.h
+/// The optimization class, retrieves and stores configuration parameters
+/// for optimization algorithm form the input file
+//
+// Copyright (C) 2013 G.D.Miron, D.Kulik
+// <GEMS Development Team, mailto:gems2.support@psi.ch>
+//
+// This file is part of the GEMSFIT code for parameterization of thermodynamic
+// data and models <http://gems.web.psi.ch/GEMSFIT/>
+//
+// GEMSIFT is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as
+// published by the Free Software Foundation, either version 3 of
+// the License, or (at your option) any later version.
+
+// GEMSFIT is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with GEMSFIT code. If not, see <http://www.gnu.org/licenses/>.
+//-------------------------------------------------------------------
+//
+
+
+
 #ifndef OPTIMIZATION_H
 #define OPTIMIZATION_H
 
@@ -10,7 +42,7 @@
 using namespace std;
 
 
-class optimization
+class optimization : public opti_vector
 {
 public:
 
@@ -18,8 +50,8 @@ public:
     vector<double> optv;
 
     // Constructor
-    optimization(opti_vector *ov );
-    optimization(); // init mode constructor DS
+    optimization( );
+    optimization( int i); // init mode constructor DS
 
     // Destructor
     virtual ~optimization();
@@ -41,7 +73,7 @@ public:
 //    int OptHybridMaxEval;
 //    int OptNmultistart;
 //    string OptHybridAlgo;
-//    double OptInitStep;
+    double OptInitStep;
 //    double OptScaleParam;
     bool OptNormParam;
     double OptBoundPerc;
@@ -83,12 +115,6 @@ public:
 
     // NLopt return codes
     virtual void print_return_message( const int result );
-
-//    // initialize optimization
-//    virtual void init_optim( vector<double> &optv_, /*TGfitTask* gfittask,*/ int &countit, double &sum_of_squares );
-
-
-
 
 };
 
