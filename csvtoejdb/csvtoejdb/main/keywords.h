@@ -76,5 +76,17 @@ static const char *url = "url"; ///	                              1		     string
 // optimization specific
     static const int bperc = 10; ///                                        integer             default up/lo bound percentage of the parameters
 
+// keywords DatTarget
+    static const char *Target = "Target"; ///                               string              name of target function
+    static const char *TT = "TT"; ///                                       string              target function type
+    static const char *WT = "WT"; ///                                       string              weight type
+    static const char *OFUN = "OFUN"; ///                                   array               Objective function
+        static const char *EPH = "EPH"; ///                                 string              experiment phase
+        static const char *EN = "EN"; ///                                   string              experiment phase element
+        static const char *EP = "EP"; ///                                   string              experiment pahse property
+        static const char *Eunit = "Eunit"; ///                             string              experiment element unit
+//        static const char *Punit = "Punit"; ///                             string              experiment property unit
+
+
 //}
 #endif // KEYWORDS_H
