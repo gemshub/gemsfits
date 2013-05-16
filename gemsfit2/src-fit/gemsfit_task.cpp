@@ -302,7 +302,6 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
 
     init_optim (Opti->optv, sum_of_squares);
 
-    cout << "ana" << endl;
 
 
 
@@ -518,7 +517,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, /*s
     ffout << "16. in optimization.cpp line 1041. Performing optimization."<<endl;
 
     //===== For testing the objective function without oprimization =====//
-    //        sum_of_squares = StdStateEquil_objective_function_callback(optv, grad, ss_systems);
+            sum_of_squares = Equil_objective_function_callback(Opti->optv, grad, this);
 
 /**
 //            // check results

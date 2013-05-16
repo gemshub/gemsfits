@@ -115,6 +115,14 @@ public:
 
     TargetFunction* Tfun; /// pointer to target function structure
 
+    /// Computed values for Monte Carlo confidence interval generation
+    double_v computed_values_v;
+    /// Measurement values for Monte Carlo confidence interval generation
+    double_v measured_values_v;
+
+    /// Computed residuals
+    double_v computed_residuals_v;
+
 
    TGfitTask ();   ///< Constructor
 

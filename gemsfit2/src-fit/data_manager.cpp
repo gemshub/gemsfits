@@ -383,12 +383,12 @@ void Data_Manager::get_EJDB( )
         fprintf(stderr, "\n\nRecords found: %d\n", count);
 
         //Print the result set records
-         for (int i = 0; i < TCLISTNUM(res); ++i) {
-             void *bsdata = TCLISTVALPTR(res, i);
-             char *bsdata_ = static_cast<char*>(bsdata);
-             bson_print_raw(stderr, bsdata_, 0);
-         }
-         fprintf(stderr, "\n");
+//         for (int i = 0; i < TCLISTNUM(res); ++i) {
+//             void *bsdata = TCLISTVALPTR(res, i);
+//             char *bsdata_ = static_cast<char*>(bsdata);
+//             bson_print_raw(stderr, bsdata_, 0);
+//         }
+//         fprintf(stderr, "\n");
 
          // adding data into Data_manager storage class
          for (int j=0; j<count; j++)

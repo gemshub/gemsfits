@@ -41,6 +41,7 @@
 
 #include <vector>
 #include <iostream>
+#include "gemsfit_task.h"
 
 
 
@@ -56,7 +57,27 @@
 */
 double Equil_objective_function_callback( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data );
 
+// GEMS3K wrapper
+/**
+* Call to the GEMS3K wrapper. The arguments of this function must not be
+* modified since the nlopt library expects exactly this format.
+* @param opt      optimization vector
+* @param residual sum of squared residuals being returned from the function
+* @param sys      data object that holds the data of the current TGfitTask struct
+* @author DM
+* @date 19.11.2012
+*/
+void gems3k_wrap( double &residual, const std::vector<double> &opt, TGfitTask *sys );
 
+void adjust_G0 (int i, double G0, TGfitTask *sys);
+
+void adjust_RDc (TGfitTask *sys);
+
+void check_unit(int i, int p, int e, string unit, TGfitTask *sys );
+
+double residual_aqgen_elem (int i, int p, int e, TGfitTask *sys);
+
+double least_square (double computed_value, double measured_value);
 
 
 

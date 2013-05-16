@@ -45,7 +45,9 @@ const char *FIT_LOGFILE = "log_gemsfit.log";
 //void get_gems_fit_multi_txt( TNode* node );
 //void get_gems_fit_DCH_txt( TNode* node );
 //void get_gems_fit_DBR_txt( TNode* node );
+/// if after F comes an JSON object
 void F_to_OP (opti_vector *op, IOJFormat Jformat, string nfild);
+/// if after F comes the initial value
 void F_to_OP (double val, opti_vector *op, IOJFormat Jformat, string nfild);
 void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat, string nfild);
 
@@ -479,9 +481,11 @@ void get_gems_fit_DCH_txt(TNode* node, opti_vector* op )
                 {
                     if (vFormats[ii].format.size() >1)
                     {
+                        // after F comes initial value
                         F_to_OP(op, vFormats[ii], DataCH_dynamic_fields[nfild].name );
                     } else
                     {
+                        // after F compes a JSON object
                         switch( nfild )
                         {
                         case f_G0: F_to_OP(CSD->G0[vFormats[ii].index], op, vFormats[ii], DataCH_dynamic_fields[nfild].name );
@@ -499,9 +503,7 @@ void get_gems_fit_DCH_txt(TNode* node, opti_vector* op )
             }
             vFormats.clear();
         }
-
         nfild = rddar.findNextNotAll();
-
     }
 }
 
