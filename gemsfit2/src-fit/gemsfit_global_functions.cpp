@@ -36,6 +36,7 @@
 
 
 #include "gemsfit_global_functions.h"
+#include "gemsfit_target_functions.h"
 #include "gemsfit_task.h"
 
 
@@ -45,9 +46,6 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     // Call GEMS3K and run GEM_run();
 
     // Temporary storage vectors
-    vector<double> computed_values_temp;
-    vector<double> measured_values_temp;
-    vector<double> computed_residuals_temp, computed_leastsquare_temp;
     double residuals_sys_ = 0.0;
 
 
@@ -76,35 +74,39 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         adjust_RDc(sys);
     }
 
-    // Asking GEM to run with automatic initial approximation after changing the G0, if not it will always take the values of the exp form which the 0000dbr file is made.
-    for (int i; i<sys->NodT.size(); ++i)
+    // cout << sys->NodT[0]->DC_G0(20, 150*100000, 325+273.15, false)  << endl;
+    // Equilibrium calculation
+    cout << sys->NodT[0]->Get_mIC(6) << endl;
+    for (int i=0; i<sys->NodT.size(); ++i)
     {
         DATABR* dBR = sys->NodT[i]->pCNode();
-        DATACH* dCH = sys->NodT[i]->pCSD();
         long int NodeStatusCH;
+
+        // Asking GEM to run with automatic initial approximation
         dBR->NodeStatusCH = NEED_GEM_AIA;
 
-        // PERFORM TEST RUN WITH DBR file
+        // RUN GEMS3K
         NodeStatusCH = sys->NodT[i]->GEM_run( false );
 
-    #ifdef GEMSFIT_DEBUG
-    cout << " NodeStatusCH = "<<NodeStatusCH<<endl;
-    cout << "   node temperature from dbr file: " << sys->NodT[i]->cTK() << endl;
-    cout << "   node pressure from dbr file: " << sys->NodT[i]->cP() << endl;
-    #endif
         if( NodeStatusCH == OK_GEM_AIA || NodeStatusCH == OK_GEM_SIA  )
         {
-            sys->NodT[i]->GEM_print_ipm( "SS_GEMS3K_log.out" );
+            sys->NodT[i]->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
         }
         else
         {
             // possible return status analysis, error message
-            sys->NodT[i]->GEM_print_ipm( "SS_GEMS3K_log.out" );   // possible debugging printout
+            sys->NodT[i]->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
+            cout<<"For experiment "<<i+1<< endl;
             cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
         }
     }
 
+
+    long int NodeStatusCH = sys->NodT[0]->GEM_run( false );
+    cout << sys->NodT[0]->DC_G0(20, 150*100000, 325+273.15, false)  << endl;
+    cout << sys->NodT[0]->Get_mIC(6) << endl;
     cout << "end" << endl;
+
 
     /// Target function
     // Loop trough all experiments
@@ -134,9 +136,6 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
                                 {
                                     residuals_sys_ = residuals_sys_ + residual_phase_elem (i, p, e, sys);
                                 }
-
-
-
                             }
                         }
                     }
@@ -145,6 +144,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         }
     }
 
+    residuals_sys = residuals_sys_;
 }
 
 
@@ -182,123 +182,5 @@ double Equil_objective_function_callback( const std::vector<double> &opt, std::v
     sum_of_squared_residuals_allsys = sum_of_squared_residuals_allsys + sum_of_squared_residuals_sys;
     }
 return sum_of_squared_residuals_allsys;
-}
-
-
-void adjust_G0 (int i, double G0, TGfitTask *sys)
-{
-
-    double new_G0=G0-444;
-    double new_GTP=0.0;
-    double delta_G0old_G0new;
-    int species_index = sys->Opti->Pindex[i];
-    // going trough all nodes
-    for (int n=0; n<sys->NodT.size(); ++n)
-    {
-        delta_G0old_G0new = sys->NodT[n]->DC_G0(species_index, 1e+05, 298.15, false) - new_G0;
-        // going trough all TP pairs
-        for (int j=0; j<sys->TP_pairs[0].size(); ++j)
-        {
-            new_GTP = delta_G0old_G0new + sys->NodT[n]->DC_G0(species_index, sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, false);
-            // Set the new G0 in GEMS
-            sys->NodT[n]->Set_DC_G0(species_index, sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, new_GTP);
-            // cout << temp_v[j] << endl;
-        }
-        sys->NodT[n]->Set_DC_G0(species_index, 1e+05, 298.15, G0-444);
-    }
-}
-
-void adjust_RDc (TGfitTask *sys)
-{
-    // going trough all nodes
-    for (int n=0; n<sys->NodT.size(); ++n)
-    {
-        for (int i=0; i < sys->Opti->reactions.size(); ++i )
-        {
-            double new_G0=0;
-            double delta_G=0;
-            double R=8.314472;
-            double delta_G0old_G0new;
-            int species_index = sys->Opti->reactions[i]->rdc_species_ind[sys->Opti->reactions[i]->rdc_species_ind.size()-1];
-
-            for (int j=0; j < sys->Opti->reactions[i]->rdc_species.size()-1; ++j ) // calculates DG without the last species which is the constrained one
-            {
-                delta_G += sys->Opti->reactions[i]->rdc_species_coef[j] * sys->NodT[n]->DC_G0(sys->Opti->reactions[i]->rdc_species_ind[j], 1e+05, 298.15, false);
-            }
-
-            new_G0 = (-R*298.15*2.302585093*sys->Opti->reactions[i]->logK) - delta_G;
-            delta_G0old_G0new = sys->NodT[n]->DC_G0(species_index, 1e+05, 298.15, false) - new_G0;
-            sys->NodT[n]->Set_DC_G0(species_index,1*100000, 25+273.15, new_G0);
-            sys->Opti->reactions[i]->std_gibbs = new_G0;
-
-            for (int j=0; j<sys->TP_pairs[0].size(); j++) // loops trough all unique TP_pairs
-            {
-                new_G0 = delta_G0old_G0new + sys->NodT[n]->DC_G0(species_index, sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, false);
-                // Set the new G0 in GEMS
-                sys->NodT[n]->Set_DC_G0(species_index, sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, new_G0);
-                // cout << temp_v[j] << endl;
-            }
-        }
-    }
-}
-
-void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
-{
-    if (sys->experiments[i]->expphases[p]->phcomp[e]->Qunit != unit)
-    {
-        if (unit == "loga")
-        {
-            // molal to log(molal)
-            if (sys->experiments[i]->expphases[p]->phcomp[e]->Qunit == "molal")
-            {
-                sys->experiments[i]->expphases[p]->phcomp[e]->bQnt = log10(sys->experiments[i]->expphases[p]->phcomp[e]->bQnt);
-                sys->experiments[i]->expphases[p]->phcomp[e]->Qunit = "loga";
-            }
-            else
-            {
-                cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
-                exit(1);
-            }
-        }
-    }
-    else
-    {
-        cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
-        exit(1);
-    }
-}
-
-
-double residual_aqgen_elem (int i, int p, int e, TGfitTask *sys)
-{
-    const char *elem_name;
-    int ICndx = sys->NodT[i]->IC_name_to_xDB(elem_name);
-    double computed_value, measured_value;
-    double residual = 0.0;
-
-    computed_value = sys->NodT[i]->Get_mIC(ICndx);
-    measured_value = sys->experiments[i]->expphases[p]->phcomp[e]->bQnt;
-
-    // check Target function type and calculate the residual
-    if (sys->Tfun->type == "lsq")
-    {
-        residual = least_square(computed_value, measured_value);
-    } else
-    {
-        // other type of Target functions
-    }
-
-    /// add weighting!!!
-    /// to be implemented
-
-
-    return residual;
-}
-
-double least_square (double computed_value, double measured_value)
-{
-    double lsq = 0.0;
-    lsq = pow( (computed_value - measured_value), 2) / pow(measured_value, 2);
-    return lsq;
 }
 

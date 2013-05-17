@@ -34,6 +34,7 @@
 #include "keywords.h"
 #include "gemsfit_global_functions.h"
 #include <cmath>
+#include "gemsfit_target_functions.h"
 
 #ifndef __unix
 #include <io.h>
@@ -241,6 +242,11 @@ void TGfitTask::freeMemory()
            NodT0[ii] = databr_free(NodT0[ii]);
      delete[]  NodT0;
      NodT0 = 0;
+
+     for (ii =0; ii<NodT.size(); ++ii)
+     {
+         delete NodT[ii];
+     }
 /*
      if( NodT1 )
        for(  ii=0; ii<anNodes; ii++ )
@@ -301,9 +307,6 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     get_DatTarget ( );
 
     init_optim (Opti->optv, sum_of_squares);
-
-
-
 
 //    GEM_init(gpf->GEMS3LstFilePath().c_str());
 
@@ -516,47 +519,51 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, /*s
 
     ffout << "16. in optimization.cpp line 1041. Performing optimization."<<endl;
 
-    //===== For testing the objective function without oprimization =====//
-            sum_of_squares = Equil_objective_function_callback(Opti->optv, grad, this);
+//    //===== For testing the objective function without oprimization =====//
+//    sum_of_squares = Equil_objective_function_callback(Opti->optv, grad, this);
 
-/**
-//            // check results
-//                if( result < 0 )
-//                {
-//                    std::cout<<endl;
-//                    std::cout<<"   !!!  nlopt failed  !!!   "<<std::endl;
-//                    std::cout<<"   !!!  error code:   "<<result<<std::endl;
-//                    Opti->print_return_message( result );
-//                    std::cout<<endl;
-//                }
-//                else
-//                {
-//                    std::cout<<" NLopt return code: "<<result<<endl;
-//                    Opti->print_return_message( result );
-//                    string path = gpf->OutputDirPath();
-//                           path +=  "SS_myFIT.out";
-//                    ofstream fout;
-//                    fout.open(path.c_str(), ios::app);
-//                    if( fout.fail() )
-//                    { cout<<"Output fileopen error"<<endl; exit(1); }
-//                    fout<<"found minimum at <<f( ";
-//                    for( unsigned i=0; i<Opti->optv.size(); i++ )
-//                    {
-//                        fout<<Opti->optv[i]<<" ";
-//                    }
-//                    fout<<") = "<<sum_of_squares<<std::endl;
-//                    fout<<" after "<< master_counter <<" evaluations."<<std::endl;
-//                    fout.close();
+    nlopt::result result = NLopti.optimize( Opti->optv, sum_of_squares );
+    ffout<<"optv[0] = "<<Opti->optv[0]<<endl;
+    ffout<<"size of optv = "<<Opti->optv.size()<<endl;
 
-//                    std::cout<<"found minimum at <<f( ";
-//                    for( unsigned i=0; i<Opti->optv.size(); i++ )
-//                    {
-//                        std::cout<<Opti->optv[i]<<" ";
-//                    }
-//                    std::cout<<") = "<<sum_of_squares<<std::endl;
-//                }
-//                std::cout<<" after "<< master_counter <<" evaluations"<<std::endl;
-**/
+
+            // check results
+                if( result < 0 )
+                {
+                    std::cout<<endl;
+                    std::cout<<"   !!!  nlopt failed  !!!   "<<std::endl;
+                    std::cout<<"   !!!  error code:   "<<result<<std::endl;
+                    Opti->print_return_message( result );
+                    std::cout<<endl;
+                }
+                else
+                {
+                    std::cout<<" NLopt return code: "<<result<<endl;
+                    Opti->print_return_message( result );
+                    string path = gpf->OutputDirPath();
+                           path +=  "SS_myFIT.out";
+                    ofstream fout;
+                    fout.open(path.c_str(), ios::app);
+                    if( fout.fail() )
+                    { cout<<"Output fileopen error"<<endl; exit(1); }
+                    fout<<"found minimum at <<f( ";
+                    for( unsigned i=0; i<Opti->optv.size(); i++ )
+                    {
+                        fout<<Opti->optv[i]<<" ";
+                    }
+                    fout<<") = "<<sum_of_squares<<std::endl;
+                    fout<<" after "<< master_counter <<" evaluations."<<std::endl;
+                    fout.close();
+
+                    std::cout<<"found minimum at <<f( ";
+                    for( unsigned i=0; i<Opti->optv.size(); i++ )
+                    {
+                        std::cout<<Opti->optv[i]<<" ";
+                    }
+                    std::cout<<") = "<<sum_of_squares<<std::endl;
+                }
+                std::cout<<" after "<< master_counter <<" evaluations"<<std::endl;
+
 
    // copy resulting vector back to incoming optv vector (needed for printing results)
    optv_ = Opti->optv;
@@ -739,6 +746,21 @@ void TGfitTask::setnodes()
         delete[] xDC_lo;
         delete[] Ph_surf;
     }
+
+
+//    cout << NodT[0]->DC_G0(20, 150*100000, 325+273.15, false)  << endl;
+
+//    for (int n=0; n<NodT.size(); ++n)
+//    {
+//        for (int j=0; j<TP_pairs[0].size(); ++j)
+//        {
+//            double old = NodT[n]->DC_G0(20, TP_pairs[1][j]*100000, TP_pairs[0][j]+273.15, false);
+//            NodT[n]->Set_DC_G0(20, TP_pairs[1][j]*100000, TP_pairs[0][j]+273.15, old + 10000);
+//        }
+//        double old = NodT[n]->DC_G0(20, 1e+05, 298.15, false);
+//        NodT[n]->Set_DC_G0(20, 1e+05, 298.15, old + 10000);
+//    }
+
 }
 
 
