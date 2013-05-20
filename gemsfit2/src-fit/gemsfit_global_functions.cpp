@@ -48,6 +48,8 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     // Temporary storage vectors
     double residuals_sys_ = 0.0;
 
+    master_counter++;
+
 
     // Clear already stored results
     sys->computed_values_v.clear();
@@ -75,9 +77,9 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         adjust_RDc(sys);
     }
 
-     cout << sys->NodT[0]->DC_G0(5, 1*100000, 22+273.15, false)  << endl;
+//     cout << sys->NodT[0]->DC_G0(5, 1*100000, 22+273.15, false)  << endl;
     // Equilibrium calculation
-    cout << sys->NodT[0]->Get_mIC(4) << endl;
+//    cout << sys->NodT[0]->Get_mIC(4) << endl;
     for (int i=0; i<sys->NodT.size(); ++i)
     {
         vector<DATABR*> dBR;
@@ -104,10 +106,10 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     }
 
 
-    long int NodeStatusCH = sys->NodT[0]->GEM_run( false );
-    cout << sys->NodT[0]->DC_G0(5, 1*100000, 22+273.15, false)  << endl;
-    cout << sys->NodT[0]->Get_mIC(4) << endl;
-    cout << "end" << endl;
+//    long int NodeStatusCH = sys->NodT[0]->GEM_run( false );
+//    cout << sys->NodT[0]->DC_G0(5, 1*100000, 22+273.15, false)  << endl;
+//    cout << sys->NodT[0]->Get_mIC(4) << endl;
+//    cout << "end" << endl;
 
 
     /// Target function

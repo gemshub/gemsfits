@@ -51,11 +51,11 @@ void adjust_G0 (int i, double G0, TGfitTask *sys)
         {
             new_GTP = delta_G0old_G0new + sys->NodT[n]->DC_G0(species_index, sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, false);
             // Set the new G0 in GEMS
-            sys->NodT[n]->Set_DC_G0(species_index, sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, new_GTP-50000);
+            sys->NodT[n]->Set_DC_G0(species_index, sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, new_GTP);
         }
-        sys->NodT[n]->Set_DC_G0(species_index, 1e+05, 298.15, G0-50000);
+        sys->NodT[n]->Set_DC_G0(species_index, 1e+05, 298.15, G0);
     }
-    cout << sys->NodT[0]->DC_G0(species_index, 1*100000, 25+273.15, false)  << endl;
+//    cout << sys->NodT[0]->DC_G0(species_index, 1*100000, 25+273.15, false)  << endl;
 }
 
 void adjust_RDc (TGfitTask *sys)
