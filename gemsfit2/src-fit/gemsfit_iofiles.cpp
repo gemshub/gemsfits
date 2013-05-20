@@ -479,13 +479,13 @@ void get_gems_fit_DCH_txt(TNode* node, opti_vector* op )
 
                 if ((vFormats[ii].type == ft_F))
                 {
-                    if (vFormats[ii].format.size() >1)
+                    if (vFormats[ii].format.size() > 1)
                     {
-                        // after F comes initial value
+                        // after F compes a JSON object
                         F_to_OP(op, vFormats[ii], DataCH_dynamic_fields[nfild].name );
                     } else
                     {
-                        // after F compes a JSON object
+                        // after F comes initial value
                         switch( nfild )
                         {
                         case f_G0: F_to_OP(CSD->G0[vFormats[ii].index], op, vFormats[ii], DataCH_dynamic_fields[nfild].name );
@@ -1427,8 +1427,8 @@ void F_to_OP (double val, opti_vector *op, IOJFormat Jformat, string nfild)
 {
     op->opt.push_back(val);
     op->optv0.push_back(val);
-    op->LB.push_back(val-val*bperc/100);
-    op->UB.push_back(val+val*bperc/100);
+    op->UB.push_back(val-val*bperc/100);
+    op->LB.push_back(val+val*bperc/100);
 
     op->Ptype.push_back( nfild );
     op->Pindex.push_back( Jformat.index );

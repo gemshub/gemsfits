@@ -349,6 +349,7 @@ void TGfitTask::get_DatTarget ( )
         Tfun->objfun[i]->exp_unit = "NULL";
     }
     out.clear();
+    int j=0;
 
     parse_JSON_array_object(DatTarget, OFUN, EPH, out);
     for (unsigned int i = 0 ; i < out.size() ; i++)
@@ -361,13 +362,14 @@ void TGfitTask::get_DatTarget ( )
     for (unsigned int i = 0 ; i < out.size() ; i++)
     {
         Tfun->objfun[i]->exp_elem = out[i];
+        ++j;
     }
     out.clear();
 
     parse_JSON_array_object(DatTarget, OFUN, EP, out);
-    for (unsigned int i = 0 ; i < out.size() ; i++)
+    for (unsigned int i = j ; i < out.size()+j ; i++)
     {
-        Tfun->objfun[i]->exp_property = out[i];
+        Tfun->objfun[i]->exp_property = out[i-j];
     }
     out.clear();
 
@@ -759,6 +761,33 @@ void TGfitTask::setnodes()
 //        }
 //        double old = NodT[n]->DC_G0(20, 1e+05, 298.15, false);
 //        NodT[n]->Set_DC_G0(20, 1e+05, 298.15, old + 10000);
+//    }
+
+//    // Equilibrium calculation
+//    for (int i=0; i<NodT.size(); ++i)
+//    {
+
+//        vector<DATABR*> dBR;
+//        dBR.push_back(NodT[i]->pCNode());
+//        long int NodeStatusCH;
+
+//        // Asking GEM to run with automatic initial approximation
+//        dBR.at(0)->NodeStatusCH = NEED_GEM_AIA;
+
+//        // RUN GEMS3K
+//        NodeStatusCH = NodT[i]->GEM_run( false );
+
+//        if( NodeStatusCH == OK_GEM_AIA || NodeStatusCH == OK_GEM_SIA  )
+//        {
+//            NodT[i]->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
+//        }
+//        else
+//        {
+//            // possible return status analysis, error message
+//            NodT[i]->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
+//            cout<<"For experiment "<<i+1<< endl;
+//            cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
+//        }
 //    }
 
 }

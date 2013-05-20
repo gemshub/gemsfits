@@ -54,6 +54,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     sys->measured_values_v.clear();
     sys->computed_residuals_v.clear();
 
+
     // going trough the adjusted parameters in Opti->Ptype and adjust with the new value
     for (int i=0; i< sys->Opti->Ptype.size(); ++i)
     {
@@ -74,16 +75,17 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         adjust_RDc(sys);
     }
 
-    // cout << sys->NodT[0]->DC_G0(20, 150*100000, 325+273.15, false)  << endl;
+     cout << sys->NodT[0]->DC_G0(5, 1*100000, 22+273.15, false)  << endl;
     // Equilibrium calculation
-    cout << sys->NodT[0]->Get_mIC(6) << endl;
+    cout << sys->NodT[0]->Get_mIC(4) << endl;
     for (int i=0; i<sys->NodT.size(); ++i)
     {
-        DATABR* dBR = sys->NodT[i]->pCNode();
+        vector<DATABR*> dBR;
+        dBR.push_back(sys->NodT[i]->pCNode());
         long int NodeStatusCH;
 
         // Asking GEM to run with automatic initial approximation
-        dBR->NodeStatusCH = NEED_GEM_AIA;
+        dBR.at(0)->NodeStatusCH = NEED_GEM_SIA;
 
         // RUN GEMS3K
         NodeStatusCH = sys->NodT[i]->GEM_run( false );
@@ -103,8 +105,8 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 
 
     long int NodeStatusCH = sys->NodT[0]->GEM_run( false );
-    cout << sys->NodT[0]->DC_G0(20, 150*100000, 325+273.15, false)  << endl;
-    cout << sys->NodT[0]->Get_mIC(6) << endl;
+    cout << sys->NodT[0]->DC_G0(5, 1*100000, 22+273.15, false)  << endl;
+    cout << sys->NodT[0]->Get_mIC(4) << endl;
     cout << "end" << endl;
 
 
@@ -129,12 +131,15 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
                             {
                                 // check for unit
                                 check_unit(i, p, e, sys->Tfun->objfun[j]->exp_unit, sys );
-                                if (sys->experiments[i]->expphases[p]->phase == "aq_gen")
+                                if ((sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
                                 {
                                     residuals_sys_ = residuals_sys_ + residual_aqgen_elem (i, p, e, sys);
                                 } else // other phase than aq_gen
                                 {
+                                    if (sys->Tfun->objfun[j]->exp_phase != "aq_gen")
+                                    {
                                     residuals_sys_ = residuals_sys_ + residual_phase_elem (i, p, e, sys);
+                                    }
                                 }
                             }
                         }
