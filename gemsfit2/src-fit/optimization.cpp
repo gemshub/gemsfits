@@ -17,6 +17,7 @@ optimization::optimization( )
     OptUpBounds = UB;
     OptLoBounds = LB;
 
+    fout << "11. optimization.cpp line 20. Reading NLopt optimization settings from the input file; " << endl;
     get_nlopt_param_txt( optv );
 
     if (OptBoundPerc > 0.)
@@ -24,19 +25,6 @@ optimization::optimization( )
         UB = OptUpBounds;
         LB = OptLoBounds;
     }
-
-    // in build_optim
-
-//    if (OptNormParam)
-//    {
-//        normalize_params( optv );
-//    }
-
-
-//		Plot_StdState = new PlotFit();
-
-    fout << "12. in optimization.cpp line 160. Setting the NLOPT (optimization library) parameters read form SS_GEMSFIT_input.dat."<< endl << endl;
-//    set_nlopt_param();
 
     fout.close();
 }

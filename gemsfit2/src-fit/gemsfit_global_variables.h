@@ -32,4 +32,5 @@
 
 
 
+
 #endif // GEMSFIT_GLOBAL_VARIABLES_H

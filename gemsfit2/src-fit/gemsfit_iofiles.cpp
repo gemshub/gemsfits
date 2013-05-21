@@ -27,7 +27,7 @@ using namespace std;
 #include "data_manager.h"
 #include "keywords.h"
 
-//#include "fit_statistics.h"
+#include "statistics.h"
 #include "optimization.h"
 //#include "plot_class.h"
 //using namespace opti;
@@ -67,14 +67,14 @@ optimization::optimization( int i)
 //}
 
 //// Constructor
-//StdStatistics::StdStatistics():PlotFit(1)
-//{
-//    number_of_measurements = 0;
-//    sum_of_squares 		= 0;
-//    num_of_runs		= 0;
-//    number_of_parameters   = 0;
+statistics::statistics()
+{
+    number_of_measurements = 0;
+    sum_of_squares 		= 0;
+    num_of_runs		= 0;
+    number_of_parameters   = 0;
 //    define_plotfit_vars();
-//}
+}
 
 // Constructor
 Data_Manager::Data_Manager( int )
@@ -113,8 +113,8 @@ int generateConfig()
     optimization *opti = new optimization(1);
     opti->out_nlopt_param_txt(with_comments, brief_mode);
 
-//    StdStatistics *stat= new StdStatistics();
-//    stat->out_stat_param_txt(with_comments, brief_mode);
+    statistics *stat= new statistics();
+    stat->out_stat_param_txt(with_comments, brief_mode);
 //    stat->out_plotfit_vars_txt(with_comments, brief_mode);
 
     /* test reading
@@ -869,83 +869,83 @@ void Data_Manager::get_db_specs_txt( )
 
 //-------------------------------------------------------------------------------------------------
 
-//outField StdStatistics_fields[4] =
-//{
-//    { "StatMCruns",  0, 0, 1, "\n# StatMCruns: Comment"},
-//    { "StatSensitivity",  0, 0, 1, "\n# StatSensitivity: Comment"},
-//    { "StatMCbars",  0, 0, 1, "\n# StatMCbars: Comment"},
-//    { "StatMCbool",  0, 0, 1, "\n# StatMCbool: Comment"}
-//};
+outField statistics_fields[4] =
+{
+    { "StatMCruns",  0, 0, 1, "\n# StatMCruns: Comment"},
+    { "StatSensitivity",  0, 0, 1, "\n# StatSensitivity: Comment"},
+    { "StatMCbars",  0, 0, 1, "\n# StatMCbars: Comment"},
+    { "StatMCbool",  0, 0, 1, "\n# StatMCbool: Comment"}
+};
 
-//typedef enum {  /// Field index into outField structure
-//    f_StatMCruns= 0,
-//    f_StatSensitivity,
-//    f_StatMCbars,
-//    f_StatMCbool
-//} StdStatistics_FIELDS;
+typedef enum {  /// Field index into outField structure
+    f_StatMCruns= 0,
+    f_StatSensitivity,
+    f_StatMCbars,
+    f_StatMCbool
+} statistics_FIELDS;
 
 
 ///// Set up default values for structure
-//void StdStatistics::default_stat_param()
-//{
-//  num_of_MC_runs = 10;
-//  sensitivity_points = 50;
-//  MC_number_of_bars = 10;
-//  MCbool =  0;
-//}
+void statistics::default_stat_param()
+{
+  num_of_MC_runs = 10;
+  sensitivity_points = 50;
+  MC_number_of_bars = 10;
+  MCbool =  0;
+}
 
 ///// Writes  structure to  the GEMSFIT configuration file
-//void StdStatistics::out_stat_param_txt( bool with_comments, bool brief_mode )
-//{
-//    string fname = gpf->OptParamFile();
-//    fstream ff(fname.c_str(), ios::out|ios::app);
-//    ErrorIf( !ff.good() , fname.c_str(), "OptParamFile text open error");
+void statistics::out_stat_param_txt( bool with_comments, bool brief_mode )
+{
+    string fname = gpf->OptParamFile();
+    fstream ff(fname.c_str(), ios::out|ios::app);
+    ErrorIf( !ff.good() , fname.c_str(), "OptParamFile text open error");
 
-//    TPrintArrays  prar(4, StdStatistics_fields, ff);
-//    prar.writeField(f_StatMCruns, (long int)num_of_MC_runs, with_comments, brief_mode  );
-//    prar.writeField(f_StatSensitivity, (long int)sensitivity_points, with_comments, brief_mode  );
-//    prar.writeField(f_StatMCbars, (long int)MC_number_of_bars, with_comments, brief_mode  );
-//    prar.writeField(f_StatMCbool, (long int)MCbool, with_comments, brief_mode  );
-//}
+    TPrintArrays  prar(4, statistics_fields, ff);
+    prar.writeField(f_StatMCruns, (long int)num_of_MC_runs, with_comments, brief_mode  );
+    prar.writeField(f_StatSensitivity, (long int)sensitivity_points, with_comments, brief_mode  );
+    prar.writeField(f_StatMCbars, (long int)MC_number_of_bars, with_comments, brief_mode  );
+    prar.writeField(f_StatMCbool, (long int)MCbool, with_comments, brief_mode  );
+}
 
 //// Read statistical input specifications from configurator
-//void StdStatistics::std_get_stat_param_txt( )
-//{
-//    // open file for reading
-//    string fname = gpf->OptParamFile();
-//    fstream ff(fname.c_str(), ios::in );
-//    ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
+void statistics::std_get_stat_param_txt( )
+{
+    // open file for reading
+    string fname = gpf->OptParamFile();
+    fstream ff(fname.c_str(), ios::in );
+    ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
 
-//    TReadArrays  rdar(4, StdStatistics_fields, ff);
+    TReadArrays  rdar(4, statistics_fields, ff);
 
-//    long int nfild = rdar.findNextNotAll();
-//    while( nfild >=0 )
-//        {
-//          switch( nfild )
-//          {
-//           case f_StatMCruns: rdar.readArray( "StatMCruns",  &num_of_MC_runs, 1 );
-//                   break;
-//           case f_StatSensitivity: rdar.readArray( "StatSensitivity",  &sensitivity_points, 1 );
-//                   break;
-//           case f_StatMCbars: rdar.readArray( "StatMCbars",  &MC_number_of_bars, 1);
-//                   break;
-//           case f_StatMCbool:
-//                   { int bb;
-//                    rdar.readArray( "StatMCbool",  &bb, 1 );
-//                    MCbool = (bool)bb;
-//                   }
-//                   break;
-//          }
-//          nfild = rdar.findNextNotAll();
-//        }
+    long int nfild = rdar.findNextNotAll();
+    while( nfild >=0 )
+        {
+          switch( nfild )
+          {
+           case f_StatMCruns: rdar.readArray( "StatMCruns",  &num_of_MC_runs, 1 );
+                   break;
+           case f_StatSensitivity: rdar.readArray( "StatSensitivity",  &sensitivity_points, 1 );
+                   break;
+           case f_StatMCbars: rdar.readArray( "StatMCbars",  &MC_number_of_bars, 1);
+                   break;
+           case f_StatMCbool:
+                   { int bb;
+                    rdar.readArray( "StatMCbool",  &bb, 1 );
+                    MCbool = (bool)bb;
+                   }
+                   break;
+          }
+          nfild = rdar.findNextNotAll();
+        }
 
-//    // testing read
-//        string ret = rdar.testRead();
-//        if( !ret.empty() )
-//         { ret += " - fields must be read from OptParamFile structure";
-//           Error( "Error", ret);
-//         }
-//}
+    // testing read
+        string ret = rdar.testRead();
+        if( !ret.empty() )
+         { ret += " - fields must be read from OptParamFile structure";
+           Error( "Error", ret);
+         }
+}
 
 
 ////-------------------------------------------------------------------------------------------------

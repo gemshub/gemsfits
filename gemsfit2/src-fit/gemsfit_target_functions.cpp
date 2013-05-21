@@ -45,7 +45,7 @@ void adjust_G0 (int i, double G0, TGfitTask *sys)
     // going trough all nodes
     for (int n=0; n<sys->NodT.size(); ++n)
     {
-        delta_G0old_G0new = sys->NodT[n]->DC_G0(species_index, 1e+05, 298.15, false) - new_G0;
+        delta_G0old_G0new = abs(sys->NodT[n]->DC_G0(species_index, 1e+05, 298.15, false)) - abs(new_G0);
         // going trough all TP pairs
         for (int j=0; j<sys->TP_pairs[0].size(); ++j)
         {
@@ -77,7 +77,8 @@ void adjust_RDc (TGfitTask *sys)
             }
 
             new_G0 = (-R*298.15*2.302585093*sys->Opti->reactions[i]->logK) - delta_G;
-            delta_G0old_G0new = sys->NodT[n]->DC_G0(species_index, 1e+05, 298.15, false) - new_G0;
+            // put absolute - check if correct
+            delta_G0old_G0new = abs(sys->NodT[n]->DC_G0(species_index, 1e+05, 298.15, false)) - abs(new_G0);
             sys->NodT[n]->Set_DC_G0(species_index,1*100000, 25+273.15, new_G0);
             sys->Opti->reactions[i]->std_gibbs = new_G0;
 

@@ -297,26 +297,19 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     }
 
     // initialize nodes with the experimental data
+    fout << "8. gemsfit_task.cpp line 300. Initializing nodes with the experimental data; " << endl;
     setnodes ( );
 
     // getting the parameters to be optimized from DCH, DBR and multi structures, and optimization settings form the input file
+    fout << "9. gemsfit_task.cpp line 304. Initializing optimization structure; " << endl;
     Opti = new optimization ( );
 
+    fout << "12. gemsfit_task.cpp line 307. Initializing the Target function structure & get_DatTarget(); " << endl;
     Tfun = new TargetFunction;
-
     get_DatTarget ( );
 
+    fout << "13. gemsfit_task.cpp line 311. Initializing optimization init_optim; " << endl;
     init_optim (Opti->optv, sum_of_squares);
-
-//    GEM_init(gpf->GEMS3LstFilePath().c_str());
-
-//    // Read parameters for database connection
-//    fout << "3. data_manager.cpp line 48. Reading database parameter get_db_specs(); " << endl;
-//    get_db_specs_txt();
-
-//    // Read measurement data from PosgreSQL server
-//    fout << "4. data_manager.cpp line 52. allexp.push_back(new experiment) - empty; " << endl;
-//    experiments.push_back( new samples );
 
 }
 
@@ -386,7 +379,6 @@ void TGfitTask::get_DatTarget ( )
 // Initialize optimization object and Run Optimization by calling build_optim
 void TGfitTask::init_optim( std::vector<double> &optv_, /*int &countit,*/ double &sum_of_squares )
 {
-
     // Instantiate nlopt::opt object
     if( Opti->OptAlgo.compare( "'LN_COBYLA'" ) == 0 )
     {
@@ -492,7 +484,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, /*s
 
 
     /// specify objective function
-    ffout << endl << "15. in optimization.cpp line 1006. Setting minimizing objective function." << endl;
+    ffout << endl << "14. in gemsfit_task.cpp line 487. Setting minimizing objective function." << endl;
     NLopti.set_min_objective( Equil_objective_function_callback, this );
 
 //        if( OptConstraints )
@@ -519,7 +511,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, /*s
     //ierr = MPI_Comm_size( MPI_COMM_WORLD, &p );
     int continue_or_exit;
 
-    ffout << "16. in optimization.cpp line 1041. Performing optimization."<<endl;
+    ffout << "15. in gesfit_task.cpp line 514. Performing optimization."<<endl;
 
 //    //===== For testing the objective function without oprimization =====//
 //    sum_of_squares = Equil_objective_function_callback(Opti->optv, grad, this);
@@ -527,6 +519,8 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, /*s
     nlopt::result result = NLopti.optimize( Opti->optv, sum_of_squares );
     ffout<<"optv[0] = "<<Opti->optv[0]<<endl;
     ffout<<"size of optv = "<<Opti->optv.size()<<endl;
+
+    ffout << "16. gemsfit_task.cpp line 523. Finished optimization; " << endl;
 
 
             // check results
@@ -748,48 +742,6 @@ void TGfitTask::setnodes()
         delete[] xDC_lo;
         delete[] Ph_surf;
     }
-
-
-//    cout << NodT[0]->DC_G0(20, 150*100000, 325+273.15, false)  << endl;
-
-//    for (int n=0; n<NodT.size(); ++n)
-//    {
-//        for (int j=0; j<TP_pairs[0].size(); ++j)
-//        {
-//            double old = NodT[n]->DC_G0(20, TP_pairs[1][j]*100000, TP_pairs[0][j]+273.15, false);
-//            NodT[n]->Set_DC_G0(20, TP_pairs[1][j]*100000, TP_pairs[0][j]+273.15, old + 10000);
-//        }
-//        double old = NodT[n]->DC_G0(20, 1e+05, 298.15, false);
-//        NodT[n]->Set_DC_G0(20, 1e+05, 298.15, old + 10000);
-//    }
-
-//    // Equilibrium calculation
-//    for (int i=0; i<NodT.size(); ++i)
-//    {
-
-//        vector<DATABR*> dBR;
-//        dBR.push_back(NodT[i]->pCNode());
-//        long int NodeStatusCH;
-
-//        // Asking GEM to run with automatic initial approximation
-//        dBR.at(0)->NodeStatusCH = NEED_GEM_AIA;
-
-//        // RUN GEMS3K
-//        NodeStatusCH = NodT[i]->GEM_run( false );
-
-//        if( NodeStatusCH == OK_GEM_AIA || NodeStatusCH == OK_GEM_SIA  )
-//        {
-//            NodT[i]->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
-//        }
-//        else
-//        {
-//            // possible return status analysis, error message
-//            NodT[i]->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
-//            cout<<"For experiment "<<i+1<< endl;
-//            cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
-//        }
-//    }
-
 }
 
 

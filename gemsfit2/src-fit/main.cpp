@@ -42,6 +42,7 @@
 
 #include "gemsfit_iofiles.h"
 #include "gemsfit_task.h"
+#include "statistics.h"
 
 
 #define BOOST_FILESYSTEM_VERSION 3
@@ -64,6 +65,8 @@ int generateConfig(); // Mode GEMSFIT to generate input configuration file
  
 int main( int argc, char *argv[] )
 {
+    clockid_t startTime = clock();
+
     gpf = new TGfitPath(argc, argv);
 
     if( gpf->isInitMode() ) // Mode GEMSFIT to generate input configuration file
@@ -88,12 +91,6 @@ int main( int argc, char *argv[] )
         bfs::remove(*dir_iter);
     }
 
-	int ierr = 0;
-	double elapsed_time = 0.0, sum_of_squares = 0.0;
-    clockid_t startTime = clock();
-
-cout<<"37"<<endl;
-
     // GEMSFIT logfile
     //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
     ofstream fout;
@@ -112,14 +109,29 @@ cout<<"37"<<endl;
     fout_<<dt<<endl; // writes the date and time of the run in the result file
 
     // Reading in the data //
-    fout << "1. main.cpp line 138. Creating new TGfitTask" << endl;
+    fout << "1. main.cpp line 115. Creating new TGfitTask" << endl;
     TGfitTask* gfittask = new TGfitTask();
 
+    fout<<endl<<" back in main ..."<<endl;
 
-    fout << "10. main.cpp line 126. Finished reading input data and experimental data from the database." << endl;
+    fout_.setf(ios::fixed);
 
+    for( int i=0; i< (int) gfittask->Opti->optv.size(); i++ )
+        fout_<<" parameter "<<i<<" = "<< gfittask->Opti->optv[i] << endl;
+    fout_<<" sum of squares = "<<gfittask->sum_of_squares<<endl;
+    fout_<<endl;
 
+    countit = master_counter;
 
+    // Perform statistical analysis: Instantiate object of Statistics class
+    statistics stat( gfittask, gfittask->sum_of_squares, (int) gfittask->Opti->optv.size(), countit );
+
+    // perform basic statistical analysis
+    stat.basic_stat( gfittask->Opti->optv, gfittask );
+
+    delete gfittask;
+
+    cout << double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
 }
 
 

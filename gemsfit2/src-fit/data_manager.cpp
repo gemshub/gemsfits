@@ -54,20 +54,20 @@ Data_Manager::Data_Manager( )
     { cout<<"Output fileopen error"<<endl; exit(1); }
 
     // Read parameters for database connection
-    fout << "3. data_manager.cpp line 48. Reading database parameter get_db_specs(); " << endl;
+    fout << "2. data_manager.cpp line 57. Reading database parameter get_db_specs(); " << endl;
     get_db_specs_txt();
 
     // Read measurement data from PosgreSQL server
-    fout << "4. data_manager.cpp line 52. allexp.push_back(new experiment) - empty; " << endl;
-
+    fout << "3. data_manager.cpp line 61. Reading in the data selection query; " << endl;
     // Readin in the data slection query
     DataSelect = readin_JSON("<DatSelect>");
-
+    fout << "4. data_manager.cpp line 64. Reading in the Target function form the input file; " << endl;
     DatTarget = readin_JSON("<DatTarget>");
 
     // Getting the query result data into the Data_Manager class
+    fout << "5. data_manager.cpp line 68. Getting data form the EJDB database; " << endl;
     get_EJDB();
-
+    fout << "7. data_manager.cpp line 70. Getting distinct T and P pairs; " << endl;
     get_distinct_TP();
 
     fout.close();
@@ -256,6 +256,12 @@ void Data_Manager::get_EJDB( )
     //        "sP" : [1, 2500]
     //    }
 
+    // GEMSFIT logfile
+    ofstream fout;
+    fout.open(gpf->FITLogFile().c_str(), ios::app);
+    if( fout.fail() )
+    { cout<<"Output fileopen error"<<endl; exit(1); }
+
     string_v out, qsample, qexpdataset;
     int_v qsT, qsP;
 
@@ -401,6 +407,7 @@ void Data_Manager::get_EJDB( )
              // set Hexperiments variables false
 
          }
+         fout << "6. data_manager.cpp line 410. Adding the data returned by the selection query into the data structure; " << endl;
          for (int i = 0; i < TCLISTNUM(res); ++i) {
              void *bsdata = TCLISTVALPTR(res, i);
              char *bsdata_ = static_cast<char*>(bsdata);
