@@ -129,6 +129,13 @@ int main( int argc, char *argv[] )
     // perform basic statistical analysis
     stat.basic_stat( gfittask->Opti->optv, gfittask );
 
+    if( gfittask->Opti->OptDoWhat == 0 )
+    {
+        stat.sensitivity_correlation( gfittask->Opti->optv, gfittask );
+
+//        stat.MC_confidence_interval( &elvis, optim.opt, &systems, countit );
+    }
+
     delete gfittask;
 
     cout << double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;

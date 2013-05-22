@@ -100,6 +100,18 @@ double residual_aqgen_elem (int i, int p, int e, TGfitTask *sys);
 */
 double residual_phase_elem (int i, int p, int e, TGfitTask *sys);
 
+/**
+* Returns the weight based on the wight type
+* @param i      position in the experiments vector (which experiment)
+* @param p      position in the expphases vector (which pahse)
+* @param e      position in the phcomp vector (which element)
+* @param type   type of weighting
+* @param sys    pointer to data object that holds the data of the current TGfitTask struct
+* @author DM
+* @date 17.05.2013
+*/
+double weight (int i, int p, int e, string type, TGfitTask *sys);
+
 
 /**
 * Returns the least square ( sqrt[(calculated-measured)^2 /measured^2] )

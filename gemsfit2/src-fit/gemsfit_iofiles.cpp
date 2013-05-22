@@ -73,6 +73,7 @@ statistics::statistics()
     sum_of_squares 		= 0;
     num_of_runs		= 0;
     number_of_parameters   = 0;
+    default_stat_param();
 //    define_plotfit_vars();
 }
 
@@ -124,10 +125,10 @@ int generateConfig()
     stat->std_get_stat_param_txt();
     stat->set_plotfit_vars_txt();
     get_gems_fit_multi_txt( node ); */
-
-
 //    get_gems_fit_DCH_txt( node );
 //    get_gems_fit_DBR_txt( node );
+
+
     cout << "Finish " << endl;
 
     } catch(TError& err)
@@ -162,6 +163,17 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
         ff << "\n\n#########################################################################" << endl;
         ff << "#>>>>>>>>>>>>>>> Parameters to Fit section >>>>>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
         ff << "#########################################################################" << endl;
+        ff << "\n  Parameter marking example:"
+              "\n  Mark with F the value you want to fit, followed by the initial value or as follows:"
+              "\n  F{ \"IV\" :-833444.00006792, \"UB\" : -800000, \"LB\" : -900000 } for SiO2@ G0 fitting"
+              "\n  IV - initial value \n  UB - upper bundary \n  LB - lower bundary \n"
+              "\n  For a reaction constraint on G0 paste the following tamplate (in the place of the parameter) and make desired changes:"
+              "\n  R{  \"IV\" : -36819.000776856, \"Ref\" : \"SUPCRT92\", \"logK\" : -14.46, \"nC\" : 4, \"species\" : \"KOH@\","
+              "\n      \"RC\" : [ \"K+\", \"H2O@\", \"H+\", \"KOH@\" ],"
+              "\n      \"Rcoef\" : [ -1, -1, 1, 1 ]}"
+              "\n  Ref - reference, logK - reaction constant, nC - numer of components involved in the reaction"
+              "\n  species - reaction constrained species, RC - species involved in the reaction, Rcoef - reaction coeficients"
+           << endl;
     }
 
     TPrintArrays  prarCH(30, DataCH_dynamic_fields, ff);
@@ -488,8 +500,10 @@ void get_gems_fit_DCH_txt(TNode* node, opti_vector* op )
                         // after F comes initial value
                         switch( nfild )
                         {
+                        // Case G0
                         case f_G0: F_to_OP(CSD->G0[vFormats[ii].index], op, vFormats[ii], DataCH_dynamic_fields[nfild].name );
                                   break;
+                        // add other parameters
                          }
                     }
                 }
@@ -581,14 +595,28 @@ void get_gems_fit_DBR_txt(TNode* node , opti_vector *op)
                         " Index " << vFormats[ii].index << endl;
                 cout<< vFormats[ii].format << endl;
 
-                if ((vFormats[ii].type == ft_F) && (vFormats[ii].format.size() >1))
+                if ((vFormats[ii].type == ft_F))
                 {
-                    F_to_OP(op, vFormats[ii], DataBR_fields[nfild].name );
+                    if (vFormats[ii].format.size() > 1)
+                    {
+                        // after F compes a JSON object
+                        F_to_OP(op, vFormats[ii], DataBR_fields[nfild].name );
+                    } else
+                    {
+                        // after F comes initial value
+                        switch( nfild )
+                        {
+                            case f_TK: F_to_OP(CNode->TK, op, vFormats[ii], DataCH_dynamic_fields[nfild].name );
+                                      break;
+                            case f_P: F_to_OP(CNode->P, op, vFormats[ii], DataCH_dynamic_fields[nfild].name );
+                                      break;
+                        // add other parameters
+                        }
+                    }
                 }
             }
             vFormats.clear();
         }
-
         nfild = rdar.findNextNotAll();
         }
 }
@@ -702,17 +730,26 @@ outField Data_Manager_fields[10] =
 {
     { "DatDB",  0, 0, 1, "\n# DatDB: database path"},
     { "DatColection",  0, 0, 1, "\n# DatColection: database colection name"},
-//    { "DatUsername",  0, 0, 1, "\n# DatUsername: Comment"},
-//    { "DatPasswd",  0, 0, 1, "\n# DatPasswd: Comment"},
     { "DatSource",  1, 0, 1, "\n# DatSource: get measurement data from EJDB databse (default) (0). No other sources implemented in GEMSFIT2"},
-//    { "DatCSVfile",  0, 0, 1, "\n# DatCSVfile: Comment"},
-//    { "DatServer",  0, 0, 1, "\n# DatServer: Comment"},
+
     { "DatSelect", 0, 0, 1, "\n# DataSelect: query for selecting data form EJDB database in JSON format. Names of samples or expdatasets and temperature and pressure intervals. all - select all data"
-      "\n { \"sample\" : \"\", "
-      "\n \"expdataset\" : [\"CH04\", \"CH04D\"],"
-      "\n \"sT\" : [100, 1000],"
-      "\n \"sP\" : [1, 2500] }\n#"},
-    { "DatTarget",  0, 0, 1, "\n# DatTarget: Target function for parmeter fitting"},
+      "\n  Use the following template by pasting it after the <DatSelect> and changing the desired settings: \n  sample - names of samples you want to select"
+      "\n  expdataset - names of experimental datasets you want to select \n  sT - temperature range \n  sP - pressure range"
+      "\n \n  { \"sample\" : \"\", "
+      "\n  \"expdataset\" : [\"CH04\", \"CH04D\"],"
+      "\n  \"sT\" : [100, 1000],"
+      "\n  \"sP\" : [1, 2500] }\n"},
+
+    { "DatTarget",  0, 0, 1, "\n# DatTarget: Target function for parmeter fitting"
+      "\n  Use the following template by pasting it after the <DatTaerget> and changing the desired settings:"
+      "\n  Target - name of the function \n  TT - type of target function (lsq - least square, ...) \n  WT - weighting scheeme (inverr - invers weighting *1/error, ...)"
+      "\n  OFUN - objective function, what to compare \n  EPH - what phase from the experiments \n  EN - what element from the phase \n  EP - what property of the phase"
+      "\n  Eunit - what unit the values should be in (molal - moles/Kg H2O, loga - log(molal), ...)"
+      "\n \n  { \"Target\": \"name\", \"TT\": \"lsq\", \"WT\": \"inverr\", \"OFUN\":"
+      "\n     [{ \"EPH\": \"aq_gen\", \"EN\": \"Si\", \"Eunit\": \"molal\" },"
+      "\n      { \"EPH\": \"aq_gen\", \"EN\": \"Al\", \"Eunit\": \"molal\" },"
+      "\n      { \"EPH\": \"aq_gen\", \"EP\": \"pH\", \"Eunit\": \"-loga\" }] }\n"
+    },
     { "SystemFiles",  0, 0, 1, "\n# SystemFiles: Comment"},
     { "RecipeFiles",  0, 0, 1, "\n# RecipeFiles: Comment"}
 };
@@ -720,11 +757,7 @@ outField Data_Manager_fields[10] =
 typedef enum {  /// Field index into outField structure
     f_DatDB = 0,
     f_DatColection,
-//    f_DatUsername,
-//    f_DatPasswd,
     f_DatSource,
-//    f_DatCSVfile,
-//    f_DatServer,
     f_DatSelect,
     f_DatTarget,
     f_SystemFiles,
@@ -735,14 +768,10 @@ typedef enum {  /// Field index into outField structure
 void Data_Manager::define_db_specs( )
 {
    datasource = 0;
-//   CSVfile = "DatCSVfile";
    DBname ="";
    colection="";
-//   username="";
-//   passwd="";
-//   psql_server="";
-   DataSelect ="all";
-   DatTarget ="";
+   DataSelect ="paste template here";
+   DatTarget ="paste template here";
 
 }
 
@@ -762,18 +791,6 @@ void Data_Manager::out_db_specs_txt( bool with_comments, bool brief_mode )
         prar.setAlws( f_DatColection );
         prar.setAlws( f_DatSelect );
     }
-//    else if( datasource == 1 )
-//    {
-//       prar.setAlws( f_DatCSVfile );
-//    }
-//    else if( datasource == 2 )
-//    {
-//        prar.setAlws( f_DatDB );
-//        prar.setAlws( f_DatTable );
-//        prar.setAlws( f_DatUsername );
-//        prar.setAlws( f_DatPasswd );
-//        prar.setAlws( f_DatServer );
-//    }
 
     if(with_comments )
     {
@@ -783,12 +800,8 @@ void Data_Manager::out_db_specs_txt( bool with_comments, bool brief_mode )
     }
 
     prar.writeField(f_DatSource, (long int)datasource, with_comments, brief_mode  );
-//    prar.writeField(f_DatCSVfile, CSVfile, with_comments, brief_mode  );
     prar.writeField(f_DatDB, DBname, with_comments, brief_mode  );
     prar.writeField(f_DatColection, colection, with_comments, brief_mode  );
-//    prar.writeField(f_DatUsername, username, with_comments, brief_mode  );
-//    prar.writeField(f_DatPasswd, passwd, with_comments, brief_mode  );
-//    prar.writeField(f_DatServer, psql_server, with_comments, brief_mode  );
     prar.writeField(f_DatSelect, DataSelect, with_comments, brief_mode );
     prar.writeField(f_DatTarget, DatTarget, with_comments, brief_mode );
     prar.writeField(f_SystemFiles, gpf->GEMS3LstFilePath(), with_comments, brief_mode  );
@@ -815,16 +828,8 @@ void Data_Manager::get_db_specs_txt( )
                    break;
            case f_DatColection: rdar.readArray( "DatColection",  colection );
                    break;
-//           case f_DatUsername: rdar.readArray( "DatUsername",  username);
-//                   break;
-//           case f_DatPasswd: rdar.readArray( "DatPasswd",  passwd );
-//                   break;
            case f_DatSource: rdar.readArray( "DatSource",  &datasource, 1);
                    break;
-//           case f_DatCSVfile: rdar.readArray( "DatCSVfile",  CSVfile);
-//              break;
-//           case f_DatServer: rdar.readArray( "DatServer",  psql_server );
-              break;
           case f_DatSelect: rdar.readArray( "DatSelect",  DataSelect );
              break;
           case f_DatTarget: rdar.readArray( "DatTarget",  DatTarget );
@@ -846,18 +851,6 @@ void Data_Manager::get_db_specs_txt( )
         rdar.setAlws( f_DatColection );
         rdar.setAlws( f_DatSelect );
     }
-//    else if( datasource == 1 )
-//    {
-//       rdar.setAlws( f_DatCSVfile );
-//    }
-//    else if( datasource == 2 )
-//    {
-//        rdar.setAlws( f_DatDB );
-//        rdar.setAlws( f_DatTable );
-//        rdar.setAlws( f_DatUsername );
-//        rdar.setAlws( f_DatPasswd );
-//        rdar.setAlws( f_DatServer );
-//    }
 
     // testing read
         string ret = rdar.testRead();
@@ -871,16 +864,14 @@ void Data_Manager::get_db_specs_txt( )
 
 outField statistics_fields[4] =
 {
-    { "StatMCruns",  0, 0, 1, "\n# StatMCruns: Comment"},
-    { "StatSensitivity",  0, 0, 1, "\n# StatSensitivity: Comment"},
-    { "StatMCbars",  0, 0, 1, "\n# StatMCbars: Comment"},
-    { "StatMCbool",  0, 0, 1, "\n# StatMCbool: Comment"}
+    { "StatMCruns",  0, 0, 1, "\n# StatMCruns: number of Monte Carlo runs for confidence interval generation"},
+    { "StatSensitivity",  0, 0, 1, "\n# StatSensitivity: number of evaluations points per parameter for sensitivity evaluation"},
+    { "StatMCbool",  0, 0, 1, "\n# StatMCbool: perform Monte Carlo runs -> yes (1)/no (0)"}
 };
 
 typedef enum {  /// Field index into outField structure
     f_StatMCruns= 0,
     f_StatSensitivity,
-    f_StatMCbars,
     f_StatMCbool
 } statistics_FIELDS;
 
@@ -890,7 +881,6 @@ void statistics::default_stat_param()
 {
   num_of_MC_runs = 10;
   sensitivity_points = 50;
-  MC_number_of_bars = 10;
   MCbool =  0;
 }
 
@@ -904,12 +894,11 @@ void statistics::out_stat_param_txt( bool with_comments, bool brief_mode )
     TPrintArrays  prar(4, statistics_fields, ff);
     prar.writeField(f_StatMCruns, (long int)num_of_MC_runs, with_comments, brief_mode  );
     prar.writeField(f_StatSensitivity, (long int)sensitivity_points, with_comments, brief_mode  );
-    prar.writeField(f_StatMCbars, (long int)MC_number_of_bars, with_comments, brief_mode  );
     prar.writeField(f_StatMCbool, (long int)MCbool, with_comments, brief_mode  );
 }
 
 //// Read statistical input specifications from configurator
-void statistics::std_get_stat_param_txt( )
+void statistics::get_stat_param_txt( )
 {
     // open file for reading
     string fname = gpf->OptParamFile();
@@ -926,8 +915,6 @@ void statistics::std_get_stat_param_txt( )
            case f_StatMCruns: rdar.readArray( "StatMCruns",  &num_of_MC_runs, 1 );
                    break;
            case f_StatSensitivity: rdar.readArray( "StatSensitivity",  &sensitivity_points, 1 );
-                   break;
-           case f_StatMCbars: rdar.readArray( "StatMCbars",  &MC_number_of_bars, 1);
                    break;
            case f_StatMCbool:
                    { int bb;
@@ -1011,32 +998,11 @@ typedef enum {  /// Field index into outField structure
 void optimization::define_nlopt_param( )
 {
     OptAlgo = "LN_BOBYQA";
-//    OptThreads = 1;
     OptBoundPerc = -1.0;
-//    OptUpBounds.push_back(100);
-//    OptUpBounds.push_back(100);
-//    OptLoBounds.push_back(-10);
-//    OptLoBounds.push_back(-10);
     OptTolRel = 1e-4;
     OptTolAbs = 1e-4;
     OptMaxEval = 5000;
-
-//    OptConstraints = 0;
-    //??OptUpConstraints;
-    //??OptLoConstraints;
-
-     OptDoWhat = 0;
-    //OptStatOnlyBestFitParam;
-    //OptStatOnlySSR;
-    //OptEquil;
-//    OptHybridMode = 0;
-//    OptHybridAlgo = "LN_COBYLA";
-//    OptHybridTolRel = 1e-4;
-//    OptHybridTolAbs = 1e-4;
-//    OptHybridMaxEval = 5000000;
-//    OptNmultistart = 0;
-    OptInitStep = 0;
-    //OptScaleParam;
+    OptDoWhat = 0;
     OptNormParam = 1;
 
 }
@@ -1053,30 +1019,6 @@ void optimization::out_nlopt_param_txt( bool with_comments, bool brief_mode )
 
     TPrintArrays  prar(24, optimization_fields, ff);
 
-//    if( OptHybridMode )
-//    {
-//        prar.setAlws( f_OptHybridTolRel );
-//        prar.setAlws( f_OptHybridTolAbs );
-//        prar.setAlws( f_OptHybridMaxEval );
-//        prar.setAlws( f_OptHybridAlgo );
-//    }
-
-//    if( OptConstraints )
-//    {
-
-//        // !!!! What constraint up or low ?
-//        int i;
-
-//        for( i=0; i< (int) constraint_data_v.size(); i++)
-//        {
-//            OptUpConstraints_.push_back(constraint_data_v[i].Constraints);
-//        };
-//        for( i=0; i< (int) constraint_data_v.size(); i++)
-//        {
-//            OptLoConstraints_.push_back(constraint_data_v[i].Constraints);
-//        };
-//    }
-
     if(with_comments )
     {
         ff << "\n\n#########################################################################" << endl;
@@ -1086,27 +1028,11 @@ void optimization::out_nlopt_param_txt( bool with_comments, bool brief_mode )
 
     prar.writeField( f_OptDoWhat,  (long int)OptDoWhat, with_comments, brief_mode);
     prar.writeField( f_OptAlgo,  OptAlgo, with_comments, brief_mode );
-//    prar.writeField( f_OptThreads,  (long int)OptThreads, with_comments, brief_mode);
     prar.writeField( f_OptBoundPerc,  OptBoundPerc, with_comments, brief_mode );
-//    prar.writeArray( f_OptUpBounds,  OptUpBounds, 2, with_comments, brief_mode);
-//    prar.writeArray( f_OptLoBounds,  OptLoBounds, 2, with_comments, brief_mode );
     prar.writeField( f_OptTolRel,  OptTolRel, with_comments, brief_mode);
     prar.writeField( f_OptTolAbs,  OptTolAbs, with_comments, brief_mode);
     prar.writeField( f_OptMaxEval,  (long int)OptMaxEval, with_comments, brief_mode);
-//    prar.writeField( f_OptConstraints,  (long int)OptConstraints, with_comments, brief_mode);
-//    prar.writeArray( f_OptUpConstraints,  OptUpConstraints_, 2, with_comments, brief_mode);
-//    prar.writeArray( f_OptLoConstraints,  OptLoConstraints_, 2, with_comments, brief_mode );
-//    prar.writeArray( f_OptStatOnlyBestFitParam,  OptStatOnlyBestFitParam, 2, with_comments, brief_mode);
-//    prar.writeField( f_OptStatOnlySSR,  OptStatOnlySSR, with_comments, brief_mode);
-//    prar.writeField( f_OptEqSolv,  (long int)OptEquil, with_comments, brief_mode);
-//    prar.writeField( f_OptHybridMode,  (long int)OptHybridMode, with_comments, brief_mode);
-//    prar.writeField( f_OptHybridAlgo,  OptHybridAlgo, with_comments, brief_mode );
-//    prar.writeField( f_OptHybridTolRel,  OptHybridTolRel, with_comments, brief_mode);
-//    prar.writeField( f_OptHybridTolAbs,  OptHybridTolAbs, with_comments, brief_mode);
-//    prar.writeField( f_OptHybridMaxEval,  (long int)OptHybridMaxEval, with_comments, brief_mode);
-//    prar.writeField( f_OptNmultistart,  (long int)OptNmultistart, with_comments, brief_mode);
     prar.writeField( f_OptInitStep,  OptInitStep, with_comments, brief_mode);
-//    prar.writeField( f_OptScaleParam,  OptScaleParam, with_comments, brief_mode);
     prar.writeField( f_OptNormParam,  (long int)OptNormParam, with_comments, brief_mode);
 
 }
@@ -1121,8 +1047,6 @@ void optimization::get_nlopt_param_txt(vector<double> optv)
     ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
 
     TReadArrays  rdar(24, optimization_fields, ff);
-    vector<double> OptUpConstraints_;
-    vector<double> OptLoConstraints_;
 
     long int nfild = rdar.findNextNotAll();
     while( nfild >=0 )
@@ -1131,56 +1055,19 @@ void optimization::get_nlopt_param_txt(vector<double> optv)
           {
           case f_OptAlgo: rdar.readArray( "OptAlgo",  OptAlgo );
                    break;
-//          case f_OptThreads: rdar.readArray( "OptThreads",  &OptThreads, 1);
-//                  break;
           case f_OptBoundPerc: rdar.readArray( "OptBoundPerc",  &OptBoundPerc, 1 );
                   if( OptBoundPerc < 0.) OptBoundPerc = -1;
                  break;
-//          case f_OptUpBounds: rdar.readArray( "OptUpBounds",  OptUpBounds);
-//                   break;
-//          case f_OptLoBounds: rdar.readArray( "OptLoBounds",  OptLoBounds );
-//                   break;
           case f_OptTolRel: rdar.readArray( "OptTolRel",  &OptTolRel, 1);
                    break;
           case f_OptTolAbs: rdar.readArray( "OptTolAbs",  &OptTolAbs, 1);
                   break;
           case f_OptMaxEval: rdar.readArray( "OptMaxEval",  &OptMaxEval, 1);
                   break;
-//          case f_OptConstraints: rdar.readArray( "OptConstraints",  &OptConstraints, 1);
-//                  break;
-//          case f_OptUpConstraints: rdar.readArray( "OptUpConstraints",  OptUpConstraints_);
-//                   break;
-//          case f_OptLoConstraints: rdar.readArray( "OptLoConstraints",  OptLoConstraints_ );
-//                   break;
           case f_OptDoWhat: rdar.readArray( "OptDoWhat",  &OptDoWhat, 1);
                   break;
-//          case f_OptStatOnlyBestFitParam: rdar.readArray( "OptStatOnlyBestFitParam",  OptStatOnlyBestFitParam);
-//                   break;
-//          case f_OptStatOnlySSR: rdar.readArray( "OptStatOnlySSR",  &OptStatOnlySSR, 1);
-//                  break;
-//          case f_OptEqSolv:
-//                  {
-//                    int bb;
-//                    rdar.readArray( "OptEqSolv",  &bb, 1);
-//                     OptEquil = bb;
-//                   }  break;
-//          case f_OptHybridMode: rdar.readArray( "OptHybridMode",  &OptHybridMode, 1);
-//                  break;
-
-//          case f_OptHybridAlgo: rdar.readArray( "OptHybridAlgo",  OptHybridAlgo );
-//                   break;
-//          case f_OptHybridTolRel: rdar.readArray( "OptHybridTolRel",  &OptHybridTolRel, 1);
-//                  break;
-//          case f_OptHybridTolAbs: rdar.readArray( "OptHybridTolAbs",  &OptHybridTolAbs, 1);
-//                  break;
-//          case f_OptHybridMaxEval: rdar.readArray( "OptHybridMaxEval",  &OptHybridMaxEval, 1);
-//                  break;
-//          case f_OptNmultistart: rdar.readArray( "OptNmultistart",  &OptNmultistart, 1);
-//                  break;
           case f_OptInitStep: rdar.readArray( "OptInitStep",  &OptInitStep, 1);
                   break;
-//          case f_OptScaleParam: rdar.readArray( "OptScaleParam",  &OptScaleParam, 1);
-//                  break;
           case f_OptNormParam:{
                 int bb;
                 rdar.readArray( "OptNormParam",  &bb, 1);
@@ -1201,77 +1088,6 @@ void optimization::get_nlopt_param_txt(vector<double> optv)
             OptLoBounds[i] = optv[i] - fabs( optv[i]*OptBoundPerc/100. );
         }
     }
-
-    // Check if all lower bounds are smaller than the corresponding upper bounds
-//    if( OptLoBounds.size() != OptUpBounds.size() )
-//    {
-//        cout<<endl;
-//        cout<<"upper and lower bounds must have same number of elements !! "<<endl;
-//            cout<<"exiting now ..."<<endl;
-//            cout<<endl;
-//        exit(1);
-//    }
-//    for( i=0; i<OptLoBounds.size(); i++ )
-//    {
-//        if( OptLoBounds[i]>OptUpBounds[i] )
-//        {
-//            cout<<endl;
-//            cout<<"Inconsistence in bounds: OptLoBounds["<<i<<"] = "<<OptLoBounds[i]<<" has a bigger value than OptUpBounds["<<i<<"] = "<<OptUpBounds[i]<<endl;
-//            cout<<" !! exiting now ..."<<endl;
-//                cout<<endl;
-//            exit(1);
-//        }
-//    }
-
-//    if( OptConstraints )
-//    {
-//        my_constraint_data constrdata;
-//        int ii = 0;
-
-//        for( i=0; i< (int) OptUpConstraints_.size(); i++)
-//        {
-//            constrdata.id = i;
-//            constrdata.Constraints = OptUpConstraints_[i];
-//            constraint_data_v.push_back(constrdata);
-//            ii = i;
-//        };
-//        for( i=0; i< (int) OptLoConstraints_.size(); i++)
-//        {
-//            constrdata.id = ii + 1 + i;
-//            constrdata.Constraints = OptLoConstraints_[i];
-//            constraint_data_v.push_back(constrdata);
-//        };
-
-
-//        // Check if all lower constraints are smaller than the corresponding upper constraints
-//        if( OptUpConstraints_.size() != OptLoConstraints_.size() )
-//        {
-//            cout<<endl;
-//            cout<<"WARNING: upper and lower constraints do not have same number of elements !!"<<endl;
-//            cout<<"OptUpConstraints.size() = "<<OptUpConstraints_.size()<<" <-> OptLoConstraints.size() = "<<OptLoConstraints_.size()<<endl;
-//            cout<<"hope that's ok, proceeding now ..."<<endl;
-//            cout<<endl;
-//        }
-//        for( i=0; i<OptLoConstraints_.size(); i++ )
-//        {
-//            if( OptLoConstraints_[i] > OptUpConstraints_[i] )
-//            {
-//                cout<<endl;
-//                cout<<"Inconsistence in constrains: OptLoConstraints["<<i<<"] = "<<OptLoConstraints_[i]<<" has a bigger value than OptUpConstraints["<<i<<"] = "<<OptUpConstraints_[i]<<endl;
-//                cout<<" .... exiting now .... "<<endl;
-//                    cout<<endl;
-//                exit(1);
-//            };
-//        };
-//    }//enf if ( OptConstraints )
-
-//        if( OptHybridMode )
-//        {
-//            rdar.setAlws( f_OptHybridTolRel );
-//            rdar.setAlws( f_OptHybridTolAbs );
-//            rdar.setAlws( f_OptHybridMaxEval );
-//            rdar.setAlws( f_OptHybridAlgo );
-//        }
 
         // testing read
         string ret = rdar.testRead();

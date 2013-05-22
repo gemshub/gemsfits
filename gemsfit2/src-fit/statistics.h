@@ -116,7 +116,7 @@ class statistics
         * @author SD
         * @date 14.03.2013
         */
-        void std_get_stat_param_txt( );
+        void get_stat_param_txt( );
         void out_stat_param_txt( bool with_comments, bool brief_mode );
         void default_stat_param();
 
@@ -152,14 +152,14 @@ class statistics
 //        */
 //        void SS_MC_confidence_interval( opti::StdStateProp* gibbs, std::vector<double> &optv_, std::vector<SS_System_Properties*> *systems, int &countit );
 
-//        /**
-//        * Perform sensitivity analysis of selected parameters.
-//        * @author DM
-//        * @param optv_    optimization vector
-//        * @param systems  vector of pointers to instances of System_Properties structs
-//        * @date 06.12.2012
-//        */
-//        void SS_sensitivity_correlation( const std::vector<double> &optv_, std::vector<SS_System_Properties*> *systems );
+        /**
+        * Perform sensitivity analysis of selected parameters.
+        * @author DM
+        * @param optv_    optimization vector
+        * @param systems  vector of pointers to instances of System_Properties structs
+        * @date 06.12.2012
+        */
+        void sensitivity_correlation( const std::vector<double> &optv_, TGfitTask* gfittask );
 
 //		// Compute Pearson's sample correlation coefficient
 //		//void correlation(  );

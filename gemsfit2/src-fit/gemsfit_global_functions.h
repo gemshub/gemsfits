@@ -68,7 +68,7 @@ double Equil_objective_function_callback( const std::vector<double> &opt, std::v
 * @author DM
 * @date 19.11.2012
 */
-void gems3k_wrap( double &residual, const std::vector<double> &opt, TGfitTask *sys, vector<TNode*> node );
+void gems3k_wrap( double &residual, const std::vector<double> &opt, TGfitTask *sys );
 
 
 

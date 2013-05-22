@@ -201,13 +201,18 @@ double residual_phase_elem (int i, int p, int e, TGfitTask *sys)
     return residual;
 }
 
-
-
-
 double least_square (double computed_value, double measured_value)
 {
     double lsq = 0.0;
     lsq = pow( (computed_value - measured_value), 2) / pow(measured_value, 2);
     return lsq;
+}
+
+double weight (int i, int p, int e, string type, TGfitTask *sys)
+{
+    if (type == "inverr")
+    {
+        return 1/sys->experiments[i]->expphases[p]->phcomp[e]->Qerror;
+    }
 }
 

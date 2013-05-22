@@ -1,4 +1,9 @@
 #include "statistics.h"
+#include "gemsfit_global_functions.h"
+#include <armadillo>
+#include <boost/math/distributions/students_t.hpp>
+#include <boost/math/distributions/normal.hpp>
+#include <boost/math/distributions/chi_squared.hpp>
 
 // Constructor
 statistics::statistics( TGfitTask *gfittask, double sum_of_squares_, int num_of_params_, int num_of_runs_ )
@@ -21,7 +26,7 @@ cout<<" Statistics Constructor: number_of_parameters: "<<number_of_parameters<<e
 //    /// Populate data members
 //    std_get_stat_param();
 
-//stat->std_get_stat_param_txt();
+    get_stat_param_txt();
 //stat->set_plotfit_vars_txt();
 
 //    /// Instantiate pointer to PlotFit class to print results
@@ -65,8 +70,8 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     }
 
 
-    SD_of_residuals = sqrt((Res/degrees_of_freedom));
-    //SD_of_residuals = sqrt( (sum_of_squares/(number_of_measurements-number_of_parameters)) );
+//    SD_of_residuals = sqrt((Res/degrees_of_freedom));
+    SD_of_residuals = sqrt( (sum_of_squares/(number_of_measurements-number_of_parameters)) );
 
 
     // Modified by DM on 12.03.2012 due to errorneus calculation of R^2 when using log_solubility data.
@@ -158,4 +163,329 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         myStat << endl;
         myStat.close();
 }
+
+
+// perform sensitivity analysis of selected parameters
+void statistics::sensitivity_correlation( const std::vector<double> &optv_, TGfitTask* gfittask )
+{
+        int i, j, k, l, jj, ll, len_meas;
+        double residual_sys;
+
+        std::vector<double> computed_up;
+        std::vector<double> computed_lo;
+        std::vector<double> opt_scan;
+        std::vector<double> ssr_param;
+        std::vector<double> opt_scan_v;
+
+        opt_scan.resize( optv_.size() );
+        ssr_param.resize( sensitivity_points );
+        opt_scan_v.resize( sensitivity_points );
+        std::vector< std::vector< double> > array_ssr;
+
+        // Generate systematic variations in the G0 values from the optimization vector and loop over them
+
+            // Set printfile bool to true in order to deactivate to parallelization of the loop over measurements within the StdState_gems3k_wrap() function
+//            gfittask->printfile = true;
+
+            for( i=0; i< (int) optv_.size(); i++ )
+            {
+                for( j=0; j< sensitivity_points; j++ )
+                {
+                    // Copy original values into opt_scan
+                    opt_scan = optv_;
+
+                    // add/subtract up to 25% of the original parameter value
+                    opt_scan[i] = optv_[i] + optv_[i] * ( j - sensitivity_points/2  ) / 200;
+
+                    // compute sum of squared residuals
+                    residual_sys = 0.;
+                    gems3k_wrap( residual_sys, opt_scan, gfittask );
+cout<<"residual_sys = "<<residual_sys<<endl;
+                    opt_scan_v[j] = opt_scan[i];
+                    ssr_param[j]  = residual_sys;
+                }
+                // add rows with 'sensitivity_points' columns
+                array_ssr.push_back( opt_scan_v );
+                array_ssr.push_back( ssr_param );
+            }
+
+
+//            print_vectors_curve( optv_, array_ssr, sensitivity_points );
+
+        len_meas = (int) gfittask->experiments.size();
+
+//        // Compute Jacobian matrix (= Sensitivity matrix)
+        arma::mat SensitivityMatrix( len_meas, (int) optv_.size() );
+        arma::mat DimensionlessScaledSensitivities( len_meas, (int) optv_.size() );
+        arma::vec CompositeScaledSensitivities = arma::zeros<arma::vec>( (int) optv_.size(), 1 );
+        arma::vec ParameterStandardDeviation = arma::zeros<arma::vec>( (int) optv_.size(), 1 );
+        arma::vec CoefficientOfVariation = arma::zeros<arma::vec>( (int) optv_.size(), 1 );
+        arma::vec Parameter_t_Statistic = arma::zeros<arma::vec>( (int) optv_.size(), 1 );
+
+
+        double delta = 0.001;
+        for( i=0; i< (int) optv_.size(); i++ )
+        {
+            opt_scan = optv_;
+
+            // Central finite differences:
+            opt_scan[i] = optv_[i] + optv_[i]*delta;
+            residual_sys = 0.;
+            gems3k_wrap( residual_sys, opt_scan, gfittask );
+cout<<"residual_sys = "<<residual_sys<<endl;
+            computed_up = gfittask->computed_values_v;
+
+            opt_scan[i] = optv_[i] - optv_[i]*delta;
+            residual_sys = 0.;
+            gems3k_wrap( residual_sys, opt_scan, gfittask );
+cout<<"residual_sys = "<<residual_sys<<endl;
+            computed_lo = gfittask->computed_values_v;
+
+            for( k=0; k< len_meas; k++ )
+            {
+                SensitivityMatrix(k,i) 	 			  = ( computed_up[k] - computed_lo[k] ) / ( optv_[i]*delta*2 );
+//                DimensionlessScaledSensitivities(k,i) = SensitivityMatrix(k,i) * fabs( optv_[i] ) * sqrt( 1.0 / gfittask->data_meas->allexp[k]->error_sol[0] );
+//                CompositeScaledSensitivities(i)      += sqrt( DimensionlessScaledSensitivities(k,i)*DimensionlessScaledSensitivities(k,i)/len_meas );
+            }
+        }
+
+        ofstream myStat;
+        myStat.open(gpf->FITStatisticsFile().c_str(),ios::app);
+
+
+
+/*		myStat << " Sensitivity matrix over each measurement point: "<<endl;
+        for( i=0; i< (int) optv_.size(); i++ )
+        {
+            for( j=0; j< (int) computed_up.size(); j++ )
+            {
+                // Write sensitivities to file
+                myStat <<" "<< i <<" "<< j <<" :	" << SensitivityMatrix(j,i)	<< endl;
+            }
+        }
+*/
+//        myStat << " Composite Scaled Sensitivities: "<<endl;
+//        for( i=0; i< (int) optv_.size(); i++ )
+//        {
+//            // Write sensitivities to file
+//            myStat <<"			parameter "<< i <<" :	           " << CompositeScaledSensitivities(i)	<< endl;
+//        }
+//        myStat << endl;
+
+        // Plot results with DISLIN
+//        print_sensitivity( (int) computed_up.size(), (int) optv_.size(), SensitivityMatrix , gfittask->sysdata->molality_1 );
+
+
+//SensitivityMatrix.print("SensitivityMatrix:");
+
+        // Get transpose of sensitivity matrix
+        arma::mat SensitivityMatrix_T = arma::trans(SensitivityMatrix);
+
+SensitivityMatrix_T.print("SensitivityMatrix_T:");
+
+        // Compute Fisher matrix (is a proxy for the Hessian matrix)
+        arma::mat FisherMatrix = SensitivityMatrix_T * SensitivityMatrix;
+
+FisherMatrix.print("Fisher Matrix:");
+
+        // Compute variance-covariance matrix
+        arma::mat VarCovarMatrix = SD_of_residuals * arma::inv( FisherMatrix, false );
+
+VarCovarMatrix.print("Variance Covariance Matrix:");
+
+        // Correlation matrix
+        arma::mat CorellationMatrix( (int) optv_.size(), (int) optv_.size() );
+
+        for( i=0; i<(int) optv_.size(); i++ )
+        {
+            for( k=i; k<(int) optv_.size(); k++ )
+            {
+                // 			 			 Covar(i,k)          / sqrt( Var(k,k)            * Var(i,i)            )
+                CorellationMatrix(i,k) = VarCovarMatrix(i,k) / sqrt( VarCovarMatrix(k,k) * VarCovarMatrix(i,i) );
+                CorellationMatrix(k,i) = CorellationMatrix(i,k);
+            }
+            ParameterStandardDeviation(i) = sqrt(VarCovarMatrix(i,i));
+            CoefficientOfVariation(i) 	  = ParameterStandardDeviation(i) / optv_[i];
+            Parameter_t_Statistic(i) 	  = 1. / CoefficientOfVariation(i);
+        }
+        CorellationMatrix.print("CorellationMatrix = ");
+
+CorellationMatrix.print("Corellation Matrix:");
+
+        // Print Variance-Covariance matrix to file
+        myStat << " Variance-Covariance matrix: "<<endl;
+        for( i=0; i< (int) optv_.size(); i++ )
+        {
+            if( i== 0 )
+                myStat <<"								parameter "<< i;
+            else
+                myStat <<"			parameter "<< i;
+        }
+        myStat << endl;
+        for( i=0; i< (int) optv_.size(); i++ )
+        {
+            myStat <<"			parameter "<< i <<" : ";
+            for( j=0; j< (int) optv_.size(); j++ )
+            {
+                if( j==0 )
+                    myStat <<"			   " <<VarCovarMatrix(i,j);
+                else
+                    myStat <<"		    " <<VarCovarMatrix(i,j);
+            }
+            myStat << endl;
+        }
+        myStat << endl;
+
+        // Print Parameter Standard Deviations to file
+        myStat << " Parameter Standard Deviations/Errors: "<<endl;
+        for( i=0; i< (int) optv_.size(); i++ )
+        {
+            myStat <<"			parameter "<< i <<" :	           " << ParameterStandardDeviation(i) << endl;
+        }
+        myStat << endl;
+
+
+        double T, w;
+        int DegreesOfFreedom = number_of_measurements - number_of_parameters;
+        double alpha[] = { 0.5, 0.25, 0.1, 0.05, 0.01 };
+        boost::math::students_t dist( DegreesOfFreedom );
+        for( j=0; j< (int) optv_.size(); j++ )
+        {
+            myStat <<"			parameter "<< j << " :	           ";
+            myStat << endl;
+            myStat <<    "___________________________________________________________________" << endl;
+            myStat <<    "Confidence       T           Interval          Lower          Upper" << endl;
+            myStat <<    " Value (%)     Value          Width            Limit          Limit" << endl;
+            myStat <<    "___________________________________________________________________" << endl;
+
+            for( i = 0; i < int (sizeof(alpha)/sizeof(alpha[0])); ++i)
+            {
+                // Confidence value:
+                myStat << fixed << setprecision(3) << setw(10) << right << 100 * (1-alpha[i]);
+                // calculate T:
+                T = boost::math::quantile(boost::math::complement(dist, alpha[i] / 2));
+                // Print T:
+                myStat << fixed << setprecision(3) << setw(10) << right << T;
+                // Calculate width of interval (one sided):
+                w = T * ParameterStandardDeviation(j) / sqrt(double( number_of_measurements ));
+                // Print width:
+                if(w < 0.01)
+                    myStat << scientific << setprecision(3) << setw(17) << right << w;
+                else
+                    myStat << fixed << setprecision(3) << setw(17) << right << w;
+                // Print Limits:
+                myStat << fixed << setprecision(5) << setw(15) << right << optv_[j] - w;
+                myStat << fixed << setprecision(5) << setw(15) << right << optv_[j] + w << endl;
+            }
+            myStat << endl;
+
+        }
+
+
+
+        // Print Parameter Standard Deviations to file
+        myStat << " Coefficient of Variation: "<<endl;
+        for( i=0; i< (int) optv_.size(); i++ )
+        {
+            myStat <<"			parameter "<< i <<" :	           " << CoefficientOfVariation(i) << endl;
+        }
+        myStat << endl;
+
+        // Print Parameter Standard Deviations to file
+        myStat << " Parameter t-statistic: "<<endl;
+        for( i=0; i< (int) optv_.size(); i++ )
+        {
+            myStat <<"			parameter "<< i <<" :	           " << Parameter_t_Statistic(i) << endl;
+        }
+        myStat << endl;
+
+        // Print Correlation matrix to file
+        myStat << " Correlation matrix: "<<endl;
+        for( i=0; i< (int) optv_.size(); i++ )
+        {
+            if( i== 0 )
+                myStat <<"								parameter "<< i;
+            else
+                myStat <<"			parameter "<< i;
+        }
+        myStat << endl;
+        for( i=0; i< (int) optv_.size(); i++ )
+        {
+            myStat <<"			parameter "<< i <<" : ";
+            for( j=0; j< (int) optv_.size(); j++ )
+            {
+                if( j==0 )
+                    myStat <<"			   " <<CorellationMatrix(i,j);
+                else
+                    myStat <<"		   			" <<CorellationMatrix(i,j);
+            }
+            myStat << endl;
+        }
+        myStat << endl;
+
+        myStat.close();
+
+
+//        // allocate synamic 4D memory for holding parameter-pair specific SSR with varying parameters
+//        int points_per_axis = 100;
+//        float* SSR_surface;
+//        SSR_surface = new float [ points_per_axis * points_per_axis ];
+//        double* param_1_ray;
+//        double* param_2_ray;
+//        param_1_ray = new double [ points_per_axis ];
+//        param_2_ray = new double [ points_per_axis ];
+//        int param_pair[2];
+
+//        for( i=0; i< (int) optv_.size()-1; i++ )			// loop over
+//        {													// first parameter and
+//            for( k=i+1; k< (int) optv_.size(); k++ )		// loop over
+//            {												// second parameter and
+//                for( jj=0; jj<points_per_axis; jj++ )		// vary +- 25%
+//                {
+//                    for( ll=0; ll<points_per_axis; ll++ )	// vary +- 25%
+//                    {
+//                        j = jj * 5;
+//                        l = ll * 5;
+
+//                        // parameter 1: add/subtract up to 25% of the original parameter value
+//                        opt_scan[i] = optv_[i] + optv_[i] * ( 0.5 / points_per_axis * jj - 0.25 );
+//                        param_1_ray[jj] = opt_scan[i];
+
+//                        // parameter 2: add/subtract up to 25% of the original parameter value
+//                        opt_scan[k] = optv_[k] + optv_[k] * ( 0.5 / points_per_axis * ll - 0.25 );
+//                        param_2_ray[ll] = opt_scan[k];
+
+//                        residual_sys = 0.;
+//                        opti::StdState_gems3k_wrap( residual_sys, opt_scan, gfittask );
+
+//                        // Compute and store values of sruface matrix
+//                        SSR_surface[ points_per_axis*jj + ll ] 	 = residual_sys ;
+//                    }
+//                }
+//                // Print a contour plot for every parameter pair
+//                param_pair[0] = i;
+//                param_pair[1] = k;
+
+//                print_SSR_contour( param_pair, (int) optv_.size(), points_per_axis, SSR_surface, param_1_ray, param_2_ray );
+//            }
+//        }
+
+
+//        // free dynamicaly allocated memory
+//        delete[] SSR_surface;
+//        delete[] param_1_ray;
+//        delete[] param_2_ray;
+
+
+
+
+//exit(1);//STOP
+
+        // In case later on parallelization of measurement over for loop is wished, set printfile bool to false
+        gfittask->printfile = false;
+
+
+}
+
+
 

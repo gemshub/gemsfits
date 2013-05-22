@@ -135,7 +135,11 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
                                 check_unit(i, p, e, sys->Tfun->objfun[j]->exp_unit, sys );
                                 if ((sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
                                 {
-                                    residuals_sys_ = residuals_sys_ + residual_aqgen_elem (i, p, e, sys);
+                                    if (sys->Tfun->weight.size() > 0)
+                                    {
+                                       residuals_sys_ = residuals_sys_ + residual_aqgen_elem (i, p, e, sys)*weight(i, p, e, sys->Tfun->weight, sys);
+                                    } else residuals_sys_ = residuals_sys_ + residual_aqgen_elem (i, p, e, sys);
+
                                 } else // other phase than aq_gen
                                 {
                                     if (sys->Tfun->objfun[j]->exp_phase != "aq_gen")
