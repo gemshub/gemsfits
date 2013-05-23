@@ -26,6 +26,8 @@
 	GEMFSIT - fitting tool for thermodynamic data
 */
 
+#define USE_MPI
+
 #include <stdio.h>
 #include <iostream>
 #include <vector>
@@ -34,10 +36,6 @@
 #include <nlopt.hpp>
 #include <ctime>
 #include <fstream>
-
-#ifdef USE_MPI
-#include <mpi.h>
-#endif
 
 
 #include "gemsfit_iofiles.h"
@@ -139,6 +137,7 @@ int main( int argc, char *argv[] )
     delete gfittask;
 
     cout << double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
+
 }
 
 

@@ -36,6 +36,7 @@
 #include <cmath>
 #include "gemsfit_target_functions.h"
 
+
 #ifndef __unix
 #include <io.h>
 #endif
@@ -594,14 +595,22 @@ void TGfitTask::setnodes()
     double* xDC_lo;
     double* Ph_surf;
 
-    // initialize the nodes with the input GEMS3 file
+//#ifdef USE_MPI
+    omp_set_num_threads(MPI);
+    #pragma omp parallel for
+//#endif
     for (n=0; n<NodT.size(); ++n)
     {
         if( NodT[n]->GEM_init( gpf->GEMS3LstFilePath().c_str() ) == 1 )
         {
             cout<<" .. ERROR occurred while reading input files !!! ..."<<endl;
         }
+    }
 
+
+    // initialize the nodes with the input GEMS3 file
+    for (n=0; n<NodT.size(); ++n)
+    {
         // Getting direct access to work node DATABR structure which exchanges the
         // data with GEMS3K (already filled out by reading the DBR input file)
         DATABR* dBR = NodT[n]->pCNode();

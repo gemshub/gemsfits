@@ -26,6 +26,7 @@ using namespace std;
 #include "io_arrays.h"
 #include "data_manager.h"
 #include "keywords.h"
+#include <omp.h>
 
 #include "statistics.h"
 #include "optimization.h"
@@ -728,6 +729,7 @@ TGfitPath *gpf;
 
 outField Data_Manager_fields[10] =
 {
+    { "MPI", 0, 0, 1, "\# MPI: Number of threads for paralelization"},
     { "DatDB",  0, 0, 1, "\n# DatDB: database path"},
     { "DatColection",  0, 0, 1, "\n# DatColection: database colection name"},
     { "DatSource",  1, 0, 1, "\n# DatSource: get measurement data from EJDB databse (default) (0). No other sources implemented in GEMSFIT2"},
@@ -755,7 +757,8 @@ outField Data_Manager_fields[10] =
 };
 
 typedef enum {  /// Field index into outField structure
-    f_DatDB = 0,
+    f_MPI = 0,
+    f_DatDB,
     f_DatColection,
     f_DatSource,
     f_DatSelect,
@@ -767,6 +770,7 @@ typedef enum {  /// Field index into outField structure
 /// Set up default values for structure
 void Data_Manager::define_db_specs( )
 {
+   MPI = omp_get_num_threads() * omp_get_num_procs();
    datasource = 0;
    DBname ="";
    colection="";
@@ -787,6 +791,7 @@ void Data_Manager::out_db_specs_txt( bool with_comments, bool brief_mode )
 
     if (datasource == 0)
     {
+        prar.setAlws( f_MPI );
         prar.setAlws( f_DatDB );
         prar.setAlws( f_DatColection );
         prar.setAlws( f_DatSelect );
@@ -799,6 +804,7 @@ void Data_Manager::out_db_specs_txt( bool with_comments, bool brief_mode )
         ff << "#########################################################################" << endl;
     }
 
+    prar.writeField(f_MPI, (long int)MPI, with_comments, brief_mode  );
     prar.writeField(f_DatSource, (long int)datasource, with_comments, brief_mode  );
     prar.writeField(f_DatDB, DBname, with_comments, brief_mode  );
     prar.writeField(f_DatColection, colection, with_comments, brief_mode  );
@@ -824,22 +830,24 @@ void Data_Manager::get_db_specs_txt( )
         {
           switch( nfild )
           {
-           case f_DatDB: rdar.readArray( "DatDB",  DBname );
-                   break;
-           case f_DatColection: rdar.readArray( "DatColection",  colection );
-                   break;
-           case f_DatSource: rdar.readArray( "DatSource",  &datasource, 1);
-                   break;
-          case f_DatSelect: rdar.readArray( "DatSelect",  DataSelect );
-             break;
-          case f_DatTarget: rdar.readArray( "DatTarget",  DatTarget );
-             break;
-          case f_SystemFiles: rdar.readArray( "SystemFiles",  inputstr );
-              gpf->setGEMS3LstFilePath(inputstr.c_str() );
-             break;
-          case f_RecipeFiles: rdar.readArray( "RecipeFiles",  inputstr );
-              gpf->setGEMS3RecipeFilePath(inputstr.c_str());
-             break;
+            case f_MPI: rdar.readArray( "MPI",  &MPI, 1 );
+                    break;
+            case f_DatDB: rdar.readArray( "DatDB",  DBname );
+                    break;
+            case f_DatColection: rdar.readArray( "DatColection",  colection );
+                    break;
+            case f_DatSource: rdar.readArray( "DatSource",  &datasource, 1);
+                    break;
+            case f_DatSelect: rdar.readArray( "DatSelect",  DataSelect );
+                    break;
+            case f_DatTarget: rdar.readArray( "DatTarget",  DatTarget );
+                    break;
+            case f_SystemFiles: rdar.readArray( "SystemFiles",  inputstr );
+                    gpf->setGEMS3LstFilePath(inputstr.c_str() );
+                    break;
+            case f_RecipeFiles: rdar.readArray( "RecipeFiles",  inputstr );
+                    gpf->setGEMS3RecipeFilePath(inputstr.c_str());
+                    break;
           }
           nfild = rdar.findNextNotAll();
         }
@@ -847,6 +855,7 @@ void Data_Manager::get_db_specs_txt( )
     // define data must be read
     if (datasource == 0)
     {
+        rdar.setAlws( f_MPI );
         rdar.setAlws( f_DatDB );
         rdar.setAlws( f_DatColection );
         rdar.setAlws( f_DatSelect );
@@ -1243,8 +1252,15 @@ void F_to_OP (double val, opti_vector *op, IOJFormat Jformat, string nfild)
 {
     op->opt.push_back(val);
     op->optv0.push_back(val);
-    op->UB.push_back(val-val*bperc/100);
-    op->LB.push_back(val+val*bperc/100);
+    if (val > 0)
+    {
+        op->LB.push_back(val-val*bperc/100);
+        op->UB.push_back(val+val*bperc/100);
+    } else
+    {
+        op->UB.push_back(val-val*bperc/100);
+        op->LB.push_back(val+val*bperc/100);
+    }
 
     op->Ptype.push_back( nfild );
     op->Pindex.push_back( Jformat.index );

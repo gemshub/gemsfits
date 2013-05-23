@@ -39,7 +39,6 @@
 #include "gemsfit_target_functions.h"
 #include "gemsfit_task.h"
 
-
 // Wrapper around GEMS3K solver
 void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTask* sys )
 {
@@ -58,6 +57,10 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 
 
     // going trough the adjusted parameters in Opti->Ptype and adjust with the new value
+//#ifdef USE_MPI
+//    omp_set_num_threads(sys->MPI);
+//    #pragma omp parallel for
+//#endif
     for (int i=0; i< sys->Opti->Ptype.size(); ++i)
     {
         // parameter is Std State Gibbs free energy
@@ -80,6 +83,11 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 //     cout << sys->NodT[0]->DC_G0(5, 1*100000, 22+273.15, false)  << endl;
     // Equilibrium calculation
 //    cout << sys->NodT[0]->Get_mIC(4) << endl;
+
+//#ifdef USE_MPI
+    omp_set_num_threads(sys->MPI);
+    #pragma omp parallel for
+//#endif
     for (int i=0; i<sys->NodT.size(); ++i)
     {
         vector<DATABR*> dBR;
@@ -94,12 +102,12 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 
         if( NodeStatusCH == OK_GEM_AIA || NodeStatusCH == OK_GEM_SIA  )
         {
-            sys->NodT[i]->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
+//            sys->NodT[i]->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
         }
         else
         {
             // possible return status analysis, error message
-            sys->NodT[i]->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
+//            sys->NodT[i]->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
             cout<<"For experiment "<<i+1<< endl;
             cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
         }
@@ -154,7 +162,6 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
             }
         }
     }
-
     residuals_sys = residuals_sys_;
 }
 

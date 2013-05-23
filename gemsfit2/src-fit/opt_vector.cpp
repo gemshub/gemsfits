@@ -65,6 +65,7 @@ opti_vector::opti_vector( )
 void opti_vector::get_RDc_indexes (TNode *node, opti_vector *ov)
 {
     int index_species;
+    // maybe try to add MPI here??
     for (int j = 0; j < ov->reactions.size(); ++j )
     {
         index_species = node->DC_name_to_xCH( ov->reactions[j]->Dc_name.c_str() );

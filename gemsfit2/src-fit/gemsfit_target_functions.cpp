@@ -61,6 +61,10 @@ void adjust_G0 (int i, double G0, TGfitTask *sys)
 void adjust_RDc (TGfitTask *sys)
 {
     // going trough all nodes
+//#ifdef USE_MPI
+    omp_set_num_threads(sys->MPI);
+    #pragma omp parallel for
+//#endif
     for (int n=0; n<sys->NodT.size(); ++n)
     {
         for (int i=0; i < sys->Opti->reactions.size(); ++i )
@@ -102,7 +106,9 @@ void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
             // molal to log(molal)
             if (sys->experiments[i]->expphases[p]->phcomp[e]->Qunit == "molal")
             {
+                double error_perc = sys->experiments[i]->expphases[p]->phcomp[e]->Qerror * 100 / sys->experiments[i]->expphases[p]->phcomp[e]->bQnt;
                 sys->experiments[i]->expphases[p]->phcomp[e]->bQnt = log10(sys->experiments[i]->expphases[p]->phcomp[e]->bQnt);
+                sys->experiments[i]->expphases[p]->phcomp[e]->Qerror = sys->experiments[i]->expphases[p]->phcomp[e]->bQnt * error_perc / 100;
                 sys->experiments[i]->expphases[p]->phcomp[e]->Qunit = "loga";
             }
             else

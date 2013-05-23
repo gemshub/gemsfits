@@ -200,7 +200,7 @@ void statistics::sensitivity_correlation( const std::vector<double> &optv_, TGfi
                     // compute sum of squared residuals
                     residual_sys = 0.;
                     gems3k_wrap( residual_sys, opt_scan, gfittask );
-cout<<"residual_sys = "<<residual_sys<<endl;
+//cout<<"residual_sys = "<<residual_sys<<endl;
                     opt_scan_v[j] = opt_scan[i];
                     ssr_param[j]  = residual_sys;
                 }
@@ -232,13 +232,13 @@ cout<<"residual_sys = "<<residual_sys<<endl;
             opt_scan[i] = optv_[i] + optv_[i]*delta;
             residual_sys = 0.;
             gems3k_wrap( residual_sys, opt_scan, gfittask );
-cout<<"residual_sys = "<<residual_sys<<endl;
+//cout<<"residual_sys = "<<residual_sys<<endl;
             computed_up = gfittask->computed_values_v;
 
             opt_scan[i] = optv_[i] - optv_[i]*delta;
             residual_sys = 0.;
             gems3k_wrap( residual_sys, opt_scan, gfittask );
-cout<<"residual_sys = "<<residual_sys<<endl;
+//cout<<"residual_sys = "<<residual_sys<<endl;
             computed_lo = gfittask->computed_values_v;
 
             for( k=0; k< len_meas; k++ )

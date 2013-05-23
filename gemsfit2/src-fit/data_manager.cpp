@@ -405,9 +405,14 @@ void Data_Manager::get_EJDB( )
              experiments.at(j)->idsample= NULL;
              Hexperiments.push_back( new Hsamples ); // handels for marking data to compare
              // set Hexperiments variables false
-
          }
+
          fout << "6. data_manager.cpp line 410. Adding the data returned by the selection query into the data structure; " << endl;
+
+//#ifdef USE_MPI
+         omp_set_num_threads(MPI);
+         #pragma omp parallel for
+//#endif
          for (int i = 0; i < TCLISTNUM(res); ++i) {
              void *bsdata = TCLISTVALPTR(res, i);
              char *bsdata_ = static_cast<char*>(bsdata);
