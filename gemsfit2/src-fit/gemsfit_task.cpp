@@ -656,7 +656,11 @@ void TGfitTask::setnodes()
             if (experiments[n]->sbcomp[j]->comp == "H2O")
             {
                 ICndx = NodT[n]->IC_name_to_xDB("H");
-                new_moles_IC[ICndx] += 2*experiments[n]->sbcomp[j]->bQnt/18.01528 + 2.123456*experiments[n]->sbcomp[j]->bQnt/1000*1e-05; // adds 1e-05 moles of H2 for each kg og H2O
+                new_moles_IC[ICndx] += 2*experiments[n]->sbcomp[j]->bQnt/18.01528; // adds 1e-05 moles of H2 for each kg og H2O
+                if (NodT[n]->IC_name_to_xDB("Nit") < -1)
+                {
+                    new_moles_IC[ICndx] += 2.123456*experiments[n]->sbcomp[j]->bQnt/1000*1e-04;
+                }
                 // cout << new_moles_IC[ICndx] << endl;
                 ICndx = NodT[n]->IC_name_to_xDB("O");
                 new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->bQnt/18.01528 /*+ 3*experiments[n]->sbcomp[j]->bQnt/1000*1e-03*/;

@@ -735,7 +735,7 @@ outField Data_Manager_fields[10] =
     { "DatSource",  1, 0, 1, "\n# DatSource: get measurement data from EJDB databse (default) (0). No other sources implemented in GEMSFIT2"},
 
     { "DatSelect", 0, 0, 1, "\n# DataSelect: query for selecting data form EJDB database in JSON format. Names of samples or expdatasets and temperature and pressure intervals. all - select all data"
-      "\n  Use the following template by pasting it after the <DatSelect> and changing the desired settings: \n  sample - names of samples you want to select"
+      "\n  Use the following template by pasting it after the DatSelect and changing the desired settings: \n  sample - names of samples you want to select"
       "\n  expdataset - names of experimental datasets you want to select \n  sT - temperature range \n  sP - pressure range"
       "\n \n  { \"sample\" : \"\", "
       "\n  \"expdataset\" : [\"CH04\", \"CH04D\"],"
@@ -743,7 +743,7 @@ outField Data_Manager_fields[10] =
       "\n  \"sP\" : [1, 2500] }\n"},
 
     { "DatTarget",  0, 0, 1, "\n# DatTarget: Target function for parmeter fitting"
-      "\n  Use the following template by pasting it after the <DatTaerget> and changing the desired settings:"
+      "\n  Use the following template by pasting it after the DatTarget and changing the desired settings:"
       "\n  Target - name of the function \n  TT - type of target function (lsq - least square, ...) \n  WT - weighting scheeme (inverr - invers weighting *1/error, ...)"
       "\n  OFUN - objective function, what to compare \n  EPH - what phase from the experiments \n  EN - what element from the phase \n  EP - what property of the phase"
       "\n  Eunit - what unit the values should be in (molal - moles/Kg H2O, loga - log(molal), ...)"

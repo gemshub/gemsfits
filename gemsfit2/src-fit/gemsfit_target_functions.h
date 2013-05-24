@@ -52,6 +52,8 @@
 */
 void adjust_G0 (int i, double G0, TGfitTask *sys);
 
+void adjust_PMc (int i, double new_PMc, TGfitTask *sys);
+
 // Set new Gibbs free energy based on reaction constraints
 /**
 * Sets the new G0 of the components fixed using reaction constraints

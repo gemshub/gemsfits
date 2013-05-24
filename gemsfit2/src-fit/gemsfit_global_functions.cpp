@@ -69,6 +69,11 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
             adjust_G0(i, opt[i], sys);
 
         } // END if G0
+        else
+        if (sys->Opti->Ptype[i] == "LsMod")
+        {
+           adjust_PMc(i, opt[i], sys);
+        }
 
         /// if other parameters...
 
@@ -150,7 +155,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 
                                 } else // other phase than aq_gen
                                 {
-                                    if (sys->Tfun->objfun[j]->exp_phase != "aq_gen")
+                                    if ((sys->Tfun->objfun[j]->exp_phase != "aq_gen") && (sys->experiments[i]->expphases[p]->phase != "aq_gen"))
                                     {
                                     residuals_sys_ = residuals_sys_ + residual_phase_elem (i, p, e, sys);
                                     }

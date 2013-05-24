@@ -58,6 +58,17 @@ void adjust_G0 (int i, double G0, TGfitTask *sys)
 //    cout << sys->NodT[0]->DC_G0(species_index, 1*100000, 25+273.15, false)  << endl;
 }
 
+void adjust_PMc (int i, double new_PMc, TGfitTask *sys)
+{
+    int index_PMc = sys->Opti->Pindex[i];
+    for (int n=0; n<sys->NodT.size(); ++n)
+    {
+        sys->NodT[n]->Set_PMc(new_PMc, index_PMc );
+    }
+}
+
+
+
 void adjust_RDc (TGfitTask *sys)
 {
     // going trough all nodes
