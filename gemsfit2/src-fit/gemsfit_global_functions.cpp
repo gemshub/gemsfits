@@ -49,6 +49,10 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 
     master_counter++;
 
+    if (master_counter%10000 == 0)
+    {
+        cout << master_counter << " itterations, continuning..." << endl;
+    }
 
     // Clear already stored results
     sys->computed_values_v.clear();
@@ -100,7 +104,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         long int NodeStatusCH;
 
         // Asking GEM to run with automatic initial approximation
-        dBR.at(0)->NodeStatusCH = NEED_GEM_SIA;
+        dBR.at(0)->NodeStatusCH = NEED_GEM_AIA;
 
         // RUN GEMS3K
         NodeStatusCH = sys->NodT[i]->GEM_run( false );
@@ -152,12 +156,39 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
                                     {
                                        residuals_sys_ = residuals_sys_ + residual_aqgen_elem (i, p, e, sys)*weight(i, p, e, sys->Tfun->weight, sys);
                                     } else residuals_sys_ = residuals_sys_ + residual_aqgen_elem (i, p, e, sys);
-
                                 } else // other phase than aq_gen
                                 {
                                     if ((sys->Tfun->objfun[j]->exp_phase != "aq_gen") && (sys->experiments[i]->expphases[p]->phase != "aq_gen"))
                                     {
                                     residuals_sys_ = residuals_sys_ + residual_phase_elem (i, p, e, sys);
+                                    }
+                                }
+                            }
+                        }
+                    } else
+                    if ((sys->Tfun->objfun[j]->exp_property !="NULL") && (sys->experiments[i]->expphases[p]->phprop.size() > 0))
+                    {
+                        // loop trough all properties
+                        for (int pp = 0; pp< sys->experiments[i]->expphases[p]->phprop.size(); ++pp)
+                        {
+                            if (sys->experiments[i]->expphases[p]->phprop[pp]->property == sys->Tfun->objfun[j]->exp_property)
+                            {
+                                // check for unit
+                                check_ph_unit(i, p, pp, sys->Tfun->objfun[j]->exp_unit, sys );
+                                if ((sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
+                                {
+                                    if (sys->Tfun->weight.size() > 0)
+                                    {
+                                       residuals_sys_ = residuals_sys_ + residual_aqgen_prop (i, p, pp, j, sys)*weight_phprop(i, p, pp, sys->Tfun->weight, sys);
+                                    } else residuals_sys_ = residuals_sys_ + residual_aqgen_prop (i, p, pp, j, sys);
+                                } else // other phase than aq_gen
+                                {
+                                    if ((sys->Tfun->objfun[j]->exp_phase != "aq_gen") && (sys->experiments[i]->expphases[p]->phase != "aq_gen"))
+                                    {
+                                        if (sys->Tfun->weight.size() > 0)
+                                        {
+                                           residuals_sys_ = residuals_sys_ + residual_phase_prop (i, p, pp, j, sys)*weight_phprop(i, p, pp, sys->Tfun->weight, sys);
+                                        } else residuals_sys_ = residuals_sys_ + residual_phase_prop (i, p, pp, j, sys);
                                     }
                                 }
                             }

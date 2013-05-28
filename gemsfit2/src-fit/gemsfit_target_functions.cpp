@@ -139,6 +139,53 @@ void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
     }
 }
 
+void check_ph_unit(int i, int p, int pp, string unit, TGfitTask *sys )
+{
+    if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit != unit)
+    {
+        if (unit == "-loga")
+        {
+            // molal to log(molal)
+            if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == "molal")
+            {
+                double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->pQnt;
+                sys->experiments[i]->expphases[p]->phprop[pp]->pQnt = -log10(sys->experiments[i]->expphases[p]->phprop[pp]->pQnt);
+                sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt * error_perc / 100;
+                sys->experiments[i]->expphases[p]->phprop[pp]->Qunit = "-loga";
+            }
+            else
+            {
+                cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+                exit(1);
+            }
+        } else
+            if (unit == "molal")
+            {
+                // log to molal
+                if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == "-loga")
+                {
+                    double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->pQnt;
+                    sys->experiments[i]->expphases[p]->phprop[pp]->pQnt = pow(10,-(sys->experiments[i]->expphases[p]->phprop[pp]->pQnt));
+                    sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt * error_perc / 100;
+                    sys->experiments[i]->expphases[p]->phprop[pp]->Qunit = "molal";
+                }
+                else
+                {
+                    cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+                    exit(1);
+                }
+            }
+    }
+    else
+    {
+        if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit != unit)
+        {
+            cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+            exit(1);
+        }
+    }
+}
+
 
 double residual_aqgen_elem (int i, int p, int e, TGfitTask *sys)
 {
@@ -171,6 +218,42 @@ double residual_aqgen_elem (int i, int p, int e, TGfitTask *sys)
 
     /// add weighting!!!
     /// to be implemented
+
+    sys->computed_values_v.push_back(computed_value);
+    sys->measured_values_v.push_back(measured_value);
+    sys->computed_residuals_v.push_back(residual);
+
+    return residual;
+}
+
+double residual_aqgen_prop (int i, int p, int pp, int j, TGfitTask *sys)
+{
+    double computed_value, measured_value;
+    double residual = 0.0;
+
+    if (sys->Tfun->objfun[j]->exp_property == "pH")
+    {
+        if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == "-loga")
+        {
+        computed_value = sys->NodT[i]->Get_pH();
+        } else
+        {
+            computed_value = pow(10,(-(sys->NodT[i]->Get_pH()))) /*sys->NodT[i]->Get_pH()*/;
+        }
+    } // addd other properties
+
+
+
+    measured_value = (sys->experiments[i]->expphases[p]->phprop[pp]->pQnt);
+
+    // check Target function type and calculate the residual
+    if (sys->Tfun->type == "lsq")
+    {
+        residual = least_square(computed_value, measured_value);
+    } else
+    {
+        // other type of Target functions
+    }
 
     sys->computed_values_v.push_back(computed_value);
     sys->measured_values_v.push_back(measured_value);
@@ -218,6 +301,38 @@ double residual_phase_elem (int i, int p, int e, TGfitTask *sys)
     return residual;
 }
 
+double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
+{
+    const char *phase_name;
+    int PHndx, nIC;
+    double computed_value, measured_value;
+    double residual = 0.0;
+    DATACH* dCH = sys->NodT[i]->pCSD();
+    double* IC_in_PH;
+
+    phase_name = sys->experiments[i]->expphases[p]->phase.c_str();
+    PHndx = sys->NodT[i]->Ph_name_to_xDB(phase_name);
+
+    computed_value = sys->NodT[i]->Ph_Mass(PHndx);
+    measured_value = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt;
+
+    // check Target function type and calculate the residual
+    if (sys->Tfun->type == "lsq")
+    {
+        residual = least_square(computed_value, measured_value);
+    } else
+    {
+        // other type of Target functions
+    }
+
+    sys->computed_values_v.push_back(computed_value);
+    sys->measured_values_v.push_back(measured_value);
+    sys->computed_residuals_v.push_back(residual);
+
+    return residual;
+}
+
+
 double least_square (double computed_value, double measured_value)
 {
     double lsq = 0.0;
@@ -229,7 +344,23 @@ double weight (int i, int p, int e, string type, TGfitTask *sys)
 {
     if (type == "inverr")
     {
+        if (sys->experiments[i]->expphases[p]->phcomp[e]->Qerror == 0)
+        {
+            /*cout <<"experiment "<<i<<" phase "<<sys->experiments[i]->expphases[p]->phase<<" element "<< sys->experiments[i]->expphases[p]->phcomp[e]->comp << " the error is 0. Exiting now..."<<endl;*/ return 1;
+        }
         return 1/sys->experiments[i]->expphases[p]->phcomp[e]->Qerror;
+    }
+}
+
+double weight_phprop (int i, int p, int pp, string type, TGfitTask *sys)
+{
+    if (type == "inverr")
+    {
+        if (sys->experiments[i]->expphases[p]->phprop[pp]->Qerror == 0)
+        {
+            /*cout <<"experiment "<<i<<" phase "<<sys->experiments[i]->expphases[p]->phase<<" property "<< sys->experiments[i]->expphases[p]->phprop[pp]->property << " the error is 0. Exiting now..."<<endl;*/ return 1;
+        } else
+        return 1/sys->experiments[i]->expphases[p]->phprop[pp]->Qerror;
     }
 }
 

@@ -79,6 +79,19 @@ void adjust_RDc (TGfitTask *sys);
 void check_unit(int i, int p, int e, string unit, TGfitTask *sys );
 
 /**
+* Checks if the unit specified in the target function in the input file corresponds with the unit in the
+* Data Manager class
+* @param i      position in the experiments vector (which experiment)
+* @param p      position in the expphases vector (which pahse)
+* @param pp     position in the phprop vector (which property)
+* @param unit   unit of form the target function specified in the input file
+* @param sys    pointer to data object that holds the data of the current TGfitTask struct
+* @author DM
+* @date 17.05.2013
+*/
+void check_ph_unit(int i, int p, int pp, string unit, TGfitTask *sys );
+
+/**
 * Returns the residual from comparing the calculated with the meaured
 * the elemental composition in the aqueous phase
 * @param i      position in the experiments vector (which experiment)
@@ -89,6 +102,19 @@ void check_unit(int i, int p, int e, string unit, TGfitTask *sys );
 * @date 17.05.2013
 */
 double residual_aqgen_elem (int i, int p, int e, TGfitTask *sys);
+
+/**
+* Returns the residual from comparing the calculated with the meaured
+* the elemental composition in the aqueous phase
+* @param i      position in the experiments vector (which experiment)
+* @param p      position in the expphases vector (which pahse)
+* @param pp     position in the phprop vector (which property)
+* @param j      position in the objfun vector
+* @param sys    pointer to data object that holds the data of the current TGfitTask struct
+* @author DM
+* @date 17.05.2013
+*/
+double residual_aqgen_prop (int i, int p, int pp, int j, TGfitTask *sys);
 
 /**
 * Returns the residual from comparing the calculated with the meaured
@@ -103,6 +129,19 @@ double residual_aqgen_elem (int i, int p, int e, TGfitTask *sys);
 double residual_phase_elem (int i, int p, int e, TGfitTask *sys);
 
 /**
+* Returns the residual from comparing the calculated with the meaured
+* the elemental composition a phase
+* @param i      position in the experiments vector (which experiment)
+* @param p      position in the expphases vector (which pahse)
+* @param pp     position in the phprop vector (which property)
+* @param j      position in the objfun vector
+* @param sys    pointer to data object that holds the data of the current TGfitTask struct
+* @author DM
+* @date 17.05.2013
+*/
+double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys);
+
+/**
 * Returns the weight based on the wight type
 * @param i      position in the experiments vector (which experiment)
 * @param p      position in the expphases vector (which pahse)
@@ -114,6 +153,18 @@ double residual_phase_elem (int i, int p, int e, TGfitTask *sys);
 */
 double weight (int i, int p, int e, string type, TGfitTask *sys);
 
+/**
+* Returns the weight based on the wight type
+* @param i      position in the experiments vector (which experiment)
+* @param p      position in the expphases vector (which pahse)
+* @param pp     position in the phprop vector (which property)
+* @param type   type of weighting
+* @param sys    pointer to data object that holds the data of the current TGfitTask struct
+* @author DM
+* @date 17.05.2013
+*/
+double weight_phprop (int i, int p, int pp, string type, TGfitTask *sys);
+
 
 /**
 * Returns the least square ( sqrt[(calculated-measured)^2 /measured^2] )
@@ -123,5 +174,8 @@ double weight (int i, int p, int e, string type, TGfitTask *sys);
 * @date 17.05.2013
 */
 double least_square (double computed_value, double measured_value);
+
+
+
 
 #endif // GEMSFIT_TARGET_FUNCTIONS_H

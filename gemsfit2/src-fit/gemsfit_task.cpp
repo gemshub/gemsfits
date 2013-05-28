@@ -349,6 +349,7 @@ void TGfitTask::get_DatTarget ( )
     for (unsigned int i = 0 ; i < out.size() ; i++)
     {
         Tfun->objfun[i]->exp_phase = out[i];
+        ++j;
     }
     out.clear();
 
@@ -356,7 +357,20 @@ void TGfitTask::get_DatTarget ( )
     for (unsigned int i = 0 ; i < out.size() ; i++)
     {
         Tfun->objfun[i]->exp_elem = out[i];
-        ++j;
+    }
+    out.clear();
+
+    parse_JSON_array_object(DatTarget, OFUN, Eunit, out);
+    for (unsigned int i = 0 ; i < out.size() ; i++)
+    {
+        Tfun->objfun[i]->exp_unit = out[i];
+    }
+    out.clear();
+
+    parse_JSON_array_object(DatTarget, OFUN, PPH, out);
+    for (unsigned int i = j ; i < out.size()+j ; i++)
+    {
+        Tfun->objfun[i]->exp_phase = out[i-j];
     }
     out.clear();
 
@@ -367,12 +381,14 @@ void TGfitTask::get_DatTarget ( )
     }
     out.clear();
 
-    parse_JSON_array_object(DatTarget, OFUN, Eunit, out);
-    for (unsigned int i = 0 ; i < out.size() ; i++)
+    parse_JSON_array_object(DatTarget, OFUN, PEunit, out);
+    for (unsigned int i = j ; i < out.size()+j ; i++)
     {
-        Tfun->objfun[i]->exp_unit = out[i];
+        Tfun->objfun[i]->exp_unit = out[i-j];
     }
     out.clear();
+
+
 
 }
 
@@ -646,7 +662,7 @@ void TGfitTask::setnodes()
         // if Nitt present assign two moles
         if (NodT[n]->IC_name_to_xDB("Nit") > -1) {
             ICndx = NodT[n]->IC_name_to_xDB("Nit");
-            new_moles_IC[ICndx]=2;
+            new_moles_IC[ICndx]=4.12434406;
         }
 
         // Set amount of dependent components (GEMS3K: DBR indexing)
@@ -656,10 +672,10 @@ void TGfitTask::setnodes()
             if (experiments[n]->sbcomp[j]->comp == "H2O")
             {
                 ICndx = NodT[n]->IC_name_to_xDB("H");
-                new_moles_IC[ICndx] += 2*experiments[n]->sbcomp[j]->bQnt/18.01528; // adds 1e-05 moles of H2 for each kg og H2O
-                if (NodT[n]->IC_name_to_xDB("Nit") < -1)
+                new_moles_IC[ICndx] += 2*experiments[n]->sbcomp[j]->bQnt/18.01528 /*+  2.123456*experiments[n]->sbcomp[j]->bQnt/1000*1e-05*/; // adds 1e-05 moles of H2 for each kg og H2O
+                if (NodT[n]->IC_name_to_xDB("Nit") < 0)
                 {
-                    new_moles_IC[ICndx] += 2.123456*experiments[n]->sbcomp[j]->bQnt/1000*1e-04;
+                    new_moles_IC[ICndx] += 2.123456*experiments[n]->sbcomp[j]->bQnt/1000*1e-05;
                 }
                 // cout << new_moles_IC[ICndx] << endl;
                 ICndx = NodT[n]->IC_name_to_xDB("O");
@@ -755,6 +771,8 @@ void TGfitTask::setnodes()
         delete[] xDC_lo;
         delete[] Ph_surf;
     }
+
+
 }
 
 
