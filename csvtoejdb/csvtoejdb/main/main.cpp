@@ -437,12 +437,12 @@ int main(int argc, char *argv[])
 
     bson bq2;
     bson_init_as_query(&bq2);
-//    bson_append_start_object(&bq2, expdataset);
-//    bson_append_start_array(&bq2, "$in");
-//    bson_append_string(&bq2, "0", "CH04D");
-//    bson_append_string(&bq2, "1", "CH04");
-//    bson_append_finish_array(&bq2);
-//    bson_append_finish_object(&bq2);
+    bson_append_start_object(&bq2, expdataset);
+    bson_append_start_array(&bq2, "$in");
+    bson_append_string(&bq2, "0", "K_Anderson&Burnham1967");
+    bson_append_string(&bq2, "1", "K_Pascal&Anderson1989");
+    bson_append_finish_array(&bq2);
+    bson_append_finish_object(&bq2);
 
     bson_append_start_object(&bq2, sT);
     bson_append_start_array(&bq2, "$bt");
@@ -524,7 +524,7 @@ int main(int argc, char *argv[])
     ofstream fout;
     string path2 = argv[1];
     path2+= "distinctTP.csv";
-    fout.open(path2.c_str(), ios::app);
+    fout.open(path2.c_str(), ios::trunc);
     if( fout.fail() )
     { cout<<"Output fileopen error"<<endl; exit(1); }
 

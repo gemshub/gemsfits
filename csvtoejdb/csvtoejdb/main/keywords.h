@@ -83,9 +83,10 @@ static const char *url = "url"; ///	                              1		     string
     static const char *OFUN = "OFUN"; ///                                   array               Objective function
         static const char *EPH = "EPH"; ///                                 string              experiment phase
         static const char *EN = "EN"; ///                                   string              experiment phase element
+        static const char *PPH = "PPH"; ///                                 string              experiment pahse (for phase property)
         static const char *EP = "EP"; ///                                   string              experiment pahse property
         static const char *Eunit = "Eunit"; ///                             string              experiment element unit
-//        static const char *Punit = "Punit"; ///                             string              experiment property unit
+        static const char *PEunit = "PEunit"; ///                           string              experiment property unit
 
 
 //}
