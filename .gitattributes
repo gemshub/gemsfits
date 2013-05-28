@@ -48,6 +48,12 @@ Tests/SS_INPUT_CSV/qtz_h2o_csv_test-dbr.lst -text
 Tests/SS_INPUT_CSV/qtz_h2o_csv_test-dch.dat -text
 Tests/SS_INPUT_CSV/qtz_h2o_csv_test-ipm.dat -text
 Tests/SS_INPUT_CSV/solubility.csv -text
+Tests/Test[!!-~]gemsfit1&2/qtz-koh/1/qtz_koh_sqldb -text
+Tests/Test[!!-~]gemsfit1&2/qtz-koh/2/qtzh2okoh -text
+Tests/Test[!!-~]gemsfit1&2/qtz-koh/2/qtzh2okoh_experiments -text
+Tests/Test[!!-~]gemsfit1&2/solcash/1/solcash_sqldb -text
+Tests/Test[!!-~]gemsfit1&2/solcash/2/solcash -text
+Tests/Test[!!-~]gemsfit1&2/solcash/2/solcash_experiments -text
 Tests/soldata.backup -text
 Tests/test.backup -text
 csvtoejdb/csvtoejdb-build/CASH/CASH.csv -text

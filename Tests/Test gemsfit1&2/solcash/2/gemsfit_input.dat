@@ -1,0 +1,316 @@
+
+
+#########################################################################
+#>>>>>>>>>>>>>>> Data sources section >>>>>>>>>>>>>>>>>>>>>>>>>>>>>#
+#########################################################################
+
+# MPI: Number of threads for paralelization
+<MPI>  4
+
+# DatSource: get measurement data from EJDB databse (default) (0). No other sources implemented in GEMSFIT2
+<DatSource>  
+0
+
+# DatDB: database path
+<DatDB>
+test_input/CASH/solcash
+
+# DatColection: database colection name
+<DatColection>
+experiments
+
+# DataSelect: query for selecting data form EJDB database in JSON format. Names of samples or expdatasets and temperature and pressure intervals. all - select all data
+  Use the following template by pasting it after the DatSelect and changing the desired settings: 
+  sample - names of samples you want to select
+  expdataset - names of experimental datasets you want to select 
+  sT - temperature range 
+  sP - pressure range
+ 
+  { "sample" : "", 
+  "expdataset" : ["CH04", "CH04D"],
+  "sT" : [100, 1000],
+  "sP" : [1, 2500] }
+
+<DatSelect>
+  { "sample" : "", 
+  "expdataset" : ["CH04", "CH04D", "GC65"],
+  "sT" : [1, 1000],
+  "sP" : [1, 2500] }
+
+
+# DatTarget: Target function for parmeter fitting
+  Use the following template by pasting it after the DatTarget and changing the desired settings:
+  Target - name of the function 
+  TT - type of target function (lsq - least square, ...) 
+  WT - weighting scheeme (inverr - invers weighting *1/error, ...)
+  OFUN - objective function, what to compare 
+  EPH - what phase from the experiments 
+  EN - what element from the phase 
+  EP - what property of the phase
+  Eunit - what unit the values should be in (molal - moles/Kg H2O, loga - log(molal), ...)
+ 
+  { "Target": "name", "TT": "lsq", "WT": "inverr", "OFUN":
+     [{ "EPH": "aq_gen", "EN": "Si", "Eunit": "molal" },
+      { "EPH": "aq_gen", "EN": "Al", "Eunit": "molal" },
+      { "EPH": "aq_gen", "EP": "pH", "Eunit": "-loga" }] }
+
+<DatTarget>
+  { "Target": "name", "TT": "lsq", "WT": "", "OFUN":
+     [{ "EPH": "aq_gen", "EN": "Si", "Eunit": "molal" },
+      { "EPH": "aq_gen", "EN": "Ca", "Eunit": "molal" },
+      { "EPH": "aq_gen", "EP": "pH", "Eunit": "-loga" }] }
+
+# SystemFiles: Comment
+<SystemFiles>  
+./test_input/AllDa3T-fwd-dat.lst
+
+# RecipeFiles: Comment
+<RecipeFiles>  '' 
+
+#########################################################################
+#>>>>>>>>>>>>>>> Parameters to Fit section >>>>>>>>>>>>>>>>>>>>>>>>>>>>>#
+#########################################################################
+
+  Parameter marking example:
+  Mark with F the value you want to fit, followed by the initial value or as follows:
+  F{ "IV" :-833444.00006792, "UB" : -800000, "LB" : -900000 } for SiO2@ G0 fitting
+  IV - initial value 
+  UB - upper bundary 
+  LB - lower bundary 
+
+  For a reaction constraint on G0 paste the following tamplate (in the place of the parameter) and make desired changes:
+  R{  "IV" : -36819.000776856, "Ref" : "SUPCRT92", "logK" : -14.46, "nC" : 4, "species" : "KOH@",
+      "RC" : [ "K+", "H2O@", "H+", "KOH@" ],
+      "Rcoef" : [ -1, -1, 1, 1 ]}
+  Ref - reference, logK - reaction constant, nC - numer of components involved in the reaction
+  species - reaction constrained species, RC - species involved in the reaction, Rcoef - reaction coeficients
+
+# ICNL: List of Independent Component names (<=4 characters per name) [nIC]
+<ICNL>
+'Ca' 'H' 'Nit' 'O' 'Si' 'Zz' 
+# DCNL: Name list of Dependent Components (<=16 characters per name) [nDC]
+<DCNL>
+'Ca+2' 'CaOH+' 'Ca(HSiO3)+' 'CaSiO3@' 'HSiO3-' 'SiO2@' 'SiO3-2' 'H2@' 'N2@' 'O2@' 'OH-' 'H+' 'H2O@' 'H2' 'N2' 'O2' 'CSH-T2C' 'CSH-T5C' 'CSH-TobH' 'Portlandite' 'Amor-Sl' 
+# PHNL: List of Phase names (<=16 characters per name) [nPH]
+<PHNL>
+'aq_gen' 'gas_gen' 'C-S-H-3T-2' 'Portlandite' 'Silica-amorph' 
+# ccPH: Codes of phase aggregate state [nPH]
+<ccPH>
+'a' 'g' 's' 's' 's' 
+# nDCinPH: Number of DCs included in each phase [nPH]
+<nDCinPH>
+13 3 3 1 1 
+# TKval: Temperature values, K for lookup arrays of thermodynamic data [nTp]
+<TKval>
+298.15 295.15 
+# Pval: Pressure values, Pa for lookup arrays of thermodynamic data [nPp]
+<Pval>
+100000 100000 
+ 
+# G0: Look-up array for DC molar Gibbs energy function g(T,P), J/mol at 298.15K and 1 bar 
+F{ "IV" :-4931878.7456321, "UB" : -4900000, "LB" : -4960000 }
+F{ "IV" :-5121922.1127774, "UB" : -5100000, "LB" : -5160000 }
+<G0>
+-552790.00065054
+-717024.00023652
+-1574238.0003068
+-1517557
+-1014598.010816
+-833411
+-938510
+17729.00010995
+18194.000182443
+16446.000207431
+-157270.00090727
+0
+-237181.38483664
+0
+0
+0
+-4931878.7456321
+F{ "IV" :-5027157.2910962, "UB" : -5000000, "LB" : -5100000 }
+-5121922.1127774
+-897013
+-848903
+
+
+#########################################################################
+#>>>>>>>>>> Input for fitting non-ideality parametres >>>>>>>>>>>>>>>>>>#
+#########################################################################
+
+
+## (4) Initial data for multicomponent phases (see DCH file for dimension nPHs)
+# sMod: Codes for TSolMod built-in  models of mixing in multicomponent phases [nPS*6]
+<sMod>
+'DNNSNN' 'INNINN' 'BNNSNN' 
+
+# LsMod: Dimensions of TSolMod <IPxPH> and <PMc> data arrays [nPS*3]. In each row (for phase):
+# [0] number of interaction parameters (rows in <IPx>); [1] max. parameter order (columns in <IPx>);
+# [2] number of coefficients per interaction parameter in <PMc> array
+<LsMod>
+2 0 4 
+0 0 0 
+2 4 3 
+
+# IPxPH: Index lists (in TSolMod convention) for interaction parameters of non-ideal solutions
+<IPxPH>
+0 2 0 0 1 3 0 0 
+
+# PMc: Tables (in TSolMod convention) of interaction parameter coefficients  for non-ideal solutions
+<PMc>
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+
+# LsMdc: Dimensions of TSolMod <DMc> and <MoiSN> arrays [nPS*3]: In each row (for phase):
+# [0] number of parameters per component; [1] 0; [2] 0. For multi-site (sublattice) models: 
+#   [1] number of sublattices nS; [2] total number of moieties nM acting in sublattice sites
+<LsMdc>
+0 0 0 
+0 0 0 
+1 2 4 
+
+# DMc: Tables (in TSolMod convention) of  parameter coefficients for dependent components
+<DMc>
+0 0 0 
+
+# MoiSN:  end member moiety / site multiplicity number tables (in TSolMod convention) 
+<MoiSN>
+1 0 0 0 0 1 0 0 0 0 1 0 0 1 0 0 0 0 1 0 0 0 0 1 
+
+# fDQF: DQF parameters of end members or pure gas fugacities, (J/mol/(RT) [nDC]
+<fDQF>
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+
+# This part is taken from *DBR.dat
+
+# TK: Node temperature T, Kelvin. This value must always be provided (GEM input)
+<TK>  298.15
+# P:  Node Pressure P, Pa. This value must always be provided (GEM input)
+<P>  100000
+
+## (4) Data for Independent Components
+#  'Ca' 'H' 'Nit' 'O' 'Si' 'Zz' 
+# bIC: Bulk composition of reactive subsystem (main GEM input), moles of ICs [nICb]
+<bIC>
+1.00000002513381 113.016746705914 2 59.5103733770907 1.000000001 0 
+
+## (5) Data for Dependent Components
+#  'Ca+2' 'CaOH+' 'Ca(HSiO3)+' 'CaSiO3@' 'HSiO3-' 'SiO2@' 'SiO3-2' 'H2@' 'N2@' 'O2@' 'OH-' 'H+' 'H2O@' 'H2' 'N2' 'O2' 'CSH-T2C' 'CSH-T5C' 'CSH-TobH' 'Portlandite' 'Amor-Sl' 
+# xDC: Speciation - amounts of DCs in equilibrium (primal solution), moles (GEM output/input) [nDCb]
+<xDC>
+0.00211414690151572 0.000102279025652252 6.93611937999773e-06 0.000282007709021412 0.000286707073042359 4.50153099771094e-06 6.54705000414675e-06 0 0.000637155066080237 1.28883054526704e-06 0.00403770777785058 2.8375415819891e-12 54.5092485810618 0 0.99936284493392 0.000998709669449552 0.188394960001679 0.0206730252364914 0.19031360614099 0 0 
+
+# dll: Lower metastability restrictions on amounts of DCs, moles (GEM input) [nDCb]
+<dll>
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+
+# dul: Upper metastability constraints on amounts of DCs, moles (GEM input) [nDCb]
+<dul>
+1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 
+
+## (6) Data for Phases
+#  'aq_gen' 'gas_gen' 'C-S-H-3T-2' 'Portlandite' 'Silica-amorph' 
+# aPH: Specific surface areas of phases, m2/kg (GEM input) [nPHb]
+<aPH>
+0 0 0 0 0 
+
+#########################################################################
+#>>>>>>>>>>>>>>> Data to compare section >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#
+#########################################################################
+
+# Vs: Volume V of reactive subsystem, m3 (GEM output)
+<Vs>  0.0258495
+# Ms: Mass of reactive subsystem, kg (GEM output)
+<Ms>  1.16222
+# Gs: Total Gibbs energy of the reactive subsystem, J/(RT) (GEM output)
+<Gs>  -6026.91
+# IS: Effective aqueous ionic strength, molal (GEM output)
+<IS>  0.00657658
+# pH: pH of aqueous solution in molal activity scale (GEM output)
+<pH>  11.5765
+# pe: pe of aqueous solution in molal activity scale (GEM output)
+<pe>  8.4494
+# Eh: Eh of aqueous solution, V (GEM output)
+<Eh>  0.498856
+
+## (4) Data for Independent Components
+#  'Ca' 'H' 'Nit' 'O' 'Si' 'Zz' 
+
+# uIC: Chemical potentials of ICs in equilibrium (dual solution), J/(RT) (GEM output) [nICb]
+<uIC>
+-268.387594923588 -46.1113904018458 -0.000499423723309459 -3.45470393857459 -341.575816808364 19.4554667625578 
+
+# bSP: Output bulk composition of the equilibrium solid part of the system, moles 
+<bSP>
+0.997494655378244 3.9938159137916 0 4.99322921530915 0.999413301517555 0 
+
+## (5) Data for Dependent Components
+#  'Ca+2' 'CaOH+' 'Ca(HSiO3)+' 'CaSiO3@' 'HSiO3-' 'SiO2@' 'SiO3-2' 'H2@' 'N2@' 'O2@' 'OH-' 'H+' 'H2O@' 'H2' 'N2' 'O2' 'CSH-T2C' 'CSH-T5C' 'CSH-TobH' 'Portlandite' 'Amor-Sl' 
+
+# gam: Activity coefficients of DCs in their respective phases (GEM output/input) [nDCb]
+<gam>
+0.708916384512715 0.917590165819487 0.917590165819487 0.999999990588271 0.917590165819487 0.999999990588271 0.708916384512715 0.999999990588271 0.999999990588271 0.999999990588271 0.917590165819487 0.917590165819487 0.999999981175681 1 1 1 0.523479273334078 5.34257213026233 0.5282833158356 1 1 
+
+## (6) Data for Phases
+#  'aq_gen' 'gas_gen' 'C-S-H-3T-2' 'Portlandite' 'Silica-amorph' 
+
+# xPH: Amounts of phases in equilibrium state, moles (GEM output) [nPHb]
+<xPH>
+54.5167278581487 1.00036155460337 0.39938159137916 0 0 
+
+# vPS: Volumes of multicomponent phases, m3 (GEM output) [nPSb]
+<vPS>
+0.000984864648877126 0.0247986743993325 6.59697762700602e-05 
+
+# mPS: Masses of multicomponent phases, kg (GEM output) [nPSb]
+<mPS>
+0.982234040652106 0.0280275077562236 0.151960851656592 
+
+# xPA: Amount of carrier (sorbent or solvent) in multicomponent phases, moles (GEM output) [nPSb]
+<xPA>
+54.5092485810618 0 0 
+
+# bPS: Bulk elemental compositions of multicomponent phases, moles (GEM output) [nPSb*nICb]
+#  'Ca' 'H' 'Nit' 'O' 'Si' 'Zz' 
+<bPS>
+0.00250536975556938 109.022930792122 0.00127431013216047 54.5151467424427 0.000586699482445626 -1.50205075667255e-20 
+0 0 1.99872568986784 0.0019974193388991 0 0 
+0.997494655378244 3.9938159137916 0 4.99322921530915 0.999413301517555 0 
+
+#########################################################################
+#>>>>>>>>>>>>>>> Optimization Methods section >>>>>>>>>>>>>>>>>>>>>>>>>>>>>#
+#########################################################################
+
+
+# OptDoWhat: perform optimization and statistics (0), only optimization with basic Statistics (1), only Statistics (2) with initial guesses as best fit parametters
+<OptDoWhat>  0
+
+# OptAlgo: specify algorithm GN_ISRES GN_ORIG_DIRECT GN_ORIG_DIRECT_L LN_COBYLA LN_BOBYQA 
+<OptAlgo>  
+'LN_BOBYQA'
+
+# OptBoundPerc: Generate bounds from initial guess vector: specify percentage deviation (user specific, user-defined bounds when set to -1)
+<OptBoundPerc>  100
+
+# OptTolRel: stopping criterion -> specify relative tolerance (default = 1e-04) of function value
+<OptTolRel>  1e-06
+
+# OptTolAbs: stopping criterion -> specify absolute tolerance (default = 1e-04) of function value
+<OptTolAbs>  1e-06
+
+# OptMaxEval: specify max number of evaluations
+<OptMaxEval>  5000
+
+# OptInitStep: specify initial stepsize for local minimizers (factor will be multiplied to all optimization parameters); 0 => use default
+<OptInitStep>  0
+
+# OptNormParam: Normalize bounds/constraints/fitting parameters with initial guess vector
+<OptNormParam>  1
+
+# StatMCruns: number of Monte Carlo runs for confidence interval generation
+<StatMCruns>  10
+
+# StatSensitivity: number of evaluations points per parameter for sensitivity evaluation
+<StatSensitivity>  50
+
+# StatMCbool: perform Monte Carlo runs -> yes (1)/no (0)
+<StatMCbool>  0
