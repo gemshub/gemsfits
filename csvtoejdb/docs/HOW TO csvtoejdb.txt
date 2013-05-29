@@ -1,0 +1,18 @@
+1. Have your data in a preformated exceel file - see CASH.xls as a template.
+2. Save your file as coma separated format "," (as separator) CSV.
+3. Run the program csvtoejdb with arguments as in the example: "CASH/ solcash CASH.csv" where:
+	first argument is the path to the CSV and database files, 2nd argument is the name of the database, and 3rd argument is the CSV file
+4. The program is default set to create a new database every time is executed - no appending of data.
+	If you have acces to the C++ project on line 44 remove argument "JBOTRUNC", resulting in appending of data to the database.
+
+5. Structure of the excel file:
+
+sample - name of sample - SHOULD BE UNIQUE
+expdataset - name of experimental dataset
+sT, sP - temperature and pressure
+!!! error and unit - should alsways come in this order after the value of interest!!!
+comp. - keyword that describes the composition of the experiment. comp. should be followed by an oxide eg. comp.SiO2
+phase. - keyword that describes a pahse. After pahse. comes the name of the pahse (as in GEMS) eg. pahse.aq_gen., followed by the property of the pahse eg. pahse.aq_gen.pH, component of the pahse
+eg. pahse.aq_gen.Si, or dependent component/species of a phase which is marked by "s" after the dot(.) eg. phase.aq_gen.sSiO2-
+!!! Names of the pahse, components, elements should be the same as in GEMS3K exported files !!!
+
