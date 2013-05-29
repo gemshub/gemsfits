@@ -39,6 +39,7 @@
 #include <vector>
 #include <iostream>
 #include "gemsfit_task.h"
+#include "print.h"
 
 
 // Set new Gibbs free energy

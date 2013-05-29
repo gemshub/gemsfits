@@ -223,6 +223,8 @@ double residual_aqgen_elem (int i, int p, int e, TGfitTask *sys)
     sys->measured_values_v.push_back(measured_value);
     sys->computed_residuals_v.push_back(residual);
 
+    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phcomp[e]->comp,sys->experiments[i]->expphases[p]->phcomp[e]->Qunit,measured_value,computed_value,residual );
+
     return residual;
 }
 
@@ -258,6 +260,8 @@ double residual_aqgen_prop (int i, int p, int pp, int j, TGfitTask *sys)
     sys->computed_values_v.push_back(computed_value);
     sys->measured_values_v.push_back(measured_value);
     sys->computed_residuals_v.push_back(residual);
+
+    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phprop[pp]->property,sys->experiments[i]->expphases[p]->phprop[pp]->Qunit,measured_value,computed_value,residual );
 
     return residual;
 }
@@ -298,6 +302,8 @@ double residual_phase_elem (int i, int p, int e, TGfitTask *sys)
     sys->measured_values_v.push_back(measured_value);
     sys->computed_residuals_v.push_back(residual);
 
+//    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phprop[pp]->property,sys->experiments[i]->expphases[p]->phprop[pp]->Qunit,measured_value,computed_value,residual );
+
     return residual;
 }
 
@@ -328,6 +334,8 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
     sys->computed_values_v.push_back(computed_value);
     sys->measured_values_v.push_back(measured_value);
     sys->computed_residuals_v.push_back(residual);
+
+//    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phprop[pp]->property,sys->experiments[i]->expphases[p]->phprop[pp]->Qunit,measured_value,computed_value,residual );
 
     return residual;
 }

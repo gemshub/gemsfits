@@ -282,7 +282,7 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     param_file  = gpf->OptParamFile().c_str();
 
     // For parameter optimization do not use printing of results
-    printfile = false;
+    printfile = gpf->ResultDir()+"FIT_results.csv";
 
     // For parameter optimization do not use parallelization of the Monte Carlo loop (=true). Instead, execute loop over measurements within objective function in parallel (=false).
     MC_MPI = false;
@@ -307,9 +307,10 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
 
     fout << "12. gemsfit_task.cpp line 307. Initializing the Target function structure & get_DatTarget(); " << endl;
     Tfun = new TargetFunction;
+    print = new ResPrint(printfile);
     get_DatTarget ( );
 
-    fout << "13. gemsfit_task.cpp line 311. Initializing optimization init_optim; " << endl;
+    fout << "13. gemsfit_task.cpp line 313. Initializing optimization init_optim; " << endl;
     init_optim (Opti->optv, sum_of_squares);
 
 }
@@ -452,7 +453,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, /*s
 //     Reset counter to zero
     master_counter = 0;
 
-    if( Opti->OptNormParam && !printfile )
+    if( Opti->OptNormParam )
     {
         Opti->normalize_params( optv_ );
         NormParams = true;
@@ -532,6 +533,8 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, /*s
 
 //    //===== For testing the objective function without oprimization =====//
 //    sum_of_squares = Equil_objective_function_callback(Opti->optv, grad, this);
+
+    print->print_header(Tfun->type);
 
     nlopt::result result = NLopti.optimize( Opti->optv, sum_of_squares );
     ffout<<"optv[0] = "<<Opti->optv[0]<<endl;

@@ -59,6 +59,8 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     sys->measured_values_v.clear();
     sys->computed_residuals_v.clear();
 
+    sys->print->print_clear();
+
 
     // going trough the adjusted parameters in Opti->Ptype and adjust with the new value
 //#ifdef USE_MPI
@@ -127,6 +129,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 //    cout << sys->NodT[0]->DC_G0(5, 1*100000, 22+273.15, false)  << endl;
 //    cout << sys->NodT[0]->Get_mIC(4) << endl;
 //    cout << "end" << endl;
+
 
 
     /// Target function

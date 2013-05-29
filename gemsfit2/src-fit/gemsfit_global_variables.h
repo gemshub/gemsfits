@@ -15,6 +15,9 @@
 #ifndef GEMSFIT_GLOBAL_VARIABLES_H
 #define GEMSFIT_GLOBAL_VARIABLES_H
 
+#include <string>
+using namespace std;
+
 // MPI variable declarations
 //namespace mpispace
 //{
@@ -27,9 +30,6 @@
 
     extern int	n_procs_boost;
     extern int	proc_id_boost;
-
-
-
 
 
 

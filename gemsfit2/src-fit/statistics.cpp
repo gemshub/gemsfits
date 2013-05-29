@@ -482,7 +482,6 @@ CorellationMatrix.print("Corellation Matrix:");
 //exit(1);//STOP
 
         // In case later on parallelization of measurement over for loop is wished, set printfile bool to false
-        gfittask->printfile = false;
 
 
 }

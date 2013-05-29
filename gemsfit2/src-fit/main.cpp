@@ -42,7 +42,6 @@
 #include "gemsfit_task.h"
 #include "statistics.h"
 
-
 #define BOOST_FILESYSTEM_VERSION 3
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #include <boost/filesystem.hpp>
@@ -109,6 +108,8 @@ int main( int argc, char *argv[] )
     // Reading in the data //
     fout << "1. main.cpp line 115. Creating new TGfitTask" << endl;
     TGfitTask* gfittask = new TGfitTask();
+
+    gfittask->print->print_result();
 
     fout<<endl<<" back in main ..."<<endl;
 

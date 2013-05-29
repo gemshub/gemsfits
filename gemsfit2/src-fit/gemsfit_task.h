@@ -39,6 +39,7 @@
 #include "optimization.h"
 #include "gemsfit_global_variables.h"
 #include <nlopt.hpp>
+#include "print.h"
 
 
 
@@ -84,7 +85,7 @@ public:
     string param_file;
 
     /// Printing Flag: if this flag is set to one, the result of the optimization will be printed to file (via optimization.cpp)
-    bool printfile;
+    string printfile;
 
     /// Monte Carlo flag: if true, then the MPI commands within the objective function call will not be executed. Instead, the loop over Monte Carlo runs is parallelized
     bool MC_MPI;
@@ -95,6 +96,8 @@ public:
     bool NormParams;
 
     static TGfitTask* gft;   ///< static pointer to this class
+
+    ResPrint* print;
 
 
     struct TargetFunction /// structure holding the target function information
