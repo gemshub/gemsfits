@@ -1,0 +1,10 @@
+- Printing class
+- test inverse weighting more
+- solidsolution composition
+- test the reaction constraint - also test if logk is respected at higher temperatures also
+- test interaction parameters
+- problems with GEMS convergence - can affect the ocnvergence as BOBYQA - decides how to change paramters ased on first residuals
+
+- type of data to compare (molality and log molality) etc...
+
+- look over the statistics 
