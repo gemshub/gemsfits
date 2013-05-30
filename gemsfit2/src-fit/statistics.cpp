@@ -150,8 +150,16 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         for( i=0; i< (int) optv_.size(); i++ ) // cols
         {
             // Print optimized parameter values to file
-            myStat <<"			parameter "<< i <<" : 	           " << optv_[i] << endl;
+            myStat <<"          parameter "<< i <<" : 	           " << optv_[i] << endl;
 
+        }
+
+        if (gfittask->Opti->h_RDc)
+        {
+            for (i=0; i<gfittask->Opti->reactions.size(); ++i)
+            {
+                myStat <<"          Reac parameter "<<i <<" :               "<<gfittask->Opti->reactions[i]->std_gibbs<<endl;
+            }
         }
         // Reaction constrained parameter
 //            myStat << " Reaction constrained parameter: "  <<endl;

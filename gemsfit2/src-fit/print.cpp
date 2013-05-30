@@ -56,8 +56,29 @@ void ResPrint::print_result()
     fout.setf(ios::fixed);
     for (int i=0; i<experiment.size(); ++i)
     {
-        fout<<experiment[i]<<","<<what1[i]<<","<<what2[i]<<","<<unit[i]<<","<<measured[i]<<","<<computed[i]<<","<<residual[i]<<endl;
+        if (what1[i] == "")
+        {
+            fout<<experiment[i]<<","/*<<what1[i]*/<<","<<what2[i]<<","<<unit[i]<<","<<measured[i]<<","<<computed[i]<<","<<residual[i]<<endl;
+        } else fout<<experiment[i]<<","<<what1[i]<<","<<what2[i]<<","<<unit[i]<<","<<measured[i]<<","<<computed[i]<<","<<residual[i]<<endl;
     }
+
+
+//    for( int i=0; i< (int) gfittask->Opti->optv.size(); i++ )
+//        fout<<" parameter "<<i<<" = "<< gfittask->Opti->optv[i] << endl;
+//    fout<<" sum of squares = "<<gfittask->sum_of_squares<<endl;
+//    fout<<endl;
+
+//    if (gfittask->Opti->h_RDc)
+//    {
+//        for (i=0; i<gfittask->Opti->reactions.size(); ++i)
+//        {
+//            myStat <<"          Reac parameter "<<i <<" :               "<<gfittask->Opti->reactions[i]->std_gibbs<<endl;
+//        }
+//    }
+
+
+
+
 }
 
 void ResPrint::print_result(string experiment, string what2, string unit, double measured, double computed, double residual)

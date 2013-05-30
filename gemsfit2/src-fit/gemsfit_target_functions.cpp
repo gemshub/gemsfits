@@ -92,6 +92,7 @@ void adjust_RDc (TGfitTask *sys)
             }
 
             new_G0 = (-R*298.15*2.302585093*sys->Opti->reactions[i]->logK) - delta_G;
+            sys->Opti->reactions[i]->std_gibbs = new_G0;
             // put absolute - check if correct
             delta_G0old_G0new = abs(sys->NodT[n]->DC_G0(species_index, 1e+05, 298.15, false)) - abs(new_G0);
             sys->NodT[n]->Set_DC_G0(species_index,1*100000, 25+273.15, new_G0);

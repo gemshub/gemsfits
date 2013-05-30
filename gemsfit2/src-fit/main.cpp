@@ -113,13 +113,6 @@ int main( int argc, char *argv[] )
 
     fout<<endl<<" back in main ..."<<endl;
 
-    fout_.setf(ios::fixed);
-
-    for( int i=0; i< (int) gfittask->Opti->optv.size(); i++ )
-        fout_<<" parameter "<<i<<" = "<< gfittask->Opti->optv[i] << endl;
-    fout_<<" sum of squares = "<<gfittask->sum_of_squares<<endl;
-    fout_<<endl;
-
     countit = master_counter;
 
     // Perform statistical analysis: Instantiate object of Statistics class
