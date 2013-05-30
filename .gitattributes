@@ -51,6 +51,9 @@ Tests/SS_INPUT_CSV/solubility.csv -text
 Tests/Test[!!-~]gemsfit1&2/qtz-koh/1/qtz_koh_sqldb -text
 Tests/Test[!!-~]gemsfit1&2/qtz-koh/2/qtzh2okoh -text
 Tests/Test[!!-~]gemsfit1&2/qtz-koh/2/qtzh2okoh_experiments -text
+Tests/Test[!!-~]gemsfit1&2/qtz-koh/RDC/1/qtz_koh_sqldb -text
+Tests/Test[!!-~]gemsfit1&2/qtz-koh/RDC/2/qtzh2okoh -text
+Tests/Test[!!-~]gemsfit1&2/qtz-koh/RDC/2/qtzh2okoh_experiments -text
 Tests/Test[!!-~]gemsfit1&2/solcash/1/solcash_sqldb -text
 Tests/Test[!!-~]gemsfit1&2/solcash/2/solcash -text
 Tests/Test[!!-~]gemsfit1&2/solcash/2/solcash_experiments -text

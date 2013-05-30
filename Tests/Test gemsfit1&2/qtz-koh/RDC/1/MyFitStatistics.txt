@@ -1,0 +1,29 @@
+ # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+ - - - - - - - RESULTS FROM GEMSFIT STANDARD G0 PARAMETER REGRESSION - - - - - - - 
+ # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+
+ Number of measurements :              	250
+
+ Number of parameters :                	3
+
+ Number of runs needed for regression :      219
+
+ Degrees of freedom :                  	247
+
+ Sum of squares :                      	3.09709
+
+ Reduced_chi_square :                  	0.0125388
+
+ Standard deviation of the residuals : 	0.016009
+
+ Coefficient of determination R^2 :    	0.98322
+
+ Pearson's Chi Square test :           	0.288181
+
+ Best fit results for parameters from regression : 
+			parameter 0 : K+	           -296052
+			parameter 1 : HSiO3-	           -1.03028e+06
+			parameter 2 : SiO2@	           -833733
+ Reaction constrained parameter: 
+ KOH@ : -450695
+

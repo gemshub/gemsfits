@@ -1,0 +1,88 @@
+ # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+ - - - - - - - RESULTS FROM GEMSFIT STANDARD G0 PARAMETER REGRESSION - - - - - - - 
+ # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+
+ Number of measurements :              	250
+
+ Number of parameters :                	3
+
+ Number of runs needed for regression :      60
+
+ Degrees of freedom :                  	247
+
+ Sum of squares :                      	3.21432
+
+ Reduced_chi_square :                  	0.0130135
+
+ Standard deviation of the residuals : 	0.114077
+
+ Coefficient of determination R^2 :    	0.975014
+
+ Pearson's Chi Square test :           	0.329033
+
+ Best fit results for parameters from regression : 
+          parameter 0 : 	           -283263
+          parameter 1 : 	           -1.03331e+06
+          parameter 2 : 	           -833721
+          Reac parameter 0 :               -437906
+
+ Variance-Covariance matrix: 
+								parameter 0			parameter 1			parameter 2
+			parameter 0 : 			   4.03164e+16		    -1.97849e+10		    -1.39324e+09
+			parameter 1 : 			   -1.97849e+10		    9.47992e+08		    -1.41895e+07
+			parameter 2 : 			   -1.39324e+09		    -1.41895e+07		    2.02279e+06
+
+ Parameter Standard Deviations/Errors: 
+			parameter 0 :	           2.00789e+08
+			parameter 1 :	           30789.5
+			parameter 2 :	           1422.25
+
+			parameter 0 :	           
+___________________________________________________________________
+Confidence       T           Interval          Lower          Upper
+ Value (%)     Value          Width            Limit          Limit
+___________________________________________________________________
+    50.000     0.675      8577997.426 -8861260.63308  8294734.21962
+    75.000     1.153     14642758.557-14926021.76332 14359495.34986
+    90.000     1.651     20966688.277-21249951.48422 20683425.07076
+    95.000     1.970     25012202.373-25295465.57975 24728939.16629
+    99.000     2.596     32965164.933-33248428.13936 32681901.72589
+
+			parameter 1 :	           
+___________________________________________________________________
+Confidence       T           Interval          Lower          Upper
+ Value (%)     Value          Width            Limit          Limit
+___________________________________________________________________
+    50.000     0.675         1315.369 -1034628.31948 -1031997.58081
+    75.000     1.153         2245.353 -1035558.30353 -1031067.59675
+    90.000     1.651         3215.079 -1036528.02908 -1030097.87121
+    95.000     1.970         3835.427 -1037148.37727 -1029477.52302
+    99.000     2.596         5054.952 -1038367.90236 -1028257.99793
+
+			parameter 2 :	           
+___________________________________________________________________
+Confidence       T           Interval          Lower          Upper
+ Value (%)     Value          Width            Limit          Limit
+___________________________________________________________________
+    50.000     0.675           60.760  -833781.99042  -833660.46950
+    75.000     1.153          103.719  -833824.94890  -833617.51102
+    90.000     1.651          148.513  -833869.74314  -833572.71678
+    95.000     1.970          177.169  -833898.39870  -833544.06122
+    99.000     2.596          233.502  -833954.73186  -833487.72806
+
+ Coefficient of Variation: 
+			parameter 0 :	           -708.84370
+			parameter 1 :	           -0.02980
+			parameter 2 :	           -0.00171
+
+ Parameter t-statistic: 
+			parameter 0 :	           -0.00141
+			parameter 1 :	           -33.56058
+			parameter 2 :	           -586.19896
+
+ Correlation matrix: 
+								parameter 0			parameter 1			parameter 2
+			parameter 0 : 			   1.00000		   			-0.00320		   			-0.00488
+			parameter 1 : 			   -0.00320		   			1.00000		   			-0.32403
+			parameter 2 : 			   -0.00488		   			-0.32403		   			1.00000
+
