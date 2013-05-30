@@ -1,7 +1,10 @@
-- Printing class
++ completed or partially completed
+- to be completed
+
++ Printing class - printing in /results/FIT_results.csv
 - test inverse weighting more
 - solidsolution composition
-- test the reaction constraint - also test if logk is respected at higher temperatures also
++ test the reaction constraint - also test if logk is respected at higher temperatures
 - test interaction parameters
 - problems with GEMS convergence - can affect the ocnvergence as BOBYQA - decides how to change paramters ased on first residuals
 
