@@ -307,7 +307,7 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
 
     fout << "12. gemsfit_task.cpp line 307. Initializing the Target function structure & get_DatTarget(); " << endl;
     Tfun = new TargetFunction;
-    print = new ResPrint(printfile);
+    print = new ResPrint(printfile, Opti);
     get_DatTarget ( );
 
     fout << "13. gemsfit_task.cpp line 313. Initializing optimization init_optim; " << endl;

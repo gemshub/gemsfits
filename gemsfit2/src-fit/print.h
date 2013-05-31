@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <optimization.h>
 using namespace std;
 
 class ResPrint
@@ -16,9 +17,11 @@ private:
     string path;
 
 public:
-    ResPrint(string path_);
+    ResPrint(string path_, optimization *opti);
 
     ~ResPrint ();
+
+    optimization* res_opti;
 
     void print_header(string function);
 

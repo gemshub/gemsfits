@@ -6,9 +6,10 @@
 
 using namespace std;
 
-ResPrint::ResPrint(string path_)
+ResPrint::ResPrint(string path_, optimization *opti)
 {
     path = path_;
+    res_opti = opti;
 }
 
 
@@ -63,22 +64,35 @@ void ResPrint::print_result()
     }
 
 
-//    for( int i=0; i< (int) gfittask->Opti->optv.size(); i++ )
-//        fout<<" parameter "<<i<<" = "<< gfittask->Opti->optv[i] << endl;
-//    fout<<" sum of squares = "<<gfittask->sum_of_squares<<endl;
-//    fout<<endl;
+    // call GEM_init to read GEMS3K input files
+    TNode* node  = new TNode();
 
-//    if (gfittask->Opti->h_RDc)
-//    {
-//        for (i=0; i<gfittask->Opti->reactions.size(); ++i)
-//        {
-//            myStat <<"          Reac parameter "<<i <<" :               "<<gfittask->Opti->reactions[i]->std_gibbs<<endl;
-//        }
-//    }
+    // call GEM_init     --> read in input files
+    if( (node->GEM_init( gpf->GEMS3LstFilePath().c_str() )) == 1 )
+    {
+        cout<<" .. ERROR occurred while reading input files !!! ..."<<endl;
+    }
 
+    for(int i=0; i< (int) res_opti->optv.size(); i++ ) // cols
+    {
+        // Print optimized parameter values to file
+        if (res_opti->Ptype[i] =="G0")
+        {
+            fout <<" parameter G0 "<<node->xCH_to_DC_name(res_opti->Pindex[i])<<" : " << res_opti->optv[i] << endl;
+        } else
+        fout <<"parameter "<<res_opti->Ptype[i]<<" : " << res_opti->optv[i] << endl;
 
+    }
 
+    if (res_opti->h_RDc)
+    {
+        for (int i=0; i<res_opti->reactions.size(); ++i)
+        {
+            fout <<"Reac parameter "<<res_opti->reactions[i]->Dc_name<<" :  "<<res_opti->reactions[i]->std_gibbs<<endl;
+        }
+    }
 
+    fout<<endl;
 }
 
 void ResPrint::print_result(string experiment, string what2, string unit, double measured, double computed, double residual)

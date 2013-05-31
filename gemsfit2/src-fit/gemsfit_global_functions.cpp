@@ -49,10 +49,6 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 
     master_counter++;
 
-    if (master_counter%10000 == 0)
-    {
-        cout << master_counter << " itterations, continuning..." << endl;
-    }
 
     // Clear already stored results
     sys->computed_values_v.clear();
@@ -202,6 +198,17 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         }
     }
     residuals_sys = residuals_sys_;
+
+    // debug for when using global algorithms
+    if (master_counter%10000 == 0)
+    {
+        cout << master_counter << " itterations, continuning..." << endl;
+        cout << "sum of residuals: "<<residuals_sys<< endl;
+        for (int i = 0; i<opt.size(); ++i)
+        {
+            cout<<"parameter "<<i<<" : "<<opt[i]<<endl;
+        }
+    }
 }
 
 
