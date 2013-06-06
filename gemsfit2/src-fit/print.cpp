@@ -21,10 +21,11 @@ void ResPrint::print_clear()
     unit.clear();
     measured.clear();
     computed.clear();
-    residual.clear();
+    Weighted_Tfun_residual.clear();
+
 }
 
-void ResPrint::set_print(string experiment_, string what1_, string what2_, string unit_, double measured_, double computed_, double residual_)
+void ResPrint::set_print(string experiment_, string what1_, string what2_, string unit_, double measured_, double computed_, double Weighted_Tfun_residual_, double weight_)
 {
     experiment.push_back(experiment_);
     what1.push_back(what1_);
@@ -32,18 +33,20 @@ void ResPrint::set_print(string experiment_, string what1_, string what2_, strin
     unit.push_back(unit_);
     measured.push_back(measured_);
     computed.push_back(computed_);
-    residual.push_back(residual_);
+    Weighted_Tfun_residual.push_back(Weighted_Tfun_residual_);
 }
 
 
-void ResPrint::print_header( string function)
+void ResPrint::print_header(string function, string weight_)
 {
     ofstream fout;
     fout.open(path.c_str(), ios::app);
     if( fout.fail() )
     { cout<<"Output fileopen error"<<endl; /*exit(1);*/ }
 
-    fout << "experiment,,,unit,measured,computed," <<function<<endl;
+    if (weight_ == "")
+        fout << "experiment,,,unit,measured,computed," <<function<<endl;
+    else fout << "experiment,,,unit,measured,computed," <<"weighted_"+function<<endl;
 
 }
 
@@ -59,8 +62,8 @@ void ResPrint::print_result()
     {
         if (what1[i] == "")
         {
-            fout<<experiment[i]<<","/*<<what1[i]*/<<","<<what2[i]<<","<<unit[i]<<","<<measured[i]<<","<<computed[i]<<","<<residual[i]<<endl;
-        } else fout<<experiment[i]<<","<<what1[i]<<","<<what2[i]<<","<<unit[i]<<","<<measured[i]<<","<<computed[i]<<","<<residual[i]<<endl;
+            fout<<experiment[i]<<","/*<<what1[i]*/<<","<<what2[i]<<","<<unit[i]<<","<<measured[i]<<","<<computed[i]<<","<<Weighted_Tfun_residual[i]<<endl;
+        } else fout<<experiment[i]<<","<<what1[i]<<","<<what2[i]<<","<<unit[i]<<","<<measured[i]<<","<<computed[i]<<","<<Weighted_Tfun_residual[i]<<endl;
     }
 
 

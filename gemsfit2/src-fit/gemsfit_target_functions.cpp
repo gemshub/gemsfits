@@ -35,6 +35,8 @@
 
 #include "gemsfit_target_functions.h"
 
+
+/// Adust FUNCTIONS
 void adjust_G0 (int i, double G0, TGfitTask *sys)
 {
 
@@ -45,7 +47,7 @@ void adjust_G0 (int i, double G0, TGfitTask *sys)
     // going trough all nodes
     for (int n=0; n<sys->NodT.size(); ++n)
     {
-        delta_G0old_G0new = abs(sys->NodT[n]->DC_G0(species_index, 1e+05, 298.15, false)) - abs(new_G0);
+        delta_G0old_G0new = fabs(sys->NodT[n]->DC_G0(species_index, 1e+05, 298.15, false)) - fabs(new_G0);
         // going trough all TP pairs
         for (int j=0; j<sys->TP_pairs[0].size(); ++j)
         {
@@ -66,8 +68,6 @@ void adjust_PMc (int i, double new_PMc, TGfitTask *sys)
         sys->NodT[n]->Set_PMc(new_PMc, index_PMc );
     }
 }
-
-
 
 void adjust_RDc (TGfitTask *sys)
 {
@@ -94,7 +94,7 @@ void adjust_RDc (TGfitTask *sys)
             new_G0 = (-R*298.15*2.302585093*sys->Opti->reactions[i]->logK) - delta_G;
             sys->Opti->reactions[i]->std_gibbs = new_G0;
             // put absolute - check if correct
-            delta_G0old_G0new = abs(sys->NodT[n]->DC_G0(species_index, 1e+05, 298.15, false)) - abs(new_G0);
+            delta_G0old_G0new = fabs(sys->NodT[n]->DC_G0(species_index, 1e+05, 298.15, false)) - fabs(new_G0);
             sys->NodT[n]->Set_DC_G0(species_index,1*100000, 25+273.15, new_G0);
             sys->Opti->reactions[i]->std_gibbs = new_G0;
 
@@ -109,6 +109,7 @@ void adjust_RDc (TGfitTask *sys)
     }
 }
 
+/// Unit chack FUNCTIONS
 void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
 {
     if (sys->experiments[i]->expphases[p]->phcomp[e]->Qunit != unit)
@@ -187,13 +188,13 @@ void check_ph_unit(int i, int p, int pp, string unit, TGfitTask *sys )
     }
 }
 
-
+/// Target functions, Tfun_residual calculations
 double residual_aqgen_elem (int i, int p, int e, TGfitTask *sys)
 {
     const char *elem_name;
     int ICndx;
     double computed_value, measured_value;
-    double residual = 0.0;
+    double Tfun_residual = 0.0, Weighted_Tfun_residual = 0.0, weight_ = 1.0;
 
     elem_name =  sys->experiments[i]->expphases[p]->phcomp[e]->comp.c_str();
     ICndx = sys->NodT[i]->IC_name_to_xDB(elem_name);
@@ -208,31 +209,21 @@ double residual_aqgen_elem (int i, int p, int e, TGfitTask *sys)
 
     measured_value = sys->experiments[i]->expphases[p]->phcomp[e]->bQnt;
 
-    // check Target function type and calculate the residual
-    if (sys->Tfun->type == "lsq")
-    {
-        residual = least_square(computed_value, measured_value);
-    } else
-    {
-        // other type of Target functions
-    }
+    // check Target function type and calculate the Tfun_residual
+    weight_ = weight(i, p, e, sys->Tfun->weight, sys);
+    Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type);
+    Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type)*weight_;
 
-    /// add weighting!!!
-    /// to be implemented
+    sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
+    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phcomp[e]->comp,sys->experiments[i]->expphases[p]->phcomp[e]->Qunit,measured_value,computed_value,Weighted_Tfun_residual, weight_ );
 
-    sys->computed_values_v.push_back(computed_value);
-    sys->measured_values_v.push_back(measured_value);
-    sys->computed_residuals_v.push_back(residual);
-
-    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phcomp[e]->comp,sys->experiments[i]->expphases[p]->phcomp[e]->Qunit,measured_value,computed_value,residual );
-
-    return residual;
+    return Weighted_Tfun_residual;
 }
 
 double residual_aqgen_prop (int i, int p, int pp, int j, TGfitTask *sys)
 {
     double computed_value, measured_value;
-    double residual = 0.0;
+    double Tfun_residual = 0.0, Weighted_Tfun_residual = 0.0, weight_ = 1.0;
 
     if (sys->Tfun->objfun[j]->exp_property == "pH")
     {
@@ -245,26 +236,17 @@ double residual_aqgen_prop (int i, int p, int pp, int j, TGfitTask *sys)
         }
     } // addd other properties
 
-
-
     measured_value = (sys->experiments[i]->expphases[p]->phprop[pp]->pQnt);
 
-    // check Target function type and calculate the residual
-    if (sys->Tfun->type == "lsq")
-    {
-        residual = least_square(computed_value, measured_value);
-    } else
-    {
-        // other type of Target functions
-    }
+    // check Target function type and calculate the Tfun_residual
+    weight_ = weight_phprop(i, p, pp, sys->Tfun->weight, sys);
+    Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type);
+    Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type)*weight_;
 
-    sys->computed_values_v.push_back(computed_value);
-    sys->measured_values_v.push_back(measured_value);
-    sys->computed_residuals_v.push_back(residual);
+    sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
+    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phprop[pp]->property,sys->experiments[i]->expphases[p]->phprop[pp]->Qunit,measured_value,computed_value,Weighted_Tfun_residual, weight_ );
 
-    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phprop[pp]->property,sys->experiments[i]->expphases[p]->phprop[pp]->Qunit,measured_value,computed_value,residual );
-
-    return residual;
+    return Weighted_Tfun_residual;
 }
 
 double residual_phase_elem (int i, int p, int e, TGfitTask *sys)
@@ -272,7 +254,7 @@ double residual_phase_elem (int i, int p, int e, TGfitTask *sys)
     const char *elem_name, *phase_name;
     int ICndx, PHndx, nIC;
     double computed_value, measured_value;
-    double residual = 0.0;
+    double Tfun_residual = 0.0, Weighted_Tfun_residual, weight_ = 1.0;
     DATACH* dCH = sys->NodT[i]->pCSD();
     double* IC_in_PH;
 
@@ -288,34 +270,27 @@ double residual_phase_elem (int i, int p, int e, TGfitTask *sys)
     computed_value = IC_in_PH[ICndx];
     measured_value = sys->experiments[i]->expphases[p]->phcomp[e]->bQnt;
 
-    // check Target function type and calculate the residual
-    if (sys->Tfun->type == "lsq")
-    {
-        residual = least_square(computed_value, measured_value);
-    } else
-    {
-        // other type of Target functions
-    }
+    // check Target function type and calculate the Tfun_residual
+    weight_ = weight(i, p, e, sys->Tfun->weight, sys);
+    Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type);
+    Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type)*weight_;
+
+    sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
 
     delete[] IC_in_PH;
 
-    sys->computed_values_v.push_back(computed_value);
-    sys->measured_values_v.push_back(measured_value);
-    sys->computed_residuals_v.push_back(residual);
+    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phcomp[e]->comp,sys->experiments[i]->expphases[p]->phcomp[e]->Qunit,measured_value,computed_value,Weighted_Tfun_residual, weight_ );
 
-//    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phprop[pp]->property,sys->experiments[i]->expphases[p]->phprop[pp]->Qunit,measured_value,computed_value,residual );
-
-    return residual;
+    return Weighted_Tfun_residual;
 }
 
 double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
 {
     const char *phase_name;
-    int PHndx, nIC;
+    int PHndx;
     double computed_value, measured_value;
-    double residual = 0.0;
+    double Tfun_residual = 0.0, Weighted_Tfun_residual, weight_ = 1.0;
     DATACH* dCH = sys->NodT[i]->pCSD();
-    double* IC_in_PH;
 
     phase_name = sys->experiments[i]->expphases[p]->phase.c_str();
     PHndx = sys->NodT[i]->Ph_name_to_xDB(phase_name);
@@ -323,53 +298,63 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
     computed_value = sys->NodT[i]->Ph_Mass(PHndx);
     measured_value = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt;
 
-    // check Target function type and calculate the residual
-    if (sys->Tfun->type == "lsq")
+    // check Target function type and calculate the Tfun_residual
+    weight_ = weight_phprop(i, p, pp, sys->Tfun->weight, sys);
+    Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type);
+    Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type)*weight_;
+
+    sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
+    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phprop[pp]->property,sys->experiments[i]->expphases[p]->phprop[pp]->Qunit,measured_value,computed_value,Weighted_Tfun_residual, weight_ );
+
+    return Weighted_Tfun_residual;
+}
+
+double Tfunction (double computed_value, double measured_value, string type)
+{
+    double Tf = 0.0;
+    if (type == "lsq")
     {
-        residual = least_square(computed_value, measured_value);
-    } else
+        Tf = pow( (computed_value - measured_value), 2) /*/ pow(measured_value, 2)*/;
+    }  else
     {
         // other type of Target functions
     }
-
-    sys->computed_values_v.push_back(computed_value);
-    sys->measured_values_v.push_back(measured_value);
-    sys->computed_residuals_v.push_back(residual);
-
-//    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phprop[pp]->property,sys->experiments[i]->expphases[p]->phprop[pp]->Qunit,measured_value,computed_value,residual );
-
-    return residual;
-}
-
-
-double least_square (double computed_value, double measured_value)
-{
-    double lsq = 0.0;
-    lsq = pow( (computed_value - measured_value), 2) / pow(measured_value, 2);
-    return lsq;
+    return Tf;
 }
 
 double weight (int i, int p, int e, string type, TGfitTask *sys)
 {
     if (type == "inverr")
     {
-        if (sys->experiments[i]->expphases[p]->phcomp[e]->Qerror == 0)
-        {
-            /*cout <<"experiment "<<i<<" phase "<<sys->experiments[i]->expphases[p]->phase<<" element "<< sys->experiments[i]->expphases[p]->phcomp[e]->comp << " the error is 0. Exiting now..."<<endl;*/ return 1;
-        }
-        return 1/sys->experiments[i]->expphases[p]->phcomp[e]->Qerror;
-    }
+        return 1/(sys->experiments[i]->expphases[p]->phcomp[e]->Qerror);
+    } else
+
+    if (type == "inverr2")
+    {
+        return 1/(pow(sys->experiments[i]->expphases[p]->phcomp[e]->Qerror,2));
+    } else
+
+    if (type == "inverr3")
+    {
+        return 1/(pow(sys->experiments[i]->expphases[p]->phcomp[e]->bQnt,2));
+    } else return 1;
 }
 
 double weight_phprop (int i, int p, int pp, string type, TGfitTask *sys)
 {
     if (type == "inverr")
     {
-        if (sys->experiments[i]->expphases[p]->phprop[pp]->Qerror == 0)
-        {
-            /*cout <<"experiment "<<i<<" phase "<<sys->experiments[i]->expphases[p]->phase<<" property "<< sys->experiments[i]->expphases[p]->phprop[pp]->property << " the error is 0. Exiting now..."<<endl;*/ return 1;
-        } else
-        return 1/sys->experiments[i]->expphases[p]->phprop[pp]->Qerror;
-    }
+        return 1/(sys->experiments[i]->expphases[p]->phprop[pp]->Qerror);
+    } else
+
+    if (type == "inverr2")
+    {
+        return 1/(pow(sys->experiments[i]->expphases[p]->phprop[pp]->Qerror,2));
+    } else
+
+    if (type == "inverr3")
+    {
+        return 1/(pow(sys->experiments[i]->expphases[p]->phprop[pp]->pQnt,2));
+    } else return 1;
 }
 

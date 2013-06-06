@@ -6,18 +6,28 @@
 #include <boost/math/distributions/chi_squared.hpp>
 
 // Constructor
-statistics::statistics( TGfitTask *gfittask, double sum_of_squares_, int num_of_params_, int num_of_runs_ )
+statistics::statistics(TGfitTask *gfittask, double weighted_Tfun_sum_of_residuals_, int num_of_params_, int num_of_runs_ )
 {
 
     number_of_measurements = 0;
     number_of_measurements += gfittask->computed_values_v.size();
+    Tfun_sum_of_residuals = 0.0;
+    sum_of_residuals = 0.0; weighted_sum_of_residuals = 0.0;
 
 
-    sum_of_squares 		= sum_of_squares_;
+    weighted_Tfun_sum_of_residuals 		= weighted_Tfun_sum_of_residuals_;
+    for (int i=0; i<gfittask->Tfun_residuals_v.size(); ++i)
+    {
+        Tfun_sum_of_residuals += gfittask->Tfun_residuals_v[i];
+
+        sum_of_residuals += fabs(gfittask->residuals_v[i]);
+
+        weighted_sum_of_residuals += fabs(gfittask->residuals_v[i])*gfittask->weights[i];
+    }
 
     num_of_runs		= num_of_runs_;
 
-cout<<" Statistics Constructor: sum of squares: "<<sum_of_squares<<endl;
+cout<<" Statistics Constructor: sum of squares: "<<weighted_Tfun_sum_of_residuals<<endl;
 
     number_of_parameters   = num_of_params_;
 
@@ -57,22 +67,21 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 
 
     // Compute standard deviation of residuals
-    for (i=1; i<gfittask->computed_residuals_v.size(); i++)
+    for (i=1; i<gfittask->Weighted_Tfun_residuals_v.size(); i++)
     {
-        mean_res += gfittask->computed_residuals_v[i];
+        mean_res += gfittask->Weighted_Tfun_residuals_v[i];
     }
 
     mean_res = mean_res / number_of_measurements;
 
-    for (i=1; i<gfittask->computed_residuals_v.size(); i++)
+    for (i=1; i<gfittask->Weighted_Tfun_residuals_v.size(); i++)
     {
-        Res += pow((gfittask->computed_residuals_v[i]-mean_res),2);
+        Res += pow((gfittask->Weighted_Tfun_residuals_v[i]-mean_res),2);
     }
 
 
 //    SD_of_residuals = sqrt((Res/degrees_of_freedom));
-    SD_of_residuals = sqrt( (sum_of_squares/(number_of_measurements-number_of_parameters)) );
-
+    SD_of_residuals = sqrt( (weighted_Tfun_sum_of_residuals/(number_of_measurements-number_of_parameters)) );
 
     // Modified by DM on 12.03.2012 due to errorneus calculation of R^2 when using log_solubility data.
 //    // Compute R^2: coefficient of determination
@@ -107,7 +116,11 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 
 
     // Reduced Chi Square
-    reduced_chi_square = sum_of_squares / degrees_of_freedom;
+    reduced_chi_square = weighted_Tfun_sum_of_residuals / degrees_of_freedom;
+
+    // Error variance
+    error_variance = (weighted_Tfun_sum_of_residuals/(number_of_measurements-number_of_parameters));
+
 
 
     // Write first statistcs to file
@@ -128,6 +141,10 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         myStat << " - - - - - - - RESULTS FROM GEMSFIT STANDARD G0 PARAMETER REGRESSION - - - - - - - " << endl;
         myStat << " # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # " << endl;
         myStat << endl;
+        myStat << " References: " << endl;
+        myStat << " [1] Mary C. Hill, Claire R. Tiedeman (2007) Effective Groundwater Model Calibration: With Analysis of Data, Sensitivities, Predictions, and Uncertainty. 480 pages."<<endl;
+        myStat << " [2] Eileen P, Poeter & Marc C. Hill DOCUMENTATION OF UCODE, A Computer Code for Universal Inverse Modeling. http://inside.mines.edu/~epoeter/583/UCODEmanual_wrir98-4080.pdf" <<endl;
+        myStat << endl;
                 myStat << " Number of measurements :              	" << number_of_measurements     << endl;
         myStat << endl;
         myStat << " Number of parameters :                	" << number_of_parameters 	<< endl;
@@ -136,11 +153,17 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         myStat << endl;
         myStat << " Degrees of freedom :                  	" << degrees_of_freedom	 	<< endl;
         myStat << endl;
-        myStat << " Sum of squares :                      	" << sum_of_squares 		<< endl;
+        myStat << " Target function sum of residuals :                      	" << Tfun_sum_of_residuals 		<< endl;
+        myStat << endl;
+        myStat << " Weighted target function sum of residuals :                      	" << weighted_Tfun_sum_of_residuals 		<< endl;
+        myStat << endl;
+        myStat << " Sum of residuals:                   " << sum_of_residuals << endl;
+        myStat << endl;
+        myStat << " Weighted sum of residuals:                  " << weighted_sum_of_residuals << endl;
         myStat << endl;
         myStat << " Reduced_chi_square :                  	" << reduced_chi_square 	<< endl;
         myStat << endl;
-        myStat << " Standard deviation of the residuals : 	" << SD_of_residuals 		<< endl;
+        myStat << " Standard deviation of the target function : 	" << SD_of_residuals 		<< endl;
         myStat << endl;
                 myStat << " Coefficient of determination R^2 :    	" << coeff_of_determination     << endl;
         myStat << endl;
@@ -199,43 +222,45 @@ void statistics::sensitivity_correlation( const std::vector<double> &optv_, TGfi
             // Set printfile bool to true in order to deactivate to parallelization of the loop over measurements within the StdState_gems3k_wrap() function
 //            gfittask->printfile = true;
 
-            for( i=0; i< (int) optv_.size(); i++ )
-            {
-                for( j=0; j< sensitivity_points; j++ )
-                {
-                    // Copy original values into opt_scan
-                    opt_scan = optv_;
+//            for( i=0; i< (int) optv_.size(); i++ )
+//            {
+//                for( j=0; j< sensitivity_points; j++ )
+//                {
+//                    // Copy original values into opt_scan
+//                    opt_scan = optv_;
 
-                    // add/subtract up to 25% of the original parameter value
-                    opt_scan[i] = optv_[i] + optv_[i] * ( j - sensitivity_points/2  ) / 200;
+//                    // add/subtract up to 25% of the original parameter value
+//                    opt_scan[i] = optv_[i] + optv_[i] * ( j - sensitivity_points/2  ) / 200;
 
-                    // compute sum of squared residuals
-                    residual_sys = 0.;
-                    gems3k_wrap( residual_sys, opt_scan, gfittask );
-//cout<<"residual_sys = "<<residual_sys<<endl;
-                    opt_scan_v[j] = opt_scan[i];
-                    ssr_param[j]  = residual_sys;
-                }
-                // add rows with 'sensitivity_points' columns
-                array_ssr.push_back( opt_scan_v );
-                array_ssr.push_back( ssr_param );
-            }
+//                    // compute sum of squared residuals
+//                    residual_sys = 0.;
+//                    gems3k_wrap( residual_sys, opt_scan, gfittask );
+////cout<<"residual_sys = "<<residual_sys<<endl;
+//                    opt_scan_v[j] = opt_scan[i];
+//                    ssr_param[j]  = residual_sys;
+//                }
+//                // add rows with 'sensitivity_points' columns
+//                array_ssr.push_back( opt_scan_v );
+//                array_ssr.push_back( ssr_param );
+//            }
 
 
 //            print_vectors_curve( optv_, array_ssr, sensitivity_points );
 
-        len_meas = (int) gfittask->experiments.size();
+        len_meas = (int) gfittask->Weighted_Tfun_residuals_v.size();
 
 //        // Compute Jacobian matrix (= Sensitivity matrix)
         arma::mat SensitivityMatrix( len_meas, (int) optv_.size() );
         arma::mat DimensionlessScaledSensitivities( len_meas, (int) optv_.size() );
+        arma::mat OnePercentScaledSensitivities( len_meas, (int) optv_.size() );
+        arma::mat WeightMatrix = arma::zeros<arma::mat>(len_meas, len_meas);
         arma::vec CompositeScaledSensitivities = arma::zeros<arma::vec>( (int) optv_.size(), 1 );
         arma::vec ParameterStandardDeviation = arma::zeros<arma::vec>( (int) optv_.size(), 1 );
         arma::vec CoefficientOfVariation = arma::zeros<arma::vec>( (int) optv_.size(), 1 );
         arma::vec Parameter_t_Statistic = arma::zeros<arma::vec>( (int) optv_.size(), 1 );
 
 
-        double delta = 0.001;
+        double delta = perturbator;
         for( i=0; i< (int) optv_.size(); i++ )
         {
             opt_scan = optv_;
@@ -256,8 +281,18 @@ void statistics::sensitivity_correlation( const std::vector<double> &optv_, TGfi
             for( k=0; k< len_meas; k++ )
             {
                 SensitivityMatrix(k,i) 	 			  = ( computed_up[k] - computed_lo[k] ) / ( optv_[i]*delta*2 );
-//                DimensionlessScaledSensitivities(k,i) = SensitivityMatrix(k,i) * fabs( optv_[i] ) * sqrt( 1.0 / gfittask->data_meas->allexp[k]->error_sol[0] );
-//                CompositeScaledSensitivities(i)      += sqrt( DimensionlessScaledSensitivities(k,i)*DimensionlessScaledSensitivities(k,i)/len_meas );
+
+                OnePercentScaledSensitivities(k,i) = (SensitivityMatrix(k,i)) * optv_[i] / 100;
+
+                if (gfittask->Tfun->weight == "inverr")
+                {
+                    DimensionlessScaledSensitivities(k,i) = SensitivityMatrix(k,i) * fabs( optv_[i] ) * gfittask->weights[k];
+                } else
+                    if ((gfittask->Tfun->weight == "inverr2") || (gfittask->Tfun->weight == "inverr3"))
+                    {
+                        DimensionlessScaledSensitivities(k,i) = SensitivityMatrix(k,i) * fabs( optv_[i] ) * sqrt(gfittask->weights[k]);
+                    } else  DimensionlessScaledSensitivities(k,i) = SensitivityMatrix(k,i) * fabs( optv_[i] ) * 1;
+                CompositeScaledSensitivities(i)      += sqrt( DimensionlessScaledSensitivities(k,i)*DimensionlessScaledSensitivities(k,i)/len_meas );
             }
         }
 
@@ -266,23 +301,29 @@ void statistics::sensitivity_correlation( const std::vector<double> &optv_, TGfi
 
 
 
-/*		myStat << " Sensitivity matrix over each measurement point: "<<endl;
-        for( i=0; i< (int) optv_.size(); i++ )
+        myStat << " Sensitivity matrix over each parameter [j] measurement point [i]: "<<endl;
+        myStat << " Calculated using central diferences, see ref. [1] section 4.3 "<<endl;
+        for( i=0; i< (int) computed_up.size();  i++ )
         {
-            for( j=0; j< (int) computed_up.size(); j++ )
+            for( j=0; j< (int) optv_.size(); j++ )
             {
                 // Write sensitivities to file
-                myStat <<" "<< i <<" "<< j <<" :	" << SensitivityMatrix(j,i)	<< endl;
+                myStat <<" ["<< j <<"] ["<< i <<"] : " << SensitivityMatrix(i,j) <<" ";
             }
+
+            myStat << endl;
         }
-*/
-//        myStat << " Composite Scaled Sensitivities: "<<endl;
-//        for( i=0; i< (int) optv_.size(); i++ )
-//        {
-//            // Write sensitivities to file
-//            myStat <<"			parameter "<< i <<" :	           " << CompositeScaledSensitivities(i)	<< endl;
-//        }
-//        myStat << endl;
+
+
+        myStat << " Composite Scaled Sensitivities: "<<endl;
+        myStat << " See ref. [1] section 4.3.4. If there is no weighting the weight is asumed 1 for all measured values. "<<endl;
+        myStat << " Larger values indicate parameters for which observations provide more information. \n A value less than 1 or less than (or close to) 1% of the highest value, means that the parameter is poorly estimated. \n These parameters should be fixed during regresion. "<<endl;
+        for( i=0; i< (int) optv_.size(); i++ )
+        {
+            // Write sensitivities to file
+            myStat <<"			parameter "<< i <<" :	           " << CompositeScaledSensitivities(i)	<< endl;
+        }
+        myStat << endl;
 
         // Plot results with DISLIN
 //        print_sensitivity( (int) computed_up.size(), (int) optv_.size(), SensitivityMatrix , gfittask->sysdata->molality_1 );
@@ -290,18 +331,32 @@ void statistics::sensitivity_correlation( const std::vector<double> &optv_, TGfi
 
 //SensitivityMatrix.print("SensitivityMatrix:");
 
+        for(i=0; i<gfittask->weights.size(); ++i)
+        {
+            WeightMatrix(i,i) = gfittask->weights[i];
+        }
+
         // Get transpose of sensitivity matrix
         arma::mat SensitivityMatrix_T = arma::trans(SensitivityMatrix);
 
-SensitivityMatrix_T.print("SensitivityMatrix_T:");
+//SensitivityMatrix_T.print("SensitivityMatrix_T:");
 
         // Compute Fisher matrix (is a proxy for the Hessian matrix)
-        arma::mat FisherMatrix = SensitivityMatrix_T * SensitivityMatrix;
+        arma::mat FisherMatrix = SensitivityMatrix_T * /*WeightMatrix **/ SensitivityMatrix;
+        if ((gfittask->Tfun->weight == "inverr2") /*|| (gfittask->Tfun->weight == "inverr1")*/ )
+        {
+            FisherMatrix = SensitivityMatrix_T * /*WeightMatrix **/ SensitivityMatrix;
+        }
 
 FisherMatrix.print("Fisher Matrix:");
 
         // Compute variance-covariance matrix
-        arma::mat VarCovarMatrix = SD_of_residuals * arma::inv( FisherMatrix, false );
+        arma::mat VarCovarMatrix = 1 * arma::inv( FisherMatrix, false );
+        if (gfittask->Tfun->weight == "inverr2")
+        {
+            VarCovarMatrix = error_variance * arma::inv( FisherMatrix, false );
+        } else VarCovarMatrix = 1 * arma::inv( FisherMatrix, false );
+
 
 VarCovarMatrix.print("Variance Covariance Matrix:");
 
@@ -326,6 +381,8 @@ CorellationMatrix.print("Corellation Matrix:");
 
         // Print Variance-Covariance matrix to file
         myStat << " Variance-Covariance matrix: "<<endl;
+        myStat << " See ref. [1] section 7.2. V(b) = s^2([X]trans*[X])^1; \n [W] - weight matrix is considered as 1 as there is no full weight matrix calculted, based on true experimental error (not provided for all experiments). \n X - sensitivity matrix " <<endl;
+        myStat << " When the chosen weight is other than inverr2 (1/sigma^2) error variance (s^2) is assumed 1. \n For inverr2 the error variance is calculated as weighted_Tfun_sum_of_residuals/degrees of freedom." << endl;
         for( i=0; i< (int) optv_.size(); i++ )
         {
             if( i== 0 )

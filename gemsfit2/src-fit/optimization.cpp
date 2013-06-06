@@ -54,7 +54,7 @@ void optimization::normalize_params( const vector<double> initguesses )
     optv.resize( initguesses.size() );
     for(i=0; i<optv.size(); i++)
     {
-        optv[i] = initguesses[i] / abs(initguesses[i]);
+        optv[i] = initguesses[i] / fabs(initguesses[i]);
     }
 
     // Normalize upper bounds vector
@@ -62,7 +62,7 @@ void optimization::normalize_params( const vector<double> initguesses )
     {
         fout << "Init guess ["<<i<<"] = " << initguesses[i] << endl;
         fout << "Upper Bound old ["<<i<<"]= " << OptUpBounds[i] << endl;
-        OptUpBounds[i] = OptUpBounds[i] / abs(initguesses[i]);
+        OptUpBounds[i] = OptUpBounds[i] / fabs(initguesses[i]);
         fout << "Upper Bound new ["<<i<<"]= " << OptUpBounds[i] << endl;
     }
 
@@ -71,14 +71,14 @@ void optimization::normalize_params( const vector<double> initguesses )
     {
         fout << "Init guess ["<<i<<"] = " << initguesses[i] << endl;
         fout << "Lower Bound old ["<<i<<"]= " << OptLoBounds[i] << endl;
-        OptLoBounds[i] = OptLoBounds[i] / abs(initguesses[i]);
+        OptLoBounds[i] = OptLoBounds[i] / fabs(initguesses[i]);
         fout << "Lower Bound new ["<<i<<"]= " << OptLoBounds[i] << endl;
     }
 
     // Normalize constraints vector
     for(i=0; i<constraint_data_v.size(); i++)
     {
-        constraint_data_v[i].Constraints = constraint_data_v[i].Constraints / abs(initguesses[i]);
+        constraint_data_v[i].Constraints = constraint_data_v[i].Constraints / fabs(initguesses[i]);
     }
 
     fout.close();

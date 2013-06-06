@@ -116,7 +116,7 @@ int main( int argc, char *argv[] )
     countit = master_counter;
 
     // Perform statistical analysis: Instantiate object of Statistics class
-    statistics stat( gfittask, gfittask->sum_of_squares, (int) gfittask->Opti->optv.size(), countit );
+    statistics stat( gfittask, gfittask->weighted_Tfun_sum_of_residuals, (int) gfittask->Opti->optv.size(), countit );
 
     // perform basic statistical analysis
     stat.basic_stat( gfittask->Opti->optv, gfittask );

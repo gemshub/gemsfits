@@ -269,7 +269,7 @@ void TGfitTask::freeMemory()
 //< Constructors for 1D arrangement of nodes
 TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
 {
-    sum_of_squares = 0.0;
+    weighted_Tfun_sum_of_residuals = 0.0;
     // GEMSFIT logfile
     //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
     ofstream fout;
@@ -311,7 +311,7 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     get_DatTarget ( );
 
     fout << "13. gemsfit_task.cpp line 313. Initializing optimization init_optim; " << endl;
-    init_optim (Opti->optv, sum_of_squares);
+    init_optim (Opti->optv, weighted_Tfun_sum_of_residuals);
 
 }
 
@@ -395,33 +395,33 @@ void TGfitTask::get_DatTarget ( )
 
 
 // Initialize optimization object and Run Optimization by calling build_optim
-void TGfitTask::init_optim( std::vector<double> &optv_, /*int &countit,*/ double &sum_of_squares )
+void TGfitTask::init_optim( std::vector<double> &optv_, /*int &countit,*/ double &weighted_Tfun_sum_of_residuals )
 {
     // Instantiate nlopt::opt object
     if( Opti->OptAlgo.compare( "'LN_COBYLA'" ) == 0 )
     {
         nlopt::opt nlopti_( nlopt::LN_COBYLA, optv_.size() );
-        build_optim( nlopti_, optv_, sum_of_squares );
+        build_optim( nlopti_, optv_, weighted_Tfun_sum_of_residuals );
     }
     else if( Opti->OptAlgo.compare( "'GN_ISRES'" ) == 0 )
     {
         nlopt::opt nlopti_( nlopt::GN_ISRES, optv_.size() );
-        build_optim( nlopti_, optv_, sum_of_squares );
+        build_optim( nlopti_, optv_, weighted_Tfun_sum_of_residuals );
     }
     else if( Opti->OptAlgo.compare( "'LN_BOBYQA'" ) == 0 )
     {
         nlopt::opt nlopti_( nlopt::LN_BOBYQA, optv_.size() );
-        build_optim( nlopti_, optv_, sum_of_squares );
+        build_optim( nlopti_, optv_, weighted_Tfun_sum_of_residuals );
     }
     else if( Opti->OptAlgo.compare( "'GN_ORIG_DIRECT'" ) == 0 )
     {
         nlopt::opt nlopti_( nlopt::GN_ORIG_DIRECT, optv_.size() );
-        build_optim( nlopti_, optv_, sum_of_squares );
+        build_optim( nlopti_, optv_, weighted_Tfun_sum_of_residuals );
     }
     else if( Opti->OptAlgo.compare( "'GN_ORIG_DIRECT_L'" ) == 0 )
     {
         nlopt::opt nlopti_( nlopt::GN_ORIG_DIRECT_L, optv_.size() );
-        build_optim( nlopti_, optv_, sum_of_squares );
+        build_optim( nlopti_, optv_, weighted_Tfun_sum_of_residuals );
     }
     else
     {
@@ -435,7 +435,7 @@ void TGfitTask::init_optim( std::vector<double> &optv_, /*int &countit,*/ double
 
 
 // Initialize optimization object and Run Optimization
-void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, /*std::vector<SS_System_Properties*> *ss_systems, int &countit,*/ double &sum_of_squares )
+void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, /*std::vector<SS_System_Properties*> *ss_systems, int &countit,*/ double &weighted_Tfun_sum_of_residuals )
 {
     unsigned int i = 0;
     int j = 0;
@@ -532,11 +532,11 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, /*s
     ffout << "15. in gesfit_task.cpp line 514. Performing optimization."<<endl;
 
 //    //===== For testing the objective function without oprimization =====//
-//    sum_of_squares = Equil_objective_function_callback(Opti->optv, grad, this);
+//    weighted_Tfun_sum_of_residuals = Equil_objective_function_callback(Opti->optv, grad, this);
 
-    print->print_header(Tfun->type);
+    print->print_header(Tfun->type, Tfun->weight);
 
-    nlopt::result result = NLopti.optimize( Opti->optv, sum_of_squares );
+    nlopt::result result = NLopti.optimize( Opti->optv, weighted_Tfun_sum_of_residuals );
     ffout<<"optv[0] = "<<Opti->optv[0]<<endl;
     ffout<<"size of optv = "<<Opti->optv.size()<<endl;
 
@@ -567,7 +567,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, /*s
                     {
                         fout<<Opti->optv[i]<<" ";
                     }
-                    fout<<") = "<<sum_of_squares<<std::endl;
+                    fout<<") = "<<weighted_Tfun_sum_of_residuals<<std::endl;
                     fout<<" after "<< master_counter <<" evaluations."<<std::endl;
                     fout.close();
 
@@ -576,7 +576,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, /*s
                     {
                         std::cout<<Opti->optv[i]<<" ";
                     }
-                    std::cout<<") = "<<sum_of_squares<<std::endl;
+                    std::cout<<") = "<<weighted_Tfun_sum_of_residuals<<std::endl;
                 }
                 std::cout<<" after "<< master_counter <<" evaluations"<<std::endl;
 
@@ -593,7 +593,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, /*s
       {
           for( i=0; i<Opti->optv.size(); i++ )
               {
-                  optv_[i] = Opti->optv[i] * abs(Opti->opt[i]);
+                  optv_[i] = Opti->optv[i] * fabs(Opti->opt[i]);
               }
       }
 
@@ -793,6 +793,16 @@ void TGfitTask::get_nodes(long int nNod)
 TGfitTask::~TGfitTask(   )
 {
    freeMemory();
+}
+
+void TGfitTask::set_residuals (double computed, double measured, double Weighted_Tfun_residual, double Tfun_residual, double weight )
+{
+    residuals_v.push_back(measured-computed);
+    weights.push_back(weight);
+    computed_values_v.push_back(computed);
+    measured_values_v.push_back(measured);
+    Weighted_Tfun_residuals_v.push_back(Weighted_Tfun_residual);
+    Tfun_residuals_v.push_back(Tfun_residual);
 }
 
 

@@ -53,7 +53,10 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     // Clear already stored results
     sys->computed_values_v.clear();
     sys->measured_values_v.clear();
-    sys->computed_residuals_v.clear();
+    sys->Weighted_Tfun_residuals_v.clear();
+    sys->Tfun_residuals_v.clear();
+    sys->residuals_v.clear();
+    sys->weights.clear();
 
     sys->print->print_clear();
 
@@ -151,10 +154,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
                                 check_unit(i, p, e, sys->Tfun->objfun[j]->exp_unit, sys );
                                 if ((sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
                                 {
-                                    if (sys->Tfun->weight.size() > 0)
-                                    {
-                                       residuals_sys_ = residuals_sys_ + residual_aqgen_elem (i, p, e, sys)*weight(i, p, e, sys->Tfun->weight, sys);
-                                    } else residuals_sys_ = residuals_sys_ + residual_aqgen_elem (i, p, e, sys);
+                                    residuals_sys_ = residuals_sys_ + residual_aqgen_elem (i, p, e, sys);
                                 } else // other phase than aq_gen
                                 {
                                     if ((sys->Tfun->objfun[j]->exp_phase != "aq_gen") && (sys->experiments[i]->expphases[p]->phase != "aq_gen"))
@@ -176,18 +176,12 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
                                 check_ph_unit(i, p, pp, sys->Tfun->objfun[j]->exp_unit, sys );
                                 if ((sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
                                 {
-                                    if (sys->Tfun->weight.size() > 0)
-                                    {
-                                       residuals_sys_ = residuals_sys_ + residual_aqgen_prop (i, p, pp, j, sys)*weight_phprop(i, p, pp, sys->Tfun->weight, sys);
-                                    } else residuals_sys_ = residuals_sys_ + residual_aqgen_prop (i, p, pp, j, sys);
+                                    residuals_sys_ = residuals_sys_ + residual_aqgen_prop (i, p, pp, j, sys);
                                 } else // other phase than aq_gen
                                 {
                                     if ((sys->Tfun->objfun[j]->exp_phase != "aq_gen") && (sys->experiments[i]->expphases[p]->phase != "aq_gen"))
                                     {
-                                        if (sys->Tfun->weight.size() > 0)
-                                        {
-                                           residuals_sys_ = residuals_sys_ + residual_phase_prop (i, p, pp, j, sys)*weight_phprop(i, p, pp, sys->Tfun->weight, sys);
-                                        } else residuals_sys_ = residuals_sys_ + residual_phase_prop (i, p, pp, j, sys);
+                                        residuals_sys_ = residuals_sys_ + residual_phase_prop (i, p, pp, j, sys);
                                     }
                                 }
                             }
@@ -233,7 +227,7 @@ double Equil_objective_function_callback( const std::vector<double> &opt, std::v
         vector<double> optV( opt.size() );
         for( i=0; i<opt.size(); i++ )
         {
-            optV[i] = opt[i] * abs(sys->Opti->opt[i]);
+            optV[i] = opt[i] * fabs(sys->Opti->opt[i]);
         }
         // call tsolmod wrapper
         gems3k_wrap( sum_of_squared_residuals_sys, optV, sys );

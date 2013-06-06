@@ -50,12 +50,12 @@ class statistics
         *
         * @author DM, FFH
         * @param systems vector of pointers to instances of System_Properties structs
-        * @param sum_of_squares_ the sum of squares which result from the performed regression
+        * @param weighted_Tfun_sum_of_residuals_ the sum of squares which result from the performed regression
         * @param num_of_params_ the number of variables which were fitted (length of optimization vector)
         * @param num_of_runs_ the number of runs needed for the parameter regression
         * @date 21.11.2012
         */
-        statistics( TGfitTask *system, double sum_of_squares_, int num_of_params_, int num_of_runs_  );
+        statistics( TGfitTask *system, double weighted_Tfun_sum_of_residuals_, int num_of_params_, int num_of_runs_  );
         statistics(); // init mode SD
 
         /**
@@ -68,8 +68,11 @@ class statistics
         virtual ~statistics();
 
         // Parameters for instantiating the class
-        /// sum of squares from fit
-        double sum_of_squares;
+        /// Target function form the fit
+        double weighted_Tfun_sum_of_residuals;
+        double Tfun_sum_of_residuals;
+        double weighted_sum_of_residuals;
+        double sum_of_residuals;
         /// number of parameters of the last regression (length of optimization vector)
         int number_of_parameters;
         /// number of measurements invoilved in the parameter regression
@@ -80,6 +83,8 @@ class statistics
         int MC_number_of_bars;
         /// number of runs that will be performed during the sensitivity analysis
         int num_of_runs;
+        /// used in calculation of the sensitivities by central diferences
+        double perturbator;
 
         // Number of Monte Carlo evaluations for confidence interval evaluation
         /// bool indicating if Monte Carlo runs for confidence interval analysis should be performed (=1) or not (=0)
@@ -96,6 +101,8 @@ class statistics
         double Pearsons_chi_square;
         /// reduces Chi Squared
         double reduced_chi_square;
+        /// Error variance
+        double error_variance;
         /// degrees of freedom
         double degrees_of_freedom;
 

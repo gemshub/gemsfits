@@ -90,7 +90,7 @@ public:
     /// Monte Carlo flag: if true, then the MPI commands within the objective function call will not be executed. Instead, the loop over Monte Carlo runs is parallelized
     bool MC_MPI;
 
-    double sum_of_squares;
+    double weighted_Tfun_sum_of_residuals;
 
     /// normalize parameters flag
     bool NormParams;
@@ -124,33 +124,39 @@ public:
     double_v measured_values_v;
 
     /// Computed residuals
-    double_v computed_residuals_v;
+    double_v residuals_v; // measured - calculated residuals
+//    double_v relative_residuals_v; // 100*(measured-calculated)/measured in %
+    double_v Weighted_Tfun_residuals_v; // Target function "residuals"
+    double_v Tfun_residuals_v;
+    double_v weights; // weights
 
 
    TGfitTask ();   ///< Constructor
 
    ~TGfitTask ();      /// Destructor
 
+   void set_residuals (double computed, double measured, double Weighted_Tfun_residual, double Tfun_residual, double weight );
+
    // initialize optimization
    /**
    * Initializes the NLopt obeject and the optimization task
    * @author DM
    * @param optv_ vector of optimized parameters
-   * @param sum_of_squares
+   * @param weighted_Tfun_sum_of_residuals
    * @date 06.05.2013
    */
-   virtual void init_optim(vector<double> &optv_, /*int &countit,*/ double &sum_of_squares );
+   virtual void init_optim(vector<double> &optv_, /*int &countit,*/ double &weighted_Tfun_sum_of_residuals );
 
    /**
    * initialize optimization object and assign constraints and bounds.
    * performs the optimization.
    * @param NLopti			nlopt optimization object
    * @param optv_              optimization vector
-   * @param sum_of_squares		sum of squared residuals
+   * @param weighted_Tfun_sum_of_residuals		sum of squared residuals
    * @author DM
    * @date 07.05.2013
    */
-   virtual void build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, /*std::vector<System_Properties*> *systems, int &countit,*/ double &sum_of_squares );
+   virtual void build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, /*std::vector<System_Properties*> *systems, int &countit,*/ double &weighted_Tfun_sum_of_residuals );
 
 
 

@@ -174,7 +174,7 @@ double weight_phprop (int i, int p, int pp, string type, TGfitTask *sys);
 * @author DM
 * @date 17.05.2013
 */
-double least_square (double computed_value, double measured_value);
+double Tfunction (double computed_value, double measured_value, string type);
 
 
 

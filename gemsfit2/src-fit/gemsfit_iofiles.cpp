@@ -71,9 +71,10 @@ optimization::optimization( int i)
 statistics::statistics()
 {
     number_of_measurements = 0;
-    sum_of_squares 		= 0;
+    weighted_Tfun_sum_of_residuals 		= 0;
     num_of_runs		= 0;
     number_of_parameters   = 0;
+    perturbator = 0.001;
     default_stat_param();
 //    define_plotfit_vars();
 }
@@ -744,7 +745,8 @@ outField Data_Manager_fields[10] =
 
     { "DatTarget",  0, 0, 1, "\n# DatTarget: Target function for parmeter fitting"
       "\n  Use the following template by pasting it after the DatTarget and changing the desired settings:"
-      "\n  Target - name of the function \n  TT - type of target function (lsq - least square, ...) \n  WT - weighting scheeme (inverr - invers weighting *1/error, ...)"
+      "\n  Target - name of the function \n  TT - type of target function: lsq - [measured-simulated]^2;"
+      "\n  WT - weighting scheeme: inverr - 1/error; inverr2 - 1/error^2; inverr3 - 1/measured^2;"
       "\n  OFUN - objective function, what to compare \n  EPH - what phase from the experiments \n  EN - what element from the phase \n  EP - what property of the phase"
       "\n  Eunit - what unit the values should be in (molal - moles/Kg H2O, loga - log(molal), ...)"
       "\n \n  { \"Target\": \"name\", \"TT\": \"lsq\", \"WT\": \"inverr\", \"OFUN\":"
@@ -875,13 +877,15 @@ outField statistics_fields[4] =
 {
     { "StatMCruns",  0, 0, 1, "\n# StatMCruns: number of Monte Carlo runs for confidence interval generation"},
     { "StatSensitivity",  0, 0, 1, "\n# StatSensitivity: number of evaluations points per parameter for sensitivity evaluation"},
-    { "StatMCbool",  0, 0, 1, "\n# StatMCbool: perform Monte Carlo runs -> yes (1)/no (0)"}
+    { "StatMCbool",  0, 0, 1, "\n# StatMCbool: perform Monte Carlo runs -> yes (1)/no (0)"},
+    { "StatPerturbator", 0, 0, 1, "\n# StatPerturbator: used for calculating sensitivities by central diference, see ref [2]"}
 };
 
 typedef enum {  /// Field index into outField structure
     f_StatMCruns= 0,
     f_StatSensitivity,
-    f_StatMCbool
+    f_StatMCbool,
+    f_StatPerturbator
 } statistics_FIELDS;
 
 
@@ -891,6 +895,7 @@ void statistics::default_stat_param()
   num_of_MC_runs = 10;
   sensitivity_points = 50;
   MCbool =  0;
+  perturbator = 0.001;
 }
 
 ///// Writes  structure to  the GEMSFIT configuration file
@@ -904,6 +909,7 @@ void statistics::out_stat_param_txt( bool with_comments, bool brief_mode )
     prar.writeField(f_StatMCruns, (long int)num_of_MC_runs, with_comments, brief_mode  );
     prar.writeField(f_StatSensitivity, (long int)sensitivity_points, with_comments, brief_mode  );
     prar.writeField(f_StatMCbool, (long int)MCbool, with_comments, brief_mode  );
+    prar.writeField(f_StatPerturbator, (double)MCbool, with_comments, brief_mode  );
 }
 
 //// Read statistical input specifications from configurator
@@ -931,6 +937,8 @@ void statistics::get_stat_param_txt( )
                     MCbool = (bool)bb;
                    }
                    break;
+           case f_StatPerturbator: rdar.readArray( "StatPerturbator",  &perturbator, 1 );
+                  break;
           }
           nfild = rdar.findNextNotAll();
         }
