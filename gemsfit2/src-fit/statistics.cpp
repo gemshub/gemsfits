@@ -23,6 +23,8 @@ statistics::statistics(TGfitTask *gfittask, double weighted_Tfun_sum_of_residual
         sum_of_residuals += fabs(gfittask->residuals_v[i]);
 
         weighted_sum_of_residuals += fabs(gfittask->residuals_v[i])*gfittask->weights[i];
+
+        weighted_residuals.push_back(gfittask->residuals_v[i]*gfittask->weights[i]);
     }
 
     num_of_runs		= num_of_runs_;
@@ -345,7 +347,7 @@ void statistics::sensitivity_correlation( const std::vector<double> &optv_, TGfi
         arma::mat FisherMatrix = SensitivityMatrix_T * /*WeightMatrix **/ SensitivityMatrix;
         if ((gfittask->Tfun->weight == "inverr2") /*|| (gfittask->Tfun->weight == "inverr1")*/ )
         {
-            FisherMatrix = SensitivityMatrix_T * /*WeightMatrix **/ SensitivityMatrix;
+            FisherMatrix = SensitivityMatrix_T */* WeightMatrix **/ SensitivityMatrix;
         }
 
 FisherMatrix.print("Fisher Matrix:");

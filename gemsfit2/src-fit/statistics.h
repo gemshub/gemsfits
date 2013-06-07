@@ -73,6 +73,7 @@ class statistics
         double Tfun_sum_of_residuals;
         double weighted_sum_of_residuals;
         double sum_of_residuals;
+        vector <double> weighted_residuals;
         /// number of parameters of the last regression (length of optimization vector)
         int number_of_parameters;
         /// number of measurements invoilved in the parameter regression
