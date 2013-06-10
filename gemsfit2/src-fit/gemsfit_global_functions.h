@@ -71,6 +71,16 @@ double Equil_objective_function_callback( const std::vector<double> &opt, std::v
 */
 void gems3k_wrap( double &residual, const std::vector<double> &opt, TGfitTask *sys );
 
+/**
+* Calculates the gradient as d_sum_of_Tfun_residuals / d_parameter
+* @param opt      optimization vector
+* @param grad     vector holding the gradient
+* @param sys      data object that holds the data of the current TGfitTask struct
+* @author DM
+* @date 10.06.2013
+*/
+void gradient( vector<double> opt, vector<double> &grad, TGfitTask *sys );
+
 
 
 #endif // GEMSFIT_GLOBAL_FUNCTIONS_H

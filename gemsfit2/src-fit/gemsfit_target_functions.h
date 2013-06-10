@@ -53,6 +53,14 @@
 */
 void adjust_G0 (int i, double G0, TGfitTask *sys);
 
+/**
+* Sets the new PMc returned form the optimization algorithm
+* @param i          position of the PMc in the parameter/optimization vector
+* @param new_PMc    the new PMc returned by the optimization algorithm
+* @param sys        pointer to data object that holds the data of the current TGfitTask struct
+* @author DM
+* @date 17.05.2013
+*/
 void adjust_PMc (int i, double new_PMc, TGfitTask *sys);
 
 // Set new Gibbs free energy based on reaction constraints
@@ -171,6 +179,7 @@ double weight_phprop (int i, int p, int pp, string type, TGfitTask *sys);
 * Returns the least square ( sqrt[(calculated-measured)^2 /measured^2] )
 * @param computed_value
 * @param measured_value
+* @param type
 * @author DM
 * @date 17.05.2013
 */

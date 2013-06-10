@@ -755,7 +755,8 @@ outField Data_Manager_fields[10] =
       "\n      { \"EPH\": \"aq_gen\", \"EP\": \"pH\", \"Eunit\": \"-loga\" }] }\n"
     },
     { "SystemFiles",  0, 0, 1, "\n# SystemFiles: Comment"},
-    { "RecipeFiles",  0, 0, 1, "\n# RecipeFiles: Comment"}
+    { "RecipeFiles",  0, 0, 1, "\n# RecipeFiles: Comment"},
+    { "LimitOfDetection",  0, 0, 1, "\n# LimitOfDetection: Limit of dectetion of the measured values. Insurres that wrong computed values calculated by GEMS due to non phisical parameter values are ignored"}
 };
 
 typedef enum {  /// Field index into outField structure
@@ -766,7 +767,8 @@ typedef enum {  /// Field index into outField structure
     f_DatSelect,
     f_DatTarget,
     f_SystemFiles,
-    f_RecipeFiles
+    f_RecipeFiles,
+    f_LimitOfDetection
 } Data_Manager_FIELDS;
 
 /// Set up default values for structure
@@ -778,6 +780,7 @@ void Data_Manager::define_db_specs( )
    colection="";
    DataSelect ="paste template here";
    DatTarget ="paste template here";
+   LimitOfDetection = 1e-06;
 
 }
 
@@ -797,6 +800,7 @@ void Data_Manager::out_db_specs_txt( bool with_comments, bool brief_mode )
         prar.setAlws( f_DatDB );
         prar.setAlws( f_DatColection );
         prar.setAlws( f_DatSelect );
+        prar.setAlws( f_LimitOfDetection );
     }
 
     if(with_comments )
@@ -814,6 +818,7 @@ void Data_Manager::out_db_specs_txt( bool with_comments, bool brief_mode )
     prar.writeField(f_DatTarget, DatTarget, with_comments, brief_mode );
     prar.writeField(f_SystemFiles, gpf->GEMS3LstFilePath(), with_comments, brief_mode  );
     prar.writeField(f_RecipeFiles, "", with_comments, brief_mode  );
+    prar.writeField(f_LimitOfDetection, "", with_comments, brief_mode  );
 }
 
 // get PostgreSQL database connection parameters
@@ -840,6 +845,8 @@ void Data_Manager::get_db_specs_txt( )
                     break;
             case f_DatSource: rdar.readArray( "DatSource",  &datasource, 1);
                     break;
+            case f_LimitOfDetection: rdar.readArray( "LimitOfDetection",  &LimitOfDetection, 1);
+                    break;
             case f_DatSelect: rdar.readArray( "DatSelect",  DataSelect );
                     break;
             case f_DatTarget: rdar.readArray( "DatTarget",  DatTarget );
@@ -861,6 +868,7 @@ void Data_Manager::get_db_specs_txt( )
         rdar.setAlws( f_DatDB );
         rdar.setAlws( f_DatColection );
         rdar.setAlws( f_DatSelect );
+        rdar.setAlws( f_LimitOfDetection );
     }
 
     // testing read
@@ -954,7 +962,7 @@ void statistics::get_stat_param_txt( )
 
 ////-------------------------------------------------------------------------------------------------
 
-outField optimization_fields[24] =
+outField optimization_fields[25] =
 {
     { "OptAlgo",  0, 0, 1, "\n# OptAlgo: specify algorithm GN_ISRES GN_ORIG_DIRECT GN_ORIG_DIRECT_L LN_COBYLA LN_BOBYQA "},
     { "OptThreads",  0, 0, 1, "\n# OptThreads: Comment"},
@@ -975,7 +983,7 @@ outField optimization_fields[24] =
     { "OptHybridMaxEval",  0, 0, 1, "\n# OptHybridMaxEval: Comment"},
     { "OptHybridMode",  0, 0, 1, "\n# OptHybridMode: Comment"},
     { "OptNmultistart",  0, 0, 1, "\n# OptNmultistart: Comment"},
-    { "OptHybridAlgo",  0, 0, 1, "\n# OptHybridAlgo: Comment"},
+    { "OptPerturbator",  0, 0, 1, "\n# OptPerturbator: The delta/difference used to to calculate the d(function_value)/d(parameter_value) gradient"},
     { "OptInitStep",  0, 0, 1, "\n# OptInitStep: specify initial stepsize for local minimizers (factor will be multiplied to all optimization parameters); 0 => use default"},
     { "OptScaleParam",  0, 0, 1, "\n# OptScaleParam: Comment"},
     { "OptNormParam",  0, 0, 1, "\n# OptNormParam: Normalize bounds/constraints/fitting parameters with initial guess vector"},
@@ -1002,7 +1010,7 @@ typedef enum {  /// Field index into outField structure
     f_OptHybridMaxEval,
     f_OptHybridMode,
     f_OptNmultistart,
-    f_OptHybridAlgo,
+    f_OptPerturbator,
     f_OptInitStep,
     f_OptScaleParam,
     f_OptNormParam,
@@ -1021,6 +1029,7 @@ void optimization::define_nlopt_param( )
     OptMaxEval = 5000;
     OptDoWhat = 0;
     OptNormParam = 1;
+    OptPerturbator = 0.001;
 
 }
 
@@ -1051,6 +1060,7 @@ void optimization::out_nlopt_param_txt( bool with_comments, bool brief_mode )
     prar.writeField( f_OptMaxEval,  (long int)OptMaxEval, with_comments, brief_mode);
     prar.writeField( f_OptInitStep,  OptInitStep, with_comments, brief_mode);
     prar.writeField( f_OptNormParam,  (long int)OptNormParam, with_comments, brief_mode);
+    prar.writeField( f_OptPerturbator,  OptPerturbator, with_comments, brief_mode);
 
 }
 
@@ -1084,6 +1094,8 @@ void optimization::get_nlopt_param_txt(vector<double> optv)
           case f_OptDoWhat: rdar.readArray( "OptDoWhat",  &OptDoWhat, 1);
                   break;
           case f_OptInitStep: rdar.readArray( "OptInitStep",  &OptInitStep, 1);
+                  break;
+          case f_OptPerturbator: rdar.readArray( "OptPerturbator",  &OptPerturbator, 1);
                   break;
           case f_OptNormParam:{
                 int bb;

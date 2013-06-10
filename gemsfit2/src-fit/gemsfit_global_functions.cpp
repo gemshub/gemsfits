@@ -118,8 +118,8 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         {
             // possible return status analysis, error message
 //            sys->NodT[i]->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
-            cout<<"For experiment "<<i+1<< endl;
-            cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
+//            cout<<"For experiment "<<i+1<< endl;
+//            cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
         }
     }
 
@@ -194,7 +194,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     residuals_sys = residuals_sys_;
 
     // debug for when using global algorithms
-    if (master_counter%10000 == 0)
+    if (master_counter%1000 == 0)
     {
         cout << master_counter << " itterations, continuning..." << endl;
         cout << "sum of residuals: "<<residuals_sys<< endl;
@@ -229,16 +229,68 @@ double Equil_objective_function_callback( const std::vector<double> &opt, std::v
         {
             optV[i] = opt[i] * fabs(sys->Opti->opt[i]);
         }
+
+        /// GRadient calculation
+        if (sys->Opti->OptAlgo.compare(2,1,"D") == 0)
+        {
+            gradient(optV, grad, sys);
+        }
+
         // call tsolmod wrapper
         gems3k_wrap( sum_of_squared_residuals_sys, optV, sys );
         sum_of_squared_residuals_allsys = sum_of_squared_residuals_allsys + sum_of_squared_residuals_sys;
     }
     else
     {
-    // call tsolmod wrapper
-    gems3k_wrap( sum_of_squared_residuals_sys, opt, sys );
-    sum_of_squared_residuals_allsys = sum_of_squared_residuals_allsys + sum_of_squared_residuals_sys;
+        /// GRadient calculation
+        if (sys->Opti->OptAlgo.compare(1,1,"D") == 0)
+        {
+            gradient(opt, grad, sys);
+        }
+
+        // call tsolmod wrapper
+        gems3k_wrap( sum_of_squared_residuals_sys, opt, sys );
+        sum_of_squared_residuals_allsys = sum_of_squared_residuals_allsys + sum_of_squared_residuals_sys;
     }
 return sum_of_squared_residuals_allsys;
+}
+
+
+void gradient( vector<double> opt, vector<double> &grad, TGfitTask *sys )
+{
+    double residual_sys;
+
+    double computed_up, param_up;
+    double computed_lo, param_lo;
+    std::vector<double> opt_scan;
+
+    grad.clear();
+    grad.resize(opt.size());
+
+    opt_scan.resize( opt.size() );
+
+    double delta = sys->Opti->OptPerturbator;
+    for(int i=0; i< (int) opt.size(); i++ )
+    {
+        opt_scan = opt;
+
+        // Central finite differences:
+        opt_scan[i] = opt[i] + opt[i]*delta;
+        param_up = opt[i] + opt[i]*delta;
+        residual_sys = 0.;
+        gems3k_wrap( residual_sys, opt_scan, sys );
+//cout<<"residual_sys = "<<residual_sys<<endl;
+        computed_up = residual_sys;
+
+        opt_scan[i] = opt[i] - opt[i]*delta;
+        param_lo = opt[i] - opt[i]*delta;
+        residual_sys = 0.;
+        gems3k_wrap( residual_sys, opt_scan, sys );
+//cout<<"residual_sys = "<<residual_sys<<endl;
+        computed_lo = residual_sys;
+
+        grad[i] = (computed_up - computed_lo) / (param_up - param_lo);
+    }
+
 }
 

@@ -423,6 +423,21 @@ void TGfitTask::init_optim( std::vector<double> &optv_, /*int &countit,*/ double
         nlopt::opt nlopti_( nlopt::GN_ORIG_DIRECT_L, optv_.size() );
         build_optim( nlopti_, optv_, weighted_Tfun_sum_of_residuals );
     }
+    else if( Opti->OptAlgo.compare( "'LD_MMA'" ) == 0 )
+    {
+        nlopt::opt nlopti_( nlopt::LD_MMA, optv_.size() );
+        build_optim( nlopti_, optv_, weighted_Tfun_sum_of_residuals );
+    }
+    else if( Opti->OptAlgo.compare( "'LD_SLSQP'" ) == 0 )
+    {
+        nlopt::opt nlopti_( nlopt::LD_SLSQP, optv_.size() );
+        build_optim( nlopti_, optv_, weighted_Tfun_sum_of_residuals );
+    }
+    else if( Opti->OptAlgo.compare( "'GD_MLSL'" ) == 0 )
+    {
+        nlopt::opt nlopti_( nlopt::GD_MLSL, optv_.size() );
+        build_optim( nlopti_, optv_, weighted_Tfun_sum_of_residuals );
+    }
     else
     {
         cout<<" Unknown optimization algorithm !!!! "<<endl;

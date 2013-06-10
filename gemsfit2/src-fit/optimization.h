@@ -77,6 +77,7 @@ public:
 //    double OptScaleParam;
     bool OptNormParam;
     double OptBoundPerc;
+    double OptPerturbator;
 
 //    vector<double> OptStatOnlyBestFitParam;
 //    double OptStatOnlySSR;

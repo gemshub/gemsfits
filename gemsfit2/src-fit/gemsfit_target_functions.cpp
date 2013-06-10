@@ -209,6 +209,14 @@ double residual_aqgen_elem (int i, int p, int e, TGfitTask *sys)
 
     measured_value = sys->experiments[i]->expphases[p]->phcomp[e]->bQnt;
 
+    if (computed_value < sys->LimitOfDetection)
+    {
+//        cout << measured_value <<" / " <<computed_value<<" = " << measured_value / computed_value << endl;
+        computed_value = rand() % 100 + 1;
+    }
+
+
+
     // check Target function type and calculate the Tfun_residual
     weight_ = weight(i, p, e, sys->Tfun->weight, sys);
     Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type);
