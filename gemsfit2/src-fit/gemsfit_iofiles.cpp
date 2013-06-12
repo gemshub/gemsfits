@@ -1250,17 +1250,17 @@ void F_to_OP (opti_vector *op, IOJFormat Jformat, string nfild)
 {
     vector<string> out;
     Data_Manager *temp = new Data_Manager(1);
-    temp->parse_JSON_object(Jformat.format, IV, out);
+    temp->parse_JSON_object(Jformat.format, keys::IV, out);
 
     op->opt.push_back( atof(out.at(0).c_str()) );
     op->optv0.push_back( atof(out.at(0).c_str()) );
     out.clear();
 
-    temp->parse_JSON_object(Jformat.format, UB, out);
+    temp->parse_JSON_object(Jformat.format, keys::UB, out);
     op->UB.push_back( atof(out.at(0).c_str()) );
     out.clear();
 
-    temp->parse_JSON_object(Jformat.format, LB, out);
+    temp->parse_JSON_object(Jformat.format, keys::LB, out);
     op->LB.push_back( atof(out.at(0).c_str()) );
     out.clear();
 
@@ -1274,12 +1274,12 @@ void F_to_OP (double val, opti_vector *op, IOJFormat Jformat, string nfild)
     op->optv0.push_back(val);
     if (val > 0)
     {
-        op->LB.push_back(val-val*bperc/100);
-        op->UB.push_back(val+val*bperc/100);
+        op->LB.push_back(val-val*keys::bperc/100);
+        op->UB.push_back(val+val*keys::bperc/100);
     } else
     {
-        op->UB.push_back(val-val*bperc/100);
-        op->LB.push_back(val+val*bperc/100);
+        op->UB.push_back(val-val*keys::bperc/100);
+        op->LB.push_back(val+val*keys::bperc/100);
     }
 
     op->Ptype.push_back( nfild );
@@ -1291,34 +1291,34 @@ void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat, string nfild)
     vector<string> out;
     Data_Manager *temp = new Data_Manager(1);
 
-    temp->parse_JSON_object(Jformat.format, IV, out);
+    temp->parse_JSON_object(Jformat.format, keys::IV, out);
     r->IV = atof(out.at(0).c_str());
     out.clear();
 
-    temp->parse_JSON_object(Jformat.format, Ref, out);
+    temp->parse_JSON_object(Jformat.format, keys::Ref, out);
     r->Ref = out.at(0);
     out.clear();
 
-    temp->parse_JSON_object(Jformat.format, logK, out);
+    temp->parse_JSON_object(Jformat.format, keys::logK, out);
     r->logK = atof(out.at(0).c_str());
     out.clear();
 
-    temp->parse_JSON_object(Jformat.format, nC, out);
+    temp->parse_JSON_object(Jformat.format, keys::nC, out);
     r->nC = atoi(out.at(0).c_str());
     out.clear();
 
-    temp->parse_JSON_object(Jformat.format, species, out);
+    temp->parse_JSON_object(Jformat.format, keys::species, out);
     r->Dc_name = out.at(0);
     out.clear();
 
-    temp->parse_JSON_object(Jformat.format, RC, out);
+    temp->parse_JSON_object(Jformat.format, keys::RC, out);
     for (unsigned int i = 0 ; i < out.size() ; i++)
     {
         r->rdc_species.push_back( out.at(i) );
     }
     out.clear();
 
-    temp->parse_JSON_object(Jformat.format, Rcoef, out);
+    temp->parse_JSON_object(Jformat.format, keys::Rcoef, out);
     if (out.size() != r->rdc_species.size())
     {
         cout << "ERROR: Number of reaction components is not equal with the number of reaction coeficients" << endl;

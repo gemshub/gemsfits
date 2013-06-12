@@ -34,6 +34,7 @@
 
 
 #include "gemsfit_target_functions.h"
+#include "keywords.h"
 
 
 /// Adust FUNCTIONS
@@ -114,15 +115,15 @@ void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
 {
     if (sys->experiments[i]->expphases[p]->phcomp[e]->Qunit != unit)
     {
-        if (unit == "loga")
+        if (unit == keys::loga)
         {
             // molal to log(molal)
-            if (sys->experiments[i]->expphases[p]->phcomp[e]->Qunit == "molal")
+            if (sys->experiments[i]->expphases[p]->phcomp[e]->Qunit == keys::molal)
             {
                 double error_perc = sys->experiments[i]->expphases[p]->phcomp[e]->Qerror * 100 / sys->experiments[i]->expphases[p]->phcomp[e]->bQnt;
                 sys->experiments[i]->expphases[p]->phcomp[e]->bQnt = log10(sys->experiments[i]->expphases[p]->phcomp[e]->bQnt);
                 sys->experiments[i]->expphases[p]->phcomp[e]->Qerror = sys->experiments[i]->expphases[p]->phcomp[e]->bQnt * error_perc / 100;
-                sys->experiments[i]->expphases[p]->phcomp[e]->Qunit = "loga";
+                sys->experiments[i]->expphases[p]->phcomp[e]->Qunit = keys::loga;
             }
             else
             {
@@ -141,19 +142,19 @@ void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
     }
 }
 
-void check_ph_unit(int i, int p, int pp, string unit, TGfitTask *sys )
+void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
 {
     if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit != unit)
     {
-        if (unit == "-loga")
+        if (unit == keys::_loga)
         {
-            // molal to log(molal)
-            if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == "molal")
+            // molal to -log(molal)
+            if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::molal)
             {
                 double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->pQnt;
                 sys->experiments[i]->expphases[p]->phprop[pp]->pQnt = -log10(sys->experiments[i]->expphases[p]->phprop[pp]->pQnt);
                 sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt * error_perc / 100;
-                sys->experiments[i]->expphases[p]->phprop[pp]->Qunit = "-loga";
+                sys->experiments[i]->expphases[p]->phprop[pp]->Qunit = keys::_loga;
             }
             else
             {
@@ -161,22 +162,90 @@ void check_ph_unit(int i, int p, int pp, string unit, TGfitTask *sys )
                 exit(1);
             }
         } else
-            if (unit == "molal")
+            if (unit == keys::molal)
             {
-                // log to molal
-                if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == "-loga")
+                // -log to molal
+                if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::_loga)
                 {
                     double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->pQnt;
                     sys->experiments[i]->expphases[p]->phprop[pp]->pQnt = pow(10,-(sys->experiments[i]->expphases[p]->phprop[pp]->pQnt));
                     sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt * error_perc / 100;
-                    sys->experiments[i]->expphases[p]->phprop[pp]->Qunit = "molal";
+                    sys->experiments[i]->expphases[p]->phprop[pp]->Qunit = keys::molal;
                 }
                 else
                 {
                     cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
                     exit(1);
                 }
-            }
+            } else
+                if (unit == keys::kgram)
+                {
+                    // g to kg
+                    // log to molal
+                    if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::gram)
+                    {
+                        double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->pQnt;
+                        sys->experiments[i]->expphases[p]->phprop[pp]->pQnt = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt / 1000;
+                        sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt * error_perc / 100;
+                        sys->experiments[i]->expphases[p]->phprop[pp]->Qunit = keys::kgram;
+                    }
+                    else
+                    {
+                        cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+                        exit(1);
+                    }
+                } else
+                    if (unit == keys::gram)
+                    {
+                        // kg to g
+                        // log to molal
+                        if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::kgram)
+                        {
+                            double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->pQnt;
+                            sys->experiments[i]->expphases[p]->phprop[pp]->pQnt = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt * 1000;
+                            sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt * error_perc / 100;
+                            sys->experiments[i]->expphases[p]->phprop[pp]->Qunit = keys::gram;
+                        }
+                        else
+                        {
+                            cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+                            exit(1);
+                        }
+                    } else
+                        if (unit == keys::cm3)
+                        {
+                            // m3 to cm3
+                            // log to molal
+                            if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::m3)
+                            {
+                                double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->pQnt;
+                                sys->experiments[i]->expphases[p]->phprop[pp]->pQnt = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt * 1e06;
+                                sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt * error_perc / 100;
+                                sys->experiments[i]->expphases[p]->phprop[pp]->Qunit = keys::cm3;
+                            }
+                            else
+                            {
+                                cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+                                exit(1);
+                            }
+                        } else
+                            if (unit == keys::m3)
+                            {
+                                // kg to g
+                                // log to molal
+                                if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::cm3)
+                                {
+                                    double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->pQnt;
+                                    sys->experiments[i]->expphases[p]->phprop[pp]->pQnt = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt / 1e06;
+                                    sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt * error_perc / 100;
+                                    sys->experiments[i]->expphases[p]->phprop[pp]->Qunit = keys::m3;
+                                }
+                                else
+                                {
+                                    cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+                                    exit(1);
+                                }
+                            }
     }
     else
     {
@@ -189,80 +258,12 @@ void check_ph_unit(int i, int p, int pp, string unit, TGfitTask *sys )
 }
 
 /// Target functions, Tfun_residual calculations
-double residual_aqgen_elem (int i, int p, int e, TGfitTask *sys)
-{
-    const char *elem_name;
-    int ICndx;
-    double computed_value, measured_value;
-    double Tfun_residual = 0.0, Weighted_Tfun_residual = 0.0, weight_ = 1.0;
-
-    elem_name =  sys->experiments[i]->expphases[p]->phcomp[e]->comp.c_str();
-    ICndx = sys->NodT[i]->IC_name_to_xDB(elem_name);
-
-    if (sys->experiments[i]->expphases[p]->phcomp[e]->Qunit == "loga")
-    {
-    computed_value = log10(sys->NodT[i]->Get_mIC(ICndx));
-    } else
-    {
-        computed_value = sys->NodT[i]->Get_mIC(ICndx);
-    }
-
-    measured_value = sys->experiments[i]->expphases[p]->phcomp[e]->bQnt;
-
-    if (computed_value < sys->LimitOfDetection)
-    {
-//        cout << measured_value <<" / " <<computed_value<<" = " << measured_value / computed_value << endl;
-        computed_value = rand() % 100 + 1;
-    }
-
-
-
-    // check Target function type and calculate the Tfun_residual
-    weight_ = weight(i, p, e, sys->Tfun->weight, sys);
-    Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type);
-    Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type)*weight_;
-
-    sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
-    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phcomp[e]->comp,sys->experiments[i]->expphases[p]->phcomp[e]->Qunit,measured_value,computed_value,Weighted_Tfun_residual, weight_ );
-
-    return Weighted_Tfun_residual;
-}
-
-double residual_aqgen_prop (int i, int p, int pp, int j, TGfitTask *sys)
-{
-    double computed_value, measured_value;
-    double Tfun_residual = 0.0, Weighted_Tfun_residual = 0.0, weight_ = 1.0;
-
-    if (sys->Tfun->objfun[j]->exp_property == "pH")
-    {
-        if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == "-loga")
-        {
-        computed_value = sys->NodT[i]->Get_pH();
-        } else
-        {
-            computed_value = pow(10,(-(sys->NodT[i]->Get_pH()))) /*sys->NodT[i]->Get_pH()*/;
-        }
-    } // addd other properties
-
-    measured_value = (sys->experiments[i]->expphases[p]->phprop[pp]->pQnt);
-
-    // check Target function type and calculate the Tfun_residual
-    weight_ = weight_phprop(i, p, pp, sys->Tfun->weight, sys);
-    Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type);
-    Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type)*weight_;
-
-    sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
-    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phprop[pp]->property,sys->experiments[i]->expphases[p]->phprop[pp]->Qunit,measured_value,computed_value,Weighted_Tfun_residual, weight_ );
-
-    return Weighted_Tfun_residual;
-}
-
-double residual_phase_elem (int i, int p, int e, TGfitTask *sys)
+double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
 {
     const char *elem_name, *phase_name;
     int ICndx, PHndx, nIC;
     double computed_value, measured_value;
-    double Tfun_residual = 0.0, Weighted_Tfun_residual, weight_ = 1.0;
+    double Tfun_residual = 0.0, Weighted_Tfun_residual = 0.0, weight_ = 1.0;
     DATACH* dCH = sys->NodT[i]->pCSD();
     double* IC_in_PH;
 
@@ -275,8 +276,30 @@ double residual_phase_elem (int i, int p, int e, TGfitTask *sys)
     IC_in_PH = new double[ nIC ];
     sys->NodT[i]->Ph_BC(PHndx, IC_in_PH);
 
-    computed_value = IC_in_PH[ICndx];
+    // Get composition of aqueous pahse
+    if ((sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
+    {
+        if (sys->experiments[i]->expphases[p]->phcomp[e]->Qunit == keys::loga)
+        {
+        computed_value = log10(sys->NodT[i]->Get_mIC(ICndx));
+        } else
+        {
+            computed_value = sys->NodT[i]->Get_mIC(ICndx);
+        }
+    } else // other than aqueous phase
+        if ((sys->Tfun->objfun[j]->exp_phase != "aq_gen") && (sys->experiments[i]->expphases[p]->phase != "aq_gen"))
+        {
+            computed_value = IC_in_PH[ICndx];
+        }
+
     measured_value = sys->experiments[i]->expphases[p]->phcomp[e]->bQnt;
+
+    // Error handeling due to possible nonphisical parameters
+    if (computed_value < sys->LimitOfDetection)
+    {
+//        cout << measured_value <<" / " <<computed_value<<" = " << measured_value / computed_value << endl;
+        computed_value = rand() % 100 + 1;
+    }
 
     // check Target function type and calculate the Tfun_residual
     weight_ = weight(i, p, e, sys->Tfun->weight, sys);
@@ -303,8 +326,40 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
     phase_name = sys->experiments[i]->expphases[p]->phase.c_str();
     PHndx = sys->NodT[i]->Ph_name_to_xDB(phase_name);
 
-    computed_value = sys->NodT[i]->Ph_Mass(PHndx);
+    // Get aqueous phase pH
+    if ((sys->Tfun->objfun[j]->exp_property == keys::pH) && (sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
+    {
+        if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::_loga)
+        {
+        computed_value = sys->NodT[i]->Get_pH();
+        } else computed_value = pow(10,(-(sys->NodT[i]->Get_pH()))) /*sys->NodT[i]->Get_pH()*/;
+
+    } else // Get phase amount
+    if ((sys->Tfun->objfun[j]->exp_property == keys::pQnt))
+    {
+        if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::gram)
+        {
+            computed_value = sys->NodT[i]->Ph_Mass(PHndx) * 1000;
+        } else computed_value = sys->NodT[i]->Ph_Mass(PHndx);
+
+    } else // Get phase volume
+    if ((sys->Tfun->objfun[j]->exp_property == keys::pV))
+    {
+        if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::cm3)
+        {
+            computed_value = sys->NodT[i]->Ph_Mass(PHndx) * 1e06;
+        } else computed_value = sys->NodT[i]->Ph_Mass(PHndx);
+
+    }
+
     measured_value = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt;
+
+    // Error handeling due to possible nonphisical parameters
+    if (computed_value < sys->LimitOfDetection)
+    {
+//        cout << measured_value <<" / " <<computed_value<<" = " << measured_value / computed_value << endl;
+        computed_value = rand() % 100 + 1;
+    }
 
     // check Target function type and calculate the Tfun_residual
     weight_ = weight_phprop(i, p, pp, sys->Tfun->weight, sys);
@@ -320,7 +375,7 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
 double Tfunction (double computed_value, double measured_value, string type)
 {
     double Tf = 0.0;
-    if (type == "lsq")
+    if (type == keys::lsq)
     {
         Tf = pow( (computed_value - measured_value), 2) /*/ pow(measured_value, 2)*/;
     }  else
@@ -332,17 +387,17 @@ double Tfunction (double computed_value, double measured_value, string type)
 
 double weight (int i, int p, int e, string type, TGfitTask *sys)
 {
-    if (type == "inverr")
+    if (type == keys::inverr)
     {
         return 1/(sys->experiments[i]->expphases[p]->phcomp[e]->Qerror);
     } else
 
-    if (type == "inverr2")
+    if (type == keys::inverr2)
     {
         return 1/(pow(sys->experiments[i]->expphases[p]->phcomp[e]->Qerror,2));
     } else
 
-    if (type == "inverr3")
+    if (type == keys::inverr3)
     {
         return 1/(pow(sys->experiments[i]->expphases[p]->phcomp[e]->bQnt,2));
     } else return 1;
@@ -350,19 +405,98 @@ double weight (int i, int p, int e, string type, TGfitTask *sys)
 
 double weight_phprop (int i, int p, int pp, string type, TGfitTask *sys)
 {
-    if (type == "inverr")
+    if (type == keys::inverr)
     {
         return 1/(sys->experiments[i]->expphases[p]->phprop[pp]->Qerror);
     } else
 
-    if (type == "inverr2")
+    if (type == keys::inverr2)
     {
         return 1/(pow(sys->experiments[i]->expphases[p]->phprop[pp]->Qerror,2));
     } else
 
-    if (type == "inverr3")
+    if (type == keys::inverr3)
     {
         return 1/(pow(sys->experiments[i]->expphases[p]->phprop[pp]->pQnt,2));
     } else return 1;
 }
+
+
+
+
+
+//double residual_aqgen_prop (int i, int p, int pp, int j, TGfitTask *sys)
+//{
+//    double computed_value, measured_value;
+//    double Tfun_residual = 0.0, Weighted_Tfun_residual = 0.0, weight_ = 1.0;
+
+//    if (sys->Tfun->objfun[j]->exp_property == keys::pH)
+//    {
+//        if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == "-loga")
+//        {
+//        computed_value = sys->NodT[i]->Get_pH();
+//        } else
+//        {
+//            computed_value = pow(10,(-(sys->NodT[i]->Get_pH()))) /*sys->NodT[i]->Get_pH()*/;
+//        }
+//    } // addd other properties
+
+//    measured_value = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt;
+
+//    // Error handeling due to possible nonphisical parameters
+//    if (computed_value < sys->LimitOfDetection)
+//    {
+////        cout << measured_value <<" / " <<computed_value<<" = " << measured_value / computed_value << endl;
+//        computed_value = rand() % 100 + 1;
+//    }
+
+//    // check Target function type and calculate the Tfun_residual
+//    weight_ = weight_phprop(i, p, pp, sys->Tfun->weight, sys);
+//    Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type);
+//    Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type)*weight_;
+
+//    sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
+//    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phprop[pp]->property,sys->experiments[i]->expphases[p]->phprop[pp]->Qunit,measured_value,computed_value,Weighted_Tfun_residual, weight_ );
+
+//    return Weighted_Tfun_residual;
+//}
+//double residual_aqgen_elem (int i, int p, int e, TGfitTask *sys)
+//{
+//    const char *elem_name;
+//    int ICndx;
+//    double computed_value, measured_value;
+//    double Tfun_residual = 0.0, Weighted_Tfun_residual = 0.0, weight_ = 1.0;
+
+//    elem_name =  sys->experiments[i]->expphases[p]->phcomp[e]->comp.c_str();
+//    ICndx = sys->NodT[i]->IC_name_to_xDB(elem_name);
+
+//    if (sys->experiments[i]->expphases[p]->phcomp[e]->Qunit == "loga")
+//    {
+//    computed_value = log10(sys->NodT[i]->Get_mIC(ICndx));
+//    } else
+//    {
+//        computed_value = sys->NodT[i]->Get_mIC(ICndx);
+//    }
+
+//    measured_value = sys->experiments[i]->expphases[p]->phcomp[e]->bQnt;
+
+//    // Error handeling due to possible nonphisical parameters
+//    if (computed_value < sys->LimitOfDetection)
+//    {
+////        cout << measured_value <<" / " <<computed_value<<" = " << measured_value / computed_value << endl;
+//        computed_value = rand() % 100 + 1;
+//    }
+
+//    // check Target function type and calculate the Tfun_residual
+//    weight_ = weight(i, p, e, sys->Tfun->weight, sys);
+//    Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type);
+//    Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type)*weight_;
+
+//    sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
+//    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phcomp[e]->comp,sys->experiments[i]->expphases[p]->phcomp[e]->Qunit,measured_value,computed_value,Weighted_Tfun_residual, weight_ );
+
+//    return Weighted_Tfun_residual;
+//}
+
+
 

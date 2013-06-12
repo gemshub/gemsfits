@@ -143,50 +143,54 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
                 // loop trough all pahses
                 for (int p=0; p<sys->experiments[i]->expphases.size(); ++p)
                 {
-                    if (sys->Tfun->objfun[j]->exp_elem !="NULL")
+                    if ((sys->Tfun->objfun[j]->exp_elem !="NULL") && (sys->Tfun->objfun[j]->exp_property =="NULL"))
                     {
                         // loop trough all elements
                         for (int e=0; e<sys->experiments[i]->expphases[p]->phcomp.size(); ++e)
                         {
-                            if (sys->experiments[i]->expphases[p]->phcomp[e]->comp == sys->Tfun->objfun[j]->exp_elem)
+                            if ((sys->experiments[i]->expphases[p]->phcomp[e]->comp == sys->Tfun->objfun[j]->exp_elem) && (sys->experiments[i]->expphases[p]->phase == sys->Tfun->objfun[j]->exp_phase ))
                             {
                                 // check for unit
                                 check_unit(i, p, e, sys->Tfun->objfun[j]->exp_unit, sys );
-                                if ((sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
-                                {
-                                    residuals_sys_ = residuals_sys_ + residual_aqgen_elem (i, p, e, sys);
-                                } else // other phase than aq_gen
-                                {
-                                    if ((sys->Tfun->objfun[j]->exp_phase != "aq_gen") && (sys->experiments[i]->expphases[p]->phase != "aq_gen"))
-                                    {
-                                    residuals_sys_ = residuals_sys_ + residual_phase_elem (i, p, e, sys);
-                                    }
-                                }
+                                residuals_sys_ = residuals_sys_ + residual_phase_elem (i, p, e, j, sys);
                             }
                         }
                     } else
-                    if ((sys->Tfun->objfun[j]->exp_property !="NULL") && (sys->experiments[i]->expphases[p]->phprop.size() > 0))
-                    {
+                        if ((sys->Tfun->objfun[j]->exp_property !="NULL") && (sys->experiments[i]->expphases[p]->phprop.size() > 0) && (sys->Tfun->objfun[j]->exp_dcomp == "NULL"))
+                        {
                         // loop trough all properties
                         for (int pp = 0; pp< sys->experiments[i]->expphases[p]->phprop.size(); ++pp)
                         {
-                            if (sys->experiments[i]->expphases[p]->phprop[pp]->property == sys->Tfun->objfun[j]->exp_property)
+                            if ((sys->experiments[i]->expphases[p]->phprop[pp]->property == sys->Tfun->objfun[j]->exp_property) && (sys->experiments[i]->expphases[p]->phase == sys->Tfun->objfun[j]->exp_phase ))
                             {
                                 // check for unit
-                                check_ph_unit(i, p, pp, sys->Tfun->objfun[j]->exp_unit, sys );
-                                if ((sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
+                                check_prop_unit(i, p, pp, sys->Tfun->objfun[j]->exp_unit, sys );
+                                residuals_sys_ = residuals_sys_ + residual_phase_prop (i, p, pp, j, sys);
+                            }
+                        }
+                    } else
+                        if ((sys->Tfun->objfun[j]->exp_property !="NULL") && (sys->experiments[i]->expphases[p]->phdcomps.size() > 0) && (sys->Tfun->objfun[j]->exp_dcomp != "NULL"))
+                        {
+                            // loop trough all dependent components
+                            for (int dc = 0; dc< sys->experiments[i]->expphases[p]->phdcomps.size(); ++dc)
+                            {
+                                if ((sys->experiments[i]->expphases[p]->phdcomps[dc]->formula == sys->Tfun->objfun[j]->exp_dcomp) && (sys->experiments[i]->expphases[p]->phase == sys->Tfun->objfun[j]->exp_phase ))
                                 {
-                                    residuals_sys_ = residuals_sys_ + residual_aqgen_prop (i, p, pp, j, sys);
-                                } else // other phase than aq_gen
-                                {
-                                    if ((sys->Tfun->objfun[j]->exp_phase != "aq_gen") && (sys->experiments[i]->expphases[p]->phase != "aq_gen"))
+                                    // loop trough all dep comp properties
+                                    for (int dcp = 0; dcp < sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop.size(); ++dcp)
                                     {
-                                        residuals_sys_ = residuals_sys_ + residual_phase_prop (i, p, pp, j, sys);
+                                        if (sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->property == sys->Tfun->objfun[j]->exp_property)
+                                        {
+                                            cout << "yes"<<endl;
+                                            //                                    // check for unit
+                                            //                                    check_prop_unit(i, p, pp, sys->Tfun->objfun[j]->exp_unit, sys );
+                                            //                                    residuals_sys_ = residuals_sys_ + residual_phase_prop (i, p, pp, j, sys);
+                                        }
+
                                     }
                                 }
                             }
                         }
-                    }
                 }
             }
         }

@@ -112,6 +112,7 @@ public:
             string exp_elem;
             string exp_property;
             string exp_unit;
+            string exp_dcomp;
         };
         vector<obj_fun*> objfun;
     };

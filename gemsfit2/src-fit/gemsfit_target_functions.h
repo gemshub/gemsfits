@@ -98,7 +98,7 @@ void check_unit(int i, int p, int e, string unit, TGfitTask *sys );
 * @author DM
 * @date 17.05.2013
 */
-void check_ph_unit(int i, int p, int pp, string unit, TGfitTask *sys );
+void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys );
 
 /**
 * Returns the residual from comparing the calculated with the meaured
@@ -135,7 +135,7 @@ double residual_aqgen_prop (int i, int p, int pp, int j, TGfitTask *sys);
 * @author DM
 * @date 17.05.2013
 */
-double residual_phase_elem (int i, int p, int e, TGfitTask *sys);
+double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys);
 
 /**
 * Returns the residual from comparing the calculated with the meaured

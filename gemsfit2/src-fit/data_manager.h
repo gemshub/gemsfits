@@ -149,15 +149,20 @@ class Data_Manager : public TNode
                     // composition of the phases in elements
                     vector<components*> phcomp;
 
-                    // species (end member, phase component) 3rd level in EJDB
-                    struct species
+                    // dcomps (end member, phase component) 3rd level in EJDB
+                    struct dcomps
                     {
-                        string formula;               /// name of chemical species (end member, phase component)
-                        double sQnt;                 /// measured quantity/concentration of phase species
-                        double Qerror;               /// error
-                        string Qunit;                /// units
+                        string formula;               /// name of chemical dcomps (end member, phase component)
+                        struct dcprop
+                        {
+                            string property;
+                            double pQnt;                 /// measured quantity/concentration of phase dcomps
+                            double Qerror;               /// error
+                            string Qunit;                /// units
+                        };
+                        vector<dcprop*> dcompprop;
                     };
-                    vector<species*> phspecies;
+                    vector<dcomps*> phdcomps;
                 };
                 vector<phases*> expphases;      /// vector of phases measured in one experiment
             };
@@ -190,12 +195,12 @@ class Data_Manager : public TNode
                     // composition of the phases in elements
                     vector<Hcomponents*> Hphcomp;
 
-                    // species (end member, phase component) 3rd level in EJDB
-                    struct Hspecies
+                    // dcomps (end member, phase component) 3rd level in EJDB
+                    struct Hdcomps
                     {
-                        bool formula;               /// name of chemical species (end member, phase component)
+                        bool formula;               /// name of chemical dcomps (end member, phase component)
                     };
-                    vector<Hspecies*> Hphspecies;
+                    vector<Hdcomps*> Hphdcomps;
                 };
                 vector<Hphases*> Hexpphases;      /// vector of phases measured in one experiment
             };
