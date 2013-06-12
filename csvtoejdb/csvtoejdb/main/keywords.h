@@ -1,8 +1,8 @@
 #ifndef KEYWORDS_H
 #define KEYWORDS_H
 
-//namespace keys
-//{
+namespace keys
+{
 //                    Keyword                                  (level)			Type            Comment
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -27,8 +27,9 @@ static const char *expphases = "expphases"; ///	                  1    	     arr
     static const char *phcomp = "phcomp"; ///	                  2   	     array		        measured composition of the phase
         static const char *element = "element"; ///	              3	         string 		    name of chemical element (e.g. 'Al')
         static const char *eQnt = "eQnt"; ///	                  3	         float		        measured quantity/concentration of element (in Qunit)
-    static const char *phspecies = "phspecies"; ///  	          2	         array		        chemical species (end member, phase component)
-        static const char *species = "species"; ///               3          string             name of chemical species (end member, phase component)
+    static const char *phspecies = "phdcomps"; ///  	          2	         array		        chemical species (end member, phase component)
+        static const char *dcompprop = "dcompprop"; ///
+        static const char *species = "dcomps"; ///               3          string             name of chemical species (end member, phase component)
         static const char *sQnt = "sQnt"; ///	                  3	         float		        measured quantity/concentration of phase species
                         // with Qerror and Qunit
     static const char *phprop = "phprop"; ///	                  2   	     array		        known bulk properties of the phase
@@ -87,7 +88,26 @@ static const char *url = "url"; ///	                              1		     string
         static const char *EP = "EP"; ///                                   string              experiment pahse property
         static const char *Eunit = "Eunit"; ///                             string              experiment element unit
         static const char *PEunit = "PEunit"; ///                           string              experiment property unit
+        static const char *DCPH = "DCPH"; ///                               string              experiment dependent comp phase
+        static const char *DC = "DC"; ///                                   string              dependent component
+        static const char *DCP = "DCP"; ///                                 string              dependent comp property
+        static const char *DCPunit = "DCPunit"; ///                         string              dependent comp property unit
 
 
-//}
+
+// Name of Target Functions and weights
+static const char *lsq = "lsq"; ///                                         string              least square function (measured-computed)^2
+static const char *inverr = "inverr"; ///                                   string              inverse weight as 1/error
+static const char *inverr2 = "inverr2"; ///                                 string              inverse weight as 1/error^2
+static const char *inverr3 = "inverr3"; ///                                 string              inverse weight as 1/measured^2
+
+// Kaywords for units
+static const char *molal = "molal"; ///                                     string              molality moles/kg
+static const char *loga = "loga"; ///                                       string              log(molality)
+static const char *_loga = "-loga"; ///                                     string              -log(consntration) used for pH
+static const char *gram = "g"; ///
+static const char *kgram = "kg"; ///
+static const char *m3 = "m3"; ///
+static const char *cm3 = "cm3"; ///
+}
 #endif // KEYWORDS_H

@@ -7,15 +7,16 @@
 #include <boost/lexical_cast.hpp>
 
 using namespace std;
+using namespace keys;
 
 static EJDB *jb;
 
 int main(int argc, char *argv[])
 {
-    int ic=0, phc = 0;
-    string ph_new, ph_old;
-    vector<string> phases;
-    bool h_phprop = false, h_phases = false, h_phcomp = false; // handle that is true if we have ph_prop in the CSV file
+    int ic=0, phc = 0, dcc = 0;
+    string ph_new, ph_old, dcomp_new, dcomp_old;
+    vector<string> phases, dcomps;
+    bool h_phprop = false, h_phases = false, h_phcomp = false, h_dcomp = false; // handle that is true if we have ph_prop in the CSV file
 
     vector<int> TP[2], TP_pairs[2];
     bool isfound = false, isfound2 = false;
@@ -69,7 +70,8 @@ int main(int argc, char *argv[])
     while(getline(in, line)  && in.good() )
     {
         ic = 0;
-        phc = 0; // keeps numnber of phases per line
+        phc = 0; // keeps number of phases per line
+        dcc = 0; // keeps number of dependent components
         csvline(row, line, ',');
         // going trough the headline markers to identify the data type, based on which it is assigned into the database
         bson exp;
@@ -242,7 +244,7 @@ int main(int argc, char *argv[])
                                         h_phprop = true;
                                     }
                                     // if composition present
-                                    if (((ph_prop != pQnt) && (ph_prop != pH) && (ph_prop != pV) &&  (ph_prop != Eh) && (ph_prop != IS) && (ph_prop != all) &&  (ph_prop != sArea)) && (strncmp(ph_prop.c_str(),"s", 1) != 0) && (!row[j].empty()))
+                                    if (((ph_prop != pQnt) && (ph_prop != pH) && (ph_prop != pV) &&  (ph_prop != Eh) && (ph_prop != IS) && (ph_prop != all) &&  (ph_prop != sArea)) && (strncmp(ph_prop.c_str(),"Dc", 2) != 0) && (!row[j].empty()))
                                     {
                                         h_phcomp = true;
                                     }
@@ -318,7 +320,7 @@ int main(int argc, char *argv[])
                                         ph_prop = headline[j].substr((pos_end+f1.length()),(headline[j].size()));
 
                                         // qunatity of this pahse in the experiment
-                                        if (((ph_prop != pQnt) && (ph_prop != pH) && (ph_prop != pV) &&  (ph_prop != Eh) && (ph_prop != IS) && (ph_prop != all) &&  (ph_prop != sArea)) && (strncmp(ph_prop.c_str(),"s", 1) != 0) && (!row[j].empty()))
+                                        if (((ph_prop != pQnt) && (ph_prop != pH) && (ph_prop != pV) &&  (ph_prop != Eh) && (ph_prop != IS) && (ph_prop != all) &&  (ph_prop != sArea)) && (strncmp(ph_prop.c_str(),"Dc", 2) != 0) && (!row[j].empty()))
                                         {
                                             bson_append_start_object(&exp, boost::lexical_cast<string>(ic).c_str()); // START phase element object
                                             ic++;
@@ -351,47 +353,127 @@ int main(int argc, char *argv[])
                         } h_phcomp = false;
 
                         //++ START array phspecies ++//
-                        if ((strncmp(ph_prop.c_str(),"s", 1) == 0) && (!row[i].empty())) // check is there is species data in the CSV header
+                        if ((strncmp(ph_prop.c_str(),"Dc", 1) == 0) && (!row[i].empty())) // check if there is species data in the CSV header
                         {
                             bson_append_start_array(&exp, phspecies);
                             for (unsigned int j=0; j<headline.size(); ++j)
                             {
-                                if ((strncmp(headline[j].c_str(),phase, 5) == 0) && (!row[j].empty()))
+                                if ((strncmp(headline[j].c_str(),phase, 5) == 0) && (!row[j].empty())) // check for pahse. key
                                 {
                                     pos_start = headline[j].find(f1);
                                     pos_end   = headline[j].find(f1,pos_start+1);
                                     // getting the phase species
-                                    if (phase_name == headline[j].substr((pos_start+f1.length()),(pos_end-pos_start-f1.length())))
+                                    if (phase_name == headline[j].substr((pos_start+f1.length()),(pos_end-pos_start-f1.length()))) // check for phase name
                                     {
                                         ph_prop = headline[j].substr((pos_end+f1.length()),(headline[j].size()));
                                         // species
-                                        if ((strncmp(ph_prop.c_str(),"s", 1) == 0) && (!row[j].empty()))
+                                        if ((strncmp(ph_prop.c_str(),"Dc", 1) == 0) && (!row[j].empty()))
                                         {
-                                            bson_append_start_object(&exp, boost::lexical_cast<string>(ic).c_str()); // START species object
-                                            ic++;
-                                            ph_prop = ph_prop.substr(1,ph_prop.length()); // deleting the "s"
-                                            bson_append_string(&exp, species, ph_prop.c_str());
-                                            bson_append_double(&exp, sQnt, atof(row[j].c_str()));
+                                            string dcomp_name, Dc_prop, ph_dcomp;
 
-                                            // if error and unit follow in the CSV they are added in the DB
-                                            if ((headline[j+1]==_error))
+                                            ph_dcomp = "phase." + phase_name + ".";
+
+                                            ph_prop = ph_prop.substr(2,ph_prop.length()); // deleting the "Dc" - species name
+
+                                            // getting the name of the phase e.g. aq_gen form phase.aq_gen
+                                            pos_start = -1;
+                                            pos_end   = ph_prop.find(f1);
+                                            dcomp_name = ph_prop.substr((pos_start+f1.length()),(pos_end-pos_start-f1.length()));
+                                            dcomp_new = dcomp_name;
+                                            h_dcomp = false;
+
+                                            if ((dcomp_new != dcomp_old))
                                             {
-                                                ++j;
-                                                if ((!row[j].empty()))
+                                                // check if pahse name was not present before
+                                                for (unsigned int j=0; j<dcomps.size(); ++j)
                                                 {
-                                                    bson_append_double(&exp, Qerror, atof(row[j].c_str()));
+                                                    if (dcomp_name == dcomps[j])
+                                                    {
+                                                        h_dcomp = true;
+                                                    }
+                                                }
+
+                                                if (!h_dcomp) // START if h_dcomp
+                                                {
+                                                    string dcomp_prop;
+                                                    bson_append_start_object(&exp, boost::lexical_cast<string>(dcc).c_str()); // START species object
+                                                    dcc++;
+                                                    bson_append_string(&exp, species, dcomp_name.c_str());
+                                                    dcomps.push_back(dcomp_name);
+                                                    ph_dcomp += "Dc" + dcomp_name + ".";
+                                                    ic = 0;
+
+                                                    // loop to get all the properties of current dcomp
+                                                    bson_append_start_array(&exp, dcompprop);
+                                                    for (unsigned int j=0; j<headline.size(); ++j)
+                                                    {
+                                                        if (j== 30 || j ==33)
+                                                        {
+                                                            cout << headline[j].c_str() <<" "<< ph_dcomp.c_str() << " " << ph_dcomp.size() << endl;
+                                                        }
+                                                        if ((strncmp(headline[j].c_str(),ph_dcomp.c_str(), ph_dcomp.size()) == 0) && (!row[j].empty()))
+                                                        {
+                                                            cout << j << endl;
+
+                                                            pos_start = ph_dcomp.size();
+                                                            pos_end = headline[j].size();
+                                                            dcomp_prop = headline[j].substr(pos_start, pos_end);
+
+
+                                                            bson_append_start_object(&exp, boost::lexical_cast<string>(ic).c_str()); // START property object
+                                                            ic++;
+                                                            bson_append_string(&exp, property, dcomp_prop.c_str());
+                                                            bson_append_double(&exp, pQnt, atof(row[j].c_str()));
+
+                                                            // checking if there are errors and units included in the CSV and adding tem in the database
+                                                            if ((headline[j+1]==_error))
+                                                            {
+                                                                ++j;
+                                                                if ((!row[j].empty()))
+                                                                {
+                                                                    bson_append_double(&exp, Qerror, atof(row[j].c_str()));
+                                                                }
+                                                            }
+                                                            if ((headline[j+1]==_unit) && (!row[j+1].empty()))
+                                                            {
+                                                                ++j;
+                                                                bson_append_string(&exp, Qunit, row[j].c_str());
+                                                            }
+                                                            bson_append_finish_object(&exp); // END property object
+                                                            dcomp_old = dcomp_name;
+
+
+
+                                                        }
+
+                                                    }
+                                                    bson_append_finish_array(&exp); // END dcompprop array
+
                                                 }
                                             }
-                                            if ((headline[j+1]==_unit) && (!row[j+1].empty()))
-                                            {
-                                                ++j;
-                                                bson_append_string(&exp, Qunit, row[j].c_str());
-                                            }
 
-                                            bson_append_finish_object(&exp); // END species object
+//                                            bson_append_double(&exp, sQnt, atof(row[j].c_str()));
+
+//                                            // if error and unit follow in the CSV they are added in the DB
+//                                            if ((headline[j+1]==_error))
+//                                            {
+//                                                ++j;
+//                                                if ((!row[j].empty()))
+//                                                {
+//                                                    bson_append_double(&exp, Qerror, atof(row[j].c_str()));
+//                                                }
+//                                            }
+//                                            if ((headline[j+1]==_unit) && (!row[j+1].empty()))
+//                                            {
+//                                                ++j;
+//                                                bson_append_string(&exp, Qunit, row[j].c_str());
+//                                            }
+
+//                                            bson_append_finish_object(&exp); // END species object
                                             ph_old = phase_name;
                                         }
                                     }
+                                    dcomps.clear();
                                 }
                             }
                             //++ END array phspecies ++//
@@ -437,17 +519,17 @@ int main(int argc, char *argv[])
 
     bson bq2;
     bson_init_as_query(&bq2);
-    bson_append_start_object(&bq2, expdataset);
-    bson_append_start_array(&bq2, "$in");
-    bson_append_string(&bq2, "0", "K_Anderson&Burnham1967");
-    bson_append_string(&bq2, "1", "K_Pascal&Anderson1989");
-    bson_append_finish_array(&bq2);
-    bson_append_finish_object(&bq2);
+//    bson_append_start_object(&bq2, expdataset);
+//    bson_append_start_array(&bq2, "$in");
+//    bson_append_string(&bq2, "0", "K_Anderson&Burnham1967");
+//    bson_append_string(&bq2, "1", "K_Pascal&Anderson1989");
+//    bson_append_finish_array(&bq2);
+//    bson_append_finish_object(&bq2);
 
-    bson_append_start_object(&bq2, sT);
+    bson_append_start_object(&bq2, sP);
     bson_append_start_array(&bq2, "$bt");
-    bson_append_string(&bq2, "0", "1");
-    bson_append_string(&bq2, "1", "1500");
+    bson_append_string(&bq2, "0", "2");
+    bson_append_string(&bq2, "1", "2");
     bson_append_finish_array(&bq2);
     bson_append_finish_object(&bq2);
 

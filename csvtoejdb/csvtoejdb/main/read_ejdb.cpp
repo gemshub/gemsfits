@@ -2,6 +2,7 @@
 # include <iostream>
 
 using namespace std;
+using namespace keys;
 
 void bson_read_raw(FILE *f, const char *data) {
     bson_iterator i, j;
