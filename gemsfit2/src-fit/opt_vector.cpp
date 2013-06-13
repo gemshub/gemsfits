@@ -44,7 +44,7 @@ opti_vector::opti_vector( )
             exit(1);
        }
     this->h_RDc = false;
-
+    this->h_Lp  = false;
 
     fout << "10. opt_vector.cpp line 49. Reading optimized parameters from the input file; " << endl;
     get_gems_fit_DCH_txt( node, this ); // reading DCH parameters
@@ -57,6 +57,12 @@ opti_vector::opti_vector( )
     {
         fout << "10-1. opt_vector.cpp line 58. Getting the indexes of species involved in the reaction constraints; " << endl;
         get_RDc_indexes (node, this);
+    }
+
+    // getting indexes of liked paramater/ elements
+    if (h_Lp)
+    {
+        ///
     }
 
 }

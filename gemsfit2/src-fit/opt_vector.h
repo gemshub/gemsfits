@@ -60,6 +60,7 @@ public:
     vd optv0; /// vector storing initial parameter values
 
     bool h_RDc; /// handle for cheking if there are reaction constraints in the input file
+    bool h_Lp; /// handle for checking if there are linked parameters in the input file
 
     struct RDc /// structure storing reaction constraint information
     {
@@ -76,7 +77,16 @@ public:
     };
     vector<RDc*> reactions; /// Vector of pointer to reactions (rdc_species struct that hold the reaction dependent species and the reaction properties)
 
-
+    struct Lp /// structure holding liked parameters information
+    {
+        int index;
+        string type;
+        string name; /// name of the linked parameter e.g H
+        double IV; /// initial value
+        vs L_param; /// name of the parameters that the linked parameters is linked to eg. Cl in HCl and S in H2SO4
+        vd L_coef; /// linking coefiecients e.g 1.0 for Cl and 2.0 for S
+    };
+    vector<Lp*> Lparams;
 
     /**
     * Gets the indexes of the RDc species

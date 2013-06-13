@@ -290,7 +290,7 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
         if ((sys->Tfun->objfun[j]->exp_phase != "aq_gen") && (sys->experiments[i]->expphases[p]->phase != "aq_gen"))
         {
             computed_value = IC_in_PH[ICndx];
-        }
+        } else { cout << "Error in target functions line 293 "; exit(1);}
 
     measured_value = sys->experiments[i]->expphases[p]->phcomp[e]->bQnt;
 
@@ -350,7 +350,7 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
             computed_value = sys->NodT[i]->Ph_Mass(PHndx) * 1e06;
         } else computed_value = sys->NodT[i]->Ph_Mass(PHndx);
 
-    }
+    } else { cout << "Error in target functions line 253 "; exit(1);}
 
     measured_value = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt;
 
@@ -368,6 +368,53 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
 
     sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
     sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phprop[pp]->property,sys->experiments[i]->expphases[p]->phprop[pp]->Qunit,measured_value,computed_value,Weighted_Tfun_residual, weight_ );
+
+    return Weighted_Tfun_residual;
+}
+
+
+double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sys)
+{
+    const char *phase_name, *dcomp_name;
+    int PHndx, DCndx;
+    double computed_value, measured_value;
+    double Tfun_residual = 0.0, Weighted_Tfun_residual, weight_ = 1.0;
+    DATACH* dCH = sys->NodT[i]->pCSD();
+
+    phase_name = sys->experiments[i]->expphases[p]->phase.c_str();
+    dcomp_name = sys->experiments[i]->expphases[p]->phdcomps[dc]->formula.c_str();
+    PHndx = sys->NodT[i]->Ph_name_to_xDB(phase_name);
+    DCndx = sys->NodT[i]->DC_name_to_xCH(dcomp_name);
+
+    if (sys->Tfun->objfun[j]->exp_property == keys::pQnt)
+    {
+        measured_value = sys->NodT[i]->Get_nDC(DCndx); // Retrieves the current mole amount of Dependent Component.
+        if (sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->Qunit == keys::molfrac)
+        {
+            measured_value = sys->NodT[i]->Get_cDC(DCndx);// for species in other phases - mole fraction.
+        }
+    } else
+    if (sys->Tfun->objfun[j]->exp_property == keys::actcoef)
+    {
+        measured_value = sys->NodT[i]->Get_gDC(DCndx);
+    } else { cout << "Error in target functions line 400 "; exit(1);}
+
+    measured_value = sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->pQnt;
+
+    // Error handeling due to possible nonphisical parameters
+//    if (computed_value < sys->LimitOfDetection)
+//    {
+////        cout << measured_value <<" / " <<computed_value<<" = " << measured_value / computed_value << endl;
+//        computed_value = rand() % 100 + 1;
+//    }
+
+    // check Target function type and calculate the Tfun_residual
+    weight_ = weight_phdcomp(i, p, dc, dcp, sys->Tfun->weight, sys);
+    Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type);
+    Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type)*weight_;
+
+    sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
+    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phdcomps[dc]->formula,sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->property, sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->Qunit, measured_value, computed_value, Weighted_Tfun_residual, weight_ );
 
     return Weighted_Tfun_residual;
 }
@@ -414,10 +461,26 @@ double weight_phprop (int i, int p, int pp, string type, TGfitTask *sys)
     {
         return 1/(pow(sys->experiments[i]->expphases[p]->phprop[pp]->Qerror,2));
     } else
-
     if (type == keys::inverr3)
     {
         return 1/(pow(sys->experiments[i]->expphases[p]->phprop[pp]->pQnt,2));
+    } else return 1;
+}
+
+double weight_phdcomp (int i, int p, int dc, int dcp, string type, TGfitTask *sys)
+{
+    if (type == keys::inverr)
+    {
+        return 1/(sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->Qerror);
+    } else
+
+    if (type == keys::inverr2)
+    {
+        return 1/(pow(sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->Qerror,2));
+    } else
+    if (type == keys::inverr3)
+    {
+        return 1/(pow(sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->pQnt,2));
     } else return 1;
 }
 

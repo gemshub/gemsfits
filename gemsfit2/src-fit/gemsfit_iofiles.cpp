@@ -51,6 +51,7 @@ void F_to_OP (opti_vector *op, IOJFormat Jformat, string nfild);
 /// if after F comes the initial value
 void F_to_OP (double val, opti_vector *op, IOJFormat Jformat, string nfild);
 void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat, string nfild);
+void L_to_OP (opti_vector::Lp *l, IOJFormat Jformat, string nfild);
 
 optimization::optimization( int i)
 {
@@ -591,6 +592,7 @@ void get_gems_fit_DBR_txt(TNode* node , opti_vector *op)
          }
         if( !vFormats.empty() )
         {
+            int nl = 0;
             // Hear you must write your code
             for( int ii=0; ii<vFormats.size(); ii++ )
             {    cout<< "Fied " << DataBR_fields[nfild].name << " Type " << vFormats[ii].type <<
@@ -608,13 +610,22 @@ void get_gems_fit_DBR_txt(TNode* node , opti_vector *op)
                         // after F comes initial value
                         switch( nfild )
                         {
-                            case f_TK: F_to_OP(CNode->TK, op, vFormats[ii], DataCH_dynamic_fields[nfild].name );
+                            case f_TK: F_to_OP(CNode->TK, op, vFormats[ii], DataBR_fields[nfild].name );
                                       break;
-                            case f_P: F_to_OP(CNode->P, op, vFormats[ii], DataCH_dynamic_fields[nfild].name );
+                            case f_P: F_to_OP(CNode->P, op, vFormats[ii], DataBR_fields[nfild].name );
+                                      break;
+                            case f_bIC: F_to_OP(CNode->bIC[vFormats[ii].index], op, vFormats[ii], DataBR_fields[nfild].name ); // i
                                       break;
                         // add other parameters
                         }
                     }
+                }
+                if (vFormats[ii].type == ft_L)
+                {
+                    op->Lparams.push_back(new opti_vector::Lp);
+                    op->h_Lp = true;
+                    L_to_OP(op->Lparams[nl], vFormats[ii], DataBR_fields[nfild].name );
+                    nl++;
                 }
             }
             vFormats.clear();
@@ -1345,6 +1356,41 @@ void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat, string nfild)
 
 //    op->Ptype.push_back( nfild );
 //    op->Pindex.push_back( Jformat.index );
+}
+
+
+void L_to_OP (opti_vector::Lp *l, IOJFormat Jformat, string nfild)
+{
+    vector<string> out;
+    Data_Manager *temp = new Data_Manager(1);
+
+    l->type = nfild ;
+    l->index = Jformat.index ;
+
+    temp->parse_JSON_object(Jformat.format, keys::IV, out);
+    l->IV = atof(out.at(0).c_str());
+    out.clear();
+
+    temp->parse_JSON_object(Jformat.format, keys::LE, out);
+    for (unsigned int i = 0 ; i < out.size() ; i++)
+    {
+        l->L_param.push_back( out.at(i) );
+    }
+    out.clear();
+
+    temp->parse_JSON_object(Jformat.format, keys::Lcoef, out);
+    if (out.size() != l->L_param.size())
+    {
+        cout << "ERROR: Number og linked parameters is not equal with the number of link coeficients" << endl;
+        exit(1);
+    }
+    for (unsigned int i = 0 ; i < out.size() ; i++)
+    {
+        l->L_coef.push_back( atof(out.at(i).c_str()) );
+    }
+
+    out.clear();
+
 }
 
 // ----------- End of  visor.cpp ----------------------------
