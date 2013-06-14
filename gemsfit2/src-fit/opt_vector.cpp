@@ -62,7 +62,7 @@ opti_vector::opti_vector( )
     // getting indexes of liked paramater/ elements
     if (h_Lp)
     {
-        ///
+        get_Lp_indexes (node, this);
     }
 
 }
@@ -97,6 +97,49 @@ void opti_vector::get_RDc_indexes (TNode *node, opti_vector *ov)
                 else
                 {
                     ov->reactions[j]->rdc_species_ind.push_back(index_species);
+                }
+            }
+            catch( long e )
+            {
+                cout<<endl;
+                cout<<" Phase name in GEMSFIT chemical system file has no corresponding phase name in GEMS3K input file !!!! "<<endl;
+                cout<<" Can not proceed ... Bailing out now ... "<<endl;
+                cout<<endl;
+                exit(1);
+            }
+        }
+    }
+}
+
+void opti_vector::get_Lp_indexes (TNode *node, opti_vector *ov)
+{
+    int index_IC;
+    // maybe try to add MPI here??
+    for (int j = 0; j < ov->Lparams.size(); ++j )
+    {
+        index_IC = node->IC_name_to_xCH( ov->Lparams[j]->name.c_str() );
+        if( index_IC < 0 )
+        {
+            throw index_IC;
+        }
+        else
+        {
+            ov->Lparams[j]->index = index_IC;
+        }
+
+        for (int i=0; i<ov->Lparams[j]->L_param.size(); ++i )
+        {
+            // Get form GEMS the index of to_fit_species of interest
+            try
+            {
+                index_IC = node->IC_name_to_xCH( ov->Lparams[j]->L_param[i].c_str() );
+                if( index_IC < 0 )
+                {
+                    throw index_IC;
+                }
+                else
+                {
+                    ov->Lparams[j]->L_param_ind.push_back(index_IC);
                 }
             }
             catch( long e )

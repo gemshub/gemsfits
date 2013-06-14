@@ -760,10 +760,15 @@ outField Data_Manager_fields[10] =
       "\n  WT - weighting scheeme: inverr - 1/error; inverr2 - 1/error^2; inverr3 - 1/measured^2;"
       "\n  OFUN - objective function, what to compare \n  EPH - what phase from the experiments \n  EN - what element from the phase \n  EP - what property of the phase"
       "\n  Eunit - what unit the values should be in (molal - moles/Kg H2O, loga - log(molal), ...)"
+      "\n\n  DCPH - pahse for which the dependent component/species belongs"
+      "\n  DC - dependent component/species"
+      "\n  DCP - dependent component property"
+      "\n  DCPunit - property unit"
       "\n \n  { \"Target\": \"name\", \"TT\": \"lsq\", \"WT\": \"inverr\", \"OFUN\":"
       "\n     [{ \"EPH\": \"aq_gen\", \"EN\": \"Si\", \"Eunit\": \"molal\" },"
       "\n      { \"EPH\": \"aq_gen\", \"EN\": \"Al\", \"Eunit\": \"molal\" },"
-      "\n      { \"EPH\": \"aq_gen\", \"EP\": \"pH\", \"Eunit\": \"-loga\" }] }\n"
+      "\n      { \"EPH\": \"aq_gen\", \"EP\": \"pH\", \"Eunit\": \"-loga\" },"
+      "\n      { \"DCPH\": \"aq_gen\", \"DC\": \"SiO2-\", \"DCP\" : \"pQnt\", \"DCPunit\": \"mol\"}]}\n"
     },
     { "SystemFiles",  0, 0, 1, "\n# SystemFiles: Comment"},
     { "RecipeFiles",  0, 0, 1, "\n# RecipeFiles: Comment"},
@@ -1372,6 +1377,10 @@ void L_to_OP (opti_vector::Lp *l, IOJFormat Jformat, string nfild)
     out.clear();
 
     temp->parse_JSON_object(Jformat.format, keys::LE, out);
+    l->name = out.at(0);
+    out.clear();
+
+    temp->parse_JSON_object(Jformat.format, keys::LEs, out);
     for (unsigned int i = 0 ; i < out.size() ; i++)
     {
         l->L_param.push_back( out.at(i) );

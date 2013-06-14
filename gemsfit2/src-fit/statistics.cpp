@@ -190,12 +190,14 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
                 myStat <<"          Reac parameter "<<gfittask->Opti->reactions[i]->Dc_name <<" :           "<<gfittask->Opti->reactions[i]->std_gibbs<<endl;
             }
         }
-        // Reaction constrained parameter
-//            myStat << " Reaction constrained parameter: "  <<endl;
-//            for ( i=0; i < gfittask->reaction.size(); ++i )
-//            {
-//                myStat <<" " <<gfittask->reaction[i]->rdc_species[gfittask->reaction[i]->rdc_species.size()-1] <<" : " << gfittask->reaction[i]->std_gibbs <<endl;
-//            }
+
+        if (gfittask->Opti->h_Lp)
+        {
+            for (i=0; i<gfittask->Opti->Lparams.size(); ++i)
+            {
+                myStat <<"          Linked parameter "<<gfittask->Opti->Lparams[i]->name <<" :           "<<gfittask->Opti->Lparams[i]->EV<<endl;
+            }
+        }
 
         myStat << endl;
         myStat.close();

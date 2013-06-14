@@ -66,13 +66,19 @@ void adjust_PMc (int i, double new_PMc, TGfitTask *sys);
 // Set new Gibbs free energy based on reaction constraints
 /**
 * Sets the new G0 of the components fixed using reaction constraints
-* @param i      position of the G0 in the parameter/optimization vector
-* @param G0     the new G0 returned by the optimization algorithm
 * @param sys    pointer to data object that holds the data of the current TGfitTask struct
 * @author DM
 * @date 17.05.2013
 */
 void adjust_RDc (TGfitTask *sys);
+
+/**
+* Sets the new value of the linked element in bIC (bulk composition) vector
+* @param sys    pointer to data object that holds the data of the current TGfitTask struct
+* @author DM
+* @date 13.06.2013
+*/
+void adjust_Lp (TGfitTask *sys);
 
 /**
 * Checks if the unit specified in the target function in the input file corresponds with the unit in the

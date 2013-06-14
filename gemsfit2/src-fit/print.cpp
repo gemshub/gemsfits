@@ -95,6 +95,14 @@ void ResPrint::print_result()
         }
     }
 
+    if (res_opti->h_Lp)
+    {
+        for (int i=0; i<res_opti->Lparams.size(); ++i)
+        {
+            fout <<"Linked parameter "<<res_opti->Lparams[i]->name<<" :  "<<res_opti->Lparams[i]->EV<<endl;
+        }
+    }
+
     fout<<endl;
 }
 

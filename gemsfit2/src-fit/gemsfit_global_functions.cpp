@@ -90,6 +90,11 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         adjust_RDc(sys);
     }
 
+    if (sys->Opti->h_Lp)
+    {
+        adjust_Lp(sys);
+    }
+
 //     cout << sys->NodT[0]->DC_G0(5, 1*100000, 22+273.15, false)  << endl;
     // Equilibrium calculation
 //    cout << sys->NodT[0]->Get_mIC(4) << endl;
@@ -181,7 +186,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
                                     {
                                         if (sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->property == sys->Tfun->objfun[j]->exp_property)
                                         {
-                                            cout << "yes"<<endl;
+//                                            cout << "yes"<<endl;
                                             //                                    // check for unit
                                             //                                    check_prop_unit(i, p, pp, sys->Tfun->objfun[j]->exp_unit, sys );
                                             //                                    residuals_sys_ = residuals_sys_ + residual_phase_prop (i, p, pp, j, sys);
@@ -198,7 +203,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     residuals_sys = residuals_sys_;
 
     // debug for when using global algorithms
-    if (master_counter%1000 == 0)
+    if (master_counter%10000 == 0)
     {
         cout << master_counter << " itterations, continuning..." << endl;
         cout << "sum of residuals: "<<residuals_sys<< endl;

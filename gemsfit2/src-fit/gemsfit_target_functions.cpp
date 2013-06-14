@@ -110,6 +110,32 @@ void adjust_RDc (TGfitTask *sys)
     }
 }
 
+void adjust_Lp (TGfitTask *sys)
+{
+    // going trough all nodes
+//#ifdef USE_MPI
+    omp_set_num_threads(sys->MPI);
+    #pragma omp parallel for
+//#endif
+    for (int n=0; n<sys->NodT.size(); ++n)
+    {
+        for (int i=0; i < sys->Opti->Lparams.size(); ++i )
+        {
+            double new_param=0;
+            int LP_index = sys->Opti->Lparams[i]->index;
+
+            for (int j=0; j < sys->Opti->Lparams[i]->L_param.size()-1; ++j )
+            {
+                new_param += sys->Opti->Lparams[i]->L_coef[j] * sys->NodT[n]->Get_bIC(sys->Opti->Lparams[i]->L_param_ind[j]);
+            }
+
+            new_param += sys->NodT[n]->Get_bIC(LP_index);
+            sys->NodT[n]->Set_bIC(LP_index, new_param);
+            sys->Opti->Lparams[i]->EV = new_param;
+        }
+    }
+}
+
 /// Unit chack FUNCTIONS
 void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
 {

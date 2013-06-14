@@ -83,7 +83,9 @@ public:
         string type;
         string name; /// name of the linked parameter e.g H
         double IV; /// initial value
+        double EV; /// end value
         vs L_param; /// name of the parameters that the linked parameters is linked to eg. Cl in HCl and S in H2SO4
+        vi L_param_ind;
         vd L_coef; /// linking coefiecients e.g 1.0 for Cl and 2.0 for S
     };
     vector<Lp*> Lparams;
@@ -96,6 +98,15 @@ public:
     * @date 06.05.2013
     */
     void get_RDc_indexes (TNode *node, opti_vector *ov);
+
+    /**
+    * Gets the indexes of the linked parameters/elements form bulk composition
+    * @author DM
+    * @param node
+    * @param ov opti_vector class
+    * @date 06.05.2013
+    */
+    void get_Lp_indexes (TNode *node, opti_vector *ov);
 
 };
 
