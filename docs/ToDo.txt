@@ -4,10 +4,21 @@
 + Printing class - printing in /results/FIT_results.csv
 - test inverse weighting more
 - solidsolution composition
-+ test the reaction constraint - also test if logk is respected at higher temperatures
++ test the reaction constraint 
+- also test if logk is respected at higher temperatures
 - test interaction parameters
+
 - problems with GEMS convergence - can affect the ocnvergence as BOBYQA - decides how to change paramters ased on first residuals
 
 - type of data to compare (molality and log molality) etc...
++ added phase amount, phase vlolume, dcomp amount, dcomp activity coeficient
+- not added Eh, osmotic coeficient.
+- think about units, how to make a uniform strategy for units.
 
-- look over the statistics 
++ add bulk composition as parameters 
++ work on L (linked) type parameters  
+
++ look over the statistics !! think about the weighting matrix problem in the Var/Cov calculation.
+
+
+- make a separate RUN function in TGfittask so one can access the data manager and calculate statistics before the fitting procedure.
