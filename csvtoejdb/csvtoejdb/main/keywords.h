@@ -29,8 +29,8 @@ static const char *expphases = "expphases"; ///	                  1    	     arr
         static const char *eQnt = "eQnt"; ///	                  3	         float		        measured quantity/concentration of element (in Qunit)
     static const char *phspecies = "phdcomps"; ///  	          2	         array		        chemical species (end member, phase component)
         static const char *dcompprop = "dcompprop"; ///
-        static const char *species = "dcomps"; ///               3          string             name of chemical species (end member, phase component)
-        static const char *sQnt = "sQnt"; ///	                  3	         float		        measured quantity/concentration of phase species
+        static const char *species = "dcomps"; ///                3          string             name of chemical species (end member, phase component)
+        static const char *actcoef = "@coef"; ///	              3	         float		        measured quantity/concentration of phase species
                         // with Qerror and Qunit
     static const char *phprop = "phprop"; ///	                  2   	     array		        known bulk properties of the phase
         static const char *property = "property"; ///
@@ -74,6 +74,10 @@ static const char *url = "url"; ///	                              1		     string
                         // species
     static const char *RC = "RC"; ///                                       array               array of components names
     static const char *Rcoef = "Rcoef"; ///                                 array               array of reaction coeficients
+    // Linked parameters
+    static const char *LEs = "LEs"; ///                                     array               array of linked elements
+    static const char *LE = "LE"; ///                                       string              linked element
+    static const char *Lcoef = "Lcoef"; ///                                 array               array of linking coeficients
 // optimization specific
     static const int bperc = 10; ///                                        integer             default up/lo bound percentage of the parameters
 
@@ -109,5 +113,6 @@ static const char *gram = "g"; ///
 static const char *kgram = "kg"; ///
 static const char *m3 = "m3"; ///
 static const char *cm3 = "cm3"; ///
+static const char *molfrac = "molfrac"; ///
 }
 #endif // KEYWORDS_H

@@ -4,7 +4,7 @@
 # include <locale.h>
 # include "read_ejdb.h"
 # include "keywords.h"
-#include <boost/lexical_cast.hpp>
+# include <boost/lexical_cast.hpp>
 
 using namespace std;
 using namespace keys;
@@ -13,7 +13,7 @@ static EJDB *jb;
 
 int main(int argc, char *argv[])
 {
-    int ic=0, phc = 0, dcc = 0;
+    int ic=0, phc = 0, dcc = 0, iinit, irun, iconf;
     string ph_new, ph_old, dcomp_new, dcomp_old;
     vector<string> phases, dcomps;
     bool h_phprop = false, h_phases = false, h_phcomp = false, h_dcomp = false; // handle that is true if we have ph_prop in the CSV file
@@ -24,11 +24,33 @@ int main(int argc, char *argv[])
     // create EJDB databse object
     jb = ejdbnew();
 
+    for (int ii = 1; ii < argc; ii++)
+    {
+        if (strcmp(argv[ii], "-init") == 0 )
+          iinit = ii;
+        else if (strcmp(argv[ii], "-run") == 0 )
+            irun = ii;
+                 else if (strcmp(argv[ii], "-conf") == 0)
+                     iconf = ii;
+    }
+
+    if (irun != 0)
+    {
+        if (argc <= irun + 1)
+        {
+            cout << "Wrong options, Wrong argument for option -run";
+            exit(1);
+        }
+
+
+
+    }
+
     // create directory for db if not existent
-    if (0 != access(argv[1], F_OK)) {
+    if (0 != access(argv[irun + 1], F_OK)) {
       if (ENOENT == errno) {
          // does not exist
-          mkdir(argv[1], S_IRWXU|S_IRGRP|S_IXGRP);
+          mkdir(argv[irun + 1], S_IRWXU|S_IRGRP|S_IXGRP);
       }
       if (ENOTDIR == errno) {
          // not a directory
@@ -38,8 +60,8 @@ int main(int argc, char *argv[])
     char ejdb_path[64] = {};
     cout << ejdb_path << endl;
 
-    strcat(ejdb_path, argv[1]);
-    strcat(ejdb_path, argv[2]);
+    strcat(ejdb_path, argv[irun + 1]);
+    strcat(ejdb_path, argv[irun + 2]);
     cout << ejdb_path << endl;
     // open the database file as a writer JBOWRITER, create new is not existent JBOCREAT, and truncate db on open JBOTRUNC
     if (!ejdbopen(jb, ejdb_path, JBOWRITER | JBOCREAT | JBOTRUNC)) {
@@ -57,8 +79,8 @@ int main(int argc, char *argv[])
     string line;
 
     char csv_path[64] = {};
-    strcat(csv_path, argv[1]);
-    strcat(csv_path, argv[3]);
+    strcat(csv_path, argv[irun + 1]);
+    strcat(csv_path, argv[irun + 3]);
     ifstream in(csv_path);
     if (in.fail())  { cout << "File not found" <<endl; return 0; }
 
@@ -369,7 +391,7 @@ int main(int argc, char *argv[])
                                         // species
                                         if ((strncmp(ph_prop.c_str(),"Dc", 1) == 0) && (!row[j].empty()))
                                         {
-                                            string dcomp_name, Dc_prop, ph_dcomp;
+                                            string dcomp_name, ph_dcomp;
 
                                             ph_dcomp = "phase." + phase_name + ".";
 
@@ -423,7 +445,7 @@ int main(int argc, char *argv[])
                                                             bson_append_start_object(&exp, boost::lexical_cast<string>(ic).c_str()); // START property object
                                                             ic++;
                                                             bson_append_string(&exp, property, dcomp_prop.c_str());
-                                                            bson_append_double(&exp, pQnt, atof(row[j].c_str()));
+                                                            bson_append_double(&exp, pQnt, atof(row[j].c_str())); // quantity of the property
 
                                                             // checking if there are errors and units included in the CSV and adding tem in the database
                                                             if ((headline[j+1]==_error))
@@ -441,35 +463,12 @@ int main(int argc, char *argv[])
                                                             }
                                                             bson_append_finish_object(&exp); // END property object
                                                             dcomp_old = dcomp_name;
-
-
-
                                                         }
 
                                                     }
                                                     bson_append_finish_array(&exp); // END dcompprop array
-
                                                 }
                                             }
-
-//                                            bson_append_double(&exp, sQnt, atof(row[j].c_str()));
-
-//                                            // if error and unit follow in the CSV they are added in the DB
-//                                            if ((headline[j+1]==_error))
-//                                            {
-//                                                ++j;
-//                                                if ((!row[j].empty()))
-//                                                {
-//                                                    bson_append_double(&exp, Qerror, atof(row[j].c_str()));
-//                                                }
-//                                            }
-//                                            if ((headline[j+1]==_unit) && (!row[j+1].empty()))
-//                                            {
-//                                                ++j;
-//                                                bson_append_string(&exp, Qunit, row[j].c_str());
-//                                            }
-
-//                                            bson_append_finish_object(&exp); // END species object
                                             ph_old = phase_name;
                                         }
                                     }
@@ -482,11 +481,8 @@ int main(int argc, char *argv[])
                         // end object in the array phases
                         bson_append_finish_object(&exp); // END phase object
                     } // END if h_phases
-
                 } // END ph_new != ph_old
-
             } // END check for key pahse in the headline
-
         }
         //++ END array expphases ++//
         bson_append_finish_array(&exp);
@@ -528,8 +524,8 @@ int main(int argc, char *argv[])
 
     bson_append_start_object(&bq2, sP);
     bson_append_start_array(&bq2, "$bt");
-    bson_append_string(&bq2, "0", "2");
-    bson_append_string(&bq2, "1", "2");
+    bson_append_string(&bq2, "0", "1");
+    bson_append_string(&bq2, "1", "5000");
     bson_append_finish_array(&bq2);
     bson_append_finish_object(&bq2);
 
@@ -574,7 +570,7 @@ int main(int argc, char *argv[])
     ejdbdel(jb);
 
 
-    // get unique TP
+    // get distinct TP
     for (int i=0; i<TP[0].size(); i++)
     {
         // check if TP pair is presnt more than once in the TP vector
@@ -618,7 +614,7 @@ int main(int argc, char *argv[])
     fout.close();
 
 
-cout << endl;
+    cout << endl;
 
     return 0;
 }
