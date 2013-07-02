@@ -8,7 +8,7 @@
 - also test if logk is respected at higher temperatures
 - test interaction parameters
 
-- problems with GEMS convergence - can affect the ocnvergence as BOBYQA - decides how to change paramters ased on first residuals
+- problems with GEMS convergence - can affect the convergence as BOBYQA - decides how to change parameters based on first residuals
 
 - type of data to compare (molality and log molality) etc...
 + added phase amount, phase vlolume, dcomp amount, dcomp activity coeficient
@@ -21,4 +21,4 @@
 + look over the statistics !! think about the weighting matrix problem in the Var/Cov calculation.
 
 
-- make a separate RUN function in TGfittask so one can access the data manager and calculate statistics before the fitting procedure.
++ make a separate RUN function in TGfittask so one can access the data manager and calculate statistics before the fitting procedure.
