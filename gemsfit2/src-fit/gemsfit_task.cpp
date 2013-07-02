@@ -12,18 +12,18 @@
 // This file is part of the GEMSFIT code for parameterization of thermodynamic
 // data and models <http://gems.web.psi.ch/GEMSFIT/>
 //
-// GEMSIFT is free software: you can redistribute it and/or modify
+// GEMSIFT2 is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as
 // published by the Free Software Foundation, either version 3 of
 // the License, or (at your option) any later version.
 
-// GEMSFIT is distributed in the hope that it will be useful,
+// GEMSFIT2 is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with GEMSFIT code. If not, see <http://www.gnu.org/licenses/>.
+// along with GEMSFIT2 code. If not, see <http://www.gnu.org/licenses/>.
 //-------------------------------------------------------------------
 //
 
@@ -52,219 +52,6 @@ extern outField DataBR_fields[58];
 
 TGfitTask* TGfitTask::gft;
 
-//-------------------------------------------------------------------------
-// RunGEM()
-// GEM IPM calculation of equilibrium state for the iNode node
-// from array NodT1. abs(Mode)) - mode of GEMS calculation (NEED_GEM_SIA or NEED_GEM_AIA)
-//    if Mode is negative then the loading of primal solution from the node is forced
-//    (only in SIA mode)
-//  Function returns: NodeStatus code after GEM calculation
-//   ( OK_GEM_AIA; OK_GEM_SIA; error codes )
-//
-//-------------------------------------------------------------------
-
-long int  TGfitTask::RunGEM( long int  iNode, long int Mode )
-{
-
-bool uPrimalSol = false;
-long int retCode;
-
-  if( Mode < 0 || abs(Mode) == NEED_GEM_SIA )
-	  uPrimalSol = true;
-	  
-// Copy data from the iNode node from array NodT0 to the work DATABR structure
-   CopyWorkNodeFromArray( iNode, anNodes, NodT0 );
-
-// GEM IPM calculation of equilibrium state in MULTI
-  pCNode()->NodeStatusCH = abs(Mode);
-  retCode = GEM_run( uPrimalSol );
-
-// Copying data for node iNode back from work DATABR structure into the node array
-//   if( retCode == OK_GEM_AIA ||
-//       retCode == OK_GEM_PIA  )
-   MoveWorkNodeToArray( iNode, anNodes, NodT0 );
-
-   return retCode;
-}
-
-void  TGfitTask::checkGfitSamples(
-    long int i, long int* nodeTypes, const char*  datachbr_file )
-{
- if(nodeTypes)
-   for( long int ii=0; ii<anNodes; ii++)
-     if(   nodeTypes[ii]<0 || nodeTypes[ii] >= i )
-        {
-	  cout << anNodes << " " << nodeTypes[ii] << " i = " << i<< endl;
-	Error( datachbr_file,
-          "GEM_init() error: Undefined fitting condition!" );
-	}
-}
-
-//-------------------------------------------------------------------
-// Initialization of TNodeArray data structures. Reads in the DBR text input files and
-// copying data from work DATABR structure into the node array
-// (as specified in nodeTypes array, ndx index of dataBR files in
-//    the dbrfiles_lst_name list).
-//
-//-------------------------------------------------------------------
-void  TGfitTask::InitGfitTask( const char *dbrfiles_lst_name,
-                  long int *nodeTypes, bool getNodT1, bool binary_f  )
-{
-  int i;
-  gstring datachbr_fn;
-
-  gstring curPath = ""; //current reading file path
-
-     gstring lst_in = dbrfiles_lst_name;
-     gstring Path = "";
-
-// Get path
-#ifdef IPMGEMPLUGIN
-#ifdef _WIN32
-      size_t pos = lst_in.rfind("\\");// HS keep this on windows
-#else
-      size_t pos = lst_in.rfind("/"); // HS keep this on linux
-#endif
-#else
-      size_t pos = lst_in.rfind("\\");
-      if( pos == npos )
-         pos = lst_in.rfind("/");
-      else
-         pos = max(pos, lst_in.rfind("/") );
-#endif
-      if( pos < npos )
-      Path = lst_in.substr(0, pos+1);
-
-//  open file stream for the file names list file
-      fstream f_lst( lst_in.c_str(), ios::in );
-      ErrorIf( !f_lst.good() , lst_in.c_str(), "Fileopen error");
-
-
-// Prepare for reading DBR_DAT files
-     i = 0;
-     while( !f_lst.eof() )  // For all DBR_DAT files listed
-     {
-
-// Reading DBR_DAT file into work DATABR structure
-         if( i )  // Comma only after the first DBR_DAT file!
-            f_getline( f_lst, datachbr_fn, ',');
-         else
-            f_getline( f_lst, datachbr_fn, ' ');
-
-         gstring dbr_file = Path + datachbr_fn;
-         curPath = dbr_file;
-         if( binary_f )
-         {
-             GemDataStream in_br(dbr_file, ios::in|ios::binary);
-             databr_from_file(in_br);
-          }
-         else
-          {   fstream in_br(dbr_file.c_str(), ios::in );
-                 ErrorIf( !in_br.good() , datachbr_fn.c_str(),
-                    "DBR_DAT fileopen error");
-               databr_from_text_file(in_br);
-          }
-         curPath = "";
-// Unpacking work DATABR structure into MULTI (GEM IPM work structure): uses DATACH
-//    unpackDataBr();
-
-
-// Copying data from work DATABR structure into the node array
-// (as specified in nodeTypes array)
-           setNodeArray( i, nodeTypes  );
-
-          i++;
-     }  // end while()
-
-    ErrorIf( i==0, datachbr_fn.c_str(), "GEM_init() error: No DBR_DAT files read!" );
-    checkGfitSamples( i, nodeTypes, datachbr_fn.c_str()  );
-}
-
-//-------------------------------------------------------------------
-// setGfitTaskData()
-// Copying data from work DATABR structure into the node array
-// (as specified in nodeTypes array, ndx index of dataBR files in
-//    the ipmfiles_lst_name list).
-//
-//-------------------------------------------------------------------
-void  TGfitTask::setGfitTaskData( long int ndx, long int* nodeTypes  )
-{
-   for( long int ii=0; ii<anNodes; ii++)
-            if(  (!nodeTypes && ndx==0) ||
-              ( nodeTypes && (nodeTypes[ii] == ndx/*i+1*/ )) )
-                  {    pCNode()->NodeHandle = ndx/*(i+1)*/;
-                       MoveWorkNodeToArray(ii, anNodes, NodT0);
-                       CopyWorkNodeFromArray(ii, anNodes,NodT0);
-//                       MoveWorkNodeToArray(ii, anNodes, NodT1);
-//                       CopyWorkNodeFromArray(ii, anNodes,NodT1);
-                   }
-}
-
-
-//---------------------------------------------------------//
-
-void TGfitTask::allocMemory()
-{
-	long int ii;
-
-// alloc memory for data bidge structures
-// did in constructor TNode::allocMemory();
-
-// alloc memory for all nodes at current time point
-    NodT0 = new  DATABRPTR[anNodes];
-    for(  ii=0; ii<anNodes; ii++ )
-//        NodT0[ii] = 0;
-/*
-// alloc memory for all nodes at previous time point
-    NodT1 = new  DATABRPTR[anNodes];
-    for(  ii=0; ii<anNodes; ii++ )
-        NodT1[ii] = 0;
-*/
-// alloc memory for the work array of node types
-    tcNode = new char[anNodes];
-    for(  ii=0; ii<anNodes; ii++ )
-        tcNode[ii] = normal;    
-        
-// alloc memory for the work array of IA indicators
-    iaNode = new bool[anNodes];
-    for(  ii=0; ii<anNodes; ii++ )
-        iaNode[ii] = true;
-// grid ?    
-}
-
-void TGfitTask::freeMemory()
-{
-	long int ii;
-
-   if( anNodes )
-   { if( NodT0 )
-       for(  ii=0; ii<anNodes; ii++ )
-        if( NodT0[ii] )
-           NodT0[ii] = databr_free(NodT0[ii]);
-     delete[]  NodT0;
-     NodT0 = 0;
-
-     for (ii =0; ii<NodT.size(); ++ii)
-     {
-         delete NodT[ii];
-     }
-/*
-     if( NodT1 )
-       for(  ii=0; ii<anNodes; ii++ )
-        if( NodT1[ii] )
-          NodT1[ii] = databr_free(NodT1[ii]);
-     delete[]  NodT1;
-     NodT1 = 0;
-*/
-   }
-
-//  if( grid )
-//     delete[] grid;
-  if( tcNode)
-     delete[] tcNode;
-  if( iaNode )
-	 delete[] iaNode; 
-}
 
 //< Constructors for 1D arrangement of nodes
 TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
@@ -298,21 +85,33 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     }
 
     // initialize nodes with the experimental data
-    fout << "8. gemsfit_task.cpp line 300. Initializing nodes with the experimental data; " << endl;
+    fout << "8. gemsfit_task.cpp line 88. Initializing nodes with the experimental data; " << endl;
     setnodes ( );
 
     // getting the parameters to be optimized from DCH, DBR and multi structures, and optimization settings form the input file
-    fout << "9. gemsfit_task.cpp line 304. Initializing optimization structure; " << endl;
+    fout << "9. gemsfit_task.cpp line 92. Initializing optimization structure; " << endl;
     Opti = new optimization ( );
 
-    fout << "12. gemsfit_task.cpp line 307. Initializing the Target function structure & get_DatTarget(); " << endl;
+    fout << "12. gemsfit_task.cpp line 95. Initializing the Target function structure & get_DatTarget(); " << endl;
     Tfun = new TargetFunction;
     print = new ResPrint(printfile, Opti);
     get_DatTarget ( );
 
-    fout << "13. gemsfit_task.cpp line 313. Initializing optimization init_optim; " << endl;
+    fout.close();
+
+}
+
+void TGfitTask::run_optim()
+{
+    ofstream fout;
+    fout.open(gpf->FITLogFile().c_str(), ios::app);
+    if( fout.fail() )
+    { cout<<"Output fileopen error"<<endl; exit(1); }
+
+    fout << "13. gemsfit_task.cpp line 111. Initializing optimization init_optim; " << endl;
     init_optim (Opti->optv, weighted_Tfun_sum_of_residuals);
 
+    fout.close();
 }
 
 void TGfitTask::get_DatTarget ( )
@@ -549,7 +348,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, /*s
 
 
     /// specify objective function
-    ffout << endl << "14. in gemsfit_task.cpp line 487. Setting minimizing objective function." << endl;
+    ffout << endl << "14. in gemsfit_task.cpp line 351. Setting minimizing objective function." << endl;
     NLopti.set_min_objective( Equil_objective_function_callback, this );
 
 //        if( OptConstraints )
@@ -576,7 +375,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, /*s
     //ierr = MPI_Comm_size( MPI_COMM_WORLD, &p );
     int continue_or_exit;
 
-    ffout << "15. in gesfit_task.cpp line 514. Performing optimization."<<endl;
+    ffout << "15. in gesfit_task.cpp line 378. Performing optimization."<<endl;
 
 //    //===== For testing the objective function without oprimization =====//
 //    weighted_Tfun_sum_of_residuals = Equil_objective_function_callback(Opti->optv, grad, this);
@@ -587,7 +386,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, /*s
     ffout<<"optv[0] = "<<Opti->optv[0]<<endl;
     ffout<<"size of optv = "<<Opti->optv.size()<<endl;
 
-    ffout << "16. gemsfit_task.cpp line 523. Finished optimization; " << endl;
+    ffout << "16. gemsfit_task.cpp line 389. Finished optimization; " << endl;
 
 
             // check results
@@ -822,24 +621,11 @@ void TGfitTask::setnodes()
         delete[] Ph_surf;
     }
 
-
-}
-
-
-void TGfitTask::get_nodes(long int nNod)
-{
-    NodT0 = 0;  // nodes at current time point
-  //  NodT1 = 0;  // nodes at previous time point
-    tcNode = 0;     // Node type codes (see DataBR.h) size anNodes+1
-    iaNode = 0;
-    allocMemory();
-    gft = this;
-    anNodes = nNod; // ???
 }
 
 TGfitTask::~TGfitTask(   )
 {
-   freeMemory();
+//   freeMemory();
 }
 
 void TGfitTask::set_residuals (double computed, double measured, double Weighted_Tfun_residual, double Tfun_residual, double weight )
@@ -850,155 +636,6 @@ void TGfitTask::set_residuals (double computed, double measured, double Weighted
     measured_values_v.push_back(measured);
     Weighted_Tfun_residuals_v.push_back(Weighted_Tfun_residual);
     Tfun_residuals_v.push_back(Tfun_residual);
-}
-
-
-// Copying data for node ii from node array into work DATABR structure
-void TGfitTask::CopyWorkNodeFromArray( long int ii, long int nNodes, DATABRPTR* arr_BR )
-{
-  // from arr_BR[ii] to pCNode() structure
-  if( ii < 0 || ii>= nNodes )
-    return;
-  // memory must be allocated before
-
-  // mem_cpy( &pCNode()->NodeHandle, &arr_BR[ii]->NodeHandle, 6*sizeof(short));
-  pCNode()->NodeHandle = arr_BR[ii]->NodeHandle;
-  pCNode()->NodeTypeHY = arr_BR[ii]->NodeTypeHY;
-  pCNode()->NodeTypeMT = arr_BR[ii]->NodeTypeMT;
-  pCNode()->NodeStatusFMT = arr_BR[ii]->NodeStatusFMT;
-  pCNode()->NodeStatusCH = arr_BR[ii]->NodeStatusCH;
-  pCNode()->IterDone = arr_BR[ii]->IterDone;      //6
-  // mem_cpy( &pCNode()->TK, &arr_BR[ii]->TK, 32*sizeof(double));
-	pCNode()->TK = arr_BR[ii]->TK;
-	pCNode()->P = arr_BR[ii]->P;
-	pCNode()->Vs = arr_BR[ii]->Vs;  
-	pCNode()->Vi = arr_BR[ii]->Vi;   
-	pCNode()->Ms = arr_BR[ii]->Ms;   
-	pCNode()->Mi = arr_BR[ii]->Mi;    
-	pCNode()->Gs = arr_BR[ii]->Gs;    
-	pCNode()->Hs = arr_BR[ii]->Hs; 	
-	pCNode()->Hi = arr_BR[ii]->Hi;    
-	pCNode()->IC = arr_BR[ii]->IC;    
-	pCNode()->pH = arr_BR[ii]->pH;    
-	pCNode()->pe = arr_BR[ii]->pe;     
-	pCNode()->Eh = arr_BR[ii]->Eh; //13     
-
-	pCNode()->Tm = arr_BR[ii]->Tm;    
-    pCNode()->dt = arr_BR[ii]->dt;
-
-// Dynamic data - dimensions see in DATACH.H structure
-// exchange of values occurs through lists of indices, e.g. xDC, xPH
-  copyValues( pCNode()->xDC, arr_BR[ii]->xDC, pCSD()->nDCb );
-  copyValues( pCNode()->gam, arr_BR[ii]->gam, pCSD()->nDCb );
-  if( CSD->nAalp >0 )
-	  copyValues( pCNode()->aPH, arr_BR[ii]->aPH, pCSD()->nPHb );
-  else  pCNode()->aPH = 0;
-  copyValues( pCNode()->xPH, arr_BR[ii]->xPH, pCSD()->nPHb );
-  copyValues( pCNode()->vPS, arr_BR[ii]->vPS, pCSD()->nPSb );
-  copyValues( pCNode()->mPS, arr_BR[ii]->mPS, pCSD()->nPSb );
-
-  copyValues( pCNode()->bPS, arr_BR[ii]->bPS,
-                          pCSD()->nPSb*pCSD()->nICb );
-  copyValues( pCNode()->xPA, arr_BR[ii]->xPA, pCSD()->nPSb );
-  copyValues( pCNode()->dul, arr_BR[ii]->dul, pCSD()->nDCb );
-  copyValues( pCNode()->dll, arr_BR[ii]->dll, pCSD()->nDCb );
-  copyValues( pCNode()->bIC, arr_BR[ii]->bIC, pCSD()->nICb );
-  copyValues( pCNode()->rMB, arr_BR[ii]->rMB, pCSD()->nICb );
-  copyValues( pCNode()->uIC, arr_BR[ii]->uIC, pCSD()->nICb );
-  copyValues( pCNode()->bSP, arr_BR[ii]->bSP, pCSD()->nICb );
-}
-
-// Copying data for node iNode back from work DATABR structure into the node array
-void TGfitTask::MoveWorkNodeToArray( long int ii, long int nNodes, DATABRPTR* arr_BR )
-{
-  if( ii < 0 || ii>= nNodes )
-    return;
-  if( arr_BR[ii] )
-  {
-       arr_BR[ii] = databr_free( arr_BR[ii]);
-       // delete[] arr_BR[ii];
-  }
-  arr_BR[ii] = pCNode();
-// alloc new memory
-  TNode::CNode = new DATABR;
-  databr_reset( CNode, 1 );
-  databr_realloc();
-  // mem_set( &pCNode()->TC, 0, 32*sizeof(double));
-}
-
-void TGfitTask::CopyNodeFromTo( long int ndx, long int nNod,
-                       DATABRPTR* arr_From, DATABRPTR* arr_To )
-{
-  if( !arr_From || !arr_To )
-      return;
-  CopyWorkNodeFromArray( ndx, nNod, arr_From );
-  MoveWorkNodeToArray( ndx,  nNod, arr_To );
-}
-
-//---------------------------------------------------------
-// Methods for working with node arrays (access to data from DBR)
-
-// Calculate phase (carrier) mass, kg  of single component phase
-double TGfitTask::get_mPH( long int ia, long int nodex, long int PHx )
-{
-  long int DCx = Phx_to_DCx( Ph_xDB_to_xCH(PHx) );
-  double val=0.;
-
-  if( DCx >= pCSD()->nDCs && DCx < pCSD()->nDC )
-  {
-    val = pCSD()->DCmm[DCx];
-    if( ia == 0)
-     val *= pNodT0()[nodex]->xDC[DC_xCH_to_xDB(DCx)];
-//    else
-//     val *= pNodT1()[nodex]->xDC[DC_xCH_to_xDB(DCx)];
-  }
-
-  return val;
-}
-
-// Calculate phase volume (in cm3) of single - component phase
-double TGfitTask::get_vPH( long int ia, long int nodex, long int PHx )
-{
-  long int DCx = Phx_to_DCx( Ph_xDB_to_xCH(PHx) );
-  double val=0.;
-
-  if( DCx >= pCSD()->nDCs && DCx < pCSD()->nDC )
-  {
-     double T, P;
-     if( ia == 0 )
-     {
-      T = pNodT0()[(nodex)]->TK;
-      P = pNodT0()[(nodex)]->P;
-      val = pNodT0()[nodex]->xDC[DC_xCH_to_xDB(DCx)]; // number of moles
-     }
-//     else
-//     {
-//      T = pNodT1()[(nodex)]->TK;
-//      P = pNodT1()[(nodex)]->P;
-//      val = pNodT1()[nodex]->xDC[DC_xCH_to_xDB(DCx)];
-//     }
-     val *= DC_V0( DCx, P, T );
-  }
-  return val;
-}
-
-
-// Calculate bulk compositions  of single component phase
-double TGfitTask::get_bPH( long int ia, long int nodex, long int PHx, long int ICx )
-{
-  long int DCx = Phx_to_DCx( Ph_xDB_to_xCH(PHx) );
-  double val=0.;
-
-  if( DCx >= pCSD()->nDCs && DCx < pCSD()->nDC )
-  {
-    val = pCSD()->A[ pCSD()->xic[ICx] + DCx * pCSD()->nIC];
-    if( ia == 0)
-     val *= pNodT0()[nodex]->xDC[DC_xCH_to_xDB(DCx)];
-//    else
-//     val *= pNodT1()[nodex]->xDC[DC_xCH_to_xDB(DCx)];
-  }
-
-  return val;
 }
 
 //-----------------------End of gemsfit_task.cpp--------------------------

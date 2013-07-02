@@ -1,26 +1,26 @@
 // Copyright (C) 2013 G.D.Miron, D.Kulik
 // <GEMS Development Team, mailto:gems2.support@psi.ch>
 //
-// This file is part of the GEMSFIT code for parameterization of thermodynamic
+// This file is part of the GEMSFIT2 code for parameterization of thermodynamic
 // data and models <http://gems.web.psi.ch/GEMSFIT/>
 //
-// GEMSIFT is free software: you can redistribute it and/or modify
+// GEMSIFT2 is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as
 // published by the Free Software Foundation, either version 3 of
 // the License, or (at your option) any later version.
 
-// GEMSFIT is distributed in the hope that it will be useful,
+// GEMSFIT2 is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with GEMSFIT code. If not, see <http://www.gnu.org/licenses/>.
+// along with GEMSFIT2 code. If not, see <http://www.gnu.org/licenses/>.
 //-------------------------------------------------------------------
 //
 
 /**
- *	@file gemsfit_target_functions.h
+ *	@file gemsfit_target_functions.cpp
  *
  *	@brief this header file contains implementetions of target functions needed during optimization.
  *  Also other functions needed for setting the new adjuste paramaters are implemented here
@@ -136,7 +136,7 @@ void adjust_Lp (TGfitTask *sys)
     }
 }
 
-/// Unit chack FUNCTIONS
+/// Unit check FUNCTIONS
 void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
 {
     if (sys->experiments[i]->expphases[p]->phcomp[e]->Qunit != unit)
@@ -509,83 +509,3 @@ double weight_phdcomp (int i, int p, int dc, int dcp, string type, TGfitTask *sy
         return 1/(pow(sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->pQnt,2));
     } else return 1;
 }
-
-
-
-
-
-//double residual_aqgen_prop (int i, int p, int pp, int j, TGfitTask *sys)
-//{
-//    double computed_value, measured_value;
-//    double Tfun_residual = 0.0, Weighted_Tfun_residual = 0.0, weight_ = 1.0;
-
-//    if (sys->Tfun->objfun[j]->exp_property == keys::pH)
-//    {
-//        if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == "-loga")
-//        {
-//        computed_value = sys->NodT[i]->Get_pH();
-//        } else
-//        {
-//            computed_value = pow(10,(-(sys->NodT[i]->Get_pH()))) /*sys->NodT[i]->Get_pH()*/;
-//        }
-//    } // addd other properties
-
-//    measured_value = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt;
-
-//    // Error handeling due to possible nonphisical parameters
-//    if (computed_value < sys->LimitOfDetection)
-//    {
-////        cout << measured_value <<" / " <<computed_value<<" = " << measured_value / computed_value << endl;
-//        computed_value = rand() % 100 + 1;
-//    }
-
-//    // check Target function type and calculate the Tfun_residual
-//    weight_ = weight_phprop(i, p, pp, sys->Tfun->weight, sys);
-//    Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type);
-//    Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type)*weight_;
-
-//    sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
-//    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phprop[pp]->property,sys->experiments[i]->expphases[p]->phprop[pp]->Qunit,measured_value,computed_value,Weighted_Tfun_residual, weight_ );
-
-//    return Weighted_Tfun_residual;
-//}
-//double residual_aqgen_elem (int i, int p, int e, TGfitTask *sys)
-//{
-//    const char *elem_name;
-//    int ICndx;
-//    double computed_value, measured_value;
-//    double Tfun_residual = 0.0, Weighted_Tfun_residual = 0.0, weight_ = 1.0;
-
-//    elem_name =  sys->experiments[i]->expphases[p]->phcomp[e]->comp.c_str();
-//    ICndx = sys->NodT[i]->IC_name_to_xDB(elem_name);
-
-//    if (sys->experiments[i]->expphases[p]->phcomp[e]->Qunit == "loga")
-//    {
-//    computed_value = log10(sys->NodT[i]->Get_mIC(ICndx));
-//    } else
-//    {
-//        computed_value = sys->NodT[i]->Get_mIC(ICndx);
-//    }
-
-//    measured_value = sys->experiments[i]->expphases[p]->phcomp[e]->bQnt;
-
-//    // Error handeling due to possible nonphisical parameters
-//    if (computed_value < sys->LimitOfDetection)
-//    {
-////        cout << measured_value <<" / " <<computed_value<<" = " << measured_value / computed_value << endl;
-//        computed_value = rand() % 100 + 1;
-//    }
-
-//    // check Target function type and calculate the Tfun_residual
-//    weight_ = weight(i, p, e, sys->Tfun->weight, sys);
-//    Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type);
-//    Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type)*weight_;
-
-//    sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
-//    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phcomp[e]->comp,sys->experiments[i]->expphases[p]->phcomp[e]->Qunit,measured_value,computed_value,Weighted_Tfun_residual, weight_ );
-
-//    return Weighted_Tfun_residual;
-//}
-
-
-

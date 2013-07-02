@@ -107,17 +107,6 @@ class statistics
         /// degrees of freedom
         double degrees_of_freedom;
 
-//        // Printing class
-//        PlotFit* Plot_Stat;
-
-//        /**
-//        * Read statistical input specifications from GEMSFIT_input.dat
-//        *
-//        * @author FFH
-//        * @date 09.04.2012
-//        */
-//        void std_get_stat_param( );
-
         /**
         * Read statistical input specifications from GEMSFIT_input.dat
         *
@@ -138,16 +127,6 @@ class statistics
         */
 
         void basic_stat(std::vector<double> &optv_, TGfitTask *gfittask );
-
-//		/**
-//		* Plot residuals of parameter regression.
-//		*
-//		* @author FFH
-//		* @param optv_ optimization vector
-//		* @param systems vector of pointers to instances of System_Properties structs
-//		* @date 09.04.2012
-//		*/
-//		void SS_plot_residuals( std::vector<double> &optv_, std::vector<SS_System_Properties*> *systems );
 
 //        /**
 //        * Compute confidence intervals using Mone Carlo.

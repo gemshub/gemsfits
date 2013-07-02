@@ -1,21 +1,21 @@
 // Copyright (C) 2013 G.D.Miron, D.Kulik
 // <GEMS Development Team, mailto:gems2.support@psi.ch>
 //
-// This file is part of the GEMSFIT code for parameterization of thermodynamic
+// This file is part of the GEMSFIT2 code for parameterization of thermodynamic
 // data and models <http://gems.web.psi.ch/GEMSFIT/>
 //
-// GEMSIFT is free software: you can redistribute it and/or modify
+// GEMSIFT2 is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as
 // published by the Free Software Foundation, either version 3 of
 // the License, or (at your option) any later version.
 
-// GEMSFIT is distributed in the hope that it will be useful,
+// GEMSFIT2 is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with GEMSFIT code. If not, see <http://www.gnu.org/licenses/>.
+// along with GEMSFIT2 code. If not, see <http://www.gnu.org/licenses/>.
 //-------------------------------------------------------------------
 //
 
@@ -41,6 +41,7 @@
 #include "gemsfit_iofiles.h"
 #include "gemsfit_task.h"
 #include "statistics.h"
+#include "gemsfit_global_functions.h"
 
 #define BOOST_FILESYSTEM_VERSION 3
 #define BOOST_FILESYSTEM_NO_DEPRECATED
@@ -109,6 +110,16 @@ int main( int argc, char *argv[] )
     fout << "1. main.cpp line 115. Creating new TGfitTask" << endl;
     TGfitTask* gfittask = new TGfitTask();
 
+    if (gfittask->Opti->OptDoWhat < 2)
+    {
+        gfittask->run_optim();
+
+    } else
+    {
+        vector<double> grad;
+        Equil_objective_function_callback(gfittask->Opti->optv, grad, gfittask);
+    }
+
     gfittask->print->print_result();
 
     fout<<endl<<" back in main ..."<<endl;
@@ -121,7 +132,7 @@ int main( int argc, char *argv[] )
     // perform basic statistical analysis
     stat.basic_stat( gfittask->Opti->optv, gfittask );
 
-    if( gfittask->Opti->OptDoWhat == 0 )
+    if( gfittask->Opti->OptDoWhat != 1 )
     {
         stat.sensitivity_correlation( gfittask->Opti->optv, gfittask );
 

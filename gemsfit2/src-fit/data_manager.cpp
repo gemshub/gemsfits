@@ -5,21 +5,21 @@
 // Copyright (C) 2013 G.D.Miron, D.Kulik
 // <GEMS Development Team, mailto:gems2.support@psi.ch>
 //
-// This file is part of the GEMSFIT code for parameterization of thermodynamic
-// data and models <http://gems.web.psi.ch/GEMSFIT/>
+// This file is part of the GEMSFIT2 code for parameterization of thermodynamic
+// data and models <http://gems.web.psi.ch/GEMSFIT2/>
 //
 // GEMSIFT is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as
 // published by the Free Software Foundation, either version 3 of
 // the License, or (at your option) any later version.
 
-// GEMSFIT is distributed in the hope that it will be useful,
+// GEMSFIT2 is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with GEMSFIT code. If not, see <http://www.gnu.org/licenses/>.
+// along with GEMSFIT2 code. If not, see <http://www.gnu.org/licenses/>.
 //-------------------------------------------------------------------
 //
 
@@ -27,7 +27,7 @@
  *	@file data_manager.cpp
  *
  *	@brief this source file contains the implementation of the data manager class,
- *	which retrieves and stores data from thre GEMSFIT input file as well as
+ *	which retrieves and stores data from thre GEMSFIT2 input file as well as
  *	the measurement form an EJDB local database.
  *
  *	@author G. Dan Miron
@@ -416,7 +416,7 @@ void Data_Manager::get_EJDB( )
          for (int i = 0; i < TCLISTNUM(res); ++i) {
              void *bsdata = TCLISTVALPTR(res, i);
              char *bsdata_ = static_cast<char*>(bsdata);
-             bson_to_Data_Manager(stderr, bsdata_, i); // addin the data
+             bson_to_Data_Manager(stderr, bsdata_, i); // adding the data returned by the selection query into the data storage class
          }
 
         //Dispose result set
@@ -636,7 +636,7 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                         }
                     }
 
-                    // adding pahse dcomps
+                    // adding phase dcomps
                     if ((key_ == keys::phspecies) && (t == BSON_ARRAY))
                     {
                         bson_iterator_from_buffer(&k, bson_iterator_value(&d));

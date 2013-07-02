@@ -1,21 +1,21 @@
 // Copyright (C) 2013 G.D.Miron, D.Kulik
 // <GEMS Development Team, mailto:gems2.support@psi.ch>
 //
-// This file is part of the GEMSFIT code for parameterization of thermodynamic
+// This file is part of the GEMSFIT2 code for parameterization of thermodynamic
 // data and models <http://gems.web.psi.ch/GEMSFIT/>
 //
-// GEMSIFT is free software: you can redistribute it and/or modify
+// GEMSIFT2 is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as
 // published by the Free Software Foundation, either version 3 of
 // the License, or (at your option) any later version.
 
-// GEMSFIT is distributed in the hope that it will be useful,
+// GEMSFIT2 is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with GEMSFIT code. If not, see <http://www.gnu.org/licenses/>.
+// along with GEMSFIT2 code. If not, see <http://www.gnu.org/licenses/>.
 //-------------------------------------------------------------------
 //
 
@@ -48,7 +48,6 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     double residuals_sys_ = 0.0;
 
     master_counter++;
-
 
     // Clear already stored results
     sys->computed_values_v.clear();
@@ -89,15 +88,11 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     {
         adjust_RDc(sys);
     }
-
+    /// Linked parameters
     if (sys->Opti->h_Lp)
     {
         adjust_Lp(sys);
     }
-
-//     cout << sys->NodT[0]->DC_G0(5, 1*100000, 22+273.15, false)  << endl;
-    // Equilibrium calculation
-//    cout << sys->NodT[0]->Get_mIC(4) << endl;
 
 //#ifdef USE_MPI
     omp_set_num_threads(sys->MPI);
@@ -127,14 +122,6 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 //            cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
         }
     }
-
-
-//    long int NodeStatusCH = sys->NodT[0]->GEM_run( false );
-//    cout << sys->NodT[0]->DC_G0(5, 1*100000, 22+273.15, false)  << endl;
-//    cout << sys->NodT[0]->Get_mIC(4) << endl;
-//    cout << "end" << endl;
-
-
 
     /// Target function
     // Loop trough all experiments
@@ -188,10 +175,9 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
                                         {
 //                                            cout << "yes"<<endl;
                                             //                                    // check for unit
-                                            //                                    check_prop_unit(i, p, pp, sys->Tfun->objfun[j]->exp_unit, sys );
-                                            //                                    residuals_sys_ = residuals_sys_ + residual_phase_prop (i, p, pp, j, sys);
+                                            //                                    check_dcomp_unit(i, p, dc, dcp, sys->Tfun->objfun[j]->exp_unit, sys );
+                                            residuals_sys_ = residuals_sys_ + residual_phase_dcomp (i, p, dc, dcp, j, sys);
                                         }
-
                                     }
                                 }
                             }
@@ -202,7 +188,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     }
     residuals_sys = residuals_sys_;
 
-    // debug for when using global algorithms
+    // debug for when using global algorithm
     if (master_counter%10000 == 0)
     {
         cout << master_counter << " itterations, continuning..." << endl;
@@ -215,16 +201,9 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 }
 
 
-
-
 double Equil_objective_function_callback( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data )
 {
-    // If Master process enters function callback, he sends a signal to the others processes which makes them in turn calling ActMod_objective_function_callback directly. They are waiting for this signal in the init_optim function.
-    int continue_or_exit = 1;
-    int pid_;
-
     TGfitTask *sys = reinterpret_cast<TGfitTask*>(obj_func_data);
-
 
     unsigned int i;
     double sum_of_squared_residuals_allsys = 0.0;
@@ -264,7 +243,6 @@ double Equil_objective_function_callback( const std::vector<double> &opt, std::v
 return sum_of_squared_residuals_allsys;
 }
 
-
 void gradient( vector<double> opt, vector<double> &grad, TGfitTask *sys )
 {
     double residual_sys;
@@ -300,6 +278,5 @@ void gradient( vector<double> opt, vector<double> &grad, TGfitTask *sys )
 
         grad[i] = (computed_up - computed_lo) / (param_up - param_lo);
     }
-
 }
 

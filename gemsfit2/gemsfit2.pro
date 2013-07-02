@@ -6,26 +6,26 @@
 #    the Free Software Foundation, either version 3 of the License, or						
 #    (at your option) any later version.													
 #																							 
-#    GEMSFIT is distributed in the hope that it will be useful,								 
+#    GEMSFIT2 is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of							
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the							
 #    GNU Lesser General Public License for more details.									
 #																							 
 #    You should have received a copy of the GNU Lesser General Public License				
-#    along with GEMSFIT.  If not, see <http://www.gnu.org/licenses/>.	
+#    along with GEMSFIT2.  If not, see <http://www.gnu.org/licenses/>.
 #   
 #    GEMSFIT2 uses the GEMS3K solver of geochemical equilibria
 #    (C) 2012 by GEMS Developer Team (http://gems.web.psi.ch/GEMS3K)
-#    GEMSFIT is available under GNU Lesser General Public License v.3	
+#    GEMSFIT2 is available under GNU Lesser General Public License v.3
 #
-#    GEMSFIT uses EJDB as internal databsse (http://ejdb.org)
+#    GEMSFIT2 uses EJDB as internal databsse (http://ejdb.org)
 #																							 
-#    This is the qmake project file for generation of static GEMSFIT application
+#    This is the qmake project file for generation of static GEMSFIT2 application
 #  	configure serial, release version:      qmake "CONFIG += serial release" gemsfit.pro 
 #  	configure parallelized, debug version:	qmake "CONFIG += mpi debug" gemsfit.pro      
 #
 #    -init <path to <GEMS3K>-dat.lst>
-#    -run  <path to GEMSFIT input config file>
+#    -run  <path to GEMSFIT2 input config file>
 ##############################################################################################
 
 
@@ -65,7 +65,7 @@ CONFIG( mpi, serial|mpi ) {
         QMAKE_CXX	= mpic++
         QMAKE_CFLAGS += $$system(mpicc --showme:compile) -fopenmp
         QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions $$system(mpic++ --showme:compile) -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions -fopenmp
-        LIBS += -L/usr/lib/postgresql/9.1/lib/ -L/usr/local/dislin/ $$system(mpic++ --showme:link) -ldislin -lXm -lecpg -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp -ljansson
+        LIBS +=  $$system(mpic++ --showme:link)  -lXm  -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp -ljansson
 }
 
 #contains( CONFIG, serial ) {
@@ -75,7 +75,7 @@ CONFIG( serial, serial|mpi ) {
         QMAKE_CXX	= g++
         QMAKE_CFLAGS += -fopenmp
         QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions -fopenmp
-        LIBS += -L/usr/lib/postgresql/9.1/lib/ -L/usr/local/dislin/ -ldislin -lXm -lecpg -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp -ljansson
+        LIBS +=  -lXm -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp -ljansson
 }
 
 QMAKE_CXXFLAGS += -std=gnu99
@@ -101,7 +101,6 @@ INCLUDEPATH  += $$FIT_H
 INCLUDEPATH  += $$GEMS3K_H   
 INCLUDEPATH  += $$EJDB_H
 INCLUDEPATH  += $$KEYS_H
-INCLUDEPATH  += . /usr/include/postgresql /usr/local/dislin/
 
 OBJECTS_DIR       = obj
 

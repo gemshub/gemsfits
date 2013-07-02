@@ -1,8 +1,38 @@
+// Copyright (C) 2013 G.D.Miron, D.Kulik
+// <GEMS Development Team, mailto:gems2.support@psi.ch>
+//
+// This file is part of the GEMSFIT2 code for parameterization of thermodynamic
+// data and models <http://gems.web.psi.ch/GEMSFIT/>
+//
+// GEMSIFT2 is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as
+// published by the Free Software Foundation, either version 3 of
+// the License, or (at your option) any later version.
+
+// GEMSFIT2 is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with GEMSFIT2 code. If not, see <http://www.gnu.org/licenses/>.
+//-------------------------------------------------------------------
+//
+
+/**
+ *	@file print.cpp
+ *
+ *	@brief this header file contains implementetions of print class functions for printing the optimization results
+ *
+ *	@author G. Dan Miron
+ *
+ * 	@date 17.05.2013
+ *
+ */
+
 #include "print.h"
 #include <string>
 #include <fstream>
-
-
 
 using namespace std;
 
@@ -106,12 +136,12 @@ void ResPrint::print_result()
     fout<<endl;
 }
 
-void ResPrint::print_result(string experiment, string what2, string unit, double measured, double computed, double residual)
-{
-    ofstream fout;
-    fout.open(path.c_str(), ios::app);
-    if( fout.fail() )
-    { cout<<"Output fileopen error"<<endl; /*exit(1);*/ }
+//void ResPrint::print_result(string experiment, string what2, string unit, double measured, double computed, double residual)
+//{
+//    ofstream fout;
+//    fout.open(path.c_str(), ios::app);
+//    if( fout.fail() )
+//    { cout<<"Output fileopen error"<<endl; /*exit(1);*/ }
 
-    fout<<experiment<<","/*<<what1*/<<","<<what2<<","<<unit<<","<<measured<<","<<computed<<","<<residual<<endl;
-}
+//    fout<<experiment<<","/*<<what1*/<<","<<what2<<","<<unit<<","<<measured<<","<<computed<<","<<residual<<endl;
+//}

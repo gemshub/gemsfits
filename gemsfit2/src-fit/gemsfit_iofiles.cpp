@@ -1,20 +1,21 @@
 /*
 *	 Copyright (C) 2013 by Dmytriyeva S. (gems2.support@psi.ch)
+*    modified G. Dan Miron
 *
-*	 This file is part of the thermodynamic fitting program GEMSFIT.
+*	 This file is part of the thermodynamic fitting program GEMSFIT2.
 *
-*    GEMSFIT is free software: you can redistribute it and/or modify
+*    GEMSFIT2 is free software: you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
 *    the Free Software Foundation, either version 3 of the License, or
 *    (at your option) any later version.
 *
-*    GEMSFIT is distributed in the hope that it will be useful,
+*    GEMSFIT2 is distributed in the hope that it will be useful,
 *    but WITHOUT ANY WARRANTY; without even the implied warranty of
 *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *    GNU  General Public License for more details.
 *
 *    You should have received a copy of the GNU General Public License
-*    along with GEMSFIT.  If not, see <http://www.gnu.org/licenses/>.
+*    along with GEMSFIT2.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <iostream>
@@ -50,7 +51,9 @@ const char *FIT_LOGFILE = "log_gemsfit.log";
 void F_to_OP (opti_vector *op, IOJFormat Jformat, string nfild);
 /// if after F comes the initial value
 void F_to_OP (double val, opti_vector *op, IOJFormat Jformat, string nfild);
+/// if the parameter is rection constrained
 void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat, string nfild);
+/// if the parameter is linked e.g. titration
 void L_to_OP (opti_vector::Lp *l, IOJFormat Jformat, string nfild);
 
 optimization::optimization( int i)
@@ -167,7 +170,7 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
         ff << "#>>>>>>>>>>>>>>> Parameters to Fit section >>>>>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
         ff << "#########################################################################" << endl;
         ff << "\n  Parameter marking example:"
-              "\n  Mark with F the value you want to fit, followed by the initial value or as follows:"
+              "\n  Mark with F the value you want to fit, followed by the initial value (F-833444.00006792) or as follows:"
               "\n  F{ \"IV\" :-833444.00006792, \"UB\" : -800000, \"LB\" : -900000 } for SiO2@ G0 fitting"
               "\n  IV - initial value \n  UB - upper bundary \n  LB - lower bundary \n"
               "\n  For a reaction constraint on G0 paste the following tamplate (in the place of the parameter) and make desired changes:"
@@ -760,8 +763,8 @@ outField Data_Manager_fields[10] =
       "\n  WT - weighting scheeme: inverr - 1/error; inverr2 - 1/error^2; inverr3 - 1/measured^2;"
       "\n  OFUN - objective function, what to compare \n  EPH - what phase from the experiments \n  EN - what element from the phase \n  EP - what property of the phase"
       "\n  Eunit - what unit the values should be in (molal - moles/Kg H2O, loga - log(molal), ...)"
-      "\n\n  DCPH - pahse for which the dependent component/species belongs"
-      "\n  DC - dependent component/species"
+      "\n\n  DCPH - phase for which the dependent component belongs"
+      "\n  DC - dependent component"
       "\n  DCP - dependent component property"
       "\n  DCPunit - property unit"
       "\n \n  { \"Target\": \"name\", \"TT\": \"lsq\", \"WT\": \"inverr\", \"OFUN\":"
@@ -772,7 +775,7 @@ outField Data_Manager_fields[10] =
     },
     { "SystemFiles",  0, 0, 1, "\n# SystemFiles: Comment"},
     { "RecipeFiles",  0, 0, 1, "\n# RecipeFiles: Comment"},
-    { "LimitOfDetection",  0, 0, 1, "\n# LimitOfDetection: Limit of dectetion of the measured values. Insurres that wrong computed values calculated by GEMS due to non phisical parameter values are ignored"}
+    { "LimitOfDetection",  0, 0, 1, "\n# LimitOfDetection: Limit of dectetion of the measured values. Insurres that wrong computed values calculated by GEMS due to non physical parameter values are ignored"}
 };
 
 typedef enum {  /// Field index into outField structure
@@ -794,8 +797,8 @@ void Data_Manager::define_db_specs( )
    datasource = 0;
    DBname ="";
    colection="";
-   DataSelect ="paste template here";
-   DatTarget ="paste template here";
+   DataSelect ="paste template here without '' ";
+   DatTarget ="paste template here without '' ";
    LimitOfDetection = 1e-06;
 
 }
@@ -833,8 +836,8 @@ void Data_Manager::out_db_specs_txt( bool with_comments, bool brief_mode )
     prar.writeField(f_DatSelect, DataSelect, with_comments, brief_mode );
     prar.writeField(f_DatTarget, DatTarget, with_comments, brief_mode );
     prar.writeField(f_SystemFiles, gpf->GEMS3LstFilePath(), with_comments, brief_mode  );
-    prar.writeField(f_RecipeFiles, "", with_comments, brief_mode  );
-    prar.writeField(f_LimitOfDetection, "", with_comments, brief_mode  );
+//    prar.writeField(f_RecipeFiles, "", with_comments, brief_mode  );
+    prar.writeField(f_LimitOfDetection, (double)LimitOfDetection, with_comments, brief_mode  );
 }
 
 // get PostgreSQL database connection parameters
@@ -933,7 +936,7 @@ void statistics::out_stat_param_txt( bool with_comments, bool brief_mode )
     prar.writeField(f_StatMCruns, (long int)num_of_MC_runs, with_comments, brief_mode  );
     prar.writeField(f_StatSensitivity, (long int)sensitivity_points, with_comments, brief_mode  );
     prar.writeField(f_StatMCbool, (long int)MCbool, with_comments, brief_mode  );
-    prar.writeField(f_StatPerturbator, (double)MCbool, with_comments, brief_mode  );
+    prar.writeField(f_StatPerturbator, (double)perturbator, with_comments, brief_mode  );
 }
 
 //// Read statistical input specifications from configurator
@@ -1042,7 +1045,7 @@ void optimization::define_nlopt_param( )
     OptBoundPerc = -1.0;
     OptTolRel = 1e-4;
     OptTolAbs = 1e-4;
-    OptMaxEval = 5000;
+    OptMaxEval = 50000;
     OptDoWhat = 0;
     OptNormParam = 1;
     OptPerturbator = 0.001;
@@ -1346,21 +1349,6 @@ void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat, string nfild)
     }
 
     out.clear();
-
-//    op->opt.push_back( atof(out.at(0).c_str()) );
-//    op->optv0.push_back( atof(out.at(0).c_str()) );
-//    out.clear();
-
-//    temp->parse_JSON_object(Jformat.format, UB, out);
-//    op->UB.push_back( atof(out.at(0).c_str()) );
-//    out.clear();
-
-//    temp->parse_JSON_object(Jformat.format, LB, out);
-//    op->LB.push_back( atof(out.at(0).c_str()) );
-//    out.clear();
-
-//    op->Ptype.push_back( nfild );
-//    op->Pindex.push_back( Jformat.index );
 }
 
 
