@@ -148,7 +148,8 @@ int main(int argc, char *argv[])
 
         if (count > 0)
         {
-            cout << "The combination sample name and expdataset in the input csv file is already present in the database" << endl;
+            cout << "The combination of sample name and expdataset in the input csv file is already present in the database.\n"
+                 << "Are you trying to import the same experimental data again? " << endl;
             //Now print the result set records
              for (int i = 0; i < TCLISTNUM(res); ++i) {
                  void *bsdata = TCLISTVALPTR(res, i);

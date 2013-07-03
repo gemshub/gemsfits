@@ -109,7 +109,7 @@ int generateConfig()
     bool brief_mode = false;
 
     // Writting to the data
-    cout << "Start writting"<< endl;
+    cout << "Start writing template file"<< endl;
     Data_Manager *data_meas = new Data_Manager(1);
     data_meas->out_db_specs_txt(with_comments, brief_mode);
 
@@ -135,7 +135,7 @@ int generateConfig()
 //    get_gems_fit_DBR_txt( node );
 
 
-    cout << "Finish " << endl;
+    cout << "Finish writing template file" << endl;
 
     } catch(TError& err)
       {
@@ -169,29 +169,40 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
         ff << "\n\n#########################################################################" << endl;
         ff << "#>>>>>>>>>>>>>>> Parameters to Fit section >>>>>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
         ff << "#########################################################################" << endl;
-        ff << "\n  Parameter marking example:"
-              "\n  Mark with F the value you want to fit, followed by the initial value (F-833444.00006792) or as follows:"
-              "\n  F{ \"IV\" :-833444.00006792, \"UB\" : -800000, \"LB\" : -900000 } for SiO2@ G0 fitting"
-              "\n  IV - initial value \n  UB - upper bundary \n  LB - lower bundary \n"
-              "\n  For a reaction constraint on G0 paste the following tamplate (in the place of the parameter) and make desired changes:"
-              "\n  R{  \"IV\" : -36819.000776856, \"Ref\" : \"SUPCRT92\", \"logK\" : -14.46, \"nC\" : 4, \"species\" : \"KOH@\","
-              "\n      \"RC\" : [ \"K+\", \"H2O@\", \"H+\", \"KOH@\" ],"
-              "\n      \"Rcoef\" : [ -1, -1, 1, 1 ]}"
-              "\n  Ref - reference, logK - reaction constant, nC - numer of components involved in the reaction"
-              "\n  species - reaction constrained species, RC - species involved in the reaction, Rcoef - reaction coeficients"
+        ff << "\n#  GEM input parameters to be fitted can be marked by preceding them with the F, L, and R letter "
+              "\n#    in <TKval>, <Pval>, <G0>,  <PMc>, <DMc>, <fDQF>, <bIC> ... data object entries below."
+              "\n#  Mark with F the parameter value you want to fit independently of other parameters. Options:"
+              "\n#    F-833444.00006792 : the initial value with default (10%) upper- and lower boundaries;"
+              "\n#    or as in this example for fitting G0(298) of SiO2@ : "
+              "\n#      F{ \"IV\" :-833444.00006792, \"UB\" : -800000, \"LB\" : -900000 }    where:"
+              "\n#      \"IV\": initial value; "
+              "\n#      \"UB\": upper boundary; "
+              "\n#      \"LB\": lower bundary (in this case, all in J/mol). "
+              "\n#  Mark with R the G0(298) value of a dependent component, which depends on G0 of other dependent components"
+              "\n#     via a reaction constraint, by copy-pasting the following template in place of the G0(298) value,"
+              "\n#     and edit it to make the desired changes:"
+              "\n#      R{ \"IV\" : -36819, \"Ref\" : \"SUPCRT92\", \"logK\" : -14.46, \"nC\" : 4, \"species\" : \"KOH@\","
+              "\n#      \"RC \" : [ \"K+\", \"H2O@\", \"H+\", \"KOH@\" ], \"Rcoef\" : [ -1, -1, 1, 1 ] }"
+              "\n#     Here,  \"IV\": initial value; "
+              "\n          \"Ref\": bibliographic reference;"
+              "\n#         \"logK\": reaction equilibrium constant at 298 K, 1 bar; "
+              "\n#         \"nC\": numer of components (species) involved in the reaction;"
+              "\n#         \"species\": name of species whose properties are constrained with this reaction; "
+              "\n#         \"RC\": list [ ] of names of all components (species) involved in the reaction (comma-separated);"
+              "\n#         \"Rcoef\": array [ ] of reaction stoichiometry coeficients (comma-separated), in the same order as in the \"RC\" list."
            << endl;
     }
 
     TPrintArrays  prarCH(30, DataCH_dynamic_fields, ff);
 
     if( _comment )
-        ff << "\n# ICNL: List of Independent Component names (<=4 characters per name) [nIC]";
+        ff << "\n# ICNL: List of Independent Component names (for readability)";
     prarCH.writeArray(  "ICNL", CSD->ICNL[0], CSD->nIC, MaxICN );
     if( _comment )
-            ff << "\n# DCNL: Name list of Dependent Components (<=16 characters per name) [nDC]";
+            ff << "\n# DCNL: List of Dependent Component names (for readability)";
     prarCH.writeArray(  "DCNL", CSD->DCNL[0], CSD->nDC, MaxDCN );
     if( _comment )
-            ff << "\n# PHNL: List of Phase names (<=16 characters per name) [nPH]";
+            ff << "\n# PHNL: List of Phase names (for readability)";
     prarCH.writeArray(  "PHNL", CSD->PHNL[0], CSD->nPH, MaxPHN );
     prarCH.writeArrayF(  f_ccPH, CSD->ccPH, CSD->nPH, 1L,_comment, brief_mode );
     prarCH.writeArray(  f_nDCinPH, CSD->nDCinPH, CSD->nPH, -1L,_comment, brief_mode);
@@ -210,7 +221,7 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
     if(_comment )
     {
         ff << "\n\n#########################################################################" << endl;
-        ff << "#>>>>>>>>>> Input for fitting non-ideality parametres >>>>>>>>>>>>>>>>>>#" << endl;
+        ff << "#>>>>>>>>>> Input for fitting non-ideality parameters >>>>>>>>>>>>>>>>>>#" << endl;
         ff << "#########################################################################" << endl;
     }
     TPrintArrays  prarIPM( 70, MULTI_dynamic_fields, ff);
@@ -219,7 +230,8 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
     if( pmp->FIs > 0 && pmp->Ls > 0 )
     {
       if( _comment )
-         ff << "\n\n## (4) Initial data for multicomponent phases (see DCH file for dimension nPHs)";
+         ff << "\n# Initial data for multicomponent phases (fragment of GEMS3K *IMP.dat input file)"
+               "\n#    (see DCH file for dimension nPHs)";
       prarIPM.writeArrayF(  f_sMod, pmp->sMod[0], pmp->FIs, 6L, _comment, brief_mode );
 
     long int LsModSum;
@@ -261,7 +273,7 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
 
 
     if( _comment )
-       ff << "\n\n# This part is taken from *DBR.dat\n";
+       ff << "\n\n# This part for the system composition data is taken from *DBR.dat\n";
 
     // from *DBR.dat
     TPrintArrays  prar(f_bSP+1/*52*/, DataBR_fields, ff);
@@ -286,12 +298,12 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
     }
     prar.writeArray(  f_aPH,  CNode->aPH, CSD->nPHb, -1L,_comment, brief_mode );
 
-    if(_comment )
-    {
-        ff << "\n\n#########################################################################" << endl;
-        ff << "#>>>>>>>>>>>>>>> Data to compare section >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
-        ff << "#########################################################################" << endl;
-    }
+//    if(_comment )
+//    {
+//        ff << "\n\n#########################################################################" << endl;
+//        ff << "#>>>>>>>>>>>>>>> Data to compare section >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
+//        ff << "#########################################################################" << endl;
+//    }
 
     prar.writeField(f_Vs, CNode->Vs, _comment, brief_mode  );
     prar.writeField(f_Ms, CNode->Ms, _comment, brief_mode  );
@@ -742,43 +754,74 @@ TGfitPath *gpf;
 
 //-------------------------------------------------------------------------------------------------
 
-outField Data_Manager_fields[10] =
+outField Data_Manager_fields[9] =
 {
-    { "MPI", 0, 0, 1, "\# MPI: Number of threads for paralelization"},
-    { "DatDB",  0, 0, 1, "\n# DatDB: database path"},
-    { "DatColection",  0, 0, 1, "\n# DatColection: database colection name"},
-    { "DatSource",  1, 0, 1, "\n# DatSource: get measurement data from EJDB databse (default) (0). No other sources implemented in GEMSFIT2"},
+    { "MPI", 0, 0, 1, "\n# MPI: Number of threads for parallelization\n" },
+    { "DataDB",  0, 0, 1, "\n# DataDB: EJDB database path (please, edit to put the actual path)\n" },
+    { "DataCollection",  0, 0, 1, "\n# DataCollection: database collection name (please, edit to put the actual name)\n" },
+    { "DataSource",  1, 0, 1, "\n# DataSource: get experimental data from the EJDB format database"
+      "\n#     (default:0, no other sources yet implemented in GEMSFIT2)\n" },
 
-    { "DatSelect", 0, 0, 1, "\n# DataSelect: query for selecting data form EJDB database in JSON format. Names of samples or expdatasets and temperature and pressure intervals. all - select all data"
-      "\n  Use the following template by pasting it after the DatSelect and changing the desired settings: \n  sample - names of samples you want to select"
-      "\n  expdataset - names of experimental datasets you want to select \n  sT - temperature range \n  sP - pressure range"
-      "\n \n  { \"sample\" : \"\", "
-      "\n  \"expdataset\" : [\"CH04\", \"CH04D\"],"
-      "\n  \"sT\" : [100, 1000],"
-      "\n  \"sP\" : [1, 2500] }\n"},
-
-    { "DatTarget",  0, 0, 1, "\n# DatTarget: Target function for parmeter fitting"
-      "\n  Use the following template by pasting it after the DatTarget and changing the desired settings:"
-      "\n  Target - name of the function \n  TT - type of target function: lsq - [measured-simulated]^2;"
-      "\n  WT - weighting scheeme: inverr - 1/error; inverr2 - 1/error^2; inverr3 - 1/measured^2;"
-      "\n  OFUN - objective function, what to compare \n  EPH - what phase from the experiments \n  EN - what element from the phase \n  EP - what property of the phase"
-      "\n  Eunit - what unit the values should be in (molal - moles/Kg H2O, loga - log(molal), ...)"
-      "\n\n  DCPH - phase for which the dependent component belongs"
-      "\n  DC - dependent component"
-      "\n  DCP - dependent component property"
-      "\n  DCPunit - property unit"
-      "\n \n  { \"Target\": \"name\", \"TT\": \"lsq\", \"WT\": \"inverr\", \"OFUN\":"
-      "\n     [{ \"EPH\": \"aq_gen\", \"EN\": \"Si\", \"Eunit\": \"molal\" },"
-      "\n      { \"EPH\": \"aq_gen\", \"EN\": \"Al\", \"Eunit\": \"molal\" },"
-      "\n      { \"EPH\": \"aq_gen\", \"EP\": \"pH\", \"Eunit\": \"-loga\" },"
-      "\n      { \"DCPH\": \"aq_gen\", \"DC\": \"SiO2-\", \"DCP\" : \"pQnt\", \"DCPunit\": \"mol\"}]}\n"
+    { "DataSelect", 0, 0, 1, "\n# DataSelect: query for obtaining the experimental data from the database."
+      "\n# Options: "
+      "\n#    \'all\': select all data"
+      "\n#    \'{ ... }\': script in JSON format (in braces) describing what to select. "
+      "\n#      \"sample\": [...]: list of comma-separated names of samples, "
+      "\n#         or empty string \"\" to select all samples;"
+      "\n#      \"expdataset\": [...]: list of comma-separated names of experimental datasets, "
+      "\n#         or empty string \"\" to select all available datasets;"
+      "\n#      \"sT\": [...]: list of comma-separated minimum and maximum temperature, C, "
+      "\n#         or empty string \"\" to select data for all available temperatures; "
+      "\n#      \"sP\": [...]: list of comma-separated minimum and maximum pressures, bar, "
+      "\n#         or empty string \"\" to select data for all available pressures;  "
+      "\n#      Example: "
+      "\n#      \'{ \"sample\" : \"\", "
+      "\n#        \"expdataset\" : [\"CH04\", \"CH04D\"],"
+      "\n#        \"sT\" : [100, 1000],"
+      "\n#        \"sP\" : [1, 2500] }\'"
+      "\n#      Paste the above example below, remove comment symbols (#), and edit as necessary.\n"
     },
-    { "SystemFiles",  0, 0, 1, "\n# SystemFiles: Comment"},
-    { "RecipeFiles",  0, 0, 1, "\n# RecipeFiles: Comment"},
-    { "LimitOfDetection",  0, 0, 1, "\n# LimitOfDetection: Limit of dectetion of the measured values. Insurres that wrong computed values calculated by GEMS due to non physical parameter values are ignored"}
+
+    { "DataTarget",  0, 0, 1, "\n# DataTarget: Target function for parameter fitting, described in JSON style"
+      "\n#     as text in single quotes and braces: \'{ ... }\' "
+      "\n#  \"Target\":  name of the target (objective) function (optional)"
+      "\n#  \"TT\":  type of target function as sum of following terms: "
+      "\n#     \"lsq\":       w*(measured-simulated)^2;"
+      "\n#     \"lsq-norm\":  w*(measured/avgm-simulated/avgm)^2;"
+      "\n#     ... "
+      "\n#  \"WT\":  weighting scheme: empty string \"\": w = 1 (equal weights);"
+      "\n#       \"inverr\": w=1/error; \"inverr2\": w=1/error^2; \"inverr3\": w=1/measured^2;"
+      "\n#  \"OFUN\":  objective function, a list [] of terms {} for measured properties to compare with their computed counterparts. "
+      "\n#     Each term can contain property-value pairs:"
+      "\n#       \"EPH\": for what phase from the experiments "
+      "\n#       \"EN\":  for what element from the phase "
+      "\n#       \"EP\":  for what property of the phase"
+      "\n#       \"Eunit\":  what unit the values should are given in (overrides the units given in the database for this entry):"
+      "\n#          \"molal\":  mol/(kg H2O), \"loga\": log(molal), \"-loga\": negated log(molal);"
+      "\n#           ..."
+      "\n#       \"DCPH\":  phase to which the dependent component belongs"
+      "\n#       \"DC\":  dependent component"
+      "\n#       \"DCP\":  dependent component property"
+      "\n#       \"DCPunit\":  property unit - overrides the units given in the database for this entry"
+      "\n#       (conversions are performed automatically.)"
+      "\n#  Example:"
+      "\n#  \'{ \"Target\": \"name\", \"TT\": \"lsq\", \"WT\": \"inverr\", \"OFUN\":"
+      "\n#      ["
+      "\n#         { \"EPH\": \"aq_gen\", \"EN\": \"Si\", \"Eunit\": \"molal\" },"
+      "\n#         { \"EPH\": \"aq_gen\", \"EN\": \"Al\", \"Eunit\": \"molal\" },"
+      "\n#         { \"EPH\": \"aq_gen\", \"EP\": \"pH\", \"Eunit\": \"-loga\" },"
+      "\n#         { \"DCPH\": \"aq_gen\", \"DC\": \"SiO2-\", \"DCP\" : \"pQnt\", \"DCPunit\": \"mol\"}"
+      "\n#      ]"
+      "\n#   }\'"
+      "\n#  Paste the above example below, remove comment symbols (#), and edit as necessary.\n"
+    },
+    { "SystemFiles",  0, 0, 1, "\n# SystemFiles: path to the list of GEMS3K input files (also used for this template file)\n" },
+//    { "RecipeFiles",  0, 0, 1, "\n# RecipeFiles: Comment"},
+    { "LimitOfDetection",  0, 0, 1, "\n# LimitOfDetection: Limit of detection of the measured values."
+      "\n# Ensures that wrongly computed values calculated by GEMS due to non-physical parameter values are ignored.\n" }
 };
 
-typedef enum {  /// Field index into outField structure
+typedef enum { /// Field index into outField structure
     f_MPI = 0,
     f_DatDB,
     f_DatColection,
@@ -786,7 +829,7 @@ typedef enum {  /// Field index into outField structure
     f_DatSelect,
     f_DatTarget,
     f_SystemFiles,
-    f_RecipeFiles,
+//    f_RecipeFiles,
     f_LimitOfDetection
 } Data_Manager_FIELDS;
 
@@ -795,15 +838,15 @@ void Data_Manager::define_db_specs( )
 {
    MPI = omp_get_num_threads() * omp_get_num_procs();
    datasource = 0;
-   DBname ="";
-   colection="";
-   DataSelect ="paste template here without '' ";
-   DatTarget ="paste template here without '' ";
+   DBname = "./test_input/experimentsDB";
+   colection= "experiments";
+   DataSelect ="all";
+   DatTarget = "{[...]}";
    LimitOfDetection = 1e-06;
 
 }
 
-/// Writes  structure to  the GEMSFIT configuration file
+/// Writes structure to the GEMSFIT configuration file
 void Data_Manager::out_db_specs_txt( bool with_comments, bool brief_mode )
 {
     string fname = gpf->OptParamFile();
@@ -824,12 +867,20 @@ void Data_Manager::out_db_specs_txt( bool with_comments, bool brief_mode )
 
     if(with_comments )
     {
-        ff << "\n\n#########################################################################" << endl;
-        ff << "#>>>>>>>>>>>>>>> Data sources section >>>>>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
         ff << "#########################################################################" << endl;
+        ff << "#>>>>>>>>>>>>>>> GEMSFIT2 input file template >>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
+        ff << "#########################################################################" << endl;
+        ff << "#  Character '#' means a comment line ";
     }
 
     prar.writeField(f_MPI, (long int)MPI, with_comments, brief_mode  );
+
+    if(with_comments )
+    {
+        ff << "\n\n#########################################################################" << endl;
+        ff << "#>>>>>>>>>>>>>>>>>>>>>> Data sources section >>>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
+        ff << "#########################################################################";
+    }
     prar.writeField(f_DatSource, (long int)datasource, with_comments, brief_mode  );
     prar.writeField(f_DatDB, DBname, with_comments, brief_mode  );
     prar.writeField(f_DatColection, colection, with_comments, brief_mode  );
@@ -849,7 +900,7 @@ void Data_Manager::get_db_specs_txt( )
     fstream ff(fname.c_str(), ios::in );
     ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
 
-    TReadArrays  rdar(10, Data_Manager_fields, ff);
+    TReadArrays  rdar(9, Data_Manager_fields, ff);
 
     long int nfild = rdar.findNextNotAll();
     while( nfild >=0 )
@@ -873,9 +924,9 @@ void Data_Manager::get_db_specs_txt( )
             case f_SystemFiles: rdar.readArray( "SystemFiles",  inputstr );
                     gpf->setGEMS3LstFilePath(inputstr.c_str() );
                     break;
-            case f_RecipeFiles: rdar.readArray( "RecipeFiles",  inputstr );
-                    gpf->setGEMS3RecipeFilePath(inputstr.c_str());
-                    break;
+ //           case f_RecipeFiles: rdar.readArray( "RecipeFiles",  inputstr );
+ //                   gpf->setGEMS3RecipeFilePath(inputstr.c_str());
+ //                   break;
           }
           nfild = rdar.findNextNotAll();
         }

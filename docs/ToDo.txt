@@ -1,9 +1,14 @@
 + completed or partially completed
 - to be completed
 
+- describe/document command line parameters to start gemsfit2 and csvtoejdb utility program
+- check if GEMSFIT input file exists by writing a new template input file (to prevent overwrite)
+- documentation in the GEMSFIT template input file (fitting bulk composition with L linked parameters)
+
 + Printing class - printing in /results/FIT_results.csv
 - test inverse weighting more
-- solidsolution composition
+- add normalized target function (by average from experimental data)
+- solid-solution composition as element bulk phase concentration
 + test the reaction constraint 
 - also test if logk is respected at higher temperatures
 - test interaction parameters
@@ -22,3 +27,10 @@
 
 
 + make a separate RUN function in TGfittask so one can access the data manager and calculate statistics before the fitting procedure.
+
+EJDB database maintenance functionality:
+- try installing ejdb console via nodejs (as given on ejdb.org)
+- the sense of 'collection': as a modeling application project name? as experimental dataset? any other semantics? 
+- backup to JSON text file (the whole DB, one exp.dataset, etc.)
+- restore from JSON text file
+- updating/owerwriting documents e.g. for error corrections in experimental data, adding new information for experimental samples. 

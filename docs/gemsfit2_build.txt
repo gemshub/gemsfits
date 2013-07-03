@@ -4,7 +4,7 @@ boost - search for libboost and istall libboost-all-dev.
 
 omp - should already be available as omp.h in C/C++ http://en.wikipedia.org/wiki/OpenMP
 
-armadilo - Go to http://arma.sourceforge.net and download Armadillo C++ library stable version armadillo-2.4.2.tar.gz.
+armadillo - Go to http://arma.sourceforge.net and download Armadillo C++ library stable version armadillo-2.4.2.tar.gz.
    	   Unpack it, change into the directory that was created by unpacking the armadillo archive, and type the following
   	   commands:
   
@@ -20,7 +20,7 @@ Nlopt - Go to http://ab-initio.mit.edu/wiki/index.php/NLopt#Download_and_install
 
 jansson - http://www.digip.org/jansson/
 
-GEMSFIT2 is also linked with the flowing standalone libraries:
+GEMSFIT2 is also linked with the following standalone libraries:
 
 GEMS3K
 
