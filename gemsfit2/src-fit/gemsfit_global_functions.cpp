@@ -71,12 +71,26 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         if (sys->Opti->Ptype[i] == "G0")
         {
             adjust_G0(i, opt[i], sys);
-
-        } // END if G0
-        else
+        } else // adjust PMc
         if (sys->Opti->Ptype[i] == "LsMod")
         {
            adjust_PMc(i, opt[i], sys);
+        } else // adjust DMc
+        if (sys->Opti->Ptype[i] == "LsMdc")
+        {
+           adjust_DMc(i, opt[i], sys);
+        } else // adjust bIC
+        if (sys->Opti->Ptype[i] == "bIC")
+        {
+           adjust_bIC(i, opt[i], sys);
+        } else // adjust TK
+        if (sys->Opti->Ptype[i] == "TK")
+        {
+           adjust_TK(i, opt[i], sys);
+        } else // adjust P
+        if (sys->Opti->Ptype[i] == "P")
+        {
+           adjust_P(i, opt[i], sys);
         }
 
         /// if other parameters...

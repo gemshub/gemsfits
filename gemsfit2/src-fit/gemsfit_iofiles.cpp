@@ -28,11 +28,14 @@ using namespace std;
 #include "data_manager.h"
 #include "keywords.h"
 #include <omp.h>
+#include <boost/filesystem.hpp>
 
 #include "statistics.h"
 #include "optimization.h"
 //#include "plot_class.h"
 //using namespace opti;
+
+namespace bfs=boost::filesystem;
 
 // subfolder and file names default
 const char *INPUT_DIR = "input/";
@@ -92,6 +95,7 @@ Data_Manager::Data_Manager( int )
 /// Mode GEMSFIT to generate input configuration file
 int generateConfig()
 {
+   string YN;
    try
    {
 
@@ -111,6 +115,24 @@ int generateConfig()
     // Writting to the data
     cout << "Start writing template file"<< endl;
     Data_Manager *data_meas = new Data_Manager(1);
+
+    if (bfs::exists(gpf->OptParamFile().c_str())) {
+        cout << gpf->OptParamFile() <<" exists. Do you want to overwrite it? write yes or no: ";
+        cin >> YN;
+        if ((YN == "yes") || (YN == "Yes") || (YN == "YES") || (YN == "yEs") || (YN == "yeS"))
+        {
+            goto overwrite;
+        } else
+        {
+            cout << "Give the new file name: ";
+            cin >> YN;
+            gpf->OptParamFileRename(YN.c_str());
+            goto overwrite;
+        }
+    } else
+    {
+    overwrite:
+
     data_meas->out_db_specs_txt(with_comments, brief_mode);
 
     out_gems_fit_txt( node, with_comments, brief_mode );
@@ -136,6 +158,7 @@ int generateConfig()
 
 
     cout << "Finish writing template file" << endl;
+    }
 
     } catch(TError& err)
       {
@@ -184,12 +207,21 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
               "\n#      R{ \"IV\" : -36819, \"Ref\" : \"SUPCRT92\", \"logK\" : -14.46, \"nC\" : 4, \"species\" : \"KOH@\","
               "\n#      \"RC \" : [ \"K+\", \"H2O@\", \"H+\", \"KOH@\" ], \"Rcoef\" : [ -1, -1, 1, 1 ] }"
               "\n#     Here,  \"IV\": initial value; "
-              "\n          \"Ref\": bibliographic reference;"
+              "\n#          \"Ref\": bibliographic reference;"
               "\n#         \"logK\": reaction equilibrium constant at 298 K, 1 bar; "
               "\n#         \"nC\": numer of components (species) involved in the reaction;"
               "\n#         \"species\": name of species whose properties are constrained with this reaction; "
               "\n#         \"RC\": list [ ] of names of all components (species) involved in the reaction (comma-separated);"
               "\n#         \"Rcoef\": array [ ] of reaction stoichiometry coeficients (comma-separated), in the same order as in the \"RC\" list."
+              "\n#  Mark with L the bIC (element bulk composition) value of an independent component, which depends on bIC of other elements"
+              "\n#     via a titration constraint by copy-pasting the following template in place of the bIC value,"
+              "\n#     and edit it to make the desired changes:"
+              "\n#      L{ \"LE\" :\"H\", \"IV\" :113.016746705914, \"LEs\" :[\"S\", \"Cl\"], \"Lcoef\" :[2,1]}"
+              "\n#     Here, H is linked to S and Cl by titration of H2SO4 and HCl, with the stoechiometric coeficients of 2 and 1, respectively."
+              "\n#         \"LE\": linked element "
+              "\n#         \"IV\": initial value "
+              "\n#         \"LEs\": the elements linked to "
+              "\n#         \"Lcoef\": linking coeficients (stoechiometric coeficients) "
            << endl;
     }
 
@@ -277,6 +309,9 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
 
     // from *DBR.dat
     TPrintArrays  prar(f_bSP+1/*52*/, DataBR_fields, ff);
+
+    ff<< "\n# For fitting T and P parameters in thermobarometry application give the upper and lower values correspodning "
+         "\n# to the interpolation range you selected when the GEMS3K system files were exported ";
 
     prar.writeField(f_TK, CNode->TK, _comment, brief_mode  );
     prar.writeField(f_P, CNode->P, _comment, brief_mode  );
@@ -419,40 +454,47 @@ void get_gems_fit_multi_txt(TNode* node, opti_vector *op )
           {
               // Hear you must write your code
               for( int ii=0; ii<vFormats.size(); ii++ )
-              {    cout<< "Fied " << MULTI_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<
+              {    cout<< "field " << MULTI_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<
                           " Index " << vFormats[ii].index << endl;
                   cout<< vFormats[ii].format << endl;
 
                   if ((vFormats[ii].type == ft_F))
                   {
                       if (vFormats[ii].format.size() >1)
-                      {
+                      {   // after F comes a JSON object
                           F_to_OP(op, vFormats[ii], MULTI_dynamic_fields[nfild].name );
                       } else
-                      {
+                      {   // after F compes the initial value
                           switch( nfild )
                           {
                           case f_sMod:
                                        break;
                           case f_LsMod:{ if( !pmp->LsMod )
-                                          Error( "Error", "Array LsMod is not used in this problem");
-//                                        rddar.readArray( "LsMod" , pmp->LsMod, pmp->FIs*3) ;
-                                        long int LsModSum;
-                                        long int LsIPxSum;
-                                        node->pMulti()->getLsModsum( LsModSum, LsIPxSum );
-                                        if(LsIPxSum )
-                                        {
-                                        }
-                                        if(LsModSum )
+                                            Error( "Error", "Array LsMod is not used in this problem");
+//                                          rddar.readArray( "LsMod" , pmp->LsMod, pmp->FIs*3) ;
+                                            long int LsModSum;
+                                            long int LsIPxSum;
+                                            node->pMulti()->getLsModsum( LsModSum, LsIPxSum );
+                                            if(LsIPxSum )
+                                            {
+                                            }
+                                            if(LsModSum )
                                             F_to_OP(pmp->PMc[vFormats[ii].index], op, vFormats[ii], MULTI_dynamic_fields[nfild].name );
                                         break;
                                        }
-                            case f_LsMdc:
+                          case f_LsMdc:{ if( !pmp->LsMdc )
+                                            Error( "Error", "Array LsMdc not used in this problem");
+                                            long int LsMdcSum;
+                                            long int LsMsnSum;
+                                            long int LsSitSum;
+                                            node->pMulti()->getLsMdcsum( LsMdcSum,LsMsnSum, LsSitSum );
+                                            if(LsMdcSum )
+                                            F_to_OP(pmp->DMc[vFormats[ii].index], op, vFormats[ii], MULTI_dynamic_fields[nfild].name );
                                         break;
-                            case f_fDQF:
+                                        }
+                          case f_fDQF: F_to_OP(pmp->fDQF[vFormats[ii].index], op, vFormats[ii], MULTI_dynamic_fields[nfild].name );
                                         break;
                           }
-
                       }
                   }
               }
@@ -610,7 +652,7 @@ void get_gems_fit_DBR_txt(TNode* node , opti_vector *op)
             int nl = 0;
             // Hear you must write your code
             for( int ii=0; ii<vFormats.size(); ii++ )
-            {    cout<< "Fied " << DataBR_fields[nfild].name << " Type " << vFormats[ii].type <<
+            {    cout<< "field " << DataBR_fields[nfild].name << " Type " << vFormats[ii].type <<
                         " Index " << vFormats[ii].index << endl;
                 cout<< vFormats[ii].format << endl;
 
@@ -823,11 +865,11 @@ outField Data_Manager_fields[9] =
 
 typedef enum { /// Field index into outField structure
     f_MPI = 0,
-    f_DatDB,
-    f_DatColection,
-    f_DatSource,
-    f_DatSelect,
-    f_DatTarget,
+    f_DataDB,
+    f_DataCollection,
+    f_DataSource,
+    f_DataSelect,
+    f_DataTarget,
     f_SystemFiles,
 //    f_RecipeFiles,
     f_LimitOfDetection
@@ -839,9 +881,9 @@ void Data_Manager::define_db_specs( )
    MPI = omp_get_num_threads() * omp_get_num_procs();
    datasource = 0;
    DBname = "./test_input/experimentsDB";
-   colection= "experiments";
+   collection= "experiments";
    DataSelect ="all";
-   DatTarget = "{[...]}";
+   DataTarget = "{[...]}";
    LimitOfDetection = 1e-06;
 
 }
@@ -859,9 +901,9 @@ void Data_Manager::out_db_specs_txt( bool with_comments, bool brief_mode )
     if (datasource == 0)
     {
         prar.setAlws( f_MPI );
-        prar.setAlws( f_DatDB );
-        prar.setAlws( f_DatColection );
-        prar.setAlws( f_DatSelect );
+        prar.setAlws( f_DataDB );
+        prar.setAlws( f_DataCollection );
+        prar.setAlws( f_DataSelect );
         prar.setAlws( f_LimitOfDetection );
     }
 
@@ -881,11 +923,11 @@ void Data_Manager::out_db_specs_txt( bool with_comments, bool brief_mode )
         ff << "#>>>>>>>>>>>>>>>>>>>>>> Data sources section >>>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
         ff << "#########################################################################";
     }
-    prar.writeField(f_DatSource, (long int)datasource, with_comments, brief_mode  );
-    prar.writeField(f_DatDB, DBname, with_comments, brief_mode  );
-    prar.writeField(f_DatColection, colection, with_comments, brief_mode  );
-    prar.writeField(f_DatSelect, DataSelect, with_comments, brief_mode );
-    prar.writeField(f_DatTarget, DatTarget, with_comments, brief_mode );
+    prar.writeField(f_DataSource, (long int)datasource, with_comments, brief_mode  );
+    prar.writeField(f_DataDB, DBname, with_comments, brief_mode  );
+    prar.writeField(f_DataCollection, collection, with_comments, brief_mode  );
+    prar.writeField(f_DataSelect, DataSelect, with_comments, brief_mode );
+    prar.writeField(f_DataTarget, DataTarget, with_comments, brief_mode );
     prar.writeField(f_SystemFiles, gpf->GEMS3LstFilePath(), with_comments, brief_mode  );
 //    prar.writeField(f_RecipeFiles, "", with_comments, brief_mode  );
     prar.writeField(f_LimitOfDetection, (double)LimitOfDetection, with_comments, brief_mode  );
@@ -895,12 +937,14 @@ void Data_Manager::out_db_specs_txt( bool with_comments, bool brief_mode )
 void Data_Manager::get_db_specs_txt( )
 {
     // open file for reading
-    string inputstr;
+    string inputstr, result;
     string fname = gpf->OptParamFile();
     fstream ff(fname.c_str(), ios::in );
     ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
 
-    TReadArrays  rdar(9, Data_Manager_fields, ff);
+    TReadArrays  rdar(8, Data_Manager_fields, ff);
+
+
 
     long int nfild = rdar.findNextNotAll();
     while( nfild >=0 )
@@ -909,19 +953,22 @@ void Data_Manager::get_db_specs_txt( )
           {
             case f_MPI: rdar.readArray( "MPI",  &MPI, 1 );
                     break;
-            case f_DatDB: rdar.readArray( "DatDB",  DBname );
+            case f_DataDB: rdar.readArray( "DataDB",  DBname );
                     break;
-            case f_DatColection: rdar.readArray( "DatColection",  colection );
+            case f_DataCollection: rdar.readArray( "DataCollection",  collection );
                     break;
-            case f_DatSource: rdar.readArray( "DatSource",  &datasource, 1);
+            case f_DataSource: rdar.readArray( "DataSource",  &datasource, 1);
                     break;
             case f_LimitOfDetection: rdar.readArray( "LimitOfDetection",  &LimitOfDetection, 1);
                     break;
-            case f_DatSelect: rdar.readArray( "DatSelect",  DataSelect );
+            case f_DataSelect: rdar.readArray( "DataSelect",  DataSelect );
                     break;
-            case f_DatTarget: rdar.readArray( "DatTarget",  DatTarget );
+            case f_DataTarget: rdar.readArray( "DataTarget",  DataTarget );
                     break;
             case f_SystemFiles: rdar.readArray( "SystemFiles",  inputstr );
+                    remove_copy(inputstr.begin(), inputstr.end(), std::back_inserter(result), '\'');
+                    inputstr = result;
+                    result.clear();
                     gpf->setGEMS3LstFilePath(inputstr.c_str() );
                     break;
  //           case f_RecipeFiles: rdar.readArray( "RecipeFiles",  inputstr );
@@ -935,9 +982,9 @@ void Data_Manager::get_db_specs_txt( )
     if (datasource == 0)
     {
         rdar.setAlws( f_MPI );
-        rdar.setAlws( f_DatDB );
-        rdar.setAlws( f_DatColection );
-        rdar.setAlws( f_DatSelect );
+        rdar.setAlws( f_DataDB );
+        rdar.setAlws( f_DataCollection );
+        rdar.setAlws( f_DataSelect );
         rdar.setAlws( f_LimitOfDetection );
     }
 
@@ -947,6 +994,14 @@ void Data_Manager::get_db_specs_txt( )
          { ret += " - fields must be read from OptParamFile structure";
            Error( "Error", ret);
          }
+    // removing inverted comma
+
+        remove_copy(DBname.begin(), DBname.end(), std::back_inserter(result), '\'');
+        DBname = result;
+        result.clear();
+
+        remove_copy(collection.begin(), collection.end(), std::back_inserter(result), '\'');
+        collection = result;
 }
 
 //-------------------------------------------------------------------------------------------------

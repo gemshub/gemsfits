@@ -70,6 +70,42 @@ void adjust_PMc (int i, double new_PMc, TGfitTask *sys)
     }
 }
 
+void adjust_DMc (int i, double new_DMc, TGfitTask *sys)
+{
+    int index_DMc = sys->Opti->Pindex[i];
+    for (int n=0; n<sys->NodT.size(); ++n)
+    {
+        sys->NodT[n]->Set_DMc(new_DMc, index_DMc );
+    }
+}
+
+void adjust_bIC (int i, double new_bIC, TGfitTask *sys)
+{
+    int index_bIC = sys->Opti->Pindex[i];
+    for (int n=0; n<sys->NodT.size(); ++n)
+    {
+        sys->NodT[n]->Set_bIC(index_bIC, new_bIC );
+    }
+}
+
+void adjust_TK (int i, double new_TK, TGfitTask *sys)
+{
+    for (int n=0; n<sys->NodT.size(); ++n)
+    {
+        sys->NodT[n]->Set_TK(new_TK );
+        sys->NodT[n]->Set_mLook(0); // activate interpolation of themrodynamic properties lookup array
+    }
+}
+
+void adjust_P (int i, double new_P, TGfitTask *sys)
+{
+    for (int n=0; n<sys->NodT.size(); ++n)
+    {
+        sys->NodT[n]->Set_TK(new_P );
+        sys->NodT[n]->Set_mLook(0); // activate interpolation of themrodynamic properties lookup array
+    }
+}
+
 void adjust_RDc (TGfitTask *sys)
 {
     // going trough all nodes

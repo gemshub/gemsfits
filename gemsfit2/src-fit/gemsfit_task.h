@@ -154,7 +154,14 @@ public:
    * @author DM
    * @date 07.05.2013
    */
-   void get_DatTarget ( );
+   void get_DataTarget ( );
+
+   /**
+   * Checks for parameter inconsistencies with type of experimental data and other parameters
+   * @author DM
+   * @date 04.07.2013
+   */
+   void gfit_error ( );
 
 
    void get_nodes( long int nNod ); ///< Constructors for 1D arrangement of nodes

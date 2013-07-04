@@ -2,8 +2,9 @@
 - to be completed
 
 - describe/document command line parameters to start gemsfit2 and csvtoejdb utility program
-- check if GEMSFIT input file exists by writing a new template input file (to prevent overwrite)
-- documentation in the GEMSFIT template input file (fitting bulk composition with L linked parameters)
++ check if GEMSFIT input file exists by writing a new template input file (to prevent overwrite)
++ documentation in the GEMSFIT template input file (fitting bulk composition with L linked parameters) 
+- write all possible option the user has for data to compare
 
 + Printing class - printing in /results/FIT_results.csv
 - test inverse weighting more
@@ -16,6 +17,10 @@
 - problems with GEMS convergence - can affect the convergence as BOBYQA - decides how to change parameters based on first residuals
 
 - type of data to compare (molality and log molality) etc...
++ add DMc, fDQF parameters
++ check Tk and P - if implemented
+- make test for Linked parameters - simple pH titration system
+- make test of geobarometry with qtz rutile paper.
 + added phase amount, phase vlolume, dcomp amount, dcomp activity coeficient
 - not added Eh, osmotic coeficient.
 - think about units, how to make a uniform strategy for units.
@@ -34,3 +39,4 @@ EJDB database maintenance functionality:
 - backup to JSON text file (the whole DB, one exp.dataset, etc.)
 - restore from JSON text file
 - updating/owerwriting documents e.g. for error corrections in experimental data, adding new information for experimental samples. 
+- what if one wants to sellect data form more collections

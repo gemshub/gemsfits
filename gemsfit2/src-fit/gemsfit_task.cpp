@@ -48,7 +48,7 @@ int master_counter;
 
 istream& f_getline(istream& is, gstring& str, char delim);
 
-extern outField DataBR_fields[58];
+//extern outField DataBR_fields[58];
 
 TGfitTask* TGfitTask::gft;
 
@@ -95,10 +95,26 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     fout << "12. gemsfit_task.cpp line 95. Initializing the Target function structure & get_DatTarget(); " << endl;
     Tfun = new TargetFunction;
     print = new ResPrint(printfile, Opti);
-    get_DatTarget ( );
+    get_DataTarget ( );
+
+
+    // check for errors and inconsitencies of input options and parameters
+    gfit_error ( );
 
     fout.close();
 
+}
+
+void TGfitTask::gfit_error ( )
+{
+    for (int i=0; i<Opti->opt.size(); ++i)
+    {
+        if( ((Opti->Ptype[i] == "TK") || (Opti->Ptype[i] == "P")) && (NodT.size() > 1))
+         {
+            cout << "Error - When fitting TK or P only one system/experiment/sample si allowed. " << endl;
+            exit(1);
+         }
+    }
 }
 
 void TGfitTask::run_optim()
@@ -114,26 +130,26 @@ void TGfitTask::run_optim()
     fout.close();
 }
 
-void TGfitTask::get_DatTarget ( )
+void TGfitTask::get_DataTarget ( )
 {
     vector<string> out;
-    parse_JSON_array_object(DatTarget, "OFUN", "OPH", out);
+    parse_JSON_array_object(DataTarget, "OFUN", "OPH", out);
     out.clear();
 
 
-    parse_JSON_object(DatTarget, keys::Target, out);
+    parse_JSON_object(DataTarget, keys::Target, out);
     Tfun->name = out[0]; // Name of target function
     out.clear();
 
-    parse_JSON_object(DatTarget, keys::TT, out);
+    parse_JSON_object(DataTarget, keys::TT, out);
     Tfun->type = out[0]; // Type of the target function
     out.clear();
 
-    parse_JSON_object(DatTarget, keys::WT, out);
+    parse_JSON_object(DataTarget, keys::WT, out);
     Tfun->weight = out[0]; // Weight of target function
     out.clear();
 
-    parse_JSON_object(DatTarget, keys::OFUN, out);
+    parse_JSON_object(DataTarget, keys::OFUN, out);
     for (unsigned int i = 0 ; i < out.size() ; i++)
     {
         Tfun->objfun.push_back(new TargetFunction::obj_fun); // initializing
@@ -148,7 +164,7 @@ void TGfitTask::get_DatTarget ( )
     int j=0;
     int jj=0;
 
-    parse_JSON_array_object(DatTarget, keys::OFUN, keys::EPH, out);
+    parse_JSON_array_object(DataTarget, keys::OFUN, keys::EPH, out);
     for (unsigned int i = 0 ; i < out.size() ; i++)
     {
         Tfun->objfun[i]->exp_phase = out[i];
@@ -156,14 +172,14 @@ void TGfitTask::get_DatTarget ( )
     }
     out.clear();
 
-    parse_JSON_array_object(DatTarget, keys::OFUN, keys::EN, out);
+    parse_JSON_array_object(DataTarget, keys::OFUN, keys::EN, out);
     for (unsigned int i = 0 ; i < out.size() ; i++)
     {
         Tfun->objfun[i]->exp_elem = out[i];
     }
     out.clear();
 
-    parse_JSON_array_object(DatTarget, keys::OFUN, keys::Eunit, out);
+    parse_JSON_array_object(DataTarget, keys::OFUN, keys::Eunit, out);
     for (unsigned int i = 0 ; i < out.size() ; i++)
     {
         Tfun->objfun[i]->exp_unit = out[i];
@@ -172,7 +188,7 @@ void TGfitTask::get_DatTarget ( )
 
     jj = j;
 
-    parse_JSON_array_object(DatTarget, keys::OFUN, keys::PPH, out);
+    parse_JSON_array_object(DataTarget, keys::OFUN, keys::PPH, out);
     for (unsigned int i = j ; i < out.size()+j ; i++)
     {
         Tfun->objfun[i]->exp_phase = out[i-j];
@@ -180,14 +196,14 @@ void TGfitTask::get_DatTarget ( )
     }
     out.clear();
 
-    parse_JSON_array_object(DatTarget, keys::OFUN, keys::EP, out);
+    parse_JSON_array_object(DataTarget, keys::OFUN, keys::EP, out);
     for (unsigned int i = j ; i < out.size()+j ; i++)
     {
         Tfun->objfun[i]->exp_property = out[i-j];
     }
     out.clear();
 
-    parse_JSON_array_object(DatTarget, keys::OFUN, keys::PEunit, out);
+    parse_JSON_array_object(DataTarget, keys::OFUN, keys::PEunit, out);
     for (unsigned int i = j ; i < out.size()+j ; i++)
     {
         Tfun->objfun[i]->exp_unit = out[i-j];
@@ -195,28 +211,28 @@ void TGfitTask::get_DatTarget ( )
     out.clear();
 
 
-    parse_JSON_array_object(DatTarget, keys::OFUN, keys::DCPH, out);
+    parse_JSON_array_object(DataTarget, keys::OFUN, keys::DCPH, out);
     for (unsigned int i = jj ; i < out.size()+jj ; i++)
     {
         Tfun->objfun[i]->exp_phase = out[i-jj];
     }
     out.clear();
 
-    parse_JSON_array_object(DatTarget, keys::OFUN, keys::DC, out);
+    parse_JSON_array_object(DataTarget, keys::OFUN, keys::DC, out);
     for (unsigned int i = jj ; i < out.size()+jj ; i++)
     {
         Tfun->objfun[i]->exp_dcomp = out[i-jj];
     }
     out.clear();
 
-    parse_JSON_array_object(DatTarget, keys::OFUN, keys::DCP, out);
+    parse_JSON_array_object(DataTarget, keys::OFUN, keys::DCP, out);
     for (unsigned int i = jj ; i < out.size()+jj ; i++)
     {
         Tfun->objfun[i]->exp_property = out[i-jj];
     }
     out.clear();
 
-    parse_JSON_array_object(DatTarget, keys::OFUN, keys::DCPunit, out);
+    parse_JSON_array_object(DataTarget, keys::OFUN, keys::DCPunit, out);
     for (unsigned int i = jj ; i < out.size()+jj ; i++)
     {
         Tfun->objfun[i]->exp_unit = out[i-jj];

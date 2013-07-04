@@ -51,6 +51,7 @@
 #include <string>
 #include "node.h"
 #include "ejdb.h"
+#include <algorithm>
 
 //#ifdef USE_MPI
 #include "omp.h"
@@ -100,7 +101,7 @@ class Data_Manager : public TNode
         vector<TNode*> NodT;
 
         /// JSON object for building the target function
-        string DatTarget;
+        string DataTarget;
 
         int MPI; /// number of paralele threads
 
@@ -290,7 +291,7 @@ class Data_Manager : public TNode
         string DBname;
 
         /// PostgreSQL/EJDB database: table/colection name with solubility experiments
-        string colection;
+        string collection;
 
         /// PostgreSQL database: username
         string username;

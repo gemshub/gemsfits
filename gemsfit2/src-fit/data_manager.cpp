@@ -60,9 +60,9 @@ Data_Manager::Data_Manager( )
     // Read measurement data from PosgreSQL server
     fout << "3. data_manager.cpp line 61. Reading in the data selection query; " << endl;
     // Readin in the data slection query
-    DataSelect = readin_JSON("<DatSelect>");
+    DataSelect = readin_JSON("<DataSelect>");
     fout << "4. data_manager.cpp line 64. Reading in the Target function form the input file; " << endl;
-    DatTarget = readin_JSON("<DatTarget>");
+    DataTarget = readin_JSON("<DataTarget>");
 
     // Getting the query result data into the Data_Manager class
     fout << "5. data_manager.cpp line 68. Getting data form the EJDB database; " << endl;
@@ -90,7 +90,7 @@ string Data_Manager::readin_JSON(string key)
     // Variable declarations
     vector<string> vdata;
     string line, allparam;
-    string json_s;
+    string json_s, result;
     string fname = gpf->OptParamFile();
     int pos_start, pos_end;
     unsigned int i;
@@ -124,6 +124,9 @@ string Data_Manager::readin_JSON(string key)
     pos_start = allparam.find(f7);
     pos_end   = allparam.find(f4,pos_start);
     json_s = allparam.substr((pos_start+f7.length()),(pos_end-pos_start-f7.length()));
+
+    remove_copy(json_s.begin(), json_s.end(), std::back_inserter(result), '\'');
+    json_s = result;
 
     return json_s;
 }
@@ -301,7 +304,7 @@ void Data_Manager::get_EJDB( )
 
         }
         //Get or create collection 'experiments'
-        EJCOLL *coll = ejdbcreatecoll(jb, colection.c_str(), NULL);
+        EJCOLL *coll = ejdbcreatecoll(jb, collection.c_str(), NULL);
 
         // Creat bson query object
         bson bq2;

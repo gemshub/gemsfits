@@ -63,6 +63,46 @@ void adjust_G0 (int i, double G0, TGfitTask *sys);
 */
 void adjust_PMc (int i, double new_PMc, TGfitTask *sys);
 
+/**
+* Sets the new DMc returned form the optimization algorithm
+* @param i          position of the DMc in the parameter/optimization vector
+* @param new_DMc    the new DMc returned by the optimization algorithm
+* @param sys        pointer to data object that holds the data of the current TGfitTask struct
+* @author DM
+* @date 04.07.2013
+*/
+void adjust_DMc (int i, double new_DMc, TGfitTask *sys);
+
+/**
+* Sets the new bIC returned form the optimization algorithm
+* @param i          position of the bIC in the parameter/optimization vector
+* @param new_bIC    the new DMc returned by the optimization algorithm
+* @param sys        pointer to data object that holds the data of the current TGfitTask struct
+* @author DM
+* @date 04.07.2013
+*/
+void adjust_bIC (int i, double new_bIC, TGfitTask *sys);
+
+/**
+* Sets the new TK returned form the optimization algorithm
+* @param i          position of the TK in the parameter/optimization vector
+* @param new_TK     the new TK returned by the optimization algorithm
+* @param sys        pointer to data object that holds the data of the current TGfitTask struct
+* @author DM
+* @date 04.07.2013
+*/
+void adjust_TK (int i, double new_TK, TGfitTask *sys);
+
+/**
+* Sets the new P returned form the optimization algorithm
+* @param i          position of the P in the parameter/optimization vector
+* @param new_P      the new P returned by the optimization algorithm
+* @param sys        pointer to data object that holds the data of the current TGfitTask struct
+* @author DM
+* @date 04.07.2013
+*/
+void adjust_P (int i, double new_P, TGfitTask *sys);
+
 // Set new Gibbs free energy based on reaction constraints
 /**
 * Sets the new G0 of the components fixed using reaction constraints

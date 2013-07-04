@@ -52,7 +52,6 @@ opti_vector::opti_vector( )
     get_gems_fit_multi_txt( node, this ); // reading multi parameters
 
     // getting indexes of components in the DCH
-
     if (h_RDc)
     {
         fout << "10-1. opt_vector.cpp line 58. Getting the indexes of species involved in the reaction constraints; " << endl;

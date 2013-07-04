@@ -39,6 +39,8 @@
 
 class opti_vector
 {
+private:
+//    vector<int> Error;
 public:
     typedef vector<double> vd;        // vector of double
     typedef vector<vector<double> > vvd;  // 2D vector of double

@@ -67,14 +67,14 @@ int main( int argc, char *argv[] )
 
     gpf = new TGfitPath(argc, argv);
 
-    if( gpf->isInitMode() ) // Mode GEMSFIT to generate input configuration file
-      return generateConfig();
-
     // Create output for log files and results directory
     if ( !bfs::exists( gpf->OutputDirPath() ) )
         bfs::create_directory(gpf->OutputDirPath() );
     if ( !bfs::exists( gpf->ResultDir() ) )
         bfs::create_directory(gpf->ResultDir());
+
+    if( gpf->isInitMode() ) // Mode GEMSFIT to generate input configuration file
+      return generateConfig();
 	
     // empty output directory
     bfs::path fi(gpf->OutputDirPath() );

@@ -31,6 +31,26 @@ using namespace std;
     extern int	n_procs_boost;
     extern int	proc_id_boost;
 
+//    struct outField_ /// Internal descriptions of fields
+//     {
+//       string name; ///< name of field in structure
+//       string comment;
+
+//    };
+
+
+//    outField_ Error_fields[2] =
+//    {
+//        { "Error_TK_param", " When fitting TK (geo-thermometry) only one system/experiment/sample si alowed at a time " },
+//        { "Error_P_param","When fitting TK (geo-thermometry) only one system/experiment/sample si alowed at a time " }
+
+//    };
+
+//    typedef enum { /// Field index into outField structure
+//        f_Error_TK_param = 0,
+//        f_Error_P_param
+//    } Error_FIELDS;
+
 
 
 #endif // GEMSFIT_GLOBAL_VARIABLES_H
