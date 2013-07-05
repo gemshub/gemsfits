@@ -489,6 +489,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
 double Tfunction (double computed_value, double measured_value, string type)
 {
     double Tf = 0.0;
+    double average_measured;
     if (type == keys::lsq)
     {
         Tf = pow( (computed_value - measured_value), 2) /*/ pow(measured_value, 2)*/;

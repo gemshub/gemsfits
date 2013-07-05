@@ -101,9 +101,11 @@ static const char *url = "url"; ///	                              1		     string
 
 // Name of Target Functions and weights
 static const char *lsq = "lsq"; ///                                         string              least square function (measured-computed)^2
+static const char *lsq_norm = "lsq_norm"; ///                               string              normalized to experimental average least square
 static const char *inverr = "inverr"; ///                                   string              inverse weight as 1/error
 static const char *inverr2 = "inverr2"; ///                                 string              inverse weight as 1/error^2
 static const char *inverr3 = "inverr3"; ///                                 string              inverse weight as 1/measured^2
+static const char *inverr_norm = "inverr_norm"; ///                         string              normalized <Xmeas>/error
 
 // Kaywords for units
 static const char *molal = "molal"; ///                                     string              molality moles/kg
