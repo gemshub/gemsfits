@@ -113,6 +113,7 @@ static const char *gram = "g"; ///
 static const char *kgram = "kg"; ///
 static const char *m3 = "m3"; ///
 static const char *cm3 = "cm3"; ///
+static const char *Simolfrac = "Simolfrac"; ///
 static const char *molfrac = "molfrac"; ///
 }
 #endif // KEYWORDS_H

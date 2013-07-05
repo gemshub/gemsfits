@@ -351,6 +351,11 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
     } else // other than aqueous phase
         if ((sys->Tfun->objfun[j]->exp_phase != "aq_gen") && (sys->experiments[i]->expphases[p]->phase != "aq_gen"))
         {
+            if ((sys->Tfun->objfun[j]->exp_unit == keys::Simolfrac) && (sys->experiments[i]->expphases[p]->phcomp[e]->Qunit == keys::Simolfrac))
+            {
+                int Sindx = sys->NodT[i]->IC_name_to_xDB("Si");
+                computed_value = IC_in_PH[ICndx]/IC_in_PH[Sindx];
+            } else // phase bulk composition in moles (mol)
             computed_value = IC_in_PH[ICndx];
         } else { cout << "Error in target functions line 293 "; exit(1);}
 

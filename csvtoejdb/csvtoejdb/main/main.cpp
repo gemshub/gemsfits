@@ -13,7 +13,7 @@ static EJDB *jb;
 
 int main(int argc, char *argv[])
 {
-    int ic=0, phc = 0, dcc = 0, iinit, irun, iconf;
+    int ic=0, phc = 0, dcc = 0, iinit = 0, irun = 0, ihelp = 0;
     string ph_new, ph_old, dcomp_new, dcomp_old;
     vector<string> phases, dcomps;
     bool h_phprop = false, h_phases = false, h_phcomp = false, h_dcomp = false; // handle that is true if we have ph_prop in the CSV file
@@ -30,27 +30,39 @@ int main(int argc, char *argv[])
           iinit = ii;
         else if (strcmp(argv[ii], "-run") == 0 )
             irun = ii;
-                 else if (strcmp(argv[ii], "-conf") == 0)
-                     iconf = ii;
+                 else if (strcmp(argv[ii], "-help") == 0)
+                     ihelp = ii;
+    }
+
+    if (ihelp != 0)
+    {
+        cout << " USAGE: \n"
+//                "   csvtoejdb  -run      <path to gemsfit2 input file> \n"
+                "   csvtoejdb   -run -t <path to folder for the database and CSV file> <database name> <CSV file name> \n\n"
+                " WHERE: \n"
+                "   -run,   runs the program \n"
+                "   -t,     truncate (add more data) \n"
+                "   -a,     append (overwrite the existing database), \n"
+                "           if database name is not present a new database is created \n\n"
+                " EXAMPLE; \n"
+                "   -run -t CASH/ cashtest CASHtest.csv "<< endl;
+        return 0;
     }
 
     if (irun != 0)
     {
-        if (argc <= irun + 1)
+        if (argc <= irun + 4)
         {
             cout << "Wrong options, Wrong argument for option -run";
             exit(1);
         }
-
-
-
     }
 
     // create directory for db if not existent
-    if (0 != access(argv[irun + 1], F_OK)) {
+    if (0 != access(argv[irun + 2], F_OK)) {
       if (ENOENT == errno) {
          // does not exist
-          mkdir(argv[irun + 1], S_IRWXU|S_IRGRP|S_IXGRP);
+          mkdir(argv[irun + 2], S_IRWXU|S_IRGRP|S_IXGRP);
       }
       if (ENOTDIR == errno) {
          // not a directory
@@ -60,13 +72,24 @@ int main(int argc, char *argv[])
     char ejdb_path[64] = {};
     cout << ejdb_path << endl;
 
-    strcat(ejdb_path, argv[irun + 1]);
     strcat(ejdb_path, argv[irun + 2]);
+    strcat(ejdb_path, argv[irun + 3]);
     cout << ejdb_path << endl;
     // open the database file as a writer JBOWRITER, create new is not existent JBOCREAT, and truncate db on open JBOTRUNC
-    if (!ejdbopen(jb, ejdb_path, JBOWRITER | JBOCREAT | JBOTRUNC)) {
-        return 1;
-    }
+    if (!strcmp(argv[irun + 1], "-t"))
+    {
+        if (!ejdbopen(jb, ejdb_path, JBOWRITER | JBOCREAT | JBOTRUNC)) {
+            return 1;
+        }
+    } else
+    if (!strcmp(argv[irun + 1], "-a"))
+    {
+        if (!ejdbopen(jb, ejdb_path, JBOWRITER | JBOCREAT )) {
+            return 1;
+        }
+    } else { cout << "Wrong options, Wrong argument for option -run";
+        exit(1);}
+
 
     //Get or create collection 'contacts'
     EJCOLL *coll = ejdbcreatecoll(jb, experiments, NULL);
@@ -79,8 +102,8 @@ int main(int argc, char *argv[])
     string line;
 
     char csv_path[64] = {};
-    strcat(csv_path, argv[irun + 1]);
-    strcat(csv_path, argv[irun + 3]);
+    strcat(csv_path, argv[irun + 2]);
+    strcat(csv_path, argv[irun + 4]);
     ifstream in(csv_path);
     if (in.fail())  { cout << "File not found" <<endl; return 0; }
 
@@ -109,6 +132,7 @@ int main(int argc, char *argv[])
             if ((headline[i]==expsample) || (headline[i]==expdataset) || (headline[i]==Tunit) || (headline[i]==Punit)|| (headline[i]==Vunit) )
             {
                 bson_append_string(&exp, headline[i].c_str(), row[i].c_str());
+                // for query
                 if (headline[i]==expdataset)
                 {
                     bson_append_start_object(&bq1, expdataset);
@@ -120,7 +144,7 @@ int main(int argc, char *argv[])
                     bson_append_start_object(&bq1, expsample);
                     bson_append_string(&bq1, "$begin", row[i].c_str());
                     bson_append_finish_object(&bq1);
-                }
+                } // end for query
             }
             else if  ((headline[i]==sT) || (headline[i]==sP))
             {
@@ -150,6 +174,7 @@ int main(int argc, char *argv[])
         {
             cout << "The combination of sample name and expdataset in the input csv file is already present in the database.\n"
                  << "Are you trying to import the same experimental data again? " << endl;
+                 cout << "Number of experiments: " << count << endl;
             //Now print the result set records
              for (int i = 0; i < TCLISTNUM(res); ++i) {
                  void *bsdata = TCLISTVALPTR(res, i);

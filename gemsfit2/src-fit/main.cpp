@@ -28,12 +28,12 @@
 
 #define USE_MPI
 
-#include <stdio.h>
+//#include <stdio.h>
 #include <iostream>
 #include <vector>
 #include <string>
-#include <cmath>
-#include <nlopt.hpp>
+//#include <cmath>
+//#include <nlopt.hpp>
 #include <ctime>
 #include <fstream>
 
@@ -67,6 +67,9 @@ int main( int argc, char *argv[] )
 
     gpf = new TGfitPath(argc, argv);
 
+    if (gpf->isHelpMode())
+        return 0;
+
     // Create output for log files and results directory
     if ( !bfs::exists( gpf->OutputDirPath() ) )
         bfs::create_directory(gpf->OutputDirPath() );
@@ -75,7 +78,7 @@ int main( int argc, char *argv[] )
 
     if( gpf->isInitMode() ) // Mode GEMSFIT to generate input configuration file
       return generateConfig();
-	
+
     // empty output directory
     bfs::path fi(gpf->OutputDirPath() );
     if(!bfs::exists(fi) || !bfs::is_directory(fi))
@@ -142,7 +145,6 @@ int main( int argc, char *argv[] )
     delete gfittask;
 
     cout << double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
-
 }
 
 

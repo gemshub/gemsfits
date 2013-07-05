@@ -712,6 +712,7 @@ TGfitPath::TGfitPath(int c, char *v[]):
     int iinit = 0;		// index of -init option
     int irun = 0;		// index of -run option
     int iconf = 0;		// index of -conf option
+    int ihelp = 0;      // index of -help option
 
     for (int ii = 1; ii < argc; ii++)
     {
@@ -721,63 +722,76 @@ TGfitPath::TGfitPath(int c, char *v[]):
             irun = ii;
                  else if (strcmp(argv[ii], "-conf") == 0)
                      iconf = ii;
+                        else if (strcmp(argv[ii], "-help") == 0)
+                            ihelp = ii;
     }
 
-
-    if (irun != 0)
+    if (ihelp !=0)
     {
-        if (argc <= irun + 1)
-            Error("Wrong options", "Wrong argument for option -run");
-        optParamFile = argv[irun + 1];
-        mode = RUN_;
-    }
-
-
-   if (iinit != 0)
+        cout << " USAGE: \n"
+                "   gemsfit2  -run      <path to gemsfit2 input file> \n"
+                "   gemsfit2  -init     <path to GEMS3K exported system list file *-dat.lst> \n\n"
+                " WHERE: \n"
+                "   -run,   runs the program with the settings from the input file \n"
+                "   -init,  writes a template input file using the exported GEMS3K system files \n"<< endl;
+        mode = HELP_;
+    } else
     {
-        if (argc <= iinit + 1)
-            Error("Wrong options", "Wrong argument for option -init");
-        gems3LstFilePath = argv[iinit + 1];
-        mode = INIT_;
+        if (irun != 0)
+        {
+            if (argc <= irun + 1)
+                Error("Wrong options", "Wrong argument for option -run");
+            optParamFile = argv[irun + 1];
+            mode = RUN_;
+        }
+
+
+       if (iinit != 0)
+        {
+            if (argc <= iinit + 1)
+                Error("Wrong options", "Wrong argument for option -init");
+            gems3LstFilePath = argv[iinit + 1];
+            mode = INIT_;
+        }
+
+        if (iconf != 0)
+        {
+            if (argc <= iconf + 1)
+                Error("Wrong options", "Wrong argument for option -conf");
+            optParamFile = argv[iconf + 1];
+        }
+
+        if( optParamFile.empty() )
+        {
+            optParamFile = optParamFilePath;
+            optParamFile += "/";
+            optParamFile += OPT_PARAM_FILE;
+        }
+        else
+        {
+            string name;
+            string ext;
+            u_splitpath( optParamFile, optParamFilePath, name, ext );
+        }
+
+        string path = optParamFilePath;
+        path += "/";
+
+        // set up default pathes
+        // later this pathes and filenames can be read from config file
+        inputDir = path + INPUT_DIR;
+        outputDir = path + OUTPUT_DIR;
+        resultDir = path + RESULT_DIR;
+
+        fitFile = resultDir+FIT_CSV_FILE;
+        fitStatistics = outputDir+FIT_STATISTIC;
+        fitLogFile = outputDir+FIT_LOGFILE;
+
+        cout << "optParamFile = " << optParamFile << endl;
+        cout << "fitFile = " << fitFile << endl;
+        cout << "fitLogFile = " << fitLogFile << endl;
+        cout << "gems3LstFilePath = " << gems3LstFilePath << endl;
     }
-
-    if (iconf != 0)
-    {
-        if (argc <= iconf + 1)
-            Error("Wrong options", "Wrong argument for option -conf");
-        optParamFile = argv[iconf + 1];
-    }
-
-    if( optParamFile.empty() )
-    {
-        optParamFile = optParamFilePath;
-        optParamFile += "/";
-        optParamFile += OPT_PARAM_FILE;
-    }
-    else
-    {
-        string name;
-        string ext;
-        u_splitpath( optParamFile, optParamFilePath, name, ext );
-    }
-
-    string path = optParamFilePath;
-    path += "/";
-
-    // set up default pathes
-    // later this pathes and filenames can be read from config file
-    inputDir = path + INPUT_DIR;
-    outputDir = path + OUTPUT_DIR;
-    resultDir = path + RESULT_DIR;
-
-    fitFile = resultDir+FIT_CSV_FILE;
-    fitStatistics = outputDir+FIT_STATISTIC;
-    fitLogFile = outputDir+FIT_LOGFILE;
-
-    cout << "optParamFile = " << optParamFile << endl;
-    cout << "fitFile = " << fitFile << endl;
-    cout << "fitLogFile = " << fitLogFile << endl;
-    cout << "gems3LstFilePath = " << gems3LstFilePath << endl;
  }
 
 TGfitPath::~TGfitPath()
@@ -806,7 +820,7 @@ outField Data_Manager_fields[9] =
 
     { "DataSelect", 0, 0, 1, "\n# DataSelect: query for obtaining the experimental data from the database."
       "\n# Options: "
-      "\n#    \'all\': select all data"
+//      "\n#    \'all\': select all data"
       "\n#    \'{ ... }\': script in JSON format (in braces) describing what to select. "
       "\n#      \"sample\": [...]: list of comma-separated names of samples, "
       "\n#         or empty string \"\" to select all samples;"
@@ -840,12 +854,19 @@ outField Data_Manager_fields[9] =
       "\n#       \"EP\":  for what property of the phase"
       "\n#       \"Eunit\":  what unit the values should are given in (overrides the units given in the database for this entry):"
       "\n#          \"molal\":  mol/(kg H2O), \"loga\": log(molal), \"-loga\": negated log(molal);"
+      "\n#          \"g\"; \"kg\"; \"cm3\"; \"m3\"; \"molfrac\": mole fraction "
       "\n#           ..."
       "\n#       \"DCPH\":  phase to which the dependent component belongs"
       "\n#       \"DC\":  dependent component"
       "\n#       \"DCP\":  dependent component property"
       "\n#       \"DCPunit\":  property unit - overrides the units given in the database for this entry"
       "\n#       (conversions are performed automatically.)"
+      "\n#     The compare options are: "
+      "\n#       aqueous phase (\"aq_gen\") elemental composition in \"molal\" or \"loga\" "
+      "\n#       aqueous phase (\"aq_gen\") properties (\"EP\"): \"pH\" in \"-loga\" (or \"molal\" - molality concentration of H+); \"pQnt\" - mass in \"g\" or \"kg\"  "
+      "\n#       other phases composition as element bulk phase concentration in moles (\"mol\") or to /Si molar ratio (\"Simolfrac\")"
+      "\n#       other phases properties (\"EP\"): \"pQnt\" - mass in \"g\" or \"kg\"; \"pV\" - volume in \"cm3\" or \"m3\" "
+      "\n#       dependent components (\"DC\") properties: \"pQnt\" - amount in \"molfrac\"; \"@coef\" - activity coefictient "
       "\n#  Example:"
       "\n#  \'{ \"Target\": \"name\", \"TT\": \"lsq\", \"WT\": \"inverr\", \"OFUN\":"
       "\n#      ["
@@ -882,7 +903,7 @@ void Data_Manager::define_db_specs( )
    datasource = 0;
    DBname = "./test_input/experimentsDB";
    collection= "experiments";
-   DataSelect ="all";
+   DataSelect ="{...}";
    DataTarget = "{[...]}";
    LimitOfDetection = 1e-06;
 
