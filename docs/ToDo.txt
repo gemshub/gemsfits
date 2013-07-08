@@ -19,6 +19,7 @@
 - problems with GEMS convergence - can affect the convergence as BOBYQA - decides how to change parameters based on first residuals
 
 - type of data to compare (molality and log molality) etc...
+- add density for data to compare.
 + add DMc, fDQF parameters
 + check Tk and P - if implemented
 - make test for Linked parameters - simple pH titration system

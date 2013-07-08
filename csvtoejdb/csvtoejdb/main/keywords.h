@@ -29,7 +29,8 @@ static const char *expphases = "expphases"; ///	                  1    	     arr
         static const char *eQnt = "eQnt"; ///	                  3	         float		        measured quantity/concentration of element (in Qunit)
     static const char *phspecies = "phdcomps"; ///  	          2	         array		        chemical species (end member, phase component)
         static const char *dcompprop = "dcompprop"; ///
-        static const char *species = "dcomps"; ///                3          string             name of chemical species (end member, phase component)
+        static const char *species = "species";               /// 3          string             name of chemical species (end member, phase component)
+        static const char *dcomp = "dcomp"; ///
         static const char *actcoef = "@coef"; ///	              3	         float		        measured quantity/concentration of phase species
                         // with Qerror and Qunit
     static const char *phprop = "phprop"; ///	                  2   	     array		        known bulk properties of the phase
@@ -41,6 +42,7 @@ static const char *expphases = "expphases"; ///	                  1    	     arr
         static const char *pV = "pV"; ///	                      3	         float		        volume of phase
         static const char *pQnt = "pQnt"; ///	                  3	         float		        Quantity of this phase in the sample system
         static const char *sArea = "sArea"; ///                   3 	     float		        specific surface area of the phase
+        static const char *RHO = "RHO"; ///                       3          double             density of the phase
 
 static const char *expdatarefs = "expdatarefs"; ///               0     	 collection 	    components (recipe in oxides; e.g. SiO2, H2O, Al2O3, etc.)
 //const char *expdataset = "expdataset"; /// 		              1	         string		        ID of experimental dataset e.g. 'Kennedy1950',
@@ -117,5 +119,6 @@ static const char *m3 = "m3"; ///
 static const char *cm3 = "cm3"; ///
 static const char *Simolfrac = "Simolfrac"; ///
 static const char *molfrac = "molfrac"; ///
+static const char *g_cm3 = "g/cm3"; ///
 }
 #endif // KEYWORDS_H

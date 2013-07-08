@@ -18,11 +18,13 @@
 
 # DataDB: EJDB database path (please, edit to put the actual path)
 
-<DataDB>  './test_input/experimentsDB' 
+<DataDB>
+'test_input/SOL/qtzkohnaoh'
 
 # DataCollection: database collection name (please, edit to put the actual name)
 
-<DataCollection>  'experiments' 
+<DataCollection>
+'experiments'
 
 # DataSelect: query for obtaining the experimental data from the database.
 # Options: 
@@ -42,7 +44,13 @@
 #        "sP" : [1, 2500] }'
 #      Paste the above example below, remove comment symbols (#), and edit as necessary.
 
-<DataSelect>  '{...}' 
+<DataSelect>  
+'{ "sample" : "", 
+ "expdataset" : ["Kennedy1950", "Walther&Orville1983", "Hemley_etal1980", "Manning1994", "Morey_etal1962", "Newton&Manning2000", "Shmulovich_etal2006", "Anderson&Burnham1965",
+"Novgorodov1975", "Wyart&Sabatier1955", "Morey&Hesselgesser1951", "Weill&Fyfe1964", "Novgorodov1977", "Anderson&Burnham1967", "K_Anderson&Burnham1967", "K_Pascal&Anderson1989", "K_Cloke1951", "NaOH_Crear&Anderson1971", "NaOH_Anderson&Burnham1967", "NaOH_Ostapenko1969"],
+ "sT" : [1, 1000],
+ "sP" : [0, 5000]
+}' 
 
 # DataTarget: Target function for parameter fitting, described in JSON style
 #     as text in single quotes and braces: '{ ... }' 
@@ -60,7 +68,7 @@
 #       "EP":  for what property of the phase
 #       "Eunit":  what unit the values should are given in (overrides the units given in the database for this entry):
 #          "molal":  mol/(kg H2O), "loga": log(molal), "-loga": negated log(molal);
-#          "g"; "kg"; "cm3"; "m3"; "mol" 
+#          "g"; "kg"; "cm3"; "m3"; "molfrac": mole fraction 
 #           ...
 #       "DCPH":  phase to which the dependent component belongs
 #       "DC":  dependent component
@@ -70,9 +78,9 @@
 #     The compare options are: 
 #       aqueous phase ("aq_gen") elemental composition in "molal" or "loga" 
 #       aqueous phase ("aq_gen") properties ("EP"): "pH" in "-loga" (or "molal" - molality concentration of H+); "pQnt" - mass in "g" or "kg"  
-#       other phases composition as element bulk phase concentration in moles ("mol") or to /Si molar ratio ("SiMratio")
+#       other phases composition as element bulk phase concentration in moles ("mol") or to /Si molar ratio ("Simolfrac")
 #       other phases properties ("EP"): "pQnt" - mass in "g" or "kg"; "pV" - volume in "cm3" or "m3" 
-#       dependent components ("DC") properties: "pQnt" - amount in "mol"; "@coef" - activity coefictient 
+#       dependent components ("DC") properties: "pQnt" - amount in "molfrac"; "@coef" - activity coefictient 
 #  Example:
 #  '{ "Target": "name", "TT": "lsq", "WT": "inverr", "OFUN":
 #      [
@@ -84,11 +92,17 @@
 #   }'
 #  Paste the above example below, remove comment symbols (#), and edit as necessary.
 
-<DataTarget>  '{[...]}' 
+<DataTarget>
+'{ "Target": "name", "TT": "lsq", "WT": "inverr3", "OFUN": 
+  [ 
+    { "EPH": "aq_gen", "EN": "Si",  "Eunit": "molal", "Eerr": "log_error" }
+  ]
+}'
 
 # SystemFiles: path to the list of GEMS3K input files (also used for this template file)
 
-<SystemFiles>  './test_input/qtz-koh-naoh-dat.lst' 
+<SystemFiles>
+'./test_input/qtz-koh-naoh-dat.lst'
 
 # LimitOfDetection: Limit of detection of the measured values.
 # Ensures that wrongly computed values calculated by GEMS due to non-physical parameter values are ignored.
@@ -182,10 +196,10 @@
 -1567372
 -1088998.9999474
 -388734.99998001
--1288211.99998
+R{ "IV" : -1288211.99998, "Ref" : "GEMS", "logK" : 1.831109, "nC" : 3, "dcomp" : "NaHSiO3@", "RC" : [ "Na+", "HSiO3-", "NaHSiO3@" ], "Rcoef" : [ -1, -1, 1 ] }
 -417981.99998422
--1015879.000816
--833444.00006792
+R{ "IV" : -1015879.000816, "Ref" : "GEMS", "logK" : 4.409763, "nC" : 3, "dcomp" : "HSiO3-", "RC" : [ "OH-", "SiO2@", "HSiO3-" ], "Rcoef" : [ -1, -1, 1 ] }
+F{ "IV" :-833444.00006792, "UB" : -800000, "LB" : -900000 }
 -36819.000776856
 -79913.999908779
 17153.999335198
@@ -366,16 +380,16 @@
 <OptDoWhat>  0
 
 # OptAlgo: specify algorithm GN_ISRES GN_ORIG_DIRECT GN_ORIG_DIRECT_L LN_COBYLA LN_BOBYQA 
-<OptAlgo>  'LN_BOBYQA' 
+<OptAlgo>  'LN_BOBYQA'
 
 # OptBoundPerc: Generate bounds from initial guess vector: specify percentage deviation (user specific, user-defined bounds when set to -1)
 <OptBoundPerc>  -1
 
 # OptTolRel: stopping criterion -> specify relative tolerance (default = 1e-04) of function value
-<OptTolRel>  0.0001
+<OptTolRel>  0.000001
 
 # OptTolAbs: stopping criterion -> specify absolute tolerance (default = 1e-04) of function value
-<OptTolAbs>  0.0001
+<OptTolAbs>  0.000001
 
 # OptMaxEval: specify max number of evaluations
 <OptMaxEval>  50000
@@ -399,4 +413,4 @@
 <StatMCbool>  0
 
 # StatPerturbator: used for calculating sensitivities by central diference, see ref [2]
-<StatPerturbator>  0.001
+<StatPerturbator>  0.0001

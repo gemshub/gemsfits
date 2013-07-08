@@ -414,10 +414,17 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
     {
         if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::cm3)
         {
-            computed_value = sys->NodT[i]->Ph_Mass(PHndx) * 1e06;
-        } else computed_value = sys->NodT[i]->Ph_Mass(PHndx);
+            computed_value = sys->NodT[i]->Ph_Volume(PHndx) * 1e06;
+        } else computed_value = sys->NodT[i]->Ph_Volume(PHndx);
 
-    } else { cout << "Error in target functions line 253 "; exit(1);}
+    } else
+    if (sys->Tfun->objfun[j]->exp_property == keys::RHO)
+    {
+        if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::g_cm3)
+        {
+            computed_value = (sys->NodT[i]->Ph_Mass(PHndx) * 1000) / (sys->NodT[i]->Ph_Volume(PHndx) * 1e06);
+        }
+    } else { cout << "Error in target functions line 427 "; exit(1);}
 
     measured_value = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt;
 
@@ -464,7 +471,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
     if (sys->Tfun->objfun[j]->exp_property == keys::actcoef)
     {
         measured_value = sys->NodT[i]->Get_gDC(DCndx);
-    } else { cout << "Error in target functions line 400 "; exit(1);}
+    } else { cout << "Error in target functions line 474 "; exit(1);}
 
     measured_value = sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->pQnt;
 

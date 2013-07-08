@@ -204,13 +204,13 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
               "\n#  Mark with R the G0(298) value of a dependent component, which depends on G0 of other dependent components"
               "\n#     via a reaction constraint, by copy-pasting the following template in place of the G0(298) value,"
               "\n#     and edit it to make the desired changes:"
-              "\n#      R{ \"IV\" : -36819, \"Ref\" : \"SUPCRT92\", \"logK\" : -14.46, \"nC\" : 4, \"species\" : \"KOH@\","
-              "\n#      \"RC \" : [ \"K+\", \"H2O@\", \"H+\", \"KOH@\" ], \"Rcoef\" : [ -1, -1, 1, 1 ] }"
+              "\n#      R{ \"IV\" : -36819, \"Ref\" : \"SUPCRT92\", \"logK\" : -14.46, \"nC\" : 4, \"dcomp\" : \"KOH@\","
+              "\n#      \"RC\" : [ \"K+\", \"H2O@\", \"H+\", \"KOH@\" ], \"Rcoef\" : [ -1, -1, 1, 1 ] }"
               "\n#     Here,  \"IV\": initial value; "
               "\n#          \"Ref\": bibliographic reference;"
               "\n#         \"logK\": reaction equilibrium constant at 298 K, 1 bar; "
               "\n#         \"nC\": numer of components (species) involved in the reaction;"
-              "\n#         \"species\": name of species whose properties are constrained with this reaction; "
+              "\n#         \"dcomp\": name of dependent component whose properties are constrained with this reaction; "
               "\n#         \"RC\": list [ ] of names of all components (species) involved in the reaction (comma-separated);"
               "\n#         \"Rcoef\": array [ ] of reaction stoichiometry coeficients (comma-separated), in the same order as in the \"RC\" list."
               "\n#  Mark with L the bIC (element bulk composition) value of an independent component, which depends on bIC of other elements"
@@ -1453,7 +1453,7 @@ void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat, string nfild)
     r->nC = atoi(out.at(0).c_str());
     out.clear();
 
-    temp->parse_JSON_object(Jformat.format, keys::species, out);
+    temp->parse_JSON_object(Jformat.format, keys::dcomp, out);
     r->Dc_name = out.at(0);
     out.clear();
 
