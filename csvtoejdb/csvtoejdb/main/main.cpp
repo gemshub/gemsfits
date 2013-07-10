@@ -41,8 +41,8 @@ int main(int argc, char *argv[])
                 "   csvtoejdb   -run -t <path to folder for the database and CSV file> <database name> <CSV file name> \n\n"
                 " WHERE: \n"
                 "   -run,   runs the program \n"
-                "   -t,     truncate (add more data) \n"
-                "   -a,     append (overwrite the existing database), \n"
+                "   -t,     truncate (overwrite the existing database) \n"
+                "   -a,     append (add more data) \n"
                 "           if database name is not present a new database is created \n\n"
                 " EXAMPLE; \n"
                 "   -run -t CASH/ cashtest CASHtest.csv "<< endl;

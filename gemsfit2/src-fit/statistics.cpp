@@ -64,7 +64,8 @@ statistics::statistics(TGfitTask *gfittask, double weighted_Tfun_sum_of_residual
 
 cout<<" Statistics Constructor: sum of squares: "<<weighted_Tfun_sum_of_residuals<<endl;
 
-    number_of_parameters   = num_of_params_;
+    number_of_ind_parameters   = num_of_params_;
+    number_of_parameters = number_of_ind_parameters + gfittask->Opti->reactions.size() + gfittask->Opti->Lparams.size();
 
 cout<<" Statistics Constructor: number_of_parameters: "<<number_of_parameters<<endl;
 
@@ -99,6 +100,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 
     // Degrees of freedom
     degrees_of_freedom = number_of_measurements-number_of_parameters;
+
 
 
     // Compute standard deviation of residuals
@@ -238,7 +240,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 
 
 // perform sensitivity analysis of selected parameters
-void statistics::sensitivity_correlation( const std::vector<double> &optv_, TGfitTask* gfittask )
+void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfittask )
 {
         int i, j, k, l, jj, ll, len_meas;
         double residual_sys;
@@ -283,6 +285,23 @@ void statistics::sensitivity_correlation( const std::vector<double> &optv_, TGfi
 
 
 //            print_vectors_curve( optv_, array_ssr, sensitivity_points );
+        gfittask->Opti->h_Lp = false;
+        gfittask->Opti->h_RDc = false;
+        for (i = 0; i<gfittask->Opti->reactions.size(); ++i)
+        {
+            optv_.push_back(gfittask->Opti->reactions[i]->std_gibbs);
+            gfittask->Opti->Pindex.push_back(gfittask->Opti->reactions[i]->DcIndex);
+            gfittask->Opti->Ptype.push_back("G0");
+//            gfittask->Opti->opt.push_back(gfittask->Opti->reactions[i]->IV);
+        }
+        for (i = 0; i<gfittask->Opti->Lparams.size(); ++i)
+        {
+            optv_.push_back(gfittask->Opti->Lparams[i]->EV);
+//            gfittask->Opti->Pindex.push_back(gfittask->Opti->reactions[i]->DcIndex);
+//            gfittask->Opti->Ptype.push_back("bIC");
+//            gfittask->Opti->opt.push_back(gfittask->Opti->reactions[i]->std_gibbs);
+
+        }
 
         len_meas = (int) gfittask->Weighted_Tfun_residuals_v.size();
 

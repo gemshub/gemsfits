@@ -1,26 +1,36 @@
 csvtoejdb uses boost and jansson external libraries and EJDB coupled libary
 
-1. Have your data in a preformated exceel file - see excel_example.xls as a template.
-2. Save your file as comma separated format "," (as separator) CSV.
-3. Run the program csvtoejdb with arguments as in the example: "-run CASH/ solcash CASH.csv" where:
-	first argument is the path to the CSV and database files, 2nd argument is the name of the database, and 3rd argument is the input CSV file
-4. The program is default set to create a new database every time is executed - no appending of data.
-	If you have acces to the C++ project on line 44 in main.cpp remove argument "JBOTRUNC", resulting in appending of data to the database.
+1. Have your data in a preformated exceel file - see excel_example.xls or solcahs_example (for CASH systems) as a template.
 
-5. Structure of the excel file:
+EXPERIMENTS DESCRIPTION
+id: 			add numbering of experiments 1, 2, 3, ...
+sample:			add sample names / names of experimental runs
+comment:		add comments - field not obligatory
+type:			type of experiment - filed not obligatory
+sT:			temperature in degrees Celsius
+sP:			pressure in bars
+expdataset:		name of experimental set 
 
-sample - name of sample - SHOULD BE UNIQUE
-expdataset - name of experimental dataset
-	Only unique pairs are allowed. The program checks for unique sample and expdataset pairs; if pairs with the same names are added, the program should give an error and not execute.
+SYSTEM COMPOSITION:
+comp. :			oxide composition of the system as follows: comp.oxide/hidroxide/chloride_formula as in GEMS, e.g comp.SiO2, comp.CaO, comp.NaCl ...
+			units should be g (grams of oxide) or M (mole) for (NaCl).
 
-sT, sP - temperature and pressure
+RESULTS:
+phase properties:
+phase.name_of_phase.	(a) for phase properties write phase.name_of_phase (as in GEMS) e.g. phase.aq_gen.name_of_property such as: pQnt - phase qunatity; pH; pV - phase volume; Eh; IS - ionic strenght; 				all - alkalinity; sArea - surface area; ... e.g. phase.aq_gen.pH, phase.C-S-H-3T-2.pQnt, ...
+			IMPLEMENTED IN GEMSFIT2: pH unit -loga (nagated log); pV - cm3 or m3; pQunt - g or kg; RHO - g/cm3; ... others to be implemented.
+phase composition:	(b) for phase composition in elements write phase.name_of_phase (as in GEMS) e.g. phase.aq_gen.Si (for aqueous phase molal (molality) or loga (log of molality), for solid-solution
+			phase phase bulk composition in moles (mol) or for CASH pahses as Simolfrac (mole fraction to Si). 
+phase Dcomp:		(c) for phase dependent components write phase.name_of_phase (as in GEMS) followed by Dc and the formula of the dependent components as in GEMS, followed by the measured porperty 				such as: pQnt - dependent component qunatity in molfrac (mole fraction); @coef - activity coeficient; e.g. phase.aq_gen.DcSiO2-.pQnt
 
-!!! error THEN unit - should always come in this order after the value of interest!!! They can be omitted or cells left unfilled.
+IMPORTANT:
+You should have only unique sample and expdataset name pairs.
+In the excel file if present column unit should follow after the column error which comes after the column containing the value. e.g. phase.aq_gen.pH | error | unit | ...
+Names of phases, components, elements should be the same as in GEMS3K exported files.
 
-comp. - keyword that describes the composition of the experiment. comp. should be followed by an oxide eg. comp.SiO2
+2. Save your file as comma separated format "," (as separator) CSV. Be careful that the cell values are saved in full and not only as they are formated 0.1234567 and not as 0.123 (as formated).
 
-phase. - keyword that describes a phase. After phase. comes the name of the phase (as in GEMS) eg. phase.aq_gen., followed by the property of the phase eg. phase.aq_gen.pH, component of the phase
-eg. phase.aq_gen.Si, or dependent component/species of a phase which is marked by "Dc" after the dot(.) eg. phase.aq_gen.DcSiO2-. For dependent components, different properties can follow, such as quantity .dQnt, .@coef, etc. (eg. phase.aq_gen.DcSiO2-.@coef for activity coefficient of SiO2-).
+3. Run the program csvtoejdb with arguments as in the example: "-run -t CASH/ solcash CASH.csv" where:
+	first argument is the path to the CSV and database files, 2nd argument is the mode: -t truncate (overwrite the existing database); -a append append (add more data);, 3nd argument is the name of 		the database, and 3rd argument is the input CSV file
 
-!!! Names of phases, components, elements should be the same as in GEMS3K exported files !!!
 

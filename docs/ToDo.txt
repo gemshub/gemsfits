@@ -35,6 +35,7 @@
 
 
 + make a separate RUN function in TGfittask so one can access the data manager and calculate statistics before the fitting procedure.
+- make statistics for the reaction dependent parameters as the statistics are fit independent - just add the parameters into the statistics parameter vector.
 
 
 EJDB database maintenance functionality:

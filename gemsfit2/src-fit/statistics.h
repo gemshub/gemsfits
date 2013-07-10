@@ -74,6 +74,8 @@ class statistics
         double weighted_sum_of_residuals;
         double sum_of_residuals;
         vector <double> weighted_residuals;
+        /// number of independent fitted parameters
+        int number_of_ind_parameters;
         /// number of parameters of the last regression (length of optimization vector)
         int number_of_parameters;
         /// number of measurements invoilved in the parameter regression
@@ -146,7 +148,7 @@ class statistics
         * @param systems  vector of pointers to instances of System_Properties structs
         * @date 06.12.2012
         */
-        void sensitivity_correlation( const std::vector<double> &optv_, TGfitTask* gfittask );
+        void sensitivity_correlation(vector<double> &optv_, TGfitTask* gfittask );
 
 //		// Compute Pearson's sample correlation coefficient
 //		//void correlation(  );

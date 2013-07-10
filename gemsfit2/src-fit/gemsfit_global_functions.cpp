@@ -62,8 +62,8 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 
     // going trough the adjusted parameters in Opti->Ptype and adjust with the new value
 //#ifdef USE_MPI
-    omp_set_num_threads(sys->MPI);
-    #pragma omp parallel for
+//    omp_set_num_threads(sys->MPI);
+//    #pragma omp parallel for
 //#endif
     for (int i=0; i< sys->Opti->Ptype.size(); ++i)
     {

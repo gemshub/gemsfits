@@ -178,6 +178,8 @@
 12400000 34700000 39000000 88100000 125300000 81200000 116800000 64500000 65000000 73300000 88600000 67000000 44700000 70500000 28000000 18800000 27600000 29000000 31500000 31800000 0 0 0 
  
 # G0: Look-up array for DC molar Gibbs energy function g(T,P), J/mol at 298.15K and 1 bar 
+# R{ "IV" : -1015879.000816, "Ref" : "GEMS", "logK" : 4.409763, "nC" : 3, "dcomp" : "HSiO3-", "RC" : [ "OH-", "SiO2@", "HSiO3-" ], "Rcoef" : [ -1, -1, 1 ] }
+# R{ "IV" : -1288211.99998, "Ref" : "GEMS", "logK" : 1.831109, "nC" : 3, "dcomp" : "NaHSiO3@", "RC" : [ "Na+", "HSiO3-", "NaHSiO3@" ], "Rcoef" : [ -1, -1, 1 ] }
 <G0>
 -899506.00028008
 -1101735
@@ -198,7 +200,7 @@
 -388734.99998001
 R{ "IV" : -1288211.99998, "Ref" : "GEMS", "logK" : 1.831109, "nC" : 3, "dcomp" : "NaHSiO3@", "RC" : [ "Na+", "HSiO3-", "NaHSiO3@" ], "Rcoef" : [ -1, -1, 1 ] }
 -417981.99998422
-R{ "IV" : -1015879.000816, "Ref" : "GEMS", "logK" : 4.409763, "nC" : 3, "dcomp" : "HSiO3-", "RC" : [ "OH-", "SiO2@", "HSiO3-" ], "Rcoef" : [ -1, -1, 1 ] }
+F{ "IV" :-1015879.000816, "UB" : -1000000, "LB" : -1100000 }
 F{ "IV" :-833444.00006792, "UB" : -800000, "LB" : -900000 }
 -36819.000776856
 -79913.999908779
@@ -265,7 +267,7 @@ F{ "IV" :-833444.00006792, "UB" : -800000, "LB" : -900000 }
 
 # LsMdc: Dimensions of TSolMod <DMc> and <MoiSN> arrays [nPS*3]: In each row (for phase):
 # [0] number of parameters per component; [1] 0; [2] 0. For multi-site (sublattice) models: 
-#   [1] number of sublattices nS; [2] total number of moieties nM acting in sublattice sites
+# [1] number of sublattices nS; [2] total number of moieties nM acting in sublattice sites
 <LsMdc>
 0 0 0 
 
@@ -413,4 +415,4 @@ F{ "IV" :-833444.00006792, "UB" : -800000, "LB" : -900000 }
 <StatMCbool>  0
 
 # StatPerturbator: used for calculating sensitivities by central diference, see ref [2]
-<StatPerturbator>  0.0001
+<StatPerturbator>  0.000001

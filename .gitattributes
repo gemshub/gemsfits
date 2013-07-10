@@ -73,6 +73,7 @@ csvtoejdb/csvtoejdb/main/main.pri -text
 csvtoejdb/csvtoejdb/main/read_ejdb.cpp -text
 csvtoejdb/csvtoejdb/main/read_ejdb.h -text
 csvtoejdb/docs/excel_example.xls -text
+csvtoejdb/docs/solcash_example.xlsx -text
 docs/Developing[!!-~]GEMSFIT(GUI)_GEMS3K.pdf -text
 docs/GEMSFIT_help.doc -text
 docs/GFIT-keywords_.txt -text
