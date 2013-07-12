@@ -168,6 +168,8 @@ public:
 
    void  setnodes( );
 
+   void get_logK_TPpairs();
+
 };
 
 #endif   // _gemsft_task_

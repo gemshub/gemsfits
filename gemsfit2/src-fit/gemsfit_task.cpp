@@ -97,6 +97,8 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     print = new ResPrint(printfile, Opti);
     get_DataTarget ( );
 
+    get_logK_TPpairs ();
+
 
     // check for errors and inconsitencies of input options and parameters
     gfit_error ( );
@@ -128,6 +130,30 @@ void TGfitTask::run_optim()
     init_optim (Opti->optv, weighted_Tfun_sum_of_residuals);
 
     fout.close();
+}
+
+void TGfitTask::get_logK_TPpairs()
+{
+    double DG = 0.0;
+    const double Rln = -2.302585093*8.314472;
+    double RTln = 0.0;
+    // loop trough reactions
+    for (int i = 0; i< this->Opti->reactions.size(); ++i)
+    {
+//        this->Opti->reactions[i]->logK_TPpairs.resize(this->TP_pairs[0].size());
+        // loop trough TP
+        for (int j = 0; j<this->TP_pairs[0].size(); ++j)
+        {
+            // loop trough rection species to calculated delta G of reaction
+            for (int k = 0; k<this->Opti->reactions[i]->rdc_species.size(); ++k)
+            {
+                DG += this->NodT[0]->DC_G0(this->Opti->reactions[i]->rdc_species_ind[k], this->TP_pairs[1][j]*100000, this->TP_pairs[0][j]+273.15, false) * this->Opti->reactions[i]->rdc_species_coef[k];
+            }
+            RTln = Rln * this->TP_pairs[0][j]+273.15;
+            this->Opti->reactions[i]->logK_TPpairs.push_back(DG/RTln);
+            DG = 0.0;
+        }
+    }
 }
 
 void TGfitTask::get_DataTarget ( )

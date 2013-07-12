@@ -69,6 +69,7 @@ public:
         int DcIndex; /// index of the dependent component
         double IV; /// initial value
         double logK; /// log K of the reaction
+        vd logK_TPpairs; /// log K for all T and P pairs
         int nC; /// number of components
         string Dc_name; /// species name
         vs rdc_species; /// Names of species involved in reaction (the last one is the fixed species)

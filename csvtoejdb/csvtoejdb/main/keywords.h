@@ -10,6 +10,7 @@ static const char *experiments = "experiments"; ///               0          col
 // data for experimental samples
 static const char *expsample = "sample"; ///                      1		     string 	        ID of this experimental sample
 static const char *expdataset = "expdataset"; ///                 1		     string		        ID of set of experimental data
+static const char *Weight = "Weight"; ///                         1          double             artificial assigned weight
 static const char *sT = "sT"; ///                                 1		     float		        temperature for this experimental sample
 static const char *Tunit = "Tunit"; ///   	                      1          string		        units of temperature { 'C' (default) or 'K' or 'F' }
 static const char *sP = "sP"; ///                                 1		     float		        pressure for this experimental sample

@@ -161,8 +161,13 @@ int main(int argc, char *argv[])
             else if (headline[i]==sV)
             {
                 bson_append_double(&exp, headline[i].c_str(), atof(row[i].c_str()));
+            } else if (headline[i] == Weight)
+            {
+                if (!row[i].empty())
+                {
+                    bson_append_double(&exp, headline[i].c_str(), atof(row[i].c_str()));
+                } else bson_append_double(&exp, headline[i].c_str(), 1.0);
             }
-
          }
 
         bson_finish(&bq1);

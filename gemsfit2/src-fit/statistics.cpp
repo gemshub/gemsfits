@@ -292,6 +292,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
             optv_.push_back(gfittask->Opti->reactions[i]->std_gibbs);
             gfittask->Opti->Pindex.push_back(gfittask->Opti->reactions[i]->DcIndex);
             gfittask->Opti->Ptype.push_back("G0");
+            gfittask->Opti->opt.push_back(gfittask->Opti->reactions[i]->std_gibbs);
 //            gfittask->Opti->opt.push_back(gfittask->Opti->reactions[i]->IV);
         }
         for (i = 0; i<gfittask->Opti->Lparams.size(); ++i)
