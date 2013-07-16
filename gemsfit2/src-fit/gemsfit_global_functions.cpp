@@ -62,8 +62,8 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 
     // going trough the adjusted parameters in Opti->Ptype and adjust with the new value
 //#ifdef USE_MPI
-//    omp_set_num_threads(sys->MPI);
-//    #pragma omp parallel for
+    omp_set_num_threads(sys->MPI);
+    #pragma omp parallel for
 //#endif
     for (int i=0; i< sys->Opti->Ptype.size(); ++i)
     {
@@ -132,9 +132,16 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         {
             // possible return status analysis, error message
 //            sys->NodT[i]->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
-//            cout<<"For experiment "<<i+1<< endl;
-//            cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
+            cout<<"For experiment "<<i+1<< endl;
+            cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
         }
+    }
+
+    // Set the P in the node->CNode-P as in the experiments
+    for (int i=0; i<sys->experiments.size(); ++i)
+    {
+        sys->NodT[i]->Set_TK(273.15 + sys->experiments[i]->sT);
+        sys->NodT[i]->Set_P(100000 * sys->experiments[i]->sP);
     }
 
     /// Target function

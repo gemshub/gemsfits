@@ -81,7 +81,7 @@ statistics::statistics()
     weighted_Tfun_sum_of_residuals 		= 0;
     num_of_runs		= 0;
     number_of_parameters   = 0;
-    perturbator = 0.001;
+    perturbator = 0.0001;
     default_stat_param();
 //    define_plotfit_vars();
 }
@@ -1049,7 +1049,7 @@ void statistics::default_stat_param()
   num_of_MC_runs = 10;
   sensitivity_points = 50;
   MCbool =  0;
-  perturbator = 0.001;
+  perturbator = 0.0001;
 }
 
 ///// Writes  structure to  the GEMSFIT configuration file
@@ -1170,9 +1170,9 @@ void optimization::define_nlopt_param( )
 {
     OptAlgo = "LN_BOBYQA";
     OptBoundPerc = -1.0;
-    OptTolRel = 1e-4;
-    OptTolAbs = 1e-4;
-    OptMaxEval = 50000;
+    OptTolRel = 1e-6;
+    OptTolAbs = 1e-6;
+    OptMaxEval = 500000;
     OptDoWhat = 0;
     OptNormParam = 1;
     OptPerturbator = 0.001;

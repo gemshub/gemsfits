@@ -555,7 +555,7 @@ int main(int argc, char *argv[])
 
     bson_append_start_object(&bq2, sP);
     bson_append_start_array(&bq2, "$bt");
-    bson_append_string(&bq2, "0", "1");
+    bson_append_string(&bq2, "0", "0");
     bson_append_string(&bq2, "1", "5000");
     bson_append_finish_array(&bq2);
     bson_append_finish_object(&bq2);
@@ -631,7 +631,7 @@ int main(int argc, char *argv[])
     }
 
     ofstream fout;
-    string path2 = argv[1];
+    string path2 = argv[irun + 2];
     path2+= "distinctTP.csv";
     fout.open(path2.c_str(), ios::trunc);
     if( fout.fail() )

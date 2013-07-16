@@ -35,6 +35,7 @@
 #include "gemsfit_global_functions.h"
 #include <cmath>
 #include "gemsfit_target_functions.h"
+#include <iomanip>
 
 
 #ifndef __unix
@@ -502,6 +503,7 @@ void TGfitTask::setnodes()
     double* xDC_lo;
     double* Ph_surf;
 
+
 //#ifdef USE_MPI
     omp_set_num_threads(MPI);
     #pragma omp parallel for
@@ -550,11 +552,16 @@ void TGfitTask::setnodes()
             }
         }
 
+
         // if Nitt present assign two moles
-        if (NodT[n]->IC_name_to_xDB("Nit") > -1) {
-            ICndx = NodT[n]->IC_name_to_xDB("Nit");
-            new_moles_IC[ICndx]=4.12434406;
-        }
+//        if (NodT[n]->IC_name_to_xDB("Nit") > -1) {
+//            ICndx = NodT[n]->IC_name_to_xDB("Nit");
+//            new_moles_IC[ICndx]=3;
+//        }
+
+        int DCndx = NodT[n]->DC_name_to_xDB("H2");
+
+//        NodT[n]->Set_nDC(DCndx, 1e-05);
 
         // Set amount of dependent components (GEMS3K: DBR indexing)
         // go trough all acomponents and calculate the mole amounts of the IC for the b vector in GEMS
@@ -563,22 +570,26 @@ void TGfitTask::setnodes()
             if (experiments[n]->sbcomp[j]->comp == "H2O")
             {
                 ICndx = NodT[n]->IC_name_to_xDB("H");
-                new_moles_IC[ICndx] += 2*experiments[n]->sbcomp[j]->bQnt/18.01528 /*+  2.123456*experiments[n]->sbcomp[j]->bQnt/1000*1e-05*/; // adds 1e-05 moles of H2 for each kg og H2O
+                new_moles_IC[ICndx] += 2*experiments[n]->sbcomp[j]->bQnt/18.0153 +  1.2344*experiments[n]->sbcomp[j]->bQnt/1000*1e-05; // adds 1e-05 moles of H2 for each kg og H2O
+//                NodT[n]->Set_nDC(DCndx, experiments[n]->sbcomp[j]->bQnt/1000*1e-05);
+
+
                 if (NodT[n]->IC_name_to_xDB("Nit") < 0)
                 {
-                    new_moles_IC[ICndx] += 2.123456*experiments[n]->sbcomp[j]->bQnt/1000*1e-05;
+//                    new_moles_IC[ICndx] += 1.5*experiments[n]->sbcomp[j]->bQnt/1000*1e-05;
+                    NodT[n]->Set_nDC(DCndx, experiments[n]->sbcomp[j]->bQnt/1000*1e-05);
                 }
                 // cout << new_moles_IC[ICndx] << endl;
                 ICndx = NodT[n]->IC_name_to_xDB("O");
-                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->bQnt/18.01528 /*+ 3*experiments[n]->sbcomp[j]->bQnt/1000*1e-03*/;
+                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->bQnt/18.0153 /*+ 3*experiments[n]->sbcomp[j]->bQnt/1000*1e-03*/;
             }
             else if (experiments[n]->sbcomp[j]->comp == "SiO2")
             {
                 ICndx = NodT[n]->IC_name_to_xDB("Si");
-                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->bQnt/60.0843;
+                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->bQnt/60.08;
                // cout << new_moles_IC[ICndx]<<endl;
                 ICndx = NodT[n]->IC_name_to_xDB("O");
-                new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->bQnt/60.0843;
+                new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->bQnt/60.08;
             }
             else if (experiments[n]->sbcomp[j]->comp == "Al2O3")
             {
@@ -616,6 +627,12 @@ void TGfitTask::setnodes()
                 new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/39.99710928;
                 ICndx = NodT[n]->IC_name_to_xDB("O");
                 new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/39.99710928;
+
+                // changing the bacground electrolite settings
+                NodT[n]->Set_PMc(0.098, 0 );
+                NodT[n]->Set_PMc(3.31, 1 );
+                NodT[n]->Set_PMc(3, 4 );
+
             }
             else if (experiments[n]->sbcomp[j]->comp == "KOH")
             {
@@ -625,6 +642,11 @@ void TGfitTask::setnodes()
                 new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/56.10564;
                 ICndx = NodT[n]->IC_name_to_xDB("O");
                 new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/56.10564;
+
+                // changing the bacground electrolite settings
+                NodT[n]->Set_PMc(0.123, 0 );
+                NodT[n]->Set_PMc(3.67, 1 );
+                NodT[n]->Set_PMc(4, 4 );
             }
             else if (experiments[n]->sbcomp[j]->comp == "CO2")
             {
@@ -639,6 +661,11 @@ void TGfitTask::setnodes()
                 new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->bQnt;
                 ICndx = NodT[n]->IC_name_to_xDB("Cl");
                 new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->bQnt;
+
+                // changing the bacground electrolite settings
+                NodT[n]->Set_PMc(0.064, 0 );
+                NodT[n]->Set_PMc(3.72, 1 );
+                NodT[n]->Set_PMc(1, 4 );
             }
                 else
                 {
@@ -655,7 +682,9 @@ void TGfitTask::setnodes()
         // ---- // ---- // set the new amount of IC and T & P from experiment i // ---- // ---- //
         // in the future - implement a Tnode function that stes just T, P and bIC vector of amount of independent components.
         // ---- // ---- // Transfer new temperature, pressure and b-vector to GEMS3K // ---- // ---- //
-        NodT[n]->GEM_from_MT( NodeHandle, NodeStatusCH, T_k, P_pa, 0., 0., new_moles_IC, xDC_up, xDC_lo, Ph_surf );
+//        NodT[n]->GEM_from_MT( NodeHandle, NodeStatusCH, T_k, P_pa, 0., 0., new_moles_IC, xDC_up, xDC_lo, Ph_surf );
+
+        NodT[n]->GEM_from_MT( NodeHandle, NodeStatusCH, T_k, P_pa, new_moles_IC );
 
         delete[] new_moles_IC;
         delete[] xDC_up;
