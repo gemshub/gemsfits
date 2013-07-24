@@ -58,12 +58,18 @@ int count_r = 0;
 
 int generateConfig(); // Mode GEMSFIT to generate input configuration file
 
+struct timeval start, end;
+
+
 
 // ---- // ---- // ---- // MAIN FUNCTION FOR GEMSFIT PROGRAM // ---- // ---- // ---- //
  
 int main( int argc, char *argv[] )
 {
     clockid_t startTime = clock();
+
+    // benchmark code
+    gettimeofday(&start, NULL);
 
     gpf = new TGfitPath(argc, argv);
 
@@ -113,6 +119,8 @@ int main( int argc, char *argv[] )
     fout << "1. main.cpp line 115. Creating new TGfitTask" << endl;
     TGfitTask* gfittask = new TGfitTask();
 
+    cout << gfittask->NodT[0]->DenH2Ow(100000 *1, 25 + 273.15) << endl;
+
     if (gfittask->Opti->OptDoWhat < 2)
     {
         gfittask->run_optim();
@@ -142,9 +150,18 @@ int main( int argc, char *argv[] )
 //        stat.MC_confidence_interval( &elvis, optim.opt, &systems, countit );
     }
 
+
+
     delete gfittask;
 
-    cout << double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
+//    cout << double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
+
+
+    gettimeofday(&end, NULL);
+
+    double delta = ((end.tv_sec  - start.tv_sec) * 1000000u +
+             end.tv_usec - start.tv_usec) / 1.e6;
+    cout << delta << " seconds." << endl;
 }
 
 

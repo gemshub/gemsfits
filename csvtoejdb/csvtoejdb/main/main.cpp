@@ -149,14 +149,14 @@ int main(int argc, char *argv[])
             else if  ((headline[i]==sT) || (headline[i]==sP))
             {
                 bson_append_int(&exp, headline[i].c_str(), atoi(row[i].c_str()));
-                if (headline[i]==sT)
-                {
-                    TP[0].push_back(atoi(row[i].c_str()));
-                }
-                if (headline[i]==sP)
-                {
-                    TP[1].push_back(atoi(row[i].c_str()));
-                }
+//                if (headline[i]==sT)
+//                {
+//                    TP[0].push_back(atoi(row[i].c_str()));
+//                }
+//                if (headline[i]==sP)
+//                {
+//                    TP[1].push_back(atoi(row[i].c_str()));
+//                }
             }
             else if (headline[i]==sV)
             {
@@ -572,6 +572,32 @@ int main(int argc, char *argv[])
          void *bsdata = TCLISTVALPTR(res2, i);
          char *bsdata_ = static_cast<char*>(bsdata);
          bson_print_raw(stderr, bsdata_, 0);
+
+         bson_iterator it;
+         const char *key;
+         string key_;
+
+         bson_iterator_from_buffer(&it, bsdata_);
+
+         while (bson_iterator_next(&it))
+         {
+             bson_type t = bson_iterator_type(&it);
+             if (t == 0)
+                 break;
+             key = bson_iterator_key(&it);
+             key_ = key;
+
+             if (key_ == sT)
+             {
+                 // adding temperature
+                 TP[0].push_back(bson_iterator_int(&it));
+             } else
+             if (key_ == sP)
+             {
+                 // adding pressure
+                 TP[1].push_back(bson_iterator_int(&it));
+             }
+         }
      }
      fprintf(stderr, "\n");
 

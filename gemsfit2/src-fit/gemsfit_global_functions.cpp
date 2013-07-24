@@ -210,7 +210,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     residuals_sys = residuals_sys_;
 
     // debug for when using global algorithm
-    if (master_counter%10000 == 0)
+    if (master_counter%1000 == 0)
     {
         cout << master_counter << " itterations, continuning..." << endl;
         cout << "sum of residuals: "<<residuals_sys<< endl;

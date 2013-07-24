@@ -658,9 +658,9 @@ void TGfitTask::setnodes()
             else if (experiments[n]->sbcomp[j]->comp == "NaCl")
             {
                 ICndx = NodT[n]->IC_name_to_xDB("Na");
-                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->bQnt;
+                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->bQnt/58.4430;
                 ICndx = NodT[n]->IC_name_to_xDB("Cl");
-                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->bQnt;
+                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->bQnt/58.4430;
 
                 // changing the bacground electrolite settings
                 NodT[n]->Set_PMc(0.064, 0 );

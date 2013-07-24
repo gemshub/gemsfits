@@ -112,6 +112,7 @@ void ResPrint::print_result()
         if (res_opti->Ptype[i] =="G0")
         {
             fout <<" parameter G0 "<<node->xCH_to_DC_name(res_opti->Pindex[i])<<" : " << res_opti->optv[i] << endl;
+//            cout << node->xCH_to_DC_name(res_opti->Pindex[i]) << endl;
         } else
         fout <<"parameter "<<res_opti->Ptype[i]<<" : " << res_opti->optv[i] << endl;
 

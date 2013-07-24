@@ -213,6 +213,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
             if (gfittask->Opti->Ptype[i] =="G0")
             {
                 myStat <<"          parameter G0 "<<gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])<<" :           " << optv_[i] << endl;
+                cout /*<< gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])*/ << endl;
             } else
             myStat <<"          parameter "<<gfittask->Opti->Ptype[i]<<" :          " << optv_[i] << endl;
 
