@@ -1,17 +1,19 @@
 + completed or partially completed
 - to be completed
 
-- add artificial weight column in database in gemsfit2
+- add artificial weight column in database in gemsfit2??
 
 + describe/document command line parameters to start gemsfit2 and csvtoejdb utility program
 + check if GEMSFIT input file exists by writing a new template input file (to prevent overwrite)
 + documentation in the GEMSFIT template input file (fitting bulk composition with L linked parameters) 
 + write all possible option the user has for data to compare
 - see more possible errors and add them to the gemfit_error function.
+- problem in csvtoejdb tool when adding same pair of sample and expdataset - the program should break and not add anything in the database.
 
 + Printing class - printing in /results/FIT_results.csv
 - test inverse weighting more
-- add normalized target function (by average from experimental data)
++ add normalized target function (by average from experimental data)
+- add documentation fo normalized target function
 + solid-solution composition as element bulk phase concentration
 - test solid-solution with solchas
 + test the reaction constraint 

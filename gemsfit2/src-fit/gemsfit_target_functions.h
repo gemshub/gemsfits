@@ -191,24 +191,26 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
 * @param i      position in the experiments vector (which experiment)
 * @param p      position in the expphases vector (which pahse)
 * @param e      position in the phcomp vector (which element)
+* @param j      position in the objective function vector
 * @param type   type of weighting
 * @param sys    pointer to data object that holds the data of the current TGfitTask struct
 * @author DM
 * @date 17.05.2013
 */
-double weight (int i, int p, int e, string type, TGfitTask *sys);
+double weight (int i, int p, int e, int j, string type, TGfitTask *sys);
 
 /**
 * Returns the weight based on the weight type
 * @param i      position in the experiments vector (which experiment)
 * @param p      position in the expphases vector (which pahse)
 * @param pp     position in the phprop vector (which property)
+* @param j      position in the objective function vector
 * @param type   type of weighting
 * @param sys    pointer to data object that holds the data of the current TGfitTask struct
 * @author DM
 * @date 17.05.2013
 */
-double weight_phprop (int i, int p, int pp, string type, TGfitTask *sys);
+double weight_phprop (int i, int p, int pp, int j, string type, TGfitTask *sys);
 
 /**
 * Returns the weight based on the weight type
@@ -216,22 +218,24 @@ double weight_phprop (int i, int p, int pp, string type, TGfitTask *sys);
 * @param p      position in the expphases vector (which pahse)
 * @param dc     position in the phdcomps vector (which which dcomp)
 * @param dcp    position in the dcompprop vector (which which dcomp property)
+* @param j      position in the objective function vector
 * @param type   type of weighting
 * @param sys    pointer to data object that holds the data of the current TGfitTask struct
 * @author DM
 * @date 13.06.2013
 */
-double weight_phdcomp (int i, int p, int dc, int dcp, string type, TGfitTask *sys);
+double weight_phdcomp (int i, int p, int dc, int dcp, int j, string type, TGfitTask *sys);
 
 /**
 * Returns the target function value (computed - measured)
 * @param computed_value
 * @param measured_value
 * @param type
+* @param objfun current objective function
 * @author DM
 * @date 17.05.2013
 */
-double Tfunction (double computed_value, double measured_value, string type);
+double Tfunction (double computed_value, double measured_value, string type, TGfitTask::TargetFunction::obj_fun objfun);
 
 
 

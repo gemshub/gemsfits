@@ -104,6 +104,10 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     // check for errors and inconsitencies of input options and parameters
     gfit_error ( );
 
+    double temp_res;
+
+    get_residuals( temp_res);
+
     fout.close();
 
 }
@@ -157,6 +161,86 @@ void TGfitTask::get_logK_TPpairs()
     }
 }
 
+void TGfitTask::get_residuals( double &residuals)
+{
+    double average = 0.0;
+    residuals = 0.0;
+    // loop trough objective function
+    for (int j=0; j<Tfun->objfun.size(); ++j)
+    {
+        int count = 0;
+    /// Target function
+    // Loop trough all experiments
+    for (int i=0; i<this->experiments.size(); ++i)
+    {
+
+            if ((this->Tfun->objfun[j]->exp_phase !="NULL") && (this->experiments[i]->expphases.size() > 0))
+            {
+                // loop trough all pahses
+                for (int p=0; p<this->experiments[i]->expphases.size(); ++p)
+                {
+                    if ((Tfun->objfun[j]->exp_elem !="NULL") && (Tfun->objfun[j]->exp_property =="NULL"))
+                    {
+                        // loop trough all elements
+                        for (int e=0; e<this->experiments[i]->expphases[p]->phcomp.size(); ++e)
+                        {
+                            if ((this->experiments[i]->expphases[p]->phcomp[e]->comp == this->Tfun->objfun[j]->exp_elem) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
+                            {
+                                // check for unit
+                                check_unit(i, p, e, Tfun->objfun[j]->exp_unit, this );
+                                average = average + this->experiments[i]->expphases[p]->phcomp[e]->bQnt;
+                                residuals = residuals + residual_phase_elem (i, p, e, j, this);
+                                ++count;
+                            }
+                        }
+                    } else
+                        if ((Tfun->objfun[j]->exp_property !="NULL") && (this->experiments[i]->expphases[p]->phprop.size() > 0) && (this->Tfun->objfun[j]->exp_dcomp == "NULL"))
+                        {
+                        // loop trough all properties
+                        for (int pp = 0; pp< this->experiments[i]->expphases[p]->phprop.size(); ++pp)
+                        {
+                            if ((this->experiments[i]->expphases[p]->phprop[pp]->property == Tfun->objfun[j]->exp_property) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
+                            {
+                                // check for unit
+                                check_prop_unit(i, p, pp, Tfun->objfun[j]->exp_unit, this );
+                                average = average + this->experiments[i]->expphases[p]->phprop[pp]->pQnt;
+                                residuals = residuals + residual_phase_prop (i, p, pp, j, this);
+                                ++count;
+                            }
+                        }
+                    } else
+                        if ((Tfun->objfun[j]->exp_property !="NULL") && (this->experiments[i]->expphases[p]->phdcomps.size() > 0) && (Tfun->objfun[j]->exp_dcomp != "NULL"))
+                        {
+                            // loop trough all dependent components
+                            for (int dc = 0; dc< this->experiments[i]->expphases[p]->phdcomps.size(); ++dc)
+                            {
+                                if ((this->experiments[i]->expphases[p]->phdcomps[dc]->formula == Tfun->objfun[j]->exp_dcomp) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
+                                {
+                                    // loop trough all dep comp properties
+                                    for (int dcp = 0; dcp < this->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop.size(); ++dcp)
+                                    {
+                                        if (this->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->property == Tfun->objfun[j]->exp_property)
+                                        {
+//                                            cout << "yes"<<endl;
+                                            //                                    // check for unit
+                                            //                                    check_dcomp_unit(i, p, dc, dcp, sys->Tfun->objfun[j]->exp_unit, sys );
+                                            average = average + this->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->pQnt;
+                                            residuals = residuals + residual_phase_dcomp (i, p, dc, dcp, j, this);
+                                            ++count;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                }
+            }
+        }
+    average = average / count;
+    Tfun->objfun[j]->meas_average = average;
+    average = 0.0;
+    }
+}
+
 void TGfitTask::get_DataTarget ( )
 {
     vector<string> out;
@@ -185,6 +269,7 @@ void TGfitTask::get_DataTarget ( )
         Tfun->objfun[i]->exp_property = "NULL";
         Tfun->objfun[i]->exp_unit = "NULL";
         Tfun->objfun[i]->exp_dcomp ="NULL";
+        Tfun->objfun[i]->meas_average = 0.0;
 
     }
     out.clear();
@@ -497,11 +582,12 @@ void TGfitTask::setnodes()
     // DATACH structure content
     int nIC, nDC, nPH, ICndx, PHndx;
     long int NodeStatusCH, NodeHandle;
-    double P_pa, T_k;
+    double P_pa, T_k, PMc;
     double* new_moles_IC;
     double* xDC_up;
     double* xDC_lo;
     double* Ph_surf;
+    bool salt = false;
 
 
 //#ifdef USE_MPI
@@ -633,6 +719,8 @@ void TGfitTask::setnodes()
                 NodT[n]->Set_PMc(3.31, 1 );
                 NodT[n]->Set_PMc(3, 4 );
 
+                salt = true;
+
             }
             else if (experiments[n]->sbcomp[j]->comp == "KOH")
             {
@@ -647,6 +735,8 @@ void TGfitTask::setnodes()
                 NodT[n]->Set_PMc(0.123, 0 );
                 NodT[n]->Set_PMc(3.67, 1 );
                 NodT[n]->Set_PMc(4, 4 );
+
+                salt = true;
             }
             else if (experiments[n]->sbcomp[j]->comp == "CO2")
             {
@@ -666,6 +756,8 @@ void TGfitTask::setnodes()
                 NodT[n]->Set_PMc(0.064, 0 );
                 NodT[n]->Set_PMc(3.72, 1 );
                 NodT[n]->Set_PMc(1, 4 );
+
+                salt = true;
             }
                 else
                 {
@@ -674,6 +766,16 @@ void TGfitTask::setnodes()
                     exit(1);
                 }
         }
+
+        if (!salt)
+        {
+            // use NaCl
+            NodT[n]->Set_PMc(0.064, 0 );
+            NodT[n]->Set_PMc(3.72, 1 );
+            NodT[n]->Set_PMc(1, 4 );
+        }
+
+        salt = false;
 
         // ---- // ---- // Set temperature and pressure // ---- // ---- //
         P_pa = 100000 * experiments[n]->sP;

@@ -85,6 +85,7 @@ public:
             string exp_property;
             string exp_unit;
             string exp_dcomp;
+            double meas_average;
         };
         vector<obj_fun*> objfun;
     };
@@ -163,9 +164,18 @@ public:
    */
    void gfit_error ( );
 
+   /**
+   * Gets the sum of residuals based on the Objective and target functions. This value is minimized by the fitter.
+   * @author DM
+   * @date 24.07.2013
+   */
+   void get_residuals ( double &residual);
 
-   void get_nodes( long int nNod ); ///< Constructors for 1D arrangement of nodes
-
+   /**
+   * Sets the GEMS nodes with T, P, composition and solution parameters based on the data in the experiments data manager class
+   * @author DM
+   * @date 01.05.2013
+   */
    void  setnodes( );
 
    void get_logK_TPpairs();

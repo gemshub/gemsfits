@@ -177,6 +177,7 @@ int main(int argc, char *argv[])
 
         if (count > 0)
         {
+            bson_destroy(&exp);
             cout << "The combination of sample name and expdataset in the input csv file is already present in the database.\n"
                  << "Are you trying to import the same experimental data again? " << endl;
                  cout << "Number of experiments: " << count << endl;
@@ -187,14 +188,13 @@ int main(int argc, char *argv[])
                  bson_print_raw(stderr, bsdata_, 0);
              }
              fprintf(stderr, "\n");
+             //Dispose result set
+             tclistdel(res);
+
+             //Dispose query
+             ejdbquerydel(q1);
              exit(1);
         }
-
-        //Dispose result set
-        tclistdel(res);
-
-        //Dispose query
-        ejdbquerydel(q1);
 
         // 2nd level - bulk composition of chemical system for this experiment
         // array of components

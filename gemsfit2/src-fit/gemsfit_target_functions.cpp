@@ -383,9 +383,9 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
     }
 
     // check Target function type and calculate the Tfun_residual
-    weight_ = weight(i, p, e, sys->Tfun->weight, sys);
-    Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type);
-    Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type)*weight_;
+    weight_ = weight(i, p, e, j, sys->Tfun->weight, sys);
+    Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j]);
+    Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j])*weight_;
 
     sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
 
@@ -450,9 +450,9 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
     }
 
     // check Target function type and calculate the Tfun_residual
-    weight_ = weight_phprop(i, p, pp, sys->Tfun->weight, sys);
-    Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type);
-    Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type)*weight_;
+    weight_ = weight_phprop(i, p, pp, j, sys->Tfun->weight, sys);
+    Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j]);
+    Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j])*weight_;
 
     sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
     sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phprop[pp]->property,sys->experiments[i]->expphases[p]->phprop[pp]->Qunit,measured_value,computed_value,Weighted_Tfun_residual, weight_ );
@@ -497,9 +497,9 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
 //    }
 
     // check Target function type and calculate the Tfun_residual
-    weight_ = weight_phdcomp(i, p, dc, dcp, sys->Tfun->weight, sys);
-    Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type);
-    Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type)*weight_;
+    weight_ = weight_phdcomp(i, p, dc, dcp, j, sys->Tfun->weight, sys);
+    Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j]);
+    Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j])*weight_;
 
     sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
     sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phdcomps[dc]->formula,sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->property, sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->Qunit, measured_value, computed_value, Weighted_Tfun_residual, weight_ );
@@ -507,21 +507,25 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
     return Weighted_Tfun_residual;
 }
 
-double Tfunction (double computed_value, double measured_value, string type)
+double Tfunction (double computed_value, double measured_value, string type, TGfitTask::TargetFunction::obj_fun objfun)
 {
     double Tf = 0.0;
-    double average_measured;
     if (type == keys::lsq)
     {
         Tf = pow( (computed_value - measured_value), 2) /*/ pow(measured_value, 2)*/;
     }  else
+    if (type == keys::lsq_norm)
+    {
+        Tf = pow( ((computed_value/objfun.meas_average) - (measured_value/objfun.meas_average)), 2);
+    }
+    else
     {
         // other type of Target functions
     }
     return Tf;
 }
 
-double weight (int i, int p, int e, string type, TGfitTask *sys)
+double weight (int i, int p, int e, int j, string type, TGfitTask *sys)
 {
     if (type == keys::inverr)
     {
@@ -536,10 +540,15 @@ double weight (int i, int p, int e, string type, TGfitTask *sys)
     if (type == keys::inverr3)
     {
         return 1/(pow(sys->experiments[i]->expphases[p]->phcomp[e]->bQnt,2));
-    } else return 1;
+    } else
+    if (type == keys::inverr_norm)
+    {
+        return 1/(pow((sys->experiments[i]->expphases[p]->phcomp[e]->Qerror/sys->Tfun->objfun[j]->meas_average),2));
+    } else
+        return 1;
 }
 
-double weight_phprop (int i, int p, int pp, string type, TGfitTask *sys)
+double weight_phprop (int i, int p, int pp, int j, string type, TGfitTask *sys)
 {
     if (type == keys::inverr)
     {
@@ -553,10 +562,15 @@ double weight_phprop (int i, int p, int pp, string type, TGfitTask *sys)
     if (type == keys::inverr3)
     {
         return 1/(pow(sys->experiments[i]->expphases[p]->phprop[pp]->pQnt,2));
-    } else return 1;
+    } else
+    if (type == keys::inverr_norm)
+    {
+        return 1/(pow((sys->experiments[i]->expphases[p]->phprop[pp]->Qerror/sys->Tfun->objfun[j]->meas_average),2));
+    } else
+        return 1;
 }
 
-double weight_phdcomp (int i, int p, int dc, int dcp, string type, TGfitTask *sys)
+double weight_phdcomp (int i, int p, int dc, int dcp, int j, string type, TGfitTask *sys)
 {
     if (type == keys::inverr)
     {
@@ -570,5 +584,10 @@ double weight_phdcomp (int i, int p, int dc, int dcp, string type, TGfitTask *sy
     if (type == keys::inverr3)
     {
         return 1/(pow(sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->pQnt,2));
-    } else return 1;
+    } else
+    if (type == keys::inverr_norm)
+    {
+        return 1/(pow((sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->Qerror/sys->Tfun->objfun[j]->meas_average),2));
+    } else
+        return 1;
 }
