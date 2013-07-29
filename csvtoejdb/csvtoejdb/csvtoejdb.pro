@@ -52,3 +52,5 @@ OBJECTS_DIR     = obj
 include($$EJDB_CPP/tcejdb.pri)
 include($$MAIN_CPP/main.pri)
 
+HEADERS +=
+

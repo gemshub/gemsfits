@@ -4,7 +4,7 @@
 # include <locale.h>
 # include "read_ejdb.h"
 # include "keywords.h"
-# include <boost/lexical_cast.hpp>
+# include "ejdbtojson.h"
 
 using namespace std;
 using namespace keys;
@@ -567,11 +567,21 @@ int main(int argc, char *argv[])
     TCLIST *res2 = ejdbqryexecute(coll, q2, &count, 0, NULL);
     fprintf(stderr, "\n\nRecords found: %d\n", count);
 
+
+    // GEMSFIT results file for all test runs. Keeps a log of all runs. The file has to be deleted manually.
+    string path = "test.json";
+    ofstream fout_json;
+    fout_json.open(path.c_str(), ios::trunc);
+    if( fout_json.fail() )
+    { cout<<"Output fileopen error"<<endl; exit(1); }
+
+
     //Now print the result set records
      for (int i = 0; i < TCLISTNUM(res2); ++i) {
          void *bsdata = TCLISTVALPTR(res2, i);
          char *bsdata_ = static_cast<char*>(bsdata);
          bson_print_raw(stderr, bsdata_, 0);
+         ejdbtojson( bsdata_, i, path);
 
          bson_iterator it;
          const char *key;
@@ -600,6 +610,7 @@ int main(int argc, char *argv[])
          }
      }
      fprintf(stderr, "\n");
+     fout_json.close();
 
 //     for (int i = 0; i < TCLISTNUM(res2); ++i) {
 //         void *bsdata = TCLISTVALPTR(res2, i);
