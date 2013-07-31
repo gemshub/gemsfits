@@ -6,7 +6,7 @@
 # include <ejdb.h>
 # include <boost/lexical_cast.hpp>
 
-void ejdbtojson(const char *data, int pos, std::string path);
+void ejdbtojson(const char *data, std::string path);
 
 
 std::string foutjson(const char *data);

@@ -7,10 +7,9 @@
 using namespace std;
 
 
-void ejdbtojson(const char *data, int pos, string path)
+void ejdbtojson(const char *data, string path)
 {
     string out;
-
     ofstream fout;
     fout.open(path.c_str(), ios::app);
     if( fout.fail() )
@@ -27,7 +26,6 @@ void ejdbtojson(const char *data, int pos, string path)
     out += "}";
 
     int p = 1;
-
     while (p > 0)
     {
         p = out.find(", }", p);
@@ -46,9 +44,7 @@ void ejdbtojson(const char *data, int pos, string path)
                 out.erase(p, 1);
         }
     }
-
     fout << out.c_str() << endl;
-
     fout.close();
 
 }
@@ -66,11 +62,8 @@ string foutjson(const char *data)
         if (t == 0)
             break;
 
-        cout << t << endl;
-
         key = bson_iterator_key(&i);
         key_ = key;
-        cout << key_ << endl;
 
         if ((t == BSON_DOUBLE) || (t == BSON_OID) || (t == BSON_INT))
         {
@@ -81,7 +74,7 @@ string foutjson(const char *data)
                     out = out + boost::lexical_cast<string>(bson_iterator_double(&i)).c_str() + ", ";
                     break;
                 case BSON_OID:
-                    out = out + boost::lexical_cast<string>(bson_iterator_oid(&i)).c_str() + ", ";
+                out = out + "\"" + boost::lexical_cast<string>(bson_iterator_oid(&i)).c_str() + "\"" + ", ";
                     break;
                 case BSON_INT:
                     out = out + boost::lexical_cast<string>(bson_iterator_int(&i)).c_str() + ", ";

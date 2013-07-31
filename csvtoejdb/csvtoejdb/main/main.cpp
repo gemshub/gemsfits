@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
 
     // create EJDB databse object
     jb = ejdbnew();
+    EJCOLL *coll = ejdbcreatecoll(jb, experiments, NULL);
 
     for (int ii = 1; ii < argc; ii++)
     {
@@ -37,25 +38,24 @@ int main(int argc, char *argv[])
     if (ihelp != 0)
     {
         cout << " USAGE: \n"
-//                "   csvtoejdb  -run      <path to gemsfit2 input file> \n"
-                "   csvtoejdb   -run -t <path to folder for the database and CSV file> <database name> <CSV file name> \n\n"
+                "   csvtoejdb   -run -t <path to folder for the database and CSV file> <database name> <collection name> <CSV file name> \n\n"
                 " WHERE: \n"
                 "   -run,   runs the program \n"
-                "   -t,     truncate (overwrite the existing database) \n"
-                "   -a,     append (add more data) \n"
-                "           if database name is not present a new database is created \n\n"
-                "   -back,  to backup the database in JSON file with the same name as the database \n"
-                "   -rest,  to restore a database from a JSON file \n\n"
+                "   -run -t,     truncate (overwrite the existing database) \n"
+                "   -run -a,     append (add more data) \n"
+                "                if database name is not present a new database is created \n\n"
+                "   -back,  backup the database in JSON file with the same name as the database \n"
+                "   -rest,  restore a database from a JSON file with the same name as the JSON file\n\n"
                 " EXAMPLE; \n"
-                "   -run -t CASH/ cashtest CASHtest.csv \n"
-                "   -back CASH/ cashtest \n"
-                "   -rest CASH/ cashtest.json "<< endl;
+                "   -run -t CASH/ cashtest experiments CASHtest.csv \n"
+                "   -back CASH/ cashtest experiments \n"
+                "   -rest CASH/ cashtest.json experiments"<< endl;
         return 0;
     }
 
     if (irun != 0)
     {
-        if (argc <= irun + 4)
+        if (argc <= irun + 5)
         {
             cout << "Wrong options, Wrong argument for option -run";
             exit(1);
@@ -80,25 +80,28 @@ int main(int argc, char *argv[])
     strcat(ejdb_path, argv[irun + 3]);
     string ejdb_path2 = ejdb_path;
     cout << ejdb_path << endl;
-    // open the database file as a writer JBOWRITER, create new is not existent JBOCREAT, and truncate db on open JBOTRUNC
-
 
     char csv_path[64] = {};
-
 
     if (irest != 0 )
     {
         int pos = 0;
         string point = ".";
+        pos = ejdb_path2.find(".json", pos);
+        if (pos < 0)
+        {
+            cout << "File not .json terminated... exiting!";
+            exit(1);
+        }
+
         pos = ejdb_path2.find(point, pos);
         ejdb_path2.erase(pos, 5);
-
-        if (!ejdbopen(jb, ejdb_path2.c_str(), JBOWRITER | JBOCREAT | JBOTRUNC)) {
+        if (!ejdbopen(jb, ejdb_path2.c_str(), JBOWRITER | JBOCREAT /*| JBOTRUNC*/)) {
             return 1;
         }
 
         //Get or create collection 'experiments'
-        EJCOLL *coll = ejdbcreatecoll(jb, experiments, NULL);
+        EJCOLL *coll = ejdbcreatecoll(jb, argv[irest + 3], NULL);
 
         bson_oid_t oid;
         string line;
@@ -107,26 +110,14 @@ int main(int argc, char *argv[])
 
         while(getline(in, line)  && in.good() )
         {
-            cout << line << endl;
-
             jsontoejdb(line, jb, coll, oid);
-
         }
         in.close();
-    }
-
-
-
-
-
-
-
-
-
+    } else
     if ((irun != 0))
     {
         strcat(csv_path, argv[irun + 2]);
-        strcat(csv_path, argv[irun + 4]);
+        strcat(csv_path, argv[irun + 5]);
         if (!strcmp(argv[irun + 1], "-t"))
         {
             if (!ejdbopen(jb, ejdb_path, JBOWRITER | JBOCREAT | JBOTRUNC)) {
@@ -142,8 +133,7 @@ int main(int argc, char *argv[])
             exit(1);}
 
         //Get or create collection 'experiments'
-        EJCOLL *coll = ejdbcreatecoll(jb, experiments, NULL);
-
+        EJCOLL *coll = ejdbcreatecoll(jb, argv[irun + 4], NULL);
 
         ifstream in(csv_path);
         if (in.fail())  { cout << "File not found" <<endl; return 0; }
@@ -156,7 +146,11 @@ int main(int argc, char *argv[])
             return 1; }
     }
 
-    EJCOLL *coll = ejdbcreatecoll(jb, experiments, NULL);
+    if (irun !=0)
+    {
+        coll = ejdbcreatecoll(jb, argv[irun + 4], NULL);
+    } else coll = ejdbcreatecoll(jb, argv[irun + 3], NULL);
+
 
 //    bson_oid_t oid;
 //    // keeps each row of the CSV file
@@ -613,14 +607,16 @@ int main(int argc, char *argv[])
     TCLIST *res2 = ejdbqryexecute(coll, q2, &count, 0, NULL);
     fprintf(stderr, "\n\nRecords found: %d\n", count);
 
-
     // Clearing the backup JSON file
-    string path = ejdb_path2 + ".json";
-    ofstream fout_json;
-    fout_json.open(path.c_str(), ios::app);
-    if( fout_json.fail() )
-    { cout<<"Output fileopen error"<<endl; exit(1); }
-
+    if (irest == 0)
+    {
+        string path = ejdb_path2 + ".json";
+        ofstream fout_json;
+        fout_json.open(path.c_str(), ios::trunc);
+        if( fout_json.fail() )
+        { cout<<"Output fileopen error"<<endl; exit(1); }
+        fout_json.close();
+    }
 
     //Now print the result set records
      for (int i = 0; i < TCLISTNUM(res2); ++i) {
@@ -628,14 +624,9 @@ int main(int argc, char *argv[])
          char *bsdata_ = static_cast<char*>(bsdata);
          bson_print_raw(stderr, bsdata_, 0);
 
-
          if (irest == 0)
          {
-             fout_json.close();
-             fout_json.open(path.c_str(), ios::trunc);
-             if( fout_json.fail() )
-             { cout<<"Output fileopen error"<<endl; exit(1); }
-             ejdbtojson( bsdata_, i, ejdb_path2 + ".json");
+             ejdbtojson( bsdata_, ejdb_path2 + ".json");
          }
 
          bson_iterator it;
@@ -665,7 +656,6 @@ int main(int argc, char *argv[])
          }
      }
      fprintf(stderr, "\n");
-     fout_json.close();
 
     tclistdel(res2);
 
@@ -720,7 +710,6 @@ int main(int argc, char *argv[])
     }
     fout << TP_pairs[1].size() <<endl;
     fout.close();
-
 
     cout << endl;
 

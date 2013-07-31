@@ -8,12 +8,12 @@
 + documentation in the GEMSFIT template input file (fitting bulk composition with L linked parameters) 
 + write all possible option the user has for data to compare
 - see more possible errors and add them to the gemfit_error function.
-- problem in csvtoejdb tool when adding same pair of sample and expdataset - the program should break and not add anything in the database.
++ problem in csvtoejdb tool when adding same pair of sample and expdataset - the program should break and not add anything in the database.
 
 + Printing class - printing in /results/FIT_results.csv
 - test inverse weighting more
 + add normalized target function (by average from experimental data)
-- add documentation fo normalized target function
++ add documentation for normalized target function
 + solid-solution composition as element bulk phase concentration
 - test solid-solution with solchas
 + test the reaction constraint 
@@ -45,8 +45,8 @@
 EJDB database maintenance functionality:
 - try installing ejdb console via nodejs (as given on ejdb.org)
 - the sense of 'collection': as a modeling application project name? as experimental dataset? any other semantics? 
-- backup to JSON text file (the whole DB, one exp.dataset, etc.)
-- restore from JSON text file
++ backup to JSON text file (the whole DB, one exp.dataset, etc.)
++ restore from JSON text file
 - updating/owerwriting documents e.g. for error corrections in experimental data, adding new information for experimental samples. 
 - what if one wants to sellect data from more collections
 

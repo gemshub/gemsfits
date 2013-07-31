@@ -31,6 +31,8 @@ Names of phases, components, elements should be the same as in GEMS3K exported f
 2. Save your file as comma separated format "," (as separator) CSV. Be careful that the cell values are saved in full and not only as they are formated 0.1234567 and not as 0.123 (as formated).
 
 3. Run the program csvtoejdb with arguments as in the example: "-run -t CASH/ solcash CASH.csv" where:
-	first argument is the path to the CSV and database files, 2nd argument is the mode: -t truncate (overwrite the existing database); -a append append (add more data);, 3nd argument is the name of 		the database, and 3rd argument is the input CSV file
+	first argument is the path to the CSV and database files, 2nd argument is the mode: -t truncate (overwrite the existing database); -a append append (add more data);, 3nd argument is the name of 		the database, and 3rd argument is the input CSV file. The program also writes a *.json file in JSON format with the same name as the database name given in the command line.
 
+4. To backup a full database/collection run the program as in the example: -back <path to folder of the database> <name of the database> "-back /SOL test2"
 
+5. To restore a database/collection form a json file run the program as in the example: .rest <path to folder of JSON file> <name of the file>.json "-rest /SOL test2.json"
