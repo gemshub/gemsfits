@@ -24,15 +24,17 @@ phase composition:	(b) for phase composition in elements write phase.name_of_pha
 phase Dcomp:		(c) for phase dependent components write phase.name_of_phase (as in GEMS) followed by Dc and the formula of the dependent components as in GEMS, followed by the measured porperty 				such as: pQnt - dependent component qunatity in molfrac (mole fraction); @coef - activity coeficient; e.g. phase.aq_gen.DcSiO2-.pQnt
 
 IMPORTANT:
-You should have only unique sample and expdataset name pairs.
+You should have only unique sample and expdataset name pairs in one collection.
 In the excel file if present column unit should follow after the column error which comes after the column containing the value. e.g. phase.aq_gen.pH | error | unit | ...
 Names of phases, components, elements should be the same as in GEMS3K exported files.
 
 2. Save your file as comma separated format "," (as separator) CSV. Be careful that the cell values are saved in full and not only as they are formated 0.1234567 and not as 0.123 (as formated).
 
-3. Run the program csvtoejdb with arguments as in the example: "-run -t CASH/ solcash CASH.csv" where:
-	first argument is the path to the CSV and database files, 2nd argument is the mode: -t truncate (overwrite the existing database); -a append append (add more data);, 3nd argument is the name of 		the database, and 3rd argument is the input CSV file. The program also writes a *.json file in JSON format with the same name as the database name given in the command line.
+3. Run the program csvtoejdb with arguments as in the example: "-run -t CASH/ solcash experiments CASH.csv" where:
+	first argument is the path to the CSV and database files, 2nd argument is the mode: -t truncate (overwrite the existing database); -a append append (add more data);, 3nd argument is the name of 		the database, 3rd argument is the name of the collection, and 4th argument is the input CSV file. The program also writes a *.json file in JSON format <name of database>_<name of collection>.json
 
-4. To backup a full database/collection run the program as in the example: -back <path to folder of the database> <name of the database> "-back /SOL test2"
+4. To backup a full collection run the program as in the example: -back <path to folder of the database> <name of the database> <name of the collection> "-back /SOL test2 experiments". A JSON file with 		the name <name of database>_<name of collection>.json will be created.
 
-5. To restore a database/collection form a json file run the program as in the example: .rest <path to folder of JSON file> <name of the file>.json "-rest /SOL test2.json"
+5. To restore a full collection form a json file run the program as in the example: .rest <path to folder of JSON file> <name of the file>.json <name of the colection>"-rest /SOL test2.json experiments"
+
+5.1 To restore more than one collection to a single database when running the program with -rest keep the same name of the database and run with each collection names you wish to restore. 

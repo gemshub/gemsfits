@@ -1,0 +1,14 @@
+EJDB Command line interface
+
+INSTALATION
+
+Go to http://nodejs.org/ - download the current version, extract it, go to the folder and install it with the following commands:
+Unix/Macintosh:
+
+    ./configure
+    make
+    make install 
+
+Install the EJDB command line interface with the following command: npm install -g ejdb 
+
+

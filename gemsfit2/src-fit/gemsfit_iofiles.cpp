@@ -847,6 +847,7 @@ outField Data_Manager_fields[9] =
       "\n#     ... "
       "\n#  \"WT\":  weighting scheme: empty string \"\": w = 1 (equal weights);"
       "\n#       \"inverr\": w=1/error; \"inverr2\": w=1/error^2; \"inverr3\": w=1/measured^2;"
+      "\n#       \"inverr_norm\": w=1/(error/<meas(average)>)^2; "
       "\n#  \"OFUN\":  objective function, a list [] of terms {} for measured properties to compare with their computed counterparts. "
       "\n#     Each term can contain property-value pairs:"
       "\n#       \"EPH\": for what phase from the experiments "

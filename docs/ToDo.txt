@@ -43,11 +43,11 @@
 
 
 EJDB database maintenance functionality:
-- try installing ejdb console via nodejs (as given on ejdb.org)
-- the sense of 'collection': as a modeling application project name? as experimental dataset? any other semantics? 
++ try installing ejdb console via nodejs (as given on ejdb.org)
++ the sense of 'collection': as a modeling application project name? as experimental dataset? any other semantics? 
 + backup to JSON text file (the whole DB, one exp.dataset, etc.)
 + restore from JSON text file
-- updating/owerwriting documents e.g. for error corrections in experimental data, adding new information for experimental samples. 
++ updating/owerwriting documents e.g. for error corrections in experimental data, adding new information for experimental samples. <= use EJDB command line interface.
 - what if one wants to sellect data from more collections
 
 

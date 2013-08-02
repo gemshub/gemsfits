@@ -55,9 +55,30 @@ int main(int argc, char *argv[])
 
     if (irun != 0)
     {
-        if (argc <= irun + 5)
+        if ((argc <= irun + 5) || (argc > irun + 7))
         {
-            cout << "Wrong options, Wrong argument for option -run";
+            cout << "Wrong options, Wrong argument for option -run \n"
+                    "Example: -run -t CASH/ cashtest experiments CASHtest.csv \n";
+            exit(1);
+        }
+    }
+
+    if (iback != 0)
+    {
+        if ((argc <= iback + 3) || (argc > iback + 4) || (strcmp(argv[iback + 1], "-a")) || (strcmp(argv[iback + 1], "-t")))
+        {
+            cout << "Wrong options, Wrong argument for option -back \n"
+                    "Example: -back CASH/ cashtest experiments \n";
+            exit(1);
+        }
+    }
+
+    if (irest != 0)
+    {
+        if ((argc <= irest + 3) || (argc > irest + 4) || (strcmp(argv[irest + 1], "-a")) || (strcmp(argv[irest + 1], "-t")))
+        {
+            cout << "Wrong options, Wrong argument for option -rest \n"
+                    "Example: -rest CASH/ cashtest.json experiments \n";
             exit(1);
         }
     }
@@ -86,7 +107,7 @@ int main(int argc, char *argv[])
     if (irest != 0 )
     {
         int pos = 0;
-        string point = ".";
+        string point = "_";
         pos = ejdb_path2.find(".json", pos);
         if (pos < 0)
         {
@@ -94,8 +115,9 @@ int main(int argc, char *argv[])
             exit(1);
         }
 
+        pos = 0;
         pos = ejdb_path2.find(point, pos);
-        ejdb_path2.erase(pos, 5);
+        ejdb_path2.erase(pos, ejdb_path2.size());
         if (!ejdbopen(jb, ejdb_path2.c_str(), JBOWRITER | JBOCREAT /*| JBOTRUNC*/)) {
             return 1;
         }
@@ -149,7 +171,7 @@ int main(int argc, char *argv[])
     if (irun !=0)
     {
         coll = ejdbcreatecoll(jb, argv[irun + 4], NULL);
-    } else coll = ejdbcreatecoll(jb, argv[irun + 3], NULL);
+    } else {coll = ejdbcreatecoll(jb, argv[irun + 4], NULL);}
 
 
 //    bson_oid_t oid;
@@ -610,7 +632,7 @@ int main(int argc, char *argv[])
     // Clearing the backup JSON file
     if (irest == 0)
     {
-        string path = ejdb_path2 + ".json";
+        string path = ejdb_path2 + "_" + argv[irun + 4] + ".json";
         ofstream fout_json;
         fout_json.open(path.c_str(), ios::trunc);
         if( fout_json.fail() )
@@ -626,7 +648,7 @@ int main(int argc, char *argv[])
 
          if (irest == 0)
          {
-             ejdbtojson( bsdata_, ejdb_path2 + ".json");
+             ejdbtojson( bsdata_, ejdb_path2 + "_" + argv[irun + 4] + ".json");
          }
 
          bson_iterator it;
