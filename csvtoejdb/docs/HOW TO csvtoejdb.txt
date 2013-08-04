@@ -1,40 +1,128 @@
-csvtoejdb uses boost and jansson external libraries and EJDB coupled libary
+The csvtoejdb is a utility program for import of experimental data into a JSON-format file
+with its subsequent import into EJDB database to be used in GEMSFIT2 code. The program can 
+also backup such EJDB GEMSGIT2 database of experimental data into JSON text file(s), and 
+restore the EJDB GEMSGIT2 database from the backup JSON text files. 
 
-1. Have your data in a preformated exceel file - see excel_example.xls or solcahs_example (for CASH systems) as a template.
+csvtoejdb is written by Dan Miron (URL) as part of the GEMSFIT2 project (URL).  
+Uses boost (URL) and jansson (URL) external libraries and EJDB (URL) coupled libary.
 
-EXPERIMENTS DESCRIPTION
-id: 			add numbering of experiments 1, 2, 3, ...
-sample:			add sample names / names of experimental runs
-comment:		add comments - field not obligatory
-type:			type of experiment - filed not obligatory
-sT:			temperature in degrees Celsius
-sP:			pressure in bars
-expdataset:		name of experimental set 
+How to use csvtoejdb:
 
+1. Prepare your data in a preformatted excel file. See excel_example.xls or solcahs_example.xlsx 
+   (for CASH systems) as a template.
+
+The column names and their order in the excel table should follow as described below, grouped in 
+three sections: EXPERIMENTS DESCRIPTION; SYSTEM COMPOSITION; RESULTS. 
+
+Column name		Explanation
+EXPERIMENTS DESCRIPTION:
+id 			Numbering of experiments 1, 2, 3, ...
+sample			Sample names / names of experimental runs (alphanumeric), must be 
+				unique within a given experimental dataset
+comment			Comments to experiments (optional column)
+type			Type of experiment (optional column)
+sT			Temperature in degrees Celsius
+sP			Pressure in bars
+expdataset		Name of this experimental data set (alphanumeric), 
+				should be the same for all samples belonging to a given set.   
 SYSTEM COMPOSITION:
-comp. :			oxide composition of the system as follows: comp.oxide/hidroxide/chloride_formula as in GEMS, e.g comp.SiO2, comp.CaO, comp.NaCl ...
-			units should be g (grams of oxide) or M (mole) for (NaCl).
+comp.<formula> 		Composition of the sample system, expressed as one or several columns 
+			with names in the format: comp.SiO2, comp.CaO, comp.NaCl ...
+error                   error estimate (value can be left blank, if unknown) for the preceding 
+				value of the composition
+unit			units of measurement for the preceding value [and error], should be given
+			as g (grams of oxide) or M (mole) for (NaCl). <???>
 
-RESULTS:
-phase properties:
-phase.name_of_phase.	(a) for phase properties write phase.name_of_phase (as in GEMS) e.g. phase.aq_gen.name_of_property such as: pQnt - phase qunatity; pH; pV - phase volume; Eh; IS - ionic strenght; 				all - alkalinity; sArea - surface area; ... e.g. phase.aq_gen.pH, phase.C-S-H-3T-2.pQnt, ...
-			IMPLEMENTED IN GEMSFIT2: pH unit -loga (nagated log); pV - cm3 or m3; pQunt - g or kg; RHO - g/cm3; ... others to be implemented.
-phase composition:	(b) for phase composition in elements write phase.name_of_phase (as in GEMS) e.g. phase.aq_gen.Si (for aqueous phase molal (molality) or loga (log of molality), for solid-solution
-			phase phase bulk composition in moles (mol) or for CASH pahses as Simolfrac (mole fraction to Si). 
-phase Dcomp:		(c) for phase dependent components write phase.name_of_phase (as in GEMS) followed by Dc and the formula of the dependent components as in GEMS, followed by the measured porperty 				such as: pQnt - dependent component qunatity in molfrac (mole fraction); @coef - activity coeficient; e.g. phase.aq_gen.DcSiO2-.pQnt
+RESULTS - phase properties from experiments:
+phase.<pname>.<pprop>	pname should correspond to the name of this phase in GEMS3K DCH file.
+			pprop is one of keywords designating a bulk phase property, currently
+			   implemented are: 
+			   pQnt: phase qunatity; 
+			   pV: phase volume;
+			   RHO: phase density;	 
+			   pH: pH (aqueous phase only); 
+			   Eh: Eh (aqueous phase only); 
+			   IS: effective ionic strength (aqueous phase only); 
+			   alk: alkalinity (aqueous phase only); 
+			   sArea: phase surface area; 
+			   ... 
+			Examples: phase.aq_gen.pH; phase.C-S-H-3T-2.pQnt
+error                   error estimate (value can be left blank, if unknown) for the preceding 
+			   value of the phase property
+unit			units of measurement for the preceding value [and error] of the phase 
+			   property.for pH: -loga (negated log); for pV: cm3 or m3; 
+			   for pQnt: g or kg; for RHO: g/cm3; 
+			   ... 
+			
+RESULTS - phase composition from experiments:	
+phase.<pname>.<ename>.	Experimental concentration of element <ename> in the phase <pname>. 
+			pname should correspond to the name of this phase in GEMS3K DCH file.
+			ename is name (symbol) of element (Independent Component) as in GEMS3K.
+			Example: phase.aq_gen.Si 
+error                   error estimate (value can be left blank, if unknown) for the preceding 
+			   value of the element concentration in phase.  
+unit			units of measurement for the preceding value [and error] 
+			   for aqueous phases: molal; loga (log of molality); 
+			   for solid phases: mol (in moles); molfrac (mole fraction); 
+			   simolfrac (mole ratio to Si, for Si-containing cement phases). 
+
+phase.<pname>.Dc<dfor>. Experimental property of species <dfor> in the phase <pname>. 			 
+			pname should correspond to the name of this phase in GEMS3K DCH file.
+			dfor is the formula of species (Dependent Component) belonging to 
+			   this phase. The following properties can be used after <dfor>. :
+			pQnt: concentration in mole fraction (molfrac);
+			@coef: activity coefficient;
+			...
+error                   error estimate (value can be left blank, if unknown) for the preceding 
+			   value of the phase species property.  
+unit			units of measurement for the preceding value [and error]: 
+			   for pQnt: molfrac (mole fraction); for @coef: ???? 
+			Example: phase.aq_gen.DcSiO2-.pQnt
 
 IMPORTANT:
-You should have only unique sample and expdataset name pairs in one collection.
-In the excel file if present column unit should follow after the column error which comes after the column containing the value. e.g. phase.aq_gen.pH | error | unit | ...
-Names of phases, components, elements should be the same as in GEMS3K exported files.
+Each sample (row) must have a unique combination of sample and expdataset names.
+If present, the column 'unit' should be after the column 'error' that should come after 
+the column containing the respective property value, e.g. phase.aq_gen.pH | error | unit | ...
+Names of phases, components, elements should be the same as in the GEMS3K DCH I/O files.
 
-2. Save your file as comma separated format "," (as separator) CSV. Be careful that the cell values are saved in full and not only as they are formated 0.1234567 and not as 0.123 (as formated).
+2. Export your Excel table into the comma-separated format ',' csv file. Check that 
+the cell values are saved in full, e.g. as 0.1234567 and not as 0.123 (as visible).
 
-3. Run the program csvtoejdb with arguments as in the example: "-run -t CASH/ solcash experiments CASH.csv" where:
-	first argument is the path to the CSV and database files, 2nd argument is the mode: -t truncate (overwrite the existing database); -a append append (add more data);, 3nd argument is the name of 		the database, 3rd argument is the name of the collection, and 4th argument is the input CSV file. The program also writes a *.json file in JSON format <name of database>_<name of collection>.json
+3. In the terminal, cd to folder with the program csvtoejdb, and execute it 
+with command-line arguments <action> <mode> <db-folder> <db-name> <input_csv_file>
+where: 
+   <action> is 	-run	import data from the .csv file to the database
+		-back	backup the whole collection/database into JSON text file(s)
+ 		-rest	restore the collection/database from the JSON text file(s)
+   <mode>   is 	-t  	truncate (overwrite the existing database)
+		-a 	append (add more data to the existing database)	
+   <db-folder> 		path to the folder where the CSV and database files are located
+   <db-name> 		name of the database (will be created if not exists)
+   <input_csv_file>	name of the input CSV file (relative to db_folder)
 
-4. To backup a full collection run the program as in the example: -back <path to folder of the database> <name of the database> <name of the collection> "-back /SOL test2 experiments". A JSON file with 		the name <name of database>_<name of collection>.json will be created.
+The program csvtoejdb will also write a <db-name>.json file in JSON format. 
+Example call for data import:
 
-5. To restore a full collection form a json file run the program as in the example: .rest <path to folder of JSON file> <name of the file>.json <name of the colection>"-rest /SOL test2.json experiments"
+  $ csvtoejdb -run -t /CASH solcash CASH.csv 
 
-5.1 To restore more than one collection to a single database when running the program with -rest keep the same name of the database and run with each collection names you wish to restore. 
+The file "CASH.csv" must be either in the "CASH" subfolder or in the same folder where
+the csvtoejdb executable file is located. The files "solcash" and "solcash.experiments" 
+in the /CASH subfolder will result.  
+
+4. To backup a database/collection, run the program as in the example below:
+
+   $ csvtoejdn -back /SOL test2
+
+The file "test2.json" will be the result. 
+
+5. To restore a database/collection from a json file backup, run the program as: 
+
+   $ csvtoejdb -rest /SOL test2.json"
+
+The files "test2" and "test2.experiments" in the /SOL subfolder will result.
+
+6. Return codes and error messages
+
+.....
+
+.....
