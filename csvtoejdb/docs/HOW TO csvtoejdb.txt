@@ -89,7 +89,7 @@ Names of phases, components, elements should be the same as in the GEMS3K DCH I/
 the cell values are saved in full, e.g. as 0.1234567 and not as 0.123 (as visible).
 
 3. In the terminal, cd to folder with the program csvtoejdb, and execute it 
-with command-line arguments <action> <mode> <db-folder> <db-name> <input_csv_file>
+with command-line arguments <action> <mode> <db-folder> <db-name> <coll-name> <input_csv_file>
 where: 
    <action> is 	-run	import data from the .csv file to the database
 		-back	backup the whole collection/database into JSON text file(s)
@@ -98,28 +98,29 @@ where:
 		-a 	append (add more data to the existing database)	
    <db-folder> 		path to the folder where the CSV and database files are located
    <db-name> 		name of the database (will be created if not exists)
+   <coll-name>		name of the collection
    <input_csv_file>	name of the input CSV file (relative to db_folder)
 
-The program csvtoejdb will also write a <db-name>.json file in JSON format. 
+The program csvtoejdb will also write a <db-name>_<coll-name>.json file in JSON format. 
 Example call for data import:
 
-  $ csvtoejdb -run -t /CASH solcash CASH.csv 
+  $ csvtoejdb -run -t /CASH solcash experiments CASH.csv 
 
 The file "CASH.csv" must be either in the "CASH" subfolder or in the same folder where
-the csvtoejdb executable file is located. The files "solcash" and "solcash.experiments" 
+the csvtoejdb executable file is located. The files "solcash" and "solcash_experiments" 
 in the /CASH subfolder will result.  
 
-4. To backup a database/collection, run the program as in the example below:
+4. To backup a collection, run the program as in the example below:
 
-   $ csvtoejdn -back /SOL test2
+   $ csvtoejdb -back /SOL solcash experiments
 
-The file "test2.json" will be the result. 
+The file "solcash_experiments.json" will be the result. 
 
 5. To restore a database/collection from a json file backup, run the program as: 
 
-   $ csvtoejdb -rest /SOL test2.json"
+   $ csvtoejdb -rest /SOL solcash_experiments.json experiments"
 
-The files "test2" and "test2.experiments" in the /SOL subfolder will result.
+The files "solcash" and "solcash_experiments" in the /SOL subfolder will result.
 
 6. Return codes and error messages
 
