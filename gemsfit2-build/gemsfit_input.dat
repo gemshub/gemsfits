@@ -41,7 +41,6 @@
 #        "sT" : [100, 1000],
 #        "sP" : [1, 2500] }'
 #      Paste the above example below, remove comment symbols (#), and edit as necessary.
-#  "Walther1997", "K_Anderson&Burnham1967", "K_Barns_etal1963", "Na_Yamaguchi1962", "Na_Barns_etal1963", "Gi_Na_Sato1954", "Gi_K_Fricke&Jucaitis1930",  "NaCl_co_Walther2001"
 
 <DataSelect>
 '{ "sample" : "", 
@@ -49,6 +48,7 @@
  "sT" : [1, 1000],
  "sP" : [0, 5000]
 }'
+
 
 # DataTarget: Target function for parameter fitting, described in JSON style
 #     as text in single quotes and braces: '{ ... }' 
@@ -59,6 +59,7 @@
 #     ... 
 #  "WT":  weighting scheme: empty string "": w = 1 (equal weights);
 #       "inverr": w=1/error; "inverr2": w=1/error^2; "inverr3": w=1/measured^2;
+#       "inverr_norm": w=1/(error/<meas(average)>)^2; 
 #  "OFUN":  objective function, a list [] of terms {} for measured properties to compare with their computed counterparts. 
 #     Each term can contain property-value pairs:
 #       "EPH": for what phase from the experiments 
@@ -147,16 +148,16 @@
 # DCNL: List of Dependent Component names (for readability)
 <DCNL>
 'Al(OH)2+' 'Al(OH)3@' 'Al(OH)4-' 'Al+3' 'AlH3SiO4+2' 'AlO+' 'AlO2-' 'AlO2H@' 'AlOH+2' 'K+' 'KAlO2@' 'KCl@' 'KOH@' 'Na+' 'NaAl(OH)4@' 'NaAlO2@' 'NaCl@' 'NaHSiO3@' 'NaOH@' 'HSiO3-' 'SiO2@' 'ClO-' 'HClO@' 'ClO2-' 'HClO2@' 'ClO3-' 'ClO4-' 'Cl-' 'HCl@' 'H2@' 'N2@' 'O2@' 'H2O2@' 'HO2-' 'OH-' 'H+' 'H2O@' 'H2' 'N2' 'O2' 
-'Albite' 'Albite high' 'Analcite' 'Andalusite' 'Bhm' 'Coesite' 'Corundum' 'Cristobalite' 'Gbs2' 'Halite' 'Jadeite' 'Kalsilite' 'Kaolinite' 'Kyanite' 'Leucite' 'Microcline' 'Muscovite' 'Nepheline' 'Paragonite' 'Pyrophyllite' 'Quartz' 'Sanidine' 'Sillimanite' 'Stishovite' 'Sylvite' 'Topaz-OH' 'Tridymite' 
+'Albite' 'Albite high' 'Analcite' 'Andalusite' 'Bhm' 'Coesite' 'Corundum' 'Cristobalite' 'Gbs2' 'Halite' 'Jadeite' 'Kalsilite' 'Kaolinite' 'Kyanite' 'Leucite' 'Microcline' 'Muscovite' 'Nepheline' 'Paragonite' 'Pyrophyllite' 'Quartz' 'Sillimanite' 'Stishovite' 'Sylvite' 'Topaz-OH' 'Tridymite' 
 # PHNL: List of Phase names (for readability)
 <PHNL>
-'aq_gen' 'gas_gen' 'Albite' 'Albite high' 'Analcite' 'Andalusite' 'Boehmite' 'Coesite' 'Corundum' 'Cristobalite' 'Gibbsite' 'Halite' 'Jadeite' 'Kalsilite' 'Kaolinite' 'Kyanite' 'Leucite' 'Microcline' 'Muscovite' 'Nepheline' 'Paragonite' 'Pyrophyllite' 'Quartz' 'Sanidine' 'Sillimanite' 'Stishovite' 'Sylvite' 'Topaz-OH' 'Tridymite' 
+'aq_gen' 'gas_gen' 'Albite' 'Albite high' 'Analcite' 'Andalusite' 'Boehmite' 'Coesite' 'Corundum' 'Cristobalite' 'Gibbsite' 'Halite' 'Jadeite' 'Kalsilite' 'Kaolinite' 'Kyanite' 'Leucite' 'Microcline' 'Muscovite' 'Nepheline' 'Paragonite' 'Pyrophyllite' 'Quartz' 'Sillimanite' 'Stishovite' 'Sylvite' 'Topaz-OH' 'Tridymite' 
 # ccPH: Codes of phase aggregate state [nPH]
 <ccPH>
-'a' 'g' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 
+'a' 'g' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' 
 # nDCinPH: Number of DCs included in each phase [nPH]
 <nDCinPH>
-37 3 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+37 3 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
 # TKval: Temperature values, K for lookup arrays of thermodynamic data [nTp]
 <TKval>
 298.15 939.15 943.15 947.15 955.15 945.15 938.15 941.15 943.15 940.15 948.15 828.15 881.15 873.15 673.15 673.15 823.15 958.15 971.15 973.15 673.15 758.15 863.15 963.15 993.15 723.15 723.15 733.15 723.15 723.15 723.15 723.15 723.15 770.15 728.15 673.15 673.15 823.15 823.15 823.15 
@@ -164,7 +165,7 @@
 773.15 773.15 773.15 773.15 773.15 873.15 873.15 873.15 673.15 673.15 673.15 672.15 648.15 698.15 698.15 723.15 723.15 723.15 773.15 773.15 823.15 873.15 872.15 873.15 873.15 873.15 973.15 1073.15 673.15 673.15 773.15 873.15 873.15 873.15 873.15 973.15 973.15 873.15 873.15 703.15 
 873.15 873.15 973.15 973.15 973.15 973.15 673.15 673.15 673.15 723.15 723.15 723.15 873.15 873.15 873.15 873.15 823.15 823.15 773.15 723.15 723.15 673.15 673.15 673.15 673.15 723.15 773.15 773.15 773.15 773.15 823.15 823.15 873.15 873.15 873.15 873.15 522.15 674.15 673.15 673.15 
 723.15 773.15 773.15 773.15 773.15 773.15 773.15 773.15 873.15 873.15 873.15 873.15 873.15 873.15 773.15 723.15 813.15 723.15 723.15 298.15 323.15 343.15 313.15 323.15 333.15 343.15 353.15 363.15 373.15 383.15 393.15 297.15 302.15 322.15 342.15 365.15 308.15 333.15 368.15 303.15 
-347.15 352.15 357.15 362.15 367.15 373.15 403.15 313.15 
+347.15 352.15 357.15 362.15 367.15 373.15 403.15 313.15 973.15 973.15 
 # Pval: Pressure values, Pa for lookup arrays of thermodynamic data [nPp]
 <Pval>
 100000 250000000 300000000 350000000 400000000 450000000 500000000 500000000 500000000 500000000 500000000 200900000 202200000 201800000 203900000 189900000 185000000 190000000 163000000 104100000 204000000 192000000 208000000 212000000 114000000 295000000 200000000 144500000 300000000 211000000 144000000 100000000 73000000 237000000 312000000 195000000 125000000 197000000 150000000 117000000 
@@ -172,7 +173,7 @@
 189400000 152000000 123200000 102000000 86600000 200200000 225200000 233800000 75000000 60000000 50000000 49800000 50000000 68500000 55800000 59800000 53500000 50000000 61800000 55300000 51900000 50000000 76000000 75000000 124000000 125200000 500000000 500000000 110000000 210000000 186000000 207000000 228000000 221000000 213000000 262000000 265000000 300000000 400000000 145000000 
 145000000 214000000 241000000 238000000 255000000 234000000 50600000 101300000 151900000 50600000 101300000 10100000 98000000 75200000 124600000 151600000 98000000 103800000 99900000 98200000 106000000 103500000 99800000 143000000 150500000 201500000 150300000 119000000 98900000 85000000 101100000 104800000 139500000 113000000 100100000 147600000 195000000 99200000 150100000 99600000 
 105000000 199800000 193000000 198100000 150200000 149900000 114600000 75000000 198500000 160600000 150000000 106500000 100200000 86800000 65500000 50500000 75000000 147000000 150100000 100000 100000 100000 0 0 0 0 0 0 0 0 0 100000 100000 100000 100000 100000 100000 100000 100000 100000 
-100000 100000 100000 100000 100000 100000 0 100000 
+100000 100000 100000 100000 100000 100000 0 100000 100000000 200000000 
  
 # G0: Look-up array for DC molar Gibbs energy function g(T,P), J/mol at 298.15K and 1 bar 
 <G0>
@@ -237,7 +238,6 @@ F{"IV": -1088998.9999474, "LB": -1130000 , "UB" : -1040000 }
 -5565263
 -5266775
 -856432.97934399
--3744340
 -2438764.9906227
 -816165
 -408587
@@ -276,104 +276,104 @@ F{"IV": -1088998.9999474, "LB": -1130000 , "UB" : -1040000 }
 # fDQF: DQF parameters of end members or pure gas fugacities, (J/mol/(RT) [nDC]
 <fDQF>
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
 
 # This part for the system composition data is taken from *DBR.dat
 
 # For fitting T and P parameters in thermobarometry application give the upper and lower values correspodning 
 # to the interpolation range you selected when the GEMS3K system files were exported 
 # TK: Node temperature T, Kelvin. This value must always be provided (GEM input)
-<TK>  373.15
+<TK>  923.15
 # P:  Node Pressure P, Pa. This value must always be provided (GEM input)
-<P>  101322
+<P>  200000000
 
 ## (4) Data for Independent Components
 #  'Al' 'Cl' 'H' 'K' 'Na' 'Nit' 'O' 'Si' 'Zz' 
 # bIC: Bulk composition of reactive subsystem (main GEM input), moles of ICs [nICb]
 <bIC>
-6.40996460178633 1e-09 133.376188475639 1e-09 3.12954801263371 1e-09 77.8678151468158 1e-09 0 
+1.96153043244477 2.73534233438506 111.313502509536 0.763356971336656 2.62347471810166 1e-09 67.9454507386053 4.51032957882167 0 
 
 ## (5) Data for Dependent Components
 #  'Al(OH)2+' 'Al(OH)3@' 'Al(OH)4-' 'Al+3' 'AlH3SiO4+2' 'AlO+' 'AlO2-' 'AlO2H@' 'AlOH+2' 'K+' 'KAlO2@' 'KCl@' 'KOH@' 'Na+' 'NaAl(OH)4@' 'NaAlO2@' 'NaCl@' 'NaHSiO3@' 'NaOH@' 'HSiO3-' 'SiO2@' 'ClO-' 'HClO@' 'ClO2-' 'HClO2@' 'ClO3-' 'ClO4-' 'Cl-' 'HCl@' 'H2@' 'N2@' 'O2@' 'H2O2@' 'HO2-' 'OH-' 'H+' 'H2O@' 'H2' 'N2' 'O2' 
-#  'Albite' 'Albite high' 'Analcite' 'Andalusite' 'Bhm' 'Coesite' 'Corundum' 'Cristobalite' 'Gbs2' 'Halite' 'Jadeite' 'Kalsilite' 'Kaolinite' 'Kyanite' 'Leucite' 'Microcline' 'Muscovite' 'Nepheline' 'Paragonite' 'Pyrophyllite' 'Quartz' 'Sanidine' 'Sillimanite' 'Stishovite' 'Sylvite' 'Topaz-OH' 'Tridymite' 
+#  'Albite' 'Albite high' 'Analcite' 'Andalusite' 'Bhm' 'Coesite' 'Corundum' 'Cristobalite' 'Gbs2' 'Halite' 'Jadeite' 'Kalsilite' 'Kaolinite' 'Kyanite' 'Leucite' 'Microcline' 'Muscovite' 'Nepheline' 'Paragonite' 'Pyrophyllite' 'Quartz' 'Sillimanite' 'Stishovite' 'Sylvite' 'Topaz-OH' 'Tridymite' 
 # xDC: Speciation - amounts of DCs in equilibrium (primal solution), moles (GEM output/input) [nDCb]
 <xDC>
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+7.41537484944823e-10 2.65388056845645e-07 0.000235148150524446 1.86026638840952e-16 1.64536084911748e-11 1.8547192277033e-11 2.80071656713466e-05 3.38200349091853e-09 1.25331677613438e-13 0.165340969707506 0.000238694406087015 0.35766819012257 1.42562447983662e-06 0.425268058124027 0.000436692247993161 0.00199512294591299 1.76716190806001 1.29487812682481e-06 1.64667158799445e-06 1.57225032444502e-06 0.154203880798047 6.12014424812409e-13 5.70462107373808e-10 1.94418837582635e-20 6.82747660606679e-19 2.17560767754862e-23 7.38053982068759e-29 0.590362569030687 0.0201496666007162 4.46879145673275e-07 5e-10 2.2314204342781e-07 2.24248483106997e-11 4.47880017597131e-17 8.1915941303695e-06 2.64595671742315e-05 55.6453115976516 0 0 0 
+0.428609995173983 0 0 0.644939405665865 0 0 0 0 0 0 0 0 0 0 0 0.240107691476008 0 0 0 0 1.70503036526287 0 0 0 0 0 
 
 # dll: Lower metastability restrictions on amounts of DCs, moles (GEM input) [nDCb]
 <dll>
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
 
 # dul: Upper metastability constraints on amounts of DCs, moles (GEM input) [nDCb]
 <dul>
 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 
-1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 
+1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 
 
 ## (6) Data for Phases
-#  'aq_gen' 'gas_gen' 'Albite' 'Albite high' 'Analcite' 'Andalusite' 'Boehmite' 'Coesite' 'Corundum' 'Cristobalite' 'Gibbsite' 'Halite' 'Jadeite' 'Kalsilite' 'Kaolinite' 'Kyanite' 'Leucite' 'Microcline' 'Muscovite' 'Nepheline' 'Paragonite' 'Pyrophyllite' 'Quartz' 'Sanidine' 'Sillimanite' 'Stishovite' 'Sylvite' 'Topaz-OH' 'Tridymite' 
+#  'aq_gen' 'gas_gen' 'Albite' 'Albite high' 'Analcite' 'Andalusite' 'Boehmite' 'Coesite' 'Corundum' 'Cristobalite' 'Gibbsite' 'Halite' 'Jadeite' 'Kalsilite' 'Kaolinite' 'Kyanite' 'Leucite' 'Microcline' 'Muscovite' 'Nepheline' 'Paragonite' 'Pyrophyllite' 'Quartz' 'Sillimanite' 'Stishovite' 'Sylvite' 'Topaz-OH' 'Tridymite' 
 # aPH: Specific surface areas of phases, m2/kg (GEM input) [nPHb]
 <aPH>
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
 # Vs: Volume V of reactive subsystem, m3 (GEM output)
-<Vs>  0
+<Vs>  0.00197166
 # Ms: Mass of reactive subsystem, kg (GEM output)
-<Ms>  1.62517
+<Ms>  1.56602
 # Gs: Total Gibbs energy of the reactive subsystem, J/(RT) (GEM output)
-<Gs>  7777780
+<Gs>  -3174.76
 # IS: Effective aqueous ionic strength, molal (GEM output)
-<IS>  0
+<IS>  0.589182
 # pH: pH of aqueous solution in molal activity scale (GEM output)
-<pH>  0
+<pH>  5.35876
 # pe: pe of aqueous solution in molal activity scale (GEM output)
-<pe>  0
+<pe>  -0.123144
 # Eh: Eh of aqueous solution, V (GEM output)
-<Eh>  0
+<Eh>  -0.0225112
 
 ## (4) Data for Independent Components
 #  'Al' 'Cl' 'H' 'K' 'Na' 'Nit' 'O' 'Si' 'Zz' 
 
 # uIC: Chemical potentials of ICs in equilibrium (dual solution), J/(RT) (GEM output) [nICb]
 <uIC>
-0 0 0 0 0 0 0 0 0 
+-83.742652700556 -17.4754680503092 -12.0554425019123 -48.9803808182324 -44.1011673190348 -18.2442269614588 -15.9176687544594 -85.61347578664 -0.283549245774446 
 
 # bSP: Output bulk composition of the equilibrium solid part of the system, moles 
 <bSP>
-0 0 0 0 0 0 0 0 0 
+1.95859649798172 0 0 0.240107691476008 0.428609995173983 0 11.984499252055 4.35612283087871 0 
 
 ## (5) Data for Dependent Components
 #  'Al(OH)2+' 'Al(OH)3@' 'Al(OH)4-' 'Al+3' 'AlH3SiO4+2' 'AlO+' 'AlO2-' 'AlO2H@' 'AlOH+2' 'K+' 'KAlO2@' 'KCl@' 'KOH@' 'Na+' 'NaAl(OH)4@' 'NaAlO2@' 'NaCl@' 'NaHSiO3@' 'NaOH@' 'HSiO3-' 'SiO2@' 'ClO-' 'HClO@' 'ClO2-' 'HClO2@' 'ClO3-' 'ClO4-' 'Cl-' 'HCl@' 'H2@' 'N2@' 'O2@' 'H2O2@' 'HO2-' 'OH-' 'H+' 'H2O@' 'H2' 'N2' 'O2' 
-#  'Albite' 'Albite high' 'Analcite' 'Andalusite' 'Bhm' 'Coesite' 'Corundum' 'Cristobalite' 'Gbs2' 'Halite' 'Jadeite' 'Kalsilite' 'Kaolinite' 'Kyanite' 'Leucite' 'Microcline' 'Muscovite' 'Nepheline' 'Paragonite' 'Pyrophyllite' 'Quartz' 'Sanidine' 'Sillimanite' 'Stishovite' 'Sylvite' 'Topaz-OH' 'Tridymite' 
+#  'Albite' 'Albite high' 'Analcite' 'Andalusite' 'Bhm' 'Coesite' 'Corundum' 'Cristobalite' 'Gbs2' 'Halite' 'Jadeite' 'Kalsilite' 'Kaolinite' 'Kyanite' 'Leucite' 'Microcline' 'Muscovite' 'Nepheline' 'Paragonite' 'Pyrophyllite' 'Quartz' 'Sillimanite' 'Stishovite' 'Sylvite' 'Topaz-OH' 'Tridymite' 
 
 # gam: Activity coefficients of DCs in their respective phases (GEM output/input) [nDCb]
 <gam>
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0.165856157703021 0.85325621973847 0.165856157703021 3.38024904860588e-07 0.00121811421773559 0.165856157703021 0.165856157703021 0.85325621973847 0.00121811421773559 0.165856157703021 0.85325621973847 0.85325621973847 0.85325621973847 0.165856157703021 0.85325621973847 0.85325621973847 0.85325621973847 0.85325621973847 0.85325621973847 0.165856157703021 0.85325621973847 0.165856157703021 0.85325621973847 0.165856157703021 0.85325621973847 0.165856157703021 0.165856157703021 0.165856157703021 0.85325621973847 0.85325621973847 0.85325621973847 0.85325621973847 0.85325621973847 0.165856157703021 0.165856157703021 0.165856157703021 1.00873531012883 1 1 1 
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
 
 ## (6) Data for Phases
-#  'aq_gen' 'gas_gen' 'Albite' 'Albite high' 'Analcite' 'Andalusite' 'Boehmite' 'Coesite' 'Corundum' 'Cristobalite' 'Gibbsite' 'Halite' 'Jadeite' 'Kalsilite' 'Kaolinite' 'Kyanite' 'Leucite' 'Microcline' 'Muscovite' 'Nepheline' 'Paragonite' 'Pyrophyllite' 'Quartz' 'Sanidine' 'Sillimanite' 'Stishovite' 'Sylvite' 'Topaz-OH' 'Tridymite' 
+#  'aq_gen' 'gas_gen' 'Albite' 'Albite high' 'Analcite' 'Andalusite' 'Boehmite' 'Coesite' 'Corundum' 'Cristobalite' 'Gibbsite' 'Halite' 'Jadeite' 'Kalsilite' 'Kaolinite' 'Kyanite' 'Leucite' 'Microcline' 'Muscovite' 'Nepheline' 'Paragonite' 'Pyrophyllite' 'Quartz' 'Sillimanite' 'Stishovite' 'Sylvite' 'Topaz-OH' 'Tridymite' 
 
 # xPH: Amounts of phases in equilibrium state, moles (GEM output) [nPHb]
 <xPH>
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+59.1284420362586 0 0.428609995173983 0 0 0.644939405665865 0 0 0 0 0 0 0 0 0 0 0 0.240107691476008 0 0 0 0 1.70503036526287 0 0 0 0 0 
 
 # vPS: Volumes of multicomponent phases, m3 (GEM output) [nPSb]
 <vPS>
-0 0 
+0.00182754851174551 0 
 
 # mPS: Masses of multicomponent phases, kg (GEM output) [nPSb]
 <mPS>
-0.000486900000958829 0.0206760330994924 
+1.17984397685984 0 
 
 # xPA: Amount of carrier (sorbent or solvent) in multicomponent phases, moles (GEM output) [nPSb]
 <xPA>
-0 0 
+55.6453115976516 0 
 
 # bPS: Bulk elemental compositions of multicomponent phases, moles (GEM output) [nPSb*nICb]
 #  'Al' 'Cl' 'H' 'K' 'Na' 'Nit' 'O' 'Si' 'Zz' 
 <bPS>
-0 0 0 0 0 0 0 0 0 
+0.0029339344629131 2.73534233438506 111.313502509536 0.523249279860642 2.19486472292766 1e-09 55.9609514865484 0.154206747942952 3.35391165794813e-17 
 0 0 0 0 0 0 0 0 0 
 
 #########################################################################

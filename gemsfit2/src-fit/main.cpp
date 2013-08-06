@@ -53,7 +53,6 @@ using namespace std;
 namespace bfs=boost::filesystem;
 
 int countit = 0;
-int count_r = 0;
 
 
 int generateConfig(); // Mode GEMSFIT to generate input configuration file
@@ -150,12 +149,7 @@ int main( int argc, char *argv[] )
 //        stat.MC_confidence_interval( &elvis, optim.opt, &systems, countit );
     }
 
-
-
     delete gfittask;
-
-//    cout << double( clock() - startTime ) / (double)CLOCKS_PER_SEC<< " seconds." << endl;
-
 
     gettimeofday(&end, NULL);
 

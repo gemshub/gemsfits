@@ -529,20 +529,20 @@ CorellationMatrix.print("Corellation Matrix:");
         for( i=0; i< (int) optv_.size(); i++ )
         {
             if( i== 0 )
-                myStat <<"								parameter "<< i;
+                myStat <<"          parameter "<< i;
             else
-                myStat <<"			parameter "<< i;
+                myStat <<"parameter "<< i;
         }
         myStat << endl;
         for( i=0; i< (int) optv_.size(); i++ )
         {
-            myStat <<"			parameter "<< i <<" : ";
+            myStat <<"parameter "<< i <<" : ";
             for( j=0; j< (int) optv_.size(); j++ )
             {
                 if( j==0 )
-                    myStat <<"			   " <<CorellationMatrix(i,j);
+                    myStat <<"	   " <<CorellationMatrix(i,j);
                 else
-                    myStat <<"		   			" <<CorellationMatrix(i,j);
+                    myStat <<"	   		" <<CorellationMatrix(i,j);
             }
             myStat << endl;
         }

@@ -86,14 +86,14 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     }
 
     // initialize nodes with the experimental data
-    fout << "8. gemsfit_task.cpp line 88. Initializing nodes with the experimental data; " << endl;
+    fout << "8. gemsfit_task.cpp line 89. Initializing nodes with the experimental data; " << endl;
     setnodes ( );
 
     // getting the parameters to be optimized from DCH, DBR and multi structures, and optimization settings form the input file
-    fout << "9. gemsfit_task.cpp line 92. Initializing optimization structure; " << endl;
+    fout << "9. gemsfit_task.cpp line 93. Initializing optimization structure; " << endl;
     Opti = new optimization ( );
 
-    fout << "12. gemsfit_task.cpp line 95. Initializing the Target function structure & get_DatTarget(); " << endl;
+    fout << "12. gemsfit_task.cpp line 96. Initializing the Target function structure & get_DatTarget(); " << endl;
     Tfun = new TargetFunction;
     print = new ResPrint(printfile, Opti);
     get_DataTarget ( );
@@ -684,6 +684,20 @@ void TGfitTask::setnodes()
                 ICndx = NodT[n]->IC_name_to_xDB("O");
                 new_moles_IC[ICndx] +=  3*experiments[n]->sbcomp[j]->bQnt/101.9612772;
             }
+            else if (experiments[n]->sbcomp[j]->comp == "K2O")
+            {
+                ICndx = NodT[n]->IC_name_to_xDB("K");
+                new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->bQnt/94.19605;
+                ICndx = NodT[n]->IC_name_to_xDB("O");
+                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->bQnt/94.19605;
+            }
+            else if (experiments[n]->sbcomp[j]->comp == "Na2O")
+            {
+                ICndx = NodT[n]->IC_name_to_xDB("Na");
+                new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->bQnt/61.97897;
+                ICndx = NodT[n]->IC_name_to_xDB("O");
+                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->bQnt/61.97897;
+            }
             else if (experiments[n]->sbcomp[j]->comp == "Al(OH)3")
             {
                 ICndx = NodT[n]->IC_name_to_xDB("Al");
@@ -715,9 +729,10 @@ void TGfitTask::setnodes()
                 new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/39.99710928;
 
                 // changing the bacground electrolite settings
+                if (!salt){
                 NodT[n]->Set_PMc(0.098, 0 );
                 NodT[n]->Set_PMc(3.31, 1 );
-                NodT[n]->Set_PMc(3, 4 );
+                NodT[n]->Set_PMc(3, 4 );}
 
                 salt = true;
 
@@ -732,9 +747,25 @@ void TGfitTask::setnodes()
                 new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/56.10564;
 
                 // changing the bacground electrolite settings
+                if (!salt){
                 NodT[n]->Set_PMc(0.123, 0 );
                 NodT[n]->Set_PMc(3.67, 1 );
-                NodT[n]->Set_PMc(4, 4 );
+                NodT[n]->Set_PMc(4, 4 );}
+
+                salt = true;
+            }
+            else if (experiments[n]->sbcomp[j]->comp == "KCl")
+            {
+                ICndx = NodT[n]->IC_name_to_xDB("K");
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/74.5513;
+                ICndx = NodT[n]->IC_name_to_xDB("Cl");
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/74.5513;
+
+                // changing the bacground electrolite settings
+                if (!salt){
+                NodT[n]->Set_PMc(0.025, 0 );
+                NodT[n]->Set_PMc(4.08, 1 );
+                NodT[n]->Set_PMc(2, 4 );}
 
                 salt = true;
             }
@@ -744,6 +775,13 @@ void TGfitTask::setnodes()
                 new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/44.0095;
                 ICndx = NodT[n]->IC_name_to_xDB("O");
                 new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->bQnt/44.0095;
+            }
+            else if (experiments[n]->sbcomp[j]->comp == "HCl")
+            {
+                ICndx = NodT[n]->IC_name_to_xDB("H");
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/36.4611;
+                ICndx = NodT[n]->IC_name_to_xDB("Cl");
+                new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->bQnt/36.4611;
             }
             else if (experiments[n]->sbcomp[j]->comp == "NaCl")
             {
@@ -761,7 +799,7 @@ void TGfitTask::setnodes()
             }
                 else
                 {
-                    cout<<" Unknown component in gemsfit_global_function.cpp line 343 !!!! "<<endl;
+                    cout<<" Unknown component in gemsfit_global_function.cpp line 785 !!!! "<<endl;
                     cout<<" ... bail out now ... "<<endl;
                     exit(1);
                 }
