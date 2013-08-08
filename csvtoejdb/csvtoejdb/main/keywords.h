@@ -22,12 +22,14 @@ static const char *sbcomp = "sbcomp"; ///        		          1       	 array		  
     static const char *bQnt = "bQnt"; ///	                      2       	 float		        quantity (to be added to system bulk composition)
     static const char *Qerror = "Qerror"; ///	                  2	         float 		        error (uncertainty) of quantity in the same units
     static const char *Qunit = "Qunit"; ///	                      2  	     string 		    units of measurement of quantity { 'g' or 'mol' (default) or … }
+static const char *Upper_CK = "Upper_CK"; ///
+static const char *Lower_CK = "Lower_CK"; ///
 
 static const char *expphases = "expphases"; ///	                  1    	     array		        data for phases characterised (measured) in this experiment
     static const char *phase = "phase"; ///	                      2	         string		        phase ID (name)
     static const char *phcomp = "phcomp"; ///	                  2   	     array		        measured composition of the phase
         static const char *element = "element"; ///	              3	         string 		    name of chemical element (e.g. 'Al')
-        static const char *eQnt = "eQnt"; ///	                  3	         float		        measured quantity/concentration of element (in Qunit)
+        static const char *eQnt = "Q"; ///	                      3	         float		        measured quantity/concentration of element (in Qunit)
     static const char *phspecies = "phdcomps"; ///  	          2	         array		        chemical species (end member, phase component)
         static const char *dcompprop = "dcompprop"; ///
         static const char *species = "species";               /// 3          string             name of chemical species (end member, phase component)
@@ -41,7 +43,8 @@ static const char *expphases = "expphases"; ///	                  1    	     arr
         static const char *IS = "IS"; ///	                      3	         float 		        Ionic strength (molal)
         static const char *all = "all"; ///	                      3	         float		        Alkalinity (aqueous phase only)
         static const char *pV = "pV"; ///	                      3	         float		        volume of phase
-        static const char *pQnt = "pQnt"; ///	                  3	         float		        Quantity of this phase in the sample system
+        static const char *pQnt = "Q"; ///	                      3	         float		        Quantity of this phase in the sample system
+        static const char *IC = "IC";///
         static const char *sArea = "sArea"; ///                   3 	     float		        specific surface area of the phase
         static const char *RHO = "RHO"; ///                       3          double             density of the phase
 
@@ -118,7 +121,7 @@ static const char *gram = "g"; ///
 static const char *kgram = "kg"; ///
 static const char *m3 = "m3"; ///
 static const char *cm3 = "cm3"; ///
-static const char *Simolfrac = "Simolfrac"; ///
+static const char *Simolfrac = "simolfrac"; ///
 static const char *molfrac = "molfrac"; ///
 static const char *g_cm3 = "g/cm3"; ///
 }

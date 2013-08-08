@@ -67,6 +67,7 @@ Data_Manager::Data_Manager( )
     // Getting the query result data into the Data_Manager class
     fout << "5. data_manager.cpp line 68. Getting data form the EJDB database; " << endl;
     get_EJDB();
+
     fout << "7. data_manager.cpp line 70. Getting distinct T and P pairs; " << endl;
     get_distinct_TP();
 
@@ -84,6 +85,7 @@ Data_Manager::~Data_Manager( )
         delete experiments[i];
     }
 }
+
 
 string Data_Manager::readin_JSON(string key)
 {
@@ -479,6 +481,11 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
             // adding pressure
             experiments.at(pos)->sP = bson_iterator_int(&i);
         } else
+        if (key_ == keys::sV)
+        {
+            // adding volume
+            experiments.at(pos)->sV = bson_iterator_int(&i);
+        } else
 
         // adding experiment components/recipe
         if ((key_ == keys::sbcomp) && (t == BSON_ARRAY))
@@ -491,6 +498,7 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                 Hexperiments.at(pos)->Hsbcomp.push_back( new Hsamples::Hcomponents );
                 ic++; // position of the component in sbcomp vector
                 experiments.at(pos)->sbcomp.at(ic)->bQnt = NULL; experiments.at(pos)->sbcomp.at(ic)->Qerror = NULL;
+                experiments.at(pos)->sbcomp.at(ic)->Qunit = keys::gram;
                 Hexperiments.at(pos)->Hsbcomp.at(ic)->comp = false;
 
                 while (bson_iterator_next(&d))
@@ -567,6 +575,12 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                             experiments.at(pos)->expphases.at(ip)->phcomp.at(ipc)->bQnt   = NULL;
                             Hexperiments.at(pos)->Hexpphases.at(ip)->Hphcomp.at(ipc)->comp= false;
 
+                            string p_name = experiments.at(pos)->expphases.at(ip)->phase;
+                            if (p_name == "aq_gen")
+                            {
+                                experiments.at(pos)->expphases.at(ip)->phcomp.at(ipc)->Qunit = keys::molal;
+                            } else experiments.at(pos)->expphases.at(ip)->phcomp.at(ipc)->Qunit = keys::molfrac;
+
                             while (bson_iterator_next(&d2))
                             {
                                 t = bson_iterator_type(&d2);
@@ -620,8 +634,26 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
 
                                 if ((key_ == keys::property))
                                 {
+                                    string p_name = bson_iterator_string(&d2);
                                     experiments.at(pos)->expphases.at(ip)->phprop.at(ipp)->property = bson_iterator_string(&d2) ;
                                     Hexperiments.at(pos)->Hexpphases.at(ip)->Hphprop.at(ipp)->property = true;
+                                    // assigining default values for units
+                                    if (p_name==keys::pQnt)
+                                    {
+                                        experiments.at(pos)->expphases.at(ip)->phprop.at(ipp)->Qunit = keys::gram;
+                                    } else
+                                    if (p_name==keys::RHO)
+                                    {
+                                        experiments.at(pos)->expphases.at(ip)->phprop.at(ipp)->Qunit = keys::g_cm3;
+                                    } else
+                                    if (p_name==keys::pV)
+                                    {
+                                        experiments.at(pos)->expphases.at(ip)->phprop.at(ipp)->Qunit = keys::cm3;
+                                    } else
+                                    if (p_name==keys::pH)
+                                    {
+                                        experiments.at(pos)->expphases.at(ip)->phprop.at(ipp)->Qunit = keys::_loga;
+                                    }
                                 } else
                                 if ((key_ == keys::pQnt))
                                 {
@@ -691,7 +723,7 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
 
                                             if ((key_ == keys::property))
                                             {
-                                                experiments.at(pos)->expphases.at(ip)->phdcomps.at(ips)->dcompprop.at(ipdcp)->property = bson_iterator_string(&d3) ;
+                                                experiments.at(pos)->expphases.at(ip)->phdcomps.at(ips)->dcompprop.at(ipdcp)->property = bson_iterator_string(&d3);
                                             } else
                                             if ((key_ == keys::pQnt))
                                             {

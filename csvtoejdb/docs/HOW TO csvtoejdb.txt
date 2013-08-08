@@ -21,63 +21,66 @@ sample			Sample names / names of experimental runs (alphanumeric), must be
 				unique within a given experimental dataset
 comment			Comments to experiments (optional column)
 type			Type of experiment (optional column)
-sT			Temperature in degrees Celsius
-sP			Pressure in bars
+sT			Temperature in degrees Celsius (empty cell = 0)
+sP			Pressure in bars (empty cell = 0)
+sV			System volume in cm3 (empty cell = 0)
 expdataset		Name of this experimental data set (alphanumeric), 
 				should be the same for all samples belonging to a given set.   
 SYSTEM COMPOSITION:
 comp.<formula> 		Composition of the sample system, expressed as one or several columns 
-			with names in the format: comp.SiO2, comp.CaO, comp.NaCl ...
+			with names in the format: comp.SiO2, comp.CaO, comp.NaCl ... (empty cell = object not created in GEMSFIT2)
 error                   error estimate (value can be left blank, if unknown) for the preceding 
-				value of the composition
+				value of the composition (empty cell = 0)
 unit			units of measurement for the preceding value [and error], should be given
-			as g (grams of oxide) or M (mole) for (NaCl). <???>
+			as g (grams of oxide) or molal (concentrations e.g for salts). (empty cell = g)
 
 RESULTS - phase properties from experiments:
-phase.<pname>.<pprop>	pname should correspond to the name of this phase in GEMS3K DCH file.
+phase.<pname>.<pprop>	pname should correspond to the name of this phase in GEMS3K DCH file. (empty cell = object not created in GEMSFIT2)
 			pprop is one of keywords designating a bulk phase property, currently
 			   implemented are: 
-			   pQnt: phase qunatity; 
-			   pV: phase volume;
-			   RHO: phase density;	 
-			   pH: pH (aqueous phase only); 
-			   Eh: Eh (aqueous phase only); 
-			   IS: effective ionic strength (aqueous phase only); 
-			   alk: alkalinity (aqueous phase only); 
-			   sArea: phase surface area; 
+			   Q: phase qunatity; (empty cell = object not created in GEMSFIT2)
+			   pV: phase volume; (empty cell = object not created in GEMSFIT2)
+			   RHO: phase density; (empty cell = object not created in GEMSFIT2)
+			   pH: pH (aqueous phase only); (empty cell = object not created in GEMSFIT2)
+			   Eh: Eh (aqueous phase only); (empty cell = object not created in GEMSFIT2)
+			   IS: effective ionic strength (aqueous phase only); (empty cell = object not created in GEMSFIT2)
+			   alk: alkalinity (aqueous phase only); (empty cell = object not created in GEMSFIT2)
+			   sArea: phase surface area; (empty cell = object not created in GEMSFIT2)
 			   ... 
-			Examples: phase.aq_gen.pH; phase.C-S-H-3T-2.pQnt
+			Examples: phase.aq_gen.pH; phase.C-S-H-3T-2.Q
 error                   error estimate (value can be left blank, if unknown) for the preceding 
-			   value of the phase property
+			   value of the phase property (empty cell = 0)
 unit			units of measurement for the preceding value [and error] of the phase 
 			   property.for pH: -loga (negated log); for pV: cm3 or m3; 
 			   for pQnt: g or kg; for RHO: g/cm3; 
+			   Empty cell (default values) values: pH: -loga (negated log); pV: cm3; 
+			   Q: g; RHO: g/cm3;
 			   ... 
 			
 RESULTS - phase composition from experiments:	
-phase.<pname>.<ename>.	Experimental concentration of element <ename> in the phase <pname>. 
-			pname should correspond to the name of this phase in GEMS3K DCH file.
-			ename is name (symbol) of element (Independent Component) as in GEMS3K.
-			Example: phase.aq_gen.Si 
-error                   error estimate (value can be left blank, if unknown) for the preceding 
-			   value of the element concentration in phase.  
-unit			units of measurement for the preceding value [and error] 
-			   for aqueous phases: molal; loga (log of molality); 
-			   for solid phases: mol (in moles); molfrac (mole fraction); 
-			   simolfrac (mole ratio to Si, for Si-containing cement phases). 
+phase.<pname>.IC.<ename>.Q	Experimental concentration of independent component IC element <ename> in the phase <pname>. 
+				    pname should correspond to the name of this phase in GEMS3K DCH file.
+				    ename is name (symbol) of element (Independent Component) as in GEMS3K. (empty cell = object not created in GEMSFIT2)
+				    Example: phase.aq_gen.IC.Si.Q 
+error                   	error estimate (value can be left blank, if unknown) for the preceding 
+			   	    value of the element concentration in phase.  (empty cell = 0)
+unit				units of measurement for the preceding value [and error] 
+			   	    for aqueous phases: molal; loga (log of molality); (empty cell = molal)
+			   	    for solid phases: mol (in moles); molfrac (mole fraction); (empty cell = molfrac) 
+			   	    simolfrac (mole ratio to Si, for Si-containing cement phases). 
 
-phase.<pname>.Dc<dfor>. Experimental property of species <dfor> in the phase <pname>. 			 
-			pname should correspond to the name of this phase in GEMS3K DCH file.
-			dfor is the formula of species (Dependent Component) belonging to 
-			   this phase. The following properties can be used after <dfor>. :
-			pQnt: concentration in mole fraction (molfrac);
-			@coef: activity coefficient;
+phase.<pname>.DC.<dname>. 	Experimental property of dependent component DC, <dname> in the phase <pname>. 			 
+				    pname should correspond to the name of this phase in GEMS3K DCH file. (empty cell = object not created in GEMSFIT2)
+			   	    dfor is the formula of species (Dependent Component) belonging to 
+			   	    this phase. The following properties can be used after <dfor>. :
+				Q: concentration in mole fraction (molfrac);
+				@coef: activity coefficient;
 			...
 error                   error estimate (value can be left blank, if unknown) for the preceding 
-			   value of the phase species property.  
+			   value of the phase species property. (empty cell = 0) 
 unit			units of measurement for the preceding value [and error]: 
 			   for pQnt: molfrac (mole fraction); for @coef: ???? 
-			Example: phase.aq_gen.DcSiO2-.pQnt
+			Example: phase.aq_gen.DC.SiO2-.pQnt
 
 IMPORTANT:
 Each sample (row) must have a unique combination of sample and expdataset names.
