@@ -46,11 +46,11 @@ void adjust_G0 (int i, double G0, TGfitTask *sys)
     double delta_G0old_G0new;
     int species_index = sys->Opti->Pindex[i];
     // going trough all nodes
-    for (int n=0; n<sys->NodT.size(); ++n)
+    for (unsigned int n=0; n<sys->NodT.size(); ++n)
     {
         delta_G0old_G0new = fabs(sys->NodT[n]->DC_G0(species_index, 1e+05, 298.15, false)) - fabs(new_G0);
         // going trough all TP pairs
-        for (int j=0; j<sys->TP_pairs[0].size(); ++j)
+        for (unsigned int j=0; j<sys->TP_pairs[0].size(); ++j)
         {
             new_GTP = delta_G0old_G0new + sys->NodT[n]->DC_G0(species_index, sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, false);
             // Set the new G0 in GEMS
@@ -64,7 +64,7 @@ void adjust_G0 (int i, double G0, TGfitTask *sys)
 void adjust_PMc (int i, double new_PMc, TGfitTask *sys)
 {
     int index_PMc = sys->Opti->Pindex[i];
-    for (int n=0; n<sys->NodT.size(); ++n)
+    for (unsigned int n=0; n<sys->NodT.size(); ++n)
     {
         sys->NodT[n]->Set_PMc(new_PMc, index_PMc );
     }
@@ -73,7 +73,7 @@ void adjust_PMc (int i, double new_PMc, TGfitTask *sys)
 void adjust_DMc (int i, double new_DMc, TGfitTask *sys)
 {
     int index_DMc = sys->Opti->Pindex[i];
-    for (int n=0; n<sys->NodT.size(); ++n)
+    for (unsigned int n=0; n<sys->NodT.size(); ++n)
     {
         sys->NodT[n]->Set_DMc(new_DMc, index_DMc );
     }
@@ -82,7 +82,7 @@ void adjust_DMc (int i, double new_DMc, TGfitTask *sys)
 void adjust_bIC (int i, double new_bIC, TGfitTask *sys)
 {
     int index_bIC = sys->Opti->Pindex[i];
-    for (int n=0; n<sys->NodT.size(); ++n)
+    for (unsigned int n=0; n<sys->NodT.size(); ++n)
     {
         sys->NodT[n]->Set_bIC(index_bIC, new_bIC );
     }
@@ -90,7 +90,7 @@ void adjust_bIC (int i, double new_bIC, TGfitTask *sys)
 
 void adjust_TK (int i, double new_TK, TGfitTask *sys)
 {
-    for (int n=0; n<sys->NodT.size(); ++n)
+    for (unsigned int n=0; n<sys->NodT.size(); ++n)
     {
         sys->NodT[n]->Set_TK(new_TK );
         sys->NodT[n]->Set_mLook(0); // activate interpolation of themrodynamic properties lookup array
@@ -99,7 +99,7 @@ void adjust_TK (int i, double new_TK, TGfitTask *sys)
 
 void adjust_P (int i, double new_P, TGfitTask *sys)
 {
-    for (int n=0; n<sys->NodT.size(); ++n)
+    for (unsigned int n=0; n<sys->NodT.size(); ++n)
     {
         sys->NodT[n]->Set_TK(new_P );
         sys->NodT[n]->Set_mLook(0); // activate interpolation of themrodynamic properties lookup array
@@ -113,9 +113,9 @@ void adjust_RDc (TGfitTask *sys)
     omp_set_num_threads(sys->MPI);
     #pragma omp parallel for
 //#endif
-    for (int n=0; n<sys->NodT.size(); ++n)
+    for (unsigned int n=0; n<sys->NodT.size(); ++n)
     {
-        for (int i=0; i < sys->Opti->reactions.size(); ++i )
+        for (unsigned int i=0; i < sys->Opti->reactions.size(); ++i )
         {
             double new_G0=0;
             double delta_G=0;
@@ -124,7 +124,7 @@ void adjust_RDc (TGfitTask *sys)
             int species_index = sys->Opti->reactions[i]->rdc_species_ind[sys->Opti->reactions[i]->rdc_species_ind.size()-1];
 
             // for standard sate at 25 C and 1 bar
-            for (int j=0; j < sys->Opti->reactions[i]->rdc_species.size()-1; ++j ) // calculates DG without the last species which is the constrained one
+            for (unsigned int j=0; j < sys->Opti->reactions[i]->rdc_species.size()-1; ++j ) // calculates DG without the last species which is the constrained one
             {
                 delta_G += sys->Opti->reactions[i]->rdc_species_coef[j] * sys->NodT[n]->DC_G0(sys->Opti->reactions[i]->rdc_species_ind[j], 1e+05, 298.15, false);
             }
@@ -138,7 +138,7 @@ void adjust_RDc (TGfitTask *sys)
             sys->NodT[n]->Set_DC_G0(species_index,1*100000, 25+273.15, new_G0);
 
             // for all TP pairs
-            for (int j=0; j<sys->TP_pairs[0].size(); j++) // loops trough all unique TP_pairs
+            for (unsigned int j=0; j<sys->TP_pairs[0].size(); j++) // loops trough all unique TP_pairs
             {
                 // loop torugh reaction species except the last which is the dependent one
 // M2
@@ -167,14 +167,14 @@ void adjust_Lp (TGfitTask *sys)
     omp_set_num_threads(sys->MPI);
     #pragma omp parallel for
 //#endif
-    for (int n=0; n<sys->NodT.size(); ++n)
+    for (unsigned int n=0; n<sys->NodT.size(); ++n)
     {
-        for (int i=0; i < sys->Opti->Lparams.size(); ++i )
+        for (unsigned int i=0; i < sys->Opti->Lparams.size(); ++i )
         {
             double new_param=0;
             int LP_index = sys->Opti->Lparams[i]->index;
 
-            for (int j=0; j < sys->Opti->Lparams[i]->L_param.size()-1; ++j )
+            for (unsigned int j=0; j < sys->Opti->Lparams[i]->L_param.size()-1; ++j )
             {
                 new_param += sys->Opti->Lparams[i]->L_coef[j] * sys->NodT[n]->Get_bIC(sys->Opti->Lparams[i]->L_param_ind[j]);
             }
@@ -467,7 +467,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
     int PHndx, DCndx;
     double computed_value, measured_value;
     double Tfun_residual = 0.0, Weighted_Tfun_residual, weight_ = 1.0;
-    DATACH* dCH = sys->NodT[i]->pCSD();
+//    DATACH* dCH = sys->NodT[i]->pCSD();
 
     phase_name = sys->experiments[i]->expphases[p]->phase.c_str();
     dcomp_name = sys->experiments[i]->expphases[p]->phdcomps[dc]->formula.c_str();
@@ -495,7 +495,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
 ////        cout << measured_value <<" / " <<computed_value<<" = " << measured_value / computed_value << endl;
 //        computed_value = rand() % 100 + 1;
 //    }
-
+////// NO COMPUTED VALUE YET++++!!!
     // check Target function type and calculate the Tfun_residual
     weight_ = weight_phdcomp(i, p, dc, dcp, j, sys->Tfun->weight, sys);
     Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j]);

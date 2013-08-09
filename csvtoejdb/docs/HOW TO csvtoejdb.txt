@@ -25,7 +25,14 @@ sT			Temperature in degrees Celsius (empty cell = 0)
 sP			Pressure in bars (empty cell = 0)
 sV			System volume in cm3 (empty cell = 0)
 expdataset		Name of this experimental data set (alphanumeric), 
-				should be the same for all samples belonging to a given set.   
+				should be the same for all samples belonging to a given set. 
+Upper_CK.<dname>	Upper metastability constraints (if the dependent component is wished to not be
+			        suppressed form a certain experiment put 0) (optional column) 
+				(empty cell = object not created in GEMSFIT2)
+Lower_CK.<dname>	Lower metastability constraints (if the dependent component is wished to be
+			        present put >0, present as metastable) (optional column)
+				(empty cell = object not created in GEMSFIT2) 
+
 SYSTEM COMPOSITION:
 comp.<formula> 		Composition of the sample system, expressed as one or several columns 
 			with names in the format: comp.SiO2, comp.CaO, comp.NaCl ... (empty cell = object not created in GEMSFIT2)

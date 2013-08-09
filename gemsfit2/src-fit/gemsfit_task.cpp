@@ -114,7 +114,7 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
 
 void TGfitTask::gfit_error ( )
 {
-    for (int i=0; i<Opti->opt.size(); ++i)
+    for (unsigned int i=0; i<Opti->opt.size(); ++i)
     {
         if( ((Opti->Ptype[i] == "TK") || (Opti->Ptype[i] == "P")) && (NodT.size() > 1))
          {
@@ -143,14 +143,14 @@ void TGfitTask::get_logK_TPpairs()
     const double Rln = -2.302585093*8.314472;
     double RTln = 0.0;
     // loop trough reactions
-    for (int i = 0; i< this->Opti->reactions.size(); ++i)
+    for (unsigned int i = 0; i< this->Opti->reactions.size(); ++i)
     {
 //        this->Opti->reactions[i]->logK_TPpairs.resize(this->TP_pairs[0].size());
         // loop trough TP
-        for (int j = 0; j<this->TP_pairs[0].size(); ++j)
+        for (unsigned int j = 0; j<this->TP_pairs[0].size(); ++j)
         {
             // loop trough rection species to calculated delta G of reaction
-            for (int k = 0; k<this->Opti->reactions[i]->rdc_species.size(); ++k)
+            for (unsigned int k = 0; k<this->Opti->reactions[i]->rdc_species.size(); ++k)
             {
                 DG += this->NodT[0]->DC_G0(this->Opti->reactions[i]->rdc_species_ind[k], this->TP_pairs[1][j]*100000, this->TP_pairs[0][j]+273.15, false) * this->Opti->reactions[i]->rdc_species_coef[k];
             }
@@ -166,22 +166,22 @@ void TGfitTask::get_residuals( double &residuals)
     double average = 0.0;
     residuals = 0.0;
     // loop trough objective function
-    for (int j=0; j<Tfun->objfun.size(); ++j)
+    for (unsigned int j=0; j<Tfun->objfun.size(); ++j)
     {
         int count = 0;
     /// Target function
     // Loop trough all experiments
-    for (int i=0; i<this->experiments.size(); ++i)
+    for (unsigned int i=0; i<this->experiments.size(); ++i)
     {
             if ((this->Tfun->objfun[j]->exp_phase !="NULL") && (this->experiments[i]->expphases.size() > 0))
             {
                 // loop trough all pahses
-                for (int p=0; p<this->experiments[i]->expphases.size(); ++p)
+                for (unsigned int p=0; p<this->experiments[i]->expphases.size(); ++p)
                 {
                     if ((Tfun->objfun[j]->exp_elem !="NULL") && (Tfun->objfun[j]->exp_property =="NULL"))
                     {
                         // loop trough all elements
-                        for (int e=0; e<this->experiments[i]->expphases[p]->phcomp.size(); ++e)
+                        for (unsigned int e=0; e<this->experiments[i]->expphases[p]->phcomp.size(); ++e)
                         {
                             if ((this->experiments[i]->expphases[p]->phcomp[e]->comp == this->Tfun->objfun[j]->exp_elem) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
                             {
@@ -196,7 +196,7 @@ void TGfitTask::get_residuals( double &residuals)
                         if ((Tfun->objfun[j]->exp_property !="NULL") && (this->experiments[i]->expphases[p]->phprop.size() > 0) && (this->Tfun->objfun[j]->exp_dcomp == "NULL"))
                         {
                         // loop trough all properties
-                        for (int pp = 0; pp< this->experiments[i]->expphases[p]->phprop.size(); ++pp)
+                        for (unsigned int pp = 0; pp< this->experiments[i]->expphases[p]->phprop.size(); ++pp)
                         {
                             if ((this->experiments[i]->expphases[p]->phprop[pp]->property == Tfun->objfun[j]->exp_property) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
                             {
@@ -211,12 +211,12 @@ void TGfitTask::get_residuals( double &residuals)
                         if ((Tfun->objfun[j]->exp_property !="NULL") && (this->experiments[i]->expphases[p]->phdcomps.size() > 0) && (Tfun->objfun[j]->exp_dcomp != "NULL"))
                         {
                             // loop trough all dependent components
-                            for (int dc = 0; dc< this->experiments[i]->expphases[p]->phdcomps.size(); ++dc)
+                            for (unsigned int dc = 0; dc< this->experiments[i]->expphases[p]->phdcomps.size(); ++dc)
                             {
                                 if ((this->experiments[i]->expphases[p]->phdcomps[dc]->formula == Tfun->objfun[j]->exp_dcomp) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
                                 {
                                     // loop trough all dep comp properties
-                                    for (int dcp = 0; dcp < this->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop.size(); ++dcp)
+                                    for (unsigned int dcp = 0; dcp < this->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop.size(); ++dcp)
                                     {
                                         if (this->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->property == Tfun->objfun[j]->exp_property)
                                         {
@@ -497,10 +497,10 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, /*s
     }
 
     // Only the Master process runs the optimization library. The other processes only run the callback function (copying the newly generated guess values from process 0).
-    int ierr;
+//    int ierr;
     //ierr = MPI_Comm_rank( MPI_COMM_WORLD, &pid );
     //ierr = MPI_Comm_size( MPI_COMM_WORLD, &p );
-    int continue_or_exit;
+//    int continue_or_exit;
 
     ffout << "15. in gesfit_task.cpp line 378. Performing optimization."<<endl;
 
@@ -577,11 +577,11 @@ ffout.close();
 
 void TGfitTask::setnodes()
 {
-    int n, i, j;
+    unsigned int n, i, j;
     // DATACH structure content
-    int nIC, nDC, nPH, ICndx, PHndx;
+    int nIC, nDC, nPH, ICndx, DCndx/*, PHndx*/;
     long int NodeStatusCH, NodeHandle;
-    double P_pa, T_k, PMc;
+    double P_pa, T_k/*, PMc*/;
     double* new_moles_IC;
     double* xDC_up;
     double* xDC_lo;
@@ -626,6 +626,24 @@ void TGfitTask::setnodes()
             xDC_lo[ i ]  = 0.;
         }
 
+        if (experiments.at(n)->U_KC.size() > 0)
+        {
+            for (i=0; i<experiments.at(n)->U_KC.size(); ++i)
+            {
+                DCndx = NodT[n]->DC_name_to_xDB(experiments.at(n)->U_KC[i]->dcomp.c_str());
+                xDC_up[DCndx] = experiments.at(n)->U_KC[i]->pQnt;
+            }
+        }
+
+        if (experiments.at(n)->L_KC.size() > 0)
+        {
+            for (i=0; i<experiments.at(n)->L_KC.size(); ++i)
+            {
+                DCndx = NodT[n]->DC_name_to_xDB(experiments.at(n)->L_KC[i]->dcomp.c_str());
+                xDC_lo[DCndx] = experiments.at(n)->L_KC[i]->pQnt;
+            }
+        }
+
         // Surface energy of phases -> kinetics
         for( i=0; i<nPH; i++ )
             Ph_surf[i] = 0.;
@@ -645,7 +663,7 @@ void TGfitTask::setnodes()
 //            new_moles_IC[ICndx]=2;
 //        }
 
-        int DCndx = NodT[n]->DC_name_to_xDB("H2");
+         DCndx = NodT[n]->DC_name_to_xDB("H2");
 
 //        NodT[n]->Set_nDC(DCndx, 1e-05);
 
@@ -901,7 +919,7 @@ void TGfitTask::setnodes()
         // ---- // ---- // Transfer new temperature, pressure and b-vector to GEMS3K // ---- // ---- //
 //        NodT[n]->GEM_from_MT( NodeHandle, NodeStatusCH, T_k, P_pa, 0., 0., new_moles_IC, xDC_up, xDC_lo, Ph_surf );
 
-        NodT[n]->GEM_from_MT( NodeHandle, NodeStatusCH, T_k, P_pa, new_moles_IC );
+        NodT[n]->GEM_from_MT( NodeHandle, NodeStatusCH, T_k, P_pa, new_moles_IC, xDC_up, xDC_lo );
 
         delete[] new_moles_IC;
         delete[] xDC_up;

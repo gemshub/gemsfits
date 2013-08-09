@@ -122,8 +122,22 @@ class Data_Manager : public TNode
                 string Punit;
                 double sV;                  /// (system) volume of experimental sample
                 string Vunit;
-                // defines bulk composition of chemical system for this experiment 2nd level in EJDB
 
+                struct Uconstraints
+                {
+                    string dcomp;
+                    double pQnt;
+                };
+                vector<Uconstraints*> U_KC;
+
+                struct Lconstraints
+                {
+                    string dcomp;
+                    double pQnt;
+                };
+                vector<Lconstraints*> L_KC;
+
+                // defines bulk composition of chemical system for this experiment 2nd level in EJDB
                 struct components
                 {
                     string comp;         /// formula defining PCO stoichiometry (GEM formula syntax)

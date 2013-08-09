@@ -453,7 +453,7 @@ void get_gems_fit_multi_txt(TNode* node, opti_vector *op )
           if( !vFormats.empty() )
           {
               // Hear you must write your code
-              for( int ii=0; ii<vFormats.size(); ii++ )
+              for(unsigned int ii=0; ii<vFormats.size(); ii++ )
               {    cout<< "field " << MULTI_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<
                           " Index " << vFormats[ii].index << endl;
                   cout<< vFormats[ii].format << endl;
@@ -543,7 +543,7 @@ void get_gems_fit_DCH_txt(TNode* node, opti_vector* op )
         {
             int nr = 0;
             // Hear you must write your code
-            for( int ii=0; ii<vFormats.size(); ii++ )
+            for(unsigned  int ii=0; ii<vFormats.size(); ii++ )
             {
                 cout<< "Field " << DataCH_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<
                         " Index " << vFormats[ii].index << endl;
@@ -651,7 +651,7 @@ void get_gems_fit_DBR_txt(TNode* node , opti_vector *op)
         {
             int nl = 0;
             // Hear you must write your code
-            for( int ii=0; ii<vFormats.size(); ii++ )
+            for(unsigned  int ii=0; ii<vFormats.size(); ii++ )
             {    cout<< "field " << DataBR_fields[nfild].name << " Type " << vFormats[ii].type <<
                         " Index " << vFormats[ii].index << endl;
                 cout<< vFormats[ii].format << endl;
@@ -824,15 +824,18 @@ outField Data_Manager_fields[9] =
       "\n#    \'{ ... }\': script in JSON format (in braces) describing what to select. "
       "\n#      \"sample\": [...]: list of comma-separated names of samples, "
       "\n#         or empty string \"\" to select all samples;"
-      "\n#      \"expdataset\": [...]: list of comma-separated names of experimental datasets, "
+      "\n#      \"usedataset\": [...]: list of comma-separated names of experimental datasets to be used, "
       "\n#         or empty string \"\" to select all available datasets;"
+      "\n#      \"skipdataset\": [...]: list of comma-separated names of experimental datasets to be skipped, "
+      "\n#         or empty string \"\" to not skipp (in this case usedataset will apply);"
       "\n#      \"sT\": [...]: list of comma-separated minimum and maximum temperature, C, "
       "\n#         or empty string \"\" to select data for all available temperatures; "
       "\n#      \"sP\": [...]: list of comma-separated minimum and maximum pressures, bar, "
       "\n#         or empty string \"\" to select data for all available pressures;  "
       "\n#      Example: "
       "\n#      \'{ \"sample\" : \"\", "
-      "\n#        \"expdataset\" : [\"CH04\", \"CH04D\"],"
+      "\n#        \"usedataset\" : [\"CH04\", \"CH04D\"],"
+      "\n#        \"skipdataset\" : [\"CH03\", \"CH03D\"],"
       "\n#        \"sT\" : [100, 1000],"
       "\n#        \"sP\" : [1, 2500] }\'"
       "\n#      Paste the above example below, remove comment symbols (#), and edit as necessary.\n"
@@ -1258,7 +1261,7 @@ void optimization::get_nlopt_param_txt(vector<double> optv)
     {
         OptUpBounds.resize( optv.size() );
         OptLoBounds.resize( optv.size() );
-        for(int i=0; i<optv.size(); i++ )
+        for(unsigned int i=0; i<optv.size(); i++ )
         {
             OptUpBounds[i] = optv[i] + fabs( optv[i]*OptBoundPerc/100. );
             OptLoBounds[i] = optv[i] - fabs( optv[i]*OptBoundPerc/100. );

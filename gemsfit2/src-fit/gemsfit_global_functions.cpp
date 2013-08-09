@@ -64,7 +64,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     omp_set_num_threads(sys->MPI);
     #pragma omp parallel for
 //#endif
-    for (int i=0; i< sys->Opti->Ptype.size(); ++i)
+    for (unsigned int i=0; i< sys->Opti->Ptype.size(); ++i)
     {
         // parameter is Std State Gibbs free energy
         if (sys->Opti->Ptype[i] == "G0")
@@ -111,7 +111,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     omp_set_num_threads(sys->MPI);
     #pragma omp parallel for
 ////#endif
-    for (int i=0; i<sys->NodT.size(); ++i)
+    for (unsigned int i=0; i<sys->NodT.size(); ++i)
     {
         vector<DATABR*> dBR;
         dBR.push_back(sys->NodT[i]->pCNode());
@@ -137,7 +137,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     }
 
     // Set the P in the node->CNode-P as in the experiments
-    for (int i=0; i<sys->experiments.size(); ++i)
+    for (unsigned int i=0; i<sys->experiments.size(); ++i)
     {
         sys->NodT[i]->Set_TK(273.15 + sys->experiments[i]->sT);
         sys->NodT[i]->Set_P(100000 * sys->experiments[i]->sP);
@@ -217,7 +217,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     {
         cout << master_counter << " itterations, continuning..." << endl;
         cout << "sum of residuals: "<<residuals_sys<< endl;
-        for (int i = 0; i<opt.size(); ++i)
+        for (unsigned int i = 0; i<opt.size(); ++i)
         {
             cout<<"parameter "<<i<<" : "<<opt[i]<<endl;
         }

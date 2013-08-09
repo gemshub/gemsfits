@@ -91,7 +91,7 @@ statistics::~statistics()
 void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 {
     // Variable declarations
-    int i;
+    unsigned int i;
     double mean = 0.;
     double mean_res = 0.;
     double ResSumSquares = 0., TotalSumSquares = 0.;
@@ -243,7 +243,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 // perform sensitivity analysis of selected parameters
 void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfittask )
 {
-        int i, j, k, l, jj, ll, len_meas;
+        unsigned int i, j, k, len_meas;
         double residual_sys;
 
         std::vector<double> computed_up;

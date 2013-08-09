@@ -267,7 +267,7 @@ void Data_Manager::get_EJDB( )
     if( fout.fail() )
     { cout<<"Output fileopen error"<<endl; exit(1); }
 
-    string_v out, qsample, qexpdataset;
+    string_v out, qsample, usedataset, skipdataset;
     int_v qsT, qsP;
 
     // processing DataSelect
@@ -277,8 +277,12 @@ void Data_Manager::get_EJDB( )
         qsample = out; // query for selecting samples
         out.clear();
 
-        parse_JSON_object(DataSelect, keys::expdataset, out);
-        qexpdataset = out; // query for selecting expdatasets
+        parse_JSON_object(DataSelect, keys::usedataset, out);
+        usedataset = out; // query for selecting expdatasets
+        out.clear();
+
+        parse_JSON_object(DataSelect, keys::skipdataset, out);
+        skipdataset = out; // query for skiping expdatasets
         out.clear();
 
         parse_JSON_object(DataSelect, keys::sT, out);
@@ -313,13 +317,26 @@ void Data_Manager::get_EJDB( )
         bson_init_as_query(&bq2);
 
         // for selecting expdatasets
-        if (!qexpdataset[0].empty())
+        if (!usedataset[0].empty())
         {
             bson_append_start_object(&bq2, keys::expdataset);
             bson_append_start_array(&bq2, "$in");
-            for (unsigned int j=0; j<qexpdataset.size(); ++j)
+            for (unsigned int j=0; j<usedataset.size(); ++j)
             {
-                bson_append_string(&bq2, boost::lexical_cast<string>(j).c_str(), qexpdataset[j].c_str());
+                bson_append_string(&bq2, boost::lexical_cast<string>(j).c_str(), usedataset[j].c_str());
+            }
+            bson_append_finish_array(&bq2);
+            bson_append_finish_object(&bq2);
+        }
+
+        // for skiping expdatasets
+        if (!skipdataset[0].empty())
+        {
+            bson_append_start_object(&bq2, keys::expdataset);
+            bson_append_start_array(&bq2, "$nin");
+            for (unsigned int j=0; j<skipdataset.size(); ++j)
+            {
+                bson_append_string(&bq2, boost::lexical_cast<string>(j).c_str(), skipdataset[j].c_str());
             }
             bson_append_finish_array(&bq2);
             bson_append_finish_object(&bq2);
@@ -331,7 +348,7 @@ void Data_Manager::get_EJDB( )
         {
             bson_append_start_object(&bq2, keys::expsample);
             bson_append_start_array(&bq2, "$in");
-            for (unsigned int j=0; j<qexpdataset.size(); ++j)
+            for (unsigned int j=0; j<usedataset.size(); ++j)
             {
                 bson_append_string(&bq2, boost::lexical_cast<string>(j).c_str(), qsample[j].c_str());
             }
@@ -354,7 +371,7 @@ void Data_Manager::get_EJDB( )
             {
                 bson_append_start_object(&bq2, keys::sT);
                 bson_append_start_array(&bq2, "$in");
-                for (int j=0; j<qsT.size(); ++j)
+                for (unsigned int j=0; j<qsT.size(); ++j)
                 {
                     bson_append_int(&bq2, boost::lexical_cast<string>(j).c_str(), qsT[j]);
                 }
@@ -377,7 +394,7 @@ void Data_Manager::get_EJDB( )
             {
                 bson_append_start_object(&bq2, keys::sP);
                 bson_append_start_array(&bq2, "$in");
-                for (int j=0; j<qsP.size(); ++j)
+                for (unsigned int j=0; j<qsP.size(); ++j)
                 {
                     bson_append_int(&bq2, boost::lexical_cast<string>(j).c_str(), qsP[j]);
                 }
@@ -402,7 +419,7 @@ void Data_Manager::get_EJDB( )
 //         fprintf(stderr, "\n");
 
          // adding data into Data_manager storage class
-         for (int j=0; j<count; j++)
+         for (unsigned int j=0; j<count; j++)
          {
              experiments.push_back( new samples );
              // set experiments variables empty
@@ -418,7 +435,7 @@ void Data_Manager::get_EJDB( )
          omp_set_num_threads(MPI);
          #pragma omp parallel for
 //#endif
-         for (int i = 0; i < TCLISTNUM(res); ++i) {
+         for (unsigned int i = 0; i < TCLISTNUM(res); ++i) {
              void *bsdata = TCLISTVALPTR(res, i);
              char *bsdata_ = static_cast<char*>(bsdata);
              bson_to_Data_Manager(stderr, bsdata_, i); // adding the data returned by the selection query into the data storage class
@@ -446,7 +463,7 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
     bson_iterator i, j, k, k2, d, d2, d3; // 1st, 2nd, 3rd, 2-1, 3-1 level
     const char *key;
     string key_;
-    int ip = -1, ic = -1, ipc, ipp, ips, ipdcp;
+    int ip = -1, ic = -1, sk = -1, ipc, ipp, ips, ipdcp;
     bson_iterator_from_buffer(&i, data);
 
     while (bson_iterator_next(&i))
@@ -526,6 +543,88 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                     {
                         experiments.at(pos)->sbcomp.at(ic)->Qunit = bson_iterator_string(&d) ;
                     }
+                }
+            }
+        } else
+
+        // adding Upper metastability constraints
+        if ((key_ == keys::Upper_CK) && (t == BSON_ARRAY))
+        {
+            bson_iterator_from_buffer(&j, bson_iterator_value(&i));
+            while (bson_iterator_next(&j))
+            {
+                bson_iterator_from_buffer(&d, bson_iterator_value(&j));
+                experiments.at(pos)->U_KC.push_back( new samples::Uconstraints );
+                sk++; // position of the component in U_SK vector
+//                experiments.at(pos)->U_KC.at(sk)->dcomp = NULL;
+                experiments.at(pos)->U_KC.at(sk)->pQnt = 1000000;
+
+                while (bson_iterator_next(&d))
+                {
+                    t = bson_iterator_type(&d);
+                    if (t == 0)
+                        break;
+                    key = bson_iterator_key(&d);
+                    key_ = key;
+
+                    if ((key_ == keys::dcomp))
+                    {
+                        experiments.at(pos)->U_KC.at(sk)->dcomp =  bson_iterator_string(&d) ;
+
+                    } else
+                    if ((key_ == keys::pQnt))
+                    {
+                        experiments.at(pos)->U_KC.at(sk)->pQnt = bson_iterator_double(&d) ;
+                    } /*else
+                    if ((key_ == keys::Qerror))
+                    {
+                        experiments.at(pos)->sbcomp.at(ic)->Qerror = bson_iterator_double(&d) ;
+                    } else
+                    if ((key_ == keys::Qunit))
+                    {
+                        experiments.at(pos)->sbcomp.at(ic)->Qunit = bson_iterator_string(&d) ;
+                    }*/
+                }
+            }
+        } else
+
+        // adding Lower metastability constraints
+        if ((key_ == keys::Lower_CK) && (t == BSON_ARRAY))
+        {
+            bson_iterator_from_buffer(&j, bson_iterator_value(&i));
+            while (bson_iterator_next(&j))
+            {
+                bson_iterator_from_buffer(&d, bson_iterator_value(&j));
+                experiments.at(pos)->L_KC.push_back( new samples::Lconstraints );
+                sk++; // position of the component in U_SK vector
+    //            experiments.at(pos)->U_KC.at(sk)->dcomp = NULL;
+                experiments.at(pos)->L_KC.at(sk)->pQnt = 1000000;
+
+                while (bson_iterator_next(&d))
+                {
+                    t = bson_iterator_type(&d);
+                    if (t == 0)
+                        break;
+                    key = bson_iterator_key(&d);
+                    key_ = key;
+
+                    if ((key_ == keys::dcomp))
+                    {
+                        experiments.at(pos)->L_KC.at(sk)->dcomp =  bson_iterator_string(&d) ;
+
+                    } else
+                    if ((key_ == keys::pQnt))
+                    {
+                        experiments.at(pos)->L_KC.at(sk)->pQnt = bson_iterator_double(&d) ;
+                    } /*else
+                        if ((key_ == keys::Qerror))
+                        {
+                            experiments.at(pos)->sbcomp.at(ic)->Qerror = bson_iterator_double(&d) ;
+                        } else
+                        if ((key_ == keys::Qunit))
+                        {
+                            experiments.at(pos)->sbcomp.at(ic)->Qunit = bson_iterator_string(&d) ;
+                        }*/
                 }
             }
         } else
@@ -753,7 +852,7 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
 void Data_Manager::get_distinct_TP( )
 {
     vector<int> TP[2];
-    int i, j;
+    unsigned int i, j;
     bool isfound = false, isfound2 = false;
 
     for (i=0; i<experiments.size(); ++i)
