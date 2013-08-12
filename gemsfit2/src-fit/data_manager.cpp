@@ -40,8 +40,8 @@
 #include "gemsfit_iofiles.h"
 #include "keywords.h"
 #include <jansson.h>
-#include <boost/lexical_cast.hpp>
 #include "ejdb.h"
+#include <sstream>
 
 // Constructor
 Data_Manager::Data_Manager( )
@@ -137,6 +137,8 @@ void Data_Manager::parse_JSON_object(string query, const char* key, vector<strin
 {
     json_t *root; json_t *data; json_t *object;
     json_error_t jerror;
+    stringstream ss;
+    string sss;
 
     const char * JSON = query.c_str();
     root = json_loads(JSON, 0, &jerror);
@@ -159,11 +161,17 @@ void Data_Manager::parse_JSON_object(string query, const char* key, vector<strin
                     }
                     else if (json_is_real(data))
                     {
-                        result.push_back(boost::lexical_cast<string>(json_real_value(data)));
+                        ss << json_real_value(data);
+                        sss = ss.str();
+                        ss.str("");
+                        result.push_back(sss);
                     }
                     else if (json_is_integer(data))
                     {
-                        result.push_back(boost::lexical_cast<string>(json_integer_value(data)));
+                        ss << json_integer_value(data);
+                        sss = ss.str();
+                        ss.str("");
+                        result.push_back(sss);
                     }
                     else if (json_is_object(data))
                     {
@@ -179,11 +187,17 @@ void Data_Manager::parse_JSON_object(string query, const char* key, vector<strin
                 }
                 else if (json_is_real(object))
                 {
-                    result.push_back(boost::lexical_cast<string>(json_real_value(object)));
+                    ss << json_real_value(object);
+                    sss = ss.str();
+                    ss.str("");
+                    result.push_back(sss);
                 }
                 else if (json_is_integer(object))
                 {
-                    result.push_back(boost::lexical_cast<string>(json_integer_value(object)));
+                    ss << json_integer_value(object);
+                    sss = ss.str();
+                    ss.str("");
+                    result.push_back(sss);
                 }
         }
     }
@@ -193,6 +207,8 @@ void Data_Manager::parse_JSON_array_object( string data_, const char *arr , cons
 {
     json_t *root; json_t *data1; json_t *data; json_t *object;
     json_error_t jerror;
+    stringstream ss;
+    string sss;
 
     const char * JSON = data_.c_str();
     root = json_loads(JSON, 0, &jerror);
@@ -218,11 +234,17 @@ void Data_Manager::parse_JSON_array_object( string data_, const char *arr , cons
                     }
                     else if (json_is_real(data))
                     {
-                        result.push_back(boost::lexical_cast<string>(json_real_value(data)));
+                        ss << json_real_value(data);
+                        sss = ss.str();
+                        ss.str("");
+                        result.push_back(sss);
                     }
                     else if (json_is_integer(data))
                     {
-                        result.push_back(boost::lexical_cast<string>(json_integer_value(data)));
+                        ss << json_integer_value(data);
+                        sss = ss.str();
+                        ss.str("");
+                        result.push_back(sss);
                     }
                 }
              }
@@ -236,11 +258,17 @@ void Data_Manager::parse_JSON_array_object( string data_, const char *arr , cons
                 }
                 else if (json_is_real(object))
                 {
-                    result.push_back(boost::lexical_cast<string>(json_real_value(object)));
+                    ss << json_real_value(object);
+                    sss = ss.str();
+                    ss.str("");
+                    result.push_back(sss);
                 }
                 else if (json_is_integer(object))
                 {
-                    result.push_back(boost::lexical_cast<string>(json_integer_value(object)));
+                    ss << json_integer_value(object);
+                    sss = ss.str();
+                    ss.str("");
+                    result.push_back(sss);
                 }
         }
     }
@@ -269,6 +297,9 @@ void Data_Manager::get_EJDB( )
 
     string_v out, qsample, usedataset, skipdataset;
     int_v qsT, qsP;
+
+    stringstream ss;
+    string sss;
 
     // processing DataSelect
     if (DataSelect != "all")
@@ -323,7 +354,10 @@ void Data_Manager::get_EJDB( )
             bson_append_start_array(&bq2, "$in");
             for (unsigned int j=0; j<usedataset.size(); ++j)
             {
-                bson_append_string(&bq2, boost::lexical_cast<string>(j).c_str(), usedataset[j].c_str());
+                ss << j;
+                sss = ss.str();
+                ss.str("");
+                bson_append_string(&bq2, sss.c_str(), usedataset[j].c_str());
             }
             bson_append_finish_array(&bq2);
             bson_append_finish_object(&bq2);
@@ -336,7 +370,10 @@ void Data_Manager::get_EJDB( )
             bson_append_start_array(&bq2, "$nin");
             for (unsigned int j=0; j<skipdataset.size(); ++j)
             {
-                bson_append_string(&bq2, boost::lexical_cast<string>(j).c_str(), skipdataset[j].c_str());
+                ss << j;
+                sss = ss.str();
+                ss.str("");
+                bson_append_string(&bq2, sss.c_str(), skipdataset[j].c_str());
             }
             bson_append_finish_array(&bq2);
             bson_append_finish_object(&bq2);
@@ -350,7 +387,10 @@ void Data_Manager::get_EJDB( )
             bson_append_start_array(&bq2, "$in");
             for (unsigned int j=0; j<usedataset.size(); ++j)
             {
-                bson_append_string(&bq2, boost::lexical_cast<string>(j).c_str(), qsample[j].c_str());
+                ss << j;
+                sss = ss.str();
+                ss.str("");
+                bson_append_string(&bq2, sss.c_str(), qsample[j].c_str());
             }
             bson_append_finish_array(&bq2);
             bson_append_finish_object(&bq2);
@@ -373,7 +413,10 @@ void Data_Manager::get_EJDB( )
                 bson_append_start_array(&bq2, "$in");
                 for (unsigned int j=0; j<qsT.size(); ++j)
                 {
-                    bson_append_int(&bq2, boost::lexical_cast<string>(j).c_str(), qsT[j]);
+                    ss << j;
+                    sss = ss.str();
+                    ss.str("");
+                    bson_append_int(&bq2, sss.c_str(), qsT[j]);
                 }
                 bson_append_finish_array(&bq2);
                 bson_append_finish_object(&bq2);
@@ -396,7 +439,10 @@ void Data_Manager::get_EJDB( )
                 bson_append_start_array(&bq2, "$in");
                 for (unsigned int j=0; j<qsP.size(); ++j)
                 {
-                    bson_append_int(&bq2, boost::lexical_cast<string>(j).c_str(), qsP[j]);
+                    ss << j;
+                    sss = ss.str();
+                    ss.str("");
+                    bson_append_int(&bq2, sss.c_str(), qsP[j]);
                 }
                 bson_append_finish_array(&bq2);
                 bson_append_finish_object(&bq2);

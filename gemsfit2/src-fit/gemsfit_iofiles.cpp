@@ -28,14 +28,13 @@ using namespace std;
 #include "data_manager.h"
 #include "keywords.h"
 #include <omp.h>
-#include <boost/filesystem.hpp>
 
 #include "statistics.h"
 #include "optimization.h"
 //#include "plot_class.h"
 //using namespace opti;
 
-namespace bfs=boost::filesystem;
+
 
 // subfolder and file names default
 const char *INPUT_DIR = "input/";
@@ -116,7 +115,8 @@ int generateConfig()
     cout << "Start writing template file"<< endl;
     Data_Manager *data_meas = new Data_Manager(1);
 
-    if (bfs::exists(gpf->OptParamFile().c_str())) {
+    if ( access( gpf->OptParamFile().c_str(), 0 ) == 0 ) {
+//    if (bfs::exists(gpf->OptParamFile().c_str())) {
         cout << gpf->OptParamFile() <<" exists. Do you want to overwrite it? write yes or no: ";
         cin >> YN;
         if ((YN == "yes") || (YN == "Yes") || (YN == "YES") || (YN == "yEs") || (YN == "yeS"))

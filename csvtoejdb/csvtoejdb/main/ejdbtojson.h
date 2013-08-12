@@ -4,7 +4,7 @@
 # include <fstream>
 # include <string>
 # include <ejdb.h>
-# include <boost/lexical_cast.hpp>
+
 
 void ejdbtojson(const char *data, std::string path);
 

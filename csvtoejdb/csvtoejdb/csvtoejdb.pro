@@ -31,7 +31,7 @@ QMAKE_CC	= gcc
 QMAKE_CXX	= g++
 QMAKE_CXXFLAGS += -std=gnu99 -Wall -pedantic -fexceptions -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions -fopenmp
 QMAKE_CFLAGS   += -std=gnu99 -fopenmp
-LIBS           += -lboost_filesystem -lboost_system -lz -fopenmp -ljansson
+LIBS           += -lz -fopenmp -ljansson
 
 
 EJDB_CPP        =  ../../gemsfit2/tcejdb

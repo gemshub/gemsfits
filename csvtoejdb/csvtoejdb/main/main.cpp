@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
 
     if (iback != 0)
     {
-        if ((argc <= iback + 3) || (argc > iback + 4) || (strcmp(argv[iback + 1], "-a")) || (strcmp(argv[iback + 1], "-t")))
+        if ((argc <= iback + 3) || (argc > iback + 4) /*|| (strcmp(argv[iback + 1], "-a")) || (strcmp(argv[iback + 1], "-t"))*/)
         {
             cout << "Wrong options, Wrong argument for option -back \n"
                     "Example: -back CASH/ cashtest experiments \n";
@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
 
     if (irest != 0)
     {
-        if ((argc <= irest + 3) || (argc > irest + 4) || (strcmp(argv[irest + 1], "-a")) || (strcmp(argv[irest + 1], "-t")))
+        if ((argc <= irest + 3) || (argc > irest + 4) /*|| (strcmp(argv[irest + 1], "-a")) || (strcmp(argv[irest + 1], "-t"))*/)
         {
             cout << "Wrong options, Wrong argument for option -rest \n"
                     "Example: -rest CASH/ cashtest.json experiments \n";

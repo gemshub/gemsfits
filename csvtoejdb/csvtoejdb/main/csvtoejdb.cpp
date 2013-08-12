@@ -1,7 +1,7 @@
 # include "csvtoejdb.h"
 # include "csv_parser.h"
 # include "keywords.h"
-# include <boost/lexical_cast.hpp>
+# include <sstream>
 
 using namespace std;
 using namespace keys;
@@ -9,8 +9,9 @@ using namespace keys;
 void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
 {
     int ic=0, phc = 0, dcc = 0, sk = 0;
-    string ph_new, ph_old, dcomp_new, dcomp_old;
+    string ph_new, ph_old, dcomp_new, dcomp_old, sss;
     vector<string> phases, dcomps;
+    stringstream ss;
     bool h_phprop = false, h_phases = false, h_phIC = false, h_dcomp = false, h_Upper_CK= false, h_Lower_CK = false; // handle that is true if we have ph_prop in the CSV file
 
     bson_oid_t oid;
@@ -139,7 +140,10 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                     pos_end   = headline[i].find(f1,pos_start+1);
                     component = headline[i].substr((pos_start+f1.length()),(pos_end-pos_start-f1.length()));
 
-                    bson_append_start_object(&exp, boost::lexical_cast<string>(sk).c_str());
+                    ss << sk;
+                    sss = ss.str();
+                    ss.str("");
+                    bson_append_start_object(&exp, sss.c_str());
                     sk++;
                     bson_append_string(&exp, dcomp, component.c_str());
                     bson_append_double(&exp, pQnt, atof(row[i].c_str()));
@@ -186,7 +190,10 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                     pos_end   = headline[i].find(f1,pos_start+1);
                     component = headline[i].substr((pos_start+f1.length()),(pos_end-pos_start-f1.length()));
 
-                    bson_append_start_object(&exp, boost::lexical_cast<string>(sk).c_str());
+                    ss << sk;
+                    sss = ss.str();
+                    ss.str("");
+                    bson_append_start_object(&exp, sss.c_str());
                     sk++;
                     bson_append_string(&exp, dcomp, component.c_str());
                     bson_append_double(&exp, pQnt, atof(row[i].c_str()));
@@ -234,7 +241,10 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                 pos_end   = headline[i].find(f1,pos_start+1);
                 component = headline[i].substr((pos_start+f1.length()),(pos_end-pos_start-f1.length()));
 
-                bson_append_start_object(&exp, boost::lexical_cast<string>(ic).c_str());
+                ss << ic;
+                sss = ss.str();
+                ss.str("");
+                bson_append_start_object(&exp, sss.c_str());
                 ic++;
                 bson_append_string(&exp, comp, component.c_str());
                 bson_append_double(&exp, bQnt, atof(row[i].c_str()));
@@ -296,7 +306,10 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
 
                     if (!h_phases) // START if h_phases
                     {
-                        bson_append_start_object(&exp, boost::lexical_cast<string>(phc).c_str()); // START phase object
+                        ss << phc;
+                        sss = ss.str();
+                        ss.str("");
+                        bson_append_start_object(&exp, sss.c_str()); // START phase object
                         phc++;
                         bson_append_string(&exp, phase, phase_name.c_str());
                         phases.push_back(phase_name);
@@ -357,7 +370,10 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                         // amount of the property of the phase pahse in the experiment
                                         if (((ph_prop == pQnt) || (ph_prop == pH) || (ph_prop == pV) ||  (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) ||  (ph_prop == sArea) || (ph_prop == RHO)) && (!row[j].empty()))
                                         {
-                                            bson_append_start_object(&exp, boost::lexical_cast<string>(ic).c_str()); // START property object
+                                            ss << ic;
+                                            sss = ss.str();
+                                            ss.str("");
+                                            bson_append_start_object(&exp, sss.c_str()); // START property object
                                             ic++;
                                             bson_append_string(&exp, property, ph_prop.c_str());
                                             bson_append_double(&exp, pQnt, atof(row[j].c_str()));
@@ -423,7 +439,10 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                         // qunatity of this comp in the phase
                                         if (((ph_prop != pQnt) && (ph_prop_1 == pQnt) && (ph_prop_2 == IC) && (ph_prop != pH) && (ph_prop != pV) &&  (ph_prop != Eh) && (ph_prop != IS) && (ph_prop != all) &&  (ph_prop != sArea) && (ph_prop != RHO)) && (strncmp(ph_prop.c_str(),"Dc", 2) != 0) && (!row[j].empty()))
                                         {
-                                            bson_append_start_object(&exp, boost::lexical_cast<string>(ic).c_str()); // START phase element object
+                                            ss << ic;
+                                            sss = ss.str();
+                                            ss.str("");
+                                            bson_append_start_object(&exp, sss.c_str()); // START phase element object
                                             ic++;
                                             bson_append_string(&exp, element, ph_prop.c_str());
                                             bson_append_double(&exp, eQnt, atof(row[j].c_str()));
@@ -500,7 +519,10 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                                 if (!h_dcomp) // START if h_dcomp
                                                 {
                                                     string dcomp_prop;
-                                                    bson_append_start_object(&exp, boost::lexical_cast<string>(dcc).c_str()); // START species object
+                                                    ss << dcc;
+                                                    sss = ss.str();
+                                                    ss.str("");
+                                                    bson_append_start_object(&exp, sss.c_str()); // START species object
                                                     dcc++;
                                                     bson_append_string(&exp, species, dcomp_name.c_str());
                                                     dcomps.push_back(dcomp_name);
@@ -524,7 +546,10 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                                             dcomp_prop = headline[j].substr(pos_start, pos_end);
 
 
-                                                            bson_append_start_object(&exp, boost::lexical_cast<string>(ic).c_str()); // START property object
+                                                            ss << ic;
+                                                            sss = ss.str();
+                                                            ss.str("");
+                                                            bson_append_start_object(&exp, sss.c_str()); // START property object
                                                             ic++;
                                                             bson_append_string(&exp, property, dcomp_prop.c_str());
                                                             bson_append_double(&exp, pQnt, atof(row[j].c_str())); // quantity of the property

@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 using namespace std;
 
@@ -53,7 +54,8 @@ string foutjson(const char *data)
 {
     bson_iterator i, j;
     const char *key;
-    string key_, out;
+    stringstream ss;
+    string key_, out, sss;
 
     bson_iterator_from_buffer(&i, data);
     while (bson_iterator_next(&i))
@@ -71,13 +73,22 @@ string foutjson(const char *data)
             switch (t)
             {
                 case BSON_DOUBLE:
-                    out = out + boost::lexical_cast<string>(bson_iterator_double(&i)).c_str() + ", ";
+                    ss << bson_iterator_double(&i);
+                    sss = ss.str();
+                    ss.str("");
+                    out = out + sss.c_str() + ", ";
                     break;
                 case BSON_OID:
-                out = out + "\"" + boost::lexical_cast<string>(bson_iterator_oid(&i)).c_str() + "\"" + ", ";
+                    ss << bson_iterator_oid(&i);
+                    sss = ss.str();
+                    ss.str("");
+                    out = out + "\"" + sss.c_str() + "\"" + ", ";
                     break;
                 case BSON_INT:
-                    out = out + boost::lexical_cast<string>(bson_iterator_int(&i)).c_str() + ", ";
+                    ss << bson_iterator_int(&i);
+                    sss = ss.str();
+                    ss.str("");
+                    out = out + sss.c_str() + ", ";
                     break;
             }
         } else

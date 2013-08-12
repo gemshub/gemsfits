@@ -76,10 +76,15 @@ int main( int argc, char *argv[] )
         return 0;
 
     // Create output for log files and results directory
-    if ( !bfs::exists( gpf->OutputDirPath() ) )
-        bfs::create_directory(gpf->OutputDirPath() );
-    if ( !bfs::exists( gpf->ResultDir() ) )
-        bfs::create_directory(gpf->ResultDir());
+
+    if ( access( gpf->OutputDirPath().c_str(), 0 ) != 0 )
+//    if ( !bfs::exists( gpf->OutputDirPath() ) )
+        mkdir(gpf->OutputDirPath().c_str(), 0775);
+//        bfs::create_directory(gpf->OutputDirPath() );
+    if ( access( gpf->ResultDir().c_str(), 0 ) != 0 )
+//    if ( !bfs::exists( gpf->ResultDir() ) )
+//        bfs::create_directory(gpf->ResultDir());
+        mkdir(gpf->ResultDir().c_str(), 0775);
 
     if( gpf->isInitMode() ) // Mode GEMSFIT to generate input configuration file
       return generateConfig();
