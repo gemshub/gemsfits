@@ -3,8 +3,9 @@ with its subsequent import into EJDB database to be used in GEMSFIT2 code. The p
 also backup such EJDB GEMSGIT2 database of experimental data into JSON text file(s), and 
 restore the EJDB GEMSGIT2 database from the backup JSON text files. 
 
-csvtoejdb is written by Dan Miron (URL) as part of the GEMSFIT2 project (URL).  
-Uses boost (URL) and jansson (URL) external libraries and EJDB (URL) coupled libary.
+csvtoejdb is written by Dan Miron (http://www.geopetro.ethz.ch/people/dmiron) as part of 
+the GEMSFIT2 project (http://gems.web.psi.ch/GEMSFIT/). Uses jansson 
+(http://www.digip.org/jansson/) external library and EJDB (http://ejdb.org/) coupled libary.
 
 How to use csvtoejdb:
 
