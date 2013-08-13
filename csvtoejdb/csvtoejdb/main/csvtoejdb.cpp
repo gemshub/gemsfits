@@ -545,7 +545,6 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                                             pos_end = headline[j].size();
                                                             dcomp_prop = headline[j].substr(pos_start, pos_end);
 
-
                                                             ss << ic;
                                                             sss = ss.str();
                                                             ss.str("");
@@ -574,7 +573,6 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                                             bson_append_finish_object(&exp); // END property object
                                                             dcomp_old = dcomp_name;
                                                         }
-
                                                     }
                                                     bson_append_finish_array(&exp); // END dcompprop array
                                                 }
