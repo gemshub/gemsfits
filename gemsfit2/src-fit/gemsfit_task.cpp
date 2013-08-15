@@ -187,7 +187,7 @@ void TGfitTask::get_residuals( double &residuals)
                             {
                                 // check for unit
                                 check_unit(i, p, e, Tfun->objfun[j]->exp_unit, this );
-                                average = average + this->experiments[i]->expphases[p]->phcomp[e]->bQnt;
+                                average = average + this->experiments[i]->expphases[p]->phcomp[e]->Qnt;
                                 residuals = residuals + residual_phase_elem (i, p, e, j, this);
                                 ++count;
                             }
@@ -202,7 +202,7 @@ void TGfitTask::get_residuals( double &residuals)
                             {
                                 // check for unit
                                 check_prop_unit(i, p, pp, Tfun->objfun[j]->exp_unit, this );
-                                average = average + this->experiments[i]->expphases[p]->phprop[pp]->pQnt;
+                                average = average + this->experiments[i]->expphases[p]->phprop[pp]->Qnt;
                                 residuals = residuals + residual_phase_prop (i, p, pp, j, this);
                                 ++count;
                             }
@@ -223,7 +223,7 @@ void TGfitTask::get_residuals( double &residuals)
 //                                            cout << "yes"<<endl;
                                             //                                    // check for unit
                                             //                                    check_dcomp_unit(i, p, dc, dcp, sys->Tfun->objfun[j]->exp_unit, sys );
-                                            average = average + this->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->pQnt;
+                                            average = average + this->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->Qnt;
                                             residuals = residuals + residual_phase_dcomp (i, p, dc, dcp, j, this);
                                             ++count;
                                         }
@@ -630,8 +630,11 @@ void TGfitTask::setnodes()
         {
             for (i=0; i<experiments.at(n)->U_KC.size(); ++i)
             {
-                DCndx = NodT[n]->DC_name_to_xDB(experiments.at(n)->U_KC[i]->dcomp.c_str());
-                xDC_up[DCndx] = experiments.at(n)->U_KC[i]->pQnt;
+                if (experiments.at(n)->U_KC[i]->type == keys::DC)
+                {
+                    DCndx = NodT[n]->DC_name_to_xDB(experiments.at(n)->U_KC[i]->name.c_str());
+                    xDC_up[DCndx] = experiments.at(n)->U_KC[i]->Qnt;
+                } // else phase metastability constraints
             }
         }
 
@@ -639,8 +642,11 @@ void TGfitTask::setnodes()
         {
             for (i=0; i<experiments.at(n)->L_KC.size(); ++i)
             {
-                DCndx = NodT[n]->DC_name_to_xDB(experiments.at(n)->L_KC[i]->dcomp.c_str());
-                xDC_lo[DCndx] = experiments.at(n)->L_KC[i]->pQnt;
+                if (experiments.at(n)->L_KC[i]->type == keys::DC)
+                {
+                    DCndx = NodT[n]->DC_name_to_xDB(experiments.at(n)->L_KC[i]->name.c_str());
+                    xDC_lo[DCndx] = experiments.at(n)->L_KC[i]->Qnt;
+                } // else phase metastability constraints
             }
         }
 
@@ -673,7 +679,7 @@ void TGfitTask::setnodes()
             {
                 if (experiments[n]->sbcomp[j]->Qunit == keys::gram)
                 {
-                    h2o_kgamount = experiments[n]->sbcomp[j]->bQnt/1000;
+                    h2o_kgamount = experiments[n]->sbcomp[j]->Qnt/1000;
                 }
                 else
                 {
@@ -691,111 +697,111 @@ void TGfitTask::setnodes()
             if (experiments[n]->sbcomp[j]->comp == "H2O")
             {
                 ICndx = NodT[n]->IC_name_to_xDB("H");
-                new_moles_IC[ICndx] += 2*experiments[n]->sbcomp[j]->bQnt/18.0153 +  1.2344*experiments[n]->sbcomp[j]->bQnt/1000*1e-05; // adds 1e-05 moles of H2 for each kg og H2O
+                new_moles_IC[ICndx] += 2*experiments[n]->sbcomp[j]->Qnt/18.0153 +  1.2344*experiments[n]->sbcomp[j]->Qnt/1000*1e-05; // adds 1e-05 moles of H2 for each kg og H2O
 //                NodT[n]->Set_nDC(DCndx, experiments[n]->sbcomp[j]->bQnt/1000*1e-05);
 
                 if (NodT[n]->IC_name_to_xDB("Nit") < 0)
                 {
 //                    new_moles_IC[ICndx] += 1.5*experiments[n]->sbcomp[j]->bQnt/1000*1e-05;
-                    NodT[n]->Set_nDC(DCndx, experiments[n]->sbcomp[j]->bQnt/1000*1e-05);
+                    NodT[n]->Set_nDC(DCndx, experiments[n]->sbcomp[j]->Qnt/1000*1e-05);
                 }
                 // cout << new_moles_IC[ICndx] << endl;
                 ICndx = NodT[n]->IC_name_to_xDB("O");
-                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->bQnt/18.0153 /*+ 3*experiments[n]->sbcomp[j]->bQnt/1000*1e-03*/;
+                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->Qnt/18.0153 /*+ 3*experiments[n]->sbcomp[j]->bQnt/1000*1e-03*/;
             }
             else if (experiments[n]->sbcomp[j]->comp == "SiO2")
             {
                 if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
                 {
-                    experiments[n]->sbcomp[j]->bQnt = experiments[n]->sbcomp[j]->bQnt*h2o_kgamount*60.08;
+                    experiments[n]->sbcomp[j]->Qnt = experiments[n]->sbcomp[j]->Qnt*h2o_kgamount*60.08;
                     experiments[n]->sbcomp[j]->Qunit = keys::gram;
                 }
                 ICndx = NodT[n]->IC_name_to_xDB("Si");
-                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->bQnt/60.08;
+                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->Qnt/60.08;
                // cout << new_moles_IC[ICndx]<<endl;
                 ICndx = NodT[n]->IC_name_to_xDB("O");
-                new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->bQnt/60.08;
+                new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->Qnt/60.08;
             }
             else if (experiments[n]->sbcomp[j]->comp == "Al2O3")
             {
                 if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
                 {
-                    experiments[n]->sbcomp[j]->bQnt = experiments[n]->sbcomp[j]->bQnt*h2o_kgamount*101.9612772;
+                    experiments[n]->sbcomp[j]->Qnt = experiments[n]->sbcomp[j]->Qnt*h2o_kgamount*101.9612772;
                     experiments[n]->sbcomp[j]->Qunit = keys::gram;
                 }
                 ICndx = NodT[n]->IC_name_to_xDB("Al");
-                new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->bQnt/101.9612772;
+                new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->Qnt/101.9612772;
                 ICndx = NodT[n]->IC_name_to_xDB("O");
-                new_moles_IC[ICndx] +=  3*experiments[n]->sbcomp[j]->bQnt/101.9612772;
+                new_moles_IC[ICndx] +=  3*experiments[n]->sbcomp[j]->Qnt/101.9612772;
             }
             else if (experiments[n]->sbcomp[j]->comp == "K2O")
             {
                 if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
                 {
-                    experiments[n]->sbcomp[j]->bQnt = experiments[n]->sbcomp[j]->bQnt*h2o_kgamount*94.19605;
+                    experiments[n]->sbcomp[j]->Qnt = experiments[n]->sbcomp[j]->Qnt*h2o_kgamount*94.19605;
                     experiments[n]->sbcomp[j]->Qunit = keys::gram;
                 }
                 ICndx = NodT[n]->IC_name_to_xDB("K");
-                new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->bQnt/94.19605;
+                new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->Qnt/94.19605;
                 ICndx = NodT[n]->IC_name_to_xDB("O");
-                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->bQnt/94.19605;
+                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->Qnt/94.19605;
             }
             else if (experiments[n]->sbcomp[j]->comp == "Na2O")
             {
                 if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
                 {
-                    experiments[n]->sbcomp[j]->bQnt = experiments[n]->sbcomp[j]->bQnt*h2o_kgamount*61.97897;
+                    experiments[n]->sbcomp[j]->Qnt = experiments[n]->sbcomp[j]->Qnt*h2o_kgamount*61.97897;
                     experiments[n]->sbcomp[j]->Qunit = keys::gram;
                 }
                 ICndx = NodT[n]->IC_name_to_xDB("Na");
-                new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->bQnt/61.97897;
+                new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->Qnt/61.97897;
                 ICndx = NodT[n]->IC_name_to_xDB("O");
-                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->bQnt/61.97897;
+                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->Qnt/61.97897;
             }
             else if (experiments[n]->sbcomp[j]->comp == "Al(OH)3")
             {
                 if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
                 {
-                    experiments[n]->sbcomp[j]->bQnt = experiments[n]->sbcomp[j]->bQnt*h2o_kgamount*78.0035586;
+                    experiments[n]->sbcomp[j]->Qnt = experiments[n]->sbcomp[j]->Qnt*h2o_kgamount*78.0035586;
                     experiments[n]->sbcomp[j]->Qunit = keys::gram;
                 }
                 ICndx = NodT[n]->IC_name_to_xDB("Al");
-                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/78.0035586;
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->Qnt/78.0035586;
                 ICndx = NodT[n]->IC_name_to_xDB("H");
-                new_moles_IC[ICndx] +=  3*experiments[n]->sbcomp[j]->bQnt/78.0035586;
+                new_moles_IC[ICndx] +=  3*experiments[n]->sbcomp[j]->Qnt/78.0035586;
                 ICndx = NodT[n]->IC_name_to_xDB("O");
-                new_moles_IC[ICndx] +=  3*experiments[n]->sbcomp[j]->bQnt/78.0035586;
+                new_moles_IC[ICndx] +=  3*experiments[n]->sbcomp[j]->Qnt/78.0035586;
             }
             else if (experiments[n]->sbcomp[j]->comp == "Ca(OH)2")
             {
                 if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
                 {
-                    experiments[n]->sbcomp[j]->bQnt = experiments[n]->sbcomp[j]->bQnt*h2o_kgamount*74.09268;
+                    experiments[n]->sbcomp[j]->Qnt = experiments[n]->sbcomp[j]->Qnt*h2o_kgamount*74.09268;
                     experiments[n]->sbcomp[j]->Qunit = keys::gram;
                 }
                 ICndx = NodT[n]->IC_name_to_xDB("Ca");
-                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/74.09268;
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->Qnt/74.09268;
                // cout << new_moles_IC[ICndx]<<endl;
                 ICndx = NodT[n]->IC_name_to_xDB("H");
-                new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->bQnt/74.09268;
+                new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->Qnt/74.09268;
                // cout << new_moles_IC[ICndx]<<endl;
                 ICndx = NodT[n]->IC_name_to_xDB("O");
                 //cout << new_moles_IC[ICndx]<<endl;
-                new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->bQnt/74.09268;
+                new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->Qnt/74.09268;
             }
             else if (experiments[n]->sbcomp[j]->comp == "NaOH")
             {
                 if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
                 {
-                    experiments[n]->sbcomp[j]->bQnt = experiments[n]->sbcomp[j]->bQnt*h2o_kgamount*39.99710928;
+                    experiments[n]->sbcomp[j]->Qnt = experiments[n]->sbcomp[j]->Qnt*h2o_kgamount*39.99710928;
                     experiments[n]->sbcomp[j]->Qunit = keys::gram;
                 }
                 ICndx = NodT[n]->IC_name_to_xDB("Na");
-                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/39.99710928;
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->Qnt/39.99710928;
                 ICndx = NodT[n]->IC_name_to_xDB("H");
-                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/39.99710928;
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->Qnt/39.99710928;
                 ICndx = NodT[n]->IC_name_to_xDB("O");
-                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/39.99710928;
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->Qnt/39.99710928;
 
                 // changing the bacground electrolite settings
                 if (!salt){
@@ -810,15 +816,15 @@ void TGfitTask::setnodes()
             {
                 if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
                 {
-                    experiments[n]->sbcomp[j]->bQnt = experiments[n]->sbcomp[j]->bQnt*h2o_kgamount*56.10564;
+                    experiments[n]->sbcomp[j]->Qnt = experiments[n]->sbcomp[j]->Qnt*h2o_kgamount*56.10564;
                     experiments[n]->sbcomp[j]->Qunit = keys::gram;
                 }
                 ICndx = NodT[n]->IC_name_to_xDB("K");
-                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/56.10564;
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->Qnt/56.10564;
                 ICndx = NodT[n]->IC_name_to_xDB("H");
-                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/56.10564;
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->Qnt/56.10564;
                 ICndx = NodT[n]->IC_name_to_xDB("O");
-                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/56.10564;
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->Qnt/56.10564;
 
                 // changing the bacground electrolite settings
                 if (!salt){
@@ -832,13 +838,13 @@ void TGfitTask::setnodes()
             {
                 if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
                 {
-                    experiments[n]->sbcomp[j]->bQnt = experiments[n]->sbcomp[j]->bQnt*h2o_kgamount*74.5513;
+                    experiments[n]->sbcomp[j]->Qnt = experiments[n]->sbcomp[j]->Qnt*h2o_kgamount*74.5513;
                     experiments[n]->sbcomp[j]->Qunit = keys::gram;
                 }
                 ICndx = NodT[n]->IC_name_to_xDB("K");
-                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/74.5513;
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->Qnt/74.5513;
                 ICndx = NodT[n]->IC_name_to_xDB("Cl");
-                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/74.5513;
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->Qnt/74.5513;
 
                 // changing the bacground electrolite settings
                 if (!salt){
@@ -852,37 +858,37 @@ void TGfitTask::setnodes()
             {
                 if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
                 {
-                    experiments[n]->sbcomp[j]->bQnt = experiments[n]->sbcomp[j]->bQnt*h2o_kgamount*44.0095;
+                    experiments[n]->sbcomp[j]->Qnt = experiments[n]->sbcomp[j]->Qnt*h2o_kgamount*44.0095;
                     experiments[n]->sbcomp[j]->Qunit = keys::gram;
                 }
                 ICndx = NodT[n]->IC_name_to_xDB("C");
-                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/44.0095;
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->Qnt/44.0095;
                 ICndx = NodT[n]->IC_name_to_xDB("O");
-                new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->bQnt/44.0095;
+                new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->Qnt/44.0095;
             }
             else if (experiments[n]->sbcomp[j]->comp == "HCl")
             {
                 if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
                 {
-                    experiments[n]->sbcomp[j]->bQnt = experiments[n]->sbcomp[j]->bQnt*h2o_kgamount*36.4611;
+                    experiments[n]->sbcomp[j]->Qnt = experiments[n]->sbcomp[j]->Qnt*h2o_kgamount*36.4611;
                     experiments[n]->sbcomp[j]->Qunit = keys::gram;
                 }
                 ICndx = NodT[n]->IC_name_to_xDB("H");
-                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/36.4611;
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->Qnt/36.4611;
                 ICndx = NodT[n]->IC_name_to_xDB("Cl");
-                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->bQnt/36.4611;
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->Qnt/36.4611;
             }
             else if (experiments[n]->sbcomp[j]->comp == "NaCl")
             {
                 if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
                 {
-                    experiments[n]->sbcomp[j]->bQnt = experiments[n]->sbcomp[j]->bQnt*h2o_kgamount*58.4430;
+                    experiments[n]->sbcomp[j]->Qnt = experiments[n]->sbcomp[j]->Qnt*h2o_kgamount*58.4430;
                     experiments[n]->sbcomp[j]->Qunit = keys::gram;
                 }
                 ICndx = NodT[n]->IC_name_to_xDB("Na");
-                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->bQnt/58.4430;
+                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->Qnt/58.4430;
                 ICndx = NodT[n]->IC_name_to_xDB("Cl");
-                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->bQnt/58.4430;
+                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->Qnt/58.4430;
 
                 // changing the bacground electrolite settings
                 NodT[n]->Set_PMc(0.064, 0 );

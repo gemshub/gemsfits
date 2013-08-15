@@ -12,7 +12,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
     string ph_new, ph_old, dcomp_new, dcomp_old, sss;
     vector<string> phases, dcomps;
     stringstream ss;
-    bool h_phprop = false, h_phases = false, h_phIC = false, h_dcomp = false, h_Upper_CK= false, h_Lower_CK = false; // handle that is true if we have ph_prop in the CSV file
+    bool h_phprop = false, h_phases = false, h_phIC = false, h_dcomp = false, h_UMC= false, h_LMC = false; // handle that is true if we have ph_prop in the CSV file
 
     bson_oid_t oid;
     // keeps each row of the CSV file
@@ -48,13 +48,13 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
         for (unsigned int i=0; i<headline.size(); ++i)
         {
             // check for U and L metastability constraint columns
-            if ((strncmp(headline[i].c_str(),Lower_CK, 8) == 0))
+            if ((strncmp(headline[i].c_str(),LMC, strlen(LMC)) == 0))
             {
-                h_Lower_CK = true;
+                h_LMC = true;
             }
-            if ((strncmp(headline[i].c_str(),Upper_CK, 8) == 0))
+            if ((strncmp(headline[i].c_str(),UMC, strlen(UMC)) == 0))
             {
-                h_Upper_CK = true;
+                h_UMC = true;
             }
             if ((headline[i]==expsample) || (headline[i]==expdataset) || (headline[i]==Tunit) || (headline[i]==Punit)|| (headline[i]==Vunit) )
             {
@@ -124,29 +124,35 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
         }
 
         // 2nd level - upper and lower metastability restrictions
-        if (h_Upper_CK)
+        if (h_UMC)
         {
-            bson_append_start_array(&exp, Upper_CK);
+            bson_append_start_array(&exp, UMC);
             for (unsigned int i=0; i<headline.size(); ++i)
             {
-                if ((strncmp(headline[i].c_str(),Upper_CK, 8) == 0) && (!row[i].empty()))
+                if ((strncmp(headline[i].c_str(),UMC, strlen(UMC)) == 0) && (!row[i].empty()))
                 {
                     int pos_start, pos_end;
-                    string component;
+                    string component, type;
                     string f1(".");
 
                     // getting the name of the component e.g. SiO2 form comp.SiO2
                     pos_start = headline[i].find(f1);
                     pos_end   = headline[i].find(f1,pos_start+1);
-                    component = headline[i].substr((pos_start+f1.length()),(pos_end-pos_start-f1.length()));
+                    type = headline[i].substr((pos_start+f1.length()),(pos_end-pos_start-f1.length()));
+                    component = headline[i].substr((pos_end+f1.length()),( headline[i].size() -1));
 
                     ss << sk;
                     sss = ss.str();
                     ss.str("");
                     bson_append_start_object(&exp, sss.c_str());
                     sk++;
-                    bson_append_string(&exp, dcomp, component.c_str());
-                    bson_append_double(&exp, pQnt, atof(row[i].c_str()));
+                    if (type == DC)
+                    bson_append_string(&exp, DC, component.c_str());
+                    else
+                        if (type == phase)
+                            bson_append_string(&exp, phase, component.c_str());
+
+                    bson_append_double(&exp, Qnt, atof(row[i].c_str()));
 
                     // checking if there are errors and units included in the CSV and adding tem in the database
                     if (i+1 < headline.size())
@@ -174,29 +180,34 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
 
         }
 
-        if (h_Lower_CK)
+        if (h_LMC)
         {
-            bson_append_start_array(&exp, Lower_CK);
+            bson_append_start_array(&exp, LMC);
             for (unsigned int i=0; i<headline.size(); ++i)
             {
-                if ((strncmp(headline[i].c_str(),Lower_CK, 8) == 0) && (!row[i].empty()))
+                if ((strncmp(headline[i].c_str(),LMC, strlen(LMC)) == 0) && (!row[i].empty()))
                 {
                     int pos_start, pos_end;
-                    string component;
+                    string component, type;
                     string f1(".");
 
                     // getting the name of the component e.g. SiO2 form comp.SiO2
                     pos_start = headline[i].find(f1);
                     pos_end   = headline[i].find(f1,pos_start+1);
-                    component = headline[i].substr((pos_start+f1.length()),(pos_end-pos_start-f1.length()));
+                    type = headline[i].substr((pos_start+f1.length()),(pos_end-pos_start-f1.length()));
+                    component = headline[i].substr((pos_end+f1.length()),( headline[i].size() -1));
 
                     ss << sk;
                     sss = ss.str();
                     ss.str("");
                     bson_append_start_object(&exp, sss.c_str());
                     sk++;
-                    bson_append_string(&exp, dcomp, component.c_str());
-                    bson_append_double(&exp, pQnt, atof(row[i].c_str()));
+                    if (type == DC)
+                    bson_append_string(&exp, DC, component.c_str());
+                    else
+                        if (type == phase)
+                            bson_append_string(&exp, phase, component.c_str());
+                    bson_append_double(&exp, Qnt, atof(row[i].c_str()));
 
                     // checking if there are errors and units included in the CSV and adding tem in the database
                     if (i+1 < headline.size())
@@ -247,7 +258,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                 bson_append_start_object(&exp, sss.c_str());
                 ic++;
                 bson_append_string(&exp, comp, component.c_str());
-                bson_append_double(&exp, bQnt, atof(row[i].c_str()));
+                bson_append_double(&exp, Qnt, atof(row[i].c_str()));
 
                 // checking if there are errors and units included in the CSV and adding tem in the database
                 if (i+1 < headline.size())
@@ -333,7 +344,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                     ph_prop = ph_prop_1.substr((0),(pos_start));
 
                                     // if property present
-                                    if (((ph_prop == pQnt) || (ph_prop == pH) || (ph_prop == pV) ||  (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) ||  (ph_prop == sArea) || (ph_prop == RHO)) && (!row[j].empty()))
+                                    if (((ph_prop == Qnt) || (ph_prop == pH) || (ph_prop == pV) ||  (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) ||  (ph_prop == sArea) || (ph_prop == RHO)) && (!row[j].empty()))
                                     {
                                         h_phprop = true;
                                     }
@@ -368,7 +379,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                         ph_prop = headline[j].substr((pos_end+f1.length()),(headline[j].size()));
 
                                         // amount of the property of the phase pahse in the experiment
-                                        if (((ph_prop == pQnt) || (ph_prop == pH) || (ph_prop == pV) ||  (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) ||  (ph_prop == sArea) || (ph_prop == RHO)) && (!row[j].empty()))
+                                        if (((ph_prop == Qnt) || (ph_prop == pH) || (ph_prop == pV) ||  (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) ||  (ph_prop == sArea) || (ph_prop == RHO)) && (!row[j].empty()))
                                         {
                                             ss << ic;
                                             sss = ss.str();
@@ -376,7 +387,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                             bson_append_start_object(&exp, sss.c_str()); // START property object
                                             ic++;
                                             bson_append_string(&exp, property, ph_prop.c_str());
-                                            bson_append_double(&exp, pQnt, atof(row[j].c_str()));
+                                            bson_append_double(&exp, Qnt, atof(row[j].c_str()));
 
                                             // checking if there are errors and units included in the CSV and adding tem in the database
                                             if (j+1 < headline.size())
@@ -409,7 +420,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                         //++ START array phcomp ++//
                         if (h_phIC)
                         {
-                            bson_append_start_array(&exp, phcomp);
+                            bson_append_start_array(&exp, phIC);
                             // get phase comp
                             for (unsigned int j=0; j<headline.size(); ++j)
                             {
@@ -437,15 +448,15 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
 
 
                                         // qunatity of this comp in the phase
-                                        if (((ph_prop != pQnt) && (ph_prop_1 == pQnt) && (ph_prop_2 == IC) && (ph_prop != pH) && (ph_prop != pV) &&  (ph_prop != Eh) && (ph_prop != IS) && (ph_prop != all) &&  (ph_prop != sArea) && (ph_prop != RHO)) && (strncmp(ph_prop.c_str(),"Dc", 2) != 0) && (!row[j].empty()))
+                                        if (((ph_prop != Qnt) && (ph_prop_1 == Qnt) && (ph_prop_2 == IC) && (ph_prop != pH) && (ph_prop != pV) &&  (ph_prop != Eh) && (ph_prop != IS) && (ph_prop != all) &&  (ph_prop != sArea) && (ph_prop != RHO)) && (strncmp(ph_prop.c_str(),"Dc", 2) != 0) && (!row[j].empty()))
                                         {
                                             ss << ic;
                                             sss = ss.str();
                                             ss.str("");
                                             bson_append_start_object(&exp, sss.c_str()); // START phase element object
                                             ic++;
-                                            bson_append_string(&exp, element, ph_prop.c_str());
-                                            bson_append_double(&exp, eQnt, atof(row[j].c_str()));
+                                            bson_append_string(&exp, IC, ph_prop.c_str());
+                                            bson_append_double(&exp, Qnt, atof(row[j].c_str()));
 
                                             // checking if there are errors and units included in the CSV and adding tem in the database
                                             if (j+1 < headline.size())
@@ -476,9 +487,9 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                         } h_phIC = false;
 
                         //++ START array phspecies ++//
-                        if ((ph_prop_2 == "DC") && (!row[i].empty())) // check if there is species data in the CSV header
+                        if ((ph_prop_2 == DC) && (!row[i].empty())) // check if there is species data in the CSV header
                         {
-                            bson_append_start_array(&exp, phspecies);
+                            bson_append_start_array(&exp, phDC);
                             for (unsigned int j=0; j<headline.size(); ++j)
                             {
                                 if ((strncmp(headline[j].c_str(),phase, 5) == 0) && (!row[j].empty())) // check for pahse. key
@@ -524,13 +535,13 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                                     ss.str("");
                                                     bson_append_start_object(&exp, sss.c_str()); // START species object
                                                     dcc++;
-                                                    bson_append_string(&exp, species, dcomp_name.c_str());
+                                                    bson_append_string(&exp, DC, dcomp_name.c_str());
                                                     dcomps.push_back(dcomp_name);
                                                     ph_dcomp += "DC." + dcomp_name + ".";
                                                     ic = 0;
 
                                                     // loop to get all the properties of current dcomp
-                                                    bson_append_start_array(&exp, dcompprop);
+                                                    bson_append_start_array(&exp, DCprop);
                                                     for (unsigned int j=0; j<headline.size(); ++j)
                                                     {
 //                                                        if (j== 30 || j ==33)
@@ -551,7 +562,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                                             bson_append_start_object(&exp, sss.c_str()); // START property object
                                                             ic++;
                                                             bson_append_string(&exp, property, dcomp_prop.c_str());
-                                                            bson_append_double(&exp, pQnt, atof(row[j].c_str())); // quantity of the property
+                                                            bson_append_double(&exp, Qnt, atof(row[j].c_str())); // quantity of the property
 
                                                             // checking if there are errors and units included in the CSV and adding tem in the database
                                                             if (j+1 < headline.size())

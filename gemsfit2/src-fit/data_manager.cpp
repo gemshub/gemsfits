@@ -560,7 +560,7 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                 experiments.at(pos)->sbcomp.push_back( new samples::components );
                 Hexperiments.at(pos)->Hsbcomp.push_back( new Hsamples::Hcomponents );
                 ic++; // position of the component in sbcomp vector
-                experiments.at(pos)->sbcomp.at(ic)->bQnt = NULL; experiments.at(pos)->sbcomp.at(ic)->Qerror = NULL;
+                experiments.at(pos)->sbcomp.at(ic)->Qnt = NULL; experiments.at(pos)->sbcomp.at(ic)->Qerror = NULL;
                 experiments.at(pos)->sbcomp.at(ic)->Qunit = keys::gram;
                 Hexperiments.at(pos)->Hsbcomp.at(ic)->comp = false;
 
@@ -577,9 +577,9 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                         experiments.at(pos)->sbcomp.at(ic)->comp =  bson_iterator_string(&d) ;
                         Hexperiments.at(pos)->Hsbcomp.at(ic)->comp = true;
                     } else
-                    if ((key_ == keys::bQnt))
+                    if ((key_ == keys::Qnt))
                     {
-                        experiments.at(pos)->sbcomp.at(ic)->bQnt = bson_iterator_double(&d) ;
+                        experiments.at(pos)->sbcomp.at(ic)->Qnt = bson_iterator_double(&d) ;
                     } else
                     if ((key_ == keys::Qerror))
                     {
@@ -594,7 +594,7 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
         } else
 
         // adding Upper metastability constraints
-        if ((key_ == keys::Upper_CK) && (t == BSON_ARRAY))
+        if ((key_ == keys::UMC) && (t == BSON_ARRAY))
         {
             bson_iterator_from_buffer(&j, bson_iterator_value(&i));
             while (bson_iterator_next(&j))
@@ -603,7 +603,7 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                 experiments.at(pos)->U_KC.push_back( new samples::Uconstraints );
                 sk++; // position of the component in U_SK vector
 //                experiments.at(pos)->U_KC.at(sk)->dcomp = NULL;
-                experiments.at(pos)->U_KC.at(sk)->pQnt = 1000000;
+                experiments.at(pos)->U_KC.at(sk)->Qnt = 1000000;
 
                 while (bson_iterator_next(&d))
                 {
@@ -613,15 +613,22 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                     key = bson_iterator_key(&d);
                     key_ = key;
 
-                    if ((key_ == keys::dcomp))
+                    if ((key_ == keys::DC))
                     {
-                        experiments.at(pos)->U_KC.at(sk)->dcomp =  bson_iterator_string(&d) ;
+                        experiments.at(pos)->U_KC.at(sk)->type = keys::DC;
+                        experiments.at(pos)->U_KC.at(sk)->name =  bson_iterator_string(&d) ;
 
                     } else
-                    if ((key_ == keys::pQnt))
+                    if ((key_ == keys::phase))
                     {
-                        experiments.at(pos)->U_KC.at(sk)->pQnt = bson_iterator_double(&d) ;
-                    } /*else
+                        experiments.at(pos)->U_KC.at(sk)->type = keys::phase;
+                        experiments.at(pos)->U_KC.at(sk)->name = bson_iterator_double(&d) ;
+                    }
+                    if ((key_ == keys::Qnt))
+                    {
+                        experiments.at(pos)->U_KC.at(sk)->Qnt = bson_iterator_double(&d) ;
+                    }
+                    /*else
                     if ((key_ == keys::Qerror))
                     {
                         experiments.at(pos)->sbcomp.at(ic)->Qerror = bson_iterator_double(&d) ;
@@ -635,7 +642,7 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
         } else
 
         // adding Lower metastability constraints
-        if ((key_ == keys::Lower_CK) && (t == BSON_ARRAY))
+        if ((key_ == keys::LMC) && (t == BSON_ARRAY))
         {
             bson_iterator_from_buffer(&j, bson_iterator_value(&i));
             while (bson_iterator_next(&j))
@@ -644,7 +651,7 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                 experiments.at(pos)->L_KC.push_back( new samples::Lconstraints );
                 sk++; // position of the component in U_SK vector
     //            experiments.at(pos)->U_KC.at(sk)->dcomp = NULL;
-                experiments.at(pos)->L_KC.at(sk)->pQnt = 1000000;
+                experiments.at(pos)->L_KC.at(sk)->Qnt = 1000000;
 
                 while (bson_iterator_next(&d))
                 {
@@ -654,14 +661,14 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                     key = bson_iterator_key(&d);
                     key_ = key;
 
-                    if ((key_ == keys::dcomp))
+                    if ((key_ == keys::DC))
                     {
-                        experiments.at(pos)->L_KC.at(sk)->dcomp =  bson_iterator_string(&d) ;
+                        experiments.at(pos)->L_KC.at(sk)->name =  bson_iterator_string(&d) ;
 
                     } else
-                    if ((key_ == keys::pQnt))
+                    if ((key_ == keys::Qnt))
                     {
-                        experiments.at(pos)->L_KC.at(sk)->pQnt = bson_iterator_double(&d) ;
+                        experiments.at(pos)->L_KC.at(sk)->Qnt = bson_iterator_double(&d) ;
                     } /*else
                         if ((key_ == keys::Qerror))
                         {
@@ -707,7 +714,7 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                     } else
 
                     // adding phase components
-                    if ((key_ == keys::phcomp) && (t == BSON_ARRAY))
+                    if ((key_ == keys::phIC) && (t == BSON_ARRAY))
                     {
                         bson_iterator_from_buffer(&k, bson_iterator_value(&d));
                         while (bson_iterator_next(&k))
@@ -717,7 +724,7 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                             Hexperiments.at(pos)->Hexpphases.at(ip)->Hphcomp.push_back( new Hsamples::Hcomponents );
                             ipc++; // position of the component in phcomp vector
                             experiments.at(pos)->expphases.at(ip)->phcomp.at(ipc)->Qerror = NULL;
-                            experiments.at(pos)->expphases.at(ip)->phcomp.at(ipc)->bQnt   = NULL;
+                            experiments.at(pos)->expphases.at(ip)->phcomp.at(ipc)->Qnt   = NULL;
                             Hexperiments.at(pos)->Hexpphases.at(ip)->Hphcomp.at(ipc)->comp= false;
 
                             string p_name = experiments.at(pos)->expphases.at(ip)->phase;
@@ -734,14 +741,14 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                                 key = bson_iterator_key(&d2);
                                 key_ = key;
 
-                                if ((key_ == keys::element))
+                                if ((key_ == keys::IC))
                                 {
                                     experiments.at(pos)->expphases.at(ip)->phcomp.at(ipc)->comp = bson_iterator_string(&d2) ;
                                     Hexperiments.at(pos)->Hexpphases.at(ip)->Hphcomp.at(ipc)->comp= true;
                                 } else
-                                if ((key_ == keys::eQnt))
+                                if ((key_ == keys::Qnt))
                                 {
-                                    experiments.at(pos)->expphases.at(ip)->phcomp.at(ipc)->bQnt = bson_iterator_double(&d2) ;
+                                    experiments.at(pos)->expphases.at(ip)->phcomp.at(ipc)->Qnt = bson_iterator_double(&d2) ;
                                 } else
                                 if ((key_ == keys::Qerror))
                                 {
@@ -766,7 +773,7 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                             Hexperiments.at(pos)->Hexpphases.at(ip)->Hphprop.push_back( new Hsamples::Hphases::Hprop );
                             ipp++; // position of the component in phcomp vector
                             experiments.at(pos)->expphases.at(ip)->phprop.at(ipp)->Qerror = NULL;
-                            experiments.at(pos)->expphases.at(ip)->phprop.at(ipp)->pQnt   = NULL;
+                            experiments.at(pos)->expphases.at(ip)->phprop.at(ipp)->Qnt   = NULL;
                             Hexperiments.at(pos)->Hexpphases.at(ip)->Hphprop.at(ipp)->property = false;
 
                             while (bson_iterator_next(&d2))
@@ -783,7 +790,7 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                                     experiments.at(pos)->expphases.at(ip)->phprop.at(ipp)->property = bson_iterator_string(&d2) ;
                                     Hexperiments.at(pos)->Hexpphases.at(ip)->Hphprop.at(ipp)->property = true;
                                     // assigining default values for units
-                                    if (p_name==keys::pQnt)
+                                    if (p_name==keys::Qnt)
                                     {
                                         experiments.at(pos)->expphases.at(ip)->phprop.at(ipp)->Qunit = keys::gram;
                                     } else
@@ -800,9 +807,9 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                                         experiments.at(pos)->expphases.at(ip)->phprop.at(ipp)->Qunit = keys::_loga;
                                     }
                                 } else
-                                if ((key_ == keys::pQnt))
+                                if ((key_ == keys::Qnt))
                                 {
-                                    experiments.at(pos)->expphases.at(ip)->phprop.at(ipp)->pQnt = bson_iterator_double(&d2) ;
+                                    experiments.at(pos)->expphases.at(ip)->phprop.at(ipp)->Qnt = bson_iterator_double(&d2) ;
                                 } else
                                 if ((key_ == keys::Qerror))
                                 {
@@ -817,7 +824,7 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                     }
 
                     // adding phase dcomps
-                    if ((key_ == keys::phspecies) && (t == BSON_ARRAY))
+                    if ((key_ == keys::phDC) && (t == BSON_ARRAY))
                     {
                         bson_iterator_from_buffer(&k, bson_iterator_value(&d));
                         while (bson_iterator_next(&k))
@@ -839,13 +846,13 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                                 key = bson_iterator_key(&d2);
                                 key_ = key;
 
-                                if ((key_ == keys::species)) // adding the name of the specie
+                                if ((key_ == keys::DC)) // adding the name of the specie
                                 {
                                     experiments.at(pos)->expphases.at(ip)->phdcomps.at(ips)->formula =  bson_iterator_string(&d2) ;
                                 } else
 
                                 // adding dependent compoponents properties
-                                if ((key_ == keys::dcompprop) && (t == BSON_ARRAY))
+                                if ((key_ == keys::DCprop) && (t == BSON_ARRAY))
                                 {
                                     bson_iterator_from_buffer(&k2, bson_iterator_value(&d2));
                                     while (bson_iterator_next(&k2))
@@ -855,7 +862,7 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
 
                                         ipdcp++; // position of the component in phcomp vector
                                         experiments.at(pos)->expphases.at(ip)->phdcomps.at(ips)->dcompprop.at(ipdcp)->Qerror = NULL;
-                                        experiments.at(pos)->expphases.at(ip)->phdcomps.at(ips)->dcompprop.at(ipdcp)->pQnt   = NULL;
+                                        experiments.at(pos)->expphases.at(ip)->phdcomps.at(ips)->dcompprop.at(ipdcp)->Qnt   = NULL;
 
 
                                         while (bson_iterator_next(&d3))
@@ -870,9 +877,9 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                                             {
                                                 experiments.at(pos)->expphases.at(ip)->phdcomps.at(ips)->dcompprop.at(ipdcp)->property = bson_iterator_string(&d3);
                                             } else
-                                            if ((key_ == keys::pQnt))
+                                            if ((key_ == keys::Qnt))
                                             {
-                                                experiments.at(pos)->expphases.at(ip)->phdcomps.at(ips)->dcompprop.at(ipdcp)->pQnt = bson_iterator_double(&d3) ;
+                                                experiments.at(pos)->expphases.at(ip)->phdcomps.at(ips)->dcompprop.at(ipdcp)->Qnt = bson_iterator_double(&d3) ;
                                             } else
                                             if ((key_ == keys::Qerror))
                                             {

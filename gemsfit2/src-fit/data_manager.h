@@ -125,15 +125,17 @@ class Data_Manager : public TNode
 
                 struct Uconstraints
                 {
-                    string dcomp;
-                    double pQnt;
+                    string type;
+                    string name;
+                    double Qnt;
                 };
                 vector<Uconstraints*> U_KC;
 
                 struct Lconstraints
                 {
-                    string dcomp;
-                    double pQnt;
+                    string type;
+                    string name;
+                    double Qnt;
                 };
                 vector<Lconstraints*> L_KC;
 
@@ -141,7 +143,7 @@ class Data_Manager : public TNode
                 struct components
                 {
                     string comp;         /// formula defining PCO stoichiometry (GEM formula syntax)
-                    double bQnt;         /// quantity (to be added to system bulk composition)
+                    double Qnt;         /// quantity (to be added to system bulk composition)
                     double Qerror;       /// error (uncertainty) of quantity in the same units
                     string Qunit;        /// units of measurement of quantity { 'g' or 'mol' (default) or … }
                 };
@@ -155,7 +157,7 @@ class Data_Manager : public TNode
                     struct prop
                     {
                         string property;                /// known bulk properties of the phase / property of phase (pH, amount, volume, sarea, etc.)
-                        double pQnt;                    /// value
+                        double Qnt;                    /// value
                         double Qerror;                  /// error
                         string Qunit;                   /// units
                     };
@@ -171,7 +173,7 @@ class Data_Manager : public TNode
                         struct dcprop
                         {
                             string property;
-                            double pQnt;                 /// measured quantity/concentration of phase dcomps
+                            double Qnt;                 /// measured quantity/concentration of phase dcomps
                             double Qerror;               /// error
                             string Qunit;                /// units
                         };

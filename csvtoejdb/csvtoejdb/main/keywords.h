@@ -6,6 +6,12 @@ namespace keys
 //                    Keyword                                  (level)			Type            Comment
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
+// General keywords used for qunatity, error and unit
+static const char *Qnt = "Q";  ///                                                              qunatity
+static const char *Qunit = "Qunit";  ///                                                        unit
+static const char *Qerror = "Qerror";  ///                                                      error
+
+// Database structure
 static const char *experiments = "experiments"; ///               0          collection         data for experimental samples
 // data for experimental samples
 static const char *expsample = "sample"; ///                      1		     string 	        ID of this experimental sample
@@ -19,37 +25,62 @@ static const char *sP = "sP"; ///                                 1		     float	
 static const char *Punit = "Punit"; ///		                      1          string		        units of pressure { 'bar' (default) or 'kPa' or 'MPa' or 'GPa' }
 static const char *sV = "sV"; /// 		                          1       	 float		        (system) volume for this experimental sample
 static const char *Vunit = "Vunit"; ///	                          1		     string		        units of volume { 'cm3' (default) or 'dm3' or 'm3' }
+
+    // Describes bulk composition of the system
 static const char *sbcomp = "sbcomp"; ///        		          1       	 array		        defines bulk composition of chemical system for this experiment
     static const char *comp = "comp"; ///                         2 		 string		        formula defining PCO stoichiometry (GEM formula syntax)
-    static const char *bQnt = "bQnt"; ///	                      2       	 float		        quantity (to be added to system bulk composition)
-    static const char *Qerror = "Qerror"; ///	                  2	         float 		        error (uncertainty) of quantity in the same units
-    static const char *Qunit = "Qunit"; ///	                      2  	     string 		    units of measurement of quantity { 'g' or 'mol' (default) or … }
-static const char *Upper_CK = "Upper_CK"; ///
-static const char *Lower_CK = "Lower_CK"; ///
+///                   *Qnt = "Q";                                 2       	 float		        quantity (to be added to system bulk composition)
+///                   *Qerror = "Qerror";   	                  2	         float 		        error (uncertainty) of quantity in the same units
+///                   *Qunit = "Qunit"; 	                      2  	     string 		    units of measurement of quantity { 'g' or 'mol' (default) or … }
 
+    // Upper and Lower metastability constraints
+static const char *UMC = "UMC"; ///                               1          array              array of Upper metastability constraints
+///                     *Qnt = "Q";                               2          double
+///                     *IC = "IC";                               2          string             name of dependent component
+/// OR
+///                     *DC = "DC";                               2          string             name of independent component
+
+static const char *LMC = "LMC"; ///                               1          array              array of Lower metastability constraints
+///                     *Qnt = "Q";                               2          double
+///                     *IC = "IC";                               2          string             name of dependent component
+/// OR
+///                     *DC = "DC";                               2          string             name of independent component
+
+    // Describes system pahses
 static const char *expphases = "expphases"; ///	                  1    	     array		        data for phases characterised (measured) in this experiment
     static const char *phase = "phase"; ///	                      2	         string		        phase ID (name)
-    static const char *phcomp = "phcomp"; ///	                  2   	     array		        measured composition of the phase
-        static const char *element = "element"; ///	              3	         string 		    name of chemical element (e.g. 'Al')
-        static const char *eQnt = "Q"; ///	                      3	         float		        measured quantity/concentration of element (in Qunit)
-    static const char *phspecies = "phdcomps"; ///  	          2	         array		        chemical species (end member, phase component)
-        static const char *dcompprop = "dcompprop"; ///
-        static const char *species = "species";               /// 3          string             name of chemical species (end member, phase component)
-        static const char *dcomp = "dcomp"; ///
-        static const char *actcoef = "@coef"; ///	              3	         float		        measured quantity/concentration of phase species
+        // Phase independent components
+    static const char *phIC = "phIC"; ///	                      2   	     array		        array of measured composition of the phase
+        static const char *IC = "IC";///                          3          string             name of independent component (element formula, e.g. Al)
+///                       *eQnt = "Q";                            3	         double		        measured quantity/concentration of element (in Qunit)
+///                       *Qunit = "Qunit";                       3          string             unit
+        // Phase dependent components
+    static const char *phDC = "phDC"; ///                         2	         array		        array of dependent components (end member, phase component)
+        static const char *DC = "DC"; ///                         3          string             dependent component
+        static const char *DCprop = "DCprop"; ///                 3          array              array of dependent components properties (Qnt, etc.)
+///                             *property = "property";           4          string             name of the property (Qnt, @coef, etc.)
+///                             *Qnt = "Q";                       4       	 float		        quantity
+///                             *Qerror = "Qerror";   	          4	         float 		        error
+///                             *Qunit = "Qunit"; 	              4  	     string 		    units of measurement of quantity
+///
+              static const char *actcoef = "@coef"; ///	        ->4	         string		        name of peorperty - activity coef
                         // with Qerror and Qunit
+        // Phase properties
     static const char *phprop = "phprop"; ///	                  2   	     array		        known bulk properties of the phase
-        static const char *property = "property"; ///
-        static const char *pH = "pH"; /// 	                      3          float		        pH (for aqueous phase only)
-        static const char *Eh = "Eh"; ///	                      3	         float		        Eh (for aqueous phase only)
-        static const char *IS = "IS"; ///	                      3	         float 		        Ionic strength (molal)
-        static const char *all = "all"; ///	                      3	         float		        Alkalinity (aqueous phase only)
-        static const char *pV = "pV"; ///	                      3	         float		        volume of phase
-        static const char *pQnt = "Q"; ///	                      3	         float		        Quantity of this phase in the sample system
-        static const char *IC = "IC";///
-        static const char *sArea = "sArea"; ///                   3 	     float		        specific surface area of the phase
-        static const char *RHO = "RHO"; ///                       3          double             density of the phase
+        static const char *property = "property"; ///             3          string             name of property
+        static const char *pH = "pH"; /// 	                    ->3          float		        name of property - pH (for aqueous phase only)
+        static const char *Eh = "Eh"; ///	                    ->3	         float		        name of property - Eh (for aqueous phase only)
+        static const char *IS = "IS"; ///	                    ->3	         float 		        name of property - Ionic strength (molal)
+        static const char *all = "all"; ///	                    ->3	         float		        name of property - Alkalinity (aqueous phase only)
+        static const char *pV = "pV"; ///	                    ->3	         float		        name of property - volume of phase
+        static const char *sArea = "sArea"; ///                 ->3 	     float		        name of property - specific surface area of the phase
+        static const char *RHO = "RHO"; ///                     ->3          double             name of property - density of the phase
+///                       *Qnt = "Q";                             3       	 float		        quantity
+///                       *Qerror = "Qerror";   	              3	         float 		        error
+///                       *Qunit = "Qunit"; 	                  3  	     string 		    units of measurement of quantity
 
+
+/// database not implemented yet
 static const char *expdatarefs = "expdatarefs"; ///               0     	 collection 	    components (recipe in oxides; e.g. SiO2, H2O, Al2O3, etc.)
 //const char *expdataset = "expdataset"; /// 		              1	         string		        ID of experimental dataset e.g. 'Kennedy1950',
 static const char *Prange = "Prange"; ///		                  1	         struct   	        pressure range of experiments in a dataset
@@ -67,7 +98,7 @@ static const char *file = "file"; ///	                          1		     string 	
 static const char *url = "url"; ///	                              1		     string 		    URL to source of experimental data on web
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// general keywords for error and unit present in the header of the input file
+// general keywords for error and unit present in the header of the input csv file
     static const char *_error = "error";
     static const char *_unit = "unit";
 
@@ -101,7 +132,6 @@ static const char *url = "url"; ///	                              1		     string
         static const char *Eunit = "Eunit"; ///                             string              experiment element unit
         static const char *PEunit = "PEunit"; ///                           string              experiment property unit
         static const char *DCPH = "DCPH"; ///                               string              experiment dependent comp phase
-        static const char *DC = "DC"; ///                                   string              dependent component
         static const char *DCP = "DCP"; ///                                 string              dependent comp property
         static const char *DCPunit = "DCPunit"; ///                         string              dependent comp property unit
 

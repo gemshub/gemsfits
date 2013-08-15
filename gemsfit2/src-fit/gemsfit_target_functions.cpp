@@ -196,9 +196,9 @@ void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
             // molal to log(molal)
             if (sys->experiments[i]->expphases[p]->phcomp[e]->Qunit == keys::molal)
             {
-                double error_perc = sys->experiments[i]->expphases[p]->phcomp[e]->Qerror * 100 / sys->experiments[i]->expphases[p]->phcomp[e]->bQnt;
-                sys->experiments[i]->expphases[p]->phcomp[e]->bQnt = log10(sys->experiments[i]->expphases[p]->phcomp[e]->bQnt);
-                sys->experiments[i]->expphases[p]->phcomp[e]->Qerror = sys->experiments[i]->expphases[p]->phcomp[e]->bQnt * error_perc / 100;
+                double error_perc = sys->experiments[i]->expphases[p]->phcomp[e]->Qerror * 100 / sys->experiments[i]->expphases[p]->phcomp[e]->Qnt;
+                sys->experiments[i]->expphases[p]->phcomp[e]->Qnt = log10(sys->experiments[i]->expphases[p]->phcomp[e]->Qnt);
+                sys->experiments[i]->expphases[p]->phcomp[e]->Qerror = sys->experiments[i]->expphases[p]->phcomp[e]->Qnt * error_perc / 100;
                 sys->experiments[i]->expphases[p]->phcomp[e]->Qunit = keys::loga;
             }
             else
@@ -227,9 +227,9 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
             // molal to -log(molal)
             if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::molal)
             {
-                double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->pQnt;
-                sys->experiments[i]->expphases[p]->phprop[pp]->pQnt = -log10(sys->experiments[i]->expphases[p]->phprop[pp]->pQnt);
-                sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt * error_perc / 100;
+                double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->Qnt;
+                sys->experiments[i]->expphases[p]->phprop[pp]->Qnt = -log10(sys->experiments[i]->expphases[p]->phprop[pp]->Qnt);
+                sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt * error_perc / 100;
                 sys->experiments[i]->expphases[p]->phprop[pp]->Qunit = keys::_loga;
             }
             else
@@ -243,9 +243,9 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
                 // -log to molal
                 if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::_loga)
                 {
-                    double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->pQnt;
-                    sys->experiments[i]->expphases[p]->phprop[pp]->pQnt = pow(10,-(sys->experiments[i]->expphases[p]->phprop[pp]->pQnt));
-                    sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt * error_perc / 100;
+                    double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->Qnt;
+                    sys->experiments[i]->expphases[p]->phprop[pp]->Qnt = pow(10,-(sys->experiments[i]->expphases[p]->phprop[pp]->Qnt));
+                    sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt * error_perc / 100;
                     sys->experiments[i]->expphases[p]->phprop[pp]->Qunit = keys::molal;
                 }
                 else
@@ -260,9 +260,9 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
                     // log to molal
                     if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::gram)
                     {
-                        double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->pQnt;
-                        sys->experiments[i]->expphases[p]->phprop[pp]->pQnt = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt / 1000;
-                        sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt * error_perc / 100;
+                        double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->Qnt;
+                        sys->experiments[i]->expphases[p]->phprop[pp]->Qnt = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt / 1000;
+                        sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt * error_perc / 100;
                         sys->experiments[i]->expphases[p]->phprop[pp]->Qunit = keys::kgram;
                     }
                     else
@@ -277,9 +277,9 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
                         // log to molal
                         if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::kgram)
                         {
-                            double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->pQnt;
-                            sys->experiments[i]->expphases[p]->phprop[pp]->pQnt = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt * 1000;
-                            sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt * error_perc / 100;
+                            double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->Qnt;
+                            sys->experiments[i]->expphases[p]->phprop[pp]->Qnt = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt * 1000;
+                            sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt * error_perc / 100;
                             sys->experiments[i]->expphases[p]->phprop[pp]->Qunit = keys::gram;
                         }
                         else
@@ -294,9 +294,9 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
                             // log to molal
                             if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::m3)
                             {
-                                double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->pQnt;
-                                sys->experiments[i]->expphases[p]->phprop[pp]->pQnt = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt * 1e06;
-                                sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt * error_perc / 100;
+                                double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->Qnt;
+                                sys->experiments[i]->expphases[p]->phprop[pp]->Qnt = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt * 1e06;
+                                sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt * error_perc / 100;
                                 sys->experiments[i]->expphases[p]->phprop[pp]->Qunit = keys::cm3;
                             }
                             else
@@ -311,9 +311,9 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
                                 // log to molal
                                 if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::cm3)
                                 {
-                                    double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->pQnt;
-                                    sys->experiments[i]->expphases[p]->phprop[pp]->pQnt = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt / 1e06;
-                                    sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt * error_perc / 100;
+                                    double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->Qnt;
+                                    sys->experiments[i]->expphases[p]->phprop[pp]->Qnt = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt / 1e06;
+                                    sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt * error_perc / 100;
                                     sys->experiments[i]->expphases[p]->phprop[pp]->Qunit = keys::m3;
                                 }
                                 else
@@ -373,7 +373,7 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
             computed_value = IC_in_PH[ICndx];
         } else { cout << "Error in target functions line 293 "; exit(1);}
 
-    measured_value = sys->experiments[i]->expphases[p]->phcomp[e]->bQnt;
+    measured_value = sys->experiments[i]->expphases[p]->phcomp[e]->Qnt;
 
     // Error handeling due to possible nonphisical parameters
     if (computed_value < sys->LimitOfDetection)
@@ -416,7 +416,7 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
         } else computed_value = pow(10,(-(sys->NodT[i]->Get_pH()))) /*sys->NodT[i]->Get_pH()*/;
 
     } else // Get phase amount
-    if ((sys->Tfun->objfun[j]->exp_property == keys::pQnt))
+    if ((sys->Tfun->objfun[j]->exp_property == keys::Qnt))
     {
         if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::gram)
         {
@@ -440,7 +440,7 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
         }
     } else { cout << "Error in target functions line 427 "; exit(1);}
 
-    measured_value = sys->experiments[i]->expphases[p]->phprop[pp]->pQnt;
+    measured_value = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt;
 
     // Error handeling due to possible nonphisical parameters
     if (computed_value < sys->LimitOfDetection)
@@ -474,7 +474,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
     PHndx = sys->NodT[i]->Ph_name_to_xDB(phase_name);
     DCndx = sys->NodT[i]->DC_name_to_xCH(dcomp_name);
 
-    if (sys->Tfun->objfun[j]->exp_property == keys::pQnt)
+    if (sys->Tfun->objfun[j]->exp_property == keys::Qnt)
     {
         measured_value = sys->NodT[i]->Get_nDC(DCndx); // Retrieves the current mole amount of Dependent Component.
         if (sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->Qunit == keys::molfrac)
@@ -487,7 +487,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
         measured_value = sys->NodT[i]->Get_gDC(DCndx);
     } else { cout << "Error in target functions line 474 "; exit(1);}
 
-    measured_value = sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->pQnt;
+    measured_value = sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->Qnt;
 
     // Error handeling due to possible nonphisical parameters
 //    if (computed_value < sys->LimitOfDetection)
@@ -539,7 +539,7 @@ double weight (int i, int p, int e, int j, string type, TGfitTask *sys)
 
     if (type == keys::inverr3)
     {
-        return 1/(pow(sys->experiments[i]->expphases[p]->phcomp[e]->bQnt,2));
+        return 1/(pow(sys->experiments[i]->expphases[p]->phcomp[e]->Qnt,2));
     } else
     if (type == keys::inverr_norm)
     {
@@ -561,7 +561,7 @@ double weight_phprop (int i, int p, int pp, int j, string type, TGfitTask *sys)
     } else
     if (type == keys::inverr3)
     {
-        return 1/(pow(sys->experiments[i]->expphases[p]->phprop[pp]->pQnt,2));
+        return 1/(pow(sys->experiments[i]->expphases[p]->phprop[pp]->Qnt,2));
     } else
     if (type == keys::inverr_norm)
     {
@@ -583,7 +583,7 @@ double weight_phdcomp (int i, int p, int dc, int dcp, int j, string type, TGfitT
     } else
     if (type == keys::inverr3)
     {
-        return 1/(pow(sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->pQnt,2));
+        return 1/(pow(sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->Qnt,2));
     } else
     if (type == keys::inverr_norm)
     {

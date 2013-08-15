@@ -86,15 +86,15 @@ int main(int argc, char *argv[])
     }
 
     // create directory for db if not existent
-    if (0 != access(argv[irun + 2], F_OK)) {
-      if (ENOENT == errno) {
-         // does not exist
-          mkdir(argv[irun + 2], S_IRWXU|S_IRGRP|S_IXGRP);
-      }
-      if (ENOTDIR == errno) {
-         // not a directory
-      }
-    }
+//    if (0 != access(argv[irun + 2], F_OK)) {
+//      if (ENOENT == errno) {
+//         // does not exist
+//          mkdir(argv[irun + 2], S_IRWXU|S_IRGRP|S_IXGRP);
+//      }
+//      if (ENOTDIR == errno) {
+//         // not a directory
+//      }
+//    }
 
     char ejdb_path[64] = {};
     cout << ejdb_path << endl;

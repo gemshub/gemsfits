@@ -1179,7 +1179,7 @@ void optimization::define_nlopt_param( )
     OptMaxEval = 500000;
     OptDoWhat = 0;
     OptNormParam = 1;
-    OptPerturbator = 0.001;
+    OptPerturbator = 0.0001;
 
 }
 
@@ -1457,7 +1457,7 @@ void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat, string nfild)
     r->nC = atoi(out.at(0).c_str());
     out.clear();
 
-    temp->parse_JSON_object(Jformat.format, keys::dcomp, out);
+    temp->parse_JSON_object(Jformat.format, keys::DC, out);
     r->Dc_name = out.at(0);
     out.clear();
 

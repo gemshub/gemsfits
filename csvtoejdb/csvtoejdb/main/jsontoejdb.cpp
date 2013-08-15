@@ -65,10 +65,10 @@ void jsontoejdb( string data_, EJDB *jb, EJCOLL *coll, bson_oid_t oid)
         bson_append_double(&exp, Weight, json_real_value(data));
 
         //++ START array Upper_CK ++//
-        data = json_object_get(root, Upper_CK);
+        data = json_object_get(root, UMC);
         if(json_is_array(data))
         {
-            bson_append_start_array(&exp, Upper_CK);
+            bson_append_start_array(&exp, UMC);
             for (int i=0; i < json_array_size(data); i++)
             {
                 data1 = json_array_get(data, i);
@@ -78,16 +78,33 @@ void jsontoejdb( string data_, EJDB *jb, EJCOLL *coll, bson_oid_t oid)
                     sss = ss.str();
                     ss.str("");
                     bson_append_start_object(&exp, sss.c_str() );
-                    data2 = json_object_get(data1, dcomp);
+                    // for DC
+                    data2 = json_object_get(data1, DC);
                     if(json_is_string(data2))
-                    bson_append_string(&exp, dcomp, json_string_value(data2));
-                    data2 = json_object_get(data1, pQnt);
-                    if(json_is_real(data2) || json_is_integer(data2) )
-                        if (json_is_real(data2))
-                            bson_append_double(&exp, bQnt, (double) json_real_value(data2));
-                    else
-                            if (json_is_integer(data2))
-                                bson_append_double(&exp, bQnt, (int) json_integer_value(data2));
+                    {
+                        bson_append_string(&exp, DC, json_string_value(data2));
+                        data2 = json_object_get(data1, Qnt);
+                        if(json_is_real(data2) || json_is_integer(data2) )
+                            if (json_is_real(data2))
+                                bson_append_double(&exp, Qnt, (double) json_real_value(data2));
+                        else
+                                if (json_is_integer(data2))
+                                    bson_append_double(&exp, Qnt, (int) json_integer_value(data2));
+                    }
+
+                    // for phase
+                    data2 = json_object_get(data1, phase);
+                    if(json_is_string(data2))
+                    {
+                        bson_append_string(&exp, phase, json_string_value(data2));
+                        data2 = json_object_get(data1, Qnt);
+                        if(json_is_real(data2) || json_is_integer(data2) )
+                            if (json_is_real(data2))
+                                bson_append_double(&exp, Qnt, (double) json_real_value(data2));
+                        else
+                                if (json_is_integer(data2))
+                                    bson_append_double(&exp, Qnt, (int) json_integer_value(data2));
+                    }
                 }
                 bson_append_finish_object(&exp);
             }
@@ -95,10 +112,10 @@ void jsontoejdb( string data_, EJDB *jb, EJCOLL *coll, bson_oid_t oid)
         }
 
         //++ START array Lower_CK ++//
-        data = json_object_get(root, Lower_CK);
+        data = json_object_get(root, LMC);
         if(json_is_array(data))
         {
-            bson_append_start_array(&exp, Lower_CK);
+            bson_append_start_array(&exp, LMC);
             for (int i=0; i < json_array_size(data); i++)
             {
                 data1 = json_array_get(data, i);
@@ -108,16 +125,33 @@ void jsontoejdb( string data_, EJDB *jb, EJCOLL *coll, bson_oid_t oid)
                     sss = ss.str();
                     ss.str("");
                     bson_append_start_object(&exp, sss.c_str() );
-                    data2 = json_object_get(data1, dcomp);
+
+                    // For DC
+                    data2 = json_object_get(data1, DC);
                     if(json_is_string(data2))
-                    bson_append_string(&exp, dcomp, json_string_value(data2));
-                    data2 = json_object_get(data1, pQnt);
-                    if(json_is_real(data2) || json_is_integer(data2) )
-                        if (json_is_real(data2))
-                            bson_append_double(&exp, bQnt, (double) json_real_value(data2));
-                    else
-                            if (json_is_integer(data2))
-                                bson_append_double(&exp, bQnt, (int) json_integer_value(data2));
+                    {
+                        bson_append_string(&exp, DC, json_string_value(data2));
+                        data2 = json_object_get(data1, Qnt);
+                        if(json_is_real(data2) || json_is_integer(data2) )
+                            if (json_is_real(data2))
+                                bson_append_double(&exp, Qnt, (double) json_real_value(data2));
+                        else
+                                if (json_is_integer(data2))
+                                    bson_append_double(&exp, Qnt, (int) json_integer_value(data2));
+                    }
+                    // For phase
+                    data2 = json_object_get(data1, IC);
+                    if(json_is_string(data2))
+                    {
+                        bson_append_string(&exp, IC, json_string_value(data2));
+                        data2 = json_object_get(data1, Qnt);
+                        if(json_is_real(data2) || json_is_integer(data2) )
+                            if (json_is_real(data2))
+                                bson_append_double(&exp, Qnt, (double) json_real_value(data2));
+                        else
+                                if (json_is_integer(data2))
+                                    bson_append_double(&exp, Qnt, (int) json_integer_value(data2));
+                    }
                 }
                 bson_append_finish_object(&exp);
             }
@@ -143,13 +177,13 @@ void jsontoejdb( string data_, EJDB *jb, EJCOLL *coll, bson_oid_t oid)
                     data2 = json_object_get(data1, comp);
                     if(json_is_string(data2))
                     bson_append_string(&exp, comp, json_string_value(data2));
-                    data2 = json_object_get(data1, bQnt);
+                    data2 = json_object_get(data1, Qnt);
                     if(json_is_real(data2) || json_is_integer(data2) )
                         if (json_is_real(data2))
-                            bson_append_double(&exp, bQnt, (double) json_real_value(data2));
+                            bson_append_double(&exp, Qnt, (double) json_real_value(data2));
                     else
                             if (json_is_integer(data2))
-                                bson_append_double(&exp, bQnt, (int) json_integer_value(data2));
+                                bson_append_double(&exp, Qnt, (int) json_integer_value(data2));
                     data2 = json_object_get(data1, Qunit);
                     if(json_is_string(data2))
                     bson_append_string(&exp, Qunit, json_string_value(data2));
@@ -198,11 +232,11 @@ void jsontoejdb( string data_, EJDB *jb, EJCOLL *coll, bson_oid_t oid)
                                 if(json_is_string(data4))
                                 bson_append_string(&exp, property, json_string_value(data4));
 
-                                data4 = json_object_get(data3, pQnt);
+                                data4 = json_object_get(data3, Qnt);
                                 if(json_is_real(data4))
-                                bson_append_double(&exp, pQnt, json_real_value(data4));
+                                bson_append_double(&exp, Qnt, json_real_value(data4));
                                 if(json_is_integer(data4))
-                                bson_append_int(&exp, pQnt, json_integer_value(data4));
+                                bson_append_int(&exp, Qnt, json_integer_value(data4));
 
                                 data4 = json_object_get(data3, Qerror);
                                 if(json_is_real(data4))
@@ -220,10 +254,10 @@ void jsontoejdb( string data_, EJDB *jb, EJCOLL *coll, bson_oid_t oid)
                     }
 
                     //++ START array phcomp ++//
-                    data2 = json_object_get(data1, phcomp);
+                    data2 = json_object_get(data1, phIC);
                     if(json_is_array(data2))
                     {
-                        bson_append_start_array(&exp, phcomp);
+                        bson_append_start_array(&exp, phIC);
                         for (int i=0; i < json_array_size(data2); i++)
                         {
                             data3 = json_array_get(data2, i);
@@ -233,15 +267,15 @@ void jsontoejdb( string data_, EJDB *jb, EJCOLL *coll, bson_oid_t oid)
                                 sss = ss.str();
                                 ss.str("");
                                 bson_append_start_object(&exp, sss.c_str() );
-                                data4 = json_object_get(data3, element);
+                                data4 = json_object_get(data3, IC);
                                 if(json_is_string(data4))
-                                bson_append_string(&exp, element, json_string_value(data4));
+                                bson_append_string(&exp, IC, json_string_value(data4));
 
-                                data4 = json_object_get(data3, eQnt);
+                                data4 = json_object_get(data3, Qnt);
                                 if(json_is_real(data4))
-                                bson_append_double(&exp, eQnt, json_real_value(data4));
+                                bson_append_double(&exp, Qnt, json_real_value(data4));
                                 if(json_is_integer(data4))
-                                bson_append_int(&exp, eQnt, json_integer_value(data4));
+                                bson_append_int(&exp, Qnt, json_integer_value(data4));
 
                                 data4 = json_object_get(data3, Qerror);
                                 if(json_is_real(data4))
@@ -260,10 +294,10 @@ void jsontoejdb( string data_, EJDB *jb, EJCOLL *coll, bson_oid_t oid)
 
 
                     //++ START array phspecies ++//
-                    data2 = json_object_get(data1, phspecies);
+                    data2 = json_object_get(data1, phDC);
                     if(json_is_array(data2))
                     {
-                        bson_append_start_array(&exp, phspecies);
+                        bson_append_start_array(&exp, phDC);
                         for (int i=0; i < json_array_size(data2); i++)
                         {
                             data3 = json_array_get(data2, i);
@@ -273,16 +307,16 @@ void jsontoejdb( string data_, EJDB *jb, EJCOLL *coll, bson_oid_t oid)
                                 sss = ss.str();
                                 ss.str("");
                                 bson_append_start_object(&exp, sss.c_str() );
-                                data4 = json_object_get(data3, species);
+                                data4 = json_object_get(data3, DC);
                                 if(json_is_string(data4))
-                                bson_append_string(&exp, species, json_string_value(data4));
+                                bson_append_string(&exp, DC, json_string_value(data4));
 
                                 // Dcomp properties
                                 //++ START array phprop ++//
-                                data4 = json_object_get(data3, dcompprop);
+                                data4 = json_object_get(data3, DCprop);
                                 if(json_is_array(data4))
                                 {
-                                    bson_append_start_array(&exp, dcompprop);
+                                    bson_append_start_array(&exp, DCprop);
                                     for (int i=0; i < json_array_size(data4); i++)
                                     {
                                         data5 = json_array_get(data4, i);
@@ -297,11 +331,11 @@ void jsontoejdb( string data_, EJDB *jb, EJCOLL *coll, bson_oid_t oid)
                                             if(json_is_string(data6))
                                             bson_append_string(&exp, property, json_string_value(data6));
 
-                                            data6 = json_object_get(data5, pQnt);
+                                            data6 = json_object_get(data5, Qnt);
                                             if(json_is_real(data6))
-                                            bson_append_double(&exp, pQnt, json_real_value(data6));
+                                            bson_append_double(&exp, Qnt, json_real_value(data6));
                                             if(json_is_integer(data6))
-                                            bson_append_int(&exp, pQnt, json_integer_value(data6));
+                                            bson_append_int(&exp, Qnt, json_integer_value(data6));
 
                                             data6 = json_object_get(data5, Qerror);
                                             if(json_is_real(data6))

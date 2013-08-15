@@ -27,12 +27,16 @@ sP			Pressure in bars (empty cell = 0)
 sV			System volume in cm3 (empty cell = 0)
 expdataset		Name of this experimental data set (alphanumeric), 
 				should be the same for all samples belonging to a given set. 
-Upper_CK.<dname>	Upper metastability constraints (if the dependent component is wished to not be
+UMC.DC/phase.<name>	Upper metastability constraints (if the dependent component is wished to not be
 			        suppressed form a certain experiment put 0) (optional column) 
 				(empty cell = object not created in GEMSFIT2)
-Lower_CK.<dname>	Lower metastability constraints (if the dependent component is wished to be
+				e.g. UMC.DC.Sanidine (for dependent components) or UMC.phase.aq_gen
+				(for phases)
+LMC.DC/phase.<name>	Lower metastability constraints (if the dependent component is wished to be
 			        present put >0, present as metastable) (optional column)
-				(empty cell = object not created in GEMSFIT2) 
+				(empty cell = object not created in GEMSFIT2)
+				e.g. LMC.DC.Sanidine (for dependent components) or LMC.phase.aq_gen
+				(for phases) 
 
 SYSTEM COMPOSITION:
 comp.<formula> 		Composition of the sample system, expressed as one or several columns 
