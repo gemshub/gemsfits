@@ -213,7 +213,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
             if (gfittask->Opti->Ptype[i] =="G0")
             {
                 myStat <<"          parameter G0 "<<gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])<<" :           " << optv_[i] << endl;
-                cout /*<< gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])*/ << endl;
+//                cout /*<< gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])*/ << endl;
             } else
             myStat <<"          parameter "<<gfittask->Opti->Ptype[i]<<" :          " << optv_[i] << endl;
 
@@ -286,6 +286,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
 
 
 //            print_vectors_curve( optv_, array_ssr, sensitivity_points );
+        /// adding to statistics the reaction and linked paramaters
         gfittask->Opti->h_Lp = false;
         gfittask->Opti->h_RDc = false;
         for (i = 0; i<gfittask->Opti->reactions.size(); ++i)
@@ -379,7 +380,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
         for( i=0; i< (int) optv_.size(); i++ )
         {
             // Write sensitivities to file
-            myStat <<"			parameter "<< i <<" :	           " << CompositeScaledSensitivities(i)	<< endl;
+            myStat <<"			parameter "<< i <<" "<<gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]) <<" :	           " << CompositeScaledSensitivities(i)	<< endl;
         }
         myStat << endl;
 
@@ -467,7 +468,7 @@ CorellationMatrix.print("Corellation Matrix:");
         myStat << " Parameter Standard Deviations/Errors: "<<endl;
         for( i=0; i< (int) optv_.size(); i++ )
         {
-            myStat <<"			parameter "<< i <<" :	           " << ParameterStandardDeviation(i) << endl;
+            myStat <<"			parameter "<< i <<" "<<gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]) <<" :	           " << ParameterStandardDeviation(i) << endl;
         }
         myStat << endl;
 
@@ -478,7 +479,7 @@ CorellationMatrix.print("Corellation Matrix:");
         boost::math::students_t dist( DegreesOfFreedom );
         for( j=0; j< (int) optv_.size(); j++ )
         {
-            myStat <<"			parameter "<< j << " :	           ";
+            myStat <<"			parameter "<< j <<" "<<gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[j]) << " :	           ";
             myStat << endl;
             myStat <<    "___________________________________________________________________" << endl;
             myStat <<    "Confidence       T           Interval          Lower          Upper" << endl;

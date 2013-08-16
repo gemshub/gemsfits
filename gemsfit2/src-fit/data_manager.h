@@ -106,6 +106,7 @@ class Data_Manager : public TNode
         int MPI; /// number of paralele threads
 
         double LimitOfDetection; /// Experimetal limit of detection
+        double minimum_value; /// Minimum measured avlue
 
         std::vector<int> TP_pairs[2]; /// Stores unique TP pairs of the experiments. TP_pairs[0] temperature; TP_pairs[1] pressure.
 
@@ -164,12 +165,12 @@ class Data_Manager : public TNode
                     vector<prop*> phprop;
 
                     // composition of the phases in elements
-                    vector<components*> phcomp;
+                    vector<components*> phIC;
 
                     // dcomps (end member, phase component) 3rd level in EJDB
                     struct dcomps
                     {
-                        string formula;               /// name of chemical dcomps (end member, phase component)
+                        string DC;               /// name of chemical dcomps (end member, phase component)
                         struct dcprop
                         {
                             string property;
@@ -177,52 +178,13 @@ class Data_Manager : public TNode
                             double Qerror;               /// error
                             string Qunit;                /// units
                         };
-                        vector<dcprop*> dcompprop;
+                        vector<dcprop*> DCprop;
                     };
-                    vector<dcomps*> phdcomps;
+                    vector<dcomps*> phDC;
                 };
                 vector<phases*> expphases;      /// vector of phases measured in one experiment
             };
             vector<samples*> experiments;         /// vector of samples from one experimental dataset
-
-        // Handle that marks available data in the experiments to compare with calculated data
-            struct Hsamples                  /// data for experimental samples
-            {
-                string sample;              /// ID/name of this experimental sample
-                string expdataset;          /// ID/name of set of experimental data
-
-                // defines bulk composition of chemical system for this experiment 2nd level in EJDB
-                struct Hcomponents
-                {
-                    bool comp;         /// formula defining PCO stoichiometry (GEM formula syntax)
-                };
-                vector<Hcomponents*> Hsbcomp;
-
-                struct Hphases                         /// data for phases characterised (measured) in this experiment 2nd level in EJDB
-                {
-                    string phase;                     /// phase ID (name)
-                    bool   Hphase;
-                    // measured properties of a phase 3rd level in EJDB
-                    struct Hprop
-                    {
-                        bool property;                /// known bulk properties of the phase / property of phase (pH, amount, volume, sarea, etc.)
-                    };
-                    vector<Hprop*> Hphprop;
-
-                    // composition of the phases in elements
-                    vector<Hcomponents*> Hphcomp;
-
-                    // dcomps (end member, phase component) 3rd level in EJDB
-                    struct Hdcomps
-                    {
-                        bool formula;               /// name of chemical dcomps (end member, phase component)
-                    };
-                    vector<Hdcomps*> Hphdcomps;
-                };
-                vector<Hphases*> Hexpphases;      /// vector of phases measured in one experiment
-            };
-            vector<Hsamples*> Hexperiments;         /// vector of samples from one experimental dataset
-
 
         /**
         * get database connection parameters

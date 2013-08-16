@@ -288,7 +288,7 @@ F-157297.00090727
 
 # PMc: Tables (in TSolMod convention) of interaction parameter coefficients  for non-ideal solutions
 <PMc>
-0.0979999974370003 3.30999994277954 1 1 3 0 0 0 
+0.0640000030398369 3.72000002861023 1 1 1 0 0 0 
 
 # LsMdc: Dimensions of TSolMod <DMc> and <MoiSN> arrays [nPS*3]: In each row (for phase):
 # [0] number of parameters per component; [1] 0; [2] 0. For multi-site (sublattice) models: 
@@ -406,7 +406,7 @@ F-157297.00090727
 
 
 # OptDoWhat: perform optimization and statistics (0), only optimization with basic Statistics (1), only Statistics (2) with initial guesses as best fit parametters
-<OptDoWhat>  0
+<OptDoWhat>  2
 
 # OptAlgo: specify algorithm GN_ISRES GN_ORIG_DIRECT GN_ORIG_DIRECT_L LN_COBYLA LN_BOBYQA 
 <OptAlgo>  'LN_BOBYQA'
@@ -442,4 +442,4 @@ F-157297.00090727
 <StatMCbool>  0
 
 # StatPerturbator: used for calculating sensitivities by central diference, see ref [2]
-<StatPerturbator>  0.0001
+<StatPerturbator>  0.001

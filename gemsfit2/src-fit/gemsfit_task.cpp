@@ -105,8 +105,11 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     gfit_error ( );
 
     double temp_res;
-
+    // to have the average and minimum value calculated
     get_residuals( temp_res);
+
+    if (this->LimitOfDetection > (this->minimum_value/100))
+        this->LimitOfDetection = this->minimum_value/100;
 
     fout.close();
 
@@ -163,7 +166,7 @@ void TGfitTask::get_logK_TPpairs()
 
 void TGfitTask::get_residuals( double &residuals)
 {
-    double average = 0.0;
+    double average = 0.0, min = 1e-05;
     residuals = 0.0;
     // loop trough objective function
     for (unsigned int j=0; j<Tfun->objfun.size(); ++j)
@@ -181,13 +184,15 @@ void TGfitTask::get_residuals( double &residuals)
                     if ((Tfun->objfun[j]->exp_elem !="NULL") && (Tfun->objfun[j]->exp_property =="NULL"))
                     {
                         // loop trough all elements
-                        for (unsigned int e=0; e<this->experiments[i]->expphases[p]->phcomp.size(); ++e)
+                        for (unsigned int e=0; e<this->experiments[i]->expphases[p]->phIC.size(); ++e)
                         {
-                            if ((this->experiments[i]->expphases[p]->phcomp[e]->comp == this->Tfun->objfun[j]->exp_elem) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
+                            if ((this->experiments[i]->expphases[p]->phIC[e]->comp == this->Tfun->objfun[j]->exp_elem) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
                             {
                                 // check for unit
                                 check_unit(i, p, e, Tfun->objfun[j]->exp_unit, this );
-                                average = average + this->experiments[i]->expphases[p]->phcomp[e]->Qnt;
+                                average = average + this->experiments[i]->expphases[p]->phIC[e]->Qnt;
+                                if (this->experiments[i]->expphases[p]->phIC[e]->Qnt < min)
+                                    min = this->experiments[i]->expphases[p]->phIC[e]->Qnt;
                                 residuals = residuals + residual_phase_elem (i, p, e, j, this);
                                 ++count;
                             }
@@ -203,27 +208,29 @@ void TGfitTask::get_residuals( double &residuals)
                                 // check for unit
                                 check_prop_unit(i, p, pp, Tfun->objfun[j]->exp_unit, this );
                                 average = average + this->experiments[i]->expphases[p]->phprop[pp]->Qnt;
+                                if (this->experiments[i]->expphases[p]->phprop[pp]->Qnt < min)
+                                    min = this->experiments[i]->expphases[p]->phprop[pp]->Qnt;
                                 residuals = residuals + residual_phase_prop (i, p, pp, j, this);
                                 ++count;
                             }
                         }
                     } else
-                        if ((Tfun->objfun[j]->exp_property !="NULL") && (this->experiments[i]->expphases[p]->phdcomps.size() > 0) && (Tfun->objfun[j]->exp_dcomp != "NULL"))
+                        if ((Tfun->objfun[j]->exp_property !="NULL") && (this->experiments[i]->expphases[p]->phDC.size() > 0) && (Tfun->objfun[j]->exp_dcomp != "NULL"))
                         {
                             // loop trough all dependent components
-                            for (unsigned int dc = 0; dc< this->experiments[i]->expphases[p]->phdcomps.size(); ++dc)
+                            for (unsigned int dc = 0; dc< this->experiments[i]->expphases[p]->phDC.size(); ++dc)
                             {
-                                if ((this->experiments[i]->expphases[p]->phdcomps[dc]->formula == Tfun->objfun[j]->exp_dcomp) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
+                                if ((this->experiments[i]->expphases[p]->phDC[dc]->DC == Tfun->objfun[j]->exp_dcomp) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
                                 {
                                     // loop trough all dep comp properties
-                                    for (unsigned int dcp = 0; dcp < this->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop.size(); ++dcp)
+                                    for (unsigned int dcp = 0; dcp < this->experiments[i]->expphases[p]->phDC[dc]->DCprop.size(); ++dcp)
                                     {
-                                        if (this->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->property == Tfun->objfun[j]->exp_property)
+                                        if (this->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->property == Tfun->objfun[j]->exp_property)
                                         {
 //                                            cout << "yes"<<endl;
                                             //                                    // check for unit
                                             //                                    check_dcomp_unit(i, p, dc, dcp, sys->Tfun->objfun[j]->exp_unit, sys );
-                                            average = average + this->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->Qnt;
+                                            average = average + this->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt;
                                             residuals = residuals + residual_phase_dcomp (i, p, dc, dcp, j, this);
                                             ++count;
                                         }
@@ -236,6 +243,7 @@ void TGfitTask::get_residuals( double &residuals)
         }
     average = average / count;
     Tfun->objfun[j]->meas_average = average;
+    this->minimum_value = min;
     average = 0.0;
     }
 }

@@ -189,17 +189,17 @@ void adjust_Lp (TGfitTask *sys)
 /// Unit check FUNCTIONS
 void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
 {
-    if (sys->experiments[i]->expphases[p]->phcomp[e]->Qunit != unit)
+    if (sys->experiments[i]->expphases[p]->phIC[e]->Qunit != unit)
     {
         if (unit == keys::loga)
         {
             // molal to log(molal)
-            if (sys->experiments[i]->expphases[p]->phcomp[e]->Qunit == keys::molal)
+            if (sys->experiments[i]->expphases[p]->phIC[e]->Qunit == keys::molal)
             {
-                double error_perc = sys->experiments[i]->expphases[p]->phcomp[e]->Qerror * 100 / sys->experiments[i]->expphases[p]->phcomp[e]->Qnt;
-                sys->experiments[i]->expphases[p]->phcomp[e]->Qnt = log10(sys->experiments[i]->expphases[p]->phcomp[e]->Qnt);
-                sys->experiments[i]->expphases[p]->phcomp[e]->Qerror = sys->experiments[i]->expphases[p]->phcomp[e]->Qnt * error_perc / 100;
-                sys->experiments[i]->expphases[p]->phcomp[e]->Qunit = keys::loga;
+                double error_perc = sys->experiments[i]->expphases[p]->phIC[e]->Qerror * 100 / sys->experiments[i]->expphases[p]->phIC[e]->Qnt;
+                sys->experiments[i]->expphases[p]->phIC[e]->Qnt = log10(sys->experiments[i]->expphases[p]->phIC[e]->Qnt);
+                sys->experiments[i]->expphases[p]->phIC[e]->Qerror = sys->experiments[i]->expphases[p]->phIC[e]->Qnt * error_perc / 100;
+                sys->experiments[i]->expphases[p]->phIC[e]->Qunit = keys::loga;
             }
             else
             {
@@ -210,7 +210,7 @@ void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
     }
     else
     {
-        if (sys->experiments[i]->expphases[p]->phcomp[e]->Qunit != unit)
+        if (sys->experiments[i]->expphases[p]->phIC[e]->Qunit != unit)
         {
             cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
             exit(1);
@@ -343,7 +343,7 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
     DATACH* dCH = sys->NodT[i]->pCSD();
     double* IC_in_PH;
 
-    elem_name =  sys->experiments[i]->expphases[p]->phcomp[e]->comp.c_str();
+    elem_name =  sys->experiments[i]->expphases[p]->phIC[e]->comp.c_str();
     ICndx = sys->NodT[i]->IC_name_to_xDB(elem_name);
     phase_name = sys->experiments[i]->expphases[p]->phase.c_str();
     PHndx = sys->NodT[i]->Ph_name_to_xDB(phase_name);
@@ -355,7 +355,7 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
     // Get composition of aqueous pahse
     if ((sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
     {
-        if (sys->experiments[i]->expphases[p]->phcomp[e]->Qunit == keys::loga)
+        if (sys->experiments[i]->expphases[p]->phIC[e]->Qunit == keys::loga)
         {
         computed_value = log10(sys->NodT[i]->Get_mIC(ICndx));
         } else
@@ -365,7 +365,7 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
     } else // other than aqueous phase
         if ((sys->Tfun->objfun[j]->exp_phase != "aq_gen") && (sys->experiments[i]->expphases[p]->phase != "aq_gen"))
         {
-            if ((sys->Tfun->objfun[j]->exp_unit == keys::Simolfrac) && (sys->experiments[i]->expphases[p]->phcomp[e]->Qunit == keys::Simolfrac))
+            if ((sys->Tfun->objfun[j]->exp_unit == keys::Simolfrac) && (sys->experiments[i]->expphases[p]->phIC[e]->Qunit == keys::Simolfrac))
             {
                 int Sindx = sys->NodT[i]->IC_name_to_xDB("Si");
                 computed_value = IC_in_PH[ICndx]/IC_in_PH[Sindx];
@@ -373,7 +373,7 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
             computed_value = IC_in_PH[ICndx];
         } else { cout << "Error in target functions line 293 "; exit(1);}
 
-    measured_value = sys->experiments[i]->expphases[p]->phcomp[e]->Qnt;
+    measured_value = sys->experiments[i]->expphases[p]->phIC[e]->Qnt;
 
     // Error handeling due to possible nonphisical parameters
     if (computed_value < sys->LimitOfDetection)
@@ -391,7 +391,7 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
 
     delete[] IC_in_PH;
 
-    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phcomp[e]->comp,sys->experiments[i]->expphases[p]->phcomp[e]->Qunit,measured_value,computed_value,Weighted_Tfun_residual, weight_ );
+    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phIC[e]->comp,sys->experiments[i]->expphases[p]->phIC[e]->Qunit,measured_value,computed_value,Weighted_Tfun_residual, weight_ );
 
     return Weighted_Tfun_residual;
 }
@@ -470,14 +470,14 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
 //    DATACH* dCH = sys->NodT[i]->pCSD();
 
     phase_name = sys->experiments[i]->expphases[p]->phase.c_str();
-    dcomp_name = sys->experiments[i]->expphases[p]->phdcomps[dc]->formula.c_str();
+    dcomp_name = sys->experiments[i]->expphases[p]->phDC[dc]->DC.c_str();
     PHndx = sys->NodT[i]->Ph_name_to_xDB(phase_name);
     DCndx = sys->NodT[i]->DC_name_to_xCH(dcomp_name);
 
     if (sys->Tfun->objfun[j]->exp_property == keys::Qnt)
     {
         measured_value = sys->NodT[i]->Get_nDC(DCndx); // Retrieves the current mole amount of Dependent Component.
-        if (sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->Qunit == keys::molfrac)
+        if (sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit == keys::molfrac)
         {
             measured_value = sys->NodT[i]->Get_cDC(DCndx);// for species in other phases - mole fraction.
         }
@@ -487,7 +487,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
         measured_value = sys->NodT[i]->Get_gDC(DCndx);
     } else { cout << "Error in target functions line 474 "; exit(1);}
 
-    measured_value = sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->Qnt;
+    measured_value = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt;
 
     // Error handeling due to possible nonphisical parameters
 //    if (computed_value < sys->LimitOfDetection)
@@ -502,7 +502,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
     Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j])*weight_;
 
     sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
-    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phdcomps[dc]->formula,sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->property, sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->Qunit, measured_value, computed_value, Weighted_Tfun_residual, weight_ );
+    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phDC[dc]->DC,sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->property, sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit, measured_value, computed_value, Weighted_Tfun_residual, weight_ );
 
     return Weighted_Tfun_residual;
 }
@@ -529,21 +529,21 @@ double weight (int i, int p, int e, int j, string type, TGfitTask *sys)
 {
     if (type == keys::inverr)
     {
-        return 1/(sys->experiments[i]->expphases[p]->phcomp[e]->Qerror);
+        return 1/(sys->experiments[i]->expphases[p]->phIC[e]->Qerror);
     } else
 
     if (type == keys::inverr2)
     {
-        return 1/(pow(sys->experiments[i]->expphases[p]->phcomp[e]->Qerror,2));
+        return 1/(pow(sys->experiments[i]->expphases[p]->phIC[e]->Qerror,2));
     } else
 
     if (type == keys::inverr3)
     {
-        return 1/(pow(sys->experiments[i]->expphases[p]->phcomp[e]->Qnt,2));
+        return 1/(pow(sys->experiments[i]->expphases[p]->phIC[e]->Qnt,2));
     } else
     if (type == keys::inverr_norm)
     {
-        return 1/(pow((sys->experiments[i]->expphases[p]->phcomp[e]->Qerror/sys->Tfun->objfun[j]->meas_average),2));
+        return 1/(pow((sys->experiments[i]->expphases[p]->phIC[e]->Qerror/sys->Tfun->objfun[j]->meas_average),2));
     } else
         return 1;
 }
@@ -574,20 +574,20 @@ double weight_phdcomp (int i, int p, int dc, int dcp, int j, string type, TGfitT
 {
     if (type == keys::inverr)
     {
-        return 1/(sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->Qerror);
+        return 1/(sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror);
     } else
 
     if (type == keys::inverr2)
     {
-        return 1/(pow(sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->Qerror,2));
+        return 1/(pow(sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror,2));
     } else
     if (type == keys::inverr3)
     {
-        return 1/(pow(sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->Qnt,2));
+        return 1/(pow(sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt,2));
     } else
     if (type == keys::inverr_norm)
     {
-        return 1/(pow((sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->Qerror/sys->Tfun->objfun[j]->meas_average),2));
+        return 1/(pow((sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror/sys->Tfun->objfun[j]->meas_average),2));
     } else
         return 1;
 }
