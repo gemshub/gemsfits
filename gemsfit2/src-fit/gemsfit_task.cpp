@@ -780,6 +780,20 @@ void TGfitTask::setnodes()
                 ICndx = NodT[n]->IC_name_to_xDB("O");
                 new_moles_IC[ICndx] +=  3*experiments[n]->sbcomp[j]->Qnt/78.0035586;
             }
+            else if (experiments[n]->sbcomp[j]->comp == "AlO(OH)")
+            {
+                if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
+                {
+                    experiments[n]->sbcomp[j]->Qnt = experiments[n]->sbcomp[j]->Qnt*h2o_kgamount*59.9822326;
+                    experiments[n]->sbcomp[j]->Qunit = keys::gram;
+                }
+                ICndx = NodT[n]->IC_name_to_xDB("Al");
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->Qnt/59.9822326;
+                ICndx = NodT[n]->IC_name_to_xDB("H");
+                new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->Qnt/59.9822326;
+                ICndx = NodT[n]->IC_name_to_xDB("O");
+                new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->Qnt/59.9822326;
+            }
             else if (experiments[n]->sbcomp[j]->comp == "Ca(OH)2")
             {
                 if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
@@ -907,7 +921,7 @@ void TGfitTask::setnodes()
             }
                 else
                 {
-                    cout<<" Unknown component in gemsfit_global_function.cpp line 785 !!!! "<<endl;
+                    cout<<" Unknown component in gemsfit_task.cpp line 910 !!!! "<<endl;
                     cout<<" ... bail out now ... "<<endl;
                     exit(1);
                 }

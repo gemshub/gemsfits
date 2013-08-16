@@ -43,12 +43,13 @@
 #        "skipdataset" : ["CH03", "CH03D"],
 #        "sT" : [100, 1000],
 #        "sP" : [1, 2500] }'
+["Walther&Orville1983", "Hemley_etal1980", "Manning1994", "Morey_etal1962", "Newton&Manning2001", "Shmulovich_etal2006", "Shmulovich_etal2001", "Anderson&Burnham1965",
+ "Anderson&Burnham1967", "Novgorodov1975", "Novgorodov1977", "Wyart&Sabatier1955", "Morey&Hesselgesser1951", "Weill&Fyfe1964", "Kennedy1950", "Psat_Kennedy1950", "Psat_Morey_etal1962",     "Psat_Crear&Anderson1971", "Psat_Kitahara1960", "2_Morey&Hesselgesser1951", "Psat_Rimstidt1997", "Psat_Fournier1960", "Psat_vanLier1960", "Psat_Siever1962", "K_Anderson&Burnham1967", "K_Cloke1951", "Psat_NaOH_Crear&Anderson1971", "NaOH_Anderson&Burnham1967", "Psat_NaOH_Ostapenko1969", "NaCl_q_Novgorodov1977", "NaCl_q_Shmulovich_etal2006", "NaCl_q_Newton&Manning2001", "NaCl_q_Fournier_etal1982", "q_Fournier_etal1992", "NaCl_q_Anderson&Burnham1967", "Kcl_q_Anderson&Burnham1967", "Becker_etal1983", "Ragnarsdottir&Walther1985", "K_Pascal&Anderson1989", "Na_Pascal&Anderson1989", "K_Azaroual1996", "Gi_Na_Weselowski1992", "Gi_K_Weselowski1992", "Gi_Na_Russel_etal1955", "Gi_Na_Szita&Berecz1970", "Gi_Na_Apps_PhD1970", "Gi_Na_Tsirlina1936", "Gi_Na_Fricke&Jucaitis1930", "Gi_Na_Fulda&Ginsberg1951", "Gi_Na_Ikkatai&Okada1962", "Gi_Na_Lyapunov_etal1964"]
 #      Paste the above example below, remove comment symbols (#), and edit as necessary.
 
 <DataSelect>
 '{ "sample" : "", 
- "usedataset" : ["Walther&Orville1983", "Hemley_etal1980", "Manning1994", "Morey_etal1962", "Newton&Manning2001", "Shmulovich_etal2006", "Shmulovich_etal2001", "Anderson&Burnham1965",
- "Anderson&Burnham1967", "Novgorodov1975", "Novgorodov1977", "Wyart&Sabatier1955", "Morey&Hesselgesser1951", "Weill&Fyfe1964", "Kennedy1950", "Psat_Kennedy1950", "Psat_Morey_etal1962",     "Psat_Crear&Anderson1971", "Psat_Kitahara1960", "2_Morey&Hesselgesser1951", "Psat_Rimstidt1997", "Psat_Fournier1960", "Psat_vanLier1960", "Psat_Siever1962", "K_Anderson&Burnham1967", "K_Cloke1951", "Psat_NaOH_Crear&Anderson1971", "NaOH_Anderson&Burnham1967", "Psat_NaOH_Ostapenko1969", "NaCl_q_Novgorodov1977", "NaCl_q_Shmulovich_etal2006", "NaCl_q_Newton&Manning2001", "NaCl_q_Fournier_etal1982", "q_Fournier_etal1992", "NaCl_q_Anderson&Burnham1967", "Kcl_q_Anderson&Burnham1967", "Becker_etal1983", "Ragnarsdottir&Walther1985", "K_Pascal&Anderson1989", "Na_Pascal&Anderson1989", "K_Azaroual1996", "Gi_Na_Weselowski1992", "Gi_K_Weselowski1992", "Gi_Na_Russel_etal1955", "Gi_Na_Szita&Berecz1970", "Gi_Na_Apps_PhD1970", "Gi_Na_Tsirlina1936", "Gi_Na_Fricke&Jucaitis1930", "Gi_Na_Fulda&Ginsberg1951", "Gi_Na_Ikkatai&Okada1962", "Gi_Na_Lyapunov_etal1964"],
+ "usedataset" : "",
  "skipdataset": "",
  "sT" : [1, 1000],
  "sP" : [0, 5000]
@@ -113,7 +114,7 @@
 # LimitOfDetection: Limit of detection of the measured values.
 # Ensures that wrongly computed values calculated by GEMS due to non-physical parameter values are ignored.
 
-<LimitOfDetection>  1e-10
+<LimitOfDetection>  1e-08
 
 #########################################################################
 #>>>>>>>>>>>>>>> Parameters to Fit section >>>>>>>>>>>>>>>>>>>>>>>>>>>>>#
@@ -406,7 +407,7 @@ F-157297.00090727
 
 
 # OptDoWhat: perform optimization and statistics (0), only optimization with basic Statistics (1), only Statistics (2) with initial guesses as best fit parametters
-<OptDoWhat>  2
+<OptDoWhat>  0
 
 # OptAlgo: specify algorithm GN_ISRES GN_ORIG_DIRECT GN_ORIG_DIRECT_L LN_COBYLA LN_BOBYQA 
 <OptAlgo>  'LN_BOBYQA'
@@ -442,4 +443,4 @@ F-157297.00090727
 <StatMCbool>  0
 
 # StatPerturbator: used for calculating sensitivities by central diference, see ref [2]
-<StatPerturbator>  0.001
+<StatPerturbator>  0.0001
