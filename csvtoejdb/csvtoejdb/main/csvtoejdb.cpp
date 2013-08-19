@@ -8,11 +8,11 @@ using namespace keys;
 
 void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
 {
-    int ic=0, phc = 0, dcc = 0, sk = 0;
+    int ic=0, phc = 0, dcc = 0, sk = 0, mf = 0;
     string ph_new, ph_old, dcomp_new, dcomp_old, sss;
     vector<string> phases, dcomps;
     stringstream ss;
-    bool h_phprop = false, h_phases = false, h_phIC = false, h_dcomp = false, h_UMC= false, h_LMC = false; // handle that is true if we have ph_prop in the CSV file
+    bool h_phprop = false, h_phases = false, h_phIC = false, h_dcomp = false, h_UMC= false, h_LMC = false, h_phMF = false; // handle that is true if we have ph_prop in the CSV file
 
     bson_oid_t oid;
     // keeps each row of the CSV file
@@ -353,6 +353,10 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                     {
                                         h_phIC = true;
                                     }
+                                    if (ph_prop == MF)
+                                    {
+                                        h_phMF = true;
+                                    }
 //                                    if (ph_prop == DC)
 //                                    {
 //                                        h_phdcomp = true;
@@ -431,7 +435,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                     // getting the phase_name properties and composition from CSV
                                     if (phase_name == headline[j].substr((pos_start+f1.length()),(pos_end-pos_start-f1.length())))
                                     {
-                                        // getting the name of the property phase e.g. Si from phase.aq_gen.Si, or pQunt from pahse.aq_gen.pQunt
+                                        // getting the name of the property phase e.g. Si from phase.aq_gen.IC.Si.Q,
                                         ph_prop_1 = headline[j].substr((pos_end+f1.length()),(headline[j].size()));
                                         pos_start = ph_prop_1.find(f1);
                                         pos_end   = ph_prop_1.find(f1,pos_start+1);
@@ -485,6 +489,74 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                             bson_append_finish_array(&exp);
                             ic = 0;
                         } h_phIC = false;
+
+
+                        if (h_phMF)
+                        {
+                            bson_append_start_array(&exp, phMF);
+                            // get phase comp
+                            for (unsigned int j=0; j<headline.size(); ++j)
+                            {
+                                if ((strncmp(headline[j].c_str(),phase, 5) == 0) && (!row[j].empty()))
+                                {
+                                    pos_start = headline[j].find(f1);
+                                    pos_end   = headline[j].find(f1,pos_start+1);
+                                    // getting the phase_name properties and composition from CSV
+                                    if (phase_name == headline[j].substr((pos_start+f1.length()),(pos_end-pos_start-f1.length())))
+                                    {
+                                        // getting the name of the property phase e.g. Si from phase.aq_gen.IC.Si.Q,
+                                        ph_prop_1 = headline[j].substr((pos_end+f1.length()),(headline[j].size()));
+                                        pos_start = ph_prop_1.find(f1);
+                                        pos_end   = ph_prop_1.find(f1,pos_start+1);
+                                        ph_prop_2 = ph_prop_1.substr((0),(pos_start));
+                                        ph_prop = ph_prop_1.substr((pos_start+1),(ph_prop_1.size()));
+                                        pos_start = ph_prop_1.find(f1,pos_start +1);
+                                        pos_end   = ph_prop_1.find(f1,pos_end+1);
+                                        ph_prop_1 = ph_prop_1.substr((pos_start+1),(pos_start));
+
+                                        ph_prop_3 = ph_prop;
+                                        pos_start = ph_prop_3.find(f1,0);
+                                        pos_end   = ph_prop_3.find(f1,pos_end+1);
+                                        ph_prop = ph_prop_3.substr((0),(pos_start));
+
+                                        if ((ph_prop_2 == MF) && (!row[j].empty()))
+                                        {
+                                            ss << mf;
+                                            sss = ss.str();
+                                            ss.str("");
+                                            bson_append_start_object(&exp, sss.c_str()); // START phase element object
+                                            mf++;
+                                            bson_append_string(&exp, MF, ph_prop.c_str());
+                                            bson_append_double(&exp, Qnt, atof(row[j].c_str()));
+
+                                            // checking if there are errors and units included in the CSV and adding tem in the database
+                                            if (j+1 < headline.size())
+                                            {
+                                                if ((headline[j+1]==_error))
+                                                {
+                                                    ++j;
+                                                    if ((!row[j].empty()))
+                                                    {
+                                                        bson_append_double(&exp, Qerror, atof(row[j].c_str()));
+                                                    }
+                                                }
+                                                if ((headline[j+1]==_unit) && (!row[j+1].empty()))
+                                                {
+                                                    ++j;
+                                                    bson_append_string(&exp, Qunit, row[j].c_str());
+                                                }
+                                            }
+                                            bson_append_finish_object(&exp); // END phase element object
+                                            ph_old = phase_name;
+                                        }
+                                    }
+                                }
+                            }
+                            //++ END array phMF ++//
+                            bson_append_finish_array(&exp);
+                            mf = 0;
+                        } h_phMF = false;
+
 
                         //++ START array phspecies ++//
                         if ((ph_prop_2 == DC) && (!row[i].empty())) // check if there is species data in the CSV header

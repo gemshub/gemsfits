@@ -508,7 +508,7 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
     bson_iterator i, j, k, k2, d, d2, d3; // 1st, 2nd, 3rd, 2-1, 3-1 level
     const char *key;
     string key_;
-    int ip = -1, ic = -1, sk = -1, ipc, ipp, ips, ipdcp;
+    int ip = -1, ic = -1, sk = -1, ipc, ipp, ips, ipdcp, ipm;
     bson_iterator_from_buffer(&i, data);
 
     while (bson_iterator_next(&i))
@@ -686,6 +686,7 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                 experiments.at(pos)->expphases.push_back( new samples::phases );
                 ip++; // position of the phase in expphases vector
                 ipc = -1; // phases components - reset to -1 for every new pahse
+                ipm = -1; // molar fractions
                 ipp = -1; // phases properties
                 ips = -1; // phases dcomps
                 experiments.at(pos)->expphases.at(ip)->idphase = NULL;
@@ -747,6 +748,51 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                             }
                         }
                     } else
+
+                    // adding phase IC as molar fractions MF
+                    if ((key_ == keys::phMF) && (t == BSON_ARRAY))
+                    {
+                        bson_iterator_from_buffer(&k, bson_iterator_value(&d));
+                        while (bson_iterator_next(&k))
+                        {
+                            bson_iterator_from_buffer(&d2, bson_iterator_value(&k));
+                            experiments.at(pos)->expphases.at(ip)->phMF.push_back( new samples::components );
+                            ipm++; // position of the component in phcomp vector
+                            experiments.at(pos)->expphases.at(ip)->phIC.at(ipm)->Qerror = NULL;
+                            experiments.at(pos)->expphases.at(ip)->phIC.at(ipm)->Qnt   = NULL;
+                            string p_name = experiments.at(pos)->expphases.at(ip)->phase;
+                            if (p_name == "aq_gen")
+                            {
+                                experiments.at(pos)->expphases.at(ip)->phIC.at(ipc)->Qunit = keys::molfrac;
+                            } else experiments.at(pos)->expphases.at(ip)->phIC.at(ipc)->Qunit = keys::molfrac;
+
+                                while (bson_iterator_next(&d2))
+                                {
+                                    t = bson_iterator_type(&d2);
+                                    if (t == 0)
+                                        break;
+                                    key = bson_iterator_key(&d2);
+                                    key_ = key;
+
+                                    if ((key_ == keys::MF))
+                                    {
+                                        experiments.at(pos)->expphases.at(ip)->phIC.at(ipm)->comp = bson_iterator_string(&d2) ;
+                                    } else
+                                    if ((key_ == keys::Qnt))
+                                    {
+                                        experiments.at(pos)->expphases.at(ip)->phIC.at(ipm)->Qnt = bson_iterator_double(&d2) ;
+                                    } else
+                                    if ((key_ == keys::Qerror))
+                                    {
+                                        experiments.at(pos)->expphases.at(ip)->phIC.at(ipm)->Qerror = bson_iterator_double(&d2) ;
+                                    } else
+                                    if ((key_ == keys::Qunit))
+                                    {
+                                        experiments.at(pos)->expphases.at(ip)->phIC.at(ipm)->Qunit = bson_iterator_string(&d2) ;
+                                    }
+                                }
+                            }
+                        } else
 
                     // adding phase properties
                     if ((key_ == keys::phprop) && (t == BSON_ARRAY))

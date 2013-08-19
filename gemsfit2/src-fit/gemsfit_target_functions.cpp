@@ -408,7 +408,7 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
     PHndx = sys->NodT[i]->Ph_name_to_xDB(phase_name);
 
     // Get aqueous phase pH
-    if ((sys->Tfun->objfun[j]->exp_property == keys::pH) && (sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
+    if ((sys->Tfun->objfun[j]->exp_CN == keys::pH) && (sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
     {
         if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::_loga)
         {
@@ -416,7 +416,7 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
         } else computed_value = pow(10,(-(sys->NodT[i]->Get_pH()))) /*sys->NodT[i]->Get_pH()*/;
 
     } else // Get phase amount
-    if ((sys->Tfun->objfun[j]->exp_property == keys::Qnt))
+    if ((sys->Tfun->objfun[j]->exp_CN == keys::Qnt))
     {
         if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::gram)
         {
@@ -424,7 +424,7 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
         } else computed_value = sys->NodT[i]->Ph_Mass(PHndx);
 
     } else // Get phase volume
-    if ((sys->Tfun->objfun[j]->exp_property == keys::pV))
+    if ((sys->Tfun->objfun[j]->exp_CN == keys::pV))
     {
         if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::cm3)
         {
@@ -432,7 +432,7 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
         } else computed_value = sys->NodT[i]->Ph_Volume(PHndx);
 
     } else
-    if (sys->Tfun->objfun[j]->exp_property == keys::RHO)
+    if (sys->Tfun->objfun[j]->exp_CN == keys::RHO)
     {
         if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::g_cm3)
         {
@@ -474,7 +474,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
     PHndx = sys->NodT[i]->Ph_name_to_xDB(phase_name);
     DCndx = sys->NodT[i]->DC_name_to_xCH(dcomp_name);
 
-    if (sys->Tfun->objfun[j]->exp_property == keys::Qnt)
+    if (sys->Tfun->objfun[j]->exp_DCP == keys::Qnt)
     {
         measured_value = sys->NodT[i]->Get_nDC(DCndx); // Retrieves the current mole amount of Dependent Component.
         if (sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit == keys::molfrac)
@@ -482,7 +482,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
             measured_value = sys->NodT[i]->Get_cDC(DCndx);// for species in other phases - mole fraction.
         }
     } else
-    if (sys->Tfun->objfun[j]->exp_property == keys::actcoef)
+    if (sys->Tfun->objfun[j]->exp_DCP == keys::actcoef)
     {
         measured_value = sys->NodT[i]->Get_gDC(DCndx);
     } else { cout << "Error in target functions line 474 "; exit(1);}

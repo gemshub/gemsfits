@@ -81,10 +81,15 @@ public:
         struct obj_fun /// structure holding the information about the data to compare from the experiments
         {
             string exp_phase;
-            string exp_elem;
-            string exp_property;
+            string exp_CT;
+            string exp_CN;
             string exp_unit;
-            string exp_dcomp;
+            string exp_DCP;
+
+//            string exp_elem;
+//            string exp_property;
+//            string exp_dcomp;
+//            string exp_mf;
             double meas_average;
         };
         vector<obj_fun*> objfun;

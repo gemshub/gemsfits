@@ -52,6 +52,8 @@ static const char *expphases = "expphases"; ///	                  1    	     arr
         // Phase independent components
     static const char *phIC = "phIC"; ///	                      2   	     array		        array of measured composition of the phase
         static const char *IC = "IC";///                          3          string             name of independent component (element formula, e.g. Al)
+    static const char *phMF = "phMF";///                          2          array              array of reported measurments in molar fraction
+        static const char *MF = "MF"; ///                         3          string             molar faction formula
 ///                       *eQnt = "Q";                            3	         double		        measured quantity/concentration of element (in Qunit)
 ///                       *Qunit = "Qunit";                       3          string             unit
         // Phase dependent components
@@ -68,6 +70,7 @@ static const char *expphases = "expphases"; ///	                  1    	     arr
         // Phase properties
     static const char *phprop = "phprop"; ///	                  2   	     array		        known bulk properties of the phase
         static const char *property = "property"; ///             3          string             name of property
+        static const char *prop = "prop"; ///
         static const char *pH = "pH"; /// 	                    ->3          float		        name of property - pH (for aqueous phase only)
         static const char *Eh = "Eh"; ///	                    ->3	         float		        name of property - Eh (for aqueous phase only)
         static const char *IS = "IS"; ///	                    ->3	         float 		        name of property - Ionic strength (molal)
@@ -125,11 +128,13 @@ static const char *url = "url"; ///	                              1		     string
     static const char *TT = "TT"; ///                                       string              target function type
     static const char *WT = "WT"; ///                                       string              weight type
     static const char *OFUN = "OFUN"; ///                                   array               Objective function
+        static const char *CT = "CT";
+        static const char *CN = "CN"; ///
         static const char *EPH = "EPH"; ///                                 string              experiment phase
         static const char *EN = "EN"; ///                                   string              experiment phase element
         static const char *PPH = "PPH"; ///                                 string              experiment pahse (for phase property)
         static const char *EP = "EP"; ///                                   string              experiment pahse property
-        static const char *Eunit = "Eunit"; ///                             string              experiment element unit
+        static const char *Eunit = "Unit"; ///                              string              experiment element unit
         static const char *PEunit = "PEunit"; ///                           string              experiment property unit
         static const char *DCPH = "DCPH"; ///                               string              experiment dependent comp phase
         static const char *DCP = "DCP"; ///                                 string              dependent comp property

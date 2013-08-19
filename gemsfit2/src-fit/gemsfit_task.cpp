@@ -181,12 +181,12 @@ void TGfitTask::get_residuals( double &residuals)
                 // loop trough all pahses
                 for (unsigned int p=0; p<this->experiments[i]->expphases.size(); ++p)
                 {
-                    if ((Tfun->objfun[j]->exp_elem !="NULL") && (Tfun->objfun[j]->exp_property =="NULL"))
+                    if ((Tfun->objfun[j]->exp_CT == keys::IC) /*&& (Tfun->objfun[j]->exp_property =="NULL")*/)
                     {
                         // loop trough all elements
                         for (unsigned int e=0; e<this->experiments[i]->expphases[p]->phIC.size(); ++e)
                         {
-                            if ((this->experiments[i]->expphases[p]->phIC[e]->comp == this->Tfun->objfun[j]->exp_elem) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
+                            if ((this->experiments[i]->expphases[p]->phIC[e]->comp == this->Tfun->objfun[j]->exp_CN) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
                             {
                                 // check for unit
                                 check_unit(i, p, e, Tfun->objfun[j]->exp_unit, this );
@@ -198,12 +198,12 @@ void TGfitTask::get_residuals( double &residuals)
                             }
                         }
                     } else
-                        if ((Tfun->objfun[j]->exp_property !="NULL") && (this->experiments[i]->expphases[p]->phprop.size() > 0) && (this->Tfun->objfun[j]->exp_dcomp == "NULL"))
+                        if ((Tfun->objfun[j]->exp_CT == keys::prop) && (this->experiments[i]->expphases[p]->phprop.size() > 0) /*&& (this->Tfun->objfun[j]->exp_dcomp == "NULL")*/)
                         {
                         // loop trough all properties
                         for (unsigned int pp = 0; pp< this->experiments[i]->expphases[p]->phprop.size(); ++pp)
                         {
-                            if ((this->experiments[i]->expphases[p]->phprop[pp]->property == Tfun->objfun[j]->exp_property) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
+                            if ((this->experiments[i]->expphases[p]->phprop[pp]->property == Tfun->objfun[j]->exp_CN) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
                             {
                                 // check for unit
                                 check_prop_unit(i, p, pp, Tfun->objfun[j]->exp_unit, this );
@@ -215,17 +215,17 @@ void TGfitTask::get_residuals( double &residuals)
                             }
                         }
                     } else
-                        if ((Tfun->objfun[j]->exp_property !="NULL") && (this->experiments[i]->expphases[p]->phDC.size() > 0) && (Tfun->objfun[j]->exp_dcomp != "NULL"))
+                        if (/*(Tfun->objfun[j]->exp_property !="NULL") &&*/ (this->experiments[i]->expphases[p]->phDC.size() > 0) && (Tfun->objfun[j]->exp_CT == keys::DC))
                         {
                             // loop trough all dependent components
                             for (unsigned int dc = 0; dc< this->experiments[i]->expphases[p]->phDC.size(); ++dc)
                             {
-                                if ((this->experiments[i]->expphases[p]->phDC[dc]->DC == Tfun->objfun[j]->exp_dcomp) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
+                                if ((this->experiments[i]->expphases[p]->phDC[dc]->DC == Tfun->objfun[j]->exp_CN) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
                                 {
                                     // loop trough all dep comp properties
                                     for (unsigned int dcp = 0; dcp < this->experiments[i]->expphases[p]->phDC[dc]->DCprop.size(); ++dcp)
                                     {
-                                        if (this->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->property == Tfun->objfun[j]->exp_property)
+                                        if (this->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->property == Tfun->objfun[j]->exp_DCP)
                                         {
 //                                            cout << "yes"<<endl;
                                             //                                    // check for unit
@@ -241,16 +241,20 @@ void TGfitTask::get_residuals( double &residuals)
                 }
             }
         }
-    average = average / count;
+    if (count > 0)
+    {
+        average = average / count;
+    }
     Tfun->objfun[j]->meas_average = average;
     this->minimum_value = min;
     average = 0.0;
     }
 }
 
+
 void TGfitTask::get_DataTarget ( )
 {
-    vector<string> out;
+    vector<string> out, out2;
     parse_JSON_array_object(DataTarget, "OFUN", "OPH", out);
     out.clear();
 
@@ -272,12 +276,11 @@ void TGfitTask::get_DataTarget ( )
     {
         Tfun->objfun.push_back(new TargetFunction::obj_fun); // initializing
         Tfun->objfun[i]->exp_phase = "NULL";
-        Tfun->objfun[i]->exp_elem = "NULL";
-        Tfun->objfun[i]->exp_property = "NULL";
+        Tfun->objfun[i]->exp_CT = "NULL";
+        Tfun->objfun[i]->exp_CN = "NULL";
         Tfun->objfun[i]->exp_unit = "NULL";
-        Tfun->objfun[i]->exp_dcomp ="NULL";
+        Tfun->objfun[i]->exp_DCP = "NULL";
         Tfun->objfun[i]->meas_average = 0.0;
-
     }
     out.clear();
     int j=0;
@@ -287,14 +290,27 @@ void TGfitTask::get_DataTarget ( )
     for (unsigned int i = 0 ; i < out.size() ; i++)
     {
         Tfun->objfun[i]->exp_phase = out[i];
-        ++j;
     }
     out.clear();
 
-    parse_JSON_array_object(DataTarget, keys::OFUN, keys::EN, out);
+    parse_JSON_array_object(DataTarget, keys::OFUN, keys::CT, out);
+    parse_JSON_array_object(DataTarget, keys::OFUN, keys::DCP, out2);
     for (unsigned int i = 0 ; i < out.size() ; i++)
     {
-        Tfun->objfun[i]->exp_elem = out[i];
+        Tfun->objfun[i]->exp_CT = out[i];
+        if ((out[i] == keys::DC) && (out2.size() > 0))
+        {
+            Tfun->objfun[i]->exp_DCP = out2[j];
+            ++j;
+        }
+    }
+    out.clear();
+    out2.clear();
+
+    parse_JSON_array_object(DataTarget, keys::OFUN, keys::CN, out);
+    for (unsigned int i = 0 ; i < out.size() ; i++)
+    {
+        Tfun->objfun[i]->exp_CN = out[i];
     }
     out.clear();
 
@@ -305,59 +321,120 @@ void TGfitTask::get_DataTarget ( )
     }
     out.clear();
 
-    jj = j;
-
-    parse_JSON_array_object(DataTarget, keys::OFUN, keys::PPH, out);
-    for (unsigned int i = j ; i < out.size()+j ; i++)
-    {
-        Tfun->objfun[i]->exp_phase = out[i-j];
-        ++jj;
-    }
-    out.clear();
-
-    parse_JSON_array_object(DataTarget, keys::OFUN, keys::EP, out);
-    for (unsigned int i = j ; i < out.size()+j ; i++)
-    {
-        Tfun->objfun[i]->exp_property = out[i-j];
-    }
-    out.clear();
-
-    parse_JSON_array_object(DataTarget, keys::OFUN, keys::PEunit, out);
-    for (unsigned int i = j ; i < out.size()+j ; i++)
-    {
-        Tfun->objfun[i]->exp_unit = out[i-j];
-    }
-    out.clear();
-
-
-    parse_JSON_array_object(DataTarget, keys::OFUN, keys::DCPH, out);
-    for (unsigned int i = jj ; i < out.size()+jj ; i++)
-    {
-        Tfun->objfun[i]->exp_phase = out[i-jj];
-    }
-    out.clear();
-
-    parse_JSON_array_object(DataTarget, keys::OFUN, keys::DC, out);
-    for (unsigned int i = jj ; i < out.size()+jj ; i++)
-    {
-        Tfun->objfun[i]->exp_dcomp = out[i-jj];
-    }
-    out.clear();
-
-    parse_JSON_array_object(DataTarget, keys::OFUN, keys::DCP, out);
-    for (unsigned int i = jj ; i < out.size()+jj ; i++)
-    {
-        Tfun->objfun[i]->exp_property = out[i-jj];
-    }
-    out.clear();
-
-    parse_JSON_array_object(DataTarget, keys::OFUN, keys::DCPunit, out);
-    for (unsigned int i = jj ; i < out.size()+jj ; i++)
-    {
-        Tfun->objfun[i]->exp_unit = out[i-jj];
-    }
-    out.clear();
 }
+
+
+//void TGfitTask::get_DataTarget ( )
+//{
+////    vector<string> out;
+////    parse_JSON_array_object(DataTarget, "OFUN", "OPH", out);
+////    out.clear();
+
+
+////    parse_JSON_object(DataTarget, keys::Target, out);
+////    Tfun->name = out[0]; // Name of target function
+////    out.clear();
+
+////    parse_JSON_object(DataTarget, keys::TT, out);
+////    Tfun->type = out[0]; // Type of the target function
+////    out.clear();
+
+////    parse_JSON_object(DataTarget, keys::WT, out);
+////    Tfun->weight = out[0]; // Weight of target function
+////    out.clear();
+
+////    parse_JSON_object(DataTarget, keys::OFUN, out);
+////    for (unsigned int i = 0 ; i < out.size() ; i++)
+////    {
+////        Tfun->objfun.push_back(new TargetFunction::obj_fun); // initializing
+////        Tfun->objfun[i]->exp_phase = "NULL";
+//////        Tfun->objfun[i]->exp_elem = "NULL";
+//////        Tfun->objfun[i]->exp_property = "NULL";
+////        Tfun->objfun[i]->exp_unit = "NULL";
+//////        Tfun->objfun[i]->exp_dcomp ="NULL";
+//////        Tfun->objfun[i]->exp_mf ="NULL";
+////        Tfun->objfun[i]->meas_average = 0.0;
+
+////    }
+////    out.clear();
+////    int j=0;
+////    int jj=0;
+
+////    parse_JSON_array_object(DataTarget, keys::OFUN, keys::EPH, out);
+////    for (unsigned int i = 0 ; i < out.size() ; i++)
+////    {
+////        Tfun->objfun[i]->exp_phase = out[i];
+////        ++j;
+////    }
+////    out.clear();
+
+////    parse_JSON_array_object(DataTarget, keys::OFUN, keys::EN, out);
+////    for (unsigned int i = 0 ; i < out.size() ; i++)
+////    {
+////        Tfun->objfun[i]->exp_elem = out[i];
+////    }
+////    out.clear();
+
+////    parse_JSON_array_object(DataTarget, keys::OFUN, keys::Eunit, out);
+////    for (unsigned int i = 0 ; i < out.size() ; i++)
+////    {
+////        Tfun->objfun[i]->exp_unit = out[i];
+////    }
+////    out.clear();
+
+////    jj = j;
+
+////    parse_JSON_array_object(DataTarget, keys::OFUN, keys::PPH, out);
+////    for (unsigned int i = j ; i < out.size()+j ; i++)
+////    {
+////        Tfun->objfun[i]->exp_phase = out[i-j];
+////        ++jj;
+////    }
+////    out.clear();
+
+////    parse_JSON_array_object(DataTarget, keys::OFUN, keys::EP, out);
+////    for (unsigned int i = j ; i < out.size()+j ; i++)
+////    {
+////        Tfun->objfun[i]->exp_property = out[i-j];
+////    }
+////    out.clear();
+
+////    parse_JSON_array_object(DataTarget, keys::OFUN, keys::PEunit, out);
+////    for (unsigned int i = j ; i < out.size()+j ; i++)
+////    {
+////        Tfun->objfun[i]->exp_unit = out[i-j];
+////    }
+////    out.clear();
+
+
+////    parse_JSON_array_object(DataTarget, keys::OFUN, keys::DCPH, out);
+////    for (unsigned int i = jj ; i < out.size()+jj ; i++)
+////    {
+////        Tfun->objfun[i]->exp_phase = out[i-jj];
+////    }
+////    out.clear();
+
+////    parse_JSON_array_object(DataTarget, keys::OFUN, keys::DC, out);
+////    for (unsigned int i = jj ; i < out.size()+jj ; i++)
+////    {
+////        Tfun->objfun[i]->exp_dcomp = out[i-jj];
+////    }
+////    out.clear();
+
+////    parse_JSON_array_object(DataTarget, keys::OFUN, keys::DCP, out);
+////    for (unsigned int i = jj ; i < out.size()+jj ; i++)
+////    {
+////        Tfun->objfun[i]->exp_property = out[i-jj];
+////    }
+////    out.clear();
+
+////    parse_JSON_array_object(DataTarget, keys::OFUN, keys::DCPunit, out);
+////    for (unsigned int i = jj ; i < out.size()+jj ; i++)
+////    {
+////        Tfun->objfun[i]->exp_unit = out[i-jj];
+////    }
+////    out.clear();
+//}
 
 
 // Initialize optimization object and Run Optimization by calling build_optim

@@ -167,6 +167,8 @@ class Data_Manager : public TNode
                     // composition of the phases in elements
                     vector<components*> phIC;
 
+                    vector<components*> phMF;
+
                     // dcomps (end member, phase component) 3rd level in EJDB
                     struct dcomps
                     {
