@@ -365,12 +365,12 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
     } else // other than aqueous phase
         if ((sys->Tfun->objfun[j]->exp_phase != "aq_gen") && (sys->experiments[i]->expphases[p]->phase != "aq_gen"))
         {
-            if ((sys->Tfun->objfun[j]->exp_unit == keys::Simolfrac) && (sys->experiments[i]->expphases[p]->phIC[e]->Qunit == keys::Simolfrac))
-            {
-                int Sindx = sys->NodT[i]->IC_name_to_xDB("Si");
-                computed_value = IC_in_PH[ICndx]/IC_in_PH[Sindx];
-            } else // phase bulk composition in moles (mol)
-            computed_value = IC_in_PH[ICndx];
+//            if ((sys->Tfun->objfun[j]->exp_unit == keys::Simolfrac) && (sys->experiments[i]->expphases[p]->phIC[e]->Qunit == keys::Simolfrac))
+//            {
+//                int Sindx = sys->NodT[i]->IC_name_to_xDB("Si");
+//                computed_value = IC_in_PH[ICndx]/IC_in_PH[Sindx];
+//            } else // phase bulk composition in moles (mol)
+            computed_value = IC_in_PH[ICndx]; // phase bulk composition in moles (mol)
         } else { cout << "Error in target functions line 293 "; exit(1);}
 
     measured_value = sys->experiments[i]->expphases[p]->phIC[e]->Qnt;
@@ -394,6 +394,126 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
     sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phIC[e]->comp,sys->experiments[i]->expphases[p]->phIC[e]->Qunit,measured_value,computed_value,Weighted_Tfun_residual, weight_ );
 
     return Weighted_Tfun_residual;
+}
+
+
+double residual_phase_elemMF (int i, int p, int f, int j, TGfitTask *sys)
+{
+    const char *elem_name, *phase_name;
+    int ICndx, PHndx, nIC;
+    double computed_value = 0.0, measured_value = 0.0, computed_nom = 0.0, computed_denom = 0.0;
+    double Tfun_residual = 0.0, Weighted_Tfun_residual = 0.0, weight_ = 1.0;
+    DATACH* dCH = sys->NodT[i]->pCSD();
+    double* IC_in_PH;
+    vector<string> nom, denom;
+
+    phase_name = sys->experiments[i]->expphases[p]->phase.c_str();
+    PHndx = sys->NodT[i]->Ph_name_to_xDB(phase_name);
+
+    nIC = dCH->nIC;	// nr of independent components
+    IC_in_PH = new double[ nIC ];
+    sys->NodT[i]->Ph_BC(PHndx, IC_in_PH);
+
+    interpretMF (&nom, &denom, sys->experiments[i]->expphases[p]->phMF[f]->comp);
+
+    // calculating nominator
+    for (unsigned int k = 0; k < nom.size(); ++k)
+    {
+        elem_name =  nom[k].c_str();
+        ICndx = sys->NodT[i]->IC_name_to_xDB(elem_name);
+        if ((sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
+        {
+            computed_nom = computed_nom + sys->NodT[i]->Get_mIC(ICndx);
+        } else // other than aqueous phase
+            if ((sys->Tfun->objfun[j]->exp_phase != "aq_gen") && (sys->experiments[i]->expphases[p]->phase != "aq_gen"))
+            {
+                computed_nom = computed_nom + IC_in_PH[ICndx];
+            }
+    }
+
+    // calculating denominator
+    for (unsigned int k = 0; k < denom.size(); ++k)
+    {
+        elem_name =  denom[k].c_str();
+        ICndx = sys->NodT[i]->IC_name_to_xDB(elem_name);
+        if ((sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
+        {
+            computed_denom = computed_denom + sys->NodT[i]->Get_mIC(ICndx);
+        } else // other than aqueous phase
+            if ((sys->Tfun->objfun[j]->exp_phase != "aq_gen") && (sys->experiments[i]->expphases[p]->phase != "aq_gen"))
+            {
+                computed_denom = computed_denom + IC_in_PH[ICndx];
+            }
+    }
+
+    computed_value = computed_nom / computed_denom;
+    measured_value = sys->experiments[i]->expphases[p]->phMF[f]->Qnt;
+
+
+    // check Target function type and calculate the Tfun_residual
+    weight_ = weight_MF(i, p, f, j, sys->Tfun->weight, sys);
+    Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j]);
+    Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j])*weight_;
+
+    sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
+
+    delete[] IC_in_PH;
+
+    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phMF[f]->comp,sys->experiments[i]->expphases[p]->phMF[f]->Qunit,measured_value,computed_value,Weighted_Tfun_residual, weight_ );
+
+    return Weighted_Tfun_residual;
+
+
+}
+
+void interpretMF (vector<string> *nom, vector<string> *denom, string name)
+{
+    int pos_f2, pos_f1, pos_end;
+    string f1 = "+", f2 ="/", nominator, denominator, elem, temp_nom, temp_denom;
+
+
+    pos_f2 = name.find(f2);
+    pos_end   = name.find(f2,pos_f2+1);
+
+    nominator = name.substr(0, pos_f2);
+    denominator = name.substr(pos_f2+1, (name.size()-1-pos_f2));
+
+    pos_f1 = nominator.find(f1);
+    if(pos_f1 == -1)
+    {
+        nom->push_back(nominator);
+    } else
+        while (pos_f1 != -1)
+        {
+            elem = nominator.substr(0, pos_f1);
+            temp_nom = nominator.substr(pos_f1+1, (nominator.size()-1-pos_f1));
+            nominator = temp_nom;
+            nom->push_back(elem);
+            pos_f1 = nominator.find(f1);
+            if(pos_f1 == -1)
+            {
+                nom->push_back(nominator);
+            }
+        }
+
+    pos_f1 = denominator.find(f1);
+    if(pos_f1 == -1)
+    {
+        denom->push_back(denominator);
+    } else
+        while (pos_f1 != -1)
+        {
+            elem = denominator.substr(0, pos_f1);
+            temp_denom = denominator.substr(pos_f1+1, (denominator.size()-1-pos_f1));
+            denominator = temp_denom;
+            denom->push_back(elem);
+            pos_f1 = denominator.find(f1);
+            if(pos_f1 == -1)
+            {
+                denom->push_back(denominator);
+            }
+        }
+
 }
 
 double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
@@ -544,6 +664,29 @@ double weight (int i, int p, int e, int j, string type, TGfitTask *sys)
     if (type == keys::inverr_norm)
     {
         return 1/(pow((sys->experiments[i]->expphases[p]->phIC[e]->Qerror/sys->Tfun->objfun[j]->meas_average),2));
+    } else
+        return 1;
+}
+
+double weight_MF (int i, int p, int f, int j, string type, TGfitTask *sys)
+{
+    if (type == keys::inverr)
+    {
+        return 1/(sys->experiments[i]->expphases[p]->phMF[f]->Qerror);
+    } else
+
+    if (type == keys::inverr2)
+    {
+        return 1/(pow(sys->experiments[i]->expphases[p]->phMF[f]->Qerror,2));
+    } else
+
+    if (type == keys::inverr3)
+    {
+        return 1/(pow(sys->experiments[i]->expphases[p]->phMF[f]->Qnt,2));
+    } else
+    if (type == keys::inverr_norm)
+    {
+        return 1/(pow((sys->experiments[i]->expphases[p]->phMF[f]->Qerror/sys->Tfun->objfun[j]->meas_average),2));
     } else
         return 1;
 }

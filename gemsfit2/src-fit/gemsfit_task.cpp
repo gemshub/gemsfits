@@ -198,6 +198,24 @@ void TGfitTask::get_residuals( double &residuals)
                             }
                         }
                     } else
+                        if ((Tfun->objfun[j]->exp_CT == keys::MF) /*&& (Tfun->objfun[j]->exp_property =="NULL")*/)
+                        {
+                            // loop trough all elements
+                            for (unsigned int f=0; f<this->experiments[i]->expphases[p]->phMF.size(); ++f)
+                            {
+                                if ((this->experiments[i]->expphases[p]->phMF[f]->comp == this->Tfun->objfun[j]->exp_CN) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
+                                {
+                                    // check for unit
+//                                    check_unit(i, p, e, Tfun->objfun[j]->exp_unit, this );
+                                    average = average + this->experiments[i]->expphases[p]->phMF[f]->Qnt;
+                                    if (this->experiments[i]->expphases[p]->phMF[f]->Qnt < min)
+                                        min = this->experiments[i]->expphases[p]->phMF[f]->Qnt;
+                                    residuals = residuals + residual_phase_elemMF (i, p, f, j, this);
+                                    ++count;
+                                }
+                            }
+                        } else
+
                         if ((Tfun->objfun[j]->exp_CT == keys::prop) && (this->experiments[i]->expphases[p]->phprop.size() > 0) /*&& (this->Tfun->objfun[j]->exp_dcomp == "NULL")*/)
                         {
                         // loop trough all properties

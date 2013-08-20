@@ -159,6 +159,8 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys );
 */
 double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys);
 
+double residual_phase_elemMF (int i, int p, int f, int j, TGfitTask *sys);
+
 /**
 * Returns the residual from comparing the calculated with the meaured
 * the elemental composition a phase
@@ -198,6 +200,10 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
 * @date 17.05.2013
 */
 double weight (int i, int p, int e, int j, string type, TGfitTask *sys);
+
+double weight_MF (int i, int p, int f, int j, string type, TGfitTask *sys);
+
+void interpretMF (vector<string> *nom, vector<string> *denom, string name);
 
 /**
 * Returns the weight based on the weight type

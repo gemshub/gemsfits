@@ -758,13 +758,13 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                             bson_iterator_from_buffer(&d2, bson_iterator_value(&k));
                             experiments.at(pos)->expphases.at(ip)->phMF.push_back( new samples::components );
                             ipm++; // position of the component in phcomp vector
-                            experiments.at(pos)->expphases.at(ip)->phIC.at(ipm)->Qerror = NULL;
-                            experiments.at(pos)->expphases.at(ip)->phIC.at(ipm)->Qnt   = NULL;
+                            experiments.at(pos)->expphases.at(ip)->phMF.at(ipm)->Qerror = NULL;
+                            experiments.at(pos)->expphases.at(ip)->phMF.at(ipm)->Qnt   = NULL;
                             string p_name = experiments.at(pos)->expphases.at(ip)->phase;
                             if (p_name == "aq_gen")
                             {
-                                experiments.at(pos)->expphases.at(ip)->phIC.at(ipc)->Qunit = keys::molfrac;
-                            } else experiments.at(pos)->expphases.at(ip)->phIC.at(ipc)->Qunit = keys::molfrac;
+                                experiments.at(pos)->expphases.at(ip)->phMF.at(ipm)->Qunit = keys::molfrac;
+                            } else experiments.at(pos)->expphases.at(ip)->phMF.at(ipm)->Qunit = keys::molfrac;
 
                                 while (bson_iterator_next(&d2))
                                 {
@@ -776,19 +776,19 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
 
                                     if ((key_ == keys::MF))
                                     {
-                                        experiments.at(pos)->expphases.at(ip)->phIC.at(ipm)->comp = bson_iterator_string(&d2) ;
+                                        experiments.at(pos)->expphases.at(ip)->phMF.at(ipm)->comp = bson_iterator_string(&d2) ;
                                     } else
                                     if ((key_ == keys::Qnt))
                                     {
-                                        experiments.at(pos)->expphases.at(ip)->phIC.at(ipm)->Qnt = bson_iterator_double(&d2) ;
+                                        experiments.at(pos)->expphases.at(ip)->phMF.at(ipm)->Qnt = bson_iterator_double(&d2) ;
                                     } else
                                     if ((key_ == keys::Qerror))
                                     {
-                                        experiments.at(pos)->expphases.at(ip)->phIC.at(ipm)->Qerror = bson_iterator_double(&d2) ;
+                                        experiments.at(pos)->expphases.at(ip)->phMF.at(ipm)->Qerror = bson_iterator_double(&d2) ;
                                     } else
                                     if ((key_ == keys::Qunit))
                                     {
-                                        experiments.at(pos)->expphases.at(ip)->phIC.at(ipm)->Qunit = bson_iterator_string(&d2) ;
+                                        experiments.at(pos)->expphases.at(ip)->phMF.at(ipm)->Qunit = bson_iterator_string(&d2) ;
                                     }
                                 }
                             }
