@@ -179,8 +179,8 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys);
 * the elemental composition a phase
 * @param i      position in the experiments vector (which experiment)
 * @param p      position in the expphases vector (which pahse)
-* @param dc     position in the phdcomps vector (which which dcomp)
-* @param dcp    position in the dcompprop vector (which which dcomp property)
+* @param dc     position in the phDC vector (which which dcomp)
+* @param dcp    position in the DCprop vector (which which dcomp property)
 * @param j      position in the objfun vector
 * @param sys    pointer to data object that holds the data of the current TGfitTask struct
 * @author DM
@@ -192,7 +192,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
 * Returns the weight based on the weight type
 * @param i      position in the experiments vector (which experiment)
 * @param p      position in the expphases vector (which pahse)
-* @param e      position in the phcomp vector (which element)
+* @param e      position in the phIC vector (which element)
 * @param j      position in the objective function vector
 * @param type   type of weighting
 * @param sys    pointer to data object that holds the data of the current TGfitTask struct
@@ -201,8 +201,28 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
 */
 double weight (int i, int p, int e, int j, string type, TGfitTask *sys);
 
+/**
+* Returns the weight based on the weight type
+* @param i      position in the experiments vector (which experiment)
+* @param p      position in the expphases vector (which pahse)
+* @param f      position in the phMF vector (which molar faction formula)
+* @param j      position in the objective function vector
+* @param type   type of weighting
+* @param sys    pointer to data object that holds the data of the current TGfitTask struct
+* @author DM
+* @date 17.08.2013
+*/
 double weight_MF (int i, int p, int f, int j, string type, TGfitTask *sys);
 
+
+/**
+* Returns two vectors of names of elements form the molar fraction formula
+* @param nom      vector of element names of the nominator
+* @param denom    vector of element names of the denominator
+* @param name     string representing the molar fraction formula e.g. "Na/Na+K"
+* @author DM
+* @date 17.08.2013
+*/
 void interpretMF (vector<string> *nom, vector<string> *denom, string name);
 
 /**
@@ -222,8 +242,8 @@ double weight_phprop (int i, int p, int pp, int j, string type, TGfitTask *sys);
 * Returns the weight based on the weight type
 * @param i      position in the experiments vector (which experiment)
 * @param p      position in the expphases vector (which pahse)
-* @param dc     position in the phdcomps vector (which which dcomp)
-* @param dcp    position in the dcompprop vector (which which dcomp property)
+* @param dc     position in the phDC vector (which which dcomp)
+* @param dcp    position in the DCprop vector (which which dcomp property)
 * @param j      position in the objective function vector
 * @param type   type of weighting
 * @param sys    pointer to data object that holds the data of the current TGfitTask struct

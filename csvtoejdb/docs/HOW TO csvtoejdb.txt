@@ -81,6 +81,12 @@ unit				units of measurement for the preceding value [and error]
 			   	    for solid phases: mol (in moles); molfrac (mole fraction); (empty cell = molfrac) 
 			   	    simolfrac (mole ratio to Si, for Si-containing cement phases). 
 
+phase.<pname>.MF.<fromula>	Experimental reported molar faraction MF of elements in a phase <pname>
+				    pname should correspond to the name of this phase in GEMS3K DCH file.
+				    formula as in the following example: Na+K/Na+K+Ca or Na/Na+K, etc.
+error                   	error estimate (value can be left blank, if unknown) for the preceding 
+			   	    value of the element concentration in phase.  (empty cell = 0)
+
 phase.<pname>.DC.<dname>. 	Experimental property of dependent component DC, <dname> in the phase <pname>. 			 
 				    pname should correspond to the name of this phase in GEMS3K DCH file. (empty cell = object not created in GEMSFIT2)
 			   	    dfor is the formula of species (Dependent Component) belonging to 

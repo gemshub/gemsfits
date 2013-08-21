@@ -360,7 +360,7 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
         computed_value = log10(sys->NodT[i]->Get_mIC(ICndx));
         } else
         {
-            computed_value = sys->NodT[i]->Get_mIC(ICndx);
+            computed_value = sys->NodT[i]->Get_mIC(ICndx); // in mol/Kg
         }
     } else // other than aqueous phase
         if ((sys->Tfun->objfun[j]->exp_phase != "aq_gen") && (sys->experiments[i]->expphases[p]->phase != "aq_gen"))
@@ -423,7 +423,7 @@ double residual_phase_elemMF (int i, int p, int f, int j, TGfitTask *sys)
         ICndx = sys->NodT[i]->IC_name_to_xDB(elem_name);
         if ((sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
         {
-            computed_nom = computed_nom + sys->NodT[i]->Get_mIC(ICndx);
+            computed_nom = computed_nom + sys->NodT[i]->Get_mIC(ICndx) * sys->NodT[i]-> Ph_Mass(PHndx);
         } else // other than aqueous phase
             if ((sys->Tfun->objfun[j]->exp_phase != "aq_gen") && (sys->experiments[i]->expphases[p]->phase != "aq_gen"))
             {
@@ -438,7 +438,7 @@ double residual_phase_elemMF (int i, int p, int f, int j, TGfitTask *sys)
         ICndx = sys->NodT[i]->IC_name_to_xDB(elem_name);
         if ((sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
         {
-            computed_denom = computed_denom + sys->NodT[i]->Get_mIC(ICndx);
+            computed_denom = computed_denom + sys->NodT[i]->Get_mIC(ICndx) * sys->NodT[i]-> Ph_Mass(PHndx);
         } else // other than aqueous phase
             if ((sys->Tfun->objfun[j]->exp_phase != "aq_gen") && (sys->experiments[i]->expphases[p]->phase != "aq_gen"))
             {

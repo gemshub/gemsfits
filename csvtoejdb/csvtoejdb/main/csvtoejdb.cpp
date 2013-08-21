@@ -135,10 +135,10 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                     string component, type;
                     string f1(".");
 
-                    // getting the name of the component e.g. SiO2 form comp.SiO2
+                    // getting the name and the type: dependent component (DC) or phase
                     pos_start = headline[i].find(f1);
                     pos_end   = headline[i].find(f1,pos_start+1);
-                    type = headline[i].substr((pos_start+f1.length()),(pos_end-pos_start-f1.length()));
+                    type      = headline[i].substr((pos_start+f1.length()),(pos_end-pos_start-f1.length()));
                     component = headline[i].substr((pos_end+f1.length()),( headline[i].size() -1));
 
                     ss << sk;
@@ -146,10 +146,10 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                     ss.str("");
                     bson_append_start_object(&exp, sss.c_str());
                     sk++;
-                    if (type == DC)
+                    if (type == DC) // dependent component
                     bson_append_string(&exp, DC, component.c_str());
                     else
-                        if (type == phase)
+                        if (type == phase) // phase
                             bson_append_string(&exp, phase, component.c_str());
 
                     bson_append_double(&exp, Qnt, atof(row[i].c_str()));
@@ -174,7 +174,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                     bson_append_finish_object(&exp);
                 }
             }
-            //++ END array Upper_CK ++//
+            //++ END array UMC ++//
             bson_append_finish_array(&exp);
             sk=0;
 
@@ -191,10 +191,10 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                     string component, type;
                     string f1(".");
 
-                    // getting the name of the component e.g. SiO2 form comp.SiO2
+                    // getting the name and the type: dependent component (DC) or phase
                     pos_start = headline[i].find(f1);
                     pos_end   = headline[i].find(f1,pos_start+1);
-                    type = headline[i].substr((pos_start+f1.length()),(pos_end-pos_start-f1.length()));
+                    type      = headline[i].substr((pos_start+f1.length()),(pos_end-pos_start-f1.length()));
                     component = headline[i].substr((pos_end+f1.length()),( headline[i].size() -1));
 
                     ss << sk;
@@ -202,10 +202,10 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                     ss.str("");
                     bson_append_start_object(&exp, sss.c_str());
                     sk++;
-                    if (type == DC)
+                    if (type == DC) // dependent component
                     bson_append_string(&exp, DC, component.c_str());
                     else
-                        if (type == phase)
+                        if (type == phase) // phase
                             bson_append_string(&exp, phase, component.c_str());
                     bson_append_double(&exp, Qnt, atof(row[i].c_str()));
 
@@ -229,7 +229,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                     bson_append_finish_object(&exp);
                 }
             }
-            //++ END array Lower_CK ++//
+            //++ END array LMC ++//
             bson_append_finish_array(&exp);
             sk=0;
 
@@ -241,7 +241,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
         bson_append_start_array(&exp, sbcomp);
         for (unsigned int i=0; i<headline.size(); ++i)
         {
-            if ((strncmp(headline[i].c_str(),comp, 4) == 0) && (!row[i].empty()))
+            if ((strncmp(headline[i].c_str(),comp, strlen(comp)) == 0) && (!row[i].empty()))
             {
                 int pos_start, pos_end;
                 string component;
@@ -290,15 +290,15 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
         // going trough the headline and searching for "phase" keword
         for (unsigned int i=0; i<headline.size(); ++i)
         {
-            if ((strncmp(headline[i].c_str(),phase, 5) == 0) && (!row[i].empty()))
+            if ((strncmp(headline[i].c_str(),phase, strlen(phase)) == 0) && (!row[i].empty()))
             {
                 int pos_start, pos_end;
                 string phase_name, ph_prop, ph_prop_1, ph_prop_2, ph_prop_3;
                 string f1(".");
 
                 // getting the name of the phase e.g. aq_gen form phase.aq_gen
-                pos_start = headline[i].find(f1);
-                pos_end   = headline[i].find(f1,pos_start+1);
+                pos_start  = headline[i].find(f1);
+                pos_end    = headline[i].find(f1,pos_start+1);
                 phase_name = headline[i].substr((pos_start+f1.length()),(pos_end-pos_start-f1.length()));
                 ph_new = phase_name;
                 h_phases = false;
@@ -315,7 +315,8 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                         }
                     }
 
-                    if (!h_phases) // START if h_phases
+                    if (!h_phases) // START if h_phases. Every phase is scaned only once troughout out the headline.
+                        // The program goes trough this if only at the first enocunter of the phase name and scans the document for recuring of the phase.
                     {
                         ss << phc;
                         sss = ss.str();
@@ -323,25 +324,25 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                         bson_append_start_object(&exp, sss.c_str()); // START phase object
                         phc++;
                         bson_append_string(&exp, phase, phase_name.c_str());
-                        phases.push_back(phase_name);
+                        phases.push_back(phase_name); // vector that keeps already present phases
                         ic = 0;
 
                         // START check if there is phprop & phcomp data exists in the CSV
                         for (unsigned int j=0; j<headline.size(); ++j)
                         {
-                            if ((strncmp(headline[j].c_str(),phase, 5) == 0) && (!row[j].empty()))
+                            if ((strncmp(headline[j].c_str(),phase, strlen(phase)) == 0) && (!row[j].empty())) // checks where in the headline the same pahse name is present
                             {
                                 pos_start = headline[j].find(f1);
                                 pos_end   = headline[j].find(f1,pos_start+1);
-                                // getting the phase properties and composition
+                                // getting the phase properties and composition, what follows fter phase name e.g. aq_gen.IC.Si.Q
                                 if (phase_name == headline[j].substr((pos_start+f1.length()),(pos_end-pos_start-f1.length())))
                                 {
-                                    // getting the name of the property phase e.g. Si from phase.aq_gen.Si, or pQunt from pahse.aq_gen.pQunt
+                                    // getting the name of the property phase e.g. IC.Si.Q from phase.aq_gen.IC.Si.Q, or Q from pahse.aq_gen.Q
                                     ph_prop_1 = headline[j].substr((pos_end+f1.length()),(headline[j].size()));
 
                                     pos_start = ph_prop_1.find(f1);
                                     pos_end   = ph_prop_1.find(f1,pos_start+1);
-                                    ph_prop = ph_prop_1.substr((0),(pos_start));
+                                    ph_prop   = ph_prop_1.substr((0),(pos_start));
 
                                     // if property present
                                     if (((ph_prop == Qnt) || (ph_prop == pH) || (ph_prop == pV) ||  (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) ||  (ph_prop == sArea) || (ph_prop == RHO)) && (!row[j].empty()))
@@ -372,14 +373,14 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                             // get phase poperties
                             for (unsigned int j=0; j<headline.size(); ++j)
                             {
-                                if ((strncmp(headline[j].c_str(),phase, 5) == 0) && (!row[j].empty()))
+                                if ((strncmp(headline[j].c_str(),phase, strlen(phase)) == 0) && (!row[j].empty()))
                                 {
                                     pos_start = headline[j].find(f1);
                                     pos_end   = headline[j].find(f1,pos_start+1);
                                     // getting the phase properties
                                     if (phase_name == headline[j].substr((pos_start+f1.length()),(pos_end-pos_start-f1.length())))
                                     {
-                                        // getting the name of the property phase e.g. Si from phase.aq_gen.Si
+                                        // getting the name of the property
                                         ph_prop = headline[j].substr((pos_end+f1.length()),(headline[j].size()));
 
                                         // amount of the property of the phase pahse in the experiment
@@ -428,7 +429,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                             // get phase comp
                             for (unsigned int j=0; j<headline.size(); ++j)
                             {
-                                if ((strncmp(headline[j].c_str(),phase, 5) == 0) && (!row[j].empty()))
+                                if ((strncmp(headline[j].c_str(),phase, strlen(phase)) == 0) && (!row[j].empty()))
                                 {
                                     pos_start = headline[j].find(f1);
                                     pos_end   = headline[j].find(f1,pos_start+1);
@@ -440,7 +441,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                         pos_start = ph_prop_1.find(f1);
                                         pos_end   = ph_prop_1.find(f1,pos_start+1);
                                         ph_prop_2 = ph_prop_1.substr((0),(pos_start));
-                                        ph_prop = ph_prop_1.substr((pos_start+1),(ph_prop_1.size()));
+                                        ph_prop   = ph_prop_1.substr((pos_start+1),(ph_prop_1.size()));
                                         pos_start = ph_prop_1.find(f1,pos_start +1);
                                         pos_end   = ph_prop_1.find(f1,pos_end+1);
                                         ph_prop_1 = ph_prop_1.substr((pos_start+1),(pos_start));
@@ -448,8 +449,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                         ph_prop_3 = ph_prop;
                                         pos_start = ph_prop_3.find(f1,0);
                                         pos_end   = ph_prop_3.find(f1,pos_end+1);
-                                        ph_prop = ph_prop_3.substr((0),(pos_start));
-
+                                        ph_prop   = ph_prop_3.substr((0),(pos_start));
 
                                         // qunatity of this comp in the phase
                                         if (((ph_prop != Qnt) && (ph_prop_1 == Qnt) && (ph_prop_2 == IC) && (ph_prop != pH) && (ph_prop != pV) &&  (ph_prop != Eh) && (ph_prop != IS) && (ph_prop != all) &&  (ph_prop != sArea) && (ph_prop != RHO)) && (strncmp(ph_prop.c_str(),"Dc", 2) != 0) && (!row[j].empty()))
@@ -490,14 +490,14 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                             ic = 0;
                         } h_phIC = false;
 
-
+                        // getting data reported as molar facrion
                         if (h_phMF)
                         {
                             bson_append_start_array(&exp, phMF);
                             // get phase comp
                             for (unsigned int j=0; j<headline.size(); ++j)
                             {
-                                if ((strncmp(headline[j].c_str(),phase, 5) == 0) && (!row[j].empty()))
+                                if ((strncmp(headline[j].c_str(),phase, strlen(phase)) == 0) && (!row[j].empty()))
                                 {
                                     pos_start = headline[j].find(f1);
                                     pos_end   = headline[j].find(f1,pos_start+1);
@@ -509,7 +509,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                         pos_start = ph_prop_1.find(f1);
                                         pos_end   = ph_prop_1.find(f1,pos_start+1);
                                         ph_prop_2 = ph_prop_1.substr((0),(pos_start));
-                                        ph_prop = ph_prop_1.substr((pos_start+1),(ph_prop_1.size()));
+                                        ph_prop   = ph_prop_1.substr((pos_start+1),(ph_prop_1.size()));
                                         pos_start = ph_prop_1.find(f1,pos_start +1);
                                         pos_end   = ph_prop_1.find(f1,pos_end+1);
                                         ph_prop_1 = ph_prop_1.substr((pos_start+1),(pos_start));
@@ -517,7 +517,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                         ph_prop_3 = ph_prop;
                                         pos_start = ph_prop_3.find(f1,0);
                                         pos_end   = ph_prop_3.find(f1,pos_end+1);
-                                        ph_prop = ph_prop_3.substr((0),(pos_start));
+                                        ph_prop   = ph_prop_3.substr((0),(pos_start));
 
                                         if ((ph_prop_2 == MF) && (!row[j].empty()))
                                         {
@@ -564,7 +564,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                             bson_append_start_array(&exp, phDC);
                             for (unsigned int j=0; j<headline.size(); ++j)
                             {
-                                if ((strncmp(headline[j].c_str(),phase, 5) == 0) && (!row[j].empty())) // check for pahse. key
+                                if ((strncmp(headline[j].c_str(),phase, strlen(phase)) == 0) && (!row[j].empty())) // check for pahse. key
                                 {
                                     pos_start = headline[j].find(f1);
                                     pos_end   = headline[j].find(f1,pos_start+1);
@@ -582,11 +582,11 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                             ph_prop = ph_prop.substr(3,ph_prop.length()); // deleting the "Dc" - species name
 
                                             // getting the name of the phase e.g. aq_gen form phase.aq_gen
-                                            pos_start = -1;
-                                            pos_end   = ph_prop.find(f1);
+                                            pos_start  = -1;
+                                            pos_end    = ph_prop.find(f1);
                                             dcomp_name = ph_prop.substr((pos_start+f1.length()),(pos_end-pos_start-f1.length()));
-                                            dcomp_new = dcomp_name;
-                                            h_dcomp = false;
+                                            dcomp_new  = dcomp_name;
+                                            h_dcomp    = false;
 
                                             if ((dcomp_new != dcomp_old))
                                             {
@@ -616,16 +616,12 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                                     bson_append_start_array(&exp, DCprop);
                                                     for (unsigned int j=0; j<headline.size(); ++j)
                                                     {
-//                                                        if (j== 30 || j ==33)
-//                                                        {
-//                                                            cout << headline[j].c_str() <<" "<< ph_dcomp.c_str() << " " << ph_dcomp.size() << endl;
-//                                                        }
                                                         if ((strncmp(headline[j].c_str(),ph_dcomp.c_str(), ph_dcomp.size()) == 0) && (!row[j].empty()))
                                                         {
                                                             cout << j << endl;
 
-                                                            pos_start = ph_dcomp.size();
-                                                            pos_end = headline[j].size();
+                                                            pos_start  = ph_dcomp.size();
+                                                            pos_end    = headline[j].size();
                                                             dcomp_prop = headline[j].substr(pos_start, pos_end);
 
                                                             ss << ic;
