@@ -287,24 +287,24 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
 
 //            print_vectors_curve( optv_, array_ssr, sensitivity_points );
         /// adding to statistics the reaction and linked paramaters
-        gfittask->Opti->h_Lp = false;
-        gfittask->Opti->h_RDc = false;
-        for (i = 0; i<gfittask->Opti->reactions.size(); ++i)
-        {
-            optv_.push_back(gfittask->Opti->reactions[i]->std_gibbs);
-            gfittask->Opti->Pindex.push_back(gfittask->Opti->reactions[i]->DcIndex);
-            gfittask->Opti->Ptype.push_back("G0");
-            gfittask->Opti->opt.push_back(gfittask->Opti->reactions[i]->std_gibbs);
-//            gfittask->Opti->opt.push_back(gfittask->Opti->reactions[i]->IV);
-        }
-        for (i = 0; i<gfittask->Opti->Lparams.size(); ++i)
-        {
-            optv_.push_back(gfittask->Opti->Lparams[i]->EV);
+//        gfittask->Opti->h_Lp = false;
+//        gfittask->Opti->h_RDc = false;
+//        for (i = 0; i<gfittask->Opti->reactions.size(); ++i)
+//        {
+//            optv_.push_back(gfittask->Opti->reactions[i]->std_gibbs);
 //            gfittask->Opti->Pindex.push_back(gfittask->Opti->reactions[i]->DcIndex);
-//            gfittask->Opti->Ptype.push_back("bIC");
+//            gfittask->Opti->Ptype.push_back("G0");
 //            gfittask->Opti->opt.push_back(gfittask->Opti->reactions[i]->std_gibbs);
+////            gfittask->Opti->opt.push_back(gfittask->Opti->reactions[i]->IV);
+//        }
+//        for (i = 0; i<gfittask->Opti->Lparams.size(); ++i)
+//        {
+//            optv_.push_back(gfittask->Opti->Lparams[i]->EV);
+////            gfittask->Opti->Pindex.push_back(gfittask->Opti->reactions[i]->DcIndex);
+////            gfittask->Opti->Ptype.push_back("bIC");
+////            gfittask->Opti->opt.push_back(gfittask->Opti->reactions[i]->std_gibbs);
 
-        }
+//        }
 
         len_meas = (int) gfittask->Weighted_Tfun_residuals_v.size();
 

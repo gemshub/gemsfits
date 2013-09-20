@@ -115,6 +115,7 @@ static const char *url = "url"; ///	                              1		     string
                         // species
     static const char *RC = "RC"; ///                                       array               array of components names
     static const char *Rcoef = "Rcoef"; ///                                 array               array of reaction coeficients
+    static const char *order ="order"; ///                                  integer             order of the reactions
     // Linked parameters
     static const char *LEs = "LEs"; ///                                     array               array of linked elements
     static const char *LE = "LE"; ///                                       string              linked element

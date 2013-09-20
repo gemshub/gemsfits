@@ -131,13 +131,13 @@
 #  Mark with R the G0(298) value of a dependent component, which depends on G0 of other dependent components
 #     via a reaction constraint, by copy-pasting the following template in place of the G0(298) value,
 #     and edit it to make the desired changes:
-#      R{ "IV" : -36819, "Ref" : "SUPCRT92", "logK" : -14.46, "nC" : 4, "dcomp" : "KOH@",
+#      R{ "IV" : -36819, "Ref" : "SUPCRT92", "nC" : 4, "DC" : "KOH@",
 #      "RC" : [ "K+", "H2O@", "H+", "KOH@" ], "Rcoef" : [ -1, -1, 1, 1 ] }
 #     Here,  "IV": initial value; 
 #          "Ref": bibliographic reference;
 #         "logK": reaction equilibrium constant at 298 K, 1 bar; 
 #         "nC": numer of components (species) involved in the reaction;
-#         "dcomp": name of dependent component whose properties are constrained with this reaction; 
+#         "DC": name of dependent component whose properties are constrained with this reaction; 
 #         "RC": list [ ] of names of all components (species) involved in the reaction (comma-separated);
 #         "Rcoef": array [ ] of reaction stoichiometry coeficients (comma-separated), in the same order as in the "RC" list.
 #  Mark with L the bIC (element bulk composition) value of an independent component, which depends on bIC of other elements
@@ -198,23 +198,29 @@
 0 0 0 0 
  
 # G0: Look-up array for DC molar Gibbs energy function g(T,P), J/mol at 298.15K and 1 bar 
+R{ "IV" : -899506.00028008, "Ref" : "test", "nC" : 3, "dcomp" : "Al(OH)2+","RC" : [ "OH-", "AlOH+2", "Al(OH)2+" ], "Rcoef" : [ -1, -1, 1 ] }
+R{ "IV" : -1101735, "Ref" : "test", "nC" : 3, "dcomp" : "Al(OH)3@","RC" : [ "OH-", "Al(OH)2+", "Al(OH)3@" ], "Rcoef" : [ -1, -1, 1 ] }
+R{ "IV" : -1305814.0005473, "Ref" : "test", "nC" : 3, "dcomp" : "Al(OH)4-","RC" : [ "OH-", "Al(OH)3@", "Al(OH)4-" ], "Rcoef" : [ -1, -1, 1 ] }
+
+R{ "IV" : -696322.0008363, "Ref" : "test", "nC" : 3, "dcomp" : "AlOH+2","RC" : [ "OH-", "Al3+", "AlOH+2" ], "Rcoef" : [ -1, -1, 1 ] }
+
 <G0>
--899506.00028008
--1101735
-F{"IV": -1305814.0005473, "LB": -1350000, "UB" : -1250000 }
--487478.00144161
+R{ "IV" : -899506.00028008, "Ref" : "test", "order" : 2, "nC" : 3, "DC" : "Al(OH)2+","RC" : [ "OH-", "AlOH+2", "Al(OH)2+" ], "Rcoef" : [ -1, -1, 1 ] }
+F-1101735
+F-1305814.0005473
+F{"IV": -487478.00144161, "LB": -520000 , "UB" : -440000 }
 -1781798.0004629
 -661859.00050346
 F{"IV": -831332.00091632, "LB": -860000 , "UB" : -800000 }
 -869016.99998422
--696322.0008363
+R{ "IV" : -696322.0008363, "Ref" : "test", "order" : 1, "nC" : 3, "DC" : "AlOH+2","RC" : [ "OH-", "Al+3", "AlOH+2" ], "Rcoef" : [ -1, -1, 1 ] }
 -282462.00010137
 -1106169.9999737
 -399278.99998001
 -437227.99998422
-F-261881.00017392
-F-1567372
-F{"IV": -1088998.9999474, "LB": -1130000 , "UB" : -1040000 }
+-261881.00017392
+-1567372
+-1088998.9999474
 -388734.99998001
 -1288211.99998
 -417981.99998422
@@ -226,14 +232,14 @@ F{ "IV" :-833411.00006792, "UB" : -800000, "LB" : -900000 }
 5858.0001796547
 -7950.0005480658
 -8535.0005102409
-F-131290.00076597
+-131290.00076597
 -127240
 17723.00010995
 18188.000182443
 16544.000207432
 -134013.99990483
 -67321.000812735
-F-157297.00090727
+-157297.00090727
 0
 -237181.38483664
 0
@@ -268,6 +274,9 @@ F-157297.00090727
 -2690013
 -853665
 
+# logK
+<logK>
+2.72149121562244e-14 1.39558033075734e-11 7.16511285542999e-10 9.82713004847736e-25 1.90992534299309e-17 1.74727466251749e-15 2.66680952404257e-10 2.82286468611598e-12 3.25674699273875e-19
 
 #########################################################################
 #>>>>>>>>>> Input for fitting non-ideality parameters >>>>>>>>>>>>>>>>>>#

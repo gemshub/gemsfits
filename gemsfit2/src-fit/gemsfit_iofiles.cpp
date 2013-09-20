@@ -204,13 +204,13 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
               "\n#  Mark with R the G0(298) value of a dependent component, which depends on G0 of other dependent components"
               "\n#     via a reaction constraint, by copy-pasting the following template in place of the G0(298) value,"
               "\n#     and edit it to make the desired changes:"
-              "\n#      R{ \"IV\" : -36819, \"Ref\" : \"SUPCRT92\", \"logK\" : -14.46, \"nC\" : 4, \"dcomp\" : \"KOH@\","
+              "\n#      R{ \"IV\" : -36819, \"Ref\" : \"SUPCRT92\", \"order\" : \"1\", \"nC\" : 4, \"DC\" : \"KOH@\","
               "\n#      \"RC\" : [ \"K+\", \"H2O@\", \"H+\", \"KOH@\" ], \"Rcoef\" : [ -1, -1, 1, 1 ] }"
               "\n#     Here,  \"IV\": initial value; "
               "\n#          \"Ref\": bibliographic reference;"
-              "\n#         \"logK\": reaction equilibrium constant at 298 K, 1 bar; "
+              "\n#          \"order\": reaction order starting from 1, important in case of many reaction with common species;"
               "\n#         \"nC\": numer of components (species) involved in the reaction;"
-              "\n#         \"dcomp\": name of dependent component whose properties are constrained with this reaction; "
+              "\n#         \"DC\": name of dependent component whose properties are constrained with this reaction; "
               "\n#         \"RC\": list [ ] of names of all components (species) involved in the reaction (comma-separated);"
               "\n#         \"Rcoef\": array [ ] of reaction stoichiometry coeficients (comma-separated), in the same order as in the \"RC\" list."
               "\n#  Mark with L the bIC (element bulk composition) value of an independent component, which depends on bIC of other elements"
@@ -512,9 +512,11 @@ void get_gems_fit_DCH_txt(TNode* node, opti_vector* op )
     fstream ff(fname.c_str(), ios::in );
     ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
 
-    TReadArrays  rddar(30, DataCH_dynamic_fields, ff);
+    TReadArrays  rddar(31, DataCH_dynamic_fields, ff);
     DATACH* CSD = node->pCSD();
     vector<IOJFormat> vFormats;
+    int nr_reac = 0;
+    double logK[9];
 
     long int nfild = rddar.findNextNotAll();
     while( nfild >=0 )
@@ -536,7 +538,18 @@ void get_gems_fit_DCH_txt(TNode* node, opti_vector* op )
         case f_Pval: rddar.readArray( "Pval", CSD->Pval, CSD->nPp );
                   break;
         case f_G0: rddar.readFormatArray( "G0", CSD->G0, CSD->nDC*node->gridTP(), vFormats );
+                        for (unsigned int i=0; i<vFormats.size(); ++i)
+                        {
+                            if (vFormats[i].type == ft_R )
+                            {
+                                ++nr_reac;
+                                op->reactions.push_back(new opti_vector::RDc);
+                            }
+                        }
                   break;
+                        // not working until dealing on how to get the logK look-up array into the input file
+//        case f_logK: rddar.readFormatArray( "logK", logK, nr_reac*1/**node->gridTP()*/, vFormats );
+//                  break;
          }
 
         if( !vFormats.empty() )
@@ -569,10 +582,17 @@ void get_gems_fit_DCH_txt(TNode* node, opti_vector* op )
                 }
                 if (vFormats[ii].type == ft_R)
                 {
-                    op->reactions.push_back(new opti_vector::RDc);
+//                    op->reactions.push_back(new opti_vector::RDc);
                     op->h_RDc = true;
+                    vector<string> out;
+                    Data_Manager *temp = new Data_Manager(1);
+                    temp->parse_JSON_object(vFormats[ii].format, keys::order, out);
+                    nr = atoi(out.at(0).c_str())-1;
+                    out.clear();
+
+
                     R_to_OP(op->reactions[nr], vFormats[ii], DataCH_dynamic_fields[nfild].name );
-                    nr++;
+
                 }
             }
             vFormats.clear();
@@ -1448,9 +1468,9 @@ void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat, string nfild)
     r->Ref = out.at(0);
     out.clear();
 
-    temp->parse_JSON_object(Jformat.format, keys::logK, out);
-    r->logK = atof(out.at(0).c_str());
-    out.clear();
+//    temp->parse_JSON_object(Jformat.format, keys::logK, out);
+//    r->logK = atof(out.at(0).c_str());
+//    out.clear();
 
     temp->parse_JSON_object(Jformat.format, keys::nC, out);
     r->nC = atoi(out.at(0).c_str());

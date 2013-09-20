@@ -98,6 +98,7 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     print = new ResPrint(printfile, Opti);
     get_DataTarget ( );
 
+    /// function in iofiles.cpp to read the logK lookup array instead of get function!
     get_logK_TPpairs ();
 
 
@@ -149,15 +150,27 @@ void TGfitTask::get_logK_TPpairs()
     for (unsigned int i = 0; i< this->Opti->reactions.size(); ++i)
     {
 //        this->Opti->reactions[i]->logK_TPpairs.resize(this->TP_pairs[0].size());
+
+        // 25 C 1 bar
+        for (unsigned int k = 0; k<this->Opti->reactions[i]->rdc_species.size(); ++k)
+        {
+            DG += this->NodT[0]->DC_G0(this->Opti->reactions[i]->rdc_species_ind[k], 100000, 25+273.15, false) * this->Opti->reactions[i]->rdc_species_coef[k];
+        }
+        RTln = Rln * (25+273.15);
+        this->Opti->reactions[i]->dG_reaction_TP.push_back(DG);
+        this->Opti->reactions[i]->logK_TPpairs.push_back(DG/RTln);
+        DG = 0.0;
+
         // loop trough TP
         for (unsigned int j = 0; j<this->TP_pairs[0].size(); ++j)
         {
-            // loop trough rection species to calculated delta G of reaction
+            // loop trough rection species to calculate delta G of reaction
             for (unsigned int k = 0; k<this->Opti->reactions[i]->rdc_species.size(); ++k)
             {
                 DG += this->NodT[0]->DC_G0(this->Opti->reactions[i]->rdc_species_ind[k], this->TP_pairs[1][j]*100000, this->TP_pairs[0][j]+273.15, false) * this->Opti->reactions[i]->rdc_species_coef[k];
             }
             RTln = Rln * this->TP_pairs[0][j]+273.15;
+            this->Opti->reactions[i]->dG_reaction_TP.push_back(DG);
             this->Opti->reactions[i]->logK_TPpairs.push_back(DG/RTln);
             DG = 0.0;
         }

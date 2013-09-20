@@ -92,6 +92,7 @@ void opti_vector::get_RDc_indexes (TNode *node, opti_vector *ov)
                 if( index_species < 0 )
                 {
                     throw index_species;
+                    cout << "Error: Name of species: "<< ov->reactions[j]->rdc_species[i].c_str() << " doesn't exist in the database!"<<endl;
                 }
                 else
                 {

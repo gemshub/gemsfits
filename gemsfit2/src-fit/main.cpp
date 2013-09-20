@@ -125,8 +125,10 @@ int main( int argc, char *argv[] )
 
     cout << gfittask->NodT[0]->DenH2Ow(100000 *1, 25 + 273.15) << endl;
 
+    // if optimization with statistics, without statistics or >2 only statistics
     if (gfittask->Opti->OptDoWhat < 2)
     {
+        // ++++++++++ RUN OPTIMIZATION ++++++++++ //
         gfittask->run_optim();
 
     } else
