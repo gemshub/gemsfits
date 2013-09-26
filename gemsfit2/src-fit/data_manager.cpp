@@ -68,11 +68,10 @@ Data_Manager::Data_Manager( )
     fout << "5. data_manager.cpp line 68. Getting data form the EJDB database; " << endl;
     get_EJDB();
 
-    fout << "7. data_manager.cpp line 70. Getting distinct T and P pairs; " << endl;
+    fout << "7. data_manager.cpp line 71. Getting distinct T and P pairs; " << endl;
     get_distinct_TP();
 
     fout.close();
-
 }
 
 
@@ -85,195 +84,6 @@ Data_Manager::~Data_Manager( )
         delete experiments[i];
     }
 }
-
-
-string Data_Manager::readin_JSON(string key)
-{
-    // Variable declarations
-    vector<string> vdata;
-    string line, allparam;
-    string json_s, result;
-    string fname = gpf->OptParamFile();
-    int pos_start, pos_end;
-    unsigned int i;
-    ifstream param_stream;
-
-    // Keywords
-    string f7(key);
-    string f4("#");
-
-    // Read parameter file into string
-    param_stream.open(fname.c_str());
-    if( param_stream.fail() )
-    {
-        cout << "Opening of file "<<fname<<" failed !!"<<endl;
-        exit(1);
-    }
-    while( getline(param_stream, line) )
-    {
-        vdata.push_back(line);
-    }
-    param_stream.close();
-    for( i=0; i < vdata.size(); i++ )
-    allparam += vdata[i];
-
-    // GEMSFIT logfile
-    ofstream fout;
-    fout.open(gpf->FITLogFile().c_str(), ios::app);
-    if( fout.fail() )
-    { cout<<"Output fileopen error"<<endl; exit(1); }
-
-    pos_start = allparam.find(f7);
-    pos_end   = allparam.find(f4,pos_start);
-    json_s = allparam.substr((pos_start+f7.length()),(pos_end-pos_start-f7.length()));
-
-    remove_copy(json_s.begin(), json_s.end(), std::back_inserter(result), '\'');
-    json_s = result;
-
-    return json_s;
-}
-
-void Data_Manager::parse_JSON_object(string query, const char* key, vector<string> &result)
-{
-    json_t *root; json_t *data; json_t *object;
-    json_error_t jerror;
-    stringstream ss;
-    string sss;
-
-    const char * JSON = query.c_str();
-    root = json_loads(JSON, 0, &jerror);
-
-    if(!root)
-    {
-        fprintf(stderr, "error: on line %d: %s\n", jerror.line, jerror.text);
-    }
-    else
-    {
-        object = json_object_get(root, key);
-        if(json_is_array(object))
-        {
-            for(unsigned int i = 0; i < json_array_size(object); i++)
-            {
-                data = json_array_get(object, i);
-                    if(json_is_string(data))
-                    {
-                        result.push_back(json_string_value(data));
-                    }
-                    else if (json_is_real(data))
-                    {
-                        ss << json_real_value(data);
-                        sss = ss.str();
-                        ss.str("");
-                        result.push_back(sss);
-                    }
-                    else if (json_is_integer(data))
-                    {
-                        ss << json_integer_value(data);
-                        sss = ss.str();
-                        ss.str("");
-                        result.push_back(sss);
-                    }
-                    else if (json_is_object(data))
-                    {
-                        result.push_back("is object");
-                    }
-             }
-         }
-        else
-        {
-                if(json_is_string(object))
-                {
-                    result.push_back(json_string_value(object));
-                }
-                else if (json_is_real(object))
-                {
-                    ss << json_real_value(object);
-                    sss = ss.str();
-                    ss.str("");
-                    result.push_back(sss);
-                }
-                else if (json_is_integer(object))
-                {
-                    ss << json_integer_value(object);
-                    sss = ss.str();
-                    ss.str("");
-                    result.push_back(sss);
-                }
-        }
-    }
-}
-
-void Data_Manager::parse_JSON_array_object( string data_, const char *arr , const char *key, vector<string> &result )
-{
-    json_t *root; json_t *data1; json_t *data; json_t *object;
-    json_error_t jerror;
-    stringstream ss;
-    string sss;
-
-    const char * JSON = data_.c_str();
-    root = json_loads(JSON, 0, &jerror);
-
-    if(!root)
-    {
-        fprintf(stderr, "error: on line %d: %s\n", jerror.line, jerror.text);
-    }
-    else
-    {
-        object = json_object_get(root, arr);
-        if(json_is_array(object))
-        {
-            for(unsigned int i = 0; i < json_array_size(object); i++)
-            {
-                data1 = json_array_get(object, i);
-                if (json_is_object(data1))
-                {
-                    data = json_object_get(data1, key);
-                    if(json_is_string(data))
-                    {
-                        result.push_back(json_string_value(data));
-                    }
-                    else if (json_is_real(data))
-                    {
-                        ss << json_real_value(data);
-                        sss = ss.str();
-                        ss.str("");
-                        result.push_back(sss);
-                    }
-                    else if (json_is_integer(data))
-                    {
-                        ss << json_integer_value(data);
-                        sss = ss.str();
-                        ss.str("");
-                        result.push_back(sss);
-                    }
-                }
-             }
-         }
-        else
-        {
-            data = json_object_get(data1, key);
-                if(json_is_string(object))
-                {
-                    result.push_back(json_string_value(object));
-                }
-                else if (json_is_real(object))
-                {
-                    ss << json_real_value(object);
-                    sss = ss.str();
-                    ss.str("");
-                    result.push_back(sss);
-                }
-                else if (json_is_integer(object))
-                {
-                    ss << json_integer_value(object);
-                    sss = ss.str();
-                    ss.str("");
-                    result.push_back(sss);
-                }
-        }
-    }
-}
-
 
 
 // Reading data from EJDB database
@@ -503,7 +313,6 @@ void Data_Manager::get_EJDB( )
     }
 }
 
-
 void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
     bson_iterator i, j, k, k2, d, d2, d3; // 1st, 2nd, 3rd, 2-1, 3-1 level
     const char *key;
@@ -524,7 +333,6 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
         {
             // adding expdataset
             experiments.at(pos)->expdataset = bson_iterator_string(&i);
-
         } else
         if (key_ == keys::expsample)
         {
@@ -645,7 +453,7 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                 experiments.at(pos)->L_KC.push_back( new samples::Lconstraints );
                 sk++; // position of the component in U_SK vector
     //            experiments.at(pos)->U_KC.at(sk)->dcomp = NULL;
-                experiments.at(pos)->L_KC.at(sk)->Qnt = 1000000;
+                experiments.at(pos)->L_KC.at(sk)->Qnt = 0;
 
                 while (bson_iterator_next(&d))
                 {
@@ -862,9 +670,6 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                             experiments.at(pos)->expphases.at(ip)->phDC.push_back( new samples::phases::dcomps );
                             ips++; // position of the specie in phdcomps vector
                             ipdcp = -1;
-//                            experiments.at(pos)->expphases.at(ip)->phdcomps.at(ips)->Qerror = NULL;
-//                            experiments.at(pos)->expphases.at(ip)->phdcomps.at(ips)->sQnt   = NULL;
-//                            Hexperiments.at(pos)->Hexpphases.at(ip)->Hphdcomps.at(ips)->formula = false;
 
                             while (bson_iterator_next(&d2))
                             {
@@ -891,7 +696,6 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                                         ipdcp++; // position of the component in phcomp vector
                                         experiments.at(pos)->expphases.at(ip)->phDC.at(ips)->DCprop.at(ipdcp)->Qerror = NULL;
                                         experiments.at(pos)->expphases.at(ip)->phDC.at(ips)->DCprop.at(ipdcp)->Qnt   = NULL;
-
 
                                         while (bson_iterator_next(&d3))
                                         {
@@ -928,7 +732,6 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
         }
     }
 }
-
 
 void Data_Manager::get_distinct_TP( )
 {
@@ -969,3 +772,192 @@ void Data_Manager::get_distinct_TP( )
         isfound2 = false;
     }
 }
+
+string Data_Manager::readin_JSON(string key)
+{
+    // Variable declarations
+    vector<string> vdata;
+    string line, allparam;
+    string json_s, result;
+    string fname = gpf->OptParamFile();
+    int pos_start, pos_end;
+    unsigned int i;
+    ifstream param_stream;
+
+    // Keywords
+    string f7(key);
+    string f4("#");
+
+    // Read parameter file into string
+    param_stream.open(fname.c_str());
+    if( param_stream.fail() )
+    {
+        cout << "Opening of file "<<fname<<" failed !!"<<endl;
+        exit(1);
+    }
+    while( getline(param_stream, line) )
+    {
+        vdata.push_back(line);
+    }
+    param_stream.close();
+    for( i=0; i < vdata.size(); i++ )
+    allparam += vdata[i];
+
+    // GEMSFIT logfile
+    ofstream fout;
+    fout.open(gpf->FITLogFile().c_str(), ios::app);
+    if( fout.fail() )
+    { cout<<"Output fileopen error"<<endl; exit(1); }
+
+    pos_start = allparam.find(f7);
+    pos_end   = allparam.find(f4,pos_start);
+    json_s = allparam.substr((pos_start+f7.length()),(pos_end-pos_start-f7.length()));
+
+    remove_copy(json_s.begin(), json_s.end(), std::back_inserter(result), '\'');
+    json_s = result;
+
+    return json_s;
+}
+
+void Data_Manager::parse_JSON_object(string query, const char* key, vector<string> &result)
+{
+    json_t *root; json_t *data; json_t *object;
+    json_error_t jerror;
+    stringstream ss;
+    string sss;
+
+    const char * JSON = query.c_str();
+    root = json_loads(JSON, 0, &jerror);
+
+    if(!root)
+    {
+        fprintf(stderr, "error: on line %d: %s\n", jerror.line, jerror.text);
+    }
+    else
+    {
+        object = json_object_get(root, key);
+        if(json_is_array(object))
+        {
+            for(unsigned int i = 0; i < json_array_size(object); i++)
+            {
+                data = json_array_get(object, i);
+                    if(json_is_string(data))
+                    {
+                        result.push_back(json_string_value(data));
+                    }
+                    else if (json_is_real(data))
+                    {
+                        ss << json_real_value(data);
+                        sss = ss.str();
+                        ss.str("");
+                        result.push_back(sss);
+                    }
+                    else if (json_is_integer(data))
+                    {
+                        ss << json_integer_value(data);
+                        sss = ss.str();
+                        ss.str("");
+                        result.push_back(sss);
+                    }
+                    else if (json_is_object(data))
+                    {
+                        result.push_back("is object");
+                    }
+             }
+         }
+        else
+        {
+                if(json_is_string(object))
+                {
+                    result.push_back(json_string_value(object));
+                }
+                else if (json_is_real(object))
+                {
+                    ss << json_real_value(object);
+                    sss = ss.str();
+                    ss.str("");
+                    result.push_back(sss);
+                }
+                else if (json_is_integer(object))
+                {
+                    ss << json_integer_value(object);
+                    sss = ss.str();
+                    ss.str("");
+                    result.push_back(sss);
+                }
+        }
+    }
+}
+
+void Data_Manager::parse_JSON_array_object( string data_, const char *arr , const char *key, vector<string> &result )
+{
+    json_t *root; json_t *data1; json_t *data; json_t *object;
+    json_error_t jerror;
+    stringstream ss;
+    string sss;
+
+    const char * JSON = data_.c_str();
+    root = json_loads(JSON, 0, &jerror);
+
+    if(!root)
+    {
+        fprintf(stderr, "error: on line %d: %s\n", jerror.line, jerror.text);
+    }
+    else
+    {
+        object = json_object_get(root, arr);
+        if(json_is_array(object))
+        {
+            for(unsigned int i = 0; i < json_array_size(object); i++)
+            {
+                data1 = json_array_get(object, i);
+                if (json_is_object(data1))
+                {
+                    data = json_object_get(data1, key);
+                    if(json_is_string(data))
+                    {
+                        result.push_back(json_string_value(data));
+                    }
+                    else if (json_is_real(data))
+                    {
+                        ss << json_real_value(data);
+                        sss = ss.str();
+                        ss.str("");
+                        result.push_back(sss);
+                    }
+                    else if (json_is_integer(data))
+                    {
+                        ss << json_integer_value(data);
+                        sss = ss.str();
+                        ss.str("");
+                        result.push_back(sss);
+                    }
+                }
+             }
+         }
+        else
+        {
+            data = json_object_get(data1, key);
+                if(json_is_string(object))
+                {
+                    result.push_back(json_string_value(object));
+                }
+                else if (json_is_real(object))
+                {
+                    ss << json_real_value(object);
+                    sss = ss.str();
+                    ss.str("");
+                    result.push_back(sss);
+                }
+                else if (json_is_integer(object))
+                {
+                    ss << json_integer_value(object);
+                    sss = ss.str();
+                    ss.str("");
+                    result.push_back(sss);
+                }
+        }
+    }
+}
+
+

@@ -65,15 +65,6 @@ optimization::optimization( int i)
 }
 
 //// Constructor
-//PlotFit::PlotFit(int)
-//{
-//    // allocate dynamic memory for my_plotting_info struct
-//    plotting_info = new my_plotting_info;
-//    // Populate member variables
-//    define_plotfit_vars();
-//}
-
-//// Constructor
 statistics::statistics()
 {
     number_of_measurements = 0;
@@ -82,7 +73,6 @@ statistics::statistics()
     number_of_parameters   = 0;
     perturbator = 0.0001;
     default_stat_param();
-//    define_plotfit_vars();
 }
 
 // Constructor
@@ -116,7 +106,6 @@ int generateConfig()
     Data_Manager *data_meas = new Data_Manager(1);
 
     if ( access( gpf->OptParamFile().c_str(), 0 ) == 0 ) {
-//    if (bfs::exists(gpf->OptParamFile().c_str())) {
         cout << gpf->OptParamFile() <<" exists. Do you want to overwrite it? write yes or no: ";
         cin >> YN;
         if ((YN == "yes") || (YN == "Yes") || (YN == "YES") || (YN == "yEs") || (YN == "yeS"))
@@ -133,29 +122,21 @@ int generateConfig()
     {
     overwrite:
 
+        // Writting Data sources section
     data_meas->out_db_specs_txt(with_comments, brief_mode);
 
+        // Writting Parameters to Fit section &
     out_gems_fit_txt( node, with_comments, brief_mode );
 
 
     // Create instance of optimization class derived from base class Optimization
     optimization *opti = new optimization(1);
+        // Writting Optimization Methods section
     opti->out_nlopt_param_txt(with_comments, brief_mode);
 
     statistics *stat= new statistics();
+        // Writing statistics section
     stat->out_stat_param_txt(with_comments, brief_mode);
-//    stat->out_plotfit_vars_txt(with_comments, brief_mode);
-
-    /* test reading
-    cout << "Start testing"<< endl;
-    data_meas->get_db_specs_txt();
-    gibbs->set_nlopt_param_txt();
-    stat->std_get_stat_param_txt();
-    stat->set_plotfit_vars_txt();
-    get_gems_fit_multi_txt( node ); */
-//    get_gems_fit_DCH_txt( node );
-//    get_gems_fit_DBR_txt( node );
-
 
     cout << "Finish writing template file" << endl;
     }
@@ -236,10 +217,10 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
     if( _comment )
             ff << "\n# PHNL: List of Phase names (for readability)";
     prarCH.writeArray(  "PHNL", CSD->PHNL[0], CSD->nPH, MaxPHN );
-    prarCH.writeArrayF(  f_ccPH, CSD->ccPH, CSD->nPH, 1L,_comment, brief_mode );
-    prarCH.writeArray(  f_nDCinPH, CSD->nDCinPH, CSD->nPH, -1L,_comment, brief_mode);
-    prarCH.writeArray(  f_TKval, CSD->TKval, CSD->nTp, -1L,_comment, brief_mode );
-    prarCH.writeArray(  f_Pval, CSD->Pval, CSD->nPp,  -1L,_comment, brief_mode );
+//    prarCH.writeArrayF(  f_ccPH, CSD->ccPH, CSD->nPH, 1L,_comment, brief_mode );
+//    prarCH.writeArray(  f_nDCinPH, CSD->nDCinPH, CSD->nPH, -1L,_comment, brief_mode);
+//    prarCH.writeArray(  f_TKval, CSD->TKval, CSD->nTp, -1L,_comment, brief_mode );
+//    prarCH.writeArray(  f_Pval, CSD->Pval, CSD->nPp,  -1L,_comment, brief_mode );
     vector <double> xG0;
     ff << "\n \n# G0: Look-up array for DC molar Gibbs energy function g(T,P), J/mol at 298.15K and 1 bar \n";
     ff << "<G0>" << endl;
@@ -454,7 +435,7 @@ void get_gems_fit_multi_txt(TNode* node, opti_vector *op )
           {
               // Hear you must write your code
               for(unsigned int ii=0; ii<vFormats.size(); ii++ )
-              {    cout<< "field " << MULTI_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<
+              {    cout<< "Parameter: " << MULTI_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<
                           " Index " << vFormats[ii].index << endl;
                   cout<< vFormats[ii].format << endl;
 
@@ -512,7 +493,7 @@ void get_gems_fit_DCH_txt(TNode* node, opti_vector* op )
     fstream ff(fname.c_str(), ios::in );
     ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
 
-    TReadArrays  rddar(31, DataCH_dynamic_fields, ff);
+    TReadArrays  rddar(30, DataCH_dynamic_fields, ff);
     DATACH* CSD = node->pCSD();
     vector<IOJFormat> vFormats;
     int nr_reac = 0;
@@ -529,14 +510,14 @@ void get_gems_fit_DCH_txt(TNode* node, opti_vector* op )
                 break;
         case f_PHNL: rddar.readArray( "PHNL", CSD->PHNL[0], CSD->nPH, MaxPHN );
                 break;
-        case f_ccPH: rddar.readArray( "ccPH", CSD->ccPH, CSD->nPH, 1 );
-                break;
-        case f_nDCinPH: rddar.readArray( "nDCinPH", CSD->nDCinPH, CSD->nPH);
-                break;
-        case f_TKval: rddar.readArray( "TKval", CSD->TKval, CSD->nTp );
-                break;
-        case f_Pval: rddar.readArray( "Pval", CSD->Pval, CSD->nPp );
-                  break;
+//        case f_ccPH: rddar.readArray( "ccPH", CSD->ccPH, CSD->nPH, 1 );
+//                break;
+//        case f_nDCinPH: rddar.readArray( "nDCinPH", CSD->nDCinPH, CSD->nPH);
+//                break;
+//        case f_TKval: rddar.readArray( "TKval", CSD->TKval, CSD->nTp );
+//                break;
+//        case f_Pval: rddar.readArray( "Pval", CSD->Pval, CSD->nPp );
+//                  break;
         case f_G0: rddar.readFormatArray( "G0", CSD->G0, CSD->nDC*node->gridTP(), vFormats );
                         for (unsigned int i=0; i<vFormats.size(); ++i)
                         {
@@ -558,8 +539,7 @@ void get_gems_fit_DCH_txt(TNode* node, opti_vector* op )
             // Hear you must write your code
             for(unsigned  int ii=0; ii<vFormats.size(); ii++ )
             {
-                cout<< "Field " << DataCH_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<
-                        " Index " << vFormats[ii].index << endl;
+                cout<< "Parameter: " << DataCH_dynamic_fields[nfild].name << " " << node->xCH_to_DC_name(vFormats[ii].index)<< " Type " << vFormats[ii].type << endl;
                 cout<< vFormats[ii].format << endl;
 
                 if ((vFormats[ii].type == ft_F))
@@ -672,7 +652,7 @@ void get_gems_fit_DBR_txt(TNode* node , opti_vector *op)
             int nl = 0;
             // Hear you must write your code
             for(unsigned  int ii=0; ii<vFormats.size(); ii++ )
-            {    cout<< "field " << DataBR_fields[nfild].name << " Type " << vFormats[ii].type <<
+            {    cout<< "Parameter: " << DataBR_fields[nfild].name << " Type " << vFormats[ii].type <<
                         " Index " << vFormats[ii].index << endl;
                 cout<< vFormats[ii].format << endl;
 
@@ -896,10 +876,10 @@ outField Data_Manager_fields[9] =
       "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"IC\", \"CN\": \"Si\", \"Unit\": \"molal\" },"
       "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"IC\", \"CN\": \"Al\", \"Unit\": \"molal\" },"
       "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"prop\", \"CN\": \"pH\", \"Unit\": \"-loga\" },"
-      "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"DC\", \"CN\": \"SiO2-\", \"DCP\" : \"pQnt\", \"Unit\": \"mol\"}"
+      "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"DC\", \"CN\": \"SiO2-\", \"DCP\" : \"Q\", \"Unit\": \"mol\"}"
       "\n#      ]"
       "\n#   }\'"
-      "\n#  Paste the above example below, remove comment symbols (#), and edit as necessary.\n"
+      "\n#  Paste the above example below, remove comment symbols (#), and edit as necessary. Remove unwanted rows {...}\n"
     },
     { "SystemFiles",  0, 0, 1, "\n# SystemFiles: path to the list of GEMS3K input files (also used for this template file)\n" },
 //    { "RecipeFiles",  0, 0, 1, "\n# RecipeFiles: Comment"},
@@ -1038,8 +1018,8 @@ void Data_Manager::get_db_specs_txt( )
          { ret += " - fields must be read from OptParamFile structure";
            Error( "Error", ret);
          }
-    // removing inverted comma
 
+    // removing inverted comma
         remove_copy(DBname.begin(), DBname.end(), std::back_inserter(result), '\'');
         DBname = result;
         result.clear();
@@ -1085,7 +1065,7 @@ void statistics::out_stat_param_txt( bool with_comments, bool brief_mode )
     TPrintArrays  prar(4, statistics_fields, ff);
     prar.writeField(f_StatMCruns, (long int)num_of_MC_runs, with_comments, brief_mode  );
     prar.writeField(f_StatSensitivity, (long int)sensitivity_points, with_comments, brief_mode  );
-    prar.writeField(f_StatMCbool, (long int)MCbool, with_comments, brief_mode  );
+//    prar.writeField(f_StatMCbool, (long int)MCbool, with_comments, brief_mode  );
     prar.writeField(f_StatPerturbator, (double)perturbator, with_comments, brief_mode  );
 }
 
@@ -1108,12 +1088,12 @@ void statistics::get_stat_param_txt( )
                    break;
            case f_StatSensitivity: rdar.readArray( "StatSensitivity",  &sensitivity_points, 1 );
                    break;
-           case f_StatMCbool:
-                   { int bb;
-                    rdar.readArray( "StatMCbool",  &bb, 1 );
-                    MCbool = (bool)bb;
-                   }
-                   break;
+//           case f_StatMCbool:
+//                   { int bb;
+//                    rdar.readArray( "StatMCbool",  &bb, 1 );
+//                    MCbool = (bool)bb;
+//                   }
+//                   break;
            case f_StatPerturbator: rdar.readArray( "StatPerturbator",  &perturbator, 1 );
                   break;
           }
@@ -1296,123 +1276,6 @@ void optimization::get_nlopt_param_txt(vector<double> optv)
 }
 
 ////-------------------------------------------------------------------------------------------------
-
-//outField PlotFit_fields[9] =
-//{
-//    { "PrintTemperatures",  0, 0, 1, "\n# PrintTemperatures: Comment"},
-//    { "PrintPressures",  0, 0, 1, "\n# PrintPressures: Comment"},
-//    { "PrintMolalities",  0, 0, 1, "\n# PrintMolalities: Comment"},
-//    { "PrintFormat",  0, 0, 1, "\n# PrintFormat: Comment"},
-//    { "PrintFilename",  0, 0, 1, "\n# PrintFilename: Comment"},
-//    { "PrintMeasValueCode",  0, 0, 1, "\n# PrintMeasValueCode: Comment"},
-//    { "PrintLabelXaxis",  0, 0, 1, "\n# PrintLabelXaxis: Comment"},
-//    { "PrintLabelYaxis",  0, 0, 1, "\n# PrintLabelYaxis: Comment"},
-//    { "PrintHead",  0, 0, 1, "\n# PrintHead: Comment"}
-//};
-
-//typedef enum {  /// Field index into outField structure
-//    f_PrintTemperatures= 0,
-//    f_PrintPressures,
-//    f_PrintMolalities,
-//    f_PrintFormat,
-//    f_PrintFilename,
-//    f_PrintMeasValueCode,
-//    f_PrintLabelXaxis,
-//    f_PrintLabelYaxis,
-//    f_PrintHead
-//} PlotFit_FIELDS;
-
-///// Set up default values for structure
-//void PlotFit::define_plotfit_vars( )
-//{
-//    plotting_info->print_temperatures.clear();
-//    plotting_info->print_temperatures.push_back(298.15);
-//    plotting_info->print_pressures.clear();
-//    plotting_info->print_pressures.push_back(1);
-//    plotting_info->print_molalities.clear();
-//    plotting_info->print_molalities.push_back(0.0001);
-//    plotting_info->print_molalities.push_back(-4.5);
-//    plotting_info->print_format="eps";
-//    plotting_info->print_filename="Comp_vs_Meas";
-//    plotting_info->print_code=0;
-//    plotting_info->print_xlabel="molality";
-//    plotting_info->print_ylabel="activity coefficient";
-//    plotting_info->print_head="Systems: test plot";
-//}
-
-///// Writes  structure to  the GEMSFIT configuration file
-//void PlotFit::out_plotfit_vars_txt( bool with_comments, bool brief_mode )
-//{
-//    string fname = gpf->OptParamFile();
-//    fstream ff(fname.c_str(), ios::out|ios::app );
-//    ErrorIf( !ff.good() , fname.c_str(), "OptParamFile text open error");
-
-//    TPrintArrays  prar(9, PlotFit_fields, ff);
-
-//    if(with_comments )
-//    {
-//        ff << "\n\n#########################################################################" << endl;
-//        ff << "#>>>>>>>>>>>>>>> Fitting Results section >>>>>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
-//        ff << "#########################################################################" << endl;
-//    }
-
-//    prar.writeArray(f_PrintTemperatures,  plotting_info->print_temperatures, 2, with_comments, brief_mode );
-//    prar.writeArray(f_PrintPressures,  plotting_info->print_pressures, 2, with_comments, brief_mode );
-//    prar.writeArray(f_PrintMolalities,  plotting_info->print_molalities, 2, with_comments, brief_mode );
-//    prar.writeField(f_PrintFormat,  plotting_info->print_format, with_comments, brief_mode );
-//    prar.writeField(f_PrintFilename,  plotting_info->print_filename, with_comments, brief_mode );
-//    prar.writeField(f_PrintMeasValueCode,  (long int)plotting_info->print_code, with_comments, brief_mode );
-//    prar.writeField(f_PrintLabelXaxis,  plotting_info->print_xlabel, with_comments, brief_mode );
-//    prar.writeField(f_PrintLabelYaxis,  plotting_info->print_ylabel, with_comments, brief_mode );
-//    prar.writeField(f_PrintHead,  plotting_info->print_head, with_comments, brief_mode );
-
-//}
-
-///// Function populates member variables of the Plot_Fit
-///// class with data form the GEMSFIT configuration file
-//void PlotFit::set_plotfit_vars_txt( )
-//{
-//    // open file for reading
-//    string fname = gpf->OptParamFile();
-//    fstream ff(fname.c_str(), ios::in );
-//    ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
-
-//    TReadArrays  rdar(9, PlotFit_fields, ff);
-
-//    long int nfild = rdar.findNextNotAll();
-//    while( nfild >=0 )
-//        {
-//          switch( nfild )
-//          {
-//           case f_PrintTemperatures: rdar.readArray( "PrintTemperatures",  plotting_info->print_temperatures );
-//                   break;
-//           case f_PrintPressures: rdar.readArray( "PrintPressures",  plotting_info->print_pressures );
-//                   break;
-//           case f_PrintMolalities: rdar.readArray( "PrintMolalities",  plotting_info->print_molalities );
-//                   break;
-//          case f_PrintFormat: rdar.readArray( "PrintFormat",  plotting_info->print_format );
-//                  break;
-//          case f_PrintFilename: rdar.readArray( "PrintFilename",  plotting_info->print_filename );
-//                  break;
-//          case f_PrintMeasValueCode: rdar.readArray( "PrintMeasValueCode",  &plotting_info->print_code, 1 );
-//                  break;
-//          case f_PrintLabelXaxis: rdar.readArray( "PrintLabelXaxis",  plotting_info->print_xlabel );
-//                  break;
-//          case f_PrintLabelYaxis: rdar.readArray( "PrintLabelYaxis",  plotting_info->print_ylabel );
-//                  break;
-//          case f_PrintHead: rdar.readArray( "PrintHead",  plotting_info->print_head );
-//                  break;
-//          }
-//          nfild = rdar.findNextNotAll();
-//        }
-
-//    // testing read
-//        string ret = rdar.testRead();
-//        if( !ret.empty() )
-//         { ret += " - fields must be read from OptParamFile structure";
-//           Error( "Error", ret);
-//         }
-//}
 
 
 void F_to_OP (opti_vector *op, IOJFormat Jformat, string nfild)

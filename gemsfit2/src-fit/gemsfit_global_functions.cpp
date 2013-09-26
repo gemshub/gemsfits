@@ -39,6 +39,49 @@
 #include "gemsfit_target_functions.h"
 #include "gemsfit_task.h"
 
+double Equil_objective_function_callback( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data )
+{
+    TGfitTask *sys = reinterpret_cast<TGfitTask*>(obj_func_data);
+
+    unsigned int i;
+    double sum_of_squared_residuals_allsys = 0.0;
+    double sum_of_squared_residuals_sys = 0.0;
+
+    // Rescale optimization to unconvert normalization of parameters
+    if( sys->NormParams )
+    {
+        vector<double> optV( opt.size() );
+        for( i=0; i<opt.size(); i++ )
+        {
+            optV[i] = opt[i] * fabs(sys->Opti->opt[i]);
+        }
+
+        /// GRadient calculation
+        if (sys->Opti->OptAlgo.compare(2,1,"D") == 0)
+        {
+            gradient(optV, grad, sys);
+        }
+
+        // call tsolmod wrapper
+        gems3k_wrap( sum_of_squared_residuals_sys, optV, sys );
+        sum_of_squared_residuals_allsys = sum_of_squared_residuals_allsys + sum_of_squared_residuals_sys;
+    }
+    else
+    { // if parameters were not normalized
+        /// GRadient calculation
+        if (sys->Opti->OptAlgo.compare(1,1,"D") == 0)
+        {
+            gradient(opt, grad, sys);
+        }
+
+        // call tsolmod wrapper
+        gems3k_wrap( sum_of_squared_residuals_sys, opt, sys );
+        sum_of_squared_residuals_allsys = sum_of_squared_residuals_allsys + sum_of_squared_residuals_sys;
+    }
+return sum_of_squared_residuals_allsys;
+}
+
+
 // Wrapper around GEMS3K solver
 void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTask* sys )
 {
@@ -59,7 +102,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 
     sys->print->print_clear();
 
-    // going trough the adjusted parameters in Opti->Ptype and adjust with the new value
+    // going trough the adjusted parameters in Opti->Ptype and adjusts them with the new value
 //#ifdef USE_MPI
     omp_set_num_threads(sys->MPI);
     #pragma omp parallel for
@@ -111,6 +154,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     omp_set_num_threads(sys->MPI);
     #pragma omp parallel for
 ////#endif
+    // +++ Calculating equilibrium with GEMS3K +++ //
     for (unsigned int i=0; i<sys->NodT.size(); ++i)
     {
         vector<DATABR*> dBR;
@@ -136,83 +180,15 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         }
     }
 
-    // Set the P in the node->CNode-P as in the experiments
+    // Set the P in the node->CNode-P as in the experiments to avoind problem due to Psat notation as 0
     for (unsigned int i=0; i<sys->experiments.size(); ++i)
     {
         sys->NodT[i]->Set_TK(273.15 + sys->experiments[i]->sT);
         sys->NodT[i]->Set_P(100000 * sys->experiments[i]->sP);
     }
 
-/*
-    /// Target function
-    // Loop trough all experiments
-//    for (int i=0; i<sys->experiments.size(); ++i)
-//    {
-//        // loop trough objective function
-//        for (int j=0; j<sys->Tfun->objfun.size(); ++j)
-//        {
-//            if ((sys->Tfun->objfun[j]->exp_phase !="NULL") && (sys->experiments[i]->expphases.size() > 0))
-//            {
-//                // loop trough all pahses
-//                for (int p=0; p<sys->experiments[i]->expphases.size(); ++p)
-//                {
-//                    if ((sys->Tfun->objfun[j]->exp_elem !="NULL") && (sys->Tfun->objfun[j]->exp_property =="NULL"))
-//                    {
-//                        // loop trough all elements
-//                        for (int e=0; e<sys->experiments[i]->expphases[p]->phcomp.size(); ++e)
-//                        {
-//                            if ((sys->experiments[i]->expphases[p]->phcomp[e]->comp == sys->Tfun->objfun[j]->exp_elem) && (sys->experiments[i]->expphases[p]->phase == sys->Tfun->objfun[j]->exp_phase ))
-//                            {
-//                                // check for unit
-//                                check_unit(i, p, e, sys->Tfun->objfun[j]->exp_unit, sys );
-//                                residuals_sys_ = residuals_sys_ + residual_phase_elem (i, p, e, j, sys);
-//                            }
-//                        }
-//                    } else
-//                        if ((sys->Tfun->objfun[j]->exp_property !="NULL") && (sys->experiments[i]->expphases[p]->phprop.size() > 0) && (sys->Tfun->objfun[j]->exp_dcomp == "NULL"))
-//                        {
-//                        // loop trough all properties
-//                        for (int pp = 0; pp< sys->experiments[i]->expphases[p]->phprop.size(); ++pp)
-//                        {
-//                            if ((sys->experiments[i]->expphases[p]->phprop[pp]->property == sys->Tfun->objfun[j]->exp_property) && (sys->experiments[i]->expphases[p]->phase == sys->Tfun->objfun[j]->exp_phase ))
-//                            {
-//                                // check for unit
-//                                check_prop_unit(i, p, pp, sys->Tfun->objfun[j]->exp_unit, sys );
-//                                residuals_sys_ = residuals_sys_ + residual_phase_prop (i, p, pp, j, sys);
-//                            }
-//                        }
-//                    } else
-//                        if ((sys->Tfun->objfun[j]->exp_property !="NULL") && (sys->experiments[i]->expphases[p]->phdcomps.size() > 0) && (sys->Tfun->objfun[j]->exp_dcomp != "NULL"))
-//                        {
-//                            // loop trough all dependent components
-//                            for (int dc = 0; dc< sys->experiments[i]->expphases[p]->phdcomps.size(); ++dc)
-//                            {
-//                                if ((sys->experiments[i]->expphases[p]->phdcomps[dc]->formula == sys->Tfun->objfun[j]->exp_dcomp) && (sys->experiments[i]->expphases[p]->phase == sys->Tfun->objfun[j]->exp_phase ))
-//                                {
-//                                    // loop trough all dep comp properties
-//                                    for (int dcp = 0; dcp < sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop.size(); ++dcp)
-//                                    {
-//                                        if (sys->experiments[i]->expphases[p]->phdcomps[dc]->dcompprop[dcp]->property == sys->Tfun->objfun[j]->exp_property)
-//                                        {
-////                                            cout << "yes"<<endl;
-//                                            //                                    // check for unit
-//                                            //                                    check_dcomp_unit(i, p, dc, dcp, sys->Tfun->objfun[j]->exp_unit, sys );
-//                                            residuals_sys_ = residuals_sys_ + residual_phase_dcomp (i, p, dc, dcp, j, sys);
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-//                }
-//            }
-//        }
-//    }
-*/
-
-    sys->get_residuals(residuals_sys_);
+    sys->get_sum_of_residuals(residuals_sys_);
     residuals_sys = residuals_sys_;
-
-
 
 //    vector<string> nom, denom;
 //    string name_MF = "Al+Si+Cu/Na+K+O";
@@ -231,48 +207,6 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     }
 }
 
-
-double Equil_objective_function_callback( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data )
-{
-    TGfitTask *sys = reinterpret_cast<TGfitTask*>(obj_func_data);
-
-    unsigned int i;
-    double sum_of_squared_residuals_allsys = 0.0;
-    double sum_of_squared_residuals_sys = 0.0;
-
-    // Rescale optimization to unconvert normalization of parameters
-    if( sys->NormParams )
-    {
-        vector<double> optV( opt.size() );
-        for( i=0; i<opt.size(); i++ )
-        {
-            optV[i] = opt[i] * fabs(sys->Opti->opt[i]);
-        }
-
-        /// GRadient calculation
-        if (sys->Opti->OptAlgo.compare(2,1,"D") == 0)
-        {
-            gradient(optV, grad, sys);
-        }
-
-        // call tsolmod wrapper
-        gems3k_wrap( sum_of_squared_residuals_sys, optV, sys );
-        sum_of_squared_residuals_allsys = sum_of_squared_residuals_allsys + sum_of_squared_residuals_sys;
-    }
-    else
-    {
-        /// GRadient calculation
-        if (sys->Opti->OptAlgo.compare(1,1,"D") == 0)
-        {
-            gradient(opt, grad, sys);
-        }
-
-        // call tsolmod wrapper
-        gems3k_wrap( sum_of_squared_residuals_sys, opt, sys );
-        sum_of_squared_residuals_allsys = sum_of_squared_residuals_allsys + sum_of_squared_residuals_sys;
-    }
-return sum_of_squared_residuals_allsys;
-}
 
 void gradient( vector<double> opt, vector<double> &grad, TGfitTask *sys )
 {

@@ -49,7 +49,7 @@ statistics::statistics(TGfitTask *gfittask, double weighted_Tfun_sum_of_residual
 
 
     weighted_Tfun_sum_of_residuals 		= weighted_Tfun_sum_of_residuals_;
-    for (int i=0; i<gfittask->Tfun_residuals_v.size(); ++i)
+    for (unsigned int i=0; i<gfittask->Tfun_residuals_v.size(); ++i)
     {
         Tfun_sum_of_residuals += gfittask->Tfun_residuals_v[i];
 
@@ -135,7 +135,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     assert( gfittask->computed_values_v.size() == gfittask->measured_values_v.size() );
 
 
-    for( i=0; i< (int) gfittask->computed_values_v.size(); i++ )
+    for( i=0; i< gfittask->computed_values_v.size(); i++ )
     {
         ResSumSquares += pow( (gfittask->measured_values_v[i] - gfittask->computed_values_v[i]), 2);
         TotalSumSquares += pow( (gfittask->measured_values_v[i] - mean), 2);
@@ -146,7 +146,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 
     // Pearson Chi Square test
     Pearsons_chi_square = 0.;
-    for( i=0;  i< (int) gfittask->computed_values_v.size(); i++ )
+    for( i=0;  i< gfittask->computed_values_v.size(); i++ )
     {
         Pearsons_chi_square += (gfittask->computed_values_v[i] - gfittask->measured_values_v[i])*(gfittask->computed_values_v[i] - gfittask->measured_values_v[i]) / gfittask->measured_values_v[i];
     }
@@ -207,7 +207,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         myStat << " Pearson's Chi Square test :           	" << Pearsons_chi_square   	<< endl;
         myStat << endl;
                 myStat << " Best fit results for parameters from regression : "                         <<endl;
-        for( i=0; i< (int) optv_.size(); i++ ) // cols
+        for( i=0; i< optv_.size(); i++ ) // cols
         {
             // Print optimized parameter values to file
             if (gfittask->Opti->Ptype[i] =="G0")
@@ -320,7 +320,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
 
 
         double delta = perturbator;
-        for( i=0; i< (int) optv_.size(); i++ )
+        for( i=0; i< optv_.size(); i++ )
         {
             opt_scan = optv_;
 
@@ -362,9 +362,9 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
 
         myStat << " Sensitivity matrix over each parameter [j] measurement point [i]: "<<endl;
         myStat << " Calculated using central diferences, see ref. [1] section 4.3 "<<endl;
-        for( i=0; i< (int) computed_up.size();  i++ )
+        for( i=0; i<  computed_up.size();  i++ )
         {
-            for( j=0; j< (int) optv_.size(); j++ )
+            for( j=0; j<  optv_.size(); j++ )
             {
                 // Write sensitivities to file
                 myStat <<" ["<< j <<"] ["<< i <<"] : " << SensitivityMatrix(i,j) <<" ";
@@ -377,7 +377,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
         myStat << " Composite Scaled Sensitivities: "<<endl;
         myStat << " See ref. [1] section 4.3.4. If there is no weighting the weight is asumed 1 for all measured values. "<<endl;
         myStat << " Larger values indicate parameters for which observations provide more information. \n A value less than 1 or less than (or close to) 1% of the highest value, means that the parameter is poorly estimated. \n These parameters should be fixed during regresion. "<<endl;
-        for( i=0; i< (int) optv_.size(); i++ )
+        for( i=0; i< optv_.size(); i++ )
         {
             // Write sensitivities to file
             myStat <<"			parameter "<< i <<" "<<gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]) <<" :	           " << CompositeScaledSensitivities(i)	<< endl;
@@ -422,9 +422,9 @@ VarCovarMatrix.print("Variance Covariance Matrix:");
         // Correlation matrix
         arma::mat CorellationMatrix( (int) optv_.size(), (int) optv_.size() );
 
-        for( i=0; i<(int) optv_.size(); i++ )
+        for( i=0; i< optv_.size(); i++ )
         {
-            for( k=i; k<(int) optv_.size(); k++ )
+            for( k=i; k< optv_.size(); k++ )
             {
                 // 			 			 Covar(i,k)          / sqrt( Var(k,k)            * Var(i,i)            )
                 CorellationMatrix(i,k) = VarCovarMatrix(i,k) / sqrt( VarCovarMatrix(k,k) * VarCovarMatrix(i,i) );
@@ -442,7 +442,7 @@ CorellationMatrix.print("Corellation Matrix:");
         myStat << " Variance-Covariance matrix: "<<endl;
         myStat << " See ref. [1] section 7.2. V(b) = s^2([X]trans*[X])^1; \n [W] - weight matrix is considered as 1 as there is no full weight matrix calculted, based on true experimental error (not provided for all experiments). \n X - sensitivity matrix " <<endl;
         myStat << " When the chosen weight is other than inverr2 (1/sigma^2) error variance (s^2) is assumed 1. \n For inverr2 the error variance is calculated as weighted_Tfun_sum_of_residuals/degrees of freedom." << endl;
-        for( i=0; i< (int) optv_.size(); i++ )
+        for( i=0; i<  optv_.size(); i++ )
         {
             if( i== 0 )
                 myStat <<"								parameter "<< i;
@@ -450,10 +450,10 @@ CorellationMatrix.print("Corellation Matrix:");
                 myStat <<"			parameter "<< i;
         }
         myStat << endl;
-        for( i=0; i< (int) optv_.size(); i++ )
+        for( i=0; i<  optv_.size(); i++ )
         {
             myStat <<"			parameter "<< i <<" : ";
-            for( j=0; j< (int) optv_.size(); j++ )
+            for( j=0; j<  optv_.size(); j++ )
             {
                 if( j==0 )
                     myStat <<"			   " <<VarCovarMatrix(i,j);
@@ -466,7 +466,7 @@ CorellationMatrix.print("Corellation Matrix:");
 
         // Print Parameter Standard Deviations to file
         myStat << " Parameter Standard Deviations/Errors: "<<endl;
-        for( i=0; i< (int) optv_.size(); i++ )
+        for( i=0; i< optv_.size(); i++ )
         {
             myStat <<"			parameter "<< i <<" "<<gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]) <<" :	           " << ParameterStandardDeviation(i) << endl;
         }
@@ -477,7 +477,7 @@ CorellationMatrix.print("Corellation Matrix:");
         int DegreesOfFreedom = number_of_measurements - number_of_parameters;
         double alpha[] = { 0.5, 0.25, 0.1, 0.05, 0.01 };
         boost::math::students_t dist( DegreesOfFreedom );
-        for( j=0; j< (int) optv_.size(); j++ )
+        for( j=0; j< optv_.size(); j++ )
         {
             myStat <<"			parameter "<< j <<" "<<gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[j]) << " :	           ";
             myStat << endl;
@@ -511,7 +511,7 @@ CorellationMatrix.print("Corellation Matrix:");
 
         // Print Parameter Standard Deviations to file
         myStat << " Coefficient of Variation: "<<endl;
-        for( i=0; i< (int) optv_.size(); i++ )
+        for( i=0; i< optv_.size(); i++ )
         {
             myStat <<"			parameter "<< i <<" :	           " << CoefficientOfVariation(i) << endl;
         }
@@ -519,7 +519,7 @@ CorellationMatrix.print("Corellation Matrix:");
 
         // Print Parameter Standard Deviations to file
         myStat << " Parameter t-statistic: "<<endl;
-        for( i=0; i< (int) optv_.size(); i++ )
+        for( i=0; i< optv_.size(); i++ )
         {
             myStat <<"			parameter "<< i <<" :	           " << Parameter_t_Statistic(i) << endl;
         }
@@ -527,7 +527,7 @@ CorellationMatrix.print("Corellation Matrix:");
 
         // Print Correlation matrix to file
         myStat << " Correlation matrix: "<<endl;
-        for( i=0; i< (int) optv_.size(); i++ )
+        for( i=0; i< optv_.size(); i++ )
         {
             if( i== 0 )
                 myStat <<"          parameter "<< i;
@@ -535,10 +535,10 @@ CorellationMatrix.print("Corellation Matrix:");
                 myStat <<"parameter "<< i;
         }
         myStat << endl;
-        for( i=0; i< (int) optv_.size(); i++ )
+        for( i=0; i< optv_.size(); i++ )
         {
             myStat <<"parameter "<< i <<" : ";
-            for( j=0; j< (int) optv_.size(); j++ )
+            for( j=0; j< optv_.size(); j++ )
             {
                 if( j==0 )
                     myStat <<"	   " <<CorellationMatrix(i,j);

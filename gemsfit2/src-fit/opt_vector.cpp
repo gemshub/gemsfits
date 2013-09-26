@@ -63,7 +63,6 @@ opti_vector::opti_vector( )
     {
         get_Lp_indexes (node, this);
     }
-
 }
 
 

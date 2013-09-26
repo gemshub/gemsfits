@@ -85,11 +85,6 @@ public:
             string exp_CN;
             string exp_unit;
             string exp_DCP;
-
-//            string exp_elem;
-//            string exp_property;
-//            string exp_dcomp;
-//            string exp_mf;
             double meas_average;
         };
         vector<obj_fun*> objfun;
@@ -174,7 +169,7 @@ public:
    * @author DM
    * @date 24.07.2013
    */
-   void get_residuals ( double &residual);
+   void get_sum_of_residuals ( double &residual);
 
    /**
    * Sets the GEMS nodes with T, P, composition and solution parameters based on the data in the experiments data manager class

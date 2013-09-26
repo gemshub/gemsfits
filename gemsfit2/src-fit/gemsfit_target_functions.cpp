@@ -110,8 +110,8 @@ void adjust_RDc (TGfitTask *sys)
 {
     // going trough all nodes
 ////#ifdef USE_MPI
-    omp_set_num_threads(sys->MPI);
-    #pragma omp parallel for
+//    omp_set_num_threads(sys->MPI);
+//    #pragma omp parallel for
 ////#endif
     for (unsigned int n=0; n<sys->NodT.size(); ++n)
     {
@@ -149,51 +149,6 @@ void adjust_RDc (TGfitTask *sys)
                  sys->NodT[n]->Set_DC_G0(species_index, sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, new_G0);
 
             }
-
-
-
-
-/*
-            double new_G0=0;
-            double delta_G=0;
-            double R=8.314472;
-            double delta_G0old_G0new;
-            int species_index = sys->Opti->reactions[i]->rdc_species_ind[sys->Opti->reactions[i]->rdc_species_ind.size()-1];
-
-            // for standard sate at 25 C and 1 bar
-            for (unsigned int j=0; j < sys->Opti->reactions[i]->rdc_species.size()-1; ++j ) // calculates DG without the last species which is the constrained one
-            {
-                delta_G += sys->Opti->reactions[i]->rdc_species_coef[j] * sys->NodT[n]->DC_G0(sys->Opti->reactions[i]->rdc_species_ind[j], 1e+05, 298.15, false);
-            }
-
-//            new_G0 = (-R*298.15*2.302585093*sys->Opti->reactions[i]->logK) - delta_G;
-            sys->Opti->reactions[i]->std_gibbs = new_G0;
-//             put absolute - check if correct
-            // M1
-            delta_G0old_G0new = fabs(sys->NodT[n]->DC_G0(species_index, 1e+05, 298.15, false)) - fabs(new_G0);
-            // M1
-            sys->NodT[n]->Set_DC_G0(species_index,1*100000, 25+273.15, new_G0);
-
-            // for all TP pairs
-            for (unsigned int j=0; j<sys->TP_pairs[0].size(); j++) // loops trough all unique TP_pairs
-            {
-                // loop torugh reaction species except the last which is the dependent one
-// M2
-//                for (int k=0; k < sys->Opti->reactions[i]->rdc_species.size()-1; ++k ) // calculates DG without the last species which is the constrained one
-//                 {
-//                     delta_G += sys->Opti->reactions[i]->rdc_species_coef[k] * sys->NodT[n]->DC_G0(sys->Opti->reactions[i]->rdc_species_ind[k], sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, false);
-//                 }
-//                 new_G0 = (-R*sys->TP_pairs[0][j]+273.15*2.302585093*sys->Opti->reactions[i]->logK_TPpairs[j]) - delta_G;
-//                 sys->NodT[n]->Set_DC_G0(species_index, sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, new_G0);
-// M2
-                 // M1
-                new_G0 = delta_G0old_G0new + sys->NodT[n]->DC_G0(species_index, sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, false);
-                // Set the new G0 in GEMS
-                sys->NodT[n]->Set_DC_G0(species_index, sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, new_G0);
-                 // M1
-//                // cout << temp_v[j] << endl;
-            }
-*/
         }
     }
 }
@@ -372,6 +327,7 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
 }
 
 /// Target functions, Tfun_residual calculations
+// Calculates the residual of phase independent components (element composition)
 double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
 {
     const char *elem_name, *phase_name;
@@ -434,7 +390,7 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
     return Weighted_Tfun_residual;
 }
 
-
+// calculates the residual of IC as molar fraction
 double residual_phase_elemMF (int i, int p, int f, int j, TGfitTask *sys)
 {
     const char *elem_name, *phase_name;
@@ -504,6 +460,7 @@ double residual_phase_elemMF (int i, int p, int f, int j, TGfitTask *sys)
 
 }
 
+//interprets the molar fraction formula
 void interpretMF (vector<string> *nom, vector<string> *denom, string name)
 {
     int pos_f2, pos_f1, pos_end;
@@ -554,6 +511,7 @@ void interpretMF (vector<string> *nom, vector<string> *denom, string name)
 
 }
 
+// calculates residual for phase poroperties
 double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
 {
     const char *phase_name;
@@ -618,7 +576,7 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
     return Weighted_Tfun_residual;
 }
 
-
+// residual for phase dependent components
 double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sys)
 {
     const char *phase_name, *dcomp_name;

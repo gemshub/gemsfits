@@ -180,9 +180,9 @@ class Data_Manager : public TNode
                             double Qerror;               /// error
                             string Qunit;                /// units
                         };
-                        vector<dcprop*> DCprop;
+                        vector<dcprop*> DCprop; /// vector of dependent components porperties
                     };
-                    vector<dcomps*> phDC;
+                    vector<dcomps*> phDC;       /// vector of dependent components in a phase
                 };
                 vector<phases*> expphases;      /// vector of phases measured in one experiment
             };
