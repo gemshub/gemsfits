@@ -1,6 +1,6 @@
 GEMSFIT2 external libaries:
 
-boost - search for libboost and istall libboost-all-dev.
+boost - search for libboost and istall libboost-all-dev. Ot in terminal: sudo apt-get install libboost-all-dev
 
 omp - should already be available as omp.h in C/C++ http://en.wikipedia.org/wiki/OpenMP
 
@@ -19,6 +19,10 @@ Nlopt - Go to http://ab-initio.mit.edu/wiki/index.php/NLopt#Download_and_install
    	sudo make install
 
 jansson - http://www.digip.org/jansson/
+	./configure
+	make
+	make check
+	make install
 
 GEMSFIT2 is also linked with the following standalone libraries:
 
