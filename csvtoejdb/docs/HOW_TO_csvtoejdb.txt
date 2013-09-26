@@ -1,0 +1,166 @@
+The csvtoejdb is a utility program for import of experimental data into a JSON-format file
+with its subsequent import into EJDB database to be used in GEMSFIT2 code. The program can 
+also backup such EJDB GEMSGIT2 database of experimental data into JSON text file(s), and 
+restore the EJDB GEMSGIT2 database from the backup JSON text files. 
+
+csvtoejdb is written by Dan Miron (http://www.geopetro.ethz.ch/people/dmiron) as part of 
+the GEMSFIT2 project (http://gems.web.psi.ch/GEMSFIT/). Uses jansson 
+(http://www.digip.org/jansson/) external library and EJDB (http://ejdb.org/) coupled libary.
+
+The naming scheme of the columns is done in such a way that it is user friendly, it can 
+describe a various suite of geochemical experiments, and very important, it can be adapted 
+to new data.
+
+How to use csvtoejdb:
+
+1. Prepare your data in a preformatted excel file. See excel_example.xls or solcahs_example.xlsx 
+   (for CASH systems) as a template. 
+
+The column names and their order in the excel table should follow as described below, grouped in 
+three sections: EXPERIMENTS DESCRIPTION; SYSTEM COMPOSITION; RESULTS. 
+
+Column name rules:
+phase. - should be followed by the phase name e.g. aq_gen
+comp. - should be followed by an oxide formula from the system composition e.g. SiO2
+DC. - should be followed by a dependent compoents name (as in GEMS3K) e.g. SiO2@
+IC. - should be followed by the independent component element notation e.g. Al
+MF. - should be followed by the molar fraction formula e.g. Na+K/Na+K+Ca or Na/Na+K, etc.
+column names that hold experimental results qunatities/amounts finish with .Q e.g. phase.C-S-H-3T-2.Q, phase.aq_gen.IC.Si.Q, phase.aq_gen.DC.SiO2-.Q 
+
+																not read - the object is not taken into the memory of the program
+
+Column name		Explanation														OPTIONAL    |	IF EMPTY    	|	DEFAULT VALUE
+EXPERIMENTS DESCRIPTION:
+id 			Numbering of experiments 1, 2, 3, ...											   +	    |	 not read   	|	       -
+sample			Sample names / names of experimental runs (alphanumeric), must be 								    |  cannot be empty  |              -	
+				unique within a given experimental dataset
+comment			Comments to experiments (optional column)									           +	    |    not read       |              -
+ type			Type of experiment (optional column)											   +	    |    not read       |              -
+sT			Temperature in degrees Celsius 													    |  cannot be empty  |              ?	
+sP			Pressure in bars 			                                                                                    	    |  cannot be empty  |              ?	
+sV			System volume in cm3 													   +	    |    not read       |              -
+expdataset		Name of this experimental data set (alphanumeric), 										    |  cannot be empty  |              -	
+				should be the same for all samples belonging to a given set. 
+UMC.DC/phase.<name>	Upper metastability constraints (if the dependent component is wished to not be						   +	    |    default        |              1e+06
+			        suppressed form a certain experiment put 0) (optional column) 
+				(empty cell = object not created in GEMSFIT2)
+				e.g. UMC.DC.Sanidine (for dependent components) or UMC.phase.aq_gen
+				(for phases)
+LMC.DC/phase.<name>	Lower metastability constraints (if the dependent component is wished to be						   +	    |    default        |              0
+			        present put >0, present as metastable) (optional column)
+				(empty cell = object not created in GEMSFIT2)
+				e.g. LMC.DC.Sanidine (for dependent components) or LMC.phase.aq_gen
+				(for phases) 
+
+SYSTEM COMPOSITION:																	
+comp.<formula> 		Composition of the sample system, expressed as one or several columns 							            |    not read	|	       -
+			with names in the format: comp.SiO2, comp.CaO, comp.NaCl ... (empty cell = object not created in GEMSFIT2)				
+error                   error estimate (value can be left blank, if unknown) for the preceding 							   +	    |    default        |              0
+				value of the composition (empty cell = 0)
+unit			units of measurement for the preceding value [and error], should be given						   +	    |    default        |              g (check!)
+			as g (grams of oxide) or molal (concentrations e.g for salts). 
+
+RESULTS - phase properties from experiments:
+phase.<pname>.<pprop>	pname should correspond to the name of this phase in GEMS3K DCH file. (empty cell = object not created in GEMSFIT2)	            |    not read	|	       -
+			pprop is one of keywords designating a bulk phase property, currently		          					  
+			   implemented are: 
+			   Q: phase qunatity; 													    +       |    not read	|	       -
+			   pV: phase volume; 													    +       |    not read	|	       -
+			   RHO: phase density; 													    +       |    not read	|	       -
+			   pH: pH (aqueous phase only); 											    +       |    not read	|	       -
+			   Eh: Eh (aqueous phase only); 											    +       |    not read	|	       -
+			   IS: effective ionic strength (aqueous phase only); 									    +       |    not read	|	       -	
+			   alk: alkalinity (aqueous phase only); 										    +       |    not read	|	       -
+			   sArea: phase surface area; 												    +       |    not read	|	       -
+			   ... 
+			Examples: phase.aq_gen.pH; phase.C-S-H-3T-2.Q
+error                   error estimate (value can be left blank, if unknown) for the preceding 							    +       |       0   	|	       0
+			   value of the phase property (empty cell = 0)
+unit			units of measurement for the preceding value [and error] of the phase 							    +       |    default	| pH: -loga (negated log); 																						          pV: cm3; Q: g; RHO: g/cm3;
+			   property.for pH: -loga (negated log); for pV: cm3 or m3; 
+			   for pQnt: g or kg; for RHO: g/cm3; 
+			   Empty cell (default values) values: pH: -loga (negated log); pV: cm3; 
+			   Q: g; RHO: g/cm3;
+			   ... 
+			
+RESULTS - phase composition from experiments:	
+phase.<pname>.IC.<ename>.Q	Experimental concentration of independent component IC element <ename> in the phase <pname>. 			            |    not read	|	       -
+				    pname should correspond to the name of this phase in GEMS3K DCH file.
+				    ename is name (symbol) of element (Independent Component) as in GEMS3K. 
+				    Example: phase.aq_gen.IC.Si.Q 
+error                   	error estimate (value can be left blank, if unknown) for the preceding 						    +       |    default  	|	       0
+			   	    value of the element concentration in phase.  
+unit				units of measurement for the preceding value [and error] 							    +       |    default   	|aqueous molal; solid molfrac
+			   	    for aqueous phases: molal; loga (log of molality); 
+			   	    for solid phases: mol (in moles); molfrac (mole fraction); 
+			   	    simolfrac (mole ratio to Si, for Si-containing cement phases). 
+
+phase.<pname>.MF.<fromula>	Experimental reported molar faraction MF of elements in a phase <pname>						            |    not read	|	       -
+				    pname should correspond to the name of this phase in GEMS3K DCH file.
+				    formula as in the following example: Na+K/Na+K+Ca or Na/Na+K, etc.
+error                   	error estimate (value can be left blank, if unknown) for the preceding 						    +       |    default	|	       0
+			   	    value of the element concentration in phase. 
+
+phase.<pname>.DC.<dname>. 	Experimental property of dependent component DC, <dname> in the phase <pname>. 			 		            |    not read	|	       -
+				    pname should correspond to the name of this phase in GEMS3K DCH file. 
+			   	    dfor is the formula of species (Dependent Component) belonging to 
+			   	    this phase. The following properties can be used after <dfor>. :
+				Q: concentration in mole fraction (molfrac);
+				@coef: activity coefficient;
+			...
+error                   error estimate (value can be left blank, if unknown) for the preceding 						            +       |    default	|	       0
+			   value of the phase species property. 										
+unit			units of measurement for the preceding value [and error]: 								    +       |    default	|	mole fraction
+			for pQnt: molfrac (mole fraction); for @coef: ???? 
+			Example: phase.aq_gen.DC.SiO2-.Q
+
+IMPORTANT:
+Each sample (row) must have a unique combination of sample and expdataset names.
+If present, the column 'unit' should be after the column 'error' that should come after 
+the column containing the respective property value, e.g. phase.aq_gen.pH | error | unit | ...
+Names of phases, components, elements should be the same as in the GEMS3K DCH I/O files.
+
+2. Export your Excel table into the comma-separated format ',' csv file. Check that 
+the cell values are saved in full, e.g. as 0.1234567 and not as 0.123 (as visible).
+
+3. In the terminal, cd to folder with the program csvtoejdb, and execute it 
+with command-line arguments <action> <mode> <db-path> <coll-name> <input_csv_file-path>
+where: 
+   <action> is 	-run		import data from the .csv file to the database
+		-back		backup the whole collection/database into JSON text file(s)
+ 		-rest		restore the collection/database from the JSON text file(s)
+   <mode>   is 	-t  		truncate (overwrite the existing database)
+		-a 		append (add more data to the existing database)	
+   <db-path> 			path to the  database (database will be created if it doesn't exist)
+   <coll-name>			name of the collection
+   <input_csv_file-path>	path the input CSV file 
+
+The program csvtoejdb will also write a <db-name>_<coll-name>.json file in JSON format. 
+Example call for data import:
+
+  $ csvtoejdb -run -t ./CASH/solcash experiments ./CASH/CASH.csv 
+
+The files "solcash", "solcash_experiments", "solcash_experiments.json", and 
+solcash_experiments_distinctTP.csv will result in the /CASH subfolder will result. 
+
+The file solcash_experiments_distinctTP.csv holds the distinct T and P pairs of the experiments in 
+the database useful for exporting GEMS3K files.
+ 
+
+4. To backup a collection, run the program as in the example below:
+
+   $ csvtoejdb -back ./SOL/solcash experiments
+
+The file "solcash_experiments.json" will be the result. 
+
+5. To restore a database/collection from a json file backup, run the program as: 
+
+   $ csvtoejdb -rest ./SOL/solcash_experiments.json experiments"
+
+The files "solcash" and "solcash_experiments" in the /SOL subfolder will result.
+
+6. Return codes and error messages
+
+.....
+
+.....

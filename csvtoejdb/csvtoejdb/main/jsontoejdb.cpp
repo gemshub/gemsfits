@@ -156,6 +156,7 @@ void jsontoejdb( string data_, EJDB *jb, EJCOLL *coll, bson_oid_t oid)
                 bson_append_finish_object(&exp);
             }
             bson_append_finish_array(&exp);
+            //++ END array Lower_CK ++//
         }
 
         // 2nd level - bulk composition of chemical system for this experiment
@@ -191,6 +192,7 @@ void jsontoejdb( string data_, EJDB *jb, EJCOLL *coll, bson_oid_t oid)
                 bson_append_finish_object(&exp);
             }
             bson_append_finish_array(&exp);
+            //++ END array sbcomp ++//
         }
 
 
@@ -251,6 +253,7 @@ void jsontoejdb( string data_, EJDB *jb, EJCOLL *coll, bson_oid_t oid)
                             bson_append_finish_object(&exp);
                         }
                         bson_append_finish_array(&exp);
+                        //++ END array phprop ++//
                     }
 
                     //++ START array phIC ++//
@@ -295,6 +298,7 @@ void jsontoejdb( string data_, EJDB *jb, EJCOLL *coll, bson_oid_t oid)
                             bson_append_finish_object(&exp);
                         }
                         bson_append_finish_array(&exp);
+                        //++ END array phIC ++//
                     }
 
                     //++ START array phMF ++//
@@ -334,6 +338,7 @@ void jsontoejdb( string data_, EJDB *jb, EJCOLL *coll, bson_oid_t oid)
                             bson_append_finish_object(&exp);
                         }
                         bson_append_finish_array(&exp);
+                        //++ END array phMF ++//
                     }
 
 
@@ -394,16 +399,19 @@ void jsontoejdb( string data_, EJDB *jb, EJCOLL *coll, bson_oid_t oid)
                                         bson_append_finish_object(&exp);
                                     }
                                     bson_append_finish_array(&exp);
+                                    //++ END array phprop ++//
                                 }
                             }
                             bson_append_finish_object(&exp);
                         }
                         bson_append_finish_array(&exp);
+                        //++ END array phspecies ++//
                     }
                 }
                 bson_append_finish_object(&exp);
             }
             bson_append_finish_array(&exp);
+            //++ END array & object expphases ++//
         }
     }
 

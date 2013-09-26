@@ -8,11 +8,15 @@ using namespace keys;
 
 void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
 {
-    int ic=0, phc = 0, dcc = 0, sk = 0, mf = 0;
+    int ic=0,       // counts the number of system comp (recipe entries), independent components per pahse, phase properties per pahse, and dependent components properties per dependent component
+        phc = 0,    // counts the number of phases per system/experiment
+        dcc = 0,    // counts the numbe of dependent components per phase
+        sk = 0,     // counts the number of metastability constraints per constraint type
+        mf = 0;     // counts the number of molar fraction entries per system/exmperiment
     string ph_new, ph_old, dcomp_new, dcomp_old, sss;
-    vector<string> phases, dcomps;
+    vector<string> phases, dcomps; // keeps the already read phases and dcomps
     stringstream ss;
-    bool h_phprop = false, h_phases = false, h_phIC = false, h_dcomp = false, h_UMC= false, h_LMC = false, h_phMF = false; // handle that is true if we have ph_prop in the CSV file
+    bool h_phprop = false, h_phases = false, h_phIC = false, h_dcomp = false, h_UMC= false, h_LMC = false, h_phMF = false; // handle that is true if we have the entry in the CSV file
 
     bson_oid_t oid;
     // keeps each row of the CSV file
@@ -33,8 +37,8 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
     while(getline(in, line)  && in.good() )
     {
         ic = 0;
-        phc = 0; // keeps number of phases per line
-        dcc = 0; // keeps number of dependent components
+        phc = 0;
+        dcc = 0;
         csvline(row, line, ',');
         // going trough the headline markers to identify the data type, based on which it is assigned into the database
         bson exp;
@@ -62,12 +66,14 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                 // for query
                 if (headline[i]==expdataset)
                 {
+                    if (row[i].empty()) { cout << "expdataset column cannot be emppty. Exiting..." << endl; bson_destroy(&exp); exit(1);}
                     bson_append_start_object(&bq1, expdataset);
                     bson_append_string(&bq1, "$begin", row[i].c_str());
                     bson_append_finish_object(&bq1);
                 }
                 if (headline[i]==expsample)
                 {
+                    if (row[i].empty()) { cout << "sample (sample name) column cannot be emppty. Exiting..." << endl; bson_destroy(&exp); exit(1);}
                     bson_append_start_object(&bq1, expsample);
                     bson_append_string(&bq1, "$begin", row[i].c_str());
                     bson_append_finish_object(&bq1);
@@ -75,6 +81,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
             }
             else if  ((headline[i]==sT) || (headline[i]==sP))
             {
+                if (row[i].empty()) { cout << "P or T columns cannot be emppty. Exiting..." << endl; bson_destroy(&exp); exit(1);}
                 bson_append_int(&exp, headline[i].c_str(), atoi(row[i].c_str()));
 //                if (headline[i]==sT)
 //                {
@@ -97,6 +104,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
             }
          }
 
+        // checks if the sample name and expdataset is already present in the database
         bson_finish(&bq1);
         EJQ *q1 = ejdbcreatequery(jb, &bq1, NULL, 0, NULL);
         uint32_t count;
@@ -232,10 +240,9 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
             //++ END array LMC ++//
             bson_append_finish_array(&exp);
             sk=0;
-
         }
 
-        // 2nd level - bulk composition of chemical system for this experiment
+        // 2nd level - bulk composition of chemical system for the current experiment
         // array of components
         //++ START array sbcomp ++//
         bson_append_start_array(&exp, sbcomp);
@@ -327,7 +334,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                         phases.push_back(phase_name); // vector that keeps already present phases
                         ic = 0;
 
-                        // START check if there is phprop & phcomp data exists in the CSV
+                        // START check if there is phprop & phcomp data in the CSV
                         for (unsigned int j=0; j<headline.size(); ++j)
                         {
                             if ((strncmp(headline[j].c_str(),phase, strlen(phase)) == 0) && (!row[j].empty())) // checks where in the headline the same pahse name is present
@@ -364,7 +371,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
 //                                    }
                                 }
                             }
-                        } // END check
+                        } // END check if there is phprop & phcomp data in the CSV
 
                         //++ START array phprop ++//
                         if (h_phprop)
@@ -422,7 +429,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                             ic =0;
                         } h_phprop = false;
 
-                        //++ START array phcomp ++//
+                        //++ START array phcomp IC ++//
                         if (h_phIC)
                         {
                             bson_append_start_array(&exp, phIC);
@@ -485,12 +492,12 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                     }
                                 }
                             }
-                            //++ END array phcomp ++//
+                            //++ END array phcomp IC ++//
                             bson_append_finish_array(&exp);
                             ic = 0;
                         } h_phIC = false;
 
-                        // getting data reported as molar facrion
+                        //++ START getting data reported as molar facrion
                         if (h_phMF)
                         {
                             bson_append_start_array(&exp, phMF);
@@ -599,13 +606,15 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                                     }
                                                 }
 
-                                                if (!h_dcomp) // START if h_dcomp
+                                                //++ START if h_dcomp
+                                                if (!h_dcomp)
                                                 {
                                                     string dcomp_prop;
                                                     ss << dcc;
                                                     sss = ss.str();
                                                     ss.str("");
-                                                    bson_append_start_object(&exp, sss.c_str()); // START species object
+                                                    //++ START species object
+                                                    bson_append_start_object(&exp, sss.c_str());
                                                     dcc++;
                                                     bson_append_string(&exp, DC, dcomp_name.c_str());
                                                     dcomps.push_back(dcomp_name);
@@ -649,16 +658,18 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                                                     bson_append_string(&exp, Qunit, row[j].c_str());
                                                                 }
                                                             }
-                                                            bson_append_finish_object(&exp); // END property object
+                                                            //++ END dcomp property object
+                                                            bson_append_finish_object(&exp);
                                                             dcomp_old = dcomp_name;
-                                                        }
+                                                        } // end search for dcomp name in the headline of the csv file
                                                     }
-                                                    bson_append_finish_array(&exp); // END dcompprop array
-                                                }
-                                            }
+                                                    //++ END dcompprop array
+                                                    bson_append_finish_array(&exp);
+                                                } //++ END if h_dcomp
+                                            } // END comparison to check fo unique dcomps
                                             ph_old = phase_name;
-                                        }
-                                    }
+                                        } // search for "DC" indicator of dependent component entry in the csv headline
+                                    } //
                                     dcomps.clear();
                                 }
                             }
@@ -666,7 +677,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                             bson_append_finish_array(&exp);
                         }
                         // end object in the array phases
-                        bson_append_finish_object(&exp); // END phase object
+                        bson_append_finish_object(&exp); //++ END phase object ++
                     } // END if h_phases
                 } // END ph_new != ph_old
             } // END check for key pahse in the headline
@@ -680,7 +691,6 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
         bson_finish(&exp);
         ejdbsavebson(coll, &exp, &oid); // saving the document in the database
         bson_destroy(&exp);
-    } // END getting data from CSV
-
+    } // ++ END getting data from CSV ++
     in.close();
 }

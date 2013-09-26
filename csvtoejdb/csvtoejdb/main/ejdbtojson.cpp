@@ -16,17 +16,18 @@ void ejdbtojson(const char *data, string path)
     if( fout.fail() )
     { cout<<"Output fileopen error"<<endl; exit(1); }
 
-    out = "{";
+    out = "{"; // writes first { for the JSON object
     fout.close();
-    out += foutjson(data);
+    out += foutjson(data); // writes the rest of the JSON object
 
     fout.open(path.c_str(), ios::app);
     if( fout.fail() )
     { cout<<"Output fileopen error"<<endl; exit(1); }
 
-    out += "}";
+    out += "}"; // writes last } for the JSON object
 
     int p = 1;
+    // Erases } which are wrongly added by the foutjson function
     while (p > 0)
     {
         p = out.find(", }", p);
@@ -37,6 +38,7 @@ void ejdbtojson(const char *data, string path)
     }
     p=1;
 
+     // Erases ] which are wrongly added by the foutjson function
     while (p > 0)
     {
         p = out.find(", ]", p);
@@ -45,7 +47,7 @@ void ejdbtojson(const char *data, string path)
                 out.erase(p, 1);
         }
     }
-    fout << out.c_str() << endl;
+    fout << out.c_str() << endl; // writes the JSON object to the file
     fout.close();
 
 }
@@ -98,11 +100,13 @@ string foutjson(const char *data)
         } else
         if ( t == BSON_ARRAY)
         {
+            // recursive call of the function until all elements of the array are read
             out = out + " \"" + key + "\"" + " : [" + foutjson(bson_iterator_value(&i));;
             out += "], ";
         } else
         if (t == BSON_OBJECT)
         {
+            // recursive call of the function until all objects are read
             out = out + "{" + foutjson(bson_iterator_value(&i));
             out += "}, ";
         }
