@@ -1,8 +1,11 @@
 HEADERS += $$EJDB_H/bson.h \
+           $$EJDB_H/nxjson.h \
+           $$EJDB_H/basedefs.h \
+           $$PLATFORM_H/platform.h \
            $$EJDB_H/ejdb.h \
            $$EJDB_H/ejdb_private.h \
-           $$EJDB_H/ejdbutil.h \
-           $$EJDB_H/encodin.h \
+           $$EJDB_H/ejdbutl.h \
+           $$EJDB_H/encoding.h \
            $$EJDB_H/md5.h \
            $$EJDB_H/myconf.h \
            $$EJDB_H/tcadb.h \
@@ -14,6 +17,8 @@ HEADERS += $$EJDB_H/bson.h \
            $$EJDB_H/utf8proc.h
 
 SOURCES += $$EJDB_CPP/bson.c \
+           $$EJDB_CPP/nxjson.c \
+           $$PLATFORM_CPP/platform.c \
            $$EJDB_CPP/ejdb.c \
            $$EJDB_CPP/ejdbutl.c \
            $$EJDB_CPP/encoding.c \

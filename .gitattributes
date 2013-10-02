@@ -168,7 +168,6 @@ gemsfit2/src-fit/gemsfit_iofiles.h -text
 gemsfit2/src-fit/gemsfit_task.cpp -text
 gemsfit2/src-fit/gemsfit_task.h -text
 gemsfit2/src-fit/main.cpp -text
-gemsfit2/tcejdb/bros/result.xls -text
 gemsfit2/tcejdb/doc/benchmark.pdf -text
 gemsfit2/tcejdb/doc/icon16.png -text
 gemsfit2/tcejdb/doc/logo-ja.png -text

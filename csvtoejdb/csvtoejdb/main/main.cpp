@@ -1,6 +1,10 @@
 # include <iostream>
 # include <ejdb.h>
 # include <locale.h>
+
+//#include <stdio.h>
+#include <string.h>
+
 # include "keywords.h"
 # include "ejdbtojson.h"
 # include "csvtoejdb.h"
@@ -224,7 +228,7 @@ int main(int argc, char *argv[])
      for (int i = 0; i < TCLISTNUM(res2); ++i) {                                //C.3 Writing data on screen
          void *bsdata = TCLISTVALPTR(res2, i);
          char *bsdata_ = static_cast<char*>(bsdata);
-         bson_print_raw(stderr, bsdata_, 0);
+         bson_print_raw(/*stderr,*/ bsdata_, 0);
 
          if (irest == 0)                                                        //3.0.1 BACKUP (if not restoring), either in run (-run) or backup (-back) mode
          {   // writing data into the JSON text file

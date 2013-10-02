@@ -1,5 +1,4 @@
-# Source of configuration for Tokyo Cabinet
-
+# Source of configuration for EJDB
 
 
 #================================================================
@@ -11,7 +10,8 @@ test -n "$CPPFLAGS" && MYCPPFLAGS="$CPPFLAGS $MYCPPFLAGS"
 test -n "$LDFLAGS" && MYLDFLAGS="$LDFLAGS $MYLDFLAGS"
 
 # Package name
-AC_INIT(tcejdb, 1.0.65)
+AC_INIT(tcejdb, 1.1.24)
+AC_CANONICAL_HOST
 
 # Package information
 MYLIBVER=9
@@ -19,10 +19,12 @@ MYLIBREV=11
 MYFORMATVER="1.0"
 
 # Targets
-MYHEADERFILES="tcutil.h tchdb.h tcbdb.h tcfdb.h tctdb.h tcadb.h ejdb.h ejdb_private.h bson.h myconf.h"
+MYHEADERFILES="tcutil.h tchdb.h tcbdb.h tcfdb.h tctdb.h tcadb.h ejdb.h ejdb_private.h bson.h myconf.h basedefs.h"
 MYLIBRARYFILES="libtcejdb.a"
+
 MYLIBOBJFILES="tcutil.o tchdb.o tcbdb.o tcfdb.o tctdb.o tcadb.o myconf.o md5.o ejdb.o \
-bson.o numbers.o encoding.o utf8proc.o ejdbutl.o"
+bson.o numbers.o encoding.o utf8proc.o ejdbutl.o platform.o nxjson.o"
+
 MYCOMMANDFILES="tcutest tcumttest tcucodec tchtest tchmttest tchmgr"
 MYCOMMANDFILES="$MYCOMMANDFILES tcbtest tcbmttest tcbmgr tcftest tcfmttest tcfmgr"
 MYCOMMANDFILES="$MYCOMMANDFILES tcttest tctmttest tctmgr tcatest tcamttest tcamgr"
@@ -30,26 +32,39 @@ MYCGIFILES="tcawmgr.cgi"
 MYMAN1FILES=""
 MYMAN3FILES="libtcejdb.3"
 #MYDOCUMENTFILES="COPYING ChangeLog doc tokyocabinet.idl"
-MYDOCUMENTFILES="COPYING Changelog"
+MYDOCUMENTFILES="COPYING"
 MYPCFILES="tcejdb.pc"
 
+#C compiler
+AC_PROG_CC
+
+
+case $host_os in
+  mingw*)
+    CCOPT="-O2"
+      ;;
+  *)
+    CCOPT="-O2"
+      ;;
+esac
+
 # Building flags
-MYCFLAGS="$MYCFLAGS -std=c99 -Wall -fPIC -fsigned-char -O2"
-MYCPPFLAGS="-I. -I\$(INCLUDEDIR) -I$HOME/include -I/usr/local/include"
+MYCFLAGS="$MYCFLAGS -std=gnu99 -Wall -fsigned-char $CCOPT -Wfatal-errors"
+MYCPPFLAGS="-I. -I\$(INCLUDEDIR)"
 MYCPPFLAGS="$MYCPPFLAGS -D_UNICODE -DNDEBUG -D_GNU_SOURCE=1 -D_REENTRANT -D__EXTENSIONS__"
-MYLDFLAGS="-L. -L\$(LIBDIR) -L$HOME/lib -L/usr/local/lib"
+MYLDFLAGS="-L. -L\$(LIBDIR) -L/usr/lib"
 MYCMDLDFLAGS=""
 MYRUNPATH="\$(LIBDIR)"
 MYLDLIBPATHENV="LD_LIBRARY_PATH"
 MYPOSTCMD="true"
 
 # Building paths
-PATH="$PATH:$HOME/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
+PATH="$PATH:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
 PATH="$PATH:/opt/SUNWspro/bin:/usr/ccs/bin:/usr/xpg4/bin:/usr/xpg6/bin:/usr/ucb"
-CPATH="$HOME/include:/usr/local/include:$CPATH"
-LIBRARY_PATH="$HOME/lib:/usr/local/lib:$LIBRARY_PATH"
-LD_LIBRARY_PATH="$HOME/lib:/usr/local/lib:$LD_LIBRARY_PATH"
-PKG_CONFIG_PATH="$HOME/lib/pkgconfig:/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH"
+CPATH="$CPATH:/usr/local/include"
+LIBRARY_PATH="$LIBRARY_PATH:/usr/local/lib"
+LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
+PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig"
 export PATH CPATH LIBRARY_PATH LD_LIBRARY_PATH PKG_CONFIG_PATH
 
 
@@ -66,10 +81,19 @@ AC_ARG_ENABLE(debug,
   AC_HELP_STRING([--enable-debug], [build for debugging]))
 if test "$enable_debug" = "yes"
 then
-  MYCFLAGS="-std=c99 -Wall -fPIC -pedantic -fsigned-char -g -O0"
-  MYCPPFLAGS="$MYCPPFLAGS -UNDEBUG"
-  MYCMDLDFLAGS="$MYCMDLDFLAGS -static"
+  MYCFLAGS="-std=gnu99 -Wall -pedantic -fsigned-char -ggdb -O0 -Wfatal-errors"
+  MYCPPFLAGS="$MYCPPFLAGS -D_DEBUG -UNDEBUG -DEJDB_STATIC"
+  case $host_os in
+    darwin*)
+
+        ;;
+    *)
+      MYCMDLDFLAGS="$MYCMDLDFLAGS -static"
+        ;;
+  esac
   enables="$enables (debug)"
+else
+  MYLDFLAGS="$MYLDFLAGS"
 fi
 
 # Developping mode
@@ -77,8 +101,8 @@ AC_ARG_ENABLE(devel,
   AC_HELP_STRING([--enable-devel], [build for development]))
 if test "$enable_devel" = "yes"
 then
-  MYCFLAGS="-std=c99 -Wall -fPIC -pedantic -fsigned-char -g -O2 -pipe"
-  MYCPPFLAGS="$MYCPPFLAGS -UNDEBUG"
+  MYCFLAGS="-std=gnu99 -Wall -pedantic -fsigned-char -g $CCOPT -pipe"
+  MYCPPFLAGS="$MYCPPFLAGS -D_DEBUG -UNDEBUG"
   enables="$enables (devel)"
 fi
 
@@ -87,7 +111,7 @@ AC_ARG_ENABLE(profile,
   AC_HELP_STRING([--enable-profile], [build for profiling]))
 if test "$enable_profile" = "yes"
 then
-  MYCFLAGS="-std=c99 -Wall -fPIC -pedantic -fsigned-char -g -pg -O2 -pipe"
+  MYCFLAGS="-std=gnu99 -Wall -pedantic -fsigned-char -g -pg $CCOPT -pipe -Wfatal-errors"
   enables="$enables (profile)"
 fi
 
@@ -106,7 +130,7 @@ AC_ARG_ENABLE(fastest,
 if test "$enable_fastest" = "yes"
 then
   MYLIBOBJFILES="tokyocabinet_all.o"
-  MYCFLAGS="-std=c99 -Wall -fPIC -pedantic -fsigned-char -O3"
+  MYCFLAGS="-std=gnu99 -Wall -pedantic -fsigned-char -O3"
   MYCFLAGS="$MYCFLAGS -fomit-frame-pointer -fforce-addr -minline-all-stringops"
   MYCPPFLAGS="$MYCPPFLAGS -D_MYFASTEST"
   enables="$enables (fastest)"
@@ -175,15 +199,6 @@ then
   enables="$enables (no-zlib)"
 fi
 
-# Disable POSIX thread
-AC_ARG_ENABLE(pthread,
-  AC_HELP_STRING([--disable-pthread], [build without POSIX thread support]))
-if test "$enable_pthread" = "no"
-then
-  MYCPPFLAGS="$MYCPPFLAGS -D_MYNOPTHREAD"
-  enables="$enables (no-pthread)"
-fi
-
 # Disable shared object
 AC_ARG_ENABLE(shared,
   AC_HELP_STRING([--disable-shared], [avoid to build shared libraries]))
@@ -236,19 +251,12 @@ then
   LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$with_bzip/lib"
 fi
 
-# Messages
-printf '#================================================================\n'
-printf '# Configuring EJDB version %s%s.\n' "$PACKAGE_VERSION" "$enables"
-printf '#================================================================\n'
-
-
-
 #================================================================
 # Checking Commands and Libraries
 #================================================================
 
-# C compiler
-AC_PROG_CC
+# BSD install
+AC_PROG_INSTALL
 
 # Reset variables
 if test "$GCC" != "yes"
@@ -263,11 +271,8 @@ AC_C_BIGENDIAN(MYCPPFLAGS="$MYCPPFLAGS -D_MYBIGEND")
 # Underlying libraries
 AC_CHECK_LIB(c, main)
 AC_CHECK_LIB(m, main)
-if test "$enable_pthread" != "no"
-then
-  AC_CHECK_LIB(pthread, main)
-  AC_CHECK_LIB(rt, main)
-fi
+AC_CHECK_LIB(rt, main)
+
 if test "$enable_zlib" != "no"
 then
   AC_CHECK_LIB(z, main)
@@ -284,7 +289,6 @@ if test "$enable_exlzo" = "yes"
 then
   AC_CHECK_LIB(lzo2, main)
 fi
-AC_CHECK_LIB(tcejdb, main, AC_MSG_WARN([old version of EJDB was found]))
 
 if test "$enable_tests" = "yes"
 then
@@ -297,12 +301,9 @@ AC_CHECK_HEADER(stdlib.h, true, AC_MSG_ERROR([stdlib.h is required]))
 AC_CHECK_HEADER(stdint.h, true, AC_MSG_ERROR([stdint.h is required]))
 AC_CHECK_HEADER(unistd.h, true, AC_MSG_ERROR([unistd.h is required]))
 AC_CHECK_HEADER(dirent.h, true, AC_MSG_ERROR([dirent.h is required]))
-AC_CHECK_HEADER(regex.h, true, AC_MSG_ERROR([regex.h is required]))
-AC_CHECK_HEADER(glob.h, true, AC_MSG_ERROR([glob.h is required]))
-if test "$enable_pthread" != "no"
-then
-  AC_CHECK_HEADER(pthread.h, true, AC_MSG_ERROR([pthread.h is required]))
-fi
+AC_CHECK_HEADER(stddef.h, true, AC_MSG_ERROR([stddef.h is required]))
+AC_CHECK_HEADER(pthread.h, true, AC_MSG_ERROR([pthread.h is required]))
+
 if test "$enable_zlib" != "no"
 then
   AC_CHECK_HEADER(zlib.h, true, AC_MSG_ERROR([zlib.h is required]))
@@ -320,21 +321,60 @@ then
   AC_CHECK_HEADER(lzo/lzo1x.h, true, AC_MSG_ERROR([lzo/lzo1x.h is required]))
 fi
 
+case $host_os in
+  mingw*)
+      AC_CHECK_HEADER(windows.h, true, AC_MSG_ERROR([windows.h is required]))
+      AC_CHECK_HEADER(time.h, true, AC_MSG_ERROR([time.h is required]))
+      ;;
+  *)
+      AC_CHECK_HEADER(glob.h, true, AC_MSG_ERROR([glob.h is required]))
+      ;;
+esac
+
+
 # Shared libraries
 if test "$enable_shared" != "no" && test "$enable_profile" != "yes"
 then
-  if uname | grep Darwin >/dev/null
-  then
-    MYLIBRARYFILES="$MYLIBRARYFILES libtcejdb.$MYLIBVER.$MYLIBREV.0.dylib"
-    MYLIBRARYFILES="$MYLIBRARYFILES libtcejdb.$MYLIBVER.dylib"
-    MYLIBRARYFILES="$MYLIBRARYFILES libtcejdb.dylib"
-    MYLDLIBPATHENV="DYLD_LIBRARY_PATH"
-  else
-    MYLIBRARYFILES="$MYLIBRARYFILES libtcejdb.so.$MYLIBVER.$MYLIBREV.0"
-    MYLIBRARYFILES="$MYLIBRARYFILES libtcejdb.so.$MYLIBVER"
-    MYLIBRARYFILES="$MYLIBRARYFILES libtcejdb.so"
-  fi
+  case $host_os in
+    darwin*)
+        MYLIBRARYFILES="$MYLIBRARYFILES libtcejdb.$MYLIBVER.$MYLIBREV.0.dylib"
+        MYLIBRARYFILES="$MYLIBRARYFILES libtcejdb.$MYLIBVER.dylib"
+        MYLIBRARYFILES="$MYLIBRARYFILES libtcejdb.dylib"
+        MYLDLIBPATHENV="DYLD_LIBRARY_PATH"
+        ;;
+    mingw*)
+        MYLIBRARYFILES="$MYLIBRARYFILES tcejdbdll.dll libtcejdbdll.a tcejdbdll.def tcejdbdll.lib tcejdbdll.exp"
+        MYCPPFLAGS="$MYCPPFLAGS -DEJDB_DLL"
+        ;;
+    *)
+        MYLIBRARYFILES="$MYLIBRARYFILES libtcejdb.so.$MYLIBVER.$MYLIBREV.0"
+        MYLIBRARYFILES="$MYLIBRARYFILES libtcejdb.so.$MYLIBVER"
+        MYLIBRARYFILES="$MYLIBRARYFILES libtcejdb.so"
+        ;;
+  esac
 fi
+
+
+
+case $host_os in
+    mingw*)
+        AC_CHECK_HEADER(pcre.h, true, AC_MSG_ERROR([pcre.h is required]))
+        AC_CHECK_HEADER(pcreposix.h, true, AC_MSG_ERROR([pcreposix.h is required]))
+        AC_CHECK_LIB(pcre, pcre_compile, [], AC_MSG_ERROR([pcre lib is required]))
+        AC_CHECK_LIB(pcreposix, regcomp, [], AC_MSG_ERROR([pcreposix lib is required]))
+        AC_CHECK_LIB(winpthread, main, [], AC_MSG_ERROR([winpthread lubrary is required]))
+        MYLDFLAGS="-static-libgcc -static-libstdc++ $MYLDFLAGS -Wl,-Bstatic"
+        MYHEADERFILES="$MYHEADERFILES win32/platform.h"
+        MYCPPFLAGS="$MYCPPFLAGS -DPCRE_STATIC"
+        MYCFLAGS="$MYCFLAGS -Wno-pedantic-ms-format"
+        ;;
+    *)
+        MYHEADERFILES="$MYHEADERFILES nix/platform.h"
+        AC_CHECK_HEADER(regex.h, true, AC_MSG_ERROR([regex.h is required]))
+        AC_CHECK_LIB(pthread, main, [], AC_MSG_ERROR([pthread lubrary is required]))
+        MYCFLAGS="$MYCFLAGS -fPIC"
+        ;;
+esac
 
 
 
@@ -343,6 +383,9 @@ fi
 #================================================================
 
 # Export variables
+AC_SUBST(host)
+AC_SUBST(host_cpu)
+AC_SUBST(host_os)
 AC_SUBST(MYLIBVER)
 AC_SUBST(MYLIBREV)
 AC_SUBST(MYFORMATVER)
@@ -366,13 +409,12 @@ AC_SUBST(PACKAGE_NAME)
 AC_SUBST(PACKAGE_VERSION)
 
 # Targets
-AC_OUTPUT(Makefile tcejdb.pc)
+AC_OUTPUT(Makefile tcejdb.pc testejdb/Makefile)
 
 # Messages
 printf '#================================================================\n'
-printf '# Ready to make.\n'
+printf '# Ready to make EJDB version %s%s.\n' "$PACKAGE_VERSION" "$enables"
 printf '#================================================================\n'
-
 
 
 # END OF FILE

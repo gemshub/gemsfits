@@ -37,6 +37,8 @@
 #include <ctime>
 #include <fstream>
 
+#include <sys/stat.h>
+#include <sys/time.h>
 
 #include "gemsfit_iofiles.h"
 #include "gemsfit_task.h"

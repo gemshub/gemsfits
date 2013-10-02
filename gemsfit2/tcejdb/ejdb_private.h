@@ -15,17 +15,14 @@
  *************************************************************************************************/
 
 #ifndef EJDB_PRIVATE_H
-#define        EJDB_PRIVATE_H
+#define EJDB_PRIVATE_H
 
 #include "ejdb.h"
-
-#include "myconf.h"
 #include "tcutil.h"
 #include "tctdb.h"
 #include "tchdb.h"
 
 #include <assert.h>
-#include <pthread.h>
 
 EJDB_EXTERN_C_START
 
@@ -72,52 +69,68 @@ enum { /**> Query field flags */
     EJCONDPULL = 1 << 13, /**> $pull Removes all occurrences of value from field, if field is an array */
     EJCONDUPSERT = 1 << 14, /**> $upsert Upsert $set operation */
     EJCONDALL = 1 << 15, /**> 'All' modificator for $pull or $addToSet ($addToSetAll or $pullAll) */
-    EJCONDOIT = 1 << 16 /**> $do query field operation */
+    EJCONDOIT = 1 << 16, /**> $do query field operation */
+    EJCONDUNSET = 1 << 17 /**> $unset Field value */
 };
 
 enum { /**> Query flags */
     EJQINTERNAL = 1, /**> Internal query object used in _ejdbqryexecute */
     EJQUPDATING = 1 << 1, /**> Query in updating mode */
     EJQDROPALL = 1 << 2, /**> Drop bson object if matched */
-    EJQONLYCOUNT = 1 << 3 /**> Only count mode */
+    EJQONLYCOUNT = 1 << 3, /**> Only count mode */
+    EJQHAS$UQUERY = 1 << 4 /**> It means the query contains update $(query) fields #91 */
 };
 
+typedef struct { /**> $(query) matchin slot used in update $ placeholder processing. #91 */
+    int32_t mpos; /**> array position of matched element */
+    int32_t dpos; /**> $ position in the fieldpath */
+    const void *op; /**> Opaque pointer associated with slot */
+} USLOT;
+
 struct EJQF { /**> Matching field and status */
-    char *fpath; /**>JSON field path */
-    int fpathsz; /**>JSON field path size */
-    char *expr; /**> Query operand expression, string or TCLIST data */
-    int exprsz; /**> Size of query operand expression */
-    int64_t exprlongval; /**> Integer value represeintation */
-    double exprdblval; /**> Double value representation */
-    TCLIST *exprlist; /**> List representation of expression */
-    TCMAP *exprmap; /**> Hash map for expression tokens used in $in matching operation. */
-    regex_t *regex; /**> Regular expression object */
-    int tcop; /**> Matching operation eg. TDBQCSTREQ */
     bool negate; /**> Negate expression */
+    int fpathsz; /**>JSON field path size */
+    int exprsz; /**> Size of query operand expression */
+    int tcop; /**> Matching operation eg. TDBQCSTREQ */
+    bson_type ftype; /**> BSON field type */
     uint32_t flags; /**> Various field matching|status flags */
     uint32_t mflags; /**> Temporary matching flags used during single record matching */
     int order; /**> 0 no order, 1 ASC, -1 DESC */
     int orderseq; /**> Seq number for order fields */
-    bson_type ftype; /**> BSON field type */
+    int elmatchgrp; /**> $elemMatch group id */
+    int elmatchpos; /**> $elemMatch fieldpath position */
+    char *fpath; /**>JSON field path */
+    char *expr; /**> Query operand expression, string or TCLIST data */
     const TDBIDX *idx; /**> Column index for this field if exists */
     bson *idxmeta; /**> Index metainfo */
     bson *updateobj; /**> Update bson object for $set and $inc operations */
-    int elmatchgrp; /**> $elemMatch group id */
-    int elmatchpos; /**> $elemMatch fieldpath position */
+    TCLIST *exprlist; /**> List representation of expression */
+    TCMAP *exprmap; /**> Hash map for expression tokens used in $in matching operation. */
+    void *regex; /**> Regular expression object */
     EJDB *jb; /**> Reference to the EJDB during query processing */
-    EJQ *q; /**> Query object field embedded into */
+    EJQ *q; /**> Query object in which this field embedded */
+    double exprdblval; /**> Double value representation */
+    int64_t exprlongval; /**> Integer value represeintation */
+    TCLIST *$ufields; /**> Update $(query) prositional fields #91 */
+    TCLIST *$uslots; /**> $(query) matching slots USLOT #91 */
 };
 typedef struct EJQF EJQF;
 
 struct EJQ { /**> Query object. */
-    TCLIST *qobjlist; /**> List of query objects *EJQF */
-    EJQ *orqobjs; /** OR Query objects */
-    int orqobjsnum; /** Number of OR query objects */
+    TCLIST *qflist; /**> List of query field objects *EJQF */
+    TCLIST *orqlist; /**> List of $or joined query objects *EJQ */
+    TCLIST *andqlist; /**> List of $and joined query objects *EJQ */
     bson *hints; /**> Hints bson object */
+    /**> Include $(projection) fields char* names.
+     *  Mapping EJQF fpath => $(projection) field name
+     *  http://docs.mongodb.org/manual/reference/projection/positional/#proj._S_
+     */
+    TCMAP *$ifields;
     uint32_t skip; /**> Number of records to skip. */
     uint32_t max; /**> Max number of results */
     uint32_t flags; /**> Control flags */
-    EJQF *lastmatchedorqf; /**> Reference to the last matched or query field */
+    EJQ *lastmatchedorq; /**> Reference to the last matched $or query */
+    EJQF **allqfields; /**> NULL terminated list of all *EJQF fields including all $and $or QF*/
 
     //Temporal buffers used during query processing
     TCXSTR *colbuf; /**> TCTDB current column buffer */
@@ -130,6 +143,10 @@ struct EJQ { /**> Query object. */
 
 
 #define JBINOPTMAPTHRESHOLD 16 /**> If number of tokens in `$in` array exeeds it then TCMAP will be used in fullscan matching of tokens */
+
+
+EJDB_EXPORT bool ejcollockmethod(EJCOLL *coll, bool wr);
+EJDB_EXPORT bool ejcollunlockmethod(EJCOLL *coll);
 
 EJDB_EXTERN_C_END
 

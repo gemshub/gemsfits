@@ -78,8 +78,18 @@ CONFIG( serial, serial|mpi ) {
         LIBS +=  -lXm -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp -ljansson
 }
 
-QMAKE_CXXFLAGS += -std=gnu99
-QMAKE_CFLAGS += -std=gnu99
+!win32 {
+  PLATFORM_CPP       =  ./tcejdb/nix
+}
+else {
+  PLATFORM_CPP       =  ./tcejdb/win32
+}
+
+!macx-clang {
+ QMAKE_CXXFLAGS += -std=gnu99
+ QMAKE_CFLAGS += -std=gnu99
+}
+
 
 FIT_CPP      =  ./src-fit
 GEMS3K_CPP   =  ../../standalone/GEMS3K
@@ -91,16 +101,19 @@ FIT_H        =   $$FIT_CPP
 GEMS3K_H     =   $$GEMS3K_CPP
 EJDB_H       =   $$EJDB_CPP
 KEYS_H       =   $$KEYS_CPP
+PLATFORM_H   =  $$PLATFORM_CPP
 
 DEPENDPATH   += $$FIT_H
 DEPENDPATH   += $$GEMS3K_H
 DEPENDPATH   += $$EJDB_H
 DEPENDPATH   += $$KEYS_H
+DEPENDPATH   += $$PLATFORM_H
 
 INCLUDEPATH  += $$FIT_H
 INCLUDEPATH  += $$GEMS3K_H   
 INCLUDEPATH  += $$EJDB_H
 INCLUDEPATH  += $$KEYS_H
+INCLUDEPATH  += $$PLATFORM_H
 
 OBJECTS_DIR       = obj
 

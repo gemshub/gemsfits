@@ -1,4 +1,7 @@
 
+
+
+
 CC=gcc
 CPPFLAGS = -I. -I.. -DDEBUG -D_DEBUG -D_GNU_SOURCE=1 -D_REENTRANT -D__EXTENSIONS__
 CFLAGS = -std=c99 -Wall -fPIC -pedantic -fsigned-char -g -O0

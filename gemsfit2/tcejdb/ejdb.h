@@ -17,11 +17,15 @@
 #ifndef EJDB_H
 #define        EJDB_H
 
-#include "myconf.h"
 #include "bson.h"
 #include "tcutil.h"
 
 EJDB_EXTERN_C_START
+
+#ifndef EJDB_MAX_IMPORTED_BSON_SIZE
+//64 MB is the default maximum size of bson object imported with `ejdbimport()`
+#define EJDB_MAX_IMPORTED_BSON_SIZE 67108864
+#endif
 
 struct EJDB; /**< EJDB database object. */
 typedef struct EJDB EJDB;
@@ -36,9 +40,11 @@ typedef struct { /**< EJDB collection tuning options. */
     bool large; /**< Large collection. It can be larger than 2GB. Default false */
     bool compressed; /**< Collection records will be compressed with DEFLATE compression. Default: false */
     int64_t records; /**< Expected records number in the collection. Default: 128K */
-    int cachedrecords; /**< Maximum number of cached records. Default: 0 */
+    int cachedrecords; /**< Maximum number of records cached in memory. Default: 0 */
 } EJCOLLOPTS;
 
+
+typedef TCLIST* EJQRESULT; /**< EJDB query result */
 
 #define JBMAXCOLNAMELEN 128
 
@@ -57,7 +63,11 @@ enum { /** Error codes */
     JBEQONEEMATCH = 9011, /**< Only one $elemMatch allowed in the fieldpath. */
     JBEQINCEXCL = 9012, /**< $fields hint cannot mix include and exclude fields */
     JBEQACTKEY = 9013, /**< action key in $do block can only be one of: $join */
-    JBEMAXNUMCOLS = 9014 /**< Exceeded the maximum number of collections per database */
+    JBEMAXNUMCOLS = 9014, /**< Exceeded the maximum number of collections per database */
+    JBEEI = 9015, /**< EJDB export/import error */
+    JBEEJSONPARSE = 9016, /**< JSON parsing failed */
+    JBETOOBIGBSON = 9017, /**< BSON size is too big */
+    JBEINVALIDCMD = 9018 /**< Invalid ejdb command specified */
 };
 
 enum { /** Database open modes */
@@ -73,7 +83,7 @@ enum { /** Database open modes */
 enum { /** Index modes, index types. */
     JBIDXDROP = 1 << 0, /**< Drop index. */
     JBIDXDROPALL = 1 << 1, /**< Drop index for all types. */
-    JBIDXOP = 1 << 2, /**< Optimize index. */
+    JBIDXOP = 1 << 2, /**< Optimize indexes. */
     JBIDXREBLD = 1 << 3, /**< Rebuild index. */
     JBIDXNUM = 1 << 4, /**< Number index. */
     JBIDXSTR = 1 << 5, /**< String index.*/
@@ -82,9 +92,20 @@ enum { /** Index modes, index types. */
 };
 
 enum { /*< Query search mode flags in ejdbqryexecute() */
-    JBQRYCOUNT = 1 /*< Query only count(*) */
+    JBQRYCOUNT = 1, /*< Query only count(*) */
+    JBQRYFINDONE = 1 << 1 /*< Fetch first record only */
 };
 
+/**
+ * Returns EJDB library version string. Eg: "1.1.13"
+ */
+EJDB_EXPORT const char *ejdbversion();
+
+/**
+ * Return true if passed `oid` string cat be converted to valid
+ * 12 bit BSON object identifier (OID).
+ * @param oid String
+ */
 EJDB_EXPORT bool ejdbisvalidoidstr(const char *oid);
 
 /**
@@ -217,6 +238,8 @@ EJDB_EXPORT bool ejdbsavebson(EJCOLL *coll, bson *bs, bson_oid_t *oid);
  */
 EJDB_EXPORT bool ejdbsavebson2(EJCOLL *jcoll, bson *bs, bson_oid_t *oid, bool merge);
 
+EJDB_EXPORT bool ejdbsavebson3(EJCOLL *jcoll, const void *bsdata, bson_oid_t *oid, bool merge);
+
 /**
  * Remove BSON object from collection.
  * The `oid` argument should points the primary key (_id)
@@ -271,17 +294,24 @@ EJDB_EXPORT bson* ejdbloadbson(EJCOLL *coll, const bson_oid_t *oid);
  *      - $elemMatch The $elemMatch operator matches more than one component within an array element.
  *          -    { array: { $elemMatch: { value1 : 1, value2 : { $gt: 1 } } } }
  *          Restriction: only one $elemMatch allowed in context of one array field.
+ *      - $and, $or joining:
+ *          -   {..., $and : [subq1, subq2, ...] }
+ *          -   {..., $or  : [subq1, subq2, ...] }
+ *          Example: {z : 33, $and : [ {$or : [{a : 1}, {b : 2}]}, {$or : [{c : 5}, {d : 7}]} ] }
+ *
+ *      - Mongodb $(projection) operator supported. (http://docs.mongodb.org/manual/reference/projection/positional/#proj._S_)
+ *      - Mongodb positional $ update operator supported. (http://docs.mongodb.org/manual/reference/operator/positional/)
  *
  *  - Queries can be used to update records:
  *
  *      $set Field set operation.
- *          - {.., '$set' : {'field1' : val1, 'fieldN' : valN}}
+ *          - {.., '$set' : {'fpath1' : val1, 'fpathN' : valN}}
  *      $upsert Atomic upsert. If matching records are found it will be '$set' operation,
  *              otherwise new record will be inserted
  *              with fields specified by argment object.
- *          - {.., '$upsert' : {'field1' : val1, 'fieldN' : valN}}
+ *          - {.., '$upsert' : {'fpath1' : val1, 'fpathN' : valN}}
  *      $inc Increment operation. Only number types are supported.
- *          - {.., '$inc' : {'field1' : number, ...,  'field1' : number}
+ *          - {.., '$inc' : {'fpath1' : number, ...,  'fpath2' : number}
  *      $dropall In-place record removal operation.
  *          - {.., '$dropall' : true}
  *      $addToSet Atomically adds value to the array only if its not in the array already.
@@ -328,7 +358,7 @@ EJDB_EXPORT bson* ejdbloadbson(EJCOLL *coll, const bson_oid_t *oid);
  *
  * Many query examples can be found in `testejdb/t2.c` test case.
  *
- * @param EJDB database handle.
+ * @param jb EJDB database handle.
  * @param qobj Main BSON query object.
  * @param orqobjs Array of additional OR query objects (joined with OR predicate).
  * @param orqobjsnum Number of OR query objects.
@@ -336,6 +366,33 @@ EJDB_EXPORT bson* ejdbloadbson(EJCOLL *coll, const bson_oid_t *oid);
  * @return On success return query handle. On error returns NULL.
  */
 EJDB_EXPORT EJQ* ejdbcreatequery(EJDB *jb, bson *qobj, bson *orqobjs, int orqobjsnum, bson *hints);
+
+
+/**
+ * Alternative query creation method convenient to use
+ * with `ejdbqueryaddor` and `ejdbqueryhints` methods.
+ * @param jb EJDB database handle.
+ * @param qobj Main query object BSON data.
+ * @return On success return query handle. On error returns NULL.
+ */
+EJDB_EXPORT EJQ* ejdbcreatequery2(EJDB *jb, const void *qbsdata);
+
+/**
+ * Add OR restriction to query object.
+ * @param jb EJDB database handle.
+ * @param q Query handle.
+ * @param orbsdata OR restriction BSON data.
+ * @return NULL on error.
+ */
+EJDB_EXPORT EJQ* ejdbqueryaddor(EJDB *jb, EJQ *q, const void *orbsdata);
+
+/**
+ * Set hints for the query.
+ * @param jb EJDB database handle.
+ * @param hintsbsdata Query hints BSON data.
+ * @return NULL on error.
+ */
+EJDB_EXPORT EJQ* ejdbqueryhints(EJDB *jb, EJQ *q, const void *hintsbsdata);
 
 /**
  * Destroy query object created with ejdbcreatequery().
@@ -379,22 +436,42 @@ EJDB_EXPORT void ejdbquerydel(EJQ *q);
 EJDB_EXPORT bool ejdbsetindex(EJCOLL *coll, const char *ipath, int flags);
 
 /**
- * Execute query against EJDB collection.
- * It is better to execute update queries with `JBQRYCOUNT` control
+ * Execute the query against EJDB collection.
+ * It is better to execute update queries with specified `JBQRYCOUNT` control
  * flag avoid unnecessarily rows fetching.
  *
  * @param jcoll EJDB database
  * @param q Query handle created with ejdbcreatequery()
  * @param count Output count pointer. Result set size will be stored into it.
- * @param qflags Execution flag. If JBQRYCOUNT is set the only count of matching records will be computed
- *         without resultset, this operation is analog of count(*) in SQL and can be faster than operations with resultsets.
+ * @param qflags Execution flag.
+ *          * `JBQRYCOUNT` The only count of matching records will be computed
+ *                         without resultset, this operation is analog of count(*)
+ *                         in SQL and can be faster than operations with resultsets.
  * @param log Optional extended string to collect debug information during query execution, can be NULL.
  * @return TCLIST with matched bson records data.
  * If (qflags & JBQRYCOUNT) then NULL will be returned
  * and only count reported.
  */
-EJDB_EXPORT TCLIST* ejdbqryexecute(EJCOLL *jcoll, const EJQ *q, uint32_t *count, int qflags, TCXSTR *log);
+EJDB_EXPORT EJQRESULT ejdbqryexecute(EJCOLL *jcoll, const EJQ *q, uint32_t *count, int qflags, TCXSTR *log);
 
+/**
+ * Returns the number of elements in the query result set.
+ * @param qr Query result set. Can be `NULL` in this case 0 is returned.
+ */
+EJDB_EXPORT int ejdbqresultnum(EJQRESULT qr);
+
+/**
+ * Gets the pointer of query result BSON data buffer at the specified position `pos`.
+ * If `qr` is `NULL` or `idx` is put of index range then the `NULL` pointer will be returned.
+ * @param qr Query result set object.
+ * @param pos Zero based position of the record.
+ */
+EJDB_EXPORT const void* ejdbqresultbsondata(EJQRESULT qr, int pos, int *size);
+
+/**
+ * Disposes the query result set and frees a records buffers.
+ */
+EJDB_EXPORT void ejdbqresultdispose(EJQRESULT qr);
 
 /**
  * Convenient method to execute update queries.
@@ -402,9 +479,9 @@ EJDB_EXPORT TCLIST* ejdbqryexecute(EJCOLL *jcoll, const EJQ *q, uint32_t *count,
  * `$set` and `$inc` operations are supported:
  *
  * `$set` Field set operation:
- *      - {some fields for selection, '$set' : {'field1' : {obj}, ...,  'field1' : {obj}}}
+ *      - {some fields for selection, '$set' : {'fpath1' : {obj}, ...,  'fpathN' : {obj}}}
  * `$inc` Increment operation. Only number types are supported.
- *      - {some fields for selection, '$inc' : {'field1' : number, ...,  'field1' : {number}}
+ *      - {some fields for selection, '$inc' : {'fpath1' : number, ...,  'fpathN' : {number}}
  *
  * @return Number of updated records
  */
@@ -419,7 +496,7 @@ EJDB_EXPORT bool ejdbsyncoll(EJCOLL *jcoll);
 
 /**
  * Synchronize entire EJDB database and
- * all its collections with storage.
+ * all of its collections with storage.
  * @param jb Database hand
  */
 EJDB_EXPORT bool ejdbsyncdb(EJDB *jb);
@@ -435,6 +512,99 @@ EJDB_EXPORT bool ejdbtranabort(EJCOLL *coll);
 
 /** Get current transaction status, it will be placed into txActive*/
 EJDB_EXPORT bool ejdbtranstatus(EJCOLL *jcoll, bool *txactive);
+
+
+/** Gets description of EJDB database and its collections. */
+EJDB_EXPORT bson* ejdbmeta(EJDB *jb);
+
+/** Export/Import settings used in `ejdbexport()` and `ejdbimport()` functions. */
+enum {
+    JBJSONEXPORT = 1, //If set json collection data will be exported as JSON files instead of BSON.
+    JBIMPORTUPDATE = 1 << 1, //Update existing collection entries with imported ones. Collections will not be recreated and its options are ignored.
+    JBIMPORTREPLACE = 1 << 2 //Recreate existing collections and replace all collection data with imported entries.
+};
+
+/**
+ * Exports database collections data to the specified directory.
+ * Database read lock will be taken on each collection.
+ *
+ * NOTE: Only data exported as BSONs can be imported with `ejdbimport()`
+ *
+ * @param jb EJDB database handle.
+ * @param path The directory path in which data will be exported.
+ * @param cnames List of collection names to export. `NULL` implies that all existing collections will be exported.
+ * @param flags. Can be set to `JBJSONEXPORT` in order to export data as JSON files instead exporting into BSONs.
+ * @param log Optional operation string log buffer.
+ * @return on sucess `true`
+ */
+EJDB_EXPORT bool ejdbexport(EJDB *jb, const char *path, TCLIST *cnames, int flags, TCXSTR *log);
+
+/**
+ * Imports previously exported collections data into ejdb.
+ * Global database write lock will be applied during import operation.
+ *
+ * NOTE: Only data exported as BSONs can be imported with `ejdbimport()`
+ *
+ * @param jb EJDB database handle.
+ * @param path The directory path in which data resides.
+ * @param cnames List of collection names to import. `NULL` implies that all collections found in `path` will be imported.
+ * @param flags Can be one of:
+ *             `JBIMPORTUPDATE`  Update existing collection entries with imported ones.
+ *                               Existing collections will not be recreated.
+ *                               For existing collections options will not be imported.
+ *
+ *             `JBIMPORTREPLACE` Recreate existing collections and replace
+ *                               all their data with imported entries.
+ *                               Collections options will be imported.
+ *
+ *             `0`              Implies `JBIMPORTUPDATE`
+ * @param log Optional operation log buffer.
+ * @return
+ */
+EJDB_EXPORT bool ejdbimport(EJDB *jb, const char *path, TCLIST *cnames, int flags, TCXSTR *log);
+
+/**
+ * Execute the ejdb database command.
+ *
+ * Supported commands:
+ *
+ *
+ *  1) Exports database collections data. See ejdbexport() method.
+ *
+ *    "export" : {
+ *          "path" : string,                    //Exports database collections data
+ *          "cnames" : [string array]|null,     //List of collection names to export
+ *          "mode" : int|null                   //Values: null|`JBJSONEXPORT` See ejdbexport() method
+ *    }
+ *
+ *    Command response:
+ *       {
+ *          "log" : string,        //Diagnostic log about executing this command
+ *          "error" : string|null, //ejdb error message
+ *          "errorCode" : int|0,   //ejdb error code
+ *       }
+ *
+ *  2) Imports previously exported collections data into ejdb.
+ *
+ *    "import" : {
+ *          "path" : string                     //The directory path in which data resides
+ *          "cnames" : [string array]|null,     //List of collection names to import
+ *          "mode" : int|null                //Values: null|`JBIMPORTUPDATE`|`JBIMPORTREPLACE` See ejdbimport() method
+ *     }
+ *
+ *     Command response:
+ *       {
+ *          "log" : string,        //Diagnostic log about executing this command
+ *          "error" : string|null, //ejdb error message
+ *          "errorCode" : int|0,   //ejdb error code
+ *       }
+ *
+ * @param jb    EJDB database handle.
+ * @param cmd   BSON command spec.
+ * @return Allocated BSON command response object. Caller should call `bson_del()` on it.
+ */
+EJDB_EXPORT bson* ejdbcommand(EJDB *jb, bson *cmdbson);
+EJDB_EXPORT bson* ejdbcommand2(EJDB *jb, void *cmdbsondata);
 
 EJDB_EXTERN_C_END
 

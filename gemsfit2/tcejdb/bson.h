@@ -4,6 +4,7 @@
  */
 
 /*    Copyright 2009-2012 10gen Inc.
+ *    Copyright (C) 2012-2013 Softmotions Ltd <info@softmotions.com>
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,19 +22,14 @@
 #ifndef BSON_H_
 #define BSON_H_
 
-#include "myconf.h"
-
-#ifdef EJDB_BIG_ENDIAN
-#define bson_little_endian64(out, in) ( bson_swap_endian64(out, in) )
-#define bson_little_endian32(out, in) ( bson_swap_endian32(out, in) )
-#define bson_big_endian64(out, in) ( memcpy(out, in, 8) )
-#define bson_big_endian32(out, in) ( memcpy(out, in, 4) )
-#else
-#define bson_little_endian64(out, in) ( memcpy(out, in, 8) )
-#define bson_little_endian32(out, in) ( memcpy(out, in, 4) )
-#define bson_big_endian64(out, in) ( bson_swap_endian64(out, in) )
-#define bson_big_endian32(out, in) ( bson_swap_endian32(out, in) )
+#include "basedefs.h"
+#include <stdio.h>
+#include <stdint.h>
+#if ! defined(__cplusplus)
+#include <stdbool.h>
 #endif
+#include <time.h>
+#include "tcutil.h"
 
 #define BSON_IS_NUM_TYPE(atype) (atype == BSON_INT || atype == BSON_LONG || atype == BSON_DOUBLE)
 
@@ -131,6 +127,24 @@ typedef struct {
 
 EJDB_EXPORT const char* bson_first_errormsg(bson *bson);
 
+
+#define BSON_ITERATOR_FROM_BUFFER(_bs_I, _bs_B) \
+    (_bs_I)->cur = ((char*) (_bs_B)) + 4;       \
+    (_bs_I)->first = 1;
+
+#define BSON_ITERATOR_SUBITERATOR(_bs_I, _bs_S) \
+    BSON_ITERATOR_FROM_BUFFER((_bs_S), bson_iterator_value(_bs_I))
+
+#define BSON_ITERATOR_TYPE(_bs_I) \
+    ((bson_type) (_bs_I)->cur[0])
+
+#define BSON_ITERATOR_KEY(_bs_I) \
+    ((_bs_I)->cur + 1)
+
+#define BSON_ITERATOR_INIT(_bs_I, _bs) \
+    (_bs_I)->cur = (_bs)->data + 4; \
+    (_bs_I)->first = 1;
+
 /* ----------------------------
    READING
    ------------------------------ */
@@ -150,18 +164,12 @@ EJDB_EXPORT int bson_size2(const void *bsdata);
 EJDB_EXPORT int bson_buffer_size(const bson *b);
 
 /**
- * Print a string representation of a BSON object.
- *
- * @param b the BSON object to print.
- */
-EJDB_EXPORT void bson_print(FILE *f, const bson *b);
-
-/**
  * Return a pointer to the raw buffer stored by this bson object.
  *
  * @param b a BSON object
  */
 EJDB_EXPORT const char *bson_data(const bson *b);
+EJDB_EXPORT const char* bson_data2(const bson *b, int *bsize);
 
 /**
  * Print a string representation of a BSON object.
@@ -169,7 +177,7 @@ EJDB_EXPORT const char *bson_data(const bson *b);
  * @param bson the raw data to print.
  * @param depth the depth to recurse the object.x
  */
-EJDB_EXPORT void bson_print_raw(FILE *f, const char *bson, int depth);
+EJDB_EXPORT void bson_print_raw(const char *bson, int depth);
 
 /**
  * Advance a bson_iterator to the named field.
@@ -190,6 +198,8 @@ typedef struct { /**< Find field path context */
     bson_iterator *input;
     int stopos;
     bool stopnestedarr;
+    int mpos; /**< Array index of the first matched array field */
+    int dpos; /**< Position of `$` in array projection fieldpath. */
 } FFPCTX;
 
 
@@ -416,7 +426,7 @@ EJDB_EXPORT const char *bson_iterator_string(const bson_iterator *i);
  *
  * @return the length of the current BSON object.
  */
-int bson_iterator_string_len(const bson_iterator *i);
+EJDB_EXPORT int bson_iterator_string_len(const bson_iterator *i);
 
 /**
  * Get the code value of the BSON object currently pointed to by the
@@ -590,7 +600,7 @@ EJDB_EXPORT void bson_append(bson *b, const void *data, int len);
  *  object using this function.
  *
  *  @note When finished, you must pass the bson object to
- *      bson_destroy( ).
+ *      bson_del( ).
  */
 EJDB_EXPORT void bson_init(bson *b);
 
@@ -611,8 +621,8 @@ EJDB_EXPORT void bson_init_as_query(bson *b);
  *
  * @return BSON_OK or BSON_ERROR.
  */
-int bson_init_data(bson *b, char *data);
-EJDB_EXPORT int bson_init_finished_data(bson *b, char *data);
+EJDB_EXPORT int bson_init_data(bson *b, char *data);
+EJDB_EXPORT int bson_init_finished_data(bson *b, const char *data);
 
 /**
  * Initialize a BSON object, and set its
@@ -623,9 +633,9 @@ EJDB_EXPORT int bson_init_finished_data(bson *b, char *data);
  *
  * @return BSON_OK or BSON_ERROR.
  */
-void bson_init_size(bson *b, int size);
+EJDB_EXPORT void bson_init_size(bson *b, int size);
 
-void bson_init_on_stack(bson *b, char *bstack, int mincapacity, int maxonstack);
+EJDB_EXPORT void bson_init_on_stack(bson *b, char *bstack, int mincapacity, int maxonstack);
 
 /**
  * Grow a bson object.
@@ -636,7 +646,7 @@ void bson_init_on_stack(bson *b, char *bstack, int mincapacity, int maxonstack);
  * @return BSON_OK or BSON_ERROR with the bson error object set.
  *   Exits if allocation fails.
  */
-int bson_ensure_space(bson *b, const int bytesNeeded);
+EJDB_EXPORT int bson_ensure_space(bson *b, const int bytesNeeded);
 
 /**
  * Finalize a bson object.
@@ -644,18 +654,22 @@ int bson_ensure_space(bson *b, const int bytesNeeded);
  * @param b the bson object to finalize.
  *
  * @return the standard error code. To deallocate memory,
- *   call bson_destroy on the bson object.
+ *   call bson_del on the bson object.
  */
 EJDB_EXPORT int bson_finish(bson *b);
 
 /**
  * Destroy a bson object.
- *
+ * Clears bson object and frees internal memory buffers held by bson
+ * object BUT does not delete bson object itself
  * @param b the bson object to destroy.
- *
  */
 EJDB_EXPORT void bson_destroy(bson *b);
 
+/**
+ * The bson_del() performs bson_destroy() then frees bson object itself.
+ * @param b
+ */
 EJDB_EXPORT void bson_del(bson *b);
 
 EJDB_EXPORT void bson_reset(bson *b);
@@ -993,21 +1007,15 @@ EJDB_EXPORT int bson_numstrn(char *str, int maxbuf, int64_t i);
 
 /* bson_err_handlers shouldn't return!!! */
 typedef void( *bson_err_handler)(const char *errmsg);
-
 typedef int (*bson_printf_func)(const char *, ...);
-typedef int (*bson_fprintf_func)(FILE *, const char *, ...);
-typedef int (*bson_sprintf_func)(char *, const char *, ...);
 
 extern void *(*bson_malloc_func)(size_t);
 extern void *(*bson_realloc_func)(void *, size_t);
 extern void ( *bson_free_func)(void *);
 
-extern bson_printf_func bson_printf;
-extern bson_fprintf_func bson_fprintf;
-extern bson_sprintf_func bson_sprintf;
 extern bson_printf_func bson_errprintf;
 
-EJDB_EXPORT void bson_free(void *ptr);
+void bson_free(void *ptr);
 
 /**
  * Allocates memory and checks return value, exiting fatally if malloc() fails.
@@ -1018,7 +1026,7 @@ EJDB_EXPORT void bson_free(void *ptr);
  *
  * @sa malloc(3)
  */
-EJDB_EXPORT void *bson_malloc(int size);
+void *bson_malloc(int size);
 
 /**
  * Changes the size of allocated memory and checks return value,
@@ -1071,7 +1079,6 @@ void bson_builder_error(bson *b);
  *
  */
 EJDB_EXPORT double bson_int64_to_double(int64_t i64);
-
 EJDB_EXPORT void bson_swap_endian32(void *outp, const void *inp);
 EJDB_EXPORT void bson_swap_endian64(void *outp, const void *inp);
 
@@ -1099,24 +1106,57 @@ EJDB_EXPORT int bson_append_array_from_iterator(const char *key, bson_iterator *
 
 
 /**
- * Merge bson  'b2' into 'b1' saving result the 'out' object.
- * 'b1' & 'b2' bson must be finished BSONS.
+ * Merge bson  `b2` into `b1` saving result the 'out' object.
+ * `b1` & `b2` bson must be finished BSONS.
  * Resulting 'out' bson must be allocated and not finished.
  *
  * Nested object skipped and usupported.
  *
- * @param b1 BSON to to be merged into out
- * @param b2 BSON to to be merged into out
- * @param overwrite if True All b1 fields will be overwriten by corresponding b2 fields
+ * @param b1 BSON to to be merged in `out`
+ * @param b2 Second BSON to to be merged in `out`
+ * @param overwrite if `true` all `b1` fields will be overwriten by corresponding `b2` fields
+ * @param out
  *
  * @return BSON_OK or BSON_ERROR.
  */
 EJDB_EXPORT int bson_merge(const bson *b1, const bson *b2, bson_bool_t overwrite, bson *out);
 EJDB_EXPORT int bson_merge2(const void *b1data, const void *b2data, bson_bool_t overwrite, bson *out);
 
+/**
+ * Merge bsons.
+ * `bsdata2` may contain field path keys (eg: 'foo.bar').
+ * @param bsdata1 BSON data to to be merged in `out`
+ * @param bsdata2 Second BSON data to to be merged in `out`
+ * @param out Resulting `out` bson must be allocated and not finished.
+ *
+ * @return BSON_OK or BSON_ERROR.
+ */
+EJDB_EXPORT int bson_merge3(const void *bsdata1, const void *bsdata2, bson *out);
+
 EJDB_EXPORT int bson_inplace_set_bool(bson_iterator *pos, bson_bool_t val);
 EJDB_EXPORT int bson_inplace_set_long(bson_iterator *pos, int64_t val);
 EJDB_EXPORT int bson_inplace_set_double(bson_iterator *pos, double val);
+
+typedef struct {
+    TCMAP *ifields; //Required Map of fieldpaths. Map values are a simple boolean bufs.
+    bool imode; //Required If true fpaths will be included. Otherwise fpaths will be excluded from bson.
+    const void *bsbuf; //Required BSON buffer to process.
+    bson *bsout; //Required Allocated output not finished bson* object.
+    TCMAP *fkfields; //Optional: Map (fpath => bson key) used to force specific bson keys for selected fpaths.
+} BSONSTRIPCTX;
+
+/**
+ * Include or exclude fpaths in the specified BSON and put resulting data into `bsout`.
+ * On completion it finishes `bsout` object.
+ *
+ * @param ifields Map of fieldpaths. Map values are a simple boolean bufs.
+ * @param imode If true fpaths will be included. Otherwise fpaths will be excluded from bson.
+ * @param bsbuf BSON buffer to process.
+ * @param bsout Allocated output not finished bson* object
+ * @return BSON error code
+ */
+EJDB_EXPORT int bson_strip(TCMAP *ifields, bool imode, const void *bsbuf, bson *bsout);
+EJDB_EXPORT int bson_strip2(BSONSTRIPCTX *sctx);
 
 
 /**
@@ -1143,12 +1183,31 @@ EJDB_EXPORT int bson_compare_bool(bson_bool_t cv, const void *bsdata, const char
 EJDB_EXPORT bson* bson_dup(const bson *src);
 
 
+EJDB_EXPORT bson* bson_create_from_iterator(bson_iterator *from);
 EJDB_EXPORT bson* bson_create_from_buffer(const void *buf, int bufsz);
 EJDB_EXPORT bson* bson_create_from_buffer2(bson *bs, const void *buf, int bufsz);
+EJDB_EXPORT void bson_init_with_data(bson *bs, const void *bsdata);
 
 EJDB_EXPORT bool bson_find_unmerged_array_sets(const void *mbuf, const void *inbuf);
 EJDB_EXPORT bool bson_find_merged_array_sets(const void *mbuf, const void *inbuf, bool expandall);
 EJDB_EXPORT int bson_merge_array_sets(const void *mbuf, const void *inbuf, bool pull, bool expandall, bson *bsout);
+
+
+/**
+ * Convert BSON into JSON buffer.
+ * @param src BSON data
+ * @param buf Allocated buffer with resulting JSON data
+ * @param sp JSON data length will be stored into
+ * @return BSON_OK or BSON_ERROR
+ */
+EJDB_EXPORT int bson2json(const char *bsdata, char **buf, int *sp);
+
+/**
+ * Convert JSON into BSON object.
+ * @param jsonstr NULL terminated JSON string
+ * @return Allocated BSON object filled with given JSON data or NULL on error
+ */
+EJDB_EXPORT bson* json2bson(const char *jsonstr);
 
 
 EJDB_EXTERN_C_END

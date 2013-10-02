@@ -2,6 +2,7 @@
 # include "csv_parser.h"
 # include "keywords.h"
 # include <sstream>
+#include <string.h>
 
 using namespace std;
 using namespace keys;
@@ -120,7 +121,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
              for (int i = 0; i < TCLISTNUM(res); ++i) {
                  void *bsdata = TCLISTVALPTR(res, i);
                  char *bsdata_ = static_cast<char*>(bsdata);
-                 bson_print_raw(stderr, bsdata_, 0);
+                 bson_print_raw(/*stderr,*/ bsdata_, 0);
              }
              fprintf(stderr, "\n");
              //Dispose result set

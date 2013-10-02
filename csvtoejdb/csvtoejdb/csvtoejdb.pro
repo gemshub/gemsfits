@@ -24,13 +24,23 @@ CONFIG( debug,  debug|release ) {
         message( "Configuring for debug build ..." )
 }
 
+!win32 {
+  PLATFORM_CPP       =  ../../gemsfit2/tcejdb/nix
+}
+else {
+  PLATFORM_CPP       =  ../../gemsfit2/tcejdb/win32
+}
 
+!macx-clang {
+ QMAKE_CXXFLAGS += -std=gnu99
+ QMAKE_CFLAGS += -std=gnu99
+}
 
 
 QMAKE_CC	= gcc
 QMAKE_CXX	= g++
-QMAKE_CXXFLAGS += -std=gnu99 -Wall -pedantic -fexceptions -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions -fopenmp
-QMAKE_CFLAGS   += -std=gnu99 -fopenmp
+QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions -fopenmp
+QMAKE_CFLAGS   += -fopenmp
 LIBS           += -lz -fopenmp -ljansson
 
 
@@ -39,13 +49,15 @@ MAIN_CPP        =  ./main
 
 EJDB_H          =  $$EJDB_CPP
 MAIN_H          =   $$MAIN_CPP
-
+PLATFORM_H   =  $$PLATFORM_CPP
 
 DEPENDPATH     += $$EJDB_H
 DEPENDPATH     += $$MAIN_H
+DEPENDPATH   += $$PLATFORM_H
 
 INCLUDEPATH    += $$EJDB_H
 INCLUDEPATH    += $$MAIN_H
+INCLUDEPATH  += $$PLATFORM_H
 
 OBJECTS_DIR     = obj
 
