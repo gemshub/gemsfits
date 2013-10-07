@@ -86,10 +86,9 @@ else {
 }
 
 !macx-clang {
- QMAKE_CXXFLAGS += -std=gnu99
- QMAKE_CFLAGS += -std=gnu99
+  QMAKE_CXXFLAGS += -std=gnu99
+  QMAKE_CFLAGS += -std=gnu99
 }
-
 
 FIT_CPP      =  ./src-fit
 GEMS3K_CPP   =  ../../standalone/GEMS3K

@@ -1,5 +1,5 @@
 
-# CASH/ solcash CASH.csv
+# csvtoejdb.pro
 
 TEMPLATE        = app
 CONFIG         += console
