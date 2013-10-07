@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+  <title>HOWTO GEMSFIT2 (workflow)</title>
+
+  
+  
+  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+  
+  <meta name="author" content="GEMS Development Team">
+
+  
+  <meta name="description" content="Version 2">
+
+</head><body style="background-image: url(bgimg-gray.jpg);">
+<h1><img style="width: 48px; height: 48px;" src="gemsfit2.png" alt="gemsfit2.png"> <font style="color: black;" color="#000066">GEMSFIT2<br>
+</font></h1>
+
+<h2>How to work with GEMSFIT2 program<br>
+</h2>
+
+<h2 style="font-family: Helvetica,Arial,sans-serif;"> </h2>
+
+<h4><span style="font-family: Helvetica,Arial,sans-serif;"></span></h4>
+
+<hr size="2" width="100%">
+<h4>Contents</h4>
+<br>
+<hr style="width: 100%; height: 2px;">(After the program is ready to run; to build the program, see gemsfit2_build.txt)<br>
+<br>
+To process your data with GEMSFIT2 you need to use the following tools: 1. csvtoejdb, 2. GEMS3, and 3. gemsfit2.<br>
+<br>
+1. csvtoejdb is a utility program that deals with the data management
+and is used to put the experimental data into a JSON database file
+(uses EJDB, http://ejdb.org/). The program adds entries into the
+database, backups the <br>
+database into a JSON format text file, and also can restore the JSON file into the database. The database <br>
+file the program creates will be then used by gemsfit2 for the data processing/fitting. Together with the<br>
+database file, a file terminated with ...._distinctTP.csv will be created. This file opend in excel will have <br>
+the unique P and T points of all experiments in the database that are useful when exporting the GEMS3 system <br>
+files. (for runing csvtoejdb see /csvtoejdb/docs/HOW_TO_csvtoejdb.txt)<br>
+<br>
+2. GEM-Selektor v3 code package (http://gems.web.psi.ch/GEMS3) is needed to create the geochemical system <br>
+to model the experiments. In GEMS3, elements in the system, dependent components, phases, thermodynamic datasets <br>
+can be selected and combined within the chemical thermodynamic system, which can be checked in trial calculations. <br>
+For an overview, installation, and use of GEMS3, see its web site, help window, and test projects. <br>
+After the&nbsp; system is created and tested, the user needs to export the system files that later will be input <br>
+for gemsfit2 (which includes the same GEMS3K GEM solver of equilibria as GEM-Selektor v.3). This<br>
+is done from the "Single Thermodynamic System" dialog of GEMS3. Calculate the equilibrium, and use the menu<br>
+"Data"-&gt; "Export GEMS3K files...", which opens the "GEMS3K files export" dialog.&nbsp; <br>
+&nbsp;&nbsp;&nbsp; -In the "T and P values and look-up array structure" select "enter temperature and pressure values" <br>
+&nbsp;&nbsp;&nbsp; and "disable interpolation". <br>
+&nbsp;&nbsp;&nbsp; -In the "number of P points or paris" enter the number of unique T and P points which you can get from <br>
+&nbsp;&nbsp;&nbsp; the ..._distinctTP.csv file exported by the csvtoejdb tool at the same time with adding data to the <br>
+&nbsp;&nbsp;&nbsp; database file (see /csvtoejdb/docs/HOW_TO_csvtoejdb.txt). <br>
+&nbsp;&nbsp;&nbsp; -At the next step, you have to copy and paste all the P and T points also found in the ..._distinctTP.csv <br>
+&nbsp;&nbsp;&nbsp; file exported by the csvtoejdb tool.<br>
+The exported GEMS3K files will be then used to generate the gemsfit2 input file template and are also necessary<br>
+during the fitting procedures.<br>
+<br>
+3. gemsfit2 code is actually the fitting tool, which reads the experimental data from the EJDB database,<br>
+and based on the user defined settings in the input file, it adjusts the desired GEM input parameters. <br>
+gemsfit2 has two modes: <br>
+&nbsp;&nbsp; -init - writes the template input file (to be modified by the user) using the exported GEMS3K files;<br>
+&nbsp;&nbsp; -run&nbsp; - runs the prameter fitting procedure based on the settings given in the user-edited input file.<br>
+For running gemsfit2, see HOW_TO_gemsfit2.txt.<br>
+<br>
+Workflow steps for the user:<br>
+<br>
+1. Create / update the experimental database using the csvtoejdb - see /csvtoejdb/docs/HOW_TO_csvtoejdb.txt<br>
+2. Create the chemical system in GEMS3 modeling project, test it, and export the GEMS3K sytem files<br>
+3. Use gemsfit2 in -init mode to create the template input file - see HOW_TO_gemsfit2.txt<br>
+4. Edit the input file for the specific parameter fitting task (indicate the paths to the GEMS3K system files,<br>
+&nbsp;&nbsp; and to the database file) following the instructions for each section present as comments in the file.<br>
+5. Run gemsfit2 in -run mode with the path to the edited input file as command line argument, see HOW_TO_gemsfit2.txt<br>
+<br>
+For trobleshooting in the case of reported errors or crashes of csvtoejdb or gemsfit2 codes, see <br>
+ERRORS_csvtoejdb.txt&nbsp; and ERRORS_gemsfit2.txt documentation files.<br>
+<br>
+<br>
+<br>
+<hr style="width: 100%; height: 2px;">Last
+updated:&nbsp; 02. 10. 2013&nbsp; DM,DK <br style="font-family: Helvetica,Arial,sans-serif;">
+
+<br style="font-family: Helvetica,Arial,sans-serif;">
+
+Copyright&nbsp; (c) 2013&nbsp; <a href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a><br style="font-family: Helvetica,Arial,sans-serif;">
+
+<hr style="font-family: Helvetica,Arial,sans-serif;" size="2" width="100%"><br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+</body></html>

@@ -1,14 +1,22 @@
+Roadmap of GEMSFIT2 development
+
 + completed or partially completed
 - to be completed
 
 - add artificial weight column in database in gemsfit2??
 
+- save current code tree to GEMSFIT1013 tag
+- move devDanFit branch to new trunk, clean it up, improve html documentation
+- fork devPhaFit branch from trunk, merge trunk standalone from devPhase standalone
+- check necessary extensions in GEMSFIT2 and cvstoejdb due to extended .IPM file parameter arrays
+- propagate to GEMSFIT2 documentation, wherever necessary    
+
 + describe/document command line parameters to start gemsfit2 and csvtoejdb utility program
 + check if GEMSFIT input file exists by writing a new template input file (to prevent overwrite)
 + documentation in the GEMSFIT template input file (fitting bulk composition with L linked parameters) 
-+ write all possible option the user has for data to compare
-- see more possible errors and add them to the gemfit_error function.
-+ problem in csvtoejdb tool when adding same pair of sample and expdataset - the program should break and not add anything in the database.
++ write all possible options the user has for the data to compare
+- see more possible errors and add them to the gemfit_error function
++ problem in csvtoejdb tool when adding the same pair of sample and expdataset - the program should skip it and not add it again to the database.
 
 + Printing class - printing in /results/FIT_results.csv
 - test inverse weighting more
@@ -24,11 +32,11 @@
 
 - type of data to compare (molality and log molality) etc...
 + add density for data to compare.
-+ add DMc, fDQF parameters
++ add DMc, fDQF parameters (needs merge from devPhase first)
 + check Tk and P - if implemented
 - make test for Linked parameters - simple pH titration system
 - make test of geobarometry with qtz rutile paper.
-+ added phase amount, phase vlolume, dcomp amount, dcomp activity coeficient
++ added phase amount, phase volume, dcomp amount, dcomp activity coeficient
 - not added Eh, osmotic coeficient.
 - think about units, how to make a uniform strategy for units.
 
@@ -48,10 +56,11 @@ EJDB database maintenance functionality:
 + backup to JSON text file (the whole DB, one exp.dataset, etc.)
 + restore from JSON text file
 + updating/owerwriting documents e.g. for error corrections in experimental data, adding new information for experimental samples. <= use EJDB command line interface.
-- what if one wants to sellect data from more collections
+- what if one wants to select data from more collections
 
 
 future
-- itterative regresion
-- 2-3 stept regrestion: 1 - using global algoritm; 2 - using local algorithm.
+- iterative regresion
+- 2-3 step regrestion: 1 - using global algoritm; 2 - using local algorithm.
 - Bayesian linear regression
+

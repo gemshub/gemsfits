@@ -1,6 +1,0 @@
-1. sudo apt-get install openssh-server on both PC
-
-2. make a new empty database on the PC you want to copy
-
-3. /usr/local/pgsql/bin/pg_dump -C <name of db to be copied> | bzip2 | ssh  postgres@129.132.137.60 "bunzip2 | /usr/local/pgsql/bin/psql <name of new empty db on other PC/server>"
-

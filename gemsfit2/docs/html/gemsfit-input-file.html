@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+  <title>GEMSFIT2 Input File</title>
+
+  
+  
+  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+  
+  <meta name="author" content="GEMS Development Team">
+
+  
+  <meta name="description" content="Version 2">
+
+</head><body style="background-image: url(bgimg-gray.jpg);">
+<h1><img style="width: 48px; height: 48px;" src="gemsfit2.png" alt="gemsfit2.png"> <font style="color: black;" color="#000066">GEMSFIT2<br>
+</font></h1>
+
+<h2>Task input configuration file and how to prepare it<br>
+</h2>
+
+<h2 style="font-family: Helvetica,Arial,sans-serif;"> </h2>
+
+<h4><span style="font-family: Helvetica,Arial,sans-serif;"></span></h4>
+
+<hr size="2" width="100%">
+<h4>Contents</h4>
+<br>
+<br>
+<hr style="width: 100%; height: 2px;">Suggestion on how to produce a template GEMSFIT configuration file from GEMS3K I/O files (DK DM SD 11.03.2013)<br>
+<br>
+1. There should be a special mode of starting GEMSFIT with command-line parameters as<br>
+<br>
+&gt;$ gemsfit -init &lt;path to &lt;GEMS3K&gt;-dat.lst&gt; -conf &lt;path to GEMSFIT input config file to be generated&gt; <br>
+<br>
+Example: &gt;$ gemsfit -init ./SS_INPUT/AllDa3T-fwd-dat.lst -conf ./SS_INPUT/SS_GEMSFIT_AllDa3T_input.dat<br>
+<br>
+In this mode, GEMSFIT&nbsp;will generate a template input configuration
+file. This file should be edited by the user to indicate (1) what
+parameters to fit and (2) what GEM output to compare with the
+experimental data to be loaded from the input .csv file or from the
+external database. <br>
+&nbsp;<br>
+&lt;path to &lt;GEMS3K&gt;-dat.lst&gt; is a path to the list of GEMS3K
+DCH, IPM and DBR input files as exported from the GEM-Selektor code
+package. <br>
+<br>
+&lt;path to GEMSFIT input config file to be generated&gt; is a path to
+the template GEMSFIT input configuration file to be generated (if
+exists, will be overwritten). This file has to be edited by the user
+before running GEMSFIT for this task.<br>
+<br>
+<br>
+2. Using GEMSFIT, one should be able to fit any combination of standard
+state properties and non-ideality model interaction parameters, system
+T, P, bulk composition, i.e. any combination of GEMIPM input
+parameters. <br>
+<br>
+To run GEMSFIT, a path to the the input configuration file should be given in the command line:<br>
+<br>
+&gt;$ gemsfit -run &lt;path to GEMSFIT input config file&gt; <br>
+<br>
+Example: &gt;$ gemsfit -run ./SS_INPUT/SS_GEMSFIT_AllDa3T_input.dat<br>
+<br>
+The GEMSFIT output files will be written into the "output_GEMSFIT" and
+the "results_GEMSFIT" subfolders located in the same folder where the
+GEMSFIT input config file is located. <br>
+<br>
+<br>
+3. Each GEM&nbsp;input property selected for fitting must have at least
+the start value, lower and upper constraint, optional reaction
+constraints given in the "Parameters to Fit" section of the GEMSFIT
+input configuration file. <br>
+<br>
+F&lt;initval&gt;&nbsp;&nbsp; # assumed default low, upper boundaries, and 'i' meaning 'independently fitted'<br>
+<br>
+F{"IV":&lt;initval&gt;, "LB":&lt;lowbound&gt;, "UB":&lt;upperbound&gt; }&nbsp;&nbsp;&nbsp; # explicit properties of fitting <br>
+<br>
+Example 1: Inverse titration with H2SO4 and HCl to reach the prescribed pH:<br>
+<br>
+For IC "S":&nbsp;&nbsp; F{ "IV":0.1, "LB":0.09, "UB":0.11, "PD":"i"
+}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # independent parameter<br>
+For IC "Cl":&nbsp; F{ "IV":0.01, "LB":0.009, "UB":0.011, "PD":"i" }&nbsp;&nbsp;&nbsp;&nbsp; # independent parameter<br>
+For IC "H":&nbsp;&nbsp; L{ "IV":113, "LB":112,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[ { "LF":1, "LN": "Cl", "LP":"bIC" }, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+{ "LF":2, "LN": "S", "LP":"bIC" } ]<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }&nbsp;&nbsp; # linked parameter (hard link with coeff. 1.0)<br>
+For IC "O":&nbsp;&nbsp; L{ "IV": 55.51, "LB": 112,&nbsp; [ { "LF": 4, "LN": "S", "LP":"bIC" } ] }<br>
+<br>
+<br>
+Example 2: Fitting G0 value of KOH@ under reaction constraint to G0 of K+ (fitting parameter) and G0 of H2O@. <br>
+<br>
+For DC 'K+' in G0 at 1,298:&nbsp;&nbsp; F{"IV": -298074, "LB": -303000, "UB": -295000, "PD":'i'}&nbsp; <br>
+For DC 'KOH@': R{&nbsp; "IV" : -36819.000776856,<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Ref" : "SUPCRT92",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "logK" : -14.46,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "nC" : 4,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "species" : "KOH@",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+"RC" : [ "K+", "H2O@", "H+", "KOH@" ],<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+"Rcoef" : [ -1, -1, 1, 1 ]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+<br>
+In the "Data to Compare" section of this file, it should also be
+clearly specified which GEMIPM output values (pH, Eh, concentrations,
+activities, their functions such as osmotic coefficients) should be
+compared with which respective experimental values; what type of the
+objective function (least-squares, ...), what kind of weights of
+samples should be used; and from which .csv file or which subset of
+PostgreSQL database these experimental values should be selected. <br>
+<br>
+"DT": "bPS", "PN": "aqueous", "<br>
+<br>
+JSON notation example of the target (objective) function for parameter fitting<br>
+<br>
+{ "Target": "name", "TT": "lsq", "WT": "inverr", "OFUN": <br>
+&nbsp; [ <br>
+&nbsp;&nbsp;&nbsp; { "OPH": "aq_gen", "ON": "Si", "OP": "bXs",&nbsp;&nbsp;&nbsp;&nbsp; "OFU": "log_m",&nbsp; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "EPH": "aq_gen", "EN": "Si",&nbsp; "Eunit": "loga", "Eerr": "log_error" },<br>
+&nbsp;&nbsp;&nbsp; { "OPH": "aq_gen", "ON": "Al", "OP": "bXs",&nbsp;&nbsp;&nbsp;&nbsp; "OFU": "log_m",&nbsp; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "EPH": "aq_gen", "EN": "Al",&nbsp; "Eval": "loga", "Eerr": "log_error" },<br>
+&nbsp;&nbsp;&nbsp; { "OPH": "aq_gen", "OP": "pH",&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "EPH": "aq_gen", "EP": "pH", "Eval": "loga", "Eerr": "log_error" }<br>
+&nbsp; ]<br>
+}<br>
+<br>
+JSON notation example of the subset of experimental data to be selected<br>
+<br>
+{ "sample" : "", <br>
+&nbsp; "expdataset" : ["Kennedy1950", "CH04D"],<br>
+&nbsp; "sT" : [1, 2000],<br>
+&nbsp; "sP" : [1, 5000]<br>
+}<br>
+<br>
+<br>
+In the "Optimization Methods" section, the rest of specifications
+should be collected, e.g. choice of the algorithm, threads, statistics,
+etc. <br>
+<br>
+In the "Fitting Results" section, all the modes of output of fitting
+results (output file paths), verbosity, print, and graphic formats
+should be collected. <br>
+<br>
+<br>
+3. To generate the template GEMSFIT input configuration file, the
+program should combine fragments of GEMS3K DCH, IPM and DBR files into
+the "Fitting Task" section; fragment of DBR file into "Experimental
+Data" section; append the default "Optimization Methods" and "Fitting
+Results" sections. In the comment lines, all options must be visible. <br>
+<br>
+A generated file must be edited by the user to mark what to fit and
+what to compare in the target function. Discussions are needed to
+develop "markup language" for that. The example template file is
+provided at the end of this file. <br>
+<br>
+<br>
+<br>
+<br>
+<br>
+Last
+updated:&nbsp; 02. 10. 2013&nbsp; DM,DK <br style="font-family: Helvetica,Arial,sans-serif;">
+
+<br style="font-family: Helvetica,Arial,sans-serif;">
+
+Copyright&nbsp; (c) 2013&nbsp; <a href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a><br style="font-family: Helvetica,Arial,sans-serif;">
+
+<hr style="font-family: Helvetica,Arial,sans-serif;" size="2" width="100%"><br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+</body></html>

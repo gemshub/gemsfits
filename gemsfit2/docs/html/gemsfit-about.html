@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+  <title>About GEMSFIT2 Code</title>
+
+  
+  
+  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+  
+  <meta name="author" content="GEMS Development Team">
+
+  
+  <meta name="description" content="Version 2">
+
+</head><body style="background-image: url(bgimg-gray.jpg);">
+<h1><img style="width: 48px; height: 48px;" src="gemsfit2.png" alt="gemsfit2.png"> <font style="color: black;" color="#000066">GEMSFIT2<br>
+</font></h1>
+
+<h2>About GEMSFIT2 code<br>
+</h2>
+
+<h2 style="font-family: Helvetica,Arial,sans-serif;"> </h2>
+
+<h4><span style="font-family: Helvetica,Arial,sans-serif;"></span></h4>
+
+<hr size="2" width="100%">
+<h4><br>
+</h4>
+Data Source - EJDB database<br>
+<br>
+Data Select - The user can select individual experiments, datasets, and temperature and pressure intervals.<br>
+<br>
+Data Exclude - Not implemented yet! - For now one can exclude by not selecting :)<br>
+<br>
+Type of target functions - least square: (computed - measured)^2; <br>
+<br>
+Weighting - inverr: 1/error; inverr2: 1/error^2; inverr3: 1/measured^2;<br>
+<br>
+Data To Compare - (only aqueous July 2013) phase chemical (elements) composition, given in molal or loga (meaning log) units;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; phase properties: pH,
+amount, volume in -loga (meaning -log) or molal, g or kg, cm3 or m3;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; phase dependent components: amount (in mole amount), activity coeficient <br>
+<br>
+Parameters to fit - G0 (Gibbs free energy at 25 C and 1 bar), bIC (bulk
+composition), PMc (interaction parameter coefficients for non-ideal
+solutions)<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; G0, bIC, and
+PMc can be marked with F followed by the initial value or a JSON type
+with initial, upper and lower bounds specified<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; G0 can also be
+marked by R - as reaction dependent (using the reaction constant)<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; bIC can also
+be marked by L - as linked parameters e.g if we have Na linked with Cl
+and we add 1 mole of Cl, 1 mole of Na will be automatically added<br>
+<br>
+Optimization algorithms - GN_ISRES GN_ORIG_DIRECT GN_ORIG_DIRECT_L
+LN_COBYLA LN_BOBYQA LD_MMA LD_SLSQP GD_MLSL - for info see
+http://ab-initio.mit.edu/wiki/index.php/NLopt_Algorithms<br>
+<br>
+<hr style="width: 100%; height: 2px;">Last
+updated:&nbsp; 02. 10. 2013&nbsp; DM,DK <br style="font-family: Helvetica,Arial,sans-serif;">
+
+<br style="font-family: Helvetica,Arial,sans-serif;">
+
+Copyright&nbsp; (c) 2013&nbsp; <a href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a><br style="font-family: Helvetica,Arial,sans-serif;">
+
+<hr style="font-family: Helvetica,Arial,sans-serif;" size="2" width="100%"><br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+</body></html>
