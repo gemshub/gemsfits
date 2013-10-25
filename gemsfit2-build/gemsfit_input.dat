@@ -69,14 +69,11 @@
 #       "EPH": for what phase from the experiments 
 #       "EN":  for what element from the phase 
 #       "EP":  for what property of the phase
-#       "Eunit":  what unit the values should are given in (overrides the units given in the database for this entry):
+#       "unit":  what unit the values should are given in (overrides the units given in the database for this entry):
 #          "molal":  mol/(kg H2O), "loga": log(molal), "-loga": negated log(molal);
 #          "g"; "kg"; "cm3"; "m3"; "molfrac": mole fraction 
 #           ...
-#       "DCPH":  phase to which the dependent component belongs
 #       "DC":  dependent component
-#       "DCP":  dependent component property
-#       "DCPunit":  property unit - overrides the units given in the database for this entry
 #       (conversions are performed automatically.)
 #     The compare options are: 
 #       aqueous phase ("aq_gen") elemental composition in "molal" or "loga" 
@@ -90,7 +87,7 @@
 #         { "EPH": "aq_gen", "EN": "Si", "Eunit": "molal" },
 #         { "EPH": "aq_gen", "EN": "Al", "Eunit": "molal" },
 #         { "EPH": "aq_gen", "EP": "pH", "Eunit": "-loga" },
-#         { "EPH": "aq_gen", "CT": "prop", "CN": "pH",  "Unit": "-loga" }
+#         { "EPH": "aq_gen", "CT": "property", "CN": "pH",  "Unit": "-loga" }
 #      ]
 #   }'
 #  Paste the above example below, remove comment symbols (#), and edit as necessary.
@@ -98,11 +95,11 @@
 <DataTarget>
 '{ "Target": "name", "TT": "lsq", "WT": "inverr3", "OFUN": 
   [ 
-    { "EPH": "aq_gen", "CT": "IC", "CN": "Al",  "Unit": "molal", "Eerr": "log_error" },
-    { "EPH": "aq_gen", "CT": "IC", "CN": "Si",  "Unit": "molal", "Eerr": "log_error" },
-    { "EPH": "aq_gen", "CT": "IC", "CN": "K",   "Unit": "molal", "Eerr": "log_error" },
-    { "EPH": "aq_gen", "CT": "IC", "CN": "Na",  "Unit": "molal", "Eerr": "log_error" },
-    { "EPH": "aq_gen", "CT": "IC", "CN": "Cl",  "Unit": "molal", "Eerr": "log_error" }
+    { "EPH": "aq_gen", "CT": "IC", "CN": "Al",  "unit": "molal" },
+    { "EPH": "aq_gen", "CT": "IC", "CN": "Si",  "unit": "molal" },
+    { "EPH": "aq_gen", "CT": "IC", "CN": "K",   "unit": "molal" },
+    { "EPH": "aq_gen", "CT": "IC", "CN": "Na",  "unit": "molal" },
+    { "EPH": "aq_gen", "CT": "IC", "CN": "Cl",  "unit": "molal" }
   ]
 }'
 
@@ -201,11 +198,10 @@
 R{ "IV" : -899506.00028008, "Ref" : "test", "nC" : 3, "dcomp" : "Al(OH)2+","RC" : [ "OH-", "AlOH+2", "Al(OH)2+" ], "Rcoef" : [ -1, -1, 1 ] }
 R{ "IV" : -1101735, "Ref" : "test", "nC" : 3, "dcomp" : "Al(OH)3@","RC" : [ "OH-", "Al(OH)2+", "Al(OH)3@" ], "Rcoef" : [ -1, -1, 1 ] }
 R{ "IV" : -1305814.0005473, "Ref" : "test", "nC" : 3, "dcomp" : "Al(OH)4-","RC" : [ "OH-", "Al(OH)3@", "Al(OH)4-" ], "Rcoef" : [ -1, -1, 1 ] }
-
 R{ "IV" : -696322.0008363, "Ref" : "test", "nC" : 3, "dcomp" : "AlOH+2","RC" : [ "OH-", "Al3+", "AlOH+2" ], "Rcoef" : [ -1, -1, 1 ] }
 
 <G0>
-R{ "IV" : -899506.00028008, "Ref" : "test", "order" : 2, "nC" : 3, "DC" : "Al(OH)2+","RC" : [ "OH-", "AlOH+2", "Al(OH)2+" ], "Rcoef" : [ -1, -1, 1 ] }
+R{ "IV" : -899506.00028008, "Ref" : "test", "order" : 2, "nC" : 3, "rDC" : "Al(OH)2+", "RC" : [ "OH-", "AlOH+2", "Al(OH)2+" ], "Rcoef" : [ -1, -1, 1 ] }
 F-1101735
 F-1305814.0005473
 F{"IV": -487478.00144161, "LB": -520000 , "UB" : -440000 }
@@ -213,7 +209,7 @@ F{"IV": -487478.00144161, "LB": -520000 , "UB" : -440000 }
 -661859.00050346
 F{"IV": -831332.00091632, "LB": -860000 , "UB" : -800000 }
 -869016.99998422
-R{ "IV" : -696322.0008363, "Ref" : "test", "order" : 1, "nC" : 3, "DC" : "AlOH+2","RC" : [ "OH-", "Al+3", "AlOH+2" ], "Rcoef" : [ -1, -1, 1 ] }
+R{ "IV" : -696322.0008363, "Ref" : "test", "order" : 1, "nC" : 3, "rDC" : "AlOH+2", "RC" : [ "OH-", "Al+3", "AlOH+2" ], "Rcoef" : [ -1, -1, 1 ] }
 -282462.00010137
 -1106169.9999737
 -399278.99998001

@@ -1,6 +1,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html><head>
-  <title>GEMSFIT2 Tech Info</title>
+<html><head><title>GEMSFIT2 Tech Info</title>
+
+
+
+
+  
 
   
   
@@ -10,9 +14,7 @@
   <meta name="author" content="GEMS Development Team">
 
   
-  <meta name="description" content="Version 2">
-
-</head><body style="background-image: url(bgimg-gray.jpg);">
+  <meta name="description" content="Version 2"></head><body style="background-image: url(bgimg-gray.jpg);">
 <h1><img style="width: 48px; height: 48px;" src="gemsfit2.png" alt="gemsfit2.png"> <font style="color: black;" color="#000066">GEMSFIT2<br>
 </font></h1>
 
@@ -25,87 +27,95 @@
 
 <hr size="2" width="100%">
 <h4>Contents</h4>
+<ul>
+  <li><a href="#GEMSFIT2_external_libaries:">external libaries</a>: have to be installed before building the code<br>
+  </li>
+  <li><a href="#GEMSFIT2_standalone_libraries:">standalone libraries</a>: come together with gemsfit code in predefined directory structure<br>
+  </li>
+</ul>
+<hr style="width: 100%; height: 2px;"><br>
+<h3><a name="GEMSFIT2_external_libaries:"></a>
 
-GEMSFIT2 external libaries:<br>
-
-<br>
+GEMSFIT2 external libaries:</h3>
+<ul>
+  <li>
 
 boost - search for libboost and istall libboost-all-dev. Ot in
-terminal: sudo apt-get install libboost-all-dev<br>
+terminal: sudo apt-get install libboost-all-dev</li>
+</ul>
 
-<br>
+<ul>
+  <li>search for liblapack and install liblapack3gf and liblapack-dev.</li>
+</ul>
+<ul>
+  <li>check if libblas and install are installed by liblapack installer, if needed, install libblas3gf and libblas-dev.</li>
+</ul>
+
+
+<ul>
+  <li>
 
 omp - should already be available as omp.h in C/C++
-http://en.wikipedia.org/wiki/OpenMP<br>
+http://en.wikipedia.org/wiki/OpenMP</li>
+</ul>
 
-<br>
 
-armadillo - Go to http://arma.sourceforge.net and download Armadillo
-C++ library stable version armadillo-2.4.2.tar.gz.<br>
+<ul>
+  <li>
 
-&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; Unpack it, change into the
-directory that was created by unpacking the armadillo archive, and type
-the following<br>
-
-&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; commands:<br>
-
-&nbsp; <br>
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cmake .<br>
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; make <br>
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sudo make
-install<br>
-
-<br>
-
-Nlopt - Go to
+armadillo - search for armadillo in the packedge manager and install armadillo-dev and libarmadillo2<br>
+</li></ul><ul><li>Nlopt - Go to
 http://ab-initio.mit.edu/wiki/index.php/NLopt#Download_and_installation
-and download nlopt-2.2.4.tar.gz<br>
-
-&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Unpack it, go into the nlopt directory
+and download nlopt-2.2.4.tar.gz</li>
+</ul>
+Unpack it, go into the nlopt directory
 and execute<br>
 
-&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ./configure<br>
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<span style="font-family: monospace; font-weight: bold;">&nbsp; ./configure</span><br style="font-family: monospace; font-weight: bold;"><span style="font-family: monospace; font-weight: bold;">
 
-&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; make<br>
+&nbsp;&nbsp; &nbsp;&nbsp; make</span><br style="font-family: monospace; font-weight: bold;"><span style="font-family: monospace; font-weight: bold;">
 
-&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; sudo make install<br>
+&nbsp;&nbsp; &nbsp;&nbsp; sudo make install</span><br>
+<ul>
+  <li>
+
+jansson - http://www.digip.org/jansson/</li>
+</ul>
+<span style="font-family: monospace; font-weight: bold;">
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ./configure</span><br style="font-family: monospace; font-weight: bold;"><span style="font-family: monospace; font-weight: bold;">
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; make</span><br style="font-family: monospace; font-weight: bold;"><span style="font-family: monospace; font-weight: bold;">
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; make check</span><br style="font-family: monospace; font-weight: bold;"><span style="font-family: monospace; font-weight: bold;">
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; make install</span><br>
 
 <br>
-
-jansson - http://www.digip.org/jansson/<br>
-
-&nbsp;&nbsp;&nbsp; ./configure<br>
-
-&nbsp;&nbsp;&nbsp; make<br>
-
-&nbsp;&nbsp;&nbsp; make check<br>
-
-&nbsp;&nbsp;&nbsp; make install<br>
-
-<br>
-
+<h3><a name="GEMSFIT2_standalone_libraries:"></a>GEMSFIT2 standalone libraries:</h3>
 GEMSFIT2 is also linked with the following standalone libraries:<br>
+<ul>
+  <li>
 
-<br>
+GEMS3K</li>
+</ul>
 
-GEMS3K<br>
 
-<br>
+<ul>
+  <li>
 
-csvtoejdb<br>
+csvtoejdb</li>
+</ul>
 
-<br>
 
-EJDB - http://ejdb.org/<br>
+<ul>
+  <li>
 
-<br>
+EJDB - http://ejdb.org/</li>
+</ul>
 
-<br>
 
-<br>
+
 
 <br>
 

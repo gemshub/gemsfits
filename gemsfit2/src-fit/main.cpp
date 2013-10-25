@@ -125,7 +125,7 @@ int main( int argc, char *argv[] )
     fout << "1. main.cpp line 123. Creating new TGfitTask" << endl;
     TGfitTask* gfittask = new TGfitTask();
 
-    cout << gfittask->NodT[0]->DenH2Ow(100000 *1, 25 + 273.15) << endl;
+//    cout << gfittask->NodT[0]->DenH2Ow(100000 *1, 25 + 273.15) << endl;
 
     // if optimization with statistics, without statistics or >2 only statistics
     if (gfittask->Opti->OptDoWhat < 2)

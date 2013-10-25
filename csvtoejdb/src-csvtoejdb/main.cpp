@@ -162,7 +162,7 @@ int main(int argc, char *argv[])
         } else { cout << "Wrong options, Wrong argument for option -run";
             exit(1);}
 
-        //Get or create collection 'experiments'
+        //Get or create collection
         EJCOLL *coll = ejdbcreatecoll(jb, argv[irun + 3], NULL);                //2.4 geting the collection name from comand line and adding it to the database
         coll_name = argv[irun + 3];
 

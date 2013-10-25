@@ -1,6 +1,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html><head>
-  <title>GEMSFIT2 Input File</title>
+<html><head><title>GEMSFIT2 Input File</title>
+
+
+
+
+
+
+  
 
   
   
@@ -10,9 +16,7 @@
   <meta name="author" content="GEMS Development Team">
 
   
-  <meta name="description" content="Version 2">
-
-</head><body style="background-image: url(bgimg-gray.jpg);">
+  <meta name="description" content="Version 2"></head><body style="background-image: url(bgimg-gray.jpg);">
 <h1><img style="width: 48px; height: 48px;" src="gemsfit2.png" alt="gemsfit2.png"> <font style="color: black;" color="#000066">GEMSFIT2<br>
 </font></h1>
 
@@ -25,173 +29,200 @@
 
 <hr size="2" width="100%">
 <h4>Contents</h4>
+<ul>
+  <li><a href="#-init_mode">-init mode</a>: creates the input file<br>
+  </li>
+  <li><a href="#DataSelect">DataSelect</a>: selection of data to be used during fitting</li>
+  <li><a href="#DataTarget">DataTarget</a>: what output data to compare with experimental data</li>
+  <li><a href="#Parameters_to_fit">Paramters marking</a>: mark which parameters to fit</li>
+  <li><a href="#5._Optimization_algorithm_and_statistics">Fitting and statistics</a>:&nbsp; fitting algorithm and statistics parameters <br>
+  </li>
+</ul>
+
 <br>
+<hr style="width: 100%; height: 2px;">
+<h3><a name="-init_mode"></a>1. -init mode</h3>
+How to produce a template GEMSFIT configuration file from GEMS3K I/O files (DK DM SD 10.10.2013)<br>
 <br>
-<hr style="width: 100%; height: 2px;">Suggestion on how to produce a template GEMSFIT configuration file from GEMS3K I/O files (DK DM SD 11.03.2013)<br>
+&nbsp;&nbsp;&nbsp; 1. To produce a gemsfit2 input file the user has to run gemsfit2 (command line) in the "-init" mode
 <br>
-1. There should be a special mode of starting GEMSFIT with command-line parameters as<br>
+<br style="font-weight: bold;"><span style="font-family: monospace; font-weight: bold;">
+&gt;$ gemsfit2 -init &lt;path to &lt;GEMS3K&gt;-dat.lst&gt; </span><br>
 <br>
-&gt;$ gemsfit -init &lt;path to &lt;GEMS3K&gt;-dat.lst&gt; -conf &lt;path to GEMSFIT input config file to be generated&gt; <br>
+Example: <span style="font-family: monospace; font-weight: bold;">&gt;$ gemsfit -init ./GEMS3K-files/AllDa3T-fwd-dat.lst <br>
 <br>
-Example: &gt;$ gemsfit -init ./SS_INPUT/AllDa3T-fwd-dat.lst -conf ./SS_INPUT/SS_GEMSFIT_AllDa3T_input.dat<br>
-<br>
-In this mode, GEMSFIT&nbsp;will generate a template input configuration
-file. This file should be edited by the user to indicate (1) what
-parameters to fit and (2) what GEM output to compare with the
-experimental data to be loaded from the input .csv file or from the
-external database. <br>
-&nbsp;<br>
+</span>
 &lt;path to &lt;GEMS3K&gt;-dat.lst&gt; is a path to the list of GEMS3K
 DCH, IPM and DBR input files as exported from the GEM-Selektor code
 package. <br>
 <br>
-&lt;path to GEMSFIT input config file to be generated&gt; is a path to
-the template GEMSFIT input configuration file to be generated (if
-exists, will be overwritten). This file has to be edited by the user
-before running GEMSFIT for this task.<br>
+In this mode, GEMSFIT&nbsp;will generate a template input configuration
+file. The generated GEMSFIT input configuration file will be placed in
+the directory of gemsfit executable and will be called
+gemsfit_input.dat (if it already exists will as the user to overwrite
+or rename). This file should be edited by the user to indicate: path to
+the database and GEMS3K exported files <span style="font-weight: bold;">(1) what experimental data to use (DataSelect), (2) what GEMS run output to compare with the
+experimental data (DataTarget), (3) mark what
+parameters to adjust, (4) fitting algorithm and statistics related parameters.</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp; <br>
+<h3><a name="DataSelect"></a>2. DataSelect</h3>
+DataSelect represents a JSON format object used as a query for obtaining the experimental data from the database.<br>
+<br>
+Options: <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family: monospace; font-weight: bold;"><big>'{ ... }</big>'</span>: object in JSON format (in braces) describing what to select.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family: monospace; font-weight: bold;">"<big>sample"</big>: [...]</span>: list of comma-separated names of samples, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; or empty string "" to select all samples;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-weight: bold; font-family: monospace;"><big>"usedataset"</big>: [...]</span>: list of comma-separated names of experimental datasets to be used, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; or empty string "" to select all available datasets;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family: monospace; font-weight: bold;"><big>"skipdataset"</big>: [...]</span>: list of comma-separated names of experimental datasets to be skipped, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; or empty string "" to not skipp (in this case usedataset will apply);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family: monospace; font-weight: bold;"><big>"sT</big>": [...]</span>: list of comma-separated minimum and maximum temperature, C, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; or empty string "" to select data for all available temperatures; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family: monospace; font-weight: bold;"><big>"sP"</big>: [...]</span>: list of comma-separated minimum and maximum pressures, bar, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; or empty string "" to select data for all available pressures;&nbsp; <br>
+<br>
+Example: <br>
+<big><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '{"sample" : "", </span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "usedataset" : ["CH04", "CH04D"],</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "skipdataset" : ["CH03", "CH03D"],</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "sT" : [100, 1000],</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; "sP" : [1, 2500]}'</span></big>
+
+
+
 <br>
 <br>
-2. Using GEMSFIT, one should be able to fit any combination of standard
-state properties and non-ideality model interaction parameters, system
-T, P, bulk composition, i.e. any combination of GEMIPM input
-parameters. <br>
+<h3>
+3. <a name="DataTarget"></a>DataTarget</h3>
+
+DataTarget represents a JSON format object used to describe with GEMS output data to compare with experimental data.<br>
 <br>
+Options:<br>
+&nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">'{ ... }'</span></big> : object in JSON format (in braces) describing what to compare and which type of function should be minimized.<br>
+&nbsp;&nbsp;&nbsp; <big><a href="gemsfit-useref.html#Target"><span style="font-family: monospace; font-weight: bold;">"Target"</span></a></big>:&nbsp; name of the target (objective) function (OPTIONAL)<br>
+&nbsp;&nbsp;&nbsp; <a href="gemsfit-useref.html#TT"><span style="font-weight: bold; font-family: monospace;"><big>"TT</big>"</span></a>:&nbsp; type of target function as sum of following terms<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;  Options:<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <big><span style="font-weight: bold; font-family: monospace;">"lsq"</span></big>:&nbsp; w*(measured-simulated)^2;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; <big><span style="font-family: monospace; font-weight: bold;">"lsq-norm"</span></big>:&nbsp; w*(measured/avgm-simulated/avgm)^2;<br>
+&nbsp;&nbsp;&nbsp; <big><a href="gemsfit-useref.html#WT"><span style="font-weight: bold; font-family: monospace;">"WT"</span></a></big>:&nbsp; weighting scheme<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;  Options:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">"inverr"</span></big>: w=1/error; <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; <span style="font-family: monospace; font-weight: bold;">"<big>inverr2"</big></span>: w=1/error^2; <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">"inverr3"</span></big>: w=1/measured^2;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">"inverr_norm</span>"</big>: w=1/(error/&lt;meas(average)&gt;)^2; <br>
+&nbsp; &nbsp; <big><a href="gemsfit-useref.html#OFUN"><span style="font-family: monospace; font-weight: bold;">"OFUN"</span></a></big>:&nbsp; objective function, a list [] of terms {} for measured properties to compare with their computed counterparts. <br>
+&nbsp;&nbsp;&nbsp;&nbsp; Each term can contain property-value pairs:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <big><span style="font-weight: bold; font-family: monospace;">"EPH"</span></big>: for what phase from the experiments <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">"EN"</span></big>:&nbsp; for what element from the phase <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">"EP"</span></big>:&nbsp; for what property of the phase<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">"unit"</span></big>:&nbsp; what unit the values should are given in (overrides the units given in the database for this entry) (OPTIONAL):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <big><span style="font-weight: bold; font-family: monospace;">"molal"</span></big>:&nbsp; mol/(kg H2O), <big><span style="font-weight: bold; font-family: monospace;">"loga"</span></big>: log(molal), <big><span style="font-family: monospace; font-weight: bold;">"-loga"</span></big>: negated log(molal);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">"g"</span>; <span style="font-family: monospace; font-weight: bold;">"kg"</span>; <span style="font-family: monospace; font-weight: bold;">"cm3"</span>; <span style="font-weight: bold; font-family: monospace;">"m3"</span>; <span style="font-family: monospace; font-weight: bold;">"molfrac"</span></big>: mole fraction <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-weight: bold; font-family: monospace;">"DC"</span>:&nbsp; used only if <span style="font-weight: bold; font-family: monospace;">"CT"</span> is <span style="font-family: monospace; font-weight: bold;">"DC"</span>, represents the name of the dependnt component property: <span style="font-weight: bold; font-family: monospace;">Q</span> for amount.<br>
+&nbsp;&nbsp;&nbsp;&nbsp; <br>
+The compare options are: <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; aqueous phase (<big><span style="font-weight: bold; font-family: monospace;">"aq_gen"</span></big>) elemental composition in <big><span style="font-family: monospace; font-weight: bold;">"molal"</span></big> or <big><span style="font-family: monospace; font-weight: bold;">"loga"</span></big> <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; aqueous phase (<big><span style="font-family: monospace; font-weight: bold;">"aq_gen"</span></big>)
+properties (<big><span style="font-family: monospace; font-weight: bold;">"EP"</span></big>): <big><span style="font-family: monospace; font-weight: bold;">"pH"</span></big> in <big><span style="font-weight: bold; font-family: monospace;">"-loga"</span> </big>(or <big><span style="font-family: monospace; font-weight: bold;">"molal"</span></big> - molality concentration
+of H+); <big><span style="font-weight: bold; font-family: monospace;">"pQnt"</span></big> - mass in <big style="font-weight: bold;"><span style="font-family: monospace;">"g"</span></big> or <big><span style="font-family: monospace; font-weight: bold;">"kg"</span><span style="font-weight: bold;">&nbsp; </span></big><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; other phases composition as
+element bulk phase concentration in moles ("mol") or to /Si molar ratio
+("Simolfrac")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; other phases properties (<big style="font-weight: bold; font-family: monospace;">"EP"</big>):
+<big style="font-weight: bold; font-family: monospace;">"Q"</big> - mass in <big style="font-weight: bold; font-family: monospace;">"g"</big> or <big style="font-weight: bold;"><span style="font-family: monospace;">"kg"</span></big>; <big style="font-weight: bold; font-family: monospace;">"pV"</big> - volume in <big><span style="font-family: monospace; font-weight: bold;">"cm3"</span></big> or <big><span style="font-family: monospace; font-weight: bold;">"m3"</span></big> <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dependent components (<big style="font-family: monospace;"><span style="font-weight: bold;">"DC"</span></big>)
+properties: <big style="font-weight: bold;"><span style="font-family: monospace;">"Q"</span></big> - amount in "molfrac"; "<big style="font-family: monospace;"><span style="font-weight: bold;">@coef"</span></big> - activity
+coefictient <br>
+<br>
+<br>
+Example:<br><span style="font-family: monospace; font-weight: bold;">
+&nbsp;</span><big><span style="font-family: monospace;"> '{ "Target": "name", "TT": "lsq", "WT": "inverr", "OFUN":</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { "EPH": "aq_gen", "CT": "IC", "CN": "Si", "unit": "molal" },</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { "EPH": "aq_gen", "CT": "IC", "CN": "Al", "unit": "molal" },</span><span style="font-family: monospace;"></span><br style="font-family: monospace;">
+<span style="font-family: monospace;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { "EPH": "aq_gen", "CT": "property", "CN": "pH",&nbsp; "unit": "-loga" }<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; </span><span style="font-family: monospace;">{ "EPH": "aq_gen", "CT": "DC", "CN": "SiO2@", "DCP": "Q", "unit": "molal" },</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]<br>
+&nbsp;&nbsp; }'</span><br>
+</big>
+
+<br>
+<h3>4. <a name="Parameters_to_fit"></a>Parameters to fit</h3>
+
+GEM input parameters to be fitted can be marked by preceding them with the F, L, and R letter&nbsp; in <span style="font-family: monospace; font-weight: bold;">&lt;TKval&gt;, &lt;Pval&gt;, &lt;G0&gt;,&nbsp; &lt;PMc&gt;, &lt;DMc&gt;, &lt;fDQF&gt;, &lt;bIC&gt; </span>... data object entries in the input file. With F you can mark any type of parameters, with L <span style="font-weight: bold; font-family: monospace;">bIC</span>, and with R G0's which the user wants to have them ase reaction constrined.<br>
+Mark with F the parameter value you want to fit independently of other parameters. Options:<br>
+&nbsp;&nbsp;&nbsp; F&lt;initial value&gt; : the initial value with
+default (10%) upper- and lower boundaries,&nbsp; example for fitting
+G0(298) of SiO2@ : <span style="font-family: monospace; font-weight: bold;">F-833444</span><br>
+&nbsp;&nbsp;&nbsp; <a name="F_JSON"></a>
+F{"IV":&lt;initval&gt;, "LB":&lt;lowbound&gt;, "UB":&lt;upperbound&gt; }<br>
+&nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace;">F{ "IV" :-833444.00006792, "UB" : -800000, "LB" : -900000 }</span></big><br>
+&nbsp;&nbsp;&nbsp; Here,&nbsp; <big><span style="font-weight: bold; font-family: monospace;">"IV"</span></big>: initial value; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">"UB"</span></big>: upper boundary; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">"LB"</span></big>: lower bundary;<br>
+Mark with R the G0(298) value of a dependent component, which depends
+on G0 of other dependent components via a reaction constraint, as in
+the following template:<br>
+&nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace;">R{
+"IV" : -36819, "Ref" : "SUPCRT92", "nC" : 4, "DC" : "KOH@", "RC" : [
+"K+", "H2O@", "H+", "KOH@" ], "Rcoef" : [ -1, -1, 1, 1 ] }</span></big><br>
+&nbsp;&nbsp;&nbsp; Here,&nbsp; <big><span style="font-family: monospace; font-weight: bold;">"IV"</span></big>: initial value; <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; <big><span style="font-weight: bold; font-family: monospace;">"Ref"</span></big>: bibliographic reference;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">"logK"</span></big>: reaction equilibrium constant at 298 K, 1 bar; <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">"nC"</span></big>: numer of components (species) involved in the reaction;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">"DC"</span></big>: name of dependent component whose properties are constrained with this reaction; <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">"RC"</span></big>: list [ ] of names of all components (species) involved in the reaction (comma-separated);<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">"Rcoef"</span></big>: array [ ] of reaction stoichiometry coeficients (comma-separated), in the same order as in the <span style="font-family: monospace; font-weight: bold;">"RC"</span> list.<br>
+Mark with L the <span style="font-weight: bold; font-family: monospace;">bIC</span> (element bulk composition) value of an independent component, which depends on <span style="font-family: monospace; font-weight: bold;">bIC</span> of other elements via a titration constraint similar to the following template in place of the <span style="font-family: monospace; font-weight: bold;">bIC</span> value, and edit it to make the desired changes:<br>
+&nbsp;&nbsp;&nbsp;<big><span style="font-weight: bold;"> </span><span style="font-family: monospace;">L{ "LE" :"H", "IV" :113.016746705914, "LEs" :["S", "Cl"], "Lcoef" :[2,1]}</span></big><br>
+&nbsp;&nbsp;&nbsp; Here, H (hydrogen) is linked to S (sufur) and Cl (clorine) by titration of H<sub>2</sub>SO<sub>4</sub> and HCl, with the stoechiometric coeficients of 2 and 1, respectively.<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; <big><span style="font-weight: bold; font-family: monospace;">"LE"</span></big>: linked element <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; <big><span style="font-family: monospace; font-weight: bold;">"IV</span>"</big>: initial value <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; <big><span style="font-family: monospace; font-weight: bold;">"LEs"</span></big>: the elements linked to <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; <big><span style="font-family: monospace; font-weight: bold;">"Lcoef"</span></big>: linking coeficients (stoechiometric coeficients) <br>
+<br>
+<h3><a name="5._Optimization_algorithm_and_statistics"></a>5. Optimization algorithm and statistics</h3>
+
+Gemsfit uses <a href="http://ab-initio.mit.edu/wiki/index.php/NLopt" target="_blank">NLopt</a> optimization algorithm. The implemented algorithms are: <a href="http://ab-initio.mit.edu/wiki/index.php/NLopt_Algorithms" target="_blank">GN_ISRES, GN_ORIG_DIRECT, LN_COBYLA, LN_BOBYQA, LD_MMA, LD_SLSQP, GD_MLSL.</a> <br>
+<br>
+The user can override the previously assigned abounds by giving a
+general bound percentage in OptBundPerc section. The stoping criterion
+and maximum number of evaluations can be also set here. In the
+statistics section the user can specifi the number of points for the
+sensitivity evaluation, the gradient and sensitivities central
+difference step.<br>
+<br>
+<hr style="width: 100%; height: 2px;"><br>
 To run GEMSFIT, a path to the the input configuration file should be given in the command line:<br>
+<br><big style="font-weight: bold; font-family: monospace;">
+&gt;$ gemsfit -run &lt;path to GEMSFIT input config file&gt; </big><br>
 <br>
-&gt;$ gemsfit -run &lt;path to GEMSFIT input config file&gt; <br>
-<br>
-Example: &gt;$ gemsfit -run ./SS_INPUT/SS_GEMSFIT_AllDa3T_input.dat<br>
-<br>
-The GEMSFIT output files will be written into the "output_GEMSFIT" and
-the "results_GEMSFIT" subfolders located in the same folder where the
-GEMSFIT input config file is located. <br>
-<br>
-<br>
-3. Each GEM&nbsp;input property selected for fitting must have at least
-the start value, lower and upper constraint, optional reaction
-constraints given in the "Parameters to Fit" section of the GEMSFIT
-input configuration file. <br>
-<br>
-F&lt;initval&gt;&nbsp;&nbsp; # assumed default low, upper boundaries, and 'i' meaning 'independently fitted'<br>
-<br>
-F{"IV":&lt;initval&gt;, "LB":&lt;lowbound&gt;, "UB":&lt;upperbound&gt; }&nbsp;&nbsp;&nbsp; # explicit properties of fitting <br>
-<br>
-Example 1: Inverse titration with H2SO4 and HCl to reach the prescribed pH:<br>
-<br>
-For IC "S":&nbsp;&nbsp; F{ "IV":0.1, "LB":0.09, "UB":0.11, "PD":"i"
-}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # independent parameter<br>
-For IC "Cl":&nbsp; F{ "IV":0.01, "LB":0.009, "UB":0.011, "PD":"i" }&nbsp;&nbsp;&nbsp;&nbsp; # independent parameter<br>
-For IC "H":&nbsp;&nbsp; L{ "IV":113, "LB":112,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-[ { "LF":1, "LN": "Cl", "LP":"bIC" }, <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-{ "LF":2, "LN": "S", "LP":"bIC" } ]<br>
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }&nbsp;&nbsp; # linked parameter (hard link with coeff. 1.0)<br>
-For IC "O":&nbsp;&nbsp; L{ "IV": 55.51, "LB": 112,&nbsp; [ { "LF": 4, "LN": "S", "LP":"bIC" } ] }<br>
-<br>
-<br>
-Example 2: Fitting G0 value of KOH@ under reaction constraint to G0 of K+ (fitting parameter) and G0 of H2O@. <br>
-<br>
-For DC 'K+' in G0 at 1,298:&nbsp;&nbsp; F{"IV": -298074, "LB": -303000, "UB": -295000, "PD":'i'}&nbsp; <br>
-For DC 'KOH@': R{&nbsp; "IV" : -36819.000776856,<br>
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Ref" : "SUPCRT92",<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "logK" : -14.46,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "nC" : 4,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "species" : "KOH@",<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"RC" : [ "K+", "H2O@", "H+", "KOH@" ],<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"Rcoef" : [ -1, -1, 1, 1 ]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
-<br>
-In the "Data to Compare" section of this file, it should also be
-clearly specified which GEMIPM output values (pH, Eh, concentrations,
-activities, their functions such as osmotic coefficients) should be
-compared with which respective experimental values; what type of the
-objective function (least-squares, ...), what kind of weights of
-samples should be used; and from which .csv file or which subset of
-PostgreSQL database these experimental values should be selected. <br>
-<br>
-"DT": "bPS", "PN": "aqueous", "<br>
-<br>
-JSON notation example of the target (objective) function for parameter fitting<br>
-<br>
-{ "Target": "name", "TT": "lsq", "WT": "inverr", "OFUN": <br>
-&nbsp; [ <br>
-&nbsp;&nbsp;&nbsp; { "OPH": "aq_gen", "ON": "Si", "OP": "bXs",&nbsp;&nbsp;&nbsp;&nbsp; "OFU": "log_m",&nbsp; <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "EPH": "aq_gen", "EN": "Si",&nbsp; "Eunit": "loga", "Eerr": "log_error" },<br>
-&nbsp;&nbsp;&nbsp; { "OPH": "aq_gen", "ON": "Al", "OP": "bXs",&nbsp;&nbsp;&nbsp;&nbsp; "OFU": "log_m",&nbsp; <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "EPH": "aq_gen", "EN": "Al",&nbsp; "Eval": "loga", "Eerr": "log_error" },<br>
-&nbsp;&nbsp;&nbsp; { "OPH": "aq_gen", "OP": "pH",&nbsp;&nbsp; <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "EPH": "aq_gen", "EP": "pH", "Eval": "loga", "Eerr": "log_error" }<br>
-&nbsp; ]<br>
-}<br>
-<br>
-JSON notation example of the subset of experimental data to be selected<br>
-<br>
-{ "sample" : "", <br>
-&nbsp; "expdataset" : ["Kennedy1950", "CH04D"],<br>
-&nbsp; "sT" : [1, 2000],<br>
-&nbsp; "sP" : [1, 5000]<br>
-}<br>
-<br>
-<br>
-In the "Optimization Methods" section, the rest of specifications
-should be collected, e.g. choice of the algorithm, threads, statistics,
-etc. <br>
-<br>
-In the "Fitting Results" section, all the modes of output of fitting
-results (output file paths), verbosity, print, and graphic formats
-should be collected. <br>
-<br>
-<br>
-3. To generate the template GEMSFIT input configuration file, the
-program should combine fragments of GEMS3K DCH, IPM and DBR files into
-the "Fitting Task" section; fragment of DBR file into "Experimental
-Data" section; append the default "Optimization Methods" and "Fitting
-Results" sections. In the comment lines, all options must be visible. <br>
-<br>
-A generated file must be edited by the user to mark what to fit and
-what to compare in the target function. Discussions are needed to
-develop "markup language" for that. The example template file is
-provided at the end of this file. <br>
-<br>
-<br>
+Example: <big><span style="font-family: monospace; font-weight: bold;">&gt;$ gemsfit -run ./SS_INPUT/SS_GEMSFIT_AllDa3T_input.dat</span></big><br>
+<br>The GEMSFIT output files will be written into the "output_GEMSFIT"
+and
+the "results_GEMSFIT" subfolders. The output_GEMSFIT contains the log
+file and the output statistics of the current run. This folder gets
+DELETED before each run!! The results_GEMSFIT folder contains a comma
+separated file that stores the calculated, measured, residuals, and
+fitted parameters for all runs. The file is appended until the user
+changes the name, moves or deletes it.<br>
 <br>
 <br>
 <br>
 Last
-updated:&nbsp; 02. 10. 2013&nbsp; DM,DK <br style="font-family: Helvetica,Arial,sans-serif;">
+updated:&nbsp; 10.10. 2013&nbsp; DM,DK <br style="font-family: Helvetica,Arial,sans-serif;">
 
 <br style="font-family: Helvetica,Arial,sans-serif;">
 
 Copyright&nbsp; (c) 2013&nbsp; <a href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a><br style="font-family: Helvetica,Arial,sans-serif;">
 
 <hr style="font-family: Helvetica,Arial,sans-serif;" size="2" width="100%"><br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
 
 <br>
 

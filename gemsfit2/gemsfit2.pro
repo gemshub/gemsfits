@@ -65,7 +65,7 @@ CONFIG( mpi, serial|mpi ) {
         QMAKE_CXX	= mpic++
         QMAKE_CFLAGS += $$system(mpicc --showme:compile) -fopenmp
         QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions $$system(mpic++ --showme:compile) -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions -fopenmp
-        LIBS +=  $$system(mpic++ --showme:link)  -lXm  -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp -ljansson
+        LIBS +=  $$system(mpic++ --showme:link) -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp -ljansson
 }
 
 #contains( CONFIG, serial ) {
@@ -75,7 +75,7 @@ CONFIG( serial, serial|mpi ) {
         QMAKE_CXX	= g++
         QMAKE_CFLAGS += -fopenmp
         QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions -fopenmp
-        LIBS +=  -lXm -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp -ljansson
+        LIBS += -lnlopt -lm -lboost_filesystem  -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp -ljansson
 }
 
 !win32 {
@@ -93,7 +93,7 @@ else {
 FIT_CPP      =  ./src-fit
 GEMS3K_CPP   =  ../../standalone/GEMS3K
 EJDB_CPP     =  ./tcejdb
-KEYS_CPP     =  ../csvtoejdb/csvtoejdb/main
+KEYS_CPP     =  ../csvtoejdb/src-csvtoejdb
 
 
 FIT_H        =   $$FIT_CPP

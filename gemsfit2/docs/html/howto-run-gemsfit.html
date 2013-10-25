@@ -1,6 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html><head>
-  <title>HOWTO Run GEMSFIT2 Program</title>
+<html><head><title>HOWTO Run GEMSFIT2 Program</title>
+
+  
 
   
   
@@ -10,9 +11,7 @@
   <meta name="author" content="GEMS Development Team">
 
   
-  <meta name="description" content="Version 2">
-
-</head><body style="background-image: url(bgimg-gray.jpg);">
+  <meta name="description" content="Version 2"></head><body style="background-image: url(bgimg-gray.jpg);">
 <h1><img style="width: 48px; height: 48px;" src="gemsfit2.png" alt="gemsfit2.png"> <font style="color: black;" color="#000066">GEMSFIT2<br>
 </font></h1>
 
@@ -26,182 +25,135 @@
 <hr size="2" width="100%">
 <h4>Contents</h4>
 
+<ul>
+  <li><a href="#-init">-init </a>- generates the template input file</li>
+  <li><a href="#Editing">Edit</a> the <a href="gemsfit-input-file.html">input file</a></li>
+  <li><a href="#-run">-run</a> - running the optimization</li>
+  <li><a href="#Output_and_results">Output and results</a></li>
+  <li><a href="#Return_codes_and_error_messages">Return codes and messages</a></li>
+</ul>
 <br>
+
 
 <hr style="width: 100%; height: 2px;">gemsfit2 is the main tool used
-for processing/fitting the data. Once the user<br>
-
-produced a database file (EJFB format) and exported the GEMS3K chemical
-system<br>
-
-files, he can proceed with the preparation of the fitting routine and
-start <br>
-
-the actual fitting.<br>
+for processing/fitting the data. Once the user produced a database file (EJFB format) and exported the GEMS3K chemical
+system files, he can proceed with the preparation of the fitting routine and
+start the actual fitting.<br>
 
 <br>
 
-gemsfit2 has two running modes: -init and -run.<br>
+gemsfit2 has two running modes: <big><span style="font-weight: bold; font-family: monospace;">-init </span></big>and <big style="font-family: monospace;"><span style="font-weight: bold;">-run</span></big>.<br>
+<h3>
 
-<br>
-
-1. If the user is running gemsfit for the first time or he is using a
-different<br>
-
-&nbsp;&nbsp; database of experiments, different chemical system, or an
-updated database,<br>
-
-&nbsp;&nbsp; he has to first run the program in the "-init" mode. For
-every change in the <br>
-
-&nbsp;&nbsp; experimental database and the GEMS3K exported system files
-gemsift2 should<br>
-
-&nbsp;&nbsp; first be run in the "-init" mode!<br>
-
-&nbsp;&nbsp; Runing in -init mode using the command line needs two
+1. <a name="-init"></a>-init</h3>
+If the user is running gemsfit for the first time or he is using a
+different database of experiments, different chemical system, or an
+updated database, he has to first run the program in the "-init" mode. For
+every change in the experimental database and the GEMS3K exported system files
+gemsift2 should first be run in the "-init" mode!<br>Runing in -init mode using the command line needs two
 arguments:<br>
 
-<br>
+<br><big style="font-weight: bold; font-family: monospace;">
 
 &nbsp;&nbsp;&nbsp; $ gemsfit2 -init &lt;path to
 &lt;GEMS3K&gt;-dat.lst&gt;<br>
+&nbsp;&nbsp;&nbsp; </big><big style="font-weight: bold; font-family: monospace;">$ gemsfit2 -init ./GEMS-files/mySystem-dat.lst</big><br>
+
 
 <br>
-
-&nbsp;&nbsp;&nbsp; the second argument is the path to the .lst file
-that sits in the same folder<br>
-
-&nbsp;&nbsp;&nbsp; with the rest of the GEMS3K exported system files. <br>
-
-&nbsp;&nbsp; After running gemsfit2 in "-init" mode, a template input
-file named<br>
-
-&nbsp;&nbsp; gemsfit_input.dat is produced using some parts of GEMS3K
+the second argument is the path to the .lst file
+that sits in the same folder with the rest of the GEMS3K exported
+system files. After running gemsfit2 in "-init" mode, a template input
+file named gemsfit_input.dat is produced using some parts of GEMS3K
 input files.<br>
-
 <br>
+<hr style="width: 100%; height: 2px;">
+<h3>
 
-2. The user has to carefully look through and edit the template file
-according to <br>
+2. <a name="Editing"></a>Editing the <a href="gemsfit-input-file.html">input file</a></h3>
+The user has to carefully look through and edit the template file
+according to the instructions (comments) given in the file for each
+section. <br>The main options to specify are:<br>
+<ul>
+  <li>&nbsp;
 
-&nbsp;&nbsp; the instructions (comments) given in the file for each
-section. <br>
+where is the database file</li>
+  <li>
 
-&nbsp;&nbsp; The main options to specify are:<br>
+&nbsp; where are the GEMS3K system files</li>
+  <li>
 
-&nbsp;&nbsp;&nbsp; - where is the database file<br>
+&nbsp; what experimental data to select from the database</li>
+  <li>
 
-&nbsp;&nbsp;&nbsp; - where are the GEMS3K system files<br>
+&nbsp; what data entries to compare within the objective
+function</li>
+  <li>
 
-&nbsp;&nbsp;&nbsp; - what experimental data to select from the database<br>
+&nbsp; what parameters to fit and how to fit them
+(independent, reaction, linked), what are initial parameter values
+and bounds</li>
+  <li>
 
-&nbsp;&nbsp;&nbsp; - what data entries to compare within the objective
-function<br>
+&nbsp; what fitting algorithm to use (type of algorithm,
+etc.)</li>
+  <li>
 
-&nbsp;&nbsp;&nbsp; - what parameters to fit and how to fit them
-(independent, reaction,<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp; linked), what are initial parameter values
-and bounds<br>
-
-&nbsp;&nbsp;&nbsp; - what fitting algorithm to use (type of algorithm,
-etc.)<br>
-
-&nbsp;&nbsp;&nbsp; - what statistics parameters to compute.<br>
-
+&nbsp; what statistics parameters to compute</li>
+</ul>
 <br>
+<hr style="width: 100%; height: 2px;">
+<h3>
 
-3. Run gemsfit2 fitting task using the "-run" mode.<br>
-
-&nbsp;&nbsp; Running in -run mode using command line needs two
+3. <a name="-run"></a>-run</h3>
+Run gemsfit2 fitting task using the "-run" mode. Running in -run mode using command line needs two
 arguments:<br>
 
-&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp; <br><big style="font-weight: bold;"><span style="font-family: monospace;">
 
 &nbsp;&nbsp;&nbsp; $ gemsfi2 -run &lt;path to gemsfit_input.dat&gt;<br>
+&nbsp;&nbsp;&nbsp; </span></big><big style="font-weight: bold;"><span style="font-family: monospace;">$ gemsfi2 -run ./gemsfit_input.dat</span></big><br>
+<big style="font-weight: bold;"><span style="font-family: monospace;"><br>
+</span></big>
 
-<br>
+<hr style="width: 100%; height: 2px;">
+<h3>
 
-4. If there were no errors returned by the program after the executing
-time (which can<br>
+4. <a name="Output_and_results"></a>Output and results</h3>
+If there were no errors returned by the program after the executing
+time (which can vary depending on the number of experiments and the number
+of parameters to fit), the results are written in two places:<br>
 
-&nbsp;&nbsp; vary depending on the number of experiments and the number
-of parameters to fit),<br>
+&nbsp;&nbsp;<big style="font-weight: bold; font-family: monospace;"> /output</big>
+- the actual run result statistics file and the
+run log file are here.This folder is emptied
+before every run of gemsfit2 in the "-run" mode. It is IMPORTANT to
+move or save the files elsewhere before making another run of the
+program!<br>
 
-&nbsp;&nbsp; the results are written in two places:<br>
-
-&nbsp;&nbsp; /output - the actual run result statistics file and the
-run log file are here.<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; this folder is emptied
-before every run of gemsfit2 in the "-run"<br>
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-mode. It is IMPORTANT to move or save the files elsewhere before making<br>
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-another run of the program!<br>
-
-&nbsp;&nbsp; /results - this folder is never emptied and contains the
-csv file fit_results.csv.<br>
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-The file contains the mesured and calculated values, the residuals,<br>
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-and the result parameters for every run. This file can be deleted<br>
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-or moved by the user - a new file will be automatically created for<br>
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-future runs. The file will be appended until the name is changed, the<br>
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-file is moved or deleted.<br>
+&nbsp;&nbsp; <big style="font-weight: bold; font-family: monospace;">/results</big>
+- this folder is never emptied and contains the
+csv file fit_results.csv. The file contains the mesured and calculated
+values, the residuals, and the result parameters for every run. This
+file can be deleted or&nbsp;&nbsp; moved by the user - a new file will
+be automatically created for future runs. The file will be appended
+until the name is changed, the file is moved or deleted.<br>
 
 <br>
 
 <br>
 
+<hr style="width: 100%; height: 2px;">
+<h3>5. <a name="Return_codes_and_error_messages"></a>Return codes and error messages</h3>
 <br>
-
-<br>
-
-<hr style="width: 100%; height: 2px;">Last
-updated:&nbsp; 02. 10. 2013&nbsp; DM,DK <br style="font-family: Helvetica,Arial,sans-serif;">
+<hr style="width: 100%; height: 2px;"><br>
+Last
+updated:&nbsp; 11.10. 2013&nbsp; DM, DK <br style="font-family: Helvetica,Arial,sans-serif;">
 
 <br style="font-family: Helvetica,Arial,sans-serif;">
 
 Copyright&nbsp; (c) 2013&nbsp; <a href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a><br style="font-family: Helvetica,Arial,sans-serif;">
 
 <hr style="font-family: Helvetica,Arial,sans-serif;" size="2" width="100%"><br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
 
 </body></html>

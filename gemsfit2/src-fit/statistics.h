@@ -42,6 +42,61 @@ using namespace std;
 
 class statistics
 {
+
+    private:
+    // Parameters for instantiating the class
+    /// Target function form the fit
+    double weighted_Tfun_sum_of_residuals;
+    double Tfun_sum_of_residuals;
+    double weighted_sum_of_residuals;
+    double sum_of_residuals;
+
+    vector <double> weighted_residuals;
+    /// number of independent fitted parameters
+    int number_of_ind_parameters;
+    /// number of parameters of the last regression (length of optimization vector)
+    int number_of_parameters;
+    /// number of measurements invoilved in the parameter regression
+    int number_of_measurements;
+    /// Number of evaluations points per parameter for sensitivity evaluation
+    int sensitivity_points;
+    /// number of bars which will be used to generate the Histogram from the Monte Carlo runs (for generation of confidence intervals)
+    int MC_number_of_bars;
+    /// number of runs that will be performed during the sensitivity analysis
+    int num_of_runs;
+    /// used in calculation of the sensitivities by central diferences
+    double perturbator;
+
+    // Number of Monte Carlo evaluations for confidence interval evaluation
+    /// bool indicating if Monte Carlo runs for confidence interval analysis should be performed (=1) or not (=0)
+    bool MCbool;
+    /// Number of Monte Carlo runs for confidence interval evaluation
+    int num_of_MC_runs;
+
+    // Computed parameters
+    /// standard deviation of residuals
+    double SD_of_residuals;
+    /// R^2: coefficient of determination
+    double coeff_of_determination;
+    /// result from Pearson's Chi Squared test
+    double Pearsons_chi_square;
+    /// reduces Chi Squared
+    double reduced_chi_square;
+    /// Error variance
+    double error_variance;
+    /// degrees of freedom
+    double degrees_of_freedom;
+
+    /**
+    * Read statistical input specifications from GEMSFIT_input.dat
+    *
+    * @author SD
+    * @date 14.03.2013
+    */
+    void get_stat_param_txt( );
+    void default_stat_param();
+
+
     public:
         /**
         * Constructor for the Statistics class. It is derived from the PlotFit class.
@@ -67,57 +122,13 @@ class statistics
         */
         virtual ~statistics();
 
-        // Parameters for instantiating the class
-        /// Target function form the fit
-        double weighted_Tfun_sum_of_residuals;
-        double Tfun_sum_of_residuals;
-        double weighted_sum_of_residuals;
-        double sum_of_residuals;
-        vector <double> weighted_residuals;
-        /// number of independent fitted parameters
-        int number_of_ind_parameters;
-        /// number of parameters of the last regression (length of optimization vector)
-        int number_of_parameters;
-        /// number of measurements invoilved in the parameter regression
-        int number_of_measurements;
-        /// Number of evaluations points per parameter for sensitivity evaluation
-        int sensitivity_points;
-        /// number of bars which will be used to generate the Histogram from the Monte Carlo runs (for generation of confidence intervals)
-        int MC_number_of_bars;
-        /// number of runs that will be performed during the sensitivity analysis
-        int num_of_runs;
-        /// used in calculation of the sensitivities by central diferences
-        double perturbator;
-
-        // Number of Monte Carlo evaluations for confidence interval evaluation
-        /// bool indicating if Monte Carlo runs for confidence interval analysis should be performed (=1) or not (=0)
-        bool MCbool;
-        /// Number of Monte Carlo runs for confidence interval evaluation
-        int num_of_MC_runs;
-
-        // Computed parameters
-        /// standard deviation of residuals
-        double SD_of_residuals;
-        /// R^2: coefficient of determination
-        double coeff_of_determination;
-        /// result from Pearson's Chi Squared test
-        double Pearsons_chi_square;
-        /// reduces Chi Squared
-        double reduced_chi_square;
-        /// Error variance
-        double error_variance;
-        /// degrees of freedom
-        double degrees_of_freedom;
-
         /**
-        * Read statistical input specifications from GEMSFIT_input.dat
+        * Write statistical input specifications to GEMSFIT_input.dat template file
         *
         * @author SD
         * @date 14.03.2013
         */
-        void get_stat_param_txt( );
         void out_stat_param_txt( bool with_comments, bool brief_mode );
-        void default_stat_param();
 
         /**
         * Perform basic statistical test (R^2, SD of residuals, ...)

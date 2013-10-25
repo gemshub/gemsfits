@@ -41,6 +41,25 @@ class opti_vector
 {
 private:
 //    vector<int> Error;
+    /**
+    * Gets the indexes of the RDc species
+    * @author DM
+    * @param node
+    * @param ov opti_vector class
+    * @date 06.05.2013
+    */
+    void get_RDc_indexes (TNode *node, opti_vector *ov);
+
+    /**
+    * Gets the indexes of the linked parameters/elements form bulk composition
+    * @author DM
+    * @param node
+    * @param ov opti_vector class
+    * @date 06.05.2013
+    */
+    void get_Lp_indexes (TNode *node, opti_vector *ov);
+
+
 public:
     typedef vector<double> vd;        // vector of double
     typedef vector<vector<double> > vvd;  // 2D vector of double
@@ -93,25 +112,6 @@ public:
         vd L_coef; /// linking coefiecients e.g 1.0 for Cl and 2.0 for S
     };
     vector<Lp*> Lparams;
-
-    /**
-    * Gets the indexes of the RDc species
-    * @author DM
-    * @param node
-    * @param ov opti_vector class
-    * @date 06.05.2013
-    */
-    void get_RDc_indexes (TNode *node, opti_vector *ov);
-
-    /**
-    * Gets the indexes of the linked parameters/elements form bulk composition
-    * @author DM
-    * @param node
-    * @param ov opti_vector class
-    * @date 06.05.2013
-    */
-    void get_Lp_indexes (TNode *node, opti_vector *ov);
-
 };
 
 #endif // OPT_VECTOR_H

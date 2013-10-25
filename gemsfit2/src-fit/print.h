@@ -50,12 +50,13 @@ private:
     double_v measured, computed, Weighted_Tfun_residual;
     string path;
 
-public:
-    ResPrint(string path_, optimization *opti);
-
-    ~ResPrint ();
-
     optimization* res_opti; /// points to the optimization results
+
+public:
+    //constructor
+    ResPrint(string path_, optimization *opti);
+    //destructor
+    ~ResPrint ();
 
     /**
     * Prints the header of the results CSV file

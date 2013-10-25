@@ -44,6 +44,24 @@ using namespace std;
 
 class optimization : public opti_vector
 {
+
+private:
+
+    /// struct holding constraint values (retrieved from SS_GEMSFIT_input.dat)
+    typedef struct
+    {
+        int id;
+        double Constraints;
+    } my_constraint_data;
+    my_constraint_data* constraint_data;
+    vector<my_constraint_data> constraint_data_v;
+
+
+    // Populate nlopt instance
+//    virtual void set_nlopt_param( );
+    virtual void get_nlopt_param_txt( vector<double> optv );
+    virtual void define_nlopt_param( );
+
 public:
 
     // opt vector
@@ -55,6 +73,9 @@ public:
 
     // Destructor
     virtual ~optimization();
+
+    /// Writes the NLopt parameters in the input tamplat file
+    virtual void out_nlopt_param_txt(  bool with_comments, bool brief_mode );
 
     // configuration data for nlopt instance (get from SS_GEMSFIT_input.dat)
     /// name of the optimization algorithm from NLOPT library
@@ -94,28 +115,12 @@ public:
     /// printing information (get from SS_GEMSFIT_input.dat)
 //        PlotFit* Plot_ActMod;
 
-
-    /// struct holding constraint values (retrieved from SS_GEMSFIT_input.dat)
-    typedef struct
-    {
-        int id;
-        double Constraints;
-    } my_constraint_data;
-    my_constraint_data* constraint_data;
-    vector<my_constraint_data> constraint_data_v;
-
-
-    // Populate nlopt instance
-//    virtual void set_nlopt_param( );
-    virtual void get_nlopt_param_txt( vector<double> optv );
-    virtual void out_nlopt_param_txt(  bool with_comments, bool brief_mode );
-    virtual void define_nlopt_param( );
-
-    // Normalize init vector, bounds and constraints
+    /// Normalize init vector, bounds and constraints
     virtual void normalize_params( const vector<double> initguesses );
 
-    // NLopt return codes
+    /// NLopt return codes
     virtual void print_return_message( const int result );
+
 
 };
 

@@ -49,19 +49,67 @@ class TGfitTask : public Data_Manager
 protected:
 
     long int anNodes;  ///< Number of allocated nodes (samples)
+private:
 
-public:
+    // initialize optimization
+    /**
+    * Initializes the NLopt obeject and the optimization task
+    * @author DM
+    * @param optv_ vector of optimized parameters
+    * @param weighted_Tfun_sum_of_residuals
+    * @date 06.05.2013
+    */
+    virtual void init_optim(vector<double> &optv_, /*int &countit,*/ double &weighted_Tfun_sum_of_residuals );
 
-    optimization *Opti; ///< pointer to optimization
+    /**
+    * initialize optimization object and assign constraints and bounds.
+    * performs the optimization.
+    * @param NLopti			nlopt optimization object
+    * @param optv_              optimization vector
+    * @param weighted_Tfun_sum_of_residuals		sum of squared residuals
+    * @author DM
+    * @date 07.05.2013
+    */
+    virtual void build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, /*std::vector<System_Properties*> *systems, int &countit,*/ double &weighted_Tfun_sum_of_residuals );
+
+    /**
+    * Reads the target function options form the input file and adds them to the TargetFunction structure
+    * @author DM
+    * @date 07.05.2013
+    */
+    void get_DataTarget ( );
+
+    /**
+    * Checks for parameter inconsistencies with type of experimental data and other parameters
+    * @author DM
+    * @date 04.07.2013
+    */
+    void gfit_error ( );
+
+    /**
+    * Sets the GEMS nodes with T, P, composition and solution parameters based on the data in the experiments data manager class
+    * @author DM
+    * @date 01.05.2013
+    */
+    void  setnodes( );
+
+    void get_logK_TPpairs();
 
     /// the GEMSFIT configuration file (fixed to SS_GEMSFIT_input.dat)
     string param_file;
 
     /// Printing Flag: if this flag is set to one, the result of the optimization will be printed to file (via optimization.cpp)
     string printfile;
+public:
 
-    /// Monte Carlo flag: if true, then the MPI commands within the objective function call will not be executed. Instead, the loop over Monte Carlo runs is parallelized
-    bool MC_MPI;
+    optimization *Opti; ///< pointer to optimization
+
+
+
+
+
+//    /// Monte Carlo flag: if true, then the MPI commands within the objective function call will not be executed. Instead, the loop over Monte Carlo runs is parallelized
+//    bool MC_MPI;
 
     double weighted_Tfun_sum_of_residuals;
 
@@ -117,6 +165,14 @@ public:
    */
    void run_optim ();
 
+
+   /**
+   * Gets the sum of residuals based on the Objective and target functions. This value is minimized by the fitter.
+   * @author DM
+   * @date 24.07.2013
+   */
+   void get_sum_of_residuals ( double &residual);
+
    /**
    * Stores the values for each experiment after runing GEMS
    * @author DM
@@ -128,57 +184,6 @@ public:
    * @date 01.07.2013
    */
    void set_residuals (double computed, double measured, double Weighted_Tfun_residual, double Tfun_residual, double weight );
-
-   // initialize optimization
-   /**
-   * Initializes the NLopt obeject and the optimization task
-   * @author DM
-   * @param optv_ vector of optimized parameters
-   * @param weighted_Tfun_sum_of_residuals
-   * @date 06.05.2013
-   */
-   virtual void init_optim(vector<double> &optv_, /*int &countit,*/ double &weighted_Tfun_sum_of_residuals );
-
-   /**
-   * initialize optimization object and assign constraints and bounds.
-   * performs the optimization.
-   * @param NLopti			nlopt optimization object
-   * @param optv_              optimization vector
-   * @param weighted_Tfun_sum_of_residuals		sum of squared residuals
-   * @author DM
-   * @date 07.05.2013
-   */
-   virtual void build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, /*std::vector<System_Properties*> *systems, int &countit,*/ double &weighted_Tfun_sum_of_residuals );
-
-   /**
-   * Reads the target function options form the input file and adds them to the TargetFunction structure
-   * @author DM
-   * @date 07.05.2013
-   */
-   void get_DataTarget ( );
-
-   /**
-   * Checks for parameter inconsistencies with type of experimental data and other parameters
-   * @author DM
-   * @date 04.07.2013
-   */
-   void gfit_error ( );
-
-   /**
-   * Gets the sum of residuals based on the Objective and target functions. This value is minimized by the fitter.
-   * @author DM
-   * @date 24.07.2013
-   */
-   void get_sum_of_residuals ( double &residual);
-
-   /**
-   * Sets the GEMS nodes with T, P, composition and solution parameters based on the data in the experiments data manager class
-   * @author DM
-   * @date 01.05.2013
-   */
-   void  setnodes( );
-
-   void get_logK_TPpairs();
 
 };
 

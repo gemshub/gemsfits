@@ -72,7 +72,7 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     printfile = gpf->ResultDir()+"FIT_results.csv";
 
     // For parameter optimization do not use parallelization of the Monte Carlo loop (=true). Instead, execute loop over measurements within objective function in parallel (=false).
-    MC_MPI = false;
+//    MC_MPI = false;
 
     // nodes
     anNodes = experiments.size();
@@ -795,7 +795,7 @@ void TGfitTask::get_DataTarget ( )
     }
     out.clear();
 
-    parse_JSON_array_object(DataTarget, keys::OFUN, keys::Eunit, out);
+    parse_JSON_array_object(DataTarget, keys::OFUN, keys::Qunit, out);
     for (unsigned int i = 0 ; i < out.size() ; i++)
     {
         Tfun->objfun[i]->exp_unit = out[i];
@@ -893,7 +893,7 @@ void TGfitTask::get_sum_of_residuals( double &residuals)
                             }
                         } else
 
-                        if ((Tfun->objfun[j]->exp_CT == keys::prop) && (this->experiments[i]->expphases[p]->phprop.size() > 0) /*&& (this->Tfun->objfun[j]->exp_dcomp == "NULL")*/)
+                        if ((Tfun->objfun[j]->exp_CT == keys::property) && (this->experiments[i]->expphases[p]->phprop.size() > 0) /*&& (this->Tfun->objfun[j]->exp_dcomp == "NULL")*/)
                         {
                         // loop trough all properties
                         for (unsigned int pp = 0; pp< this->experiments[i]->expphases[p]->phprop.size(); ++pp)

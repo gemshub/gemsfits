@@ -1,6 +1,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html><head>
-  <title>HOWTO csvtoejdb</title>
+<html><head><title>HOWTO csvtoejdb</title>
+
+
+
+
+
+
+  
 
   
   
@@ -10,9 +16,7 @@
   <meta name="author" content="GEMS Development Team">
 
   
-  <meta name="description" content="Version 2">
-
-</head><body style="background-image: url(bgimg-gray.jpg);">
+  <meta name="description" content="Version 2"></head><body style="background-image: url(bgimg-gray.jpg);">
 <h1><img style="width: 48px; height: 48px;" src="gemsfit2.png" alt="gemsfit2.png"> <font style="color: black;" color="#000066">GEMSFIT2:
 The csvtoejdb utility program<br>
 </font></h1>
@@ -32,9 +36,19 @@ csvtoejdb<br>
 
   <li><a href="#CSVTOEJDB_INTRO">Introduction</a></li>
   <li><a href="#CSVTOEJDB_WORKFLOW">Workflow of csvtoejdb</a></li>
+  <ol>
+    <li><a href="#1._Prepare_your_data_">Prepare your data</a></li>
+    <li><a href="#Export_excel_file">Export excel file</a></li>
+    <li><a href="#Run_csvtoejdb">Run csvtoejdb</a></li>
+
+  </ol>
+  <li><a href="#Return_codes_and_error_messages">Return and error messages</a><br>
+  </li>
+
+
 </ul>
 
-<br>
+
 
 <br>
 
@@ -62,10 +76,10 @@ experiments, and very important, it can be adapted to new data.<br>
 
 <hr style="width: 100%; height: 2px;">
 <h3><a name="CSVTOEJDB_WORKFLOW"></a>Workflow of csvtoejdb</h3>
-
-Prepare your data in a preformatted excel file. See
+<h3><a name="1._Prepare_your_data_"></a>1. Prepare your data<small> </small></h3>
+in a preformatted excel file. See
 ./xls/excel_example.xls or ./xls/solcash_example.xlsx (for CASH
-systems) as a template. <br>
+systems) as a template. 
 
 <p>The column names and their order in the excel table should follow as
 described in the tables below, grouped in three sections: EXPERIMENTS
@@ -87,32 +101,32 @@ Column name rules:<br>
       </td>
     </tr>
     <tr>
-      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>phase.</big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#phase">phase</a>.</big></td>
       <td style="vertical-align: top;">should be followed by the phase
 name (from GEMS3K .DCH file)<br>
       </td>
       <td style="vertical-align: top; font-family: monospace;"><big>aq_gen</big></td>
     </tr>
     <tr>
-      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>comp.</big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#comp">comp</a>.</big></td>
       <td style="vertical-align: top;">should be followed by an oxide
 formula from the system composition </td>
       <td style="vertical-align: top; font-family: monospace;"><big>SiO2</big></td>
     </tr>
     <tr>
-      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>DC.</big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#DC">DC</a>.</big></td>
       <td style="vertical-align: top;"> should be followed by a
 dependent compoents name (as in GEMS3K)</td>
       <td style="vertical-align: top; font-family: monospace;"><big>SiO2@</big></td>
     </tr>
     <tr>
-      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>IC.</big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#IC">IC</a>.</big></td>
       <td style="vertical-align: top;">should be followed by the
 independent component element notation </td>
       <td style="vertical-align: top; font-family: monospace;"><big>Al</big></td>
     </tr>
     <tr>
-      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>MF.
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#MF">MF</a>.
       </big></td>
       <td style="vertical-align: top;">should be followed by the molar
 fraction formula </td>
@@ -128,662 +142,735 @@ Na/Na+K<br>
 The column names that hold experimental results quantities/amounts
 should be finished with <big style="font-weight: bold;"><span style="font-family: monospace;">.Q</span></big> . For instance: <br>
 
-<big style="font-weight: bold;"><span style="font-family: monospace;">phase<big>.</big></span></big><big><span style="font-family: monospace;"></span><span style="font-family: monospace;">C-S-H-3T-2</span></big><big style="font-weight: bold;"><span style="font-family: monospace;">.Q</span></big><br>
+<big style="font-weight: bold;"><span style="font-family: monospace;">phase<big>.</big></span></big><big><span style="font-family: monospace;"></span><span style="font-family: monospace;">C-S-H-3T-2</span></big><big style="font-weight: bold;"><span style="font-family: monospace;">.Q </span></big>- for phase<br>
 
-&nbsp;<big><span style="font-family: monospace;">phase.aq_gen.IC.Si.Q <br>
-phase.aq_gen.DC.SiO2-.Q</span></big> <br>
+<big><span style="font-family: monospace;"><span style="font-weight: bold;">phase</span>.aq_gen.<span style="font-weight: bold;">IC</span>.Si.<span style="font-weight: bold;">Q</span> </span><small>- for element </small><span style="font-family: monospace;"><br><span style="font-weight: bold;">
+phase</span>.aq_gen.<span style="font-weight: bold;">DC</span>.SiO2-.<span style="font-weight: bold;">Q</span></span></big><span style="font-weight: bold;"> </span>- for dependent component<span style="font-weight: bold;"> </span><br>
 
+<br>
+not read - the object is not taken into the memory of the program<br>
+<br>
+
+
+IMPORTANT:<br>
+
+
+
+
+Each sample (row) must have a unique combination of sample and
+expdataset names. If present, the column 'unit' should be after the column 'error' that
+should come after the column containing the respective property value, e.g.
+phase.aq_gen.pH | error | unit | ... Names of phases, components, elements should be the same as in the
+GEMS3K DCH I/O files.<br>
 <br>
 
 <hr style="width: 100%; height: 2px;">EXPERIMENTS DESCRIPTION<br>
-
 <br>
 
+<table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">Keyword</td>
+      <td style="vertical-align: top;">Description<br>
+      </td>
+      <td style="vertical-align: top;">Optional<br>
+      </td>
+      <td style="vertical-align: top;">if empty / default value<br>
+      </td>
+      <td style="vertical-align: top;">Examples<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>id<br>
+
+      </big></td>
+      <td style="vertical-align: top;">numbering the experiments<br>
+      </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;">not read<br>
+      </td>
+      <td style="vertical-align: top; font-family: monospace;"><big>1, 2, 3<br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#sample">sample</a><br>
+
+      </big></td>
+      <td style="vertical-align: top;">sample name<br>
+      </td>
+      <td style="vertical-align: top;">no<br>
+      </td>
+      <td style="vertical-align: top;">cannot be empty<br>
+      </td>
+      <td style="vertical-align: top; font-family: monospace;"><big>A_01<br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#expdataset">expdataset</a><br>
+
+      </big></td>
+      <td style="vertical-align: top;">experiments set name<br>
+      </td>
+      <td style="vertical-align: top;">no<br>
+      </td>
+      <td style="vertical-align: top;">cannot be empty<br>
+      </td>
+      <td style="vertical-align: top; font-family: monospace;"><big>Anderson_etal1967<br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>comment<br>
+
+      </big></td>
+      <td style="vertical-align: top;">comments to experiments<br>
+      </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;">not read<br>
+      </td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>type<br>
+
+      </big></td>
+      <td style="vertical-align: top;">type of experiment<br>
+      </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;">not read<br>
+      </td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#sT">sT</a><br>
+
+      </big></td>
+      <td style="vertical-align: top;">temperature of the experiment in ºC<br>
+      </td>
+      <td style="vertical-align: top;">no<br>
+      </td>
+      <td style="vertical-align: top;">cannot be empty<br>
+      </td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#sP">sP</a><br>
+
+      </big></td>
+      <td style="vertical-align: top;">pressure of the experiment in bar<br>
+      </td>
+      <td style="vertical-align: top;">no<br>
+      </td>
+      <td style="vertical-align: top;">cannot be empty<br>
+      </td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#sV">sV</a><br>
+
+      </big></td>
+      <td style="vertical-align: top;">volume of the experiment<br>
+      </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;">not read / ( internaly in GEMS)<br>
+      </td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#UMC">UMC</a>.<a href="gemsfit-useref.html#DC">DC</a>/<a href="gemsfit-useref.html#phase">phase</a>.&lt;name&gt;<br>
+
+      </big></td>
+      <td style="vertical-align: top;">upper metastability constrits for <a href="gemsfit-useref.html#DC">DC</a> or <a href="gemsfit-useref.html#phase">phase</a> with &lt;name&gt; acording to GEMS syntax<br>
+      </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;">not read / 1e+06<br>
+      </td>
+      <td style="vertical-align: top; font-family: monospace;"><big>UMC.DC.Sanidine, UMC.phase.aq_gen</big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#LMC">LMC</a>.<a href="gemsfit-useref.html#DC">DC</a>/<a href="gemsfit-useref.html#phase">phase</a>.&lt;name&gt;<br>
+
+      </big></td>
+      <td style="vertical-align: top;">lower metastability constrits for <a href="gemsfit-useref.html#DC">DC</a> or <a href="gemsfit-useref.html#phase">phase</a> with &lt;name&gt; acording to GEMS syntax</td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;">not read / 0<br>
+      </td>
+      <td style="vertical-align: top; font-family: monospace;"><big>LMC.DC.Sanidine, LMC.phase.aq_gen</big></td>
+    </tr>
+  </tbody>
+</table>
+<br>
 <br>
 
 <hr style="width: 100%; height: 2px;">SYSTEM COMPOSITION<br>
 
 <br>
+<table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">Keyword<br>
+      </td>
+      <td style="vertical-align: top;">Description<br>
+      </td>
+      <td style="vertical-align: top;">optional<br>
+      </td>
+      <td style="vertical-align: top;">if empty / default value<br>
+      </td>
+      <td style="vertical-align: top;">Examples<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#comp">comp</a>.&lt;formula&gt;<br>
+
+      </big></td>
+      <td style="vertical-align: top;">composition
+of the sample system, expressed as oxide formula in one or several columns
+      </td>
+      <td style="vertical-align: top;">no<br>
+      </td>
+      <td style="vertical-align: top;">not read<br>
+      </td>
+      <td style="vertical-align: top; font-family: monospace;"><big>comp.SiO2, comp.NaCl<br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>error<br>
+
+      </big></td>
+      <td style="vertical-align: top;">error estimate </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;">not read<br>
+      </td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>unit<br>
+
+      </big></td>
+      <td style="vertical-align: top;">unit (g or molality)<br>
+      </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;">not read / g<br>
+      </td>
+      <td style="vertical-align: top; font-family: monospace;"><big>g, molal<br>
+
+      </big></td>
+    </tr>
+  </tbody>
+</table>
+<br>
 
 <br>
 
-<hr style="width: 100%; height: 2px;">RESULTS<br>
-
-not read - the object is not taken into the memory of the program<br>
-
+<hr style="width: 100%; height: 2px;">RESULTS - phase properties<br>
 <br>
+<table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">Keyword<br>
+      </td>
+      <td style="vertical-align: top;">Description<br>
+      </td>
+      <td style="vertical-align: top;">optional<br>
+      </td>
+      <td style="vertical-align: top;">if empty / default value<br>
+      </td>
+      <td style="vertical-align: top;">Examples<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#phase">phase</a>.&lt;pname&gt;.&lt;pprop&gt;<br>
 
-<hr style="width: 100%; height: 2px;">Last
-updated:&nbsp; 02. 10. 2013&nbsp; DM,DK <br style="font-family: Helvetica,Arial,sans-serif;">
+      </big></td>
+      <td style="vertical-align: top;">pname should
+correspond to the name of this phase in GEMS3K DCH file, pprop is one
+of keywords designating a bulk phase property
+      </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top; font-family: monospace;"><big>phase.aq_gen.pH; phase.C-S-H-3T-2.Q
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>&nbsp;&nbsp;&nbsp;&nbsp; .<a href="gemsfit-useref.html#Q">Q</a>
+      </big></td>
+      <td style="vertical-align: top;">phase amount<br>
+      </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;">not
+read / unit g
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>&nbsp;&nbsp;&nbsp;&nbsp; .pV<br>
 
-<br style="font-family: Helvetica,Arial,sans-serif;">
+      </big></td>
+      <td style="vertical-align: top;">phase volume<br>
+      </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;">not
+read / unit cm3
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>&nbsp;&nbsp;&nbsp;&nbsp; .RHO<br>
 
-Copyright&nbsp; (c) 2013&nbsp; <a href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a><br style="font-family: Helvetica,Arial,sans-serif;">
+      </big></td>
+      <td style="vertical-align: top;">phase density<br>
+      </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;">not
+read / unit g/cm3
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>&nbsp;&nbsp;&nbsp;&nbsp; .pH<br>
 
+      </big></td>
+      <td style="vertical-align: top;">aqueous only<br>
+      </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;">not
+read / unit -loga
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr><tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>&nbsp;&nbsp;&nbsp;&nbsp; .eH<br>
+      </big></td>
+      <td style="vertical-align: top;">aqueous only<br>
+      </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;">not
+read / unit ??<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>&nbsp;&nbsp;&nbsp;&nbsp; .IS<br>
+      </big></td>
+      <td style="vertical-align: top;">effective ionic strenght, aqueous only<br>
+      </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;">not
+read / unit ??<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>&nbsp;&nbsp;&nbsp;&nbsp; .alk<br>
+      </big></td>
+      <td style="vertical-align: top;">alkalinity, aqueous only<br>
+      </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;">not
+read /<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>&nbsp;&nbsp;&nbsp;&nbsp; .sArea<br>
+      </big></td>
+      <td style="vertical-align: top;">phase surface area<br>
+      </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;">not
+read /<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#error">error</a><br>
+      </big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;">not
+read <br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#unit">unit</a><br>
+      </big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;">not
+read (see above)<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+
+  </tbody>
+</table>
 <br>
-
 <br>
-
-Column name&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-Explanation&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; OPTIONAL
-&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; IF EMPTY&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; DEFAULT VALUE<br>
-
-EXPERIMENTS DESCRIPTION:<br>
-
-id &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Numbering
-of experiments 1, 2,3, ...&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; &nbsp;not
-read&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -<br>
-
-sample&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Sample
-names / names of experimental runs (alphanumeric), must be
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; |&nbsp; cannot
-be empty&nbsp;
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
--&nbsp;&nbsp;&nbsp; <br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; unique within a given experimental dataset<br>
-
-comment&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-Comments to experiments (optional column)&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; not
-read&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
--<br>
-
-&nbsp;type&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Type
-of experiment (optional column)&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; not
-read&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
--<br>
-
-sT&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Temperature
-in degrees Celsius &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; |&nbsp; cannot
-be empty&nbsp;
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-?&nbsp;&nbsp;&nbsp; <br>
-sP&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Pressure in
-bars &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; |&nbsp; cannot be empty&nbsp;
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-?&nbsp;&nbsp;&nbsp; <br>
-
-sV&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System
-volume in cm3 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; +&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-|&nbsp;&nbsp;&nbsp; not read&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
--<br>
-
-expdataset&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Name of this
-experimental data set (alphanumeric), &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; |&nbsp; cannot be empty&nbsp;
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
--&nbsp;&nbsp;&nbsp; <br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; should be the same for all samples belonging to a
-given set. <br>
-
-UMC.DC/phase.&lt;name&gt;&nbsp;&nbsp;&nbsp; Upper metastability
-constraints (if the dependent component is wished to not
-be&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;
-default&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-1e+06<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; suppressed form a certain
-experiment put 0) (optional column) <br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; (empty cell = object not created in GEMSFIT2)<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; e.g. UMC.DC.Sanidine (for dependent components) or
-UMC.phase.aq_gen<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; (for phases)<br>
-
-LMC.DC/phase.&lt;name&gt;&nbsp;&nbsp;&nbsp; Lower metastability
-constraints (if the dependent component is wished to
-be&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;
-default&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-0<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; present put &gt;0, present
-as metastable) (optional column)<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; (empty cell = object not created in GEMSFIT2)<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; e.g. LMC.DC.Sanidine (for dependent components) or
-LMC.phase.aq_gen<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; (for phases) <br>
-
+<hr style="width: 100%; height: 2px;">RESULTS - phase composition<br>
 <br>
+<table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">Keyword<br>
+      </td>
+      <td style="vertical-align: top;">Description<br>
+      </td>
+      <td style="vertical-align: top;">optional<br>
+      </td>
+      <td style="vertical-align: top;">if empty / default value<br>
+      </td>
+      <td style="vertical-align: top;">Examples<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#phase">
 
-SYSTEM COMPOSITION:&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <br>
-
-comp.&lt;formula&gt; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Composition
-of the sample system, expressed as one or several columns
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-|&nbsp;&nbsp;&nbsp; not read&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; with names in
-the format: comp.SiO2, comp.CaO, comp.NaCl ... (empty cell = object not
-created in GEMSFIT2)&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <br>
-
-error&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-error estimate (value can be left blank, if unknown) for the preceding
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; +&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-|&nbsp;&nbsp;&nbsp; default&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-0<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; value of the composition (empty cell = 0)<br>
-
-unit&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; units of
-measurement for the preceding value [and error], should be
-given&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;
-default&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-g (check!)<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; as g (grams of
-oxide) or molal (concentrations e.g for salts). <br>
-
-<br>
-
-RESULTS - phase properties from experiments:<br>
-
-phase.&lt;pname&gt;.&lt;pprop&gt;&nbsp;&nbsp;&nbsp; pname should
-correspond to the name of this phase in GEMS3K DCH file. (empty cell =
-object not created in GEMSFIT2)&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-|&nbsp;&nbsp;&nbsp; not read&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; pprop is one
-of keywords designating a bulk phase property,
-currently&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; <br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-implemented are: <br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-Q: phase qunatity; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; not
-read&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-pV: phase volume; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; not
-read&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-RHO: phase density; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; not
-read&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-pH: pH (aqueous phase only); &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-|&nbsp;&nbsp;&nbsp; not read&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-Eh: Eh (aqueous phase only); &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-|&nbsp;&nbsp;&nbsp; not read&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-IS: effective ionic strength (aqueous phase only); &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; not
-read&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&nbsp;&nbsp;&nbsp; <br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-alk: alkalinity (aqueous phase only); &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-|&nbsp;&nbsp;&nbsp; not read&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-sArea: phase surface area; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; not
-read&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-... <br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Examples:
-phase.aq_gen.pH; phase.C-S-H-3T-2.Q<br>
-
-error&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-error estimate (value can be left blank, if unknown) for the preceding
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-|&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-value of the phase property (empty cell = 0)<br>
-
-unit&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; units of
-measurement for the preceding value [and error] of the phase
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;
-default&nbsp;&nbsp;&nbsp; | pH: -loga (negated log); &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pV: cm3; Q: g;
-RHO: g/cm3;<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-property.for pH: -loga (negated log); for pV: cm3 or m3; <br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-for pQnt: g or kg; for RHO: g/cm3; <br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-Empty cell (default values) values: pH: -loga (negated log); pV: cm3; <br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-Q: g; RHO: g/cm3;<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-... <br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <br>
-
-RESULTS - phase composition from experiments:&nbsp;&nbsp;&nbsp; <br>
-
-phase.&lt;pname&gt;.IC.&lt;ename&gt;.Q&nbsp;&nbsp;&nbsp; Experimental
+phase</a>.&lt;pname&gt;.<a href="gemsfit-useref.html#IC">IC</a>.&lt;ename&gt;.<a href="gemsfit-useref.html#Q">Q</a></big></td>
+      <td style="vertical-align: top;">Experimental
 concentration of independent component IC element &lt;ename&gt; in the
-phase &lt;pname&gt;. &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-|&nbsp;&nbsp;&nbsp; not read&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -<br>
+phase &lt;pname&gt;, pname should correspond to the
+name of this phase in GEMS3K DCH file, ename is name (symbol) of element
+(Independent Component) as in GEMS3K.</td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;"><small><br>
 
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; pname should correspond to the
-name of this phase in GEMS3K DCH file.<br>
+      </small></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>phase.aq_gen.IC.Si.Q </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#error">error</a><br>
 
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ename is name (symbol) of element
-(Independent Component) as in GEMS3K. <br>
+      </big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
 
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Example: phase.aq_gen.IC.Si.Q <br>
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#unit">unit<br>
+      </a></big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;"><a href="gemsfit-useref.html#molal">molal</a> (for aqueous); <a href="gemsfit-useref.html#molfrac">molfrac</a> (for solids)<br>
+      </td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
 
-error&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; error estimate (value can be left blank, if unknown)
-for the preceding &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; default&nbsp;
-&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<br>
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#phase">
 
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; value of the element
-concentration in phase.&nbsp; <br>
+phase</a>.&lt;pname&gt;.<a href="gemsfit-useref.html#MF">MF</a>.&lt;fromula&gt; <br>
 
-unit&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; units of measurement for the preceding value [and
-error] &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;
-default&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; |aqueous molal; solid molfrac<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; for aqueous phases: molal; loga
-(log of molality); <br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; for solid phases: mol (in moles);
-molfrac (mole fraction); <br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; simolfrac (mole ratio to Si, for
-Si-containing cement phases). <br>
-
-<br>
-
-phase.&lt;pname&gt;.MF.&lt;fromula&gt;&nbsp;&nbsp;&nbsp; Experimental
+      </big></td>
+      <td style="vertical-align: top;">Experimental
 reported molar faraction MF of elements in a phase
-&lt;pname&gt;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-|&nbsp;&nbsp;&nbsp; not read&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -<br>
+&lt;pname&gt; pname should correspond to the
+name of this phase in GEMS3K DCH file, formula as in the following
+example: Na+K/Na+K+Ca or Na/Na+K, etc.</td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top; font-family: monospace;"><big>phase.Plagioclase.MF.Na/Na+Ca<br>
 
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; pname should correspond to the
-name of this phase in GEMS3K DCH file.<br>
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#error">error</a><br>
 
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; formula as in the following
-example: Na+K/Na+K+Ca or Na/Na+K, etc.<br>
+      </big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
 
-error&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; error estimate (value can be left blank, if unknown)
-for the preceding &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;
-default&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<br>
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#phase">
 
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; value of the element
-concentration in phase. <br>
-
-<br>
-
-phase.&lt;pname&gt;.DC.&lt;dname&gt;. &nbsp;&nbsp;&nbsp; Experimental
+phase</a>.&lt;pname&gt;.<a href="gemsfit-useref.html#DC">DC</a>.&lt;dname&gt;.</big></td>
+      <td style="vertical-align: top;">Experimental
 property of dependent component DC, &lt;dname&gt; in the phase
-&lt;pname&gt;. &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-|&nbsp;&nbsp;&nbsp; not read&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -<br>
+&lt;pname&gt;. pname should correspond to the
+name of this phase in GEMS3K DCH file, dname is the formula of species
+(Dependent Component) belonging to this phase. The following
+properties can be used after &lt;dname&gt;. </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
 
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; pname should correspond to the
-name of this phase in GEMS3K DCH file. <br>
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>&nbsp;&nbsp;&nbsp;&nbsp; <a href="gemsfit-useref.html#Q">Q</a><br>
 
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; dfor is the formula of species
-(Dependent Component) belonging to <br>
+      </big></td>
+      <td style="vertical-align: top;">concentration in mol fraction<br>
+      </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top; font-family: monospace;"><big>phase.aq_gen.DC.SiO2@.Q</big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>&nbsp;&nbsp;&nbsp;&nbsp; @coef<br>
 
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; this phase. The following
-properties can be used after &lt;dfor&gt;. :<br>
+      </big></td>
+      <td style="vertical-align: top;">activity coefficeint<br>
+      </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top; font-family: monospace;"><big>phase.aq_gen.DC.SiO2@.@ceof</big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#error">error</a><br>
 
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; Q: concentration in mole fraction (molfrac);<br>
+      </big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
 
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; @coef: activity coefficient;<br>
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#unit">unit</a><br>
 
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ...<br>
+      </big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
 
-error&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-error estimate (value can be left blank, if unknown) for the preceding
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;
-default&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-value of the phase species property. &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <br>
-
-unit&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; units of
-measurement for the preceding value [and error]: &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;
-default&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; mole fraction<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; for pQnt:
-molfrac (mole fraction); for @coef: ???? <br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Example:
-phase.aq_gen.DC.SiO2-.Q<br>
+      </big></td>
+    </tr>
+  </tbody>
+</table>
+<br>
 
 <br>
 
-IMPORTANT:<br>
+<hr style="width: 100%; height: 2px;">
+<h3>
+2. <a name="Export_excel_file"></a>Export excel file to csv format file</h3>
 
-Each sample (row) must have a unique combination of sample and
-expdataset names.<br>
-
-If present, the column 'unit' should be after the column 'error' that
-should come after <br>
-
-the column containing the respective property value, e.g.
-phase.aq_gen.pH | error | unit | ...<br>
-
-Names of phases, components, elements should be the same as in the
-GEMS3K DCH I/O files.<br>
-
-<br>
-
-2. Export your Excel table into the comma-separated format ',' csv
-file. Check that <br>
-
-the cell values are saved in full, e.g. as 0.1234567 and not as 0.123
+Export your Excel table into the comma-separated format ',' csv
+file. Check that the cell values are saved in full, e.g. as 0.1234567 and not as 0.123
 (as visible).<br>
-
 <br>
+<hr style="width: 100%; height: 2px;">
+<h3>3. <a name="Run_csvtoejdb"></a>Run csvtoejdb</h3>
 
-3. In the terminal, cd to folder with the program csvtoejdb, and
-execute it <br>
+In the terminal, cd to folder with the program csvtoejdb, and
+execute it with command-line arguments &lt;action&gt; &lt;mode&gt; &lt;db-path&gt;
+&lt;coll-name&gt; &lt;input_csv_file-path&gt; where: <br>
 
-with command-line arguments &lt;action&gt; &lt;mode&gt; &lt;db-path&gt;
-&lt;coll-name&gt; &lt;input_csv_file-path&gt;<br>
-
-where: <br>
 
 &nbsp;&nbsp; &lt;action&gt; is &nbsp;&nbsp;&nbsp;
--run&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; import data from the .csv
+&nbsp;&nbsp;&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">-run</span></big>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; import data from the .csv
 file to the database<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; -back&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; backup the whole collection/database into JSON text
+&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">-back</span></big>&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; backup the whole collection/database into JSON text
+file(s)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
+<big style="font-family: monospace;"><span style="font-weight: bold;">-rest</span></big>&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; restore the collection/database from the JSON
+text
 file(s)<br>
 
-&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; -rest&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; restore the collection/database from the JSON text
-file(s)<br>
 
-&nbsp;&nbsp; &lt;mode&gt;&nbsp;&nbsp; is &nbsp;&nbsp;&nbsp; -t&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; truncate (overwrite the existing
+&nbsp;&nbsp; &lt;mode&gt; is &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">-t&nbsp;
+&nbsp;&nbsp;&nbsp;</span></big> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; truncate (overwrite the existing
 database)<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; -a &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; append (add more data to the existing
-database)&nbsp;&nbsp;&nbsp; <br>
-
-&nbsp;&nbsp; &lt;db-path&gt; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; path to the&nbsp; database (database will be created
+&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">-a</span></big> &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; append (add more data to the
+existing
+database)&nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;
+&lt;db-path&gt; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; path to the&nbsp; database
+(database will be created
 if it doesn't exist)<br>
 
-&nbsp;&nbsp; &lt;coll-name&gt;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; name of the collection<br>
 
-&nbsp;&nbsp; &lt;input_csv_file-path&gt;&nbsp;&nbsp;&nbsp; path the
+&nbsp;&nbsp; &lt;coll-name&gt;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name of the collection<br>
+
+
+&nbsp;&nbsp; &lt;input_csv_file-path&gt;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; path the
 input CSV file <br>
 
+
 <br>
+
 
 The program csvtoejdb will also write a
 &lt;db-name&gt;_&lt;coll-name&gt;.json file in JSON format. <br>
+<br>
+A. To add data run the program as in the exmaple:<br>
 
-Example call for data import:<br>
 
 <br>
 
-&nbsp; $ csvtoejdb -run -t ./CASH/solcash experiments ./CASH/CASH.csv <br>
+
+&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">$ csvtoejdb -run -t ./CASH/solcash experiments ./CASH/CASH.csv</span></big> (overwrites if file exists and creates a new database form data in CASH.csv)<br>
+or<br>
+&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">$ csvtoejdb -run -a ./CASH/solcash experiments ./CASH/CASH.csv</span></big> (appends the existing file, gives error message if the sample name and expdataset pairs are already present in the dtabase)<br>
+
 
 <br>
+For the above example the files "solcash", "solcash_experiments", "solcash_experiments.json",
+and solcash_experiments_distinctTP.csv will result in the /CASH subfolder
+will result. The file <a name="distinctTP.csv"></a>solcash_experiments_distinctTP.csv holds the distinct T and P
+pairs of the experiments in the database useful for exporting GEMS3K files.<br>
 
-The files "solcash", "solcash_experiments", "solcash_experiments.json",
-and <br>
-
-solcash_experiments_distinctTP.csv will result in the /CASH subfolder
-will result. <br>
-
-<br>
-
-The file solcash_experiments_distinctTP.csv holds the distinct T and P
-pairs of the experiments in <br>
-
-the database useful for exporting GEMS3K files.<br>
 
 &nbsp;<br>
 
-<br>
-
-4. To backup a collection, run the program as in the example below:<br>
 
 <br>
+B. To backup a collection, run the program as in the example below:<br>
 
-&nbsp;&nbsp; $ csvtoejdb -back ./SOL/solcash experiments<br>
 
 <br>
+
+
+&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">$ csvtoejdb -back ./SOL/solcash experiments</span></big><br>
+
+
+<br>
+
 
 The file "solcash_experiments.json" will be the result. <br>
 
-<br>
 
-5. To restore a database/collection from a json file backup, run the
+<br>
+C. To restore a database/collection from a json file backup, run the
 program as: <br>
 
-<br>
-
-&nbsp;&nbsp; $ csvtoejdb -rest ./SOL/solcash_experiments.json
-experiments"<br>
 
 <br>
+
+
+&nbsp; <big style="font-family: monospace; font-weight: bold;">$ csvtoejdb -rest ./SOL/solcash_experiments.json
+experiments"</big><br>
+
+
+<br>
+
 
 The files "solcash" and "solcash_experiments" in the /SOL subfolder
 will result.<br>
 
-<br>
-
-6. Return codes and error messages<br>
 
 <br>
+<hr style="width: 100%; height: 2px;">
+<h3><a name="Return_codes_and_error_messages"></a>Return codes and error messages</h3>
+
+
+<br>
+
 
 .....<br>
 
+
 <br>
+
 
 .....<br>
+<hr style="width: 100%; height: 2px;">Last
+updated:&nbsp; 11.10. 2013&nbsp; DM,DK <br style="font-family: Helvetica,Arial,sans-serif;">
 
-<br>
+<br style="font-family: Helvetica,Arial,sans-serif;">
 
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
+Copyright&nbsp; (c) 2013&nbsp; <a href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a><br>
 
 </body></html>

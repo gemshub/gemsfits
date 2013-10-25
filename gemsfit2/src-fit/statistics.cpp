@@ -41,7 +41,6 @@
 // Constructor
 statistics::statistics(TGfitTask *gfittask, double weighted_Tfun_sum_of_residuals_, int num_of_params_, int num_of_runs_ )
 {
-
     number_of_measurements = 0;
     number_of_measurements += gfittask->computed_values_v.size();
     Tfun_sum_of_residuals = 0.0;
@@ -410,7 +409,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
 FisherMatrix.print("Fisher Matrix:");
 
         // Compute variance-covariance matrix
-        arma::mat VarCovarMatrix = 1 * arma::inv( FisherMatrix, false );
+arma::mat VarCovarMatrix = 1 * arma::inv( FisherMatrix, false );
         if (gfittask->Tfun->weight == "inverr2")
         {
             VarCovarMatrix = error_variance * arma::inv( FisherMatrix, false );

@@ -52,6 +52,7 @@
 #include "node.h"
 #include "ejdb.h"
 #include <algorithm>
+#include "optimization.h"
 
 //#ifdef USE_MPI
 #include "omp.h"
@@ -64,7 +65,6 @@ using namespace std;
 // as well as measurement data from EJDB local database.
 class Data_Manager : public TNode
 {
-
     public:
         /**
         * Constructor for the Data_Manager class.
@@ -188,29 +188,13 @@ class Data_Manager : public TNode
             };
             vector<samples*> experiments;         /// vector of samples from one experimental dataset
 
+
         /**
-        * get database connection parameters
+        * Writes database connection parameters in the template input file
         * @author SD
         * @date 14.03.2013
         */
-        void get_db_specs_txt( );
         void out_db_specs_txt( bool with_comments, bool brief_mode );
-        void define_db_specs( );
-
-        /**
-        * Read measurement data from EJDB database
-        * @author DM
-        * @date 19.04.2013
-        */
-        void get_EJDB( );
-
-        /**
-        * Returns JSON string from input file
-        * @author DM
-        * @param key string pointing to the position in the input file of the JSON string e.g <DatSelect>.
-        * @date 19.04.2013
-        */
-        string readin_JSON (string key );
 
         /**
         * Interprets 1 level JSON object pointed by the variable key
@@ -233,22 +217,7 @@ class Data_Manager : public TNode
         */
         void parse_JSON_array_object( string data_, const char *arr , const char *key, vector<string> &result );
 
-        /**
-        * Puts the in BSON format (e.g. returned from an EJDB query) into Data Manager class
-        * @author DM
-        * @param *f
-        * @param *data BSON object
-        * @param pos position of the BSON object in the vector experiments
-        * @date 19.04.2013
-        */
-        void bson_to_Data_Manager(FILE *f, const char *data, int pos);
 
-        /**
-        * Gest the distinct T-P pairs form the experimental data
-        * @author DM
-        * @date 19.04.2013
-        */
-        void get_distinct_TP( );
 
 //        /**
 //        * Read measurement data from CSV file
@@ -285,6 +254,45 @@ class Data_Manager : public TNode
         /// EJDB data selection querie
         string DataSelect;
 
+        /**
+        * get database connection parameters
+        * @author SD
+        * @date 14.03.2013
+        */
+        void get_db_specs_txt( );
+        void define_db_specs( );
+
+        /**
+        * Read measurement data from EJDB database
+        * @author DM
+        * @date 19.04.2013
+        */
+        void get_EJDB( );
+
+        /**
+        * Returns JSON string from input file
+        * @author DM
+        * @param key string pointing to the position in the input file of the JSON string e.g <DatSelect>.
+        * @date 19.04.2013
+        */
+        string readin_JSON (string key );
+
+        /**
+        * Puts the in BSON format (e.g. returned from an EJDB query) into Data Manager class
+        * @author DM
+        * @param *f
+        * @param *data BSON object
+        * @param pos position of the BSON object in the vector experiments
+        * @date 19.04.2013
+        */
+        void bson_to_Data_Manager(FILE *f, const char *data, int pos);
+
+        /**
+        * Gest the distinct T-P pairs form the experimental data
+        * @author DM
+        * @date 19.04.2013
+        */
+        void get_distinct_TP( );
 
 };
 

@@ -859,7 +859,7 @@ outField Data_Manager_fields[9] =
       "\n#       \"CN\":  the name/formula of the data to compare. e.g. \"Al\" if \"CT\" is \"IC\", or \"pH\" if \"CT\" is \"prop\" "
       "\n#                                                              \"K/Na+K\" if \"CT\" is \"MF\" "
       "\n#       \"DCP\": used only if \"CT\" is \"DC\", represent the name of the dependent component property: \"Q\" for amount; \"@coef\" for activity coeficient "
-      "\n#       \"Eunit\":  what unit the values should are given in (overrides the units given in the database for this entry):"
+      "\n#       \"unit\":  what unit the values should are given in (overrides the units given in the database for this entry):"
       "\n#          \"molal\":  mol/(kg H2O), \"loga\": log(molal), \"-loga\": negated log(molal);"
       "\n#          \"g\"; \"kg\"; \"cm3\"; \"m3\"; \"molfrac\": mole fraction "
       "\n#           ..."
@@ -873,10 +873,10 @@ outField Data_Manager_fields[9] =
       "\n#  Example:"
       "\n#  \'{ \"Target\": \"name\", \"TT\": \"lsq\", \"WT\": \"inverr\", \"OFUN\":"
       "\n#      ["
-      "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"IC\", \"CN\": \"Si\", \"Unit\": \"molal\" },"
-      "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"IC\", \"CN\": \"Al\", \"Unit\": \"molal\" },"
-      "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"prop\", \"CN\": \"pH\", \"Unit\": \"-loga\" },"
-      "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"DC\", \"CN\": \"SiO2-\", \"DCP\" : \"Q\", \"Unit\": \"mol\"}"
+      "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"IC\", \"CN\": \"Si\", \"unit\": \"molal\" },"
+      "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"IC\", \"CN\": \"Al\", \"unit\": \"molal\" },"
+      "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"property\", \"CN\": \"pH\", \"unit\": \"-loga\" },"
+      "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"DC\", \"CN\": \"SiO2@\", \"DCP\" : \"Q\", \"unit\": \"mol\"}"
       "\n#      ]"
       "\n#   }\'"
       "\n#  Paste the above example below, remove comment symbols (#), and edit as necessary. Remove unwanted rows {...}\n"
@@ -1339,7 +1339,7 @@ void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat, string nfild)
     r->nC = atoi(out.at(0).c_str());
     out.clear();
 
-    temp->parse_JSON_object(Jformat.format, keys::DC, out);
+    temp->parse_JSON_object(Jformat.format, keys::rDC, out);
     r->Dc_name = out.at(0);
     out.clear();
 

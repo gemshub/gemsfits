@@ -88,7 +88,7 @@ void ResPrint::print_result()
     { cout<<"Output fileopen error"<<endl; /*exit(1);*/ }
 
     fout.setf(ios::fixed);
-    for (int i=0; i<experiment.size(); ++i)
+    for (unsigned int i=0; i<experiment.size(); ++i)
     {
         if (what1[i] == "")
         {
@@ -120,7 +120,7 @@ void ResPrint::print_result()
 
     if (res_opti->h_RDc)
     {
-        for (int i=0; i<res_opti->reactions.size(); ++i)
+        for (unsigned int i=0; i<res_opti->reactions.size(); ++i)
         {
             fout <<"Reac parameter "<<res_opti->reactions[i]->Dc_name<<" :  "<<res_opti->reactions[i]->std_gibbs<<endl;
         }
@@ -128,7 +128,7 @@ void ResPrint::print_result()
 
     if (res_opti->h_Lp)
     {
-        for (int i=0; i<res_opti->Lparams.size(); ++i)
+        for (unsigned int i=0; i<res_opti->Lparams.size(); ++i)
         {
             fout <<"Linked parameter "<<res_opti->Lparams[i]->name<<" :  "<<res_opti->Lparams[i]->EV<<endl;
         }

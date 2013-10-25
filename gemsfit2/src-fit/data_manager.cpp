@@ -365,7 +365,7 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                 experiments.at(pos)->sbcomp.push_back( new samples::components );
                 ic++; // position of the component in sbcomp vector
                 experiments.at(pos)->sbcomp.at(ic)->Qnt = NULL; experiments.at(pos)->sbcomp.at(ic)->Qerror = NULL;
-                experiments.at(pos)->sbcomp.at(ic)->Qunit = keys::gram;
+                experiments.at(pos)->sbcomp.at(ic)->Qunit = keys::gram; // default
 
                 while (bson_iterator_next(&d))
                 {

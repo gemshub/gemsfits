@@ -166,7 +166,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                     // checking if there are errors and units included in the CSV and adding tem in the database
                     if (i+1 < headline.size())
                     {
-                        if ((headline[i+1]==_error))
+                        if ((headline[i+1]==Qerror))
                         {
                             ++i;
                             if ((!row[i].empty()))
@@ -221,7 +221,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                     // checking if there are errors and units included in the CSV and adding tem in the database
                     if (i+1 < headline.size())
                     {
-                        if ((headline[i+1]==_error))
+                        if ((headline[i+1]==Qerror))
                         {
                             ++i;
                             if ((!row[i].empty()))
@@ -271,7 +271,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                 // checking if there are errors and units included in the CSV and adding tem in the database
                 if (i+1 < headline.size())
                 {
-                    if ((headline[i+1]==_error))
+                    if ((headline[i+1]==Qerror))
                     {
                         ++i;
                         if ((!row[i].empty()))
@@ -405,7 +405,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                             // checking if there are errors and units included in the CSV and adding tem in the database
                                             if (j+1 < headline.size())
                                             {
-                                                if ((headline[j+1]==_error))
+                                                if ((headline[j+1]==Qerror))
                                                 {
                                                     ++j;
                                                     if ((!row[j].empty()))
@@ -473,7 +473,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                             // checking if there are errors and units included in the CSV and adding tem in the database
                                             if (j+1 < headline.size())
                                             {
-                                                if ((headline[j+1]==_error))
+                                                if ((headline[j+1]==Qerror))
                                                 {
                                                     ++j;
                                                     if ((!row[j].empty()))
@@ -540,7 +540,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                             // checking if there are errors and units included in the CSV and adding tem in the database
                                             if (j+1 < headline.size())
                                             {
-                                                if ((headline[j+1]==_error))
+                                                if ((headline[j+1]==Qerror))
                                                 {
                                                     ++j;
                                                     if ((!row[j].empty()))
@@ -645,7 +645,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                                             // checking if there are errors and units included in the CSV and adding tem in the database
                                                             if (j+1 < headline.size())
                                                             {
-                                                                if ((headline[j+1]==_error))
+                                                                if ((headline[j+1]==Qerror))
                                                                 {
                                                                     ++j;
                                                                     if ((!row[j].empty()))

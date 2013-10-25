@@ -8,8 +8,8 @@ namespace keys
 
 // General keywords used for qunatity, error and unit
 static const char *Qnt = "Q";  ///                                                              qunatity
-static const char *Qunit = "Qunit";  ///                                                        unit
-static const char *Qerror = "Qerror";  ///                                                      error
+static const char *Qunit = "unit";  ///                                                        unit
+static const char *Qerror = "error";  ///                                                      error
 
 // Database structure
 static const char *experiments = "experiments"; ///               0          collection         data for experimental samples
@@ -111,6 +111,7 @@ static const char *url = "url"; ///	                              1		     string
     // Reaction specific
     static const char *Ref = "Ref"; ///                                     string              reference for logK
     static const char *logK = "logK"; ///                                   double              reaction constant
+    static const char *rDC = "rDC";///                                      string              rection dependent component
     static const char *nC = "nC"; ///                                       integer             number of components involved in the reaction
                         // species
     static const char *RC = "RC"; ///                                       array               array of components names
@@ -129,10 +130,10 @@ static const char *url = "url"; ///	                              1		     string
     static const char *WT = "WT"; ///                                       string              weight type
     static const char *OFUN = "OFUN"; ///                                   array               Objective function
         static const char *CT = "CT"; ///                                   string              type of component/data to compare
-            static const char *prop = "prop"; ///                           string              keyword for comparing properties with names such as pH, Q, IS, etc.
+//            static const char *property = "prop"; ///                           string              keyword for comparing properties with names such as pH, Q, IS, etc.
         static const char *CN = "CN"; ///                                   string              name of data to compare e.g. Al, pH, etc.
         static const char *EPH = "EPH"; ///                                 string              experiment phase
-        static const char *Eunit = "Unit"; ///                              string              experiment element unit
+//        static const char *Eunit = "Unit"; ///                              string              experiment element unit
         static const char *DCP = "DCP"; ///                                 string              dependent comp property
 
 

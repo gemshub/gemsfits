@@ -5,7 +5,6 @@ TEMPLATE        = app
 CONFIG         += console
 CONFIG         -= qt
 
-
 CONFIG         -= qt
 CONFIG         += warn_on
 CONFIG         += console
@@ -25,10 +24,10 @@ CONFIG( debug,  debug|release ) {
 }
 
 !win32 {
-  PLATFORM_CPP       =  ../../gemsfit2/tcejdb/nix
+  PLATFORM_CPP       =  ../gemsfit2/tcejdb/nix
 }
 else {
-  PLATFORM_CPP       =  ../../gemsfit2/tcejdb/win32
+  PLATFORM_CPP       =  ../gemsfit2/tcejdb/win32
 }
 
 !macx-clang {
@@ -44,25 +43,25 @@ QMAKE_CFLAGS   += -fopenmp
 LIBS           += -lz -fopenmp -ljansson
 
 
-EJDB_CPP        =  ../../gemsfit2/tcejdb
-MAIN_CPP        =  ./main
+EJDB_CPP        =  ../gemsfit2/tcejdb
+SRC_CPP        =  ./src-csvtoejdb
 
 EJDB_H          =  $$EJDB_CPP
-MAIN_H          =   $$MAIN_CPP
+SRC_H          =  $$SRC_CPP
 PLATFORM_H   =  $$PLATFORM_CPP
 
 DEPENDPATH     += $$EJDB_H
-DEPENDPATH     += $$MAIN_H
+DEPENDPATH     += $$SRC_H
 DEPENDPATH   += $$PLATFORM_H
 
 INCLUDEPATH    += $$EJDB_H
-INCLUDEPATH    += $$MAIN_H
+INCLUDEPATH    += $$SRC_H
 INCLUDEPATH  += $$PLATFORM_H
 
 OBJECTS_DIR     = obj
 
 include($$EJDB_CPP/tcejdb.pri)
-include($$MAIN_CPP/main.pri)
+include($$SRC_CPP/csvtoejdb.pri)
 
 HEADERS +=
 
