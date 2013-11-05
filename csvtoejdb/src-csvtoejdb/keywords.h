@@ -18,6 +18,7 @@ static const char *expsample = "sample"; ///                      1		     string
 static const char *expdataset = "expdataset"; ///                 1		     string		        ID of set of experimental data
 static const char *usedataset = "usedataset"; ///                 1		     string		        ID of set of experimental data
 static const char *skipdataset = "skipdataset"; ///               1		     string		        ID of set of experimental data
+static const char *Type = "Type";///
 static const char *Weight = "Weight"; ///                         1          double             artificial assigned weight
 static const char *sT = "sT"; ///                                 1		     float		        temperature for this experimental sample
 static const char *Tunit = "Tunit"; ///   	                      1          string		        units of temperature { 'C' (default) or 'K' or 'F' }

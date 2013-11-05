@@ -61,7 +61,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
             {
                 h_UMC = true;
             }
-            if ((headline[i]==expsample) || (headline[i]==expdataset) || (headline[i]==Tunit) || (headline[i]==Punit)|| (headline[i]==Vunit) )
+            if ((headline[i]==expsample) || (headline[i]==expdataset) || (headline[i]==Tunit) || (headline[i]==Punit)|| (headline[i]==Vunit) || (headline[i]==Type))
             {
                 bson_append_string(&exp, headline[i].c_str(), row[i].c_str());
                 // for query
@@ -413,6 +413,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                                         bson_append_double(&exp, Qerror, atof(row[j].c_str()));
                                                     }
                                                 }
+                                                if (j+1 < headline.size())
                                                 if ((headline[j+1]==_unit) && (!row[j+1].empty()))
                                                 {
                                                     ++j;
@@ -481,6 +482,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                                         bson_append_double(&exp, Qerror, atof(row[j].c_str()));
                                                     }
                                                 }
+                                                if (j+1 < headline.size())
                                                 if ((headline[j+1]==_unit) && (!row[j+1].empty()))
                                                 {
                                                     ++j;
@@ -538,7 +540,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                             bson_append_double(&exp, Qnt, atof(row[j].c_str()));
 
                                             // checking if there are errors and units included in the CSV and adding tem in the database
-                                            if (j+1 < headline.size())
+                                            if ((j+1) < headline.size())
                                             {
                                                 if ((headline[j+1]==Qerror))
                                                 {
@@ -548,6 +550,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                                         bson_append_double(&exp, Qerror, atof(row[j].c_str()));
                                                     }
                                                 }
+                                                if (j+1 < headline.size())
                                                 if ((headline[j+1]==_unit) && (!row[j+1].empty()))
                                                 {
                                                     ++j;
@@ -653,6 +656,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                                                         bson_append_double(&exp, Qerror, atof(row[j].c_str()));
                                                                     }
                                                                 }
+                                                                if (j+1 < headline.size())
                                                                 if ((headline[j+1]==_unit) && (!row[j+1].empty()))
                                                                 {
                                                                     ++j;

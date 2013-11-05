@@ -32,6 +32,10 @@ void jsontoejdb( string data_, EJDB *jb, EJCOLL *coll, bson_oid_t oid)
         if(json_is_string(data))
         bson_append_string(&exp, expdataset, json_string_value(data));
 
+        data = json_object_get(root, Type);
+        if(json_is_string(data))
+        bson_append_string(&exp, Type, json_string_value(data));
+
         data = json_object_get(root, Tunit);
         if(json_is_string(data))
         bson_append_string(&exp, Tunit, json_string_value(data));
