@@ -351,7 +351,8 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
     {
         if (sys->experiments[i]->expphases[p]->phIC[e]->Qunit == keys::loga)
         {
-        computed_value = log10(sys->NodT[i]->Get_mIC(ICndx));
+            double molal_= sys->NodT[i]->Get_mIC(ICndx);
+        computed_value = log10(molal_);
         } else
         {
             computed_value = sys->NodT[i]->Get_mIC(ICndx); // in mol/Kg
@@ -370,7 +371,8 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
     measured_value = sys->experiments[i]->expphases[p]->phIC[e]->Qnt;
 
     // Error handeling due to possible nonphisical parameters
-    if (computed_value < sys->LimitOfDetection)
+
+    if ((computed_value < sys->LimitOfDetection) && (computed_value > 0))
     {
 //        cout << measured_value <<" / " <<computed_value<<" = " << measured_value / computed_value << endl;
         computed_value = rand() % 100 + 1;
@@ -559,7 +561,7 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
     measured_value = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt;
 
     // Error handeling due to possible nonphisical parameters
-    if (computed_value < sys->LimitOfDetection)
+    if ((computed_value < sys->LimitOfDetection) && (computed_value > 0))
     {
 //        cout << measured_value <<" / " <<computed_value<<" = " << measured_value / computed_value << endl;
         computed_value = rand() % 100 + 1;

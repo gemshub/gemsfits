@@ -32,7 +32,10 @@
 
 #include "print.h"
 #include <string>
+#include <sstream>
 #include <fstream>
+#include <iomanip>
+#include <math.h>
 
 using namespace std;
 
@@ -67,16 +70,27 @@ void ResPrint::set_print(string experiment_, string what1_, string what2_, strin
 }
 
 
-void ResPrint::print_header(string function, string weight_)
+void ResPrint::print_header(string function, string weight_, int size)
 {
     ofstream fout;
+    stringstream ss;
+    string sss;
     fout.open(path.c_str(), ios::app);
     if( fout.fail() )
     { cout<<"Output fileopen error"<<endl; /*exit(1);*/ }
 
     if (weight_ == "")
-        fout << "experiment,,,unit,measured,computed," <<function<<endl;
-    else fout << "experiment,,,unit,measured,computed," <<"weighted_"+function<<endl;
+        fout << "experiment,,,unit,measured,computed," <<function;
+    else fout << "experiment,,,unit,measured,computed," <<"weighted_"+function;
+    for (unsigned int i =0; i<size; ++i)
+    {
+        ss << i;
+        sss = ss.str();
+        fout <<",Sens_p"+sss;
+        ss.str("");
+    }
+    fout << endl;
+
 
 }
 
@@ -84,6 +98,8 @@ void ResPrint::print_result()
 {
     ofstream fout;
     fout.open(path.c_str(), ios::app);
+    setprecision(5);
+    scientific(fout);
     if( fout.fail() )
     { cout<<"Output fileopen error"<<endl; /*exit(1);*/ }
 
@@ -92,8 +108,15 @@ void ResPrint::print_result()
     {
         if (what1[i] == "")
         {
-            fout<<experiment[i]<<","/*<<what1[i]*/<<","<<what2[i]<<","<<unit[i]<<","<<measured[i]<<","<<computed[i]<<","<<Weighted_Tfun_residual[i]<<endl;
-        } else fout<<experiment[i]<<","<<what1[i]<<","<<what2[i]<<","<<unit[i]<<","<<measured[i]<<","<<computed[i]<<","<<Weighted_Tfun_residual[i]<<endl;
+            fout<<experiment[i]<<","/*<<what1[i]*/<<","<<what2[i]<<","<<unit[i]<<","<<measured[i]<<","<<computed[i]<<","<<Weighted_Tfun_residual[i];
+        } else fout<<experiment[i]<<","<<what1[i]<<","<<what2[i]<<","<<unit[i]<<","<<measured[i]<<","<<computed[i]<<","<<Weighted_Tfun_residual[i];
+
+        for (unsigned int j=0; j<sensitivity.size(); j++)
+        {
+            double abss = abs(sensitivity[j][i]);
+            fout <<","<<log10(abss);
+        }
+        fout<<endl;
     }
 
 

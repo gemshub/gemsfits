@@ -139,7 +139,7 @@ int main( int argc, char *argv[] )
         Equil_objective_function_callback(gfittask->Opti->optv, grad, gfittask);
     }
 
-    gfittask->print->print_result();
+
 
     fout<<endl<<" back in main ..."<<endl;
 
@@ -157,6 +157,8 @@ int main( int argc, char *argv[] )
 
 //        stat.MC_confidence_interval( &elvis, optim.opt, &systems, countit );
     }
+
+    gfittask->print->print_result();
 
     delete gfittask;
 

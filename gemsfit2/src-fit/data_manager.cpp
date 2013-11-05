@@ -339,6 +339,11 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
             // adding sample name
             experiments.at(pos)->sample = bson_iterator_string(&i);
         } else
+        if (key_ == keys::Type)
+        {
+            // adding sample name
+            experiments.at(pos)->Type = bson_iterator_string(&i);
+        } else
         if (key_ == keys::sT)
         {
             // adding temperature

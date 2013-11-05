@@ -292,7 +292,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
 //    //===== For testing the objective function without oprimization =====//
 //    weighted_Tfun_sum_of_residuals = Equil_objective_function_callback(Opti->optv, grad, this);
 
-    print->print_header(Tfun->type, Tfun->weight);
+    print->print_header(Tfun->type, Tfun->weight, Opti->optv.size());
 
     nlopt::result result = NLopti.optimize( Opti->optv, weighted_Tfun_sum_of_residuals );
     ffout<<"optv[0] = "<<Opti->optv[0]<<endl;

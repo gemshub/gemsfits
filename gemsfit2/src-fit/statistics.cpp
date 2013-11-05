@@ -322,6 +322,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
         for( i=0; i< optv_.size(); i++ )
         {
             opt_scan = optv_;
+            vector<double> sens;
 
             // Central finite differences:
             opt_scan[i] = optv_[i] + optv_[i]*delta;
@@ -339,6 +340,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
             for( k=0; k< len_meas; k++ )
             {
                 SensitivityMatrix(k,i) 	 			  = ( computed_up[k] - computed_lo[k] ) / ( optv_[i]*delta*2 );
+                sens.push_back(SensitivityMatrix(k,i));
 
                 OnePercentScaledSensitivities(k,i) = (SensitivityMatrix(k,i)) * optv_[i] / 100;
 
@@ -352,6 +354,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
                     } else  DimensionlessScaledSensitivities(k,i) = SensitivityMatrix(k,i) * fabs( optv_[i] ) * 1;
                 CompositeScaledSensitivities(i)      += sqrt( DimensionlessScaledSensitivities(k,i)*DimensionlessScaledSensitivities(k,i)/len_meas );
             }
+            gfittask->print->sensitivity.push_back(sens);
         }
 
         ofstream myStat;

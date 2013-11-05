@@ -58,6 +58,8 @@ public:
     //destructor
     ~ResPrint ();
 
+    vector<vector<double> > sensitivity;
+
     /**
     * Prints the header of the results CSV file
     * @param function      name of the target function
@@ -65,7 +67,7 @@ public:
     * @author DM
     * @date 17.05.2013
     */
-    void print_header(string function, string weight_);
+    void print_header(string function, string weight_, int size);
 
     /**
     * Clears the printing class variables (sotore the optimization results from the last itteration)
