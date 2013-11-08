@@ -53,8 +53,8 @@ static const char *expphases = "expphases"; ///	                  1    	     arr
         // Phase independent components
     static const char *phIC = "phIC"; ///	                      2   	     array		        array of measured composition of the phase
         static const char *IC = "IC";///                          3          string             name of independent component (element formula, e.g. Al)
-    static const char *phMF = "phMF";///                          2          array              array of reported measurments in molar fraction
-        static const char *MF = "MF"; ///                         3          string             molar faction formula
+    static const char *phMR = "phMR";///                          2          array              array of reported measurments in molar ratio
+        static const char *MR = "MR"; ///                         3          string             molar ratio formula
 ///                       *eQnt = "Q";                            3	         double		        measured quantity/concentration of element (in Qunit)
 ///                       *Qunit = "Qunit";                       3          string             unit
         // Phase dependent components

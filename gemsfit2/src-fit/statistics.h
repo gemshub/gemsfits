@@ -76,6 +76,8 @@ class statistics
     // Computed parameters
     /// standard deviation of residuals
     double SD_of_residuals;
+    /// standard deviation of target function residuals
+    double SD_of_TFresiduals;
     /// R^2: coefficient of determination
     double coeff_of_determination;
     /// result from Pearson's Chi Squared test

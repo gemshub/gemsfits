@@ -279,9 +279,9 @@ void jsontoejdb( string data_, EJDB *jb, EJCOLL *coll, bson_oid_t oid)
                                 bson_append_string(&exp, IC, json_string_value(data4));
 
                                 bson_append_start_object(&exp, sss.c_str() );
-                                data4 = json_object_get(data3, MF);
+                                data4 = json_object_get(data3, MR);
                                 if(json_is_string(data4))
-                                bson_append_string(&exp, MF, json_string_value(data4));
+                                bson_append_string(&exp, MR, json_string_value(data4));
 
                                 data4 = json_object_get(data3, Qnt);
                                 if(json_is_real(data4))
@@ -305,11 +305,11 @@ void jsontoejdb( string data_, EJDB *jb, EJCOLL *coll, bson_oid_t oid)
                         //++ END array phIC ++//
                     }
 
-                    //++ START array phMF ++//
-                    data2 = json_object_get(data1, phMF);
+                    //++ START array phMR ++//
+                    data2 = json_object_get(data1, phMR);
                     if(json_is_array(data2))
                     {
-                        bson_append_start_array(&exp, phMF);
+                        bson_append_start_array(&exp, phMR);
                         for (int i=0; i < json_array_size(data2); i++)
                         {
                             data3 = json_array_get(data2, i);
@@ -319,9 +319,9 @@ void jsontoejdb( string data_, EJDB *jb, EJCOLL *coll, bson_oid_t oid)
                                 sss = ss.str();
                                 ss.str("");
                                 bson_append_start_object(&exp, sss.c_str() );
-                                data4 = json_object_get(data3, MF);
+                                data4 = json_object_get(data3, MR);
                                 if(json_is_string(data4))
-                                bson_append_string(&exp, MF, json_string_value(data4));
+                                bson_append_string(&exp, MR, json_string_value(data4));
 
                                 data4 = json_object_get(data3, Qnt);
                                 if(json_is_real(data4))
@@ -342,7 +342,7 @@ void jsontoejdb( string data_, EJDB *jb, EJCOLL *coll, bson_oid_t oid)
                             bson_append_finish_object(&exp);
                         }
                         bson_append_finish_array(&exp);
-                        //++ END array phMF ++//
+                        //++ END array phMR ++//
                     }
 
 

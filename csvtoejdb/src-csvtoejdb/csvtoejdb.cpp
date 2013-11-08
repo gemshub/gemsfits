@@ -17,7 +17,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
     string ph_new, ph_old, dcomp_new, dcomp_old, sss;
     vector<string> phases, dcomps; // keeps the already read phases and dcomps
     stringstream ss;
-    bool h_phprop = false, h_phases = false, h_phIC = false, h_dcomp = false, h_UMC= false, h_LMC = false, h_phMF = false; // handle that is true if we have the entry in the CSV file
+    bool h_phprop = false, h_phases = false, h_phIC = false, h_dcomp = false, h_UMC= false, h_LMC = false, h_phMR = false; // handle that is true if we have the entry in the CSV file
 
     bson_oid_t oid;
     // keeps each row of the CSV file
@@ -362,9 +362,9 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                     {
                                         h_phIC = true;
                                     }
-                                    if (ph_prop == MF)
+                                    if (ph_prop == MR)
                                     {
-                                        h_phMF = true;
+                                        h_phMR = true;
                                     }
 //                                    if (ph_prop == DC)
 //                                    {
@@ -501,9 +501,9 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                         } h_phIC = false;
 
                         //++ START getting data reported as molar facrion
-                        if (h_phMF)
+                        if (h_phMR)
                         {
-                            bson_append_start_array(&exp, phMF);
+                            bson_append_start_array(&exp, phMR);
                             // get phase comp
                             for (unsigned int j=0; j<headline.size(); ++j)
                             {
@@ -529,14 +529,14 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                         pos_end   = ph_prop_3.find(f1,pos_end+1);
                                         ph_prop   = ph_prop_3.substr((0),(pos_start));
 
-                                        if ((ph_prop_2 == MF) && (!row[j].empty()))
+                                        if ((ph_prop_2 == MR) && (!row[j].empty()))
                                         {
                                             ss << mf;
                                             sss = ss.str();
                                             ss.str("");
                                             bson_append_start_object(&exp, sss.c_str()); // START phase element object
                                             mf++;
-                                            bson_append_string(&exp, MF, ph_prop.c_str());
+                                            bson_append_string(&exp, MR, ph_prop.c_str());
                                             bson_append_double(&exp, Qnt, atof(row[j].c_str()));
 
                                             // checking if there are errors and units included in the CSV and adding tem in the database
@@ -563,10 +563,10 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                     }
                                 }
                             }
-                            //++ END array phMF ++//
+                            //++ END array phMR ++//
                             bson_append_finish_array(&exp);
                             mf = 0;
-                        } h_phMF = false;
+                        } h_phMR = false;
 
 
                         //++ START array phspecies ++//

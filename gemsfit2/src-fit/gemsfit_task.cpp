@@ -875,19 +875,19 @@ void TGfitTask::get_sum_of_residuals( double &residuals)
                             }
                         }
                     } else
-                        if ((Tfun->objfun[j]->exp_CT == keys::MF) /*&& (Tfun->objfun[j]->exp_property =="NULL")*/)
+                        if ((Tfun->objfun[j]->exp_CT == keys::MR) /*&& (Tfun->objfun[j]->exp_property =="NULL")*/)
                         {
                             // loop trough all elements
-                            for (unsigned int f=0; f<this->experiments[i]->expphases[p]->phMF.size(); ++f)
+                            for (unsigned int f=0; f<this->experiments[i]->expphases[p]->phMR.size(); ++f)
                             {
-                                if ((this->experiments[i]->expphases[p]->phMF[f]->comp == this->Tfun->objfun[j]->exp_CN) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
+                                if ((this->experiments[i]->expphases[p]->phMR[f]->comp == this->Tfun->objfun[j]->exp_CN) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
                                 {
                                     // check for unit
 //                                    check_unit(i, p, e, Tfun->objfun[j]->exp_unit, this );
-                                    average = average + this->experiments[i]->expphases[p]->phMF[f]->Qnt;
-                                    if (this->experiments[i]->expphases[p]->phMF[f]->Qnt < min)
-                                        min = this->experiments[i]->expphases[p]->phMF[f]->Qnt;
-                                    residuals = residuals + residual_phase_elemMF (i, p, f, j, this);
+                                    average = average + this->experiments[i]->expphases[p]->phMR[f]->Qnt;
+                                    if (this->experiments[i]->expphases[p]->phMR[f]->Qnt < min)
+                                        min = this->experiments[i]->expphases[p]->phMR[f]->Qnt;
+                                    residuals = residuals + residual_phase_elemMR (i, p, f, j, this);
                                     ++count;
                                 }
                             }

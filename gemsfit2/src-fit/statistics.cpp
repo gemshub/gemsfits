@@ -95,6 +95,10 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     double mean_res = 0.;
     double ResSumSquares = 0., TotalSumSquares = 0.;
     double Res = 0.;
+    double m2 = 0., m3 = 0., m4 = 0.;
+    double sqrtb1, b2, Y, beta2_sqrtb1, W2, delta, alpha, Z_sqrtb1, E_b2, Var_b2, x, sqrt_beta1_b2, A, Z_b2, K2, K2test;
+    vector<double> percentiles_v;
+    vector<double> quantiles_v;
 
 
     // Degrees of freedom
@@ -117,7 +121,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 
 
 //    SD_of_residuals = sqrt((Res/degrees_of_freedom));
-    SD_of_residuals = sqrt( (weighted_Tfun_sum_of_residuals/(number_of_measurements-number_of_parameters)) );
+    SD_of_TFresiduals = sqrt( (weighted_Tfun_sum_of_residuals/(number_of_measurements-number_of_parameters)) );
 
     // Modified by DM on 12.03.2012 due to errorneus calculation of R^2 when using log_solubility data.
 //    // Compute R^2: coefficient of determination
@@ -157,6 +161,75 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     // Error variance
     error_variance = (weighted_Tfun_sum_of_residuals/(number_of_measurements-number_of_parameters));
 
+
+    // Prepare data for Q-Q Plot
+
+    // Generate object containing normally distributed data with mean = 0 and standard deviation = SD_of_residuals
+    boost::math::normal dist(  0., SD_of_residuals );
+    sort( gfittask->residuals_v.begin(), gfittask->residuals_v.end() );
+    int N = (int) gfittask->residuals_v.size();
+
+    // Compute percentile
+    for( i=0; i< N; i++ )
+        percentiles_v.push_back( (i+1-0.5)/N );
+
+    // Rank-based z-scores
+    for( i=0; i< N; i++ )
+        quantiles_v.push_back( boost::math::quantile( dist, percentiles_v[i] ) );
+
+//    // Generate Q-Q Plot (Quantile-Quantile Plot)
+//    print_qqplot( residuals_v, quantiles_v );
+
+
+    // D'Agostino K square test for normality
+    mean = 0;
+    for (i=0; i< gfittask->residuals_v.size(); i++)
+    {
+        mean += gfittask->residuals_v[i];
+    }
+    mean = mean / gfittask->residuals_v.size();
+
+//    mean = ( accumulate(gfittask->residuals_v.begin(), gfittask->residuals_v.end(), 0) ) / N;
+
+
+    for( i=0; i<N; i++ )
+    {
+        m2 += pow( (gfittask->residuals_v[i] - mean), 2. ) / N;
+        m3 += pow( (gfittask->residuals_v[i] - mean), 3. ) / N;
+        m4 += pow( (gfittask->residuals_v[i] - mean), 4. ) / N;
+    }
+
+    sqrtb1 = m3 / pow( m2, (3./2.));
+    b2     = m4 / pow( m2, 2.);
+
+    // D'Agostino K square test: test of skewness
+    Y             = sqrtb1 * sqrt( ((N+1.)*(N+3.))/(6*(N-2.)) );
+    beta2_sqrtb1  = ( 3*(N*N + 27*N - 70)*(N + 1.)*(N + 3.)  ) / ( (N - 2.)*(N + 5.)*(N + 7.)*(N + 9.) );
+    W2            = -1. + sqrt(2 * (beta2_sqrtb1 - 1.) );
+    delta         = 1. / sqrt( log( sqrt(W2) ) ) ;
+    alpha         = sqrt( 2. / (W2 - 1) );
+    Z_sqrtb1      = delta * log( Y / alpha + sqrt( pow( (Y/alpha), 2 ) + 1 ) );
+
+    // D'Agostino K square test: test of kurtosis
+    // mean of b2
+    E_b2          = 3.*(N-1.)/(N+1.);
+    // variance of b2
+    Var_b2        = ( 24.*N*(N - 2.)*(N - 3.) ) / ( (N + 1.)*(N + 1.)*(N + 3.)*(N + 5.) );
+    // standardized version of b2
+    x             = ( b2 - E_b2 ) / ( sqrt(Var_b2) );
+    // third standardized moment of b2
+    sqrt_beta1_b2 = 6.*(N*N - 5.*N + 2.) / ( (N + 7.)*(N + 9.) ) * sqrt( 6. * (N + 3.)*(N + 5.) / ( N * (N - 2.) * (N - 3.) ) );
+    A             = 6. + ( 8. / sqrt_beta1_b2 ) * ( 2. / sqrt_beta1_b2 + sqrt( 1 + 4./(sqrt_beta1_b2*sqrt_beta1_b2) ) );
+    Z_b2          = ( (1.-2./(9.*A)) - pow( ((1.-2./A) / (1 + x*sqrt(2./(A - 4.))) ), (1./3.) ) ) / sqrt( 2./(9.*A) );
+
+    // K square
+    K2 = Z_sqrtb1*Z_sqrtb1 + Z_b2*Z_b2;
+
+    // Create chi-squared distribution object
+    boost::math::chi_squared chi_dist( 2 );
+
+    // 1 - cumulative distribution function
+    K2test = 1 - boost::math::cdf( chi_dist, K2 );
 
 
     // Write first statistcs to file
@@ -199,12 +272,17 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         myStat << endl;
         myStat << " Reduced_chi_square :                  	" << reduced_chi_square 	<< endl;
         myStat << endl;
-        myStat << " Standard deviation of the target function : 	" << SD_of_residuals 		<< endl;
+        myStat << " Standard deviation of the target function residuals : 	" << SD_of_TFresiduals 		<< endl;
         myStat << endl;
                 myStat << " Coefficient of determination R^2 :    	" << coeff_of_determination     << endl;
         myStat << endl;
         myStat << " Pearson's Chi Square test :           	" << Pearsons_chi_square   	<< endl;
         myStat << endl;
+
+        myStat << " D'Agostino K square test: "<<endl;
+        myStat << " K squared :  " << K2 << endl;
+        myStat << " Probability that K squared follows Chi-squared distribution :  " << K2test << endl;
+
                 myStat << " Best fit results for parameters from regression : "                         <<endl;
         for( i=0; i< optv_.size(); i++ ) // cols
         {

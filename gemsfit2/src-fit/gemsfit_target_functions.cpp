@@ -393,7 +393,7 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
 }
 
 // calculates the residual of IC as molar fraction
-double residual_phase_elemMF (int i, int p, int f, int j, TGfitTask *sys)
+double residual_phase_elemMR (int i, int p, int f, int j, TGfitTask *sys)
 {
     const char *elem_name, *phase_name;
     int ICndx, PHndx, nIC;
@@ -410,7 +410,7 @@ double residual_phase_elemMF (int i, int p, int f, int j, TGfitTask *sys)
     IC_in_PH = new double[ nIC ];
     sys->NodT[i]->Ph_BC(PHndx, IC_in_PH);
 
-    interpretMF (&nom, &denom, sys->experiments[i]->expphases[p]->phMF[f]->comp);
+    interpretMR (&nom, &denom, sys->experiments[i]->expphases[p]->phMR[f]->comp);
 
     // calculating nominator
     for (unsigned int k = 0; k < nom.size(); ++k)
@@ -443,11 +443,11 @@ double residual_phase_elemMF (int i, int p, int f, int j, TGfitTask *sys)
     }
 
     computed_value = computed_nom / computed_denom;
-    measured_value = sys->experiments[i]->expphases[p]->phMF[f]->Qnt;
+    measured_value = sys->experiments[i]->expphases[p]->phMR[f]->Qnt;
 
 
     // check Target function type and calculate the Tfun_residual
-    weight_ = weight_MF(i, p, f, j, sys->Tfun->weight, sys);
+    weight_ = weight_MR(i, p, f, j, sys->Tfun->weight, sys);
     Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j]);
     Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j])*weight_;
 
@@ -455,7 +455,7 @@ double residual_phase_elemMF (int i, int p, int f, int j, TGfitTask *sys)
 
     delete[] IC_in_PH;
 
-    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phMF[f]->comp,sys->experiments[i]->expphases[p]->phMF[f]->Qunit,measured_value,computed_value,Weighted_Tfun_residual, weight_ );
+    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phMR[f]->comp,sys->experiments[i]->expphases[p]->phMR[f]->Qunit,measured_value,computed_value,Weighted_Tfun_residual, weight_ );
 
     return Weighted_Tfun_residual;
 
@@ -463,7 +463,7 @@ double residual_phase_elemMF (int i, int p, int f, int j, TGfitTask *sys)
 }
 
 //interprets the molar fraction formula
-void interpretMF (vector<string> *nom, vector<string> *denom, string name)
+void interpretMR (vector<string> *nom, vector<string> *denom, string name)
 {
     int pos_f2, pos_f1, pos_end;
     string f1 = "+", f2 ="/", nominator, denominator, elem, temp_nom, temp_denom;
@@ -666,25 +666,25 @@ double weight (int i, int p, int e, int j, string type, TGfitTask *sys)
         return 1;
 }
 
-double weight_MF (int i, int p, int f, int j, string type, TGfitTask *sys)
+double weight_MR (int i, int p, int f, int j, string type, TGfitTask *sys)
 {
     if (type == keys::inverr)
     {
-        return 1/(sys->experiments[i]->expphases[p]->phMF[f]->Qerror);
+        return 1/(sys->experiments[i]->expphases[p]->phMR[f]->Qerror);
     } else
 
     if (type == keys::inverr2)
     {
-        return 1/(pow(sys->experiments[i]->expphases[p]->phMF[f]->Qerror,2));
+        return 1/(pow(sys->experiments[i]->expphases[p]->phMR[f]->Qerror,2));
     } else
 
     if (type == keys::inverr3)
     {
-        return 1/(pow(sys->experiments[i]->expphases[p]->phMF[f]->Qnt,2));
+        return 1/(pow(sys->experiments[i]->expphases[p]->phMR[f]->Qnt,2));
     } else
     if (type == keys::inverr_norm)
     {
-        return 1/(pow((sys->experiments[i]->expphases[p]->phMF[f]->Qerror/sys->Tfun->objfun[j]->meas_average),2));
+        return 1/(pow((sys->experiments[i]->expphases[p]->phMR[f]->Qerror/sys->Tfun->objfun[j]->meas_average),2));
     } else
         return 1;
 }

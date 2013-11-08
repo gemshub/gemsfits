@@ -159,7 +159,7 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys );
 */
 double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys);
 
-double residual_phase_elemMF (int i, int p, int f, int j, TGfitTask *sys);
+double residual_phase_elemMR (int i, int p, int f, int j, TGfitTask *sys);
 
 /**
 * Returns the residual from comparing the calculated with the meaured
@@ -205,14 +205,14 @@ double weight (int i, int p, int e, int j, string type, TGfitTask *sys);
 * Returns the weight based on the weight type
 * @param i      position in the experiments vector (which experiment)
 * @param p      position in the expphases vector (which pahse)
-* @param f      position in the phMF vector (which molar faction formula)
+* @param f      position in the phMR vector (which molar faction formula)
 * @param j      position in the objective function vector
 * @param type   type of weighting
 * @param sys    pointer to data object that holds the data of the current TGfitTask struct
 * @author DM
 * @date 17.08.2013
 */
-double weight_MF (int i, int p, int f, int j, string type, TGfitTask *sys);
+double weight_MR (int i, int p, int f, int j, string type, TGfitTask *sys);
 
 
 /**
@@ -223,7 +223,7 @@ double weight_MF (int i, int p, int f, int j, string type, TGfitTask *sys);
 * @author DM
 * @date 17.08.2013
 */
-void interpretMF (vector<string> *nom, vector<string> *denom, string name);
+void interpretMR (vector<string> *nom, vector<string> *denom, string name);
 
 /**
 * Returns the weight based on the weight type

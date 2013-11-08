@@ -191,8 +191,8 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     residuals_sys = residuals_sys_;
 
 //    vector<string> nom, denom;
-//    string name_MF = "Al+Si+Cu/Na+K+O";
-//    interpretMF(&nom,&denom, name_MF);
+//    string name_MR = "Al+Si+Cu/Na+K+O";
+//    interpretMR(&nom,&denom, name_MR);
 //    cout << residuals_sys << endl;
 
     // debug for when using global algorithm
