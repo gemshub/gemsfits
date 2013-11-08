@@ -648,6 +648,10 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                                     {
                                         experiments.at(pos)->expphases.at(ip)->phprop.at(ipp)->Qunit = keys::_loga;
                                     }
+                                    if (p_name==keys::Eh)
+                                    {
+                                        experiments.at(pos)->expphases.at(ip)->phprop.at(ipp)->Qunit = keys::Volts;
+                                    }
                                 } else
                                 if ((key_ == keys::Qnt))
                                 {

@@ -157,6 +157,8 @@ static const char *m3 = "m3"; ///
 static const char *cm3 = "cm3"; ///
 static const char *Simolfrac = "simolfrac"; ///
 static const char *molratio = "molratio"; ///
+static const char *molfrac = "molfrac"; ///
 static const char *g_cm3 = "g/cm3"; ///
+static const char *Volts = "Volts"; ///
 }
 #endif // KEYWORDS_H

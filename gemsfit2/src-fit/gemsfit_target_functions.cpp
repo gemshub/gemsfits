@@ -419,7 +419,7 @@ double residual_phase_elemMR (int i, int p, int f, int j, TGfitTask *sys)
         ICndx = sys->NodT[i]->IC_name_to_xDB(elem_name);
         if ((sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
         {
-            computed_nom = computed_nom + sys->NodT[i]->Get_mIC(ICndx) * sys->NodT[i]-> Ph_Mass(PHndx);
+            computed_nom = computed_nom + sys->NodT[i]->Get_mIC(ICndx)/* * sys->NodT[i]-> Ph_Mass(PHndx)*/;
         } else // other than aqueous phase
             if ((sys->Tfun->objfun[j]->exp_phase != "aq_gen") && (sys->experiments[i]->expphases[p]->phase != "aq_gen"))
             {
@@ -434,7 +434,7 @@ double residual_phase_elemMR (int i, int p, int f, int j, TGfitTask *sys)
         ICndx = sys->NodT[i]->IC_name_to_xDB(elem_name);
         if ((sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
         {
-            computed_denom = computed_denom + sys->NodT[i]->Get_mIC(ICndx) * sys->NodT[i]-> Ph_Mass(PHndx);
+            computed_denom = computed_denom + sys->NodT[i]->Get_mIC(ICndx)/* * sys->NodT[i]-> Ph_Mass(PHndx)*/;
         } else // other than aqueous phase
             if ((sys->Tfun->objfun[j]->exp_phase != "aq_gen") && (sys->experiments[i]->expphases[p]->phase != "aq_gen"))
             {
@@ -533,6 +533,10 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
         computed_value = sys->NodT[i]->Get_pH();
         } else computed_value = pow(10,(-(sys->NodT[i]->Get_pH()))) /*sys->NodT[i]->Get_pH()*/;
 
+    } else //Get aqueous phase Eh
+    if ((sys->Tfun->objfun[j]->exp_CN == keys::Eh) && (sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
+    {
+        computed_value = sys->NodT[i]->Get_Eh();
     } else // Get phase amount
     if ((sys->Tfun->objfun[j]->exp_CN == keys::Qnt))
     {
@@ -595,7 +599,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
     if (sys->Tfun->objfun[j]->exp_DCP == keys::Qnt)
     {
         measured_value = sys->NodT[i]->Get_nDC(DCndx); // Retrieves the current mole amount of Dependent Component.
-        if (sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit == keys::molratio)
+        if (sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit == keys::molfrac)
         {
             measured_value = sys->NodT[i]->Get_cDC(DCndx);// for species in other phases - mole fraction.
         }
