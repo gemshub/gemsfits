@@ -38,6 +38,11 @@
 #include <boost/math/distributions/normal.hpp>
 #include <boost/math/distributions/chi_squared.hpp>
 
+
+#include "boost/random.hpp"
+#include "boost/generator_iterator.hpp"
+#include <boost/random/normal_distribution.hpp>
+
 // Constructor
 statistics::statistics(TGfitTask *gfittask, double weighted_Tfun_sum_of_residuals_, int num_of_params_, int num_of_runs_ )
 {
@@ -693,4 +698,277 @@ CorellationMatrix.print("Corellation Matrix:");
 }
 
 
+
+void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* gfittask, int &countit )
+{
+
+//cout<<"pid : "<<pid<<" entered Statistics::MC_confidence_interval ..."<<endl;
+
+    int i,ierr,n_param,id,imc;
+    int j,k, p_=1, pid_=0;
+    double sum_of_squares_MC;
+    double residual = 0.0;
+    double residual_sys = 0.0;
+    std::vector<double> scatter_v;
+    std::vector<std::vector<double> > measured_values_backup;
+    std::vector<std::vector<double> > computed_values_backup;
+
+    scatter_v.resize(number_of_measurements);
+
+    // loop over systems and backup measurement values and computed values
+        // Store originals measurements and computed values
+        computed_values_backup.push_back( gfittask->computed_values_v );
+        measured_values_backup.push_back( gfittask->measured_values_v );
+
+
+    // Check if number of MC runs has zero modulo. If not increase num_of_MC_runs till it can be equally divided by the processes
+//    num_of_MC_runs = num_of_MC_runs + p - (num_of_MC_runs % p);
+
+//    for( i=0; i<(int) optv_.size(); i++ )
+//        cout<<"optv_["<<i<<"] = "<<optv_[i]<<endl;
+    n_param = (int) optv_.size();
+
+
+//cout<<"pid : "<<pid<<" entered Statistics::MC_confidence_interval | line 133 | num_of_MC_runs = "<<num_of_MC_runs<<", n_param = "<<n_param<<endl;
+
+
+    // Allocate dynamic arrays to contain the fitted parameters	( MUST BE ALLOCATED WITH CONTINUOUS LOCATIONSIN MEMORY !!!!)
+//	double **MC_fitted_parameters_all = opti::alloc_2d_double( num_of_MC_runs, n_param );
+//	double **MC_fitted_parameters_pid = opti::alloc_2d_double( num_of_MC_runs/p, n_param );
+
+    double*  MC_fitted_parameters_all_storage = (double *) malloc ( num_of_MC_runs * n_param * sizeof(double) );
+    double** MC_fitted_parameters_all		  = (double **) malloc ( num_of_MC_runs * sizeof(double *) );
+    for( i=0; i<num_of_MC_runs; i++ )
+        MC_fitted_parameters_all[i] = &MC_fitted_parameters_all_storage[ i * n_param ];
+
+//    double*  MC_fitted_parameters_pid_storage = (double *) malloc ( num_of_MC_runs/p_ * n_param * sizeof(double) );
+//    double** MC_fitted_parameters_pid		  = (double **) malloc ( num_of_MC_runs/p_ * sizeof(double *) );
+//    for( i=0; i<(num_of_MC_runs/p_); i++ )
+//        MC_fitted_parameters_pid[i] = &MC_fitted_parameters_pid_storage[ i * n_param ];
+
+
+
+
+    double* scatter_all 	  = new double[ number_of_measurements * num_of_MC_runs ];
+//    double* scatter_pid_MCrun = new double[ number_of_measurements * num_of_MC_runs / p_ ];
+
+
+    // Master creates normally distributed random numbers and scatters them to all processes
+    // normal distribution with mean of 0.0 and standard deviation of SD_of_residuals
+//	if( !pid )
+//	{
+        // mersenne twister generator
+        typedef boost::mt19937 RNGType;
+        RNGType rng;
+
+        boost::normal_distribution<> rdist(0.0, SD_of_TFresiduals);
+
+        boost::variate_generator< RNGType, boost::normal_distribution<> > get_rand(rng, rdist);
+
+        // for each MC run generate number_of_measurements random variables
+            ofstream myScatter_all;
+            myScatter_all.open("output_GEMSFIT/myScatter_all.txt");
+        for( i=0; i<(number_of_measurements * num_of_MC_runs); i++ )
+        {
+            scatter_all[i] = get_rand();
+            myScatter_all << " scatter_all["<<i<<"] : "<< scatter_all[i] <<endl;
+        }
+            myScatter_all.close();
+//	}
+
+
+    // Scatter the generated random numbers to all processes
+//    int count = number_of_measurements * num_of_MC_runs / p;
+
+//#ifdef USE_MPI
+//	ierr = MPI_Scatter( &scatter_all[0], count, MPI_DOUBLE, &scatter_pid_MCrun[0], count, MPI_DOUBLE, 0, MPI_COMM_WORLD );
+//#endif
+
+//	if(!pid)
+//	{
+//#ifdef GEMSFIT_DEBUG
+//		for( i=0; i<number_of_measurements; i++ )
+//			cout<<" pid "<<pid<<", scatter_pid_MCrun["<<i<<"] = "<<scatter_pid_MCrun[i]<<endl;
+//#endif
+//	}
+//cout<<" pid "<<pid<<", line 206"<<endl;
+
+pid_ = 0;
+    id = 0;
+    // Perform Monte Carlo runs
+    for( imc=pid_; imc<num_of_MC_runs; ++imc /*+= p*/)
+    {
+        sum_of_squares_MC = 0.;
+
+        for( i=0; i<number_of_measurements; i++ )
+        {
+            int it = number_of_measurements * imc/p_+ i;
+            scatter_v[i] = scatter_all[ (imc/p_ * number_of_measurements + i) ];
+        }
+
+//		if( !pid )
+//		{
+            ofstream myScatter_pid_0;
+            myScatter_pid_0.open("output_GEMSFIT/myScatter_pid_0.txt",ios::app);
+            for( i=0; i<number_of_measurements; i++ )
+            {
+                myScatter_pid_0 << " scatter_v["<<i<<"] : "<<scatter_v[i]<<endl;
+            }
+            myScatter_pid_0 << endl;
+            myScatter_pid_0.close();
+////		}
+////		else if( pid==1 )
+////		{
+//			ofstream myScatter_pid_1;
+//			myScatter_pid_1.open("output_GEMSFIT/myScatter_pid_1.txt");
+//			for( i=0; i<number_of_measurements; i++ )
+//			{
+//				myScatter_pid_1 << " scatter_v["<<i<<"] : "<<scatter_v[i]<<endl<<endl;
+//			}
+//				myScatter_pid_1.close();
+////		}
+
+
+        // loop over systems and add MC scatter to simulated measurements to simulate new set of experimental data
+            double* simulated_measurements = new double[gfittask->computed_values_v.size()];
+
+/*
+            // Add scatter to the computed values vector of each system
+            for( k=0; k< (int) systems->at(j)->sysdata->molality_1.size(); k++ )
+            {
+                simulated_measurements[k] = systems->at(j)->computed_values_v[k] + scatter_v[k];
+            }
+
+            // Copy the simulated experiments onto the measurement value vector
+
+            for( k=0; k< (int) systems->at(j)->sysdata->val.size(); k++)
+            {
+                systems->at(j)->sysdata->val[k] = simulated_measurements[k];
+
+            }
+
+            g
+*/
+            gfittask->add_MC_scatter(scatter_v);
+
+
+            delete[] simulated_measurements;
+
+
+        // perform optimization
+        gfittask->Ainit_optim( optv_, sum_of_squares_MC);
+
+
+
+//        if( isnan(sum_of_squares) )
+//        {
+//            cout<<" sum of squares from objective function is NaN !!! "<<endl;
+//            cout<<" system measurement values (modified by Monte Carlo algorithm for confidence analysis): "<<endl;
+//            for( i=0; i< (int) systems->at(j)->sysdata->val.size(); i++)
+//                cout<<"pid : "<<pid<<" fit_statistics.cpp: systems->at(j)->sysdata->val["<<i<<"] = "<<systems->at(j)->sysdata->val[i]<<endl;
+//            exit(1);
+//        }
+
+        // Store fitted parameters of each run in process specific array
+        for( j=0; j<n_param; j++ )
+        {
+            MC_fitted_parameters_all[ id ][ j ] = optv_[ j ];
+
+        }
+
+
+        // loop over systems and subtract MC scatter to retain the original measurement data
+            // Retain original computed values
+            gfittask->computed_values_v = computed_values_backup[j];
+            // Retain original measurements
+            gfittask->measured_values_v = measured_values_backup[j];
+
+    id++;
+    }// end Monte Carlo for-loop
+
+
+//#ifdef USE_MPI
+//	// Collect all MC results in array MC_fitted_parameters_all
+//	ierr = MPI_Gather( &MC_fitted_parameters_pid_storage[0], (n_param*num_of_MC_runs/p), MPI_DOUBLE, &MC_fitted_parameters_all_storage[0], (n_param*num_of_MC_runs/p), MPI_DOUBLE, 0, MPI_COMM_WORLD );
+//	cout<<"ierr = "<<ierr<<endl;
+//#endif
+
+    // Analysis of results (plot histogram, evaluate confidence intervals, ...)
+//	if( !pid )
+//	{
+
+
+
+        double StandardDeviation = 0.;
+        arma::vec MCparams( num_of_MC_runs );
+
+#ifdef BOOST_MPI
+        ofstream myStat;
+        ostringstream pb;
+        pb << proc_id_boost;
+        string out_fit("./output_GEMSFIT")
+        out_fit += "_" + pb.str() + "/myFitStatistics.txt";
+        myStat.open( out_fit.c_str(), ios::app );
+#endif
+
+#ifndef BOOST_MPI
+        ofstream myStat;
+        myStat.open("output_GEMSFIT/myFitStatistics.txt",ios::app);
+#endif
+
+        myStat << " Confidence intervals of MC parameters : "<<endl;
+        myStat << " -> standard deviation of parameters generated during Monte Carlo runs "<<endl;
+        for( j=0; j<n_param; j++ ) // cols
+        {
+            for( i=0; i<num_of_MC_runs; i++ ) // rows
+            {
+                MCparams(i) = MC_fitted_parameters_all[ i ][ j ];
+            }
+            // compute standard deviation of generated parameters
+            StandardDeviation = arma::stddev( MCparams, 0 );
+
+            // Print Standard Deviations of parameters generated during MC runs to file
+            myStat <<"			parameter "<< j <<" :	           " << StandardDeviation << endl;
+
+        }
+        myStat << endl;
+        myStat.close();
+
+//	}
+
+
+
+
+    if( !pid )
+    {
+
+        // generate and plot histogram
+//		print_histogram( optv_, MC_fitted_parameters_all, num_of_MC_runs, MC_number_of_bars );
+
+    }
+
+
+    // Free dynamic memory
+
+    //opti::free_2d_double( MC_fitted_parameters_pid );
+    //opti::free_2d_double( MC_fitted_parameters_all );
+    //delete[] MC_fitted_parameters_pid;
+    //delete[] MC_fitted_parameters_all;
+
+//    free (MC_fitted_parameters_pid[0]);
+//    free (MC_fitted_parameters_pid);
+
+    free (MC_fitted_parameters_all[0]);
+    free (MC_fitted_parameters_all);
+
+    delete[] scatter_all;
+//    delete[] scatter_pid_MCrun;
+
+
+//#ifdef USE_MPI
+//	// To prevent confusion, wait for all threads
+//	MPI_Barrier(MPI_COMM_WORLD);
+//#endif
+
+}// end of function MC_confidence_interval
 

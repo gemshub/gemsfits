@@ -138,6 +138,11 @@ void TGfitTask::run_optim()
     fout.close();
 }
 
+void TGfitTask::Ainit_optim (std::vector<double> &optv_, /*int &countit,*/ double &weighted_Tfun_sum_of_residual)
+{
+    init_optim( optv_, weighted_Tfun_sum_of_residuals );
+}
+
 // Initialize optimization object and Run Optimization by calling build_optim
 void TGfitTask::init_optim( std::vector<double> &optv_, /*int &countit,*/ double &weighted_Tfun_sum_of_residuals )
 {
@@ -946,6 +951,115 @@ void TGfitTask::get_sum_of_residuals( double &residuals)
     }
 }
 
+
+void TGfitTask::add_MC_scatter( vector<double> scatter)
+{
+    double average = 0.0, min = 1e-05;
+    double residuals = 0.0;
+    int count = 0;
+    // loop trough objective function
+    for (unsigned int j=0; j<Tfun->objfun.size(); ++j)
+    {
+    /// Target function
+    // Loop trough all experiments
+    for (unsigned int i=0; i<this->experiments.size(); ++i)
+    {
+            if ((this->Tfun->objfun[j]->exp_phase !="NULL") && (this->experiments[i]->expphases.size() > 0))
+            {
+                // loop trough all pahses
+                for (unsigned int p=0; p<this->experiments[i]->expphases.size(); ++p)
+                {
+                    if ((Tfun->objfun[j]->exp_CT == keys::IC) /*&& (Tfun->objfun[j]->exp_property =="NULL")*/)
+                    {
+                        // loop trough all elements
+                        for (unsigned int e=0; e<this->experiments[i]->expphases[p]->phIC.size(); ++e)
+                        {
+                            if ((this->experiments[i]->expphases[p]->phIC[e]->comp == this->Tfun->objfun[j]->exp_CN) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
+                            {
+                                this->experiments[i]->expphases[p]->phIC[e]->Qnt + scatter[count];
+                                // check for unit
+                                check_unit(i, p, e, Tfun->objfun[j]->exp_unit, this );
+                                average = average + this->experiments[i]->expphases[p]->phIC[e]->Qnt;
+                                if (this->experiments[i]->expphases[p]->phIC[e]->Qnt < min)
+                                    min = this->experiments[i]->expphases[p]->phIC[e]->Qnt;
+                                residuals = residuals + residual_phase_elem (i, p, e, j, this);
+                                ++count;
+                            }
+                        }
+                    } else
+                        if ((Tfun->objfun[j]->exp_CT == keys::MR) /*&& (Tfun->objfun[j]->exp_property =="NULL")*/)
+                        {
+                            // loop trough all elements
+                            for (unsigned int f=0; f<this->experiments[i]->expphases[p]->phMR.size(); ++f)
+                            {
+                                if ((this->experiments[i]->expphases[p]->phMR[f]->comp == this->Tfun->objfun[j]->exp_CN) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
+                                {
+                                    this->experiments[i]->expphases[p]->phMR[f]->Qnt + scatter[count];
+                                    // check for unit
+//                                    check_unit(i, p, e, Tfun->objfun[j]->exp_unit, this );
+                                    average = average + this->experiments[i]->expphases[p]->phMR[f]->Qnt;
+                                    if (this->experiments[i]->expphases[p]->phMR[f]->Qnt < min)
+                                        min = this->experiments[i]->expphases[p]->phMR[f]->Qnt;
+                                    residuals = residuals + residual_phase_elemMR (i, p, f, j, this);
+                                    ++count;
+                                }
+                            }
+                        } else
+
+                        if ((Tfun->objfun[j]->exp_CT == keys::property) && (this->experiments[i]->expphases[p]->phprop.size() > 0) /*&& (this->Tfun->objfun[j]->exp_dcomp == "NULL")*/)
+                        {
+                        // loop trough all properties
+                        for (unsigned int pp = 0; pp< this->experiments[i]->expphases[p]->phprop.size(); ++pp)
+                        {
+                            if ((this->experiments[i]->expphases[p]->phprop[pp]->property == Tfun->objfun[j]->exp_CN) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
+                            {
+                                this->experiments[i]->expphases[p]->phprop[pp]->Qnt + scatter[count];
+                                // check for unit
+                                check_prop_unit(i, p, pp, Tfun->objfun[j]->exp_unit, this );
+                                average = average + this->experiments[i]->expphases[p]->phprop[pp]->Qnt;
+                                if (this->experiments[i]->expphases[p]->phprop[pp]->Qnt < min)
+                                    min = this->experiments[i]->expphases[p]->phprop[pp]->Qnt;
+                                residuals = residuals + residual_phase_prop (i, p, pp, j, this);
+                                ++count;
+                            }
+                        }
+                    } else
+                        if (/*(Tfun->objfun[j]->exp_property !="NULL") &&*/ (this->experiments[i]->expphases[p]->phDC.size() > 0) && (Tfun->objfun[j]->exp_CT == keys::DC))
+                        {
+                            // loop trough all dependent components
+                            for (unsigned int dc = 0; dc< this->experiments[i]->expphases[p]->phDC.size(); ++dc)
+                            {
+                                if ((this->experiments[i]->expphases[p]->phDC[dc]->DC == Tfun->objfun[j]->exp_CN) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
+                                {
+                                    // loop trough all dep comp properties
+                                    for (unsigned int dcp = 0; dcp < this->experiments[i]->expphases[p]->phDC[dc]->DCprop.size(); ++dcp)
+                                    {
+                                        if (this->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->property == Tfun->objfun[j]->exp_DCP)
+                                        {
+                                            this->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt + scatter[count];
+//                                            cout << "yes"<<endl;
+                                            //                                    // check for unit
+                                            //                                    check_dcomp_unit(i, p, dc, dcp, sys->Tfun->objfun[j]->exp_unit, sys );
+                                            average = average + this->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt;
+                                            residuals = residuals + residual_phase_dcomp (i, p, dc, dcp, j, this);
+                                            ++count;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                }
+            }
+        }
+    if (count > 0)
+    {
+        average = average / count;
+    }
+    Tfun->objfun[j]->meas_average = average;
+    this->minimum_value = min;
+    average = 0.0;
+    }
+}
 
 
 TGfitTask::~TGfitTask(   )

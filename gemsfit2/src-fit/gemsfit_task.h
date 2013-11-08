@@ -173,6 +173,9 @@ public:
    */
    void get_sum_of_residuals ( double &residual);
 
+   void add_MC_scatter(vector<double> scatter);
+   void Ainit_optim (std::vector<double> &optv_, /*int &countit,*/ double &weighted_Tfun_sum_of_residual);
+
    /**
    * Stores the values for each experiment after runing GEMS
    * @author DM
