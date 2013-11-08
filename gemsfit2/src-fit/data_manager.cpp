@@ -532,7 +532,7 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                             if (p_name == "aq_gen")
                             {
                                 experiments.at(pos)->expphases.at(ip)->phIC.at(ipc)->Qunit = keys::molal;
-                            } else experiments.at(pos)->expphases.at(ip)->phIC.at(ipc)->Qunit = keys::molfrac;
+                            } else experiments.at(pos)->expphases.at(ip)->phIC.at(ipc)->Qunit = keys::molratio;
 
                             while (bson_iterator_next(&d2))
                             {
@@ -576,8 +576,8 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                             string p_name = experiments.at(pos)->expphases.at(ip)->phase;
                             if (p_name == "aq_gen")
                             {
-                                experiments.at(pos)->expphases.at(ip)->phMR.at(ipm)->Qunit = keys::molfrac;
-                            } else experiments.at(pos)->expphases.at(ip)->phMR.at(ipm)->Qunit = keys::molfrac;
+                                experiments.at(pos)->expphases.at(ip)->phMR.at(ipm)->Qunit = keys::molratio;
+                            } else experiments.at(pos)->expphases.at(ip)->phMR.at(ipm)->Qunit = keys::molratio;
 
                                 while (bson_iterator_next(&d2))
                                 {

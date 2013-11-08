@@ -595,7 +595,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
     if (sys->Tfun->objfun[j]->exp_DCP == keys::Qnt)
     {
         measured_value = sys->NodT[i]->Get_nDC(DCndx); // Retrieves the current mole amount of Dependent Component.
-        if (sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit == keys::molfrac)
+        if (sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit == keys::molratio)
         {
             measured_value = sys->NodT[i]->Get_cDC(DCndx);// for species in other phases - mole fraction.
         }
