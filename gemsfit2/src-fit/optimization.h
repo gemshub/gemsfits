@@ -116,7 +116,7 @@ public:
 //        PlotFit* Plot_ActMod;
 
     /// Normalize init vector, bounds and constraints
-    virtual void normalize_params( const vector<double> initguesses );
+    virtual void normalize_params( const vector<double> initguesses, bool NormBounds );
 
     /// NLopt return codes
     virtual void print_return_message( const int result );

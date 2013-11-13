@@ -44,14 +44,25 @@ class statistics
 {
 
     private:
-    // Parameters for instantiating the class
-    /// Target function form the fit
-    double weighted_Tfun_sum_of_residuals;
-    double Tfun_sum_of_residuals;
-    double weighted_sum_of_residuals;
-    double sum_of_residuals;
 
-    vector <double> weighted_residuals;
+    double Weighted_mean_res;
+    double means_res;
+    double Weighted_max_res;
+    double max_res;
+    double Weighted_min_res;
+    double min_res;
+    int pos_residuals, neg_residuals;
+    /// Sum of residuals of the weighted target function, the same as Tfun_sum_of_residuals with the weights are 1
+    double Weighted_Tfun_sum_of_residuals;
+    /// Sum of residuals of the target function with no weight
+    double          Tfun_sum_of_residuals;
+    /// Weighted absolute sum of residals (measured - calculated), the same as Abs_sum_of_residuals when the weights are 1
+    double  Weighted_Abs_sum_of_residuals;
+    /// Absolute sum of residuals
+    double           Abs_sum_of_residuals;
+
+    vector <double> weighted_residuals; /// residuals weighted with the weighting shceeme selected during fitting
+    vector <double> measured_norm_residuals;  /// in %, residuals normalized to measured value * 100
     /// number of independent fitted parameters
     int number_of_ind_parameters;
     /// number of parameters of the last regression (length of optimization vector)
@@ -68,16 +79,18 @@ class statistics
     double perturbator;
 
     // Number of Monte Carlo evaluations for confidence interval evaluation
-    /// bool indicating if Monte Carlo runs for confidence interval analysis should be performed (=1) or not (=0)
-    bool MCbool;
     /// Number of Monte Carlo runs for confidence interval evaluation
     int num_of_MC_runs;
 
     // Computed parameters
     /// standard deviation of residuals
-    double SD_of_residuals;
+    double     SD_of_residuals;
+    /// standard deviation of the absolute values of residuals
+    double Abs_SD_of_residuals;
+    /// standard deviation of the weighted residuals (same as SD_of_residuals if weights are 1)
+    double Weighted_SD_of_residuals;
     /// standard deviation of target function residuals
-    double SD_of_TFresiduals;
+    double  Weighted_TF_SD_of_residuals;
     /// R^2: coefficient of determination
     double coeff_of_determination;
     /// result from Pearson's Chi Squared test
@@ -114,6 +127,9 @@ class statistics
         */
         statistics( TGfitTask *system, double weighted_Tfun_sum_of_residuals_, int num_of_params_, int num_of_runs_  );
         statistics(); // init mode SD
+
+        /// bool indicating if Monte Carlo runs for confidence interval analysis should be performed (=1) or not (=0)
+        bool MCbool;
 
         /**
         * Destructor of the Statistics class.

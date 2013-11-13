@@ -44,29 +44,39 @@
 #include <boost/random/normal_distribution.hpp>
 
 // Constructor
-statistics::statistics(TGfitTask *gfittask, double weighted_Tfun_sum_of_residuals_, int num_of_params_, int num_of_runs_ )
+statistics::statistics(TGfitTask *gfittask, double Weighted_Tfun_sum_of_residuals_, int num_of_params_, int num_of_runs_ )
 {
+    double mean_res = 0., Abs_mean_res = 0.0, Weighted_TF_mean_res = 0.0;
+    unsigned int i;
+
     number_of_measurements = 0;
     number_of_measurements += gfittask->computed_values_v.size();
     Tfun_sum_of_residuals = 0.0;
-    sum_of_residuals = 0.0; weighted_sum_of_residuals = 0.0;
+    Abs_sum_of_residuals = 0.0; Weighted_Abs_sum_of_residuals = 0.0;
+    min_res =0.0; max_res = 0.0; Weighted_min_res = 0.0; Weighted_max_res = 0.0; neg_residuals = 0; pos_residuals = 0;
 
 
-    weighted_Tfun_sum_of_residuals 		= weighted_Tfun_sum_of_residuals_;
-    for (unsigned int i=0; i<gfittask->Tfun_residuals_v.size(); ++i)
+    Weighted_Tfun_sum_of_residuals 		= Weighted_Tfun_sum_of_residuals_;
+    for (i=0; i<number_of_measurements; ++i)
     {
         Tfun_sum_of_residuals += gfittask->Tfun_residuals_v[i];
-
-        sum_of_residuals += fabs(gfittask->residuals_v[i]);
-
-        weighted_sum_of_residuals += fabs(gfittask->residuals_v[i])*gfittask->weights[i];
+         Abs_sum_of_residuals += fabs(gfittask->residuals_v[i]);
+Weighted_Abs_sum_of_residuals += fabs(gfittask->residuals_v[i])*gfittask->weights[i];
 
         weighted_residuals.push_back(gfittask->residuals_v[i]*gfittask->weights[i]);
+        measured_norm_residuals.push_back(gfittask->residuals_v[i] / gfittask->measured_values_v[i] * 100);
+
+        if (min_res > gfittask->residuals_v[i]) min_res = gfittask->residuals_v[i];
+        if (Weighted_min_res > weighted_residuals[i]) Weighted_min_res = weighted_residuals[i];
+        if (max_res < gfittask->residuals_v[i]) max_res = gfittask->residuals_v[i];
+        if (Weighted_max_res < weighted_residuals[i]) Weighted_max_res = weighted_residuals[i];
+        if (gfittask->residuals_v[i] < 0) ++neg_residuals;
+        if (gfittask->residuals_v[i] >= 0) ++pos_residuals;
     }
 
     num_of_runs		= num_of_runs_;
 
-cout<<" Statistics Constructor: sum of squares: "<<weighted_Tfun_sum_of_residuals<<endl;
+cout<<" Statistics Constructor: sum of squares: "<<Weighted_Tfun_sum_of_residuals<<endl;
 
     number_of_ind_parameters   = num_of_params_;
     number_of_parameters = number_of_ind_parameters + gfittask->Opti->reactions.size() + gfittask->Opti->Lparams.size();
@@ -81,6 +91,45 @@ cout<<" Statistics Constructor: number_of_parameters: "<<number_of_parameters<<e
 
 //    /// Instantiate pointer to PlotFit class to print results
 //    Plot_Stat = new PlotFit();
+
+    // Degrees of freedom
+    degrees_of_freedom = number_of_measurements-number_of_parameters;
+
+
+
+    // Compute standard deviation of residuals
+    for (i=1; i<number_of_measurements; i++)
+    {
+Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
+        Abs_mean_res += fabs(gfittask->residuals_v[i]);
+   Weighted_mean_res += weighted_residuals[i];
+            mean_res += gfittask->residuals_v[i];
+
+    }
+
+ Weighted_TF_mean_res = Weighted_TF_mean_res / number_of_measurements;
+         Abs_mean_res = Abs_mean_res / number_of_measurements;
+    Weighted_mean_res = Weighted_mean_res / number_of_measurements; /// same as mean_res if weight = 1
+             mean_res = mean_res / number_of_measurements;
+
+ Weighted_TF_SD_of_residuals = 0.0;
+         Abs_SD_of_residuals = 0.0;
+    Weighted_SD_of_residuals = 0.0;
+             SD_of_residuals = 0.0;
+
+    for (i=1; i<number_of_measurements; i++)
+    {
+        Weighted_TF_SD_of_residuals += pow((gfittask->Weighted_Tfun_residuals_v[i]-Weighted_TF_mean_res),2);
+                Abs_SD_of_residuals += pow((fabs(gfittask->residuals_v[i])-Abs_mean_res),2);
+           Weighted_SD_of_residuals += pow((weighted_residuals[i]-Weighted_mean_res),2);
+                    SD_of_residuals += pow((gfittask->residuals_v[i]-mean_res),2);
+    }
+
+    Weighted_TF_SD_of_residuals = sqrt((Weighted_TF_SD_of_residuals/degrees_of_freedom));
+            Abs_SD_of_residuals = sqrt((Abs_SD_of_residuals/degrees_of_freedom));
+       Weighted_SD_of_residuals = sqrt((Weighted_SD_of_residuals/degrees_of_freedom));
+                SD_of_residuals = sqrt((SD_of_residuals/degrees_of_freedom));
+
 
 }
 
@@ -97,44 +146,24 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     // Variable declarations
     unsigned int i;
     double mean = 0.;
-    double mean_res = 0.;
     double ResSumSquares = 0., TotalSumSquares = 0.;
+    double Nom_CC = 0.0, Dnom_CC = 0.0;
+    double Correlation_coef = 0.0;
     double Res = 0.;
     double m2 = 0., m3 = 0., m4 = 0.;
     double sqrtb1, b2, Y, beta2_sqrtb1, W2, delta, alpha, Z_sqrtb1, E_b2, Var_b2, x, sqrt_beta1_b2, A, Z_b2, K2, K2test;
     vector<double> percentiles_v;
     vector<double> quantiles_v;
-
-
-    // Degrees of freedom
-    degrees_of_freedom = number_of_measurements-number_of_parameters;
-
-
-
-    // Compute standard deviation of residuals
-    for (i=1; i<gfittask->Weighted_Tfun_residuals_v.size(); i++)
-    {
-        mean_res += gfittask->Weighted_Tfun_residuals_v[i];
-    }
-
-    mean_res = mean_res / number_of_measurements;
-
-    for (i=1; i<gfittask->Weighted_Tfun_residuals_v.size(); i++)
-    {
-        Res += pow((gfittask->Weighted_Tfun_residuals_v[i]-mean_res),2);
-    }
-
-
-//    SD_of_residuals = sqrt((Res/degrees_of_freedom));
-    SD_of_TFresiduals = sqrt( (weighted_Tfun_sum_of_residuals/(number_of_measurements-number_of_parameters)) );
+    vector<double> abs_residuals_v;
 
     // Modified by DM on 12.03.2012 due to errorneus calculation of R^2 when using log_solubility data.
 //    // Compute R^2: coefficient of determination
 //    mean = ( accumulate(gfittask->measured_values_v.begin(), gfittask->measured_values_v.end(), 0) ) / gfittask->measured_values_v.size();
 
-    mean = 0;
+
     // Compute R^2: coefficient of determination
-    for (i=0; i< gfittask->measured_values_v.size(); i++)
+        mean = 0;
+    for (i=0; i< number_of_measurements; i++)
     {
         mean += gfittask->measured_values_v[i];
     }
@@ -143,40 +172,74 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     assert( gfittask->computed_values_v.size() == gfittask->measured_values_v.size() );
 
 
-    for( i=0; i< gfittask->computed_values_v.size(); i++ )
+    for( i=0; i< number_of_measurements; i++ )
     {
         ResSumSquares += pow( (gfittask->measured_values_v[i] - gfittask->computed_values_v[i]), 2);
         TotalSumSquares += pow( (gfittask->measured_values_v[i] - mean), 2);
     }
-
     coeff_of_determination = 1 - ResSumSquares / TotalSumSquares;
+
+
 
 
     // Pearson Chi Square test
     Pearsons_chi_square = 0.;
-    for( i=0;  i< gfittask->computed_values_v.size(); i++ )
+    for( i=0;  i< number_of_measurements; i++ )
     {
-        Pearsons_chi_square += (gfittask->computed_values_v[i] - gfittask->measured_values_v[i])*(gfittask->computed_values_v[i] - gfittask->measured_values_v[i]) / gfittask->measured_values_v[i];
+        if (gfittask->measured_values_v[i] != 0)
+        Pearsons_chi_square += (abs(gfittask->computed_values_v[i]) - abs(gfittask->measured_values_v[i]))*(abs(gfittask->computed_values_v[i]) - abs(gfittask->measured_values_v[i])) / abs(gfittask->measured_values_v[i]);
     }
 
-
     // Reduced Chi Square
-    reduced_chi_square = weighted_Tfun_sum_of_residuals / degrees_of_freedom;
+    reduced_chi_square = Pearsons_chi_square / degrees_of_freedom;
 
     // Error variance
-    error_variance = (weighted_Tfun_sum_of_residuals/(number_of_measurements-number_of_parameters));
+    error_variance = Weighted_Tfun_sum_of_residuals/degrees_of_freedom;
 
 
     // Prepare data for Q-Q Plot
 
     // Generate object containing normally distributed data with mean = 0 and standard deviation = SD_of_residuals
     boost::math::normal dist(  0., SD_of_residuals );
+//    for (i=0; i < gfittask->residuals_v.size(); ++i )
+//    {
+//        abs_residuals_v.push_back(abs(gfittask->residuals_v[i]));
+//    }
+
     sort( gfittask->residuals_v.begin(), gfittask->residuals_v.end() );
+    sort(weighted_residuals.begin(), weighted_residuals.end());
     int N = (int) gfittask->residuals_v.size();
 
     // Compute percentile
     for( i=0; i< N; i++ )
         percentiles_v.push_back( (i+1-0.5)/N );
+
+arma::vec e0 = arma::zeros<arma::vec>( N, 1 );
+arma::vec tau = arma::zeros<arma::vec>( N, 1 );
+for( i=0; i< N; i++ )
+{
+
+    e0(i) = weighted_residuals[i]-Weighted_mean_res;
+    tau(i) = percentiles_v[i];
+}
+double sum1=0.0, sum2=0.0, sum3=0.0;
+for (i=0; i<N; i++)
+{
+    sum1 += e0(i)*tau(i);
+    sum2 += e0(i)*e0(i);
+    sum3 +=tau(i)*tau(i);
+}
+//arma::vec e0_T = arma::trans(e0);
+//arma::vec tau_T = arma::trans(tau);
+
+//Nom_CC = 0;
+//    for( i=0; i< number_of_measurements; i++ )
+//    {
+//        Nom_CC += e0(i)*tau(i);
+//        Dnom_CC += (e0_T(i)*e0(i))*(tau(i)*tau_T(i));
+//    }
+Correlation_coef = (sum1*sum1)/(sum2*sum3);
+
 
     // Rank-based z-scores
     for( i=0; i< N; i++ )
@@ -205,25 +268,25 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     }
 
     sqrtb1 = m3 / pow( m2, (3./2.));
-    b2     = m4 / pow( m2, 2.);
+    b2     = (m4 / pow( m2, 2.))-3;
 
     // D'Agostino K square test: test of skewness
     Y             = sqrtb1 * sqrt( ((N+1.)*(N+3.))/(6*(N-2.)) );
-    beta2_sqrtb1  = ( 3*(N*N + 27*N - 70)*(N + 1.)*(N + 3.)  ) / ( (N - 2.)*(N + 5.)*(N + 7.)*(N + 9.) );
-    W2            = -1. + sqrt(2 * (beta2_sqrtb1 - 1.) );
+    beta2_sqrtb1  = ( 36*(N*N + 2*N - 5)*(N - 7.)  ) / ( (N - 2.)*(N + 5.)*(N + 7.)*(N + 9.) );
+    W2            = -1. + sqrt(2 * (beta2_sqrtb1 + 2.) );
     delta         = 1. / sqrt( log( sqrt(W2) ) ) ;
     alpha         = sqrt( 2. / (W2 - 1) );
     Z_sqrtb1      = delta * log( Y / alpha + sqrt( pow( (Y/alpha), 2 ) + 1 ) );
 
     // D'Agostino K square test: test of kurtosis
     // mean of b2
-    E_b2          = 3.*(N-1.)/(N+1.);
+    E_b2          = -6./(N+1.);
     // variance of b2
     Var_b2        = ( 24.*N*(N - 2.)*(N - 3.) ) / ( (N + 1.)*(N + 1.)*(N + 3.)*(N + 5.) );
     // standardized version of b2
     x             = ( b2 - E_b2 ) / ( sqrt(Var_b2) );
     // third standardized moment of b2
-    sqrt_beta1_b2 = 6.*(N*N - 5.*N + 2.) / ( (N + 7.)*(N + 9.) ) * sqrt( 6. * (N + 3.)*(N + 5.) / ( N * (N - 2.) * (N - 3.) ) );
+    sqrt_beta1_b2 = 6.*(N*N - 5.*N + 2.) / ( (N + 7.)*(N + 9.) ) * sqrt(( 6. * (N + 3.)*(N + 5.) )/ ( N * (N - 2.) * (N - 3.) ) );
     A             = 6. + ( 8. / sqrt_beta1_b2 ) * ( 2. / sqrt_beta1_b2 + sqrt( 1 + 4./(sqrt_beta1_b2*sqrt_beta1_b2) ) );
     Z_b2          = ( (1.-2./(9.*A)) - pow( ((1.-2./A) / (1 + x*sqrt(2./(A - 4.))) ), (1./3.) ) ) / sqrt( 2./(9.*A) );
 
@@ -233,6 +296,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     // Create chi-squared distribution object
     boost::math::chi_squared chi_dist( 2 );
 
+    double test_ = boost::math::cdf( chi_dist, K2 );
     // 1 - cumulative distribution function
     K2test = 1 - boost::math::cdf( chi_dist, K2 );
 
@@ -259,34 +323,57 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         myStat << " [1] Mary C. Hill, Claire R. Tiedeman (2007) Effective Groundwater Model Calibration: With Analysis of Data, Sensitivities, Predictions, and Uncertainty. 480 pages."<<endl;
         myStat << " [2] Eileen P, Poeter & Marc C. Hill DOCUMENTATION OF UCODE, A Computer Code for Universal Inverse Modeling. http://inside.mines.edu/~epoeter/583/UCODEmanual_wrir98-4080.pdf" <<endl;
         myStat << endl;
-                myStat << " Number of measurements :              	" << number_of_measurements     << endl;
+        myStat << " Number of measurements :                                                " << number_of_measurements     << endl;
         myStat << endl;
-        myStat << " Number of parameters :                	" << number_of_parameters 	<< endl;
+        myStat << " Number of parameters :                                              	" << number_of_parameters 	<< endl;
         myStat << endl;
-                myStat << " Number of runs needed for regression :      " << num_of_runs 		<< endl;
+        myStat << " Number of runs needed for regression :                                  " << num_of_runs 		<< endl;
         myStat << endl;
-        myStat << " Degrees of freedom :                  	" << degrees_of_freedom	 	<< endl;
+        myStat << " Degrees of freedom :                                                  	" << degrees_of_freedom	 	<< endl;
         myStat << endl;
-        myStat << " Target function sum of residuals :                      	" << Tfun_sum_of_residuals 		<< endl;
+
+        myStat << " - - - - - - - RESIDUAL STATISTICS - - - - - - - " << endl;
+        myStat << " Weighted target function sum (minimized value) :                        " << Weighted_Tfun_sum_of_residuals 		<< endl;
         myStat << endl;
-        myStat << " Weighted target function sum of residuals :                      	" << weighted_Tfun_sum_of_residuals 		<< endl;
+        myStat << " Target function sum  :                                                	" << Tfun_sum_of_residuals 		<< endl;
         myStat << endl;
-        myStat << " Sum of residuals:                   " << sum_of_residuals << endl;
+        myStat << " Sum of absolute values of residuals:                                    " << Abs_sum_of_residuals << endl;
         myStat << endl;
-        myStat << " Weighted sum of residuals:                  " << weighted_sum_of_residuals << endl;
+        myStat << " Sum of weighted absolute values of residuals:                           " << Weighted_Abs_sum_of_residuals << endl;
         myStat << endl;
-        myStat << " Reduced_chi_square :                  	" << reduced_chi_square 	<< endl;
+        myStat << " Standard deviation of the residuals :                               	" << SD_of_residuals 		<< endl;
         myStat << endl;
-        myStat << " Standard deviation of the target function residuals : 	" << SD_of_TFresiduals 		<< endl;
+        myStat << " Standard deviation of the weighted residuals :                       	" << Weighted_SD_of_residuals 		<< endl;
         myStat << endl;
-                myStat << " Coefficient of determination R^2 :    	" << coeff_of_determination     << endl;
+        myStat << " Standard deviation of the weighted target function values :             " << Weighted_TF_SD_of_residuals 		<< endl;
         myStat << endl;
-        myStat << " Pearson's Chi Square test :           	" << Pearsons_chi_square   	<< endl;
+        myStat << " Standard deviation of the absolute values of the residuals :            " << Abs_SD_of_residuals 		<< endl;
+        myStat << endl;
+        myStat << " Average weighted residual :                                          	" << Weighted_mean_res 		<< endl;
+        myStat << endl;
+        myStat << " Maximum weighted residual :                                          	" << Weighted_max_res 		<< endl;
+        myStat << endl;
+        myStat << " Minimum weighted residual :                                          	" << Weighted_min_res 		<< endl;
+        myStat << endl;
+        myStat << " Number of positive residuals :                                          " << pos_residuals 		<< endl;
+        myStat << endl;
+        myStat << " Number of negative residuals :                                          " << neg_residuals 		<< endl;
+        myStat << endl;
+
+
+        myStat << " Coefficient of determination R^2 :                                  	" << coeff_of_determination     << endl;
+        myStat << endl;
+        myStat << " Pearson's Chi Square test :                                             " << Pearsons_chi_square   	<< endl;
+        myStat << endl;
+        myStat << " Reduced_chi_square :                                                	" << reduced_chi_square 	<< endl;
+        myStat << endl;
+        myStat << " Error variance :                                                     	" << error_variance 	<< endl;
         myStat << endl;
 
         myStat << " D'Agostino K square test: "<<endl;
         myStat << " K squared :  " << K2 << endl;
         myStat << " Probability that K squared follows Chi-squared distribution :  " << K2test << endl;
+        myStat << endl;
 
                 myStat << " Best fit results for parameters from regression : "                         <<endl;
         for( i=0; i< optv_.size(); i++ ) // cols
@@ -434,17 +521,20 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
                     if ((gfittask->Tfun->weight == "inverr2") || (gfittask->Tfun->weight == "inverr3"))
                     {
                         DimensionlessScaledSensitivities(k,i) = SensitivityMatrix(k,i) * fabs( optv_[i] ) * sqrt(gfittask->weights[k]);
-                    } else  DimensionlessScaledSensitivities(k,i) = SensitivityMatrix(k,i) * fabs( optv_[i] ) * 1;
+                    }
+                    else  DimensionlessScaledSensitivities(k,i) = SensitivityMatrix(k,i) * fabs( optv_[i] ) * 1;
                 CompositeScaledSensitivities(i)      += sqrt( DimensionlessScaledSensitivities(k,i)*DimensionlessScaledSensitivities(k,i)/len_meas );
             }
             gfittask->print->sensitivity.push_back(sens);
         }
 
+        gems3k_wrap( residual_sys, optv_, gfittask );
+
         ofstream myStat;
         myStat.open(gpf->FITStatisticsFile().c_str(),ios::app);
 
 
-
+/*
         myStat << " Sensitivity matrix over each parameter [j] measurement point [i]: "<<endl;
         myStat << " Calculated using central diferences, see ref. [1] section 4.3 "<<endl;
         for( i=0; i<  computed_up.size();  i++ )
@@ -457,6 +547,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
 
             myStat << endl;
         }
+*/
 
 
         myStat << " Composite Scaled Sensitivities: "<<endl;
@@ -486,10 +577,14 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
 //SensitivityMatrix_T.print("SensitivityMatrix_T:");
 
         // Compute Fisher matrix (is a proxy for the Hessian matrix)
-        arma::mat FisherMatrix = SensitivityMatrix_T * /*WeightMatrix **/ SensitivityMatrix;
+        arma::mat FisherMatrix = SensitivityMatrix_T * WeightMatrix * SensitivityMatrix;
         if ((gfittask->Tfun->weight == "inverr2") /*|| (gfittask->Tfun->weight == "inverr1")*/ )
         {
-            FisherMatrix = SensitivityMatrix_T */* WeightMatrix **/ SensitivityMatrix;
+            FisherMatrix = SensitivityMatrix_T * sqrt(WeightMatrix) * SensitivityMatrix;
+        }
+        if ((gfittask->Tfun->weight == "inverr3") /*|| (gfittask->Tfun->weight == "inverr1")*/ )
+        {
+            FisherMatrix = SensitivityMatrix_T * SensitivityMatrix;
         }
 
 FisherMatrix.print("Fisher Matrix:");
@@ -553,7 +648,7 @@ CorellationMatrix.print("Corellation Matrix:");
         myStat << " Parameter Standard Deviations/Errors: "<<endl;
         for( i=0; i< optv_.size(); i++ )
         {
-            myStat <<"			parameter "<< i <<" "<<gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]) <<" :	           " << ParameterStandardDeviation(i) << endl;
+            myStat <<"			parameter "<< i <<" "<<gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]) <<" :	           " << ParameterStandardDeviation(i)/sqrt(degrees_of_freedom) << endl;
         }
         myStat << endl;
 
@@ -710,6 +805,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
     double residual = 0.0;
     double residual_sys = 0.0;
     std::vector<double> scatter_v;
+    std::vector<double> optv_backup;
     std::vector<std::vector<double> > measured_values_backup;
     std::vector<std::vector<double> > computed_values_backup;
 
@@ -719,6 +815,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
         // Store originals measurements and computed values
         computed_values_backup.push_back( gfittask->computed_values_v );
         measured_values_backup.push_back( gfittask->measured_values_v );
+        optv_backup = optv_;
 
 
     // Check if number of MC runs has zero modulo. If not increase num_of_MC_runs till it can be equally divided by the processes
@@ -761,7 +858,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
         typedef boost::mt19937 RNGType;
         RNGType rng;
 
-        boost::normal_distribution<> rdist(0.0, SD_of_TFresiduals);
+        boost::normal_distribution<> rdist(0.0, SD_of_residuals);
 
         boost::variate_generator< RNGType, boost::normal_distribution<> > get_rand(rng, rdist);
 
@@ -856,6 +953,10 @@ pid_ = 0;
 
 
         // perform optimization
+//            gfittask->Opti->OptLoBounds = gfittask->Opti->LB;
+//            gfittask->Opti->OptUpBounds = gfittask->Opti->UB;
+            optv_ = optv_backup;
+
         gfittask->Ainit_optim( optv_, sum_of_squares_MC);
 
 
@@ -879,9 +980,9 @@ pid_ = 0;
 
         // loop over systems and subtract MC scatter to retain the original measurement data
             // Retain original computed values
-            gfittask->computed_values_v = computed_values_backup[j];
+            gfittask->computed_values_v = computed_values_backup[0];
             // Retain original measurements
-            gfittask->measured_values_v = measured_values_backup[j];
+            gfittask->measured_values_v = measured_values_backup[0];
 
     id++;
     }// end Monte Carlo for-loop
@@ -913,7 +1014,7 @@ pid_ = 0;
 
 #ifndef BOOST_MPI
         ofstream myStat;
-        myStat.open("output_GEMSFIT/myFitStatistics.txt",ios::app);
+        myStat.open(gpf->FITStatisticsFile().c_str(),ios::app);
 #endif
 
         myStat << " Confidence intervals of MC parameters : "<<endl;

@@ -218,7 +218,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
 
     if( Opti->OptNormParam )
     {
-        Opti->normalize_params( optv_ );
+        Opti->normalize_params( optv_, NormParams );
         NormParams = true;
     }
     else // do not normalize parameters
@@ -976,7 +976,7 @@ void TGfitTask::add_MC_scatter( vector<double> scatter)
                         {
                             if ((this->experiments[i]->expphases[p]->phIC[e]->comp == this->Tfun->objfun[j]->exp_CN) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
                             {
-                                this->experiments[i]->expphases[p]->phIC[e]->Qnt + scatter[count];
+                                this->experiments[i]->expphases[p]->phIC[e]->Qnt += scatter[count];
                                 // check for unit
                                 check_unit(i, p, e, Tfun->objfun[j]->exp_unit, this );
                                 average = average + this->experiments[i]->expphases[p]->phIC[e]->Qnt;
@@ -994,7 +994,7 @@ void TGfitTask::add_MC_scatter( vector<double> scatter)
                             {
                                 if ((this->experiments[i]->expphases[p]->phMR[f]->comp == this->Tfun->objfun[j]->exp_CN) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
                                 {
-                                    this->experiments[i]->expphases[p]->phMR[f]->Qnt + scatter[count];
+                                    this->experiments[i]->expphases[p]->phMR[f]->Qnt += scatter[count];
                                     // check for unit
 //                                    check_unit(i, p, e, Tfun->objfun[j]->exp_unit, this );
                                     average = average + this->experiments[i]->expphases[p]->phMR[f]->Qnt;
@@ -1013,7 +1013,7 @@ void TGfitTask::add_MC_scatter( vector<double> scatter)
                         {
                             if ((this->experiments[i]->expphases[p]->phprop[pp]->property == Tfun->objfun[j]->exp_CN) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
                             {
-                                this->experiments[i]->expphases[p]->phprop[pp]->Qnt + scatter[count];
+                                this->experiments[i]->expphases[p]->phprop[pp]->Qnt += scatter[count];
                                 // check for unit
                                 check_prop_unit(i, p, pp, Tfun->objfun[j]->exp_unit, this );
                                 average = average + this->experiments[i]->expphases[p]->phprop[pp]->Qnt;
@@ -1036,7 +1036,7 @@ void TGfitTask::add_MC_scatter( vector<double> scatter)
                                     {
                                         if (this->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->property == Tfun->objfun[j]->exp_DCP)
                                         {
-                                            this->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt + scatter[count];
+                                            this->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt += scatter[count];
 //                                            cout << "yes"<<endl;
                                             //                                    // check for unit
                                             //                                    check_dcomp_unit(i, p, dc, dcp, sys->Tfun->objfun[j]->exp_unit, sys );

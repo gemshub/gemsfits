@@ -98,7 +98,9 @@ void ResPrint::print_result()
 {
     ofstream fout;
     fout.open(path.c_str(), ios::app);
-    setprecision(5);
+    double sum_res = 0.0, sum_meas = 0.0;
+
+    setprecision(9);
     scientific(fout);
     if( fout.fail() )
     { cout<<"Output fileopen error"<<endl; /*exit(1);*/ }
@@ -110,7 +112,7 @@ void ResPrint::print_result()
         {
             fout<<experiment[i]<<","/*<<what1[i]*/<<","<<what2[i]<<","<<unit[i]<<","<<measured[i]<<","<<computed[i]<<","<<Weighted_Tfun_residual[i];
         } else fout<<experiment[i]<<","<<what1[i]<<","<<what2[i]<<","<<unit[i]<<","<<measured[i]<<","<<computed[i]<<","<<Weighted_Tfun_residual[i];
-
+        sum_res += (measured[i] - computed[i]);
         for (unsigned int j=0; j<sensitivity.size(); j++)
         {
             double abss = abs(sensitivity[j][i]);
@@ -118,6 +120,8 @@ void ResPrint::print_result()
         }
         fout<<endl;
     }
+
+    fout<< "sum of residuals = " << sum_res << endl;
 
 
     // call GEM_init to read GEMS3K input files

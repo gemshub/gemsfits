@@ -154,9 +154,9 @@ int main( int argc, char *argv[] )
     if( gfittask->Opti->OptDoWhat != 1 )
     {
         stat.sensitivity_correlation( gfittask->Opti->optv, gfittask );
-
-//        stat.MC_confidence_interval( &elvis, optim.opt, &systems, countit );
     }
+
+    if(stat.MCbool == 1)  stat.MC_confidence_interval( gfittask->Opti->optv, gfittask, countit );
 
     gfittask->print->print_result();
 

@@ -68,9 +68,12 @@ optimization::optimization( int i)
 statistics::statistics()
 {
     number_of_measurements = 0;
-    weighted_Tfun_sum_of_residuals 		= 0;
+    Weighted_Tfun_sum_of_residuals 		= 0.0;
     num_of_runs		= 0;
     number_of_parameters   = 0;
+    Tfun_sum_of_residuals = 0.0;
+    Abs_sum_of_residuals = 0.0; Weighted_Abs_sum_of_residuals = 0.0;
+    min_res =0.0; max_res = 0.0; Weighted_min_res = 0.0; Weighted_max_res = 0.0; neg_residuals = 0; pos_residuals = 0;
     perturbator = 0.0001;
     default_stat_param();
 }
@@ -1065,7 +1068,7 @@ void statistics::out_stat_param_txt( bool with_comments, bool brief_mode )
     TPrintArrays  prar(4, statistics_fields, ff);
     prar.writeField(f_StatMCruns, (long int)num_of_MC_runs, with_comments, brief_mode  );
     prar.writeField(f_StatSensitivity, (long int)sensitivity_points, with_comments, brief_mode  );
-//    prar.writeField(f_StatMCbool, (long int)MCbool, with_comments, brief_mode  );
+    prar.writeField(f_StatMCbool, (long int)MCbool, with_comments, brief_mode  );
     prar.writeField(f_StatPerturbator, (double)perturbator, with_comments, brief_mode  );
 }
 
@@ -1088,12 +1091,12 @@ void statistics::get_stat_param_txt( )
                    break;
            case f_StatSensitivity: rdar.readArray( "StatSensitivity",  &sensitivity_points, 1 );
                    break;
-//           case f_StatMCbool:
-//                   { int bb;
-//                    rdar.readArray( "StatMCbool",  &bb, 1 );
-//                    MCbool = (bool)bb;
-//                   }
-//                   break;
+           case f_StatMCbool:
+                   { int bb;
+                    rdar.readArray( "StatMCbool",  &bb, 1 );
+                    MCbool = (bool)bb;
+                   }
+                   break;
            case f_StatPerturbator: rdar.readArray( "StatPerturbator",  &perturbator, 1 );
                   break;
           }

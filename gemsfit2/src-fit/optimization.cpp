@@ -69,7 +69,7 @@ optimization::~optimization()
 
 }
 
-void optimization::normalize_params( const vector<double> initguesses )
+void optimization::normalize_params(const vector<double> initguesses , bool NormBounds)
 {
     unsigned int i= 0;
 
@@ -82,8 +82,6 @@ void optimization::normalize_params( const vector<double> initguesses )
 
     fout << " ... performing parameter normalization ... " << endl;
 
-
-
     // Normalize init guess vector
     optv.resize( initguesses.size() );
     for(i=0; i<optv.size(); i++)
@@ -92,6 +90,8 @@ void optimization::normalize_params( const vector<double> initguesses )
     }
 
     // Normalize upper bounds vector
+    if (!NormBounds)
+    {
     for(i=0; i<OptUpBounds.size(); i++)
     {
         fout << "Init guess ["<<i<<"] = " << initguesses[i] << endl;
@@ -113,6 +113,7 @@ void optimization::normalize_params( const vector<double> initguesses )
     for(i=0; i<constraint_data_v.size(); i++)
     {
         constraint_data_v[i].Constraints = constraint_data_v[i].Constraints / fabs(initguesses[i]);
+    }
     }
 
     fout.close();
