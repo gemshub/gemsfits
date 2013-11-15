@@ -139,9 +139,9 @@ int main( int argc, char *argv[] )
         Equil_objective_function_callback(gfittask->Opti->optv, grad, gfittask);
     }
 
-
-
     fout<<endl<<" back in main ..."<<endl;
+
+//        gfittask->test();
 
     countit = master_counter;
 
@@ -156,9 +156,11 @@ int main( int argc, char *argv[] )
         stat.sensitivity_correlation( gfittask->Opti->optv, gfittask );
     }
 
+    gfittask->print->print_result();
+
     if(stat.MCbool == 1)  stat.MC_confidence_interval( gfittask->Opti->optv, gfittask, countit );
 
-    gfittask->print->print_result();
+
 
     delete gfittask;
 

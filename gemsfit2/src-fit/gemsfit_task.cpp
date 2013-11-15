@@ -109,6 +109,7 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     if (this->LimitOfDetection > (this->minimum_value/100))
         this->LimitOfDetection = this->minimum_value/100; // sets the limit of detection not more than 100 times smaller than the lowest experimental value
 
+    print->print_header(Tfun->type, Tfun->weight, Opti->optv.size());
     fout.close();
 
 }
@@ -297,7 +298,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
 //    //===== For testing the objective function without oprimization =====//
 //    weighted_Tfun_sum_of_residuals = Equil_objective_function_callback(Opti->optv, grad, this);
 
-    print->print_header(Tfun->type, Tfun->weight, Opti->optv.size());
+
 
     nlopt::result result = NLopti.optimize( Opti->optv, weighted_Tfun_sum_of_residuals );
     ffout<<"optv[0] = "<<Opti->optv[0]<<endl;
@@ -976,7 +977,7 @@ void TGfitTask::add_MC_scatter( vector<double> scatter)
                         {
                             if ((this->experiments[i]->expphases[p]->phIC[e]->comp == this->Tfun->objfun[j]->exp_CN) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
                             {
-                                this->experiments[i]->expphases[p]->phIC[e]->Qnt += scatter[count];
+                                this->experiments[i]->expphases[p]->phIC[e]->Qnt = scatter[count];
                                 // check for unit
                                 check_unit(i, p, e, Tfun->objfun[j]->exp_unit, this );
                                 average = average + this->experiments[i]->expphases[p]->phIC[e]->Qnt;
@@ -994,7 +995,7 @@ void TGfitTask::add_MC_scatter( vector<double> scatter)
                             {
                                 if ((this->experiments[i]->expphases[p]->phMR[f]->comp == this->Tfun->objfun[j]->exp_CN) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
                                 {
-                                    this->experiments[i]->expphases[p]->phMR[f]->Qnt += scatter[count];
+                                    this->experiments[i]->expphases[p]->phMR[f]->Qnt = scatter[count];
                                     // check for unit
 //                                    check_unit(i, p, e, Tfun->objfun[j]->exp_unit, this );
                                     average = average + this->experiments[i]->expphases[p]->phMR[f]->Qnt;
@@ -1013,7 +1014,7 @@ void TGfitTask::add_MC_scatter( vector<double> scatter)
                         {
                             if ((this->experiments[i]->expphases[p]->phprop[pp]->property == Tfun->objfun[j]->exp_CN) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
                             {
-                                this->experiments[i]->expphases[p]->phprop[pp]->Qnt += scatter[count];
+                                this->experiments[i]->expphases[p]->phprop[pp]->Qnt = scatter[count];
                                 // check for unit
                                 check_prop_unit(i, p, pp, Tfun->objfun[j]->exp_unit, this );
                                 average = average + this->experiments[i]->expphases[p]->phprop[pp]->Qnt;
@@ -1036,7 +1037,7 @@ void TGfitTask::add_MC_scatter( vector<double> scatter)
                                     {
                                         if (this->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->property == Tfun->objfun[j]->exp_DCP)
                                         {
-                                            this->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt += scatter[count];
+                                            this->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt = scatter[count];
 //                                            cout << "yes"<<endl;
                                             //                                    // check for unit
                                             //                                    check_dcomp_unit(i, p, dc, dcp, sys->Tfun->objfun[j]->exp_unit, sys );
@@ -1075,6 +1076,16 @@ void TGfitTask::set_residuals (double computed, double measured, double Weighted
     measured_values_v.push_back(measured);
     Weighted_Tfun_residuals_v.push_back(Weighted_Tfun_residual);
     Tfun_residuals_v.push_back(Tfun_residual);
+}
+
+void TGfitTask::test()
+{
+    mean_reisdulas = 0.0;
+    for (int i=0; i<residuals_v.size(); i++)
+    {
+        mean_reisdulas +=residuals_v[i];
+    }
+    mean_reisdulas = mean_reisdulas / residuals_v.size();
 }
 
 //-----------------------End of gemsfit_task.cpp--------------------------

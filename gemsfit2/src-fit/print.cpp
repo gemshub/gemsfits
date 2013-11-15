@@ -55,6 +55,7 @@ void ResPrint::print_clear()
     measured.clear();
     computed.clear();
     Weighted_Tfun_residual.clear();
+    residuals_v.clear();
 
 }
 
@@ -67,6 +68,7 @@ void ResPrint::set_print(string experiment_, string what1_, string what2_, strin
     measured.push_back(measured_);
     computed.push_back(computed_);
     Weighted_Tfun_residual.push_back(Weighted_Tfun_residual_);
+    residuals_v.push_back(measured_-computed_);
 }
 
 
@@ -100,7 +102,7 @@ void ResPrint::print_result()
     fout.open(path.c_str(), ios::app);
     double sum_res = 0.0, sum_meas = 0.0;
 
-    setprecision(9);
+    setprecision(12);
     scientific(fout);
     if( fout.fail() )
     { cout<<"Output fileopen error"<<endl; /*exit(1);*/ }
@@ -123,7 +125,7 @@ void ResPrint::print_result()
 
     fout<< "sum of residuals = " << sum_res << endl;
 
-
+    double test2 = sum_res / residuals_v.size();
     // call GEM_init to read GEMS3K input files
     TNode* node  = new TNode();
 

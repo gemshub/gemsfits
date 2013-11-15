@@ -46,8 +46,10 @@
 // Constructor
 statistics::statistics(TGfitTask *gfittask, double Weighted_Tfun_sum_of_residuals_, int num_of_params_, int num_of_runs_ )
 {
-    double mean_res = 0., Abs_mean_res = 0.0, Weighted_TF_mean_res = 0.0;
+    double mean_res = 0.0, Abs_mean_res = 0.0, Weighted_TF_mean_res = 0.0;
     unsigned int i;
+
+//    gfittask->test();
 
     number_of_measurements = 0;
     number_of_measurements += gfittask->computed_values_v.size();
@@ -63,7 +65,9 @@ statistics::statistics(TGfitTask *gfittask, double Weighted_Tfun_sum_of_residual
          Abs_sum_of_residuals += fabs(gfittask->residuals_v[i]);
 Weighted_Abs_sum_of_residuals += fabs(gfittask->residuals_v[i])*gfittask->weights[i];
 
+        if (gfittask->weights[i] != 1)
         weighted_residuals.push_back(gfittask->residuals_v[i]*gfittask->weights[i]);
+        else weighted_residuals.push_back(gfittask->residuals_v[i]);
         measured_norm_residuals.push_back(gfittask->residuals_v[i] / gfittask->measured_values_v[i] * 100);
 
         if (min_res > gfittask->residuals_v[i]) min_res = gfittask->residuals_v[i];
@@ -98,7 +102,7 @@ cout<<" Statistics Constructor: number_of_parameters: "<<number_of_parameters<<e
 
 
     // Compute standard deviation of residuals
-    for (i=1; i<number_of_measurements; i++)
+    for (i=0; i<number_of_measurements; i++)
     {
 Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
         Abs_mean_res += fabs(gfittask->residuals_v[i]);
@@ -117,7 +121,7 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
     Weighted_SD_of_residuals = 0.0;
              SD_of_residuals = 0.0;
 
-    for (i=1; i<number_of_measurements; i++)
+    for (i=0; i<number_of_measurements; i++)
     {
         Weighted_TF_SD_of_residuals += pow((gfittask->Weighted_Tfun_residuals_v[i]-Weighted_TF_mean_res),2);
                 Abs_SD_of_residuals += pow((fabs(gfittask->residuals_v[i])-Abs_mean_res),2);
@@ -206,7 +210,24 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 //        abs_residuals_v.push_back(abs(gfittask->residuals_v[i]));
 //    }
 
+
+//    /// Test
+
+//    typedef boost::mt19937 RNGType;
+//    RNGType rng;
+
+//    boost::normal_distribution<> rdist(0.0, SD_of_residuals);
+
+//    boost::variate_generator< RNGType, boost::normal_distribution<> > get_rand(rng, rdist);
+
+
     sort( gfittask->residuals_v.begin(), gfittask->residuals_v.end() );
+
+//    for (i=0; i<number_of_measurements; i++)
+//    {
+//        weighted_residuals[i] = get_rand();
+//    }
+
     sort(weighted_residuals.begin(), weighted_residuals.end());
     int N = (int) gfittask->residuals_v.size();
 
@@ -253,7 +274,7 @@ Correlation_coef = (sum1*sum1)/(sum2*sum3);
     mean = 0;
     for (i=0; i< gfittask->residuals_v.size(); i++)
     {
-        mean += gfittask->residuals_v[i];
+        mean += weighted_residuals[i];
     }
     mean = mean / gfittask->residuals_v.size();
 
@@ -262,9 +283,9 @@ Correlation_coef = (sum1*sum1)/(sum2*sum3);
 
     for( i=0; i<N; i++ )
     {
-        m2 += pow( (gfittask->residuals_v[i] - mean), 2. ) / N;
-        m3 += pow( (gfittask->residuals_v[i] - mean), 3. ) / N;
-        m4 += pow( (gfittask->residuals_v[i] - mean), 4. ) / N;
+        m2 += pow( (weighted_residuals[i] - mean), 2. ) / N;
+        m3 += pow( (weighted_residuals[i] - mean), 3. ) / N;
+        m4 += pow( (weighted_residuals[i] - mean), 4. ) / N;
     }
 
     sqrtb1 = m3 / pow( m2, (3./2.));
@@ -345,10 +366,10 @@ Correlation_coef = (sum1*sum1)/(sum2*sum3);
         myStat << endl;
         myStat << " Standard deviation of the weighted residuals :                       	" << Weighted_SD_of_residuals 		<< endl;
         myStat << endl;
-        myStat << " Standard deviation of the weighted target function values :             " << Weighted_TF_SD_of_residuals 		<< endl;
-        myStat << endl;
-        myStat << " Standard deviation of the absolute values of the residuals :            " << Abs_SD_of_residuals 		<< endl;
-        myStat << endl;
+//        myStat << " Standard deviation of the weighted target function values :             " << Weighted_TF_SD_of_residuals 		<< endl;
+//        myStat << endl;
+//        myStat << " Standard deviation of the absolute values of the residuals :            " << Abs_SD_of_residuals 		<< endl;
+//        myStat << endl;
         myStat << " Average weighted residual :                                          	" << Weighted_mean_res 		<< endl;
         myStat << endl;
         myStat << " Maximum weighted residual :                                          	" << Weighted_max_res 		<< endl;
@@ -362,6 +383,8 @@ Correlation_coef = (sum1*sum1)/(sum2*sum3);
 
 
         myStat << " Coefficient of determination R^2 :                                  	" << coeff_of_determination     << endl;
+        myStat << endl;
+        myStat << " Correlation coefficient (Brockwell and Davis, 1987, p304) RN^2:         " << Correlation_coef     << endl;
         myStat << endl;
         myStat << " Pearson's Chi Square test :                                             " << Pearsons_chi_square   	<< endl;
         myStat << endl;
@@ -804,12 +827,13 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
     double sum_of_squares_MC;
     double residual = 0.0;
     double residual_sys = 0.0;
-    std::vector<double> scatter_v;
+    std::vector<double> scatter_v, MC_measured_v;
     std::vector<double> optv_backup;
     std::vector<std::vector<double> > measured_values_backup;
     std::vector<std::vector<double> > computed_values_backup;
 
     scatter_v.resize(number_of_measurements);
+    MC_measured_v.resize(number_of_measurements);
 
     // loop over systems and backup measurement values and computed values
         // Store originals measurements and computed values
@@ -946,7 +970,12 @@ pid_ = 0;
 
             g
 */
-            gfittask->add_MC_scatter(scatter_v);
+            for (i=0; i<number_of_measurements; i++)
+            {
+                MC_measured_v[i] = scatter_v[i] + gfittask->measured_values_v[i];
+            }
+
+            gfittask->add_MC_scatter(MC_measured_v);
 
 
             delete[] simulated_measurements;
@@ -983,6 +1012,8 @@ pid_ = 0;
             gfittask->computed_values_v = computed_values_backup[0];
             // Retain original measurements
             gfittask->measured_values_v = measured_values_backup[0];
+            // puts back the original mesured values
+            gfittask->add_MC_scatter(measured_values_backup[0]);
 
     id++;
     }// end Monte Carlo for-loop

@@ -95,6 +95,7 @@ private:
 
     void get_logK_TPpairs();
 
+
     /// the GEMSFIT configuration file (fixed to SS_GEMSFIT_input.dat)
     string param_file;
 
@@ -106,7 +107,7 @@ public:
 
 
 
-
+    void test();
 
 //    /// Monte Carlo flag: if true, then the MPI commands within the objective function call will not be executed. Instead, the loop over Monte Carlo runs is parallelized
 //    bool MC_MPI;
@@ -147,6 +148,7 @@ public:
 
     /// Computed residuals
     double_v residuals_v; // measured - calculated residuals
+    double mean_reisdulas;
 //    double_v relative_residuals_v; // 100*(measured-calculated)/measured in %
     double_v Weighted_Tfun_residuals_v; // Target function "residuals"
     double_v Tfun_residuals_v;
