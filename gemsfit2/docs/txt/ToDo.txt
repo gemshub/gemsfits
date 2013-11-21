@@ -5,11 +5,11 @@ Roadmap of GEMSFIT2 development
 
 - add artificial weight column in database in gemsfit2??
 
-- save current code tree to GEMSFIT1013 tag
-- move devDanFit branch to new trunk, clean it up, improve html documentation
-- fork devPhaFit branch from trunk, merge trunk standalone from devPhase standalone
-- check necessary extensions in GEMSFIT2 and cvstoejdb due to extended .IPM file parameter arrays
-- propagate to GEMSFIT2 documentation, wherever necessary    
++ save current code tree to GEMSFIT1013 tag
++ move devDanFit branch to new trunk, clean it up, improve html documentation
++ fork devPhaFit branch from trunk, merge trunk standalone from devPhase standalone
++ check necessary extensions in GEMSFIT2 and cvstoejdb due to extended .IPM file parameter arrays
++ propagate to GEMSFIT2 documentation, wherever necessary    
 
 + describe/document command line parameters to start gemsfit2 and csvtoejdb utility program
 + check if GEMSFIT input file exists by writing a new template input file (to prevent overwrite)
@@ -57,6 +57,12 @@ EJDB database maintenance functionality:
 + restore from JSON text file
 + updating/owerwriting documents e.g. for error corrections in experimental data, adding new information for experimental samples. <= use EJDB command line interface.
 - what if one wants to select data from more collections
+
+
+- add different options for monte carlo simulation (add scatter to computed values or measured values or use the actual residuals and randomly add them to the data pg.108)
+- implement the Tukey-Biweight scheme to weight out the outlighers.
+- maybe write matlab scripts for ploting form gemsfit output files??
+- add option of adding weight for different type of data.
 
 
 future
