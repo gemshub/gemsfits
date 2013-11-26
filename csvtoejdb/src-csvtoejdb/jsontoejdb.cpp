@@ -50,11 +50,11 @@ void jsontoejdb( string data_, EJDB *jb, EJCOLL *coll, bson_oid_t oid)
 
         data = json_object_get(root, sT);
         if(json_is_integer(data))
-        bson_append_int(&exp, sT, json_integer_value(data));
+        bson_append_double(&exp, sT, json_real_value(data));
 
         data = json_object_get(root, sP);
         if(json_is_integer(data))
-        bson_append_int(&exp, sP, json_integer_value(data));
+        bson_append_double(&exp, sP, json_real_value(data));
 
         data = json_object_get(root, sV);
         if(json_is_integer(data))

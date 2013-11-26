@@ -268,6 +268,14 @@ Correlation_coef = (sum1*sum1)/(sum2*sum3);
 
 //    // Generate Q-Q Plot (Quantile-Quantile Plot)
 //    print_qqplot( residuals_v, quantiles_v );
+    ofstream myqq;
+    myqq.open("output/qqplot.csv",ios::app);
+    myqq << "residuals,quantiles" << endl;
+    for (i=0; i<N; ++i)
+    {
+        myqq <<gfittask->residuals_v[i]<<","<<quantiles_v[i]<< endl;
+    }
+    myqq.close();
 
 
     // D'Agostino K square test for normality

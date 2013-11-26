@@ -18,7 +18,7 @@ static EJDB *jb;
 int main(int argc, char *argv[])
 {
     int iinit = 0, irun = 0, ihelp = 0, iback = 0, irest = 0;
-    vector<int> TP[2], TP_pairs[2]; // holding the temperature and pressures and the uniques pairs for printing
+    vector<double> TP[2], TP_pairs[2]; // holding the temperature and pressures and the uniques pairs for printing
     bool isfound = false, isfound2 = false;
     string coll_name;
 
@@ -254,12 +254,12 @@ int main(int argc, char *argv[])
              if (key_ == sT)
              {
                  // adding temperature
-                 TP[0].push_back(bson_iterator_int(&it));
+                 TP[0].push_back(bson_iterator_double(&it));
              } else
              if (key_ == sP)
              {
                  // adding pressure
-                 TP[1].push_back(bson_iterator_int(&it));
+                 TP[1].push_back(bson_iterator_double(&it));
              }
          }
      }

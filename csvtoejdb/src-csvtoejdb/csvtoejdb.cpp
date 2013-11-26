@@ -83,7 +83,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
             else if  ((headline[i]==sT) || (headline[i]==sP))
             {
                 if (row[i].empty()) { cout << "P or T columns cannot be emppty. Exiting..." << endl; bson_destroy(&exp); exit(1);}
-                bson_append_int(&exp, headline[i].c_str(), atoi(row[i].c_str()));
+                bson_append_double(&exp, headline[i].c_str(), atof(row[i].c_str()));
 //                if (headline[i]==sT)
 //                {
 //                    TP[0].push_back(atoi(row[i].c_str()));
@@ -469,7 +469,9 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                             bson_append_start_object(&exp, sss.c_str()); // START phase element object
                                             ic++;
                                             bson_append_string(&exp, IC, ph_prop.c_str());
-                                            bson_append_double(&exp, Qnt, atof(row[j].c_str()));
+                                            bson_append_double(&exp, Qnt, strtod(row[j].c_str(), NULL));
+//                                            cout << strtod(row[j].c_str(), NULL) << endl;
+//                                            cout << atof(row[j].c_str()) << endl;
 
                                             // checking if there are errors and units included in the CSV and adding tem in the database
                                             if (j+1 < headline.size())

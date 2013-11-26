@@ -106,7 +106,7 @@ void Data_Manager::get_EJDB( )
     { cout<<"Output fileopen error"<<endl; exit(1); }
 
     string_v out, qsample, usedataset, skipdataset;
-    int_v qsT, qsP;
+    double_v qsT, qsP;
 
     stringstream ss;
     string sss;
@@ -129,14 +129,14 @@ void Data_Manager::get_EJDB( )
         parse_JSON_object(DataSelect, keys::sT, out);
         for (unsigned int i = 0 ; i < out.size() ; i++)
         {
-            qsT.push_back( atoi(out.at(i).c_str()) ); // query for selecting T
+            qsT.push_back( atof(out.at(i).c_str()) ); // query for selecting T
         }
         out.clear();
 
         parse_JSON_object(DataSelect, keys::sP, out);
         for (unsigned int i = 0 ; i < out.size() ; i++)
         {
-            qsP.push_back( atoi(out.at(i).c_str()) ); // query for selecting P
+            qsP.push_back( atof(out.at(i).c_str()) ); // query for selecting P
         }
         out.clear();
 
@@ -212,8 +212,8 @@ void Data_Manager::get_EJDB( )
             // for selecting T interval
             bson_append_start_object(&bq2, keys::sT);
             bson_append_start_array(&bq2, "$bt");
-            bson_append_int(&bq2, "0", qsT[0]);
-            bson_append_int(&bq2, "1", qsT[1]);
+            bson_append_double(&bq2, "0", qsT[0]);
+            bson_append_double(&bq2, "1", qsT[1]);
             bson_append_finish_array(&bq2);
             bson_append_finish_object(&bq2);
         } else
@@ -238,8 +238,8 @@ void Data_Manager::get_EJDB( )
             // for selecting P interval
             bson_append_start_object(&bq2, keys::sP);
             bson_append_start_array(&bq2, "$bt");
-            bson_append_int(&bq2, "0", qsP[0]);
-            bson_append_int(&bq2, "1", qsP[1]);
+            bson_append_double(&bq2, "0", qsP[0]);
+            bson_append_double(&bq2, "1", qsP[1]);
             bson_append_finish_array(&bq2);
             bson_append_finish_object(&bq2);
         } else
@@ -347,17 +347,17 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
         if (key_ == keys::sT)
         {
             // adding temperature
-            experiments.at(pos)->sT = bson_iterator_int(&i);
+            experiments.at(pos)->sT = bson_iterator_double(&i);
         } else
         if (key_ == keys::sP)
         {
             // adding pressure
-            experiments.at(pos)->sP = bson_iterator_int(&i);
+            experiments.at(pos)->sP = bson_iterator_double(&i);
         } else
         if (key_ == keys::sV)
         {
             // adding volume
-            experiments.at(pos)->sV = bson_iterator_int(&i);
+            experiments.at(pos)->sV = bson_iterator_double(&i);
         } else
 
         // adding experiment components/recipe

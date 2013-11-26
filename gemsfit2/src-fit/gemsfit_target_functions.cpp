@@ -35,6 +35,7 @@
 
 #include "gemsfit_target_functions.h"
 #include "keywords.h"
+#include <boost/lexical_cast.hpp>
 
 
 /// Adust FUNCTIONS
@@ -387,7 +388,9 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
 
     delete[] IC_in_PH;
 
-    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phIC[e]->comp,sys->experiments[i]->expphases[p]->phIC[e]->Qunit,measured_value,computed_value,Weighted_Tfun_residual, weight_ );
+
+
+    sys->print->set_print(sys->experiments[i]->sample, boost::lexical_cast<std::string>(sys->NodT[i]->Get_pH( )),sys->experiments[i]->expphases[p]->phIC[e]->comp,sys->experiments[i]->expphases[p]->phIC[e]->Qunit,measured_value,computed_value,Weighted_Tfun_residual, weight_ );
 
     return Weighted_Tfun_residual;
 }
