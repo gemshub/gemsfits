@@ -121,6 +121,8 @@ public:
 
     ResPrint* print;
 
+    int exp_nr, tit_nr;
+
     struct TargetFunction /// structure holding the target function information
     {
         string name; /// target function name

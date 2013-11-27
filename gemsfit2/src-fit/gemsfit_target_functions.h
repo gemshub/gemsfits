@@ -42,6 +42,8 @@
 #include "print.h"
 
 
+
+
 // Set new Gibbs free energy
 /**
 * Sets the new G0 returned form the optimization algorithm
