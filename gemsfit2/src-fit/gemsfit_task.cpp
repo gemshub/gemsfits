@@ -58,7 +58,7 @@ TGfitTask* TGfitTask::gft;
 TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
 {
     weighted_Tfun_sum_of_residuals = 0.0;
-    exp_nr = -1; tit_nr = -1;
+    EXPndx = -1;COMPndx = -1;PHndx = -1;PHPndx = -1;
     // GEMSFIT logfile
     //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
     ofstream fout;

@@ -45,10 +45,6 @@
 #include "node.h"
 #include "print.h"
 
-void titration(TGfitTask *sys);
-
-double titfunc(const std::vector<double> &x, std::vector<double> &grad, void *obj_func_data);
-
 // callback function for GEMS3K wrapper
 /**
 * Callback function for the constraint functions referring to the GEMS3 solver. The arguments of this function must not be

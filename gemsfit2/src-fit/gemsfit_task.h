@@ -121,7 +121,8 @@ public:
 
     ResPrint* print;
 
-    int exp_nr, tit_nr;
+    // indexes //
+    int EXPndx, COMPndx, PHndx, PHPndx;
 
     struct TargetFunction /// structure holding the target function information
     {

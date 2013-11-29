@@ -63,6 +63,8 @@ EJDB database maintenance functionality:
 - implement the Tukey-Biweight scheme to weight out the outlighers.
 - maybe write matlab scripts for ploting form gemsfit output files??
 - add option of adding weight for different type of data.
+- "dynamic regression run" when some parameters are correlated, with different input file for the different sets of parameters. 1st fits one set with the other fixed, then fits the 2nd with first
+	fixed in a loop (unitl ??)
 
 
 future
