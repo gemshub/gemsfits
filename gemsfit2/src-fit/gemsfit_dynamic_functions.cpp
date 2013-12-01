@@ -3,39 +3,54 @@
 
 void titration (TGfitTask *sys)
 {
-    bool h_HCl = false, h_NaOH = false;
-    int i, j;
-    double old_HCl, old_NaOH;
+    vector<bool> h_HCl, h_NaOH;
+    int i;
+    vector<double> old_HCl, old_NaOH;
+
+    for (i=0; i<sys->MPI+1; i++)
+    {
+        h_HCl.push_back(false);
+        h_NaOH.push_back(false);
+        old_HCl.push_back(0.0);
+        old_NaOH.push_back(0.0);
+    }
 
     // loop trough all experiments
+    //#ifdef USE_MPI
+        omp_set_num_threads(sys->MPI);
+        #pragma omp parallel for
+    //#endif
     for (i = 0; i<sys->experiments.size(); i++)
     {
-        h_HCl = false; h_NaOH = false;
+        int j;
+        int P_id = omp_get_thread_num();
+//        cout << P_id << endl;
+        h_HCl[P_id] = false; h_NaOH[P_id] = false;
         // loop torugh all comp to check for titrant
         for (j=0; j<sys->experiments[i]->sbcomp.size(); j++)
         {
             if (sys->experiments[i]->sbcomp[j]->comp == "HCl")
             {
-                h_HCl = true;
-                old_HCl = sys->experiments[i]->sbcomp[j]->Qnt;
-                sys->COMPndx = j;
+                h_HCl[P_id] = true;
+                old_HCl[P_id] = sys->experiments[i]->sbcomp[j]->Qnt;
+                sys->COMPndx[P_id] = j;
             }
             if (sys->experiments[i]->sbcomp[j]->comp == "NaOH")
             {
-                h_NaOH = true;
-                old_NaOH = sys->experiments[i]->sbcomp[j]->Qnt;
-                sys->COMPndx = j;
+                h_NaOH[P_id] = true;
+                old_NaOH[P_id] = sys->experiments[i]->sbcomp[j]->Qnt;
+                sys->COMPndx[P_id] = j;
             }
         }
         //adjust HCl
-        if (h_HCl)
+        if (h_HCl[P_id])
         {
             nlopt::opt opt_HCL(nlopt::LN_COBYLA, 1);
 
             std::vector<double> x;
-            x.push_back( old_HCl);
+            x.push_back( old_HCl[P_id]);
             double minf;
-            sys->EXPndx=i;
+            sys->EXPndx[P_id]=i;
 
             vector<double> gr;
 
@@ -43,8 +58,8 @@ void titration (TGfitTask *sys)
 
             double pH_dif = abs (sys->experiments[i]->expphases[0]->phprop[0]->Qnt - sys->NodT[i]->Get_pH());
 
-            opt_HCL.set_lower_bounds(old_HCl-0.1*pH_dif*old_HCl);
-            opt_HCL.set_upper_bounds(old_HCl+0.1*pH_dif*old_HCl);
+            opt_HCL.set_lower_bounds(old_HCl[P_id]-0.1*pH_dif*old_HCl[P_id]);
+            opt_HCL.set_upper_bounds(old_HCl[P_id]+0.1*pH_dif*old_HCl[P_id]);
 
             opt_HCL.set_min_objective(titfunc, sys);
 
@@ -53,23 +68,23 @@ void titration (TGfitTask *sys)
 //            std::vector<double> x;
 //            x.push_back( old_HCl);
 //            double minf;
-            sys->EXPndx=i;
+            sys->EXPndx[P_id]=i;
             nlopt::result result = opt_HCL.optimize(x, minf);
-            sys->experiments[sys->EXPndx]->sbcomp[sys->COMPndx]->Qnt = x[0];
+            sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt = x[0];
 
 //            cout << "happy"<< endl;
 
         }
 
         //adjust NaOH
-        if (h_NaOH)
+        if (h_NaOH[P_id])
         {
             nlopt::opt opt_NaOH(nlopt::LN_BOBYQA, 1);
 
             std::vector<double> x;
-            x.push_back( old_NaOH);
+            x.push_back( old_NaOH[P_id]);
             double minf;
-            sys->EXPndx=i;
+            sys->EXPndx[P_id]=i;
 
             vector<double> gr;
 
@@ -77,8 +92,8 @@ void titration (TGfitTask *sys)
 
             double pH_dif = abs (sys->experiments[i]->expphases[0]->phprop[0]->Qnt - sys->NodT[i]->Get_pH());
 
-            opt_NaOH.set_lower_bounds(old_NaOH-0.1*pH_dif*old_NaOH);
-            opt_NaOH.set_upper_bounds(old_NaOH+0.1*pH_dif*old_NaOH);
+            opt_NaOH.set_lower_bounds(old_NaOH[P_id]-0.1*pH_dif*old_NaOH[P_id]);
+            opt_NaOH.set_upper_bounds(old_NaOH[P_id]+0.1*pH_dif*old_NaOH[P_id]);
 
             opt_NaOH.set_min_objective(titfunc, sys);
 
@@ -87,9 +102,9 @@ void titration (TGfitTask *sys)
 //            std::vector<double> x;
 //            x.push_back( old_NaOH);
 //            double minf;
-            sys->EXPndx=i;
+            sys->EXPndx[P_id]=i;
             nlopt::result result = opt_NaOH.optimize(x, minf);
-            sys->experiments[sys->EXPndx]->sbcomp[sys->COMPndx]->Qnt = x[0];
+            sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt = x[0];
         }
     }
 
@@ -114,7 +129,9 @@ double titfunc(const std::vector<double> &x, std::vector<double> &grad, void *ob
     // Getting direct access to work node DATABR structure which exchanges the
     // data with GEMS3K (already filled out by reading the DBR input file)
 //    DATABR* dBR = sys->NodT[sys->tit_nr]->pCNode();
-    DATACH* dCH = sys->NodT[sys->COMPndx]->pCSD();
+    int P_id = omp_get_thread_num();
+
+    DATACH* dCH = sys->NodT[sys->COMPndx[P_id]]->pCSD();
 
     nIC = dCH->nIC;	// nr of independent components
     nDC = dCH->nDC;	// nr of dependent components
@@ -134,65 +151,65 @@ double titfunc(const std::vector<double> &x, std::vector<double> &grad, void *ob
 
     for ( i=0; i<nIC; i++)
     {
-        new_moles_IC[i] = sys->NodT[sys->EXPndx]->Get_bIC(i);
+        new_moles_IC[i] = sys->NodT[sys->EXPndx[P_id]]->Get_bIC(i);
     }
 
 //    P_pa = 100000 * sys->experiments[sys->EXPndx]->sP;
 //    T_k = 273.15 + sys->experiments[sys->EXPndx]->sT;
 
 
-    dif = sys->experiments[sys->EXPndx]->sbcomp[sys->COMPndx]->Qnt - x[0];
+    dif = sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt - x[0];
 
-    if (sys->experiments[sys->EXPndx]->sbcomp[sys->COMPndx]->comp == "NaOH")
+    if (sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->comp == "NaOH")
     {
 //        if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
 //        {
 //            experiments[n]->sbcomp[j]->Qnt = experiments[n]->sbcomp[j]->Qnt*h2o_kgamount*39.99710928;
 //            experiments[n]->sbcomp[j]->Qunit = keys::gram;
 //        }
-        ICndx = sys->NodT[sys->EXPndx]->IC_name_to_xDB("Na");
-        new_moles = sys->NodT[sys->EXPndx]->Get_bIC(ICndx) + 1*dif/39.99710928;
-        sys->NodT[sys->EXPndx]->Set_bIC(ICndx, new_moles);
-        ICndx = sys->NodT[sys->EXPndx]->IC_name_to_xDB("H");
-        new_moles = sys->NodT[sys->EXPndx]->Get_bIC(ICndx) + 1*dif/39.99710928;
-        sys->NodT[sys->EXPndx]->Set_bIC(ICndx, new_moles);
-        ICndx = sys->NodT[sys->EXPndx]->IC_name_to_xDB("O");
-        new_moles = sys->NodT[sys->EXPndx]->Get_bIC(ICndx) + 1*dif/39.99710928;
-        sys->NodT[sys->EXPndx]->Set_bIC(ICndx, new_moles);
+        ICndx = sys->NodT[sys->EXPndx[P_id]]->IC_name_to_xDB("Na");
+        new_moles = sys->NodT[sys->EXPndx[P_id]]->Get_bIC(ICndx) + 1*dif/39.99710928;
+        sys->NodT[sys->EXPndx[P_id]]->Set_bIC(ICndx, new_moles);
+        ICndx = sys->NodT[sys->EXPndx[P_id]]->IC_name_to_xDB("H");
+        new_moles = sys->NodT[sys->EXPndx[P_id]]->Get_bIC(ICndx) + 1*dif/39.99710928;
+        sys->NodT[sys->EXPndx[P_id]]->Set_bIC(ICndx, new_moles);
+        ICndx = sys->NodT[sys->EXPndx[P_id]]->IC_name_to_xDB("O");
+        new_moles = sys->NodT[sys->EXPndx[P_id]]->Get_bIC(ICndx) + 1*dif/39.99710928;
+        sys->NodT[sys->EXPndx[P_id]]->Set_bIC(ICndx, new_moles);
 
     } else
-        if (sys->experiments[sys->EXPndx]->sbcomp[sys->COMPndx]->comp == "HCl")
+        if (sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->comp == "HCl")
         {
 //                        if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
 //                        {
 //                            experiments[n]->sbcomp[j]->Qnt = experiments[n]->sbcomp[j]->Qnt*h2o_kgamount*36.4611;
 //                            experiments[n]->sbcomp[j]->Qunit = keys::gram;
 //                        }
-            ICndx =sys->NodT[sys->EXPndx]->IC_name_to_xDB("H");
-            new_moles = sys->NodT[sys->EXPndx]->Get_bIC(ICndx) + 1*dif/36.4611;
-            sys->NodT[sys->EXPndx]->Set_bIC(ICndx, new_moles);
-            ICndx = sys->NodT[sys->EXPndx]->IC_name_to_xDB("Cl");
-            double old_moles = sys->NodT[sys->EXPndx]->Get_bIC(ICndx);
-            new_moles = sys->NodT[sys->EXPndx]->Get_bIC(ICndx) + 1*dif/36.4611;
-            sys->NodT[sys->EXPndx]->Set_bIC(ICndx, new_moles);
+            ICndx =sys->NodT[sys->EXPndx[P_id]]->IC_name_to_xDB("H");
+            new_moles = sys->NodT[sys->EXPndx[P_id]]->Get_bIC(ICndx) + 1*dif/36.4611;
+            sys->NodT[sys->EXPndx[P_id]]->Set_bIC(ICndx, new_moles);
+            ICndx = sys->NodT[sys->EXPndx[P_id]]->IC_name_to_xDB("Cl");
+            double old_moles = sys->NodT[sys->EXPndx[P_id]]->Get_bIC(ICndx);
+            new_moles = sys->NodT[sys->EXPndx[P_id]]->Get_bIC(ICndx) + 1*dif/36.4611;
+            sys->NodT[sys->EXPndx[P_id]]->Set_bIC(ICndx, new_moles);
 
         }
 
 //    sys->NodT[sys->EXPndx]->GEM_from_MT( NodeHandle, NodeStatusCH, T_k, P_pa, new_moles_IC, xDC_up, xDC_lo );
 
-    sys->NodT[sys->EXPndx]->Set_TK(273.15 + sys->experiments[sys->EXPndx]->sT);
-    sys->NodT[sys->EXPndx]->Set_P(100000 * sys->experiments[sys->EXPndx]->sP);
+    sys->NodT[sys->EXPndx[P_id]]->Set_TK(273.15 + sys->experiments[sys->EXPndx[P_id]]->sT);
+    sys->NodT[sys->EXPndx[P_id]]->Set_P(100000 * sys->experiments[sys->EXPndx[P_id]]->sP);
 
 
     // calc equilibirum
     vector<DATABR*> dBR;
-    dBR.push_back(sys->NodT[sys->EXPndx]->pCNode());
+    dBR.push_back(sys->NodT[sys->EXPndx[P_id]]->pCNode());
 
     // Asking GEM to run with automatic initial approximation
     dBR.at(0)->NodeStatusCH = NEED_GEM_AIA;
 
     // RUN GEMS3K
-    NodeStatusCH = sys->NodT[sys->EXPndx]->GEM_run( false );
+    NodeStatusCH = sys->NodT[sys->EXPndx[P_id]]->GEM_run( false );
 
     if( NodeStatusCH == OK_GEM_AIA || NodeStatusCH == OK_GEM_SIA  )
     {
@@ -202,16 +219,16 @@ double titfunc(const std::vector<double> &x, std::vector<double> &grad, void *ob
     {
         // possible return status analysis, error message
 //            sys->NodT[i]->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
-        cout<<"For experiment titration "<<sys->EXPndx+1<< endl;
+        cout<<"For experiment titration "<<sys->EXPndx[P_id]+1<< endl;
         cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
     }
 
 
     // calc residual
-    double meas_pH = sys->experiments[sys->EXPndx]->expphases[0]->phprop[0]->Qnt;
-    double calc_pH = sys->NodT[sys->EXPndx]->Get_pH();
+    double meas_pH = sys->experiments[sys->EXPndx[P_id]]->expphases[0]->phprop[0]->Qnt;
+    double calc_pH = sys->NodT[sys->EXPndx[P_id]]->Get_pH();
 
-    residual = abs (sys->experiments[sys->EXPndx]->expphases[0]->phprop[0]->Qnt - sys->NodT[sys->EXPndx]->Get_pH());
+    residual = abs (sys->experiments[sys->EXPndx[P_id]]->expphases[0]->phprop[0]->Qnt - sys->NodT[sys->EXPndx[P_id]]->Get_pH());
 
     return residual;
 }

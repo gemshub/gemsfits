@@ -122,7 +122,7 @@ public:
     ResPrint* print;
 
     // indexes //
-    int EXPndx, COMPndx, PHndx, PHPndx;
+    vector<int> EXPndx, COMPndx, PHndx, PHPndx;
 
     struct TargetFunction /// structure holding the target function information
     {
