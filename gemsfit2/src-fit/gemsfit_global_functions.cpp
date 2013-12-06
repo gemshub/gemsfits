@@ -151,7 +151,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         adjust_Lp(sys);
     }
 
-    titration (sys);
+//    titration (sys);
 //    cout << "finished titration correction"<< endl;
 
 ////#ifdef USE_MPI

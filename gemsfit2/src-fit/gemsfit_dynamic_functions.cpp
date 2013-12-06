@@ -4,23 +4,23 @@
 void titration (TGfitTask *sys)
 {
     vector<bool> h_HCl, h_NaOH;
-    int i;
     vector<double> old_HCl, old_NaOH;
+    double sum_min = 0.0;
 
-    for (i=0; i<sys->MPI+1; i++)
+    for (int i=1; i<sys->MPI+1; i++)
     {
         h_HCl.push_back(false);
         h_NaOH.push_back(false);
-        old_HCl.push_back(0.0);
-        old_NaOH.push_back(0.0);
+        old_HCl.push_back(0);
+        old_NaOH.push_back(0);
     }
 
     // loop trough all experiments
-    //#ifdef USE_MPI
-        omp_set_num_threads(sys->MPI);
-        #pragma omp parallel for
-    //#endif
-    for (i = 0; i<sys->experiments.size(); i++)
+//    //#ifdef USE_MPI
+//        omp_set_num_threads(sys->MPI);
+//        #pragma omp parallel for
+//    //#endif
+    for (int i = 0; i<sys->experiments.size(); i++)
     {
         int j;
         int P_id = omp_get_thread_num();
@@ -45,11 +45,11 @@ void titration (TGfitTask *sys)
         //adjust HCl
         if (h_HCl[P_id])
         {
-            nlopt::opt opt_HCL(nlopt::LN_COBYLA, 1);
+            nlopt::opt opt_HCL(nlopt::LN_BOBYQA, 1);
 
             std::vector<double> x;
             x.push_back( old_HCl[P_id]);
-            double minf;
+            double minf=0;
             sys->EXPndx[P_id]=i;
 
             vector<double> gr;
@@ -63,7 +63,7 @@ void titration (TGfitTask *sys)
 
             opt_HCL.set_min_objective(titfunc, sys);
 
-            opt_HCL.set_xtol_rel(1e-3);
+            opt_HCL.set_xtol_rel(1e-4);
 
 //            std::vector<double> x;
 //            x.push_back( old_HCl);
@@ -71,6 +71,11 @@ void titration (TGfitTask *sys)
             sys->EXPndx[P_id]=i;
             nlopt::result result = opt_HCL.optimize(x, minf);
             sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt = x[0];
+//            if (sys->EXPndx[P_id] == 1)
+//                cout << minf << endl;
+            sum_min += minf;
+
+
 
 //            cout << "happy"<< endl;
 
@@ -83,7 +88,7 @@ void titration (TGfitTask *sys)
 
             std::vector<double> x;
             x.push_back( old_NaOH[P_id]);
-            double minf;
+            double minf=0;
             sys->EXPndx[P_id]=i;
 
             vector<double> gr;
@@ -105,8 +110,16 @@ void titration (TGfitTask *sys)
             sys->EXPndx[P_id]=i;
             nlopt::result result = opt_NaOH.optimize(x, minf);
             sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt = x[0];
+//            if (sys->EXPndx[P_id] == 53)
+//                cout << minf << endl;
+            sum_min += minf;
+
         }
+        h_HCl[P_id] = false; h_NaOH[P_id] = false;
     }
+
+//    cout << sum_min << endl;
+
 
 }
 
@@ -231,6 +244,172 @@ double titfunc(const std::vector<double> &x, std::vector<double> &grad, void *ob
     residual = abs (sys->experiments[sys->EXPndx[P_id]]->expphases[0]->phprop[0]->Qnt - sys->NodT[sys->EXPndx[P_id]]->Get_pH());
 
     return residual;
+}
+
+
+void titrationG(TGfitTask *sys)
+{
+    vector<bool> h_HCl, h_NaOH, h_pH;
+    vector<double> old_HCl, old_NaOH;
+    double sum_min = 0.0;
+
+    for (int i=1; i<sys->MPI+1; i++)
+    {
+        h_HCl.push_back(false);
+        h_NaOH.push_back(false);
+        h_pH.push_back(false);
+        old_HCl.push_back(0);
+        old_NaOH.push_back(0);
+    }
+
+    // loop trough all experiments
+//    //#ifdef USE_MPI
+//        omp_set_num_threads(sys->MPI);
+//        #pragma omp parallel for
+//    //#endif
+    for (int i = 0; i<sys->experiments.size(); i++)
+    {
+        int j;
+        int P_id = omp_get_thread_num();
+//        cout << P_id << endl;
+        h_HCl[P_id] = false; h_NaOH[P_id] = false;
+        // loop torugh all comp to check for titrant
+        for (j=0; j<sys->experiments[i]->sbcomp.size(); j++)
+        {
+            if (sys->experiments[i]->sbcomp[j]->comp == "HCl")
+            {
+                h_HCl[P_id] = true;
+                old_HCl[P_id] = sys->experiments[i]->sbcomp[j]->Qnt;
+                sys->COMPndx[P_id] = j;
+            }
+            if (sys->experiments[i]->sbcomp[j]->comp == "NaOH")
+            {
+                h_NaOH[P_id] = true;
+                old_NaOH[P_id] = sys->experiments[i]->sbcomp[j]->Qnt;
+                sys->COMPndx[P_id] = j;
+            }
+        }
+
+//        for (j=0; j<sys->experiments[i]->expphases[0]->phprop.size(); ++j)
+//        {
+//            if (j<sys->experiments[i]->expphases[0]->phprop[j])
+//        }
+        //adjust HCl
+        if (h_HCl[P_id])
+        {
+            std::vector<double> x;
+            x.push_back( old_HCl[P_id]);
+
+            sys->EXPndx[P_id]=i;
+
+            vector<double> gr;
+
+            titfunc(x, gr, sys);
+
+            double pH_dif = abs (sys->experiments[i]->expphases[0]->phprop[0]->Qnt - sys->NodT[i]->Get_pH());
+
+            double c=min(sys->experiments[i]->expphases[0]->phprop[0]->Qnt, sys->NodT[i]->Get_pH());
+            double d=max(sys->experiments[i]->expphases[0]->phprop[0]->Qnt, sys->NodT[i]->Get_pH());
+
+            x[0] = sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt;
+
+            x[0] = golden(x[0]+x[0]/2,x[0]-x[0]/2, c, d, sys->EXPndx[P_id], sys);
+
+            pH_dif = abs (sys->experiments[i]->expphases[0]->phprop[0]->Qnt - sys->NodT[i]->Get_pH());
+
+            sys->EXPndx[P_id]=i;
+
+            sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt = x[0];
+
+        }
+
+        //adjust NaOH
+        if (h_NaOH[P_id])
+        {
+
+            std::vector<double> x;
+            x.push_back( old_NaOH[P_id]);
+
+            sys->EXPndx[P_id]=i;
+
+            vector<double> gr;
+
+            titfunc(x, gr, sys);
+
+            double pH_dif = abs (sys->experiments[i]->expphases[0]->phprop[0]->Qnt - sys->NodT[i]->Get_pH());
+
+            double c=min(sys->experiments[i]->expphases[0]->phprop[0]->Qnt, sys->NodT[i]->Get_pH());
+            double d=max(sys->experiments[i]->expphases[0]->phprop[0]->Qnt, sys->NodT[i]->Get_pH());
+
+            x[0] = sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt;
+
+            x[0] = golden(x[0]+x[0]/2,x[0]-x[0]/2, c, d, sys->EXPndx[P_id], sys);
+
+            sys->EXPndx[P_id]=i;
+
+            pH_dif = abs (sys->experiments[i]->expphases[0]->phprop[0]->Qnt - sys->NodT[i]->Get_pH());
+
+            sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt = x[0];
+
+
+        }
+        h_HCl[P_id] = false; h_NaOH[P_id] = false;
+    }
+}
+
+double golden(double a, double b, double c, double d , int EXPndx, TGfitTask *sys)
+{
+    double tol = 0.0001;
+    double tau = (sqrt(5)-1)/2;
+
+    double x1 = a+(1-tau)*(b-a);
+    double x2 = a+tau*(b-a);
+
+    double f_x1 = get_pH(x1, EXPndx, sys);
+    double f_x2 = get_pH(x2, EXPndx, sys);
+
+    while (abs(c-d) > tol)
+    {
+        if (f_x1<f_x2)
+        {
+            b=x2;
+            x2=x1;
+            x1=a+(1-tau)*(b-a);
+
+            f_x1 = get_pH(x1, EXPndx, sys);
+            f_x2 = get_pH(x2, EXPndx, sys);
+        } else
+        {
+            a=x1;
+            x1=x2;
+            x2=a+tau*(b-a);
+
+            f_x1 = get_pH(x1, EXPndx, sys);
+            f_x2 = get_pH(x2, EXPndx, sys);
+        }
+    }
+
+    if (f_x1<f_x2)
+    {
+        get_pH(x1, EXPndx, sys);
+        return x1;
+    }
+    else
+    {
+        get_pH(x2, EXPndx, sys);
+        return x2;
+    }
+}
+
+double get_pH(double x, int EXPndx, TGfitTask *sys)
+{
+
+    vector<double> gr, x2;
+    x2.push_back(x);
+    titfunc(x2, gr, sys);
+
+    return sys->NodT[EXPndx]->Get_pH();
+
 }
 
 

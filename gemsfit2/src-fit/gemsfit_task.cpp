@@ -58,7 +58,7 @@ TGfitTask* TGfitTask::gft;
 TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
 {
     weighted_Tfun_sum_of_residuals = 0.0;
-    for (unsigned int i=0; i <MPI+1; i++)
+    for (unsigned int i=1; i <MPI+1; i++)
     {
         EXPndx.push_back(-1);COMPndx.push_back(-1);PHndx.push_back(-1);PHPndx.push_back(-1);
     }

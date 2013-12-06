@@ -1182,6 +1182,7 @@ void optimization::define_nlopt_param( )
     OptDoWhat = 0;
     OptNormParam = 1;
     OptPerturbator = 0.0001;
+    OptInitStep = 0;
 
 }
 
