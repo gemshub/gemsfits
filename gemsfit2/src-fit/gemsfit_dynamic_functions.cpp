@@ -3,7 +3,7 @@
 
 void titration (TGfitTask *sys)
 {
-    vector<bool> h_HCl, h_NaOH;
+    vector<bool> h_HCl, h_NaOH, h_pH;
     vector<double> old_HCl, old_NaOH;
     double sum_min = 0.0;
 
@@ -11,6 +11,7 @@ void titration (TGfitTask *sys)
     {
         h_HCl.push_back(false);
         h_NaOH.push_back(false);
+        h_pH.push_back(false);
         old_HCl.push_back(0);
         old_NaOH.push_back(0);
     }
@@ -27,6 +28,23 @@ void titration (TGfitTask *sys)
 //        cout << P_id << endl;
         h_HCl[P_id] = false; h_NaOH[P_id] = false;
         // loop torugh all comp to check for titrant
+
+        h_pH[P_id] = false;
+
+        for (j = 0; j<sys->experiments[i]->expphases.size(); ++j)
+        {
+            if (sys->experiments[i]->expphases[j]->phase == "aq_gen")
+            {
+                sys->PHndx[P_id] = j;
+            }
+        }
+
+        if (sys->PHndx[P_id] >= 0)
+            for (j = 0; j<sys->experiments[i]->expphases[sys->PHndx[P_id]]->phprop.size(); ++j)
+        {
+                if (sys->experiments[i]->expphases[sys->PHndx[P_id]]->phprop[j]->property == "pH")
+                    h_pH[P_id] = true;
+        }
         for (j=0; j<sys->experiments[i]->sbcomp.size(); j++)
         {
             if (sys->experiments[i]->sbcomp[j]->comp == "HCl")
@@ -43,7 +61,7 @@ void titration (TGfitTask *sys)
             }
         }
         //adjust HCl
-        if (h_HCl[P_id])
+        if (h_HCl[P_id] && h_pH[P_id])
         {
             nlopt::opt opt_HCL(nlopt::LN_BOBYQA, 1);
 
@@ -82,7 +100,7 @@ void titration (TGfitTask *sys)
         }
 
         //adjust NaOH
-        if (h_NaOH[P_id])
+        if (h_NaOH[P_id]&& h_pH[P_id])
         {
             nlopt::opt opt_NaOH(nlopt::LN_BOBYQA, 1);
 
@@ -274,6 +292,23 @@ void titrationG(TGfitTask *sys)
 //        cout << P_id << endl;
         h_HCl[P_id] = false; h_NaOH[P_id] = false;
         // loop torugh all comp to check for titrant
+
+        h_pH[P_id] = false;
+
+        for (j = 0; j<sys->experiments[i]->expphases.size(); ++j)
+        {
+            if (sys->experiments[i]->expphases[j]->phase == "aq_gen")
+                sys->PHndx[P_id] = j;
+        }
+
+        if (sys->PHndx[P_id] > 0)
+            for (j = 0; j<sys->experiments[i]->expphases[sys->PHndx[P_id]]->phprop.size(); ++j)
+        {
+                if (sys->experiments[i]->expphases[sys->PHndx[P_id]]->phprop[j]->property == "pH")
+                    h_pH[P_id] = true;
+        }
+
+
         for (j=0; j<sys->experiments[i]->sbcomp.size(); j++)
         {
             if (sys->experiments[i]->sbcomp[j]->comp == "HCl")
@@ -295,7 +330,7 @@ void titrationG(TGfitTask *sys)
 //            if (j<sys->experiments[i]->expphases[0]->phprop[j])
 //        }
         //adjust HCl
-        if (h_HCl[P_id])
+        if (h_HCl[P_id] && h_pH[P_id])
         {
             std::vector<double> x;
             x.push_back( old_HCl[P_id]);
@@ -324,7 +359,7 @@ void titrationG(TGfitTask *sys)
         }
 
         //adjust NaOH
-        if (h_NaOH[P_id])
+        if (h_NaOH[P_id]&& h_pH[P_id])
         {
 
             std::vector<double> x;
@@ -351,9 +386,8 @@ void titrationG(TGfitTask *sys)
 
             sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt = x[0];
 
-
         }
-        h_HCl[P_id] = false; h_NaOH[P_id] = false;
+        h_HCl[P_id] = false; h_NaOH[P_id] = false; h_pH[P_id] = false;
     }
 }
 

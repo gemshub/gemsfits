@@ -88,6 +88,7 @@ public:
     int OptMaxEval;
 //    int OptConstraints;
     int OptDoWhat;
+    int OptTitration;
 //    int OptHybridMode;
 //    double OptHybridTolRel;
 //    double OptHybridTolAbs;

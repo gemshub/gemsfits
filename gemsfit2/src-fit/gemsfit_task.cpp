@@ -33,6 +33,7 @@
 #include "gemsfit_iofiles.h"
 #include "keywords.h"
 #include "gemsfit_global_functions.h"
+#include "gemsfit_dynamic_functions.h"
 #include <cmath>
 #include "gemsfit_target_functions.h"
 #include <iomanip>
@@ -62,6 +63,7 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     {
         EXPndx.push_back(-1);COMPndx.push_back(-1);PHndx.push_back(-1);PHPndx.push_back(-1);
     }
+    h_grad = false;
 
     // GEMSFIT logfile
     //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
@@ -137,6 +139,8 @@ void TGfitTask::run_optim()
     fout.open(gpf->FITLogFile().c_str(), ios::app);
     if( fout.fail() )
     { cout<<"Output fileopen error"<<endl; exit(1); }
+
+//    titration(this);
 
     fout << "13. gemsfit_task.cpp line 135. Initializing optimization init_optim; " << endl;
     init_optim (Opti->optv, weighted_Tfun_sum_of_residuals);

@@ -79,6 +79,7 @@ double Equil_objective_function_callback( const std::vector<double> &opt, std::v
         gems3k_wrap( sum_of_squared_residuals_sys, opt, sys );
         sum_of_squared_residuals_allsys = sum_of_squared_residuals_allsys + sum_of_squared_residuals_sys;
     }
+    sys->h_grad = false;
 return sum_of_squared_residuals_allsys;
 }
 
@@ -151,7 +152,8 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         adjust_Lp(sys);
     }
 
-//    titration (sys);
+    if (!sys->h_grad && sys->Opti->OptTitration == 1)
+        titration (sys);
 //    cout << "finished titration correction"<< endl;
 
 ////#ifdef USE_MPI
@@ -226,6 +228,8 @@ void gradient( vector<double> opt, vector<double> &grad, TGfitTask *sys )
     double computed_up, param_up;
     double computed_lo, param_lo;
     std::vector<double> opt_scan;
+
+    sys->h_grad = true;
 
     grad.clear();
     grad.resize(opt.size());

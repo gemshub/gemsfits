@@ -123,6 +123,7 @@ public:
 
     // indexes //
     vector<int> EXPndx, COMPndx, PHndx, PHPndx;
+    bool h_grad;
 
     struct TargetFunction /// structure holding the target function information
     {
