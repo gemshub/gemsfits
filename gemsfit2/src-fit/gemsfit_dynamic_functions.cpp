@@ -1,11 +1,50 @@
+// Copyright (C) 2013 G.D.Miron, D.Kulik
+// <GEMS Development Team, mailto:gems2.support@psi.ch>
+//
+// This file is part of the GEMSFIT2 code for parameterization of thermodynamic
+// data and models <http://gems.web.psi.ch/GEMSFIT/>
+//
+// GEMSIFT2 is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as
+// published by the Free Software Foundation, either version 3 of
+// the License, or (at your option) any later version.
+
+// GEMSFIT2 is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with GEMSFIT2 code. If not, see <http://www.gnu.org/licenses/>.
+//-------------------------------------------------------------------
+//
+
+/**
+ *	@file gemsfit_dynamic_functions.cpp
+ *
+ *	@brief this source file contains implementations of global dynamic functions needed during specific optimization.
+ *	tasks. When the user wants to dyamically adjust other system parameters during fitting. For example
+ *  adjusting the NaOH or HCl amount so that the pH is the same as measured, during optimization, since there is no
+ *  clear info on their amount from the experimental paper.
+ *
+ *	@author G. Dan Miron
+ *
+ * 	@date 01.12.2013
+ *
+ */
+
+
 #include "gemsfit_dynamic_functions.h"
 
 
 void titration (TGfitTask *sys)
 {
+    // for checking if the experiment has HCl, or NaOH and if pH is present
     vector<bool> h_HCl, h_NaOH, h_pH;
+    // for keeping old amounts
     vector<double> old_HCl, old_NaOH;
     double sum_min = 0.0;
+
 
     for (int i=1; i<sys->MPI+1; i++)
     {
@@ -24,6 +63,7 @@ void titration (TGfitTask *sys)
     for (int i = 0; i<sys->experiments.size(); i++)
     {
         int j;
+        int ICndx;
         int P_id = omp_get_thread_num();
 //        cout << P_id << endl;
         h_HCl[P_id] = false; h_NaOH[P_id] = false;
@@ -31,6 +71,7 @@ void titration (TGfitTask *sys)
 
         h_pH[P_id] = false;
 
+        // gets the index of aqeous phase
         for (j = 0; j<sys->experiments[i]->expphases.size(); ++j)
         {
             if (sys->experiments[i]->expphases[j]->phase == "aq_gen")
@@ -39,12 +80,18 @@ void titration (TGfitTask *sys)
             }
         }
 
+        // checks if pH is given in the data and gets the index of pH in phase property vector
         if (sys->PHndx[P_id] >= 0)
             for (j = 0; j<sys->experiments[i]->expphases[sys->PHndx[P_id]]->phprop.size(); ++j)
         {
                 if (sys->experiments[i]->expphases[sys->PHndx[P_id]]->phprop[j]->property == "pH")
+                {
                     h_pH[P_id] = true;
+                    sys->PHPndx[P_id] = j;
+                }
         }
+
+        // checks what to adjusts: either HCl or NaOH
         for (j=0; j<sys->experiments[i]->sbcomp.size(); j++)
         {
             if (sys->experiments[i]->sbcomp[j]->comp == "HCl")
@@ -60,6 +107,17 @@ void titration (TGfitTask *sys)
                 sys->COMPndx[P_id] = j;
             }
         }
+
+        // get initial values of titration elements
+        ICndx = sys->NodT[i]->IC_name_to_xDB("Na");
+        sys->iNa[P_id] = sys->NodT[i]->Get_bIC(ICndx);
+        ICndx = sys->NodT[i]->IC_name_to_xDB("O");
+        sys->iO[P_id] = sys->NodT[i]->Get_bIC(ICndx);
+        ICndx = sys->NodT[i]->IC_name_to_xDB("H");
+        sys->iH[P_id] = sys->NodT[i]->Get_bIC(ICndx);
+        ICndx = sys->NodT[i]->IC_name_to_xDB("Cl");
+        sys->iCl[P_id] = sys->NodT[i]->Get_bIC(ICndx);
+
         //adjust HCl
         if (h_HCl[P_id] && h_pH[P_id])
         {
@@ -74,29 +132,20 @@ void titration (TGfitTask *sys)
 
             titfunc(x, gr, sys);
 
-            double pH_dif = abs (sys->experiments[i]->expphases[0]->phprop[0]->Qnt - sys->NodT[i]->Get_pH());
+            double pH_dif = abs (sys->experiments[i]->expphases[sys->PHndx[P_id]]->phprop[sys->PHPndx[P_id]]->Qnt - sys->NodT[i]->Get_pH());
 
-            opt_HCL.set_lower_bounds(old_HCl[P_id]-0.1*pH_dif*old_HCl[P_id]);
-            opt_HCL.set_upper_bounds(old_HCl[P_id]+0.1*pH_dif*old_HCl[P_id]);
+            opt_HCL.set_lower_bounds(old_HCl[P_id]-0.9/**pH_dif*/*old_HCl[P_id]);
+            opt_HCL.set_upper_bounds(old_HCl[P_id]+0.9/**pH_dif*/*old_HCl[P_id]);
 
             opt_HCL.set_min_objective(titfunc, sys);
 
-            opt_HCL.set_xtol_rel(1e-4);
+            opt_HCL.set_xtol_rel(1e-3);
 
-//            std::vector<double> x;
-//            x.push_back( old_HCl);
-//            double minf;
             sys->EXPndx[P_id]=i;
             nlopt::result result = opt_HCL.optimize(x, minf);
             sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt = x[0];
-//            if (sys->EXPndx[P_id] == 1)
-//                cout << minf << endl;
+
             sum_min += minf;
-
-
-
-//            cout << "happy"<< endl;
-
         }
 
         //adjust NaOH
@@ -113,23 +162,19 @@ void titration (TGfitTask *sys)
 
             titfunc(x, gr, sys);
 
-            double pH_dif = abs (sys->experiments[i]->expphases[0]->phprop[0]->Qnt - sys->NodT[i]->Get_pH());
+            double pH_dif = abs (sys->experiments[i]->expphases[sys->PHndx[P_id]]->phprop[sys->PHPndx[P_id]]->Qnt - sys->NodT[i]->Get_pH());
 
-            opt_NaOH.set_lower_bounds(old_NaOH[P_id]-0.1*pH_dif*old_NaOH[P_id]);
-            opt_NaOH.set_upper_bounds(old_NaOH[P_id]+0.1*pH_dif*old_NaOH[P_id]);
+            opt_NaOH.set_lower_bounds(old_NaOH[P_id]-0.9/**pH_dif*/*old_NaOH[P_id]);
+            opt_NaOH.set_upper_bounds(old_NaOH[P_id]+0.9/**pH_dif*/*old_NaOH[P_id]);
 
             opt_NaOH.set_min_objective(titfunc, sys);
 
-            opt_NaOH.set_xtol_rel(1e-4);
+            opt_NaOH.set_xtol_rel(1e-3);
 
-//            std::vector<double> x;
-//            x.push_back( old_NaOH);
-//            double minf;
             sys->EXPndx[P_id]=i;
             nlopt::result result = opt_NaOH.optimize(x, minf);
             sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt = x[0];
-//            if (sys->EXPndx[P_id] == 53)
-//                cout << minf << endl;
+
             sum_min += minf;
 
         }
@@ -191,6 +236,7 @@ double titfunc(const std::vector<double> &x, std::vector<double> &grad, void *ob
 
     dif = sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt - x[0];
 
+    // corrects NaOH
     if (sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->comp == "NaOH")
     {
 //        if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
@@ -199,16 +245,16 @@ double titfunc(const std::vector<double> &x, std::vector<double> &grad, void *ob
 //            experiments[n]->sbcomp[j]->Qunit = keys::gram;
 //        }
         ICndx = sys->NodT[sys->EXPndx[P_id]]->IC_name_to_xDB("Na");
-        new_moles = sys->NodT[sys->EXPndx[P_id]]->Get_bIC(ICndx) + 1*dif/39.99710928;
+        new_moles = sys->iNa[P_id] + 1*dif/39.99710928;
         sys->NodT[sys->EXPndx[P_id]]->Set_bIC(ICndx, new_moles);
         ICndx = sys->NodT[sys->EXPndx[P_id]]->IC_name_to_xDB("H");
-        new_moles = sys->NodT[sys->EXPndx[P_id]]->Get_bIC(ICndx) + 1*dif/39.99710928;
+        new_moles = sys->iH[P_id] + 1*dif/39.99710928;
         sys->NodT[sys->EXPndx[P_id]]->Set_bIC(ICndx, new_moles);
         ICndx = sys->NodT[sys->EXPndx[P_id]]->IC_name_to_xDB("O");
-        new_moles = sys->NodT[sys->EXPndx[P_id]]->Get_bIC(ICndx) + 1*dif/39.99710928;
+        new_moles = sys->iO[P_id] + 1*dif/39.99710928;
         sys->NodT[sys->EXPndx[P_id]]->Set_bIC(ICndx, new_moles);
 
-    } else
+    } else // corrects HCl
         if (sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->comp == "HCl")
         {
 //                        if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
@@ -217,11 +263,11 @@ double titfunc(const std::vector<double> &x, std::vector<double> &grad, void *ob
 //                            experiments[n]->sbcomp[j]->Qunit = keys::gram;
 //                        }
             ICndx =sys->NodT[sys->EXPndx[P_id]]->IC_name_to_xDB("H");
-            new_moles = sys->NodT[sys->EXPndx[P_id]]->Get_bIC(ICndx) + 1*dif/36.4611;
+            new_moles = sys->iH[P_id] + 1*dif/36.4611;
             sys->NodT[sys->EXPndx[P_id]]->Set_bIC(ICndx, new_moles);
             ICndx = sys->NodT[sys->EXPndx[P_id]]->IC_name_to_xDB("Cl");
             double old_moles = sys->NodT[sys->EXPndx[P_id]]->Get_bIC(ICndx);
-            new_moles = sys->NodT[sys->EXPndx[P_id]]->Get_bIC(ICndx) + 1*dif/36.4611;
+            new_moles = sys->iCl[P_id] + 1*dif/36.4611;
             sys->NodT[sys->EXPndx[P_id]]->Set_bIC(ICndx, new_moles);
 
         }
@@ -256,10 +302,10 @@ double titfunc(const std::vector<double> &x, std::vector<double> &grad, void *ob
 
 
     // calc residual
-    double meas_pH = sys->experiments[sys->EXPndx[P_id]]->expphases[0]->phprop[0]->Qnt;
+    double meas_pH = sys->experiments[sys->EXPndx[P_id]]->expphases[sys->PHndx[P_id]]->phprop[sys->PHPndx[P_id]]->Qnt;
     double calc_pH = sys->NodT[sys->EXPndx[P_id]]->Get_pH();
 
-    residual = abs (sys->experiments[sys->EXPndx[P_id]]->expphases[0]->phprop[0]->Qnt - sys->NodT[sys->EXPndx[P_id]]->Get_pH());
+    residual = abs (sys->experiments[sys->EXPndx[P_id]]->expphases[sys->PHndx[P_id]]->phprop[sys->PHPndx[P_id]]->Qnt - sys->NodT[sys->EXPndx[P_id]]->Get_pH());
 
     return residual;
 }

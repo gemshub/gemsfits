@@ -118,37 +118,78 @@ void adjust_RDc (TGfitTask *sys)
     {
         for (unsigned int i=0; i < sys->Opti->reactions.size(); ++i )
         {
-            double new_G0 =0.0;
-            double delta_G = 0.0;
-            int species_index = sys->Opti->reactions[i]->rdc_species_ind[sys->Opti->reactions[i]->rdc_species_ind.size()-1];
-
-            // for standard sate at 25 C and 1 bar
-            for (unsigned int j=0; j < sys->Opti->reactions[i]->rdc_species.size()-1; ++j ) // calculates DG without the last species which is the constrained one
+            // if there are now logK read form the input file the reaction consttraints are adjusted based on the initial values logK of the reaction
+            if (sys->Opti->reactions[i]->logK_TPpairs.size() == 0)
             {
-                delta_G += sys->Opti->reactions[i]->rdc_species_coef[j] * sys->NodT[n]->DC_G0(sys->Opti->reactions[i]->rdc_species_ind[j], 1e+05, 298.15, false);
-            }
+                double new_G0 =0.0;
+                double delta_G = 0.0;
+                int species_index = sys->Opti->reactions[i]->rdc_species_ind[sys->Opti->reactions[i]->rdc_species_ind.size()-1];
 
-            new_G0 = sys->Opti->reactions[i]->dG_reaction_TP[0] - delta_G;
-            delta_G = 0.0;
-
-            sys->Opti->reactions[i]->std_gibbs = new_G0;
-            sys->NodT[n]->Set_DC_G0(species_index,1*100000, 25+273.15, new_G0);
-
-            // for TP points
-
-            // for all TP pairs
-            for (unsigned int j=0; j<sys->TP_pairs[0].size(); j++) // loops trough all unique TP_pairs
-            {
-                for (int k=0; k < sys->Opti->reactions[i]->rdc_species.size()-1; ++k ) // calculates DG without the last species which is the constrained one
+                // for standard sate at 25 C and 1 bar
+                for (unsigned int j=0; j < sys->Opti->reactions[i]->rdc_species.size()-1; ++j ) // calculates DG without the last species which is the constrained one
                 {
-                    delta_G += sys->Opti->reactions[i]->rdc_species_coef[k] * sys->NodT[n]->DC_G0(sys->Opti->reactions[i]->rdc_species_ind[k], sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, false);
+                    delta_G += sys->Opti->reactions[i]->rdc_species_coef[j] * sys->NodT[n]->DC_G0(sys->Opti->reactions[i]->rdc_species_ind[j], 1e+05, 298.15, false);
                 }
 
-                 new_G0 = sys->Opti->reactions[i]->dG_reaction_TP[j+1] - delta_G;
-                 delta_G = 0.0;
+                new_G0 = sys->Opti->reactions[i]->dG_reaction_TP[0] - delta_G;
+                delta_G = 0.0;
 
-                 sys->NodT[n]->Set_DC_G0(species_index, sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, new_G0);
+                sys->Opti->reactions[i]->std_gibbs = new_G0;
+                sys->NodT[n]->Set_DC_G0(species_index,1*100000, 25+273.15, new_G0);
 
+                // for TP points
+
+                // for all TP pairs
+                for (unsigned int j=0; j<sys->TP_pairs[0].size(); j++) // loops trough all unique TP_pairs
+                {
+                    for (int k=0; k < sys->Opti->reactions[i]->rdc_species.size()-1; ++k ) // calculates DG without the last species which is the constrained one
+                    {
+                        delta_G += sys->Opti->reactions[i]->rdc_species_coef[k] * sys->NodT[n]->DC_G0(sys->Opti->reactions[i]->rdc_species_ind[k], sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, false);
+                    }
+
+                     new_G0 = sys->Opti->reactions[i]->dG_reaction_TP[j+1] - delta_G;
+                     delta_G = 0.0;
+
+                     sys->NodT[n]->Set_DC_G0(species_index, sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, new_G0);
+
+                }
+            } else // if there are logK values in the input file
+            {
+                double new_G0 =0.0;
+                double delta_G = 0.0;
+                double const Rcst = 8.3144621;
+                double const loge = 2.302585093;
+                int species_index = sys->Opti->reactions[i]->rdc_species_ind[sys->Opti->reactions[i]->rdc_species_ind.size()-1];
+
+                // for standard sate at 25 C and 1 bar
+                for (unsigned int j=0; j < sys->Opti->reactions[i]->rdc_species.size()-1; ++j ) // calculates DG without the last species which is the constrained one
+                {
+                    delta_G += sys->Opti->reactions[i]->rdc_species_coef[j] * sys->NodT[n]->DC_G0(sys->Opti->reactions[i]->rdc_species_ind[j], 1e+05, 298.15, false);
+                }
+
+
+                new_G0 = -(Rcst*298.15*sys->Opti->reactions[i]->logK_TPpairs[0]*loge) - delta_G;
+                delta_G = 0.0;
+
+                sys->Opti->reactions[i]->std_gibbs = new_G0;
+                sys->NodT[n]->Set_DC_G0(species_index,1*100000, 25+273.15, new_G0);
+
+                // for TP points
+
+                // for all TP pairs
+                for (unsigned int j=0; j<sys->TP_pairs[0].size(); j++) // loops trough all unique TP_pairs
+                {
+                    for (int k=0; k < sys->Opti->reactions[i]->rdc_species.size()-1; ++k ) // calculates DG without the last species which is the constrained one
+                    {
+                        delta_G += sys->Opti->reactions[i]->rdc_species_coef[k] * sys->NodT[n]->DC_G0(sys->Opti->reactions[i]->rdc_species_ind[k], sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, false);
+                    }
+
+                     new_G0 = -(Rcst*298.15*sys->Opti->reactions[i]->logK_TPpairs[j+1]*loge) - delta_G;
+                     delta_G = 0.0;
+
+                     sys->NodT[n]->Set_DC_G0(species_index, sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, new_G0);
+
+                }
             }
         }
     }
@@ -361,11 +402,6 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
     } else // other than aqueous phase
         if ((sys->Tfun->objfun[j]->exp_phase != "aq_gen") && (sys->experiments[i]->expphases[p]->phase != "aq_gen"))
         {
-//            if ((sys->Tfun->objfun[j]->exp_unit == keys::Simolfrac) && (sys->experiments[i]->expphases[p]->phIC[e]->Qunit == keys::Simolfrac))
-//            {
-//                int Sindx = sys->NodT[i]->IC_name_to_xDB("Si");
-//                computed_value = IC_in_PH[ICndx]/IC_in_PH[Sindx];
-//            } else // phase bulk composition in moles (mol)
             computed_value = IC_in_PH[ICndx]; // phase bulk composition in moles (mol)
         } else { cout << "Error in target functions line 293 "; exit(1);}
 
@@ -387,8 +423,6 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
     sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
 
     delete[] IC_in_PH;
-
-
 
     sys->print->set_print(sys->experiments[i]->sample, boost::lexical_cast<std::string>(sys->NodT[i]->Get_pH( )),sys->experiments[i]->expphases[p]->phIC[e]->comp,sys->experiments[i]->expphases[p]->phIC[e]->Qunit,measured_value,computed_value,Weighted_Tfun_residual, weight_ );
 
@@ -513,7 +547,6 @@ void interpretMR (vector<string> *nom, vector<string> *denom, string name)
                 denom->push_back(denominator);
             }
         }
-
 }
 
 // calculates residual for phase poroperties

@@ -156,6 +156,8 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         titration (sys);
 //    cout << "finished titration correction"<< endl;
 
+//    cout << sys->NodT[1]->Get_pH() << endl;
+
 ////#ifdef USE_MPI
     omp_set_num_threads(sys->MPI);
     #pragma omp parallel for
@@ -193,6 +195,10 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         }
     }
 
+
+
+//    cout << sys->NodT[1]->Get_pH() << endl;
+
     // Set the P in the node->CNode-P as in the experiments to avoind problem due to Psat notation as 0
 //    for (unsigned int i=0; i<sys->experiments.size(); ++i)
 //    {
@@ -202,11 +208,6 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 
     sys->get_sum_of_residuals(residuals_sys_);
     residuals_sys = residuals_sys_;
-
-//    vector<string> nom, denom;
-//    string name_MR = "Al+Si+Cu/Na+K+O";
-//    interpretMR(&nom,&denom, name_MR);
-//    cout << residuals_sys << endl;
 
     // debug for when using global algorithm
     if (master_counter%1000 == 0)

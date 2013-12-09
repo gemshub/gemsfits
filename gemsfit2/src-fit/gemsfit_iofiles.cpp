@@ -28,6 +28,7 @@ using namespace std;
 #include "data_manager.h"
 #include "keywords.h"
 #include <omp.h>
+#include <sstream>
 
 #include "statistics.h"
 #include "optimization.h"
@@ -188,7 +189,7 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
               "\n#  Mark with R the G0(298) value of a dependent component, which depends on G0 of other dependent components"
               "\n#     via a reaction constraint, by copy-pasting the following template in place of the G0(298) value,"
               "\n#     and edit it to make the desired changes:"
-              "\n#      R{ \"IV\" : -36819, \"Ref\" : \"SUPCRT92\", \"order\" : \"1\", \"nC\" : 4, \"DC\" : \"KOH@\","
+              "\n#      R{ \"IV\" : -36819, \"Ref\" : \"SUPCRT92\", \"order\" : \"1\", \"nC\" : 4, \"rDC\" : \"KOH@\","
               "\n#      \"RC\" : [ \"K+\", \"H2O@\", \"H+\", \"KOH@\" ], \"Rcoef\" : [ -1, -1, 1, 1 ] }"
               "\n#     Here,  \"IV\": initial value; "
               "\n#          \"Ref\": bibliographic reference;"
@@ -582,6 +583,80 @@ void get_gems_fit_DCH_txt(TNode* node, opti_vector* op )
         }
         nfild = rddar.findNextNotAll();
     }
+
+    int size = CSD->nTp, sizep = 0;
+    for (int i=0; i<CSD->nPp; ++i)
+    {
+        if (CSD->Pval[i] != 0)
+            ++sizep;
+    }
+    size = size*sizep;
+
+
+    if (op->h_RDc)
+    {
+        vector<string> data;
+        string line, allparam;
+        string LogK_s;
+        string sub_LogK;
+        int pos_start, pos_end;
+        unsigned int i;
+        ifstream param_stream;
+        string f3("<logK>");
+        string f4("#");
+
+        param_stream.open(fname.c_str());
+        if( param_stream.fail() )
+        {
+            cout << "Opening of file "<<fname<<" failed !!"<<endl;
+            exit(1);
+        }
+        while( getline(param_stream, line) )
+        {
+            data.push_back(line);
+        }
+        param_stream.close();
+        for( i=0; i < data.size(); i++ )
+        allparam += data[i];
+
+            pos_start = allparam.find(f3);
+            pos_end   = allparam.find(f4,pos_start);
+            LogK_s = allparam.substr((pos_start+f3.length()),(pos_end-pos_start-f3.length()));
+            istringstream LogK_ss(LogK_s);
+            istringstream test_ss(LogK_s);
+            vector <double> test;
+            do
+            {
+             test_ss >> sub_LogK;
+            test.push_back(atof(sub_LogK.c_str()));
+            }while(test_ss);
+            test.pop_back();
+
+            if ((test.size() != size*nr_reac) && (test.size() != 0))
+            {
+                cout << "Number of logk's doesn't correspond to number of T*P*reactions! " << endl;
+                cout << "You need " << size*nr_reac << " <logK> entries in the input file, you have " << test.size() << endl;
+                exit(1);
+            }
+
+            if (test.size() != 0)
+            do
+            {
+                for (int i = 0; i<nr_reac; ++i)
+                {
+                    for (int j=0; j<size; ++j)
+                    {
+                        LogK_ss >> sub_LogK;
+                        op->reactions[i]->logK_TPpairs.push_back(atof(sub_LogK.c_str()));
+                    }
+                }
+                LogK_ss >> sub_LogK;
+            }while(LogK_ss);
+//            charges.pop_back();
+    }
+
+
+
 }
 
 

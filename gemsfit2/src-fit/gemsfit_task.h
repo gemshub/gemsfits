@@ -121,9 +121,12 @@ public:
 
     ResPrint* print;
 
-    // indexes //
+    // indexes used in the dynamic functions//
     vector<int> EXPndx, COMPndx, PHndx, PHPndx;
+    // true if gradient method is used
     bool h_grad;
+    // titration IC initial values in moles //
+    vector<double>  iNa, iO, iH, iCl;
 
     struct TargetFunction /// structure holding the target function information
     {

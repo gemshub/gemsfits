@@ -62,6 +62,7 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     for (unsigned int i=1; i <MPI+1; i++)
     {
         EXPndx.push_back(-1);COMPndx.push_back(-1);PHndx.push_back(-1);PHPndx.push_back(-1);
+        iNa.push_back(0.0); iO.push_back(0.0); iH.push_back(0.0); iCl.push_back(0.0);
     }
     h_grad = false;
 
@@ -307,7 +308,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
 //    //===== For testing the objective function without oprimization =====//
 //    weighted_Tfun_sum_of_residuals = Equil_objective_function_callback(Opti->optv, grad, this);
 
-
+//    NLopti.set_maxeval(3);
 
     nlopt::result result = NLopti.optimize( Opti->optv, weighted_Tfun_sum_of_residuals );
     ffout<<"optv[0] = "<<Opti->optv[0]<<endl;
@@ -825,10 +826,13 @@ void TGfitTask::get_logK_TPpairs()
     double DG = 0.0;
     const double Rln = -2.302585093*8.314472;
     double RTln = 0.0;
+    bool h_logK = false;
+
     // loop trough reactions
     for (unsigned int i = 0; i< this->Opti->reactions.size(); ++i)
     {
-//        this->Opti->reactions[i]->logK_TPpairs.resize(this->TP_pairs[0].size());
+        // checks if not the logK values were not already read from the input file
+        if (this->Opti->reactions[i]->logK_TPpairs.size() == 0) h_logK = true;
 
         // 25 C 1 bar
         for (unsigned int k = 0; k<this->Opti->reactions[i]->rdc_species.size(); ++k)
@@ -836,8 +840,9 @@ void TGfitTask::get_logK_TPpairs()
             DG += this->NodT[0]->DC_G0(this->Opti->reactions[i]->rdc_species_ind[k], 100000, 25+273.15, false) * this->Opti->reactions[i]->rdc_species_coef[k];
         }
         RTln = Rln * (25+273.15);
+        if (h_logK) {
         this->Opti->reactions[i]->dG_reaction_TP.push_back(DG);
-        this->Opti->reactions[i]->logK_TPpairs.push_back(DG/RTln);
+/*        this->Opti->reactions[i]->logK_TPpairs.push_back(DG/RTln);*/}
         DG = 0.0;
 
         // loop trough TP
@@ -849,10 +854,12 @@ void TGfitTask::get_logK_TPpairs()
                 DG += this->NodT[0]->DC_G0(this->Opti->reactions[i]->rdc_species_ind[k], this->TP_pairs[1][j]*100000, this->TP_pairs[0][j]+273.15, false) * this->Opti->reactions[i]->rdc_species_coef[k];
             }
             RTln = Rln * this->TP_pairs[0][j]+273.15;
+            if (h_logK) {
             this->Opti->reactions[i]->dG_reaction_TP.push_back(DG);
-            this->Opti->reactions[i]->logK_TPpairs.push_back(DG/RTln);
+/*            this->Opti->reactions[i]->logK_TPpairs.push_back(DG/RTln);*/}
             DG = 0.0;
         }
+        h_logK = false;
     }
 }
 
