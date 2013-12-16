@@ -62,6 +62,7 @@ double Equil_objective_function_callback( const std::vector<double> &opt, std::v
         {
             gradient(optV, grad, sys);
         }
+        sys->h_grad = false;
 
         // call tsolmod wrapper
         gems3k_wrap( sum_of_squared_residuals_sys, optV, sys );
@@ -74,12 +75,13 @@ double Equil_objective_function_callback( const std::vector<double> &opt, std::v
         {
             gradient(opt, grad, sys);
         }
+        sys->h_grad = false;
 
         // call tsolmod wrapper
         gems3k_wrap( sum_of_squared_residuals_sys, opt, sys );
         sum_of_squared_residuals_allsys = sum_of_squared_residuals_allsys + sum_of_squared_residuals_sys;
     }
-    sys->h_grad = false;
+
 return sum_of_squared_residuals_allsys;
 }
 
@@ -219,6 +221,9 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
             cout<<"parameter "<<i<<" : "<<opt[i]<<endl;
         }
     }
+
+//    if(master_counter == 50)
+//        cout << "pause"<< endl;
 }
 
 

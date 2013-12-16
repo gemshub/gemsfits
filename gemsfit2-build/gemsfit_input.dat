@@ -18,7 +18,7 @@
 
 # DataDB: EJDB database path (please, edit to put the actual path)
 
-<DataDB>  '../csvtoejdb-build/SOL/Boehmite_ve90'
+<DataDB>  '../csvtoejdb-build/SOL/Boehmite_Be'
 
 # DataCollection: database collection name (please, edit to put the actual name)
 
@@ -101,7 +101,7 @@
 
 # SystemFiles: path to the list of GEMS3K input files (also used for this template file)
 
-<SystemFiles>  './test_input/GEMS3K/Boehmite_ve90-dat.lst'
+<SystemFiles>  './test_input/GEMS3K/Boehmite_Na-dat.lst'
 
 # LimitOfDetection: Limit of detection of the measured values.
 # Ensures that wrongly computed values calculated by GEMS due to non-physical parameter values are ignored.
@@ -124,7 +124,7 @@
 #  Mark with R the G0(298) value of a dependent component, which depends on G0 of other dependent components
 #     via a reaction constraint, by copy-pasting the following template in place of the G0(298) value,
 #     and edit it to make the desired changes:
-#      R{ "IV" : -36819, "Ref" : "SUPCRT92", "order" : "1", "nC" : 4, "DC" : "KOH@",
+#      R{ "IV" : -36819, "Ref" : "SUPCRT92", "order" : "1", "nC" : 4, "rDC" : "KOH@",
 #      "RC" : [ "K+", "H2O@", "H+", "KOH@" ], "Rcoef" : [ -1, -1, 1, 1 ] }
 #     Here,  "IV": initial value; 
 #          "Ref": bibliographic reference;
@@ -148,21 +148,23 @@
 'Al' 'Cl' 'H' 'Na' 'O' 'Zz' 
 # DCNL: List of Dependent Component names (for readability)
 <DCNL>
-'Al(OH)2+' 'Al(OH)3@' 'Al(OH)4-' 'Al+3' 'AlOH+2' 'Na+' 'NaCl@' 'NaOH@' 'ClO-' 'HClO@' 'ClO2-' 'HClO2@' 'ClO3-' 'ClO4-' 'Cl-' 'HCl@' 'H2@' 'O2@' 'H2O2@' 'HO2-' 'OH-' 'H+' 'H2O@' 'Boehmite' 'Corundum' 'Halite' 
+'Al(OH)2+' 'Al(OH)3@' 'Al(OH)4-' 'Al+3' 'AlOH+2' 'Na+' 'NaAl(OH)4@' 'NaCl@' 'NaOH@' 'ClO-' 'HClO@' 'ClO2-' 'HClO2@' 'ClO3-' 'ClO4-' 'Cl-' 'HCl@' 'H2@' 'O2@' 'H2O2@' 'HO2-' 'OH-' 'H+' 'H2O@' 'Boehmite' 'Corundum' 'Halite' 
 # PHNL: List of Phase names (for readability)
 <PHNL>
 'aq_gen' 'Boehmite' 'Corundum' 'Halite' 
 
-F{ "IV" :-917820, "UB" : -907820, "LB" : -927820 }
+R{ "IV" : -696322, "Ref" : "We93", "order" : "1", "nC" : 4, "rDC" : "AlOH+2",
+   "RC" : [ "Al+3", "H2O@", "H+", "AlOH+2" ], "Rcoef" : [ -1, -1, 1, 1 ] }
  
 # G0: Look-up array for DC molar Gibbs energy function g(T,P), J/mol at 298.15K and 1 bar 
 <G0>
-F{ "IV" :-900200, "UB" : -896506, "LB" : -902506 }
-F{ "IV" :-1110400, "UB" : -1.09974e+06, "LB" : -1.11374e+06 }
-F{ "IV" :-1305400, "UB" : -1.30381e+06, "LB" : -1.30781e+06 }
-F{ "IV" :-487200, "UB" : -485478, "LB" : -489478 }
-F{ "IV" :-696000, "UB" : -693322, "LB" : -699322 }
+F{ "IV" :-899506, "UB" : -897506, "LB" : -901506 }
+F{ "IV" :-1.10174e+06, "UB" : -1.09874e+06, "LB" : -1.10474e+06 }
+F{ "IV" :-1.30581e+06, "UB" : -1.30381e+06, "LB" : -1.30781e+06 }
+F{ "IV" :-487478, "UB" : -485478, "LB" : -489478 }
+F{ "IV" :-696322, "UB" : -694322, "LB" : -698322 }
 -261881
+-1.56737e+06
 -388735
 -417982
 -36819
@@ -184,6 +186,12 @@ F{ "IV" :-696000, "UB" : -693322, "LB" : -699322 }
 -1.58181e+06
 -384246
 
+ 
+# logK: Look-up array for reaction logK at T * P * nr. reactions. If a G0 parameter is marked for reaction and 
+# the list below is left empty, the logK will be calculated based on the initial values of the parameters and these will 
+# be used troughout the fitting process  
+<logK>
+-4.96 -2.95 -2.01 -1.98 -1.3 -0.74 -0.39
 
 #########################################################################
 #>>>>>>>>>> Input for fitting non-ideality parameters >>>>>>>>>>>>>>>>>>#
@@ -213,7 +221,7 @@ F{ "IV" :-696000, "UB" : -693322, "LB" : -699322 }
 
 # fDQF: DQF parameters of end members or pure gas fugacities, (J/mol/(RT) [nDC]
 <fDQF>
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
 
 # This part for the system composition data is taken from *DBR.dat
 
@@ -228,21 +236,21 @@ F{ "IV" :-696000, "UB" : -693322, "LB" : -699322 }
 #  'Al' 'Cl' 'H' 'Na' 'O' 'Zz' 
 # bIC: Bulk composition of reactive subsystem (main GEM input), moles of ICs [nICb]
 <bIC>
-0.222238022550077 0.0109558194127147 44.8539173685273 0.00821315904404505 22.4255873540793 0 
+0.166699309582021 0.0109558194127147 44.5761406330092 0.00821315904404505 22.5367479506933 0 
 
 ## (5) Data for Dependent Components
-#  'Al(OH)2+' 'Al(OH)3@' 'Al(OH)4-' 'Al+3' 'AlOH+2' 'Na+' 'NaCl@' 'NaOH@' 'ClO-' 'HClO@' 'ClO2-' 'HClO2@' 'ClO3-' 'ClO4-' 'Cl-' 'HCl@' 'H2@' 'O2@' 'H2O2@' 'HO2-' 'OH-' 'H+' 'H2O@' 'Boehmite' 'Corundum' 'Halite' 
+#  'Al(OH)2+' 'Al(OH)3@' 'Al(OH)4-' 'Al+3' 'AlOH+2' 'Na+' 'NaAl(OH)4@' 'NaCl@' 'NaOH@' 'ClO-' 'HClO@' 'ClO2-' 'HClO2@' 'ClO3-' 'ClO4-' 'Cl-' 'HCl@' 'H2@' 'O2@' 'H2O2@' 'HO2-' 'OH-' 'H+' 'H2O@' 'Boehmite' 'Corundum' 'Halite' 
 # xDC: Speciation - amounts of DCs in equilibrium (primal solution), moles (GEM output/input) [nDCb]
 <xDC>
-7.64533760464196e-07 3.36874810488546e-09 1.34001644340542e-11 0.000333835702377127 3.47897034516666e-05 0.00816107994443639 5.20790987614802e-05 8.47406690807283e-13 0 0 0 0 0 0 0.0108988170895948 4.92322435861858e-06 0.333357033825343 0 0 0 7.9781563166448e-11 0.0016658861905451 21.9818137666111 0.221868629228337 0 0 
+7.00589611398492e-07 3.04181710602998e-09 1.18926451134276e-11 0.000312737091795653 3.22692763525656e-05 0.00816146869774789 4.25850934303795e-13 5.16903450364577e-05 8.34844140516078e-13 9.4486844644866e-27 4.91617418938469e-22 0 0 0 0 0.01089904249362 5.08657405825562e-06 6.01841592254855e-26 1.62737152490586e-23 1.6396488558437e-25 8.86041980263536e-34 7.92062989454786e-11 0.00173412346926758 22.2040070718427 0.166353599570129 0 0 
 
 # dll: Lower metastability restrictions on amounts of DCs, moles (GEM input) [nDCb]
 <dll>
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
 
 # dul: Upper metastability constraints on amounts of DCs, moles (GEM input) [nDCb]
 <dul>
-1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 
+1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 
 
 ## (6) Data for Phases
 #  'aq_gen' 'Boehmite' 'Corundum' 'Halite' 
@@ -250,61 +258,61 @@ F{ "IV" :-696000, "UB" : -693322, "LB" : -699322 }
 <aPH>
 0 0 0 0 
 # Vs: Volume V of reactive subsystem, m3 (GEM output)
-<Vs>  0.000427513
+<Vs>  0.000421261
 # Ms: Mass of reactive subsystem, kg (GEM output)
 <Ms>  0.41058
 # Gs: Total Gibbs energy of the reactive subsystem, J/(RT) (GEM output)
-<Gs>  -1782.39
+<Gs>  -1784.22
 # IS: Effective aqueous ionic strength, molal (GEM output)
-<IS>  0.0301385
+<IS>  0.0296729
 # pH: pH of aqueous solution in molal activity scale (GEM output)
-<pH>  2.45938
+<pH>  2.44575
 # pe: pe of aqueous solution in molal activity scale (GEM output)
-<pe>  -3.25538
+<pe>  9.13213
 # Eh: Eh of aqueous solution, V (GEM output)
-<Eh>  -0.241514
+<Eh>  0.677504
 
 ## (4) Data for Independent Components
 #  'Al' 'Cl' 'H' 'Na' 'O' 'Zz' 
 
 # uIC: Chemical potentials of ICs in equilibrium (dual solution), J/(RT) (GEM output) [nICb]
 <uIC>
--134.209259296061 -54.5002081007807 1.83286616854403 -82.2182179902538 -81.7595456630076 -7.49578888099924 
+-219.843182688444 -25.9856439751504 -26.6590632332126 -110.750233219719 -24.7603485687892 21.0275142305227 
 
 # bSP: Output bulk composition of the equilibrium solid part of the system, moles 
 <bSP>
-0.221868629228337 0 0.221868629228337 0 0.443737258456674 0 
+0.166353599570129 0 0.166353599570129 0 0.332707199140258 0 
 
 ## (5) Data for Dependent Components
-#  'Al(OH)2+' 'Al(OH)3@' 'Al(OH)4-' 'Al+3' 'AlOH+2' 'Na+' 'NaCl@' 'NaOH@' 'ClO-' 'HClO@' 'ClO2-' 'HClO2@' 'ClO3-' 'ClO4-' 'Cl-' 'HCl@' 'H2@' 'O2@' 'H2O2@' 'HO2-' 'OH-' 'H+' 'H2O@' 'Boehmite' 'Corundum' 'Halite' 
+#  'Al(OH)2+' 'Al(OH)3@' 'Al(OH)4-' 'Al+3' 'AlOH+2' 'Na+' 'NaAl(OH)4@' 'NaCl@' 'NaOH@' 'ClO-' 'HClO@' 'ClO2-' 'HClO2@' 'ClO3-' 'ClO4-' 'Cl-' 'HCl@' 'H2@' 'O2@' 'H2O2@' 'HO2-' 'OH-' 'H+' 'H2O@' 'Boehmite' 'Corundum' 'Halite' 
 
 # gam: Activity coefficients of DCs in their respective phases (GEM output/input) [nDCb]
 <gam>
-0.825436866790531 1.0051637717938 0.825436866790531 0.170710462787833 0.457114466858971 0.825436866790531 1.0051637717938 1.0051637717938 0.825436866790531 1.0051637717938 0.825436866790531 1.0051637717938 0.825436866790531 0.825436866790531 0.825436866790531 1.0051637717938 1.0051637717938 1.0051637717938 1.0051637717938 0.825436866790531 0.825436866790531 0.825436866790531 0.999765855793098 1 1 1 
+0.826508897838126 1.00520932276647 0.826508897838126 0.172653639643501 0.459431332515538 0.826508897838126 1.00520932276647 1.00520932276647 1.00520932276647 0.826508897838126 1.00520932276647 0.826508897838126 1.00520932276647 0.826508897838126 0.826508897838126 0.826508897838126 1.00520932276647 1.00520932276647 1.00520932276647 1.00520932276647 0.826508897838126 0.826508897838126 0.826508897838126 1.00005959594087 1 1 1 
 
 ## (6) Data for Phases
 #  'aq_gen' 'Boehmite' 'Corundum' 'Halite' 
 
 # xPH: Amounts of phases in equilibrium state, moles (GEM output) [nPHb]
 <xPH>
-22.3363229793865 0.221868629228337 0 0 
+22.2252041935143 0.166353599570129 0 0 
 
 # vPS: Volumes of multicomponent phases, m3 (GEM output) [nPSb]
 <vPS>
-0.000423178705241999 
+0.000418011323426801 
 
 # mPS: Masses of multicomponent phases, kg (GEM output) [nPSb]
 <mPS>
-0.397270489013742 
+0.400600738538915 
 
 # xPA: Amount of carrier (sorbent or solvent) in multicomponent phases, moles (GEM output) [nPSb]
 <xPA>
-21.9818137666111 
+22.2040070718427 
 
 # bPS: Bulk elemental compositions of multicomponent phases, moles (GEM output) [nPSb*nICb]
 #  'Al' 'Cl' 'H' 'Na' 'O' 'Zz' 
 <bPS>
-0.000369393321737527 0.0109558194127149 44.6320487392993 0.00821315904404528 21.9818500956226 1.72181262708876e-16 
+0.000345710011895219 0.0109558194127147 44.409787033439 0.00821315904404505 22.204040751553 4.6697893379786e-19 
 
 #########################################################################
 #>>>>>>>>>>>>>>> Optimization Methods section >>>>>>>>>>>>>>>>>>>>>>>>>>>>>#
@@ -314,11 +322,14 @@ F{ "IV" :-696000, "UB" : -693322, "LB" : -699322 }
 # OptDoWhat: perform optimization and statistics (0), only optimization with basic Statistics (1), only Statistics (2) with initial guesses as best fit parametters
 <OptDoWhat>  0
 
+# OptTitration: Adjusts the computed pH by changing NaOH or HCl amount to match the mesured pH read from the database for each experiment
+<OptTitration>  1
+
 # OptAlgo: specify algorithm GN_ISRES GN_ORIG_DIRECT GN_ORIG_DIRECT_L LN_COBYLA LN_BOBYQA 
 <OptAlgo>  'LN_BOBYQA'
 
 # OptBoundPerc: Generate bounds from initial guess vector: specify percentage deviation (user specific, user-defined bounds when set to -1)
-<OptBoundPerc>  -1
+<OptBoundPerc>  5
 
 # OptTolRel: stopping criterion -> specify relative tolerance (default = 1e-04) of function value
 <OptTolRel>  1e-06

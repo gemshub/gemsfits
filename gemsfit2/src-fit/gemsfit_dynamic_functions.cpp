@@ -139,13 +139,16 @@ void titration (TGfitTask *sys)
 
             opt_HCL.set_min_objective(titfunc, sys);
 
-            opt_HCL.set_xtol_rel(1e-3);
+            opt_HCL.set_xtol_rel(1e-6);
+            opt_HCL.set_xtol_abs(1e-6);
 
             sys->EXPndx[P_id]=i;
             nlopt::result result = opt_HCL.optimize(x, minf);
             sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt = x[0];
 
             sum_min += minf;
+
+//            nlopt_destroy(opt_HCL);
         }
 
         //adjust NaOH
@@ -169,13 +172,16 @@ void titration (TGfitTask *sys)
 
             opt_NaOH.set_min_objective(titfunc, sys);
 
-            opt_NaOH.set_xtol_rel(1e-3);
+            opt_NaOH.set_xtol_rel(1e-6);
+            opt_NaOH.set_xtol_abs(1e-6);
 
             sys->EXPndx[P_id]=i;
             nlopt::result result = opt_NaOH.optimize(x, minf);
             sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt = x[0];
 
             sum_min += minf;
+
+//            nlopt_destroy(opt_NaOH);
 
         }
         h_HCl[P_id] = false; h_NaOH[P_id] = false;

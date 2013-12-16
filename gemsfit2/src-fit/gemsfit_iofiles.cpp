@@ -235,6 +235,11 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
         i += node->gridTP()-1;
     }
 
+    ff << "\n \n# logK: Look-up array for reaction logK at T * P * nr. reactions. If a G0 parameter is marked for reaction and \n";
+    ff << "\n# the list below is left empty, the logK will be calculated based on the initial values of the parameters and these will \n";
+    ff << "\n# be used troughout the fitting process \n";
+    ff << "<logK>" << endl;
+
     if(_comment )
     {
         ff << "\n\n#########################################################################" << endl;

@@ -157,8 +157,7 @@ void adjust_RDc (TGfitTask *sys)
             {
                 double new_G0 =0.0;
                 double delta_G = 0.0;
-                double const Rcst = 8.3144621;
-                double const loge = 2.302585093;
+                const double Rln = -2.302585093*8.314472;
                 int species_index = sys->Opti->reactions[i]->rdc_species_ind[sys->Opti->reactions[i]->rdc_species_ind.size()-1];
 
                 // for standard sate at 25 C and 1 bar
@@ -168,7 +167,7 @@ void adjust_RDc (TGfitTask *sys)
                 }
 
 
-                new_G0 = -(Rcst*298.15*sys->Opti->reactions[i]->logK_TPpairs[0]*loge) - delta_G;
+                new_G0 = (Rln*298.15*sys->Opti->reactions[i]->logK_TPpairs[0]) - delta_G;
                 delta_G = 0.0;
 
                 sys->Opti->reactions[i]->std_gibbs = new_G0;
@@ -184,10 +183,10 @@ void adjust_RDc (TGfitTask *sys)
                         delta_G += sys->Opti->reactions[i]->rdc_species_coef[k] * sys->NodT[n]->DC_G0(sys->Opti->reactions[i]->rdc_species_ind[k], sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, false);
                     }
 
-                     new_G0 = -(Rcst*298.15*sys->Opti->reactions[i]->logK_TPpairs[j+1]*loge) - delta_G;
-                     delta_G = 0.0;
+                    new_G0 = (Rln*(sys->TP_pairs[0][j]+273.15)*sys->Opti->reactions[i]->logK_TPpairs[j+1]) - delta_G;
+                    delta_G = 0.0;
 
-                     sys->NodT[n]->Set_DC_G0(species_index, sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, new_G0);
+                    sys->NodT[n]->Set_DC_G0(species_index, sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, new_G0);
 
                 }
             }

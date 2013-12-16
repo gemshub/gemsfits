@@ -373,6 +373,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
 
 ffout.close();
 //countit = master_counter;
+//nlopt_destroy(NLopti);
 }
 
 void TGfitTask::setnodes()
@@ -842,7 +843,7 @@ void TGfitTask::get_logK_TPpairs()
         RTln = Rln * (25+273.15);
         if (h_logK) {
         this->Opti->reactions[i]->dG_reaction_TP.push_back(DG);
-/*        this->Opti->reactions[i]->logK_TPpairs.push_back(DG/RTln);*/}
+        this->Opti->reactions[i]->logK_TPpairs.push_back(DG/RTln);}
         DG = 0.0;
 
         // loop trough TP
@@ -853,10 +854,10 @@ void TGfitTask::get_logK_TPpairs()
             {
                 DG += this->NodT[0]->DC_G0(this->Opti->reactions[i]->rdc_species_ind[k], this->TP_pairs[1][j]*100000, this->TP_pairs[0][j]+273.15, false) * this->Opti->reactions[i]->rdc_species_coef[k];
             }
-            RTln = Rln * this->TP_pairs[0][j]+273.15;
+            RTln = Rln * (this->TP_pairs[0][j]+273.15);
             if (h_logK) {
             this->Opti->reactions[i]->dG_reaction_TP.push_back(DG);
-/*            this->Opti->reactions[i]->logK_TPpairs.push_back(DG/RTln);*/}
+            this->Opti->reactions[i]->logK_TPpairs.push_back(DG/RTln);}
             DG = 0.0;
         }
         h_logK = false;

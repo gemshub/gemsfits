@@ -838,6 +838,8 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
     std::vector<std::vector<double> > measured_values_backup;
     std::vector<std::vector<double> > computed_values_backup;
 
+    int n_Rparam = gfittask->Opti->reactions.size();
+
     scatter_v.resize(number_of_measurements);
     MC_computed_v.resize(number_of_measurements);
 
@@ -853,6 +855,11 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
     double** MC_fitted_parameters_all		  = (double **) malloc ( num_of_MC_runs * sizeof(double *) );
     for( i=0; i<num_of_MC_runs; i++ )
         MC_fitted_parameters_all[i] = &MC_fitted_parameters_all_storage[ i * n_param ];
+
+    double*  MCR_fitted_parameters_all_storage = (double *) malloc ( num_of_MC_runs * n_Rparam * sizeof(double) );
+    double** MCR_fitted_parameters_all		  = (double **) malloc ( num_of_MC_runs * sizeof(double *) );
+    for( i=0; i<num_of_MC_runs; i++ )
+        MCR_fitted_parameters_all[i] = &MCR_fitted_parameters_all_storage[ i * n_Rparam ];
 
     double* scatter_all 	  = new double[ number_of_measurements * num_of_MC_runs ];
 
@@ -928,6 +935,12 @@ pid_ = 0;
 
         }
 
+        // Store reaction parameters
+        for ( j=0; j<n_Rparam; ++j)
+        {
+            MCR_fitted_parameters_all[ id ][ j ] = gfittask->Opti->reactions[j]->std_gibbs;
+        }
+
 
         // loop over systems and subtract MC scatter to retain the original measurement data
         // Retain original computed values
@@ -942,6 +955,7 @@ pid_ = 0;
 
         double StandardDeviation = 0.;
         arma::vec MCparams( num_of_MC_runs );
+        arma::vec MCRparams( num_of_MC_runs );
 
         ofstream myStat;
         myStat.open(gpf->FITStatisticsFile().c_str(),ios::app);
@@ -959,6 +973,20 @@ pid_ = 0;
 
             // Print Standard Deviations of parameters generated during MC runs to file
             myStat <<"			parameter "<< j <<" :	           " << StandardDeviation << endl;
+
+        }
+
+        for( j=0; j<n_Rparam; j++ ) // cols
+        {
+            for( i=0; i<num_of_MC_runs; i++ ) // rows
+            {
+                MCRparams(i) = MCR_fitted_parameters_all[ i ][ j ];
+            }
+            // compute standard deviation of generated parameters
+            StandardDeviation = arma::stddev( MCRparams, 0 );
+
+            // Print Standard Deviations of parameters generated during MC runs to file
+            myStat <<"      reaction parameter "<< j <<" :	           " << StandardDeviation << endl;
 
         }
         myStat << endl;
