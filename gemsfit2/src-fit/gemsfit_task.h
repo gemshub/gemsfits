@@ -160,6 +160,9 @@ public:
     double_v Weighted_Tfun_residuals_v; // Target function "residuals"
     double_v Tfun_residuals_v;
     double_v weights; // weights
+    double_v Tuckey_weights;
+
+    int number_of_residuals;
 
 
    TGfitTask ();   ///< Constructor
@@ -183,6 +186,9 @@ public:
    void get_sum_of_residuals ( double &residual);
 
    void add_MC_scatter(vector<double> scatter);
+
+   int get_number_of_residuals( );
+
    void Ainit_optim (std::vector<double> &optv_, /*int &countit,*/ double &weighted_Tfun_sum_of_residual);
 
    /**

@@ -578,7 +578,12 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
         if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::gram)
         {
             computed_value = sys->NodT[i]->Ph_Mass(PHndx) * 1000;
-        } else computed_value = sys->NodT[i]->Ph_Mass(PHndx);
+        } else
+            if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::kgram)
+                computed_value = sys->NodT[i]->Ph_Mass(PHndx);
+        else
+                if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::mole)
+                    computed_value = sys->NodT[i]->Ph_Mole(PHndx);
 
     } else // Get phase volume
     if ((sys->Tfun->objfun[j]->exp_CN == keys::pV))

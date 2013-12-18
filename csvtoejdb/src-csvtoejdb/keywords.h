@@ -153,6 +153,7 @@ static const char *loga = "loga"; ///                                       stri
 static const char *_loga = "-loga"; ///                                     string              -log(consntration) used for pH
 static const char *gram = "g"; ///
 static const char *kgram = "kg"; ///
+static const char *mole = "mole";
 static const char *m3 = "m3"; ///
 static const char *cm3 = "cm3"; ///
 static const char *Simolfrac = "simolfrac"; ///

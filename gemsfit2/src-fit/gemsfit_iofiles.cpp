@@ -1207,7 +1207,7 @@ outField optimization_fields[25] =
     { "OptConstraints",  0, 0, 1, "\n# OptConstraints:  Optimization: apply constraints (1=yes, 0=no)"},
     { "OptDoWhat",  0, 0, 1, "\n# OptDoWhat: perform optimization and statistics (0), only optimization with basic Statistics (1), only Statistics (2) with initial guesses as best fit parametters"},
     { "OptTitration",  0, 0, 1, "\n# OptTitration: Adjusts the computed pH by changing NaOH or HCl amount to match the mesured pH read from the database for each experiment"},
-    { "OptStatOnlySSR",  0, 0, 1, "\n# OptStatOnlySSR: Comment"},
+    { "OptTuckey",  0, 0, 1, "\n# OptTuckey: 0 > Use Tuckey Biweight. Value > 0 will be the number of iterations for re-weighting. "},
     { "OptEqSolv",  0, 0, 1, "\n# OptEqSolv: Comment"},
     { "OptTolAbs",  0, 0, 1, "\n# OptTolAbs: stopping criterion -> specify absolute tolerance (default = 1e-04) of function value"},
     { "OptHybridTolRel",  0, 0, 1, "\n# OptHybridTolRel: Comment"},
@@ -1234,7 +1234,7 @@ typedef enum {  /// Field index into outField structure
     f_OptConstraints,
     f_OptDoWhat,
     f_OptTitration,
-    f_OptStatOnlySSR,
+    f_OptTuckey,
     f_OptEqSolv,
     f_OptTolAbs,
     f_OptHybridTolRel,
@@ -1260,6 +1260,7 @@ void optimization::define_nlopt_param( )
     OptTolAbs = 1e-6;
     OptMaxEval = 500000;
     OptDoWhat = 0;
+    OptTuckey = 0;
     OptTitration = 0;
     OptNormParam = 1;
     OptPerturbator = 0.0001;
@@ -1287,6 +1288,7 @@ void optimization::out_nlopt_param_txt( bool with_comments, bool brief_mode )
     }
 
     prar.writeField( f_OptDoWhat,  (long int)OptDoWhat, with_comments, brief_mode);
+    prar.writeField( f_OptTuckey,  (long int)OptTuckey, with_comments, brief_mode);
     prar.writeField( f_OptTitration,  (long int)OptTitration, with_comments, brief_mode);
     prar.writeField( f_OptAlgo,  OptAlgo, with_comments, brief_mode );
     prar.writeField( f_OptBoundPerc,  OptBoundPerc, with_comments, brief_mode );
@@ -1327,6 +1329,8 @@ void optimization::get_nlopt_param_txt(vector<double> optv)
           case f_OptMaxEval: rdar.readArray( "OptMaxEval",  &OptMaxEval, 1);
                   break;
           case f_OptDoWhat: rdar.readArray( "OptDoWhat",  &OptDoWhat, 1);
+                  break;
+          case f_OptTuckey: rdar.readArray( "OptTuckey",  &OptTuckey, 1);
                   break;
           case f_OptTitration: rdar.readArray( "OptTitration",  &OptTitration, 1);
                   break;

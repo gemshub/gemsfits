@@ -266,4 +266,46 @@ void gradient( vector<double> opt, vector<double> &grad, TGfitTask *sys )
     }
 }
 
+double median(vector<double> absresiduals)
+{
+  double median;
+  size_t size = absresiduals.size();
+
+  sort(absresiduals.begin(), absresiduals.end());
+
+  if (size  % 2 == 0)
+  {
+      median = (absresiduals[size / 2 - 1] + absresiduals[size / 2]) / 2;
+  }
+  else
+  {
+      median = absresiduals[size / 2];
+  }
+
+  return median;
+}
+
+void Tuckey_weight (TGfitTask *sys)
+{
+    double C = 0.0;
+    double median_ = 0.0;
+    vector <double> abs_res;
+
+    for (int i = 0; i< sys->residuals_v.size(); i++)
+    {
+        abs_res.push_back(fabs(sys->residuals_v[i]));
+    }
+
+    median_ = median(abs_res);
+    C = 6 * median_;
+
+    for (int i=0; i<sys->residuals_v.size(); i++)
+    {
+        if (( C - abs_res[i]) < 0)
+            sys->Tuckey_weights[i] = 0;
+        else
+            sys->Tuckey_weights[i] = pow((1 - pow((abs_res[i]/C), 2) ), 2);
+    }
+}
+
 

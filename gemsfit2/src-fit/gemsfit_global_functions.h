@@ -80,5 +80,9 @@ void gems3k_wrap( double &residual, const std::vector<double> &opt, TGfitTask *s
 void gradient( vector<double> opt, vector<double> &grad, TGfitTask *sys );
 
 
+double median(vector<double> absresiduals);
+void Tuckey_weight (TGfitTask *sys);
+
+
 
 #endif // GEMSFIT_GLOBAL_FUNCTIONS_H
