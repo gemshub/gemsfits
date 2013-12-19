@@ -111,12 +111,13 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     gfit_error ( );
 
     double temp_res;
-    // to have the average and minimum value calculated
     number_of_residuals = get_number_of_residuals();
     for (int j= 0; j <number_of_residuals; j++)
     {
-        Tuckey_weights.push_back(1);
+        Tuckey_weights.push_back(1); // default value 1
     }
+
+    // to have the average and minimum value calculated
     get_sum_of_residuals( temp_res);
 
 
@@ -305,12 +306,6 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
         NLopti.set_initial_step( inistep );
     }
 
-    // Only the Master process runs the optimization library. The other processes only run the callback function (copying the newly generated guess values from process 0).
-//    int ierr;
-    //ierr = MPI_Comm_rank( MPI_COMM_WORLD, &pid );
-    //ierr = MPI_Comm_size( MPI_COMM_WORLD, &p );
-//    int continue_or_exit;
-
     ffout << "15. in gesfit_task.cpp line 378. Performing optimization."<<endl;
 
 //    //===== For testing the objective function without oprimization =====//
@@ -380,8 +375,6 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
       }
 
 ffout.close();
-//countit = master_counter;
-//nlopt_destroy(NLopti);
 }
 
 void TGfitTask::setnodes()
@@ -872,6 +865,7 @@ void TGfitTask::get_logK_TPpairs()
     }
 }
 
+// Main function that calculates the sum of residuals
 void TGfitTask::get_sum_of_residuals( double &residuals)
 {
     double average = 0.0, min = 1e-05;
@@ -983,7 +977,7 @@ void TGfitTask::get_sum_of_residuals( double &residuals)
     }
 }
 
-
+// function for counting the total numbers of residuals that will be calculated
 int TGfitTask::get_number_of_residuals( )
 {
     int nr = 0;
@@ -1029,7 +1023,6 @@ int TGfitTask::get_number_of_residuals( )
                         {
                             if ((this->experiments[i]->expphases[p]->phprop[pp]->property == Tfun->objfun[j]->exp_CN) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j]->exp_phase ))
                             {
-
                                 ++nr;
                             }
                         }
@@ -1093,7 +1086,7 @@ void TGfitTask::add_MC_scatter( vector<double> scatter)
 //                                if (this->experiments[i]->expphases[p]->phIC[e]->Qnt < min)
 //                                    min = this->experiments[i]->expphases[p]->phIC[e]->Qnt;
 //                                residuals = residuals + residual_phase_elem (i, p, e, j, this);
-//                                ++count;
+                                ++count;
                             }
                         }
                     } else
@@ -1111,7 +1104,7 @@ void TGfitTask::add_MC_scatter( vector<double> scatter)
 //                                    if (this->experiments[i]->expphases[p]->phMR[f]->Qnt < min)
 //                                        min = this->experiments[i]->expphases[p]->phMR[f]->Qnt;
 //                                    residuals = residuals + residual_phase_elemMR (i, p, f, j, this);
-//                                    ++count;
+                                    ++count;
                                 }
                             }
                         } else
@@ -1130,7 +1123,7 @@ void TGfitTask::add_MC_scatter( vector<double> scatter)
 //                                if (this->experiments[i]->expphases[p]->phprop[pp]->Qnt < min)
 //                                    min = this->experiments[i]->expphases[p]->phprop[pp]->Qnt;
 //                                residuals = residuals + residual_phase_prop (i, p, pp, j, this);
-//                                ++count;
+                                ++count;
                             }
                         }
                     } else
@@ -1152,7 +1145,7 @@ void TGfitTask::add_MC_scatter( vector<double> scatter)
 //                                            //                                    check_dcomp_unit(i, p, dc, dcp, sys->Tfun->objfun[j]->exp_unit, sys );
 //                                            average = average + this->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt;
 //                                            residuals = residuals + residual_phase_dcomp (i, p, dc, dcp, j, this);
-//                                            ++count;
+                                            ++count;
                                         }
                                     }
                                 }
@@ -1161,12 +1154,12 @@ void TGfitTask::add_MC_scatter( vector<double> scatter)
                 }
             }
         }
-    if (count > 0)
-    {
-        average = average / count;
-    }
-    Tfun->objfun[j]->meas_average = average;
-    this->minimum_value = min;
+//    if (count > 0)
+//    {
+//        average = average / count;
+//    }
+//    Tfun->objfun[j]->meas_average = average;
+//    this->minimum_value = min;
     average = 0.0;
     }
 }

@@ -151,16 +151,28 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys );
 
 /**
 * Returns the residual from comparing the calculated with the meaured
-* the elemental composition a phase
+* elemental composition a phase
 * @param i      position in the experiments vector (which experiment)
 * @param p      position in the expphases vector (which pahse)
 * @param e      position in the phcomp vector (which element)
+* @param j      position in the objfun vector
 * @param sys    pointer to data object that holds the data of the current TGfitTask struct
 * @author DM
 * @date 17.05.2013
 */
 double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys);
 
+/**
+* Returns the residual from comparing the calculated with the meaured
+* element mole ratio in a phase
+* @param i      position in the experiments vector (which experiment)
+* @param p      position in the expphases vector (which pahse)
+* @param f      position in the phMR vector (which mole ratio)
+* @param j      position in the objfun vector
+* @param sys    pointer to data object that holds the data of the current TGfitTask struct
+* @author DM
+* @date 17.08.2013
+*/
 double residual_phase_elemMR (int i, int p, int f, int j, TGfitTask *sys);
 
 /**

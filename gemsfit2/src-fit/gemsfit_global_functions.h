@@ -79,8 +79,20 @@ void gems3k_wrap( double &residual, const std::vector<double> &opt, TGfitTask *s
 */
 void gradient( vector<double> opt, vector<double> &grad, TGfitTask *sys );
 
-
+/**
+* Gets the median form a vector of values
+* @param absresiduals      vector of residuals
+* @author DM
+* @date 18.12.2014
+*/
 double median(vector<double> absresiduals);
+
+/**
+* Calculates the Tuckey weight for each resiual and adds it in the Tucke_weights vector
+* @param sys      data object that holds the data of the current TGfitTask struct
+* @author DM
+* @date 18.12.2014
+*/
 void Tuckey_weight (TGfitTask *sys);
 
 

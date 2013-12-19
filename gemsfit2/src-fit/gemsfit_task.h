@@ -160,7 +160,7 @@ public:
     double_v Weighted_Tfun_residuals_v; // Target function "residuals"
     double_v Tfun_residuals_v;
     double_v weights; // weights
-    double_v Tuckey_weights;
+    double_v Tuckey_weights; // hoding the Tuckey weights
 
     int number_of_residuals;
 
