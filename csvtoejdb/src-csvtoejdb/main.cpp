@@ -44,16 +44,16 @@ int main(int argc, char *argv[])
     if (ihelp != 0)                                                             //A.2 HELP MODE
     {
         cout << " USAGE: \n"
-                "   csvtoejdb   -run -t <path to the database and CSV file> <collection name> <path to the CSV file> \n\n"
+                "   csvtoejdb   -run -t <path to the database> <collection name> <path to the CSV file> \n\n"
                 " WHERE: \n"
-                "   -run,   runs the program \n"
+                "   -run,        runs the program \n"
                 "   -run -t,     truncate (overwrite the existing database) \n"
-                "   -run -a,     append (add more data) \n"
-                "                if database name is not present a new database is created \n\n"
+                "   -run -a,     append (add more data); \n"
+                "                if database name is not present, a new database is created \n\n"
                 "   -back,  backup the database in JSON file with the same name as the database \n"
                 "   -rest,  restore a database from a JSON file with the same name as the JSON file\n\n"
                 " EXAMPLE; \n"
-                "   -run -t ./CASH/cashtest experiments ./CASH/CASHtest.csv \n"
+                "   -run -t ./CASH/cashtest experiments ./CASHtest.csv \n"
                 "   -back ./CASH/cashtest experiments \n"
                 "   -rest ./CASH/cashtest.json experiments"<< endl;
         return 0;

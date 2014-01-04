@@ -70,7 +70,7 @@ void get_gems_fit_DBR_txt(TNode* node, opti_vector *op );
 enum MODES_GEMFIT {
  INIT_  = 0,   ///< GEMSFIT will generate a template input configuration file
  RUN_   = 1,   ///< Run GEMFIT calculation
- HELP_  = 2    ///< Comand line help
+ HELP_  = 2    ///< Command line help
 };
 
 class TGfitPath

@@ -75,7 +75,7 @@ public:
     vd UB; /// upper boundary
     vd LB; /// lower boundary
     vs Ptype; /// name of parameter e.g G0
-    vi Pindex; /// index formatted value into reading array, index of pahse, species
+    vi Pindex; /// index formatted value into reading array, index of phase, species
 
     // vector containing the first guesses for normalization of the opt vector
     vd optv0; /// vector storing initial parameter values

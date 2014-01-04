@@ -404,8 +404,7 @@ void TGfitTask::setnodes()
         }
     }
 
-
-    // initialize the nodes with the input GEMS3 file
+    // initialize the nodes using the input GEMS3 file
     for (n=0; n<NodT.size(); ++n)
     {
         // Getting direct access to work node DATABR structure which exchanges the
@@ -419,7 +418,7 @@ void TGfitTask::setnodes()
         xDC_up = new double[ nDC ];
         xDC_lo = new double[ nDC ];
         Ph_surf = new double[ nPH ];
-        new_moles_IC = new double [ nIC ]; // vector for holding the moles of independent components for each experiment
+        new_moles_IC = new double[ nIC ]; // vector for holding the moles of independent components for each experiment
 
         // lower and upper bounds for concentration of DC
         for( i=0; i<nDC; i++ )
@@ -493,13 +492,14 @@ void TGfitTask::setnodes()
         }
 
         // Set amount of dependent components (GEMS3K: DBR indexing)
-        // go trough all acomponents and calculate the mole amounts of the IC for the b vector in GEMS
+        // go through all components and calculate the mole amounts of the IC for the b vector in GEMS
         for (j=0; j<experiments[n]->sbcomp.size(); ++j)
         {
             if (experiments[n]->sbcomp[j]->comp == "H2O")
             {
                 ICndx = NodT[n]->IC_name_to_xDB("H");
-                new_moles_IC[ICndx] += 2*experiments[n]->sbcomp[j]->Qnt/18.0153 +  1.2344*experiments[n]->sbcomp[j]->Qnt/1000*1e-05; // adds 1e-05 moles of H2 for each kg og H2O
+                new_moles_IC[ICndx] += 2*experiments[n]->sbcomp[j]->Qnt/18.0153 +
+                        1.2344*experiments[n]->sbcomp[j]->Qnt/1000*1e-05; // adds 1e-05 moles of H2 for each kg og H2O
 //                NodT[n]->Set_nDC(DCndx, experiments[n]->sbcomp[j]->bQnt/1000*1e-05);
 
                 if (NodT[n]->IC_name_to_xDB("Nit") < 0)
@@ -509,7 +509,8 @@ void TGfitTask::setnodes()
                 }
                 // cout << new_moles_IC[ICndx] << endl;
                 ICndx = NodT[n]->IC_name_to_xDB("O");
-                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->Qnt/18.0153 /*+ 3*experiments[n]->sbcomp[j]->bQnt/1000*1e-03*/;
+                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->Qnt/18.0153
+                        /*+ 3*experiments[n]->sbcomp[j]->bQnt/1000*1e-03*/;
             }
             else if (experiments[n]->sbcomp[j]->comp == "SiO2")
             {
@@ -605,6 +606,13 @@ void TGfitTask::setnodes()
                 //cout << new_moles_IC[ICndx]<<endl;
                 new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->Qnt/74.09268;
             }
+
+//            CaCO3
+//            SrCO3
+//            Nit1.6O0.4
+//            Nit2
+//            O2
+
             else if (experiments[n]->sbcomp[j]->comp == "NaOH")
             {
                 if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
@@ -619,7 +627,7 @@ void TGfitTask::setnodes()
                 ICndx = NodT[n]->IC_name_to_xDB("O");
                 new_moles_IC[ICndx] +=  1*experiments[n]->sbcomp[j]->Qnt/39.99710928;
 
-                // changing the bacground electrolite settings
+                // changing the background electrolite settings
                 if (!salt){
                 NodT[n]->Set_PMc(0.098, 0 );
                 NodT[n]->Set_PMc(3.31, 1 );
@@ -715,7 +723,7 @@ void TGfitTask::setnodes()
             }
                 else
                 {
-                    cout<<" Unknown component in gemsfit_task.cpp line 910 !!!! "<<endl;
+                    cout<<" Unknown component in gemsfit_task.cpp line 718 !!!! "<<endl;
                     cout<<" ... bail out now ... "<<endl;
                     exit(1);
                 }
@@ -882,7 +890,7 @@ void TGfitTask::get_sum_of_residuals( double &residuals)
     {
             if ((this->Tfun->objfun[j]->exp_phase !="NULL") && (this->experiments[i]->expphases.size() > 0))
             {
-                // loop trough all pahses
+                // loop trough all phases
                 for (unsigned int p=0; p<this->experiments[i]->expphases.size(); ++p)
                 {
                     if ((Tfun->objfun[j]->exp_CT == keys::IC) /*&& (Tfun->objfun[j]->exp_property =="NULL")*/)
@@ -990,7 +998,7 @@ int TGfitTask::get_number_of_residuals( )
     {
             if ((this->Tfun->objfun[j]->exp_phase !="NULL") && (this->experiments[i]->expphases.size() > 0))
             {
-                // loop trough all pahses
+                // loop trough all phases
                 for (unsigned int p=0; p<this->experiments[i]->expphases.size(); ++p)
                 {
                     if ((Tfun->objfun[j]->exp_CT == keys::IC) /*&& (Tfun->objfun[j]->exp_property =="NULL")*/)
@@ -1069,7 +1077,7 @@ void TGfitTask::add_MC_scatter( vector<double> scatter)
     {
             if ((this->Tfun->objfun[j]->exp_phase !="NULL") && (this->experiments[i]->expphases.size() > 0))
             {
-                // loop trough all pahses
+                // loop trough all phases
                 for (unsigned int p=0; p<this->experiments[i]->expphases.size(); ++p)
                 {
                     if ((Tfun->objfun[j]->exp_CT == keys::IC) /*&& (Tfun->objfun[j]->exp_property =="NULL")*/)

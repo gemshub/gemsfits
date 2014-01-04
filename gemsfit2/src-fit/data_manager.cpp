@@ -498,7 +498,7 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos) {
                 bson_iterator_from_buffer(&d, bson_iterator_value(&j));
                 experiments.at(pos)->expphases.push_back( new samples::phases );
                 ip++; // position of the phase in expphases vector
-                ipc = -1; // phases components - reset to -1 for every new pahse
+                ipc = -1; // phases components - reset to -1 for every new phase
                 ipm = -1; // molar fractions
                 ipp = -1; // phases properties
                 ips = -1; // phases dcomps

@@ -30,8 +30,8 @@
 //-------------------------------------------------------------------
 //
 
-# ifndef _gemsft_task.h_
-# define _gemsft_task.h_
+#ifndef _gemsft_task.h_
+#define _gemsft_task.h_
 
 
 #include "data_manager.h"

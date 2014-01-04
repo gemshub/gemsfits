@@ -9,9 +9,10 @@ using namespace keys;
 
 void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
 {
-    int ic=0,       // counts the number of system comp (recipe entries), independent components per pahse, phase properties per pahse, and dependent components properties per dependent component
+    int is=0,       // counts the number of processed samples (.csv data rows)
+        ic=0,       // counts the number of system comp (recipe entries), independent components per pahse, phase properties per pahse, and dependent components properties per dependent component
         phc = 0,    // counts the number of phases per system/experiment
-        dcc = 0,    // counts the numbe of dependent components per phase
+        dcc = 0,    // counts the number of dependent components per phase
         sk = 0,     // counts the number of metastability constraints per constraint type
         mf = 0;     // counts the number of molar fraction entries per system/exmperiment
     string ph_new, ph_old, dcomp_new, dcomp_old, sss;
@@ -29,14 +30,17 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
     ifstream in(csv_path);
     if (in.fail())  { cout << "File not found" <<endl; /*return 0;*/ }
 
-
-    getline(in, line);
+cout << "csvtoejdb start: file " << csv_path << "; head row:" << endl;
+    getline(in, line );
     // getting headline
     csvline(headline, line, ',');
+cout << line << endl;
+cout << "csvtoejdb: processing data rows:" << endl;
 
-    // getting the data form CSV line by line and porcessing it into BSON
-    while(getline(in, line)  && in.good() )
+    // getting the data from CSV line by line and processing it into BSON
+    while ( getline( in, line ) )
     {
+        is++;
         ic = 0;
         phc = 0;
         dcc = 0;
@@ -353,7 +357,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                     ph_prop   = ph_prop_1.substr((0),(pos_start));
 
                                     // if property present
-                                    if (((ph_prop == Qnt) || (ph_prop == pH) || (ph_prop == pV) ||  (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) ||  (ph_prop == sArea) || (ph_prop == RHO)) && (!row[j].empty()))
+                                    if (((ph_prop == Qnt) || (ph_prop == pH) || (ph_prop == pV) ||  (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) ||  (ph_prop == sArea) || (ph_prop == RHO) || (ph_prop == Gex)) && (!row[j].empty()))
                                     {
                                         h_phprop = true;
                                     }
@@ -391,8 +395,8 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                         // getting the name of the property
                                         ph_prop = headline[j].substr((pos_end+f1.length()),(headline[j].size()));
 
-                                        // amount of the property of the phase pahse in the experiment
-                                        if (((ph_prop == Qnt) || (ph_prop == pH) || (ph_prop == pV) ||  (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) ||  (ph_prop == sArea) || (ph_prop == RHO)) && (!row[j].empty()))
+                                        // amount of the property of the phase in the experiment
+                                        if (((ph_prop == Qnt) || (ph_prop == pH) || (ph_prop == pV) ||  (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) ||  (ph_prop == sArea) || (ph_prop == RHO) || (ph_prop == Gex)) && (!row[j].empty()))
                                         {
                                             ss << ic;
                                             sss = ss.str();
@@ -461,7 +465,7 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                                         ph_prop   = ph_prop_3.substr((0),(pos_start));
 
                                         // qunatity of this comp in the phase
-                                        if (((ph_prop != Qnt) && (ph_prop_1 == Qnt) && (ph_prop_2 == IC) && (ph_prop != pH) && (ph_prop != pV) &&  (ph_prop != Eh) && (ph_prop != IS) && (ph_prop != all) &&  (ph_prop != sArea) && (ph_prop != RHO)) && (strncmp(ph_prop.c_str(),"Dc", 2) != 0) && (!row[j].empty()))
+                                        if (((ph_prop != Qnt) && (ph_prop_1 == Qnt) && (ph_prop_2 == IC) && (ph_prop != pH) && (ph_prop != pV) &&  (ph_prop != Eh) && (ph_prop != IS) && (ph_prop != all) &&  (ph_prop != sArea) && (ph_prop != RHO) || (ph_prop == Gex)) && (strncmp(ph_prop.c_str(),"Dc", 2) != 0) && (!row[j].empty()))
                                         {
                                             ss << ic;
                                             sss = ss.str();
@@ -687,17 +691,19 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
                         bson_append_finish_object(&exp); //++ END phase object ++
                     } // END if h_phases
                 } // END ph_new != ph_old
-            } // END check for key pahse in the headline
+            } // END check for key phase in the headline
         }
         //++ END array expphases ++//
         bson_append_finish_array(&exp);
         ph_old = ""; // reseting the old phase name after adding one experiment
-        phases.clear(); // clearing the vector that holds the pahses in one experiment
-        h_phases = false; // reseting the phases handle that cheks if one phase key was not present before
+        phases.clear(); // clearing the vector that holds the phases in one experiment
+        h_phases = false; // reseting the phases handle that checks if one phase key was not present before
 
         bson_finish(&exp);
         ejdbsavebson(coll, &exp, &oid); // saving the document in the database
         bson_destroy(&exp);
-    } // ++ END getting data from CSV ++
+cout << line.c_str() << endl;
+    }  // ++ END loop getting data from CSV ++
+cout << "csvtoejdb end: processed " << is << " samples (.csv rows)" << endl;
     in.close();
 }

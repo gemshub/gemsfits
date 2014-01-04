@@ -174,59 +174,66 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
 
     if(_comment )
     {
-        ff << "\n\n#########################################################################" << endl;
-        ff << "#>>>>>>>>>>>>>>> Parameters to Fit section >>>>>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
-        ff << "#########################################################################" << endl;
-        ff << "\n#  GEM input parameters to be fitted can be marked by preceding them with the F, L, and R letter "
-              "\n#    in <TKval>, <Pval>, <G0>,  <PMc>, <DMc>, <fDQF>, <bIC> ... data object entries below."
-              "\n#  Mark with F the parameter value you want to fit independently of other parameters. Options:"
-              "\n#    F-833444.00006792 : the initial value with default (10%) upper- and lower boundaries;"
-              "\n#    or as in this example for fitting G0(298) of SiO2@ : "
-              "\n#      F{ \"IV\" :-833444.00006792, \"UB\" : -800000, \"LB\" : -900000 }    where:"
-              "\n#      \"IV\": initial value; "
-              "\n#      \"UB\": upper boundary; "
-              "\n#      \"LB\": lower bundary (in this case, all in J/mol). "
-              "\n#  Mark with R the G0(298) value of a dependent component, which depends on G0 of other dependent components"
-              "\n#     via a reaction constraint, by copy-pasting the following template in place of the G0(298) value,"
-              "\n#     and edit it to make the desired changes:"
+        ff << "\n#  GEM input parameters to fit can be marked by preceding them with the F, L, and R letter "
+              "\n#    in <TKval>, <Pval>, <G0>,  <PMc>, <DMc>, <fDQF>, <bIC> ... data object entries, see below."
+              "\n#    Values without markup will not be modified by GEMSFIT2 routines, just used in GEM runs.\n"
+              "\n#  Mark with F the parameter value you want to fit independently of other parameters. "
+              "\n#    Shorthand option: F<initval> - initial value with default (10%) upper- and lower boundaries."
+              "\n#    Example:  ... F-833444 ... (<initval> can be modified, if necessary)."
+              "\n#    Full JSON-style markup syntax for the independently adjusted parameter: as in this example"
+              "\n#      for fitting G0(298) of SiO2@ "
+              "\n#      F{ \"IV\" :-833444, \"UB\" : -800000, \"LB\" : -900000 } "
+              "\n#      where:"
+              "\n#         \"IV\": initial value; "
+              "\n#         \"UB\": upper boundary; "
+              "\n#         \"LB\": lower bundary (in this case, all in J/mol). \n"
+              "\n#  Mark with R the G0(298) value of a Dependent Component, which depends on G0 of other DCs"
+              "\n#     via a reaction constraint, by copy-pasting the following template in place of G0(298) value,"
+              "\n#     and editing it as desired:"
               "\n#      R{ \"IV\" : -36819, \"Ref\" : \"SUPCRT92\", \"order\" : \"1\", \"nC\" : 4, \"rDC\" : \"KOH@\","
               "\n#      \"RC\" : [ \"K+\", \"H2O@\", \"H+\", \"KOH@\" ], \"Rcoef\" : [ -1, -1, 1, 1 ] }"
               "\n#     Here,  \"IV\": initial value; "
-              "\n#          \"Ref\": bibliographic reference;"
-              "\n#          \"order\": reaction order starting from 1, important in case of many reaction with common species;"
+              "\n#         \"Ref\": bibliographic reference (optional);"
+              "\n#         \"order\": reaction order | 1, 2, ... |, important for many reaction with common species;"
               "\n#         \"nC\": numer of components (species) involved in the reaction;"
-              "\n#         \"DC\": name of dependent component whose properties are constrained with this reaction; "
-              "\n#         \"RC\": list [ ] of names of all components (species) involved in the reaction (comma-separated);"
-              "\n#         \"Rcoef\": array [ ] of reaction stoichiometry coeficients (comma-separated), in the same order as in the \"RC\" list."
-              "\n#  Mark with L the bIC (element bulk composition) value of an independent component, which depends on bIC of other elements"
-              "\n#     via a titration constraint by copy-pasting the following template in place of the bIC value,"
-              "\n#     and edit it to make the desired changes:"
+              "\n#         \"DC\": name of Dependent Component whose properties are constrained with this reaction; "
+              "\n#         \"RC\": list [ ] of names of all components (species) involved in reaction (comma-separated);"
+              "\n#         \"Rcoef\": array [ ] of reaction stoichiometry coeficients (comma-separated), "
+              "\n#           in the same order as in the \"RC\" list. This example describes a reaction: "
+              "\n#           K+ + H2O@ = H+ + KOH@ in which G0(KOH@) follows variations of G0(K+) induced by the fitting, "
+              "\n#           such that the logK of this reaction at (T,P) remains constant. \n"
+              "\n#  Mark with L the bIC (system bulk composition) value of Independent Component, "
+              "\n#     which depends on bIC of other elements via a titration constraint,"
+              "\n#     by copy-pasting the following template in place of the bIC value, and editing as desired:"
               "\n#      L{ \"LE\" :\"H\", \"IV\" :113.016746705914, \"LEs\" :[\"S\", \"Cl\"], \"Lcoef\" :[2,1]}"
-              "\n#     Here, H is linked to S and Cl by titration of H2SO4 and HCl, with the stoechiometric coeficients of 2 and 1, respectively."
-              "\n#         \"LE\": linked element "
-              "\n#         \"IV\": initial value "
-              "\n#         \"LEs\": the elements linked to "
-              "\n#         \"Lcoef\": linking coeficients (stoechiometric coeficients) "
+              "\n#     In this example: the amount of H is linked to S and Cl by titration with H2SO4 and HCl, "
+              "\n#         with stoichiometry coeficients of 2 and 1, respectively."
+              "\n#        \"LE\": linked element "
+              "\n#        \"IV\": initial value "
+              "\n#        \"LEs\": the elements linked to "
+              "\n#        \"Lcoef\": linkage coefficients (stoichiometry coefficients) "
+              "\n#         Whenever the bIC values of S or Cl are varied as (independent) titration parameters,"
+              "\n#         the bIC value of H will be adjusted to titrate the system either with H2SO4 or with HCl."
            << endl;
     }
 
     TPrintArrays  prarCH(30, DataCH_dynamic_fields, ff);
 
     if( _comment )
-        ff << "\n# ICNL: List of Independent Component names (for readability)";
+        ff << "\n# ICNL: List of Independent Component names (for readability; no need to modify)";
     prarCH.writeArray(  "ICNL", CSD->ICNL[0], CSD->nIC, MaxICN );
     if( _comment )
-            ff << "\n# DCNL: List of Dependent Component names (for readability)";
+            ff << "\n# DCNL: List of Dependent Component names (for readability; no need to modify)";
     prarCH.writeArray(  "DCNL", CSD->DCNL[0], CSD->nDC, MaxDCN );
     if( _comment )
-            ff << "\n# PHNL: List of Phase names (for readability)";
+            ff << "\n# PHNL: List of Phase names (for readability; no need to modify)";
     prarCH.writeArray(  "PHNL", CSD->PHNL[0], CSD->nPH, MaxPHN );
 //    prarCH.writeArrayF(  f_ccPH, CSD->ccPH, CSD->nPH, 1L,_comment, brief_mode );
 //    prarCH.writeArray(  f_nDCinPH, CSD->nDCinPH, CSD->nPH, -1L,_comment, brief_mode);
 //    prarCH.writeArray(  f_TKval, CSD->TKval, CSD->nTp, -1L,_comment, brief_mode );
 //    prarCH.writeArray(  f_Pval, CSD->Pval, CSD->nPp,  -1L,_comment, brief_mode );
     vector <double> xG0;
-    ff << "\n \n# G0: Look-up array for DC molar Gibbs energy function g(T,P), J/mol at 298.15K and 1 bar \n";
+    ff << "\n \n# G0: Look-up array for DC Gibbs energy function g(T,P), J/mol at 298.15K and 1 bar \n";
     ff << "<G0>" << endl;
     for (int i=0; i<CSD->nDC*node->gridTP(); ++i)
     {
@@ -235,10 +242,12 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
         i += node->gridTP()-1;
     }
 
-    ff << "\n \n# logK: Look-up array for reaction logK at T * P * nr. reactions. If a G0 parameter is marked for reaction and \n";
-    ff << "\n# the list below is left empty, the logK will be calculated based on the initial values of the parameters and these will \n";
-    ff << "\n# be used troughout the fitting process \n";
-    ff << "<logK>" << endl;
+    ff << "\n \n# logK: Look-up array for logK at T * P * nr reactions. "
+          "\n#    If at least one G0 parameter is marked as \'R\' (reaction-constrained)"
+          "\n#    and the list below is left commented out, then logK values for all T,P pairs and reactions"
+          "\n#    will be calculated based on the initial values of all parameters, and this logK array"
+          "\n#    will be used throughout the fitting process. " << endl;
+    ff << "#<logK>" << endl;
 
     if(_comment )
     {
@@ -253,7 +262,7 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
     {
       if( _comment )
          ff << "\n# Initial data for multicomponent phases (fragment of GEMS3K *IMP.dat input file)"
-               "\n#    (see DCH file for dimension nPHs)";
+               "\n#    (see the DCH file for the dimension nPHs)";
       prarIPM.writeArrayF(  f_sMod, pmp->sMod[0], pmp->FIs, 6L, _comment, brief_mode );
 
     long int LsModSum;
@@ -275,19 +284,19 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
       if(LsModSum )
        {
          if( _comment )
-            ff << "\n\n# PMc: Tables (in TSolMod convention) of interaction parameter coefficients  for non-ideal solutions";
+            ff << "\n\n# PMc: Tables (in TSolMod convention) of interaction parameter coefficients for non-ideal solutions";
         prarIPM.writeArray(  "PMc", pmp->PMc,  LsModSum);
        }
 
        prarIPM.writeArray(  f_LsMdc, pmp->LsMdc, pmp->FIs*3, 3L, _comment, brief_mode);
        if(LsMdcSum )
        {   if( _comment )
-              ff << "\n\n# DMc: Tables (in TSolMod convention) of  parameter coefficients for dependent components";
+              ff << "\n\n# DMc: Tables (in TSolMod convention) of  parameter coefficients for Dependent Components";
         prarIPM.writeArray(  "DMc", pmp->DMc,  LsMdcSum);
        }
        if(LsMsnSum )
        {   if( _comment )
-              ff << "\n\n# MoiSN:  end member moiety / site multiplicity number tables (in TSolMod convention) ";
+              ff << "\n\n# MoiSN:  End member moiety / site multiplicity number tables (in TSolMod convention) ";
         prarIPM.writeArray(  "MoiSN", pmp->MoiSN,  LsMsnSum);
        }
     } // sMod
@@ -295,13 +304,13 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
 
 
     if( _comment )
-       ff << "\n\n# This part for the system composition data is taken from *DBR.dat\n";
+       ff << "\n\n# This part for the system composition data is taken from the *DBR.dat file\n";
 
     // from *DBR.dat
     TPrintArrays  prar(f_bSP+1/*52*/, DataBR_fields, ff);
 
-    ff<< "\n# For fitting T and P parameters in thermobarometry application give the upper and lower values correspodning "
-         "\n# to the interpolation range you selected when the GEMS3K system files were exported ";
+    ff<< "\n# For fitting T and P parameters in thermobarometry application, give the upper and lower values"
+         "\n#   corresponding to the interpolation range that you selected when exporting GEMS3K input files ";
 
     prar.writeField(f_TK, CNode->TK, _comment, brief_mode  );
     prar.writeField(f_P, CNode->P, _comment, brief_mode  );
@@ -322,13 +331,6 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
           prar.writeArray(  NULL, CSD->PHNL[0], CSD->nPH, MaxPHN );
     }
     prar.writeArray(  f_aPH,  CNode->aPH, CSD->nPHb, -1L,_comment, brief_mode );
-
-//    if(_comment )
-//    {
-//        ff << "\n\n#########################################################################" << endl;
-//        ff << "#>>>>>>>>>>>>>>> Data to compare section >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
-//        ff << "#########################################################################" << endl;
-//    }
 
     prar.writeField(f_Vs, CNode->Vs, _comment, brief_mode  );
     prar.writeField(f_Ms, CNode->Ms, _comment, brief_mode  );
@@ -374,7 +376,7 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
     }
 }
 
-/// Reading part MULTI structure from OptParamFile text file
+/// Reading part of the MULTI structure from OptParamFile text file
 void get_gems_fit_multi_txt(TNode* node, opti_vector *op )
 {
     // open file for reading
@@ -454,7 +456,7 @@ void get_gems_fit_multi_txt(TNode* node, opti_vector *op )
                       {   // after F comes a JSON object
                           F_to_OP(op, vFormats[ii], MULTI_dynamic_fields[nfild].name );
                       } else
-                      {   // after F compes the initial value
+                      {   // after F comes the initial value
                           switch( nfild )
                           {
                           case f_sMod:
@@ -812,11 +814,13 @@ TGfitPath::TGfitPath(int c, char *v[]):
     if (ihelp !=0)
     {
         cout << " USAGE: \n"
+                "   gemsfit2  -help \n"
                 "   gemsfit2  -run      <path to gemsfit2 input file> \n"
-                "   gemsfit2  -init     <path to GEMS3K exported system list file *-dat.lst> \n\n"
+                "   gemsfit2  -init     <path to GEMS3K input file list *-dat.lst> [ <init file template name> ] \n\n"
                 " WHERE: \n"
-                "   -run,   runs the program with the settings from the input file \n"
-                "   -init,  writes a template input file using the exported GEMS3K system files \n"<< endl;
+                "   -run:   runs the program with the settings from the input file \n"
+                "   -init:  writes a template input file using the exported GEMS3K system files \n"
+                "   -help:  displays this help for command-line options." << endl;
         mode = HELP_;
     } else
     {
@@ -833,8 +837,14 @@ TGfitPath::TGfitPath(int c, char *v[]):
         {
             if (argc <= iinit + 1)
                 Error("Wrong options", "Wrong argument for option -init");
-            gems3LstFilePath = argv[iinit + 1];
+            gems3LstFilePath = argv[iinit+1];
             mode = INIT_;
+            if (argc > iinit + 2)  // Optional: file name for the GEMSFIT2 init file template
+            {
+                optParamFile = optParamFilePath;
+                optParamFile += "/";
+                optParamFile += argv[iinit+2];
+            }
         }
 
         if (iconf != 0)
@@ -870,6 +880,7 @@ TGfitPath::TGfitPath(int c, char *v[]):
         fitStatistics = outputDir+FIT_STATISTIC;
         fitLogFile = outputDir+FIT_LOGFILE;
 
+        cout << "GEMSFIT2: Start" << endl;
         cout << "optParamFile = " << optParamFile << endl;
         cout << "fitFile = " << fitFile << endl;
         cout << "fitLogFile = " << fitLogFile << endl;
@@ -901,58 +912,70 @@ outField Data_Manager_fields[9] =
     { "DataSource",  1, 0, 1, "\n# DataSource: get experimental data from the EJDB format database"
       "\n#     (default:0, no other sources yet implemented in GEMSFIT2)\n" },
 
-    { "DataSelect", 0, 0, 1, "\n# DataSelect: query for obtaining the experimental data from the database."
+    { "DataSelect", 0, 0, 1, "# DataSelect: query for obtaining the experimental data from the database."
       "\n# Options: "
 //      "\n#    \'all\': select all data"
       "\n#    \'{ ... }\': script in JSON format (in braces) describing what to select. "
       "\n#      \"sample\": [...]: list of comma-separated names of samples, "
-      "\n#         or empty string \"\" to select all samples;"
+      "\n#         or empty string \"\" to select all samples."
       "\n#      \"usedataset\": [...]: list of comma-separated names of experimental datasets to be used, "
-      "\n#         or empty string \"\" to select all available datasets;"
+      "\n#         or empty string \"\" to select all available datasets."
       "\n#      \"skipdataset\": [...]: list of comma-separated names of experimental datasets to be skipped, "
-      "\n#         or empty string \"\" to not skipp (in this case usedataset will apply);"
+      "\n#         or empty string \"\" to not skip (in this case usedataset will apply)."
+//      "\n#      \"skipsample\": [...]: list of comma-separated names of samples to be skipped, "
+//      "\n#         or empty string "" to not skip (in this case, sample list will apply)."
       "\n#      \"sT\": [...]: list of comma-separated minimum and maximum temperature, C, "
-      "\n#         or empty string \"\" to select data for all available temperatures; "
+      "\n#         or empty string \"\" to select data for all available temperatures. "
       "\n#      \"sP\": [...]: list of comma-separated minimum and maximum pressures, bar, "
-      "\n#         or empty string \"\" to select data for all available pressures;  "
+      "\n#         or empty string \"\" to select data for all available pressures.  "
       "\n#      Example: "
       "\n#      \'{ \"sample\" : \"\", "
       "\n#        \"usedataset\" : [\"CH04\", \"CH04D\"],"
       "\n#        \"skipdataset\" : [\"CH03\", \"CH03D\"],"
       "\n#        \"sT\" : [100, 1000],"
       "\n#        \"sP\" : [1, 2500] }\'"
-      "\n#      Paste the above example below, remove comment symbols (#), and edit as necessary.\n"
+      "\n#      Copy the example and paste it below, remove comment symbols (#), and edit as necessary.\n"
     },
 
-    { "DataTarget",  0, 0, 1, "\n# DataTarget: Target function for parameter fitting, described in JSON style"
+    { "DataTarget",  0, 0, 1, "# DataTarget: Target function for parameter fitting, described in JSON style"
       "\n#     as text in single quotes and braces: \'{ ... }\' "
       "\n#  \"Target\":  name of the target (objective) function (optional)"
-      "\n#  \"TT\":  type of target function as sum of following terms: "
+      "\n#  \"TT\":  type of the target function as sum of the following terms: "
       "\n#     \"lsq\":       w*(measured-simulated)^2;"
       "\n#     \"lsq-norm\":  w*(measured/avgm-simulated/avgm)^2;"
-      "\n#     ... "
-      "\n#  \"WT\":  weighting scheme: empty string \"\": w = 1 (equal weights);"
-      "\n#       \"inverr\": w=1/error; \"inverr2\": w=1/error^2; \"inverr3\": w=1/measured^2;"
-      "\n#       \"inverr_norm\": w=1/(error/<meas(average)>)^2; "
-      "\n#  \"OFUN\":  objective function, a list [] of terms {} for measured properties to compare with their computed counterparts. "
-      "\n#     Each term can contain property-value pairs:"
-      "\n#       \"EPH\": for what phase from the experiments "
-      "\n#       \"CT\":  for the type of data to compare: \"IC\" for independent component; \"DC\" for dependent component; "
-      "\n#                                                 \"prop\" for phase property; \"MR\" molar fraction; "
-      "\n#       \"CN\":  the name/formula of the data to compare. e.g. \"Al\" if \"CT\" is \"IC\", or \"pH\" if \"CT\" is \"prop\" "
-      "\n#                                                              \"K/Na+K\" if \"CT\" is \"MR\" "
-      "\n#       \"DCP\": used only if \"CT\" is \"DC\", represent the name of the dependent component property: \"Q\" for amount; \"@coef\" for activity coeficient "
-      "\n#       \"unit\":  what unit the values should are given in (overrides the units given in the database for this entry):"
+      "\n#      ... "
+      "\n#      here, avgm is the arithmetic mean of measured values."
+      "\n#  \"WT\":  weighting scheme for samples, one of the following options:"
+      "\n#       empty string \"\": w = 1 (equal weights);"
+      "\n#      \"inverr\": w=1/error; \"inverr2\": w=1/error^2; \"inverr3\": w=1/measured^2;"
+      "\n#      \"inverr_norm\": w=1/(error/avgm)^2; "
+      "\n#       ... "
+      "\n#  \"OFUN\":  objective function, a list [] of terms {} for measured properties to compare"
+      "\n#     with their computed counterparts. Each term can contain property-value pairs:"
+      "\n#      \"EPH\": for what phase from the experiments"
+      "\n#      \"CT\":  for the type of data to compare:"
+      "\n#          \"IC\" for independent component; \"DC\" for dependent component; "
+      "\n#          \"prop\" for phase property; \"MR\" for mole fraction; "
+      "\n#      \"CN\":  the name/formula of the data to compare. e.g. \"Al\" if \"CT\" is \"IC\","
+      "\n#          or \"pH\" if \"CT\" is \"prop\", or \"K/(Na+K)\" if \"CT\" is \"MR\" "
+      "\n#      \"DCP\": used only if \"CT\" is \"DC\", to represent the name of dependent component property:"
+      "\n#          \"Q\" for amount; \"@coef\" for activity coeficient"
+      "\n#       \"unit\":  units of measurement (override those given in the database for this value):"
       "\n#          \"molal\":  mol/(kg H2O), \"loga\": log(molal), \"-loga\": negated log(molal);"
-      "\n#          \"g\"; \"kg\"; \"cm3\"; \"m3\"; \"molfrac\": mole ratio "
+      "\n#          \"g\"; \"kg\"; \"cm3\"; \"m3\"; \"molfrac\": mole fraction; kJ/mol for Gex "
       "\n#           ..."
-      "\n#       (conversions are performed automatically.)"
-      "\n#     The compare options are: "
+      "\n#       (conversions will be performed automatically)."
+      "\n#     The comparison options are: "
       "\n#       aqueous phase (\"aq_gen\") elemental composition in \"molal\" or \"loga\" "
-      "\n#       aqueous phase (\"aq_gen\") properties (\"prop\"): \"pH\" in \"-loga\" (or \"molal\" - molality concentration of H+); \"Q\" - mass in \"g\" or \"kg\"  "
-      "\n#       other phases composition as element bulk phase concentration in moles (\"mol\") or to /Si molar ratio (\"Simolfrac\")"
-      "\n#       other phases properties (\"prop\"): \"Q\" - mass in \"g\" or \"kg\"; \"pV\" - volume in \"cm3\" or \"m3\";  \"Eh\" - volume in \"Volts\" "
-      "\n#       dependent components (\"DC\") properties: \"Q\" - amount in \"mol\"; \"@coef\" - activity coefictient "
+      "\n#       aqueous phase (\"aq_gen\") properties (\"prop\"): \"pH\" in \"-loga\" (or \"molal\" "
+      "\n#          - molality concentration of H+); \"Q\" - mass in \"g\" or \"kg\"  "
+      "\n#       other phases composition as element bulk amount in moles (\"mol\") "
+      "\n#          or to /Si molar ratio (\"Simolfrac\")"
+      "\n#       other phases properties (\"prop\"): \"Q\" - mass in \"g\" or \"kg\"; "
+      "\n#          \"pV\" - volume in \"cm3\" or \"m3\";  \"Eh\" - volume in \"Volts\" "
+      "\n#       dependent components (\"DC\") properties: \"Q\" - amount in \"mol\"; "
+      "\n#          \"@coef\" - activity coefictient "
+      "\n#           ..."
       "\n#  Example:"
       "\n#  \'{ \"Target\": \"name\", \"TT\": \"lsq\", \"WT\": \"inverr\", \"OFUN\":"
       "\n#      ["
@@ -962,12 +985,14 @@ outField Data_Manager_fields[9] =
       "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"DC\", \"CN\": \"SiO2@\", \"DCP\" : \"Q\", \"unit\": \"mol\"}"
       "\n#      ]"
       "\n#   }\'"
-      "\n#  Paste the above example below, remove comment symbols (#), and edit as necessary. Remove unwanted rows {...}\n"
+      "\n#  Copy the example, paste it below, remove the comment symbols (#), and edit as necessary. "
+      "\n#     Remove the unnecessary rows {...}\n"
+
     },
     { "SystemFiles",  0, 0, 1, "\n# SystemFiles: path to the list of GEMS3K input files (also used for this template file)\n" },
 //    { "RecipeFiles",  0, 0, 1, "\n# RecipeFiles: Comment"},
     { "LimitOfDetection",  0, 0, 1, "\n# LimitOfDetection: Limit of detection of the measured values."
-      "\n# Ensures that wrongly computed values calculated by GEMS due to non-physical parameter values are ignored.\n" }
+      "\n#     Ensures that wrongly computed output values due to non-physical input parameter values are ignored.\n" }
 };
 
 typedef enum { /// Field index into outField structure
@@ -1017,7 +1042,7 @@ void Data_Manager::out_db_specs_txt( bool with_comments, bool brief_mode )
     if(with_comments )
     {
         ff << "#########################################################################" << endl;
-        ff << "#>>>>>>>>>>>>>>> GEMSFIT2 input file template >>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
+        ff << "#>>>>>>>>>>> GEMSFIT2 input specification file template >>>>>>>>>>>>>>>>#" << endl;
         ff << "#########################################################################" << endl;
         ff << "#  Character '#' means a comment line ";
     }
@@ -1027,17 +1052,38 @@ void Data_Manager::out_db_specs_txt( bool with_comments, bool brief_mode )
     if(with_comments )
     {
         ff << "\n\n#########################################################################" << endl;
-        ff << "#>>>>>>>>>>>>>>>>>>>>>> Data sources section >>>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
+        ff << "#>>>>>>>>>>>>>>>>>>>>>>>> Data Sources section >>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
         ff << "#########################################################################";
     }
     prar.writeField(f_DataSource, (long int)datasource, with_comments, brief_mode  );
     prar.writeField(f_DataDB, DBname, with_comments, brief_mode  );
     prar.writeField(f_DataCollection, collection, with_comments, brief_mode  );
-    prar.writeField(f_DataSelect, DataSelect, with_comments, brief_mode );
-    prar.writeField(f_DataTarget, DataTarget, with_comments, brief_mode );
     prar.writeField(f_SystemFiles, gpf->GEMS3LstFilePath(), with_comments, brief_mode  );
 //    prar.writeField(f_RecipeFiles, "", with_comments, brief_mode  );
+
+    if(with_comments )
+    {
+        ff << "\n\n#########################################################################" << endl;
+        ff << "#>>>>>>>>>>>>>>>>>>>>>>> DataSelect section >>>>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
+        ff << "#########################################################################" << endl;
+    }
+    prar.writeField(f_DataSelect, DataSelect, with_comments, brief_mode );
+
+    if(with_comments )
+    {
+        ff << "\n\n#########################################################################" << endl;
+        ff << "#>>>>>>>>>>>>>>>>>>>>>>> DataTarget section >>>>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
+        ff << "#########################################################################" << endl;
+    }
+    prar.writeField(f_DataTarget, DataTarget, with_comments, brief_mode );
     prar.writeField(f_LimitOfDetection, (double)LimitOfDetection, with_comments, brief_mode  );
+
+    if(with_comments )
+    {
+        ff << "\n\n#########################################################################" << endl;
+        ff << "#>>>>>>>>>>>>>>>>>>>>>> ParameterMarkup section >>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
+        ff << "#########################################################################" << endl;
+    }
 }
 
 // get PostgreSQL database connection parameters
@@ -1050,8 +1096,6 @@ void Data_Manager::get_db_specs_txt( )
     ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
 
     TReadArrays  rdar(8, Data_Manager_fields, ff);
-
-
 
     long int nfild = rdar.findNextNotAll();
     while( nfild >=0 )
@@ -1283,7 +1327,7 @@ void optimization::out_nlopt_param_txt( bool with_comments, bool brief_mode )
     if(with_comments )
     {
         ff << "\n\n#########################################################################" << endl;
-        ff << "#>>>>>>>>>>>>>>> Optimization Methods section >>>>>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
+        ff << "#>>>>>>>>>>>>>>>> OptimizationMethods section >>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
         ff << "#########################################################################" << endl;
     }
 

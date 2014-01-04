@@ -1,6 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><title>HOWTO Run GEMSFIT2 Program</title>
 
+
   
 
   
@@ -26,54 +27,66 @@
 <h4>Contents</h4>
 
 <ul>
-  <li><a href="#-init">-init </a>- generates the template input file</li>
+  <li><a href="#-init">-init mode </a>- generates the template input file</li>
   <li><a href="#Editing">Edit</a> the <a href="gemsfit-input-file.html">input file</a></li>
-  <li><a href="#-run">-run</a> - running the optimization</li>
+  <li><a href="#-run">-run mode</a> - running the optimization</li>
   <li><a href="#Output_and_results">Output and results</a></li>
   <li><a href="#Return_codes_and_error_messages">Return codes and messages</a></li>
 </ul>
 <br>
 
 
-<hr style="width: 100%; height: 2px;">gemsfit2 is the main tool used
-for processing/fitting the data. Once the user produced a database file (EJFB format) and exported the GEMS3K chemical
-system files, he can proceed with the preparation of the fitting routine and
-start the actual fitting.<br>
+<hr style="width: 100%; height: 2px;">
+<p>The gemsfit2 program is a tool used
+for GEM input parameter optimization. Once the user has produced a database file (EJFB format) and exported the GEMS3K chemical
+system files, she/he can proceed with the preparation of the fitting routine and
+start the actual fitting. The gemsfit2 has two modes of execution: <big><span style="font-weight: bold; font-family: monospace;">-init </span></big>and <big style="font-family: monospace;"><span style="font-weight: bold;">-run</span></big>; calling the program with <big style="font-weight: bold;"><span style="font-family: monospace;">-help</span></big> key shows help comments on the previous two modes of operation.<br>
+</p>
 
-<br>
-
-gemsfit2 has two running modes: <big><span style="font-weight: bold; font-family: monospace;">-init </span></big>and <big style="font-family: monospace;"><span style="font-weight: bold;">-run</span></big>.<br>
 <h3>
 
-1. <a name="-init"></a>-init</h3>
+1. <a name="-init"></a>-init mode<br>
+</h3>
+<p>
 If the user is running gemsfit for the first time or he is using a
 different database of experiments, different chemical system, or an
 updated database, he has to first run the program in the "-init" mode. For
-every change in the experimental database and the GEMS3K exported system files
-gemsift2 should first be run in the "-init" mode!<br>Runing in -init mode using the command line needs two
-arguments:<br>
+every change in the experimental database and/or an update of the GEMS3K exported input files,
+the gemsift2 program should be (re-)run in the "-init" mode!</p>
+Runing in the -init mode from the command line needs two
+compulsory and one optional arguments:<br>
 
 <br><big style="font-weight: bold; font-family: monospace;">
 
-&nbsp;&nbsp;&nbsp; $ gemsfit2 -init &lt;path to
-&lt;GEMS3K&gt;-dat.lst&gt;<br>
-&nbsp;&nbsp;&nbsp; </big><big style="font-weight: bold; font-family: monospace;">$ gemsfit2 -init ./GEMS-files/mySystem-dat.lst</big><br>
+&nbsp;&nbsp;&nbsp; ~$ gemsfit2 -init &lt;path to
+&lt;GEMS3K&gt;-dat.lst&gt; [&lt;template input file name&gt;]<br>
+</big>
+<p>Example:</p>
+<big style="font-weight: bold; font-family: monospace;">
+&nbsp;&nbsp;&nbsp; </big><big style="font-weight: bold; font-family: monospace;">~$ gemsfit2 -init ./GEMS-files/mySystem-dat.lst<br>
+</big><big style="font-weight: bold; font-family: monospace;">&nbsp;&nbsp;&nbsp; ~$ gemsfit2 -init ./GEMS-files/mySystem-dat.lst gemsfit_input_mySystem.dat</big><br>
 
 
-<br>
-the second argument is the path to the .lst file
-that sits in the same folder with the rest of the GEMS3K exported
-system files. After running gemsfit2 in "-init" mode, a template input
-file named gemsfit_input.dat is produced using some parts of GEMS3K
-input files.<br>
+
+<br>the second argument is the path to the .lst file
+that sits in the same folder with other GEMS3K input files. After
+running gemsfit2 in "-init" mode with two command line arguments, a
+template input
+file named <big style="font-weight: bold;"><span style="font-family: monospace;">gemsfit_input.dat</span></big>
+is produced using some parts of the content of GEMS3K
+input files. With the optional third argument,&nbsp; this default file
+name can be replaced with another&nbsp; one (usually containing part of
+the GEMS3K file list name).<br>
 <br>
 <hr style="width: 100%; height: 2px;">
 <h3>
 
 2. <a name="Editing"></a>Editing the <a href="gemsfit-input-file.html">input file</a></h3>
+<p>
 The user has to carefully look through and edit the template file
 according to the instructions (comments) given in the file for each
-section. <br>The main options to specify are:<br>
+section. The main options to specify are:</p>
+
 <ul>
   <li>&nbsp;
 
@@ -101,17 +114,24 @@ etc.)</li>
 
 &nbsp; what statistics parameters to compute</li>
 </ul>
-<br>
+<p>See details about editing the input specifications file in the document <a style="font-weight: bold;" href="gemsfit-input-file.html" target="_blank"><big><span style="font-family: monospace;">gemsfit_input_file.html</span></big></a>.</p>
+
 <hr style="width: 100%; height: 2px;">
 <h3>
 
-3. <a name="-run"></a>-run</h3>
-Run gemsfit2 fitting task using the "-run" mode. Running in -run mode using command line needs two
-arguments:<br>
+3. <a name="-run"></a>-run mode<br>
+</h3>
+<p>
+Run gemsfit2 parameter optimization task using the "-run" mode, which needs two
+arguments: &nbsp;  <br>
+</p>
+<big style="font-weight: bold;"><span style="font-family: monospace;">
 
-&nbsp;&nbsp;&nbsp; <br><big style="font-weight: bold;"><span style="font-family: monospace;">
-
-&nbsp;&nbsp;&nbsp; $ gemsfi2 -run &lt;path to gemsfit_input.dat&gt;<br>
+&nbsp;&nbsp;&nbsp; $ gemsfi2 -run &lt;path to gemsfit_input_file&gt;<br>
+</span></big>
+<p>Example (to run the gemsfit2 with the input specifications file from the same folder where the executable exists):</p>
+<p><big style="font-weight: bold;"><span style="font-family: monospace;"></span></big></p>
+<big style="font-weight: bold;"><span style="font-family: monospace;">
 &nbsp;&nbsp;&nbsp; </span></big><big style="font-weight: bold;"><span style="font-family: monospace;">$ gemsfi2 -run ./gemsfit_input.dat</span></big><br>
 <big style="font-weight: bold;"><span style="font-family: monospace;"><br>
 </span></big>
@@ -148,11 +168,11 @@ until the name is changed, the file is moved or deleted.<br>
 <br>
 <hr style="width: 100%; height: 2px;"><br>
 Last
-updated:&nbsp; 11.10. 2013&nbsp; DM, DK <br style="font-family: Helvetica,Arial,sans-serif;">
+updated:&nbsp; 04.01. 2013&nbsp; DM, DK <br style="font-family: Helvetica,Arial,sans-serif;">
 
 <br style="font-family: Helvetica,Arial,sans-serif;">
 
-Copyright&nbsp; (c) 2013&nbsp; <a href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a><br style="font-family: Helvetica,Arial,sans-serif;">
+Copyright&nbsp; (c) 2013-2014&nbsp; <a href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a><br style="font-family: Helvetica,Arial,sans-serif;">
 
 <hr style="font-family: Helvetica,Arial,sans-serif;" size="2" width="100%"><br>
 

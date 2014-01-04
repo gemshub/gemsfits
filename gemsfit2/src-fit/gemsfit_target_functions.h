@@ -126,7 +126,7 @@ void adjust_Lp (TGfitTask *sys);
 * Checks if the unit specified in the target function in the input file corresponds with the unit in the
 * Data Manager class
 * @param i      position in the experiments vector (which experiment)
-* @param p      position in the expphases vector (which pahse)
+* @param p      position in the expphases vector (which phase)
 * @param e      position in the phcomp vector (which element)
 * @param unit   unit of form the target function specified in the input file
 * @param sys    pointer to data object that holds the data of the current TGfitTask struct
@@ -139,7 +139,7 @@ void check_unit(int i, int p, int e, string unit, TGfitTask *sys );
 * Checks if the unit specified in the target function in the input file corresponds with the unit in the
 * Data Manager class
 * @param i      position in the experiments vector (which experiment)
-* @param p      position in the expphases vector (which pahse)
+* @param p      position in the expphases vector (which phase)
 * @param pp     position in the phprop vector (which property)
 * @param unit   unit of form the target function specified in the input file
 * @param sys    pointer to data object that holds the data of the current TGfitTask struct
@@ -150,10 +150,10 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys );
 
 
 /**
-* Returns the residual from comparing the calculated with the meaured
+* Returns the residual from comparing the calculated with the measured
 * elemental composition a phase
 * @param i      position in the experiments vector (which experiment)
-* @param p      position in the expphases vector (which pahse)
+* @param p      position in the expphases vector (which phase)
 * @param e      position in the phcomp vector (which element)
 * @param j      position in the objfun vector
 * @param sys    pointer to data object that holds the data of the current TGfitTask struct
@@ -163,10 +163,10 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys );
 double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys);
 
 /**
-* Returns the residual from comparing the calculated with the meaured
+* Returns the residual from comparing the calculated with the measured
 * element mole ratio in a phase
 * @param i      position in the experiments vector (which experiment)
-* @param p      position in the expphases vector (which pahse)
+* @param p      position in the expphases vector (which phase)
 * @param f      position in the phMR vector (which mole ratio)
 * @param j      position in the objfun vector
 * @param sys    pointer to data object that holds the data of the current TGfitTask struct
@@ -176,10 +176,10 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys);
 double residual_phase_elemMR (int i, int p, int f, int j, TGfitTask *sys);
 
 /**
-* Returns the residual from comparing the calculated with the meaured
-* the elemental composition a phase
+* Returns the residual from comparing the calculated with the measured
+* bulk property of a phase
 * @param i      position in the experiments vector (which experiment)
-* @param p      position in the expphases vector (which pahse)
+* @param p      position in the expphases vector (which phase)
 * @param pp     position in the phprop vector (which property)
 * @param j      position in the objfun vector
 * @param sys    pointer to data object that holds the data of the current TGfitTask struct
@@ -189,12 +189,12 @@ double residual_phase_elemMR (int i, int p, int f, int j, TGfitTask *sys);
 double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys);
 
 /**
-* Returns the residual from comparing the calculated with the meaured
-* the elemental composition a phase
+* Returns the residual from comparing the calculated with the measured
+* speciation in a phase
 * @param i      position in the experiments vector (which experiment)
-* @param p      position in the expphases vector (which pahse)
-* @param dc     position in the phDC vector (which which dcomp)
-* @param dcp    position in the DCprop vector (which which dcomp property)
+* @param p      position in the expphases vector (which phase)
+* @param dc     position in the phDC vector (which dcomp)
+* @param dcp    position in the DCprop vector (which dcomp property)
 * @param j      position in the objfun vector
 * @param sys    pointer to data object that holds the data of the current TGfitTask struct
 * @author DM
@@ -205,7 +205,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
 /**
 * Returns the weight based on the weight type
 * @param i      position in the experiments vector (which experiment)
-* @param p      position in the expphases vector (which pahse)
+* @param p      position in the expphases vector (which phase)
 * @param e      position in the phIC vector (which element)
 * @param j      position in the objective function vector
 * @param type   type of weighting
@@ -218,7 +218,7 @@ double weight (int i, int p, int e, int j, string type, TGfitTask *sys);
 /**
 * Returns the weight based on the weight type
 * @param i      position in the experiments vector (which experiment)
-* @param p      position in the expphases vector (which pahse)
+* @param p      position in the expphases vector (which phase)
 * @param f      position in the phMR vector (which molar faction formula)
 * @param j      position in the objective function vector
 * @param type   type of weighting
@@ -242,7 +242,7 @@ void interpretMR (vector<string> *nom, vector<string> *denom, string name);
 /**
 * Returns the weight based on the weight type
 * @param i      position in the experiments vector (which experiment)
-* @param p      position in the expphases vector (which pahse)
+* @param p      position in the expphases vector (which phase)
 * @param pp     position in the phprop vector (which property)
 * @param j      position in the objective function vector
 * @param type   type of weighting
@@ -255,7 +255,7 @@ double weight_phprop (int i, int p, int pp, int j, string type, TGfitTask *sys);
 /**
 * Returns the weight based on the weight type
 * @param i      position in the experiments vector (which experiment)
-* @param p      position in the expphases vector (which pahse)
+* @param p      position in the expphases vector (which phase)
 * @param dc     position in the phDC vector (which which dcomp)
 * @param dcp    position in the DCprop vector (which which dcomp property)
 * @param j      position in the objective function vector

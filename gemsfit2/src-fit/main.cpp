@@ -179,6 +179,7 @@ int main( int argc, char *argv[] )
     double delta = ((end.tv_sec  - start.tv_sec) * 1000000u +
              end.tv_usec - start.tv_usec) / 1.e6;
     cout << delta << " seconds." << endl;
+    cout << "GEMSFIT2: End. Bye!" << endl;
 }
 
 

@@ -7,6 +7,8 @@
 
 
 
+
+
   
 
   
@@ -22,7 +24,7 @@
 The csvtoejdb utility program<br>
 </font></h1>
 
-<h2>How to extend and maintain the experimental databases using
+<h2>How to extend and maintain experimental databases using
 csvtoejdb<br>
 </h2>
 
@@ -63,30 +65,31 @@ GEMSFIT2 database of experimental data into JSON text file(s), and
 restore the EJDB GEMSFIT2 database from the backup JSON text files. <br>
 </p>
 
-<p>csvtoejdb is written mainly by Dan Miron
+<p>csvtoejdb code is written mainly by G. Dan Miron
 (http://www.geopetro.ethz.ch/people/dmiron) as part of the GEMSFIT2
 project (http://gems.web.psi.ch/GEMSFIT/). Uses jansson
 (http://www.digip.org/jansson/) and EJDB (http://ejdb.org/) C/C++
-libraries.<br>
+libraries. Concepts and documentation were developed by G.Dan Miron and Dmitrii A. Kulik (http://people.web.psi.ch/kulik).</p>
+<p><br>
 </p>
 
-<p> The naming scheme of the columns is done in such a way that it is
-user friendly, it can describe a various suite of geochemical
-experiments, and very important, it can be adapted to new data.<br>
-</p>
+
+
 
 <hr style="width: 100%; height: 2px;">
 <h3><a name="CSVTOEJDB_WORKFLOW"></a>Workflow of csvtoejdb</h3>
 <h3><a name="1._Prepare_your_data_"></a>1. Prepare your data<small> </small></h3>
-in a preformatted excel file. See
+Prepare your experimental data in a preformatted excel file. See
 ./xls/excel_example.xls or ./xls/solcash_example.xlsx (for CASH
-systems) as a template. 
+systems) as a template.&nbsp; The naming scheme of spreadsheet columns is done in such a way that it is
+user friendly, it can describe a various suite of geochemical
+experiments, and, very important, it can be easily adapted to new data types. 
 
-<p>The column names and their order in the excel table should follow as
-described in the tables below, grouped in three sections: EXPERIMENTS
-DESCRIPTION; SYSTEM COMPOSITION; RESULTS. </p>
+<p>Column names and their order in the excel table should follow the
+patterns described in the tables below, grouped in three sections: <a href="#EXPERDESCR">EXPERIMENTS
+DESCRIPTION</a>; <a href="#SYSCOMPOS">SYSTEM COMPOSITION</a>; <a href="#RESULTS">RESULTS</a>. </p>
 
-Column name rules:<br>
+Column name rules and conventions:<br>
 
 <br>
 
@@ -110,14 +113,13 @@ name (from GEMS3K .DCH file)<br>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#comp">comp</a>.</big></td>
-      <td style="vertical-align: top;">should be followed by an oxide
-formula from the system composition </td>
+      <td style="vertical-align: top;">should be followed by a Dependent Component name (or <a href="#SALT_FORMULAE">salt formula</a>)<br>
+</td>
       <td style="vertical-align: top; font-family: monospace;"><big>SiO2</big></td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#DC">DC</a>.</big></td>
-      <td style="vertical-align: top;"> should be followed by a
-dependent compoents name (as in GEMS3K)</td>
+      <td style="vertical-align: top;"> should be followed by a Dependent Component name (as in GEMS3K)</td>
       <td style="vertical-align: top; font-family: monospace;"><big>SiO2@</big></td>
     </tr>
     <tr>
@@ -130,8 +132,8 @@ independent component element notation </td>
       <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#MF">MR</a>.
       </big></td>
       <td style="vertical-align: top;">should be followed by the molar ratio formula </td>
-      <td style="vertical-align: top; font-family: monospace;"><big>Na+K/Na+K+Ca<br>
-Na/Na+K<br>
+      <td style="vertical-align: top; font-family: monospace;"><big>(Na+K)/(Na+K+Ca)<br>
+Na/(Na+K)<br>
       </big></td>
     </tr>
   </tbody>
@@ -139,32 +141,32 @@ Na/Na+K<br>
 
 <br>
 
-The column names that hold experimental results quantities/amounts
+Column names that hold experimental results (quantities or amounts)
 should be finished with <big style="font-weight: bold;"><span style="font-family: monospace;">.Q</span></big> . For instance: <br>
 
-<big style="font-weight: bold;"><span style="font-family: monospace;">phase<big>.</big></span></big><big><span style="font-family: monospace;"></span><span style="font-family: monospace;">C-S-H-3T-2</span></big><big style="font-weight: bold;"><span style="font-family: monospace;">.Q </span></big>- for phase<br>
+<big style="font-weight: bold;"><span style="font-family: monospace;">phase<big>.</big></span></big><big><span style="font-family: monospace;"></span><span style="font-family: monospace;">C-S-H-3T-2</span></big><big style="font-weight: bold;"><span style="font-family: monospace;">.Q </span></big>- for phase amount<br>
 
-<big><span style="font-family: monospace;"><span style="font-weight: bold;">phase</span>.aq_gen.<span style="font-weight: bold;">IC</span>.Si.<span style="font-weight: bold;">Q</span> </span><small>- for element </small><span style="font-family: monospace;"><br><span style="font-weight: bold;">
-phase</span>.aq_gen.<span style="font-weight: bold;">DC</span>.SiO2-.<span style="font-weight: bold;">Q</span></span></big><span style="font-weight: bold;"> </span>- for dependent component<span style="font-weight: bold;"> </span><br>
+<big><span style="font-family: monospace;"><span style="font-weight: bold;">phase</span>.aq_gen.<span style="font-weight: bold;">IC</span>.Si.<span style="font-weight: bold;">Q</span> </span><small>- for element amount </small><span style="font-family: monospace;"><br><span style="font-weight: bold;">
+phase</span>.aq_gen.<span style="font-weight: bold;">DC</span>.SiO2-.<span style="font-weight: bold;">Q</span></span></big><span style="font-weight: bold;"> </span>- for dependent component (species) amount<span style="font-weight: bold;"> </span><br>
 
 <br>
-not read - the object is not taken into the memory of the program<br>
+not read - the object is skipped (not taken into the memory of the program).<br>
 <br>
 
 
 IMPORTANT:<br>
-
-
-
-
 Each sample (row) must have a unique combination of sample and
-expdataset names. If present, the column 'unit' should be after the column 'error' that
-should come after the column containing the respective property value, e.g.
-phase.aq_gen.pH | error | unit | ... Names of phases, components, elements should be the same as in the
-GEMS3K DCH I/O files.<br>
+expdataset names. If present, the column 'unit' should be after the
+column 'error' that
+should come after the column containing the respective property value,
+e.g.
+phase.aq_gen.pH | error | unit | ... Names of phases, dependent
+components, independent components (elements) should be the same as in
+the
+GEMS3K DCH I/O file for this GEMSFIT2 task.<br>
 <br>
 
-<hr style="width: 100%; height: 2px;">EXPERIMENTS DESCRIPTION<br>
+<hr style="width: 100%; height: 2px;"><a name="EXPERDESCR"></a><big>EXPERIMENTS DESCRIPTION</big><br>
 <br>
 
 <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
@@ -173,7 +175,7 @@ GEMS3K DCH I/O files.<br>
       <td style="vertical-align: top;">Keyword</td>
       <td style="vertical-align: top;">Description<br>
       </td>
-      <td style="vertical-align: top;">Optional<br>
+      <td style="vertical-align: top;">Optional column<br>
       </td>
       <td style="vertical-align: top;">if empty / default value<br>
       </td>
@@ -260,7 +262,7 @@ GEMS3K DCH I/O files.<br>
       </td>
       <td style="vertical-align: top;">cannot be empty<br>
       </td>
-      <td style="vertical-align: top; font-family: monospace;"><big><br>
+      <td style="vertical-align: top; font-family: monospace;"><big>25<br>
 
       </big></td>
     </tr>
@@ -274,7 +276,7 @@ GEMS3K DCH I/O files.<br>
       </td>
       <td style="vertical-align: top;">cannot be empty<br>
       </td>
-      <td style="vertical-align: top; font-family: monospace;"><big><br>
+      <td style="vertical-align: top; font-family: monospace;"><big>1<br>
 
       </big></td>
     </tr>
@@ -302,7 +304,7 @@ GEMS3K DCH I/O files.<br>
       </td>
       <td style="vertical-align: top;">not read / 1e+06<br>
       </td>
-      <td style="vertical-align: top; font-family: monospace;"><big>UMC.DC.Sanidine, UMC.phase.aq_gen</big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>UMC.DC.Sanidine UMC.phase.aq_gen</big></td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#LMC">LMC</a>.<a href="gemsfit-useref.html#DC">DC</a>/<a href="gemsfit-useref.html#phase">phase</a>.&lt;name&gt;<br>
@@ -313,14 +315,14 @@ GEMS3K DCH I/O files.<br>
       </td>
       <td style="vertical-align: top;">not read / 0<br>
       </td>
-      <td style="vertical-align: top; font-family: monospace;"><big>LMC.DC.Sanidine, LMC.phase.aq_gen</big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>LMC.DC.Sanidine LMC.phase.aq_gen</big></td>
     </tr>
   </tbody>
 </table>
 <br>
 <br>
 
-<hr style="width: 100%; height: 2px;">SYSTEM COMPOSITION<br>
+<hr style="width: 100%; height: 2px;"><a name="SYSCOMPOS"></a><big>SYSTEM COMPOSITION</big><br>
 
 <br>
 <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
@@ -375,7 +377,7 @@ of the sample system, expressed as oxide formula in one or several columns
       </td>
       <td style="vertical-align: top;">not read / g<br>
       </td>
-      <td style="vertical-align: top; font-family: monospace;"><big>g, molal<br>
+      <td style="vertical-align: top; font-family: monospace;"><big>g, molal, mole<br>
 
       </big></td>
     </tr>
@@ -385,7 +387,9 @@ of the sample system, expressed as oxide formula in one or several columns
 
 <br>
 
-<hr style="width: 100%; height: 2px;">RESULTS - phase properties<br>
+<hr style="width: 100%; height: 2px;"><a name="RESULTS"></a><big>RESULTS</big><br>
+<br>
+RESULTS - phase properties<br>
 <br>
 <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
   <tbody>
@@ -461,7 +465,7 @@ read / unit g/cm3
       <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>&nbsp;&nbsp;&nbsp;&nbsp; .pH<br>
 
       </big></td>
-      <td style="vertical-align: top;">aqueous only<br>
+      <td style="vertical-align: top;">aqueous phase only<br>
       </td>
       <td style="vertical-align: top;">yes<br>
       </td>
@@ -471,14 +475,26 @@ read / unit -loga
       <td style="vertical-align: top;"><br>
       </td>
     </tr><tr>
-      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>&nbsp;&nbsp;&nbsp;&nbsp; .eH<br>
-      </big></td>
-      <td style="vertical-align: top;">aqueous only<br>
+      <td style="vertical-align: top; text-align: center;"><big style="font-weight: bold; color: red;"><span style="font-family: monospace;">.pe</span></big><br>
+      </td>
+      <td style="vertical-align: top;">aqueous phase only<br>
       </td>
       <td style="vertical-align: top;">yes<br>
       </td>
       <td style="vertical-align: top;">not
-read / unit ??<br>
+read / unit -loga</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+<tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>&nbsp;&nbsp;&nbsp;&nbsp; .Eh<br>
+      </big></td>
+      <td style="vertical-align: top;">aqueous phase only<br>
+      </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;">not
+read / unit V<br>
       </td>
       <td style="vertical-align: top;"><br>
       </td>
@@ -486,12 +502,12 @@ read / unit ??<br>
     <tr>
       <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>&nbsp;&nbsp;&nbsp;&nbsp; .IS<br>
       </big></td>
-      <td style="vertical-align: top;">effective ionic strenght, aqueous only<br>
+      <td style="vertical-align: top;">effective ionic strenght, aqueous phase only<br>
       </td>
       <td style="vertical-align: top;">yes<br>
       </td>
       <td style="vertical-align: top;">not
-read / unit ??<br>
+read / unit molal<br>
       </td>
       <td style="vertical-align: top;"><br>
       </td>
@@ -510,6 +526,17 @@ read /<br>
       </td>
     </tr>
     <tr>
+      <td style="vertical-align: top; text-align: center;"><big style="font-weight: bold; color: red;"><span style="font-family: monospace;">.oscw</span></big></td>
+      <td style="vertical-align: top;">osmotic coefficient of water (aqueous only)<br>
+      </td>
+      <td style="vertical-align: top;">yes<br>
+      </td>
+      <td style="vertical-align: top;">not read /<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+<tr>
       <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>&nbsp;&nbsp;&nbsp;&nbsp; .sArea<br>
       </big></td>
       <td style="vertical-align: top;">phase surface area<br>
@@ -549,13 +576,13 @@ read (see above)<br>
       </td>
     </tr>
     <tr>
-      <td style="vertical-align: top;"><br>
+      <td style="vertical-align: top; text-align: center;"><big style="color: red; font-weight: bold;"><span style="font-family: monospace;">.Gex</span></big><br>
       </td>
-      <td style="vertical-align: top;"><br>
+      <td style="vertical-align: top;">Excess Gibbs energy of the non-aqueous solution phase<br>
       </td>
-      <td style="vertical-align: top;"><br>
+      <td style="vertical-align: top;">yes<br>
       </td>
-      <td style="vertical-align: top;"><br>
+      <td style="vertical-align: top;">not read / unit kJ/mol<br>
       </td>
       <td style="vertical-align: top;"><br>
       </td>
@@ -627,19 +654,19 @@ name of this phase in GEMS3K DCH file, ename is name (symbol) of element
     <tr>
       <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#phase">
 
-phase</a>.&lt;pname&gt;.<a href="gemsfit-useref.html#MF">MF</a>.&lt;fromula&gt; <br>
+phase</a>.&lt;pname&gt;.<a href="gemsfit-useref.html#MF">MF</a>.&lt;formula&gt; <br>
 
       </big></td>
       <td style="vertical-align: top;">Experimental
-reported molar faraction MF of elements in a phase
+reported molar fraction MF of elements in a phase
 &lt;pname&gt; pname should correspond to the
 name of this phase in GEMS3K DCH file, formula as in the following
-example: Na+K/Na+K+Ca or Na/Na+K, etc.</td>
+example: (Na+K)/(Na+K+Ca) or Na/(Na+K), etc.</td>
       <td style="vertical-align: top;">yes<br>
       </td>
       <td style="vertical-align: top;"><br>
       </td>
-      <td style="vertical-align: top; font-family: monospace;"><big>phase.Plagioclase.MF.Na/Na+Ca<br>
+      <td style="vertical-align: top; font-family: monospace;"><big>phase.Plagioclase.MF.Na/(Na+Ca)<br>
 
       </big></td>
     </tr>
@@ -697,7 +724,7 @@ properties can be used after &lt;dname&gt;. </td>
       </td>
       <td style="vertical-align: top;"><br>
       </td>
-      <td style="vertical-align: top; font-family: monospace;"><big>phase.aq_gen.DC.SiO2@.@ceof</big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>phase.aq_gen.DC.SiO2@.@coef</big></td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#error">error</a><br>
@@ -732,98 +759,272 @@ properties can be used after &lt;dname&gt;. </td>
 <br>
 
 <br>
+<p><a name="SALT_FORMULAE"></a><span style="font-weight: bold;">Salt (oxide) formulae,</span> currently implemented in GEMSFIT2 to facilitate setup of system compositions.</p>
+<table style="text-align: left; width: 501px; height: 564px;" border="1" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">Formula (name)<br>
+      </td>
+      <td style="vertical-align: top;">Molar mass<br>
+      </td>
+      <td style="vertical-align: top;">Comment<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>H2O<br>
+      </big></td>
+      <td style="vertical-align: top;">18.0153<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>SiO2<br>
+      </big></td>
+      <td style="vertical-align: top;">60.08<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>Al2O3<br>
+      </big></td>
+      <td style="vertical-align: top;">101.9612772<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>K2O<br>
+      </big></td>
+      <td style="vertical-align: top;">94.19605<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>Na2O<br>
+      </big></td>
+      <td style="vertical-align: top;">61.97897<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>Al(OH)3<br>
+      </big></td>
+      <td style="vertical-align: top;">78.0035586<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>AlO(OH)<br>
+      </big></td>
+      <td style="vertical-align: top;">59.9822326<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>Ca(OH)2<br>
+      </big></td>
+      <td style="vertical-align: top;">74.09268<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>NaOH<br>
+      </big></td>
+      <td style="vertical-align: top;">39.99710928<br>
+      </td>
+      <td style="vertical-align: top;">salt<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>KOH<br>
+      </big></td>
+      <td style="vertical-align: top;">56.10564<br>
+      </td>
+      <td style="vertical-align: top;">salt<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>KCl<br>
+      </big></td>
+      <td style="vertical-align: top;">74.5513<br>
+      </td>
+      <td style="vertical-align: top;">salt<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>CO2<br>
+      </big></td>
+      <td style="vertical-align: top;">44.0095<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>HCl<br>
+      </big></td>
+      <td style="vertical-align: top;">36.4611<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>NaCl<br>
+      </big></td>
+      <td style="vertical-align: top;">58.4430<br>
+      </td>
+      <td style="vertical-align: top;">salt<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>CaCO3<br>
+      </big></td>
+      <td style="vertical-align: top;">100.087<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>SrCO3<br>
+      </big></td>
+      <td style="vertical-align: top;">147.629<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>Nit2<br>
+      </big></td>
+      <td style="vertical-align: top;">28.0134<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>O2<br>
+      </big></td>
+      <td style="vertical-align: top;">31.9988<br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>...<br>
+      </big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
 
 <hr style="width: 100%; height: 2px;">
 <h3>
-2. <a name="Export_excel_file"></a>Export excel file to csv format file</h3>
-
-Export your Excel table into the comma-separated format ',' csv
-file. Check that the cell values are saved in full, e.g. as 0.1234567 and not as 0.123
-(as visible).<br>
+2. <a name="Export_excel_file"></a>Export excel file to csv format file</h3>Export
+your Excel table into the comma-separated format ',' csv
+file. Check that the cell values are saved in full, e.g. as 0.1234567
+and not as 0.123
+(as visible). Make sure that the row delimiter is '\n' ('\xOA') as in
+linux and not '\xOD' as in Mac OS X (re-export csv file in linux, if
+necessary).<br>
 <br>
 <hr style="width: 100%; height: 2px;">
 <h3>3. <a name="Run_csvtoejdb"></a>Run csvtoejdb</h3>
 
-In the terminal, cd to folder with the program csvtoejdb, and
-execute it with command-line arguments &lt;action&gt; &lt;mode&gt; &lt;db-path&gt;
-&lt;coll-name&gt; &lt;input_csv_file-path&gt; where: <br>
+In the terminal, cd to folder with the&nbsp; utility program <big><span style="font-family: monospace;">csvtoejdb</span></big> executable, and launch it with the command-line arguments <big><span style="font-family: monospace;">&lt;action&gt; &lt;mode&gt; &lt;db-path&gt;
+&lt;coll-name&gt; &lt;input_csv_file-path&gt;</span></big> where: <br>
 
 
-&nbsp;&nbsp; &lt;action&gt; is &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">-run</span></big>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; import data from the .csv
+&nbsp;&nbsp; <big><span style="font-family: monospace;">&lt;action&gt;</span></big> is &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">-run</span></big>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; import data from the .csv
 file to the database<br>
 &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">-back</span></big>&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; backup the whole collection/database into JSON text
+&nbsp; &nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">-back</span></big>&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; backup the whole collection/database into JSON text
 file(s)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
-<big style="font-family: monospace;"><span style="font-weight: bold;">-rest</span></big>&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; restore the collection/database from the JSON
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <big style="font-family: monospace;"><span style="font-weight: bold;">-rest</span></big>&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; restore the collection/database from the JSON
 text
 file(s)<br>
 
 
-&nbsp;&nbsp; &lt;mode&gt; is &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">-t&nbsp;
-&nbsp;&nbsp;&nbsp;</span></big> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; truncate (overwrite the existing
+&nbsp;&nbsp; <big><span style="font-family: monospace;">&lt;mode&gt;</span></big> is &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">-t&nbsp;
+&nbsp;&nbsp;&nbsp;</span></big> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; truncate (overwrite the existing
 database)<br>
 &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">-a</span></big> &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; append (add more data to the
+&nbsp; &nbsp;&nbsp;&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">-a</span></big> &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; append (add more data to the
 existing
 database)&nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;
-&lt;db-path&gt; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+<big><span style="font-family: monospace;">&lt;db-path&gt;</span></big> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; path to the&nbsp; database
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; path to the&nbsp; database
 (database will be created
 if it doesn't exist)<br>
 
 
-&nbsp;&nbsp; &lt;coll-name&gt;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name of the collection<br>
+&nbsp;&nbsp; <big><span style="font-family: monospace;">&lt;coll-name&gt;</span></big>&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+name of the collection<br>
 
 
-&nbsp;&nbsp; &lt;input_csv_file-path&gt;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; path the
+&nbsp;&nbsp; <big><span style="font-family: monospace;">&lt;input_csv_file-path&gt;</span></big>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; path the
 input CSV file <br>
 
 
 <br>
+<big><span style="font-family: monospace;">&lt;host:user&gt;$</span></big> <big><span style="font-family: monospace;">csvtoejdb &lt;action&gt; &lt;mode&gt; &lt;db-path&gt; &lt;coll-name&gt; &lt;input_csv_file-path&gt;</span></big><br>
+<br>
 
 
 The program csvtoejdb will also write a
-&lt;db-name&gt;_&lt;coll-name&gt;.json file in JSON format. <br>
+<big><span style="font-family: monospace;">&lt;db-name&gt;_&lt;coll-name&gt;.json</span></big>
+backup file in JSON format. With this file, the data can be restored in
+the EJDB&nbsp; data base (see below). Note that the path folder&nbsp;
+in <big><span style="font-family: monospace;">&lt;db_path&gt;</span></big> (e.g. <big><span style="font-family: monospace;">./CASH</span></big> in the example below) must be created before executing the csvejdb program.<br>&nbsp;
 <br>
-A. To add data run the program as in the exmaple:<br>
+A. To add data, run the program as in the example:<br>
 
 
 <br>
 
 
-&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">$ csvtoejdb -run -t ./CASH/solcash experiments ./CASH/CASH.csv</span></big> (overwrites if file exists and creates a new database form data in CASH.csv)<br>
+&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">$ csvtoejdb -run -t ./CASH/solcash experiments ./CASH/CASH.csv</span></big> (overwrites if file exists and creates a new database from data in CASH.csv)<br>
 or<br>
-&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">$ csvtoejdb -run -a ./CASH/solcash experiments ./CASH/CASH.csv</span></big> (appends the existing file, gives error message if the sample name and expdataset pairs are already present in the dtabase)<br>
+&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">$ csvtoejdb -run -a ./CASH/solcash experiments ./CASH/CASH.csv</span></big> (appends the existing file, gives error message if the sample name and expdataset pairs are already present in the database)<br>
 
 
 <br>
-For the above example the files "solcash", "solcash_experiments", "solcash_experiments.json",
-and solcash_experiments_distinctTP.csv will result in the /CASH subfolder
-will result. The file <a name="distinctTP.csv"></a>solcash_experiments_distinctTP.csv holds the distinct T and P
-pairs of the experiments in the database useful for exporting GEMS3K files.<br>
+For the above example, the files "solcash", "solcash_experiments", "solcash_experiments.json",
+and solcash_experiments_distinctTP.csv will result in the /CASH subfolder. The file <a name="distinctTP.csv"></a>solcash_experiments_distinctTP.csv holds the distinct T and P
+pairs of the experiments in the database useful for exporting the GEMS3K files from the GEM-Selektor package.<br>
 
 
 &nbsp;<br>
 
 
 <br>
-B. To backup a collection, run the program as in the example below:<br>
+B. To backup a data collection "experiments", run the program as in the example below:<br>
 
 
 <br>
 
 
-&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">$ csvtoejdb -back ./SOL/solcash experiments</span></big><br>
+&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">$ csvtoejdb -back ./CASH/solcash experiments</span></big><br>
 
 
 <br>
@@ -867,7 +1068,7 @@ will result.<br>
 
 .....<br>
 <hr style="width: 100%; height: 2px;">Last
-updated:&nbsp; 11.10. 2013&nbsp; DM,DK <br style="font-family: Helvetica,Arial,sans-serif;">
+updated:&nbsp; 26.12. 2013&nbsp; DM,DK <br style="font-family: Helvetica,Arial,sans-serif;">
 
 <br style="font-family: Helvetica,Arial,sans-serif;">
 

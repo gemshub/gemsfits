@@ -47,7 +47,7 @@ static const char *LMC = "LMC"; ///                               1          arr
 /// OR
 ///                     *DC = "DC";                               2          string             name of independent component
 
-    // Describes system pahses
+    // Describes system phases
 static const char *expphases = "expphases"; ///	                  1    	     array		        data for phases characterised (measured) in this experiment
     static const char *phase = "phase"; ///	                      2	         string		        phase ID (name)
         // Phase independent components
@@ -77,7 +77,8 @@ static const char *expphases = "expphases"; ///	                  1    	     arr
         static const char *all = "all"; ///	                    ->3	         float		        name of property - Alkalinity (aqueous phase only)
         static const char *pV = "pV"; ///	                    ->3	         float		        name of property - volume of phase
         static const char *sArea = "sArea"; ///                 ->3 	     float		        name of property - specific surface area of the phase
-        static const char *RHO = "RHO"; ///                     ->3          double             name of property - density of the phase
+        static const char *RHO = "RHO"; ///                     ->3          double             name of property - excess Gibbs energy of the phase
+        static const char *Gex = "Gex"; ///                     ->3          double             name o
 ///                       *Qnt = "Q";                             3       	 float		        quantity
 ///                       *Qerror = "Qerror";   	              3	         float 		        error
 ///                       *Qunit = "Qunit"; 	                  3  	     string 		    units of measurement of quantity
@@ -96,7 +97,7 @@ static const char *Trange = "Trange"; ///	                      1		     struct		
     static const char *Tmin = "Tmin"; ///	                      2	         float
     static const char *Tmax = "Tmax"; ///	                      2	         float
 static const char *reference = "reference"; ///	                  1	         string		        bib.reference(s) for the experimental dataset
-static const char *comment	= "commnet"; ///	                  1	         string		        comment
+static const char *comment	= "comment"; ///	                  1	         string		        comment
 static const char *file = "file"; ///	                          1		     string 		    file name(s), e.g. image, word,
 static const char *url = "url"; ///	                              1		     string 		    URL to source of experimental data on web
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -161,5 +162,6 @@ static const char *molratio = "molratio"; ///
 static const char *molfrac = "molfrac"; ///
 static const char *g_cm3 = "g/cm3"; ///
 static const char *Volts = "Volts"; ///
+static const char *kJ_mol = "kJ/mol"; ///
 }
 #endif // KEYWORDS_H

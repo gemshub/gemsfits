@@ -22,8 +22,8 @@
 /**
  *	@file gemsfit_target_functions.cpp
  *
- *	@brief this header file contains implementetions of target functions needed during optimization.
- *  Also other functions needed for setting the new adjuste paramaters are implemented here
+ *	@brief this file contains implementations of target functions needed during optimization.
+ *  Also other functions needed for setting the newly adjusted paramaters are implemented here.
  *
  *	@author G. Dan Miron
  *
@@ -387,7 +387,7 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
     IC_in_PH = new double[ nIC ];
     sys->NodT[i]->Ph_BC(PHndx, IC_in_PH);
 
-    // Get composition of aqueous pahse
+    // Get composition of aqueous phase
     if ((sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
     {
         if (sys->experiments[i]->expphases[p]->phIC[e]->Qunit == keys::loga)
@@ -548,11 +548,11 @@ void interpretMR (vector<string> *nom, vector<string> *denom, string name)
         }
 }
 
-// calculates residual for phase poroperties
+// calculates residual for phase properties
 double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
 {
     const char *phase_name;
-    int PHndx;
+    long int PHndx, DC0ndx, nDCinPH;
     double computed_value, measured_value;
     double Tfun_residual = 0.0, Weighted_Tfun_residual, weight_ = 1.0;
     DATACH* dCH = sys->NodT[i]->pCSD();
@@ -600,11 +600,35 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
         {
             computed_value = (sys->NodT[i]->Ph_Mass(PHndx) * 1000) / (sys->NodT[i]->Ph_Volume(PHndx) * 1e06);
         }
-    } else { cout << "Error in target functions line 427 "; exit(1);}
+    } else
+    if (sys->Tfun->objfun[j]->exp_CN == keys::Gex )  // functionality added by DK on 03.01.2014
+    {
+        if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::kJ_mol)
+        {                                   // so far Gex only in kJ/mol
+            double Gex = 0., gam_dc, x_dc;
+            long int jc;
+
+            computed_value = 0.;
+            DC0ndx = sys->NodT[i]->PhtoDC_DBR( PHndx, nDCinPH );
+//          n_ph = sys->NodT[i]->Ph_Mole(PHndx);
+            if( nDCinPH > 1 )
+            {
+            for( jc = DC0ndx; jc<DC0ndx+nDCinPH; jc++ )
+            {
+               gam_dc = sys->NodT[i]->Get_gDC( jc );  // activity coeff.
+               x_dc = sys->NodT[i]->Get_cDC( jc );  // concentration (mole fr.)
+               // n_dc = sys->NodT[i]->Get_nDC(DCndx);
+               Gex += log( gam_dc ) * x_dc;
+            }
+            computed_value = Gex * 8.31451 * sys->NodT[i]->cTK() / 1000.; // in kJ/mol
+            }
+        }
+    }
+    else { cout << "Error in target functions line 627 "; exit(1);}
 
     measured_value = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt;
 
-    // Error handeling due to possible nonphisical parameters
+    // Error handling due to possible non-physical parameters
     if ((computed_value < sys->LimitOfDetection) && (computed_value > 0))
     {
 //        cout << measured_value <<" / " <<computed_value<<" = " << measured_value / computed_value << endl;
@@ -651,7 +675,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
 
     measured_value = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt;
 
-    // Error handeling due to possible nonphisical parameters
+    // Error handling due to possible nonphisical parameters
 //    if (computed_value < sys->LimitOfDetection)
 //    {
 ////        cout << measured_value <<" / " <<computed_value<<" = " << measured_value / computed_value << endl;

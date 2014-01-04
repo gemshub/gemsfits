@@ -3,6 +3,10 @@ Roadmap of GEMSFIT2 development
 + completed or partially completed
 - to be completed
 
+- (important!): re-write TGfitTask::setnodes() to avoid hardcoded compounds;
+  instead, use name lists of DCs from node-> (DCH file) and TNode access to A matrix and at. masses!
+  in perspective (Sveta) to re-use GEMS formula parser class.  
+
 - add artificial weight column in database in gemsfit2??
 
 + save current code tree to GEMSFIT1013 tag
@@ -13,8 +17,10 @@ Roadmap of GEMSFIT2 development
 
 + describe/document command line parameters to start gemsfit2 and csvtoejdb utility program
 + check if GEMSFIT input file exists by writing a new template input file (to prevent overwrite)
++ added ooptional CLI parameter for gemsfit2 -init mode (to give a name to input spec. file template)
 + documentation in the GEMSFIT template input file (fitting bulk composition with L linked parameters) 
 + write all possible options the user has for the data to compare
+- implement a "skipsample" entry in the data query
 - see more possible errors and add them to the gemfit_error function
 + problem in csvtoejdb tool when adding the same pair of sample and expdataset - the program should skip it and not add it again to the database.
 
@@ -37,7 +43,8 @@ Roadmap of GEMSFIT2 development
 - make test for Linked parameters - simple pH titration system
 - make test of geobarometry with qtz rutile paper.
 + added phase amount, phase volume, dcomp amount, dcomp activity coeficient
-- not added Eh, osmotic coeficient.
++ added Gex phase property in kJ/mol to target function (Gex: excess Gibbs energy of mixing)
+- not yet added: Eh, osmotic coeficient.
 - think about units, how to make a uniform strategy for units.
 
 + add bulk composition as parameters 
@@ -57,6 +64,14 @@ EJDB database maintenance functionality:
 + restore from JSON text file
 + updating/owerwriting documents e.g. for error corrections in experimental data, adding new information for experimental samples. <= use EJDB command line interface.
 - what if one wants to select data from more collections
+
+csvtoejdb documentation:
+- check if arbitrary comp.<formula> works always (formula syntax?)
+- check if unit "mole" and "kJ/mol" work (in addition to "g", "molal", "g/cm3", ...)
+- check in phase properties "Eh" not "eH"
+- check/add phase properties "pe", "oscw", "Gex" in the codes
+- fix the issue that a new folder is not created upon initial import of the .csv file. Error: ../gemsfit2/tcejdb/tchdb.c:409:tchdbopen:-:3:file not found:2:No such file or directory 
+- fix the issue in csvtoejdb(34,41) about delimiter for getline (in linux \n (\x0A), in mac os \f or \r (\x0D)
 
 
 - add different options for monte carlo simulation (add scatter to computed values or measured values or use the actual residuals and randomly add them to the data pg.108)
