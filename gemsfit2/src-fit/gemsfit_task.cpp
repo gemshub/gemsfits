@@ -415,7 +415,7 @@ void TGfitTask::setnodes()
         nIC = dCH->nIC;	// nr of independent components
         nDC = dCH->nDC;	// nr of dependent components
         nPH = dCH->nPH;
-        xDC_up = new double[ nDC ];
+        xDC_up = new double[ nDC ];  // memory leaks here! (these arrays must be re-created at each n)
         xDC_lo = new double[ nDC ];
         Ph_surf = new double[ nPH ];
         new_moles_IC = new double[ nIC ]; // vector for holding the moles of independent components for each experiment
@@ -463,7 +463,6 @@ void TGfitTask::setnodes()
             }
         }
 
-
         // if Nitt present assign two moles
 //        if (NodT[n]->IC_name_to_xDB("Nit") > -1) {
 //            ICndx = NodT[n]->IC_name_to_xDB("Nit");
@@ -471,7 +470,6 @@ void TGfitTask::setnodes()
 //        }
 
          DCndx = NodT[n]->DC_name_to_xDB("H2");
-
 //        NodT[n]->Set_nDC(DCndx, 1e-05);
 
         for (j=0; j<experiments[n]->sbcomp.size(); ++j)
@@ -490,11 +488,58 @@ void TGfitTask::setnodes()
                 }
             }
         }
-
-        // Set amount of dependent components (GEMS3K: DBR indexing)
+// ....................................................................
+// NodT[n]->  This is written using TNode functions on 05.01.2014 by DK
+        // Set amounts of dependent components (GEMS3K: DBR indexing)
         // go through all components and calculate the mole amounts of the IC for the b vector in GEMS
         for (j=0; j<experiments[n]->sbcomp.size(); ++j)
         {
+            DATACH* CSD;
+            long int nICb, nDCb, xDCb;
+            char cName[32];
+            double DCm, ICm, njDC;
+
+            CSD = NodT[n]->pCSD(); // Get the pointer to chemical system definition data structure
+            nICb = CSD->nICb;
+            nDCb = CSD->nDCb;
+            strcpy( cName, experiments[n]->sbcomp[j]->comp.c_str() );
+            // or -1 if no such name was found in the DATACH DC name list
+            xDCb = NodT[n]->DC_name_to_xDB( cName ); // Returns DBR index of DC given the DC Name string
+                                    // or -1 if no such name was found in the DATACH DC name list
+            if( xDCb >= 0 )
+            { // This is a valid DC name from the system definition and DBR file
+                if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
+                {   // conversion from molal to mole
+//                    experiments[n]->sbcomp[j]->Qnt = experiments[n]->sbcomp[j]->Qnt*h2o_kgamount;
+//                    experiments[n]->sbcomp[j]->Qunit = keys::mole; // this is not good!
+                    njDC = experiments[n]->sbcomp[j]->Qnt * h2o_kgamount;
+                }
+                else
+                    njDC = experiments[n]->sbcomp[j]->Qnt;
+                if(  experiments[n]->sbcomp[j]->Qunit == keys::gram )
+                {   // conversion from gram to mole
+                    DCm = NodT[n]->DCmm( xDCb )*1000.;  // Retrieves the molar mass of DC in g/mol.
+                    njDC /= DCm;
+                }
+                for(i=0; i<nICb; i++)
+                {   // loop over ICs
+                    double aij;
+                    // Retrieves the stoichiometry coefficient a[xdc][xic] of IC in the formula of DC.
+                    aij = NodT[n]->DCaJI( xDCb, i );
+                    if( !aij )
+                       continue;
+                    new_moles_IC[i] += njDC * aij;
+//                    ICm = NodT[n]->ICmm( i )*1000.; // Retrieves the molar mass of IC in g/mol.
+                }
+// check charge!
+// check salt!
+            }
+            else {
+                // This is not a name of DC used in DBR file!
+                // Here, the use of GEM formula parser is needed!
+                // Until this is done, the old stuff is retained! DK 05.01.2014
+//            }
+//.................................................................
             if (experiments[n]->sbcomp[j]->comp == "H2O")
             {
                 ICndx = NodT[n]->IC_name_to_xDB("H");
@@ -723,12 +768,12 @@ void TGfitTask::setnodes()
             }
                 else
                 {
-                    cout<<" Unknown component in gemsfit_task.cpp line 718 !!!! "<<endl;
+                    cout<<" Unknown component in gemsfit_task.cpp line 769 !!!! "<<endl;
                     cout<<" ... bail out now ... "<<endl;
                     exit(1);
                 }
         }
-
+        } // for j
         if (!salt)
         {
             // use NaCl
@@ -736,7 +781,6 @@ void TGfitTask::setnodes()
             NodT[n]->Set_PMc(3.72, 1 );
             NodT[n]->Set_PMc(1, 4 );
         }
-
         salt = false;
         h2o_kgamount = 0.0;
 
@@ -755,7 +799,7 @@ void TGfitTask::setnodes()
         delete[] xDC_up;
         delete[] xDC_lo;
         delete[] Ph_surf;
-    }
+    }  // for n
 
 }
 
