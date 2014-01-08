@@ -279,8 +279,8 @@ void Data_Manager::get_EJDB( )
          {
              experiments.push_back( new samples );
              // set experiments variables empty
-             experiments.at(j)->sP = NULL; experiments.at(j)->sT = NULL; experiments.at(j)->sV= NULL;
-             experiments.at(j)->idsample= NULL;
+             experiments[j]->sP = NULL; experiments[j]->sT = NULL; experiments[j]->sV= NULL;
+             experiments[j]->idsample= NULL;
              // set experiments variables false
          }
 
@@ -315,196 +315,186 @@ void Data_Manager::get_EJDB( )
 
 void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos)
 {
-    bson_iterator i, j, k, k2, d, d2, d3; // 1st, 2nd, 3rd, 2-1, 3-1 level
-    const char *key;
-    string key_;
+    bson_iterator i[1], j[1], k[1], k2[1], d[1], d2[1], d3[1]; // 1st, 2nd, 3rd, 2-1, 3-1 level
     int ip = -1, ic = -1, sk = -1, ipc, ipp, ips, ipdcp, ipm;
 
-    bson_iterator_from_buffer(&i, data);
+    bson_iterator_from_buffer(i, data); // getting primary iterator
 
-    while (bson_iterator_next(&i))
+    while ( bson_iterator_next(i) != BSON_EOO )
     {
-        bson_type t = bson_iterator_type(&i);
-        if (t == BSON_EOO)
-            break;
-        key = bson_iterator_key(&i);
-        key_ = key;
+        string key_ = bson_iterator_key(i);
+//        key_ = key;
 
         if (key_ == keys::expdataset)
         {
             // adding expdataset
-            experiments[pos]->expdataset = bson_iterator_string(&i);
+            experiments[pos]->expdataset = bson_iterator_string(i);
         } else
         if (key_ == keys::expsample)
         {
             // adding sample name
-            experiments[pos]->sample = bson_iterator_string(&i);
+            experiments[pos]->sample = bson_iterator_string(i);
         } else
         if (key_ == keys::Type)
         {
             // adding sample type
-            experiments[pos]->Type = bson_iterator_string(&i);
+            experiments[pos]->Type = bson_iterator_string(i);
         } else
         if (key_ == keys::sT)
         {
             // adding temperature
-            experiments[pos]->sT = bson_iterator_double(&i);
+            experiments[pos]->sT = bson_iterator_double(i);
         } else
         if (key_ == keys::sP)
         {
             // adding pressure
-            experiments[pos]->sP = bson_iterator_double(&i);
+            experiments[pos]->sP = bson_iterator_double(i);
         } else
         if (key_ == keys::sV)
         {
             // adding volume
-            experiments[pos]->sV = bson_iterator_double(&i);
+            experiments[pos]->sV = bson_iterator_double(i);
         } else
 
         // adding experiment components/recipe
-        if ((key_ == keys::sbcomp) && (t == BSON_ARRAY))
+        if ((key_ == keys::sbcomp) ) // && (t == BSON_ARRAY))
         {
-            bson_iterator_from_buffer(&j, bson_iterator_value(&i));
-            while (bson_iterator_next(&j))
+            bson_iterator_subiterator( i, j );
+
+            while (bson_iterator_next(j) != BSON_EOO )
             {
-                bson_iterator_from_buffer(&d, bson_iterator_value(&j));
                 experiments[pos]->sbcomp.push_back( new samples::components );
                 ic++; // position of the component in sbcomp vector
                 experiments[pos]->sbcomp[ic]->Qnt = 0.;
                 experiments[pos]->sbcomp[ic]->Qerror = 0.;
                 experiments[pos]->sbcomp[ic]->Qunit = keys::gram; // default
 
-                while (bson_iterator_next(&d))
+                bson_iterator_subiterator( j, d );
+
+                while (bson_iterator_next(d) != BSON_EOO )
                 {
-                    t = bson_iterator_type(&d);
-                    if (t == BSON_EOO)
-                        break;
-                    key = bson_iterator_key(&d);
-                    key_ = key;
+                    string key_ = bson_iterator_key(d);
 
                     if ((key_ == keys::comp))
                     {
-                        experiments[pos]->sbcomp[ic]->comp =  bson_iterator_string(&d) ;
+                        experiments[pos]->sbcomp[ic]->comp =  bson_iterator_string(d) ;
                     } else
                     if ((key_ == keys::Qnt))
                     {
-                        experiments[pos]->sbcomp[ic]->Qnt = bson_iterator_double(&d) ;
+                        experiments[pos]->sbcomp[ic]->Qnt = bson_iterator_double(d) ;
                     } else
                     if ((key_ == keys::Qerror))
                     {
-                        experiments[pos]->sbcomp[ic]->Qerror = bson_iterator_double(&d) ;
+                        experiments[pos]->sbcomp[ic]->Qerror = bson_iterator_double(d) ;
                     } else
                     if ((key_ == keys::Qunit))
                     {
-                        experiments[pos]->sbcomp[ic]->Qunit = bson_iterator_string(&d) ;
+                        experiments[pos]->sbcomp[ic]->Qunit = bson_iterator_string(d) ;
                     }
                 }
             }
         } else
 
         // adding Upper metastability constraints
-        if ((key_ == keys::UMC) && (t == BSON_ARRAY))
+        if ((key_ == keys::UMC) ) // && (t == BSON_ARRAY))
         {
-            bson_iterator_from_buffer(&j, bson_iterator_value(&i));
-            while (bson_iterator_next(&j))
+            bson_iterator_subiterator( i, j );
+
+            while (bson_iterator_next(j) != BSON_EOO )
             {
-                bson_iterator_from_buffer(&d, bson_iterator_value(&j));
+
                 experiments[pos]->U_KC.push_back( new samples::Uconstraints );
                 sk++; // position of the component in U_SK vector
 //                experiments.at(pos)->U_KC.at(sk)->dcomp = NULL;
                 experiments[pos]->U_KC[sk]->Qnt = 1000000.;
 
-                while (bson_iterator_next(&d))
+                bson_iterator_subiterator( j, d );
+                while (bson_iterator_next(d) != BSON_EOO )
                 {
-                    t = bson_iterator_type(&d);
-                    if (t == BSON_EOO)
-                        break;
-                    key = bson_iterator_key(&d);
-                    key_ = key;
+                    string key_ = bson_iterator_key(d);
 
                     if ((key_ == keys::DC))
                     {
                         experiments[pos]->U_KC[sk]->type = keys::DC;
-                        experiments[pos]->U_KC[sk]->name =  bson_iterator_string(&d) ;
+                        experiments[pos]->U_KC[sk]->name =  bson_iterator_string(d) ;
 
                     } else
                     if ((key_ == keys::phase))
                     {
                         experiments[pos]->U_KC[sk]->type = keys::phase;
-                        experiments[pos]->U_KC[sk]->name = bson_iterator_string(&d) ;
+                        experiments[pos]->U_KC[sk]->name = bson_iterator_string(d) ;
                     } else
                     if ((key_ == keys::Qnt))
                     {
-                        experiments[pos]->U_KC[sk]->Qnt = bson_iterator_double(&d) ;
+                        experiments[pos]->U_KC[sk]->Qnt = bson_iterator_double(d) ;
                     }
                     /*else
                     if ((key_ == keys::Qerror))
                     {
-                        experiments.at(pos)->sbcomp.at(ic)->Qerror = bson_iterator_double(&d) ;
+                        experiments.at(pos)->sbcomp.at(ic)->Qerror = bson_iterator_double(d) ;
                     } else
                     if ((key_ == keys::Qunit))
                     {
-                        experiments.at(pos)->sbcomp.at(ic)->Qunit = bson_iterator_string(&d) ;
+                        experiments.at(pos)->sbcomp.at(ic)->Qunit = bson_iterator_string(d) ;
                     }*/
                 }
             }
         } else
 
         // adding Lower metastability constraints
-        if ((key_ == keys::LMC) && (t == BSON_ARRAY))
+        if ((key_ == keys::LMC) ) // && (t == BSON_ARRAY))
         {
-            bson_iterator_from_buffer(&j, bson_iterator_value(&i));
-            while (bson_iterator_next(&j))
+            bson_iterator_subiterator( i, j );
+
+            while (bson_iterator_next(j) != BSON_EOO )
             {
-                bson_iterator_from_buffer(&d, bson_iterator_value(&j));
+
                 experiments[pos]->L_KC.push_back( new samples::Lconstraints );
                 sk++; // position of the component in U_SK vector
     //            experiments.at(pos)->U_KC.at(sk)->dcomp = NULL;
-                experiments[pos]->L_KC[sk]->Qnt = 0;
+                experiments[pos]->L_KC[sk]->Qnt = 0.;
 
-                while (bson_iterator_next(&d))
+                bson_iterator_subiterator( j, d );
+                while (bson_iterator_next(d) != BSON_EOO )
                 {
-                    t = bson_iterator_type(&d);
-                    if (t == BSON_EOO)
-                        break;
-                    key = bson_iterator_key(&d);
-                    key_ = key;
+                    string key_ = bson_iterator_key(d);
 
                     if ((key_ == keys::DC))
                     {
                         experiments[pos]->L_KC[sk]->type = keys::DC;
-                        experiments[pos]->L_KC[sk]->name =  bson_iterator_string(&d) ;
+                        experiments[pos]->L_KC[sk]->name =  bson_iterator_string(d) ;
 
                     } else
                     if ((key_ == keys::phase))
                     {
                         experiments[pos]->L_KC[sk]->type = keys::phase;
-                        experiments[pos]->L_KC[sk]->name = bson_iterator_string(&d) ;
+                        experiments[pos]->L_KC[sk]->name = bson_iterator_string(d) ;
                     } else
                     if ((key_ == keys::Qnt))
                     {
-                        experiments[pos]->U_KC[sk]->Qnt = bson_iterator_double(&d) ;
+                        experiments[pos]->U_KC[sk]->Qnt = bson_iterator_double(d) ;
                     }
                      /*else
                         if ((key_ == keys::Qerror))
                         {
-                            experiments.at(pos)->sbcomp.at(ic)->Qerror = bson_iterator_double(&d) ;
+                            experiments.at(pos)->sbcomp.at(ic)->Qerror = bson_iterator_double(d) ;
                         } else
                         if ((key_ == keys::Qunit))
                         {
-                            experiments.at(pos)->sbcomp.at(ic)->Qunit = bson_iterator_string(&d) ;
+                            experiments.at(pos)->sbcomp.at(ic)->Qunit = bson_iterator_string(d) ;
                         }*/
                 }
            }
         } else
 
         // adding experimental phases
-        if ((key_ == keys::expphases) && (t == BSON_ARRAY))
+        if ((key_ == keys::expphases) ) // && (t == BSON_ARRAY))
         {
-            bson_iterator_from_buffer(&j, bson_iterator_value(&i));
-            while (bson_iterator_next(&j))
+            bson_iterator_subiterator( i, j );
+
+            while ( bson_iterator_next(j) != BSON_EOO )
             {
-                bson_iterator_from_buffer(&d, bson_iterator_value(&j));
+
                 experiments[pos]->expphases.push_back( new samples::phases );
                 ip++; // position of the phase in expphases vector
                 ipc = -1; // phases components - reset to -1 for every new phase
@@ -513,26 +503,23 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos)
                 ips = -1; // phases dcomps
                 experiments[pos]->expphases[ip]->idphase = 0;
 
-                while (bson_iterator_next(&d))
+                bson_iterator_subiterator( j, d );
+                while (bson_iterator_next(d) != BSON_EOO )
                 {
-                    t = bson_iterator_type(&d);
-                    if (t == BSON_EOO)
-                        break;
-                    key = bson_iterator_key(&d);
-                    key_ = key;
+                    string key_ = bson_iterator_key(d);
 
                     if ((key_ == keys::phase))
                     {
-                        experiments[pos]->expphases[ip]->phase =  bson_iterator_string(&d) ;
+                        experiments[pos]->expphases[ip]->phase =  bson_iterator_string(d) ;
                     } else
 
                     // adding phase components
-                    if ((key_ == keys::phIC) && (t == BSON_ARRAY))
+                    if ((key_ == keys::phIC) ) //  && (t == BSON_ARRAY))
                     {
-                        bson_iterator_from_buffer(&k, bson_iterator_value(&d));
-                        while (bson_iterator_next(&k))
+                        bson_iterator_subiterator( d, k );
+
+                        while ( bson_iterator_next(k) != BSON_EOO )
                         {
-                            bson_iterator_from_buffer(&d2, bson_iterator_value(&k));
                             experiments[pos]->expphases[ip]->phIC.push_back( new samples::components );
                             ipc++; // position of the component in phcomp vector
                             experiments[pos]->expphases[ip]->phIC[ipc]->Qerror = 0.;
@@ -544,41 +531,38 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos)
                             } else
                                 experiments[pos]->expphases[ip]->phIC[ipc]->Qunit = keys::molratio;
 
-                            while (bson_iterator_next(&d2))
+                            bson_iterator_subiterator( k, d2 );
+                            while ( bson_iterator_next(d2) != BSON_EOO )
                             {
-                                t = bson_iterator_type(&d2);
-                                if (t == BSON_EOO)
-                                    break;
-                                key = bson_iterator_key(&d2);
-                                key_ = key;
+                                string key_ = bson_iterator_key(d2);
 
                                 if ((key_ == keys::IC))
                                 {
-                                    experiments[pos]->expphases[ip]->phIC[ipc]->comp = bson_iterator_string(&d2) ;
+                                    experiments[pos]->expphases[ip]->phIC[ipc]->comp = bson_iterator_string(d2) ;
                                 } else
                                 if ((key_ == keys::Qnt))
                                 {
-                                    experiments[pos]->expphases[ip]->phIC[ipc]->Qnt = bson_iterator_double(&d2) ;
+                                    experiments[pos]->expphases[ip]->phIC[ipc]->Qnt = bson_iterator_double(d2) ;
                                 } else
                                 if ((key_ == keys::Qerror))
                                 {
-                                    experiments[pos]->expphases[ip]->phIC[ipc]->Qerror = bson_iterator_double(&d2) ;
+                                    experiments[pos]->expphases[ip]->phIC[ipc]->Qerror = bson_iterator_double(d2) ;
                                 } else
                                 if ((key_ == keys::Qunit))
                                 {
-                                    experiments[pos]->expphases[ip]->phIC[ipc]->Qunit = bson_iterator_string(&d2) ;
+                                    experiments[pos]->expphases[ip]->phIC[ipc]->Qunit = bson_iterator_string(d2) ;
                                 }
                             }
                         }
                     } else
 
                     // adding phase IC as mole fractions MR
-                    if ((key_ == keys::phMR) && (t == BSON_ARRAY))
+                    if ((key_ == keys::phMR) ) // && (t == BSON_ARRAY))
                     {
-                        bson_iterator_from_buffer(&k, bson_iterator_value(&d));
-                        while (bson_iterator_next(&k))
+                        bson_iterator_subiterator( d, k );
+
+                        while (bson_iterator_next(k) != BSON_EOO )
                         {
-                            bson_iterator_from_buffer(&d2, bson_iterator_value(&k));
                             experiments[pos]->expphases[ip]->phMR.push_back( new samples::components );
                             ipm++; // position of the component in phcomp vector
                             experiments[pos]->expphases[ip]->phMR[ipm]->Qerror = 0.;
@@ -590,64 +574,53 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos)
                             } else
                                 experiments[pos]->expphases[ip]->phMR[ipm]->Qunit = keys::molratio;
 
-                                while (bson_iterator_next(&d2))
-                                {
-                                    t = bson_iterator_type(&d2);
-                                    if (t == BSON_EOO)
-                                        break;
-                                    key = bson_iterator_key(&d2);
-                                    key_ = key;
+                            bson_iterator_subiterator( k, d2 );
+                            while (bson_iterator_next(d2) != BSON_EOO )
+                            {
+                                string key_ = bson_iterator_key(d2);
 
-                                    if ((key_ == keys::MR))
-                                    {
-                                        experiments[pos]->expphases[ip]->phMR[ipm]->comp = bson_iterator_string(&d2) ;
-                                    } else
-                                    if ((key_ == keys::Qnt))
-                                    {
-                                        experiments[pos]->expphases[ip]->phMR[ipm]->Qnt = bson_iterator_double(&d2) ;
-                                    } else
-                                    if ((key_ == keys::Qerror))
-                                    {
-                                        experiments[pos]->expphases[ip]->phMR[ipm]->Qerror = bson_iterator_double(&d2) ;
-                                    } else
-                                    if ((key_ == keys::Qunit))
-                                    {
-                                        experiments[pos]->expphases[ip]->phMR[ipm]->Qunit = bson_iterator_string(&d2) ;
-                                    }
-                                }
+                                if ((key_ == keys::MR))
+                                {
+                                    experiments[pos]->expphases[ip]->phMR[ipm]->comp = bson_iterator_string(d2) ;
+                                } else
+                                if ((key_ == keys::Qnt))
+                                {
+                                    experiments[pos]->expphases[ip]->phMR[ipm]->Qnt = bson_iterator_double(d2) ;
+                                 } else
+                                 if ((key_ == keys::Qerror))
+                                 {
+                                    experiments[pos]->expphases[ip]->phMR[ipm]->Qerror = bson_iterator_double(d2) ;
+                                 } else
+                                 if ((key_ == keys::Qunit))
+                                 {
+                                    experiments[pos]->expphases[ip]->phMR[ipm]->Qunit = bson_iterator_string(d2) ;
+                                 }
+                             }
                         }
                     } else
 
                     // adding phase properties
-                    if ((key_ == keys::phprop) && (t == BSON_ARRAY))
+                    if ((key_ == keys::phprop) ) // && (t == BSON_ARRAY))
                     {
-                        double qw;
-                        string unit;
-                        bson_iterator_from_buffer(&k, bson_iterator_value(&d));
-                        while (bson_iterator_next(&k))
+                        bson_iterator_subiterator( d, k );
+
+                        while ( bson_iterator_next(k) != BSON_EOO )
                         {
-                            bson_iterator_from_buffer(&d2, bson_iterator_value(&k));
                             experiments[pos]->expphases[ip]->phprop.push_back( new samples::phases::prop );
                             ipp++; // position of the component in phcomp vector
                             experiments[pos]->expphases[ip]->phprop[ipp]->Qerror = 0.;
                             experiments[pos]->expphases[ip]->phprop[ipp]->Qnt   = 0.;
-cout << "pos: " << pos << " ip: " << ip << " ipp: " << ipp << " :: ";
-                            while (bson_iterator_next(&d2))
+//cout << "pos: " << pos << " ip: " << ip << " ipp: " << ipp << " :: ";
+                            bson_iterator_subiterator( k, d2 );
+                            while (bson_iterator_next(d2) != BSON_EOO )
                             {
-                                t = bson_iterator_type(&d2);
-                                if (t == BSON_EOO)
-                                {
-cout << " EOO " << endl;
-                                    break;
-                                }
-                                key = bson_iterator_key(&d2);
-                                key_ = key;
-cout << " kwd: " << key_;
+                                string key_ = bson_iterator_key(d2);
+//cout << " " << key_.c_str();
                                 if ((key_ == keys::property))
                                 {
-                                    string p_name = bson_iterator_string(&d2);
-cout << " prop: " << p_name;
-                                    experiments[pos]->expphases[ip]->phprop[ipp]->property = p_name; // bson_iterator_string(&d2) ;
+                                    string p_name = bson_iterator_string(d2);
+//cout << ": " << p_name;
+                                    experiments[pos]->expphases[ip]->phprop[ipp]->property = p_name; // bson_iterator_string(d2) ;
                                     // assigining default values for units
                                     if (p_name==keys::Qnt)
                                     {
@@ -676,21 +649,21 @@ cout << " prop: " << p_name;
                                 } else
                                 if ((key_ == keys::Qnt))
                                 {
-                                    qw = bson_iterator_double(&d2) ;
+                                    double qw = bson_iterator_double(d2) ;
                                     experiments[pos]->expphases[ip]->phprop[ipp]->Qnt = qw;
-cout << " Qnt: " << qw;
+//cout << ": " << qw;
                                 } else
                                 if ((key_ == keys::Qerror))
                                 {
-                                    qw = bson_iterator_double(&d2) ;
+                                    double qw = bson_iterator_double(d2) ;
                                     experiments[pos]->expphases[ip]->phprop[ipp]->Qerror = qw ;
-cout << " Qerr: " << qw;
+//cout << ": " << qw;
                                 } else
                                 if ((key_ == keys::Qunit))
                                 {
-                                    unit = bson_iterator_string(&d2) ;
+                                    string unit = bson_iterator_string(d2) ;
                                     experiments[pos]->expphases[ip]->phprop[ipp]->Qunit = unit ;
-cout << " Qunit: " << unit;
+//cout << ": " << unit;
                                 }
                             }
                         }
@@ -698,65 +671,58 @@ cout << " Qunit: " << unit;
                     } else
 
                     // adding phase dcomps
-                    if ((key_ == keys::phDC) && (t == BSON_ARRAY))
+                    if ((key_ == keys::phDC) ) // && (t == BSON_ARRAY))
                     {
-                        bson_iterator_from_buffer(&k, bson_iterator_value(&d));
-                        while (bson_iterator_next(&k))
+                        bson_iterator_subiterator( d, k );
+
+                        while (bson_iterator_next(k) != BSON_EOO )
                         {
-                            bson_iterator_from_buffer(&d2, bson_iterator_value(&k));
                             experiments[pos]->expphases[ip]->phDC.push_back( new samples::phases::dcomps );
                             ips++; // position of the specie in phdcomps vector
                             ipdcp = -1;
 
-                            while (bson_iterator_next(&d2))
+                            bson_iterator_subiterator( k, d2 );
+                            while (bson_iterator_next(d2) != BSON_EOO )
                             {
-                                t = bson_iterator_type(&d2);
-                                if (t == BSON_EOO)
-                                    break;
-                                key = bson_iterator_key(&d2);
-                                key_ = key;
+                                string key_ = bson_iterator_key(d2);
 
                                 if ((key_ == keys::DC)) // adding the name of the specie
                                 {
-                                    experiments[pos]->expphases[ip]->phDC[ips]->DC =  bson_iterator_string(&d2) ;
+                                    experiments[pos]->expphases[ip]->phDC[ips]->DC =  bson_iterator_string(d2) ;
                                 } else
 
                                 // adding dependent compoponents properties
-                                if ((key_ == keys::DCprop) && (t == BSON_ARRAY))
+                                if ((key_ == keys::DCprop) ) // && (t == BSON_ARRAY))
                                 {
-                                    bson_iterator_from_buffer(&k2, bson_iterator_value(&d2));
-                                    while (bson_iterator_next(&k2))
-                                    {
-                                        bson_iterator_from_buffer(&d3, bson_iterator_value(&k2));
-                                        experiments[pos]->expphases[ip]->phDC[ips]->DCprop.push_back( new samples::phases::dcomps::dcprop );
+                                    bson_iterator_subiterator( d2, k2 );
 
+                                    while (bson_iterator_next(k2) != BSON_EOO )
+                                    {
+                                        experiments[pos]->expphases[ip]->phDC[ips]->DCprop.push_back( new samples::phases::dcomps::dcprop );
                                         ipdcp++; // position of the component in phcomp vector
                                         experiments[pos]->expphases[ip]->phDC[ips]->DCprop[ipdcp]->Qerror = 0.;
                                         experiments[pos]->expphases[ip]->phDC[ips]->DCprop[ipdcp]->Qnt   = 0.;
 
-                                        while (bson_iterator_next(&d3))
+                                        bson_iterator_subiterator( k2, d3 );
+                                        while (bson_iterator_next(d3) != BSON_EOO )
                                         {
-                                            t = bson_iterator_type(&d3);
-                                            if (t == BSON_EOO)
-                                                break;
-                                            key = bson_iterator_key(&d3);
-                                            key_ = key;
+                                            string key_ = bson_iterator_key(d3);
 
                                             if ((key_ == keys::property))
                                             {
-                                                experiments[pos]->expphases[ip]->phDC[ips]->DCprop[ipdcp]->property = bson_iterator_string(&d3);
+                                                experiments[pos]->expphases[ip]->phDC[ips]->DCprop[ipdcp]->property = bson_iterator_string(d3);
                                             } else
                                             if ((key_ == keys::Qnt))
                                             {
-                                                experiments[pos]->expphases[ip]->phDC[ips]->DCprop[ipdcp]->Qnt = bson_iterator_double(&d3) ;
+                                                experiments[pos]->expphases[ip]->phDC[ips]->DCprop[ipdcp]->Qnt = bson_iterator_double(d3) ;
                                             } else
                                             if ((key_ == keys::Qerror))
                                             {
-                                                experiments[pos]->expphases[ip]->phDC[ips]->DCprop[ipdcp]->Qerror = bson_iterator_double(&d3) ;
+                                                experiments[pos]->expphases[ip]->phDC[ips]->DCprop[ipdcp]->Qerror = bson_iterator_double(d3) ;
                                             } else
                                             if ((key_ == keys::Qunit))
                                             {
-                                                experiments[pos]->expphases[ip]->phDC[ips]->DCprop[ipdcp]->Qunit = bson_iterator_string(&d3) ;
+                                                experiments[pos]->expphases[ip]->phDC[ips]->DCprop[ipdcp]->Qunit = bson_iterator_string(d3) ;
                                             }
                                         }
                                     }
@@ -768,6 +734,7 @@ cout << " Qunit: " << unit;
             }
         }
     }
+//cout << endl;
 }
 
 void Data_Manager::get_distinct_TP( )
