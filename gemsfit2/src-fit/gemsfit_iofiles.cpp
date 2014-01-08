@@ -815,7 +815,7 @@ TGfitPath::TGfitPath(int c, char *v[]):
     {
         cout << " USAGE: \n"
                 "   gemsfit2  -help \n"
-                "   gemsfit2  -run      <path to gemsfit2 input file> \n"
+                "   gemsfit2  -run      <path to gemsfit2 input file> [ <path to GEMS3K input file list *-dat.lst> ] \n"
                 "   gemsfit2  -init     <path to GEMS3K input file list *-dat.lst> [ <init file template name> ] \n\n"
                 " WHERE: \n"
                 "   -run:   runs the program with the settings from the input file \n"
@@ -981,7 +981,7 @@ outField Data_Manager_fields[9] =
       "\n#      ["
       "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"IC\", \"CN\": \"Si\", \"unit\": \"molal\" },"
       "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"IC\", \"CN\": \"Al\", \"unit\": \"molal\" },"
-      "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"property\", \"CN\": \"pH\", \"unit\": \"-loga\" },"
+      "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"prop\", \"CN\": \"pH\", \"unit\": \"-loga\" },"
       "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"DC\", \"CN\": \"SiO2@\", \"DCP\" : \"Q\", \"unit\": \"mol\"}"
       "\n#      ]"
       "\n#   }\'"

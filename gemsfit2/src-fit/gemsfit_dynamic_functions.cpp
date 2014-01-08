@@ -84,7 +84,7 @@ void titration (TGfitTask *sys)
         if (sys->PHndx[P_id] >= 0)
             for (j = 0; j<sys->experiments[i]->expphases[sys->PHndx[P_id]]->phprop.size(); ++j)
         {
-                if (sys->experiments[i]->expphases[sys->PHndx[P_id]]->phprop[j]->property == "pH")
+                if (sys->experiments[i]->expphases[sys->PHndx[P_id]]->phprop[j]->property == "pH")  // keys::pH
                 {
                     h_pH[P_id] = true;
                     sys->PHPndx[P_id] = j;
@@ -356,7 +356,7 @@ void titrationG(TGfitTask *sys)
         if (sys->PHndx[P_id] > 0)
             for (j = 0; j<sys->experiments[i]->expphases[sys->PHndx[P_id]]->phprop.size(); ++j)
         {
-                if (sys->experiments[i]->expphases[sys->PHndx[P_id]]->phprop[j]->property == "pH")
+                if (sys->experiments[i]->expphases[sys->PHndx[P_id]]->phprop[j]->property == "pH")  // keys::pH
                     h_pH[P_id] = true;
         }
 

@@ -70,7 +70,7 @@ static const char *expphases = "expphases"; ///	                  1    	     arr
                         // with Qerror and Qunit
         // Phase properties
     static const char *phprop = "phprop"; ///	                  2   	     array		        known bulk properties of the phase
-        static const char *property = "property"; ///             3          string             name of property
+        static const char *property = "prop"; ///                 3          string             name of property category
         static const char *pH = "pH"; /// 	                    ->3          float		        name of property - pH (for aqueous phase only)
         static const char *Eh = "Eh"; ///	                    ->3	         float		        name of property - Eh (for aqueous phase only)
         static const char *IS = "IS"; ///	                    ->3	         float 		        name of property - Ionic strength (molal)

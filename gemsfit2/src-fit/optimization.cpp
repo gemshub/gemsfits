@@ -51,7 +51,7 @@ optimization::optimization( )
     OptUpBounds = UB;
     OptLoBounds = LB;
 
-    fout << "11. optimization.cpp line 20. Reading NLopt optimization settings from the input file; " << endl;
+    fout << "11. optimization.cpp line 54. Reading NLopt optimization settings from the input file; " << endl;
     get_nlopt_param_txt( optv );
 
     if (OptBoundPerc > 0.)

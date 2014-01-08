@@ -33,15 +33,12 @@
 #ifndef _gemsft_task.h_
 #define _gemsft_task.h_
 
-
 #include "data_manager.h"
 #include "opt_vector.h"
 #include "optimization.h"
 #include "gemsfit_global_variables.h"
 #include <nlopt.hpp>
 #include "print.h"
-
-
 
 // Definition of TGfitTask class
 class TGfitTask : public Data_Manager

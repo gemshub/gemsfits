@@ -122,7 +122,7 @@ int main( int argc, char *argv[] )
     fout_<<dt<<endl; // writes the date and time of the begining of the run in the result file
 
     // Reading in the data //
-    fout << "1. main.cpp line 123. Creating new TGfitTask" << endl;
+    fout << "1. main.cpp line 125. Creating new TGfitTask" << endl;
     TGfitTask* gfittask = new TGfitTask();
 
 //    cout << gfittask->NodT[0]->DenH2Ow(100000 *1, 25 + 273.15) << endl;

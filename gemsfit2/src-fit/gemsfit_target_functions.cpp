@@ -402,7 +402,7 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
         if ((sys->Tfun->objfun[j]->exp_phase != "aq_gen") && (sys->experiments[i]->expphases[p]->phase != "aq_gen"))
         {
             computed_value = IC_in_PH[ICndx]; // phase bulk composition in moles (mol)
-        } else { cout << "Error in target functions line 293 "; exit(1);}
+        } else { cout << "Error in target functions line 405 "; exit(1);}
 
     measured_value = sys->experiments[i]->expphases[p]->phIC[e]->Qnt;
 
@@ -613,14 +613,14 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
 //          n_ph = sys->NodT[i]->Ph_Mole(PHndx);
             if( nDCinPH > 1 )
             {
-            for( jc = DC0ndx; jc<DC0ndx+nDCinPH; jc++ )
-            {
-               gam_dc = sys->NodT[i]->Get_gDC( jc );  // activity coeff.
-               x_dc = sys->NodT[i]->Get_cDC( jc );  // concentration (mole fr.)
-               // n_dc = sys->NodT[i]->Get_nDC(DCndx);
-               Gex += log( gam_dc ) * x_dc;
-            }
-            computed_value = Gex * 8.31451 * sys->NodT[i]->cTK() / 1000.; // in kJ/mol
+               for( jc = DC0ndx; jc<DC0ndx+nDCinPH; jc++ )
+               {
+                  gam_dc = sys->NodT[i]->Get_gDC( jc );  // activity coeff.
+                  x_dc = sys->NodT[i]->Get_cDC( jc );  // concentration (mole fr.)
+                  // n_dc = sys->NodT[i]->Get_nDC(DCndx);
+                  Gex += log( gam_dc ) * x_dc;
+               }
+               computed_value = Gex * 8.31451 * sys->NodT[i]->cTK() / 1000.; // in kJ/mol
             }
         }
     }
@@ -671,7 +671,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
     if (sys->Tfun->objfun[j]->exp_DCP == keys::actcoef)
     {
         measured_value = sys->NodT[i]->Get_gDC(DCndx);
-    } else { cout << "Error in target functions line 474 "; exit(1);}
+    } else { cout << "Error in target functions line 674 "; exit(1);}
 
     measured_value = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt;
 

@@ -91,14 +91,14 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     }
 
     // initialize nodes with the experimental data
-    fout << "8. gemsfit_task.cpp line 86. Initializing nodes with the experimental data; " << endl;
+    fout << "8. gemsfit_task.cpp line 94. Initializing nodes with the experimental data; " << endl;
     setnodes ( );
 
     // getting the parameters to be optimized from DCH, DBR and multi structures, and optimization settings form the input file
-    fout << "9. gemsfit_task.cpp line 90. Initializing optimization structure; " << endl;
+    fout << "9. gemsfit_task.cpp line 98. Initializing optimization structure; " << endl;
     Opti = new optimization ( );
 
-    fout << "12. gemsfit_task.cpp line 93. Initializing the Target function structure & get_DatTarget(); " << endl;
+    fout << "12. gemsfit_task.cpp line 101. Initializing the Target function structure & get_DatTarget(); " << endl;
     Tfun = new TargetFunction;
     print = new ResPrint(printfile, Opti);
     get_DataTarget ( );
@@ -119,9 +119,6 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
 
     // to have the average and minimum value calculated
     get_sum_of_residuals( temp_res);
-
-
-
 
     if (this->LimitOfDetection > (this->minimum_value/100))
         this->LimitOfDetection = this->minimum_value/100; // sets the limit of detection not more than 100 times smaller than the lowest experimental value
@@ -152,7 +149,7 @@ void TGfitTask::run_optim()
 
 //    titration(this);
 
-    fout << "13. gemsfit_task.cpp line 135. Initializing optimization init_optim; " << endl;
+    fout << "13. gemsfit_task.cpp line 152. Initializing optimization init_optim; " << endl;
     init_optim (Opti->optv, weighted_Tfun_sum_of_residuals);
 
     fout.close();
@@ -285,7 +282,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
 
 
     /// specify objective function
-    ffout << endl << "14. in gemsfit_task.cpp line 351. Setting minimizing objective function." << endl;
+    ffout << endl << "14. in gemsfit_task.cpp line 285. Setting minimizing objective function." << endl;
     NLopti.set_min_objective( Equil_objective_function_callback, this );
 
 //        if( OptConstraints )
@@ -306,7 +303,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
         NLopti.set_initial_step( inistep );
     }
 
-    ffout << "15. in gesfit_task.cpp line 378. Performing optimization."<<endl;
+    ffout << "15. in gesfit_task.cpp line 306. Performing optimization."<<endl;
 
 //    //===== For testing the objective function without oprimization =====//
 //    weighted_Tfun_sum_of_residuals = Equil_objective_function_callback(Opti->optv, grad, this);
@@ -317,7 +314,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
     ffout<<"optv[0] = "<<Opti->optv[0]<<endl;
     ffout<<"size of optv = "<<Opti->optv.size()<<endl;
 
-    ffout << "16. gemsfit_task.cpp line 389. Finished optimization; " << endl;
+    ffout << "16. gemsfit_task.cpp line 317. Finished optimization; " << endl;
 
 
             // check results
@@ -415,7 +412,7 @@ void TGfitTask::setnodes()
         nIC = dCH->nIC;	// nr of independent components
         nDC = dCH->nDC;	// nr of dependent components
         nPH = dCH->nPH;
-        xDC_up = new double[ nDC ];  // memory leaks here! (these arrays must be re-created at each n)
+        xDC_up = new double[ nDC ];  // memory leaks may be here! (these arrays must be re-created at each n)
         xDC_lo = new double[ nDC ];
         Ph_surf = new double[ nPH ];
         new_moles_IC = new double[ nIC ]; // vector for holding the moles of independent components for each experiment
@@ -474,7 +471,7 @@ void TGfitTask::setnodes()
 
         for (j=0; j<experiments[n]->sbcomp.size(); ++j)
         {
-            if ((experiments[n]->sbcomp[j]->comp == "H2O") )
+            if (( experiments[n]->sbcomp[j]->comp == "H2O" || experiments[n]->sbcomp[j]->comp == "H2O@" ) )
             {
                 if (experiments[n]->sbcomp[j]->Qunit == keys::gram)
                 {
@@ -768,7 +765,7 @@ void TGfitTask::setnodes()
             }
                 else
                 {
-                    cout<<" Unknown component in gemsfit_task.cpp line 769 !!!! "<<endl;
+                    cout<<" Unknown component in gemsfit_task.cpp line 768 !!!! "<<endl;
                     cout<<" ... bail out now ... "<<endl;
                     exit(1);
                 }
@@ -929,7 +926,7 @@ void TGfitTask::get_sum_of_residuals( double &residuals)
     {
         int count = 0;
     /// Target function
-    // Loop trough all experiments
+    // Loop through all experiments
     for (unsigned int i=0; i<this->experiments.size(); ++i)
     {
             if ((this->Tfun->objfun[j]->exp_phase !="NULL") && (this->experiments[i]->expphases.size() > 0))

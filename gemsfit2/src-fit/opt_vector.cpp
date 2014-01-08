@@ -54,7 +54,7 @@ opti_vector::opti_vector( )
     // getting indexes of components in the DCH
     if (h_RDc)
     {
-        fout << "10-1. opt_vector.cpp line 58. Getting the indexes of species involved in the reaction constraints; " << endl;
+        fout << "10-1. opt_vector.cpp line 57. Getting the indexes of species involved in the reaction constraints; " << endl;
         get_RDc_indexes (node, this);
     }
 
