@@ -1,0 +1,406 @@
+#########################################################################
+#>>>>>>>>>>> GEMSFIT2 input specification file template >>>>>>>>>>>>>>>>#
+#########################################################################
+#  Character '#' means a comment line 
+
+# MPI: Number of threads for parallelization
+
+<MPI>  4
+
+#########################################################################
+#>>>>>>>>>>>>>>>>>>>>>>>> Data Sources section >>>>>>>>>>>>>>>>>>>>>>>>>#
+#########################################################################
+
+# DataSource: get experimental data from the EJDB format database
+#     (default:0, no other sources yet implemented in GEMSFIT2)
+
+<DataSource>  0
+
+# DataDB: EJDB database path (please, edit to put the actual path)
+
+<DataDB>  './test_input/CaSrCO3/EJDB/solargstr'
+
+# DataCollection: database collection name (please, edit to put the actual name)
+
+<DataCollection>  'experiments'
+
+# SystemFiles: path to the list of GEMS3K input files (also used for this template file)
+
+<SystemFiles>  './test_input/CaSrCO3/ArgStrGex-dat.lst'
+
+#########################################################################
+#>>>>>>>>>>>>>>>>>>>>>>> DataSelect section >>>>>>>>>>>>>>>>>>>>>>>>>>>>#
+#########################################################################
+
+# DataSelect: query for obtaining the experimental data from the database.
+# Options: 
+#    '{ ... }': script in JSON format (in braces) describing what to select. 
+#      "sample": [...]: list of comma-separated names of samples, 
+#         or empty string "" to select all samples.
+#      "usedataset": [...]: list of comma-separated names of experimental datasets to be used, 
+#         or empty string "" to select all available datasets.
+#      "skipdataset": [...]: list of comma-separated names of experimental datasets to be skipped, 
+#         or empty string "" to not skip (in this case usedataset will apply).
+#      "sT": [...]: list of comma-separated minimum and maximum temperature, C, 
+#         or empty string "" to select data for all available temperatures. 
+#      "sP": [...]: list of comma-separated minimum and maximum pressures, bar, 
+#         or empty string "" to select data for all available pressures.  
+#      Example: 
+#      '{ "sample" : "", 
+#        "usedataset" : ["CH04", "CH04D"],
+#        "skipdataset" : ["CH03", "CH03D"],
+#        "sT" : [100, 1000],
+#        "sP" : [1, 2500] }'
+#      Copy the example and paste it below, remove comment symbols (#), and edit as necessary.
+
+<DataSelect>  '{ "sample" : [ "xCa0.0", "xCa0.22", "xCa0.41", "xCa0.51", "xCa0.75", "xCa0.9", "xCa1.0" ], 
+        "usedataset" : "C96Hmix",
+        "skipdataset" : "",
+        "sT" : "",
+        "sP" : "" }'
+
+#########################################################################
+#>>>>>>>>>>>>>>>>>>>>>>> DataTarget section >>>>>>>>>>>>>>>>>>>>>>>>>>>>#
+#########################################################################
+
+# DataTarget: Target function for parameter fitting, described in JSON style
+#     as text in single quotes and braces: '{ ... }' 
+#  "Target":  name of the target (objective) function (optional)
+#  "TT":  type of the target function as sum of the following terms: 
+#     "lsq":       w*(measured-simulated)^2;
+#     "lsq-norm":  w*(measured/avgm-simulated/avgm)^2;
+#      ... 
+#      here, avgm is the arithmetic mean of measured values.
+#  "WT":  weighting scheme for samples, one of the following options:
+#       empty string "": w = 1 (equal weights);
+#      "inverr": w=1/error; "inverr2": w=1/error^2; "inverr3": w=1/measured^2;
+#      "inverr_norm": w=1/(error/avgm)^2; 
+#       ... 
+#  "OFUN":  objective function, a list [] of terms {} for measured properties to compare
+#     with their computed counterparts. Each term can contain property-value pairs:
+#      "EPH": for what phase from the experiments
+#      "CT":  for the type of data to compare:
+#          "IC" for independent component; "DC" for dependent component; 
+#          "prop" for phase property; "MR" for mole fraction; 
+#      "CN":  the name/formula of the data to compare. e.g. "Al" if "CT" is "IC",
+#          or "pH" if "CT" is "prop", or "K/(Na+K)" if "CT" is "MR" 
+#      "DCP": used only if "CT" is "DC", to represent the name of dependent component property:
+#          "Q" for amount; "@coef" for activity coeficient
+#       "unit":  units of measurement (override those given in the database for this value):
+#          "molal":  mol/(kg H2O), "loga": log(molal), "-loga": negated log(molal);
+#          "g"; "kg"; "cm3"; "m3"; "molfrac": mole fraction; kJ/mol for Gex 
+#           ...
+#       (conversions will be performed automatically).
+#     The comparison options are: 
+#       aqueous phase ("aq_gen") elemental composition in "molal" or "loga" 
+#       aqueous phase ("aq_gen") properties ("prop"): "pH" in "-loga" (or "molal" 
+#          - molality concentration of H+); "Q" - mass in "g" or "kg"  
+#       other phases composition as element bulk amount in moles ("mol") 
+#          or to /Si molar ratio ("Simolfrac")
+#       other phases properties ("prop"): "Q" - mass in "g" or "kg"; 
+#          "pV" - volume in "cm3" or "m3";  "Eh" - volume in "Volts";
+#          "Gex"  - excess Gibbs energy of mixing (in "kJ/mol"). 
+#       dependent components ("DC") properties: "Q" - amount in "mol"; 
+#          "@coef" - activity coefictient 
+#           ...
+#  Example:
+#  '{ "Target": "name", "TT": "lsq", "WT": "inverr", "OFUN":
+#      [
+#         { "EPH": "aq_gen", "CT": "IC", "CN": "Si", "unit": "molal" },
+#         { "EPH": "aq_gen", "CT": "IC", "CN": "Al", "unit": "molal" },
+#         { "EPH": "aq_gen", "CT": "prop", "CN": "pH", "unit": "-loga" },
+#         { "EPH": "aq_gen", "CT": "DC", "CN": "SiO2@", "DCP" : "Q", "unit": "mol"}
+#      ]
+#   }'
+#  Copy the example, paste it below, remove the comment symbols (#), and edit as necessary. 
+#     Remove the unnecessary rows {...}
+
+<DataTarget>  '{ "Target": "fitGex", "TT": "lsq", "WT": "inverr", "OFUN":
+      [
+         { "EPH": "ArgStr", "CT": "prop", "CN": "Gex", "unit": "kJ/mol" }
+      ]
+               }'
+
+# LimitOfDetection: Limit of detection of the measured values.
+#     Ensures that wrongly  output values computed due to non-physical input parameters are ignored.
+
+<LimitOfDetection>  1e-06
+
+#########################################################################
+#>>>>>>>>>>>>>>>>>>>>>> ParameterMarkup section >>>>>>>>>>>>>>>>>>>>>>>>#
+#########################################################################
+
+#  GEM input parameters to fit can be marked by preceding them with the F, L, and R letter 
+#    in <TKval>, <Pval>, <G0>,  <PMc>, <DMc>, <fDQF>, <bIC> ... data object entries, see below.
+#    Values without markup will not be modified by GEMSFIT2 routines, just used in GEM runs.
+
+#  Mark with F the parameter value you want to fit independently of other parameters. 
+#    Shorthand option: F<initval> - initial value with default (10%) upper- and lower boundaries.
+#    Example:  ... F-833444 ... (<initval> can be modified, if necessary).
+#    Full JSON-style markup syntax for the independently adjusted parameter: as in this example
+#      for fitting G0(298) of SiO2@ 
+#      F{ "IV" :-833444, "UB" : -800000, "LB" : -900000 } 
+#      where:
+#         "IV": initial value; 
+#         "UB": upper boundary; 
+#         "LB": lower bundary (in this case, all in J/mol). 
+
+#  Mark with R the G0(298) value of a Dependent Component, which depends on G0 of other DCs
+#     via a reaction constraint, by copy-pasting the following template in place of G0(298) value,
+#     and editing it as desired:
+#      R{ "IV" : -36819, "Ref" : "SUPCRT92", "order" : "1", "nC" : 4, "rDC" : "KOH@",
+#      "RC" : [ "K+", "H2O@", "H+", "KOH@" ], "Rcoef" : [ -1, -1, 1, 1 ] }
+#     Here,  "IV": initial value; 
+#         "Ref": bibliographic reference (optional);
+#         "order": reaction order | 1, 2, ... |, important for many reaction with common species;
+#         "nC": numer of components (species) involved in the reaction;
+#         "DC": name of Dependent Component whose properties are constrained with this reaction; 
+#         "RC": list [ ] of names of all components (species) involved in reaction (comma-separated);
+#         "Rcoef": array [ ] of reaction stoichiometry coeficients (comma-separated), 
+#           in the same order as in the "RC" list. This example describes a reaction: 
+#           K+ + H2O@ = H+ + KOH@ in which G0(KOH@) follows variations of G0(K+) induced by the fitting, 
+#           such that the logK of this reaction at (T,P) remains constant. 
+
+#  Mark with L the bIC (system bulk composition) value of Independent Component, 
+#     which depends on bIC of other elements via a titration constraint,
+#     by copy-pasting the following template in place of the bIC value, and editing as desired:
+#      L{ "LE" :"H", "IV" :113.016746705914, "LEs" :["S", "Cl"], "Lcoef" :[2,1]}
+#     In this example: the amount of H is linked to S and Cl by titration with H2SO4 and HCl, 
+#         with stoichiometry coeficients of 2 and 1, respectively.
+#        "LE": linked element 
+#        "IV": initial value 
+#        "LEs": the elements linked to 
+#        "Lcoef": linkage coefficients (stoichiometry coefficients) 
+#         Whenever the bIC values of S or Cl are varied as (independent) titration parameters,
+#         the bIC value of H will be adjusted to titrate the system either with H2SO4 or with HCl.
+
+# ICNL: List of Independent Component names (for readability; no need to modify)
+<ICNL>
+'C' 'Ca' 'H' 'Nit' 'O' 'Sr' 'Zz' 
+# DCNL: List of Dependent Component names (for readability; no need to modify)
+<DCNL>
+'Ca(CO3)@' 'Ca(HCO3)+' 'Ca+2' 'CaOH+' 'Sr(CO3)@' 'Sr(HCO3)+' 'Sr+2' 'SrOH+' 'CO2@' 'CO3-2' 'HCO3-' 'CH4@' 'H2@' 'N2@' 'O2@' 'OH-' 'H+' 'H2O@' 'CO2' 'CH4' 'H2' 'N2' 'O2' 'Arg' 'Str' 'Gr' 'Portlandite' 
+# PHNL: List of Phase names (for readability; no need to modify)
+<PHNL>
+'aq_gen' 'gas_gen' 'ArgStr' 'Graphite' 'Portlandite' 
+ 
+# G0: Look-up array for DC Gibbs energy function g(T,P), J/mol at 298.15K and 1 bar 
+<G0>
+-1.09918e+06
+-1.14604e+06
+-552790
+-717024
+-1.10783e+06
+-1.15754e+06
+-563836
+-725159
+-386015
+-527982
+-586940
+-34354
+17729
+18194
+16446
+-157270
+0
+-237181
+-394393
+-50659
+0
+0
+0
+-1.12836e+06
+-1.14474e+06
+0
+-897013
+
+ 
+# logK: Look-up array for logK at T * P * nr reactions. 
+#    If at least one G0 parameter is marked as 'R' (reaction-constrained)
+#    and the list below is left commented out, then logK values for all T,P pairs and reactions
+#    will be calculated based on the initial values of all parameters, and this logK array
+#    will be used throughout the fitting process. 
+#<logK>
+
+
+#########################################################################
+#>>>>>>>>>> Input for fitting non-ideality parameters >>>>>>>>>>>>>>>>>>#
+#########################################################################
+
+# Initial data for multicomponent phases (fragment of GEMS3K *IMP.dat input file)
+#    (see the DCH file for the dimension nPHs)
+# sMod: Codes for TSolMod built-in  models of mixing in multicomponent phases [nPS*6]
+<sMod>
+'HNNSNN' 'NNINNI' 'NNNNRN' 
+
+# LsMod: Dimensions of TSolMod <IPxPH> and <PMc> data arrays [nPS*3]. In each row (for phase):
+# [0] number of interaction parameters (rows in <IPx>); [1] max. parameter order (columns in <IPx>);
+# [2] number of coefficients per interaction parameter in <PMc> array
+<LsMod>
+2 0 4 
+0 0 0 
+1 2 3 
+
+# IPxPH: Index lists (in TSolMod convention) for interaction parameters of non-ideal solutions
+<IPxPH>
+1 0 
+
+# PMc: Tables (in TSolMod convention) of interaction parameter coefficients for non-ideal solutions
+<PMc>
+0.0642049983143806 3.72000002861023 1 0 0 0 0 0 
+F{ "IV" : 12.0, "LB" : 6.0, "UB" : 16.0 }   0 0 
+
+# LsMdc: Dimensions of TSolMod <DMc> and <MoiSN> arrays [nPS*3]: In each row (for phase):
+# [0] number of parameters per component; [1] 0; [2] 0. For multi-site (sublattice) models: 
+#   [1] number of sublattices nS; [2] total number of moieties nM acting in sublattice sites
+<LsMdc>
+0 0 0 
+0 0 0 
+0 0 0 
+
+# fDQF: DQF parameters of end members or pure gas fugacities, (J/mol/(RT) [nDC]
+<fDQF>
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+
+# This part for the system composition data is taken from the *DBR.dat file
+
+# For fitting T and P parameters in thermobarometry application, give the upper and lower values
+#   corresponding to the interpolation range that you selected when exporting GEMS3K input files 
+# TK: Node temperature T, Kelvin. This value must always be provided (GEM input)
+<TK>  298.15
+# P:  Node Pressure P, Pa. This value must always be provided (GEM input)
+<P>  100000
+
+## (4) Data for Independent Components
+#  'C' 'Ca' 'H' 'Nit' 'O' 'Sr' 'Zz' 
+# bIC: Bulk composition of reactive subsystem (main GEM input), moles of ICs [nICb]
+<bIC>
+10.0020023257401 5 111.016746657646 0.000553896413071579 85.512511802928 5.00000014131116 0 
+
+## (5) Data for Dependent Components
+#  'Ca(CO3)@' 'Ca(HCO3)+' 'Ca+2' 'CaOH+' 'Sr(CO3)@' 'Sr(HCO3)+' 'Sr+2' 'SrOH+' 'CO2@' 'CO3-2' 'HCO3-' 'CH4@' 'H2@' 'N2@' 'O2@' 'OH-' 'H+' 'H2O@' 'CO2' 'CH4' 'H2' 'N2' 'O2' 'Arg' 'Str' 'Gr' 'Portlandite' 
+# xDC: Speciation - amounts of DCs in equilibrium (primal solution), moles (GEM output/input) [nDCb]
+<xDC>
+7.90142466872349e-06 4.90122720786191e-05 0.00152220830296276 5.656250065511e-09 3.50045540294189e-07 6.83982258711845e-06 0.000177070080742866 2.0330952217626e-10 0.000253086099269988 5.76487854822919e-06 0.00344261769439058 0 0 0.000276948206535789 6.68406562666311e-05 3.05420141105746e-07 3.81499915687813e-08 55.5066239192139 0 0 0 0 0 4.99842087234405 4.99981588115899 0 0 
+
+# dll: Lower metastability restrictions on amounts of DCs, moles (GEM input) [nDCb]
+<dll>
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+
+# dul: Upper metastability constraints on amounts of DCs, moles (GEM input) [nDCb]
+<dul>
+1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 
+
+## (6) Data for Phases
+#  'aq_gen' 'gas_gen' 'ArgStr' 'Graphite' 'Portlandite' 
+# aPH: Specific surface areas of phases, m2/kg (GEM input) [nPHb]
+<aPH>
+0 0 0 0 0 
+# Vs: Volume V of reactive subsystem, m3 (GEM output)
+<Vs>  0.00136873
+# Ms: Mass of reactive subsystem, kg (GEM output)
+<Ms>  2.23868
+# Gs: Total Gibbs energy of the reactive subsystem, J/(RT) (GEM output)
+<Gs>  -9895.74
+# IS: Effective aqueous ionic strength, molal (GEM output)
+<IS>  0.00515966
+# pH: pH of aqueous solution in molal activity scale (GEM output)
+<pH>  7.45156
+# pe: pe of aqueous solution in molal activity scale (GEM output)
+<pe>  13.0012
+# Eh: Eh of aqueous solution, V (GEM output)
+<Eh>  0.767595
+
+## (4) Data for Independent Components
+#  'C' 'Ca' 'H' 'Nit' 'O' 'Sr' 'Zz' 
+
+# uIC: Chemical potentials of ICs in equilibrium (dual solution), J/(RT) (GEM output) [nICb]
+<uIC>
+-161.018424068598 -289.662225802623 -47.0942095202928 -0.425784752145653 -1.4890331387246 -296.269926250978 29.9363662073603 
+
+# bSP: Output bulk composition of the equilibrium solid part of the system, moles 
+<bSP>
+9.99823675350303 4.99842087234405 0 0 29.9947102605091 4.99981588115899 0 
+
+## (5) Data for Dependent Components
+#  'Ca(CO3)@' 'Ca(HCO3)+' 'Ca+2' 'CaOH+' 'Sr(CO3)@' 'Sr(HCO3)+' 'Sr+2' 'SrOH+' 'CO2@' 'CO3-2' 'HCO3-' 'CH4@' 'H2@' 'N2@' 'O2@' 'OH-' 'H+' 'H2O@' 'CO2' 'CH4' 'H2' 'N2' 'O2' 'Arg' 'Str' 'Gr' 'Portlandite' 
+
+# gam: Activity coefficients of DCs in their respective phases (GEM output/input) [nDCb]
+<gam>
+1.00076307642485 0.92590168795818 0.733272981074103 0.92590168795818 1.00076307642485 0.92590168795818 0.733272981074103 0.92590168795818 1.00076307642485 0.733272981074103 0.92590168795818 1.00076307642485 1.00076307642485 1.00076307642485 1.00076307642485 0.92590168795818 0.92590168795818 0.999999989048691 1 1 1 1 1 2.04668758437137 2.04586986329159 1 1 
+
+## (6) Data for Phases
+#  'aq_gen' 'gas_gen' 'ArgStr' 'Graphite' 'Portlandite' 
+
+# xPH: Amounts of phases in equilibrium state, moles (GEM output) [nPHb]
+<xPH>
+55.5124329081272 0 9.99823675350303 0 0 
+
+# vPS: Volumes of multicomponent phases, m3 (GEM output) [nPSb]
+<vPS>
+0.00100298804231471 0 0.000365738889548856 
+
+# mPS: Masses of multicomponent phases, kg (GEM output) [nPSb]
+<mPS>
+1.00028326471077 0 1.23839478565928 
+
+# xPA: Amount of carrier (sorbent or solvent) in multicomponent phases, moles (GEM output) [nPSb]
+<xPA>
+55.5066239192139 0 0 
+
+# bPS: Bulk elemental compositions of multicomponent phases, moles (GEM output) [nPSb*nICb]
+#  'C' 'Ca' 'H' 'Nit' 'O' 'Sr' 'Zz' 
+<bPS>
+0.00376557223708355 0.00157912765596017 111.016746657646 0.000553896413071579 55.5178015424181 0.000184260152179801 -1.56196184661606e-19 
+0 0 0 0 0 0 0 
+9.99823675350303 4.99842087234405 0 0 29.9947102605091 4.99981588115899 0 
+
+#########################################################################
+#>>>>>>>>>>>>>>>> OptimizationMethods section >>>>>>>>>>>>>>>>>>>>>>>>>>#
+#########################################################################
+
+
+# OptDoWhat: perform optimization and statistics (0), only optimization with basic Statistics (1), only Statistics (2) with initial guesses as best fit parametters
+<OptDoWhat>  1
+
+# OptTuckey: 0 > Use Tuckey Biweight. Value > 0 will be the number of iterations for re-weighting. 
+<OptTuckey>  0
+
+# OptTitration: Adjusts the computed pH by changing NaOH or HCl amount to match the mesured pH read from the database for each experiment
+<OptTitration>  0
+
+# OptAlgo: specify algorithm GN_ISRES GN_ORIG_DIRECT GN_ORIG_DIRECT_L LN_COBYLA LN_BOBYQA 
+<OptAlgo>  'LN_BOBYQA'
+
+# OptBoundPerc: Generate bounds from initial guess vector: specify percentage deviation (user specific, user-defined bounds when set to -1)
+<OptBoundPerc>  -1
+
+# OptTolRel: stopping criterion -> specify relative tolerance (default = 1e-04) of function value
+<OptTolRel>  1e-06
+
+# OptTolAbs: stopping criterion -> specify absolute tolerance (default = 1e-04) of function value
+<OptTolAbs>  1e-06
+
+# OptMaxEval: specify max number of evaluations
+<OptMaxEval>  500000
+
+# OptInitStep: specify initial stepsize for local minimizers (factor will be multiplied to all optimization parameters); 0 => use default
+<OptInitStep>  0
+
+# OptNormParam: Normalize bounds/constraints/fitting parameters with initial guess vector
+<OptNormParam>  0
+
+# OptPerturbator: The delta/difference used to to calculate the d(function_value)/d(parameter_value) gradient
+<OptPerturbator>  0.0001
+
+# StatMCruns: number of Monte Carlo runs for confidence interval generation
+<StatMCruns>  10
+
+# StatSensitivity: number of evaluations points per parameter for sensitivity evaluation
+<StatSensitivity>  50
+
+# StatMCbool: perform Monte Carlo runs -> yes (1)/no (0)
+<StatMCbool>  0
+
+# StatPerturbator: used for calculating sensitivities by central diference, see ref [2]
+<StatPerturbator>  0.001

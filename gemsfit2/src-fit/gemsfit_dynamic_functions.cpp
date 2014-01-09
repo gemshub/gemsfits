@@ -306,7 +306,6 @@ double titfunc(const std::vector<double> &x, std::vector<double> &grad, void *ob
         cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
     }
 
-
     // calc residual
     double meas_pH = sys->experiments[sys->EXPndx[P_id]]->expphases[sys->PHndx[P_id]]->phprop[sys->PHPndx[P_id]]->Qnt;
     double calc_pH = sys->NodT[sys->EXPndx[P_id]]->Get_pH();
@@ -337,9 +336,9 @@ void titrationG(TGfitTask *sys)
 //        omp_set_num_threads(sys->MPI);
 //        #pragma omp parallel for
 //    //#endif
-    for (int i = 0; i<sys->experiments.size(); i++)
+    for (unsigned int i = 0; i<sys->experiments.size(); i++)
     {
-        int j;
+        unsigned int j;
         int P_id = omp_get_thread_num();
 //        cout << P_id << endl;
         h_HCl[P_id] = false; h_NaOH[P_id] = false;

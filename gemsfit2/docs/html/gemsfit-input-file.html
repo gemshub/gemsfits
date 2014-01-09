@@ -9,6 +9,7 @@
 
 
 
+
   
 
   
@@ -46,7 +47,8 @@
 <hr style="width: 100%; height: 2px;">
 <h3><a name="-init_mode"></a>1. -init mode</h3>
 <p>
-To produce a template GEMSFIT specifications file from GEMS3K I/O files: run gemsfit2 (from the command line) in the "-init" mode
+To produce a template GEMSFIT specifications file from GEMS3K I/O
+files: run gemsfit2 (from the command line) in the "-init" mode
 <br>
 </p>
 
@@ -131,7 +133,7 @@ than 1000 C, and pressures within the interval 1 to 2500 bar. </p>
 <hr style="width: 100%; height: 2px;">
 <h3>
 3. <a name="DataTarget"></a>DataTarget</h3>
-<p>DataTarget section represents a JSON-format object used to describe
+<p>DataTarget section contains a JSON-format object used to describe
 which GEM output data to compare with what experimental data. Options:</p>
 <p>
 &nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">'{ ... }'</span></big> : object in JSON format (in braces) describing what to compare and which type of target function should be minimized.</p>
@@ -153,33 +155,44 @@ which GEM output data to compare with what experimental data. Options:</p>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">"inverr_norm</span>"</big>: <big><span style="font-family: monospace;">w=1/(error/avgm)^2;<br>
 &nbsp;&nbsp;&nbsp;&nbsp; ...</span></big><br>
 <p>
-&nbsp; &nbsp; <big><a href="gemsfit-useref.html#OFUN"><span style="font-family: monospace; font-weight: bold;">"OFUN"</span></a></big>:&nbsp; objective function, a list [] of terms {} for measured properties to compare with their computed counterparts. Each term can contain property-value pairs:<br>
+&nbsp; &nbsp; <big><a href="gemsfit-useref.html#OFUN"><span style="font-family: monospace; font-weight: bold;">"OFUN"</span></a></big>:&nbsp;
+objective function, a list [] of terms {} for measured properties to
+compare with their computed counterparts. Each term can contain
+property-value pairs:<br>
 </p>
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <big><span style="font-weight: bold; font-family: monospace;">"EPH"</span></big>: for what phase from the experiments <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">"EN"</span></big>:&nbsp; for what element from the phase <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">"EP"</span></big>:&nbsp; for what property of the phase<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">"unit"</span></big>:&nbsp; what unit the values should are given in (overrides the units given in the database for this entry) (optional):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <big><span style="font-weight: bold; font-family: monospace;">"molal"</span></big>:&nbsp; mol/(kg H2O), <big><span style="font-weight: bold; font-family: monospace;">"loga"</span></big>: log(molal), <big><span style="font-family: monospace; font-weight: bold;">"-loga"</span></big>: negated log(molal);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">"g"</span>; <span style="font-family: monospace; font-weight: bold;">"kg"</span>; <span style="font-family: monospace; font-weight: bold;">"cm3"</span>; <span style="font-weight: bold; font-family: monospace;">"m3"</span>; <span style="font-family: monospace; font-weight: bold;">"molratio"</span></big>: mole ratio; <big><span style="font-family: monospace;">"kJ/mol"</span></big>: energy units for Gex.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-weight: bold; font-family: monospace;">"DC"</span>:&nbsp; used only if <span style="font-weight: bold; font-family: monospace;">"CT"</span> is <span style="font-family: monospace; font-weight: bold;">"DC"</span>, represents the name of the dependnt component property: <span style="font-weight: bold; font-family: monospace;">Q</span> for amount.<br>
-<p>
-&nbsp;&nbsp;&nbsp;&nbsp; The compare options are: </p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <big><span style="font-weight: bold; font-family: monospace;">"EPH"</span></big>: for what phase from the experiments <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">"CT"</span></big>:&nbsp; for the type of data to compare:<br>
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">"IC"</span></big>: for independent component; <big style="font-weight: bold;"><span style="font-family: monospace;">"DC"</span></big>: for dependent component; <br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">"prop"</span></big>: for phase property; <big style="font-weight: bold;"><span style="font-family: monospace;">"MR"</span></big>: for mole fraction; <br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">"CN"</span></big>:&nbsp; the name/formula of the data to compare. e.g. <big style="font-weight: bold;"><span style="font-family: monospace;">"Al"</span></big> if <big style="font-weight: bold;"><span style="font-family: monospace;">"CT"</span></big> is <big style="font-weight: bold;"><span style="font-family: monospace;">"IC"</span></big>, or <big style="font-weight: bold;"><span style="font-family: monospace;">"pH"</span></big> if <big style="font-weight: bold;"><span style="font-family: monospace;">"CT"</span></big> is <big style="font-weight: bold;"><span style="font-family: monospace;">"prop"</span></big>, or <big style="font-weight: bold;"><span style="font-family: monospace;">"K/(Na+K)"</span></big> if <big style="font-weight: bold;"><span style="font-family: monospace;">"CT"</span></big> is <big style="font-weight: bold;"><span style="font-family: monospace;">"MR"</span></big> <br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">"DCP"</span></big>: used only if <big style="font-weight: bold;"><span style="font-family: monospace;">"CT"</span></big> is "<big style="font-weight: bold;"><span style="font-family: monospace;">DC"</span></big>, to represent the name of the dependent component property:<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">"Q"</span></big> for amount; <big style="font-weight: bold;"><span style="font-family: monospace;">"@coef"</span></big> for activity coeficient<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; <big><span style="font-family: monospace; font-weight: bold;">"unit"</span></big>:&nbsp; what unit the values should are given in (overrides the units given in the database for this entry) (optional):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; <big><span style="font-weight: bold; font-family: monospace;">"molal"</span></big>:&nbsp; mol/(kg H2O), <big><span style="font-weight: bold; font-family: monospace;">"loga"</span></big>: log(molal), <big><span style="font-family: monospace; font-weight: bold;">"-loga"</span></big>: negated log(molal);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">"g"</span>; <span style="font-family: monospace; font-weight: bold;">"kg"</span>; <span style="font-family: monospace; font-weight: bold;">"cm3"</span>; <span style="font-weight: bold; font-family: monospace;">"m3"</span>; <span style="font-family: monospace; font-weight: bold;">"molratio"</span></big>: mole ratio; <big style="font-family: monospace; font-weight: bold;">"kJ/mol"</big>: energy units for Gex.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...<br>
+&nbsp;&nbsp;&nbsp; The comparison options are:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; aqueous phase (<big><span style="font-weight: bold; font-family: monospace;">"aq_gen"</span></big>) elemental composition in <big><span style="font-family: monospace; font-weight: bold;">"molal"</span></big> or <big><span style="font-family: monospace; font-weight: bold;">"loga"</span></big> <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; aqueous phase (<big><span style="font-family: monospace; font-weight: bold;">"aq_gen"</span></big>)
-properties (<big><span style="font-family: monospace; font-weight: bold;">"EP"</span></big>): <big><span style="font-family: monospace; font-weight: bold;"><br>
+properties (<big><span style="font-family: monospace; font-weight: bold;">"prop"</span></big>): <br>
+<big><span style="font-family: monospace; font-weight: bold;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "pH"</span></big> in <big><span style="font-weight: bold; font-family: monospace;">"-loga"</span> </big>(or <big><span style="font-family: monospace; font-weight: bold;">"molal"</span></big> - molality concentration
-of H+); <big><span style="font-weight: bold; font-family: monospace;">"pQnt"</span></big> - mass in <big style="font-weight: bold;"><span style="font-family: monospace;">"g"</span></big> or <big><span style="font-family: monospace; font-weight: bold;">"kg"</span><span style="font-weight: bold;">&nbsp; </span></big><br>
+of H+); <big><span style="font-weight: bold; font-family: monospace;">"Q"</span></big> - mass in <big style="font-weight: bold;"><span style="font-family: monospace;">"g"</span></big> or <big><span style="font-family: monospace; font-weight: bold;">"kg"</span><span style="font-weight: bold;">&nbsp; </span></big><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; other phases composition as
-element bulk phase concentration in moles ("mol") or to /Si molar ratio
-("Simolfrac")<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; other phases properties (<big style="font-weight: bold; font-family: monospace;">"EP"</big>):
-<big style="font-weight: bold; font-family: monospace;">"Q"</big> - mass in <big style="font-weight: bold; font-family: monospace;">"g"</big> or <big style="font-weight: bold;"><span style="font-family: monospace;">"kg"</span></big>; <big style="font-weight: bold; font-family: monospace;">"pV"</big> - volume in <big><span style="font-family: monospace; font-weight: bold;">"cm3"</span></big> or <big><span style="font-family: monospace; font-weight: bold;">"m3"</span></big>; <big style="font-weight: bold; font-family: monospace;">"Eh"</big> - Eh in <big><span style="font-family: monospace; font-weight: bold;">"Volts"</span></big>  <br>
+element bulk amount in moles (<big style="font-weight: bold;"><span style="font-family: monospace;">"mol"</span></big>) or to /Si molar ratio
+(<big style="font-weight: bold;"><span style="font-family: monospace;">"Simolfrac"</span></big>).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; other phases properties (<big style="font-weight: bold; font-family: monospace;">"prop"</big>):
+<big style="font-weight: bold; font-family: monospace;">"Q"</big> - mass in <big style="font-weight: bold; font-family: monospace;">"g"</big> or <big style="font-weight: bold;"><span style="font-family: monospace;">"kg"</span></big>; <big style="font-weight: bold; font-family: monospace;">"pV"</big> - volume in <big><span style="font-family: monospace; font-weight: bold;">"cm3"</span></big> or <big><span style="font-family: monospace; font-weight: bold;">"m3"</span></big>; <big style="font-weight: bold; font-family: monospace;">"Eh"</big> - Eh in <big><span style="font-family: monospace; font-weight: bold;">"Volts"</span></big>  ; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">"Gex"</span></big>&nbsp; - excess Gibbs energy of mixing (in <big style="font-weight: bold;"><span style="font-family: monospace;">"kJ/mol"</span></big>). <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dependent components (<big style="font-family: monospace;"><span style="font-weight: bold;">"DC"</span></big>)
 properties: <big style="font-weight: bold;"><span style="font-family: monospace;">"Q"</span></big> - amount in "molfrac"; "<big style="font-family: monospace;"><span style="font-weight: bold;">@coef"</span></big> - activity
 coefictient <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...<br>
 <p>
 Example definition of target function in JSON-style format:</p>
 <span style="font-family: monospace; font-weight: bold;">
@@ -191,7 +204,7 @@ Example definition of target function in JSON-style format:</p>
 <span style="font-family: monospace;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { "EPH": "aq_gen", "CT": "IC", "CN": "Al", "unit": "molal" },</span><span style="font-family: monospace;"></span><br style="font-family: monospace;">
 <span style="font-family: monospace;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { "EPH": "aq_gen", "CT": "property", "CN": "pH",&nbsp; "unit": "-loga" }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { "EPH": "aq_gen", "CT": "prop", "CN": "pH",&nbsp; "unit": "-loga" }<br>
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; </span><span style="font-family: monospace;">{ "EPH": "aq_gen", "CT": "DC", "CN": "SiO2@", "DCP": "Q", "unit": "molal" },</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]<br>
@@ -202,7 +215,10 @@ Example definition of target function in JSON-style format:</p>
 <hr style="width: 100%; height: 2px;">
 <h3>4. <a name="Parameters_to_fit"></a>ParameterMarkup<br>
 </h3>
-<p>To tell GEMSFIT2 code which GEM input parameters must be fitted, locate them in <span style="font-family: monospace; font-weight: bold;">&lt;TKval&gt;, &lt;Pval&gt;, &lt;G0&gt;,&nbsp; &lt;PMc&gt;, &lt;DMc&gt;, &lt;fDQF&gt;, &lt;bIC&gt; </span>... data object entries in the input file, and mark by preceding the respective value with the 'F', 'L', and 'R' letter, followed by JSON-style definition in braces. <br>
+<p>To tell GEMSFIT2 code which GEM input parameters must be fitted, locate them in <span style="font-family: monospace; font-weight: bold;">&lt;TKval&gt;, &lt;Pval&gt;, &lt;G0&gt;,&nbsp; &lt;PMc&gt;, &lt;DMc&gt;, &lt;fDQF&gt;, &lt;bIC&gt; </span>...
+data object entries in the input file, and mark by preceding the
+respective value with the 'F', 'L', and 'R' letter, followed by
+JSON-style definition in braces. <br>
 </p>
 <p>The data entries have been copied from the respective GEMS3K input
 (.ipm, .dbr, .dch) files used upon creation of the GEMSFIT2 input
@@ -210,7 +226,9 @@ specification template file and to be used by GEMS3K kernel codes in
 GEMSFIT2 calculations later on. For the format and syntax of GEMS3K
 input files, see GEMS3K documentation (<a href="http://gems.web.psi.ch/GEMS3K" target="_blank">http://gems.web.psi.ch/GEMS3K</a>). <br>
 </p>
-<p>Entries without 'F', 'L', and 'R' markup will not be modified by GEMSFIT2; they will be used&nbsp; in GEM IPM and/or TSolMod calculatioms, as provided.<br>
+<p>Entries without 'F', 'L', and 'R' markup will not be modified by
+GEMSFIT2; they will be used&nbsp; in GEM IPM and/or TSolMod
+calculatioms, as provided.<br>
 </p>
 <p>With 'F' you can mark any type of parameters; with 'L' only <span style="font-weight: bold; font-family: monospace;">bIC</span> vector elements, and with 'R' G0's which the user wants to handle as reaction-constrained.<br>
 </p>

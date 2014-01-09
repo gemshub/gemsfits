@@ -144,7 +144,8 @@ void adjust_RDc (TGfitTask *sys)
                 {
                     for (int k=0; k < sys->Opti->reactions[i]->rdc_species.size()-1; ++k ) // calculates DG without the last species which is the constrained one
                     {
-                        delta_G += sys->Opti->reactions[i]->rdc_species_coef[k] * sys->NodT[n]->DC_G0(sys->Opti->reactions[i]->rdc_species_ind[k], sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, false);
+                        delta_G += sys->Opti->reactions[i]->rdc_species_coef[k]
+                                * sys->NodT[n]->DC_G0(sys->Opti->reactions[i]->rdc_species_ind[k], sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, false);
                     }
 
                      new_G0 = sys->Opti->reactions[i]->dG_reaction_TP[j+1] - delta_G;
@@ -180,7 +181,8 @@ void adjust_RDc (TGfitTask *sys)
                 {
                     for (int k=0; k < sys->Opti->reactions[i]->rdc_species.size()-1; ++k ) // calculates DG without the last species which is the constrained one
                     {
-                        delta_G += sys->Opti->reactions[i]->rdc_species_coef[k] * sys->NodT[n]->DC_G0(sys->Opti->reactions[i]->rdc_species_ind[k], sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, false);
+                        delta_G += sys->Opti->reactions[i]->rdc_species_coef[k]
+                                * sys->NodT[n]->DC_G0(sys->Opti->reactions[i]->rdc_species_ind[k], sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, false);
                     }
 
                     new_G0 = (Rln*(sys->TP_pairs[0][j]+273.15)*sys->Opti->reactions[i]->logK_TPpairs[j+1]) - delta_G;
@@ -423,7 +425,11 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
 
     delete[] IC_in_PH;
 
-    sys->print->set_print(sys->experiments[i]->sample, boost::lexical_cast<std::string>(sys->NodT[i]->Get_pH( )),sys->experiments[i]->expphases[p]->phIC[e]->comp,sys->experiments[i]->expphases[p]->phIC[e]->Qunit,measured_value,computed_value,Weighted_Tfun_residual, weight_ );
+    sys->print->set_print(sys->experiments[i]->sample,
+                          boost::lexical_cast<std::string>(sys->NodT[i]->Get_pH( )),
+                          sys->experiments[i]->expphases[p]->phIC[e]->comp,
+                          sys->experiments[i]->expphases[p]->phIC[e]->Qunit,
+                          measured_value,computed_value,Weighted_Tfun_residual, weight_ );
 
     return Weighted_Tfun_residual;
 }
@@ -491,11 +497,12 @@ double residual_phase_elemMR (int i, int p, int f, int j, TGfitTask *sys)
 
     delete[] IC_in_PH;
 
-    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phMR[f]->comp,sys->experiments[i]->expphases[p]->phMR[f]->Qunit,measured_value,computed_value,Weighted_Tfun_residual, weight_ );
+    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,
+                          sys->experiments[i]->expphases[p]->phMR[f]->comp,
+                          sys->experiments[i]->expphases[p]->phMR[f]->Qunit,
+                          measured_value,computed_value,Weighted_Tfun_residual, weight_ );
 
     return Weighted_Tfun_residual;
-
-
 }
 
 //interprets the molar fraction formula
@@ -503,7 +510,6 @@ void interpretMR (vector<string> *nom, vector<string> *denom, string name)
 {
     int pos_f2, pos_f1, pos_end;
     string f1 = "+", f2 ="/", nominator, denominator, elem, temp_nom, temp_denom;
-
 
     pos_f2 = name.find(f2);
     pos_end   = name.find(f2,pos_f2+1);
@@ -569,7 +575,8 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
         } else computed_value = pow(10,(-(sys->NodT[i]->Get_pH()))) /*sys->NodT[i]->Get_pH()*/;
 
     } else //Get aqueous phase Eh
-    if ((sys->Tfun->objfun[j]->exp_CN == keys::Eh) && (sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
+    if ((sys->Tfun->objfun[j]->exp_CN == keys::Eh) && (sys->experiments[i]->expphases[p]->phase == "aq_gen")
+            && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
     {
         computed_value = sys->NodT[i]->Get_Eh();
     } else // Get phase amount
@@ -620,13 +627,14 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
                   // n_dc = sys->NodT[i]->Get_nDC(DCndx);
                   Gex += log( gam_dc ) * x_dc;
                }
-               computed_value = Gex * 8.31451 * sys->NodT[i]->cTK() / 1000.; // in kJ/mol
+               computed_value = Gex * 0.00831451 * sys->NodT[i]->cTK(); // in kJ/mol
             }
         }
     }
     else { cout << "Error in target functions line 627 "; exit(1);}
 
     measured_value = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt;
+cout << "measured: " << measured_value << " computed: " << computed_value << endl;
 
     // Error handling due to possible non-physical parameters
     if ((computed_value < sys->LimitOfDetection) && (computed_value > 0))
@@ -641,7 +649,10 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
     Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j])*weight_;
 
     sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
-    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,sys->experiments[i]->expphases[p]->phprop[pp]->property,sys->experiments[i]->expphases[p]->phprop[pp]->Qunit,measured_value,computed_value,Weighted_Tfun_residual, weight_ );
+    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,
+                          sys->experiments[i]->expphases[p]->phprop[pp]->property,
+                          sys->experiments[i]->expphases[p]->phprop[pp]->Qunit,
+                          measured_value,computed_value,Weighted_Tfun_residual, weight_ );
 
     return Weighted_Tfun_residual;
 }
@@ -688,7 +699,10 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
     Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j])*weight_;
 
     sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
-    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phDC[dc]->DC,sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->property, sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit, measured_value, computed_value, Weighted_Tfun_residual, weight_ );
+    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phDC[dc]->DC,
+                          sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->property,
+                          sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit,
+                          measured_value, computed_value, Weighted_Tfun_residual, weight_ );
 
     return Weighted_Tfun_residual;
 }

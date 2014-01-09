@@ -123,7 +123,7 @@ void Data_Manager::get_EJDB( )
         out.clear();
 
         parse_JSON_object(DataSelect, keys::skipdataset, out);
-        skipdataset = out; // query for skiping expdatasets
+        skipdataset = out; // query for skipping expdatasets
         out.clear();
 
         parse_JSON_object(DataSelect, keys::sT, out);
@@ -142,7 +142,7 @@ void Data_Manager::get_EJDB( )
 
         // Build the query in EJDB format
 
-        // create EJDB databse object
+        // create EJDB database object
         static EJDB *jb;
         jb = ejdbnew();
         // open the database file as a writer JBOWRITER, create new is not existent JBOCREAT, and truncate db on open JBOTRUNC
@@ -173,7 +173,7 @@ void Data_Manager::get_EJDB( )
             bson_append_finish_object(&bq2);
         }
 
-        // for skiping expdatasets
+        // for skipping expdatasets
         if (!skipdataset[0].empty())
         {
             bson_append_start_object(&bq2, keys::expdataset);
@@ -190,23 +190,23 @@ void Data_Manager::get_EJDB( )
         }
 
         // for selecting samples
-//        cout << qsample[0].c_str() <<  endl;
         if (!qsample[0].empty())
         {
             bson_append_start_object(&bq2, keys::expsample);
             bson_append_start_array(&bq2, "$in");
-            for (unsigned int j=0; j<usedataset.size(); ++j)
+            for (unsigned int j=0; j<qsample.size(); ++j)
             {
                 ss << j;
                 sss = ss.str();
                 ss.str("");
                 bson_append_string(&bq2, sss.c_str(), qsample[j].c_str());
+ // cout << qsample[j].c_str() <<  endl;
             }
             bson_append_finish_array(&bq2);
             bson_append_finish_object(&bq2);
         }
 
-        // for selection temperatures
+        // for selection of temperatures
         if ((qsT.size() == 2))
         {
             // for selecting T interval
@@ -217,7 +217,7 @@ void Data_Manager::get_EJDB( )
             bson_append_finish_array(&bq2);
             bson_append_finish_object(&bq2);
         } else
-            if (!(qsT[0] == NULL))
+            if (!(qsT[0] == 0))
             {
                 bson_append_start_object(&bq2, keys::sT);
                 bson_append_start_array(&bq2, "$in");
@@ -232,7 +232,7 @@ void Data_Manager::get_EJDB( )
                 bson_append_finish_object(&bq2);
             }
 
-        // for selection presures
+        // for selection of pressures
         if ((qsP.size() == 2))
         {
             // for selecting P interval
@@ -319,7 +319,6 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos)
     int ip = -1, ic = -1, sk = -1, ipc, ipp, ips, ipdcp, ipm;
 
     bson_iterator_from_buffer(i, data); // getting primary iterator
-
     while ( bson_iterator_next(i) != BSON_EOO )
     {
         string key_ = bson_iterator_key(i);
@@ -360,7 +359,6 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos)
         if ((key_ == keys::sbcomp) ) // && (t == BSON_ARRAY))
         {
             bson_iterator_subiterator( i, j );
-
             while (bson_iterator_next(j) != BSON_EOO )
             {
                 experiments[pos]->sbcomp.push_back( new samples::components );
@@ -399,7 +397,6 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos)
         if ((key_ == keys::UMC) ) // && (t == BSON_ARRAY))
         {
             bson_iterator_subiterator( i, j );
-
             while (bson_iterator_next(j) != BSON_EOO )
             {
 
@@ -445,7 +442,6 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos)
         if ((key_ == keys::LMC) ) // && (t == BSON_ARRAY))
         {
             bson_iterator_subiterator( i, j );
-
             while (bson_iterator_next(j) != BSON_EOO )
             {
 
@@ -491,7 +487,6 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos)
         if ((key_ == keys::expphases) ) // && (t == BSON_ARRAY))
         {
             bson_iterator_subiterator( i, j );
-
             while ( bson_iterator_next(j) != BSON_EOO )
             {
 
@@ -517,7 +512,6 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos)
                     if ((key_ == keys::phIC) ) //  && (t == BSON_ARRAY))
                     {
                         bson_iterator_subiterator( d, k );
-
                         while ( bson_iterator_next(k) != BSON_EOO )
                         {
                             experiments[pos]->expphases[ip]->phIC.push_back( new samples::components );
@@ -560,7 +554,6 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos)
                     if ((key_ == keys::phMR) ) // && (t == BSON_ARRAY))
                     {
                         bson_iterator_subiterator( d, k );
-
                         while (bson_iterator_next(k) != BSON_EOO )
                         {
                             experiments[pos]->expphases[ip]->phMR.push_back( new samples::components );
@@ -603,7 +596,6 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos)
                     if ((key_ == keys::phprop) ) // && (t == BSON_ARRAY))
                     {
                         bson_iterator_subiterator( d, k );
-
                         while ( bson_iterator_next(k) != BSON_EOO )
                         {
                             experiments[pos]->expphases[ip]->phprop.push_back( new samples::phases::prop );
@@ -674,7 +666,6 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos)
                     if ((key_ == keys::phDC) ) // && (t == BSON_ARRAY))
                     {
                         bson_iterator_subiterator( d, k );
-
                         while (bson_iterator_next(k) != BSON_EOO )
                         {
                             experiments[pos]->expphases[ip]->phDC.push_back( new samples::phases::dcomps );
@@ -695,7 +686,6 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos)
                                 if ((key_ == keys::DCprop) ) // && (t == BSON_ARRAY))
                                 {
                                     bson_iterator_subiterator( d2, k2 );
-
                                     while (bson_iterator_next(k2) != BSON_EOO )
                                     {
                                         experiments[pos]->expphases[ip]->phDC[ips]->DCprop.push_back( new samples::phases::dcomps::dcprop );

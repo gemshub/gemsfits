@@ -79,7 +79,8 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     // For parameter optimization do not use printing of results
     printfile = gpf->ResultDir()+"FIT_results.csv";
 
-    // For parameter optimization do not use parallelization of the Monte Carlo loop (=true). Instead, execute loop over measurements within objective function in parallel (=false).
+    // For parameter optimization do not use parallelization of the Monte Carlo loop (=true).
+    // Instead, execute loop over measurements within objective function in parallel (=false).
 //    MC_MPI = false;
 
     // nodes
@@ -91,13 +92,11 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     }
 
     // initialize nodes with the experimental data
-    fout << "8. gemsfit_task.cpp line 94. Initializing nodes with the experimental data; " << endl;
-    setnodes ( );
-
+    fout << "8. gemsfit_task.cpp line 95. Initializing nodes with the experimental data; " << endl;
+    setnodes ( );  // initialization of nodes each for one experimental point (system)
     // getting the parameters to be optimized from DCH, DBR and multi structures, and optimization settings form the input file
     fout << "9. gemsfit_task.cpp line 98. Initializing optimization structure; " << endl;
     Opti = new optimization ( );
-
     fout << "12. gemsfit_task.cpp line 101. Initializing the Target function structure & get_DatTarget(); " << endl;
     Tfun = new TargetFunction;
     print = new ResPrint(printfile, Opti);
@@ -376,7 +375,7 @@ ffout.close();
 
 void TGfitTask::setnodes()
 {
-    unsigned int n, i, j;
+    int n, i, j;
     // DATACH structure content
     int nIC, nDC, nPH, ICndx, DCndx/*, PHndx*/;
     long int NodeStatusCH, NodeHandle;
@@ -448,7 +447,7 @@ void TGfitTask::setnodes()
             }
         }
 
-        // Surface energy of phases -> kinetics
+        // Surface areas of phases -> kinetics
         for( i=0; i<nPH; i++ )
             Ph_surf[i] = 0.;
 
@@ -784,14 +783,33 @@ void TGfitTask::setnodes()
         // ---- // ---- // Set temperature and pressure // ---- // ---- //
         P_pa = 100000 * experiments[n]->sP;
         T_k = 273.15 + experiments[n]->sT;
-
+        NodeHandle = n;
         // ---- // ---- // set the new amount of IC and T & P from experiment i // ---- // ---- //
         // in the future - implement a Tnode function that stes just T, P and bIC vector of amount of independent components.
         // ---- // ---- // Transfer new temperature, pressure and b-vector to GEMS3K // ---- // ---- //
 //        NodT[n]->GEM_from_MT( NodeHandle, NodeStatusCH, T_k, P_pa, 0., 0., new_moles_IC, xDC_up, xDC_lo, Ph_surf );
 
-        NodT[n]->GEM_from_MT( NodeHandle, NodeStatusCH, T_k, P_pa, new_moles_IC, xDC_up, xDC_lo );
+        // variant (8c) of GEM_from_MT()
+        NodT[n]->GEM_from_MT( NodeHandle, NEED_GEM_AIA, T_k, P_pa, new_moles_IC, xDC_up, xDC_lo );  // bugfix DK 09.01.2014
 
+        // Calling GEMIPM calculation
+        NodeStatusCH = NodT[n]->GEM_run( true );
+cout << "Node: " << NodeHandle << "  NodeStatusCH: " << NodeStatusCH << endl;
+
+        if( ( NodeStatusCH == ERR_GEM_AIA || NodeStatusCH == ERR_GEM_SIA ||
+                       NodeStatusCH ==  T_ERROR_GEM ) )
+        {
+             cout << "Error: GEM calculation results are not retrieved upon initializing experimental system (node) "
+                  << NodeHandle << endl;
+        }
+        else
+        {
+           if( ( NodeStatusCH == BAD_GEM_AIA || NodeStatusCH == BAD_GEM_SIA  ) )
+           {
+              cout << "Insufficient quality of GEM solution, but GEM results are retrieved upon initializing experimental system (node) "
+              << NodeHandle << endl;
+           }
+        }
         delete[] new_moles_IC;
         delete[] xDC_up;
         delete[] xDC_lo;
