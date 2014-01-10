@@ -1,0 +1,110 @@
+GEMSFIT2: Start
+optParamFile = ./gfin01_ArgStrGex.dat
+fitFile = ./results/FIT.csv
+fitLogFile = ./output/log_gemsfit.log
+gems3LstFilePath = 
+Node: 0  NodeStatusCH: 2
+Node: 1  NodeStatusCH: 2
+Node: 2  NodeStatusCH: 2
+Node: 3  NodeStatusCH: 2
+Node: 4  NodeStatusCH: 2
+Parameter: LsMod Type 1 Index 8 : { "IV" : 10000, "LB" : 5000, "UB" : 15000 }
+i=0 p=0 pp=0 j=0 : measured: 2172 computed: 1213.32
+i=1 p=0 pp=0 j=0 : measured: 2494 computed: 1716.35
+i=2 p=0 pp=0 j=0 : measured: 3806 computed: 1774.38
+i=3 p=0 pp=0 j=0 : measured: 2165 computed: 1331.93
+i=4 p=0 pp=0 j=0 : measured: 2614 computed: 638.865
+i=0 p=0 pp=0 j=0 : measured: 2172 computed: 1708.09
+i=1 p=0 pp=0 j=0 : measured: 2494 computed: 2417.28
+i=2 p=0 pp=0 j=0 : measured: 3806 computed: 2499.13
+i=3 p=0 pp=0 j=0 : measured: 2165 computed: 1875.21
+i=4 p=0 pp=0 j=0 : measured: 2614 computed: 897.918
+~ m.count.= 1 sum.res.= 5013.66
+i=0 p=0 pp=0 j=0 : measured: 2172 computed: 2134.45
+i=1 p=0 pp=0 j=0 : measured: 2494 computed: 3021.48
+i=2 p=0 pp=0 j=0 : measured: 3806 computed: 3123.92
+i=3 p=0 pp=0 j=0 : measured: 2165 computed: 2342.89
+i=4 p=0 pp=0 j=0 : measured: 2614 computed: 1119.1
+~ m.count.= 2 sum.res.= 2151.34
+i=0 p=0 pp=0 j=0 : measured: 2172 computed: 1281.58
+i=1 p=0 pp=0 j=0 : measured: 2494 computed: 1813.03
+i=2 p=0 pp=0 j=0 : measured: 3806 computed: 1874.35
+i=3 p=0 pp=0 j=0 : measured: 2165 computed: 1406.91
+i=4 p=0 pp=0 j=0 : measured: 2614 computed: 674.713
+~ m.count.= 3 sum.res.= 11898.8
+i=0 p=0 pp=0 j=0 : measured: 2172 computed: 2224.61
+i=1 p=0 pp=0 j=0 : measured: 2494 computed: 3149.28
+i=2 p=0 pp=0 j=0 : measured: 3806 computed: 3256.07
+i=3 p=0 pp=0 j=0 : measured: 2165 computed: 2441.71
+i=4 p=0 pp=0 j=0 : measured: 2614 computed: 1165.6
+~ m.count.= 4 sum.res.= 2060.86
+i=0 p=0 pp=0 j=0 : measured: 2172 computed: 2267.24
+i=1 p=0 pp=0 j=0 : measured: 2494 computed: 3209.7
+i=2 p=0 pp=0 j=0 : measured: 3806 computed: 3318.55
+i=3 p=0 pp=0 j=0 : measured: 2165 computed: 2488.42
+i=4 p=0 pp=0 j=0 : measured: 2614 computed: 1187.54
+~ m.count.= 5 sum.res.= 2080.62
+i=0 p=0 pp=0 j=0 : measured: 2172 computed: 2221.92
+i=1 p=0 pp=0 j=0 : measured: 2494 computed: 3145.46
+i=2 p=0 pp=0 j=0 : measured: 3806 computed: 3252.12
+i=3 p=0 pp=0 j=0 : measured: 2165 computed: 2438.76
+i=4 p=0 pp=0 j=0 : measured: 2614 computed: 1164.21
+~ m.count.= 6 sum.res.= 2060.96
+i=0 p=0 pp=0 j=0 : measured: 2172 computed: 2227.31
+i=1 p=0 pp=0 j=0 : measured: 2494 computed: 3153.1
+i=2 p=0 pp=0 j=0 : measured: 3806 computed: 3260.03
+i=3 p=0 pp=0 j=0 : measured: 2165 computed: 2444.66
+i=4 p=0 pp=0 j=0 : measured: 2614 computed: 1166.98
+~ m.count.= 7 sum.res.= 2060.92
+i=0 p=0 pp=0 j=0 : measured: 2172 computed: 2224.94
+i=1 p=0 pp=0 j=0 : measured: 2494 computed: 3149.74
+i=2 p=0 pp=0 j=0 : measured: 3806 computed: 3256.55
+i=3 p=0 pp=0 j=0 : measured: 2165 computed: 2442.07
+i=4 p=0 pp=0 j=0 : measured: 2614 computed: 1165.76
+~ m.count.= 8 sum.res.= 2060.85
+i=0 p=0 pp=0 j=0 : measured: 2172 computed: 2225.11
+i=1 p=0 pp=0 j=0 : measured: 2494 computed: 3149.99
+i=2 p=0 pp=0 j=0 : measured: 3806 computed: 3256.8
+i=3 p=0 pp=0 j=0 : measured: 2165 computed: 2442.26
+i=4 p=0 pp=0 j=0 : measured: 2614 computed: 1165.85
+~ m.count.= 9 sum.res.= 2060.85
+i=0 p=0 pp=0 j=0 : measured: 2172 computed: 2224.94
+i=1 p=0 pp=0 j=0 : measured: 2494 computed: 3149.74
+i=2 p=0 pp=0 j=0 : measured: 3806 computed: 3256.55
+i=3 p=0 pp=0 j=0 : measured: 2165 computed: 2442.07
+i=4 p=0 pp=0 j=0 : measured: 2614 computed: 1165.76
+~ m.count.= 10 sum.res.= 2060.85
+ NLopt return code: 4
+ Optimization stopped because xtol_rel or xtol_abs was reached. 
+found minimum at <<f( 1.30307 ) = 2060.85
+ after 10 evaluations
+ Statistics Constructor: sum of squares: 2060.85
+ Statistics Constructor: number_of_parameters: 1
+i=0 p=0 pp=0 j=0 : measured: 2172 computed: 2227.16
+i=1 p=0 pp=0 j=0 : measured: 2494 computed: 3152.89
+i=2 p=0 pp=0 j=0 : measured: 3806 computed: 3259.81
+i=3 p=0 pp=0 j=0 : measured: 2165 computed: 2444.5
+i=4 p=0 pp=0 j=0 : measured: 2614 computed: 1166.91
+~ m.count.= 11 sum.res.= 2060.91
+i=0 p=0 pp=0 j=0 : measured: 2172 computed: 2222.72
+i=1 p=0 pp=0 j=0 : measured: 2494 computed: 3146.59
+i=2 p=0 pp=0 j=0 : measured: 3806 computed: 3253.3
+i=3 p=0 pp=0 j=0 : measured: 2165 computed: 2439.63
+i=4 p=0 pp=0 j=0 : measured: 2614 computed: 1164.62
+~ m.count.= 12 sum.res.= 2060.91
+i=0 p=0 pp=0 j=0 : measured: 2172 computed: 2224.94
+i=1 p=0 pp=0 j=0 : measured: 2494 computed: 3149.74
+i=2 p=0 pp=0 j=0 : measured: 3806 computed: 3256.55
+i=3 p=0 pp=0 j=0 : measured: 2165 computed: 2442.07
+i=4 p=0 pp=0 j=0 : measured: 2614 computed: 1165.76
+~ m.count.= 13 sum.res.= 2060.85
+Fisher Matrix:
+   0.0003
+Variance Covariance Matrix:
+   3.1156e+03
+CorellationMatrix = 
+   1.0000
+Corellation Matrix:
+   1.0000
+0.07898 seconds.
+GEMSFIT2: End. Bye!

@@ -18,7 +18,7 @@
 
 # DataDB: EJDB database path (please, edit to put the actual path)
 
-<DataDB>  './test_input/CaSrCO3/EJDB/solargstr'
+<DataDB> './EJDB/solargstr'
 
 # DataCollection: database collection name (please, edit to put the actual name)
 
@@ -26,7 +26,7 @@
 
 # SystemFiles: path to the list of GEMS3K input files (also used for this template file)
 
-<SystemFiles>  './test_input/CaSrCO3/ArgStrGex-dat.lst'
+<SystemFiles>  './GEMS/ArgStrGex-dat.lst'
 
 #########################################################################
 #>>>>>>>>>>>>>>>>>>>>>>> DataSelect section >>>>>>>>>>>>>>>>>>>>>>>>>>>>#
@@ -53,7 +53,7 @@
 #        "sP" : [1, 2500] }'
 #      Copy the example and paste it below, remove comment symbols (#), and edit as necessary.
 
-<DataSelect>  '{ "sample" : [ "xCa0.0", "xCa0.22", "xCa0.41", "xCa0.51", "xCa0.75", "xCa0.9", "xCa1.0" ], 
+<DataSelect>  '{ "sample" : [  "xCa0.22", "xCa0.41", "xCa0.51", "xCa0.75", "xCa0.9" ], 
         "usedataset" : "C96Hmix",
         "skipdataset" : "",
         "sT" : "",
@@ -117,7 +117,7 @@
 
 <DataTarget>  '{ "Target": "fitGex", "TT": "lsq", "WT": "inverr", "OFUN":
       [
-         { "EPH": "ArgStr", "CT": "prop", "CN": "Gex", "unit": "kJ/mol" }
+         { "EPH": "ArgStr", "CT": "prop", "CN": "Gex", "unit": "J/mol" }
       ]
                }'
 
@@ -248,7 +248,7 @@
 # PMc: Tables (in TSolMod convention) of interaction parameter coefficients for non-ideal solutions
 <PMc>
 0.0642049983143806 3.72000002861023 1 0 0 0 0 0 
-F{ "IV" : 12.0, "LB" : 6.0, "UB" : 16.0 }   0 0 
+F{ "IV" : 10000, "LB" : 5000, "UB" : 15000 }   0 0 
 
 # LsMdc: Dimensions of TSolMod <DMc> and <MoiSN> arrays [nPS*3]: In each row (for phase):
 # [0] number of parameters per component; [1] 0; [2] 0. For multi-site (sublattice) models: 
@@ -361,7 +361,7 @@ F{ "IV" : 12.0, "LB" : 6.0, "UB" : 16.0 }   0 0
 
 
 # OptDoWhat: perform optimization and statistics (0), only optimization with basic Statistics (1), only Statistics (2) with initial guesses as best fit parametters
-<OptDoWhat>  1
+<OptDoWhat>  0
 
 # OptTuckey: 0 > Use Tuckey Biweight. Value > 0 will be the number of iterations for re-weighting. 
 <OptTuckey>  0
@@ -376,10 +376,10 @@ F{ "IV" : 12.0, "LB" : 6.0, "UB" : 16.0 }   0 0
 <OptBoundPerc>  -1
 
 # OptTolRel: stopping criterion -> specify relative tolerance (default = 1e-04) of function value
-<OptTolRel>  1e-06
+<OptTolRel>  1e-04
 
 # OptTolAbs: stopping criterion -> specify absolute tolerance (default = 1e-04) of function value
-<OptTolAbs>  1e-06
+<OptTolAbs>  1e-04
 
 # OptMaxEval: specify max number of evaluations
 <OptMaxEval>  500000
@@ -387,8 +387,8 @@ F{ "IV" : 12.0, "LB" : 6.0, "UB" : 16.0 }   0 0
 # OptInitStep: specify initial stepsize for local minimizers (factor will be multiplied to all optimization parameters); 0 => use default
 <OptInitStep>  0
 
-# OptNormParam: Normalize bounds/constraints/fitting parameters with initial guess vector
-<OptNormParam>  0
+# OptNormParam: Normalize bounds/constraints/fitting parameters with initial guess vector (1); do not normalize (0)
+<OptNormParam>  1
 
 # OptPerturbator: The delta/difference used to to calculate the d(function_value)/d(parameter_value) gradient
 <OptPerturbator>  0.0001

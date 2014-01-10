@@ -118,11 +118,11 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         {
             adjust_G0(i, opt[i], sys);
         } else // adjust PMc
-        if (sys->Opti->Ptype[i] == "LsMod")
+        if (sys->Opti->Ptype[i] == "PMc")
         {
            adjust_PMc(i, opt[i], sys);
         } else // adjust DMc
-        if (sys->Opti->Ptype[i] == "LsMdc")
+        if (sys->Opti->Ptype[i] == "DMc")
         {
            adjust_DMc(i, opt[i], sys);
         } else // adjust bIC
@@ -214,7 +214,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     // debug for when using global algorithm
     if (master_counter%1000 == 0)
     {
-        cout << master_counter << " itterations, continuning..." << endl;
+        cout << master_counter << " iterations, continuing..." << endl;
         cout << "sum of residuals: "<<residuals_sys<< endl;
         for (unsigned int i = 0; i<opt.size(); ++i)
         {
@@ -222,6 +222,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         }
     }
 
+cout << "~ m.count.= " << master_counter << " sum.res.= " << residuals_sys << endl;
 //    if(master_counter == 50)
 //        cout << "pause"<< endl;
 }

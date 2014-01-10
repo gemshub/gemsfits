@@ -1,0 +1,20 @@
+Fri Jan 10 17:19:17 2014
+
+experiment,,,unit,measured,computed,weighted_lsq,Sens_p0
+xCa0.0,ArgStr,Gex,J/mol,0.001,0.00624522,0.0275123,-6.41577
+xCa0.11,ArgStr,Gex,J/mol,660,731.437,10.0064,-1.0166
+xCa0.225,ArgStr,Gex,J/mol,980,1312.74,201.297,-0.760859
+xCa0.409,ArgStr,Gex,J/mol,1260,1825.87,317.043,-0.617043
+xCa0.511,ArgStr,Gex,J/mol,2060,1888.91,40.6561,-0.602244
+xCa0.584,ArgStr,Gex,J/mol,2420,1837.03,239.33,-0.614357
+xCa0.696,ArgStr,Gex,J/mol,950,1600.16,162.581,-0.674488
+xCa0.723,ArgStr,Gex,J/mol,2950,1514.58,1312.38,-0.698444
+xCa0.751,ArgStr,Gex,J/mol,1920,1414.14,419.491,-0.728354
+xCa0.791,ArgStr,Gex,J/mol,530,1250.05,484.549,-0.782141
+xCa0.899,ArgStr,Gex,J/mol,50,686.03,311.181,-1.04396
+xCa0.967,ArgStr,Gex,J/mol,-360,240.826,440.234,-1.50058
+xCa0.986,ArgStr,Gex,J/mol,-180,104.124,252.27,-1.86569
+xCa1.0,ArgStr,Gex,J/mol,0.001,0.00754726,0.0428666,-6.00635
+sum of residuals = -1165.92
+parameter PMc : 7558.85
+

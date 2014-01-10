@@ -151,14 +151,14 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     unsigned int i;
     double mean = 0.;
     double ResSumSquares = 0., TotalSumSquares = 0.;
-    double Nom_CC = 0.0, Dnom_CC = 0.0;
+//    double Nom_CC = 0.0, Dnom_CC = 0.0;
     double Correlation_coef = 0.0;
-    double Res = 0.;
+//    double Res = 0.;
     double m2 = 0., m3 = 0., m4 = 0.;
     double sqrtb1, b2, Y, beta2_sqrtb1, W2, delta, alpha, Z_sqrtb1, E_b2, Var_b2, x, sqrt_beta1_b2, A, Z_b2, K2, K2test;
     vector<double> percentiles_v;
     vector<double> quantiles_v;
-    vector<double> abs_residuals_v;
+//    vector<double> abs_residuals_v;
 
     // Modified by DM on 12.03.2012 due to errorneus calculation of R^2 when using log_solubility data.
 //    // Compute R^2: coefficient of determination
@@ -303,6 +303,8 @@ Correlation_coef = (sum1*sum1)/(sum2*sum3);
     Y             = sqrtb1 * sqrt( ((N+1.)*(N+3.))/(6*(N-2.)) );
     beta2_sqrtb1  = ( 36*(N*N + 2*N - 5)*(N - 7.)  ) / ( (N - 2.)*(N + 5.)*(N + 7.)*(N + 9.) );
     W2            = -1. + sqrt(2 * (beta2_sqrtb1 + 2.) );
+if( W2 < 1.)  // workaround to suppress nan() and zdiv crash
+    W2 = 1.001;
     delta         = 1. / sqrt( log( sqrt(W2) ) ) ;
     alpha         = sqrt( 2. / (W2 - 1) );
     Z_sqrtb1      = delta * log( Y / alpha + sqrt( pow( (Y/alpha), 2 ) + 1 ) );

@@ -565,7 +565,7 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
 
     phase_name = sys->experiments[i]->expphases[p]->phase.c_str();
     PHndx = sys->NodT[i]->Ph_name_to_xDB(phase_name);
-
+cout << "i=" << i << " p=" << p << " pp=" << pp << " j=" << j << " : ";
     // Get aqueous phase pH
     if ((sys->Tfun->objfun[j]->exp_CN == keys::pH) && (sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
     {
@@ -610,8 +610,6 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
     } else
     if (sys->Tfun->objfun[j]->exp_CN == keys::Gex )  // functionality added by DK on 03.01.2014
     {
-        if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::kJ_mol)
-        {                                   // so far Gex only in kJ/mol
             double Gex = 0., gam_dc, x_dc;
             long int jc;
 
@@ -627,13 +625,15 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
                   // n_dc = sys->NodT[i]->Get_nDC(DCndx);
                   Gex += log( gam_dc ) * x_dc;
                }
-               computed_value = Gex * 0.00831451 * sys->NodT[i]->cTK(); // in kJ/mol
+               computed_value = Gex * 8.31451 * sys->NodT[i]->cTK(); // in J/mol
             }
-        }
+//            if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::kJ_mol)
+                                               // so far Gex only in J/mol
     }
-    else { cout << "Error in target functions line 627 "; exit(1);}
+    else { cout << "Error in target functions line 633 "; exit(1);}
 
     measured_value = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt;
+
 cout << "measured: " << measured_value << " computed: " << computed_value << endl;
 
     // Error handling due to possible non-physical parameters

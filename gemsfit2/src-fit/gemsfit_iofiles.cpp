@@ -54,9 +54,9 @@ const char *FIT_LOGFILE = "log_gemsfit.log";
 void F_to_OP (opti_vector *op, IOJFormat Jformat, string nfild);
 /// if after F comes the initial value
 void F_to_OP (double val, opti_vector *op, IOJFormat Jformat, string nfild);
-/// if the parameter is rection constrained
+/// if the parameter is reaction constrained
 void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat, string nfild);
-/// if the parameter is linked e.g. titration
+/// if the parameter is linked e.g. in titration
 void L_to_OP (opti_vector::Lp *l, IOJFormat Jformat, string nfild);
 
 optimization::optimization( int i)
@@ -444,17 +444,29 @@ void get_gems_fit_multi_txt(TNode* node, opti_vector *op )
 
           if( !vFormats.empty() )
           {
-              // Hear you must write your code
+              string fPMc = "PMc";
+              string fDMc = "DMc";
+              string ffDQF = "fDQF";
+              // Here write your code for input parameters
               for(unsigned int ii=0; ii<vFormats.size(); ii++ )
-              {    cout<< "Parameter: " << MULTI_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<
-                          " Index " << vFormats[ii].index << endl;
-                  cout<< vFormats[ii].format << endl;
-
+              {
+cout << "Parameter: " << MULTI_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
+cout << " : " << vFormats[ii].format << endl;
                   if ((vFormats[ii].type == ft_F))
                   {
                       if (vFormats[ii].format.size() >1)
                       {   // after F comes a JSON object
-                          F_to_OP(op, vFormats[ii], MULTI_dynamic_fields[nfild].name );
+                          switch( nfild )
+                          {
+                             case f_LsMod:  // interaction parameters     (PMc table)
+                                  F_to_OP(op, vFormats[ii], fPMc );
+                                  break;
+                             case f_LsMdc:  // phase component parameters (DMc table)
+                                  F_to_OP(op, vFormats[ii], fDMc );
+                                  break;
+                             default:
+                                  F_to_OP(op, vFormats[ii], MULTI_dynamic_fields[nfild].name );
+                          }
                       } else
                       {   // after F comes the initial value
                           switch( nfild )
@@ -462,8 +474,7 @@ void get_gems_fit_multi_txt(TNode* node, opti_vector *op )
                           case f_sMod:
                                        break;
                           case f_LsMod:{ if( !pmp->LsMod )
-                                            Error( "Error", "Array LsMod is not used in this problem");
-//                                          rddar.readArray( "LsMod" , pmp->LsMod, pmp->FIs*3) ;
+                                            Error( "Error", "Arrays LsMod and PMc are not used in this GEM system definition!");
                                             long int LsModSum;
                                             long int LsIPxSum;
                                             node->pMulti()->getLsModsum( LsModSum, LsIPxSum );
@@ -471,17 +482,17 @@ void get_gems_fit_multi_txt(TNode* node, opti_vector *op )
                                             {
                                             }
                                             if(LsModSum )
-                                            F_to_OP(pmp->PMc[vFormats[ii].index], op, vFormats[ii], MULTI_dynamic_fields[nfild].name );
+                                            F_to_OP(pmp->PMc[vFormats[ii].index], op, vFormats[ii], fPMc );
                                         break;
                                        }
                           case f_LsMdc:{ if( !pmp->LsMdc )
-                                            Error( "Error", "Array LsMdc not used in this problem");
+                                            Error( "Error", "Array LsMdc and DMc are not used in this GEM system definition!");
                                             long int LsMdcSum;
                                             long int LsMsnSum;
                                             long int LsSitSum;
                                             node->pMulti()->getLsMdcsum( LsMdcSum,LsMsnSum, LsSitSum );
                                             if(LsMdcSum )
-                                            F_to_OP(pmp->DMc[vFormats[ii].index], op, vFormats[ii], MULTI_dynamic_fields[nfild].name );
+                                            F_to_OP(pmp->DMc[vFormats[ii].index], op, vFormats[ii], fDMc );
                                         break;
                                         }
                           case f_fDQF: F_to_OP(pmp->fDQF[vFormats[ii].index], op, vFormats[ii], MULTI_dynamic_fields[nfild].name );
@@ -550,14 +561,13 @@ void get_gems_fit_DCH_txt(TNode* node, opti_vector* op )
             // Hear you must write your code
             for(unsigned  int ii=0; ii<vFormats.size(); ii++ )
             {
-                cout<< "Parameter: " << DataCH_dynamic_fields[nfild].name << " " << node->xCH_to_DC_name(vFormats[ii].index)<< " Type " << vFormats[ii].type << endl;
-                cout<< vFormats[ii].format << endl;
-
+cout << "Parameter: " << DataCH_dynamic_fields[nfild].name << " " << node->xCH_to_DC_name(vFormats[ii].index)<< " Type " << vFormats[ii].type;
+cout << " : " << vFormats[ii].format << endl;
                 if ((vFormats[ii].type == ft_F))
                 {
                     if (vFormats[ii].format.size() > 1)
                     {
-                        // after F compes a JSON object
+                        // after F comes a JSON object
                         F_to_OP(op, vFormats[ii], DataCH_dynamic_fields[nfild].name );
                     } else
                     {
@@ -581,7 +591,6 @@ void get_gems_fit_DCH_txt(TNode* node, opti_vector* op )
                     nr = atoi(out.at(0).c_str())-1;
                     out.clear();
 
-
                     R_to_OP(op->reactions[nr], vFormats[ii], DataCH_dynamic_fields[nfild].name );
 
                 }
@@ -591,7 +600,7 @@ void get_gems_fit_DCH_txt(TNode* node, opti_vector* op )
         nfild = rddar.findNextNotAll();
     }
 
-    int size = CSD->nTp, sizep = 0;
+    unsigned int size = CSD->nTp, sizep = 0;
     for (int i=0; i<CSD->nPp; ++i)
     {
         if (CSD->Pval[i] != 0)
@@ -735,21 +744,18 @@ void get_gems_fit_DBR_txt(TNode* node , opti_vector *op)
         if( !vFormats.empty() )
         {
             int nl = 0;
-            // Hear you must write your code
+            // Here you must write your code
             for(unsigned  int ii=0; ii<vFormats.size(); ii++ )
-            {    cout<< "Parameter: " << DataBR_fields[nfild].name << " Type " << vFormats[ii].type <<
-                        " Index " << vFormats[ii].index << endl;
-                cout<< vFormats[ii].format << endl;
-
+            {
+cout<< "Parameter: " << DataBR_fields[nfild].name << " Type " << vFormats[ii].type << " Index " << vFormats[ii].index << endl;
+cout<< vFormats[ii].format << endl;
                 if ((vFormats[ii].type == ft_F))
                 {
                     if (vFormats[ii].format.size() > 1)
-                    {
-                        // after F compes a JSON object
+                    {             // after F comes a JSON object
                         F_to_OP(op, vFormats[ii], DataBR_fields[nfild].name );
                     } else
-                    {
-                        // after F comes initial value
+                    {              // after F comes initial value
                         switch( nfild )
                         {
                             case f_TK: F_to_OP(CNode->TK, op, vFormats[ii], DataBR_fields[nfild].name );
@@ -962,7 +968,7 @@ outField Data_Manager_fields[9] =
       "\n#          \"Q\" for amount; \"@coef\" for activity coeficient"
       "\n#       \"unit\":  units of measurement (override those given in the database for this value):"
       "\n#          \"molal\":  mol/(kg H2O), \"loga\": log(molal), \"-loga\": negated log(molal);"
-      "\n#          \"g\"; \"kg\"; \"cm3\"; \"m3\"; \"molfrac\": mole fraction; kJ/mol for Gex "
+      "\n#          \"g\"; \"kg\"; \"cm3\"; \"m3\"; \"molfrac\": mole fraction; J/mol for Gex "
       "\n#           ..."
       "\n#       (conversions will be performed automatically)."
       "\n#     The comparison options are: "
@@ -973,7 +979,7 @@ outField Data_Manager_fields[9] =
       "\n#          or to /Si molar ratio (\"Simolfrac\")"
       "\n#       other phases properties (\"prop\"): \"Q\" - mass in \"g\" or \"kg\"; "
       "\n#          \"pV\" - volume in \"cm3\" or \"m3\";  \"Eh\" - volume in \"Volts\"; "
-      "\n#          \"Gex\"  - excess Gibbs energy of mixing (in \"kJ/mol\"). "
+      "\n#          \"Gex\"  - excess Gibbs energy of mixing (in \"J/mol\"). "
       "\n#       dependent components (\"DC\") properties: \"Q\" - amount in \"mol\"; "
       "\n#          \"@coef\" - activity coefictient "
       "\n#           ..."
@@ -1162,7 +1168,7 @@ outField statistics_fields[4] =
 {
     { "StatMCruns",  0, 0, 1, "\n# StatMCruns: number of Monte Carlo runs for confidence interval generation"},
     { "StatSensitivity",  0, 0, 1, "\n# StatSensitivity: number of evaluations points per parameter for sensitivity evaluation"},
-    { "StatMCbool",  0, 0, 1, "\n# StatMCbool: perform Monte Carlo runs -> yes (1)/no (0)"},
+    { "StatMCbool",  0, 0, 1, "\n# StatMCbool: perform Monte Carlo runs -> yes (1) | no (0)"},
     { "StatPerturbator", 0, 0, 1, "\n# StatPerturbator: used for calculating sensitivities by central diference, see ref [2]"}
 };
 
@@ -1241,7 +1247,7 @@ void statistics::get_stat_param_txt( )
 
 outField optimization_fields[25] =
 {
-    { "OptAlgo",  0, 0, 1, "\n# OptAlgo: specify algorithm GN_ISRES GN_ORIG_DIRECT GN_ORIG_DIRECT_L LN_COBYLA LN_BOBYQA "},
+    { "OptAlgo",  0, 0, 1, "\n# OptAlgo: specify algorithm: GN_ISRES | GN_ORIG_DIRECT | GN_ORIG_DIRECT_L | LN_COBYLA | LN_BOBYQA "},
     { "OptThreads",  0, 0, 1, "\n# OptThreads: Comment"},
     { "OptUpBounds",  0, 0, 1, "\n# OptUpBounds: Comment"},
     { "OptLoBounds",  0, 0, 1, "\n# OptLoBounds: Comment"},
@@ -1250,9 +1256,11 @@ outField optimization_fields[25] =
     { "OptUpConstraints",  0, 0, 1, "\n# OptUpConstraints: specify parameter vectors for constraint function"},
     { "OptLoConstraints",  0, 0, 1, "\n# OptLoConstraints: Comment"},
     { "OptConstraints",  0, 0, 1, "\n# OptConstraints:  Optimization: apply constraints (1=yes, 0=no)"},
-    { "OptDoWhat",  0, 0, 1, "\n# OptDoWhat: perform optimization and statistics (0), only optimization with basic Statistics (1), only Statistics (2) with initial guesses as best fit parametters"},
-    { "OptTitration",  0, 0, 1, "\n# OptTitration: Adjusts the computed pH by changing NaOH or HCl amount to match the mesured pH read from the database for each experiment"},
-    { "OptTuckey",  0, 0, 1, "\n# OptTuckey: 0 > Use Tuckey Biweight. Value > 0 will be the number of iterations for re-weighting. "},
+    { "OptDoWhat",  0, 0, 1, "\n# OptDoWhat: perform optimization and statistics (0); only optimization with basic Statistics (1);"
+                             "\n#            only Statistics (2) with initial guesses as best fit parametters"},
+    { "OptTitration",  0, 0, 1, "\n# OptTitration: Adjusts the computed pH by changing NaOH or HCl amount to match the measured pH"
+                                "\n#               read from the database for each experiment"},
+    { "OptTuckey",  0, 0, 1, "\n# OptTuckey: 0 -> Use Tuckey Biweight. Value > 0 will be the number of iterations for re-weighting. "},
     { "OptEqSolv",  0, 0, 1, "\n# OptEqSolv: Comment"},
     { "OptTolAbs",  0, 0, 1, "\n# OptTolAbs: stopping criterion -> specify absolute tolerance (default = 1e-04) of function value"},
     { "OptHybridTolRel",  0, 0, 1, "\n# OptHybridTolRel: Comment"},
@@ -1261,10 +1269,12 @@ outField optimization_fields[25] =
     { "OptHybridMode",  0, 0, 1, "\n# OptHybridMode: Comment"},
     { "OptNmultistart",  0, 0, 1, "\n# OptNmultistart: Comment"},
     { "OptPerturbator",  0, 0, 1, "\n# OptPerturbator: The delta/difference used to to calculate the d(function_value)/d(parameter_value) gradient"},
-    { "OptInitStep",  0, 0, 1, "\n# OptInitStep: specify initial stepsize for local minimizers (factor will be multiplied to all optimization parameters); 0 => use default"},
+    { "OptInitStep",  0, 0, 1, "\n# OptInitStep: specify initial stepsize for local minimizers \n"
+                               "\n#              (factor will be multiplied to all optimization parameters); 0 => use default"},
     { "OptScaleParam",  0, 0, 1, "\n# OptScaleParam: Comment"},
-    { "OptNormParam",  0, 0, 1, "\n# OptNormParam: Normalize bounds/constraints/fitting parameters with initial guess vector"},
-    { "OptBoundPerc",  0, 0, 1, "\n# OptBoundPerc: Generate bounds from initial guess vector: specify percentage deviation (user specific, user-defined bounds when set to -1)"}
+    { "OptNormParam",  0, 0, 1, "\n# OptNormParam: Normalize bounds/constraints/fitting parameters with the initial guess vector"},
+    { "OptBoundPerc",  0, 0, 1, "\n# OptBoundPerc: Generate bounds from initial guess vector: specify percentage deviation\n"
+                                "\n#               (user-specific, user-defined bounds when set to -1)"}
 };
 
 typedef enum {  /// Field index into outField structure

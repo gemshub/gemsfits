@@ -17,6 +17,9 @@ Tests/CASH/impdata_to_resultsss.sql -text
 Tests/CASH/solcash.backup -text
 Tests/CASH/solcash_gs65.backup -text
 Tests/CASH/solcash_new.backup -text
+Tests/CaSrCO3/EJDB/solargstr -text
+Tests/CaSrCO3/EJDB/solargstr_experiments -text
+Tests/CaSrCO3/GEMS/GF2-SrCaC.zip -text
 Tests/SS_INPUT/SS_GEMSFIT_input.dat -text
 Tests/SS_INPUT/qtz_h2o_test-dat.lst -text
 Tests/SS_INPUT/qtz_h2o_test-dbr-0-0000.dat -text
@@ -63,8 +66,6 @@ csvtoejdb-build/CASH/CASH.csv -text
 csvtoejdb-build/CASH/CASH.xls -text
 csvtoejdb-build/CASH/solcash -text
 csvtoejdb-build/CASH/solcash_experiments -text
-csvtoejdb-build/CaSrCO3/solargstr -text
-csvtoejdb-build/CaSrCO3/solargstr_experiments -text
 csvtoejdb/csvtoejdb.pro -text
 csvtoejdb/src-csvtoejdb/csv_parser.cpp -text
 csvtoejdb/src-csvtoejdb/csv_parser.h -text
@@ -83,8 +84,6 @@ gemsfit2-build/test_input/CASH/CASH.csv -text
 gemsfit2-build/test_input/CASH/CASH.xls -text
 gemsfit2-build/test_input/CASH/solcash -text
 gemsfit2-build/test_input/CASH/solcash_experiments -text
-gemsfit2-build/test_input/CaSrCO3/EJDB/solargstr -text
-gemsfit2-build/test_input/CaSrCO3/EJDB/solargstr_experiments -text
 gemsfit2/docs/html/bgimg-gray.jpg -text
 gemsfit2/docs/html/gemsfit2.png -text
 gemsfit2/docs/xls/excel_example.xls -text

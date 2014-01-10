@@ -2,7 +2,7 @@
 /// Implementation of reading database parameters form input file
 /// and experimental data form databsse
 //
-// Copyright (C) 2013 G.D.Miron, D.Kulik
+// Copyright (C) 2013-2014 G.D.Miron, D.Kulik
 // <GEMS Development Team, mailto:gems2.support@psi.ch>
 //
 // This file is part of the GEMSFIT2 code for parameterization of thermodynamic
@@ -57,7 +57,7 @@ Data_Manager::Data_Manager( )
     fout << "2. data_manager.cpp line 57. Reading database parameter get_db_specs(); " << endl;
     get_db_specs_txt();
 
-    // Read measurement data from PosgreSQL server
+    // Read measurement data from EJDB server
     fout << "3. data_manager.cpp line 61. Reading in the data selection query; " << endl;
     // Readin in the data slection query
     DataSelect = readin_JSON("<DataSelect>");
@@ -624,7 +624,7 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos)
                                     } else
                                     if (p_name==keys::Gex)
                                     {
-                                        experiments[pos]->expphases[ip]->phprop[ipp]->Qunit = keys::kJ_mol;
+                                        experiments[pos]->expphases[ip]->phprop[ipp]->Qunit = keys::J_mol;
                                     } else
                                     if (p_name==keys::pV)
                                     {
