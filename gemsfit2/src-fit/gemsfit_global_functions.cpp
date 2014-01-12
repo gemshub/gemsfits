@@ -132,11 +132,11 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         } else // adjust TK
         if (sys->Opti->Ptype[i] == "TK")
         {
-           adjust_TK(i, opt[i], sys);
+           adjust_TK( i, opt[i], sys);
         } else // adjust P
         if (sys->Opti->Ptype[i] == "P")
         {
-           adjust_P(i, opt[i], sys);
+           adjust_P( i, opt[i], sys);
         }
 
         /// if other parameters...
@@ -197,8 +197,6 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         }
     }
 
-
-
 //    cout << sys->NodT[1]->Get_pH() << endl;
 
     // Set the P in the node->CNode-P as in the experiments to avoind problem due to Psat notation as 0
@@ -221,8 +219,9 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
             cout<<"parameter "<<i<<" : "<<opt[i]<<endl;
         }
     }
-
+    gpf->fout << "~ m.count.= " << master_counter << " sum.res.= " << residuals_sys << endl;
 cout << "~ m.count.= " << master_counter << " sum.res.= " << residuals_sys << endl;
+
 //    if(master_counter == 50)
 //        cout << "pause"<< endl;
 }

@@ -38,28 +38,28 @@ using namespace std;
 
 
 // subfolder and file names default
-const char *INPUT_DIR = "input/";
-const char *OUTPUT_DIR = "output/";
-const char *RESULT_DIR = "results/";
-const char *OPT_PARAM_FILE = "gemsfit_input.dat";
-const char *FIT_CSV_FILE = "FIT.csv";
-const char *FIT_STATISTIC = "MyFitStatistics.txt";
-const char *FIT_LOGFILE = "log_gemsfit.log";
+//const char *INPUT_DIR = "input/";
+//const char *OUTPUT_DIR = "output/";
+//const char *RESULT_DIR = "results/";
+//const char *OPT_PARAM_FILE = "gemsfit2_input.dat";
+//const char *FIT_CSV_FILE = "FIT.csv";
+//const char *FIT_STATISTIC = "MyFitStatistics.txt";
+//const char *FIT_LOGFILE = "gemsfit2.log";
 
 //void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode );
 //void get_gems_fit_multi_txt( TNode* node );
 //void get_gems_fit_DCH_txt( TNode* node );
 //void get_gems_fit_DBR_txt( TNode* node );
-/// if after F comes an JSON object
+/// if after F comes an JSON object ( F{...} )
 void F_to_OP (opti_vector *op, IOJFormat Jformat, string nfild);
-/// if after F comes the initial value
+/// if after F comes the initial value ( F5000 )
 void F_to_OP (double val, opti_vector *op, IOJFormat Jformat, string nfild);
-/// if the parameter is reaction constrained
-void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat, string nfild);
-/// if the parameter is linked e.g. in titration
+/// if the parameter is reaction constrained ( R{...} )
+void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat);
+/// if the parameter is linked e.g. in titration (L{...} )
 void L_to_OP (opti_vector::Lp *l, IOJFormat Jformat, string nfild);
 
-optimization::optimization( int i)
+optimization::optimization( int i )
 {
     constraint_data = new my_constraint_data;
     define_nlopt_param();
@@ -106,7 +106,7 @@ int generateConfig()
     bool brief_mode = false;
 
     // Writting to the data
-    cout << "Start writing template file"<< endl;
+    cout << "Start writing the input specification file template"<< endl;
     Data_Manager *data_meas = new Data_Manager(1);
 
     if ( access( gpf->OptParamFile().c_str(), 0 ) == 0 ) {
@@ -117,7 +117,7 @@ int generateConfig()
             goto overwrite;
         } else
         {
-            cout << "Give the new file name: ";
+            cout << "Please, enter the new file name: ";
             cin >> YN;
             gpf->OptParamFileRename(YN.c_str());
             goto overwrite;
@@ -126,10 +126,10 @@ int generateConfig()
     {
     overwrite:
 
-        // Writting Data sources section
+        // Writing Data sources section
     data_meas->out_db_specs_txt(with_comments, brief_mode);
 
-        // Writting Parameters to Fit section &
+        // Writing Parameters to Fit section &
     out_gems_fit_txt( node, with_comments, brief_mode );
 
 
@@ -142,7 +142,7 @@ int generateConfig()
         // Writing statistics section
     stat->out_stat_param_txt(with_comments, brief_mode);
 
-    cout << "Finish writing template file" << endl;
+    cout << "Finished writing the input specification file template" << endl;
     }
 
     } catch(TError& err)
@@ -459,13 +459,16 @@ cout << " : " << vFormats[ii].format << endl;
                           switch( nfild )
                           {
                              case f_LsMod:  // interaction parameters     (PMc table)
-                                  F_to_OP(op, vFormats[ii], fPMc );
-                                  break;
+gpf->fout << "    Parameter: " << fPMc << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
+                                 F_to_OP(op, vFormats[ii], fPMc );
+                                 break;
                              case f_LsMdc:  // phase component parameters (DMc table)
-                                  F_to_OP(op, vFormats[ii], fDMc );
-                                  break;
+gpf->fout << "    Parameter: " << fDMc << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
+                                 F_to_OP(op, vFormats[ii], fDMc );
+                                 break;
                              default:
-                                  F_to_OP(op, vFormats[ii], MULTI_dynamic_fields[nfild].name );
+gpf->fout << "    Parameter: " << MULTI_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
+                                 F_to_OP(op, vFormats[ii], MULTI_dynamic_fields[nfild].name );
                           }
                       } else
                       {   // after F comes the initial value
@@ -482,7 +485,8 @@ cout << " : " << vFormats[ii].format << endl;
                                             {
                                             }
                                             if(LsModSum )
-                                            F_to_OP(pmp->PMc[vFormats[ii].index], op, vFormats[ii], fPMc );
+gpf->fout << "    Parameter: " << fPMc << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
+                                                F_to_OP(pmp->PMc[vFormats[ii].index], op, vFormats[ii], fPMc );
                                         break;
                                        }
                           case f_LsMdc:{ if( !pmp->LsMdc )
@@ -492,14 +496,18 @@ cout << " : " << vFormats[ii].format << endl;
                                             long int LsSitSum;
                                             node->pMulti()->getLsMdcsum( LsMdcSum,LsMsnSum, LsSitSum );
                                             if(LsMdcSum )
+gpf->fout << "    Parameter: " << fDMc << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
                                             F_to_OP(pmp->DMc[vFormats[ii].index], op, vFormats[ii], fDMc );
                                         break;
                                         }
-                          case f_fDQF: F_to_OP(pmp->fDQF[vFormats[ii].index], op, vFormats[ii], MULTI_dynamic_fields[nfild].name );
+                          case f_fDQF:
+gpf->fout << "    Parameter: " << MULTI_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
+                               F_to_OP(pmp->fDQF[vFormats[ii].index], op, vFormats[ii], MULTI_dynamic_fields[nfild].name );
                                         break;
                           }
                       }
                   }
+gpf->fout << " : " << vFormats[ii].format << endl;
               }
               vFormats.clear();
           }
@@ -519,7 +527,7 @@ void get_gems_fit_DCH_txt(TNode* node, opti_vector* op )
     DATACH* CSD = node->pCSD();
     vector<IOJFormat> vFormats;
     int nr_reac = 0;
-    double logK[9];
+//    double logK[9];
 
     long int nfild = rddar.findNextNotAll();
     while( nfild >=0 )
@@ -591,7 +599,7 @@ cout << " : " << vFormats[ii].format << endl;
                     nr = atoi(out.at(0).c_str())-1;
                     out.clear();
 
-                    R_to_OP(op->reactions[nr], vFormats[ii], DataCH_dynamic_fields[nfild].name );
+                    R_to_OP(op->reactions[nr], vFormats[ii] ); // , DataCH_dynamic_fields[nfild].name );
 
                 }
             }
@@ -660,7 +668,7 @@ cout << " : " << vFormats[ii].format << endl;
             {
                 for (int i = 0; i<nr_reac; ++i)
                 {
-                    for (int j=0; j<size; ++j)
+                    for (unsigned int j=0; j<size; ++j)
                     {
                         LogK_ss >> sub_LogK;
                         op->reactions[i]->logK_TPpairs.push_back(atof(sub_LogK.c_str()));
@@ -785,6 +793,14 @@ cout<< vFormats[ii].format << endl;
 //----------------------------------------------------------------
 // TGfitPath  class implementation
 //----------------------------------------------------------------
+//----- subfolder and default file names  ------------------------
+const char *INPUT_DIR = "input/";
+const char *OUTPUT_DIR = "output/";
+const char *RESULT_DIR = "results/";
+const char *OPT_PARAM_FILE = "gemsfit2_input.dat";
+const char *FIT_CSV_FILE = "FIT.csv";
+const char *FIT_STATISTIC = "MyFitStatistics.txt";
+const char *FIT_LOGFILE = "gemsfit2.log";
 
 TGfitPath::TGfitPath(int c, char *v[]):
         argc(c), argv(v)
@@ -795,7 +811,7 @@ TGfitPath::TGfitPath(int c, char *v[]):
 //#ifdef __unix
 //        optParamFilePath = getenv("HOME");
 //#else
-        optParamFilePath = ".";
+//        optParamFilePath = ".";
 //#endif
 
     // parsing options -init, -run, -conf if given
@@ -828,6 +844,7 @@ TGfitPath::TGfitPath(int c, char *v[]):
                 "   -init:  writes a template input file using the exported GEMS3K system files \n"
                 "   -help:  displays this help for command-line options." << endl;
         mode = HELP_;
+//        return 0;
     } else
     {
         if (irun != 0)
@@ -838,7 +855,6 @@ TGfitPath::TGfitPath(int c, char *v[]):
             mode = RUN_;
         }
 
-
        if (iinit != 0)
         {
             if (argc <= iinit + 1)
@@ -848,12 +864,12 @@ TGfitPath::TGfitPath(int c, char *v[]):
             if (argc > iinit + 2)  // Optional: file name for the GEMSFIT2 init file template
             {
                 optParamFile = optParamFilePath;
-                optParamFile += "/";
+//                optParamFile += "/";
                 optParamFile += argv[iinit+2];
             }
         }
 
-        if (iconf != 0)
+        if (iconf != 0)  // needs reconsideration
         {
             if (argc <= iconf + 1)
                 Error("Wrong options", "Wrong argument for option -conf");
@@ -874,23 +890,62 @@ TGfitPath::TGfitPath(int c, char *v[]):
         }
 
         string path = optParamFilePath;
-        path += "/";
+        string path_ = resultDir+"FIT_results.csv";
+        switch( mode )
+        {
+            case INIT_:
+                // set up default paths
+                // later these paths and filenames can be read from config file
+                inputDir = path + INPUT_DIR;
+                outputDir = path + OUTPUT_DIR;
+                resultDir = path + RESULT_DIR;
+                fitFile = resultDir+FIT_CSV_FILE;
+                fitStatistics = outputDir+FIT_STATISTIC;
+                fitLogFile = outputDir+FIT_LOGFILE;
+                break;
+            case RUN_:
+                path += "/";
+                // set up default paths
+                // later these paths and filenames can be read from config file
+                inputDir = path + INPUT_DIR;
+                outputDir = path + OUTPUT_DIR;
+                resultDir = path + RESULT_DIR;
+                fitFile = resultDir+FIT_CSV_FILE;
+                fitStatistics = outputDir+FIT_STATISTIC;
+                fitLogFile = outputDir+FIT_LOGFILE;
+                // GEMSFIT logfile (usually log_gemsfit.log)
+                fout.open( fitLogFile.c_str(), ios::out | ios::trunc );
+                if( fout.fail() )
+                { cout<<"Logfile fileopen error"<<endl;
+                   exit(1); }
+                // GEMSFIT logfile
+                fout_.open(path_.c_str(), ios::out | ios::trunc );
+                if( fout_.fail() )
+                { cout<<"Output fileopen error"<<endl;
+                   exit(1); }
+                fout << "GEMSFIT2: Start" << endl;
+                fout << "optParamFile = " << optParamFile << endl;
+                fout << "fitFile = " << fitFile << endl;
+                fout << "fitLogFile = " << fitLogFile << endl;
+                fout << "gems3LstFilePath = " << gems3LstFilePath << endl;
+                fout.close();
+                break;
+            default:
+                // set up default paths
+                // later these paths and filenames can be read from config file
+                inputDir = path + INPUT_DIR;
+                outputDir = path + OUTPUT_DIR;
+                resultDir = path + RESULT_DIR;
+                fitFile = resultDir+FIT_CSV_FILE;
+                fitStatistics = outputDir+FIT_STATISTIC;
+                fitLogFile = outputDir+FIT_LOGFILE;
+        }
 
-        // set up default pathes
-        // later this pathes and filenames can be read from config file
-        inputDir = path + INPUT_DIR;
-        outputDir = path + OUTPUT_DIR;
-        resultDir = path + RESULT_DIR;
-
-        fitFile = resultDir+FIT_CSV_FILE;
-        fitStatistics = outputDir+FIT_STATISTIC;
-        fitLogFile = outputDir+FIT_LOGFILE;
-
-        cout << "GEMSFIT2: Start" << endl;
-        cout << "optParamFile = " << optParamFile << endl;
-        cout << "fitFile = " << fitFile << endl;
-        cout << "fitLogFile = " << fitLogFile << endl;
-        cout << "gems3LstFilePath = " << gems3LstFilePath << endl;
+cout << "GEMSFIT2: Start" << endl;
+cout << "optParamFile = " << optParamFile << endl;
+cout << "fitFile = " << fitFile << endl;
+cout << "fitLogFile = " << fitLogFile << endl;
+cout << "gems3LstFilePath = " << gems3LstFilePath << endl;
     }
  }
 
@@ -1360,7 +1415,7 @@ void optimization::out_nlopt_param_txt( bool with_comments, bool brief_mode )
 void optimization::get_nlopt_param_txt(vector<double> optv)
 {
     // open file for reading
-    int i;
+//    int i;
     string fname = gpf->OptParamFile();
     fstream ff(fname.c_str(), ios::in );
     ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
@@ -1465,7 +1520,7 @@ void F_to_OP (double val, opti_vector *op, IOJFormat Jformat, string nfild)
     op->Pindex.push_back( Jformat.index );
 }
 
-void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat, string nfild)
+void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat /* , string nfild */ )
 {
     vector<string> out;
     Data_Manager *temp = new Data_Manager(1);

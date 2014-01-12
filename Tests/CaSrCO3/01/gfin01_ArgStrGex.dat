@@ -18,7 +18,7 @@
 
 # DataDB: EJDB database path (please, edit to put the actual path)
 
-<DataDB> './EJDB/solargstr'
+<DataDB> '../EJDB/solargstr'
 
 # DataCollection: database collection name (please, edit to put the actual name)
 
@@ -26,7 +26,7 @@
 
 # SystemFiles: path to the list of GEMS3K input files (also used for this template file)
 
-<SystemFiles>  './GEMS/ArgStrGex-dat.lst'
+<SystemFiles>  '../GEMS/ArgStrGex-dat.lst'
 
 #########################################################################
 #>>>>>>>>>>>>>>>>>>>>>>> DataSelect section >>>>>>>>>>>>>>>>>>>>>>>>>>>>#

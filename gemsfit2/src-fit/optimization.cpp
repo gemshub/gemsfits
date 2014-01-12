@@ -38,10 +38,10 @@ optimization::optimization( )
 {
     // GEMSFIT logfile
     //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
-    ofstream fout;
-    fout.open(gpf->FITLogFile().c_str(), ios::app);
-    if( fout.fail() )
-    { cout<<"Output fileopen error"<<endl; exit(1); }
+//    ofstream fout;
+//    fout.open(gpf->FITLogFile().c_str(), ios::app);
+//    if( fout.fail() )
+//    { cout<<"Output fileopen error"<<endl; exit(1); }
 
     constraint_data = new my_constraint_data;
 
@@ -51,7 +51,7 @@ optimization::optimization( )
     OptUpBounds = UB;
     OptLoBounds = LB;
 
-    fout << "11. optimization.cpp line 54. Reading NLopt optimization settings from the input file; " << endl;
+    gpf->fout << "11. optimization.cpp(54). Reading NLopt optimization settings from the input file; " << endl;
     get_nlopt_param_txt( optv );
 
     if (OptBoundPerc > 0.)
@@ -60,7 +60,7 @@ optimization::optimization( )
         LB = OptLoBounds;
     }
 
-    fout.close();
+//    fout.close();
 }
 
 optimization::~optimization()
@@ -75,12 +75,12 @@ void optimization::normalize_params(const vector<double> initguesses , bool Norm
 
     // GEMSFIT logfile
     //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
-    ofstream fout;
-    fout.open(gpf->FITLogFile().c_str(), ios::app);
-    if( fout.fail() )
-    { cout<<"Output fileopen error"<<endl; exit(1); }
+//    ofstream fout;
+//    fout.open(gpf->FITLogFile().c_str(), ios::app);
+//    if( fout.fail() )
+//    { cout<<"Output fileopen error"<<endl; exit(1); }
 
-    fout << " ... performing parameter normalization ... " << endl;
+    gpf->fout << " ... performing parameter normalization ... " << endl;
 
     // Normalize init guess vector
     optv.resize( initguesses.size() );
@@ -94,19 +94,19 @@ void optimization::normalize_params(const vector<double> initguesses , bool Norm
     {
     for(i=0; i<OptUpBounds.size(); i++)
     {
-        fout << "Init guess ["<<i<<"] = " << initguesses[i] << endl;
-        fout << "Upper Bound old ["<<i<<"]= " << OptUpBounds[i] << endl;
+        gpf->fout << "     Init guess ["<<i<<"] = " << initguesses[i] << endl;
+        gpf->fout << "     Upper Bound old ["<<i<<"]= " << OptUpBounds[i] << endl;
         OptUpBounds[i] = OptUpBounds[i] / fabs(initguesses[i]);
-        fout << "Upper Bound new ["<<i<<"]= " << OptUpBounds[i] << endl;
+        gpf->fout << "     Upper Bound new ["<<i<<"]= " << OptUpBounds[i] << endl;
     }
 
     // Normalize lower bounds vector
     for(i=0; i<OptLoBounds.size(); i++)
     {
-        fout << "Init guess ["<<i<<"] = " << initguesses[i] << endl;
-        fout << "Lower Bound old ["<<i<<"]= " << OptLoBounds[i] << endl;
+        gpf->fout << "     Init guess ["<<i<<"] = " << initguesses[i] << endl;
+        gpf->fout << "     Lower Bound old ["<<i<<"]= " << OptLoBounds[i] << endl;
         OptLoBounds[i] = OptLoBounds[i] / fabs(initguesses[i]);
-        fout << "Lower Bound new ["<<i<<"]= " << OptLoBounds[i] << endl;
+        gpf->fout << "     Lower Bound new ["<<i<<"]= " << OptLoBounds[i] << endl;
     }
 
     // Normalize constraints vector
@@ -116,7 +116,7 @@ void optimization::normalize_params(const vector<double> initguesses , bool Norm
     }
     }
 
-    fout.close();
+//    fout.close();
 }
 
 

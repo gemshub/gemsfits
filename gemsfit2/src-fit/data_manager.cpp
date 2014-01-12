@@ -48,30 +48,30 @@ Data_Manager::Data_Manager( )
 {
     // GEMSFIT logfile
     //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
-    ofstream fout;
-    fout.open(gpf->FITLogFile().c_str(), ios::app);
-    if( fout.fail() )
-    { cout<<"Output fileopen error"<<endl; exit(1); }
+//    ofstream fout;
+//    fout.open(gpf->FITLogFile().c_str(), ios::app);
+//    if( fout.fail() )
+//    { cout<<"Output fileopen error"<<endl; exit(1); }
 
     // Read parameters for database connection
-    fout << "2. data_manager.cpp line 57. Reading database parameter get_db_specs(); " << endl;
+    gpf->fout << "02. data_manager.cpp(57). Reading database parameter get_db_specs(); " << endl;
     get_db_specs_txt();
 
     // Read measurement data from EJDB server
-    fout << "3. data_manager.cpp line 61. Reading in the data selection query; " << endl;
+    gpf->fout << "03. data_manager.cpp(61). Reading in the data selection query; " << endl;
     // Readin in the data slection query
     DataSelect = readin_JSON("<DataSelect>");
-    fout << "4. data_manager.cpp line 64. Reading in the Target function form the input file; " << endl;
+    gpf->fout << "04. data_manager.cpp(64). Reading in the Target function form the input file; " << endl;
     DataTarget = readin_JSON("<DataTarget>");
 
     // Getting the query result data into the Data_Manager class
-    fout << "5. data_manager.cpp line 68. Getting data form the EJDB database; " << endl;
+    gpf->fout << "05. data_manager.cpp(68). Getting data form the EJDB database; " << endl;
     get_EJDB();
 
-    fout << "7. data_manager.cpp line 71. Getting distinct T and P pairs; " << endl;
+    gpf->fout << "07. data_manager.cpp(71). Getting distinct T and P pairs; " << endl;
     get_distinct_TP();
 
-    fout.close();
+//    fout.close();
 }
 
 
@@ -100,10 +100,10 @@ void Data_Manager::get_EJDB( )
     //    }
 
     // GEMSFIT logfile
-    ofstream fout;
-    fout.open(gpf->FITLogFile().c_str(), ios::app);
-    if( fout.fail() )
-    { cout<<"Output fileopen error"<<endl; exit(1); }
+//    ofstream fout;
+//    fout.open(gpf->FITLogFile().c_str(), ios::app);
+//    if( fout.fail() )
+//    { cout<<"Output fileopen error"<<endl; exit(1); }
 
     string_v out, qsample, usedataset, skipdataset;
     double_v qsT, qsP;
@@ -243,7 +243,7 @@ void Data_Manager::get_EJDB( )
             bson_append_finish_array(&bq2);
             bson_append_finish_object(&bq2);
         } else
-            if (!(qsP[0] == NULL))
+            if (!(qsP[0] == 0))
             {
                 bson_append_start_object(&bq2, keys::sP);
                 bson_append_start_array(&bq2, "$in");
@@ -279,12 +279,12 @@ void Data_Manager::get_EJDB( )
          {
              experiments.push_back( new samples );
              // set experiments variables empty
-             experiments[j]->sP = NULL; experiments[j]->sT = NULL; experiments[j]->sV= NULL;
-             experiments[j]->idsample= NULL;
+             experiments[j]->sP = 0.; experiments[j]->sT = 0.; experiments[j]->sV= 0.;
+             experiments[j]->idsample= 0;
              // set experiments variables false
          }
 
-         fout << "6. data_manager.cpp line 287. Adding the data returned by the selection query into the data structure; " << endl;
+         gpf->fout << "06. data_manager.cpp(287). Adding the data returned by the selection query into the data structure; " << endl;
 
 //#ifdef USE_MPI
          omp_set_num_threads(MPI);
@@ -293,7 +293,7 @@ void Data_Manager::get_EJDB( )
          for (int i = 0; i < TCLISTNUM(res); ++i) {
              void *bsdata = TCLISTVALPTR(res, i);
              char *bsdata_ = static_cast<char*>(bsdata);
-             bson_to_Data_Manager(stderr, bsdata_, i); // adding the data returned by the selection query into the data storage class
+             bson_to_Data_Manager(/*stderr,*/ bsdata_, i); // adding the data returned by the selection query into the data storage class
          }
 
         //Dispose result set
@@ -313,7 +313,7 @@ void Data_Manager::get_EJDB( )
     }
 }
 
-void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos)
+void Data_Manager::bson_to_Data_Manager(/* FILE *f, */ const char *data, int pos)
 {
     bson_iterator i[1], j[1], k[1], k2[1], d[1], d2[1], d3[1]; // 1st, 2nd, 3rd, 2-1, 3-1 level
     int ip = -1, ic = -1, sk = -1, ipc, ipp, ips, ipdcp, ipm;
@@ -659,7 +659,7 @@ void Data_Manager::bson_to_Data_Manager(FILE *f, const char *data, int pos)
                                 }
                             }
                         }
-// cout << endl;
+//cout << endl;
                     } else
 
                     // adding phase dcomps
@@ -798,10 +798,10 @@ string Data_Manager::readin_JSON(string key)
     allparam += vdata[i];
 
     // GEMSFIT logfile
-    ofstream fout;
-    fout.open(gpf->FITLogFile().c_str(), ios::app);
-    if( fout.fail() )
-    { cout<<"Output fileopen error"<<endl; exit(1); }
+//    ofstream fout;
+//    fout.open(gpf->FITLogFile().c_str(), ios::app);
+//    if( fout.fail() )
+//    { cout<<"Output fileopen error"<<endl; exit(1); }
 
     pos_start = allparam.find(f7);
     pos_end   = allparam.find(f4,pos_start);
@@ -931,7 +931,7 @@ void Data_Manager::parse_JSON_array_object( string data_, const char *arr , cons
          }
         else
         {
-            data = json_object_get(data1, key);
+//            data = json_object_get(data1, key);  // maybe error
                 if(json_is_string(object))
                 {
                     result.push_back(json_string_value(object));

@@ -106,23 +106,23 @@ int main( int argc, char *argv[] )
 
     // GEMSFIT logfile
     //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
-    ofstream fout;
-    fout.open(gpf->FITLogFile().c_str(), ios::app);
-    if( fout.fail() )
-    { cout<<"Output fileopen error"<<endl; exit(1); }
+ //   ofstream fout;
+ gpf->fout.open(gpf->FITLogFile().c_str(), ios::app);
+ if( gpf->fout.fail() )
+ { cout<<"Output fileopen error"<<endl; exit(1); }
 
     // GEMSFIT results file for all test runs. Keeps a log of all runs. The file has to be deleted manually.
-    string path_ = gpf->ResultDir()+"FIT_results.csv";
-    ofstream fout_;
-    fout_.open(path_.c_str(), ios::app);
-    if( fout_.fail() )
-    { cout<<"Output fileopen error"<<endl; exit(1); }
-    time_t now = time(0);
+//    string path_ = gpf->ResultDir()+"FIT_results.csv";
+//    ofstream fout_;
+//gpf->fout_.open(path_.c_str(), ios::app);
+//if( gpf->fout_.fail() )
+//{ cout<<"Results fileopen error"<<endl; exit(1); }
+   time_t now = time(0);
     char* dt = ctime(&now);
-    fout_<<dt<<endl; // writes the date and time of the begining of the run in the result file
+    gpf->fout_<<dt<<endl; // writes the date and time of the begining of the run in the result file
 
     // Reading in the data //
-    fout << "1. main.cpp line 125. Creating new TGfitTask" << endl;
+    gpf->fout << "01. main.cpp(125). Creating new TGfitTask" << endl;
     TGfitTask* gfittask = new TGfitTask();
 
 //    cout << gfittask->NodT[0]->DenH2Ow(100000 *1, 25 + 273.15) << endl;
@@ -149,7 +149,7 @@ int main( int argc, char *argv[] )
         Equil_objective_function_callback(gfittask->Opti->optv, grad, gfittask);
     }
 
-    fout<<endl<<" back in main ..."<<endl;
+    gpf->fout << endl <<"17. Back in main.cpp(152). Performing statistics ..."<< endl;
 
 //        gfittask->test();
 
@@ -170,16 +170,18 @@ int main( int argc, char *argv[] )
 
     if(stat.MCbool == 1)  stat.MC_confidence_interval( gfittask->Opti->optv, gfittask, countit );
 
-
-
     delete gfittask;
 
     gettimeofday(&end, NULL);
 
     double delta = ((end.tv_sec  - start.tv_sec) * 1000000u +
              end.tv_usec - start.tv_usec) / 1.e6;
-    cout << delta << " seconds." << endl;
-    cout << "GEMSFIT2: End. Bye!" << endl;
+    gpf->fout <<"18. main.cpp(152): finished in ";
+    gpf->fout << delta << " seconds. GEMSFIT2: End. Bye!" << endl;
+cout << delta << " seconds." << endl;
+cout << "GEMSFIT2: End. Bye!" << endl;
+   gpf->fout.close();
+   gpf->fout_.close();
 }
 
 

@@ -1,7 +1,7 @@
 //-------------------------------------------------------------------
 // $Id: gemsft_task.h 789 2012-12-19 17:08:55Z kulik $
 /// \file gemsft_task.h
-/// Contains declaration of TNodeArray class implementing an advanced
+/// Contains declaration of TGFitTask class implementing an advanced
 /// interface for GEMSFIT.
 //
 /// \class TGfitTask gemsft_task.h
@@ -30,8 +30,8 @@
 //-------------------------------------------------------------------
 //
 
-#ifndef _gemsft_task.h_
-#define _gemsft_task.h_
+#ifndef _GEMSFT_TASK_H
+#define _GEMSFT_TASK_H
 
 #include "data_manager.h"
 #include "opt_vector.h"
@@ -46,6 +46,7 @@ class TGfitTask : public Data_Manager
 protected:
 
     long int anNodes;  ///< Number of allocated nodes (samples)
+
 private:
 
     // initialize optimization
@@ -186,7 +187,7 @@ public:
 
    int get_number_of_residuals( );
 
-   void Ainit_optim (std::vector<double> &optv_, /*int &countit,*/ double &weighted_Tfun_sum_of_residual);
+   void Ainit_optim (std::vector<double> &optv_);
 
    /**
    * Stores the values for each experiment after runing GEMS
@@ -202,6 +203,6 @@ public:
 
 };
 
-#endif   // _gemsft_task_
+#endif   // _GEMSFT_TASK_H
 
 // end gemsft_task

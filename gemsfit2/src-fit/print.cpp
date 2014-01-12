@@ -84,7 +84,7 @@ void ResPrint::print_header(string function, string weight_, int size)
     if (weight_ == "")
         fout << "experiment,,,unit,measured,computed," <<function;
     else fout << "experiment,,,unit,measured,computed," <<"weighted_"+function;
-    for (unsigned int i =0; i<size; ++i)
+    for ( int i =0; i<size; ++i)
     {
         ss << i;
         sss = ss.str();
@@ -100,7 +100,7 @@ void ResPrint::print_result()
 {
     ofstream fout;
     fout.open(path.c_str(), ios::app);
-    double sum_res = 0.0, sum_meas = 0.0;
+    double sum_res = 0.0; // , sum_meas = 0.0;
 
     setprecision(12);
     scientific(fout);
@@ -125,7 +125,7 @@ void ResPrint::print_result()
 
     fout<< "sum of residuals = " << sum_res << endl;
 
-    double test2 = sum_res / residuals_v.size();
+//    double test2 = sum_res / residuals_v.size();
     // call GEM_init to read GEMS3K input files
     TNode* node  = new TNode();
 

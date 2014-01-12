@@ -286,7 +286,7 @@ class Data_Manager : public TNode
         * @param pos position of the BSON object in the vector experiments
         * @date 19.04.2013
         */
-        void bson_to_Data_Manager(FILE *f, const char *data, int pos);
+        void bson_to_Data_Manager(const char *data, int pos);
 
         /**
         * Gest the distinct T-P pairs form the experimental data

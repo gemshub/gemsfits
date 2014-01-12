@@ -1,0 +1,44 @@
+01. main.cpp(125). Creating new TGfitTask
+02. data_manager.cpp(57). Reading database parameter get_db_specs(); 
+03. data_manager.cpp(61). Reading in the data selection query; 
+04. data_manager.cpp(64). Reading in the Target function form the input file; 
+05. data_manager.cpp(68). Getting data form the EJDB database; 
+06. data_manager.cpp(287). Adding the data returned by the selection query into the data structure; 
+07. data_manager.cpp(71). Getting distinct T and P pairs; 
+08. gemsfit_task.cpp(95). Initializing nodes with the experimental data; 
+09. gemsfit_task.cpp(98). Initializing optimization structure; 
+10. opt_vector.cpp(49). Reading optimized parameters from the input file; 
+    Parameter: PMc Type 1 Index 8 : { "IV" : 6000, "LB" : 3000, "UB" : 11000 }
+11. optimization.cpp(54). Reading NLopt optimization settings from the input file; 
+12. gemsfit_task.cpp(100). Initializing the Target function structure & get_DatTarget(); 
+13. gemsfit_task.cpp(151). Initializing optimization init_optim(); 
+ ... initializing optimization object in build_optim() ... 
+ ... performing parameter normalization ... 
+     Init guess [0] = 6000
+     Upper Bound old [0]= 11000
+     Upper Bound new [0]= 1.83333
+     Init guess [0] = 6000
+     Lower Bound old [0]= 3000
+     Lower Bound new [0]= 0.5
+... assigning bounds and tolerance for optimization...
+
+14. in gemsfit_task.cpp(284). Setting target (objective) function to minimize.
+15. gemsfit_task.cpp(305). Performing optimization.
+~ m.count.= 1 sum.res.= 4558.05
+~ m.count.= 2 sum.res.= 3543.51
+~ m.count.= 3 sum.res.= 8700.96
+~ m.count.= 4 sum.res.= 3495.4
+~ m.count.= 5 sum.res.= 3495.57
+~ m.count.= 6 sum.res.= 3495.55
+~ m.count.= 7 sum.res.= 3495.4
+~ m.count.= 8 sum.res.= 3495.4
+~ m.count.= 9 sum.res.= 3495.4
+optv[0] = 1.27484
+size of optv = 1
+16. gemsfit_task.cpp(316). Finished optimization; 
+
+17. Back in main.cpp(152). Performing statistics ...
+~ m.count.= 10 sum.res.= 3495.43
+~ m.count.= 11 sum.res.= 3495.43
+~ m.count.= 12 sum.res.= 3495.4
+18. main.cpp(152): finished in 0.104275 seconds. GEMSFIT2: End. Bye!

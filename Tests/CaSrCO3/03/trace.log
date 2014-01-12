@@ -1,7 +1,7 @@
 GEMSFIT2: Start
 optParamFile = ./gfin03_ArgStrGex.dat
 fitFile = ./results/FIT.csv
-fitLogFile = ./output/log_gemsfit.log
+fitLogFile = ./output/gemsfit2.log
 gems3LstFilePath = 
 Node: 0  NodeStatusCH: 2
 Node: 1  NodeStatusCH: 2
@@ -16,134 +16,14 @@ Node: 9  NodeStatusCH: 2
 Node: 10  NodeStatusCH: 2
 Node: 11  NodeStatusCH: 2
 Parameter: LsMod Type 1 Index 8 : { "IV" : 6000, "LB" : 3000, "UB" : 11000 }
-i=0 p=0 pp=0 j=0 : measured: 0.001 computed: 0.00604546
-i=1 p=0 pp=0 j=0 : measured: 660 computed: 687.263
-i=2 p=0 pp=0 j=0 : measured: 980 computed: 1233.15
-i=3 p=0 pp=0 j=0 : measured: 1260 computed: 1715.05
-i=4 p=0 pp=0 j=0 : measured: 2060 computed: 1774.24
-i=5 p=0 pp=0 j=0 : measured: 2420 computed: 1725.52
-i=6 p=0 pp=0 j=0 : measured: 950 computed: 1503.07
-i=7 p=0 pp=0 j=0 : measured: 2950 computed: 1422.69
-i=8 p=0 pp=0 j=0 : measured: 1920 computed: 1328.37
-i=9 p=0 pp=0 j=0 : measured: 530 computed: 1174.26
-i=10 p=0 pp=0 j=0 : measured: 50 computed: 644.542
-i=11 p=0 pp=0 j=0 : measured: 0.001 computed: 0.00709422
-i=0 p=0 pp=0 j=0 : measured: 0.001 computed: 0.00539981
-i=1 p=0 pp=0 j=0 : measured: 660 computed: 581.296
-i=2 p=0 pp=0 j=0 : measured: 980 computed: 1042.32
-i=3 p=0 pp=0 j=0 : measured: 1260 computed: 1449.37
-i=4 p=0 pp=0 j=0 : measured: 2060 computed: 1499.36
-i=5 p=0 pp=0 j=0 : measured: 2420 computed: 1458.2
-i=6 p=0 pp=0 j=0 : measured: 950 computed: 1270.27
-i=7 p=0 pp=0 j=0 : measured: 2950 computed: 1202.37
-i=8 p=0 pp=0 j=0 : measured: 1920 computed: 1122.69
-i=9 p=0 pp=0 j=0 : measured: 530 computed: 992.502
-i=10 p=0 pp=0 j=0 : measured: 50 computed: 544.944
-i=11 p=0 pp=0 j=0 : measured: 0.001 computed: 0.00600274
 ~ m.count.= 1 sum.res.= 4558.05
-i=0 p=0 pp=0 j=0 : measured: 0.001 computed: 0.00639117
-i=1 p=0 pp=0 j=0 : measured: 660 computed: 773.894
-i=2 p=0 pp=0 j=0 : measured: 980 computed: 1389.25
-i=3 p=0 pp=0 j=0 : measured: 1260 computed: 1932.42
-i=4 p=0 pp=0 j=0 : measured: 2060 computed: 1999.15
-i=5 p=0 pp=0 j=0 : measured: 2420 computed: 1944.24
-i=6 p=0 pp=0 j=0 : measured: 950 computed: 1693.5
-i=7 p=0 pp=0 j=0 : measured: 2950 computed: 1602.91
-i=8 p=0 pp=0 j=0 : measured: 1920 computed: 1496.59
-i=9 p=0 pp=0 j=0 : measured: 530 computed: 1322.89
-i=10 p=0 pp=0 j=0 : measured: 50 computed: 725.878
-i=11 p=0 pp=0 j=0 : measured: 0.001 computed: 0.0079811
 ~ m.count.= 2 sum.res.= 3543.51
-i=0 p=0 pp=0 j=0 : measured: 0.001 computed: 0.00381533
-i=1 p=0 pp=0 j=0 : measured: 660 computed: 388.261
-i=2 p=0 pp=0 j=0 : measured: 980 computed: 695.189
-i=3 p=0 pp=0 j=0 : measured: 1260 computed: 966.283
-i=4 p=0 pp=0 j=0 : measured: 2060 computed: 999.572
-i=5 p=0 pp=0 j=0 : measured: 2420 computed: 972.139
-i=6 p=0 pp=0 j=0 : measured: 950 computed: 846.917
-i=7 p=0 pp=0 j=0 : measured: 2950 computed: 801.673
-i=8 p=0 pp=0 j=0 : measured: 1920 computed: 748.578
-i=9 p=0 pp=0 j=0 : measured: 530 computed: 661.82
-i=10 p=0 pp=0 j=0 : measured: 50 computed: 363.503
-i=11 p=0 pp=0 j=0 : measured: 0.001 computed: 0.00400688
 ~ m.count.= 3 sum.res.= 8700.96
-i=0 p=0 pp=0 j=0 : measured: 0.001 computed: 0.00627873
-i=1 p=0 pp=0 j=0 : measured: 660 computed: 740.076
-i=2 p=0 pp=0 j=0 : measured: 980 computed: 1328.3
-i=3 p=0 pp=0 j=0 : measured: 1260 computed: 1847.55
-i=4 p=0 pp=0 j=0 : measured: 2060 computed: 1911.34
-i=5 p=0 pp=0 j=0 : measured: 2420 computed: 1858.85
-i=6 p=0 pp=0 j=0 : measured: 950 computed: 1619.15
-i=7 p=0 pp=0 j=0 : measured: 2950 computed: 1532.55
-i=8 p=0 pp=0 j=0 : measured: 1920 computed: 1430.92
-i=9 p=0 pp=0 j=0 : measured: 530 computed: 1264.87
-i=10 p=0 pp=0 j=0 : measured: 50 computed: 694.141
-i=11 p=0 pp=0 j=0 : measured: 0.001 computed: 0.00763567
 ~ m.count.= 4 sum.res.= 3495.4
-i=0 p=0 pp=0 j=0 : measured: 0.001 computed: 0.00627143
-i=1 p=0 pp=0 j=0 : measured: 660 computed: 738.151
-i=2 p=0 pp=0 j=0 : measured: 980 computed: 1324.83
-i=3 p=0 pp=0 j=0 : measured: 1260 computed: 1842.72
-i=4 p=0 pp=0 j=0 : measured: 2060 computed: 1906.34
-i=5 p=0 pp=0 j=0 : measured: 2420 computed: 1853.99
-i=6 p=0 pp=0 j=0 : measured: 950 computed: 1614.92
-i=7 p=0 pp=0 j=0 : measured: 2950 computed: 1528.55
-i=8 p=0 pp=0 j=0 : measured: 1920 computed: 1427.18
-i=9 p=0 pp=0 j=0 : measured: 530 computed: 1261.57
-i=10 p=0 pp=0 j=0 : measured: 50 computed: 692.334
-i=11 p=0 pp=0 j=0 : measured: 0.001 computed: 0.00761598
 ~ m.count.= 5 sum.res.= 3495.57
-i=0 p=0 pp=0 j=0 : measured: 0.001 computed: 0.00628596
-i=1 p=0 pp=0 j=0 : measured: 660 computed: 742.001
-i=2 p=0 pp=0 j=0 : measured: 980 computed: 1331.77
-i=3 p=0 pp=0 j=0 : measured: 1260 computed: 1852.38
-i=4 p=0 pp=0 j=0 : measured: 2060 computed: 1916.33
-i=5 p=0 pp=0 j=0 : measured: 2420 computed: 1863.71
-i=6 p=0 pp=0 j=0 : measured: 950 computed: 1623.39
-i=7 p=0 pp=0 j=0 : measured: 2950 computed: 1536.56
-i=8 p=0 pp=0 j=0 : measured: 1920 computed: 1434.66
-i=9 p=0 pp=0 j=0 : measured: 530 computed: 1268.17
-i=10 p=0 pp=0 j=0 : measured: 50 computed: 695.948
-i=11 p=0 pp=0 j=0 : measured: 0.001 computed: 0.00765537
 ~ m.count.= 6 sum.res.= 3495.55
-i=0 p=0 pp=0 j=0 : measured: 0.001 computed: 0.0062789
-i=1 p=0 pp=0 j=0 : measured: 660 computed: 740.119
-i=2 p=0 pp=0 j=0 : measured: 980 computed: 1328.38
-i=3 p=0 pp=0 j=0 : measured: 1260 computed: 1847.66
-i=4 p=0 pp=0 j=0 : measured: 2060 computed: 1911.45
-i=5 p=0 pp=0 j=0 : measured: 2420 computed: 1858.96
-i=6 p=0 pp=0 j=0 : measured: 950 computed: 1619.25
-i=7 p=0 pp=0 j=0 : measured: 2950 computed: 1532.64
-i=8 p=0 pp=0 j=0 : measured: 1920 computed: 1431.01
-i=9 p=0 pp=0 j=0 : measured: 530 computed: 1264.94
-i=10 p=0 pp=0 j=0 : measured: 50 computed: 694.182
-i=11 p=0 pp=0 j=0 : measured: 0.001 computed: 0.00763612
 ~ m.count.= 7 sum.res.= 3495.4
-i=0 p=0 pp=0 j=0 : measured: 0.001 computed: 0.00627911
-i=1 p=0 pp=0 j=0 : measured: 660 computed: 740.177
-i=2 p=0 pp=0 j=0 : measured: 980 computed: 1328.49
-i=3 p=0 pp=0 j=0 : measured: 1260 computed: 1847.81
-i=4 p=0 pp=0 j=0 : measured: 2060 computed: 1911.6
-i=5 p=0 pp=0 j=0 : measured: 2420 computed: 1859.1
-i=6 p=0 pp=0 j=0 : measured: 950 computed: 1619.38
-i=7 p=0 pp=0 j=0 : measured: 2950 computed: 1532.76
-i=8 p=0 pp=0 j=0 : measured: 1920 computed: 1431.12
-i=9 p=0 pp=0 j=0 : measured: 530 computed: 1265.04
-i=10 p=0 pp=0 j=0 : measured: 50 computed: 694.236
-i=11 p=0 pp=0 j=0 : measured: 0.001 computed: 0.00763671
 ~ m.count.= 8 sum.res.= 3495.4
-i=0 p=0 pp=0 j=0 : measured: 0.001 computed: 0.0062789
-i=1 p=0 pp=0 j=0 : measured: 660 computed: 740.119
-i=2 p=0 pp=0 j=0 : measured: 980 computed: 1328.38
-i=3 p=0 pp=0 j=0 : measured: 1260 computed: 1847.66
-i=4 p=0 pp=0 j=0 : measured: 2060 computed: 1911.45
-i=5 p=0 pp=0 j=0 : measured: 2420 computed: 1858.96
-i=6 p=0 pp=0 j=0 : measured: 950 computed: 1619.25
-i=7 p=0 pp=0 j=0 : measured: 2950 computed: 1532.64
-i=8 p=0 pp=0 j=0 : measured: 1920 computed: 1431.01
-i=9 p=0 pp=0 j=0 : measured: 530 computed: 1264.94
-i=10 p=0 pp=0 j=0 : measured: 50 computed: 694.182
-i=11 p=0 pp=0 j=0 : measured: 0.001 computed: 0.00763612
 ~ m.count.= 9 sum.res.= 3495.4
  NLopt return code: 4
  Optimization stopped because xtol_rel or xtol_abs was reached. 
@@ -151,44 +31,8 @@ found minimum at <<f( 1.27484 ) = 3495.4
  after 9 evaluations
  Statistics Constructor: sum of squares: 3495.4
  Statistics Constructor: number_of_parameters: 1
-i=0 p=0 pp=0 j=0 : measured: 0.001 computed: 0.00628166
-i=1 p=0 pp=0 j=0 : measured: 660 computed: 740.856
-i=2 p=0 pp=0 j=0 : measured: 980 computed: 1329.71
-i=3 p=0 pp=0 j=0 : measured: 1260 computed: 1849.51
-i=4 p=0 pp=0 j=0 : measured: 2060 computed: 1913.36
-i=5 p=0 pp=0 j=0 : measured: 2420 computed: 1860.82
-i=6 p=0 pp=0 j=0 : measured: 950 computed: 1620.87
-i=7 p=0 pp=0 j=0 : measured: 2950 computed: 1534.17
-i=8 p=0 pp=0 j=0 : measured: 1920 computed: 1432.44
-i=9 p=0 pp=0 j=0 : measured: 530 computed: 1266.21
-i=10 p=0 pp=0 j=0 : measured: 50 computed: 694.873
-i=11 p=0 pp=0 j=0 : measured: 0.001 computed: 0.00764365
 ~ m.count.= 10 sum.res.= 3495.43
-i=0 p=0 pp=0 j=0 : measured: 0.001 computed: 0.00627611
-i=1 p=0 pp=0 j=0 : measured: 660 computed: 739.383
-i=2 p=0 pp=0 j=0 : measured: 980 computed: 1327.05
-i=3 p=0 pp=0 j=0 : measured: 1260 computed: 1845.81
-i=4 p=0 pp=0 j=0 : measured: 2060 computed: 1909.54
-i=5 p=0 pp=0 j=0 : measured: 2420 computed: 1857.1
-i=6 p=0 pp=0 j=0 : measured: 950 computed: 1617.63
-i=7 p=0 pp=0 j=0 : measured: 2950 computed: 1531.11
-i=8 p=0 pp=0 j=0 : measured: 1920 computed: 1429.58
-i=9 p=0 pp=0 j=0 : measured: 530 computed: 1263.68
-i=10 p=0 pp=0 j=0 : measured: 50 computed: 693.491
-i=11 p=0 pp=0 j=0 : measured: 0.001 computed: 0.00762859
 ~ m.count.= 11 sum.res.= 3495.43
-i=0 p=0 pp=0 j=0 : measured: 0.001 computed: 0.0062789
-i=1 p=0 pp=0 j=0 : measured: 660 computed: 740.119
-i=2 p=0 pp=0 j=0 : measured: 980 computed: 1328.38
-i=3 p=0 pp=0 j=0 : measured: 1260 computed: 1847.66
-i=4 p=0 pp=0 j=0 : measured: 2060 computed: 1911.45
-i=5 p=0 pp=0 j=0 : measured: 2420 computed: 1858.96
-i=6 p=0 pp=0 j=0 : measured: 950 computed: 1619.25
-i=7 p=0 pp=0 j=0 : measured: 2950 computed: 1532.64
-i=8 p=0 pp=0 j=0 : measured: 1920 computed: 1431.01
-i=9 p=0 pp=0 j=0 : measured: 530 computed: 1264.94
-i=10 p=0 pp=0 j=0 : measured: 50 computed: 694.182
-i=11 p=0 pp=0 j=0 : measured: 0.001 computed: 0.00763612
 ~ m.count.= 12 sum.res.= 3495.4
 Fisher Matrix:
    0.0004
@@ -198,5 +42,5 @@ CorellationMatrix =
    1.0000
 Corellation Matrix:
    1.0000
-0.130519 seconds.
+0.104275 seconds.
 GEMSFIT2: End. Bye!

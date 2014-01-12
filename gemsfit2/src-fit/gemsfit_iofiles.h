@@ -96,8 +96,10 @@ class TGfitPath
 
   //   void defaultCFG();
  //   void fromWinCFG();
-
 public:
+
+    ofstream fout;  // GEMSFIT logfile
+    ofstream fout_;  // GEMSFIT results file logging all test runs
 
     TGfitPath(int argc, char* argv[]);
     ~TGfitPath();

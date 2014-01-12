@@ -80,7 +80,7 @@ public:
     // vector containing the first guesses for normalization of the opt vector
     vd optv0; /// vector storing initial parameter values
 
-    bool h_RDc; /// handle for cheking if there are reaction constraints in the input file
+    bool h_RDc; /// handle for checking if there are reaction constraints in the input file
     bool h_Lp; /// handle for checking if there are linked parameters in the input file
 
     struct RDc /// structure storing reaction constraint information

@@ -18,7 +18,7 @@
 
 # DataDB: EJDB database path (please, edit to put the actual path)
 
-<DataDB> '../EJDB/solargstr'
+<DataDB>  './test_input/experimentsDB'
 
 # DataCollection: database collection name (please, edit to put the actual name)
 
@@ -26,7 +26,7 @@
 
 # SystemFiles: path to the list of GEMS3K input files (also used for this template file)
 
-<SystemFiles>  '../GEMS/ArgStrGex-dat.lst'
+<SystemFiles>  './GEMS/ArgStrGex-dat.lst'
 
 #########################################################################
 #>>>>>>>>>>>>>>>>>>>>>>> DataSelect section >>>>>>>>>>>>>>>>>>>>>>>>>>>>#
@@ -53,12 +53,7 @@
 #        "sP" : [1, 2500] }'
 #      Copy the example and paste it below, remove comment symbols (#), and edit as necessary.
 
-<DataSelect>  '{ "sample" : [ "xCa0.0", "xCa0.11", "xCa0.225", "xCa0.409", "xCa0.511",
-          "xCa0.584", "xCa0.696", "xCa0.723", "xCa0.751", "xCa0.791", "xCa0.899", "xCa1.0" ], 
-        "usedataset" : "C96Gex",
-        "skipdataset" : "",
-        "sT" : "",
-        "sP" : "" }'
+<DataSelect>  '{...}'
 
 #########################################################################
 #>>>>>>>>>>>>>>>>>>>>>>> DataTarget section >>>>>>>>>>>>>>>>>>>>>>>>>>>>#
@@ -89,7 +84,7 @@
 #          "Q" for amount; "@coef" for activity coeficient
 #       "unit":  units of measurement (override those given in the database for this value):
 #          "molal":  mol/(kg H2O), "loga": log(molal), "-loga": negated log(molal);
-#          "g"; "kg"; "cm3"; "m3"; "molfrac": mole fraction; kJ/mol for Gex 
+#          "g"; "kg"; "cm3"; "m3"; "molfrac": mole fraction; J/mol for Gex 
 #           ...
 #       (conversions will be performed automatically).
 #     The comparison options are: 
@@ -99,8 +94,8 @@
 #       other phases composition as element bulk amount in moles ("mol") 
 #          or to /Si molar ratio ("Simolfrac")
 #       other phases properties ("prop"): "Q" - mass in "g" or "kg"; 
-#          "pV" - volume in "cm3" or "m3";  "Eh" - volume in "Volts";
-#          "Gex"  - excess Gibbs energy of mixing (in "kJ/mol"). 
+#          "pV" - volume in "cm3" or "m3";  "Eh" - volume in "Volts"; 
+#          "Gex"  - excess Gibbs energy of mixing (in "J/mol"). 
 #       dependent components ("DC") properties: "Q" - amount in "mol"; 
 #          "@coef" - activity coefictient 
 #           ...
@@ -116,14 +111,10 @@
 #  Copy the example, paste it below, remove the comment symbols (#), and edit as necessary. 
 #     Remove the unnecessary rows {...}
 
-<DataTarget>  '{ "Target": "fitGex", "TT": "lsq", "WT": "inverr", "OFUN":
-      [
-         { "EPH": "ArgStr", "CT": "prop", "CN": "Gex", "unit": "J/mol" }
-      ]
-               }'
+<DataTarget>  '{[...]}'
 
 # LimitOfDetection: Limit of detection of the measured values.
-#     Ensures that wrongly  output values computed due to non-physical input parameters are ignored.
+#     Ensures that wrongly computed output values due to non-physical input parameter values are ignored.
 
 <LimitOfDetection>  1e-06
 
@@ -248,8 +239,7 @@
 
 # PMc: Tables (in TSolMod convention) of interaction parameter coefficients for non-ideal solutions
 <PMc>
-0.0642049983143806 3.72000002861023 1 0 0 0 0 0  
-F{ "IV" : 6000, "LB" : 3000, "UB" : 11000 }  0 0 
+0.0642049983143806 3.72000002861023 1 0 0 0 0 0 7100 0 0 
 
 # LsMdc: Dimensions of TSolMod <DMc> and <MoiSN> arrays [nPS*3]: In each row (for phase):
 # [0] number of parameters per component; [1] 0; [2] 0. For multi-site (sublattice) models: 
@@ -361,34 +351,40 @@ F{ "IV" : 6000, "LB" : 3000, "UB" : 11000 }  0 0
 #########################################################################
 
 
-# OptDoWhat: perform optimization and statistics (0), only optimization with basic Statistics (1), only Statistics (2) with initial guesses as best fit parametters
+# OptDoWhat: perform optimization and statistics (0); only optimization with basic Statistics (1);
+#            only Statistics (2) with initial guesses as best fit parametters
 <OptDoWhat>  0
 
-# OptTuckey: 0 > Use Tuckey Biweight. Value > 0 will be the number of iterations for re-weighting. 
+# OptTuckey: 0 -> Use Tuckey Biweight. Value > 0 will be the number of iterations for re-weighting. 
 <OptTuckey>  0
 
-# OptTitration: Adjusts the computed pH by changing NaOH or HCl amount to match the mesured pH read from the database for each experiment
+# OptTitration: Adjusts the computed pH by changing NaOH or HCl amount to match the measured pH
+#               read from the database for each experiment
 <OptTitration>  0
 
-# OptAlgo: specify algorithm GN_ISRES GN_ORIG_DIRECT GN_ORIG_DIRECT_L LN_COBYLA LN_BOBYQA 
+# OptAlgo: specify algorithm: GN_ISRES | GN_ORIG_DIRECT | GN_ORIG_DIRECT_L | LN_COBYLA | LN_BOBYQA 
 <OptAlgo>  'LN_BOBYQA'
 
-# OptBoundPerc: Generate bounds from initial guess vector: specify percentage deviation (user specific, user-defined bounds when set to -1)
+# OptBoundPerc: Generate bounds from initial guess vector: specify percentage deviation
+
+#               (user-specific, user-defined bounds when set to -1)
 <OptBoundPerc>  -1
 
 # OptTolRel: stopping criterion -> specify relative tolerance (default = 1e-04) of function value
-<OptTolRel>  1e-04
+<OptTolRel>  1e-06
 
 # OptTolAbs: stopping criterion -> specify absolute tolerance (default = 1e-04) of function value
-<OptTolAbs>  1e-04
+<OptTolAbs>  1e-06
 
 # OptMaxEval: specify max number of evaluations
 <OptMaxEval>  500000
 
-# OptInitStep: specify initial stepsize for local minimizers (factor will be multiplied to all optimization parameters); 0 => use default
+# OptInitStep: specify initial stepsize for local minimizers 
+
+#              (factor will be multiplied to all optimization parameters); 0 => use default
 <OptInitStep>  0
 
-# OptNormParam: Normalize bounds/constraints/fitting parameters with initial guess vector (1); do not normalize (0)
+# OptNormParam: Normalize bounds/constraints/fitting parameters with the initial guess vector
 <OptNormParam>  1
 
 # OptPerturbator: The delta/difference used to to calculate the d(function_value)/d(parameter_value) gradient
@@ -400,8 +396,8 @@ F{ "IV" : 6000, "LB" : 3000, "UB" : 11000 }  0 0
 # StatSensitivity: number of evaluations points per parameter for sensitivity evaluation
 <StatSensitivity>  50
 
-# StatMCbool: perform Monte Carlo runs -> yes (1)/no (0)
+# StatMCbool: perform Monte Carlo runs -> yes (1) | no (0)
 <StatMCbool>  0
 
 # StatPerturbator: used for calculating sensitivities by central diference, see ref [2]
-<StatPerturbator>  0.001
+<StatPerturbator>  0.0001

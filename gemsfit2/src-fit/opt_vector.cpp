@@ -29,10 +29,10 @@
 opti_vector::opti_vector( )
 {
     // GEMSFIT logfile
-    ofstream fout;
-    fout.open(gpf->FITLogFile().c_str(), ios::app);
-    if( fout.fail() )
-    { cout<<"Output fileopen error"<<endl; exit(1); }
+//    ofstream fout;
+//    fout.open(gpf->FITLogFile().c_str(), ios::app);
+//    if( fout.fail() )
+//    { cout<<"Output fileopen error"<<endl; exit(1); }
 
     // call GEM_init to read GEMS3K input files
     TNode* node  = new TNode();
@@ -46,7 +46,7 @@ opti_vector::opti_vector( )
     this->h_RDc = false;
     this->h_Lp  = false;
 
-    fout << "10. opt_vector.cpp line 49. Reading optimized parameters from the input file; " << endl;
+    gpf->fout << "10. opt_vector.cpp(49). Reading optimized parameters from the input file; " << endl;
     get_gems_fit_DCH_txt( node, this ); // reading DCH parameters
     get_gems_fit_DBR_txt( node, this ); // reading DBR parameters
     get_gems_fit_multi_txt( node, this ); // reading multi parameters
@@ -54,7 +54,7 @@ opti_vector::opti_vector( )
     // getting indexes of components in the DCH
     if (h_RDc)
     {
-        fout << "10-1. opt_vector.cpp line 57. Getting the indexes of species involved in the reaction constraints; " << endl;
+        gpf->fout << "10-1. opt_vector.cpp(57). Getting the indexes of species involved in the reaction constraints; " << endl;
         get_RDc_indexes (node, this);
     }
 
@@ -71,7 +71,7 @@ void opti_vector::get_RDc_indexes (TNode *node, opti_vector *ov)
 {
     int index_species;
     // maybe try to add MPI here??
-    for (int j = 0; j < ov->reactions.size(); ++j )
+    for (unsigned int j = 0; j < ov->reactions.size(); ++j )
     {
         index_species = node->DC_name_to_xCH( ov->reactions[j]->Dc_name.c_str() );
         if( index_species < 0 )
@@ -83,7 +83,7 @@ void opti_vector::get_RDc_indexes (TNode *node, opti_vector *ov)
             ov->reactions[j]->DcIndex = index_species;
         }
 
-        for (int i=0; i<ov->reactions[j]->rdc_species.size(); ++i )
+        for (unsigned int i=0; i<ov->reactions[j]->rdc_species.size(); ++i )
         {
             // Get form GEMS the index of to_fit_species of interest
             try
@@ -115,7 +115,7 @@ void opti_vector::get_Lp_indexes (TNode *node, opti_vector *ov)
 {
     int index_IC;
     // maybe try to add MPI here??
-    for (int j = 0; j < ov->Lparams.size(); ++j )
+    for (unsigned int j = 0; j < ov->Lparams.size(); ++j )
     {
         index_IC = node->IC_name_to_xCH( ov->Lparams[j]->name.c_str() );
         if( index_IC < 0 )
@@ -127,7 +127,7 @@ void opti_vector::get_Lp_indexes (TNode *node, opti_vector *ov)
             ov->Lparams[j]->index = index_IC;
         }
 
-        for (int i=0; i<ov->Lparams[j]->L_param.size(); ++i )
+        for (unsigned int i=0; i<ov->Lparams[j]->L_param.size(); ++i )
         {
             // Get form GEMS the index of to_fit_species of interest
             try

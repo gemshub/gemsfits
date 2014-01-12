@@ -52,28 +52,29 @@
  Probability that K squared follows Chi-squared distribution :  0.409461
 
  Best fit results for parameters from regression : 
-          parameter PMc :          13030.7
+          parameter PMc :      13030.7
 
  Composite Scaled Sensitivities: 
  See ref. [1] section 4.3.4. If there is no weighting the weight is asumed 1 for all measured values. 
  Larger values indicate parameters for which observations provide more information. 
  A value less than 1 or less than (or close to) 1% of the highest value, means that the parameter is poorly estimated. 
- These parameters should be fixed during regresion. 
-			parameter 0 CO2@ :	           9.90263
+ These parameters should be fixed during regression. 
+			parameter 0 PMc :	     9.90263
 
  Variance-Covariance matrix: 
  See ref. [1] section 7.2. V(b) = s^2([X]trans*[X])^1; 
- [W] - weight matrix is considered as 1 as there is no full weight matrix calculted, based on true experimental error (not provided for all experiments). 
+ [W] - weight matrix is considered as 1 as there is no full weight matrix calculted, 
+ based on true experimental error (not provided for all experiments). 
  X - sensitivity matrix 
- When the chosen weight is other than inverr2 (1/sigma^2) error variance (s^2) is assumed 1. 
- For inverr2 the error variance is calculated as weighted_Tfun_sum_of_residuals/degrees of freedom.
-								parameter 0
+ When the chosen weight is other than inverr2 (1/sigma^2), the error variance (s^2)is assumed 1. 
+ For inverr2, the error variance is calculated as weighted_Tfun_sum_of_residuals/degrees of freedom.
+				parameter 0  PMc
 			parameter 0 : 			   3115.6
 
  Parameter Standard Deviation/Error: 
-			parameter 0 CO2@ :	           27.9088
+			parameter 0  PMc :	   27.9088
 
-			parameter 0 CO2@ :	           
+			parameter 0  :	           
 ___________________________________________________________________
 Confidence       T           Interval          Lower          Upper
  Value (%)     Value          Width            Limit          Limit

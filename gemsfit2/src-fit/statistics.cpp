@@ -59,7 +59,7 @@ statistics::statistics(TGfitTask *gfittask, double Weighted_Tfun_sum_of_residual
 
 
     Weighted_Tfun_sum_of_residuals 		= Weighted_Tfun_sum_of_residuals_;
-    for (i=0; i<number_of_measurements; ++i)
+    for (unsigned i=0; i<number_of_measurements; ++i)
     {
         Tfun_sum_of_residuals += gfittask->Tfun_residuals_v[i];
          Abs_sum_of_residuals += fabs(gfittask->residuals_v[i]);
@@ -102,7 +102,7 @@ cout<<" Statistics Constructor: number_of_parameters: "<<number_of_parameters<<e
 
 
     // Compute standard deviation of residuals
-    for (i=0; i<number_of_measurements; i++)
+    for (unsigned i=0; i<number_of_measurements; i++)
     {
 Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
         Abs_mean_res += fabs(gfittask->residuals_v[i]);
@@ -121,7 +121,7 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
     Weighted_SD_of_residuals = 0.0;
              SD_of_residuals = 0.0;
 
-    for (i=0; i<number_of_measurements; i++)
+    for (unsigned i=0; i<number_of_measurements; i++)
     {
         Weighted_TF_SD_of_residuals += pow((gfittask->Weighted_Tfun_residuals_v[i]-Weighted_TF_mean_res),2);
                 Abs_SD_of_residuals += pow((fabs(gfittask->residuals_v[i])-Abs_mean_res),2);
@@ -148,7 +148,7 @@ statistics::~statistics()
 void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 {
     // Variable declarations
-    unsigned int i;
+    int i;
     double mean = 0.;
     double ResSumSquares = 0., TotalSumSquares = 0.;
 //    double Nom_CC = 0.0, Dnom_CC = 0.0;
@@ -167,7 +167,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 
     // Compute R^2: coefficient of determination
         mean = 0;
-    for (i=0; i< number_of_measurements; i++)
+    for (unsigned i=0; i< number_of_measurements; i++)
     {
         mean += gfittask->measured_values_v[i];
     }
@@ -176,7 +176,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     assert( gfittask->computed_values_v.size() == gfittask->measured_values_v.size() );
 
 
-    for( i=0; i< number_of_measurements; i++ )
+    for(unsigned i=0; i< number_of_measurements; i++ )
     {
         ResSumSquares += pow( (gfittask->measured_values_v[i] - gfittask->computed_values_v[i]), 2);
         TotalSumSquares += pow( (gfittask->measured_values_v[i] - mean), 2);
@@ -188,7 +188,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 
     // Pearson Chi Square test
     Pearsons_chi_square = 0.;
-    for( i=0;  i< number_of_measurements; i++ )
+    for(unsigned i=0;  i< number_of_measurements; i++ )
     {
         if (gfittask->measured_values_v[i] != 0)
         Pearsons_chi_square += (abs(gfittask->computed_values_v[i]) - abs(gfittask->measured_values_v[i]))*(abs(gfittask->computed_values_v[i]) - abs(gfittask->measured_values_v[i])) / abs(gfittask->measured_values_v[i]);
@@ -327,7 +327,7 @@ if( W2 < 1.)  // workaround to suppress nan() and zdiv crash
     // Create chi-squared distribution object
     boost::math::chi_squared chi_dist( 2 );
 
-    double test_ = boost::math::cdf( chi_dist, K2 );
+//    double test_ = boost::math::cdf( chi_dist, K2 );
     // 1 - cumulative distribution function
     K2test = 1 - boost::math::cdf( chi_dist, K2 );
 
@@ -414,10 +414,13 @@ if( W2 < 1.)  // workaround to suppress nan() and zdiv crash
             // Print optimized parameter values to file
             if (gfittask->Opti->Ptype[i] =="G0")
             {
-                myStat <<"          parameter G0 "<<gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])<<" :           " << optv_[i] << endl;
+                myStat <<"          parameter G0 "<<
+                         gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])
+                      <<" :           " << optv_[i] << endl;
 //                cout /*<< gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])*/ << endl;
             } else
-            myStat <<"          parameter "<<gfittask->Opti->Ptype[i]<<" :          " << optv_[i] << endl;
+              myStat <<"          parameter " << gfittask->Opti->Ptype[i] << " :      "
+                  << optv_[i] << endl;
 
         }
 
@@ -585,11 +588,14 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
 
         myStat << " Composite Scaled Sensitivities: "<<endl;
         myStat << " See ref. [1] section 4.3.4. If there is no weighting the weight is asumed 1 for all measured values. "<<endl;
-        myStat << " Larger values indicate parameters for which observations provide more information. \n A value less than 1 or less than (or close to) 1% of the highest value, means that the parameter is poorly estimated. \n These parameters should be fixed during regresion. "<<endl;
+        myStat << " Larger values indicate parameters for which observations provide more information. \n A value less than 1 or less than (or close to) 1% of the highest value, means that the parameter is poorly estimated. \n These parameters should be fixed during regression. "<<endl;
         for( i=0; i< optv_.size(); i++ )
         {
             // Write sensitivities to file
-            myStat <<"			parameter "<< i <<" "<<gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]) <<" :	           " << CompositeScaledSensitivities(i)	<< endl;
+            myStat <<"			parameter "<< i << " "
+                 << gfittask->Opti->Ptype[i]
+                     //                  <<gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])
+                 <<" :	     " << CompositeScaledSensitivities(i)	<< endl;
         }
         myStat << endl;
 
@@ -653,14 +659,18 @@ CorellationMatrix.print("Corellation Matrix:");
 
         // Print Variance-Covariance matrix to file
         myStat << " Variance-Covariance matrix: "<<endl;
-        myStat << " See ref. [1] section 7.2. V(b) = s^2([X]trans*[X])^1; \n [W] - weight matrix is considered as 1 as there is no full weight matrix calculted, based on true experimental error (not provided for all experiments). \n X - sensitivity matrix " <<endl;
-        myStat << " When the chosen weight is other than inverr2 (1/sigma^2) error variance (s^2) is assumed 1. \n For inverr2 the error variance is calculated as weighted_Tfun_sum_of_residuals/degrees of freedom." << endl;
+        myStat << " See ref. [1] section 7.2. V(b) = s^2([X]trans*[X])^1; "
+          "\n [W] - weight matrix is considered as 1 as there is no full weight matrix calculted, "
+          "\n based on true experimental error (not provided for all experiments). "
+          "\n X - sensitivity matrix " << endl;
+        myStat << " When the chosen weight is other than inverr2 (1/sigma^2), the error variance (s^2)is assumed 1. "
+          "\n For inverr2, the error variance is calculated as weighted_Tfun_sum_of_residuals/degrees of freedom." << endl;
         for( i=0; i<  optv_.size(); i++ )
         {
             if( i== 0 )
-                myStat <<"								parameter "<< i;
+                myStat <<"				parameter "<< i << "  " << gfittask->Opti->Ptype[i];
             else
-                myStat <<"			parameter "<< i;
+                myStat <<"			parameter "<< i << "  " << gfittask->Opti->Ptype[i];
         }
         myStat << endl;
         for( i=0; i<  optv_.size(); i++ )
@@ -681,7 +691,10 @@ CorellationMatrix.print("Corellation Matrix:");
         myStat << " Parameter Standard Deviation/Error: "<<endl;
         for( i=0; i< optv_.size(); i++ )
         {
-            myStat <<"			parameter "<< i <<" "<<gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]) <<" :	           " << ParameterStandardDeviation(i)/sqrt(degrees_of_freedom) << endl;
+            myStat <<"			parameter "<< i
+                   << "  " << gfittask->Opti->Ptype[i]
+//                  <<gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])
+                 <<" :	   " << ParameterStandardDeviation(i)/sqrt(degrees_of_freedom) << endl;
         }
         myStat << endl;
 
@@ -692,7 +705,10 @@ CorellationMatrix.print("Corellation Matrix:");
         boost::math::students_t dist( DegreesOfFreedom );
         for( j=0; j< optv_.size(); j++ )
         {
-            myStat <<"			parameter "<< j <<" "<<gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[j]) << " :	           ";
+            myStat <<"			parameter "<< j <<" "
+                 << gfittask->Opti->Ptype[i]
+//                  <<gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[j])
+                 << " :	           ";
             myStat << endl;
             myStat <<    "___________________________________________________________________" << endl;
             myStat <<    "Confidence       T           Interval          Lower          Upper" << endl;
@@ -833,7 +849,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
 //cout<<"pid : "<<pid<<" entered Statistics::MC_confidence_interval ..."<<endl;
 
     int i,n_param,id,imc;
-    int j,k, p_=1, pid_=0;
+    int j, p_=1, pid_=0; // k
     double sum_of_squares_MC;
     std::vector<double> scatter_v, MC_computed_v;
     std::vector<double> optv_backup;
@@ -927,7 +943,7 @@ pid_ = 0;
 //            gfittask->Opti->OptUpBounds = gfittask->Opti->UB;
         optv_ = optv_backup;
 
-        gfittask->Ainit_optim( optv_, sum_of_squares_MC);
+        gfittask->Ainit_optim( optv_ ); //, sum_of_squares_MC);
 
 
         // Store fitted parameters of each run in process specific array
@@ -994,9 +1010,6 @@ pid_ = 0;
         myStat << endl;
         myStat.close();
 
-
-
-
 //    if( !pid )
 //    {
 
@@ -1005,12 +1018,10 @@ pid_ = 0;
 
 //    }
 
-
     free (MC_fitted_parameters_all[0]);
     free (MC_fitted_parameters_all);
 
     delete[] scatter_all;
-
 
 }// end of function MC_confidence_interval
 

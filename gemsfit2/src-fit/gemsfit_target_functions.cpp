@@ -89,7 +89,7 @@ void adjust_bIC (int i, double new_bIC, TGfitTask *sys)
     }
 }
 
-void adjust_TK (int i, double new_TK, TGfitTask *sys)
+void adjust_TK ( int i, double new_TK, TGfitTask *sys)
 {
     for (unsigned int n=0; n<sys->NodT.size(); ++n)
     {
@@ -98,7 +98,7 @@ void adjust_TK (int i, double new_TK, TGfitTask *sys)
     }
 }
 
-void adjust_P (int i, double new_P, TGfitTask *sys)
+void adjust_P ( int i, double new_P, TGfitTask *sys)
 {
     for (unsigned int n=0; n<sys->NodT.size(); ++n)
     {
@@ -142,7 +142,7 @@ void adjust_RDc (TGfitTask *sys)
                 // for all TP pairs
                 for (unsigned int j=0; j<sys->TP_pairs[0].size(); j++) // loops trough all unique TP_pairs
                 {
-                    for (int k=0; k < sys->Opti->reactions[i]->rdc_species.size()-1; ++k ) // calculates DG without the last species which is the constrained one
+                    for (unsigned int k=0; k < sys->Opti->reactions[i]->rdc_species.size()-1; ++k ) // calculates DG without the last species which is the constrained one
                     {
                         delta_G += sys->Opti->reactions[i]->rdc_species_coef[k]
                                 * sys->NodT[n]->DC_G0(sys->Opti->reactions[i]->rdc_species_ind[k], sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, false);
@@ -179,7 +179,7 @@ void adjust_RDc (TGfitTask *sys)
                 // for all TP pairs
                 for (unsigned int j=0; j<sys->TP_pairs[0].size(); j++) // loops trough all unique TP_pairs
                 {
-                    for (int k=0; k < sys->Opti->reactions[i]->rdc_species.size()-1; ++k ) // calculates DG without the last species which is the constrained one
+                    for (unsigned int k=0; k < sys->Opti->reactions[i]->rdc_species.size()-1; ++k ) // calculates DG without the last species which is the constrained one
                     {
                         delta_G += sys->Opti->reactions[i]->rdc_species_coef[k]
                                 * sys->NodT[n]->DC_G0(sys->Opti->reactions[i]->rdc_species_ind[k], sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, false);
@@ -561,11 +561,11 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
     long int PHndx, DC0ndx, nDCinPH;
     double computed_value, measured_value;
     double Tfun_residual = 0.0, Weighted_Tfun_residual, weight_ = 1.0;
-    DATACH* dCH = sys->NodT[i]->pCSD();
+//    DATACH* dCH = sys->NodT[i]->pCSD();
 
     phase_name = sys->experiments[i]->expphases[p]->phase.c_str();
     PHndx = sys->NodT[i]->Ph_name_to_xDB(phase_name);
-cout << "i=" << i << " p=" << p << " pp=" << pp << " j=" << j << " : ";
+// gpf->fout << "i=" << i << " p=" << p << " pp=" << pp << " j=" << j << " : ";
     // Get aqueous phase pH
     if ((sys->Tfun->objfun[j]->exp_CN == keys::pH) && (sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
     {
@@ -633,8 +633,8 @@ cout << "i=" << i << " p=" << p << " pp=" << pp << " j=" << j << " : ";
     else { cout << "Error in target functions line 633 "; exit(1);}
 
     measured_value = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt;
-
-cout << "measured: " << measured_value << " computed: " << computed_value << endl;
+// gpf->fout << "i=" << i << " p=" << p << " pp=" << pp << " j=" << j << " : ";
+// gpf->fout << "measured: " << measured_value << " computed: " << computed_value << endl;
 
     // Error handling due to possible non-physical parameters
     if ((computed_value < sys->LimitOfDetection) && (computed_value > 0))
@@ -661,27 +661,27 @@ cout << "measured: " << measured_value << " computed: " << computed_value << end
 double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sys)
 {
     const char *phase_name, *dcomp_name;
-    int PHndx, DCndx;
+    int /* PHndx,*/ DCndx;
     double computed_value, measured_value;
     double Tfun_residual = 0.0, Weighted_Tfun_residual, weight_ = 1.0;
 //    DATACH* dCH = sys->NodT[i]->pCSD();
 
     phase_name = sys->experiments[i]->expphases[p]->phase.c_str();
     dcomp_name = sys->experiments[i]->expphases[p]->phDC[dc]->DC.c_str();
-    PHndx = sys->NodT[i]->Ph_name_to_xDB(phase_name);
+//    PHndx = sys->NodT[i]->Ph_name_to_xDB(phase_name);
     DCndx = sys->NodT[i]->DC_name_to_xCH(dcomp_name);
 
     if (sys->Tfun->objfun[j]->exp_DCP == keys::Qnt)
     {
-        measured_value = sys->NodT[i]->Get_nDC(DCndx); // Retrieves the current mole amount of Dependent Component.
+        computed_value = sys->NodT[i]->Get_nDC(DCndx); // Retrieves the current mole amount of Dependent Component.
         if (sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit == keys::molfrac)
         {
-            measured_value = sys->NodT[i]->Get_cDC(DCndx);// for species in other phases - mole fraction.
+            computed_value = sys->NodT[i]->Get_cDC(DCndx);// for species in other phases - mole fraction.
         }
     } else
     if (sys->Tfun->objfun[j]->exp_DCP == keys::actcoef)
     {
-        measured_value = sys->NodT[i]->Get_gDC(DCndx);
+        computed_value = sys->NodT[i]->Get_gDC(DCndx);
     } else { cout << "Error in target functions line 674 "; exit(1);}
 
     measured_value = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt;

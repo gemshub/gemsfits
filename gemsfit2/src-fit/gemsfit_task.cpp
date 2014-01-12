@@ -59,7 +59,7 @@ TGfitTask* TGfitTask::gft;
 TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
 {
     weighted_Tfun_sum_of_residuals = 0.0;
-    for (unsigned int i=1; i <MPI+1; i++)
+    for ( int i=1; i <MPI+1; i++)
     {
         EXPndx.push_back(-1);COMPndx.push_back(-1);PHndx.push_back(-1);PHPndx.push_back(-1);
         iNa.push_back(0.0); iO.push_back(0.0); iH.push_back(0.0); iCl.push_back(0.0);
@@ -68,10 +68,10 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
 
     // GEMSFIT logfile
     //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
-    ofstream fout;
-    fout.open(gpf->FITLogFile().c_str(), ios::app);
-    if( fout.fail() )
-    { cout<<"Output fileopen error"<<endl; exit(1); }
+//    ofstream fout;
+//    fout.open(gpf->FITLogFile().c_str(), ios::app);
+//    if( fout.fail() )
+//    { cout<<"Output fileopen error"<<endl; exit(1); }
 
     // file containing the input parameters of the system and of the optimization class
     param_file  = gpf->OptParamFile().c_str();
@@ -92,12 +92,12 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     }
 
     // initialize nodes with the experimental data
-    fout << "8. gemsfit_task.cpp line 95. Initializing nodes with the experimental data; " << endl;
+    gpf->fout << "08. gemsfit_task.cpp(95). Initializing nodes with the experimental data; " << endl;
     setnodes ( );  // initialization of nodes each for one experimental point (system)
     // getting the parameters to be optimized from DCH, DBR and multi structures, and optimization settings form the input file
-    fout << "9. gemsfit_task.cpp line 98. Initializing optimization structure; " << endl;
+    gpf->fout << "09. gemsfit_task.cpp(98). Initializing optimization structure; " << endl;
     Opti = new optimization ( );
-    fout << "12. gemsfit_task.cpp line 101. Initializing the Target function structure & get_DatTarget(); " << endl;
+    gpf->fout << "12. gemsfit_task.cpp(100). Initializing the Target function structure & get_DatTarget(); " << endl;
     Tfun = new TargetFunction;
     print = new ResPrint(printfile, Opti);
     get_DataTarget ( );
@@ -123,7 +123,7 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
         this->LimitOfDetection = this->minimum_value/100; // sets the limit of detection not more than 100 times smaller than the lowest experimental value
 
     print->print_header(Tfun->type, Tfun->weight, Opti->optv.size());
-    fout.close();
+//    fout.close();
 
 }
 
@@ -141,20 +141,20 @@ void TGfitTask::gfit_error ( )
 
 void TGfitTask::run_optim()
 {
-    ofstream fout;
-    fout.open(gpf->FITLogFile().c_str(), ios::app);
-    if( fout.fail() )
-    { cout<<"Output fileopen error"<<endl; exit(1); }
+//    ofstream fout;
+//    fout.open(gpf->FITLogFile().c_str(), ios::app);
+//    if( fout.fail() )
+//    { cout<<"Output fileopen error"<<endl; exit(1); }
 
 //    titration(this);
 
-    fout << "13. gemsfit_task.cpp line 152. Initializing optimization init_optim; " << endl;
+    gpf->fout << "13. gemsfit_task.cpp(151). Initializing optimization init_optim(); " << endl;
     init_optim (Opti->optv, weighted_Tfun_sum_of_residuals);
 
-    fout.close();
+//    fout.close();
 }
 
-void TGfitTask::Ainit_optim (std::vector<double> &optv_, /*int &countit,*/ double &weighted_Tfun_sum_of_residual)
+void TGfitTask::Ainit_optim (std::vector<double> &optv_ /*,int &countit, double &weighted_Tfun_sum_of_residual */)
 {
     init_optim( optv_, weighted_Tfun_sum_of_residuals );
 }
@@ -222,12 +222,12 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
 
     // GEMSFIT logfile
     //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
-    ofstream ffout;
-    ffout.open(gpf->FITLogFile().c_str(), ios::app);
-    if( ffout.fail() )
-    { cout<<"Output fileopen error"<<endl; exit(1); }
+//    ofstream ffout;
+//    ffout.open(gpf->FITLogFile().c_str(), ios::app);
+//    if( ffout.fail() )
+//    { cout<<"Output fileopen error"<<endl; exit(1); }
 
-    ffout << " ... initializing optimization object in build_optim() ... " << endl;
+    gpf->fout << " ... initializing optimization object in build_optim() ... " << endl;
 
 //     Reset counter to zero
     master_counter = 0;
@@ -265,7 +265,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
         }
     }
 
-    ffout << "... assigning bounds and tollerance for optimization..." << endl;
+    gpf->fout << "... assigning bounds and tolerance for optimization..." << endl;
     // assign bounds
     NLopti.set_lower_bounds( Opti->OptLoBounds );
     NLopti.set_upper_bounds( Opti->OptUpBounds );
@@ -281,7 +281,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
 
 
     /// specify objective function
-    ffout << endl << "14. in gemsfit_task.cpp line 285. Setting minimizing objective function." << endl;
+    gpf->fout << endl << "14. in gemsfit_task.cpp(284). Setting target (objective) function to minimize." << endl;
     NLopti.set_min_objective( Equil_objective_function_callback, this );
 
 //        if( OptConstraints )
@@ -302,7 +302,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
         NLopti.set_initial_step( inistep );
     }
 
-    ffout << "15. in gesfit_task.cpp line 306. Performing optimization."<<endl;
+    gpf->fout << "15. gemsfit_task.cpp(305). Performing optimization."<<endl;
 
 //    //===== For testing the objective function without oprimization =====//
 //    weighted_Tfun_sum_of_residuals = Equil_objective_function_callback(Opti->optv, grad, this);
@@ -310,10 +310,10 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
 //    NLopti.set_maxeval(3);
 
     nlopt::result result = NLopti.optimize( Opti->optv, weighted_Tfun_sum_of_residuals );
-    ffout<<"optv[0] = "<<Opti->optv[0]<<endl;
-    ffout<<"size of optv = "<<Opti->optv.size()<<endl;
+    gpf->fout << "optv[0] = "<<Opti->optv[0]<<endl;
+    gpf->fout << "size of optv = "<<Opti->optv.size()<<endl;
 
-    ffout << "16. gemsfit_task.cpp line 317. Finished optimization; " << endl;
+    gpf->fout << "16. gemsfit_task.cpp(316). Finished optimization; " << endl;
 
 
             // check results
@@ -331,18 +331,18 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
                     Opti->print_return_message( result );
                     string path = gpf->OutputDirPath();
                            path +=  "SS_myFIT.out";
-                    ofstream fout;
-                    fout.open(path.c_str(), ios::app);
-                    if( fout.fail() )
+                    ofstream ofout;
+                    ofout.open(path.c_str(), ios::app);
+                    if( ofout.fail() )
                     { cout<<"Output fileopen error"<<endl; exit(1); }
-                    fout<<"found minimum at <<f( ";
+                    ofout<<"found minimum at <<f( ";
                     for( unsigned i=0; i<Opti->optv.size(); i++ )
                     {
-                        fout<<Opti->optv[i]<<" ";
+                        ofout<<Opti->optv[i]<<" ";
                     }
-                    fout<<") = "<<weighted_Tfun_sum_of_residuals<<std::endl;
-                    fout<<" after "<< master_counter <<" evaluations."<<std::endl;
-                    fout.close();
+                    ofout<<") = "<<weighted_Tfun_sum_of_residuals<<std::endl;
+                    ofout<<" after "<< master_counter <<" evaluations."<<std::endl;
+                    ofout.close();
 
                     std::cout<<"found minimum at <<f( ";
                     for( unsigned i=0; i<Opti->optv.size(); i++ )
@@ -370,14 +370,14 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
               }
       }
 
-ffout.close();
+//ffout.close();
 }
 
 void TGfitTask::setnodes()
 {
-    int n, i, j;
+    unsigned int n, i, j;
     // DATACH structure content
-    int nIC, nDC, nPH, ICndx, DCndx/*, PHndx*/;
+    unsigned int nIC, nDC, nPH, ICndx, DCndx/*, PHndx*/;
     long int NodeStatusCH, NodeHandle;
     double P_pa, T_k/*, PMc*/;
     double* new_moles_IC;
@@ -405,7 +405,7 @@ void TGfitTask::setnodes()
     {
         // Getting direct access to work node DATABR structure which exchanges the
         // data with GEMS3K (already filled out by reading the DBR input file)
-        DATABR* dBR = NodT[n]->pCNode();
+//        DATABR* dBR = NodT[n]->pCNode();
         DATACH* dCH = NodT[n]->pCSD();
 
         nIC = dCH->nIC;	// nr of independent components
@@ -764,7 +764,7 @@ void TGfitTask::setnodes()
             }
                 else
                 {
-                    cout<<" Unknown component in gemsfit_task.cpp line 768 !!!! "<<endl;
+                    cout<<" Unknown component in gemsfit_task.cpp(767) !!!! "<<endl;
                     cout<<" ... bail out now ... "<<endl;
                     exit(1);
                 }
@@ -850,7 +850,7 @@ void TGfitTask::get_DataTarget ( )
     }
     out.clear();
     int j=0;
-    int jj=0;
+//    int jj=0;
 
     parse_JSON_array_object(DataTarget, keys::OFUN, keys::EPH, out);
     for (unsigned int i = 0 ; i < out.size() ; i++)
@@ -1124,8 +1124,8 @@ int TGfitTask::get_number_of_residuals( )
 
 void TGfitTask::add_MC_scatter( vector<double> scatter)
 {
-    double average = 0.0, min = 1e-05;
-    double residuals = 0.0;
+    double average = 0.0; // , min = 1e-05;
+//    double residuals = 0.0;
     int count = 0;
     // loop trough objective function
     for (unsigned int j=0; j<Tfun->objfun.size(); ++j)
@@ -1250,7 +1250,7 @@ void TGfitTask::set_residuals (double computed, double measured, double Weighted
 void TGfitTask::test()
 {
     mean_reisdulas = 0.0;
-    for (int i=0; i<residuals_v.size(); i++)
+    for (unsigned int i=0; i<residuals_v.size(); i++)
     {
         mean_reisdulas +=residuals_v[i];
     }
