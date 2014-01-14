@@ -1,3 +1,0 @@
-GEMS3K input : file ./GEMS/CSH3Ts2B-dch.dat
-Formatted read error 01  : ## - Invalid label of data.
-
