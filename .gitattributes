@@ -17,6 +17,7 @@ Tests/CASH/impdata_to_resultsss.sql -text
 Tests/CASH/solcash.backup -text
 Tests/CASH/solcash_gs65.backup -text
 Tests/CASH/solcash_new.backup -text
+Tests/CSH3T2/GEMS/CSHQ-subl.zip -text
 Tests/CaSrCO3/EJDB/solargstr -text
 Tests/CaSrCO3/EJDB/solargstr_experiments -text
 Tests/CaSrCO3/GEMS/GF2-SrCaC.zip -text
