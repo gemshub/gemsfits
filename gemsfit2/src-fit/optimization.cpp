@@ -34,7 +34,7 @@
 
 #include "optimization.h"
 
-optimization::optimization( )
+optimization::optimization( bool initmode )
 {
     // GEMSFIT logfile
     //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
@@ -44,22 +44,21 @@ optimization::optimization( )
 //    { cout<<"Output fileopen error"<<endl; exit(1); }
 
     constraint_data = new my_constraint_data;
-
     // assigining the vector that stores the optimized parameters
     optv = opt;
 
     OptUpBounds = UB;
     OptLoBounds = LB;
-
-    gpf->fout << "11. optimization.cpp(54). Reading NLopt optimization settings from the input file; " << endl;
-    get_nlopt_param_txt( optv );
-
+    if( initmode == false )
+    {
+       gpf->fout << "11. optimization.cpp(54). Reading NLopt optimization settings from the input file; " << endl;
+       get_nlopt_param_txt( optv );
+    }
     if (OptBoundPerc > 0.)
     {
         UB = OptUpBounds;
         LB = OptLoBounds;
     }
-
 //    fout.close();
 }
 

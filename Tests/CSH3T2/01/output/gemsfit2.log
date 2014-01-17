@@ -1,0 +1,10 @@
+01. main.cpp(125). Creating new TGfitTask
+02. data_manager.cpp(57). Reading database parameter get_db_specs(); 
+03. data_manager.cpp(61). Reading in the data selection query; 
+04. data_manager.cpp(64). Reading in the Target function form the input file; 
+05. data_manager.cpp(68). Getting data form the EJDB database; 
+06. data_manager.cpp(287). Adding the data returned by the selection query into the data structure; 
+07. data_manager.cpp(71). Getting distinct T and P pairs; 
+08. gemsfit_task.cpp(95). Initializing nodes with the experimental data; 
+09. gemsfit_task.cpp(98). Initializing optimization structure; 
+10. opt_vector.cpp(49). Reading optimized parameters from the input file; 

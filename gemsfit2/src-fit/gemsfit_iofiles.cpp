@@ -91,7 +91,6 @@ int generateConfig()
    string YN;
    try
    {
-
      // call GEM_init to read GEMS3K input files
      TNode* node  = new TNode();
 
@@ -105,11 +104,12 @@ int generateConfig()
     bool with_comments = true;
     bool brief_mode = false;
 
-    // Writting to the data
+    // Writing to the data
     cout << "Start writing the input specification file template"<< endl;
     Data_Manager *data_meas = new Data_Manager(1);
 
-    if ( access( gpf->OptParamFile().c_str(), 0 ) == 0 ) {
+    if ( access( gpf->OptParamFile().c_str(), 0 ) == 0 )
+    {
         cout << gpf->OptParamFile() <<" exists. Do you want to overwrite it? write yes or no: ";
         cin >> YN;
         if ((YN == "yes") || (YN == "Yes") || (YN == "YES") || (YN == "yEs") || (YN == "yeS"))
@@ -122,28 +122,30 @@ int generateConfig()
             gpf->OptParamFileRename(YN.c_str());
             goto overwrite;
         }
-    } else
-    {
+   }  //  else
+//    {
     overwrite:
-
         // Writing Data sources section
     data_meas->out_db_specs_txt(with_comments, brief_mode);
 
+cout << "start writing out_gems_fit_txt()" << endl;
         // Writing Parameters to Fit section &
     out_gems_fit_txt( node, with_comments, brief_mode );
 
-
+cout << "start writing out_nlopt_param_txt()" << endl;
     // Create instance of optimization class derived from base class Optimization
-    optimization *opti = new optimization(1);
+    optimization *opti = new optimization( true );
+cout << "point 0" << endl;
         // Writting Optimization Methods section
     opti->out_nlopt_param_txt(with_comments, brief_mode);
 
+cout << "start writing out_stat_param_txt()" << endl;
     statistics *stat= new statistics();
         // Writing statistics section
     stat->out_stat_param_txt(with_comments, brief_mode);
 
-    cout << "Finished writing the input specification file template" << endl;
-    }
+cout << "Finished writing the input specification file template" << endl;
+//    }
 
     } catch(TError& err)
       {
@@ -155,7 +157,6 @@ int generateConfig()
         return -1;
       }
     return 0;
-
 }
 
 //extern outField DataCH_static_fields[14];
@@ -252,7 +253,7 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
     if(_comment )
     {
         ff << "\n\n#########################################################################" << endl;
-        ff << "#>>>>>>>>>> Input for fitting non-ideality parameters >>>>>>>>>>>>>>>>>>#" << endl;
+        ff << "#>>>>>>>>>>>>>>> Input for fitting GEM input parameters >>>>>>>>>>>>>>>>#" << endl;
         ff << "#########################################################################" << endl;
     }
     TPrintArrays  prarIPM( 70, MULTI_dynamic_fields, ff);
@@ -263,7 +264,7 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
       if( _comment )
          ff << "\n# Initial data for multicomponent phases (fragment of GEMS3K *IMP.dat input file)"
                "\n#    (see the DCH file for the dimension nPHs)";
-      prarIPM.writeArrayF(  f_sMod, pmp->sMod[0], pmp->FIs, 6L, _comment, brief_mode );
+      prarIPM.writeArrayF(  f_sMod, pmp->sMod[0], pmp->FIs, 8L, _comment, brief_mode );
 
     long int LsModSum;
     long int LsIPxSum;
@@ -374,6 +375,7 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
         }
        prar.writeArray(  f_bPS,  CNode->bPS, CSD->nPSb*CSD->nICb, CSD->nICb,false, brief_mode );
     }
+    ff.close();
 }
 
 /// Reading part of the MULTI structure from OptParamFile text file
@@ -1082,7 +1084,7 @@ void Data_Manager::define_db_specs( )
 
 }
 
-/// Writes structure to the GEMSFIT configuration file
+/// Writes structure to the GEMSFIT2 input specification file
 void Data_Manager::out_db_specs_txt( bool with_comments, bool brief_mode )
 {
     string fname = gpf->OptParamFile();
@@ -1090,7 +1092,7 @@ void Data_Manager::out_db_specs_txt( bool with_comments, bool brief_mode )
     ErrorIf( !ff.good() , fname.c_str(), "OptParamFile text open error");
 
     TPrintArrays  prar(10, Data_Manager_fields, ff);
-    // define data must be written
+    // define data that must be written
 
     if (datasource == 0)
     {
@@ -1146,9 +1148,10 @@ void Data_Manager::out_db_specs_txt( bool with_comments, bool brief_mode )
         ff << "#>>>>>>>>>>>>>>>>>>>>>> ParameterMarkup section >>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
         ff << "#########################################################################" << endl;
     }
+    ff.close();
 }
 
-// get PostgreSQL database connection parameters
+// get database connection parameters
 void Data_Manager::get_db_specs_txt( )
 {
     // open file for reading
@@ -1256,6 +1259,7 @@ void statistics::out_stat_param_txt( bool with_comments, bool brief_mode )
     prar.writeField(f_StatSensitivity, (long int)sensitivity_points, with_comments, brief_mode  );
     prar.writeField(f_StatMCbool, (long int)MCbool, with_comments, brief_mode  );
     prar.writeField(f_StatPerturbator, (double)perturbator, with_comments, brief_mode  );
+    ff.close();
 }
 
 //// Read statistical input specifications from configurator
@@ -1387,9 +1391,9 @@ void optimization::out_nlopt_param_txt( bool with_comments, bool brief_mode )
 
     vector<double> OptUpConstraints_;
     vector<double> OptLoConstraints_;
-
+// cout << "point 1" << endl;
     TPrintArrays  prar(24, optimization_fields, ff);
-
+// cout << "point 2" << endl;
     if(with_comments )
     {
         ff << "\n\n#########################################################################" << endl;
@@ -1409,6 +1413,7 @@ void optimization::out_nlopt_param_txt( bool with_comments, bool brief_mode )
     prar.writeField( f_OptNormParam,  (long int)OptNormParam, with_comments, brief_mode);
     prar.writeField( f_OptPerturbator,  OptPerturbator, with_comments, brief_mode);
 
+    ff.close();
 }
 
 //// populate nlopt instance: set bounds, constraints, stopping criteria

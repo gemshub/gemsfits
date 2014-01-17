@@ -705,5 +705,7 @@ cout << "csvtoejdb: processing data rows:" << endl;
 cout << line.c_str() << endl;
     }  // ++ END loop getting data from CSV ++
 cout << "csvtoejdb end: processed " << is << " samples (.csv rows)" << endl;
+if( !is )
+    cout << "  Maybe invalid line end codes;/n     Try import and re-save the .csv file in linux using a spreadsheet program... " << endl;
     in.close();
 }

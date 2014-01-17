@@ -68,7 +68,7 @@ public:
     vector<double> optv;
 
     // Constructor
-    optimization( );
+    optimization(bool init);
     optimization( int i); // init mode constructor DS
 
     // Destructor

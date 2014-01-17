@@ -96,7 +96,7 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     setnodes ( );  // initialization of nodes each for one experimental point (system)
     // getting the parameters to be optimized from DCH, DBR and multi structures, and optimization settings form the input file
     gpf->fout << "09. gemsfit_task.cpp(98). Initializing optimization structure; " << endl;
-    Opti = new optimization ( );
+    Opti = new optimization ( false );
     gpf->fout << "12. gemsfit_task.cpp(100). Initializing the Target function structure & get_DatTarget(); " << endl;
     Tfun = new TargetFunction;
     print = new ResPrint(printfile, Opti);
