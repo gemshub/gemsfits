@@ -96,7 +96,7 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     setnodes ( );  // initialization of nodes each for one experimental point (system)
     // getting the parameters to be optimized from DCH, DBR and multi structures, and optimization settings form the input file
     gpf->fout << "09. gemsfit_task.cpp(98). Initializing optimization structure; " << endl;
-    Opti = new optimization ( false );
+    Opti = new optimization ( );
     gpf->fout << "12. gemsfit_task.cpp(100). Initializing the Target function structure & get_DatTarget(); " << endl;
     Tfun = new TargetFunction;
     print = new ResPrint(printfile, Opti);
@@ -396,6 +396,7 @@ void TGfitTask::setnodes()
     {
         if( NodT[n]->GEM_init( gpf->GEMS3LstFilePath().c_str() ) == 1 )
         {
+            cout<< gpf->GEMS3LstFilePath().c_str() << endl;
             cout<<" .. ERROR occurred while reading input files !!! ..."<<endl;
         }
     }
@@ -823,7 +824,6 @@ void TGfitTask::get_DataTarget ( )
     vector<string> out, out2;
     parse_JSON_array_object(DataTarget, "OFUN", "OPH", out);
     out.clear();
-
 
     parse_JSON_object(DataTarget, keys::Target, out);
     Tfun->name = out[0]; // Name of target function

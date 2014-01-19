@@ -59,10 +59,15 @@ void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat);
 /// if the parameter is linked e.g. in titration (L{...} )
 void L_to_OP (opti_vector::Lp *l, IOJFormat Jformat, string nfild);
 
+// this constructor implicitly calls another constructor
+// opti_vector::opti_vector( ) which calls GEM_init() and reads in all
+// GEMS3K files!  needs to be resolved!
 optimization::optimization( int i )
 {
+    int ii;
     constraint_data = new my_constraint_data;
-    define_nlopt_param();
+    optimization::define_nlopt_param();
+    ii=i;
 }
 
 //// Constructor
@@ -134,15 +139,14 @@ cout << "start writing out_gems_fit_txt()" << endl;
 
 cout << "start writing out_nlopt_param_txt()" << endl;
     // Create instance of optimization class derived from base class Optimization
-    optimization *opti = new optimization( true );
-cout << "point 0" << endl;
-        // Writting Optimization Methods section
-    opti->out_nlopt_param_txt(with_comments, brief_mode);
+    optimization opti( 1 );
+        // Writing Optimization Methods section
+    opti.out_nlopt_param_txt(with_comments, brief_mode);
 
 cout << "start writing out_stat_param_txt()" << endl;
-    statistics *stat= new statistics();
+    statistics stat;
         // Writing statistics section
-    stat->out_stat_param_txt(with_comments, brief_mode);
+    stat.out_stat_param_txt(with_comments, brief_mode);
 
 cout << "Finished writing the input specification file template" << endl;
 //    }
@@ -397,7 +401,7 @@ void get_gems_fit_multi_txt(TNode* node, opti_vector *op )
           {
           case f_sMod: if( !pmp->sMod )
                           Error( "Error", "Array sMod is not used in this problem");
-                        rddar.readArray( "sMod" , pmp->sMod[0], pmp->FIs, 6 );
+                        rddar.readArray( "sMod" , pmp->sMod[0], pmp->FIs, 8 );
                         break;
           case f_LsMod:{ if( !pmp->LsMod )
                           Error( "Error", "Array LsMod is not used in this problem");
@@ -1194,7 +1198,7 @@ void Data_Manager::get_db_specs_txt( )
           nfild = rdar.findNextNotAll();
         }
 
-    // define data must be read
+    // define data that must be read
     if (datasource == 0)
     {
         rdar.setAlws( f_MPI );
@@ -1220,7 +1224,7 @@ void Data_Manager::get_db_specs_txt( )
         collection = result;
 }
 
-//-------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------
 
 outField statistics_fields[4] =
 {
@@ -1259,6 +1263,15 @@ void statistics::out_stat_param_txt( bool with_comments, bool brief_mode )
     prar.writeField(f_StatSensitivity, (long int)sensitivity_points, with_comments, brief_mode  );
     prar.writeField(f_StatMCbool, (long int)MCbool, with_comments, brief_mode  );
     prar.writeField(f_StatPerturbator, (double)perturbator, with_comments, brief_mode  );
+
+    if(with_comments )
+    {
+        ff << endl << endl;
+        ff << "#########################################################################" << endl;
+        ff << "#>>>>>>>>>> end of GEMSFIT2 input specification file template >>>>>>>>>>#" << endl;
+        ff << "#########################################################################" << endl;
+    }
+
     ff.close();
 }
 

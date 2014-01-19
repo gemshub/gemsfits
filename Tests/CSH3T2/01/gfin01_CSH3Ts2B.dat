@@ -415,3 +415,8 @@
 
 # StatPerturbator: used for calculating sensitivities by central diference, see ref [2]
 <StatPerturbator>  0.0001
+
+#########################################################################
+#>>>>>>>>>> end of GEMSFIT2 input specification file template >>>>>>>>>>#
+#########################################################################
+

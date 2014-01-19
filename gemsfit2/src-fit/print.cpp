@@ -132,6 +132,7 @@ void ResPrint::print_result()
     // call GEM_init     --> read in input files
     if( (node->GEM_init( gpf->GEMS3LstFilePath().c_str() )) == 1 )
     {
+        cout<< gpf->GEMS3LstFilePath().c_str() << endl;
         cout<<" .. ERROR occurred while reading input files !!! ..."<<endl;
     }
 

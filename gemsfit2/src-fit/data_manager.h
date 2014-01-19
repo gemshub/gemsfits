@@ -237,7 +237,7 @@ class Data_Manager : public TNode
         string CSVfile;
 
         // Database connection parameters
-        /// PostgreSQL/EJDB database: database name
+        /// PostgreSQL/EJDB database: database name (path)
         string DBname;
 
         /// PostgreSQL/EJDB database: table/colection name with solubility experiments
@@ -252,7 +252,7 @@ class Data_Manager : public TNode
         /// PostgreSQL database: URL of psql server
         string psql_server;
 
-        /// EJDB data selection querie
+        /// EJDB data selection query
         string DataSelect;
 
         /**

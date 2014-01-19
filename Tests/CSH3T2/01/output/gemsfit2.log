@@ -8,3 +8,4 @@
 08. gemsfit_task.cpp(95). Initializing nodes with the experimental data; 
 09. gemsfit_task.cpp(98). Initializing optimization structure; 
 10. opt_vector.cpp(49). Reading optimized parameters from the input file; 
+12. gemsfit_task.cpp(100). Initializing the Target function structure & get_DatTarget(); 

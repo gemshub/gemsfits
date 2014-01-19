@@ -146,10 +146,11 @@ void Data_Manager::get_EJDB( )
         static EJDB *jb;
         jb = ejdbnew();
         // open the database file as a writer JBOWRITER, create new is not existent JBOCREAT, and truncate db on open JBOTRUNC
+cout << DBname.c_str() << endl;
         if (!ejdbopen(jb, DBname.c_str(), JBOREADER)) {
             cout << "Error opening the database" << endl; exit(1);
-
         }
+// cout << gpf->GEMS3LstFilePath().c_str() << endl;
         //Get or create collection 'experiments'
         EJCOLL *coll = ejdbcreatecoll(jb, collection.c_str(), NULL);
 

@@ -34,7 +34,7 @@
 
 #include "optimization.h"
 
-optimization::optimization( bool initmode )
+optimization::optimization()
 {
     // GEMSFIT logfile
     //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
@@ -49,11 +49,10 @@ optimization::optimization( bool initmode )
 
     OptUpBounds = UB;
     OptLoBounds = LB;
-    if( initmode == false )
-    {
-       gpf->fout << "11. optimization.cpp(54). Reading NLopt optimization settings from the input file; " << endl;
-       get_nlopt_param_txt( optv );
-    }
+
+    gpf->fout << "11. optimization.cpp(54). Reading NLopt optimization settings from the input file; " << endl;
+    get_nlopt_param_txt( optv );
+
     if (OptBoundPerc > 0.)
     {
         UB = OptUpBounds;
