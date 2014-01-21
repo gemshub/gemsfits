@@ -1,0 +1,101 @@
+GEMSFIT2: Start
+optParamFile = ./gfin01_CSH3Ts2B.dat
+fitFile = ./results/FIT.csv
+fitLogFile = ./output/gemsfit2.log
+gems3LstFilePath = 
+../EJDB/cshsolubil
+Node: 0  NodeStatusCH: 2
+Node: 1  NodeStatusCH: 2
+Node: 2  NodeStatusCH: 2
+Node: 3  NodeStatusCH: 2
+Node: 4  NodeStatusCH: 2
+Node: 5  NodeStatusCH: 2
+Node: 6  NodeStatusCH: 2
+Node: 7  NodeStatusCH: 2
+Node: 8  NodeStatusCH: 2
+Node: 9  NodeStatusCH: 2
+Node: 10  NodeStatusCH: 2
+Node: 11  NodeStatusCH: 2
+Node: 12  NodeStatusCH: 2
+Node: 13  NodeStatusCH: 2
+Node: 14  NodeStatusCH: 2
+Node: 15  NodeStatusCH: 2
+Node: 16  NodeStatusCH: 2
+Node: 17  NodeStatusCH: 2
+Node: 18  NodeStatusCH: 2
+Node: 19  NodeStatusCH: 2
+Node: 20  NodeStatusCH: 2
+Node: 21  NodeStatusCH: 2
+Node: 22  NodeStatusCH: 2
+Node: 23  NodeStatusCH: 2
+Node: 24  NodeStatusCH: 2
+Node: 25  NodeStatusCH: 2
+Node: 26  NodeStatusCH: 2
+Node: 27  NodeStatusCH: 2
+Node: 28  NodeStatusCH: 2
+Node: 29  NodeStatusCH: 2
+Node: 30  NodeStatusCH: 2
+Node: 31  NodeStatusCH: 2
+Parameter: G0 CSH3-T2C Type 1 : 
+Parameter: G0 CSH3-T5C Type 1 : 
+For experiment 17
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+For experiment 26
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+~ m.count.= 1 sum.res.= 1.48177e-05
+~ m.count.= 2 sum.res.= 1.48216e-05
+~ m.count.= 3 sum.res.= 1.76808e-05
+~ m.count.= 4 sum.res.= 50298.9
+~ m.count.= 5 sum.res.= 82589.8
+~ m.count.= 6 sum.res.= 6.67816e-05
+~ m.count.= 7 sum.res.= 1.77542e-05
+~ m.count.= 8 sum.res.= 1.48076e-05
+~ m.count.= 9 sum.res.= 1.78065e-05
+For experiment 28
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+For experiment 11
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+For experiment 8
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+For experiment 16
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+~ m.count.= 10 sum.res.= 2.40086e-05
+~ m.count.= 11 sum.res.= 1.53357e-05
+For experiment 17
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+For experiment 26
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+For experiment 10
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+For experiment 32
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+~ m.count.= 12 sum.res.= 1.59122e-05
+~ m.count.= 13 sum.res.= 1.49254e-05
+~ m.count.= 14 sum.res.= 1.49529e-05
+~ m.count.= 15 sum.res.= 1.48071e-05
+~ m.count.= 16 sum.res.= 1.48148e-05
+ NLopt return code: 1
+ Generic success return value. 
+found minimum at <<f( -1.0009 -1 ) = 1.48071e-05
+ after 16 evaluations
+ Statistics Constructor: sum of squares: 1.48071e-05
+ Statistics Constructor: number_of_parameters: 2
+~ m.count.= 17 sum.res.= 1.48076e-05
+~ m.count.= 18 sum.res.= 1.48073e-05
+~ m.count.= 19 sum.res.= 1.482e-05
+~ m.count.= 20 sum.res.= 1.48509e-05
+~ m.count.= 21 sum.res.= 1.48071e-05
+Fisher Matrix:
+   1.5454e-15  -2.5061e-15
+  -2.5061e-15   1.2598e-13
+Variance Covariance Matrix:
+   6.6865e+14   1.3302e+13
+   1.3302e+13   8.2026e+12
+CorellationMatrix = 
+   1.0000   0.1796
+   0.1796   1.0000
+Corellation Matrix:
+   1.0000   0.1796
+   0.1796   1.0000
+0.386937 seconds.
+GEMSFIT2: End. Bye!

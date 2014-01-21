@@ -706,8 +706,8 @@ CorellationMatrix.print("Corellation Matrix:");
         for( j=0; j< optv_.size(); j++ )
         {
             myStat <<"			parameter "<< j <<" "
-                 << gfittask->Opti->Ptype[i]
-//                  <<gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[j])
+//                 << gfittask->Opti->Ptype[i]   // this is needed for phase properties!
+                  <<gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[j])
                  << " :	           ";
             myStat << endl;
             myStat <<    "___________________________________________________________________" << endl;

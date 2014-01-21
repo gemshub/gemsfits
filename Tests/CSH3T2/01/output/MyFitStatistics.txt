@@ -1,0 +1,115 @@
+ # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+ - - - - - - - RESULTS FROM GEMSFIT STANDARD G0 PARAMETER REGRESSION - - - - - - - 
+ # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+
+ References: 
+ [1] Mary C. Hill, Claire R. Tiedeman (2007) Effective Groundwater Model Calibration: With Analysis of Data, Sensitivities, Predictions, and Uncertainty. 480 pages.
+ [2] Eileen P, Poeter & Marc C. Hill DOCUMENTATION OF UCODE, A Computer Code for Universal Inverse Modeling. http://inside.mines.edu/~epoeter/583/UCODEmanual_wrir98-4080.pdf
+
+ Number of measurements :                                                32
+
+ Number of parameters :                                              	2
+
+ Number of runs needed for regression :                                  16
+
+ Degrees of freedom :                                                  	30
+
+ - - - - - - - RESIDUAL STATISTICS - - - - - - - 
+ Weighted target function sum (minimized value) :                        1.48071e-05
+
+ Target function sum  :                                                	1.48148e-05
+
+ Sum of absolute values of residuals:                                    0.0071812
+
+ Sum of weighted absolute values of residuals:                           0.0071812
+
+ Standard deviation of the residuals :                               	0.000681574
+
+ Standard deviation of the weighted residuals :                       	0.000681574
+
+ Average weighted residual :                                          	-0.000165686
+
+ Maximum weighted residual :                                          	0.000173375
+
+ Minimum weighted residual :                                          	-0.00284963
+
+ Number of positive residuals :                                          20
+
+ Number of negative residuals :                                          12
+
+ Coefficient of determination R^2 :                                  	0.151755
+
+ Correlation coefficient (Brockwell and Davis, 1987, p304) RN^2:         0.0664006
+
+ Pearson's Chi Square test :                                             0.00653108
+
+ Reduced_chi_square :                                                	0.000217703
+
+ Error variance :                                                     	4.93571e-07
+
+ D'Agostino K square test: 
+ K squared :  50.1324
+ Probability that K squared follows Chi-squared distribution :  1.29982e-11
+
+ Best fit results for parameters from regression : 
+          parameter G0 CSH3-T2C :           -4.94044e+06
+          parameter G0 CSH3-T5C :           -5.041e+06
+
+ Composite Scaled Sensitivities: 
+ See ref. [1] section 4.3.4. If there is no weighting the weight is asumed 1 for all measured values. 
+ Larger values indicate parameters for which observations provide more information. 
+ A value less than 1 or less than (or close to) 1% of the highest value, means that the parameter is poorly estimated. 
+ These parameters should be fixed during regression. 
+			parameter 0 G0 :	     0.112065
+			parameter 1 G0 :	     0.708287
+
+ Variance-Covariance matrix: 
+ See ref. [1] section 7.2. V(b) = s^2([X]trans*[X])^1; 
+ [W] - weight matrix is considered as 1 as there is no full weight matrix calculted, 
+ based on true experimental error (not provided for all experiments). 
+ X - sensitivity matrix 
+ When the chosen weight is other than inverr2 (1/sigma^2), the error variance (s^2)is assumed 1. 
+ For inverr2, the error variance is calculated as weighted_Tfun_sum_of_residuals/degrees of freedom.
+				parameter 0  G0			parameter 1  G0
+			parameter 0 : 			   6.68654e+14		    1.33016e+13
+			parameter 1 : 			   1.33016e+13		    8.20256e+12
+
+ Parameter Standard Deviation/Error: 
+			parameter 0  G0 :	   4.72107e+06
+			parameter 1  G0 :	   522895
+
+			parameter 0 CSH3-T2C :	           
+___________________________________________________________________
+Confidence       T           Interval          Lower          Upper
+ Value (%)     Value          Width            Limit          Limit
+___________________________________________________________________
+    50.000     0.683      3120981.041 -8061423.44105 -1819461.35895
+    75.000     1.173      5362259.528-10302701.92837   421817.12837
+    90.000     1.697      7758439.952-12698882.35237  2817997.55237
+    95.000     2.042      9335540.779-14275983.17852  4395098.37852
+    99.000     2.750     12570652.111-17511094.51129  7630209.71129
+
+			parameter 1 CSH3-T5C :	           
+___________________________________________________________________
+Confidence       T           Interval          Lower          Upper
+ Value (%)     Value          Width            Limit          Limit
+___________________________________________________________________
+    50.000     0.683       345672.688 -5386672.68806 -4695327.31194
+    75.000     1.173       593911.543 -5634911.54284 -4447088.45716
+    90.000     1.697       859306.980 -5900306.98015 -4181693.01985
+    95.000     2.042      1033983.043 -6074983.04347 -4007016.95653
+    99.000     2.750      1392296.540 -6433296.54037 -3648703.45963
+
+ Coefficient of Variation: 
+			parameter 0 :	           -5.23401
+			parameter 1 :	           -0.56814
+
+ Parameter t-statistic: 
+			parameter 0 :	           -0.19106
+			parameter 1 :	           -1.76012
+
+ Correlation matrix: 
+          parameter 0parameter 1
+parameter 0 : 	   1.00000	   		0.17961
+parameter 1 : 	   0.17961	   		1.00000
+

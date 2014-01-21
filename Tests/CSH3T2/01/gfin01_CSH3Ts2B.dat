@@ -206,8 +206,8 @@
 391.613
 574.389
 614.967
-F-4.92586e+06
-F-5.03522e+06
+F-4.936e+06
+F-5.041e+06
 -5.12329e+06
 -896764
 -848781
@@ -382,13 +382,13 @@ F-5.03522e+06
 # OptBoundPerc: Generate bounds from initial guess vector: specify percentage deviation
 
 #               (user-specific, user-defined bounds when set to -1)
-<OptBoundPerc>  5
+<OptBoundPerc>  2
 
 # OptTolRel: stopping criterion -> specify relative tolerance (default = 1e-04) of function value
-<OptTolRel>  1e-06
+<OptTolRel>  1e-05
 
 # OptTolAbs: stopping criterion -> specify absolute tolerance (default = 1e-04) of function value
-<OptTolAbs>  1e-06
+<OptTolAbs>  1e-04
 
 # OptMaxEval: specify max number of evaluations
 <OptMaxEval>  500000
