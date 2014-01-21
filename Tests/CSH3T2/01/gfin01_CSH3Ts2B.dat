@@ -116,13 +116,13 @@
 #     Remove the unnecessary rows {...}
 
 <DataTarget>  
-  '{ "Target": "name", "TT": "lsq", "WT": "inverr", "OFUN":
+  '{ "Target": "name", "TT": "lsq", "WT": "1", "OFUN":
       [
          { "EPH": "aq_gen", "CT": "IC", "CN": "Si", "unit": "molal" },
          { "EPH": "aq_gen", "CT": "IC", "CN": "Al", "unit": "molal" }
-#         { "EPH": "aq_gen", "CT": "prop", "CN": "pH", "unit": "-loga" },
       ]
    }'
+#         { "EPH": "aq_gen", "CT": "prop", "CN": "pH", "unit": "-loga" },
 
 # LimitOfDetection: Limit of detection of the measured values.
 #     Ensures that wrongly computed output values due to non-physical input parameter values are ignored.
@@ -206,8 +206,8 @@
 391.613
 574.389
 614.967
--4.92586e+06
--5.03522e+06
+F-4.92586e+06
+F-5.03522e+06
 -5.12329e+06
 -896764
 -848781

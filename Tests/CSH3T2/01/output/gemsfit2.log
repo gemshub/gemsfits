@@ -8,4 +8,85 @@
 08. gemsfit_task.cpp(95). Initializing nodes with the experimental data; 
 09. gemsfit_task.cpp(98). Initializing optimization structure; 
 10. opt_vector.cpp(49). Reading optimized parameters from the input file; 
+11. optimization.cpp(54). Reading NLopt optimization settings from the input file; 
 12. gemsfit_task.cpp(100). Initializing the Target function structure & get_DatTarget(); 
+13. gemsfit_task.cpp(151). Initializing optimization init_optim(); 
+ ... initializing optimization object in build_optim() ... 
+ ... performing parameter normalization ... 
+     Init guess [0] = -4.92586e+06
+     Upper Bound old [0]= -4.67957e+06
+     Upper Bound new [0]= -0.95
+     Init guess [1] = -5.03522e+06
+     Upper Bound old [1]= -4.78346e+06
+     Upper Bound new [1]= -0.95
+     Init guess [0] = -4.92586e+06
+     Lower Bound old [0]= -5.17215e+06
+     Lower Bound new [0]= -1.05
+     Init guess [1] = -5.03522e+06
+     Lower Bound old [1]= -5.28698e+06
+     Lower Bound new [1]= -1.05
+... assigning bounds and tolerance for optimization...
+
+14. in gemsfit_task.cpp(284). Setting target (objective) function to minimize.
+15. gemsfit_task.cpp(305). Performing optimization.
+~ m.count.= 1 sum.res.= 1.63255e-05
+~ m.count.= 2 sum.res.= 1.64564e-05
+~ m.count.= 3 sum.res.= 1.96862e-05
+~ m.count.= 4 sum.res.= 50298.9
+~ m.count.= 5 sum.res.= 82589.8
+~ m.count.= 6 sum.res.= 0.00018535
+~ m.count.= 7 sum.res.= 2.03113e-05
+~ m.count.= 8 sum.res.= 0.000138256
+~ m.count.= 9 sum.res.= 1.88976e-05
+~ m.count.= 10 sum.res.= 1.77757e-05
+~ m.count.= 11 sum.res.= 1.62988e-05
+~ m.count.= 12 sum.res.= 1.73024e-05
+~ m.count.= 13 sum.res.= 1.59048e-05
+~ m.count.= 14 sum.res.= 1.62115e-05
+~ m.count.= 15 sum.res.= 1.58049e-05
+~ m.count.= 16 sum.res.= 1.57929e-05
+~ m.count.= 17 sum.res.= 1.56999e-05
+~ m.count.= 18 sum.res.= 1.5665e-05
+~ m.count.= 19 sum.res.= 1.56267e-05
+~ m.count.= 20 sum.res.= 1.55506e-05
+~ m.count.= 21 sum.res.= 1.53875e-05
+~ m.count.= 22 sum.res.= 1.5091e-05
+~ m.count.= 23 sum.res.= 1.48175e-05
+~ m.count.= 24 sum.res.= 1.4782e-05
+~ m.count.= 25 sum.res.= 1.48152e-05
+~ m.count.= 26 sum.res.= 1.49507e-05
+~ m.count.= 27 sum.res.= 1.49192e-05
+~ m.count.= 28 sum.res.= 1.48381e-05
+~ m.count.= 29 sum.res.= 1.49089e-05
+~ m.count.= 30 sum.res.= 1.49245e-05
+~ m.count.= 31 sum.res.= 1.47756e-05
+~ m.count.= 32 sum.res.= 1.47873e-05
+~ m.count.= 33 sum.res.= 1.47715e-05
+~ m.count.= 34 sum.res.= 1.47674e-05
+~ m.count.= 35 sum.res.= 1.47597e-05
+~ m.count.= 36 sum.res.= 1.48786e-05
+~ m.count.= 37 sum.res.= 1.47647e-05
+~ m.count.= 38 sum.res.= 1.47632e-05
+~ m.count.= 39 sum.res.= 1.47607e-05
+~ m.count.= 40 sum.res.= 1.47598e-05
+~ m.count.= 41 sum.res.= 1.47604e-05
+~ m.count.= 42 sum.res.= 1.47591e-05
+~ m.count.= 43 sum.res.= 1.47582e-05
+~ m.count.= 44 sum.res.= 1.47569e-05
+~ m.count.= 45 sum.res.= 1.47542e-05
+~ m.count.= 46 sum.res.= 1.48834e-05
+~ m.count.= 47 sum.res.= 1.47533e-05
+~ m.count.= 48 sum.res.= 1.48882e-05
+~ m.count.= 49 sum.res.= 1.47544e-05
+~ m.count.= 50 sum.res.= 1.47528e-05
+~ m.count.= 51 sum.res.= 1.48872e-05
+optv[0] = -1.00108
+size of optv = 2
+16. gemsfit_task.cpp(316). Finished optimization; 
+
+17. Back in main.cpp(152). Performing statistics ...
+~ m.count.= 52 sum.res.= 1.47389e-05
+~ m.count.= 53 sum.res.= 1.4888e-05
+~ m.count.= 54 sum.res.= 1.48615e-05
+~ m.count.= 55 sum.res.= 1.48221e-05
+~ m.count.= 56 sum.res.= 1.47528e-05
