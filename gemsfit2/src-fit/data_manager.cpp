@@ -365,7 +365,7 @@ void Data_Manager::bson_to_Data_Manager(/* FILE *f, */ const char *data, int pos
                 experiments[pos]->sbcomp.push_back( new samples::components );
                 ic++; // position of the component in sbcomp vector
                 experiments[pos]->sbcomp[ic]->Qnt = 0.;
-                experiments[pos]->sbcomp[ic]->Qerror = 0.;
+                experiments[pos]->sbcomp[ic]->Qerror = 1.;
                 experiments[pos]->sbcomp[ic]->Qunit = keys::gram; // default
 
                 bson_iterator_subiterator( j, d );
@@ -517,7 +517,7 @@ void Data_Manager::bson_to_Data_Manager(/* FILE *f, */ const char *data, int pos
                         {
                             experiments[pos]->expphases[ip]->phIC.push_back( new samples::components );
                             ipc++; // position of the component in phcomp vector
-                            experiments[pos]->expphases[ip]->phIC[ipc]->Qerror = 0.;
+                            experiments[pos]->expphases[ip]->phIC[ipc]->Qerror = 1.;
                             experiments[pos]->expphases[ip]->phIC[ipc]->Qnt   = 0.;
                             string p_name = experiments[pos]->expphases[ip]->phase;
                             if (p_name == "aq_gen")
@@ -559,7 +559,7 @@ void Data_Manager::bson_to_Data_Manager(/* FILE *f, */ const char *data, int pos
                         {
                             experiments[pos]->expphases[ip]->phMR.push_back( new samples::components );
                             ipm++; // position of the component in phcomp vector
-                            experiments[pos]->expphases[ip]->phMR[ipm]->Qerror = 0.;
+                            experiments[pos]->expphases[ip]->phMR[ipm]->Qerror = 1.;
                             experiments[pos]->expphases[ip]->phMR[ipm]->Qnt   = 0.;
                             string p_name = experiments[pos]->expphases[ip]->phase;
                             if (p_name == "aq_gen")
@@ -601,7 +601,7 @@ void Data_Manager::bson_to_Data_Manager(/* FILE *f, */ const char *data, int pos
                         {
                             experiments[pos]->expphases[ip]->phprop.push_back( new samples::phases::prop );
                             ipp++; // position of the component in phcomp vector
-                            experiments[pos]->expphases[ip]->phprop[ipp]->Qerror = 0.;
+                            experiments[pos]->expphases[ip]->phprop[ipp]->Qerror = 1.;
                             experiments[pos]->expphases[ip]->phprop[ipp]->Qnt   = 0.;
 //cout << "pos: " << pos << " ip: " << ip << " ipp: " << ipp << " :: ";
                             bson_iterator_subiterator( k, d2 );
@@ -691,7 +691,7 @@ void Data_Manager::bson_to_Data_Manager(/* FILE *f, */ const char *data, int pos
                                     {
                                         experiments[pos]->expphases[ip]->phDC[ips]->DCprop.push_back( new samples::phases::dcomps::dcprop );
                                         ipdcp++; // position of the component in phcomp vector
-                                        experiments[pos]->expphases[ip]->phDC[ips]->DCprop[ipdcp]->Qerror = 0.;
+                                        experiments[pos]->expphases[ip]->phDC[ips]->DCprop[ipdcp]->Qerror = 1.;
                                         experiments[pos]->expphases[ip]->phDC[ips]->DCprop[ipdcp]->Qnt   = 0.;
 
                                         bson_iterator_subiterator( k2, d3 );
