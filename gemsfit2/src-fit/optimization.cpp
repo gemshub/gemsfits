@@ -50,6 +50,8 @@ optimization::optimization()
     OptUpBounds = UB;
     OptLoBounds = LB;
 
+    OptTuckey = 0;
+
     gpf->fout << "11. optimization.cpp(54). Reading NLopt optimization settings from the input file; " << endl;
     get_nlopt_param_txt( optv );
 

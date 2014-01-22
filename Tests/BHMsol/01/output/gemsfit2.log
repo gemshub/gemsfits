@@ -1,0 +1,100 @@
+01. main.cpp(125). Creating new TGfitTask
+02. data_manager.cpp(57). Reading database parameter get_db_specs(); 
+03. data_manager.cpp(61). Reading in the data selection query; 
+04. data_manager.cpp(64). Reading in the Target function form the input file; 
+05. data_manager.cpp(68). Getting data form the EJDB database; 
+06. data_manager.cpp(287). Adding the data returned by the selection query into the data structure; 
+07. data_manager.cpp(71). Getting distinct T and P pairs; 
+08. gemsfit_task.cpp(95). Initializing nodes with the experimental data; 
+09. gemsfit_task.cpp(98). Initializing optimization structure; 
+10. opt_vector.cpp(49). Reading optimized parameters from the input file; 
+10-1. opt_vector.cpp(57). Getting the indexes of species involved in the reaction constraints; 
+11. optimization.cpp(54). Reading NLopt optimization settings from the input file; 
+12. gemsfit_task.cpp(100). Initializing the Target function structure & get_DatTarget(); 
+13. gemsfit_task.cpp(151). Initializing optimization init_optim(); 
+ ... initializing optimization object in build_optim() ... 
+ ... performing parameter normalization ... 
+     Init guess [0] = -899506
+     Upper Bound old [0]= -897506
+     Upper Bound new [0]= -0.997777
+     Init guess [1] = -1.10174e+06
+     Upper Bound old [1]= -1.09874e+06
+     Upper Bound new [1]= -0.997277
+     Init guess [2] = -1.30581e+06
+     Upper Bound old [2]= -1.30381e+06
+     Upper Bound new [2]= -0.998468
+     Init guess [3] = -487478
+     Upper Bound old [3]= -485478
+     Upper Bound new [3]= -0.995897
+     Init guess [0] = -899506
+     Lower Bound old [0]= -901506
+     Lower Bound new [0]= -1.00222
+     Init guess [1] = -1.10174e+06
+     Lower Bound old [1]= -1.10474e+06
+     Lower Bound new [1]= -1.00272
+     Init guess [2] = -1.30581e+06
+     Lower Bound old [2]= -1.30781e+06
+     Lower Bound new [2]= -1.00153
+     Init guess [3] = -487478
+     Lower Bound old [3]= -489478
+     Lower Bound new [3]= -1.0041
+... assigning bounds and tolerance for optimization...
+
+14. in gemsfit_task.cpp(284). Setting target (objective) function to minimize.
+15. gemsfit_task.cpp(305). Performing optimization.
+~ m.count.= 1 sum.res.= 23.5945
+~ m.count.= 2 sum.res.= 24.3087
+~ m.count.= 3 sum.res.= 26.054
+~ m.count.= 4 sum.res.= 34.0342
+~ m.count.= 5 sum.res.= 22.2999
+~ m.count.= 6 sum.res.= 23.5954
+~ m.count.= 7 sum.res.= 21.5034
+~ m.count.= 8 sum.res.= 17.7225
+~ m.count.= 9 sum.res.= 26.8667
+~ m.count.= 10 sum.res.= 15.089
+~ m.count.= 11 sum.res.= 14.9418
+~ m.count.= 12 sum.res.= 14.5381
+~ m.count.= 13 sum.res.= 14.2215
+~ m.count.= 14 sum.res.= 14.1567
+~ m.count.= 15 sum.res.= 14.1253
+~ m.count.= 16 sum.res.= 14.1417
+~ m.count.= 17 sum.res.= 14.1149
+~ m.count.= 18 sum.res.= 14.089
+~ m.count.= 19 sum.res.= 14.048
+~ m.count.= 20 sum.res.= 13.9956
+~ m.count.= 21 sum.res.= 14.0007
+~ m.count.= 22 sum.res.= 14.0913
+~ m.count.= 23 sum.res.= 13.9879
+~ m.count.= 24 sum.res.= 14.0056
+~ m.count.= 25 sum.res.= 13.989
+~ m.count.= 26 sum.res.= 13.9907
+~ m.count.= 27 sum.res.= 13.9728
+~ m.count.= 28 sum.res.= 13.9885
+~ m.count.= 29 sum.res.= 13.9796
+~ m.count.= 30 sum.res.= 13.9819
+~ m.count.= 31 sum.res.= 13.9725
+~ m.count.= 32 sum.res.= 13.9911
+~ m.count.= 33 sum.res.= 13.9787
+~ m.count.= 34 sum.res.= 13.9857
+~ m.count.= 35 sum.res.= 13.983
+~ m.count.= 36 sum.res.= 13.9819
+~ m.count.= 37 sum.res.= 13.9767
+~ m.count.= 38 sum.res.= 13.9821
+~ m.count.= 39 sum.res.= 13.9796
+~ m.count.= 40 sum.res.= 13.9826
+~ m.count.= 41 sum.res.= 13.9819
+optv[0] = -0.998983
+size of optv = 4
+16. gemsfit_task.cpp(316). Finished optimization; 
+
+17. Back in main.cpp(152). Performing statistics ...
+~ m.count.= 42 sum.res.= 13.9929
+~ m.count.= 43 sum.res.= 13.9754
+~ m.count.= 44 sum.res.= 13.9987
+~ m.count.= 45 sum.res.= 13.9747
+~ m.count.= 46 sum.res.= 14.0396
+~ m.count.= 47 sum.res.= 14.013
+~ m.count.= 48 sum.res.= 13.9851
+~ m.count.= 49 sum.res.= 13.9817
+~ m.count.= 50 sum.res.= 13.9836
+18. main.cpp(152): finished in 588.084 seconds. GEMSFIT2: End. Bye!

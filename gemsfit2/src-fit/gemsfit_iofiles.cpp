@@ -252,7 +252,7 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
           "\n#    and the list below is left commented out, then logK values for all T,P pairs and reactions"
           "\n#    will be calculated based on the initial values of all parameters, and this logK array"
           "\n#    will be used throughout the fitting process. " << endl;
-    ff << "#<logK>" << endl;
+    ff << "<logK>" << endl;
 
     if(_comment )
     {
@@ -885,7 +885,7 @@ TGfitPath::TGfitPath(int c, char *v[]):
         if( optParamFile.empty() )
         {
             optParamFile = optParamFilePath;
-            optParamFile += "/";
+            optParamFile += "./";
             optParamFile += OPT_PARAM_FILE;
         }
         else

@@ -544,7 +544,7 @@ void TGfitTask::setnodes()
                         1.2344*experiments[n]->sbcomp[j]->Qnt/1000*1e-05; // adds 1e-05 moles of H2 for each kg og H2O
 //                NodT[n]->Set_nDC(DCndx, experiments[n]->sbcomp[j]->bQnt/1000*1e-05);
 
-                if (NodT[n]->IC_name_to_xDB("Nit") < 0)
+                if (NodT[n]->IC_name_to_xDB("Nit") > 0)
                 {
 //                    new_moles_IC[ICndx] += 1.5*experiments[n]->sbcomp[j]->bQnt/1000*1e-05;
                     NodT[n]->Set_nDC(DCndx, experiments[n]->sbcomp[j]->Qnt/1000*1e-05);
