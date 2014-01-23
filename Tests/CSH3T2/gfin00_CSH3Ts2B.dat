@@ -207,7 +207,7 @@
 #    and the list below is left commented out, then logK values for all T,P pairs and reactions
 #    will be calculated based on the initial values of all parameters, and this logK array
 #    will be used throughout the fitting process. 
-#<logK>
+<logK>
 
 
 #########################################################################

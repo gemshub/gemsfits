@@ -20,7 +20,7 @@ Roadmap of GEMSFIT2 development
 + added ooptional CLI parameter for gemsfit2 -init mode (to give a name to input spec. file template)
 + documentation in the GEMSFIT template input file (fitting bulk composition with L linked parameters) 
 + write all possible options the user has for the data to compare
-- implement a "skipsample" entry in the data query
+- implement a "skipsamples" entry in the data query (also symmetric "usesamples")
 - see more possible errors and add them to the gemfit_error function
 + problem in csvtoejdb tool when adding the same pair of sample and expdataset - the program should skip it and not add it again to the database.
 

@@ -25,7 +25,7 @@ csvtoejdb: processing data rows:
 20,GC65_20,GC65,,coprec,25,1,8.05,,g,1000,,g,16.78,,g,0.008,,g,0.002,,g,12.4,0.03,-loga,0.00002,0.00001,molal,0.0185,0.00001,molal,1.69,,mol,1,,,1.69,0.05,
 21,GC65_21,GC65,,coprec,25,1,8.05,,g,1000,,g,17.77,,g,0.008,,g,0.002,,g,12.33,0.03,-loga,0.00002,0.00001,molal,0.0164,0.00001,molal,1.79,,mol,1,,,1.79,0.05,
 csvtoejdb end: processed 21 samples (.csv rows)
-	_id : 7 	 52d8e57c9008e94f00000000
+	_id : 7 	 52e0e18db0584c7500000000
 	sample : 2 	 CH04_1
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -64,11 +64,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000050
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.020830
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -84,7 +86,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000001
+	_id : 7 	 52e0e18db0584c7500000001
 	sample : 2 	 CH04_2
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -123,11 +125,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000040
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.020590
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -143,7 +147,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000002
+	_id : 7 	 52e0e18db0584c7500000002
 	sample : 2 	 CH04_3
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -182,11 +186,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000050
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.019220
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -202,7 +208,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000003
+	_id : 7 	 52e0e18db0584c7500000003
 	sample : 2 	 CH04_4
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -249,11 +255,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000050
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.018590
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -269,7 +277,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000004
+	_id : 7 	 52e0e18db0584c7500000004
 	sample : 2 	 CH04_5
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -316,11 +324,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000050
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.015860
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -336,7 +346,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000005
+	_id : 7 	 52e0e18db0584c7500000005
 	sample : 2 	 CH04_6
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -375,11 +385,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000060
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.015220
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -395,7 +407,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000006
+	_id : 7 	 52e0e18db0584c7500000006
 	sample : 2 	 CH04_7
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -434,11 +446,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000060
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.013570
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -454,7 +468,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000007
+	_id : 7 	 52e0e18db0584c7500000007
 	sample : 2 	 CH04_8
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -501,11 +515,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000150
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.003170
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -521,7 +537,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000008
+	_id : 7 	 52e0e18db0584c7500000008
 	sample : 2 	 CH04_9
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -568,11 +584,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000070
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.008590
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -588,7 +606,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000009
+	_id : 7 	 52e0e18db0584c7500000009
 	sample : 2 	 CH04_10
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -635,11 +653,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000070
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.007200
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -655,7 +675,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f0000000a
+	_id : 7 	 52e0e18db0584c750000000a
 	sample : 2 	 CH04_11
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -702,11 +722,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000160
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.003370
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -722,7 +744,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f0000000b
+	_id : 7 	 52e0e18db0584c750000000b
 	sample : 2 	 CH04_12
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -769,11 +791,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000640
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.001730
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -789,7 +813,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f0000000c
+	_id : 7 	 52e0e18db0584c750000000c
 	sample : 2 	 CH04_13
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -836,11 +860,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.002300
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.001270
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -856,7 +882,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f0000000d
+	_id : 7 	 52e0e18db0584c750000000d
 	sample : 2 	 CH04_14
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -903,11 +929,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.002890
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.000950
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -923,7 +951,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f0000000e
+	_id : 7 	 52e0e18db0584c750000000e
 	sample : 2 	 CH04_15
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -970,11 +998,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.002570
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.000300
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -990,7 +1020,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f0000000f
+	_id : 7 	 52e0e18db0584c750000000f
 	sample : 2 	 CH04_16
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -1037,11 +1067,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000270
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.002370
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -1057,7 +1089,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000010
+	_id : 7 	 52e0e18db0584c7500000010
 	sample : 2 	 CH04_17
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -1104,11 +1136,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000090
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.004810
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -1124,7 +1158,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000011
+	_id : 7 	 52e0e18db0584c7500000011
 	sample : 2 	 CH04_18
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -1171,11 +1205,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000080
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.007360
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -1191,7 +1227,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000012
+	_id : 7 	 52e0e18db0584c7500000012
 	sample : 2 	 CH04_19
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -1238,11 +1274,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000070
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.008310
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -1258,7 +1296,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000013
+	_id : 7 	 52e0e18db0584c7500000013
 	sample : 2 	 CH04_20
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -1305,11 +1343,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000050
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.013080
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -1325,7 +1365,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000014
+	_id : 7 	 52e0e18db0584c7500000014
 	sample : 2 	 CH04_21
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -1364,11 +1404,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000040
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.015900
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -1384,7 +1426,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000015
+	_id : 7 	 52e0e18db0584c7500000015
 	sample : 2 	 CH04_22
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -1431,11 +1473,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000040
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.020590
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -1451,7 +1495,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000016
+	_id : 7 	 52e0e18db0584c7500000016
 	sample : 2 	 CH04_23
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -1498,11 +1542,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000020
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.019270
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -1518,7 +1564,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000017
+	_id : 7 	 52e0e18db0584c7500000017
 	sample : 2 	 CH04_24
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -1565,11 +1611,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000020
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.017820
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -1585,7 +1633,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000018
+	_id : 7 	 52e0e18db0584c7500000018
 	sample : 2 	 CH04_25
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -1632,11 +1680,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000020
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.009960
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -1652,7 +1702,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000019
+	_id : 7 	 52e0e18db0584c7500000019
 	sample : 2 	 CH04_26
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -1699,11 +1749,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000040
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.005080
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -1719,7 +1771,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f0000001a
+	_id : 7 	 52e0e18db0584c750000001a
 	sample : 2 	 CH04_27
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -1766,11 +1818,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000100
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.003700
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -1786,7 +1840,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f0000001b
+	_id : 7 	 52e0e18db0584c750000001b
 	sample : 2 	 CH04_28
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -1833,11 +1887,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000140
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.003040
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -1853,7 +1909,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f0000001c
+	_id : 7 	 52e0e18db0584c750000001c
 	sample : 2 	 CH04_29
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -1900,11 +1956,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000420
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.001660
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -1920,7 +1978,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f0000001d
+	_id : 7 	 52e0e18db0584c750000001d
 	sample : 2 	 CH04_30
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -1967,11 +2025,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000020
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.013850
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -1987,7 +2047,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f0000001e
+	_id : 7 	 52e0e18db0584c750000001e
 	sample : 2 	 CH04_31
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -2034,11 +2094,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000030
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.007370
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -2054,7 +2116,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f0000001f
+	_id : 7 	 52e0e18db0584c750000001f
 	sample : 2 	 CH04_32
 	expdataset : 2 	 CH04
 	sT : 1 	 22.000000
@@ -2101,11 +2163,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000040
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.006090
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -2121,7 +2185,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000020
+	_id : 7 	 52e0e18db0584c7500000020
 	sample : 2 	 CH04D_1
 	expdataset : 2 	 CH04D
 	sT : 1 	 22.000000
@@ -2168,11 +2232,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000020
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.019270
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -2188,7 +2254,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000021
+	_id : 7 	 52e0e18db0584c7500000021
 	sample : 2 	 CH04D_2
 	expdataset : 2 	 CH04D
 	sT : 1 	 22.000000
@@ -2227,11 +2293,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000010
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.019180
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -2247,7 +2315,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000022
+	_id : 7 	 52e0e18db0584c7500000022
 	sample : 2 	 CH04D_3
 	expdataset : 2 	 CH04D
 	sT : 1 	 22.000000
@@ -2294,11 +2362,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000020
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.017820
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -2314,7 +2384,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000023
+	_id : 7 	 52e0e18db0584c7500000023
 	sample : 2 	 CH04D_4
 	expdataset : 2 	 CH04D
 	sT : 1 	 22.000000
@@ -2361,11 +2431,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000020
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.009960
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -2381,7 +2453,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000024
+	_id : 7 	 52e0e18db0584c7500000024
 	sample : 2 	 CH04D_5
 	expdataset : 2 	 CH04D
 	sT : 1 	 22.000000
@@ -2428,11 +2500,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000040
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.005080
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -2448,7 +2522,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000025
+	_id : 7 	 52e0e18db0584c7500000025
 	sample : 2 	 CH04D_6
 	expdataset : 2 	 CH04D
 	sT : 1 	 22.000000
@@ -2487,11 +2561,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000080
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.003130
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -2507,7 +2583,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000026
+	_id : 7 	 52e0e18db0584c7500000026
 	sample : 2 	 CH04D_7
 	expdataset : 2 	 CH04D
 	sT : 1 	 22.000000
@@ -2554,11 +2630,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000100
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.002700
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -2574,7 +2652,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000027
+	_id : 7 	 52e0e18db0584c7500000027
 	sample : 2 	 CH04D_8
 	expdataset : 2 	 CH04D
 	sT : 1 	 22.000000
@@ -2621,11 +2699,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000140
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.002030
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -2641,7 +2721,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000028
+	_id : 7 	 52e0e18db0584c7500000028
 	sample : 2 	 CH04D_9
 	expdataset : 2 	 CH04D
 	sT : 1 	 22.000000
@@ -2688,11 +2768,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000420
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.001660
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -2708,7 +2790,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f00000029
+	_id : 7 	 52e0e18db0584c7500000029
 	sample : 2 	 CH04D_10
 	expdataset : 2 	 CH04D
 	sT : 1 	 22.000000
@@ -2747,11 +2829,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000220
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.001410
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -2767,7 +2851,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f0000002a
+	_id : 7 	 52e0e18db0584c750000002a
 	sample : 2 	 CH04D_11
 	expdataset : 2 	 CH04D
 	sT : 1 	 22.000000
@@ -2806,11 +2890,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000540
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.000860
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -2826,7 +2912,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f0000002b
+	_id : 7 	 52e0e18db0584c750000002b
 	sample : 2 	 CH04D_12
 	expdataset : 2 	 CH04D
 	sT : 1 	 22.000000
@@ -2865,11 +2951,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000020
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.015360
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -2885,7 +2973,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f0000002c
+	_id : 7 	 52e0e18db0584c750000002c
 	sample : 2 	 CH04D_13
 	expdataset : 2 	 CH04D
 	sT : 1 	 22.000000
@@ -2924,11 +3012,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000040
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.006250
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -2944,7 +3034,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f0000002d
+	_id : 7 	 52e0e18db0584c750000002d
 	sample : 2 	 CH04D_14
 	expdataset : 2 	 CH04D
 	sT : 1 	 22.000000
@@ -2991,11 +3081,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000020
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.013850
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -3011,7 +3103,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f0000002e
+	_id : 7 	 52e0e18db0584c750000002e
 	sample : 2 	 CH04D_15
 	expdataset : 2 	 CH04D
 	sT : 1 	 22.000000
@@ -3058,11 +3150,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000030
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.007370
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -3078,7 +3172,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e57c9008e94f0000002f
+	_id : 7 	 52e0e18db0584c750000002f
 	sample : 2 	 CH04D_16
 	expdataset : 2 	 CH04D
 	sT : 1 	 22.000000
@@ -3125,11 +3219,13 @@ csvtoejdb end: processed 21 samples (.csv rows)
 				0 : 3 	 
 					IC : 2 	 Si
 					Q : 1 	 0.000040
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 				1 : 3 	 
 					IC : 2 	 Ca
 					Q : 1 	 0.006090
+					error : 1 	 0.000010
 					unit : 2 	 molal
 
 
@@ -3145,7 +3241,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e58403d33c3f00000000
+	_id : 7 	 52e0e18f6cb18a5100000000
 	sample : 2 	 GC65_1
 	expdataset : 2 	 GC65
 	sT : 1 	 25.000000
@@ -3214,7 +3310,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e58403d33c3f00000001
+	_id : 7 	 52e0e18f6cb18a5100000001
 	sample : 2 	 GC65_2
 	expdataset : 2 	 GC65
 	sT : 1 	 25.000000
@@ -3283,7 +3379,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e58403d33c3f00000002
+	_id : 7 	 52e0e18f6cb18a5100000002
 	sample : 2 	 GC65_3
 	expdataset : 2 	 GC65
 	sT : 1 	 25.000000
@@ -3352,7 +3448,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e58403d33c3f00000003
+	_id : 7 	 52e0e18f6cb18a5100000003
 	sample : 2 	 GC65_4
 	expdataset : 2 	 GC65
 	sT : 1 	 25.000000
@@ -3421,7 +3517,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e58403d33c3f00000004
+	_id : 7 	 52e0e18f6cb18a5100000004
 	sample : 2 	 GC65_5
 	expdataset : 2 	 GC65
 	sT : 1 	 25.000000
@@ -3490,7 +3586,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e58403d33c3f00000005
+	_id : 7 	 52e0e18f6cb18a5100000005
 	sample : 2 	 GC65_6
 	expdataset : 2 	 GC65
 	sT : 1 	 25.000000
@@ -3559,7 +3655,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e58403d33c3f00000006
+	_id : 7 	 52e0e18f6cb18a5100000006
 	sample : 2 	 GC65_7
 	expdataset : 2 	 GC65
 	sT : 1 	 25.000000
@@ -3628,7 +3724,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e58403d33c3f00000007
+	_id : 7 	 52e0e18f6cb18a5100000007
 	sample : 2 	 GC65_8
 	expdataset : 2 	 GC65
 	sT : 1 	 25.000000
@@ -3697,7 +3793,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e58403d33c3f00000008
+	_id : 7 	 52e0e18f6cb18a5100000008
 	sample : 2 	 GC65_9
 	expdataset : 2 	 GC65
 	sT : 1 	 25.000000
@@ -3766,7 +3862,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e58403d33c3f00000009
+	_id : 7 	 52e0e18f6cb18a5100000009
 	sample : 2 	 GC65_10
 	expdataset : 2 	 GC65
 	sT : 1 	 25.000000
@@ -3835,7 +3931,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e58403d33c3f0000000a
+	_id : 7 	 52e0e18f6cb18a510000000a
 	sample : 2 	 GC65_11
 	expdataset : 2 	 GC65
 	sT : 1 	 25.000000
@@ -3904,7 +4000,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e58403d33c3f0000000b
+	_id : 7 	 52e0e18f6cb18a510000000b
 	sample : 2 	 GC65_12
 	expdataset : 2 	 GC65
 	sT : 1 	 25.000000
@@ -3973,7 +4069,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e58403d33c3f0000000c
+	_id : 7 	 52e0e18f6cb18a510000000c
 	sample : 2 	 GC65_13
 	expdataset : 2 	 GC65
 	sT : 1 	 25.000000
@@ -4042,7 +4138,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e58403d33c3f0000000d
+	_id : 7 	 52e0e18f6cb18a510000000d
 	sample : 2 	 GC65_14
 	expdataset : 2 	 GC65
 	sT : 1 	 25.000000
@@ -4111,7 +4207,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e58403d33c3f0000000e
+	_id : 7 	 52e0e18f6cb18a510000000e
 	sample : 2 	 GC65_15
 	expdataset : 2 	 GC65
 	sT : 1 	 25.000000
@@ -4180,7 +4276,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e58403d33c3f0000000f
+	_id : 7 	 52e0e18f6cb18a510000000f
 	sample : 2 	 GC65_16
 	expdataset : 2 	 GC65
 	sT : 1 	 25.000000
@@ -4249,7 +4345,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e58403d33c3f00000010
+	_id : 7 	 52e0e18f6cb18a5100000010
 	sample : 2 	 GC65_17
 	expdataset : 2 	 GC65
 	sT : 1 	 25.000000
@@ -4318,7 +4414,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e58403d33c3f00000011
+	_id : 7 	 52e0e18f6cb18a5100000011
 	sample : 2 	 GC65_18
 	expdataset : 2 	 GC65
 	sT : 1 	 25.000000
@@ -4387,7 +4483,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e58403d33c3f00000012
+	_id : 7 	 52e0e18f6cb18a5100000012
 	sample : 2 	 GC65_19
 	expdataset : 2 	 GC65
 	sT : 1 	 25.000000
@@ -4456,7 +4552,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e58403d33c3f00000013
+	_id : 7 	 52e0e18f6cb18a5100000013
 	sample : 2 	 GC65_20
 	expdataset : 2 	 GC65
 	sT : 1 	 25.000000
@@ -4525,7 +4621,7 @@ csvtoejdb end: processed 21 samples (.csv rows)
 
 
 
-	_id : 7 	 52d8e58403d33c3f00000014
+	_id : 7 	 52e0e18f6cb18a5100000014
 	sample : 2 	 GC65_21
 	expdataset : 2 	 GC65
 	sT : 1 	 25.000000

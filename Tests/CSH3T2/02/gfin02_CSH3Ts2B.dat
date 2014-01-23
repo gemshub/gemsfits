@@ -118,8 +118,8 @@
 <DataTarget>  
   '{ "Target": "name", "TT": "lsq", "WT": "1", "OFUN":
       [
-         { "EPH": "aq_gen", "CT": "IC", "CN": "Si", "unit": "molal" },
-         { "EPH": "aq_gen", "CT": "IC", "CN": "Ca", "unit": "molal" }
+         { "EPH": "aq_gen", "CT": "IC", "CN": "Si", "unit": "loga" },
+         { "EPH": "aq_gen", "CT": "IC", "CN": "Ca", "unit": "loga" }
       ]
    }'
 #         { "EPH": "aq_gen", "CT": "prop", "CN": "pH", "unit": "-loga" },
@@ -382,7 +382,7 @@ F-5.041e+06
 # OptBoundPerc: Generate bounds from initial guess vector: specify percentage deviation
 
 #               (user-specific, user-defined bounds when set to -1)
-<OptBoundPerc>  2
+<OptBoundPerc>  3
 
 # OptTolRel: stopping criterion -> specify relative tolerance (default = 1e-04) of function value
 <OptTolRel>  1e-05
