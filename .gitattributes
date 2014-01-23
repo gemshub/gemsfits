@@ -29,6 +29,7 @@ Tests/CSH3T2/GEMS/CSHQ-subl.zip -text
 Tests/CaSrCO3/EJDB/solargstr -text
 Tests/CaSrCO3/EJDB/solargstr_experiments -text
 Tests/CaSrCO3/GEMS/GF2-SrCaC.zip -text
+Tests/Kinet/GEMS/CarbSea.zip -text
 Tests/SS_INPUT/SS_GEMSFIT_input.dat -text
 Tests/SS_INPUT/qtz_h2o_test-dat.lst -text
 Tests/SS_INPUT/qtz_h2o_test-dbr-0-0000.dat -text
