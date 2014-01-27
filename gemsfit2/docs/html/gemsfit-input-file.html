@@ -10,6 +10,7 @@
 
 
 
+
   
 
   
@@ -90,14 +91,32 @@ database (specified before in the <big><span style="font-family: monospace;">&lt
 
 <p>Options: </p>
 <div style="margin-left: 40px;">
-<p><span style="font-family: monospace; font-weight: bold;"><big>'All</big>'</span>: select all experimental data available in the database (currently disabled).</p>
+
+<p>Any&nbsp; selection option can be left out.<br>
+<span style="font-family: monospace; font-weight: bold;"></span></p>
 <p><span style="font-family: monospace; font-weight: bold;"><big>'{ ... }</big>'</span>: object in JSON format (in braces) describing what to select.</p>
-<p><span style="font-family: monospace; font-weight: bold;">"<big>sample"</big>: [...]</span>: list of comma-separated names of samples, or empty string "" to select all samples.</p>
+
+
 <p><span style="font-weight: bold; font-family: monospace;"><big>"usedataset"</big>: [...]</span>: list of comma-separated names of experimental datasets to be used, or empty string "" to select all available datasets.</p>
-<p><span style="font-family: monospace; font-weight: bold;"><big>"skipdataset"</big>: [...]</span>: list of comma-separated names of experimental datasets to be skipped, or empty string "" to not skip (in this case, <big><span style="font-family: monospace;">usedataset</span></big> list will apply).<span style="font-family: monospace; font-weight: bold;"><big><br>
-</big></span></p>
-<p><span style="font-family: monospace; font-weight: bold;"><big>"skipsample"</big>: [...]</span>: list of comma-separated names of samples to be skipped, or empty string "" to not skip (in this case, <big><span style="font-family: monospace;">sample</span></big> list will apply). This option is currently disabled.<br>
+<p><span style="font-family: monospace; font-weight: bold;"><big>"skipdataset"</big>: [...]</span>: list of comma-separated names of experimental datasets to be skipped, or empty string "" to not skip (in this case, <big><span style="font-family: monospace;">usedataset</span></big> list will apply).</p>
+<p><span style="font-family: monospace; font-weight: bold;">"<big>uesample"</big>: [...]</span>: list of comma-separated names of samples, or empty string "" to select all samples.</p>
+
+<p><span style="font-family: monospace; font-weight: bold;"><big>"skipsample"</big>: [...]</span>: list of comma-separated names of samples to be skipped, or empty string "" to not skip (in this case, <big><span style="font-family: monospace;">sample</span></big> list will apply).</p>
+<p><big style="font-weight: bold;"><span style="font-family: monospace;">"usepairs": </span><span style="font-family: monospace;">[...]:</span></big>
+JSON objects of dataset-samples pairs to be used (sub-option to the
+ones above),&nbsp; or empty string "" for the above selection options
+to apply.<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">"usedataset":</span></big> " " name of the dataset <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">"usesamples": [...]:</span></big> list of comma-separated names of samples to be used <br>
 </p>
+<p><big style="font-weight: bold;"><span style="font-family: monospace;">"skippairs": [...]:</span></big>
+JSON objects of dataset-samples pairs to be skipped (sub-option to the
+ones above), or empty string "" for the above selection options to
+apply.<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">"usedataset": </span></big>" " name of the dataset <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <big style="font-family: monospace; font-weight: bold;">"usesamples": [...]:</big> list of comma-separated names of samples to be used <br>
+</p>
+
 <p><span style="font-family: monospace; font-weight: bold;"><big>"sT</big>": [...]</span>:
 list of comma-separated minimum and maximum temperature, C, or empty
 string "" to select the data for all available temperatures.</p>
@@ -111,19 +130,20 @@ string "" to select the data for all available pressures. </p>
 <p>
 Example query in JSON object format: </p>
 <big><span style="font-family: monospace;"></span></big>
-<div style="margin-left: 40px;"><big><span style="font-family: monospace;"><span style="font-weight: bold;">'{ "sample" : "", </span></span></big><br style="font-family: monospace; font-weight: bold;">
-<big>&nbsp;&nbsp;&nbsp;&nbsp;
-<span style="font-family: monospace; font-weight: bold;">"usedataset" : "",</span></big><br style="font-family: monospace; font-weight: bold;">
-<big>&nbsp;&nbsp;&nbsp;&nbsp;
-<span style="font-family: monospace; font-weight: bold;">"skipdataset" : ["CH03", "CH03D"],</span></big><br style="font-family: monospace; font-weight: bold;">
-<big>&nbsp;&nbsp;&nbsp;&nbsp;
-<span style="font-family: monospace; font-weight: bold;">"sT" : [100, 1000],</span></big><br style="font-family: monospace; font-weight: bold;">
-<big>&nbsp;&nbsp;&nbsp;&nbsp;
-<span style="font-family: monospace; font-weight: bold;">"sP" : [1, 2500] }'</span></big>
-
-
-
-<br>
+<div style="margin-left: 40px;"><big><span style="font-family: monospace;"><span style="font-weight: bold;"></span></span></big><big><span style="font-family: monospace; font-weight: bold;"></span></big><big><span style="font-family: monospace; font-weight: bold;">'{ "usedatasets" : ["CH04", "CH04D"],</span><br style="font-family: monospace; font-weight: bold;">
+<span style="font-family: monospace; font-weight: bold;">&nbsp;&nbsp; "skipdatasets" : ["CH03", "CH03D"],</span><br style="font-family: monospace; font-weight: bold;">
+<span style="font-family: monospace; font-weight: bold;">&nbsp;&nbsp; "usesamples" : "", </span><br style="font-family: monospace; font-weight: bold;">
+<span style="font-family: monospace; font-weight: bold;">&nbsp;&nbsp; "skipsamples" : "", </span><br style="font-family: monospace; font-weight: bold;">
+<span style="font-family: monospace; font-weight: bold;">&nbsp;&nbsp; "usepairs" : "", </span><br style="font-family: monospace; font-weight: bold;">
+<span style="font-family: monospace; font-weight: bold;">&nbsp;&nbsp; "skippairs" : [ </span><br style="font-family: monospace; font-weight: bold;">
+<span style="font-family: monospace; font-weight: bold;">&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+{ "skipdataset": "CHO4", "skipsamples": ["01", "02"]}, </span><br style="font-family: monospace; font-weight: bold;">
+<span style="font-family: monospace; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+{ "skipdataset": "CHO4D", "skipsamples": ["01", "02"]}, </span><br style="font-family: monospace; font-weight: bold;">
+<span style="font-family: monospace; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ], </span><br style="font-family: monospace; font-weight: bold;">
+<span style="font-family: monospace; font-weight: bold;">&nbsp;&nbsp; "sT" : [100, 1000],</span><br style="font-family: monospace; font-weight: bold;">
+<span style="font-family: monospace; font-weight: bold;">&nbsp;&nbsp; "sP" : [1, 2500] }'</span></big> <br>
 </div>
 
 <p>This will select all samples from all datasets except "CH03" and

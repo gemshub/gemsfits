@@ -5,7 +5,7 @@ namespace keys
 {
 //                    Keyword                                  (level)			Type            Comment
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------
-
+//
 // General keywords used for qunatity, error and unit
 static const char *Qnt = "Q";  ///                                                              qunatity
 static const char *Qunit = "unit";  ///                                                        unit
@@ -15,10 +15,13 @@ static const char *Qerror = "error";  ///                                       
 static const char *experiments = "experiments"; ///               0          collection         data for experimental samples
 // data for experimental samples
 static const char *expsample = "sample"; ///                      1		     string 	        ID of this experimental sample
-static const char *usesample = "usesamples";
-static const char *skipsample = "skipsamples";
+static const char *usesamples = "usesamples";
+static const char *skipsamples = "skipsamples";
 static const char *skippair = "skippairs";
+static const char *usepair = "usepairs";
 static const char *expdataset = "expdataset"; ///                 1		     string		        ID of set of experimental data
+static const char *usedatasets = "usedatasets"; ///                 1		     string		        ID of set of experimental data
+static const char *skipdatasets = "skipdatasets"; ///               1		     string		        ID of set of experimental data
 static const char *usedataset = "usedataset"; ///                 1		     string		        ID of set of experimental data
 static const char *skipdataset = "skipdataset"; ///               1		     string		        ID of set of experimental data
 static const char *Type = "Type";///
