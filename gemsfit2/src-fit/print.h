@@ -48,13 +48,12 @@ private:
     typedef vector<string>  string_v;
     string_v experiment, what1, what2, unit, fucntion;
     double_v measured, computed, Weighted_Tfun_residual, residuals_v;
-    string path;
 
     optimization* res_opti; /// points to the optimization results
 
 public:
     //constructor
-    ResPrint(string path_, optimization *opti);
+    ResPrint(optimization *opti);
     //destructor
     ~ResPrint ();
 

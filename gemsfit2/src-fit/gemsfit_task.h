@@ -98,7 +98,7 @@ private:
     string param_file;
 
     /// Printing Flag: if this flag is set to one, the result of the optimization will be printed to file (via optimization.cpp)
-    string printfile;
+    string resultsfile;
 public:
 
     optimization *Opti; ///< pointer to optimization

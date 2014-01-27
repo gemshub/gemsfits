@@ -77,7 +77,7 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     param_file  = gpf->OptParamFile().c_str();
 
     // For parameter optimization do not use printing of results
-    printfile = gpf->ResultDir()+"FIT_results.csv";
+    resultsfile = gpf->FITFile();
 
     // For parameter optimization do not use parallelization of the Monte Carlo loop (=true).
     // Instead, execute loop over measurements within objective function in parallel (=false).
@@ -92,14 +92,14 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     }
 
     // initialize nodes with the experimental data
-    gpf->fout << "08. gemsfit_task.cpp(95). Initializing nodes with the experimental data; " << endl;
+    gpf->flog << "08. gemsfit_task.cpp(95). Initializing nodes with the experimental data; " << endl;
     setnodes ( );  // initialization of nodes each for one experimental point (system)
     // getting the parameters to be optimized from DCH, DBR and multi structures, and optimization settings form the input file
-    gpf->fout << "09. gemsfit_task.cpp(98). Initializing optimization structure; " << endl;
+    gpf->flog << "09. gemsfit_task.cpp(98). Initializing optimization structure; " << endl;
     Opti = new optimization ( );
-    gpf->fout << "12. gemsfit_task.cpp(100). Initializing the Target function structure & get_DatTarget(); " << endl;
+    gpf->flog << "12. gemsfit_task.cpp(100). Initializing the Target function structure & get_DatTarget(); " << endl;
     Tfun = new TargetFunction;
-    print = new ResPrint(printfile, Opti);
+    print = new ResPrint(Opti);
     get_DataTarget ( );
 
     /// function in iofiles.cpp to read the logK lookup array instead of get function!
@@ -141,17 +141,9 @@ void TGfitTask::gfit_error ( )
 
 void TGfitTask::run_optim()
 {
-//    ofstream fout;
-//    fout.open(gpf->FITLogFile().c_str(), ios::app);
-//    if( fout.fail() )
-//    { cout<<"Output fileopen error"<<endl; exit(1); }
-
 //    titration(this);
-
-    gpf->fout << "13. gemsfit_task.cpp(151). Initializing optimization init_optim(); " << endl;
+    gpf->flog << "13. gemsfit_task.cpp(151). Initializing optimization init_optim(); " << endl;
     init_optim (Opti->optv, weighted_Tfun_sum_of_residuals);
-
-//    fout.close();
 }
 
 void TGfitTask::Ainit_optim (std::vector<double> &optv_ /*,int &countit, double &weighted_Tfun_sum_of_residual */)
@@ -220,14 +212,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
     int j = 0;
     std::vector<double> grad;
 
-    // GEMSFIT logfile
-    //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
-//    ofstream ffout;
-//    ffout.open(gpf->FITLogFile().c_str(), ios::app);
-//    if( ffout.fail() )
-//    { cout<<"Output fileopen error"<<endl; exit(1); }
-
-    gpf->fout << " ... initializing optimization object in build_optim() ... " << endl;
+    gpf->flog << " ... initializing optimization object in build_optim() ... " << endl;
 
 //     Reset counter to zero
     master_counter = 0;
@@ -265,7 +250,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
         }
     }
 
-    gpf->fout << "... assigning bounds and tolerance for optimization..." << endl;
+    gpf->flog << "... assigning bounds and tolerance for optimization..." << endl;
     // assign bounds
     NLopti.set_lower_bounds( Opti->OptLoBounds );
     NLopti.set_upper_bounds( Opti->OptUpBounds );
@@ -281,7 +266,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
 
 
     /// specify objective function
-    gpf->fout << endl << "14. in gemsfit_task.cpp(284). Setting target (objective) function to minimize." << endl;
+    gpf->flog << endl << "14. in gemsfit_task.cpp(284). Setting target (objective) function to minimize." << endl;
     NLopti.set_min_objective( Equil_objective_function_callback, this );
 
 //        if( OptConstraints )
@@ -302,7 +287,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
         NLopti.set_initial_step( inistep );
     }
 
-    gpf->fout << "15. gemsfit_task.cpp(305). Performing optimization."<<endl;
+    gpf->flog << "15. gemsfit_task.cpp(305). Performing optimization."<<endl;
 
 //    //===== For testing the objective function without oprimization =====//
 //    weighted_Tfun_sum_of_residuals = Equil_objective_function_callback(Opti->optv, grad, this);
@@ -310,10 +295,10 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
 //    NLopti.set_maxeval(3);
 
     nlopt::result result = NLopti.optimize( Opti->optv, weighted_Tfun_sum_of_residuals );
-    gpf->fout << "optv[0] = "<<Opti->optv[0]<<endl;
-    gpf->fout << "size of optv = "<<Opti->optv.size()<<endl;
+    gpf->flog << "optv[0] = "<<Opti->optv[0]<<endl;
+    gpf->flog << "size of optv = "<<Opti->optv.size()<<endl;
 
-    gpf->fout << "16. gemsfit_task.cpp(316). Finished optimization; " << endl;
+    gpf->flog << "16. gemsfit_task.cpp(316). Finished optimization; " << endl;
 
 
             // check results
@@ -329,20 +314,13 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
                 {
                     std::cout<<" NLopt return code: "<<result<<endl;
                     Opti->print_return_message( result );
-                    string path = gpf->OutputDirPath();
-                           path +=  "SS_myFIT.out";
-                    ofstream ofout;
-                    ofout.open(path.c_str(), ios::app);
-                    if( ofout.fail() )
-                    { cout<<"Output fileopen error"<<endl; exit(1); }
-                    ofout<<"found minimum at <<f( ";
+                    gpf->flog<<"found minimum at <<f( ";
                     for( unsigned i=0; i<Opti->optv.size(); i++ )
                     {
-                        ofout<<Opti->optv[i]<<" ";
+                        gpf->flog<<Opti->optv[i]<<" ";
                     }
-                    ofout<<") = "<<weighted_Tfun_sum_of_residuals<<std::endl;
-                    ofout<<" after "<< master_counter <<" evaluations."<<std::endl;
-                    ofout.close();
+                    gpf->flog<<") = "<<weighted_Tfun_sum_of_residuals<<std::endl;
+                    gpf->flog<<" after "<< master_counter <<" evaluations."<<std::endl;
 
                     std::cout<<"found minimum at <<f( ";
                     for( unsigned i=0; i<Opti->optv.size(); i++ )
@@ -369,8 +347,6 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
                   optv_[i] = Opti->optv[i] * fabs(Opti->opt[i]);
               }
       }
-
-//ffout.close();
 }
 
 void TGfitTask::setnodes()

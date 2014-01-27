@@ -39,9 +39,8 @@
 
 using namespace std;
 
-ResPrint::ResPrint(string path_, optimization *opti)
+ResPrint::ResPrint( optimization *opti)
 {
-    path = path_;
     res_opti = opti;
 }
 
@@ -74,56 +73,50 @@ void ResPrint::set_print(string experiment_, string what1_, string what2_, strin
 
 void ResPrint::print_header(string function, string weight_, int size)
 {
-    ofstream fout;
     stringstream ss;
     string sss;
-    fout.open(path.c_str(), ios::app);
-    if( fout.fail() )
-    { cout<<"Output fileopen error"<<endl; /*exit(1);*/ }
 
     if (weight_ == "")
-        fout << "experiment,,,unit,measured,computed," <<function;
-    else fout << "experiment,,,unit,measured,computed," <<"weighted_"+function;
+        gpf->fres << "experiment,,,unit,measured,computed," <<function;
+    else gpf->fres << "experiment,,,unit,measured,computed," <<"weighted_"+function;
     for ( int i =0; i<size; ++i)
     {
         ss << i;
         sss = ss.str();
-        fout <<",Sens_p"+sss;
+        gpf->fres <<",Sens_p"+sss;
         ss.str("");
     }
-    fout << endl;
-
+    gpf->fres << endl;
 
 }
 
 void ResPrint::print_result()
 {
-    ofstream fout;
-    fout.open(path.c_str(), ios::app);
-    double sum_res = 0.0; // , sum_meas = 0.0;
+    double sum_res = 0.0, sum_res_wtfun = 0.0; // , sum_meas = 0.0;
 
     setprecision(12);
-    scientific(fout);
-    if( fout.fail() )
-    { cout<<"Output fileopen error"<<endl; /*exit(1);*/ }
+    scientific(gpf->fres);
 
-    fout.setf(ios::fixed);
+
+    gpf->fres.setf(ios::fixed);
     for (unsigned int i=0; i<experiment.size(); ++i)
     {
         if (what1[i] == "")
         {
-            fout<<experiment[i]<<","/*<<what1[i]*/<<","<<what2[i]<<","<<unit[i]<<","<<measured[i]<<","<<computed[i]<<","<<Weighted_Tfun_residual[i];
-        } else fout<<experiment[i]<<","<<what1[i]<<","<<what2[i]<<","<<unit[i]<<","<<measured[i]<<","<<computed[i]<<","<<Weighted_Tfun_residual[i];
+            gpf->fres<<experiment[i]<<","/*<<what1[i]*/<<","<<what2[i]<<","<<unit[i]<<","<<measured[i]<<","<<computed[i]<<","<<Weighted_Tfun_residual[i];
+        } else gpf->fres<<experiment[i]<<","<<what1[i]<<","<<what2[i]<<","<<unit[i]<<","<<measured[i]<<","<<computed[i]<<","<<Weighted_Tfun_residual[i];
         sum_res += (measured[i] - computed[i]);
+        sum_res_wtfun +=Weighted_Tfun_residual[i];
         for (unsigned int j=0; j<sensitivity.size(); j++)
         {
             double abss = abs(sensitivity[j][i]);
-            fout <<","<<log10(abss);
+            gpf->fres <<","<<log10(abss);
         }
-        fout<<endl;
+        gpf->fres<<endl;
     }
 
-    fout<< "sum of residuals = " << sum_res << endl;
+    gpf->fres<< "sum of residuals = " << sum_res << endl;
+    gpf->fres<< "minimized function value = " << sum_res_wtfun << endl;
 
 //    double test2 = sum_res / residuals_v.size();
     // call GEM_init to read GEMS3K input files
@@ -141,10 +134,10 @@ void ResPrint::print_result()
         // Print optimized parameter values to file
         if (res_opti->Ptype[i] =="G0")
         {
-            fout <<" parameter G0 "<<node->xCH_to_DC_name(res_opti->Pindex[i])<<" : " << res_opti->optv[i] << endl;
+            gpf->fres <<" parameter G0 "<<node->xCH_to_DC_name(res_opti->Pindex[i])<<" : " << res_opti->optv[i] << endl;
 //            cout << node->xCH_to_DC_name(res_opti->Pindex[i]) << endl;
         } else
-        fout <<"parameter "<<res_opti->Ptype[i]<<" : " << res_opti->optv[i] << endl;
+        gpf->fres <<"parameter "<<res_opti->Ptype[i]<<" : " << res_opti->optv[i] << endl;
 
     }
 
@@ -152,7 +145,7 @@ void ResPrint::print_result()
     {
         for (unsigned int i=0; i<res_opti->reactions.size(); ++i)
         {
-            fout <<"Reac parameter "<<res_opti->reactions[i]->Dc_name<<" :  "<<res_opti->reactions[i]->std_gibbs<<endl;
+            gpf->fres <<"Reac parameter "<<res_opti->reactions[i]->Dc_name<<" :  "<<res_opti->reactions[i]->std_gibbs<<endl;
         }
     }
 
@@ -160,11 +153,11 @@ void ResPrint::print_result()
     {
         for (unsigned int i=0; i<res_opti->Lparams.size(); ++i)
         {
-            fout <<"Linked parameter "<<res_opti->Lparams[i]->name<<" :  "<<res_opti->Lparams[i]->EV<<endl;
+            gpf->fres <<"Linked parameter "<<res_opti->Lparams[i]->name<<" :  "<<res_opti->Lparams[i]->EV<<endl;
         }
     }
 
-    fout<<endl;
+    gpf->fres<<endl;
 }
 
 //void ResPrint::print_result(string experiment, string what2, string unit, double measured, double computed, double residual)

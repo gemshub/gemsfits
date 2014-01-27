@@ -219,8 +219,8 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
             cout<<"parameter "<<i<<" : "<<opt[i]<<endl;
         }
     }
-    gpf->fout << "~ m.count.= " << master_counter << " sum.res.= " << residuals_sys << endl;
-cout << "~ m.count.= " << master_counter << " sum.res.= " << residuals_sys << endl;
+    gpf->flog << "~ m.count.= " << master_counter << " sum.res.= " << residuals_sys << endl;
+    cout << "~ m.count.= " << master_counter << " sum.res.= " << residuals_sys << endl;
 
 //    if(master_counter == 50)
 //        cout << "pause"<< endl;

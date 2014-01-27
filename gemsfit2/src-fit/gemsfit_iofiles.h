@@ -24,6 +24,8 @@
 #include <string>
 #include "node.h"
 #include "opt_vector.h"
+#include <sys/stat.h>
+#include <ctime>
 
 using namespace std;
 
@@ -98,8 +100,8 @@ class TGfitPath
  //   void fromWinCFG();
 public:
 
-    ofstream fout;  // GEMSFIT logfile
-    ofstream fout_;  // GEMSFIT results file logging all test runs
+    ofstream flog;  // GEMSFIT logfile
+    ofstream fres;  // GEMSFIT results file logging all test runs
 
     TGfitPath(int argc, char* argv[]);
     ~TGfitPath();

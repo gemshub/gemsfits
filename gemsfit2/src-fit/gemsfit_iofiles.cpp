@@ -465,15 +465,15 @@ cout << " : " << vFormats[ii].format << endl;
                           switch( nfild )
                           {
                              case f_LsMod:  // interaction parameters     (PMc table)
-gpf->fout << "    Parameter: " << fPMc << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
+gpf->flog << "    Parameter: " << fPMc << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
                                  F_to_OP(op, vFormats[ii], fPMc );
                                  break;
                              case f_LsMdc:  // phase component parameters (DMc table)
-gpf->fout << "    Parameter: " << fDMc << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
+gpf->flog << "    Parameter: " << fDMc << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
                                  F_to_OP(op, vFormats[ii], fDMc );
                                  break;
                              default:
-gpf->fout << "    Parameter: " << MULTI_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
+gpf->flog << "    Parameter: " << MULTI_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
                                  F_to_OP(op, vFormats[ii], MULTI_dynamic_fields[nfild].name );
                           }
                       } else
@@ -491,7 +491,7 @@ gpf->fout << "    Parameter: " << MULTI_dynamic_fields[nfild].name << " Type " <
                                             {
                                             }
                                             if(LsModSum )
-gpf->fout << "    Parameter: " << fPMc << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
+gpf->flog << "    Parameter: " << fPMc << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
                                                 F_to_OP(pmp->PMc[vFormats[ii].index], op, vFormats[ii], fPMc );
                                         break;
                                        }
@@ -502,18 +502,18 @@ gpf->fout << "    Parameter: " << fPMc << " Type " << vFormats[ii].type <<  " In
                                             long int LsSitSum;
                                             node->pMulti()->getLsMdcsum( LsMdcSum,LsMsnSum, LsSitSum );
                                             if(LsMdcSum )
-gpf->fout << "    Parameter: " << fDMc << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
+gpf->flog << "    Parameter: " << fDMc << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
                                             F_to_OP(pmp->DMc[vFormats[ii].index], op, vFormats[ii], fDMc );
                                         break;
                                         }
                           case f_fDQF:
-gpf->fout << "    Parameter: " << MULTI_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
+gpf->flog << "    Parameter: " << MULTI_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
                                F_to_OP(pmp->fDQF[vFormats[ii].index], op, vFormats[ii], MULTI_dynamic_fields[nfild].name );
                                         break;
                           }
                       }
                   }
-gpf->fout << " : " << vFormats[ii].format << endl;
+gpf->flog << " : " << vFormats[ii].format << endl;
               }
               vFormats.clear();
           }
@@ -800,13 +800,13 @@ cout<< vFormats[ii].format << endl;
 // TGfitPath  class implementation
 //----------------------------------------------------------------
 //----- subfolder and default file names  ------------------------
-const char *INPUT_DIR = "input/";
-const char *OUTPUT_DIR = "output/";
-const char *RESULT_DIR = "results/";
-const char *OPT_PARAM_FILE = "gemsfit2_input.dat";
-const char *FIT_CSV_FILE = "FIT.csv";
-const char *FIT_STATISTIC = "MyFitStatistics.txt";
-const char *FIT_LOGFILE = "gemsfit2.log";
+string INPUT_DIR = "input/";
+string OUTPUT_DIR = "output/";
+string RESULT_DIR = "results/";
+//const char *OPT_PARAM_FILE = "gemsfit2_input.dat";
+string FIT_CSV_FILE = "FIT_results.csv";
+string FIT_STATISTIC = "MyFitStatistics.txt";
+string FIT_LOGFILE = "gemsfit2.log";
 
 TGfitPath::TGfitPath(int c, char *v[]):
         argc(c), argv(v)
@@ -885,8 +885,29 @@ TGfitPath::TGfitPath(int c, char *v[]):
         if( optParamFile.empty() )
         {
             optParamFile = optParamFilePath;
-            optParamFile += "./";
-            optParamFile += OPT_PARAM_FILE;
+            optParamFile += "00/gfin00_";
+            int pos = 0;
+            string input_file = gems3LstFilePath, new_input;
+            do
+            {
+                new_input = input_file.substr(pos+1, input_file.size());
+                pos = new_input.find("/");
+                input_file = new_input;
+            } while (pos >-1);
+
+            pos = input_file.find("-dat.lst");
+            if (pos <0)
+            {
+                pos = input_file.find(".lst");
+                if (pos < 0)
+                {
+                    Error("Wrong file name", "Wrong name for the GEMS3K system file *.lst");
+                }
+            }
+
+            optParamFile += input_file.substr(0, pos);
+            optParamFile += ".dat";
+//            optParamFile += OPT_PARAM_FILE;
         }
         else
         {
@@ -895,46 +916,78 @@ TGfitPath::TGfitPath(int c, char *v[]):
             u_splitpath( optParamFile, optParamFilePath, name, ext );
         }
 
-        string path = optParamFilePath;
-        string path_ = resultDir+"FIT_results.csv";
+        string path_init = "00/";
+        string path_run, path;
+//        string path_ = resultDir+"FIT_results.csv";
+
+//        time_t t1 = time(0);
+//        struct tm * now = localtime( & t1 );
+//        ostringstream ss, sss;
+//        ss << (now->tm_year+1900);
+//        ss << "-";
+//        ss << (now->tm_mon+1);
+//        ss << "-";
+//        ss << now->tm_mday;
+//        ss << "-";
+//        string time_folder = ss.str();
+
+
+//        sss << now->tm_hour;
+//        sss << "-";
+//        sss << now->tm_min;
+//        sss << "-";
+//        sss << now->tm_sec;
+//        sss << "-";
+//        string time_file = sss.str() ;
+
+//        OUTPUT_DIR = time_folder + OUTPUT_DIR;
+//        RESULT_DIR = time_folder + RESULT_DIR;
+
+//        FIT_CSV_FILE = time_file + FIT_CSV_FILE;
+//        FIT_STATISTIC = time_file + FIT_STATISTIC;
+//        FIT_LOGFILE = time_file + FIT_LOGFILE;
+
+
+
         switch( mode )
         {
             case INIT_:
                 // set up default paths
                 // later these paths and filenames can be read from config file
-                inputDir = path + INPUT_DIR;
-                outputDir = path + OUTPUT_DIR;
-                resultDir = path + RESULT_DIR;
+//                inputDir = path + INPUT_DIR;
+                mkdir(path_init.c_str(), 0775);
+                outputDir = path_init + OUTPUT_DIR;
+                resultDir = path_init + RESULT_DIR;
                 fitFile = resultDir+FIT_CSV_FILE;
                 fitStatistics = outputDir+FIT_STATISTIC;
                 fitLogFile = outputDir+FIT_LOGFILE;
                 break;
             case RUN_:
-                path += "/";
+//                path_run += "/";
                 // set up default paths
                 // later these paths and filenames can be read from config file
-                inputDir = path + INPUT_DIR;
-                outputDir = path + OUTPUT_DIR;
-                resultDir = path + RESULT_DIR;
+//                inputDir = path_run + INPUT_DIR;
+                outputDir = path_run + OUTPUT_DIR;
+                resultDir = path_run + RESULT_DIR;
                 fitFile = resultDir+FIT_CSV_FILE;
                 fitStatistics = outputDir+FIT_STATISTIC;
                 fitLogFile = outputDir+FIT_LOGFILE;
                 // GEMSFIT logfile (usually log_gemsfit.log)
-                fout.open( fitLogFile.c_str(), ios::out | ios::trunc );
-                if( fout.fail() )
-                { cout<<"Logfile fileopen error"<<endl;
-                   exit(1); }
-                // GEMSFIT logfile
-                fout_.open(path_.c_str(), ios::out | ios::trunc );
-                if( fout_.fail() )
-                { cout<<"Output fileopen error"<<endl;
-                   exit(1); }
-                fout << "GEMSFIT2: Start" << endl;
-                fout << "optParamFile = " << optParamFile << endl;
-                fout << "fitFile = " << fitFile << endl;
-                fout << "fitLogFile = " << fitLogFile << endl;
-                fout << "gems3LstFilePath = " << gems3LstFilePath << endl;
-                fout.close();
+//                flog.open( fitLogFile.c_str(), ios::out | ios::trunc );
+//                if( flog.fail() )
+//                { cout<<"Logfile fileopen error"<<endl;
+//                   exit(1); }
+//                // GEMSFIT logfile
+//                flog_.open(path_.c_str(), ios::out | ios::trunc );
+//                if( flog_.fail() )
+//                { cout<<"Output fileopen error"<<endl;
+//                   exit(1); }
+                flog << "GEMSFIT2: Start" << endl;
+                flog << "optParamFile = " << optParamFile << endl;
+                flog << "fitFile = " << fitFile << endl;
+                flog << "fitLogFile = " << fitLogFile << endl;
+                flog << "gems3LstFilePath = " << gems3LstFilePath << endl;
+                flog.close();
                 break;
             default:
                 // set up default paths
@@ -1095,7 +1148,7 @@ void Data_Manager::define_db_specs( )
 {
    MPI = omp_get_num_threads() * omp_get_num_procs();
    datasource = 0;
-   DBname = "./test_input/experimentsDB";
+   DBname = "../EJDB/<database name>";
    collection= "experiments";
    DataSelect ="{...}";
    DataTarget = "{[...]}";
@@ -1141,7 +1194,7 @@ void Data_Manager::out_db_specs_txt( bool with_comments, bool brief_mode )
     prar.writeField(f_DataSource, (long int)datasource, with_comments, brief_mode  );
     prar.writeField(f_DataDB, DBname, with_comments, brief_mode  );
     prar.writeField(f_DataCollection, collection, with_comments, brief_mode  );
-    prar.writeField(f_SystemFiles, gpf->GEMS3LstFilePath(), with_comments, brief_mode  );
+    prar.writeField(f_SystemFiles, "."+gpf->GEMS3LstFilePath(), with_comments, brief_mode  );
 //    prar.writeField(f_RecipeFiles, "", with_comments, brief_mode  );
 
     if(with_comments )

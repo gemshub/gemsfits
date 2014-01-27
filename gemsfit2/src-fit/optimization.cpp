@@ -52,7 +52,7 @@ optimization::optimization()
 
     OptTuckey = 0;
 
-    gpf->fout << "11. optimization.cpp(54). Reading NLopt optimization settings from the input file; " << endl;
+    gpf->flog << "11. optimization.cpp(54). Reading NLopt optimization settings from the input file; " << endl;
     get_nlopt_param_txt( optv );
 
     if (OptBoundPerc > 0.)
@@ -80,7 +80,7 @@ void optimization::normalize_params(const vector<double> initguesses , bool Norm
 //    if( fout.fail() )
 //    { cout<<"Output fileopen error"<<endl; exit(1); }
 
-    gpf->fout << " ... performing parameter normalization ... " << endl;
+    gpf->flog << " ... performing parameter normalization ... " << endl;
 
     // Normalize init guess vector
     optv.resize( initguesses.size() );
@@ -94,19 +94,19 @@ void optimization::normalize_params(const vector<double> initguesses , bool Norm
     {
     for(i=0; i<OptUpBounds.size(); i++)
     {
-        gpf->fout << "     Init guess ["<<i<<"] = " << initguesses[i] << endl;
-        gpf->fout << "     Upper Bound old ["<<i<<"]= " << OptUpBounds[i] << endl;
+        gpf->flog << "     Init guess ["<<i<<"] = " << initguesses[i] << endl;
+        gpf->flog << "     Upper Bound old ["<<i<<"]= " << OptUpBounds[i] << endl;
         OptUpBounds[i] = OptUpBounds[i] / fabs(initguesses[i]);
-        gpf->fout << "     Upper Bound new ["<<i<<"]= " << OptUpBounds[i] << endl;
+        gpf->flog << "     Upper Bound new ["<<i<<"]= " << OptUpBounds[i] << endl;
     }
 
     // Normalize lower bounds vector
     for(i=0; i<OptLoBounds.size(); i++)
     {
-        gpf->fout << "     Init guess ["<<i<<"] = " << initguesses[i] << endl;
-        gpf->fout << "     Lower Bound old ["<<i<<"]= " << OptLoBounds[i] << endl;
+        gpf->flog << "     Init guess ["<<i<<"] = " << initguesses[i] << endl;
+        gpf->flog << "     Lower Bound old ["<<i<<"]= " << OptLoBounds[i] << endl;
         OptLoBounds[i] = OptLoBounds[i] / fabs(initguesses[i]);
-        gpf->fout << "     Lower Bound new ["<<i<<"]= " << OptLoBounds[i] << endl;
+        gpf->flog << "     Lower Bound new ["<<i<<"]= " << OptLoBounds[i] << endl;
     }
 
     // Normalize constraints vector

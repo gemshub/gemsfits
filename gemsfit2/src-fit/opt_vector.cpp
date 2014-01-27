@@ -46,7 +46,7 @@ opti_vector::opti_vector( )
     this->h_RDc = false;
     this->h_Lp  = false;
 
-    gpf->fout << "10. opt_vector.cpp(49). Reading optimized parameters from the input file; " << endl;
+    gpf->flog << "10. opt_vector.cpp(49). Reading optimized parameters from the input file; " << endl;
     get_gems_fit_DCH_txt( node, this ); // reading DCH parameters
     get_gems_fit_DBR_txt( node, this ); // reading DBR parameters
     get_gems_fit_multi_txt( node, this ); // reading multi parameters
@@ -54,7 +54,7 @@ opti_vector::opti_vector( )
     // getting indexes of components in the DCH
     if (h_RDc)
     {
-        gpf->fout << "10-1. opt_vector.cpp(57). Getting the indexes of species involved in the reaction constraints; " << endl;
+        gpf->flog << "10-1. opt_vector.cpp(57). Getting the indexes of species involved in the reaction constraints; " << endl;
         get_RDc_indexes (node, this);
     }
 

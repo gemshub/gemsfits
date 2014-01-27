@@ -55,21 +55,21 @@ Data_Manager::Data_Manager( )
 //    { cout<<"Output fileopen error"<<endl; exit(1); }
 
     // Read parameters for database connection
-    gpf->fout << "02. data_manager.cpp(57). Reading database parameter get_db_specs(); " << endl;
+    gpf->flog << "02. data_manager.cpp(57). Reading database parameter get_db_specs(); " << endl;
     get_db_specs_txt();
 
     // Read measurement data from EJDB server
-    gpf->fout << "03. data_manager.cpp(61). Reading in the data selection query; " << endl;
+    gpf->flog << "03. data_manager.cpp(61). Reading in the data selection query; " << endl;
     // Readin in the data slection query
     DataSelect = readin_JSON("<DataSelect>");
-    gpf->fout << "04. data_manager.cpp(64). Reading in the Target function form the input file; " << endl;
+    gpf->flog << "04. data_manager.cpp(64). Reading in the Target function form the input file; " << endl;
     DataTarget = readin_JSON("<DataTarget>");
 
     // Getting the query result data into the Data_Manager class
-    gpf->fout << "05. data_manager.cpp(68). Getting data form the EJDB database; " << endl;
+    gpf->flog << "05. data_manager.cpp(68). Getting data form the EJDB database; " << endl;
     get_EJDB();
 
-    gpf->fout << "07. data_manager.cpp(71). Getting distinct T and P pairs; " << endl;
+    gpf->flog << "07. data_manager.cpp(71). Getting distinct T and P pairs; " << endl;
     get_distinct_TP();
 
 //    fout.close();
@@ -366,7 +366,7 @@ cout << DBname.c_str() << endl;
              // set experiments variables false
          }
 
-         gpf->fout << "06. data_manager.cpp(287). Adding the data returned by the selection query into the data structure; " << endl;
+         gpf->flog << "06. data_manager.cpp(287). Adding the data returned by the selection query into the data structure; " << endl;
 
 //#ifdef USE_MPI
          omp_set_num_threads(MPI);

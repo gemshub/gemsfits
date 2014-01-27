@@ -37,7 +37,7 @@
 #include <ctime>
 #include <fstream>
 
-#include <sys/stat.h>
+//#include <sys/stat.h>
 #include <sys/time.h>
 
 #include "gemsfit_iofiles.h"
@@ -79,6 +79,8 @@ int main( int argc, char *argv[] )
 
     // Create output for log files and results directory
 
+    if( gpf->isRunMode() )
+    {
     if ( access( gpf->OutputDirPath().c_str(), 0 ) != 0 )
 //    if ( !bfs::exists( gpf->OutputDirPath() ) )
         mkdir(gpf->OutputDirPath().c_str(), 0775);
@@ -87,6 +89,7 @@ int main( int argc, char *argv[] )
 //    if ( !bfs::exists( gpf->ResultDir() ) )
 //        bfs::create_directory(gpf->ResultDir());
         mkdir(gpf->ResultDir().c_str(), 0775);
+    }
 
     if( gpf->isInitMode() ) // Mode GEMSFIT to generate input configuration file
       return generateConfig();
@@ -107,22 +110,22 @@ int main( int argc, char *argv[] )
     // GEMSFIT logfile
     //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
  //   ofstream fout;
- gpf->fout.open(gpf->FITLogFile().c_str(), ios::app);
- if( gpf->fout.fail() )
+ gpf->flog.open(gpf->FITLogFile().c_str(), ios::app);
+ if( gpf->flog.fail() )
  { cout<<"Output fileopen error"<<endl; exit(1); }
 
     // GEMSFIT results file for all test runs. Keeps a log of all runs. The file has to be deleted manually.
-//    string path_ = gpf->ResultDir()+"FIT_results.csv";
-//    ofstream fout_;
-//gpf->fout_.open(path_.c_str(), ios::app);
-//if( gpf->fout_.fail() )
-//{ cout<<"Results fileopen error"<<endl; exit(1); }
+    string path_ = gpf->FITFile();
+    gpf->fres.open(path_.c_str(), ios::app);
+    if( gpf->fres.fail() )
+    { cout<<"Results fileopen error"<<endl; exit(1); }
+
    time_t now = time(0);
     char* dt = ctime(&now);
-    gpf->fout_<<dt<<endl; // writes the date and time of the begining of the run in the result file
+    gpf->fres<<dt<<endl; // writes the date and time of the begining of the run in the result file
 
     // Reading in the data //
-    gpf->fout << "01. main.cpp(125). Creating new TGfitTask" << endl;
+    gpf->flog << "01. main.cpp(125). Creating new TGfitTask" << endl;
     TGfitTask* gfittask = new TGfitTask();
 
 //    cout << gfittask->NodT[0]->DenH2Ow(100000 *1, 25 + 273.15) << endl;
@@ -149,7 +152,7 @@ int main( int argc, char *argv[] )
         Equil_objective_function_callback(gfittask->Opti->optv, grad, gfittask);
     }
 
-    gpf->fout << endl <<"17. Back in main.cpp(152). Performing statistics ..."<< endl;
+    gpf->flog << endl <<"17. Back in main.cpp(152). Performing statistics ..."<< endl;
 
 //        gfittask->test();
 
@@ -176,12 +179,12 @@ int main( int argc, char *argv[] )
 
     double delta = ((end.tv_sec  - start.tv_sec) * 1000000u +
              end.tv_usec - start.tv_usec) / 1.e6;
-    gpf->fout <<"18. main.cpp(152): finished in ";
-    gpf->fout << delta << " seconds. GEMSFIT2: End. Bye!" << endl;
+    gpf->flog <<"18. main.cpp(152): finished in ";
+    gpf->flog << delta << " seconds. GEMSFIT2: End. Bye!" << endl;
 cout << delta << " seconds." << endl;
 cout << "GEMSFIT2: End. Bye!" << endl;
-   gpf->fout.close();
-   gpf->fout_.close();
+   gpf->flog.close();
+   gpf->fres.close();
 }
 
 

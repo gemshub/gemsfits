@@ -269,7 +269,8 @@ Correlation_coef = (sum1*sum1)/(sum2*sum3);
 //    // Generate Q-Q Plot (Quantile-Quantile Plot)
 //    print_qqplot( residuals_v, quantiles_v );
     ofstream myqq;
-    myqq.open("output/qqplot.csv",ios::app);
+    string path = gpf->ResultDir() + "qqplot.csv";
+    myqq.open(path.c_str(),ios::app);
     myqq << "residuals,quantiles" << endl;
     for (i=0; i<N; ++i)
     {
@@ -333,19 +334,9 @@ if( W2 < 1.)  // workaround to suppress nan() and zdiv crash
 
 
     // Write first statistcs to file
-#ifdef BOOST_MPI
-        ofstream myStat;
-        ostringstream pb;
-        pb << proc_id_boost;
-        string out_fit(gpf->OutputDirPath().c_str())
-        out_fit += "_" + pb.str() + "/myFitStatistics.txt";
-        myStat.open( out_fit.c_str(), ios::app );
-#endif
-
-#ifndef BOOST_MPI
         ofstream myStat;
         myStat.open(gpf->FITStatisticsFile().c_str(),ios::app);
-#endif
+
         myStat << " # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # " << endl;
         myStat << " - - - - - - - RESULTS FROM GEMSFIT STANDARD G0 PARAMETER REGRESSION - - - - - - - " << endl;
         myStat << " # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # " << endl;
