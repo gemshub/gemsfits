@@ -171,7 +171,7 @@ int main( int argc, char *argv[] )
 
     gfittask->print->print_result();
 
-    if(stat.MCbool == 1)  stat.MC_confidence_interval( gfittask->Opti->optv, gfittask, countit );
+    if(stat.MCbool > 0)  stat.MC_confidence_interval( gfittask->Opti->optv, gfittask, countit );
 
     delete gfittask;
 

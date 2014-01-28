@@ -80,11 +80,14 @@ static const char *expphases = "expphases"; ///	                  1    	     arr
         static const char *pH = "pH"; /// 	                    ->3          float		        name of property - pH (for aqueous phase only)
         static const char *Eh = "Eh"; ///	                    ->3	         float		        name of property - Eh (for aqueous phase only)
         static const char *IS = "IS"; ///	                    ->3	         float 		        name of property - Ionic strength (molal)
-        static const char *all = "all"; ///	                    ->3	         float		        name of property - Alkalinity (aqueous phase only)
+        static const char *all = "alk"; ///	                    ->3	         float		        name of property - Alkalinity (aqueous phase only)
         static const char *pV = "pV"; ///	                    ->3	         float		        name of property - volume of phase
         static const char *sArea = "sArea"; ///                 ->3 	     float		        name of property - specific surface area of the phase
         static const char *RHO = "RHO"; ///                     ->3          double             name of property - density of the phase
         static const char *Gex = "Gex"; ///                     ->3          double             name of property - excess Gibbs energy of mixing in the phase
+        static const char *oscw = "oscw"; ///
+        static const char *pe = "pe"; ///
+
 ///                       *Qnt = "Q";                             3       	 float		        quantity
 ///                       *Qerror = "Qerror";   	              3	         float 		        error
 ///                       *Qunit = "Qunit"; 	                  3  	     string 		    units of measurement of quantity
@@ -156,7 +159,8 @@ static const char *inverr_norm = "inverr_norm"; ///                         stri
 
 // Kaywords for units
 static const char *molal = "molal"; ///                                     string              molality moles/kg
-static const char *loga = "loga"; ///                                       string              log(molality)
+static const char *loga = "loga"; ///                                       string              log(activity)
+static const char *logm = "logm"; ///                                       string              log(molality)
 static const char *_loga = "-loga"; ///                                     string              -log(consntration) used for pH
 static const char *gram = "g"; ///                                          string              mass, grams
 static const char *kgram = "kg"; ///                                        string              mass, kg
@@ -170,5 +174,8 @@ static const char *g_cm3 = "g/cm3"; ///                                     stri
 static const char *Volts = "Volts"; ///                                     string              Eh, V
 static const char *J_mol = "J/mol"; ///                                     string              energy per mole, J/mol
 static const char *kJ_mol = "kJ/mol"; ///                                   string              energy per mole, kJ/mol
+
+
+static const char *aqueous = "aq_gen"; ///
 }
 #endif // KEYWORDS_H

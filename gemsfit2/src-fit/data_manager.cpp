@@ -628,7 +628,7 @@ void Data_Manager::bson_to_Data_Manager(/* FILE *f, */ const char *data, int pos
                             experiments[pos]->expphases[ip]->phIC[ipc]->Qerror = 1.;
                             experiments[pos]->expphases[ip]->phIC[ipc]->Qnt   = 0.;
                             string p_name = experiments[pos]->expphases[ip]->phase;
-                            if (p_name == "aq_gen")
+                            if (p_name == keys::aqueous)
                             {
                                 experiments[pos]->expphases[ip]->phIC[ipc]->Qunit = keys::molal;
                             } else
@@ -670,7 +670,7 @@ void Data_Manager::bson_to_Data_Manager(/* FILE *f, */ const char *data, int pos
                             experiments[pos]->expphases[ip]->phMR[ipm]->Qerror = 1.;
                             experiments[pos]->expphases[ip]->phMR[ipm]->Qnt   = 0.;
                             string p_name = experiments[pos]->expphases[ip]->phase;
-                            if (p_name == "aq_gen")
+                            if (p_name == keys::aqueous)
                             {
                                 experiments[pos]->expphases[ip]->phMR[ipm]->Qunit = keys::molratio;
                             } else
@@ -746,6 +746,14 @@ void Data_Manager::bson_to_Data_Manager(/* FILE *f, */ const char *data, int pos
                                     if (p_name==keys::Eh)
                                     {
                                         experiments[pos]->expphases[ip]->phprop[ipp]->Qunit = keys::Volts;
+                                    } else
+                                    if (p_name==keys::pe)
+                                    {
+                                        experiments[pos]->expphases[ip]->phprop[ipp]->Qunit = keys::_loga;
+                                    } else
+                                    if (p_name==keys::oscw)
+                                    {
+//                                        experiments[pos]->expphases[ip]->phprop[ipp]->Qunit = keys::_loga;
                                     }
                                 } else
                                 if ((key_ == keys::Qnt))

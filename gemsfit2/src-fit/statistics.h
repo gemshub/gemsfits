@@ -35,6 +35,7 @@
 #define STATISTICS_H
 
 #include "gemsfit_task.h"
+#include "keywords.h"
 
 
 using namespace std;

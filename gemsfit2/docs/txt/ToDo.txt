@@ -20,7 +20,7 @@ Roadmap of GEMSFIT2 development
 + added ooptional CLI parameter for gemsfit2 -init mode (to give a name to input spec. file template)
 + documentation in the GEMSFIT template input file (fitting bulk composition with L linked parameters) 
 + write all possible options the user has for the data to compare
-- implement a "skipsamples" entry in the data query (also symmetric "usesamples")
++ implement a "skipsamples" entry in the data query (also symmetric "usesamples")
 - see more possible errors and add them to the gemfit_error function
 + problem in csvtoejdb tool when adding the same pair of sample and expdataset - the program should skip it and not add it again to the database.
 
@@ -44,7 +44,7 @@ Roadmap of GEMSFIT2 development
 - make test of geobarometry with qtz rutile paper.
 + added phase amount, phase volume, dcomp amount, dcomp activity coeficient
 + added Gex phase property in kJ/mol to target function (Gex: excess Gibbs energy of mixing)
-- not yet added: Eh, osmotic coeficient.
++ not yet added: Eh, osmotic coeficient.
 - think about units, how to make a uniform strategy for units.
 
 + add bulk composition as parameters 
@@ -66,11 +66,12 @@ EJDB database maintenance functionality:
 - what if one wants to select data from more collections
 
 csvtoejdb documentation:
-- check if arbitrary comp.<formula> works always (formula syntax?)
-- check if unit "mole" and "kJ/mol" work (in addition to "g", "molal", "g/cm3", ...)
-- check in phase properties "Eh" not "eH"
-- check/add phase properties "pe", "oscw", "Gex" in the codes
-- fix the issue that a new folder is not created upon initial import of the .csv file. Error: ../gemsfit2/tcejdb/tchdb.c:409:tchdbopen:-:3:file not found:2:No such file or directory 
++ check if arbitrary comp.<formula> works always (formula syntax?)
++ check if unit "mole" and "kJ/mol" work (in addition to "g", "molal", "g/cm3", ...)
++ check in phase properties "Eh" not "eH"
++ check/add phase properties "pe", "oscw", "Gex" in the codes
+- calculated_value for osmotic coeficient not implemented
++ fix the issue that a new folder is not created upon initial import of the .csv file. Error: ../gemsfit2/tcejdb/tchdb.c:409:tchdbopen:-:3:file not found:2:No such file or directory 
 - fix the issue in csvtoejdb(34,41) about delimiter for getline (in linux \n (\x0A), in mac os \f or \r (\x0D)
 
 

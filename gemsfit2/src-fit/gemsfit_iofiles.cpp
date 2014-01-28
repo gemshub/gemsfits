@@ -1096,7 +1096,7 @@ outField Data_Manager_fields[9] =
       "\n#      \"DCP\": used only if \"CT\" is \"DC\", to represent the name of dependent component property:"
       "\n#          \"Q\" for amount; \"@coef\" for activity coeficient"
       "\n#       \"unit\":  units of measurement (override those given in the database for this value):"
-      "\n#          \"molal\":  mol/(kg H2O), \"loga\": log(molal), \"-loga\": negated log(molal);"
+      "\n#          \"molal\":  mol/(kg H2O), \"logm\": log(molal), \"-loga\": negated log(activity) for pH;"
       "\n#          \"g\"; \"kg\"; \"cm3\"; \"m3\"; \"molfrac\": mole fraction; J/mol for Gex "
       "\n#           ..."
       "\n#       (conversions will be performed automatically)."
@@ -1298,7 +1298,7 @@ outField statistics_fields[4] =
 {
     { "StatMCruns",  0, 0, 1, "\n# StatMCruns: number of Monte Carlo runs for confidence interval generation"},
     { "StatSensitivity",  0, 0, 1, "\n# StatSensitivity: number of evaluations points per parameter for sensitivity evaluation"},
-    { "StatMCbool",  0, 0, 1, "\n# StatMCbool: perform Monte Carlo runs -> yes (1) | no (0)"},
+    { "StatMCbool",  0, 0, 1, "\n# StatMCbool: perform Monte Carlo runs -> no (0) | yes (1) scatter added to computed values | yes (2) scatter added to measured values "},
     { "StatPerturbator", 0, 0, 1, "\n# StatPerturbator: used for calculating sensitivities by central diference, see ref [2]"}
 };
 

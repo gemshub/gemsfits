@@ -227,7 +227,7 @@ void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
 {
     if (sys->experiments[i]->expphases[p]->phIC[e]->Qunit != unit)
     {
-        if (unit == keys::loga)
+        if (unit == keys::logm)
         {
             // molal to log(molal)
             if (sys->experiments[i]->expphases[p]->phIC[e]->Qunit == keys::molal)
@@ -235,7 +235,7 @@ void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
                 double error_perc = sys->experiments[i]->expphases[p]->phIC[e]->Qerror * 100 / sys->experiments[i]->expphases[p]->phIC[e]->Qnt;
                 sys->experiments[i]->expphases[p]->phIC[e]->Qnt = log10(sys->experiments[i]->expphases[p]->phIC[e]->Qnt);
                 sys->experiments[i]->expphases[p]->phIC[e]->Qerror = sys->experiments[i]->expphases[p]->phIC[e]->Qnt * error_perc / 100;
-                sys->experiments[i]->expphases[p]->phIC[e]->Qunit = keys::loga;
+                sys->experiments[i]->expphases[p]->phIC[e]->Qunit = keys::logm;
             }
             else
             {
@@ -390,9 +390,9 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
     sys->NodT[i]->Ph_BC(PHndx, IC_in_PH);
 
     // Get composition of aqueous phase
-    if ((sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
+    if ((sys->experiments[i]->expphases[p]->phase == keys::aqueous) && (sys->Tfun->objfun[j]->exp_phase == keys::aqueous))
     {
-        if (sys->experiments[i]->expphases[p]->phIC[e]->Qunit == keys::loga)
+        if (sys->experiments[i]->expphases[p]->phIC[e]->Qunit == keys::logm)
         {
             double molal_= sys->NodT[i]->Get_mIC(ICndx);
         computed_value = log10(molal_);
@@ -401,7 +401,7 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
             computed_value = sys->NodT[i]->Get_mIC(ICndx); // in mol/Kg
         }
     } else // other than aqueous phase
-        if ((sys->Tfun->objfun[j]->exp_phase != "aq_gen") && (sys->experiments[i]->expphases[p]->phase != "aq_gen"))
+        if ((sys->Tfun->objfun[j]->exp_phase != keys::aqueous) && (sys->experiments[i]->expphases[p]->phase != keys::aqueous))
         {
             computed_value = IC_in_PH[ICndx]; // phase bulk composition in moles (mol)
         } else { cout << "Error in target functions line 405 "; exit(1);}
@@ -459,11 +459,11 @@ double residual_phase_elemMR (int i, int p, int f, int j, TGfitTask *sys)
     {
         elem_name =  nom[k].c_str();
         ICndx = sys->NodT[i]->IC_name_to_xDB(elem_name);
-        if ((sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
+        if ((sys->experiments[i]->expphases[p]->phase == keys::aqueous) && (sys->Tfun->objfun[j]->exp_phase == keys::aqueous))
         {
             computed_nom = computed_nom + sys->NodT[i]->Get_mIC(ICndx)/* * sys->NodT[i]-> Ph_Mass(PHndx)*/;
         } else // other than aqueous phase
-            if ((sys->Tfun->objfun[j]->exp_phase != "aq_gen") && (sys->experiments[i]->expphases[p]->phase != "aq_gen"))
+            if ((sys->Tfun->objfun[j]->exp_phase != keys::aqueous) && (sys->experiments[i]->expphases[p]->phase != keys::aqueous))
             {
                 computed_nom = computed_nom + IC_in_PH[ICndx];
             }
@@ -474,11 +474,11 @@ double residual_phase_elemMR (int i, int p, int f, int j, TGfitTask *sys)
     {
         elem_name =  denom[k].c_str();
         ICndx = sys->NodT[i]->IC_name_to_xDB(elem_name);
-        if ((sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
+        if ((sys->experiments[i]->expphases[p]->phase == keys::aqueous) && (sys->Tfun->objfun[j]->exp_phase == keys::aqueous))
         {
             computed_denom = computed_denom + sys->NodT[i]->Get_mIC(ICndx)/* * sys->NodT[i]-> Ph_Mass(PHndx)*/;
         } else // other than aqueous phase
-            if ((sys->Tfun->objfun[j]->exp_phase != "aq_gen") && (sys->experiments[i]->expphases[p]->phase != "aq_gen"))
+            if ((sys->Tfun->objfun[j]->exp_phase != keys::aqueous) && (sys->experiments[i]->expphases[p]->phase != keys::aqueous))
             {
                 computed_denom = computed_denom + IC_in_PH[ICndx];
             }
@@ -567,7 +567,7 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
     PHndx = sys->NodT[i]->Ph_name_to_xDB(phase_name);
 // gpf->fout << "i=" << i << " p=" << p << " pp=" << pp << " j=" << j << " : ";
     // Get aqueous phase pH
-    if ((sys->Tfun->objfun[j]->exp_CN == keys::pH) && (sys->experiments[i]->expphases[p]->phase == "aq_gen") && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
+    if ((sys->Tfun->objfun[j]->exp_CN == keys::pH) && (sys->experiments[i]->expphases[p]->phase == keys::aqueous) && (sys->Tfun->objfun[j]->exp_phase == keys::aqueous))
     {
         if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::_loga)
         {
@@ -575,8 +575,8 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
         } else computed_value = pow(10,(-(sys->NodT[i]->Get_pH()))) /*sys->NodT[i]->Get_pH()*/;
 
     } else //Get aqueous phase Eh
-    if ((sys->Tfun->objfun[j]->exp_CN == keys::Eh) && (sys->experiments[i]->expphases[p]->phase == "aq_gen")
-            && (sys->Tfun->objfun[j]->exp_phase == "aq_gen"))
+    if ((sys->Tfun->objfun[j]->exp_CN == keys::Eh) && (sys->experiments[i]->expphases[p]->phase == keys::aqueous)
+            && (sys->Tfun->objfun[j]->exp_phase == keys::aqueous))
     {
         computed_value = sys->NodT[i]->Get_Eh();
     } else // Get phase amount
@@ -598,7 +598,11 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
         if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::cm3)
         {
             computed_value = sys->NodT[i]->Ph_Volume(PHndx) * 1e06;
-        } else computed_value = sys->NodT[i]->Ph_Volume(PHndx);
+        } else
+        if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::m3)
+        {
+            computed_value = sys->NodT[i]->Ph_Volume(PHndx);
+        }
 
     } else
     if (sys->Tfun->objfun[j]->exp_CN == keys::RHO)
@@ -607,6 +611,18 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
         {
             computed_value = (sys->NodT[i]->Ph_Mass(PHndx) * 1000) / (sys->NodT[i]->Ph_Volume(PHndx) * 1e06);
         }
+    } else
+    if ((sys->Tfun->objfun[j]->exp_CN == keys::pe) && (sys->Tfun->objfun[j]->exp_phase == keys::aqueous))
+    {
+        if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::_loga)
+        {
+            computed_value = sys->NodT[i]->Get_pe();
+        }
+    } else
+    if ((sys->Tfun->objfun[j]->exp_CN == keys::oscw) && (sys->Tfun->objfun[j]->exp_phase == keys::aqueous))
+    {
+    //  computed_value = ;
+        // ++++++++++ !!!!! NOT IMPLEMENTED !!!! +++++
     } else
     if (sys->Tfun->objfun[j]->exp_CN == keys::Gex )  // functionality added by DK on 03.01.2014
     {
@@ -682,17 +698,10 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
     if (sys->Tfun->objfun[j]->exp_DCP == keys::actcoef)
     {
         computed_value = sys->NodT[i]->Get_gDC(DCndx);
-    } else { cout << "Error in target functions line 674 "; exit(1);}
+    } else { cout << "Error in target functions line 685 "; exit(1);}
 
     measured_value = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt;
 
-    // Error handling due to possible nonphisical parameters
-//    if (computed_value < sys->LimitOfDetection)
-//    {
-////        cout << measured_value <<" / " <<computed_value<<" = " << measured_value / computed_value << endl;
-//        computed_value = rand() % 100 + 1;
-//    }
-////// NO COMPUTED VALUE YET++++!!!
     // check Target function type and calculate the Tfun_residual
     weight_ = weight_phdcomp(i, p, dc, dcp, j, sys->Tfun->weight, sys);
     Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j]);

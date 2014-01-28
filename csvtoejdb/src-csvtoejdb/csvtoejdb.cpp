@@ -357,7 +357,7 @@ cout << "csvtoejdb: processing data rows:" << endl;
                                     ph_prop   = ph_prop_1.substr((0),(pos_start));
 
                                     // if property present
-                                    if (((ph_prop == Qnt) || (ph_prop == pH) || (ph_prop == pV) ||  (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) ||  (ph_prop == sArea) || (ph_prop == RHO) || (ph_prop == Gex)) && (!row[j].empty()))
+                                    if (((ph_prop == Qnt) || (ph_prop == pH) || (ph_prop == pV) ||  (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) ||  (ph_prop == sArea) || (ph_prop == RHO) || (ph_prop == Gex) || (ph_prop == pe) || (ph_prop == oscw)) && (!row[j].empty()))
                                     {
                                         h_phprop = true;
                                     }
@@ -396,8 +396,14 @@ cout << "csvtoejdb: processing data rows:" << endl;
                                         ph_prop = headline[j].substr((pos_end+f1.length()),(headline[j].size()));
 
                                         // amount of the property of the phase in the experiment
-                                        if (((ph_prop == Qnt) || (ph_prop == pH) || (ph_prop == pV) ||  (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) ||  (ph_prop == sArea) || (ph_prop == RHO) || (ph_prop == Gex)) && (!row[j].empty()))
+                                        if (((ph_prop == Qnt) || (ph_prop == pH) || (ph_prop == pV) ||  (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) ||  (ph_prop == sArea) || (ph_prop == RHO) || (ph_prop == Gex) || (ph_prop == pe) || (ph_prop == oscw)) && (!row[j].empty()))
                                         {
+                                            if (((ph_prop == pH) || (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) || (ph_prop == pe) || (ph_prop == oscw)) && (phase_name != aqueous))
+                                            {
+                                                cout << ph_prop << " only works with aqueous phase (aq_gen)!"<< endl;
+                                                exit(1);
+                                            }
+
                                             ss << ic;
                                             sss = ss.str();
                                             ss.str("");
@@ -465,7 +471,7 @@ cout << "csvtoejdb: processing data rows:" << endl;
                                         ph_prop   = ph_prop_3.substr((0),(pos_start));
 
                                         // qunatity of this comp in the phase
-                                        if (((ph_prop != Qnt) && (ph_prop_1 == Qnt) && (ph_prop_2 == IC) && (ph_prop != pH) && (ph_prop != pV) &&  (ph_prop != Eh) && (ph_prop != IS) && (ph_prop != all) &&  (ph_prop != sArea) && (ph_prop != RHO) || (ph_prop == Gex)) && (strncmp(ph_prop.c_str(),"Dc", 2) != 0) && (!row[j].empty()))
+                                        if (((ph_prop != Qnt) && (ph_prop_1 == Qnt) && (ph_prop_2 == IC) && (ph_prop != pH) && (ph_prop != pV) &&  (ph_prop != Eh) && (ph_prop != IS) && (ph_prop != all) &&  (ph_prop != sArea) && (ph_prop != RHO) && (ph_prop != Gex) && (ph_prop != pe) && (ph_prop != oscw)) && (strncmp(ph_prop.c_str(),"Dc", 2) != 0) && (!row[j].empty()))
                                         {
                                             ss << ic;
                                             sss = ss.str();
@@ -506,7 +512,7 @@ cout << "csvtoejdb: processing data rows:" << endl;
                             ic = 0;
                         } h_phIC = false;
 
-                        //++ START getting data reported as molar facrion
+                        //++ START getting data reported as molar fraction
                         if (h_phMR)
                         {
                             bson_append_start_array(&exp, phMR);

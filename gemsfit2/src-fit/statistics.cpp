@@ -57,19 +57,23 @@ statistics::statistics(TGfitTask *gfittask, double Weighted_Tfun_sum_of_residual
     Abs_sum_of_residuals = 0.0; Weighted_Abs_sum_of_residuals = 0.0;
     min_res =0.0; max_res = 0.0; Weighted_min_res = 0.0; Weighted_max_res = 0.0; neg_residuals = 0; pos_residuals = 0;
 
-
+    // this is the minimized value during oprimization
     Weighted_Tfun_sum_of_residuals 		= Weighted_Tfun_sum_of_residuals_;
+
+    //
     for (unsigned i=0; i<number_of_measurements; ++i)
     {
-        Tfun_sum_of_residuals += gfittask->Tfun_residuals_v[i];
-         Abs_sum_of_residuals += fabs(gfittask->residuals_v[i]);
-Weighted_Abs_sum_of_residuals += fabs(gfittask->residuals_v[i])*gfittask->weights[i];
+        Tfun_sum_of_residuals += gfittask->Tfun_residuals_v[i];                         // sum residuals of the minimized function without weight
+         Abs_sum_of_residuals += fabs(gfittask->residuals_v[i]);                        // sum of the absolute value of residuals
+Weighted_Abs_sum_of_residuals += fabs(gfittask->residuals_v[i])*gfittask->weights[i];   // sum of the absolute value of residuals * weight
 
         if (gfittask->weights[i] != 1)
         weighted_residuals.push_back(gfittask->residuals_v[i]*gfittask->weights[i]);
         else weighted_residuals.push_back(gfittask->residuals_v[i]);
         measured_norm_residuals.push_back(gfittask->residuals_v[i] / gfittask->measured_values_v[i] * 100);
 
+        // getting the samlest and largest values of residuals and weighted residuals
+        // counting the number of negative and positivie residuals
         if (min_res > gfittask->residuals_v[i]) min_res = gfittask->residuals_v[i];
         if (Weighted_min_res > weighted_residuals[i]) Weighted_min_res = weighted_residuals[i];
         if (max_res < gfittask->residuals_v[i]) max_res = gfittask->residuals_v[i];
@@ -87,9 +91,6 @@ cout<<" Statistics Constructor: sum of squares: "<<Weighted_Tfun_sum_of_residual
 
 cout<<" Statistics Constructor: number_of_parameters: "<<number_of_parameters<<endl;
 
-//    /// Populate data members
-//    std_get_stat_param();
-
     get_stat_param_txt();
 //stat->set_plotfit_vars_txt();
 
@@ -98,8 +99,6 @@ cout<<" Statistics Constructor: number_of_parameters: "<<number_of_parameters<<e
 
     // Degrees of freedom
     degrees_of_freedom = number_of_measurements-number_of_parameters;
-
-
 
     // Compute standard deviation of residuals
     for (unsigned i=0; i<number_of_measurements; i++)
@@ -110,11 +109,11 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
             mean_res += gfittask->residuals_v[i];
 
     }
-
- Weighted_TF_mean_res = Weighted_TF_mean_res / number_of_measurements;
-         Abs_mean_res = Abs_mean_res / number_of_measurements;
-    Weighted_mean_res = Weighted_mean_res / number_of_measurements; /// same as mean_res if weight = 1
-             mean_res = mean_res / number_of_measurements;
+// copute means
+ Weighted_TF_mean_res = Weighted_TF_mean_res / number_of_measurements;  // mean of residuals that summ up to give the minimized value
+         Abs_mean_res = Abs_mean_res / number_of_measurements;          // mean of the absolute value of residuals
+    Weighted_mean_res = Weighted_mean_res / number_of_measurements;     // mean of residuals*weight (same as means_res if weight is 1)
+             mean_res = mean_res / number_of_measurements;              // mean of residuals
 
  Weighted_TF_SD_of_residuals = 0.0;
          Abs_SD_of_residuals = 0.0;
@@ -129,12 +128,10 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
                     SD_of_residuals += pow((gfittask->residuals_v[i]-mean_res),2);
     }
 
-    Weighted_TF_SD_of_residuals = sqrt((Weighted_TF_SD_of_residuals/degrees_of_freedom));
-            Abs_SD_of_residuals = sqrt((Abs_SD_of_residuals/degrees_of_freedom));
-       Weighted_SD_of_residuals = sqrt((Weighted_SD_of_residuals/degrees_of_freedom));
-                SD_of_residuals = sqrt((SD_of_residuals/degrees_of_freedom));
-
-
+    Weighted_TF_SD_of_residuals = sqrt((Weighted_TF_SD_of_residuals/degrees_of_freedom));   // standard deviation of residuals that summ up to give the minimized value
+            Abs_SD_of_residuals = sqrt((Abs_SD_of_residuals/degrees_of_freedom));           // standard deviation of the absolute value of residuals
+       Weighted_SD_of_residuals = sqrt((Weighted_SD_of_residuals/degrees_of_freedom));      // standard deviation of residuals*weight (same as means_res if weight is 1)
+                SD_of_residuals = sqrt((SD_of_residuals/degrees_of_freedom));               // standard deviation of residuals
 }
 
 
@@ -160,9 +157,6 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     vector<double> quantiles_v;
 //    vector<double> abs_residuals_v;
 
-    // Modified by DM on 12.03.2012 due to errorneus calculation of R^2 when using log_solubility data.
-//    // Compute R^2: coefficient of determination
-//    mean = ( accumulate(gfittask->measured_values_v.begin(), gfittask->measured_values_v.end(), 0) ) / gfittask->measured_values_v.size();
 
 
     // Compute R^2: coefficient of determination
@@ -200,74 +194,41 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     // Error variance
     error_variance = Weighted_Tfun_sum_of_residuals/degrees_of_freedom;
 
-
-    // Prepare data for Q-Q Plot
-
     // Generate object containing normally distributed data with mean = 0 and standard deviation = SD_of_residuals
     boost::math::normal dist(  0., SD_of_residuals );
-//    for (i=0; i < gfittask->residuals_v.size(); ++i )
-//    {
-//        abs_residuals_v.push_back(abs(gfittask->residuals_v[i]));
-//    }
-
-
-//    /// Test
-
-//    typedef boost::mt19937 RNGType;
-//    RNGType rng;
-
-//    boost::normal_distribution<> rdist(0.0, SD_of_residuals);
-
-//    boost::variate_generator< RNGType, boost::normal_distribution<> > get_rand(rng, rdist);
-
 
     sort( gfittask->residuals_v.begin(), gfittask->residuals_v.end() );
-
-//    for (i=0; i<number_of_measurements; i++)
-//    {
-//        weighted_residuals[i] = get_rand();
-//    }
-
     sort(weighted_residuals.begin(), weighted_residuals.end());
+
     int N = (int) gfittask->residuals_v.size();
 
     // Compute percentile
     for( i=0; i< N; i++ )
         percentiles_v.push_back( (i+1-0.5)/N );
 
-arma::vec e0 = arma::zeros<arma::vec>( N, 1 );
-arma::vec tau = arma::zeros<arma::vec>( N, 1 );
-for( i=0; i< N; i++ )
-{
+    // Compute Correlation coeficient
+    arma::vec e0 = arma::zeros<arma::vec>( N, 1 );
+    arma::vec tau = arma::zeros<arma::vec>( N, 1 );
+    for( i=0; i< N; i++ )
+    {
+        e0(i) = weighted_residuals[i]-Weighted_mean_res;
+        tau(i) = percentiles_v[i];
+    }
 
-    e0(i) = weighted_residuals[i]-Weighted_mean_res;
-    tau(i) = percentiles_v[i];
-}
-double sum1=0.0, sum2=0.0, sum3=0.0;
-for (i=0; i<N; i++)
-{
-    sum1 += e0(i)*tau(i);
-    sum2 += e0(i)*e0(i);
-    sum3 +=tau(i)*tau(i);
-}
-//arma::vec e0_T = arma::trans(e0);
-//arma::vec tau_T = arma::trans(tau);
-
-//Nom_CC = 0;
-//    for( i=0; i< number_of_measurements; i++ )
-//    {
-//        Nom_CC += e0(i)*tau(i);
-//        Dnom_CC += (e0_T(i)*e0(i))*(tau(i)*tau_T(i));
-//    }
-Correlation_coef = (sum1*sum1)/(sum2*sum3);
-
+    double sum1=0.0, sum2=0.0, sum3=0.0;
+    for (i=0; i<N; i++)
+    {
+        sum1 += e0(i)*tau(i);
+        sum2 += e0(i)*e0(i);
+        sum3 += tau(i)*tau(i);
+    }
+    Correlation_coef = (sum1*sum1)/(sum2*sum3);
 
     // Rank-based z-scores
     for( i=0; i< N; i++ )
         quantiles_v.push_back( boost::math::quantile( dist, percentiles_v[i] ) );
 
-//    // Generate Q-Q Plot (Quantile-Quantile Plot)
-//    print_qqplot( residuals_v, quantiles_v );
+    // Generate Q-Q Plot (Quantile-Quantile Plot)
     ofstream myqq;
     string path = gpf->ResultDir() + "qqplot.csv";
     myqq.open(path.c_str(),ios::app);
@@ -278,7 +239,6 @@ Correlation_coef = (sum1*sum1)/(sum2*sum3);
     }
     myqq.close();
 
-
     // D'Agostino K square test for normality
     mean = 0;
     for (i=0; i< gfittask->residuals_v.size(); i++)
@@ -286,9 +246,6 @@ Correlation_coef = (sum1*sum1)/(sum2*sum3);
         mean += weighted_residuals[i];
     }
     mean = mean / gfittask->residuals_v.size();
-
-//    mean = ( accumulate(gfittask->residuals_v.begin(), gfittask->residuals_v.end(), 0) ) / N;
-
 
     for( i=0; i<N; i++ )
     {
@@ -325,10 +282,9 @@ if( W2 < 1.)  // workaround to suppress nan() and zdiv crash
     // K square
     K2 = Z_sqrtb1*Z_sqrtb1 + Z_b2*Z_b2;
 
+
     // Create chi-squared distribution object
     boost::math::chi_squared chi_dist( 2 );
-
-//    double test_ = boost::math::cdf( chi_dist, K2 );
     // 1 - cumulative distribution function
     K2test = 1 - boost::math::cdf( chi_dist, K2 );
 
@@ -336,46 +292,72 @@ if( W2 < 1.)  // workaround to suppress nan() and zdiv crash
     // Write first statistcs to file
         ofstream myStat;
         myStat.open(gpf->FITStatisticsFile().c_str(),ios::app);
-
-        myStat << " # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # " << endl;
-        myStat << " - - - - - - - RESULTS FROM GEMSFIT STANDARD G0 PARAMETER REGRESSION - - - - - - - " << endl;
-        myStat << " # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # " << endl;
+        myStat << "#####################################################################################" << endl;
+        myStat << "#>>>>>>>>>>>>>>>>>>>> Summary and statistics from Gemsfits run >>>>>>>>>>>>>>>>>>>>>#" << endl;
+        myStat << "#####################################################################################" << endl;
         myStat << endl;
-        myStat << " References: " << endl;
-        myStat << " [1] Mary C. Hill, Claire R. Tiedeman (2007) Effective Groundwater Model Calibration: With Analysis of Data, Sensitivities, Predictions, and Uncertainty. 480 pages."<<endl;
-        myStat << " [2] Eileen P, Poeter & Marc C. Hill DOCUMENTATION OF UCODE, A Computer Code for Universal Inverse Modeling. http://inside.mines.edu/~epoeter/583/UCODEmanual_wrir98-4080.pdf" <<endl;
+        myStat << " Best fit results for parameters from regression : "                         <<endl;
+        for( i=0; i< optv_.size(); i++ ) // cols
+        {
+            // Print optimized parameter values to file
+            if (gfittask->Opti->Ptype[i] == "G0")
+            {
+                myStat <<"          parameter G0 "<<
+                         gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])
+                       <<" : " << optv_[i] << endl;
+//                cout /*<< gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])*/ << endl;
+            } else
+              myStat <<"            parameter " << gfittask->Opti->Ptype[i] << " : "
+                     << optv_[i] << endl;
+        }
+        if (gfittask->Opti->h_RDc)
+        {
+            for (i=0; i<gfittask->Opti->reactions.size(); ++i)
+            {
+                myStat <<"          Reac parameter "<<gfittask->Opti->reactions[i]->Dc_name <<" : "<<gfittask->Opti->reactions[i]->std_gibbs<<endl;
+            }
+        }
+        if (gfittask->Opti->h_Lp)
+        {
+            for (i=0; i<gfittask->Opti->Lparams.size(); ++i)
+            {
+                myStat <<"          Linked parameter "<<gfittask->Opti->Lparams[i]->name <<" : "<<gfittask->Opti->Lparams[i]->EV<<endl;
+            }
+        }
         myStat << endl;
+        myStat << endl;
+        myStat << " Basic statistics:" << endl;
         myStat << " Number of measurements :                                                " << number_of_measurements     << endl;
         myStat << endl;
         myStat << " Number of parameters :                                              	" << number_of_parameters 	<< endl;
         myStat << endl;
         myStat << " Number of runs needed for regression :                                  " << num_of_runs 		<< endl;
         myStat << endl;
-        myStat << " Degrees of freedom :                                                  	" << degrees_of_freedom	 	<< endl;
+        myStat << " Degrees of freedom :                                                    " << degrees_of_freedom	 	<< endl;
         myStat << endl;
 
-        myStat << " - - - - - - - RESIDUAL STATISTICS - - - - - - - " << endl;
-        myStat << " Weighted target function sum (minimized value) :                        " << Weighted_Tfun_sum_of_residuals 		<< endl;
+//        myStat << " - - - - - - - RESIDUAL STATISTICS - - - - - - - " << endl;
+        myStat << " Value of the minimized function sum :                                   " << Weighted_Tfun_sum_of_residuals 		<< endl;
         myStat << endl;
-        myStat << " Target function sum  :                                                	" << Tfun_sum_of_residuals 		<< endl;
+//        myStat << " Target function sum  :                                                	" << Tfun_sum_of_residuals 		<< endl;
+//        myStat << endl;
+//        myStat << " Sum of absolute values of residuals:                                    " << Abs_sum_of_residuals << endl;
+//        myStat << endl;
+        myStat << " Sum of absolute values of residuals:                                    " << Weighted_Abs_sum_of_residuals << endl;
         myStat << endl;
-        myStat << " Sum of absolute values of residuals:                                    " << Abs_sum_of_residuals << endl;
-        myStat << endl;
-        myStat << " Sum of weighted absolute values of residuals:                           " << Weighted_Abs_sum_of_residuals << endl;
-        myStat << endl;
-        myStat << " Standard deviation of the residuals :                               	" << SD_of_residuals 		<< endl;
-        myStat << endl;
-        myStat << " Standard deviation of the weighted residuals :                       	" << Weighted_SD_of_residuals 		<< endl;
+//        myStat << " Standard deviation of the residuals :                               	" << SD_of_residuals 		<< endl;
+//        myStat << endl;
+        myStat << " Standard deviation of the residuals :                                   " << Weighted_SD_of_residuals 		<< endl;
         myStat << endl;
 //        myStat << " Standard deviation of the weighted target function values :             " << Weighted_TF_SD_of_residuals 		<< endl;
 //        myStat << endl;
 //        myStat << " Standard deviation of the absolute values of the residuals :            " << Abs_SD_of_residuals 		<< endl;
 //        myStat << endl;
-        myStat << " Average weighted residual :                                          	" << Weighted_mean_res 		<< endl;
+        myStat << " Average residual :                                                      " << Weighted_mean_res 		<< endl;
         myStat << endl;
-        myStat << " Maximum weighted residual :                                          	" << Weighted_max_res 		<< endl;
+        myStat << " Maximum residual :                                                      " << Weighted_max_res 		<< endl;
         myStat << endl;
-        myStat << " Minimum weighted residual :                                          	" << Weighted_min_res 		<< endl;
+        myStat << " Minimum residual :                                                      " << Weighted_min_res 		<< endl;
         myStat << endl;
         myStat << " Number of positive residuals :                                          " << pos_residuals 		<< endl;
         myStat << endl;
@@ -394,43 +376,10 @@ if( W2 < 1.)  // workaround to suppress nan() and zdiv crash
         myStat << " Error variance :                                                     	" << error_variance 	<< endl;
         myStat << endl;
 
-        myStat << " D'Agostino K square test: "<<endl;
-        myStat << " K squared :  " << K2 << endl;
-        myStat << " Probability that K squared follows Chi-squared distribution :  " << K2test << endl;
+        myStat << " D'Agostino K square test, K squared :                                   " << K2 << endl;
         myStat << endl;
-
-                myStat << " Best fit results for parameters from regression : "                         <<endl;
-        for( i=0; i< optv_.size(); i++ ) // cols
-        {
-            // Print optimized parameter values to file
-            if (gfittask->Opti->Ptype[i] =="G0")
-            {
-                myStat <<"          parameter G0 "<<
-                         gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])
-                      <<" :           " << optv_[i] << endl;
-//                cout /*<< gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])*/ << endl;
-            } else
-              myStat <<"          parameter " << gfittask->Opti->Ptype[i] << " :      "
-                  << optv_[i] << endl;
-
-        }
-
-        if (gfittask->Opti->h_RDc)
-        {
-            for (i=0; i<gfittask->Opti->reactions.size(); ++i)
-            {
-                myStat <<"          Reac parameter "<<gfittask->Opti->reactions[i]->Dc_name <<" :           "<<gfittask->Opti->reactions[i]->std_gibbs<<endl;
-            }
-        }
-
-        if (gfittask->Opti->h_Lp)
-        {
-            for (i=0; i<gfittask->Opti->Lparams.size(); ++i)
-            {
-                myStat <<"          Linked parameter "<<gfittask->Opti->Lparams[i]->name <<" :           "<<gfittask->Opti->Lparams[i]->EV<<endl;
-            }
-        }
-
+        myStat << " Probability that K squared follows Chi-squared distribution :           " << K2test << endl;
+        myStat << endl;
         myStat << endl;
         myStat.close();
 }
@@ -453,58 +402,9 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
         opt_scan_v.resize( sensitivity_points );
         std::vector< std::vector< double> > array_ssr;
 
-        // Generate systematic variations in the G0 values from the optimization vector and loop over them
-
-            // Set printfile bool to true in order to deactivate to parallelization of the loop over measurements within the StdState_gems3k_wrap() function
-//            gfittask->printfile = true;
-
-//            for( i=0; i< (int) optv_.size(); i++ )
-//            {
-//                for( j=0; j< sensitivity_points; j++ )
-//                {
-//                    // Copy original values into opt_scan
-//                    opt_scan = optv_;
-
-//                    // add/subtract up to 25% of the original parameter value
-//                    opt_scan[i] = optv_[i] + optv_[i] * ( j - sensitivity_points/2  ) / 200;
-
-//                    // compute sum of squared residuals
-//                    residual_sys = 0.;
-//                    gems3k_wrap( residual_sys, opt_scan, gfittask );
-////cout<<"residual_sys = "<<residual_sys<<endl;
-//                    opt_scan_v[j] = opt_scan[i];
-//                    ssr_param[j]  = residual_sys;
-//                }
-//                // add rows with 'sensitivity_points' columns
-//                array_ssr.push_back( opt_scan_v );
-//                array_ssr.push_back( ssr_param );
-//            }
-
-
-//            print_vectors_curve( optv_, array_ssr, sensitivity_points );
-        /// adding to statistics the reaction and linked paramaters
-//        gfittask->Opti->h_Lp = false;
-//        gfittask->Opti->h_RDc = false;
-//        for (i = 0; i<gfittask->Opti->reactions.size(); ++i)
-//        {
-//            optv_.push_back(gfittask->Opti->reactions[i]->std_gibbs);
-//            gfittask->Opti->Pindex.push_back(gfittask->Opti->reactions[i]->DcIndex);
-//            gfittask->Opti->Ptype.push_back("G0");
-//            gfittask->Opti->opt.push_back(gfittask->Opti->reactions[i]->std_gibbs);
-////            gfittask->Opti->opt.push_back(gfittask->Opti->reactions[i]->IV);
-//        }
-//        for (i = 0; i<gfittask->Opti->Lparams.size(); ++i)
-//        {
-//            optv_.push_back(gfittask->Opti->Lparams[i]->EV);
-////            gfittask->Opti->Pindex.push_back(gfittask->Opti->reactions[i]->DcIndex);
-////            gfittask->Opti->Ptype.push_back("bIC");
-////            gfittask->Opti->opt.push_back(gfittask->Opti->reactions[i]->std_gibbs);
-
-//        }
-
         len_meas = (int) gfittask->Weighted_Tfun_residuals_v.size();
 
-//        // Compute Jacobian matrix (= Sensitivity matrix)
+        // Compute Jacobian matrix (= Sensitivity matrix)
         arma::mat SensitivityMatrix( len_meas, (int) optv_.size() );
         arma::mat DimensionlessScaledSensitivities( len_meas, (int) optv_.size() );
         arma::mat OnePercentScaledSensitivities( len_meas, (int) optv_.size() );
@@ -541,11 +441,11 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
 
                 OnePercentScaledSensitivities(k,i) = (SensitivityMatrix(k,i)) * optv_[i] / 100;
 
-                if (gfittask->Tfun->weight == "inverr")
+                if (gfittask->Tfun->weight == keys::inverr2) // the weight matrix is added (weighting with 1/error)
                 {
                     DimensionlessScaledSensitivities(k,i) = SensitivityMatrix(k,i) * fabs( optv_[i] ) * gfittask->weights[k];
                 } else
-                    if ((gfittask->Tfun->weight == "inverr2") || (gfittask->Tfun->weight == "inverr3"))
+                    if ((gfittask->Tfun->weight == keys::inverr) || (gfittask->Tfun->weight == keys::inverr3) || (gfittask->Tfun->weight == keys::inverr_norm)) // no re
                     {
                         DimensionlessScaledSensitivities(k,i) = SensitivityMatrix(k,i) * fabs( optv_[i] ) * sqrt(gfittask->weights[k]);
                     }
@@ -559,7 +459,6 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
 
         ofstream myStat;
         myStat.open(gpf->FITStatisticsFile().c_str(),ios::app);
-
 
 /*
         myStat << " Sensitivity matrix over each parameter [j] measurement point [i]: "<<endl;
@@ -576,23 +475,18 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
         }
 */
 
-
         myStat << " Composite Scaled Sensitivities: "<<endl;
-        myStat << " See ref. [1] section 4.3.4. If there is no weighting the weight is asumed 1 for all measured values. "<<endl;
-        myStat << " Larger values indicate parameters for which observations provide more information. \n A value less than 1 or less than (or close to) 1% of the highest value, means that the parameter is poorly estimated. \n These parameters should be fixed during regression. "<<endl;
-        for( i=0; i< optv_.size(); i++ )
         {
             // Write sensitivities to file
-            myStat <<"			parameter "<< i << " "
-                 << gfittask->Opti->Ptype[i]
-                     //                  <<gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])
-                 <<" :	     " << CompositeScaledSensitivities(i)	<< endl;
+            for( i=0; i< optv_.size(); i++ )
+            {
+                myStat <<"			parameter "<< i;
+                         if (gfittask->Opti->Ptype[i] == "G0") myStat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]);
+                         else myStat << "  " << gfittask->Opti->Ptype[i];
+                myStat <<" :	     " << CompositeScaledSensitivities(i)	<< endl;
+            }
         }
         myStat << endl;
-
-        // Plot results with DISLIN
-//        print_sensitivity( (int) computed_up.size(), (int) optv_.size(), SensitivityMatrix , gfittask->sysdata->molality_1 );
-
 
 //SensitivityMatrix.print("SensitivityMatrix:");
 
@@ -612,25 +506,57 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
         {
             FisherMatrix = SensitivityMatrix_T * sqrt(WeightMatrix) * SensitivityMatrix;
         }
-        if ((gfittask->Tfun->weight == "inverr3") /*|| (gfittask->Tfun->weight == "inverr1")*/ )
+        if ((gfittask->Tfun->weight == keys::inverr3) || (gfittask->Tfun->weight == keys::inverr) || (gfittask->Tfun->weight == keys::inverr_norm))
         {
             FisherMatrix = SensitivityMatrix_T * SensitivityMatrix;
         }
-
-FisherMatrix.print("Fisher Matrix:");
+        FisherMatrix.print("Fisher Matrix:");
 
         // Compute variance-covariance matrix
-arma::mat VarCovarMatrix = 1 * arma::inv( FisherMatrix, false );
+        arma::mat VarCovarMatrix = 1 * arma::inv( FisherMatrix, false );
         if (gfittask->Tfun->weight == "inverr2")
         {
             VarCovarMatrix = error_variance * arma::inv( FisherMatrix, false );
         } else VarCovarMatrix = 1 * arma::inv( FisherMatrix, false );
+        VarCovarMatrix.print("Variance Covariance Matrix:");
 
-
-VarCovarMatrix.print("Variance Covariance Matrix:");
+        // Print Variance-Covariance matrix to file
+        myStat << " Variance-Covariance matrix: "<<endl;
+        for( i=0; i< (int) optv_.size(); i++ )
+        {
+            if( i== 0 )
+            {
+                myStat <<"                                                      ";
+                if (gfittask->Opti->Ptype[i] == "G0") myStat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]);
+                else myStat << "  " << gfittask->Opti->Ptype[i];
+            }
+            else
+            {
+                myStat <<"              ";
+                if (gfittask->Opti->Ptype[i] == "G0") myStat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]);
+                else myStat << "  " << gfittask->Opti->Ptype[i];
+            }
+        }
+        myStat << endl;
+        for( i=0; i<  optv_.size(); i++ )
+        {
+            myStat <<"			parameter "<< i;
+                     if (gfittask->Opti->Ptype[i] == "G0") myStat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]);
+                     else myStat << "  " << gfittask->Opti->Ptype[i];
+            for( j=0; j<  optv_.size(); j++ )
+            {
+                if( j==0 )
+                    myStat <<"          " <<VarCovarMatrix(i,j);
+                else
+                    myStat <<"          " <<VarCovarMatrix(i,j);
+            }
+            myStat << endl;
+        }
+        myStat << endl;
 
         // Correlation matrix
         arma::mat CorellationMatrix( (int) optv_.size(), (int) optv_.size() );
+        CorellationMatrix.print("CorellationMatrix = ");
 
         for( i=0; i< optv_.size(); i++ )
         {
@@ -644,48 +570,15 @@ VarCovarMatrix.print("Variance Covariance Matrix:");
             CoefficientOfVariation(i) 	  = ParameterStandardDeviation(i) / optv_[i];
             Parameter_t_Statistic(i) 	  = 1. / CoefficientOfVariation(i);
         }
-        CorellationMatrix.print("CorellationMatrix = ");
-
-CorellationMatrix.print("Corellation Matrix:");
-
-        // Print Variance-Covariance matrix to file
-        myStat << " Variance-Covariance matrix: "<<endl;
-        myStat << " See ref. [1] section 7.2. V(b) = s^2([X]trans*[X])^1; "
-          "\n [W] - weight matrix is considered as 1 as there is no full weight matrix calculted, "
-          "\n based on true experimental error (not provided for all experiments). "
-          "\n X - sensitivity matrix " << endl;
-        myStat << " When the chosen weight is other than inverr2 (1/sigma^2), the error variance (s^2)is assumed 1. "
-          "\n For inverr2, the error variance is calculated as weighted_Tfun_sum_of_residuals/degrees of freedom." << endl;
-        for( i=0; i<  optv_.size(); i++ )
-        {
-            if( i== 0 )
-                myStat <<"				parameter "<< i << "  " << gfittask->Opti->Ptype[i];
-            else
-                myStat <<"			parameter "<< i << "  " << gfittask->Opti->Ptype[i];
-        }
-        myStat << endl;
-        for( i=0; i<  optv_.size(); i++ )
-        {
-            myStat <<"			parameter "<< i <<" : ";
-            for( j=0; j<  optv_.size(); j++ )
-            {
-                if( j==0 )
-                    myStat <<"			   " <<VarCovarMatrix(i,j);
-                else
-                    myStat <<"		    " <<VarCovarMatrix(i,j);
-            }
-            myStat << endl;
-        }
-        myStat << endl;
 
         // Print Parameter Standard Deviations to file
         myStat << " Parameter Standard Deviation/Error: "<<endl;
         for( i=0; i< optv_.size(); i++ )
         {
-            myStat <<"			parameter "<< i
-                   << "  " << gfittask->Opti->Ptype[i]
-//                  <<gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])
-                 <<" :	   " << ParameterStandardDeviation(i)/sqrt(degrees_of_freedom) << endl;
+            myStat <<"			parameter "<< i;
+                     if (gfittask->Opti->Ptype[i] == "G0") myStat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]);
+                     else myStat << "  " << gfittask->Opti->Ptype[i];
+                 myStat <<" :	   " << ParameterStandardDeviation(i)/sqrt(degrees_of_freedom) << endl;
         }
         myStat << endl;
 
@@ -696,10 +589,10 @@ CorellationMatrix.print("Corellation Matrix:");
         boost::math::students_t dist( DegreesOfFreedom );
         for( j=0; j< optv_.size(); j++ )
         {
-            myStat <<"			parameter "<< j <<" "
-//                 << gfittask->Opti->Ptype[i]   // this is needed for phase properties!
-                  <<gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[j])
-                 << " :	           ";
+            myStat <<"			parameter "<< j;
+                     if (gfittask->Opti->Ptype[j] == "G0") myStat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[j]);
+                     else myStat << "  " << gfittask->Opti->Ptype[j];
+            myStat << " :	           ";
             myStat << endl;
             myStat <<    "___________________________________________________________________" << endl;
             myStat <<    "Confidence       T           Interval          Lower          Upper" << endl;
@@ -733,7 +626,10 @@ CorellationMatrix.print("Corellation Matrix:");
         myStat << " Coefficient of Variation: "<<endl;
         for( i=0; i< optv_.size(); i++ )
         {
-            myStat <<"			parameter "<< i <<" :	           " << CoefficientOfVariation(i) << endl;
+            myStat <<"			parameter "<< i;
+                     if (gfittask->Opti->Ptype[i] == "G0") myStat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]);
+                     else myStat << "  " << gfittask->Opti->Ptype[i];
+            myStat <<" :	           " << CoefficientOfVariation(i) << endl;
         }
         myStat << endl;
 
@@ -741,27 +637,41 @@ CorellationMatrix.print("Corellation Matrix:");
         myStat << " Parameter t-statistic: "<<endl;
         for( i=0; i< optv_.size(); i++ )
         {
-            myStat <<"			parameter "<< i <<" :	           " << Parameter_t_Statistic(i) << endl;
+            myStat <<"			parameter "<< i;
+                     if (gfittask->Opti->Ptype[i] == "G0") myStat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]);
+                     else myStat << "  " << gfittask->Opti->Ptype[i];
+            myStat <<" :	           " << Parameter_t_Statistic(i) << endl;
         }
         myStat << endl;
 
         // Print Correlation matrix to file
         myStat << " Correlation matrix: "<<endl;
-        for( i=0; i< optv_.size(); i++ )
+        for( i=0; i< (int) optv_.size(); i++ )
         {
             if( i== 0 )
-                myStat <<"          parameter "<< i;
+            {
+                myStat <<"                              ";
+                if (gfittask->Opti->Ptype[i] == "G0") myStat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]);
+                else myStat << "  " << gfittask->Opti->Ptype[i];
+            }
             else
-                myStat <<"parameter "<< i;
+            {
+                myStat <<"                  ";
+                if (gfittask->Opti->Ptype[i] == "G0") myStat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]);
+                else myStat << "  " << gfittask->Opti->Ptype[i];
+            }
         }
         myStat << endl;
         for( i=0; i< optv_.size(); i++ )
         {
-            myStat <<"parameter "<< i <<" : ";
+            myStat <<"parameter "<< i;
+            if (gfittask->Opti->Ptype[i] == "G0") myStat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]);
+            else myStat << "  " << gfittask->Opti->Ptype[i];
+            myStat<<" : ";
             for( j=0; j< optv_.size(); j++ )
             {
                 if( j==0 )
-                    myStat <<"	   " <<CorellationMatrix(i,j);
+                    myStat <<"          " <<CorellationMatrix(i,j);
                 else
                     myStat <<"	   		" <<CorellationMatrix(i,j);
             }
@@ -771,67 +681,7 @@ CorellationMatrix.print("Corellation Matrix:");
 
         myStat.close();
 
-
-//        // allocate synamic 4D memory for holding parameter-pair specific SSR with varying parameters
-//        int points_per_axis = 100;
-//        float* SSR_surface;
-//        SSR_surface = new float [ points_per_axis * points_per_axis ];
-//        double* param_1_ray;
-//        double* param_2_ray;
-//        param_1_ray = new double [ points_per_axis ];
-//        param_2_ray = new double [ points_per_axis ];
-//        int param_pair[2];
-
-//        for( i=0; i< (int) optv_.size()-1; i++ )			// loop over
-//        {													// first parameter and
-//            for( k=i+1; k< (int) optv_.size(); k++ )		// loop over
-//            {												// second parameter and
-//                for( jj=0; jj<points_per_axis; jj++ )		// vary +- 25%
-//                {
-//                    for( ll=0; ll<points_per_axis; ll++ )	// vary +- 25%
-//                    {
-//                        j = jj * 5;
-//                        l = ll * 5;
-
-//                        // parameter 1: add/subtract up to 25% of the original parameter value
-//                        opt_scan[i] = optv_[i] + optv_[i] * ( 0.5 / points_per_axis * jj - 0.25 );
-//                        param_1_ray[jj] = opt_scan[i];
-
-//                        // parameter 2: add/subtract up to 25% of the original parameter value
-//                        opt_scan[k] = optv_[k] + optv_[k] * ( 0.5 / points_per_axis * ll - 0.25 );
-//                        param_2_ray[ll] = opt_scan[k];
-
-//                        residual_sys = 0.;
-//                        opti::StdState_gems3k_wrap( residual_sys, opt_scan, gfittask );
-
-//                        // Compute and store values of sruface matrix
-//                        SSR_surface[ points_per_axis*jj + ll ] 	 = residual_sys ;
-//                    }
-//                }
-//                // Print a contour plot for every parameter pair
-//                param_pair[0] = i;
-//                param_pair[1] = k;
-
-//                print_SSR_contour( param_pair, (int) optv_.size(), points_per_axis, SSR_surface, param_1_ray, param_2_ray );
-//            }
-//        }
-
-
-//        // free dynamicaly allocated memory
-//        delete[] SSR_surface;
-//        delete[] param_1_ray;
-//        delete[] param_2_ray;
-
-
-
-
-//exit(1);//STOP
-
-        // In case later on parallelization of measurement over for loop is wished, set printfile bool to false
-
-
 }
-
 
 
 void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* gfittask, int &countit )
@@ -882,7 +732,8 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
 
         // for each MC run generate number_of_measurements random variables
             ofstream myScatter_all;
-            myScatter_all.open("output_GEMSFIT/myScatter_all.txt");
+            string path = gpf->ResultDir() + "myScatter_all.txt";
+            myScatter_all.open(path.c_str());
         for( i=0; i<(number_of_measurements * num_of_MC_runs); i++ )
         {
             scatter_all[i] = get_rand();
@@ -915,18 +766,27 @@ pid_ = 0;
 
 
 
-        // loop over systems and add MC scatter to simulated measurements to simulate new set of experimental data
-        double* simulated_measurements = new double[gfittask->computed_values_v.size()];
+        // loop over systems and add MC scatter to calculated values to simulate new set of experimental data
+//        double* simulated_measurements = new double[gfittask->computed_values_v.size()];
 
-        for (i=0; i<number_of_measurements; i++)
-        {
-            MC_computed_v[i] = scatter_v[i] + gfittask->computed_values_v[i];
-        }
+        if (MCbool == 1) // the new simulated values are from scatter + computed values
+            for (i=0; i<number_of_measurements; i++)
+            {
+                MC_computed_v[i] = scatter_v[i] + gfittask->computed_values_v[i];
+            }
+        else
+            if (MCbool == 2) // the new simulated values are from scatter + measured values
+            {
+                for (i=0; i<number_of_measurements; i++)
+                {
+                    MC_computed_v[i] = scatter_v[i] + gfittask->measured_values_v[i];
+                }
+            }
 
         gfittask->add_MC_scatter(MC_computed_v);
 
 
-        delete[] simulated_measurements;
+//        delete[] simulated_measurements;
 
 
         // perform optimization
@@ -981,7 +841,10 @@ pid_ = 0;
             StandardDeviation = arma::stddev( MCparams, 0 );
 
             // Print Standard Deviations of parameters generated during MC runs to file
-            myStat <<"			parameter "<< j <<" :	           " << StandardDeviation << endl;
+            myStat <<"			parameter "<< j;
+            if (gfittask->Opti->Ptype[j] == "G0") myStat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[j]);
+            else myStat << "  " << gfittask->Opti->Ptype[j];
+            myStat <<" :	           " << StandardDeviation << endl;
 
         }
 
@@ -995,19 +858,14 @@ pid_ = 0;
             StandardDeviation = arma::stddev( MCRparams, 0 );
 
             // Print Standard Deviations of parameters generated during MC runs to file
-            myStat <<"      reaction parameter "<< j <<" :	           " << StandardDeviation << endl;
+            myStat <<"			parameter "<< j;
+            if (gfittask->Opti->Ptype[j] == "G0") myStat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[j]);
+            else myStat << "  " << gfittask->Opti->Ptype[j];
+            myStat <<" :	           " << StandardDeviation << endl;
 
         }
         myStat << endl;
         myStat.close();
-
-//    if( !pid )
-//    {
-
-//        // generate and plot histogram
-////		print_histogram( optv_, MC_fitted_parameters_all, num_of_MC_runs, MC_number_of_bars );
-
-//    }
 
     free (MC_fitted_parameters_all[0]);
     free (MC_fitted_parameters_all);

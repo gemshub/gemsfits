@@ -3,6 +3,7 @@
 # include <locale.h>
 
 //#include <stdio.h>
+#include <sys/stat.h>
 #include <string.h>
 
 # include "keywords.h"
@@ -89,8 +90,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    // create directory for db if not existent
-//    if (0 != access(argv[irun + 2], F_OK)) {
+//    if (0 != access() {
 //      if (ENOENT == errno) {
 //         // does not exist
 //          mkdir(argv[irun + 2], S_IRWXU|S_IRGRP|S_IXGRP);
@@ -101,12 +101,31 @@ int main(int argc, char *argv[])
 //    }
 
     char ejdb_path[64] = {};
-    cout << ejdb_path << endl;
 
     strcat(ejdb_path, argv[irun + 2]);                                          //B gets the path and name of the database (where it is/will be) / or path and name of the json file to be restored
 //    strcat(ejdb_path, argv[irun + 3]);
     string ejdb_path2 = ejdb_path;
     cout << ejdb_path << endl;
+
+    // creating database folder if not present
+    if (irun != 0)
+    {
+        int pos = 0;
+        string db_folder = ejdb_path2, new_folder;
+        do
+        {
+            new_folder = db_folder.substr(pos+1, db_folder.size());
+            pos = new_folder.find("/");
+            db_folder = new_folder;
+        } while (pos >-1);
+
+        pos = ejdb_path2.find(new_folder);
+        db_folder = ejdb_path2.substr(0, pos);
+
+        if ( access( db_folder.c_str(), 0 ) != 0 )
+            mkdir(db_folder.c_str(), 0775);
+    }
+
 
     char csv_path[64] = {};
 
