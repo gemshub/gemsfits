@@ -759,6 +759,7 @@ void get_gems_fit_DBR_txt(TNode* node , opti_vector *op)
         {
             int nl = 0;
             // Here you must write your code
+            op->h_dynfun = true;
             for(unsigned  int ii=0; ii<vFormats.size(); ii++ )
             {
 cout<< "Parameter: " << DataBR_fields[nfild].name << " Type " << vFormats[ii].type << " Index " << vFormats[ii].index << endl;

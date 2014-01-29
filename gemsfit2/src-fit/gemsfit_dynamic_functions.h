@@ -62,7 +62,7 @@ void titration(TGfitTask *sys);
 double titfunc(const std::vector<double> &x, std::vector<double> &grad, void *obj_func_data);
 
 
-
+void dynfun (TGfitTask *sys);
 
 
 void titrationG(TGfitTask *sys);

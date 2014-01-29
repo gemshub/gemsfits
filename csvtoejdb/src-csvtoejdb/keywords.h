@@ -140,12 +140,14 @@ static const char *url = "url"; ///	                              1		     string
     static const char *TT = "TT"; ///                                       string              target function type
     static const char *WT = "WT"; ///                                       string              weight type
     static const char *OFUN = "OFUN"; ///                                   array               Objective function
+    static const char *DFUN = "DFUN"; ///
         static const char *CT = "CT"; ///                                   string              type of component/data to compare
 //            static const char *property = "prop"; ///                           string              keyword for comparing properties with names such as pH, Q, IS, etc.
         static const char *CN = "CN"; ///                                   string              name of data to compare e.g. Al, pH, etc.
         static const char *EPH = "EPH"; ///                                 string              experiment phase
 //        static const char *Eunit = "Unit"; ///                              string              experiment element unit
         static const char *DCP = "DCP"; ///                                 string              dependent comp property
+        static const char *Ptype = "Ptype"; ///
 
 
 

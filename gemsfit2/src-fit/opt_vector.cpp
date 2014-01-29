@@ -43,8 +43,9 @@ opti_vector::opti_vector( )
             cout<<" .. ERROR occurred while reading GEMS3K input files !!! ..."<<endl;
             exit(1);
        }
-    this->h_RDc = false;
-    this->h_Lp  = false;
+    this->h_RDc     = false;
+    this->h_Lp      = false;
+    this->h_dynfun  = false;
 
     gpf->flog << "10. opt_vector.cpp(49). Reading optimized parameters from the input file; " << endl;
     get_gems_fit_DCH_txt( node, this ); // reading DCH parameters

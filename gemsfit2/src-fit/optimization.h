@@ -62,6 +62,8 @@ private:
     virtual void get_nlopt_param_txt( vector<double> optv );
     virtual void define_nlopt_param( );
 
+    void sort_dynfun_param();
+
 public:
 
     // opt vector
@@ -112,6 +114,8 @@ public:
 //    vector<double> optv;
     vector<double> OptUpBounds;
     vector<double> OptLoBounds;
+
+    opti_vector *dyn_optv; ///< pointer to optimization
 
 
     /// printing information (get from SS_GEMSFIT_input.dat)

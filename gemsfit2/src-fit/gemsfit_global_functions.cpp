@@ -125,7 +125,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         if (sys->Opti->Ptype[i] == "DMc")
         {
            adjust_DMc(i, opt[i], sys);
-        } else // adjust bIC
+        } /*else // adjust bIC
         if (sys->Opti->Ptype[i] == "bIC")
         {
            adjust_bIC(i, opt[i], sys);
@@ -137,7 +137,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         if (sys->Opti->Ptype[i] == "P")
         {
            adjust_P( i, opt[i], sys);
-        }
+        }*/
 
         /// if other parameters...
 
@@ -148,11 +148,17 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     {
         adjust_RDc(sys);
     }
-    /// Linked parameters
-    if (sys->Opti->h_Lp)
+
+    /// DYNAMIC FUNCTION
+    if (sys->Opti->h_dynfun)
     {
-        adjust_Lp(sys);
+        dynfun(sys);
     }
+//    /// Linked parameters
+//    if (sys->Opti->h_Lp)
+//    {
+//        adjust_Lp(sys);
+//    }
 
     if (!sys->h_grad && sys->Opti->OptTitration == 1)
         titration (sys);

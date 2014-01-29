@@ -82,6 +82,7 @@ public:
 
     bool h_RDc; /// handle for checking if there are reaction constraints in the input file
     bool h_Lp; /// handle for checking if there are linked parameters in the input file
+    bool h_dynfun; /// handle for checking if there are dynamic function in the DataTarget
 
     struct RDc /// structure storing reaction constraint information
     {

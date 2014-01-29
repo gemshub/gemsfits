@@ -61,6 +61,11 @@ optimization::optimization()
         LB = OptLoBounds;
     }
 //    fout.close();
+    //soring out the global paramaters vs the paramaters used in the dynamic functions
+    if (h_dynfun)
+    {
+        sort_dynfun_param();
+    }
 }
 
 optimization::~optimization()
@@ -117,6 +122,22 @@ void optimization::normalize_params(const vector<double> initguesses , bool Norm
     }
 
 //    fout.close();
+}
+
+void optimization::sort_dynfun_param()
+{
+    cout << " in soting param "<< endl;
+    int Nparam = optv.size();
+    for (unsigned int i = 0; i<Nparam; i++)
+    {
+        if ((Ptype[i] == "bIC") || (Ptype[i] == "TK") || (Ptype[i] == "P"))
+        {
+            dyn_optv->LB.push_back(LB[i]);
+            dyn_optv->Pindex.push_back(Pindex[i]);
+            dyn_optv->Ptype.push_back(Ptype[i]);
+        }
+    }
+
 }
 
 

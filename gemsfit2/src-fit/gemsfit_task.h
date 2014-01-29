@@ -142,6 +142,17 @@ public:
             double meas_average;
         };
         vector<obj_fun*> objfun;
+
+        struct dyn_fun /// structure holding the information about the data to compare from the experiments
+        {
+            string exp_phase;
+            string exp_CT;
+            string exp_CN;
+            string exp_unit;
+            string exp_DCP;
+            string param_type;
+        };
+        vector<dyn_fun*> dynfun;
     };
 
     TargetFunction* Tfun; /// pointer to target function structure

@@ -54,7 +54,7 @@
 #      Copy the example and paste it below, remove comment symbols (#), and edit as necessary.
 
 <DataSelect>
-      '{ "sample" : "", 
+      '{ "usesample" : "", 
         "usedataset" : "",
         "skipdataset" : "" ,
         "sT" : [1, 1000],
@@ -119,7 +119,7 @@
 <DataTarget>
 '{ "Target": "name", "TT": "lsq", "WT": "1", "OFUN": 
   [ 
-    { "EPH": "aq_gen", "CT": "IC", "CN": "Al",  "unit": "loga" }
+    { "EPH": "aq_gen", "CT": "IC", "CN": "Al",  "unit": "logm" }
   ]
 }'
 

@@ -129,6 +129,9 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
 
 void TGfitTask::gfit_error ( )
 {
+    bool h_dynfun = false, h_param_dynfun = false;
+    if (Tfun->dynfun.size() > 0) h_dynfun = true;
+
     for (unsigned int i=0; i<Opti->opt.size(); ++i)
     {
         if( ((Opti->Ptype[i] == "TK") || (Opti->Ptype[i] == "P")) && (NodT.size() > 1))
@@ -136,6 +139,21 @@ void TGfitTask::gfit_error ( )
             cout << "Error - When fitting TK or P only one system/experiment/sample si allowed. " << endl;
             exit(1);
          }
+        if ((Opti->Ptype[i] == "bIC") || (Opti->Ptype[i] == "TK") || (Opti->Ptype[i] == "P"))  h_param_dynfun = true;
+    }
+
+    if (!(h_dynfun == h_param_dynfun))
+    {
+        if (!h_param_dynfun)
+        {
+            cout << "Error - When using dynamic functions (fitting paramaters in each system node/experiment) paramaters such as bIC,  TK or P have to be marked ";
+            exit(1);
+        }
+        if (!h_dynfun)
+        {
+            cout << "Error - When fitting bIC, TK or P dynamic functions have to be added to DataTarget, which tell the program which is the dependent value from each node/experiment ";
+            exit(1);
+        }
     }
 }
 
@@ -860,6 +878,65 @@ void TGfitTask::get_DataTarget ( )
     for (unsigned int i = 0 ; i < out.size() ; i++)
     {
         Tfun->objfun[i]->exp_unit = out[i];
+    }
+    out.clear();
+
+    // get DFUN
+    parse_JSON_object(DataTarget, keys::DFUN, out);
+    for (unsigned int i = 0 ; i < out.size() ; i++)
+    {
+        Opti->h_dynfun = true;
+        Tfun->dynfun.push_back(new TargetFunction::dyn_fun); // initializing
+        Tfun->dynfun[i]->exp_phase = "NULL";
+        Tfun->dynfun[i]->exp_CT = "NULL";
+        Tfun->dynfun[i]->exp_CN = "NULL";
+        Tfun->dynfun[i]->exp_unit = "NULL";
+        Tfun->dynfun[i]->exp_DCP = "NULL";
+        Tfun->dynfun[i]->param_type = "NULL";
+    }
+    out.clear();
+    j=0;
+//    int jj=0;
+
+    parse_JSON_array_object(DataTarget, keys::DFUN, keys::EPH, out);
+    for (unsigned int i = 0 ; i < out.size() ; i++)
+    {
+        Tfun->dynfun[i]->exp_phase = out[i];
+    }
+    out.clear();
+
+    parse_JSON_array_object(DataTarget, keys::DFUN, keys::CT, out);
+    parse_JSON_array_object(DataTarget, keys::DFUN, keys::DCP, out2);
+    for (unsigned int i = 0 ; i < out.size() ; i++)
+    {
+        Tfun->dynfun[i]->exp_CT = out[i];
+        if ((out[i] == keys::DC) && (out2.size() > 0))
+        {
+            Tfun->dynfun[i]->exp_DCP = out2[j];
+            ++j;
+        }
+    }
+    out.clear();
+    out2.clear();
+
+    parse_JSON_array_object(DataTarget, keys::DFUN, keys::CN, out);
+    for (unsigned int i = 0 ; i < out.size() ; i++)
+    {
+        Tfun->dynfun[i]->exp_CN = out[i];
+    }
+    out.clear();
+
+    parse_JSON_array_object(DataTarget, keys::DFUN, keys::Qunit, out);
+    for (unsigned int i = 0 ; i < out.size() ; i++)
+    {
+        Tfun->dynfun[i]->exp_unit = out[i];
+    }
+    out.clear();
+
+    parse_JSON_array_object(DataTarget, keys::DFUN, keys::Ptype, out);
+    for (unsigned int i = 0 ; i < out.size() ; i++)
+    {
+        Tfun->dynfun[i]->param_type = out[i];
     }
     out.clear();
 

@@ -36,6 +36,14 @@
 
 #include "gemsfit_dynamic_functions.h"
 
+void dynfun (TGfitTask *sys)
+{
+    cout << " we are in the dynamic functions " << endl;
+
+
+
+}
+
 
 void titration (TGfitTask *sys)
 {

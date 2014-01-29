@@ -54,7 +54,7 @@
 #      Copy the example and paste it below, remove comment symbols (#), and edit as necessary.
 
 <DataSelect>
-      '{ "sample" : "", 
+      '{ "usesample" : "", 
         "usedataset" : "",
         "skipdataset" : "" ,
         "sT" : [1, 1000],
@@ -361,7 +361,7 @@ R{ "IV" : -696322, "Ref" : "We93", "order" : "1", "nC" : 4, "rDC" : "AlOH+2",
 
 # OptTitration: Adjusts the computed pH by changing NaOH or HCl amount to match the measured pH
 #               read from the database for each experiment
-<OptTitration>  0
+<OptTitration>  1
 
 # OptAlgo: specify algorithm: GN_ISRES | GN_ORIG_DIRECT | GN_ORIG_DIRECT_L | LN_COBYLA | LN_BOBYQA 
 <OptAlgo>  'LN_BOBYQA'

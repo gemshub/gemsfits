@@ -86,6 +86,8 @@
 optv[0] = -0.998983
 size of optv = 4
 16. gemsfit_task.cpp(316). Finished optimization; 
+found minimum at <<f( -0.998983 -1.0026 -1.00107 -0.997458 ) = 13.9725
+ after 41 evaluations.
 
 17. Back in main.cpp(152). Performing statistics ...
 ~ m.count.= 42 sum.res.= 13.9929
@@ -97,4 +99,4 @@ size of optv = 4
 ~ m.count.= 48 sum.res.= 13.9851
 ~ m.count.= 49 sum.res.= 13.9817
 ~ m.count.= 50 sum.res.= 13.9836
-18. main.cpp(152): finished in 588.084 seconds. GEMSFIT2: End. Bye!
+18. main.cpp(152): finished in 602.333 seconds. GEMSFIT2: End. Bye!
