@@ -65,23 +65,13 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
         iNa.push_back(0.0); iO.push_back(0.0); iH.push_back(0.0); iCl.push_back(0.0);
     }
     h_grad = false;
-
-    // GEMSFIT logfile
-    //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
-//    ofstream fout;
-//    fout.open(gpf->FITLogFile().c_str(), ios::app);
-//    if( fout.fail() )
-//    { cout<<"Output fileopen error"<<endl; exit(1); }
+    DYFndx = -1;
 
     // file containing the input parameters of the system and of the optimization class
     param_file  = gpf->OptParamFile().c_str();
 
     // For parameter optimization do not use printing of results
     resultsfile = gpf->FITFile();
-
-    // For parameter optimization do not use parallelization of the Monte Carlo loop (=true).
-    // Instead, execute loop over measurements within objective function in parallel (=false).
-//    MC_MPI = false;
 
     // nodes
     anNodes = experiments.size();
@@ -92,19 +82,19 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     }
 
     // initialize nodes with the experimental data
-    gpf->flog << "08. gemsfit_task.cpp(95). Initializing nodes with the experimental data; " << endl;
+    gpf->flog << "08. gemsfit_task.cpp(84). Initializing nodes with the experimental data; " << endl;
     setnodes ( );  // initialization of nodes each for one experimental point (system)
     // getting the parameters to be optimized from DCH, DBR and multi structures, and optimization settings form the input file
-    gpf->flog << "09. gemsfit_task.cpp(98). Initializing optimization structure; " << endl;
+    gpf->flog << "09. gemsfit_task.cpp(87). Initializing optimization structure; " << endl;
     Opti = new optimization ( );
-    gpf->flog << "12. gemsfit_task.cpp(100). Initializing the Target function structure & get_DatTarget(); " << endl;
+    gpf->flog << "12. gemsfit_task.cpp(89). Initializing the Target function structure & get_DatTarget(); " << endl;
     Tfun = new TargetFunction;
+    Tfun->objfunold = Tfun->objfun;
     print = new ResPrint(Opti);
     get_DataTarget ( );
 
     /// function in iofiles.cpp to read the logK lookup array instead of get function!
     get_logK_TPpairs ();
-
 
     // check for errors and inconsitencies of input options and parameters
     gfit_error ( );
@@ -123,23 +113,18 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
         this->LimitOfDetection = this->minimum_value/100; // sets the limit of detection not more than 100 times smaller than the lowest experimental value
 
     print->print_header(Tfun->type, Tfun->weight, Opti->optv.size());
-//    fout.close();
-
 }
 
 void TGfitTask::gfit_error ( )
 {
     bool h_dynfun = false, h_param_dynfun = false;
-    if (Tfun->dynfun.size() > 0) h_dynfun = true;
-
-    for (unsigned int i=0; i<Opti->opt.size(); ++i)
+    if (Tfun->dynfun.size() > 0)
     {
-        if( ((Opti->Ptype[i] == "TK") || (Opti->Ptype[i] == "P")) && (NodT.size() > 1))
-         {
-            cout << "Error - When fitting TK or P only one system/experiment/sample si allowed. " << endl;
-            exit(1);
-         }
-        if ((Opti->Ptype[i] == "bIC") || (Opti->Ptype[i] == "TK") || (Opti->Ptype[i] == "P"))  h_param_dynfun = true;
+        h_dynfun = true;
+
+    for (unsigned int i=0; i<Opti->dyn_optv->opt.size(); ++i)
+    {
+        if ((Opti->dyn_optv->Ptype[i] == "bIC") || (Opti->dyn_optv->Ptype[i] == "TK") || (Opti->dyn_optv->Ptype[i] == "P"))  h_param_dynfun = true;
     }
 
     if (!(h_dynfun == h_param_dynfun))
@@ -154,6 +139,7 @@ void TGfitTask::gfit_error ( )
             cout << "Error - When fitting bIC, TK or P dynamic functions have to be added to DataTarget, which tell the program which is the dependent value from each node/experiment ";
             exit(1);
         }
+    }
     }
 }
 
@@ -886,7 +872,7 @@ void TGfitTask::get_DataTarget ( )
     for (unsigned int i = 0 ; i < out.size() ; i++)
     {
         Opti->h_dynfun = true;
-        Tfun->dynfun.push_back(new TargetFunction::dyn_fun); // initializing
+        Tfun->dynfun.push_back(new TargetFunction::obj_fun); // initializing
         Tfun->dynfun[i]->exp_phase = "NULL";
         Tfun->dynfun[i]->exp_CT = "NULL";
         Tfun->dynfun[i]->exp_CN = "NULL";
@@ -983,6 +969,22 @@ void TGfitTask::get_logK_TPpairs()
         }
         h_logK = false;
     }
+}
+
+void TGfitTask::get_Lparams_delta()
+{
+//    for (unsigned int )
+//    for (unsigned int i=0; i < Opti->dyn_optv->Lparams.size(); ++i )
+//    {
+//        double new_param=0;
+//        int LP_index = Opti->dyn_optv->Lparams[i]->index;
+
+//        for (unsigned int j=0; j < Opti->dyn_optv->Lparams[i]->L_param.size(); ++j )
+//        {
+//            delta += Opti->dyn_optv->Lparams[i]->L_coef[j] * sys->NodT[exp]->Get_bIC(optv->Lparams[i]->L_param_ind[j]);
+//        }
+
+//    }
 }
 
 // Main function that calculates the sum of residuals
@@ -1095,6 +1097,88 @@ void TGfitTask::get_sum_of_residuals( double &residuals)
     this->minimum_value = min;
     average = 0.0;
     }
+}
+
+double TGfitTask::get_residual(int exp, int obj)
+{
+    double residual = 0.0;
+
+    int tk=0;
+    // loop trough objective function
+    /// Target function
+    if ((this->Tfun->objfun[obj]->exp_phase !="NULL") && (this->experiments[exp]->expphases.size() > 0))
+    {
+        // loop trough all phases
+        for (unsigned int p=0; p<this->experiments[exp]->expphases.size(); ++p)
+        {
+            if ((Tfun->objfun[obj]->exp_CT == keys::IC) /*&& (Tfun->objfun[obj]->exp_property =="NULL")*/)
+            {
+                // loop trough all elements
+                for (unsigned int e=0; e<this->experiments[exp]->expphases[p]->phIC.size(); ++e)
+                {
+                    if ((this->experiments[exp]->expphases[p]->phIC[e]->comp == this->Tfun->objfun[obj]->exp_CN) && (this->experiments[exp]->expphases[p]->phase == this->Tfun->objfun[obj]->exp_phase ))
+                    {
+                        // check for unit
+                        check_unit(exp, p, e, Tfun->objfun[obj]->exp_unit, this );
+                        residual =  residual_phase_elem (exp, p, e, obj, this) * this->Tuckey_weights[tk];
+                        tk++;
+                    }
+                }
+            } else
+                if ((Tfun->objfun[obj]->exp_CT == keys::MR) /*&& (Tfun->objfun[obj]->exp_property =="NULL")*/)
+                {
+                    // loop trough all elements
+                    for (unsigned int f=0; f<this->experiments[exp]->expphases[p]->phMR.size(); ++f)
+                    {
+                        if ((this->experiments[exp]->expphases[p]->phMR[f]->comp == this->Tfun->objfun[obj]->exp_CN) && (this->experiments[exp]->expphases[p]->phase == this->Tfun->objfun[obj]->exp_phase ))
+                        {
+                            // check for unit
+//                                    check_unit(i, p, e, Tfun->objfun[obj]->exp_unit, this );
+                            residual = residual_phase_elemMR (exp, p, f, obj, this) * this->Tuckey_weights[tk];
+                            tk++;
+                        }
+                    }
+                } else
+
+                if ((Tfun->objfun[obj]->exp_CT == keys::property) && (this->experiments[exp]->expphases[p]->phprop.size() > 0) /*&& (this->Tfun->objfun[obj]->exp_dcomp == "NULL")*/)
+                {
+                // loop trough all properties
+                for (unsigned int pp = 0; pp< this->experiments[exp]->expphases[p]->phprop.size(); ++pp)
+                {
+                    if ((this->experiments[exp]->expphases[p]->phprop[pp]->property == Tfun->objfun[obj]->exp_CN) && (this->experiments[exp]->expphases[p]->phase == this->Tfun->objfun[obj]->exp_phase ))
+                    {
+                        // check for unit
+                        check_prop_unit(exp, p, pp, Tfun->objfun[obj]->exp_unit, this );
+                        residual =  residual_phase_prop (exp, p, pp, obj, this) * this->Tuckey_weights[tk];
+                        tk++;
+                    }
+                }
+            } else
+                if (/*(Tfun->objfun[obj]->exp_property !="NULL") &&*/ (this->experiments[exp]->expphases[p]->phDC.size() > 0) && (Tfun->objfun[obj]->exp_CT == keys::DC))
+                {
+                    // loop trough all dependent components
+                    for (unsigned int dc = 0; dc< this->experiments[exp]->expphases[p]->phDC.size(); ++dc)
+                    {
+                        if ((this->experiments[exp]->expphases[p]->phDC[dc]->DC == Tfun->objfun[obj]->exp_CN) && (this->experiments[exp]->expphases[p]->phase == this->Tfun->objfun[obj]->exp_phase ))
+                        {
+                            // loop trough all dep comp properties
+                            for (unsigned int dcp = 0; dcp < this->experiments[exp]->expphases[p]->phDC[dc]->DCprop.size(); ++dcp)
+                            {
+                                if (this->experiments[exp]->expphases[p]->phDC[dc]->DCprop[dcp]->property == Tfun->objfun[obj]->exp_DCP)
+                                {
+//                                            cout << "yes"<<endl;
+                                    //                                    // check for unit
+                                    //                                    check_dcomp_unit(i, p, dc, dcp, sys->Tfun->objfun[obj]->exp_unit, sys );
+                                    residual = residual_phase_dcomp (exp, p, dc, dcp, obj, this) * this->Tuckey_weights[tk];
+                                    tk++;
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+    }
+    return residual;
 }
 
 // function for counting the total numbers of residuals that will be calculated

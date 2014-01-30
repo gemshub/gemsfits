@@ -89,6 +89,12 @@ void adjust_bIC (int i, double new_bIC, TGfitTask *sys)
     }
 }
 
+void adjust_bIC (int i, int exp, double new_bIC, TGfitTask *sys)
+{
+    int index_bIC = i;
+    sys->NodT[exp]->Set_bIC(index_bIC, new_bIC );
+}
+
 void adjust_TK ( int i, double new_TK, TGfitTask *sys)
 {
     for (unsigned int n=0; n<sys->NodT.size(); ++n)
@@ -196,31 +202,24 @@ void adjust_RDc (TGfitTask *sys)
     }
 }
 
-void adjust_Lp (TGfitTask *sys)
+void adjust_Lp (TGfitTask *sys, opti_vector *optv, int exp)
 {
-    // going trough all nodes
-//#ifdef USE_MPI
-    omp_set_num_threads(sys->MPI);
-    #pragma omp parallel for
-//#endif
-    for (unsigned int n=0; n<sys->NodT.size(); ++n)
+    for (unsigned int i=0; i < optv->Lparams.size(); ++i )
     {
-        for (unsigned int i=0; i < sys->Opti->Lparams.size(); ++i )
+        double new_param=0;
+        int LP_index = optv->Lparams[i]->index;
+
+        for (unsigned int j=0; j < optv->Lparams[i]->L_param.size(); ++j )
         {
-            double new_param=0;
-            int LP_index = sys->Opti->Lparams[i]->index;
-
-            for (unsigned int j=0; j < sys->Opti->Lparams[i]->L_param.size()-1; ++j )
-            {
-                new_param += sys->Opti->Lparams[i]->L_coef[j] * sys->NodT[n]->Get_bIC(sys->Opti->Lparams[i]->L_param_ind[j]);
-            }
-
-            new_param += sys->NodT[n]->Get_bIC(LP_index);
-            sys->NodT[n]->Set_bIC(LP_index, new_param);
-            sys->Opti->Lparams[i]->EV = new_param;
+            new_param += optv->Lparams[i]->L_coef[j] * sys->NodT[exp]->Get_bIC(optv->Lparams[i]->L_param_ind[j]);
         }
+        new_param += sys->NodT[exp]->Get_bIC(LP_index);
+        sys->NodT[exp]->Set_bIC(LP_index, new_param);
+        optv->Lparams[i]->EV = new_param;
     }
 }
+
+
 
 /// Unit check FUNCTIONS
 void check_unit(int i, int p, int e, string unit, TGfitTask *sys )

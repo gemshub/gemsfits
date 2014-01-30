@@ -36,13 +36,6 @@
 
 optimization::optimization()
 {
-    // GEMSFIT logfile
-    //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
-//    ofstream fout;
-//    fout.open(gpf->FITLogFile().c_str(), ios::app);
-//    if( fout.fail() )
-//    { cout<<"Output fileopen error"<<endl; exit(1); }
-
     constraint_data = new my_constraint_data;
     // assigining the vector that stores the optimized parameters
     optv = opt;
@@ -52,7 +45,7 @@ optimization::optimization()
 
     OptTuckey = 0;
 
-    gpf->flog << "11. optimization.cpp(54). Reading NLopt optimization settings from the input file; " << endl;
+    gpf->flog << "11. optimization.cpp(48). Reading NLopt optimization settings from the input file; " << endl;
     get_nlopt_param_txt( optv );
 
     if (OptBoundPerc > 0.)
@@ -60,10 +53,11 @@ optimization::optimization()
         UB = OptUpBounds;
         LB = OptLoBounds;
     }
-//    fout.close();
+
     //soring out the global paramaters vs the paramaters used in the dynamic functions
     if (h_dynfun)
     {
+        dyn_optv = new opti_vector;
         sort_dynfun_param();
     }
 }
@@ -77,13 +71,6 @@ optimization::~optimization()
 void optimization::normalize_params(const vector<double> initguesses , bool NormBounds)
 {
     unsigned int i= 0;
-
-    // GEMSFIT logfile
-    //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
-//    ofstream fout;
-//    fout.open(gpf->FITLogFile().c_str(), ios::app);
-//    if( fout.fail() )
-//    { cout<<"Output fileopen error"<<endl; exit(1); }
 
     gpf->flog << " ... performing parameter normalization ... " << endl;
 
@@ -120,24 +107,45 @@ void optimization::normalize_params(const vector<double> initguesses , bool Norm
         constraint_data_v[i].Constraints = constraint_data_v[i].Constraints / fabs(initguesses[i]);
     }
     }
-
-//    fout.close();
 }
 
 void optimization::sort_dynfun_param()
 {
-    cout << " in soting param "<< endl;
-    int Nparam = optv.size();
-    for (unsigned int i = 0; i<Nparam; i++)
+    int Nparam1 = optv.size(), Nparam2 = optv.size();
+    for (unsigned int i = 0; i<Nparam1; i++)
     {
-        if ((Ptype[i] == "bIC") || (Ptype[i] == "TK") || (Ptype[i] == "P"))
+        if ((dyn_optv->Ptype[i] != "bIC") && (dyn_optv->Ptype[i] != "TK") && (dyn_optv->Ptype[i] != "P"))
         {
-            dyn_optv->LB.push_back(LB[i]);
-            dyn_optv->Pindex.push_back(Pindex[i]);
-            dyn_optv->Ptype.push_back(Ptype[i]);
+            dyn_optv->LB.erase(dyn_optv->LB.begin() + i);
+            dyn_optv->Pindex.erase(dyn_optv->Pindex.begin() +i);
+            dyn_optv->Ptype.erase(dyn_optv->Ptype.begin() +i);
+            dyn_optv->UB.erase(dyn_optv->UB.begin() +i);
+            dyn_optv->opt.erase(dyn_optv->opt.begin() +i);
+            dyn_optv->optv0.erase(dyn_optv->optv0.begin() + i);
+            Nparam1--; i--;
         }
     }
 
+    dyn_optv->reactions.clear();
+    Lparams.clear();
+
+    for (unsigned int i = 0; i<Nparam2; i++)
+    {
+        if ((Ptype[i] == "bIC") || (Ptype[i] == "TK") || (Ptype[i] == "P"))
+        {
+            LB.erase(LB.begin() + i);
+            Pindex.erase(Pindex.begin() + i);
+            Ptype.erase(Ptype.begin() + i);
+            UB.erase(UB.begin() + i);
+            opt.erase(opt.begin() + i);
+            optv0.erase(optv0.begin() + i);
+
+            OptLoBounds.erase(OptLoBounds.begin() + i);
+            OptUpBounds.erase(OptUpBounds.begin() + i);
+            optv.erase(optv.begin() + i);
+            Nparam2--; i--;
+        }
+    }
 }
 
 

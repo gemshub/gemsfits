@@ -35,14 +35,123 @@
 
 
 #include "gemsfit_dynamic_functions.h"
+#include "gemsfit_target_functions.h"
 
 void dynfun (TGfitTask *sys)
 {
     cout << " we are in the dynamic functions " << endl;
+    string param_type;
+    int P_id = omp_get_thread_num();
+
+    // loop over the dyn functions
+    for (unsigned int j = 0; j<sys->Tfun->dynfun.size(); j++)
+    {
+        param_type = sys->Tfun->dynfun[j]->param_type;
+
+        for (unsigned int i = 0; i<sys->experiments.size(); i++)
+        {
+            sys->EXPndx[P_id]=i;
+            sys->DYFndx = j;
+
+            vector <double> x, UB, LB;
+            for (unsigned int p = 0; p < sys->Opti->dyn_optv->opt.size(); p++)
+            {
+                if (sys->Opti->dyn_optv->Ptype[p] == param_type)
+                {
+                    x.push_back(sys->Opti->dyn_optv->opt[p]);
+                    UB.push_back(sys->Opti->dyn_optv->UB[p]);
+                    LB.push_back(sys->Opti->dyn_optv->LB[p]);
+                    sys->PAndx.push_back(p);
+                }
+            }
+
+            nlopt::opt opt_HCL(nlopt::LN_BOBYQA, x.size());
+
+            double minf=0;
+
+            opt_HCL.set_lower_bounds(LB);
+            opt_HCL.set_upper_bounds(UB);
+
+            opt_HCL.set_min_objective(minfunc, sys);
+
+            opt_HCL.set_xtol_rel(1e-6);
+            opt_HCL.set_xtol_abs(1e-6);
+
+            nlopt::result result = opt_HCL.optimize(x, minf);
+
+            // Store result parameters
+//            sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt = x[0];
+
+        }
+
+
+    }
+
+
 
 
 
 }
+
+double minfunc ( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data )
+{
+    TGfitTask *sys = reinterpret_cast<TGfitTask*>(obj_func_data);
+    double residual = 0.0;
+    int P_id = omp_get_thread_num();
+    long int NodeStatusCH;
+
+    // adjust parameters
+    for (unsigned int i = 0; i < sys->PAndx.size(); i++) // index of the dyn_func paramaters that will be adjusted with one DFUN
+    {
+        for (unsigned int p = 0; p< sys->Opti->dyn_optv->opt.size(); p++)
+        {
+            if (sys->PAndx[i] == p)
+            {
+                // adjust bIC
+                if (sys->Opti->dyn_optv->Ptype[p] == "bIC")
+                {
+                    int index_bIC = sys->Opti->dyn_optv->Pindex[p];
+                    sys->NodT[sys->EXPndx[P_id]]->Set_bIC(index_bIC, opt[i] );
+                } else
+                {
+                    // other paramteres
+                }
+            }
+        }
+
+    }
+
+    /// Linked parameters
+    if (sys->Opti->h_Lp)
+    {
+        adjust_Lp(sys, sys->Opti->dyn_optv, sys->EXPndx[P_id]);
+    }
+
+
+    // claculate equilibrium
+
+    // RUN GEMS3K
+    NodeStatusCH = sys->NodT[sys->EXPndx[P_id]]->GEM_run( false );
+
+    if( NodeStatusCH == OK_GEM_AIA || NodeStatusCH == OK_GEM_SIA  )
+    {
+//            sys->NodT[i]->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
+    }
+    else
+    {
+        // possible return status analysis, error message
+//            sys->NodT[i]->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
+        cout<<"For experiment titration "<<sys->EXPndx[P_id]+1<< endl;
+        cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
+    }
+
+
+    // calculate residual
+    residual = sys->get_residual (sys->EXPndx[P_id], sys->DYFndx);
+
+    return residual;
+}
+
 
 
 void titration (TGfitTask *sys)

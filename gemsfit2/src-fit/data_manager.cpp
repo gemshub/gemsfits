@@ -47,32 +47,24 @@
 // Constructor
 Data_Manager::Data_Manager( )
 {
-    // GEMSFIT logfile
-    //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
-//    ofstream fout;
-//    fout.open(gpf->FITLogFile().c_str(), ios::app);
-//    if( fout.fail() )
-//    { cout<<"Output fileopen error"<<endl; exit(1); }
-
     // Read parameters for database connection
-    gpf->flog << "02. data_manager.cpp(57). Reading database parameter get_db_specs(); " << endl;
+    gpf->flog << "02. data_manager.cpp(51). Reading database parameter get_db_specs(); " << endl;
     get_db_specs_txt();
 
     // Read measurement data from EJDB server
-    gpf->flog << "03. data_manager.cpp(61). Reading in the data selection query; " << endl;
+    gpf->flog << "03. data_manager.cpp(55). Reading in the data selection query; " << endl;
     // Readin in the data slection query
     DataSelect = readin_JSON("<DataSelect>");
-    gpf->flog << "04. data_manager.cpp(64). Reading in the Target function form the input file; " << endl;
+    gpf->flog << "04. data_manager.cpp(58). Reading in the Target function form the input file; " << endl;
     DataTarget = readin_JSON("<DataTarget>");
 
     // Getting the query result data into the Data_Manager class
-    gpf->flog << "05. data_manager.cpp(68). Getting data form the EJDB database; " << endl;
+    gpf->flog << "05. data_manager.cpp(62). Getting data form the EJDB database; " << endl;
     get_EJDB();
 
-    gpf->flog << "07. data_manager.cpp(71). Getting distinct T and P pairs; " << endl;
+    gpf->flog << "07. data_manager.cpp(65). Getting distinct T and P pairs; " << endl;
     get_distinct_TP();
 
-//    fout.close();
 }
 
 

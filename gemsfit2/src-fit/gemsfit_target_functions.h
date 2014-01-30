@@ -85,6 +85,8 @@ void adjust_DMc (int i, double new_DMc, TGfitTask *sys);
 */
 void adjust_bIC (int i, double new_bIC, TGfitTask *sys);
 
+void adjust_bIC (int i, int exp, double new_bIC, TGfitTask *sys);
+
 /**
 * Sets the new TK returned form the optimization algorithm
 * @param i          position of the TK in the parameter/optimization vector
@@ -117,10 +119,15 @@ void adjust_RDc (TGfitTask *sys);
 /**
 * Sets the new value of the linked element in bIC (bulk composition) vector
 * @param sys    pointer to data object that holds the data of the current TGfitTask struct
+* @param optv   pointer to the object holding the optimization vector, UB, LB etc.
+* @param exp    experiment index
 * @author DM
 * @date 13.06.2013
 */
-void adjust_Lp (TGfitTask *sys);
+void adjust_Lp (TGfitTask *sys, opti_vector *optv, int exp);
+
+//void adjust_Lp (TGfitTask *sys );
+
 
 /**
 * Checks if the unit specified in the target function in the input file corresponds with the unit in the

@@ -93,6 +93,8 @@ private:
 
     void get_logK_TPpairs();
 
+    void get_Lparams_delta();
+
 
     /// the GEMSFIT configuration file (fixed to SS_GEMSFIT_input.dat)
     string param_file;
@@ -120,7 +122,8 @@ public:
     ResPrint* print;
 
     // indexes used in the dynamic functions//
-    vector<int> EXPndx, COMPndx, PHndx, PHPndx;
+    vector<int> EXPndx, COMPndx, PHndx, PHPndx, PAndx;
+    int DYFndx;
     // true if gradient method is used
     bool h_grad;
     // titration IC initial values in moles //
@@ -140,19 +143,11 @@ public:
             string exp_unit;
             string exp_DCP;
             double meas_average;
-        };
-        vector<obj_fun*> objfun;
-
-        struct dyn_fun /// structure holding the information about the data to compare from the experiments
-        {
-            string exp_phase;
-            string exp_CT;
-            string exp_CN;
-            string exp_unit;
-            string exp_DCP;
             string param_type;
         };
-        vector<dyn_fun*> dynfun;
+        vector<obj_fun*> objfun;
+        vector<obj_fun*> objfunold;
+        vector<obj_fun*> dynfun;
     };
 
     TargetFunction* Tfun; /// pointer to target function structure
@@ -193,6 +188,15 @@ public:
    * @date 24.07.2013
    */
    void get_sum_of_residuals ( double &residual);
+
+   /**
+   * Gets the residual from one experiment (exp index) and based on one comparison option (obj index in Tfun->objfun[obj])
+   * @param exp index of experiment
+   * @param obj index of objective function what to compare
+   * @author DM
+   * @date 30.01.2014
+   */
+   double get_residual (int exp, int obj);
 
    void add_MC_scatter(vector<double> scatter);
 

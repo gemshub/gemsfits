@@ -64,6 +64,8 @@ double titfunc(const std::vector<double> &x, std::vector<double> &grad, void *ob
 
 void dynfun (TGfitTask *sys);
 
+double minfunc(const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data );
+
 
 void titrationG(TGfitTask *sys);
 double golden(double a, double b, double c, double d, int EXPndx, TGfitTask *sys);

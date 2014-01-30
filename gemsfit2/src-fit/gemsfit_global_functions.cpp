@@ -152,8 +152,13 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     /// DYNAMIC FUNCTION
     if (sys->Opti->h_dynfun)
     {
+        sys->Tfun->objfunold = sys->Tfun->objfun;
+        sys->Tfun->objfun = sys->Tfun->dynfun;
         dynfun(sys);
+        sys->Tfun->objfun = sys->Tfun->objfunold;
     }
+
+
 //    /// Linked parameters
 //    if (sys->Opti->h_Lp)
 //    {
