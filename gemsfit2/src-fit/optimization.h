@@ -115,7 +115,7 @@ public:
     vector<double> OptUpBounds;
     vector<double> OptLoBounds;
 
-    opti_vector *dyn_optv; ///< pointer to optimization
+    opti_vector dyn_optv; ///< pointer to optimization
 
 
     /// printing information (get from SS_GEMSFIT_input.dat)

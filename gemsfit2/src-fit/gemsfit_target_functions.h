@@ -124,7 +124,7 @@ void adjust_RDc (TGfitTask *sys);
 * @author DM
 * @date 13.06.2013
 */
-void adjust_Lp (TGfitTask *sys, opti_vector *optv, int exp);
+void adjust_Lp (TGfitTask *sys, opti_vector optv, int exp);
 
 //void adjust_Lp (TGfitTask *sys );
 

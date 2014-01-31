@@ -202,20 +202,21 @@ void adjust_RDc (TGfitTask *sys)
     }
 }
 
-void adjust_Lp (TGfitTask *sys, opti_vector *optv, int exp)
+void adjust_Lp (TGfitTask *sys, opti_vector optv, int exp)
 {
-    for (unsigned int i=0; i < optv->Lparams.size(); ++i )
+    for (unsigned int i=0; i < optv.Lparams.size(); ++i )
     {
-        double new_param=0;
-        int LP_index = optv->Lparams[i]->index;
+        double delta=0;
+        int LP_index = optv.Lparams[i]->index;
 
-        for (unsigned int j=0; j < optv->Lparams[i]->L_param.size(); ++j )
+        for (unsigned int j=0; j < optv.Lparams[i]->L_param.size(); ++j )
         {
-            new_param += optv->Lparams[i]->L_coef[j] * sys->NodT[exp]->Get_bIC(optv->Lparams[i]->L_param_ind[j]);
+            delta += optv.Lparams[i]->L_coef[j] * sys->NodT[exp]->Get_bIC(optv.Lparams[i]->L_param_ind[j]);
         }
-        new_param += sys->NodT[exp]->Get_bIC(LP_index);
-        sys->NodT[exp]->Set_bIC(LP_index, new_param);
-        optv->Lparams[i]->EV = new_param;
+        delta = optv.Lparams[i]->delta[exp] - delta;
+        delta += sys->NodT[exp]->Get_bIC(LP_index);
+        sys->NodT[exp]->Set_bIC(LP_index, delta);
+        optv.Lparams[i]->EV = delta;
     }
 }
 

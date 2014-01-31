@@ -57,7 +57,7 @@ optimization::optimization()
     //soring out the global paramaters vs the paramaters used in the dynamic functions
     if (h_dynfun)
     {
-        dyn_optv = new opti_vector;
+        dyn_optv = *this;
         sort_dynfun_param();
     }
 }
@@ -114,19 +114,19 @@ void optimization::sort_dynfun_param()
     int Nparam1 = optv.size(), Nparam2 = optv.size();
     for (unsigned int i = 0; i<Nparam1; i++)
     {
-        if ((dyn_optv->Ptype[i] != "bIC") && (dyn_optv->Ptype[i] != "TK") && (dyn_optv->Ptype[i] != "P"))
+        if ((dyn_optv.Ptype[i] != "bIC") && (dyn_optv.Ptype[i] != "TK") && (dyn_optv.Ptype[i] != "P"))
         {
-            dyn_optv->LB.erase(dyn_optv->LB.begin() + i);
-            dyn_optv->Pindex.erase(dyn_optv->Pindex.begin() +i);
-            dyn_optv->Ptype.erase(dyn_optv->Ptype.begin() +i);
-            dyn_optv->UB.erase(dyn_optv->UB.begin() +i);
-            dyn_optv->opt.erase(dyn_optv->opt.begin() +i);
-            dyn_optv->optv0.erase(dyn_optv->optv0.begin() + i);
+            dyn_optv.LB.erase(dyn_optv.LB.begin() + i);
+            dyn_optv.Pindex.erase(dyn_optv.Pindex.begin() +i);
+            dyn_optv.Ptype.erase(dyn_optv.Ptype.begin() +i);
+            dyn_optv.UB.erase(dyn_optv.UB.begin() +i);
+            dyn_optv.opt.erase(dyn_optv.opt.begin() +i);
+            dyn_optv.optv0.erase(dyn_optv.optv0.begin() + i);
             Nparam1--; i--;
         }
     }
 
-    dyn_optv->reactions.clear();
+    dyn_optv.reactions.clear();
     Lparams.clear();
 
     for (unsigned int i = 0; i<Nparam2; i++)

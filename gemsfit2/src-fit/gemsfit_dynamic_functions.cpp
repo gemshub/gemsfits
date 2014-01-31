@@ -39,7 +39,6 @@
 
 void dynfun (TGfitTask *sys)
 {
-    cout << " we are in the dynamic functions " << endl;
     string param_type;
     int P_id = omp_get_thread_num();
 
@@ -48,22 +47,22 @@ void dynfun (TGfitTask *sys)
     {
         param_type = sys->Tfun->dynfun[j]->param_type;
 
+        vector <double> x, UB, LB;
+        for (unsigned int p = 0; p < sys->Opti->dyn_optv.opt.size(); p++)
+        {
+            if (sys->Opti->dyn_optv.Ptype[p] == param_type)
+            {
+                x.push_back(sys->Opti->dyn_optv.opt[p]);
+                UB.push_back(sys->Opti->dyn_optv.UB[p]);
+                LB.push_back(sys->Opti->dyn_optv.LB[p]);
+                sys->PAndx.push_back(p);
+            }
+        }
+
         for (unsigned int i = 0; i<sys->experiments.size(); i++)
         {
             sys->EXPndx[P_id]=i;
             sys->DYFndx = j;
-
-            vector <double> x, UB, LB;
-            for (unsigned int p = 0; p < sys->Opti->dyn_optv->opt.size(); p++)
-            {
-                if (sys->Opti->dyn_optv->Ptype[p] == param_type)
-                {
-                    x.push_back(sys->Opti->dyn_optv->opt[p]);
-                    UB.push_back(sys->Opti->dyn_optv->UB[p]);
-                    LB.push_back(sys->Opti->dyn_optv->LB[p]);
-                    sys->PAndx.push_back(p);
-                }
-            }
 
             nlopt::opt opt_HCL(nlopt::LN_BOBYQA, x.size());
 
@@ -79,18 +78,18 @@ void dynfun (TGfitTask *sys)
 
             nlopt::result result = opt_HCL.optimize(x, minf);
 
+            double xx = minf;
+
+
+
+
+
             // Store result parameters
 //            sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt = x[0];
 
         }
-
-
+        x.clear(); UB.clear(); LB.clear(); sys->PAndx.clear();
     }
-
-
-
-
-
 }
 
 double minfunc ( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data )
@@ -103,14 +102,14 @@ double minfunc ( const std::vector<double> &opt, std::vector<double> &grad, void
     // adjust parameters
     for (unsigned int i = 0; i < sys->PAndx.size(); i++) // index of the dyn_func paramaters that will be adjusted with one DFUN
     {
-        for (unsigned int p = 0; p< sys->Opti->dyn_optv->opt.size(); p++)
+        for (unsigned int p = 0; p< sys->Opti->dyn_optv.opt.size(); p++)
         {
             if (sys->PAndx[i] == p)
             {
                 // adjust bIC
-                if (sys->Opti->dyn_optv->Ptype[p] == "bIC")
+                if (sys->Opti->dyn_optv.Ptype[p] == "bIC")
                 {
-                    int index_bIC = sys->Opti->dyn_optv->Pindex[p];
+                    int index_bIC = sys->Opti->dyn_optv.Pindex[p];
                     sys->NodT[sys->EXPndx[P_id]]->Set_bIC(index_bIC, opt[i] );
                 } else
                 {
@@ -129,6 +128,14 @@ double minfunc ( const std::vector<double> &opt, std::vector<double> &grad, void
 
 
     // claculate equilibrium
+    sys->NodT[sys->EXPndx[P_id]]->Set_TK(273.15 + sys->experiments[sys->EXPndx[P_id]]->sT);
+    sys->NodT[sys->EXPndx[P_id]]->Set_P(100000 * sys->experiments[sys->EXPndx[P_id]]->sP);
+
+    vector<DATABR*> dBR;
+    dBR.push_back(sys->NodT[sys->EXPndx[P_id]]->pCNode());
+
+    // Asking GEM to run with automatic initial approximation
+    dBR.at(0)->NodeStatusCH = NEED_GEM_AIA;
 
     // RUN GEMS3K
     NodeStatusCH = sys->NodT[sys->EXPndx[P_id]]->GEM_run( false );
@@ -144,6 +151,11 @@ double minfunc ( const std::vector<double> &opt, std::vector<double> &grad, void
         cout<<"For experiment titration "<<sys->EXPndx[P_id]+1<< endl;
         cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
     }
+
+    double meas_pH = sys->experiments[sys->EXPndx[P_id]]->expphases[0]->phprop[0]->Qnt;
+    double calc_pH = sys->NodT[sys->EXPndx[P_id]]->Get_pH();
+
+    residual = abs (sys->experiments[sys->EXPndx[P_id]]->expphases[0]->phprop[0]->Qnt - sys->NodT[sys->EXPndx[P_id]]->Get_pH());
 
 
     // calculate residual

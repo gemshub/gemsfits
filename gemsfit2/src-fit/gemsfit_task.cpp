@@ -95,6 +95,7 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
 
     /// function in iofiles.cpp to read the logK lookup array instead of get function!
     get_logK_TPpairs ();
+    get_Lparams_delta ();
 
     // check for errors and inconsitencies of input options and parameters
     gfit_error ( );
@@ -122,9 +123,9 @@ void TGfitTask::gfit_error ( )
     {
         h_dynfun = true;
 
-    for (unsigned int i=0; i<Opti->dyn_optv->opt.size(); ++i)
+    for (unsigned int i=0; i<Opti->dyn_optv.opt.size(); ++i)
     {
-        if ((Opti->dyn_optv->Ptype[i] == "bIC") || (Opti->dyn_optv->Ptype[i] == "TK") || (Opti->dyn_optv->Ptype[i] == "P"))  h_param_dynfun = true;
+        if ((Opti->dyn_optv.Ptype[i] == "bIC") || (Opti->dyn_optv.Ptype[i] == "TK") || (Opti->dyn_optv.Ptype[i] == "P"))  h_param_dynfun = true;
     }
 
     if (!(h_dynfun == h_param_dynfun))
@@ -973,18 +974,19 @@ void TGfitTask::get_logK_TPpairs()
 
 void TGfitTask::get_Lparams_delta()
 {
-//    for (unsigned int )
-//    for (unsigned int i=0; i < Opti->dyn_optv->Lparams.size(); ++i )
-//    {
-//        double new_param=0;
-//        int LP_index = Opti->dyn_optv->Lparams[i]->index;
-
-//        for (unsigned int j=0; j < Opti->dyn_optv->Lparams[i]->L_param.size(); ++j )
-//        {
-//            delta += Opti->dyn_optv->Lparams[i]->L_coef[j] * sys->NodT[exp]->Get_bIC(optv->Lparams[i]->L_param_ind[j]);
-//        }
-
-//    }
+    double delta;
+    for (unsigned int i=0; i < Opti->dyn_optv.Lparams.size(); ++i )
+    {
+        for (unsigned int e=0; e < experiments.size(); e++ )
+        {
+            delta=0.0;
+            for (unsigned int j=0; j < Opti->dyn_optv.Lparams[i]->L_param.size(); ++j )
+            {
+                delta += Opti->dyn_optv.Lparams[i]->L_coef[j] * NodT[e]->Get_bIC(Opti->dyn_optv.Lparams[i]->L_param_ind[j]);
+            }
+            Opti->dyn_optv.Lparams[i]->delta.push_back(delta);
+        }
+    }
 }
 
 // Main function that calculates the sum of residuals
