@@ -140,7 +140,7 @@ static const char *url = "url"; ///	                              1		     string
     static const char *TT = "TT"; ///                                       string              target function type
     static const char *WT = "WT"; ///                                       string              weight type
     static const char *OFUN = "OFUN"; ///                                   array               Objective function
-    static const char *DFUN = "DFUN"; ///
+    static const char *NFUN = "NFUN"; ///
         static const char *CT = "CT"; ///                                   string              type of component/data to compare
 //            static const char *property = "prop"; ///                           string              keyword for comparing properties with names such as pH, Q, IS, etc.
         static const char *CN = "CN"; ///                                   string              name of data to compare e.g. Al, pH, etc.
@@ -154,6 +154,7 @@ static const char *url = "url"; ///	                              1		     string
 // Name of Target Functions and weights
 static const char *lsq = "lsq"; ///                                         string              least square function (measured-computed)^2
 static const char *lsq_norm = "lsq_norm"; ///                               string              normalized to experimental average, least square
+static const char *abs_dif = "abs_dif";///                                  string              form nested optimization use abs_dif
 static const char *inverr = "inverr"; ///                                   string              inverse weight as 1/error
 static const char *inverr2 = "inverr2"; ///                                 string              inverse weight as 1/error^2
 static const char *inverr3 = "inverr3"; ///                                 string              inverse weight as 1/measured^2

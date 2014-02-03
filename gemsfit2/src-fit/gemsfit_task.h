@@ -91,8 +91,18 @@ private:
     */
     void  setnodes( );
 
+    /**
+    * Gets the value of the Log of the equilibrium constant for the marked reactions in the input file based on the G0 values in the used database
+    * @author DM
+    * @date 01.04.2013
+    */
     void get_logK_TPpairs();
 
+    /**
+    * Gets the initial value of (a+b) form c=(a+b) for each experiment where c is a linked paramater to a and b with coeficients 1 and 1. also set initial values and bounds.
+    * @author DM
+    * @date 03.02.2014
+    */
     void get_Lparams_delta();
 
 
@@ -147,7 +157,7 @@ public:
         };
         vector<obj_fun*> objfun;
         vector<obj_fun*> objfunold;
-        vector<obj_fun*> dynfun;
+        vector<obj_fun*> nestfun;
     };
 
     TargetFunction* Tfun; /// pointer to target function structure
@@ -198,9 +208,20 @@ public:
    */
    double get_residual (int exp, int obj);
 
+   /**
+   * Adds the Monte Carlo Scatter to the measured values
+   * @param scatter vector of scatter values
+   * @author DM
+   * @date 30.10.2013
+   */
    void add_MC_scatter(vector<double> scatter);
 
-   int get_number_of_residuals( );
+   /**
+   * Counts the number of residuals basesd on the current what to compare
+   * @author DM
+   * @date 30.10.2013
+   */
+   int get_number_of_residuals(TargetFunction *Tfun );
 
    void Ainit_optim (std::vector<double> &optv_);
 

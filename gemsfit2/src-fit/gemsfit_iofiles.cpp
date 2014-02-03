@@ -759,7 +759,7 @@ void get_gems_fit_DBR_txt(TNode* node , opti_vector *op)
         {
             int nl = 0;
             // Here you must write your code
-            op->h_dynfun = true;
+            op->h_nestfun = true;
             for(unsigned  int ii=0; ii<vFormats.size(); ii++ )
             {
 cout<< "Parameter: " << DataBR_fields[nfild].name << " Type " << vFormats[ii].type << " Index " << vFormats[ii].index << endl;
@@ -1100,6 +1100,10 @@ outField Data_Manager_fields[9] =
       "\n#          \"molal\":  mol/(kg H2O), \"logm\": log(molal), \"-loga\": negated log(activity) for pH;"
       "\n#          \"g\"; \"kg\"; \"cm3\"; \"m3\"; \"molfrac\": mole fraction; J/mol for Gex "
       "\n#           ..."
+      "\n#  \"NFUN\": nested objective function, list [] of terms {} for measured porperties to compare for each experiment independently for adjusting:"
+      "\n#            same construction as the objective function and one more term:"
+      "\n#       \"Ptype\": the type of paramater that has to be fitted against the compared property. e.g bIC, T, P"
+      "\n#"
       "\n#       (conversions will be performed automatically)."
       "\n#     The comparison options are: "
       "\n#       aqueous phase (\"aq_gen\") elemental composition in \"molal\" or \"loga\" "

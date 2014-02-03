@@ -12,6 +12,7 @@
 
 
 
+
   
 
   
@@ -197,6 +198,12 @@ property-value pairs:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; <big><span style="font-weight: bold; font-family: monospace;">"molal"</span></big>:&nbsp; mol/(kg H2O), <big><span style="font-weight: bold; font-family: monospace;">"logm"</span></big>: log(molal), <big><span style="font-family: monospace; font-weight: bold;">"-loga"</span></big>: negated log(activity);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">"g"</span>; <span style="font-family: monospace; font-weight: bold;">"kg"</span>; <span style="font-family: monospace; font-weight: bold;">"cm3"</span>; <span style="font-weight: bold; font-family: monospace;">"m3"</span>; <span style="font-family: monospace; font-weight: bold;">"molratio"</span></big>: mole ratio; <big style="font-family: monospace; font-weight: bold;">"kJ/mol"</big>: energy units for Gex.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...<br>
+&nbsp;&nbsp;&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">"NFUN":</span></big>
+nested objective function, list [] of terms {} for measured porperties
+to compare for each experiment independently for adjusting:<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;  &nbsp;&nbsp;  &nbsp;&nbsp;  same construction as the objective function and one more term:<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;  &nbsp;&nbsp;  <big style="font-weight: bold;"><span style="font-family: monospace;">"Ptype"</span></big>: the type of paramater that has to be fitted against the compared property. e.g <big style="font-weight: bold;"><span style="font-family: monospace;">bIC, T, P</span></big><br>
+&nbsp;<br>
 &nbsp;&nbsp;&nbsp; The comparison options are:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; aqueous phase (<big><span style="font-weight: bold; font-family: monospace;">"aq_gen"</span></big>) elemental composition in <big><span style="font-family: monospace; font-weight: bold;">"molal"</span></big> or <big><span style="font-family: monospace; font-weight: bold;">"loga"</span></big> <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; aqueous phase (<big><span style="font-family: monospace; font-weight: bold;">"aq_gen"</span></big>)
@@ -229,8 +236,23 @@ Example definition of target function in JSON-style format:</p>
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; </span><span style="font-family: monospace;">{ "EPH": "aq_gen", "CT": "DC", "CN": "SiO2@", "DCP": "Q", "unit": "molal" },</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]<br>
-&nbsp;&nbsp; }'</span><br>
-</big>
+&nbsp;&nbsp; }'<br>
+<br>
+</span></big><span style="font-family: monospace; font-weight: bold;">
+&nbsp;</span><big><span style="font-family: monospace;"> '{ "Target": "name", "TT": "lsq", "WT": "inverr", "OFUN":</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { "EPH": "aq_gen", "CT": "IC", "CN": "Si", "unit": "molal" },</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { "EPH": "aq_gen", "CT": "IC", "CN": "Al", "unit": "molal" },</span><span style="font-family: monospace;"></span><span style="font-family: monospace;"></span><span style="font-family: monospace;"></span><br style="font-family: monospace;">
+<span style="font-family: monospace;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ], "NFUN":<br>
+&nbsp; &nbsp;&nbsp;&nbsp; [<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; { "Ptype": "bIC", "EPH": "aq_gen", "CT": "prop", "CN": "pH", "unit": "-loga" }<br>
+&nbsp; &nbsp;&nbsp;&nbsp; ]<br>
+&nbsp;&nbsp; }'</span></big><br>
+
 
 <br>
 <hr style="width: 100%; height: 2px;">

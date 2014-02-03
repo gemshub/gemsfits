@@ -48,17 +48,17 @@ optimization::optimization()
     gpf->flog << "11. optimization.cpp(48). Reading NLopt optimization settings from the input file; " << endl;
     get_nlopt_param_txt( optv );
 
+    //soring out the global paramaters vs the paramaters used in the dynamic functions
+    if (h_nestfun)
+    {
+//        nest_optv = *this;
+        sort_nestfun_param();
+    }
+
     if (OptBoundPerc > 0.)
     {
         UB = OptUpBounds;
         LB = OptLoBounds;
-    }
-
-    //soring out the global paramaters vs the paramaters used in the dynamic functions
-    if (h_dynfun)
-    {
-        dyn_optv = *this;
-        sort_dynfun_param();
     }
 }
 
@@ -109,35 +109,47 @@ void optimization::normalize_params(const vector<double> initguesses , bool Norm
     }
 }
 
-void optimization::sort_dynfun_param()
+void optimization::sort_nestfun_param()
 {
     int Nparam1 = optv.size(), Nparam2 = optv.size();
-    for (unsigned int i = 0; i<Nparam1; i++)
-    {
-        if ((dyn_optv.Ptype[i] != "bIC") && (dyn_optv.Ptype[i] != "TK") && (dyn_optv.Ptype[i] != "P"))
-        {
-            dyn_optv.LB.erase(dyn_optv.LB.begin() + i);
-            dyn_optv.Pindex.erase(dyn_optv.Pindex.begin() +i);
-            dyn_optv.Ptype.erase(dyn_optv.Ptype.begin() +i);
-            dyn_optv.UB.erase(dyn_optv.UB.begin() +i);
-            dyn_optv.opt.erase(dyn_optv.opt.begin() +i);
-            dyn_optv.optv0.erase(dyn_optv.optv0.begin() + i);
-            Nparam1--; i--;
-        }
-    }
+//    for (unsigned int i = 0; i<Nparam1; i++)
+//    {
+//        if ((nest_optv.Ptype[i] != "bIC") && (nest_optv.Ptype[i] != "TK") && (nest_optv.Ptype[i] != "P"))
+//        {
+//            nest_optv.LB.erase(nest_optv.LB.begin() + i);
+//            nest_optv.Pindex.erase(nest_optv.Pindex.begin() +i);
+//            nest_optv.Ptype.erase(nest_optv.Ptype.begin() +i);
+//            nest_optv.UB.erase(nest_optv.UB.begin() +i);
+//            nest_optv.opt.erase(nest_optv.opt.begin() +i);
+//            nest_optv.optv0.erase(nest_optv.optv0.begin() + i);
+//            Nparam1--; i--;
+//        }
+//    }
 
-    dyn_optv.reactions.clear();
+//    nest_optv.reactions.clear();
+    nest_optv.Lparams = Lparams;
     Lparams.clear();
 
     for (unsigned int i = 0; i<Nparam2; i++)
     {
         if ((Ptype[i] == "bIC") || (Ptype[i] == "TK") || (Ptype[i] == "P"))
         {
+            nest_optv.LB.push_back(LB[i]);
             LB.erase(LB.begin() + i);
+
+            nest_optv.Pindex.push_back(Pindex[i]);
             Pindex.erase(Pindex.begin() + i);
+
+            nest_optv.Ptype.push_back(Ptype[i]);
             Ptype.erase(Ptype.begin() + i);
+
+            nest_optv.UB.push_back(UB[i]);
             UB.erase(UB.begin() + i);
+
+            nest_optv.opt.push_back(opt[i]);
             opt.erase(opt.begin() + i);
+
+            nest_optv.optv0.push_back(optv0[i]);
             optv0.erase(optv0.begin() + i);
 
             OptLoBounds.erase(OptLoBounds.begin() + i);

@@ -150,13 +150,26 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     }
 
     /// DYNAMIC FUNCTION
-    if (sys->Opti->h_dynfun)
+    if (sys->Opti->h_nestfun)
     {
         sys->Tfun->objfunold = sys->Tfun->objfun;
-        sys->Tfun->objfun = sys->Tfun->dynfun;
-        dynfun(sys);
+        sys->Tfun->objfun = sys->Tfun->nestfun;
+        string old = sys->Tfun->type;
+        sys->Tfun->type = "abs_dif";
+        nestedfun(sys);
         sys->Tfun->objfun = sys->Tfun->objfunold;
+        sys->Tfun->type =old;
     }
+
+    // Clear already stored results
+    sys->computed_values_v.clear();
+    sys->measured_values_v.clear();
+    sys->Weighted_Tfun_residuals_v.clear();
+    sys->Tfun_residuals_v.clear();
+    sys->residuals_v.clear();
+    sys->weights.clear();
+
+    sys->print->print_clear();
 
 
 //    /// Linked parameters

@@ -62,9 +62,9 @@ void titration(TGfitTask *sys);
 double titfunc(const std::vector<double> &x, std::vector<double> &grad, void *obj_func_data);
 
 
-void dynfun (TGfitTask *sys);
+void nestedfun (TGfitTask *sys);
 
-double minfunc(const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data );
+double nestminfunc(const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data );
 
 
 void titrationG(TGfitTask *sys);

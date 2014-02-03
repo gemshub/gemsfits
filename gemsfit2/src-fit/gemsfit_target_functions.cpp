@@ -202,7 +202,7 @@ void adjust_RDc (TGfitTask *sys)
     }
 }
 
-void adjust_Lp (TGfitTask *sys, opti_vector optv, int exp)
+void adjust_Lp (TGfitTask *sys, optimization::nested optv, int exp)
 {
     for (unsigned int i=0; i < optv.Lparams.size(); ++i )
     {
@@ -726,11 +726,15 @@ double Tfunction (double computed_value, double measured_value, string type, TGf
     if (type == keys::lsq_norm)
     {
         Tf = pow( ((computed_value/objfun.meas_average) - (measured_value/objfun.meas_average)), 2);
-    }
-    else
+    } else
+    if (type == keys::abs_dif)
     {
-        // other type of Target functions
+       Tf = fabs(computed_value - measured_value);
+    } else
+    {
+      // other type of Target functions
     }
+
     return Tf;
 }
 

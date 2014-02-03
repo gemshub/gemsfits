@@ -62,7 +62,7 @@ private:
     virtual void get_nlopt_param_txt( vector<double> optv );
     virtual void define_nlopt_param( );
 
-    void sort_dynfun_param();
+    void sort_nestfun_param();
 
 public:
 
@@ -115,7 +115,29 @@ public:
     vector<double> OptUpBounds;
     vector<double> OptLoBounds;
 
-    opti_vector dyn_optv; ///< pointer to optimization
+    struct nested /// structure holding liked parameters information
+    {
+
+        vd opt; /// position 0 specie 0 etc.
+        // optimized parameter information
+        vd UB; /// upper boundary
+        vd LB; /// lower boundary
+        vs Ptype; /// name of parameter e.g G0
+        vi Pindex; /// index formatted value into reading array, index of phase, species
+
+        // vector containing the first guesses for normalization of the opt vector
+        vd optv0; /// vector storing initial parameter values
+
+        struct ival
+        {
+            vd val;
+        };
+        vector<ival*>i_opt;
+
+        vector<Lp*> Lparams;
+    };
+
+    nested nest_optv; ///< pointer to nested optimization
 
 
     /// printing information (get from SS_GEMSFIT_input.dat)

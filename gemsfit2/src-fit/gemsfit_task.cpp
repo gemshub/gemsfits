@@ -101,7 +101,7 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     gfit_error ( );
 
     double temp_res;
-    number_of_residuals = get_number_of_residuals();
+    number_of_residuals = get_number_of_residuals(Tfun);
     for (int j= 0; j <number_of_residuals; j++)
     {
         Tuckey_weights.push_back(1); // default value 1
@@ -118,26 +118,26 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
 
 void TGfitTask::gfit_error ( )
 {
-    bool h_dynfun = false, h_param_dynfun = false;
-    if (Tfun->dynfun.size() > 0)
+    bool h_nestfun = false, h_param_nestfun = false;
+    if (Tfun->nestfun.size() > 0)
     {
-        h_dynfun = true;
+        h_nestfun = true;
 
-    for (unsigned int i=0; i<Opti->dyn_optv.opt.size(); ++i)
+    for (unsigned int i=0; i<Opti->nest_optv.opt.size(); ++i)
     {
-        if ((Opti->dyn_optv.Ptype[i] == "bIC") || (Opti->dyn_optv.Ptype[i] == "TK") || (Opti->dyn_optv.Ptype[i] == "P"))  h_param_dynfun = true;
+        if ((Opti->nest_optv.Ptype[i] == "bIC") || (Opti->nest_optv.Ptype[i] == "TK") || (Opti->nest_optv.Ptype[i] == "P"))  h_param_nestfun = true;
     }
 
-    if (!(h_dynfun == h_param_dynfun))
+    if (!(h_nestfun == h_param_nestfun))
     {
-        if (!h_param_dynfun)
+        if (!h_param_nestfun)
         {
-            cout << "Error - When using dynamic functions (fitting paramaters in each system node/experiment) paramaters such as bIC,  TK or P have to be marked ";
+            cout << "Error - When using nested functions (fitting paramaters in each system node/experiment) paramaters such as bIC,  TK or P have to be marked ";
             exit(1);
         }
-        if (!h_dynfun)
+        if (!h_nestfun)
         {
-            cout << "Error - When fitting bIC, TK or P dynamic functions have to be added to DataTarget, which tell the program which is the dependent value from each node/experiment ";
+            cout << "Error - When fitting bIC, TK or P nested functions have to be added to DataTarget, which tell the program which is the dependent value from each node/experiment ";
             exit(1);
         }
     }
@@ -869,61 +869,61 @@ void TGfitTask::get_DataTarget ( )
     out.clear();
 
     // get DFUN
-    parse_JSON_object(DataTarget, keys::DFUN, out);
+    parse_JSON_object(DataTarget, keys::NFUN, out);
     for (unsigned int i = 0 ; i < out.size() ; i++)
     {
-        Opti->h_dynfun = true;
-        Tfun->dynfun.push_back(new TargetFunction::obj_fun); // initializing
-        Tfun->dynfun[i]->exp_phase = "NULL";
-        Tfun->dynfun[i]->exp_CT = "NULL";
-        Tfun->dynfun[i]->exp_CN = "NULL";
-        Tfun->dynfun[i]->exp_unit = "NULL";
-        Tfun->dynfun[i]->exp_DCP = "NULL";
-        Tfun->dynfun[i]->param_type = "NULL";
+        Opti->h_nestfun = true;
+        Tfun->nestfun.push_back(new TargetFunction::obj_fun); // initializing
+        Tfun->nestfun[i]->exp_phase = "NULL";
+        Tfun->nestfun[i]->exp_CT = "NULL";
+        Tfun->nestfun[i]->exp_CN = "NULL";
+        Tfun->nestfun[i]->exp_unit = "NULL";
+        Tfun->nestfun[i]->exp_DCP = "NULL";
+        Tfun->nestfun[i]->param_type = "NULL";
     }
     out.clear();
     j=0;
 //    int jj=0;
 
-    parse_JSON_array_object(DataTarget, keys::DFUN, keys::EPH, out);
+    parse_JSON_array_object(DataTarget, keys::NFUN, keys::EPH, out);
     for (unsigned int i = 0 ; i < out.size() ; i++)
     {
-        Tfun->dynfun[i]->exp_phase = out[i];
+        Tfun->nestfun[i]->exp_phase = out[i];
     }
     out.clear();
 
-    parse_JSON_array_object(DataTarget, keys::DFUN, keys::CT, out);
-    parse_JSON_array_object(DataTarget, keys::DFUN, keys::DCP, out2);
+    parse_JSON_array_object(DataTarget, keys::NFUN, keys::CT, out);
+    parse_JSON_array_object(DataTarget, keys::NFUN, keys::DCP, out2);
     for (unsigned int i = 0 ; i < out.size() ; i++)
     {
-        Tfun->dynfun[i]->exp_CT = out[i];
+        Tfun->nestfun[i]->exp_CT = out[i];
         if ((out[i] == keys::DC) && (out2.size() > 0))
         {
-            Tfun->dynfun[i]->exp_DCP = out2[j];
+            Tfun->nestfun[i]->exp_DCP = out2[j];
             ++j;
         }
     }
     out.clear();
     out2.clear();
 
-    parse_JSON_array_object(DataTarget, keys::DFUN, keys::CN, out);
+    parse_JSON_array_object(DataTarget, keys::NFUN, keys::CN, out);
     for (unsigned int i = 0 ; i < out.size() ; i++)
     {
-        Tfun->dynfun[i]->exp_CN = out[i];
+        Tfun->nestfun[i]->exp_CN = out[i];
     }
     out.clear();
 
-    parse_JSON_array_object(DataTarget, keys::DFUN, keys::Qunit, out);
+    parse_JSON_array_object(DataTarget, keys::NFUN, keys::Qunit, out);
     for (unsigned int i = 0 ; i < out.size() ; i++)
     {
-        Tfun->dynfun[i]->exp_unit = out[i];
+        Tfun->nestfun[i]->exp_unit = out[i];
     }
     out.clear();
 
-    parse_JSON_array_object(DataTarget, keys::DFUN, keys::Ptype, out);
+    parse_JSON_array_object(DataTarget, keys::NFUN, keys::Ptype, out);
     for (unsigned int i = 0 ; i < out.size() ; i++)
     {
-        Tfun->dynfun[i]->param_type = out[i];
+        Tfun->nestfun[i]->param_type = out[i];
     }
     out.clear();
 
@@ -975,18 +975,32 @@ void TGfitTask::get_logK_TPpairs()
 void TGfitTask::get_Lparams_delta()
 {
     double delta;
-    for (unsigned int i=0; i < Opti->dyn_optv.Lparams.size(); ++i )
+    for (unsigned int i=0; i < Opti->nest_optv.Lparams.size(); ++i )
     {
         for (unsigned int e=0; e < experiments.size(); e++ )
         {
             delta=0.0;
-            for (unsigned int j=0; j < Opti->dyn_optv.Lparams[i]->L_param.size(); ++j )
+            for (unsigned int j=0; j < Opti->nest_optv.Lparams[i]->L_param.size(); ++j )
             {
-                delta += Opti->dyn_optv.Lparams[i]->L_coef[j] * NodT[e]->Get_bIC(Opti->dyn_optv.Lparams[i]->L_param_ind[j]);
+                delta += Opti->nest_optv.Lparams[i]->L_coef[j] * NodT[e]->Get_bIC(Opti->nest_optv.Lparams[i]->L_param_ind[j]);
             }
-            Opti->dyn_optv.Lparams[i]->delta.push_back(delta);
+            Opti->nest_optv.Lparams[i]->delta.push_back(delta);
         }
     }
+
+    for (unsigned int i=0; i < Opti->nest_optv.Ptype.size(); ++i )
+    {
+        Opti->nest_optv.i_opt.push_back(new optimization::nested::ival);
+        if (Opti->nest_optv.Ptype[i] == "bIC")
+            for (unsigned int e=0; e < experiments.size(); e++ )
+            {
+                Opti->nest_optv.i_opt[i]->val.push_back(NodT[e]->Get_bIC(Opti->nest_optv.Pindex[i]));
+            }
+
+
+    }
+
+
 }
 
 // Main function that calculates the sum of residuals
@@ -1184,7 +1198,7 @@ double TGfitTask::get_residual(int exp, int obj)
 }
 
 // function for counting the total numbers of residuals that will be calculated
-int TGfitTask::get_number_of_residuals( )
+int TGfitTask::get_number_of_residuals(TargetFunction *Tfun)
 {
     int nr = 0;
     // loop trough objective function

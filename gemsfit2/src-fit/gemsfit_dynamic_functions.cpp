@@ -37,32 +37,52 @@
 #include "gemsfit_dynamic_functions.h"
 #include "gemsfit_target_functions.h"
 
-void dynfun (TGfitTask *sys)
+void nestedfun (TGfitTask *sys)
 {
     string param_type;
     int P_id = omp_get_thread_num();
 
-    // loop over the dyn functions
-    for (unsigned int j = 0; j<sys->Tfun->dynfun.size(); j++)
+    // loop over the nested functions
+    for (unsigned int j = 0; j<sys->Tfun->nestfun.size(); j++)
     {
-        param_type = sys->Tfun->dynfun[j]->param_type;
+        param_type = sys->Tfun->nestfun[j]->param_type;
 
-        vector <double> x, UB, LB;
-        for (unsigned int p = 0; p < sys->Opti->dyn_optv.opt.size(); p++)
-        {
-            if (sys->Opti->dyn_optv.Ptype[p] == param_type)
-            {
-                x.push_back(sys->Opti->dyn_optv.opt[p]);
-                UB.push_back(sys->Opti->dyn_optv.UB[p]);
-                LB.push_back(sys->Opti->dyn_optv.LB[p]);
-                sys->PAndx.push_back(p);
-            }
-        }
 
         for (unsigned int i = 0; i<sys->experiments.size(); i++)
         {
             sys->EXPndx[P_id]=i;
             sys->DYFndx = j;
+
+            vector <double> x, UB, LB;
+            for (unsigned int p = 0; p < sys->Opti->nest_optv.opt.size(); p++)
+            {
+                if (sys->Opti->nest_optv.Ptype[p] == param_type)
+                {
+                    double val = 0.0;
+                    //
+//                    double val = sys->NodT[sys->EXPndx[P_id]]->Get_bIC(sys->Opti->nest_optv.Pindex[p]);
+//                    val = sys->Opti->nest_optv.i_opt[p]->val[i];
+                    if (master_counter == 1){
+                       x.push_back(sys->Opti->nest_optv.opt[p]);
+                       UB.push_back(sys->Opti->nest_optv.UB[p]);
+                       LB.push_back(sys->Opti->nest_optv.LB[p]);
+
+                    } else
+                    {
+                        val = sys->NodT[sys->EXPndx[P_id]]->Get_bIC(sys->Opti->nest_optv.Pindex[p]);
+//                        val = sys->Opti->nest_optv.i_opt[p]->val[i];
+
+                        x.push_back(val);
+                        UB.push_back(val + (0.9*val));
+                        LB.push_back(val - (0.9*val));
+                    }
+
+                    //x.push_back(sys->Opti->nest_optv.opt[p]);
+                    //UB.push_back(sys->Opti->nest_optv.UB[p]);
+                    //LB.push_back(sys->Opti->nest_optv.LB[p]);
+                    sys->PAndx.push_back(p);
+                }
+            }
 
             nlopt::opt opt_HCL(nlopt::LN_BOBYQA, x.size());
 
@@ -71,28 +91,27 @@ void dynfun (TGfitTask *sys)
             opt_HCL.set_lower_bounds(LB);
             opt_HCL.set_upper_bounds(UB);
 
-            opt_HCL.set_min_objective(minfunc, sys);
+            opt_HCL.set_min_objective(nestminfunc, sys);
 
-            opt_HCL.set_xtol_rel(1e-6);
-            opt_HCL.set_xtol_abs(1e-6);
+            opt_HCL.set_xtol_rel(1e-8);
+            opt_HCL.set_xtol_abs(1e-8);
+
+            opt_HCL.set_maxeval( 1000 );
 
             nlopt::result result = opt_HCL.optimize(x, minf);
 
             double xx = minf;
 
-
-
-
-
             // Store result parameters
 //            sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt = x[0];
+            x.clear(); UB.clear(); LB.clear(); sys->PAndx.clear();
 
         }
-        x.clear(); UB.clear(); LB.clear(); sys->PAndx.clear();
+
     }
 }
 
-double minfunc ( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data )
+double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data )
 {
     TGfitTask *sys = reinterpret_cast<TGfitTask*>(obj_func_data);
     double residual = 0.0;
@@ -100,16 +119,16 @@ double minfunc ( const std::vector<double> &opt, std::vector<double> &grad, void
     long int NodeStatusCH;
 
     // adjust parameters
-    for (unsigned int i = 0; i < sys->PAndx.size(); i++) // index of the dyn_func paramaters that will be adjusted with one DFUN
+    for (unsigned int i = 0; i < sys->PAndx.size(); i++) // index of the nest_func paramaters that will be adjusted with one DFUN
     {
-        for (unsigned int p = 0; p< sys->Opti->dyn_optv.opt.size(); p++)
+        for (unsigned int p = 0; p< sys->Opti->nest_optv.opt.size(); p++)
         {
             if (sys->PAndx[i] == p)
             {
                 // adjust bIC
-                if (sys->Opti->dyn_optv.Ptype[p] == "bIC")
+                if (sys->Opti->nest_optv.Ptype[p] == "bIC")
                 {
-                    int index_bIC = sys->Opti->dyn_optv.Pindex[p];
+                    int index_bIC = sys->Opti->nest_optv.Pindex[p];
                     sys->NodT[sys->EXPndx[P_id]]->Set_bIC(index_bIC, opt[i] );
                 } else
                 {
@@ -123,7 +142,7 @@ double minfunc ( const std::vector<double> &opt, std::vector<double> &grad, void
     /// Linked parameters
     if (sys->Opti->h_Lp)
     {
-        adjust_Lp(sys, sys->Opti->dyn_optv, sys->EXPndx[P_id]);
+        adjust_Lp(sys, sys->Opti->nest_optv, sys->EXPndx[P_id]);
     }
 
 
