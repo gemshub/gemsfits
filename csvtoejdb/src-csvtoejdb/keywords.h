@@ -148,6 +148,8 @@ static const char *url = "url"; ///	                              1		     string
 //        static const char *Eunit = "Unit"; ///                              string              experiment element unit
         static const char *DCP = "DCP"; ///                                 string              dependent comp property
         static const char *Ptype = "Ptype"; ///
+        static const char *Tforumla ="Tformula"; ///                        string              name of titrants
+        static const char *Telem ="Telem"; ///                              string              name of elements
 
 
 

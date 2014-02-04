@@ -301,11 +301,12 @@ cout << DBname.c_str() << endl;
             if (!usepdatasets[0].empty())
             {
                 bson_append_start_array(&bq2, "$or");
-                int k=0;
+                unsigned int k=0; // counts trough the usesamples vector
                 int count = 0;
                 for (unsigned int j=0; j<usepdatasets.size(); ++j)
                 {
-                    for (k; k<usepsamples.size(); k++)
+//                    for (k; k<usepsamples.size(); k++)
+                        while (k<usepsamples.size())
                     {
                         if (!(usepsamples[k] == ""))
                         {
@@ -334,6 +335,7 @@ cout << DBname.c_str() << endl;
                             k++;
                             break;
                         }
+                        k++;
                     }
                 }
                 bson_append_finish_array(&bq2);
@@ -386,10 +388,11 @@ cout << DBname.c_str() << endl;
         {
             if (!skippdatasets[0].empty())
             {
-                int k=0;
+                unsigned int k=0; // counts torugh the skippsamples vector
                 for (unsigned int j=0; j<skippdatasets.size(); ++j)
                 {
-                    for (k; k<skippsamples.size(); k++)
+//                    for (k; k<skippsamples.size(); k++)
+                    while (k<skippsamples.size())
                     {
                         if (!(skippsamples[k] == ""))
                         {
@@ -407,6 +410,7 @@ cout << DBname.c_str() << endl;
                             k++;
                             break;
                         }
+                        k++;
                     }
                 }
             }
@@ -1059,7 +1063,8 @@ void Data_Manager::parse_JSON_array_object( string data_, const char *arr , cons
                                 result.push_back(sss);
                             }
                         }
-                        result.push_back("");
+                        if ((arr == keys::usepair) || (arr == keys::skippair))
+                        {result.push_back("");}
                     }
                 }
              }

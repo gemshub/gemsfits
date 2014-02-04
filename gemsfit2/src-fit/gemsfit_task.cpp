@@ -125,7 +125,7 @@ void TGfitTask::gfit_error ( )
 
     for (unsigned int i=0; i<Opti->nest_optv.opt.size(); ++i)
     {
-        if ((Opti->nest_optv.Ptype[i] == "bIC") || (Opti->nest_optv.Ptype[i] == "TK") || (Opti->nest_optv.Ptype[i] == "P"))  h_param_nestfun = true;
+        if ((Opti->nest_optv.Ptype[i] == "bIC") /*|| (Opti->nest_optv.Ptype[i] == "TK") || (Opti->nest_optv.Ptype[i] == "P")*/)  h_param_nestfun = true;
     }
 
     if (!(h_nestfun == h_param_nestfun))
@@ -473,13 +473,13 @@ void TGfitTask::setnodes()
         for (j=0; j<experiments[n]->sbcomp.size(); ++j)
         {
             DATACH* CSD;
-            long int nICb, nDCb, xDCb;
+            long int nICb, /*nDCb,*/ xDCb;
             char cName[32];
-            double DCm, ICm, njDC;
+            double DCm, /*ICm,*/ njDC;
 
             CSD = NodT[n]->pCSD(); // Get the pointer to chemical system definition data structure
             nICb = CSD->nICb;
-            nDCb = CSD->nDCb;
+//            nDCb = CSD->nDCb;
             strcpy( cName, experiments[n]->sbcomp[j]->comp.c_str() );
             // or -1 if no such name was found in the DATACH DC name list
             xDCb = NodT[n]->DC_name_to_xDB( cName ); // Returns DBR index of DC given the DC Name string
@@ -883,6 +883,7 @@ void TGfitTask::get_DataTarget ( )
     }
     out.clear();
     j=0;
+    int Tndx = -1;
 //    int jj=0;
 
     parse_JSON_array_object(DataTarget, keys::NFUN, keys::EPH, out);
@@ -910,6 +911,7 @@ void TGfitTask::get_DataTarget ( )
     for (unsigned int i = 0 ; i < out.size() ; i++)
     {
         Tfun->nestfun[i]->exp_CN = out[i];
+        if (out[i] == keys::pH) Tndx = i;
     }
     out.clear();
 
@@ -918,6 +920,14 @@ void TGfitTask::get_DataTarget ( )
     {
         Tfun->nestfun[i]->exp_unit = out[i];
     }
+    out.clear();
+
+    parse_JSON_array_object(DataTarget, keys::NFUN, keys::Tforumla, out);
+    Tfun->nestfun[Tndx]->Tformula = out;
+    out.clear();
+
+    parse_JSON_array_object(DataTarget, keys::NFUN, keys::Telem, out);
+    Tfun->nestfun[Tndx]->Telem = out;
     out.clear();
 
     parse_JSON_array_object(DataTarget, keys::NFUN, keys::Ptype, out);
@@ -1277,7 +1287,7 @@ int TGfitTask::get_number_of_residuals(TargetFunction *Tfun)
 
 void TGfitTask::add_MC_scatter( vector<double> scatter)
 {
-    double average = 0.0; // , min = 1e-05;
+    /*double average = 0.0; */// , min = 1e-05;
 //    double residuals = 0.0;
     int count = 0;
     // loop trough objective function
@@ -1380,7 +1390,7 @@ void TGfitTask::add_MC_scatter( vector<double> scatter)
 //    }
 //    Tfun->objfun[j]->meas_average = average;
 //    this->minimum_value = min;
-    average = 0.0;
+//    average = 0.0;
     }
 }
 

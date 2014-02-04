@@ -154,6 +154,8 @@ public:
             string exp_DCP;
             double meas_average;
             string param_type;
+            vector<string> Tformula;
+            vector<string> Telem;
         };
         vector<obj_fun*> objfun;
         vector<obj_fun*> objfunold;

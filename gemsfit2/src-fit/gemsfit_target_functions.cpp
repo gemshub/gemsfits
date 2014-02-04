@@ -508,11 +508,11 @@ double residual_phase_elemMR (int i, int p, int f, int j, TGfitTask *sys)
 //interprets the molar fraction formula
 void interpretMR (vector<string> *nom, vector<string> *denom, string name)
 {
-    int pos_f2, pos_f1, pos_end;
+    int pos_f2, pos_f1/*, pos_end*/;
     string f1 = "+", f2 ="/", nominator, denominator, elem, temp_nom, temp_denom;
 
     pos_f2 = name.find(f2);
-    pos_end   = name.find(f2,pos_f2+1);
+//    pos_end   = name.find(f2,pos_f2+1);
 
     nominator = name.substr(0, pos_f2);
     denominator = name.substr(pos_f2+1, (name.size()-1-pos_f2));
@@ -676,13 +676,13 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
 // residual for phase dependent components
 double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sys)
 {
-    const char *phase_name, *dcomp_name;
+    const char/* *phase_name,*/ *dcomp_name;
     int /* PHndx,*/ DCndx;
     double computed_value, measured_value;
     double Tfun_residual = 0.0, Weighted_Tfun_residual, weight_ = 1.0;
 //    DATACH* dCH = sys->NodT[i]->pCSD();
 
-    phase_name = sys->experiments[i]->expphases[p]->phase.c_str();
+//    phase_name = sys->experiments[i]->expphases[p]->phase.c_str();
     dcomp_name = sys->experiments[i]->expphases[p]->phDC[dc]->DC.c_str();
 //    PHndx = sys->NodT[i]->Ph_name_to_xDB(phase_name);
     DCndx = sys->NodT[i]->DC_name_to_xCH(dcomp_name);

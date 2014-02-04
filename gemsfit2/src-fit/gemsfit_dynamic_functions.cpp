@@ -46,65 +46,94 @@ void nestedfun (TGfitTask *sys)
     for (unsigned int j = 0; j<sys->Tfun->nestfun.size(); j++)
     {
         param_type = sys->Tfun->nestfun[j]->param_type;
-
-
         for (unsigned int i = 0; i<sys->experiments.size(); i++)
         {
-            sys->EXPndx[P_id]=i;
-            sys->DYFndx = j;
-
-            vector <double> x, UB, LB;
-            for (unsigned int p = 0; p < sys->Opti->nest_optv.opt.size(); p++)
+            double test_residual = sys->get_residual (i, j);
+            if (test_residual != 0.0)
             {
-                if (sys->Opti->nest_optv.Ptype[p] == param_type)
+                sys->EXPndx[P_id]=i;
+                sys->DYFndx = j;
+
+                vector <double> x, UB, LB;
+                for (unsigned int p = 0; p < sys->Opti->nest_optv.opt.size(); p++)
                 {
-                    double val = 0.0;
-                    //
-//                    double val = sys->NodT[sys->EXPndx[P_id]]->Get_bIC(sys->Opti->nest_optv.Pindex[p]);
-//                    val = sys->Opti->nest_optv.i_opt[p]->val[i];
-                    if (master_counter == 1){
-                       x.push_back(sys->Opti->nest_optv.opt[p]);
-                       UB.push_back(sys->Opti->nest_optv.UB[p]);
-                       LB.push_back(sys->Opti->nest_optv.LB[p]);
-
-                    } else
+                    if (sys->Opti->nest_optv.Ptype[p] == param_type)
                     {
-                        val = sys->NodT[sys->EXPndx[P_id]]->Get_bIC(sys->Opti->nest_optv.Pindex[p]);
-//                        val = sys->Opti->nest_optv.i_opt[p]->val[i];
+//                        double val = 0.0;
+                        if (sys->Tfun->objfun[sys->DYFndx]->exp_CN == "pH")
+                        {
+                            // check titrant in experiment
+                            for (unsigned int t=0; t<sys->Tfun->objfun[j]->Tformula.size(); t++)
+                            {
+                                for (unsigned int c=0; c<sys->experiments[i]->sbcomp.size(); c++)
+                                {
+                                    if (sys->experiments[i]->sbcomp[c]->comp == sys->Tfun->objfun[j]->Tformula[t])
+                                    {
+                                        int Endx = sys->NodT[i]->IC_name_to_xDB(sys->Tfun->objfun[j]->Telem[t].c_str());
+                                        if (Endx == sys->Opti->nest_optv.Pindex[p])
+                                        {
+                                            x.push_back(sys->Opti->nest_optv.opt[p]);
+                                            UB.push_back(sys->Opti->nest_optv.UB[p]);
+                                            LB.push_back(sys->Opti->nest_optv.LB[p]);
+                                            sys->PAndx.push_back(p);
+                                        }
+                                     }
+                                 }
+                            }
+                        } else
+                        {
+                        x.push_back(sys->Opti->nest_optv.opt[p]);
+                        UB.push_back(sys->Opti->nest_optv.UB[p]);
+                        LB.push_back(sys->Opti->nest_optv.LB[p]);
+                        sys->PAndx.push_back(p); // index of the parameter in the nest_optv->opt vector
+                        }
+                        //
+    //                    double val = sys->NodT[sys->EXPndx[P_id]]->Get_bIC(sys->Opti->nest_optv.Pindex[p]);
+    //                    val = sys->Opti->nest_optv.i_opt[p]->val[i];
+    //                    if (master_counter == 1){
 
-                        x.push_back(val);
-                        UB.push_back(val + (0.9*val));
-                        LB.push_back(val - (0.9*val));
+
+    //                    } else
+    //                    {
+    //                        val = sys->NodT[sys->EXPndx[P_id]]->Get_bIC(sys->Opti->nest_optv.Pindex[p]);
+    //                        val = sys->Opti->nest_optv.i_opt[p]->val[i];
+
+    //                        x.push_back(val);
+    //                        UB.push_back(val + (0.9*val));
+    //                        LB.push_back(val - (0.9*val));
+    //                    }
+
+                        //x.push_back(sys->Opti->nest_optv.opt[p]);
+                        //UB.push_back(sys->Opti->nest_optv.UB[p]);
+                        //LB.push_back(sys->Opti->nest_optv.LB[p]);
+
                     }
-
-                    //x.push_back(sys->Opti->nest_optv.opt[p]);
-                    //UB.push_back(sys->Opti->nest_optv.UB[p]);
-                    //LB.push_back(sys->Opti->nest_optv.LB[p]);
-                    sys->PAndx.push_back(p);
                 }
+
+
+                nlopt::opt opt(nlopt::LN_BOBYQA, x.size());
+
+                double minf=0;
+
+                opt.set_lower_bounds(LB);
+                opt.set_upper_bounds(UB);
+
+                opt.set_min_objective(nestminfunc, sys);
+
+                opt.set_xtol_rel(1e-8);
+                opt.set_xtol_abs(1e-8);
+
+                opt.set_maxeval( 1000 );
+
+                nlopt::result result = opt.optimize(x, minf);
+
+                double xx = minf;
+
+                // Store result parameters
+    //            sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt = x[0];
+                x.clear(); UB.clear(); LB.clear(); sys->PAndx.clear();
+
             }
-
-            nlopt::opt opt_HCL(nlopt::LN_BOBYQA, x.size());
-
-            double minf=0;
-
-            opt_HCL.set_lower_bounds(LB);
-            opt_HCL.set_upper_bounds(UB);
-
-            opt_HCL.set_min_objective(nestminfunc, sys);
-
-            opt_HCL.set_xtol_rel(1e-8);
-            opt_HCL.set_xtol_abs(1e-8);
-
-            opt_HCL.set_maxeval( 1000 );
-
-            nlopt::result result = opt_HCL.optimize(x, minf);
-
-            double xx = minf;
-
-            // Store result parameters
-//            sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt = x[0];
-            x.clear(); UB.clear(); LB.clear(); sys->PAndx.clear();
 
         }
 
@@ -123,12 +152,20 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, 
     {
         for (unsigned int p = 0; p< sys->Opti->nest_optv.opt.size(); p++)
         {
-            if (sys->PAndx[i] == p)
+            if (sys->PAndx[i] == p) // seacrches the paramaters withing the sys->Opti->nest_optv which can have other parameters
             {
                 // adjust bIC
                 if (sys->Opti->nest_optv.Ptype[p] == "bIC")
                 {
                     int index_bIC = sys->Opti->nest_optv.Pindex[p];
+//                    if ((sys->Tfun->objfun[sys->DYFndx]->exp_CN == "pH") && (opt.size() == 2))
+//                    {
+//                        double val =opt[0];
+//                        if (opt[1] > val) {val = opt[1];
+//                        sys->NodT[sys->EXPndx[P_id]]->Set_bIC(index_bIC, val ); break;}
+//                        else {val = opt[0];
+//                            sys->NodT[sys->EXPndx[P_id]]->Set_bIC(index_bIC, val ); break;}
+//                    } else
                     sys->NodT[sys->EXPndx[P_id]]->Set_bIC(index_bIC, opt[i] );
                 } else
                 {
