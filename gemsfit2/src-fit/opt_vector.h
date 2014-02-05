@@ -83,6 +83,7 @@ public:
     bool h_RDc; /// handle for checking if there are reaction constraints in the input file
     bool h_Lp; /// handle for checking if there are linked parameters in the input file
     bool h_nestfun; /// handle for checking if there are dynamic function in the DataTarget
+//    bool
 
     struct RDc /// structure storing reaction constraint information
     {
@@ -106,7 +107,9 @@ public:
         int index;
         string type;
         string name; /// name of the linked parameter e.g H
-        double IV; /// initial value
+        vd i_val; /// initial values
+        vd e_val; /// vector end values
+        double IV;
         double EV; /// end value
         vd delta; /// c = a + b; delta = (a + b) initial
         vs L_param; /// name of the parameters that the linked parameters is linked to eg. Cl in HCl and S in H2SO4

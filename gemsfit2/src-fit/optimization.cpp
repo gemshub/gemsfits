@@ -111,7 +111,7 @@ void optimization::normalize_params(const vector<double> initguesses , bool Norm
 
 void optimization::sort_nestfun_param()
 {
-    int Nparam1 = optv.size(), Nparam2 = optv.size();
+    int /*Nparam1 = optv.size(),*/ Nparam2 = optv.size();
 //    for (unsigned int i = 0; i<Nparam1; i++)
 //    {
 //        if ((nest_optv.Ptype[i] != "bIC") && (nest_optv.Ptype[i] != "TK") && (nest_optv.Ptype[i] != "P"))
@@ -130,7 +130,7 @@ void optimization::sort_nestfun_param()
     nest_optv.Lparams = Lparams;
     Lparams.clear();
 
-    for (unsigned int i = 0; i<Nparam2; i++)
+    for (int i = 0; i<Nparam2; i++)
     {
         if ((Ptype[i] == "bIC") || (Ptype[i] == "TK") || (Ptype[i] == "P"))
         {

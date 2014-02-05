@@ -95,7 +95,7 @@ void adjust_bIC (int i, int exp, double new_bIC, TGfitTask *sys)
     sys->NodT[exp]->Set_bIC(index_bIC, new_bIC );
 }
 
-void adjust_TK ( int i, double new_TK, TGfitTask *sys)
+void adjust_TK ( double new_TK, TGfitTask *sys)
 {
     for (unsigned int n=0; n<sys->NodT.size(); ++n)
     {
@@ -104,7 +104,7 @@ void adjust_TK ( int i, double new_TK, TGfitTask *sys)
     }
 }
 
-void adjust_P ( int i, double new_P, TGfitTask *sys)
+void adjust_P (double new_P, TGfitTask *sys)
 {
     for (unsigned int n=0; n<sys->NodT.size(); ++n)
     {
@@ -204,19 +204,24 @@ void adjust_RDc (TGfitTask *sys)
 
 void adjust_Lp (TGfitTask *sys, optimization::nested optv, int exp)
 {
+    int P_id = omp_get_thread_num();
+    exp = sys->EXPndx[P_id];
     for (unsigned int i=0; i < optv.Lparams.size(); ++i )
     {
-        double delta=0;
+        double param_change=0, delta = 0, new_param =0;
         int LP_index = optv.Lparams[i]->index;
 
         for (unsigned int j=0; j < optv.Lparams[i]->L_param.size(); ++j )
         {
-            delta += optv.Lparams[i]->L_coef[j] * sys->NodT[exp]->Get_bIC(optv.Lparams[i]->L_param_ind[j]);
+            delta += optv.Lparams[i]->L_coef[j] * sys->NodT[exp]->Get_bIC(optv.Lparams[i]->L_param_ind[j]); // C=(a*A + b*B); delta = (a*newA + b*newB)
         }
-        delta = optv.Lparams[i]->delta[exp] - delta;
-        delta += sys->NodT[exp]->Get_bIC(LP_index);
-        sys->NodT[exp]->Set_bIC(LP_index, delta);
-        optv.Lparams[i]->EV = delta;
+        param_change =  delta - optv.Lparams[i]->delta[exp];                                                // param_change = (a*newA + b*newB) - (inita*A + initb*B);
+        if (param_change != 0)
+        {
+            new_param = /*sys->NodT[exp]->Get_bIC(LP_index)*/optv.Lparams[i]->i_val[exp] + param_change;        // C = initC + param_change;
+            sys->NodT[exp]->Set_bIC(LP_index, new_param);
+            optv.Lparams[i]->e_val[exp] = new_param;
+        }
     }
 }
 
@@ -664,11 +669,11 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
     Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j]);
     Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j])*weight_;
 
-    sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
-    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,
-                          sys->experiments[i]->expphases[p]->phprop[pp]->property,
-                          sys->experiments[i]->expphases[p]->phprop[pp]->Qunit,
-                          measured_value,computed_value,Weighted_Tfun_residual, weight_ );
+//    sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
+//    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,
+//                          sys->experiments[i]->expphases[p]->phprop[pp]->property,
+//                          sys->experiments[i]->expphases[p]->phprop[pp]->Qunit,
+//                          measured_value,computed_value,Weighted_Tfun_residual, weight_ );
 
     return Weighted_Tfun_residual;
 }

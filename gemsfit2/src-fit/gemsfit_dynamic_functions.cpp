@@ -40,19 +40,24 @@
 void nestedfun (TGfitTask *sys)
 {
     string param_type;
-    int P_id = omp_get_thread_num();
+
 
     // loop over the nested functions
     for (unsigned int j = 0; j<sys->Tfun->nestfun.size(); j++)
     {
         param_type = sys->Tfun->nestfun[j]->param_type;
+            //#ifdef USE_MPI
+                omp_set_num_threads(sys->MPI);
+                #pragma omp parallel for
+            //#endif
         for (unsigned int i = 0; i<sys->experiments.size(); i++)
         {
+            int P_id = omp_get_thread_num();
             double test_residual = sys->get_residual (i, j);
             if (test_residual != 0.0)
             {
                 sys->EXPndx[P_id]=i;
-                sys->DYFndx = j;
+                sys->DYFndx[P_id]=j;
 
                 vector <double> x, UB, LB;
                 for (unsigned int p = 0; p < sys->Opti->nest_optv.opt.size(); p++)
@@ -60,32 +65,22 @@ void nestedfun (TGfitTask *sys)
                     if (sys->Opti->nest_optv.Ptype[p] == param_type)
                     {
 //                        double val = 0.0;
-                        if (sys->Tfun->objfun[sys->DYFndx]->exp_CN == "pH")
-                        {
-                            // check titrant in experiment
-                            for (unsigned int t=0; t<sys->Tfun->objfun[j]->Tformula.size(); t++)
-                            {
-                                for (unsigned int c=0; c<sys->experiments[i]->sbcomp.size(); c++)
-                                {
-                                    if (sys->experiments[i]->sbcomp[c]->comp == sys->Tfun->objfun[j]->Tformula[t])
-                                    {
-                                        int Endx = sys->NodT[i]->IC_name_to_xDB(sys->Tfun->objfun[j]->Telem[t].c_str());
-                                        if (Endx == sys->Opti->nest_optv.Pindex[p])
-                                        {
-                                            x.push_back(sys->Opti->nest_optv.opt[p]);
-                                            UB.push_back(sys->Opti->nest_optv.UB[p]);
-                                            LB.push_back(sys->Opti->nest_optv.LB[p]);
-                                            sys->PAndx.push_back(p);
-                                        }
-                                     }
-                                 }
-                            }
-                        } else
+//                        if (sys->Tfun->objfun[sys->DYFndx[P_id]]->exp_CN == "pH")
+//                        {
+//                            if (isTitration(sys, i, j, p))
+//                            {
+//                                x.push_back(sys->Opti->nest_optv.opt[p]);
+//                                UB.push_back(sys->Opti->nest_optv.UB[p]);
+//                                LB.push_back(sys->Opti->nest_optv.LB[p]);
+//                                sys->PAndx.push_back(p);
+//                            }
+//                        } else
                         {
                         x.push_back(sys->Opti->nest_optv.opt[p]);
                         UB.push_back(sys->Opti->nest_optv.UB[p]);
                         LB.push_back(sys->Opti->nest_optv.LB[p]);
-                        sys->PAndx.push_back(p); // index of the parameter in the nest_optv->opt vector
+//                        sys->PAndx.push_back(p); // index of the parameter in the nest_optv->opt vector
+                        sys->vPAndx[P_id]->ndx.push_back(p);
                         }
                         //
     //                    double val = sys->NodT[sys->EXPndx[P_id]]->Get_bIC(sys->Opti->nest_optv.Pindex[p]);
@@ -127,11 +122,11 @@ void nestedfun (TGfitTask *sys)
 
                 nlopt::result result = opt.optimize(x, minf);
 
-                double xx = minf;
+//                double xx = minf;
 
                 // Store result parameters
     //            sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt = x[0];
-                x.clear(); UB.clear(); LB.clear(); sys->PAndx.clear();
+                x.clear(); UB.clear(); LB.clear(); sys->PAndx.clear(); sys->vPAndx[P_id]->ndx.clear();
 
             }
 
@@ -148,24 +143,16 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, 
     long int NodeStatusCH;
 
     // adjust parameters
-    for (unsigned int i = 0; i < sys->PAndx.size(); i++) // index of the nest_func paramaters that will be adjusted with one DFUN
+    for (unsigned int i = 0; i < sys->vPAndx[P_id]->ndx.size(); i++) // index of the nest_func paramaters that will be adjusted with one DFUN
     {
-        for (unsigned int p = 0; p< sys->Opti->nest_optv.opt.size(); p++)
+        for ( int p = 0; p< (int) sys->Opti->nest_optv.opt.size(); p++)
         {
-            if (sys->PAndx[i] == p) // seacrches the paramaters withing the sys->Opti->nest_optv which can have other parameters
+            if (sys->vPAndx[P_id]->ndx[i] == p) // seacrches the paramaters withing the sys->Opti->nest_optv which can have other parameters
             {
                 // adjust bIC
                 if (sys->Opti->nest_optv.Ptype[p] == "bIC")
                 {
                     int index_bIC = sys->Opti->nest_optv.Pindex[p];
-//                    if ((sys->Tfun->objfun[sys->DYFndx]->exp_CN == "pH") && (opt.size() == 2))
-//                    {
-//                        double val =opt[0];
-//                        if (opt[1] > val) {val = opt[1];
-//                        sys->NodT[sys->EXPndx[P_id]]->Set_bIC(index_bIC, val ); break;}
-//                        else {val = opt[0];
-//                            sys->NodT[sys->EXPndx[P_id]]->Set_bIC(index_bIC, val ); break;}
-//                    } else
                     sys->NodT[sys->EXPndx[P_id]]->Set_bIC(index_bIC, opt[i] );
                 } else
                 {
@@ -173,10 +160,11 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, 
                 }
             }
         }
-
     }
 
     /// Linked parameters
+
+
     if (sys->Opti->h_Lp)
     {
         adjust_Lp(sys, sys->Opti->nest_optv, sys->EXPndx[P_id]);
@@ -211,11 +199,11 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, 
     double meas_pH = sys->experiments[sys->EXPndx[P_id]]->expphases[0]->phprop[0]->Qnt;
     double calc_pH = sys->NodT[sys->EXPndx[P_id]]->Get_pH();
 
-    residual = abs (sys->experiments[sys->EXPndx[P_id]]->expphases[0]->phprop[0]->Qnt - sys->NodT[sys->EXPndx[P_id]]->Get_pH());
+//    residual = abs (sys->experiments[sys->EXPndx[P_id]]->expphases[0]->phprop[0]->Qnt - sys->NodT[sys->EXPndx[P_id]]->Get_pH());
 
 
     // calculate residual
-    residual = sys->get_residual (sys->EXPndx[P_id], sys->DYFndx);
+    residual = sys->get_residual (sys->EXPndx[P_id], sys->DYFndx[P_id]);
 
     return residual;
 }
@@ -245,9 +233,9 @@ void titration (TGfitTask *sys)
 //        omp_set_num_threads(sys->MPI);
 //        #pragma omp parallel for
 //    //#endif
-    for (int i = 0; i<sys->experiments.size(); i++)
+    for (unsigned int i = 0; i<sys->experiments.size(); i++)
     {
-        int j;
+//        int j;
         int ICndx;
         int P_id = omp_get_thread_num();
 //        cout << P_id << endl;
@@ -257,7 +245,7 @@ void titration (TGfitTask *sys)
         h_pH[P_id] = false;
 
         // gets the index of aqeous phase
-        for (j = 0; j<sys->experiments[i]->expphases.size(); ++j)
+        for (unsigned j = 0; j<sys->experiments[i]->expphases.size(); ++j)
         {
             if (sys->experiments[i]->expphases[j]->phase == "aq_gen")
             {
@@ -267,7 +255,7 @@ void titration (TGfitTask *sys)
 
         // checks if pH is given in the data and gets the index of pH in phase property vector
         if (sys->PHndx[P_id] >= 0)
-            for (j = 0; j<sys->experiments[i]->expphases[sys->PHndx[P_id]]->phprop.size(); ++j)
+            for (unsigned j = 0; j<sys->experiments[i]->expphases[sys->PHndx[P_id]]->phprop.size(); ++j)
         {
                 if (sys->experiments[i]->expphases[sys->PHndx[P_id]]->phprop[j]->property == "pH")  // keys::pH
                 {
@@ -277,7 +265,7 @@ void titration (TGfitTask *sys)
         }
 
         // checks what to adjusts: either HCl or NaOH
-        for (j=0; j<sys->experiments[i]->sbcomp.size(); j++)
+        for (unsigned j=0; j<sys->experiments[i]->sbcomp.size(); j++)
         {
             if (sys->experiments[i]->sbcomp[j]->comp == "HCl")
             {
@@ -317,7 +305,7 @@ void titration (TGfitTask *sys)
 
             titfunc(x, gr, sys);
 
-            double pH_dif = abs (sys->experiments[i]->expphases[sys->PHndx[P_id]]->phprop[sys->PHPndx[P_id]]->Qnt - sys->NodT[i]->Get_pH());
+//            double pH_dif = abs (sys->experiments[i]->expphases[sys->PHndx[P_id]]->phprop[sys->PHPndx[P_id]]->Qnt - sys->NodT[i]->Get_pH());
 
             opt_HCL.set_lower_bounds(old_HCl[P_id]-0.9/**pH_dif*/*old_HCl[P_id]);
             opt_HCL.set_upper_bounds(old_HCl[P_id]+0.9/**pH_dif*/*old_HCl[P_id]);
@@ -350,7 +338,7 @@ void titration (TGfitTask *sys)
 
             titfunc(x, gr, sys);
 
-            double pH_dif = abs (sys->experiments[i]->expphases[sys->PHndx[P_id]]->phprop[sys->PHPndx[P_id]]->Qnt - sys->NodT[i]->Get_pH());
+//            double pH_dif = abs (sys->experiments[i]->expphases[sys->PHndx[P_id]]->phprop[sys->PHPndx[P_id]]->Qnt - sys->NodT[i]->Get_pH());
 
             opt_NaOH.set_lower_bounds(old_NaOH[P_id]-0.9/**pH_dif*/*old_NaOH[P_id]);
             opt_NaOH.set_upper_bounds(old_NaOH[P_id]+0.9/**pH_dif*/*old_NaOH[P_id]);
@@ -383,13 +371,13 @@ double titfunc(const std::vector<double> &x, std::vector<double> &grad, void *ob
     double dif = 0.0, new_moles = 0.0, residual = 0.0;
 
     // DATACH structure content
-    int i, nIC, nDC, nPH, ICndx, DCndx/*, PHndx*/;
-    long int NodeStatusCH, NodeHandle;
-    double P_pa, T_k/*, PMc*/;
+    int i, nIC, nDC, /*nPH,*/ ICndx/*, DCndx, PHndx*/;
+    long int NodeStatusCH/*, NodeHandle*/;
+//    double P_pa, T_k, PMc;
     double* new_moles_IC;
     double* xDC_up;
     double* xDC_lo;
-    double* Ph_surf;
+//    double* Ph_surf;
 
     // adjust titrant
 
@@ -402,10 +390,10 @@ double titfunc(const std::vector<double> &x, std::vector<double> &grad, void *ob
 
     nIC = dCH->nIC;	// nr of independent components
     nDC = dCH->nDC;	// nr of dependent components
-    nPH = dCH->nPH;
+//    nPH = dCH->nPH;
     xDC_up = new double[ nDC ];
     xDC_lo = new double[ nDC ];
-    Ph_surf = new double[ nPH ];
+//    Ph_surf = new double[ nPH ];
     new_moles_IC = new double [ nIC ]; // vector for holding the moles of independent components for each experiment
 
     // lower and upper bounds for concentration of DC
@@ -457,7 +445,7 @@ double titfunc(const std::vector<double> &x, std::vector<double> &grad, void *ob
             new_moles = sys->iH[P_id] + 1*dif/36.4611;
             sys->NodT[sys->EXPndx[P_id]]->Set_bIC(ICndx, new_moles);
             ICndx = sys->NodT[sys->EXPndx[P_id]]->IC_name_to_xDB("Cl");
-            double old_moles = sys->NodT[sys->EXPndx[P_id]]->Get_bIC(ICndx);
+//            double old_moles = sys->NodT[sys->EXPndx[P_id]]->Get_bIC(ICndx);
             new_moles = sys->iCl[P_id] + 1*dif/36.4611;
             sys->NodT[sys->EXPndx[P_id]]->Set_bIC(ICndx, new_moles);
 
@@ -492,183 +480,12 @@ double titfunc(const std::vector<double> &x, std::vector<double> &grad, void *ob
     }
 
     // calc residual
-    double meas_pH = sys->experiments[sys->EXPndx[P_id]]->expphases[sys->PHndx[P_id]]->phprop[sys->PHPndx[P_id]]->Qnt;
-    double calc_pH = sys->NodT[sys->EXPndx[P_id]]->Get_pH();
+//    double meas_pH = sys->experiments[sys->EXPndx[P_id]]->expphases[sys->PHndx[P_id]]->phprop[sys->PHPndx[P_id]]->Qnt;
+//    double calc_pH = sys->NodT[sys->EXPndx[P_id]]->Get_pH();
 
     residual = abs (sys->experiments[sys->EXPndx[P_id]]->expphases[sys->PHndx[P_id]]->phprop[sys->PHPndx[P_id]]->Qnt - sys->NodT[sys->EXPndx[P_id]]->Get_pH());
 
     return residual;
-}
-
-
-void titrationG(TGfitTask *sys)
-{
-    vector<bool> h_HCl, h_NaOH, h_pH;
-    vector<double> old_HCl, old_NaOH;
-    double sum_min = 0.0;
-
-    for (int i=1; i<sys->MPI+1; i++)
-    {
-        h_HCl.push_back(false);
-        h_NaOH.push_back(false);
-        h_pH.push_back(false);
-        old_HCl.push_back(0);
-        old_NaOH.push_back(0);
-    }
-
-    // loop trough all experiments
-//    //#ifdef USE_MPI
-//        omp_set_num_threads(sys->MPI);
-//        #pragma omp parallel for
-//    //#endif
-    for (unsigned int i = 0; i<sys->experiments.size(); i++)
-    {
-        unsigned int j;
-        int P_id = omp_get_thread_num();
-//        cout << P_id << endl;
-        h_HCl[P_id] = false; h_NaOH[P_id] = false;
-        // loop torugh all comp to check for titrant
-
-        h_pH[P_id] = false;
-
-        for (j = 0; j<sys->experiments[i]->expphases.size(); ++j)
-        {
-            if (sys->experiments[i]->expphases[j]->phase == "aq_gen")
-                sys->PHndx[P_id] = j;
-        }
-
-        if (sys->PHndx[P_id] > 0)
-            for (j = 0; j<sys->experiments[i]->expphases[sys->PHndx[P_id]]->phprop.size(); ++j)
-        {
-                if (sys->experiments[i]->expphases[sys->PHndx[P_id]]->phprop[j]->property == "pH")  // keys::pH
-                    h_pH[P_id] = true;
-        }
-
-
-        for (j=0; j<sys->experiments[i]->sbcomp.size(); j++)
-        {
-            if (sys->experiments[i]->sbcomp[j]->comp == "HCl")
-            {
-                h_HCl[P_id] = true;
-                old_HCl[P_id] = sys->experiments[i]->sbcomp[j]->Qnt;
-                sys->COMPndx[P_id] = j;
-            }
-            if (sys->experiments[i]->sbcomp[j]->comp == "NaOH")
-            {
-                h_NaOH[P_id] = true;
-                old_NaOH[P_id] = sys->experiments[i]->sbcomp[j]->Qnt;
-                sys->COMPndx[P_id] = j;
-            }
-        }
-
-//        for (j=0; j<sys->experiments[i]->expphases[0]->phprop.size(); ++j)
-//        {
-//            if (j<sys->experiments[i]->expphases[0]->phprop[j])
-//        }
-        //adjust HCl
-        if (h_HCl[P_id] && h_pH[P_id])
-        {
-            std::vector<double> x;
-            x.push_back( old_HCl[P_id]);
-
-            sys->EXPndx[P_id]=i;
-
-            vector<double> gr;
-
-            titfunc(x, gr, sys);
-
-            double pH_dif = abs (sys->experiments[i]->expphases[0]->phprop[0]->Qnt - sys->NodT[i]->Get_pH());
-
-            double c=min(sys->experiments[i]->expphases[0]->phprop[0]->Qnt, sys->NodT[i]->Get_pH());
-            double d=max(sys->experiments[i]->expphases[0]->phprop[0]->Qnt, sys->NodT[i]->Get_pH());
-
-            x[0] = sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt;
-
-            x[0] = golden(x[0]+x[0]/2,x[0]-x[0]/2, c, d, sys->EXPndx[P_id], sys);
-
-            pH_dif = abs (sys->experiments[i]->expphases[0]->phprop[0]->Qnt - sys->NodT[i]->Get_pH());
-
-            sys->EXPndx[P_id]=i;
-
-            sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt = x[0];
-
-        }
-
-        //adjust NaOH
-        if (h_NaOH[P_id]&& h_pH[P_id])
-        {
-
-            std::vector<double> x;
-            x.push_back( old_NaOH[P_id]);
-
-            sys->EXPndx[P_id]=i;
-
-            vector<double> gr;
-
-            titfunc(x, gr, sys);
-
-            double pH_dif = abs (sys->experiments[i]->expphases[0]->phprop[0]->Qnt - sys->NodT[i]->Get_pH());
-
-            double c=min(sys->experiments[i]->expphases[0]->phprop[0]->Qnt, sys->NodT[i]->Get_pH());
-            double d=max(sys->experiments[i]->expphases[0]->phprop[0]->Qnt, sys->NodT[i]->Get_pH());
-
-            x[0] = sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt;
-
-            x[0] = golden(x[0]+x[0]/2,x[0]-x[0]/2, c, d, sys->EXPndx[P_id], sys);
-
-            sys->EXPndx[P_id]=i;
-
-            pH_dif = abs (sys->experiments[i]->expphases[0]->phprop[0]->Qnt - sys->NodT[i]->Get_pH());
-
-            sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt = x[0];
-
-        }
-        h_HCl[P_id] = false; h_NaOH[P_id] = false; h_pH[P_id] = false;
-    }
-}
-
-double golden(double a, double b, double c, double d , int EXPndx, TGfitTask *sys)
-{
-    double tol = 0.0001;
-    double tau = (sqrt(5)-1)/2;
-
-    double x1 = a+(1-tau)*(b-a);
-    double x2 = a+tau*(b-a);
-
-    double f_x1 = get_pH(x1, EXPndx, sys);
-    double f_x2 = get_pH(x2, EXPndx, sys);
-
-    while (abs(c-d) > tol)
-    {
-        if (f_x1<f_x2)
-        {
-            b=x2;
-            x2=x1;
-            x1=a+(1-tau)*(b-a);
-
-            f_x1 = get_pH(x1, EXPndx, sys);
-            f_x2 = get_pH(x2, EXPndx, sys);
-        } else
-        {
-            a=x1;
-            x1=x2;
-            x2=a+tau*(b-a);
-
-            f_x1 = get_pH(x1, EXPndx, sys);
-            f_x2 = get_pH(x2, EXPndx, sys);
-        }
-    }
-
-    if (f_x1<f_x2)
-    {
-        get_pH(x1, EXPndx, sys);
-        return x1;
-    }
-    else
-    {
-        get_pH(x2, EXPndx, sys);
-        return x2;
-    }
 }
 
 double get_pH(double x, int EXPndx, TGfitTask *sys)
@@ -680,6 +497,26 @@ double get_pH(double x, int EXPndx, TGfitTask *sys)
 
     return sys->NodT[EXPndx]->Get_pH();
 
+}
+
+bool isTitration (TGfitTask *sys, int i, int j, int p)
+{
+    int P_id = omp_get_thread_num();
+        // check titrant in experiment
+    for (unsigned int t=0; t<sys->Tfun->objfun[j]->Tformula.size(); t++)
+    {
+        for (unsigned int c=0; c<sys->experiments[i]->sbcomp.size(); c++)
+        {
+            if (sys->experiments[i]->sbcomp[c]->comp == sys->Tfun->objfun[j]->Tformula[t])
+            {
+                int Endx = sys->NodT[i]->IC_name_to_xDB(sys->Tfun->objfun[j]->Telem[t].c_str());
+                if (Endx == sys->Opti->nest_optv.Pindex[p])
+                {
+                    return true;
+                } else return false;
+            }
+        }
+    }
 }
 
 

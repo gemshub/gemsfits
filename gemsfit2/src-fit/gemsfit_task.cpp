@@ -62,10 +62,11 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     for ( int i=1; i <MPI+1; i++)
     {
         EXPndx.push_back(-1);COMPndx.push_back(-1);PHndx.push_back(-1);PHPndx.push_back(-1);
-        iNa.push_back(0.0); iO.push_back(0.0); iH.push_back(0.0); iCl.push_back(0.0);
+        iNa.push_back(0.0); iO.push_back(0.0); iH.push_back(0.0); iCl.push_back(0.0); DYFndx.push_back(-1);
+        vPAndx.push_back( new vect);
     }
     h_grad = false;
-    DYFndx = -1;
+
 
     // file containing the input parameters of the system and of the optimization class
     param_file  = gpf->OptParamFile().c_str();
@@ -776,7 +777,7 @@ void TGfitTask::setnodes()
 
         // Calling GEMIPM calculation
         NodeStatusCH = NodT[n]->GEM_run( true );
-cout << "Node: " << NodeHandle << "  NodeStatusCH: " << NodeStatusCH << endl;
+//cout << "Node: " << NodeHandle << "  NodeStatusCH: " << NodeStatusCH << endl;
 
         if( ( NodeStatusCH == ERR_GEM_AIA || NodeStatusCH == ERR_GEM_SIA ||
                        NodeStatusCH ==  T_ERROR_GEM ) )
@@ -923,10 +924,12 @@ void TGfitTask::get_DataTarget ( )
     out.clear();
 
     parse_JSON_array_object(DataTarget, keys::NFUN, keys::Tforumla, out);
+    if (Tndx >= 0)
     Tfun->nestfun[Tndx]->Tformula = out;
     out.clear();
 
     parse_JSON_array_object(DataTarget, keys::NFUN, keys::Telem, out);
+    if (Tndx >= 0)
     Tfun->nestfun[Tndx]->Telem = out;
     out.clear();
 
@@ -995,6 +998,8 @@ void TGfitTask::get_Lparams_delta()
                 delta += Opti->nest_optv.Lparams[i]->L_coef[j] * NodT[e]->Get_bIC(Opti->nest_optv.Lparams[i]->L_param_ind[j]);
             }
             Opti->nest_optv.Lparams[i]->delta.push_back(delta);
+            Opti->nest_optv.Lparams[i]->i_val.push_back(NodT[e]->Get_bIC(Opti->nest_optv.Lparams[i]->index));
+            Opti->nest_optv.Lparams[i]->e_val.push_back(NodT[e]->Get_bIC(Opti->nest_optv.Lparams[i]->index));
         }
     }
 
@@ -1006,11 +1011,7 @@ void TGfitTask::get_Lparams_delta()
             {
                 Opti->nest_optv.i_opt[i]->val.push_back(NodT[e]->Get_bIC(Opti->nest_optv.Pindex[i]));
             }
-
-
     }
-
-
 }
 
 // Main function that calculates the sum of residuals

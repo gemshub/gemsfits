@@ -196,10 +196,10 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         long int NodeStatusCH;
 
             // Set the P in the node->CNode-P as in the experiments to avoind problem due to Psat notation as 0
-        for (unsigned int i=0; i<sys->experiments.size(); ++i)
+        for (unsigned int e=0; e<sys->experiments.size(); ++e)
         {
-            sys->NodT[i]->Set_TK(273.15 + sys->experiments[i]->sT);
-            sys->NodT[i]->Set_P(100000 * sys->experiments[i]->sP);
+            sys->NodT[e]->Set_TK(273.15 + sys->experiments[e]->sT);
+            sys->NodT[e]->Set_P(100000 * sys->experiments[e]->sP);
         }
 
         // Asking GEM to run with automatic initial approximation
@@ -220,16 +220,6 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
             cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
         }
     }
-
-//    cout << sys->NodT[1]->Get_pH() << endl;
-
-    // Set the P in the node->CNode-P as in the experiments to avoind problem due to Psat notation as 0
-//    for (unsigned int i=0; i<sys->experiments.size(); ++i)
-//    {
-//        sys->NodT[i]->Set_TK(273.15 + sys->experiments[i]->sT);
-//        sys->NodT[i]->Set_P(100000 * sys->experiments[i]->sP);
-//    }
-
     sys->get_sum_of_residuals(residuals_sys_);
     residuals_sys = residuals_sys_;
 
@@ -315,7 +305,7 @@ void Tuckey_weight (TGfitTask *sys)
     double median_ = 0.0;
     vector <double> abs_res;
 
-    for (int i = 0; i< sys->residuals_v.size(); i++)
+    for (unsigned int i = 0; i< sys->residuals_v.size(); i++)
     {
         abs_res.push_back(fabs(sys->residuals_v[i]));
     }
@@ -323,7 +313,7 @@ void Tuckey_weight (TGfitTask *sys)
     median_ = median(abs_res);
     C = 6 * median_;
 
-    for (int i=0; i<sys->residuals_v.size(); i++)
+    for (unsigned int i=0; i<sys->residuals_v.size(); i++)
     {
         if (( C - abs_res[i]) < 0)
             sys->Tuckey_weights[i] = 0;

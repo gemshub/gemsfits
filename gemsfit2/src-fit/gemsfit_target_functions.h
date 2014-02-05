@@ -95,7 +95,7 @@ void adjust_bIC (int i, int exp, double new_bIC, TGfitTask *sys);
 * @author DM
 * @date 04.07.2013
 */
-void adjust_TK (int i, double new_TK, TGfitTask *sys);
+void adjust_TK (double new_TK, TGfitTask *sys);
 
 /**
 * Sets the new P returned form the optimization algorithm
@@ -105,7 +105,7 @@ void adjust_TK (int i, double new_TK, TGfitTask *sys);
 * @author DM
 * @date 04.07.2013
 */
-void adjust_P (int i, double new_P, TGfitTask *sys);
+void adjust_P (double new_P, TGfitTask *sys);
 
 // Set new Gibbs free energy based on reaction constraints
 /**

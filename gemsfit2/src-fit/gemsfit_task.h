@@ -132,8 +132,13 @@ public:
     ResPrint* print;
 
     // indexes used in the dynamic functions//
-    vector<int> EXPndx, COMPndx, PHndx, PHPndx, PAndx;
-    int DYFndx;
+    vector<int> EXPndx, COMPndx, PHndx, PHPndx, PAndx, DYFndx;
+    struct vect
+    {
+       vector<int> ndx;
+    };
+    vector<vect*> vPAndx;
+
     // true if gradient method is used
     bool h_grad;
     // titration IC initial values in moles //

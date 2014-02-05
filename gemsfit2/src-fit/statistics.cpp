@@ -47,7 +47,6 @@
 statistics::statistics(TGfitTask *gfittask, double Weighted_Tfun_sum_of_residuals_, int num_of_params_, int num_of_runs_ )
 {
     double mean_res = 0.0, Abs_mean_res = 0.0, Weighted_TF_mean_res = 0.0;
-    unsigned int i;
 
 //    gfittask->test();
 
@@ -61,7 +60,7 @@ statistics::statistics(TGfitTask *gfittask, double Weighted_Tfun_sum_of_residual
     Weighted_Tfun_sum_of_residuals 		= Weighted_Tfun_sum_of_residuals_;
 
     //
-    for (unsigned i=0; i<number_of_measurements; ++i)
+    for (int i=0; i<number_of_measurements; ++i)
     {
         Tfun_sum_of_residuals += gfittask->Tfun_residuals_v[i];                         // sum residuals of the minimized function without weight
          Abs_sum_of_residuals += fabs(gfittask->residuals_v[i]);                        // sum of the absolute value of residuals
@@ -101,7 +100,7 @@ cout<<" Statistics Constructor: number_of_parameters: "<<number_of_parameters<<e
     degrees_of_freedom = number_of_measurements-number_of_parameters;
 
     // Compute standard deviation of residuals
-    for (unsigned i=0; i<number_of_measurements; i++)
+    for (int i=0; i<number_of_measurements; i++)
     {
 Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
         Abs_mean_res += fabs(gfittask->residuals_v[i]);
@@ -120,7 +119,7 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
     Weighted_SD_of_residuals = 0.0;
              SD_of_residuals = 0.0;
 
-    for (unsigned i=0; i<number_of_measurements; i++)
+    for (int i=0; i<number_of_measurements; i++)
     {
         Weighted_TF_SD_of_residuals += pow((gfittask->Weighted_Tfun_residuals_v[i]-Weighted_TF_mean_res),2);
                 Abs_SD_of_residuals += pow((fabs(gfittask->residuals_v[i])-Abs_mean_res),2);
@@ -161,7 +160,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 
     // Compute R^2: coefficient of determination
         mean = 0;
-    for (unsigned i=0; i< number_of_measurements; i++)
+    for (i=0; i< number_of_measurements; i++)
     {
         mean += gfittask->measured_values_v[i];
     }
@@ -170,7 +169,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     assert( gfittask->computed_values_v.size() == gfittask->measured_values_v.size() );
 
 
-    for(unsigned i=0; i< number_of_measurements; i++ )
+    for(i=0; i< number_of_measurements; i++ )
     {
         ResSumSquares += pow( (gfittask->measured_values_v[i] - gfittask->computed_values_v[i]), 2);
         TotalSumSquares += pow( (gfittask->measured_values_v[i] - mean), 2);
@@ -182,7 +181,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 
     // Pearson Chi Square test
     Pearsons_chi_square = 0.;
-    for(unsigned i=0;  i< number_of_measurements; i++ )
+    for( i=0;  i< number_of_measurements; i++ )
     {
         if (gfittask->measured_values_v[i] != 0)
         Pearsons_chi_square += (abs(gfittask->computed_values_v[i]) - abs(gfittask->measured_values_v[i]))*(abs(gfittask->computed_values_v[i]) - abs(gfittask->measured_values_v[i])) / abs(gfittask->measured_values_v[i]);
@@ -241,7 +240,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 
     // D'Agostino K square test for normality
     mean = 0;
-    for (i=0; i< gfittask->residuals_v.size(); i++)
+    for (unsigned i=0; i< gfittask->residuals_v.size(); i++)
     {
         mean += weighted_residuals[i];
     }
@@ -297,7 +296,7 @@ if( W2 < 1.)  // workaround to suppress nan() and zdiv crash
         myStat << "#####################################################################################" << endl;
         myStat << endl;
         myStat << " Best fit results for parameters from regression : "                         <<endl;
-        for( i=0; i< optv_.size(); i++ ) // cols
+        for(unsigned i=0; i< optv_.size(); i++ ) // cols
         {
             // Print optimized parameter values to file
             if (gfittask->Opti->Ptype[i] == "G0")
@@ -312,14 +311,14 @@ if( W2 < 1.)  // workaround to suppress nan() and zdiv crash
         }
         if (gfittask->Opti->h_RDc)
         {
-            for (i=0; i<gfittask->Opti->reactions.size(); ++i)
+            for (unsigned i=0; i<gfittask->Opti->reactions.size(); ++i)
             {
                 myStat <<"          Reac parameter "<<gfittask->Opti->reactions[i]->Dc_name <<" : "<<gfittask->Opti->reactions[i]->std_gibbs<<endl;
             }
         }
         if (gfittask->Opti->h_Lp)
         {
-            for (i=0; i<gfittask->Opti->Lparams.size(); ++i)
+            for (unsigned i=0; i<gfittask->Opti->Lparams.size(); ++i)
             {
                 myStat <<"          Linked parameter "<<gfittask->Opti->Lparams[i]->name <<" : "<<gfittask->Opti->Lparams[i]->EV<<endl;
             }
@@ -522,7 +521,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
 
         // Print Variance-Covariance matrix to file
         myStat << " Variance-Covariance matrix: "<<endl;
-        for( i=0; i< (int) optv_.size(); i++ )
+        for(unsigned i=0; i< optv_.size(); i++ )
         {
             if( i== 0 )
             {
@@ -646,7 +645,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
 
         // Print Correlation matrix to file
         myStat << " Correlation matrix: "<<endl;
-        for( i=0; i< (int) optv_.size(); i++ )
+        for(unsigned i=0; i<  optv_.size(); i++ )
         {
             if( i== 0 )
             {
@@ -684,14 +683,14 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
 }
 
 
-void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* gfittask, int &countit )
+void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* gfittask/*, int &countit */)
 {
 
 //cout<<"pid : "<<pid<<" entered Statistics::MC_confidence_interval ..."<<endl;
 
     int i,n_param,id,imc;
     int j, p_=1, pid_=0; // k
-    double sum_of_squares_MC;
+//    double sum_of_squares_MC;
     std::vector<double> scatter_v, MC_computed_v;
     std::vector<double> optv_backup;
     std::vector<std::vector<double> > measured_values_backup;
@@ -747,7 +746,7 @@ pid_ = 0;
     // Perform Monte Carlo runs
     for( imc=pid_; imc<num_of_MC_runs; ++imc /*+= p*/)
     {
-        sum_of_squares_MC = 0.;
+//        sum_of_squares_MC = 0.;
 
         for( i=0; i<number_of_measurements; i++ )
         {

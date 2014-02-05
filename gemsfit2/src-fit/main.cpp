@@ -67,7 +67,7 @@ struct timeval start, end;
  
 int main( int argc, char *argv[] )
 {
-    clockid_t startTime = clock();
+//    clockid_t startTime = clock();
 
     // benchmark code
     gettimeofday(&start, NULL);
@@ -171,7 +171,7 @@ int main( int argc, char *argv[] )
 
     gfittask->print->print_result();
 
-    if(stat.MCbool > 0)  stat.MC_confidence_interval( gfittask->Opti->optv, gfittask, countit );
+    if(stat.MCbool > 0)  stat.MC_confidence_interval( gfittask->Opti->optv, gfittask );
 
     delete gfittask;
 

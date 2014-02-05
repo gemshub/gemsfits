@@ -169,7 +169,7 @@ class statistics
         * @param countit  global counter of runs over measurement data
         * @date 05.12.2012
         */
-        void MC_confidence_interval( std::vector<double> &optv_, TGfitTask* gfittask, int &countit );
+        void MC_confidence_interval(std::vector<double> &optv_, TGfitTask* gfittask);
 
         /**
         * Perform sensitivity analysis of selected parameters.

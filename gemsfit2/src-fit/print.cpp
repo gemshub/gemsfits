@@ -68,6 +68,7 @@ void ResPrint::set_print(string experiment_, string what1_, string what2_, strin
     computed.push_back(computed_);
     Weighted_Tfun_residual.push_back(Weighted_Tfun_residual_);
     residuals_v.push_back(measured_-computed_);
+    weight.push_back(weight_);
 }
 
 
