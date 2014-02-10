@@ -83,7 +83,7 @@ public:
     bool h_RDc; /// handle for checking if there are reaction constraints in the input file
     bool h_Lp; /// handle for checking if there are linked parameters in the input file
     bool h_nestfun; /// handle for checking if there are dynamic function in the DataTarget
-//    bool
+    bool h_is_in_nested;
 
     struct RDc /// structure storing reaction constraint information
     {

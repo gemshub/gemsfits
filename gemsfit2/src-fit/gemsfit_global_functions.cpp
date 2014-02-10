@@ -37,7 +37,7 @@
 
 #include "gemsfit_global_functions.h"
 #include "gemsfit_target_functions.h"
-#include "gemsfit_dynamic_functions.h"
+#include "gemsfit_nested_functions.h"
 #include "gemsfit_task.h"
 
 double Equil_objective_function_callback( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data )
@@ -152,13 +152,16 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     /// DYNAMIC FUNCTION
     if (sys->Opti->h_nestfun)
     {
-        sys->Tfun->objfunold = sys->Tfun->objfun;
-        sys->Tfun->objfun = sys->Tfun->nestfun;
-        string old = sys->Tfun->type;
-        sys->Tfun->type = "abs_dif";
-        nestedfun(sys);
+        sys->Opti->h_is_in_nested = true;           // important to not set the priting class. Not working in current version with paralelization
+        sys->Tfun->objfunold = sys->Tfun->objfun;   // storing the objective function
+        sys->Tfun->objfun = sys->Tfun->nestfun;     // the objective function beomes the nestedfunction
+        string old = sys->Tfun->type;               // storing the old type of target function
+        sys->Tfun->type = "abs_dif";                // seeting the target function to simple abslute difference
+        nestedfun(sys);                             // optimizing the nested functions
+        // returning the values to the ones before
         sys->Tfun->objfun = sys->Tfun->objfunold;
-        sys->Tfun->type =old;
+        sys->Tfun->type = old;
+        sys->Opti->h_is_in_nested = false;
     }
 
     // Clear already stored results
@@ -178,8 +181,8 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 //        adjust_Lp(sys);
 //    }
 
-    if (!sys->h_grad && sys->Opti->OptTitration == 1)
-        titration (sys);
+//    if (!sys->h_grad && sys->Opti->OptTitration == 1)
+//        titration (sys);
 //    cout << "finished titration correction"<< endl;
 
 //    cout << sys->NodT[1]->Get_pH() << endl;

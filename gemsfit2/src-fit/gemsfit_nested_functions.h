@@ -20,7 +20,7 @@
 //
 
 /**
- *	@file gemsfit_dynamic_functions.h
+ *	@file gemsfit_nested_functions.h
  *
  *	@brief this header file contains definitions of dynamic functions needed during specific optimization.
  *	tasks. Wehn the user wants to dyamically adjust other system parameters during fitting. For example
@@ -34,8 +34,8 @@
  */
 
 
-#ifndef GEMSFIT_DYNAMIC_FUNCTIONS_H
-#define GEMSFIT_DYNAMIC_FUNCTIONS_H
+#ifndef GEMSFIT_NESTED_FUNCTIONS_H
+#define GEMSFIT_NESTED_FUNCTIONS_H
 
 #include <vector>
 #include <iostream>

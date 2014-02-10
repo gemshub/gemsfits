@@ -20,7 +20,7 @@
 //
 
 /**
- *	@file gemsfit_dynamic_functions.cpp
+ *	@file gemsfit_nested_functions.cpp
  *
  *	@brief this source file contains implementations of global dynamic functions needed during specific optimization.
  *	tasks. When the user wants to dyamically adjust other system parameters during fitting. For example
@@ -34,7 +34,7 @@
  */
 
 
-#include "gemsfit_dynamic_functions.h"
+#include "gemsfit_nested_functions.h"
 #include "gemsfit_target_functions.h"
 
 void nestedfun (TGfitTask *sys)
@@ -62,7 +62,8 @@ void nestedfun (TGfitTask *sys)
                 vector <double> x, UB, LB;
                 for (unsigned int p = 0; p < sys->Opti->nest_optv.opt.size(); p++)
                 {
-                    if (sys->Opti->nest_optv.Ptype[p] == param_type)
+                    if ((sys->Opti->nest_optv.Ptype[p] == param_type) || ((param_type == "P&T") && (sys->Opti->nest_optv.Ptype[p] == "P"))
+                            || ((param_type == "P&T") && (sys->Opti->nest_optv.Ptype[p] == "TK")) )
                     {
 //                        double val = 0.0;
 //                        if (sys->Tfun->objfun[sys->DYFndx[P_id]]->exp_CN == "pH")
@@ -82,29 +83,8 @@ void nestedfun (TGfitTask *sys)
 //                        sys->PAndx.push_back(p); // index of the parameter in the nest_optv->opt vector
                         sys->vPAndx[P_id]->ndx.push_back(p);
                         }
-                        //
-    //                    double val = sys->NodT[sys->EXPndx[P_id]]->Get_bIC(sys->Opti->nest_optv.Pindex[p]);
-    //                    val = sys->Opti->nest_optv.i_opt[p]->val[i];
-    //                    if (master_counter == 1){
-
-
-    //                    } else
-    //                    {
-    //                        val = sys->NodT[sys->EXPndx[P_id]]->Get_bIC(sys->Opti->nest_optv.Pindex[p]);
-    //                        val = sys->Opti->nest_optv.i_opt[p]->val[i];
-
-    //                        x.push_back(val);
-    //                        UB.push_back(val + (0.9*val));
-    //                        LB.push_back(val - (0.9*val));
-    //                    }
-
-                        //x.push_back(sys->Opti->nest_optv.opt[p]);
-                        //UB.push_back(sys->Opti->nest_optv.UB[p]);
-                        //LB.push_back(sys->Opti->nest_optv.LB[p]);
-
                     }
                 }
-
 
                 nlopt::opt opt(nlopt::LN_BOBYQA, x.size());
 
@@ -155,16 +135,22 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, 
                     int index_bIC = sys->Opti->nest_optv.Pindex[p];
                     sys->NodT[sys->EXPndx[P_id]]->Set_bIC(index_bIC, opt[i] );
                 } else
+                if (sys->Opti->nest_optv.Ptype[p] == "T")
                 {
-                    // other paramteres
+                    sys->NodT[sys->EXPndx[P_id]]->Set_TK( opt[i] );
+                    sys->experiments[sys->EXPndx[P_id]]->sT = opt[i] - 273.15; // temperature in C
+                }
+                else
+                if (sys->Opti->nest_optv.Ptype[p] == "P")
+                {
+                    sys->NodT[sys->EXPndx[P_id]]->Set_P( opt[i] );
+                    sys->experiments[sys->EXPndx[P_id]]->sP = opt[i] / 1e5; // pressure in bar
                 }
             }
         }
     }
 
     /// Linked parameters
-
-
     if (sys->Opti->h_Lp)
     {
         adjust_Lp(sys, sys->Opti->nest_optv, sys->EXPndx[P_id]);
@@ -201,13 +187,11 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, 
 
 //    residual = abs (sys->experiments[sys->EXPndx[P_id]]->expphases[0]->phprop[0]->Qnt - sys->NodT[sys->EXPndx[P_id]]->Get_pH());
 
-
     // calculate residual
     residual = sys->get_residual (sys->EXPndx[P_id], sys->DYFndx[P_id]);
 
     return residual;
 }
-
 
 
 void titration (TGfitTask *sys)
@@ -456,7 +440,6 @@ double titfunc(const std::vector<double> &x, std::vector<double> &grad, void *ob
     sys->NodT[sys->EXPndx[P_id]]->Set_TK(273.15 + sys->experiments[sys->EXPndx[P_id]]->sT);
     sys->NodT[sys->EXPndx[P_id]]->Set_P(100000 * sys->experiments[sys->EXPndx[P_id]]->sP);
 
-
     // calc equilibirum
     vector<DATABR*> dBR;
     dBR.push_back(sys->NodT[sys->EXPndx[P_id]]->pCNode());
@@ -480,9 +463,6 @@ double titfunc(const std::vector<double> &x, std::vector<double> &grad, void *ob
     }
 
     // calc residual
-//    double meas_pH = sys->experiments[sys->EXPndx[P_id]]->expphases[sys->PHndx[P_id]]->phprop[sys->PHPndx[P_id]]->Qnt;
-//    double calc_pH = sys->NodT[sys->EXPndx[P_id]]->Get_pH();
-
     residual = abs (sys->experiments[sys->EXPndx[P_id]]->expphases[sys->PHndx[P_id]]->phprop[sys->PHPndx[P_id]]->Qnt - sys->NodT[sys->EXPndx[P_id]]->Get_pH());
 
     return residual;
@@ -501,7 +481,7 @@ double get_pH(double x, int EXPndx, TGfitTask *sys)
 
 bool isTitration (TGfitTask *sys, int i, int j, int p)
 {
-    int P_id = omp_get_thread_num();
+//    int P_id = omp_get_thread_num();
         // check titrant in experiment
     for (unsigned int t=0; t<sys->Tfun->objfun[j]->Tformula.size(); t++)
     {

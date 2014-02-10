@@ -211,16 +211,19 @@ void adjust_Lp (TGfitTask *sys, optimization::nested optv, int exp)
         double param_change=0, delta = 0, new_param =0;
         int LP_index = optv.Lparams[i]->index;
 
-        for (unsigned int j=0; j < optv.Lparams[i]->L_param.size(); ++j )
+        if (sys->Opti->nest_optv.Ptype[i] == "bIC")
         {
-            delta += optv.Lparams[i]->L_coef[j] * sys->NodT[exp]->Get_bIC(optv.Lparams[i]->L_param_ind[j]); // C=(a*A + b*B); delta = (a*newA + b*newB)
-        }
-        param_change =  delta - optv.Lparams[i]->delta[exp];                                                // param_change = (a*newA + b*newB) - (inita*A + initb*B);
-        if (param_change != 0)
-        {
-            new_param = /*sys->NodT[exp]->Get_bIC(LP_index)*/optv.Lparams[i]->i_val[exp] + param_change;        // C = initC + param_change;
-            sys->NodT[exp]->Set_bIC(LP_index, new_param);
-            optv.Lparams[i]->e_val[exp] = new_param;
+            for (unsigned int j=0; j < optv.Lparams[i]->L_param.size(); ++j )
+            {
+                delta += optv.Lparams[i]->L_coef[j] * sys->NodT[exp]->Get_bIC(optv.Lparams[i]->L_param_ind[j]); // C=(a*A + b*B); delta = (a*newA + b*newB)
+            }
+            param_change =  delta - optv.Lparams[i]->delta[exp];                                                // param_change = (a*newA + b*newB) - (inita*A + initb*B);
+            if (param_change != 0)
+            {
+                new_param = /*sys->NodT[exp]->Get_bIC(LP_index)*/optv.Lparams[i]->i_val[exp] + param_change;        // C = initC + param_change;
+                sys->NodT[exp]->Set_bIC(LP_index, new_param);
+                optv.Lparams[i]->e_val[exp] = new_param;
+            }
         }
     }
 }
@@ -426,15 +429,16 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
     Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j]);
     Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j])*weight_;
 
-    sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
-
     delete[] IC_in_PH;
-
-    sys->print->set_print(sys->experiments[i]->sample,
-                          boost::lexical_cast<std::string>(sys->NodT[i]->Get_pH( )),
-                          sys->experiments[i]->expphases[p]->phIC[e]->comp,
-                          sys->experiments[i]->expphases[p]->phIC[e]->Qunit,
-                          measured_value,computed_value,Weighted_Tfun_residual, weight_ );
+    if (!sys->Opti->h_is_in_nested)
+    {
+        sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
+        sys->print->set_print(sys->experiments[i]->sample,
+                              boost::lexical_cast<std::string>(sys->NodT[i]->Get_pH( )),
+                              sys->experiments[i]->expphases[p]->phIC[e]->comp,
+                              sys->experiments[i]->expphases[p]->phIC[e]->Qunit,
+                              measured_value,computed_value,Weighted_Tfun_residual, weight_ );
+    }
 
     return Weighted_Tfun_residual;
 }
@@ -498,14 +502,16 @@ double residual_phase_elemMR (int i, int p, int f, int j, TGfitTask *sys)
     Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j]);
     Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j])*weight_;
 
-    sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
-
     delete[] IC_in_PH;
 
-    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,
-                          sys->experiments[i]->expphases[p]->phMR[f]->comp,
-                          sys->experiments[i]->expphases[p]->phMR[f]->Qunit,
-                          measured_value,computed_value,Weighted_Tfun_residual, weight_ );
+    if (!sys->Opti->h_is_in_nested)
+    {
+        sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
+        sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,
+                              sys->experiments[i]->expphases[p]->phMR[f]->comp,
+                              sys->experiments[i]->expphases[p]->phMR[f]->Qunit,
+                              measured_value,computed_value,Weighted_Tfun_residual, weight_ );
+    }
 
     return Weighted_Tfun_residual;
 }
@@ -669,11 +675,14 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
     Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j]);
     Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j])*weight_;
 
-//    sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
-//    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,
-//                          sys->experiments[i]->expphases[p]->phprop[pp]->property,
-//                          sys->experiments[i]->expphases[p]->phprop[pp]->Qunit,
-//                          measured_value,computed_value,Weighted_Tfun_residual, weight_ );
+    if (!sys->Opti->h_is_in_nested)
+    {
+        sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
+        sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,
+                              sys->experiments[i]->expphases[p]->phprop[pp]->property,
+                              sys->experiments[i]->expphases[p]->phprop[pp]->Qunit,
+                              measured_value,computed_value,Weighted_Tfun_residual, weight_ );
+    }
 
     return Weighted_Tfun_residual;
 }
@@ -712,11 +721,14 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
     Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j]);
     Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j])*weight_;
 
-    sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
-    sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phDC[dc]->DC,
-                          sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->property,
-                          sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit,
-                          measured_value, computed_value, Weighted_Tfun_residual, weight_ );
+    if (!sys->Opti->h_is_in_nested)
+    {
+        sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
+        sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phDC[dc]->DC,
+                              sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->property,
+                              sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit,
+                              measured_value, computed_value, Weighted_Tfun_residual, weight_ );
+    }
 
     return Weighted_Tfun_residual;
 }

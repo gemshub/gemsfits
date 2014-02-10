@@ -33,7 +33,7 @@
 #include "gemsfit_iofiles.h"
 #include "keywords.h"
 #include "gemsfit_global_functions.h"
-#include "gemsfit_dynamic_functions.h"
+//#include "gemsfit_nested_functions.h"
 #include <cmath>
 #include "gemsfit_target_functions.h"
 #include <iomanip>
@@ -126,7 +126,7 @@ void TGfitTask::gfit_error ( )
 
     for (unsigned int i=0; i<Opti->nest_optv.opt.size(); ++i)
     {
-        if ((Opti->nest_optv.Ptype[i] == "bIC") /*|| (Opti->nest_optv.Ptype[i] == "TK") || (Opti->nest_optv.Ptype[i] == "P")*/)  h_param_nestfun = true;
+        if ((Opti->nest_optv.Ptype[i] == "bIC") || (Opti->nest_optv.Ptype[i] == "TK") || (Opti->nest_optv.Ptype[i] == "P"))  h_param_nestfun = true;
     }
 
     if (!(h_nestfun == h_param_nestfun))
@@ -923,15 +923,16 @@ void TGfitTask::get_DataTarget ( )
     }
     out.clear();
 
-    parse_JSON_array_object(DataTarget, keys::NFUN, keys::Tforumla, out);
-    if (Tndx >= 0)
-    Tfun->nestfun[Tndx]->Tformula = out;
-    out.clear();
+    // Not used in the current form
+//    parse_JSON_array_object(DataTarget, keys::NFUN, keys::Tforumla, out);
+//    if (Tndx >= 0)
+//    Tfun->nestfun[Tndx]->Tformula = out;
+//    out.clear();
 
-    parse_JSON_array_object(DataTarget, keys::NFUN, keys::Telem, out);
-    if (Tndx >= 0)
-    Tfun->nestfun[Tndx]->Telem = out;
-    out.clear();
+//    parse_JSON_array_object(DataTarget, keys::NFUN, keys::Telem, out);
+//    if (Tndx >= 0)
+//    Tfun->nestfun[Tndx]->Telem = out;
+//    out.clear();
 
     parse_JSON_array_object(DataTarget, keys::NFUN, keys::Ptype, out);
     for (unsigned int i = 0 ; i < out.size() ; i++)
@@ -990,19 +991,21 @@ void TGfitTask::get_Lparams_delta()
     double delta;
     for (unsigned int i=0; i < Opti->nest_optv.Lparams.size(); ++i )
     {
-        for (unsigned int e=0; e < experiments.size(); e++ )
-        {
-            delta=0.0;
-            for (unsigned int j=0; j < Opti->nest_optv.Lparams[i]->L_param.size(); ++j )
+        if (Opti->nest_optv.Ptype[i] == "bIC")
+            for (unsigned int e=0; e < experiments.size(); e++ )
             {
-                delta += Opti->nest_optv.Lparams[i]->L_coef[j] * NodT[e]->Get_bIC(Opti->nest_optv.Lparams[i]->L_param_ind[j]);
+                delta=0.0;
+                for (unsigned int j=0; j < Opti->nest_optv.Lparams[i]->L_param.size(); ++j )
+                {
+                    delta += Opti->nest_optv.Lparams[i]->L_coef[j] * NodT[e]->Get_bIC(Opti->nest_optv.Lparams[i]->L_param_ind[j]);
+                }
+                Opti->nest_optv.Lparams[i]->delta.push_back(delta);
+                Opti->nest_optv.Lparams[i]->i_val.push_back(NodT[e]->Get_bIC(Opti->nest_optv.Lparams[i]->index));
+                Opti->nest_optv.Lparams[i]->e_val.push_back(NodT[e]->Get_bIC(Opti->nest_optv.Lparams[i]->index));
             }
-            Opti->nest_optv.Lparams[i]->delta.push_back(delta);
-            Opti->nest_optv.Lparams[i]->i_val.push_back(NodT[e]->Get_bIC(Opti->nest_optv.Lparams[i]->index));
-            Opti->nest_optv.Lparams[i]->e_val.push_back(NodT[e]->Get_bIC(Opti->nest_optv.Lparams[i]->index));
-        }
     }
 
+    // stores the initial values of the linked parameter bIC, ...
     for (unsigned int i=0; i < Opti->nest_optv.Ptype.size(); ++i )
     {
         Opti->nest_optv.i_opt.push_back(new optimization::nested::ival);
@@ -1010,6 +1013,18 @@ void TGfitTask::get_Lparams_delta()
             for (unsigned int e=0; e < experiments.size(); e++ )
             {
                 Opti->nest_optv.i_opt[i]->val.push_back(NodT[e]->Get_bIC(Opti->nest_optv.Pindex[i]));
+            }
+        else
+        if (Opti->nest_optv.Ptype[i] == "TK")
+            for (unsigned int e=0; e < experiments.size(); e++ )
+            {
+                Opti->nest_optv.i_opt[i]->val.push_back(NodT[e]->Get_TK( ));
+            }
+        else
+        if (Opti->nest_optv.Ptype[i] == "P")
+            for (unsigned int e=0; e < experiments.size(); e++ )
+            {
+                Opti->nest_optv.i_opt[i]->val.push_back(NodT[e]->Get_P( ));
             }
     }
 }

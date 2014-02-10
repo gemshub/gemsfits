@@ -1102,7 +1102,9 @@ outField Data_Manager_fields[9] =
       "\n#           ..."
       "\n#  \"NFUN\": nested objective function, list [] of terms {} for measured porperties to compare for each experiment independently for adjusting:"
       "\n#            same construction as the objective function and one more term:"
-      "\n#       \"Ptype\": the type of paramater that has to be fitted against the compared property. e.g bIC, T, P"
+      "\n#       \"Ptype\": the type of paramater that has to be fitted against the compared property. e.g bIC, T-P for T and/or P"
+      "\n#        IMPORTANT: When \"NFUN\" (nested function) is present in DataSelect it is  necessary at least one \"Ptype\" paramater "
+      "\n#                   marked for fitting. One can have multiple NFUN each with its parameter type. "
       "\n#"
       "\n#       (conversions will be performed automatically)."
       "\n#     The comparison options are: "
@@ -1126,7 +1128,17 @@ outField Data_Manager_fields[9] =
       "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"DC\", \"CN\": \"SiO2@\", \"DCP\" : \"Q\", \"unit\": \"mol\"}"
       "\n#      ]"
       "\n#   }\'"
-      "\n#  Copy the example, paste it below, remove the comment symbols (#), and edit as necessary. "
+      "\n# "
+      "\n#  Example with nested function:"
+      "\n#  \'{ \"Target\": \"name\", \"TT\": \"lsq\", \"WT\": \"inverr\", \"OFUN\":"
+      "\n#      ["
+      "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"IC\", \"CN\": \"Al\", \"unit\": \"logm\" },"
+      "\n#      ], \"NFUN\": "
+      "\n#      ["
+      "\n#         { \"Ptype\": \"bIC\", \"EPH\": \"aq_gen\", \"CT\": \"prop\", \"CN\": \"pH\", \"unit\": \"-loga\" } "
+      "\n#      ]"
+      "\n#   }\'"
+      "\n#  Copy one of the examples, paste it below, remove the comment symbols (#), and edit as necessary. "
       "\n#     Remove the unnecessary rows {...}\n"
 
     },
@@ -1403,8 +1415,8 @@ outField optimization_fields[25] =
     { "OptConstraints",  0, 0, 1, "\n# OptConstraints:  Optimization: apply constraints (1=yes, 0=no)"},
     { "OptDoWhat",  0, 0, 1, "\n# OptDoWhat: perform optimization and statistics (0); only optimization with basic Statistics (1);"
                              "\n#            only Statistics (2) with initial guesses as best fit parametters"},
-    { "OptTitration",  0, 0, 1, "\n# OptTitration: Adjusts the computed pH by changing NaOH or HCl amount to match the measured pH"
-                                "\n#               read from the database for each experiment"},
+//    { "OptTitration",  0, 0, 1, "\n# OptTitration: Adjusts the computed pH by changing NaOH or HCl amount to match the measured pH"
+//                                "\n#               read from the database for each experiment"},
     { "OptTuckey",  0, 0, 1, "\n# OptTuckey: 0 -> Use Tuckey Biweight. Value > 0 will be the number of iterations for re-weighting. "},
     { "OptEqSolv",  0, 0, 1, "\n# OptEqSolv: Comment"},
     { "OptTolAbs",  0, 0, 1, "\n# OptTolAbs: stopping criterion -> specify absolute tolerance (default = 1e-04) of function value"},
@@ -1489,7 +1501,7 @@ void optimization::out_nlopt_param_txt( bool with_comments, bool brief_mode )
 
     prar.writeField( f_OptDoWhat,  (long int)OptDoWhat, with_comments, brief_mode);
     prar.writeField( f_OptTuckey,  (long int)OptTuckey, with_comments, brief_mode);
-    prar.writeField( f_OptTitration,  (long int)OptTitration, with_comments, brief_mode);
+//    prar.writeField( f_OptTitration,  (long int)OptTitration, with_comments, brief_mode);
     prar.writeField( f_OptAlgo,  OptAlgo, with_comments, brief_mode );
     prar.writeField( f_OptBoundPerc,  OptBoundPerc, with_comments, brief_mode );
     prar.writeField( f_OptTolRel,  OptTolRel, with_comments, brief_mode);
@@ -1533,8 +1545,8 @@ void optimization::get_nlopt_param_txt(vector<double> optv)
                   break;
           case f_OptTuckey: rdar.readArray( "OptTuckey",  &OptTuckey, 1);
                   break;
-          case f_OptTitration: rdar.readArray( "OptTitration",  &OptTitration, 1);
-                  break;
+//          case f_OptTitration: rdar.readArray( "OptTitration",  &OptTitration, 1);
+//                  break;
           case f_OptInitStep: rdar.readArray( "OptInitStep",  &OptInitStep, 1);
                   break;
           case f_OptPerturbator: rdar.readArray( "OptPerturbator",  &OptPerturbator, 1);
