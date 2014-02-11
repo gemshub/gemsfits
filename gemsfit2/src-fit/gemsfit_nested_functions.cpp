@@ -46,10 +46,10 @@ void nestedfun (TGfitTask *sys)
     for (unsigned int j = 0; j<sys->Tfun->nestfun.size(); j++)
     {
         param_type = sys->Tfun->nestfun[j]->param_type;
-            //#ifdef USE_MPI
-                omp_set_num_threads(sys->MPI);
-                #pragma omp parallel for
-            //#endif
+//            //#ifdef USE_MPI
+//                omp_set_num_threads(sys->MPI);
+//                #pragma omp parallel for
+//            //#endif
         for (unsigned int i = 0; i<sys->experiments.size(); i++)
         {
             int P_id = omp_get_thread_num();
@@ -62,8 +62,8 @@ void nestedfun (TGfitTask *sys)
                 vector <double> x, UB, LB;
                 for (unsigned int p = 0; p < sys->Opti->nest_optv.opt.size(); p++)
                 {
-                    if ((sys->Opti->nest_optv.Ptype[p] == param_type) || ((param_type == "P&T") && (sys->Opti->nest_optv.Ptype[p] == "P"))
-                            || ((param_type == "P&T") && (sys->Opti->nest_optv.Ptype[p] == "TK")) )
+                    if ((sys->Opti->nest_optv.Ptype[p] == param_type) || ((param_type == "P-T") && (sys->Opti->nest_optv.Ptype[p] == "P"))
+                            || ((param_type == "P-T") && (sys->Opti->nest_optv.Ptype[p] == "TK")) )
                     {
 //                        double val = 0.0;
 //                        if (sys->Tfun->objfun[sys->DYFndx[P_id]]->exp_CN == "pH")

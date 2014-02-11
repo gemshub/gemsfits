@@ -1415,8 +1415,8 @@ outField optimization_fields[25] =
     { "OptConstraints",  0, 0, 1, "\n# OptConstraints:  Optimization: apply constraints (1=yes, 0=no)"},
     { "OptDoWhat",  0, 0, 1, "\n# OptDoWhat: perform optimization and statistics (0); only optimization with basic Statistics (1);"
                              "\n#            only Statistics (2) with initial guesses as best fit parametters"},
-//    { "OptTitration",  0, 0, 1, "\n# OptTitration: Adjusts the computed pH by changing NaOH or HCl amount to match the measured pH"
-//                                "\n#               read from the database for each experiment"},
+    { "OptTitration",  0, 0, 1, "\n# OptTitration: Adjusts the computed pH by changing NaOH or HCl amount to match the measured pH"
+                                "\n#               read from the database for each experiment"},
     { "OptTuckey",  0, 0, 1, "\n# OptTuckey: 0 -> Use Tuckey Biweight. Value > 0 will be the number of iterations for re-weighting. "},
     { "OptEqSolv",  0, 0, 1, "\n# OptEqSolv: Comment"},
     { "OptTolAbs",  0, 0, 1, "\n# OptTolAbs: stopping criterion -> specify absolute tolerance (default = 1e-04) of function value"},
