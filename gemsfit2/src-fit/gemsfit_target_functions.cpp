@@ -124,7 +124,7 @@ void adjust_RDc (TGfitTask *sys)
     {
         for (unsigned int i=0; i < sys->Opti->reactions.size(); ++i )
         {
-            // if there are now logK read form the input file the reaction consttraints are adjusted based on the initial values logK of the reaction
+            // if there are NO logK read form the input file the reaction consttraints are adjusted based on the initial values logK of the reaction
             if (sys->Opti->reactions[i]->logK_TPpairs.size() == 0)
             {
                 double new_G0 =0.0;

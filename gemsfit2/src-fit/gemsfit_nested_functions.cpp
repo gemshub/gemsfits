@@ -46,10 +46,10 @@ void nestedfun (TGfitTask *sys)
     for (unsigned int j = 0; j<sys->Tfun->nestfun.size(); j++)
     {
         param_type = sys->Tfun->nestfun[j]->param_type;
-//            //#ifdef USE_MPI
-//                omp_set_num_threads(sys->MPI);
-//                #pragma omp parallel for
-//            //#endif
+            //#ifdef USE_MPI
+                omp_set_num_threads(sys->MPI);
+                #pragma omp parallel for
+            //#endif
         for (unsigned int i = 0; i<sys->experiments.size(); i++)
         {
             int P_id = omp_get_thread_num();
@@ -135,7 +135,7 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, 
                     int index_bIC = sys->Opti->nest_optv.Pindex[p];
                     sys->NodT[sys->EXPndx[P_id]]->Set_bIC(index_bIC, opt[i] );
                 } else
-                if (sys->Opti->nest_optv.Ptype[p] == "T")
+                if (sys->Opti->nest_optv.Ptype[p] == "TK")
                 {
                     sys->NodT[sys->EXPndx[P_id]]->Set_TK( opt[i] );
                     sys->experiments[sys->EXPndx[P_id]]->sT = opt[i] - 273.15; // temperature in C
@@ -178,7 +178,7 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, 
     {
         // possible return status analysis, error message
 //            sys->NodT[i]->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
-        cout<<"For experiment titration "<<sys->EXPndx[P_id]+1<< endl;
+        cout<<"For experiment nested "<<sys->EXPndx[P_id]+1<< endl;
         cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
     }
 

@@ -219,6 +219,7 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
               "\n#        \"Lcoef\": linkage coefficients (stoichiometry coefficients) "
               "\n#         Whenever the bIC values of S or Cl are varied as (independent) titration parameters,"
               "\n#         the bIC value of H will be adjusted to titrate the system either with H2SO4 or with HCl."
+              "\n#  Restrictions: You can't fit G0's together with TK and P!"
            << endl;
     }
 
