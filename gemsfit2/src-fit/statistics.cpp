@@ -733,6 +733,10 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
             ofstream myScatter_all;
             string path = gpf->ResultDir() + "myScatter_all.txt";
             myScatter_all.open(path.c_str());
+
+            ofstream log;
+            log.open(gpf->FITLogFile().c_str());
+
         for( i=0; i<(number_of_measurements * num_of_MC_runs); i++ )
         {
             scatter_all[i] = get_rand();
@@ -747,6 +751,9 @@ pid_ = 0;
     for( imc=pid_; imc<num_of_MC_runs; ++imc /*+= p*/)
     {
 //        sum_of_squares_MC = 0.;
+
+        log << " #MC: " << imc << endl;
+        cout << " #MC: " << imc << endl;
 
         for( i=0; i<number_of_measurements; i++ )
         {
@@ -865,6 +872,7 @@ pid_ = 0;
         }
         myStat << endl;
         myStat.close();
+        log.close();
 
     free (MC_fitted_parameters_all[0]);
     free (MC_fitted_parameters_all);

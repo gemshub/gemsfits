@@ -66,16 +66,16 @@ void nestedfun (TGfitTask *sys)
                             || ((param_type == "P-T") && (sys->Opti->nest_optv.Ptype[p] == "TK")) )
                     {
 //                        double val = 0.0;
-//                        if (sys->Tfun->objfun[sys->DYFndx[P_id]]->exp_CN == "pH")
-//                        {
-//                            if (isTitration(sys, i, j, p))
-//                            {
-//                                x.push_back(sys->Opti->nest_optv.opt[p]);
-//                                UB.push_back(sys->Opti->nest_optv.UB[p]);
-//                                LB.push_back(sys->Opti->nest_optv.LB[p]);
-//                                sys->PAndx.push_back(p);
-//                            }
-//                        } else
+                        if ((sys->Tfun->objfun[sys->DYFndx[P_id]]->exp_CN == "pH") && (sys->Tfun->nestfun[j]->Telem.size() > 0))
+                        {
+                            if (isTitration(sys, i, j, p))
+                            {
+                                x.push_back(sys->Opti->nest_optv.opt[p]);
+                                UB.push_back(sys->Opti->nest_optv.UB[p]);
+                                LB.push_back(sys->Opti->nest_optv.LB[p]);
+                                sys->PAndx.push_back(p);
+                            }
+                        } else
                         {
                         x.push_back(sys->Opti->nest_optv.opt[p]);
                         UB.push_back(sys->Opti->nest_optv.UB[p]);
@@ -85,6 +85,25 @@ void nestedfun (TGfitTask *sys)
                         }
                     }
                 }
+
+//                if ((sys->Tfun->objfun[sys->DYFndx[P_id]]->exp_CN == "pH"))
+//                {
+//                    vector<double> res;
+//                    if (sys->EXPndx[P_id] == 51)
+//                    {
+//                        double dd;
+//                        dd = 1;
+//                    }
+
+//                    for (unsigned int k = 0; k<x.size(); k++)
+//                    {
+//                        vector <double> opt_scan, grad;
+//                        opt_scan = x;
+//                        opt_scan[k] = x[k] + x[k]*0.001;
+//                        res.push_back( nestminfunc(opt_scan, grad, sys));
+
+//                    }
+//                }
 
                 nlopt::opt opt(nlopt::LN_BOBYQA, x.size());
 

@@ -4,7 +4,7 @@ Tests/BHMsol/EJDB/Boehmite -text
 Tests/BHMsol/EJDB/Boehmite_experiments -text
 Tests/BHMsol/dbimport/Boehmite_Be.xlsx -text
 Tests/BHMsol/dbimport/toejdbrun.bat -text
-Tests/BHMsol/gf2init.bat -text
+Tests/BHMsol/gf2init.bat -text svneol=unset#application/octet-stream
 Tests/CASH/CASH-data-LHopital/CASH-EL01-data.xls -text
 Tests/CASH/CASH-data-LHopital/impdata-expcsd.sql -text
 Tests/CASH/CASH-data-LHopital/impdata-expresaq.sql -text

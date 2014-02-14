@@ -228,7 +228,7 @@ public:
    * @author DM
    * @date 30.10.2013
    */
-   int get_number_of_residuals(TargetFunction *Tfun );
+   int get_number_of_residuals( );
 
    void Ainit_optim (std::vector<double> &optv_);
 

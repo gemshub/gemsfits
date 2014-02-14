@@ -18,7 +18,7 @@
 
 # DataDB: EJDB database path (please, edit to put the actual path)
 
-<DataDB>  './test_input/experimentsDB'
+<DataDB>  '../EJDB/<database name>'
 
 # DataCollection: database collection name (please, edit to put the actual name)
 
@@ -26,7 +26,7 @@
 
 # SystemFiles: path to the list of GEMS3K input files (also used for this template file)
 
-<SystemFiles>  './GEMS/Boehmite_Na-dat.lst'
+<SystemFiles>  '../GEMS/Boehmite_Na-dat.lst'
 
 #########################################################################
 #>>>>>>>>>>>>>>>>>>>>>>> DataSelect section >>>>>>>>>>>>>>>>>>>>>>>>>>>>#
@@ -35,20 +35,37 @@
 # DataSelect: query for obtaining the experimental data from the database.
 # Options: 
 #    '{ ... }': script in JSON format (in braces) describing what to select. 
-#      "sample": [...]: list of comma-separated names of samples, 
-#         or empty string "" to select all samples.
-#      "usedataset": [...]: list of comma-separated names of experimental datasets to be used, 
+#       Any main selection option can be left out.
+#      "usedatasets": [...]: list of comma-separated names of experimental datasets to be used, 
 #         or empty string "" to select all available datasets.
-#      "skipdataset": [...]: list of comma-separated names of experimental datasets to be skipped, 
+#      "skipdatasets": [...]: list of comma-separated names of experimental datasets to be skipped, 
 #         or empty string "" to not skip (in this case usedataset will apply).
+#      "uesamples": [...]: list of comma-separated names of samples, 
+#         or empty string "" to select all samples.
+#      "skipsamples": [...]: list of comma-separated names of samples to be skipped, 
+#         or empty string "" to not skip (in this case, sample list will apply).
+#      "usepairs": [...]: JSON objects of dataset-samples pairs to be used (sub-option to the ones above), 
+#         or empty string "" for the above selection options to apply.
+#          "usedataset": " " name of the dataset 
+#          "usesamples": [...]: list of comma-separated names of samples to be used 
+#      "skippairs": [...]: JSON objects of dataset-samples pairs to be skipped (sub-option to the ones above), 
+#         or empty string "" for the above selection options to apply.
+#          "usedataset": " " name of the dataset 
+#          "usesamples": [...]: list of comma-separated names of samples to be used 
 #      "sT": [...]: list of comma-separated minimum and maximum temperature, C, 
 #         or empty string "" to select data for all available temperatures. 
 #      "sP": [...]: list of comma-separated minimum and maximum pressures, bar, 
 #         or empty string "" to select data for all available pressures.  
 #      Example: 
-#      '{ "sample" : "", 
-#        "usedataset" : ["CH04", "CH04D"],
-#        "skipdataset" : ["CH03", "CH03D"],
+#      '{"usedatasets" : ["CH04", "CH04D"],
+#        "skipdatasets" : ["CH03", "CH03D"],
+#        "usesamples" : "", 
+#        "skipsamples" : "", 
+#        "usepairs" : "", 
+#        "skippairs" : [ 
+#                          { "skipdataset": "CHO4", "skipsamples": ["01", "02"]}, 
+#                          { "skipdataset": "CHO4D", "skipsamples": ["01", "02"]}, 
+#                        ], 
 #        "sT" : [100, 1000],
 #        "sP" : [1, 2500] }'
 #      Copy the example and paste it below, remove comment symbols (#), and edit as necessary.
@@ -83,9 +100,15 @@
 #      "DCP": used only if "CT" is "DC", to represent the name of dependent component property:
 #          "Q" for amount; "@coef" for activity coeficient
 #       "unit":  units of measurement (override those given in the database for this value):
-#          "molal":  mol/(kg H2O), "loga": log(molal), "-loga": negated log(molal);
+#          "molal":  mol/(kg H2O), "logm": log(molal), "-loga": negated log(activity) for pH;
 #          "g"; "kg"; "cm3"; "m3"; "molfrac": mole fraction; J/mol for Gex 
 #           ...
+#  "NFUN": nested objective function, list [] of terms {} for measured porperties to compare for each experiment independently for adjusting:
+#            same construction as the objective function and one more term:
+#       "Ptype": the type of paramater that has to be fitted against the compared property. e.g bIC, T-P for T and/or P
+#        IMPORTANT: When "NFUN" (nested function) is present in DataSelect it is necessary that at least one "Ptype" paramater 
+#                   is marked for fitting. One can have multiple NFUN each with its parameter type ("Ptype"). 
+#
 #       (conversions will be performed automatically).
 #     The comparison options are: 
 #       aqueous phase ("aq_gen") elemental composition in "molal" or "loga" 
@@ -108,7 +131,17 @@
 #         { "EPH": "aq_gen", "CT": "DC", "CN": "SiO2@", "DCP" : "Q", "unit": "mol"}
 #      ]
 #   }'
-#  Copy the example, paste it below, remove the comment symbols (#), and edit as necessary. 
+# 
+#  Example with nested function:
+#  '{ "Target": "name", "TT": "lsq", "WT": "inverr", "OFUN":
+#      [
+#         { "EPH": "aq_gen", "CT": "IC", "CN": "Al", "unit": "logm" },
+#      ], "NFUN": 
+#      [
+#         { "Ptype": "bIC", "EPH": "aq_gen", "CT": "prop", "CN": "pH", "unit": "-loga" } 
+#      ]
+#   }'
+#  Copy one of the examples, paste it below, remove the comment symbols (#), and edit as necessary. 
 #     Remove the unnecessary rows {...}
 
 <DataTarget>  '{[...]}'
@@ -165,6 +198,7 @@
 #        "Lcoef": linkage coefficients (stoichiometry coefficients) 
 #         Whenever the bIC values of S or Cl are varied as (independent) titration parameters,
 #         the bIC value of H will be adjusted to titrate the system either with H2SO4 or with HCl.
+#  Restrictions: You can't fit G0's together with TK and P!
 
 # ICNL: List of Independent Component names (for readability; no need to modify)
 <ICNL>
@@ -348,10 +382,6 @@
 # OptTuckey: 0 -> Use Tuckey Biweight. Value > 0 will be the number of iterations for re-weighting. 
 <OptTuckey>  0
 
-# OptTitration: Adjusts the computed pH by changing NaOH or HCl amount to match the measured pH
-#               read from the database for each experiment
-<OptTitration>  0
-
 # OptAlgo: specify algorithm: GN_ISRES | GN_ORIG_DIRECT | GN_ORIG_DIRECT_L | LN_COBYLA | LN_BOBYQA 
 <OptAlgo>  'LN_BOBYQA'
 
@@ -386,7 +416,7 @@
 # StatSensitivity: number of evaluations points per parameter for sensitivity evaluation
 <StatSensitivity>  50
 
-# StatMCbool: perform Monte Carlo runs -> yes (1) | no (0)
+# StatMCbool: perform Monte Carlo runs -> no (0) | yes (1) scatter added to computed values | yes (2) scatter added to measured values 
 <StatMCbool>  0
 
 # StatPerturbator: used for calculating sensitivities by central diference, see ref [2]
