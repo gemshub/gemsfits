@@ -38,7 +38,6 @@
 #include "optimization.h"
 #include "gemsfit_global_variables.h"
 #include <nlopt.hpp>
-#include "print.h"
 
 // Definition of TGfitTask class
 class TGfitTask : public Data_Manager
@@ -129,10 +128,10 @@ public:
 
     static TGfitTask* gft;   ///< static pointer to this class
 
-    ResPrint* print;
+//    ResPrint* print;
 
     // indexes used in the dynamic functions//
-    vector<int> EXPndx, COMPndx, PHndx, PHPndx, PAndx, DYFndx;
+    vector<int> EXPndx, COMPndx, PHndx, PHPndx, PAndx, NEFndx;
     struct vect
     {
        vector<int> ndx;
@@ -161,13 +160,27 @@ public:
             string param_type;
             vector<string> Tformula;
             vector<string> Telem;
+            double TuWeight;
+            struct results
+            {
+                double measured_value;
+                double computed_value;
+                double residual;
+                double weight;
+                double Tfun_residual;
+                double WTfun_residual;
+            };
+            results res;
+            bool isComputed;
         };
-        vector<obj_fun*> objfun;
-        vector<obj_fun*> objfunold;
-        vector<obj_fun*> nestfun;
+        vector<obj_fun> objfun;
+        vector<obj_fun> objfunold;
+        vector<obj_fun> nestfun;
     };
 
     TargetFunction* Tfun; /// pointer to target function structure
+
+    vector<TargetFunction> aTfun;
 
     /// Computed values for Monte Carlo confidence interval generation
     double_v computed_values_v;
@@ -181,7 +194,7 @@ public:
     double_v Weighted_Tfun_residuals_v; // Target function "residuals"
     double_v Tfun_residuals_v;
     double_v weights; // weights
-    double_v Tuckey_weights; // hoding the Tuckey weights
+//    double_v Tuckey_weights; // hoding the Tuckey weights
 
     int number_of_residuals;
 
@@ -204,7 +217,9 @@ public:
    * @author DM
    * @date 24.07.2013
    */
-   void get_sum_of_residuals ( double &residual);
+   void get_sum_of_residuals (double &residual);
+   double get_sum_of_residuals( );
+//   void get_sum_of_residuals (double &residual, TargetFunction *objfun);
 
    /**
    * Gets the residual from one experiment (exp index) and based on one comparison option (obj index in Tfun->objfun[obj])
@@ -213,7 +228,7 @@ public:
    * @author DM
    * @date 30.01.2014
    */
-   double get_residual (int exp, int obj);
+   double get_residual (int exp, int obj, TargetFunction::obj_fun &objfun, int &count);
 
    /**
    * Adds the Monte Carlo Scatter to the measured values
@@ -230,6 +245,8 @@ public:
    */
    int get_number_of_residuals( );
 
+   void set_average_objfun ();
+
    void Ainit_optim (std::vector<double> &optv_);
 
    /**
@@ -242,7 +259,10 @@ public:
    * @param weight value of the weight
    * @date 01.07.2013
    */
-   void set_residuals (double computed, double measured, double Weighted_Tfun_residual, double Tfun_residual, double weight );
+   void set_results ( TGfitTask::TargetFunction::obj_fun &objfun, double computed, double measured, double Weighted_Tfun_residual, double Tfun_residual, double weight );
+
+   void print_global_results ();
+   void print_nested_results ();
 
 };
 

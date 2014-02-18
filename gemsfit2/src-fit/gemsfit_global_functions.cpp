@@ -92,8 +92,6 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     // Call GEMS3K and run GEM_run();
 
     // Temporary storage vectors
-    double residuals_sys_ = 0.0;
-
     master_counter++;
 
     // Clear already stored results
@@ -104,7 +102,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     sys->residuals_v.clear();
     sys->weights.clear();
 
-    sys->print->print_clear();
+//    sys->print->print_clear();
 
     // going trough the adjusted parameters in Opti->Ptype and adjusts them with the new value
 //#ifdef USE_MPI
@@ -149,31 +147,14 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         adjust_RDc(sys);
     }
 
-    /// DYNAMIC FUNCTION
+    /// NESTED FUNCTION
     if (sys->Opti->h_nestfun)
     {
-        sys->Opti->h_is_in_nested = true;           // important to not set the priting class. Not working in current version with paralelization
-        sys->Tfun->objfunold = sys->Tfun->objfun;   // storing the objective function
-        sys->Tfun->objfun = sys->Tfun->nestfun;     // the objective function beomes the nestedfunction
         string old = sys->Tfun->type;               // storing the old type of target function
         sys->Tfun->type = "abs_dif";                // seeting the target function to simple abslute difference
         nestedfun(sys);                             // optimizing the nested functions
-        // returning the values to the ones before
-        sys->Tfun->objfun = sys->Tfun->objfunold;
         sys->Tfun->type = old;
-        sys->Opti->h_is_in_nested = false;
     }
-
-    // Clear already stored results
-    sys->computed_values_v.clear();
-    sys->measured_values_v.clear();
-    sys->Weighted_Tfun_residuals_v.clear();
-    sys->Tfun_residuals_v.clear();
-    sys->residuals_v.clear();
-    sys->weights.clear();
-
-    sys->print->print_clear();
-
 
 //    /// Linked parameters
 //    if (sys->Opti->h_Lp)
@@ -223,8 +204,8 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
             cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
         }
     }
-    sys->get_sum_of_residuals(residuals_sys_);
-    residuals_sys = residuals_sys_;
+
+    residuals_sys = sys->get_sum_of_residuals( );
 
     // debug for when using global algorithm
     if (master_counter%1000 == 0)
@@ -241,6 +222,22 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 
 //    if(master_counter == 50)
 //        cout << "pause"<< endl;
+
+    for (unsigned int i = 0; i < sys->aTfun.size(); i++)
+    {
+        for (unsigned j = 0; j < sys->aTfun[i].objfun.size(); j++)
+        {
+            if (sys->aTfun[i].objfun[j].isComputed)
+            {
+                sys->computed_values_v.push_back(sys->aTfun[i].objfun[j].res.computed_value );
+                sys->measured_values_v.push_back(sys->aTfun[i].objfun[j].res.measured_value );
+                sys->residuals_v.push_back(sys->aTfun[i].objfun[j].res.residual );
+                sys->weights.push_back(sys->aTfun[i].objfun[j].res.weight );
+                sys->Tfun_residuals_v.push_back(sys->aTfun[i].objfun[j].res.Tfun_residual );
+                sys->Weighted_Tfun_residuals_v.push_back(sys->aTfun[i].objfun[j].res.WTfun_residual );
+            }
+        }
+    }
 }
 
 
@@ -302,26 +299,81 @@ double median(vector<double> absresiduals)
   return median;
 }
 
-void Tuckey_weight (TGfitTask *sys)
+void Tuckey_weight_global (TGfitTask *sys)
 {
     double C = 0.0;
     double median_ = 0.0;
     vector <double> abs_res;
 
-    for (unsigned int i = 0; i< sys->residuals_v.size(); i++)
+
+    for (unsigned int i = 0; i < sys->aTfun.size(); i++)
     {
-        abs_res.push_back(fabs(sys->residuals_v[i]));
+        for (unsigned int j = 0; j < sys->aTfun[i].objfun.size(); j++)
+        {
+            if (sys->aTfun[i].objfun[j].isComputed)
+            {
+                abs_res.push_back(fabs(sys->aTfun[i].objfun[j].res.residual));
+            }
+
+        }
     }
 
     median_ = median(abs_res);
     C = 6 * median_;
 
-    for (unsigned int i=0; i<sys->residuals_v.size(); i++)
+    omp_set_num_threads(sys->MPI);
+    #pragma omp parallel for
+    for (unsigned int i = 0; i < sys->aTfun.size(); i++)
     {
-        if (( C - abs_res[i]) < 0)
-            sys->Tuckey_weights[i] = 0;
-        else
-            sys->Tuckey_weights[i] = pow((1 - pow((abs_res[i]/C), 2) ), 2);
+        for (unsigned int j = 0; j < sys->aTfun[i].objfun.size(); j++)
+        {
+            if (sys->aTfun[i].objfun[j].isComputed)
+            {
+                if (( C - abs_res[i]) < 0)
+                    sys->aTfun[i].objfun[j].TuWeight = 0;
+                else
+                    sys->aTfun[i].objfun[j].TuWeight = pow((1 - pow((abs_res[i]/C), 2) ), 2);
+            }
+        }
+    }
+}
+
+void Tuckey_weight_objfun (TGfitTask *sys)
+{
+    vector<double> C;
+    vector<double> median_;
+    const int ln = sys->Tfun->objfun.size();
+    vector<double> abs_res[ln];
+
+    for (unsigned int j = 0; j < sys->Tfun->objfun.size(); j++)
+    {
+        for (unsigned int i = 0; i < sys->aTfun.size(); i++)
+        {
+            if (sys->aTfun[i].objfun[j].isComputed)
+            {
+                abs_res[j].push_back(fabs(sys->aTfun[i].objfun[j].res.residual));
+            }
+
+        }
+        median_.push_back(median(abs_res[j]));
+        C.push_back(6 * median_[j]);
+    }
+
+
+    omp_set_num_threads(sys->MPI);
+    #pragma omp parallel for
+    for (unsigned int j = 0; j < sys->Tfun->objfun.size(); j++)
+    {
+        for (unsigned int i = 0; i < sys->aTfun.size(); i++)
+        {
+            if (sys->aTfun[i].objfun[j].isComputed)
+            {
+                if (( C[j] - abs_res[j][i]) < 0)
+                    sys->aTfun[i].objfun[j].TuWeight = 0;
+                else
+                    sys->aTfun[i].objfun[j].TuWeight = pow((1 - pow((abs_res[j][i]/C[j]), 2) ), 2);
+            }
+        }
     }
 }
 

@@ -39,25 +39,22 @@
 
 void nestedfun (TGfitTask *sys)
 {
-    string param_type;
-
-
     // loop over the nested functions
-    for (unsigned int j = 0; j<sys->Tfun->nestfun.size(); j++)
+    for  (unsigned int i = 0; i<sys->experiments.size(); i++)
     {
-        param_type = sys->Tfun->nestfun[j]->param_type;
-            //#ifdef USE_MPI
-                omp_set_num_threads(sys->MPI);
-                #pragma omp parallel for
-            //#endif
-        for (unsigned int i = 0; i<sys->experiments.size(); i++)
+
+        omp_set_num_threads(sys->MPI);
+        #pragma omp parallel for
+        for (unsigned int j = 0; j<sys->Tfun->nestfun.size(); j++)
         {
+            string param_type = sys->Tfun->nestfun[j].param_type;
             int P_id = omp_get_thread_num();
-            double test_residual = sys->get_residual (i, j);
+            int count = 0;
+            double test_residual = sys->get_residual (i, j, sys->aTfun[i].nestfun[j], count);
             if (test_residual != 0.0)
             {
                 sys->EXPndx[P_id]=i;
-                sys->DYFndx[P_id]=j;
+                sys->NEFndx[P_id]=j;
 
                 vector <double> x, UB, LB;
                 for (unsigned int p = 0; p < sys->Opti->nest_optv.opt.size(); p++)
@@ -66,7 +63,7 @@ void nestedfun (TGfitTask *sys)
                             || ((param_type == "P-T") && (sys->Opti->nest_optv.Ptype[p] == "TK")) )
                     {
 //                        double val = 0.0;
-                        if ((sys->Tfun->objfun[sys->DYFndx[P_id]]->exp_CN == "pH") && (sys->Tfun->nestfun[j]->Telem.size() > 0))
+                        if ((sys->Tfun->nestfun[sys->NEFndx[P_id]].exp_CN == "pH") && (sys->Tfun->nestfun[j].Telem.size() > 0))
                         {
                             if (isTitration(sys, i, j, p))
                             {
@@ -86,25 +83,6 @@ void nestedfun (TGfitTask *sys)
                     }
                 }
 
-//                if ((sys->Tfun->objfun[sys->DYFndx[P_id]]->exp_CN == "pH"))
-//                {
-//                    vector<double> res;
-//                    if (sys->EXPndx[P_id] == 51)
-//                    {
-//                        double dd;
-//                        dd = 1;
-//                    }
-
-//                    for (unsigned int k = 0; k<x.size(); k++)
-//                    {
-//                        vector <double> opt_scan, grad;
-//                        opt_scan = x;
-//                        opt_scan[k] = x[k] + x[k]*0.001;
-//                        res.push_back( nestminfunc(opt_scan, grad, sys));
-
-//                    }
-//                }
-
                 nlopt::opt opt(nlopt::LN_BOBYQA, x.size());
 
                 double minf=0;
@@ -119,13 +97,26 @@ void nestedfun (TGfitTask *sys)
 
                 opt.set_maxeval( 1000 );
 
+//                cout << "before: "<<sys->NodT[i]->Get_IC() << endl;
+
                 nlopt::result result = opt.optimize(x, minf);
 
 //                double xx = minf;
 
                 // Store result parameters
     //            sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt = x[0];
+                vector<double> grad;
+                nestminfunc ( x, grad, sys );
+
+                for (unsigned int k = 0; k < sys->vPAndx[P_id]->ndx.size(); k++)
+                {
+                    sys->Opti->nest_optv.e_opt[sys->vPAndx[P_id]->ndx[k]]->val[sys->EXPndx[P_id]] = x[k];
+                }
+
+
                 x.clear(); UB.clear(); LB.clear(); sys->PAndx.clear(); sys->vPAndx[P_id]->ndx.clear();
+
+//                cout << "after: "<<sys->NodT[i]->Get_IC() << endl;
 
             }
 
@@ -207,7 +198,8 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, 
 //    residual = abs (sys->experiments[sys->EXPndx[P_id]]->expphases[0]->phprop[0]->Qnt - sys->NodT[sys->EXPndx[P_id]]->Get_pH());
 
     // calculate residual
-    residual = sys->get_residual (sys->EXPndx[P_id], sys->DYFndx[P_id]);
+    int count = 0;
+    residual = sys->get_residual (sys->EXPndx[P_id], sys->NEFndx[P_id], sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]], count);
 
     return residual;
 }
@@ -502,13 +494,13 @@ bool isTitration (TGfitTask *sys, int i, int j, int p)
 {
 //    int P_id = omp_get_thread_num();
         // check titrant in experiment
-    for (unsigned int t=0; t<sys->Tfun->objfun[j]->Tformula.size(); t++)
+    for (unsigned int t=0; t<sys->Tfun->nestfun[j].Tformula.size(); t++)
     {
         for (unsigned int c=0; c<sys->experiments[i]->sbcomp.size(); c++)
         {
-            if (sys->experiments[i]->sbcomp[c]->comp == sys->Tfun->objfun[j]->Tformula[t])
+            if (sys->experiments[i]->sbcomp[c]->comp == sys->Tfun->nestfun[j].Tformula[t])
             {
-                int Endx = sys->NodT[i]->IC_name_to_xDB(sys->Tfun->objfun[j]->Telem[t].c_str());
+                int Endx = sys->NodT[i]->IC_name_to_xDB(sys->Tfun->nestfun[j].Telem[t].c_str());
                 if (Endx == sys->Opti->nest_optv.Pindex[p])
                 {
                     return true;

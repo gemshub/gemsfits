@@ -43,7 +43,6 @@
 #include <iostream>
 #include "gemsfit_task.h"
 #include "node.h"
-#include "print.h"
 
 // callback function for GEMS3K wrapper
 /**
@@ -93,7 +92,9 @@ double median(vector<double> absresiduals);
 * @author DM
 * @date 18.12.2014
 */
-void Tuckey_weight (TGfitTask *sys);
+void Tuckey_weight_global (TGfitTask *sys);
+void Tuckey_weight_objfun (TGfitTask *sys);
+//ADD! void Tuckey_exp_objfun (TGfitTask *sys);
 
 
 

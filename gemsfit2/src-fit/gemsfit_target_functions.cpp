@@ -379,7 +379,7 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
 
 /// Target functions, Tfun_residual calculations
 // Calculates the residual of phase independent components (element composition)
-double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
+double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_fun &objfun, TGfitTask *sys)
 {
     const char *elem_name, *phase_name;
     int ICndx, PHndx, nIC;
@@ -398,7 +398,7 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
     sys->NodT[i]->Ph_BC(PHndx, IC_in_PH);
 
     // Get composition of aqueous phase
-    if ((sys->experiments[i]->expphases[p]->phase == keys::aqueous) && (sys->Tfun->objfun[j]->exp_phase == keys::aqueous))
+    if ((sys->experiments[i]->expphases[p]->phase == keys::aqueous) && (objfun.exp_phase == keys::aqueous))
     {
         if (sys->experiments[i]->expphases[p]->phIC[e]->Qunit == keys::logm)
         {
@@ -409,7 +409,7 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
             computed_value = sys->NodT[i]->Get_mIC(ICndx); // in mol/Kg
         }
     } else // other than aqueous phase
-        if ((sys->Tfun->objfun[j]->exp_phase != keys::aqueous) && (sys->experiments[i]->expphases[p]->phase != keys::aqueous))
+        if ((objfun.exp_phase != keys::aqueous) && (sys->experiments[i]->expphases[p]->phase != keys::aqueous))
         {
             computed_value = IC_in_PH[ICndx]; // phase bulk composition in moles (mol)
         } else { cout << "Error in target functions line 405 "; exit(1);}
@@ -425,26 +425,21 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys)
     }
 
     // check Target function type and calculate the Tfun_residual
-    weight_ = weight(i, p, e, j, sys->Tfun->weight, sys);
-    Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j]);
-    Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j])*weight_;
+    weight_ = weight(i, p, e, objfun, sys->Tfun->weight, sys);
+    Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun);
+    Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun)*weight_;
+    objfun.isComputed = true;
 
     delete[] IC_in_PH;
-    if (!sys->Opti->h_is_in_nested)
-    {
-        sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
-        sys->print->set_print(sys->experiments[i]->sample,
-                              boost::lexical_cast<std::string>(sys->NodT[i]->Get_pH( )),
-                              sys->experiments[i]->expphases[p]->phIC[e]->comp,
-                              sys->experiments[i]->expphases[p]->phIC[e]->Qunit,
-                              measured_value,computed_value,Weighted_Tfun_residual, weight_ );
-    }
+
+    sys->set_results(objfun, computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
+
 
     return Weighted_Tfun_residual;
 }
 
 // calculates the residual of IC as molar fraction
-double residual_phase_elemMR (int i, int p, int f, int j, TGfitTask *sys)
+double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::obj_fun &objfun, TGfitTask *sys)
 {
     const char *elem_name, *phase_name;
     int ICndx, PHndx, nIC;
@@ -468,11 +463,11 @@ double residual_phase_elemMR (int i, int p, int f, int j, TGfitTask *sys)
     {
         elem_name =  nom[k].c_str();
         ICndx = sys->NodT[i]->IC_name_to_xDB(elem_name);
-        if ((sys->experiments[i]->expphases[p]->phase == keys::aqueous) && (sys->Tfun->objfun[j]->exp_phase == keys::aqueous))
+        if ((sys->experiments[i]->expphases[p]->phase == keys::aqueous) && (objfun.exp_phase == keys::aqueous))
         {
             computed_nom = computed_nom + sys->NodT[i]->Get_mIC(ICndx)/* * sys->NodT[i]-> Ph_Mass(PHndx)*/;
         } else // other than aqueous phase
-            if ((sys->Tfun->objfun[j]->exp_phase != keys::aqueous) && (sys->experiments[i]->expphases[p]->phase != keys::aqueous))
+            if ((objfun.exp_phase != keys::aqueous) && (sys->experiments[i]->expphases[p]->phase != keys::aqueous))
             {
                 computed_nom = computed_nom + IC_in_PH[ICndx];
             }
@@ -483,11 +478,11 @@ double residual_phase_elemMR (int i, int p, int f, int j, TGfitTask *sys)
     {
         elem_name =  denom[k].c_str();
         ICndx = sys->NodT[i]->IC_name_to_xDB(elem_name);
-        if ((sys->experiments[i]->expphases[p]->phase == keys::aqueous) && (sys->Tfun->objfun[j]->exp_phase == keys::aqueous))
+        if ((sys->experiments[i]->expphases[p]->phase == keys::aqueous) && (objfun.exp_phase == keys::aqueous))
         {
             computed_denom = computed_denom + sys->NodT[i]->Get_mIC(ICndx)/* * sys->NodT[i]-> Ph_Mass(PHndx)*/;
         } else // other than aqueous phase
-            if ((sys->Tfun->objfun[j]->exp_phase != keys::aqueous) && (sys->experiments[i]->expphases[p]->phase != keys::aqueous))
+            if ((objfun.exp_phase != keys::aqueous) && (sys->experiments[i]->expphases[p]->phase != keys::aqueous))
             {
                 computed_denom = computed_denom + IC_in_PH[ICndx];
             }
@@ -498,20 +493,15 @@ double residual_phase_elemMR (int i, int p, int f, int j, TGfitTask *sys)
 
 
     // check Target function type and calculate the Tfun_residual
-    weight_ = weight_MR(i, p, f, j, sys->Tfun->weight, sys);
-    Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j]);
-    Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j])*weight_;
+    weight_ = weight_MR(i, p, f, objfun, sys->Tfun->weight, sys);
+    Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun);
+    Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun)*weight_;
+    objfun.isComputed = true;
 
     delete[] IC_in_PH;
 
-    if (!sys->Opti->h_is_in_nested)
-    {
-        sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
-        sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,
-                              sys->experiments[i]->expphases[p]->phMR[f]->comp,
-                              sys->experiments[i]->expphases[p]->phMR[f]->Qunit,
-                              measured_value,computed_value,Weighted_Tfun_residual, weight_ );
-    }
+    sys->set_results( objfun, computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
+
 
     return Weighted_Tfun_residual;
 }
@@ -566,7 +556,7 @@ void interpretMR (vector<string> *nom, vector<string> *denom, string name)
 }
 
 // calculates residual for phase properties
-double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
+double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj_fun &objfun, TGfitTask *sys)
 {
     const char *phase_name;
     long int PHndx, DC0ndx, nDCinPH;
@@ -578,7 +568,7 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
     PHndx = sys->NodT[i]->Ph_name_to_xDB(phase_name);
 // gpf->fout << "i=" << i << " p=" << p << " pp=" << pp << " j=" << j << " : ";
     // Get aqueous phase pH
-    if ((sys->Tfun->objfun[j]->exp_CN == keys::pH) && (sys->experiments[i]->expphases[p]->phase == keys::aqueous) && (sys->Tfun->objfun[j]->exp_phase == keys::aqueous))
+    if ((objfun.exp_CN == keys::pH) && (sys->experiments[i]->expphases[p]->phase == keys::aqueous) && (objfun.exp_phase == keys::aqueous))
     {
         if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::_loga)
         {
@@ -586,12 +576,12 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
         } else computed_value = pow(10,(-(sys->NodT[i]->Get_pH()))) /*sys->NodT[i]->Get_pH()*/;
 
     } else //Get aqueous phase Eh
-    if ((sys->Tfun->objfun[j]->exp_CN == keys::Eh) && (sys->experiments[i]->expphases[p]->phase == keys::aqueous)
-            && (sys->Tfun->objfun[j]->exp_phase == keys::aqueous))
+    if ((objfun.exp_CN == keys::Eh) && (sys->experiments[i]->expphases[p]->phase == keys::aqueous)
+            && (objfun.exp_phase == keys::aqueous))
     {
         computed_value = sys->NodT[i]->Get_Eh();
     } else // Get phase amount
-    if ((sys->Tfun->objfun[j]->exp_CN == keys::Qnt))
+    if ((objfun.exp_CN == keys::Qnt))
     {
         if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::gram)
         {
@@ -604,7 +594,7 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
                     computed_value = sys->NodT[i]->Ph_Mole(PHndx);
 
     } else // Get phase volume
-    if ((sys->Tfun->objfun[j]->exp_CN == keys::pV))
+    if ((objfun.exp_CN == keys::pV))
     {
         if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::cm3)
         {
@@ -616,26 +606,32 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
         }
 
     } else
-    if (sys->Tfun->objfun[j]->exp_CN == keys::RHO)
+    if (objfun.exp_CN == keys::RHO)
     {
         if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::g_cm3)
         {
             computed_value = (sys->NodT[i]->Ph_Mass(PHndx) * 1000) / (sys->NodT[i]->Ph_Volume(PHndx) * 1e06);
         }
     } else
-    if ((sys->Tfun->objfun[j]->exp_CN == keys::pe) && (sys->Tfun->objfun[j]->exp_phase == keys::aqueous))
+    if ((objfun.exp_CN == keys::pe) && (objfun.exp_phase == keys::aqueous))
     {
         if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::_loga)
         {
             computed_value = sys->NodT[i]->Get_pe();
         }
     } else
-    if ((sys->Tfun->objfun[j]->exp_CN == keys::oscw) && (sys->Tfun->objfun[j]->exp_phase == keys::aqueous))
+    if ((objfun.exp_CN == keys::IS) && (objfun.exp_phase == keys::aqueous))
+    {
+
+        computed_value = sys->NodT[i]->Get_IC();
+
+    } else
+    if ((objfun.exp_CN == keys::oscw) && (objfun.exp_phase == keys::aqueous))
     {
     //  computed_value = ;
         // ++++++++++ !!!!! NOT IMPLEMENTED !!!! +++++
     } else
-    if (sys->Tfun->objfun[j]->exp_CN == keys::Gex )  // functionality added by DK on 03.01.2014
+    if (objfun.exp_CN == keys::Gex )  // functionality added by DK on 03.01.2014
     {
             double Gex = 0., gam_dc, x_dc;
             long int jc;
@@ -671,24 +667,19 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys)
     }
 
     // check Target function type and calculate the Tfun_residual
-    weight_ = weight_phprop(i, p, pp, j, sys->Tfun->weight, sys);
-    Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j]);
-    Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j])*weight_;
+    weight_ = weight_phprop(i, p, pp, objfun, sys->Tfun->weight, sys);
+    Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun);
+    Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun)*weight_;
+    objfun.isComputed = true;
 
-    if (!sys->Opti->h_is_in_nested)
-    {
-        sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
-        sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phase,
-                              sys->experiments[i]->expphases[p]->phprop[pp]->property,
-                              sys->experiments[i]->expphases[p]->phprop[pp]->Qunit,
-                              measured_value,computed_value,Weighted_Tfun_residual, weight_ );
-    }
+    sys->set_results( objfun, computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
+
 
     return Weighted_Tfun_residual;
 }
 
 // residual for phase dependent components
-double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sys)
+double residual_phase_dcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFunction::obj_fun &objfun, TGfitTask *sys)
 {
     const char/* *phase_name,*/ *dcomp_name;
     int /* PHndx,*/ DCndx;
@@ -701,7 +692,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
 //    PHndx = sys->NodT[i]->Ph_name_to_xDB(phase_name);
     DCndx = sys->NodT[i]->DC_name_to_xCH(dcomp_name);
 
-    if (sys->Tfun->objfun[j]->exp_DCP == keys::Qnt)
+    if (objfun.exp_DCP == keys::Qnt)
     {
         computed_value = sys->NodT[i]->Get_nDC(DCndx); // Retrieves the current mole amount of Dependent Component.
         if (sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit == keys::molfrac)
@@ -709,7 +700,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
             computed_value = sys->NodT[i]->Get_cDC(DCndx);// for species in other phases - mole fraction.
         }
     } else
-    if (sys->Tfun->objfun[j]->exp_DCP == keys::actcoef)
+    if (objfun.exp_DCP == keys::actcoef)
     {
         computed_value = sys->NodT[i]->Get_gDC(DCndx);
     } else { cout << "Error in target functions line 685 "; exit(1);}
@@ -717,18 +708,13 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
     measured_value = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt;
 
     // check Target function type and calculate the Tfun_residual
-    weight_ = weight_phdcomp(i, p, dc, dcp, j, sys->Tfun->weight, sys);
-    Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j]);
-    Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, *sys->Tfun->objfun[j])*weight_;
+    weight_ = weight_phdcomp(i, p, dc, dcp, objfun, sys->Tfun->weight, sys);
+    Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun);
+    Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun)*weight_;
+    objfun.isComputed = true;
 
-    if (!sys->Opti->h_is_in_nested)
-    {
-        sys->set_residuals(computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
-        sys->print->set_print(sys->experiments[i]->sample,sys->experiments[i]->expphases[p]->phDC[dc]->DC,
-                              sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->property,
-                              sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit,
-                              measured_value, computed_value, Weighted_Tfun_residual, weight_ );
-    }
+    sys->set_results( objfun, computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
+
 
     return Weighted_Tfun_residual;
 }
@@ -755,7 +741,7 @@ double Tfunction (double computed_value, double measured_value, string type, TGf
     return Tf;
 }
 
-double weight (int i, int p, int e, int j, string type, TGfitTask *sys)
+double weight (int i, int p, int e, TGfitTask::TargetFunction::obj_fun &objfun, string type, TGfitTask *sys)
 {
     if (type == keys::inverr)
     {
@@ -773,12 +759,12 @@ double weight (int i, int p, int e, int j, string type, TGfitTask *sys)
     } else
     if (type == keys::inverr_norm)
     {
-        return 1/(pow((sys->experiments[i]->expphases[p]->phIC[e]->Qerror/sys->Tfun->objfun[j]->meas_average),2));
+        return 1/(pow((sys->experiments[i]->expphases[p]->phIC[e]->Qerror/objfun.meas_average),2));
     } else
         return 1;
 }
 
-double weight_MR (int i, int p, int f, int j, string type, TGfitTask *sys)
+double weight_MR (int i, int p, int f, TGfitTask::TargetFunction::obj_fun &objfun, string type, TGfitTask *sys)
 {
     if (type == keys::inverr)
     {
@@ -796,12 +782,12 @@ double weight_MR (int i, int p, int f, int j, string type, TGfitTask *sys)
     } else
     if (type == keys::inverr_norm)
     {
-        return 1/(pow((sys->experiments[i]->expphases[p]->phMR[f]->Qerror/sys->Tfun->objfun[j]->meas_average),2));
+        return 1/(pow((sys->experiments[i]->expphases[p]->phMR[f]->Qerror/objfun.meas_average),2));
     } else
         return 1;
 }
 
-double weight_phprop (int i, int p, int pp, int j, string type, TGfitTask *sys)
+double weight_phprop (int i, int p, int pp, TGfitTask::TargetFunction::obj_fun &objfun, string type, TGfitTask *sys)
 {
     if (type == keys::inverr)
     {
@@ -818,12 +804,12 @@ double weight_phprop (int i, int p, int pp, int j, string type, TGfitTask *sys)
     } else
     if (type == keys::inverr_norm)
     {
-        return 1/(pow((sys->experiments[i]->expphases[p]->phprop[pp]->Qerror/sys->Tfun->objfun[j]->meas_average),2));
+        return 1/(pow((sys->experiments[i]->expphases[p]->phprop[pp]->Qerror/objfun.meas_average),2));
     } else
         return 1;
 }
 
-double weight_phdcomp (int i, int p, int dc, int dcp, int j, string type, TGfitTask *sys)
+double weight_phdcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFunction::obj_fun &objfun, string type, TGfitTask *sys)
 {
     if (type == keys::inverr)
     {
@@ -840,7 +826,7 @@ double weight_phdcomp (int i, int p, int dc, int dcp, int j, string type, TGfitT
     } else
     if (type == keys::inverr_norm)
     {
-        return 1/(pow((sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror/sys->Tfun->objfun[j]->meas_average),2));
+        return 1/(pow((sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror/objfun.meas_average),2));
     } else
         return 1;
 }

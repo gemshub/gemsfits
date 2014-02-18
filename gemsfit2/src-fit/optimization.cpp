@@ -51,7 +51,6 @@ optimization::optimization()
     //soring out the global paramaters vs the paramaters used in the dynamic functions
     if (h_nestfun)
     {
-//        nest_optv = *this;
         sort_nestfun_param();
     }
 

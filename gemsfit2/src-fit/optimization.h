@@ -133,6 +133,7 @@ public:
             vd val;
         };
         vector<ival*>i_opt;
+        vector<ival*>e_opt;
 
         vector<Lp*> Lparams;
     };

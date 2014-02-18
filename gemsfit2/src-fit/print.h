@@ -41,62 +41,62 @@
 #include <optimization.h>
 using namespace std;
 
-class ResPrint
-{
-private:
-    typedef vector<double>  double_v;
-    typedef vector<string>  string_v;
-    string_v experiment, what1, what2, unit, fucntion;
-    double_v measured, computed, Weighted_Tfun_residual, residuals_v, weight;
+//class ResPrint
+//{
+//private:
+//    typedef vector<double>  double_v;
+//    typedef vector<string>  string_v;
+//    string_v experiment, what1, what2, unit, fucntion;
+//    double_v measured, computed, Weighted_Tfun_residual, residuals_v, weight;
 
-    optimization* res_opti; /// points to the optimization results
+//    optimization* res_opti; /// points to the optimization results
 
-public:
-    //constructor
-    ResPrint(optimization *opti);
-    //destructor
-    ~ResPrint ();
+//public:
+//    //constructor
+//    ResPrint(optimization *opti);
+//    //destructor
+//    ~ResPrint ();
 
-    vector<vector<double> > sensitivity;
+//    vector<vector<double> > sensitivity;
 
-    /**
-    * Prints the header of the results CSV file
-    * @param function      name of the target function
-    * @param weight_       type of weighting
-    * @author DM
-    * @date 17.05.2013
-    */
-    void print_header(string function, string weight_, int size);
+//    /**
+//    * Prints the header of the results CSV file
+//    * @param function      name of the target function
+//    * @param weight_       type of weighting
+//    * @author DM
+//    * @date 17.05.2013
+//    */
+//    void print_header(string function, string weight_, int size);
 
-    /**
-    * Clears the printing class variables (sotore the optimization results from the last itteration)
-    * @author DM
-    * @date 17.05.2013
-    */
-    void print_clear();
+//    /**
+//    * Clears the printing class variables (sotore the optimization results from the last itteration)
+//    * @author DM
+//    * @date 17.05.2013
+//    */
+//    void print_clear();
 
-    /**
-    * Sets the printing class variables with values form the optimization and target function calculation
-    * @param experiment_    name of the experiment
-    * @param what1_         name or property of data compared e.g. name of phase
-    * @param what2_         name or property of data compared e.g. name of element/phase property
-    * @param unit_          unit of the compared data
-    * @param measured_      measured value
-    * @param computed_      calculated value
-    * @param Weighted_Tfun_residual_    value of the weighted target function residual
-    * @param weight_        value of the weight
-    * @author DM
-    * @date 17.05.2013
-    */
-    void set_print(string experiment_, string what1_, string what2_, string unit_, double measured_, double computed_, double Weighted_Tfun_residual_, double weight_);
+//    /**
+//    * Sets the printing class variables with values form the optimization and target function calculation
+//    * @param experiment_    name of the experiment
+//    * @param what1_         name or property of data compared e.g. name of phase
+//    * @param what2_         name or property of data compared e.g. name of element/phase property
+//    * @param unit_          unit of the compared data
+//    * @param measured_      measured value
+//    * @param computed_      calculated value
+//    * @param Weighted_Tfun_residual_    value of the weighted target function residual
+//    * @param weight_        value of the weight
+//    * @author DM
+//    * @date 17.05.2013
+//    */
+//    void set_print(string experiment_, string what1_, string what2_, string unit_, double measured_, double computed_, double Weighted_Tfun_residual_, double weight_);
 
-    /**
-    * Prints the results to result CSV (comma separated) file
-    * @author DM
-    * @date 17.05.2013
-    */
-    void print_result();
-//    void print_result(string experiment, string what2, string unit, double measured, double computed, double residual);
-};
+//    /**
+//    * Prints the results to result CSV (comma separated) file
+//    * @author DM
+//    * @date 17.05.2013
+//    */
+//    void print_result();
+////    void print_result(string experiment, string what2, string unit, double measured, double computed, double residual);
+//};
 
 #endif // PRINT_H

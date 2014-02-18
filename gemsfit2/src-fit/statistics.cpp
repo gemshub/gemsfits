@@ -451,7 +451,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
                     else  DimensionlessScaledSensitivities(k,i) = SensitivityMatrix(k,i) * fabs( optv_[i] ) * 1;
                 CompositeScaledSensitivities(i)      += sqrt( DimensionlessScaledSensitivities(k,i)*DimensionlessScaledSensitivities(k,i)/len_meas );
             }
-            gfittask->print->sensitivity.push_back(sens);
+//            gfittask->print->sensitivity.push_back(sens);
         }
 
         gems3k_wrap( residual_sys, optv_, gfittask );

@@ -141,7 +141,7 @@ int main( int argc, char *argv[] )
             gfittask->run_optim();
             for (int i = 0; i < gfittask->Opti->OptTuckey; i++)
             {
-                Tuckey_weight(gfittask);
+                Tuckey_weight_global(gfittask);
                 gfittask->run_optim();
             }
         }
@@ -169,7 +169,9 @@ int main( int argc, char *argv[] )
         stat.sensitivity_correlation( gfittask->Opti->optv, gfittask );
     }
 
-    gfittask->print->print_result();
+//    gfittask->print->print_result();
+    gfittask->print_global_results();
+//    gfittask->print_nested_results();
 
     if(stat.MCbool > 0)  stat.MC_confidence_interval( gfittask->Opti->optv, gfittask );
 

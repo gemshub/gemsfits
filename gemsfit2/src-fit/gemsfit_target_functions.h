@@ -39,9 +39,6 @@
 #include <vector>
 #include <iostream>
 #include "gemsfit_task.h"
-#include "print.h"
-
-
 
 
 // Set new Gibbs free energy
@@ -167,7 +164,7 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys );
 * @author DM
 * @date 17.05.2013
 */
-double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys);
+double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_fun &objfun, TGfitTask *sys);
 
 /**
 * Returns the residual from comparing the calculated with the measured
@@ -180,7 +177,7 @@ double residual_phase_elem (int i, int p, int e, int j, TGfitTask *sys);
 * @author DM
 * @date 17.08.2013
 */
-double residual_phase_elemMR (int i, int p, int f, int j, TGfitTask *sys);
+double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::obj_fun &objfun, TGfitTask *sys);
 
 /**
 * Returns the residual from comparing the calculated with the measured
@@ -193,7 +190,7 @@ double residual_phase_elemMR (int i, int p, int f, int j, TGfitTask *sys);
 * @author DM
 * @date 17.05.2013
 */
-double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys);
+double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj_fun &objfun, TGfitTask *sys);
 
 /**
 * Returns the residual from comparing the calculated with the measured
@@ -207,7 +204,7 @@ double residual_phase_prop (int i, int p, int pp, int j, TGfitTask *sys);
 * @author DM
 * @date 13.06.2013
 */
-double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sys);
+double residual_phase_dcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFunction::obj_fun &objfun, TGfitTask *sys);
 
 /**
 * Returns the weight based on the weight type
@@ -220,7 +217,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, int j, TGfitTask *sy
 * @author DM
 * @date 17.05.2013
 */
-double weight (int i, int p, int e, int j, string type, TGfitTask *sys);
+double weight (int i, int p, int e, TGfitTask::TargetFunction::obj_fun &objfun, string type, TGfitTask *sys);
 
 /**
 * Returns the weight based on the weight type
@@ -233,7 +230,7 @@ double weight (int i, int p, int e, int j, string type, TGfitTask *sys);
 * @author DM
 * @date 17.08.2013
 */
-double weight_MR (int i, int p, int f, int j, string type, TGfitTask *sys);
+double weight_MR (int i, int p, int f, TGfitTask::TargetFunction::obj_fun &objfun, string type, TGfitTask *sys);
 
 
 /**
@@ -257,7 +254,7 @@ void interpretMR (vector<string> *nom, vector<string> *denom, string name);
 * @author DM
 * @date 17.05.2013
 */
-double weight_phprop (int i, int p, int pp, int j, string type, TGfitTask *sys);
+double weight_phprop (int i, int p, int pp, TGfitTask::TargetFunction::obj_fun &objfun, string type, TGfitTask *sys);
 
 /**
 * Returns the weight based on the weight type
@@ -271,7 +268,7 @@ double weight_phprop (int i, int p, int pp, int j, string type, TGfitTask *sys);
 * @author DM
 * @date 13.06.2013
 */
-double weight_phdcomp (int i, int p, int dc, int dcp, int j, string type, TGfitTask *sys);
+double weight_phdcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFunction::obj_fun &objfun, string type, TGfitTask *sys);
 
 /**
 * Returns the target function value (computed - measured)
