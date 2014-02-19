@@ -38,6 +38,7 @@
 #include <fstream>
 
 //#include <sys/stat.h>
+#include <unistd.h>
 #include <sys/time.h>
 
 #include "gemsfit_iofiles.h"
