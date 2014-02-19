@@ -94,6 +94,11 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     // Temporary storage vectors
     master_counter++;
 
+    if (sys->Opti->OptTuckey == 1)
+    {
+        Tuckey_weight_global(sys);
+    }
+
     // Clear already stored results
     sys->computed_values_v.clear();
     sys->measured_values_v.clear();
