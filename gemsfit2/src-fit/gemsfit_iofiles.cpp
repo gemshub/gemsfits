@@ -29,6 +29,7 @@ using namespace std;
 #include "keywords.h"
 #include <omp.h>
 #include <sstream>
+#include <unistd.h>
 
 #include "statistics.h"
 #include "optimization.h"
