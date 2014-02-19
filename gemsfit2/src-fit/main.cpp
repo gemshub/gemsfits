@@ -153,7 +153,7 @@ int main( int argc, char *argv[] )
         Equil_objective_function_callback(gfittask->Opti->optv, grad, gfittask);
     }
 
-    gpf->flog << endl <<"17. Back in main.cpp(152). Performing statistics ..."<< endl;
+    gpf->flog << endl <<"17. Back in main.cpp(156). Performing statistics ..."<< endl;
 
 //        gfittask->test();
 
@@ -172,7 +172,8 @@ int main( int argc, char *argv[] )
 
 //    gfittask->print->print_result();
     gfittask->print_global_results();
-//    gfittask->print_nested_results();
+    if (gfittask->Opti->h_nestfun)
+    gfittask->print_nested_results();
 
     if(stat.MCbool > 0)  stat.MC_confidence_interval( gfittask->Opti->optv, gfittask );
 
@@ -182,7 +183,7 @@ int main( int argc, char *argv[] )
 
     double delta = ((end.tv_sec  - start.tv_sec) * 1000000u +
              end.tv_usec - start.tv_usec) / 1.e6;
-    gpf->flog <<"18. main.cpp(152): finished in ";
+    gpf->flog <<"18. main.cpp(186): finished in ";
     gpf->flog << delta << " seconds. GEMSFIT2: End. Bye!" << endl;
 cout << delta << " seconds." << endl;
 cout << "GEMSFIT2: End. Bye!" << endl;

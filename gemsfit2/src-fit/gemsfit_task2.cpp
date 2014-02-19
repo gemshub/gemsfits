@@ -363,39 +363,39 @@ void TGfitTask:: print_nested_results ()
         {
             gpf->fres << "," << NodT[0]->xCH_to_IC_name(Opti->nest_optv.Lparams[i]->index);
         }
-    gpf->fres << endl;
+    gpf->fres << endl << endl;
 
 
     setprecision(12);
     scientific(gpf->fres);
 
 
-//    gpf->fres.setf(ios::fixed);
+    gpf->fres.setf(ios::fixed);
 
-//    for (unsigned int i=0; i<aTfun.size(); i++)
-//    {
-//        for (unsigned int j = 0; j <aTfun[i].nestfun.size(); j++)
-//        {
-//            if (aTfun[i].nestfun[j].isComputed)
-//            {
-//                gpf->fres << experiments[i]->sample <<","<< aTfun[i].nestfun[j].exp_phase <<","<< aTfun[i].nestfun[j].exp_CN <<","<< aTfun[i].nestfun[j].exp_unit <<","<<
-//                             aTfun[i].objfun[j].res.measured_value <<","<< aTfun[i].objfun[j].res.computed_value << ","<< aTfun[i].objfun[j].res.residual;
+    for (unsigned int i=0; i<aTfun.size(); i++)
+    {
+        for (unsigned int j = 0; j <aTfun[i].nestfun.size(); j++)
+        {
+            if (aTfun[i].nestfun[j].isComputed)
+            {
+                gpf->fres << experiments[i]->sample <<","<< aTfun[i].nestfun[j].exp_phase <<","<< aTfun[i].nestfun[j].exp_CN <<","<< aTfun[i].nestfun[j].exp_unit <<","<<
+                             aTfun[i].nestfun[j].res.measured_value <<","<< aTfun[i].nestfun[j].res.computed_value << ","<< aTfun[i].nestfun[j].res.residual;
 
-//                for (unsigned int p= 0; p<Opti->nest_optv.Pindex.size(); p++)
-//                {
-//                    gpf->fres << "," << Opti->nest_optv.e_opt[p]->val[i] ;
-//                }
+                for (unsigned int p= 0; p<Opti->nest_optv.Pindex.size(); p++)
+                {
+                    gpf->fres << "," << Opti->nest_optv.e_opt[p]->val[i] ;
+                }
 
-//                if (Opti->nest_optv.Lparams.size() > 0)
-//                    for (unsigned int l = 0; l<Opti->nest_optv.Lparams.size(); l++)
-//                    {
-//                        gpf->fres << "," << Opti->nest_optv.Lparams[l]->e_val[i];
-//                    }
-//                gpf->fres << endl;
-//            }
-//        }
-//    }
-//    gpf->fres << endl;
+                if (Opti->nest_optv.Lparams.size() > 0)
+                    for (unsigned int l = 0; l<Opti->nest_optv.Lparams.size(); l++)
+                    {
+                        gpf->fres << "," << Opti->nest_optv.Lparams[l]->e_val[i];
+                    }
+                gpf->fres << endl;
+            }
+        }
+    }
+    gpf->fres << endl;
 
 
 

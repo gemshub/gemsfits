@@ -1024,6 +1024,7 @@ void TGfitTask::get_Lparams_delta()
             for (unsigned int e=0; e < experiments.size(); e++ )
             {
                 Opti->nest_optv.i_opt[i]->val.push_back(NodT[e]->Get_bIC(Opti->nest_optv.Pindex[i]));
+                Opti->nest_optv.e_opt[i]->val.push_back(NodT[e]->Get_bIC(Opti->nest_optv.Pindex[i]));
             }
         else
         if (Opti->nest_optv.Ptype[i] == "TK")
