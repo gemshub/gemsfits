@@ -118,6 +118,7 @@ class Data_Manager : public TNode
                 string sample;              /// ID/name of this experimental sample
                 string expdataset;          /// ID/name of set of experimental data
                 string Type;                /// mineral assemblage
+                double weight;
                 double sT;                  /// temperature of experimental sample
                 string Tunit;
                 double sP;                  /// pressure of experimental sample

@@ -14,6 +14,7 @@
 
 
 
+
   
 
   
@@ -95,7 +96,7 @@ database (specified before in the <big><span style="font-family: monospace;">&lt
 <p>Options: </p>
 <div style="margin-left: 40px;">
 
-<p>Any&nbsp; selection option can be left out.<br>
+<p>Any&nbsp; selection option can be left out. Leave emtpy or { } to select all data in the database<br>
 <span style="font-family: monospace; font-weight: bold;"></span></p>
 <p><span style="font-family: monospace; font-weight: bold;"><big>'{ ... }</big>'</span>: object in JSON format (in braces) describing what to select.</p>
 
@@ -104,22 +105,15 @@ database (specified before in the <big><span style="font-family: monospace;">&lt
 <p><span style="font-family: monospace; font-weight: bold;"><big>"skipdataset"</big>: [...]</span>: list of comma-separated names of experimental datasets to be skipped, or empty string "" to not skip (in this case, <big><span style="font-family: monospace;">usedataset</span></big> list will apply).</p>
 <p><span style="font-family: monospace; font-weight: bold;">"<big>uesample"</big>: [...]</span>: list of comma-separated names of samples, or empty string "" to select all samples.</p>
 
-<p><span style="font-family: monospace; font-weight: bold;"><big>"skipsample"</big>: [...]</span>: list of comma-separated names of samples to be skipped, or empty string "" to not skip (in this case, <big><span style="font-family: monospace;">sample</span></big> list will apply).</p>
-<p><big style="font-weight: bold;"><span style="font-family: monospace;">"usepairs": </span><span style="font-family: monospace;">[...]:</span></big>
-JSON objects of dataset-samples pairs to be used (sub-option to the
-ones above),&nbsp; or empty string "" for the above selection options
-to apply.<br>
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">"usedataset":</span></big> " " name of the dataset <br>
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">"usesamples": [...]:</span></big> list of comma-separated names of samples to be used <br>
-</p>
-<p><big style="font-weight: bold;"><span style="font-family: monospace;">"skippairs": [...]:</span></big>
-JSON objects of dataset-samples pairs to be skipped (sub-option to the
-ones above), or empty string "" for the above selection options to
-apply.<br>
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">"usedataset": </span></big>" " name of the dataset <br>
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <big style="font-family: monospace; font-weight: bold;">"usesamples": [...]:</big> list of comma-separated names of samples to be used <br>
-</p>
-
+<p><span style="font-family: monospace; font-weight: bold;"><big>"skipsample"</big>: [...]</span>: list of comma-separated names of samples to be skipped, or empty string "" to not skip (in this case, <big><span style="font-family: monospace;">sample</span></big> list will apply).</p><big style="font-weight: bold;"><span style="font-family: monospace;">"usepairs": [...]: </span></big>list
+of pairs each consisting of an experimental dataset name and a list of
+comma-separated sample names to be taken from this dataset only; or an
+empty string "" for other options to apply.<br>
+<br>
+<big style="font-weight: bold;"><span style="font-family: monospace;">"skippairs": [...]:</span></big>
+list of pairs each consisting of an experimental dataset name and a
+list of comma-separated sample names to be skipped from this dataset
+only; or an empty string "" for other options to apply.<br>
 <p><span style="font-family: monospace; font-weight: bold;"><big>"sT</big>": [...]</span>:
 list of comma-separated minimum and maximum temperature, C, or empty
 string "" to select the data for all available temperatures.</p>
@@ -141,9 +135,9 @@ Example query in JSON object format: </p>
 <span style="font-family: monospace; font-weight: bold;">&nbsp;&nbsp; "skippairs" : [ </span><br style="font-family: monospace; font-weight: bold;">
 <span style="font-family: monospace; font-weight: bold;">&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-{ "skipdataset": "CHO4", "skipsamples": ["01", "02"]}, </span><br style="font-family: monospace; font-weight: bold;">
+{ "dataset": "CHO4", "samples": ["01", "02"]}, </span><br style="font-family: monospace; font-weight: bold;">
 <span style="font-family: monospace; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-{ "skipdataset": "CHO4D", "skipsamples": ["01", "02"]}, </span><br style="font-family: monospace; font-weight: bold;">
+{ "dataset": "CHO4D", "samples": ["01", "02"]}, </span><br style="font-family: monospace; font-weight: bold;">
 <span style="font-family: monospace; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ], </span><br style="font-family: monospace; font-weight: bold;">
 <span style="font-family: monospace; font-weight: bold;">&nbsp;&nbsp; "sT" : [100, 1000],</span><br style="font-family: monospace; font-weight: bold;">
 <span style="font-family: monospace; font-weight: bold;">&nbsp;&nbsp; "sP" : [1, 2500] }'</span></big> <br>
@@ -198,13 +192,15 @@ property-value pairs:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; <big><span style="font-family: monospace; font-weight: bold;">"unit"</span></big>:&nbsp; what unit the values should are given in (overrides the units given in the database for this entry) (optional):<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; <big><span style="font-weight: bold; font-family: monospace;">"molal"</span></big>:&nbsp; mol/(kg H2O), <big><span style="font-weight: bold; font-family: monospace;">"logm"</span></big>: log(molal), <big><span style="font-family: monospace; font-weight: bold;">"-loga"</span></big>: negated log(activity);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <big><span style="font-family: monospace; font-weight: bold;">"g"</span>; <span style="font-family: monospace; font-weight: bold;">"kg"</span>; <span style="font-family: monospace; font-weight: bold;">"cm3"</span>; <span style="font-weight: bold; font-family: monospace;">"m3"</span>; <span style="font-family: monospace; font-weight: bold;">"molratio"</span></big>: mole ratio; <big style="font-family: monospace; font-weight: bold;">"kJ/mol"</big>: energy units for Gex.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...<br>
-&nbsp;&nbsp;&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">"NFUN":</span></big>
-nested objective function, list [] of terms {} for measured porperties
-to compare for each experiment independently for adjusting:<br>
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;  &nbsp;&nbsp;  &nbsp;&nbsp;  same construction as the objective function and one more term:<br>
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;  &nbsp;&nbsp;  <big style="font-weight: bold;"><span style="font-family: monospace;">"Ptype"</span></big>: the type of paramater that has to be fitted against the compared property. e.g <big style="font-weight: bold;"><span style="font-family: monospace;">bIC, T, P<br>
-</span></big><big style="font-weight: bold;"><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span></big><big><span style="font-family: monospace;"></span><small>IMPORTANT: When  <big style="font-family: monospace;"><span style="font-weight: bold;">"NFUN"</span></big> (nested function) is present in DataSelect it is&nbsp; necessary that at least one <big style="font-weight: bold;"><span style="font-family: monospace;">"Ptype"</span></big> paramater is marked for fitting. One can have multiple NFUN each with its parameter type.&nbsp;  </small></big><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...<br>&nbsp; &nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;"><a href="gemsfit-useref.html#NFUN">"NFUN"</a>:</span></big>
+nested objective function, a list [] of terms {} for measured
+properties to compare with their computed counterparts for each
+experiment independently of <big style="font-weight: bold;"><span style="font-family: monospace;">"OFUN"</span></big> for adjusting a input property <big style="font-weight: bold;"><span style="font-family: monospace;">"Ptype"</span></big> to obtain an output value given by <big style="font-family: monospace;"><span style="font-family: monospace;">"</span></big><big style="font-weight: bold; font-family: monospace;">EPH"</big>, <big style="font-weight: bold;"><span style="font-family: monospace;">"CT"</span></big> and <big style="font-weight: bold;"><span style="font-family: monospace;">"CN"</span></big> pairs.<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">"Ptype":</span></big> can have a value <big style="font-weight: bold;"><span style="font-family: monospace;">"bIC"</span></big> or <big style="font-weight: bold;"><span style="font-family: monospace;">"T-P"</span></big>.
+The former refers to ajusting some parts of the bulk composition of the
+system representing the sample. The latter refers to adjusting the
+temperature, the pressure, or both.<br>
+&nbsp;&nbsp;&nbsp; IMPORTANT: When <big style="font-weight: bold;"><span style="font-family: monospace;">"NFUN"</span></big> is specified in DataTarget section, at least one element in <big><span style="font-family: monospace; font-weight: bold;">"Ptype"</span></big> property object must be marked for fitting. More than one <big style="font-weight: bold;"><span style="font-family: monospace;">NFUN</span></big> entries with different <big><span style="font-family: monospace; font-weight: bold;">"Ptype"</span></big> input properties can be used with caution.<big><small>&nbsp;  </small></big><br>
 <big style="font-weight: bold;"><span style="font-family: monospace;"></span></big><big style="font-weight: bold;"><span style="font-family: monospace;">
 </span></big>&nbsp;<br>
 &nbsp;&nbsp;&nbsp; The comparison options are:<br>

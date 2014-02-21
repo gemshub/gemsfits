@@ -85,12 +85,20 @@ void Data_Manager::get_EJDB( )
     typedef vector<int>     int_v;
     typedef vector<double>  double_v;
     typedef vector<string>  string_v;
+    json_t *root;
+    json_error_t jerror;
 
     string_v out, usesample, skipsample, usedataset, skipdataset, skippdatasets,skippsamples, usepdatasets, usepsamples ;
     double_v qsT, qsP;
 
     stringstream ss;
     string sss;
+
+    const char * JSON = DataSelect.c_str();
+    root = json_loads(JSON, 0, &jerror);
+
+    if(root)
+    {
 
     // processing DataSelect
     parse_JSON_object(DataSelect, keys::usesamples, out);
@@ -109,21 +117,21 @@ void Data_Manager::get_EJDB( )
     skipdataset = out; // query for skipping expdatasets
     out.clear();
 
-    parse_JSON_array_object(DataSelect, keys::usepair, keys::usedataset, out);
+    parse_JSON_array_object(DataSelect, keys::usepair, keys::dataset, out);
     if (out.size() == 0) parse_JSON_array_object(DataSelect, keys::usepair, keys::usedatasets, out);
     usepdatasets = out; // query for skipping expdatasets
     out.clear();
 
-    parse_JSON_array_object(DataSelect, keys::usepair, keys::usesamples, out);
+    parse_JSON_array_object(DataSelect, keys::usepair, keys::samples, out);
     usepsamples = out; // query for skipping expdatasets
     out.clear();
 
-    parse_JSON_array_object(DataSelect, keys::skippair, keys::skipdataset, out);
+    parse_JSON_array_object(DataSelect, keys::skippair, keys::dataset, out);
     if (out.size() == 0) parse_JSON_array_object(DataSelect, keys::skippair, keys::skipdatasets, out);
     skippdatasets = out; // query for skipping expdatasets
     out.clear();
 
-    parse_JSON_array_object(DataSelect, keys::skippair, keys::skipsamples, out);
+    parse_JSON_array_object(DataSelect, keys::skippair, keys::samples, out);
     skippsamples = out; // query for skipping expdatasets
     out.clear();
 
@@ -140,6 +148,7 @@ void Data_Manager::get_EJDB( )
         qsP.push_back( atof(out.at(i).c_str()) ); // query for selecting P
     }
     out.clear();
+    }
 
     // Build the query in EJDB format
 
@@ -357,6 +366,7 @@ cout << DBname.c_str() << endl;
              // set experiments variables empty
              experiments[j]->sP = 0.; experiments[j]->sT = 0.; experiments[j]->sV= 0.;
              experiments[j]->idsample= 0;
+             experiments[j]->weight = 1;
              // set experiments variables false
          }
 
@@ -458,6 +468,11 @@ void Data_Manager::bson_to_Data_Manager(/* FILE *f, */ const char *data, int pos
         {
             // adding volume
             experiments[pos]->sV = bson_iterator_double(i);
+        } else
+        if (key_ == keys::Weight)
+        {
+            // adding volume
+            experiments[pos]->weight = bson_iterator_double(i);
         } else
 
         // adding experiment components/recipe
@@ -968,7 +983,7 @@ void Data_Manager::parse_JSON_object(string query, const char* key, vector<strin
                     }
                     else if (json_is_object(data))
                     {
-                        result.push_back("is object");
+                        result.push_back(json_dumps(data, 1));
                     }
              }
          }

@@ -8,6 +8,8 @@ Roadmap of GEMSFIT2 development
   in perspective (Sveta) to re-use GEMS formula parser class.  
 
 - add artificial weight column in database in gemsfit2??
+- Re-code the DataTarget parser so each OFUN or NFUN is parsed independent.
+- think and add a unified wieght vector in the OFUN (error weight * Tuckey Weight * Objfun Weight * Absolute wight form wight column)
 
 + save current code tree to GEMSFIT1013 tag
 + move devDanFit branch to new trunk, clean it up, improve html documentation

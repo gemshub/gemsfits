@@ -161,6 +161,7 @@ public:
             vector<string> Tformula;
             vector<string> Telem;
             double TuWeight;
+            double Weight;
             struct results
             {
                 double measured_value;
