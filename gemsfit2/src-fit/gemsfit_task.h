@@ -157,12 +157,12 @@ public:
             string exp_unit;
             string exp_DCP;
             double meas_average;
-            string param_type;
+            string Ptype;
             vector<string> Tformula;
             vector<string> Telem;
             double TuWeight;
-            double Weight;
-            struct results
+            double weight;
+            struct rslts
             {
                 double measured_value;
                 double computed_value;
@@ -171,7 +171,7 @@ public:
                 double Tfun_residual;
                 double WTfun_residual;
             };
-            results res;
+            rslts results;
             bool isComputed;
         };
         vector<obj_fun> objfun;
@@ -225,11 +225,10 @@ public:
    /**
    * Gets the residual from one experiment (exp index) and based on one comparison option (obj index in Tfun->objfun[obj])
    * @param exp index of experiment
-   * @param obj index of objective function what to compare
    * @author DM
    * @date 30.01.2014
    */
-   double get_residual (int exp, int obj, TargetFunction::obj_fun &objfun, int &count);
+   double get_residual (int exp, TargetFunction::obj_fun &objfun, int &count);
 
    /**
    * Adds the Monte Carlo Scatter to the measured values
@@ -261,6 +260,8 @@ public:
    * @date 01.07.2013
    */
    void set_results ( TGfitTask::TargetFunction::obj_fun &objfun, double computed, double measured, double Weighted_Tfun_residual, double Tfun_residual, double weight );
+
+   void set_weights ();
 
    void print_global_results ();
    void print_nested_results ();

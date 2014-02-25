@@ -37,6 +37,7 @@
 #include <cmath>
 #include "gemsfit_target_functions.h"
 #include <iomanip>
+#include "s_solmod.h"
 
 
 #ifndef __unix
@@ -109,6 +110,8 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
 
     number_of_residuals = get_number_of_residuals( );
     set_average_objfun ();
+
+    set_weights();
 
     if (this->LimitOfDetection > (this->minimum_value/100))
         this->LimitOfDetection = this->minimum_value/100; // sets the limit of detection not more than 100 times smaller than the lowest experimental value
@@ -385,6 +388,12 @@ void TGfitTask::setnodes()
             cout<<" .. ERROR occurred while reading input files !!! ..."<<endl;
         }
     }
+
+//    NodT[0]->AtcivityCoeficient();
+
+
+
+//    NodT[0]->multi->Get_TSolmod(1);
 
     // initialize the nodes using the input GEMS3 file
     for (n=0; n<NodT.size(); ++n)
@@ -834,45 +843,41 @@ void TGfitTask::get_DataTarget ( )
         Tfun->objfun[i].exp_DCP = "NULL";
         Tfun->objfun[i].meas_average = 0.0;
         Tfun->objfun[i].TuWeight = 1;
+        Tfun->objfun[i].weight = 1;
         Tfun->objfun[i].isComputed = false;
 
-    }
-    out.clear();
-    int j=0;
-//    int jj=0;
+        parse_JSON_object(out[i], keys::EPH, out2);
+        if (out2.size() == 0) { cout << "Phase name has to be specified in Data Target->OFUN->EPH!"<< endl; exit(1);} // ERROR
+        Tfun->objfun[i].exp_phase = out2[0];
+        out2.clear();
 
-    parse_JSON_array_object(DataTarget, keys::OFUN, keys::EPH, out);
-    for (unsigned int i = 0 ; i < out.size() ; i++)
-    {
-        Tfun->objfun[i].exp_phase = out[i];
-    }
-    out.clear();
+        parse_JSON_object(out[i], keys::CT, out2);
+        if (out2.size() == 0) { cout << "Type of compared property has to be specified in Data Target->OFUN->CT!"<< endl; exit(1);} // ERROR
+        Tfun->objfun[i].exp_CT = out2[0];
+        out2.clear();
 
-    parse_JSON_array_object(DataTarget, keys::OFUN, keys::CT, out);
-    parse_JSON_array_object(DataTarget, keys::OFUN, keys::DCP, out2);
-    for (unsigned int i = 0 ; i < out.size() ; i++)
-    {
-        Tfun->objfun[i].exp_CT = out[i];
-        if ((out[i] == keys::DC) && (out2.size() > 0))
-        {
-            Tfun->objfun[i].exp_DCP = out2[j];
-            ++j;
-        }
-    }
-    out.clear();
-    out2.clear();
+        parse_JSON_object(out[i], keys::DCP, out2);
+        if ((out2.size() == 0) && (Tfun->objfun[i].exp_CT == keys::DC)) { cout << "Name of dependent component compared property has to be specified in Data Target->OFUN->DCP!"<< endl; exit(1);} // ERROR
+        Tfun->objfun[i].exp_DCP = out2[0];
+        out2.clear();
 
-    parse_JSON_array_object(DataTarget, keys::OFUN, keys::CN, out);
-    for (unsigned int i = 0 ; i < out.size() ; i++)
-    {
-        Tfun->objfun[i].exp_CN = out[i];
-    }
-    out.clear();
+        parse_JSON_object(out[i], keys::CN, out2);
+        if (out2.size() == 0) { cout << "Data Target->OFUN->CN has to be speficied!"<< endl; exit(1);} // ERROR
+        Tfun->objfun[i].exp_CN = out2[0];
+        out2.clear();
 
-    parse_JSON_array_object(DataTarget, keys::OFUN, keys::Qunit, out);
-    for (unsigned int i = 0 ; i < out.size() ; i++)
-    {
-        Tfun->objfun[i].exp_unit = out[i];
+        parse_JSON_object(out[i], keys::Qunit, out2);
+        if (out2.size() > 0)
+        Tfun->objfun[i].exp_unit = out2[0];
+        out2.clear();
+
+        parse_JSON_object(out[i], keys::WT, out2);
+        if (out2.size() > 0)
+        Tfun->objfun[i].weight = atof(out2[0].c_str());
+        out2.clear();
+
+
+
     }
     out.clear();
 
@@ -888,66 +893,57 @@ void TGfitTask::get_DataTarget ( )
         Tfun->nestfun[i].exp_CN = "NULL";
         Tfun->nestfun[i].exp_unit = "NULL";
         Tfun->nestfun[i].exp_DCP = "NULL";
-        Tfun->nestfun[i].param_type = "NULL";
+        Tfun->nestfun[i].Ptype = "NULL";
+        Tfun->nestfun[i].weight = 1;
         Tfun->nestfun[i].TuWeight = 1;
         Tfun->nestfun[i].isComputed = false;
-    }
-    out.clear();
-    j=0;
-    int Tndx = -1;
-//    int jj=0;
 
-    parse_JSON_array_object(DataTarget, keys::NFUN, keys::EPH, out);
-    for (unsigned int i = 0 ; i < out.size() ; i++)
-    {
-        Tfun->nestfun[i].exp_phase = out[i];
-    }
-    out.clear();
+        parse_JSON_object(out[i], keys::EPH, out2);
+        if (out2.size() == 0) { cout << "Phase name has to be specified in Data Target->NFUN->EPH!"<< endl; exit(1);} // ERROR
+        Tfun->nestfun[i].exp_phase = out2[0];
+        out2.clear();
 
-    parse_JSON_array_object(DataTarget, keys::NFUN, keys::CT, out);
-    parse_JSON_array_object(DataTarget, keys::NFUN, keys::DCP, out2);
-    for (unsigned int i = 0 ; i < out.size() ; i++)
-    {
-        Tfun->nestfun[i].exp_CT = out[i];
-        if ((out[i] == keys::DC) && (out2.size() > 0))
-        {
-            Tfun->nestfun[i].exp_DCP = out2[j];
-            ++j;
-        }
-    }
-    out.clear();
-    out2.clear();
+        parse_JSON_object(out[i], keys::CT, out2);
+        if (out2.size() == 0) { cout << "Type of compared property has to be specified in Data Target->NFUN->CT!"<< endl; exit(1);} // ERROR
+        Tfun->nestfun[i].exp_CT = out2[0];
+        out2.clear();
 
-    parse_JSON_array_object(DataTarget, keys::NFUN, keys::CN, out);
-    for (unsigned int i = 0 ; i < out.size() ; i++)
-    {
-        Tfun->nestfun[i].exp_CN = out[i];
-        if (out[i] == keys::pH) Tndx = i;
-    }
-    out.clear();
+        parse_JSON_object(out[i], keys::DCP, out2);
+        if ((out2.size() == 0) && (Tfun->objfun[i].exp_CT == keys::DC)) { cout << "Name of dependent component compared property has to be specified in Data Target->NFUN->DCP!"<< endl; exit(1);} // ERROR
+        Tfun->nestfun[i].exp_DCP = out2[0];
+        out2.clear();
 
-    parse_JSON_array_object(DataTarget, keys::NFUN, keys::Qunit, out);
-    for (unsigned int i = 0 ; i < out.size() ; i++)
-    {
-        Tfun->nestfun[i].exp_unit = out[i];
-    }
-    out.clear();
+        parse_JSON_object(out[i], keys::CN, out2);
+        if (out2.size() == 0) { cout << "Data Target->OFUN->CN has to be speficied!"<< endl; exit(1);} // ERROR
+        Tfun->nestfun[i].exp_CN = out2[0];
+        out2.clear();
 
-    // Not used in the current form
-    parse_JSON_array_object(DataTarget, keys::NFUN, keys::Tforumla, out);
-    if (Tndx >= 0)
-    Tfun->nestfun[Tndx].Tformula = out;
-    out.clear();
+        parse_JSON_object(out[i], keys::Qunit, out2);
+        if (out2.size() > 0)
+        Tfun->nestfun[i].exp_unit = out2[0];
+        out2.clear();
 
-    parse_JSON_array_object(DataTarget, keys::NFUN, keys::Telem, out);
-    if (Tndx >= 0)
-    Tfun->nestfun[Tndx].Telem = out;
-    out.clear();
+        parse_JSON_object(out[i], keys::WT, out2);
+        if (out2.size() > 0)
+        Tfun->nestfun[i].weight = atof(out2[0].c_str());
+        out2.clear();
 
-    parse_JSON_array_object(DataTarget, keys::NFUN, keys::Ptype, out);
-    for (unsigned int i = 0 ; i < out.size() ; i++)
-    {
-        Tfun->nestfun[i].param_type = out[i];
+        parse_JSON_object(out[i], keys::Telem, out2);
+        if (out2.size() > 0)
+        Tfun->nestfun[i].Telem = out2;
+        out2.clear();
+
+        parse_JSON_object(out[i], keys::Tforumla, out2);
+        if (out2.size() > 0)
+        Tfun->nestfun[i].Tformula = out2;
+        out2.clear();
+
+        parse_JSON_object(out[i], keys::Ptype, out2);
+        if (out2.size() == 0) { cout << "Data Target->NFUN->Ptype has to be speficied!"<< endl; exit(1);} // ERROR
+        Tfun->nestfun[i].Ptype = out2[0];
+        out2.clear();
+
+
     }
     out.clear();
 

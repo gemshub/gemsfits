@@ -96,7 +96,11 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 
     if (sys->Opti->OptTuckey == 1)
     {
-        Tuckey_weight_global(sys);
+        set_Tuckey_weight_global(sys);
+    } else
+        if (sys->Opti->OptTuckey == 2)
+    {
+        set_Tuckey_weight_objfun(sys);
     }
 
     // Clear already stored results
@@ -173,6 +177,16 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 
 //    cout << sys->NodT[1]->Get_pH() << endl;
 
+//     sys->NodT[0]->GEM_run( true );
+//     TSolMod *sol = reinterpret_cast<TSolMod*>(sys->NodT[0]->get_ptrTSolMod(2));
+//     sol->PTparam();
+//     sol->MixMod();
+//     adjust_PMc(0, 1500, sys);
+//     sol->PTparam();
+//     sol->MixMod();
+
+
+
 ////#ifdef USE_MPI
     omp_set_num_threads(sys->MPI);
     #pragma omp parallel for
@@ -234,12 +248,12 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         {
             if (sys->aTfun[i].objfun[j].isComputed)
             {
-                sys->computed_values_v.push_back(sys->aTfun[i].objfun[j].res.computed_value );
-                sys->measured_values_v.push_back(sys->aTfun[i].objfun[j].res.measured_value );
-                sys->residuals_v.push_back(sys->aTfun[i].objfun[j].res.residual );
-                sys->weights.push_back(sys->aTfun[i].objfun[j].res.weight );
-                sys->Tfun_residuals_v.push_back(sys->aTfun[i].objfun[j].res.Tfun_residual );
-                sys->Weighted_Tfun_residuals_v.push_back(sys->aTfun[i].objfun[j].res.WTfun_residual );
+                sys->computed_values_v.push_back(sys->aTfun[i].objfun[j].results.computed_value );
+                sys->measured_values_v.push_back(sys->aTfun[i].objfun[j].results.measured_value );
+                sys->residuals_v.push_back(sys->aTfun[i].objfun[j].results.residual );
+                sys->weights.push_back(sys->aTfun[i].objfun[j].results.weight );
+                sys->Tfun_residuals_v.push_back(sys->aTfun[i].objfun[j].results.Tfun_residual );
+                sys->Weighted_Tfun_residuals_v.push_back(sys->aTfun[i].objfun[j].results.WTfun_residual );
             }
         }
     }
@@ -285,6 +299,13 @@ void gradient( vector<double> opt, vector<double> &grad, TGfitTask *sys )
     }
 }
 
+void tsolmod_wrap( double &residual, const std::vector<double> &opt, TGfitTask *sys )
+{
+
+}
+
+
+
 double median(vector<double> absresiduals)
 {
   double median;
@@ -304,12 +325,11 @@ double median(vector<double> absresiduals)
   return median;
 }
 
-void Tuckey_weight_global (TGfitTask *sys)
+void set_Tuckey_weight_global (TGfitTask *sys)
 {
     double C = 0.0;
     double median_ = 0.0;
     vector <double> abs_res;
-
 
     for (unsigned int i = 0; i < sys->aTfun.size(); i++)
     {
@@ -317,7 +337,7 @@ void Tuckey_weight_global (TGfitTask *sys)
         {
             if (sys->aTfun[i].objfun[j].isComputed)
             {
-                abs_res.push_back(fabs(sys->aTfun[i].objfun[j].res.residual));
+                abs_res.push_back(fabs(sys->aTfun[i].objfun[j].results.residual));
             }
 
         }
@@ -343,7 +363,7 @@ void Tuckey_weight_global (TGfitTask *sys)
     }
 }
 
-void Tuckey_weight_objfun (TGfitTask *sys)
+void set_Tuckey_weight_objfun (TGfitTask *sys)
 {
     vector<double> C;
     vector<double> median_;
@@ -356,14 +376,13 @@ void Tuckey_weight_objfun (TGfitTask *sys)
         {
             if (sys->aTfun[i].objfun[j].isComputed)
             {
-                abs_res[j].push_back(fabs(sys->aTfun[i].objfun[j].res.residual));
+                abs_res[j].push_back(fabs(sys->aTfun[i].objfun[j].results.residual));
             }
 
         }
         median_.push_back(median(abs_res[j]));
         C.push_back(6 * median_[j]);
     }
-
 
     omp_set_num_threads(sys->MPI);
     #pragma omp parallel for

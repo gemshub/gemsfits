@@ -68,6 +68,8 @@ double Equil_objective_function_callback( const std::vector<double> &opt, std::v
 */
 void gems3k_wrap( double &residual, const std::vector<double> &opt, TGfitTask *sys );
 
+void tsolmod_wrap( double &residual, const std::vector<double> &opt, TGfitTask *sys );
+
 /**
 * Calculates the gradient as d_sum_of_Tfun_residuals / d_parameter
 * @param opt      optimization vector
@@ -92,8 +94,8 @@ double median(vector<double> absresiduals);
 * @author DM
 * @date 18.12.2014
 */
-void Tuckey_weight_global (TGfitTask *sys);
-void Tuckey_weight_objfun (TGfitTask *sys);
+void set_Tuckey_weight_global (TGfitTask *sys);
+void set_Tuckey_weight_objfun (TGfitTask *sys);
 //ADD! void Tuckey_exp_objfun (TGfitTask *sys);
 
 

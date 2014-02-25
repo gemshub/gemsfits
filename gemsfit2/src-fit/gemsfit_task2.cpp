@@ -47,7 +47,7 @@
 using namespace std;
 
 // Main function that calculates the residual
-double TGfitTask::get_residual(int exp,int obj, TGfitTask::TargetFunction::obj_fun &objfun, int &count)
+double TGfitTask::get_residual(int exp, TGfitTask::TargetFunction::obj_fun &objfun, int &count)
 {
     double residual = 0.0;
     count = 0;
@@ -68,7 +68,7 @@ double TGfitTask::get_residual(int exp,int obj, TGfitTask::TargetFunction::obj_f
                     {
                         // check for unit
                         check_unit(exp, p, e, objfun.exp_unit, this );
-                        residual =  residual_phase_elem (exp, p, e, objfun, this) * objfun.TuWeight;
+                        residual =  residual_phase_elem (exp, p, e, objfun, this);
                         count++;
                     }
                 }
@@ -82,7 +82,7 @@ double TGfitTask::get_residual(int exp,int obj, TGfitTask::TargetFunction::obj_f
                         {
                             // check for unit
 //                                    check_unit(i, p, e, objfun->exp_unit, this );
-                            residual = residual_phase_elemMR (exp, p, f, objfun, this) * objfun.TuWeight;
+                            residual = residual_phase_elemMR (exp, p, f, objfun, this);
                             count++;
                         }
                     }
@@ -96,7 +96,7 @@ double TGfitTask::get_residual(int exp,int obj, TGfitTask::TargetFunction::obj_f
                     {
                         // check for unit
                         check_prop_unit(exp, p, pp, objfun.exp_unit, this );
-                        residual =  residual_phase_prop (exp, p, pp, objfun, this) * objfun.TuWeight;
+                        residual =  residual_phase_prop (exp, p, pp, objfun, this);
                         count++;
                     }
                 }
@@ -116,7 +116,7 @@ double TGfitTask::get_residual(int exp,int obj, TGfitTask::TargetFunction::obj_f
 //                                            cout << "yes"<<endl;
                                     //                                    // check for unit
                                     //                                    check_dcomp_unit(i, p, dc, dcp, sys->objfun->exp_unit, sys );
-                                    residual = residual_phase_dcomp (exp, p, dc, dcp, objfun, this) * objfun.TuWeight;
+                                    residual = residual_phase_dcomp (exp, p, dc, dcp, objfun, this);
                                     count++;
                                 }
                             }
@@ -140,7 +140,7 @@ int TGfitTask::get_number_of_residuals( )
     // Loop trough all experiments
         for (unsigned int i=0; i<this->experiments.size(); ++i)
         {
-            get_residual(i, j, aTfun[i].objfun[j],count);
+            get_residual(i, aTfun[i].objfun[j],count);
             nr_res +=count;
         }
     }
@@ -158,7 +158,7 @@ double TGfitTask::get_sum_of_residuals( )
     // Loop trough all experiments
         for (unsigned int i=0; i<this->experiments.size(); ++i)
         {
-           residual = residual + get_residual(i, j, aTfun[i].objfun[j],count);
+           residual = residual + get_residual(i, aTfun[i].objfun[j],count);
         }
     }
     return residual;
@@ -176,9 +176,9 @@ void TGfitTask::set_average_objfun ()
         {
             if (aTfun[i].objfun[j].isComputed)
             {
-                average += aTfun[i].objfun[j].res.measured_value;
-                if (aTfun[i].objfun[j].res.measured_value < minimum_value)
-                    minimum_value = aTfun[i].objfun[j].res.measured_value;
+                average += aTfun[i].objfun[j].results.measured_value;
+                if (aTfun[i].objfun[j].results.measured_value < minimum_value)
+                    minimum_value = aTfun[i].objfun[j].results.measured_value;
                 count++;
             }
         }
@@ -284,15 +284,42 @@ void TGfitTask::add_MC_scatter( vector<double> scatter)
     }
 }
 
+void TGfitTask::set_weights ()
+{
+    // For onjective functions
+    omp_set_num_threads(MPI);
+    #pragma omp parallel for
+    for (unsigned i = 0; i<aTfun.size(); i++)
+    {
+        for (unsigned j = 0; j < aTfun[i].objfun.size(); j++)
+        {
+            aTfun[i].objfun[j].weight = aTfun[i].objfun[j].weight * experiments[i]->weight;
+        }
+
+    }
+
+    // For nested functions
+    omp_set_num_threads(MPI);
+    #pragma omp parallel for
+    for (unsigned i = 0; i<aTfun.size(); i++)
+    {
+        for (unsigned j = 0; j < aTfun[i].nestfun.size(); j++)
+        {
+            aTfun[i].nestfun[j].weight = aTfun[i].nestfun[j].weight * experiments[i]->weight;
+        }
+
+    }
+}
+
 
 void TGfitTask::set_results ( TGfitTask::TargetFunction::obj_fun &objfun, double computed, double measured, double Weighted_Tfun_residual, double Tfun_residual, double weight )
 {
-    objfun.res.computed_value = computed;
-    objfun.res.measured_value = measured;
-    objfun.res.residual = measured - computed;
-    objfun.res.weight = weight;
-    objfun.res.Tfun_residual = Tfun_residual;
-    objfun.res.WTfun_residual = Weighted_Tfun_residual;
+    objfun.results.computed_value = computed;
+    objfun.results.measured_value = measured;
+    objfun.results.residual = measured - computed;
+    objfun.results.weight = weight;
+    objfun.results.Tfun_residual = Tfun_residual;
+    objfun.results.WTfun_residual = Weighted_Tfun_residual;
 }
 
 void TGfitTask:: print_global_results ()
@@ -312,7 +339,7 @@ void TGfitTask:: print_global_results ()
             if (aTfun[i].objfun[j].isComputed)
             {
                 gpf->fres << experiments[i]->sample <<","<< aTfun[i].objfun[j].exp_phase <<","<< aTfun[i].objfun[j].exp_CN <<","<< aTfun[i].objfun[j].exp_unit <<","<<
-                             aTfun[i].objfun[j].res.measured_value <<","<< aTfun[i].objfun[j].res.computed_value << ","<< aTfun[i].objfun[j].res.residual<<","<< aTfun[i].objfun[j].res.WTfun_residual << endl;
+                             aTfun[i].objfun[j].results.measured_value <<","<< aTfun[i].objfun[j].results.computed_value << ","<< aTfun[i].objfun[j].results.residual<<","<< aTfun[i].objfun[j].results.WTfun_residual << endl;
 //                gpf->fres<<experiment[i]<<","/*<<what1[i]*/<<","<<what2[i]<<","<<unit[i]<<","<<measured[i]<<","<<computed[i]<<","<<Weighted_Tfun_residual[i];
             }
         }
@@ -379,7 +406,7 @@ void TGfitTask:: print_nested_results ()
             if (aTfun[i].nestfun[j].isComputed)
             {
                 gpf->fres << experiments[i]->sample <<","<< aTfun[i].nestfun[j].exp_phase <<","<< aTfun[i].nestfun[j].exp_CN <<","<< aTfun[i].nestfun[j].exp_unit <<","<<
-                             aTfun[i].nestfun[j].res.measured_value <<","<< aTfun[i].nestfun[j].res.computed_value << ","<< aTfun[i].nestfun[j].res.residual;
+                             aTfun[i].nestfun[j].results.measured_value <<","<< aTfun[i].nestfun[j].results.computed_value << ","<< aTfun[i].nestfun[j].results.residual;
 
                 for (unsigned int p= 0; p<Opti->nest_optv.Pindex.size(); p++)
                 {

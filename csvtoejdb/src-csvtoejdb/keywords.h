@@ -1,6 +1,8 @@
 #ifndef KEYWORDS_H
 #define KEYWORDS_H
 
+#pragma GCC diagnostic ignored "-Wunused-variable"
+
 namespace keys
 {
 //                    Keyword                                  (level)			Type            Comment

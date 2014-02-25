@@ -47,10 +47,10 @@ void nestedfun (TGfitTask *sys)
 //        #pragma omp parallel for
         for (unsigned int j = 0; j<sys->Tfun->nestfun.size(); j++)
         {
-            string param_type = sys->Tfun->nestfun[j].param_type;
+            string param_type = sys->Tfun->nestfun[j].Ptype;
             int P_id = omp_get_thread_num();
             int count = 0;
-            double test_residual = sys->get_residual (i, j, sys->aTfun[i].nestfun[j], count);
+            double test_residual = sys->get_residual (i, sys->aTfun[i].nestfun[j], count);
             if (test_residual != 0.0)
             {
                 sys->EXPndx[P_id]=i;
@@ -200,7 +200,7 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, 
 
     // calculate residual
     int count = 0;
-    residual = sys->get_residual (sys->EXPndx[P_id], sys->NEFndx[P_id], sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]], count);
+    residual = sys->get_residual (sys->EXPndx[P_id], sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]], count);
 
     return residual;
 }

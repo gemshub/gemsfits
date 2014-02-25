@@ -425,7 +425,7 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
     }
 
     // check Target function type and calculate the Tfun_residual
-    weight_ = weight(i, p, e, objfun, sys->Tfun->weight, sys);
+    weight_ = weight(i, p, e, objfun, sys->Tfun->weight, sys) * objfun.TuWeight * objfun.weight;
     Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun);
     Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun)*weight_;
     objfun.isComputed = true;
@@ -493,7 +493,7 @@ double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::ob
 
 
     // check Target function type and calculate the Tfun_residual
-    weight_ = weight_MR(i, p, f, objfun, sys->Tfun->weight, sys);
+    weight_ = weight_MR(i, p, f, objfun, sys->Tfun->weight, sys) * objfun.TuWeight * objfun.weight;
     Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun);
     Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun)*weight_;
     objfun.isComputed = true;
@@ -667,7 +667,7 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
     }
 
     // check Target function type and calculate the Tfun_residual
-    weight_ = weight_phprop(i, p, pp, objfun, sys->Tfun->weight, sys);
+    weight_ = weight_phprop(i, p, pp, objfun, sys->Tfun->weight, sys)  * objfun.TuWeight * objfun.weight;
     Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun);
     Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun)*weight_;
     objfun.isComputed = true;
@@ -708,7 +708,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFun
     measured_value = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt;
 
     // check Target function type and calculate the Tfun_residual
-    weight_ = weight_phdcomp(i, p, dc, dcp, objfun, sys->Tfun->weight, sys);
+    weight_ = weight_phdcomp(i, p, dc, dcp, objfun, sys->Tfun->weight, sys) * objfun.TuWeight * objfun.weight;
     Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun);
     Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun)*weight_;
     objfun.isComputed = true;

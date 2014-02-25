@@ -135,17 +135,7 @@ int main( int argc, char *argv[] )
     if (gfittask->Opti->OptDoWhat < 2)
     {
         // ++++++++++ RUN OPTIMIZATION ++++++++++ //
-        if (gfittask->Opti->OptTuckey == 0)
         gfittask->run_optim();
-        else
-        {
-            gfittask->run_optim();
-            for (int i = 0; i < gfittask->Opti->OptTuckey; i++)
-            {
-                Tuckey_weight_global(gfittask);
-                gfittask->run_optim();
-            }
-        }
 
     } else
     {
