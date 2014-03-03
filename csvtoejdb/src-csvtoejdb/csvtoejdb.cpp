@@ -15,10 +15,10 @@ void csvtoejdb(char csv_path[64], EJDB *jb, EJCOLL *coll)
         dcc = 0,    // counts the number of dependent components per phase
         sk = 0,     // counts the number of metastability constraints per constraint type
         mf = 0;     // counts the number of molar fraction entries per system/exmperiment
-    string ph_new, ph_old, dcomp_new, dcomp_old, sss;
+    string ph_new, ph_old, sss;
     vector<string> phases, dcomps; // keeps the already read phases and dcomps
     stringstream ss;
-    bool h_phprop = false, h_phases = false, h_phIC = false, h_dcomp = false, h_UMC= false, h_LMC = false, h_phMR = false; // handle that is true if we have the entry in the CSV file
+    bool h_phprop = false, h_phases = false, h_phIC = false, h_dcomp = false, h_UMC= false, h_LMC = false, h_phMR = false, h_phDC = false; // handle that is true if we have the entry in the CSV file
 
     bson_oid_t oid;
     // keeps each row of the CSV file
@@ -370,10 +370,10 @@ cout << "csvtoejdb: processing data rows:" << endl;
                                     {
                                         h_phMR = true;
                                     }
-//                                    if (ph_prop == DC)
-//                                    {
-//                                        h_phdcomp = true;
-//                                    }
+                                    if (ph_prop == DC)
+                                    {
+                                        h_phDC = true;
+                                    }
                                 }
                             }
                         } // END check if there is phprop & phcomp data in the CSV
@@ -582,8 +582,9 @@ cout << "csvtoejdb: processing data rows:" << endl;
 
 
                         //++ START array phspecies ++//
-                        if ((ph_prop_2 == DC) && (!row[i].empty())) // check if there is species data in the CSV header
+                        if (h_phDC)/*((ph_prop_2 == DC) && (!row[i].empty()))*/ // check if there is species data in the CSV header
                         {
+                            string dcomp_new, dcomp_old;
                             bson_append_start_array(&exp, phDC);
                             for (unsigned int j=0; j<headline.size(); ++j)
                             {
@@ -613,7 +614,7 @@ cout << "csvtoejdb: processing data rows:" << endl;
 
                                             if ((dcomp_new != dcomp_old))
                                             {
-                                                // check if pahse name was not present before
+                                                // check if dcomp name was not present before
                                                 for (unsigned int j=0; j<dcomps.size(); ++j)
                                                 {
                                                     if (dcomp_name == dcomps[j])
@@ -692,7 +693,7 @@ cout << "csvtoejdb: processing data rows:" << endl;
                             }
                             //++ END array phspecies ++//
                             bson_append_finish_array(&exp);
-                        }
+                        } h_phDC = false;
                         // end object in the array phases
                         bson_append_finish_object(&exp); //++ END phase object ++
                     } // END if h_phases

@@ -293,7 +293,11 @@ void TGfitTask::set_weights ()
     {
         for (unsigned j = 0; j < aTfun[i].objfun.size(); j++)
         {
-            aTfun[i].objfun[j].weight = aTfun[i].objfun[j].weight * experiments[i]->weight;
+            if (Opti->OptUserWeight)
+                aTfun[i].objfun[j].weight = aTfun[i].objfun[j].weight * experiments[i]->weight;
+            else
+                aTfun[i].objfun[j].weight = aTfun[i].objfun[j].weight;
+
         }
 
     }
@@ -305,7 +309,10 @@ void TGfitTask::set_weights ()
     {
         for (unsigned j = 0; j < aTfun[i].nestfun.size(); j++)
         {
-            aTfun[i].nestfun[j].weight = aTfun[i].nestfun[j].weight * experiments[i]->weight;
+            if (Opti->OptUserWeight)
+                aTfun[i].nestfun[j].weight = aTfun[i].nestfun[j].weight * experiments[i]->weight;
+            else
+                aTfun[i].nestfun[j].weight = aTfun[i].nestfun[j].weight;
         }
 
     }
@@ -340,7 +347,6 @@ void TGfitTask:: print_global_results ()
             {
                 gpf->fres << experiments[i]->sample <<","<< aTfun[i].objfun[j].exp_phase <<","<< aTfun[i].objfun[j].exp_CN <<","<< aTfun[i].objfun[j].exp_unit <<","<<
                              aTfun[i].objfun[j].results.measured_value <<","<< aTfun[i].objfun[j].results.computed_value << ","<< aTfun[i].objfun[j].results.residual<<","<< aTfun[i].objfun[j].results.WTfun_residual << endl;
-//                gpf->fres<<experiment[i]<<","/*<<what1[i]*/<<","<<what2[i]<<","<<unit[i]<<","<<measured[i]<<","<<computed[i]<<","<<Weighted_Tfun_residual[i];
             }
         }
     }
@@ -423,7 +429,5 @@ void TGfitTask:: print_nested_results ()
         }
     }
     gpf->fres << endl;
-
-
 
 }

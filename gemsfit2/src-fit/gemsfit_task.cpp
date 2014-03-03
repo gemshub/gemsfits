@@ -612,6 +612,19 @@ void TGfitTask::setnodes()
                 ICndx = NodT[n]->IC_name_to_xDB("O");
                 new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->Qnt/60.08;
             }
+            else if (experiments[n]->sbcomp[j]->comp == "TiO2")
+            {
+                if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
+                {
+                    experiments[n]->sbcomp[j]->Qnt = experiments[n]->sbcomp[j]->Qnt*h2o_kgamount*79.866;
+                    experiments[n]->sbcomp[j]->Qunit = keys::gram;
+                }
+                ICndx = NodT[n]->IC_name_to_xDB("Ti");
+                new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->Qnt/79.866;
+               // cout << new_moles_IC[ICndx]<<endl;
+                ICndx = NodT[n]->IC_name_to_xDB("O");
+                new_moles_IC[ICndx] +=  2*experiments[n]->sbcomp[j]->Qnt/79.866;
+            }
             else if (experiments[n]->sbcomp[j]->comp == "Al2O3")
             {
                 if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
@@ -909,6 +922,7 @@ void TGfitTask::get_DataTarget ( )
 
         parse_JSON_object(out[i], keys::DCP, out2);
         if ((out2.size() == 0) && (Tfun->objfun[i].exp_CT == keys::DC)) { cout << "Name of dependent component compared property has to be specified in Data Target->OFUN->DCP!"<< endl; exit(1);} // ERROR
+        if (out2.size() > 0)
         Tfun->objfun[i].exp_DCP = out2[0];
         out2.clear();
 
@@ -961,6 +975,7 @@ void TGfitTask::get_DataTarget ( )
 
         parse_JSON_object(out[i], keys::DCP, out2);
         if ((out2.size() == 0) && (Tfun->objfun[i].exp_CT == keys::DC)) { cout << "Name of dependent component compared property has to be specified in Data Target->NFUN->DCP!"<< endl; exit(1);} // ERROR
+        if (out2.size() > 0)
         Tfun->nestfun[i].exp_DCP = out2[0];
         out2.clear();
 

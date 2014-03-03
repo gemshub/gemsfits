@@ -15,6 +15,7 @@
 
 
 
+
   
 
   
@@ -253,6 +254,21 @@ Example definition of target function in JSON-style format:</p>
 &nbsp;&nbsp; }'</span></big><br>
 
 
+<br>
+<big style="font-weight: bold;">Weighting:</big><br>
+1. Weights can be provided by the user in the column "weight" of the
+experimental data spread sheet. These wiehgts are used when
+OptUserWeights in the input file is set to 1.<br>
+2. A general weighing option applied the hole selected data can be provided in the Data Target "WT" as described above.<br>
+3. Each objective function (type of data to compare) can have a
+separate weight as a value provided in the "WT": of each respective
+OFUN.<br>
+4. Tuckey biweight is a relative wighting method for dealing with
+outliers which get a weight of 0 if thier residual is &gt; than
+C=6*(median of residuals) or a relative weight dependeing on the
+distance from C.&nbsp; The weight can be applied for all data, by
+setting OptTuckey 1, or a C is calculated for each objective function
+separately, by setting OptTuckey as 2. <br>
 <br>
 <hr style="width: 100%; height: 2px;">
 <h3>4. <a name="Parameters_to_fit"></a>ParameterMarkup<br>

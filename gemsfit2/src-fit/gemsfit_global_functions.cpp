@@ -301,6 +301,106 @@ void gradient( vector<double> opt, vector<double> &grad, TGfitTask *sys )
 
 void tsolmod_wrap( double &residual, const std::vector<double> &opt, TGfitTask *sys )
 {
+    for (unsigned int i=0; i< sys->Opti->Ptype.size(); ++i)
+    {
+        if (sys->Opti->Ptype[i] == "PMc")
+        {
+           adjust_PMc(i, opt[i], sys);
+        } else // adjust DMc
+        if (sys->Opti->Ptype[i] == "DMc")
+        {
+           adjust_DMc(i, opt[i], sys);
+        }
+
+    } // END loop trough parameters
+
+double gam_dc1, gam_dc2, gam_dc3, gam_dc4;
+double ln_gama[40];
+    // loop over the experiments
+
+//    ////#ifdef USE_MPI
+//        omp_set_num_threads(sys->MPI);
+//        #pragma omp parallel for
+//    ////#endif
+        // Loop trough all nodes for calculationg the pahse properties
+        for (unsigned int i=0; i<sys->NodT.size(); ++i)
+        {
+
+            TMulti *multi = sys->NodT[i]->pMulti();
+
+                // Set the P in the node->CNode-P as in the experiments to avoind problem due to Psat notation as 0
+//            for (unsigned int e=0; e<sys->experiments.size(); ++e)
+//            {
+//                sys->NodT[e]->Set_TK(273.15 + sys->experiments[e]->sT);
+//                sys->NodT[e]->Set_P(100000 * sys->experiments[e]->sP);
+//            }
+
+//            int sizeFIs = multi->get_sizeFIs();
+
+            gam_dc1 = sys->NodT[i]->Get_gDC( 23 );
+            gam_dc2 = sys->NodT[i]->Get_gDC( 24 );
+
+//            for (unsigned j=0; j<sizeFIs; j++)
+//            {
+
+////            TSolMod *sol = multi->pTSolMod(j);
+//            sol->Get_lnGamma(ln_gama);
+//            gam_dc3 = ln_gama[0];
+//            gam_dc4 = ln_gama[1];
+////            multi->Access_GEM_IMP_init();
+//            sol->PTparam();
+//            sol->MixMod();
+//            sol->Get_lnGamma(ln_gama);
+//            gam_dc3 = ln_gama[0];
+//            gam_dc4 = ln_gama[1];
+//            }
+
+//            vector<DATABR*> dBR;
+//            dBR.push_back(sys->NodT[i]->pCNode());
+//            long int NodeStatusCH;
+
+                // Set the P in the node->CNode-P as in the experiments to avoind problem due to Psat notation as 0
+
+            // for SorpMod and KinMet
+//            for (unsigned j=0; j<multi->sizeFIa; j++)
+//            {
+
+//            }
+
+
+        }
+
+
+
+
+
+    residual = sys->get_sum_of_residuals( );
+
+
+    gpf->flog << "~ m.count.= " << master_counter << " sum.res.= " << residual << endl;
+    cout << "~ m.count.= " << master_counter << " sum.res.= " << residual << endl;
+
+//    if(master_counter == 50)
+//        cout << "pause"<< endl;
+
+    for (unsigned int i = 0; i < sys->aTfun.size(); i++)
+    {
+        for (unsigned j = 0; j < sys->aTfun[i].objfun.size(); j++)
+        {
+            if (sys->aTfun[i].objfun[j].isComputed)
+            {
+                sys->computed_values_v.push_back(sys->aTfun[i].objfun[j].results.computed_value );
+                sys->measured_values_v.push_back(sys->aTfun[i].objfun[j].results.measured_value );
+                sys->residuals_v.push_back(sys->aTfun[i].objfun[j].results.residual );
+                sys->weights.push_back(sys->aTfun[i].objfun[j].results.weight );
+                sys->Tfun_residuals_v.push_back(sys->aTfun[i].objfun[j].results.Tfun_residual );
+                sys->Weighted_Tfun_residuals_v.push_back(sys->aTfun[i].objfun[j].results.WTfun_residual );
+            }
+        }
+    }
+
+
+
 
 }
 

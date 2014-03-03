@@ -129,8 +129,8 @@ class statistics
         statistics( TGfitTask *system, double weighted_Tfun_sum_of_residuals_, int num_of_params_, int num_of_runs_  );
         statistics(); // init mode SD
 
-        /// bool indicating if Monte Carlo runs for confidence interval analysis should be performed (=1) or not (=0)
-        bool MCbool;
+        /// int indicating if Monte Carlo runs for confidence interval analysis should be performed (=1 || =2) or not (=0)
+        int MCbool;
 
         /**
         * Destructor of the Statistics class.

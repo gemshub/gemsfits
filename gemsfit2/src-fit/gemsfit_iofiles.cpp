@@ -885,10 +885,13 @@ TGfitPath::TGfitPath(int c, char *v[]):
             optParamFile = argv[iconf + 1];
         }
 
+        string dir;
+
         if( optParamFile.empty() )
         {
             optParamFile = optParamFilePath;
             optParamFile += "00/gfin00_";
+            dir = "00/";
             int pos = 0;
             string input_file = gems3LstFilePath, new_input;
             do
@@ -908,18 +911,23 @@ TGfitPath::TGfitPath(int c, char *v[]):
                 }
             }
 
+
             optParamFile += input_file.substr(0, pos);
             optParamFile += ".dat";
 //            optParamFile += OPT_PARAM_FILE;
+            pos = gems3LstFilePath.find(input_file.c_str());
+            new_input = gems3LstFilePath.substr(0, gems3LstFilePath.size() - input_file.size());
+
         }
         else
         {
             string name;
             string ext;
             u_splitpath( optParamFile, optParamFilePath, name, ext );
+//            dir = "/00/";
         }
 
-        string path_init = "00/";
+        string path_init = optParamFilePath + dir;
         string path_run, path;
 //        string path_ = resultDir+"FIT_results.csv";
 
@@ -1098,7 +1106,8 @@ outField Data_Manager_fields[9] =
       "\n#          or \"pH\" if \"CT\" is \"prop\", or \"K/(Na+K)\" if \"CT\" is \"MR\" "
       "\n#      \"DCP\": used only if \"CT\" is \"DC\", to represent the name of dependent component property:"
       "\n#          \"Q\" for amount; \"@coef\" for activity coeficient"
-      "\n#       \"unit\":  units of measurement (override those given in the database for this value):"
+      "\n#      \"WT\": weight assigned to the objective function as real number e.g. \"WT\": 100. "
+      "\n#      \"unit\":  units of measurement (override those given in the database for this value):"
       "\n#          \"molal\":  mol/(kg H2O), \"logm\": log(molal), \"-loga\": negated log(activity) for pH;"
       "\n#          \"g\"; \"kg\"; \"cm3\"; \"m3\"; \"molfrac\": mole fraction; J/mol for Gex "
       "\n#           ... (conversions will be performed automatically).\n"
@@ -1317,16 +1326,17 @@ void Data_Manager::get_db_specs_txt( )
 
 outField statistics_fields[4] =
 {
+    { "StatMCbool",  0, 0, 1, "\n# StatMCbool: perform Monte Carlo runs -> no (0) "
+                              "\n#             yes (1) scatter added to (ideal) computed values | yes (2) scatter added to measured values "},
     { "StatMCruns",  0, 0, 1, "\n# StatMCruns: number of Monte Carlo runs for confidence interval generation"},
     { "StatSensitivity",  0, 0, 1, "\n# StatSensitivity: number of evaluations points per parameter for sensitivity evaluation"},
-    { "StatMCbool",  0, 0, 1, "\n# StatMCbool: perform Monte Carlo runs -> no (0) | yes (1) scatter added to computed values | yes (2) scatter added to measured values "},
     { "StatPerturbator", 0, 0, 1, "\n# StatPerturbator: used for calculating sensitivities by central diference, see ref [2]"}
 };
 
 typedef enum {  /// Field index into outField structure
-    f_StatMCruns= 0,
+    f_StatMCbool = 0,
+    f_StatMCruns,
     f_StatSensitivity,
-    f_StatMCbool,
     f_StatPerturbator
 } statistics_FIELDS;
 
@@ -1334,9 +1344,9 @@ typedef enum {  /// Field index into outField structure
 ///// Set up default values for structure
 void statistics::default_stat_param()
 {
-  num_of_MC_runs = 10;
-  sensitivity_points = 50;
   MCbool =  0;
+  num_of_MC_runs = 1000;
+  sensitivity_points = 50;
   perturbator = 0.0001;
 }
 
@@ -1348,9 +1358,9 @@ void statistics::out_stat_param_txt( bool with_comments, bool brief_mode )
     ErrorIf( !ff.good() , fname.c_str(), "OptParamFile text open error");
 
     TPrintArrays  prar(4, statistics_fields, ff);
+    prar.writeField(f_StatMCbool, (long int)MCbool, with_comments, brief_mode  );
     prar.writeField(f_StatMCruns, (long int)num_of_MC_runs, with_comments, brief_mode  );
     prar.writeField(f_StatSensitivity, (long int)sensitivity_points, with_comments, brief_mode  );
-    prar.writeField(f_StatMCbool, (long int)MCbool, with_comments, brief_mode  );
     prar.writeField(f_StatPerturbator, (double)perturbator, with_comments, brief_mode  );
 
     if(with_comments )
@@ -1379,18 +1389,18 @@ void statistics::get_stat_param_txt( )
         {
           switch( nfild )
           {
-           case f_StatMCruns: rdar.readArray( "StatMCruns",  &num_of_MC_runs, 1 );
-                   break;
-           case f_StatSensitivity: rdar.readArray( "StatSensitivity",  &sensitivity_points, 1 );
-                   break;
-           case f_StatMCbool:
-                   { int bb;
-                    rdar.readArray( "StatMCbool",  &bb, 1 );
-                    MCbool = (bool)bb;
-                   }
-                   break;
-           case f_StatPerturbator: rdar.readArray( "StatPerturbator",  &perturbator, 1 );
-                  break;
+          case f_StatMCbool:
+          { /*int bb;*/
+              rdar.readArray( "StatMCbool",  &MCbool, 1 );
+//              MCbool = (bool)bb;
+          }
+              break;
+          case f_StatMCruns: rdar.readArray( "StatMCruns",  &num_of_MC_runs, 1 );
+              break;
+          case f_StatSensitivity: rdar.readArray( "StatSensitivity",  &sensitivity_points, 1 );
+              break;
+          case f_StatPerturbator: rdar.readArray( "StatPerturbator",  &perturbator, 1 );
+              break;
           }
           nfild = rdar.findNextNotAll();
         }
@@ -1421,8 +1431,8 @@ outField optimization_fields[25] =
                              "\n#            only Statistics (2) with initial guesses as best fit parametters"},
     { "OptTitration",  0, 0, 1, "\n# OptTitration: Adjusts the computed pH by changing NaOH or HCl amount to match the measured pH"
                                 "\n#               read from the database for each experiment"},
-    { "OptTuckey",  0, 0, 1, "\n# OptTuckey: 0 -> Use Tuckey Biweight. Value > 0 will be the number of iterations for re-weighting. "},
-    { "OptEqSolv",  0, 0, 1, "\n# OptEqSolv: Comment"},
+    { "OptTuckey",  0, 0, 1, "\n# OptTuckey: (1) Use Tuckey Biweight for all data. (2) Use Tuckey Biweight for each OFUN independently. "},
+    { "OptUserWeight",  0, 0, 1, "\n# OptUserWeight: (1) Use the weights provided in the \"weight\" column of the database. "},
     { "OptTolAbs",  0, 0, 1, "\n# OptTolAbs: stopping criterion -> specify absolute tolerance (default = 1e-04) of function value"},
     { "OptHybridTolRel",  0, 0, 1, "\n# OptHybridTolRel: Comment"},
     { "OptHybridTolAbs",  0, 0, 1, "\n# OptHybridTolAbs: Comment"},
@@ -1430,11 +1440,11 @@ outField optimization_fields[25] =
     { "OptHybridMode",  0, 0, 1, "\n# OptHybridMode: Comment"},
     { "OptNmultistart",  0, 0, 1, "\n# OptNmultistart: Comment"},
     { "OptPerturbator",  0, 0, 1, "\n# OptPerturbator: The delta/difference used to to calculate the d(function_value)/d(parameter_value) gradient"},
-    { "OptInitStep",  0, 0, 1, "\n# OptInitStep: specify initial stepsize for local minimizers \n"
+    { "OptInitStep",  0, 0, 1, "\n# OptInitStep: specify initial stepsize for local minimizers "
                                "\n#              (factor will be multiplied to all optimization parameters); 0 => use default"},
     { "OptScaleParam",  0, 0, 1, "\n# OptScaleParam: Comment"},
     { "OptNormParam",  0, 0, 1, "\n# OptNormParam: Normalize bounds/constraints/fitting parameters with the initial guess vector"},
-    { "OptBoundPerc",  0, 0, 1, "\n# OptBoundPerc: Generate bounds from initial guess vector: specify percentage deviation\n"
+    { "OptBoundPerc",  0, 0, 1, "\n# OptBoundPerc: Generate bounds from initial guess vector: specify percentage deviation "
                                 "\n#               (user-specific, user-defined bounds when set to -1)"}
 };
 
@@ -1451,7 +1461,7 @@ typedef enum {  /// Field index into outField structure
     f_OptDoWhat,
     f_OptTitration,
     f_OptTuckey,
-    f_OptEqSolv,
+    f_OptUserWeight,
     f_OptTolAbs,
     f_OptHybridTolRel,
     f_OptHybridTolAbs,
@@ -1477,6 +1487,7 @@ void optimization::define_nlopt_param( )
     OptMaxEval = 500000;
     OptDoWhat = 0;
     OptTuckey = 0;
+    OptUserWeight = 0;
     OptTitration = 0;
     OptNormParam = 1;
     OptPerturbator = 0.0001;
@@ -1504,6 +1515,7 @@ void optimization::out_nlopt_param_txt( bool with_comments, bool brief_mode )
     }
 
     prar.writeField( f_OptDoWhat,  (long int)OptDoWhat, with_comments, brief_mode);
+    prar.writeField( f_OptUserWeight,  (long int)OptUserWeight, with_comments, brief_mode);
     prar.writeField( f_OptTuckey,  (long int)OptTuckey, with_comments, brief_mode);
 //    prar.writeField( f_OptTitration,  (long int)OptTitration, with_comments, brief_mode);
     prar.writeField( f_OptAlgo,  OptAlgo, with_comments, brief_mode );
@@ -1546,6 +1558,8 @@ void optimization::get_nlopt_param_txt(vector<double> optv)
           case f_OptMaxEval: rdar.readArray( "OptMaxEval",  &OptMaxEval, 1);
                   break;
           case f_OptDoWhat: rdar.readArray( "OptDoWhat",  &OptDoWhat, 1);
+                  break;
+          case f_OptUserWeight: rdar.readArray( "OptUserWeight",  &OptUserWeight, 1);
                   break;
           case f_OptTuckey: rdar.readArray( "OptTuckey",  &OptTuckey, 1);
                   break;

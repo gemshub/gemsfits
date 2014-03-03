@@ -92,6 +92,7 @@ public:
     int OptDoWhat;
     int OptTuckey;
     int OptTitration;
+    int OptUserWeight;
 //    int OptHybridMode;
 //    double OptHybridTolRel;
 //    double OptHybridTolAbs;

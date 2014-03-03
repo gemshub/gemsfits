@@ -835,8 +835,14 @@ pid_ = 0;
         ofstream myStat;
         myStat.open(gpf->FITStatisticsFile().c_str(),ios::app);
 
+
+        vector<double> SD_Fparam, SD_Rparam;
+
         myStat << " Confidence intervals of MC parameters : "<<endl;
         myStat << " -> standard deviation of parameters generated during Monte Carlo runs "<<endl;
+
+
+
         for( j=0; j<n_param; j++ ) // cols
         {
             for( i=0; i<num_of_MC_runs; i++ ) // rows
@@ -845,6 +851,7 @@ pid_ = 0;
             }
             // compute standard deviation of generated parameters
             StandardDeviation = arma::stddev( MCparams, 0 );
+            SD_Fparam.push_back(StandardDeviation);
 
             // Print Standard Deviations of parameters generated during MC runs to file
             myStat <<"			parameter "<< j;
@@ -862,6 +869,7 @@ pid_ = 0;
             }
             // compute standard deviation of generated parameters
             StandardDeviation = arma::stddev( MCRparams, 0 );
+            SD_Rparam.push_back(StandardDeviation);
 
             // Print Standard Deviations of parameters generated during MC runs to file
             myStat <<"			parameter "<< j;
@@ -874,8 +882,60 @@ pid_ = 0;
         myStat.close();
         log.close();
 
+        ofstream myMC;
+        string path2 = gpf->ResultDir() + "myMC.csv";
+        myMC.open(path2.c_str(), ios::trunc);
+
+        myMC << "MC_run,";
+
+        for( j=0; j<n_param; j++ ) // cols
+        {
+            myMC << "F"<<j+1<<",";
+        }
+
+        for( j=0; j<n_Rparam; j++ ) // cols
+        {
+            myMC << "R"<<j+1<<",";
+        }
+        myMC << endl;
+
+        for( i=0; i<num_of_MC_runs; i++ ) // rows
+        {
+            myMC << i+1 << ",";
+            for( j=0; j<n_param; j++ ) // cols
+            {
+                myMC <<MC_fitted_parameters_all[ i ][ j ]<<",";
+            }
+
+            for( j=0; j<n_Rparam; j++ ) // cols
+            {
+                myMC << MCR_fitted_parameters_all[ i ][ j ]<<",";
+            }
+            myMC << endl;
+        }
+
+
+        myMC << "Standard_deviation,";
+
+        for( j=0; j<n_param; j++ ) // cols
+        {
+            myMC << SD_Fparam[j]<<",";
+        }
+
+        for( j=0; j<n_Rparam; j++ ) // cols
+        {
+            myMC << SD_Rparam[j]<<",";
+        }
+
+
+        myMC.close();
+
+
     free (MC_fitted_parameters_all[0]);
     free (MC_fitted_parameters_all);
+
+    free (MCR_fitted_parameters_all[0]);
+    free (MCR_fitted_parameters_all);
 
     delete[] scatter_all;
 
