@@ -31,7 +31,7 @@ csvtoejdb-build/test.json
 csvtoejdb/src-csvtoejdb/csvtoejdb.pro.user
 csvtoejdb/src-csvtoejdb/csvtoejdb.pro.user.0000000
 csvtoejdb/src-csvtoejdb/csvtoejdb.pro.user.b878567.2.7pre1
-gemsfits-build/good
-gemsfits-build/stat_test
-gemsfits-build/test_input/SOL
-gemsfits-build/test_input/old
+gemsfit2-build/good
+gemsfit2-build/stat_test
+gemsfit2-build/test_input/SOL
+gemsfit2-build/test_input/old
