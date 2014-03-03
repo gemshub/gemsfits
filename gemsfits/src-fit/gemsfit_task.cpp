@@ -38,6 +38,8 @@
 #include "gemsfit_target_functions.h"
 #include <iomanip>
 #include "s_solmod.h"
+#include "s_formula.h"
+#include <memory>
 
 
 #ifndef __unix
@@ -529,8 +531,57 @@ void TGfitTask::setnodes()
                 // This is not a name of DC used in DBR file!
                 // Here, the use of GEM formula parser is needed!
                 // Until this is done, the old stuff is retained! DK 05.01.2014
-//            }
-//.................................................................
+
+                DATACH* CSD;
+                long int nIC;
+                char cName[IC_RKLEN+1];
+                double DCm, /*ICm,*/ njDC;
+                TFormula aFo;
+
+                CSD = NodT[n]->pCSD(); // Get the pointer to chemical system definition data structure
+                nIC = CSD->nIC;
+                auto_ptr<double> A( new double[nIC]);
+                auto_ptr<char> SB1( new char[nIC*IC_RKLEN]);
+
+                // Set up SB1 - copy of ICNL
+                for( i=0; i<nIC; i++ )
+                {
+                    memset( cName, ' ', IC_RKLEN );
+                    strncpy( cName, CSD->ICNL[i], MaxICN );
+                    cName[IC_RKLEN] = 0;
+                    aFo.fixup_ics( cName );
+                    memcpy( SB1.get()+i*IC_RKLEN, cName, MAXICNAME+MAXSYMB );
+                }
+                // Get DComp key
+                strcpy( cName, experiments[n]->sbcomp[j]->comp.c_str() );
+                aFo.SetFormula( cName );
+                aFo.Stm_line( nIC, A.get(), SB1.get(), NULL );
+
+                if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
+                    {   // conversion from molal to mole
+    //                    experiments[n]->sbcomp[j]->Qnt = experiments[n]->sbcomp[j]->Qnt*h2o_kgamount;
+    //                    experiments[n]->sbcomp[j]->Qunit = keys::mole; // this is not good!
+                        njDC = experiments[n]->sbcomp[j]->Qnt * h2o_kgamount;
+                    }
+                else
+                        njDC = experiments[n]->sbcomp[j]->Qnt;
+                if(  experiments[n]->sbcomp[j]->Qunit == keys::gram )
+                    {   // conversion from gram to mole
+                        DCm = NodT[n]->DCmm( xDCb )*1000.;  // Retrieves the molar mass of DC in g/mol.
+                        njDC /= DCm;
+                    }
+                for(i=0; i<nIC; i++)
+                    {   // loop over ICs
+                        double aij;
+                        // Retrieves the stoichiometry coefficient a[xdc][xic] of IC in the formula of DC.
+                        aij = A.get()[i];
+                        if( !aij )
+                           continue;
+                        new_moles_IC[i] += njDC * aij;
+    //                    ICm = NodT[n]->ICmm( i )*1000.; // Retrieves the molar mass of IC in g/mol.
+                    }
+           }
+/*.................................................................
             if (experiments[n]->sbcomp[j]->comp == "H2O")
             {
                 ICndx = NodT[n]->IC_name_to_xDB("H");
@@ -546,7 +597,7 @@ void TGfitTask::setnodes()
                 // cout << new_moles_IC[ICndx] << endl;
                 ICndx = NodT[n]->IC_name_to_xDB("O");
                 new_moles_IC[ICndx] +=  experiments[n]->sbcomp[j]->Qnt/18.0153
-                        /*+ 3*experiments[n]->sbcomp[j]->bQnt/1000*1e-03*/;
+                        /*+ 3*experiments[n]->sbcomp[j]->bQnt/1000*1e-03*;
             }
             else if (experiments[n]->sbcomp[j]->comp == "SiO2")
             {
@@ -763,7 +814,7 @@ void TGfitTask::setnodes()
                     cout<<" ... bail out now ... "<<endl;
                     exit(1);
                 }
-        }
+        }*/
         } // for j
         if (!salt)
         {
