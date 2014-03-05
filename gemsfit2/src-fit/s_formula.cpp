@@ -682,7 +682,7 @@ int TFormula::Fmwtz( double &Z, double &mW, double &eS, short *lAn, double &Nj )
 //
 void TFormula::Stm_line( int N, double *Sml, char *ICsym, short *ICval )
 {
-    uint i;
+    int i;
     int ii, jj=-1;
     char ICS[IC_RKLEN+1];
     char *icsp = ICS;
@@ -703,7 +703,7 @@ void TFormula::Stm_line( int N, double *Sml, char *ICsym, short *ICval )
             }
         }
         if( jj==-1 )
-            Error( icsp, "E33FPrun: This is not a symbol of IComp!");
+            Error( aCn[i].c_str(), "This element (IComp) is not present in GEMS3K files!");
         Sml[jj] += aSC[i];
         if( aVal[i] == SHORT_EMPTY && ICval )
             aVal[i] = ICval[jj];

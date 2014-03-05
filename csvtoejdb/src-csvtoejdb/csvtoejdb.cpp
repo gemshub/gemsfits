@@ -644,7 +644,7 @@ cout << "csvtoejdb: processing data rows:" << endl;
                                                     {
                                                         if ((strncmp(headline[j].c_str(),ph_dcomp.c_str(), ph_dcomp.size()) == 0) && (!row[j].empty()))
                                                         {
-                                                            cout << j << endl;
+//                                                            cout << j << endl;
 
                                                             pos_start  = ph_dcomp.size();
                                                             pos_end    = headline[j].size();

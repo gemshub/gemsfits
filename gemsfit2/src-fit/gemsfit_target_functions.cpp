@@ -116,10 +116,6 @@ void adjust_P (double new_P, TGfitTask *sys)
 void adjust_RDc (TGfitTask *sys)
 {
     // going trough all nodes
-////#ifdef USE_MPI
-//    omp_set_num_threads(sys->MPI);
-//    #pragma omp parallel for
-////#endif
     for (unsigned int n=0; n<sys->NodT.size(); ++n)
     {
         for (unsigned int i=0; i < sys->Opti->reactions.size(); ++i )
