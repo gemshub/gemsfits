@@ -136,3 +136,240 @@ gfshell/src-gui/sqlscript.cpp -text
 gfshell/src-gui/sqlscript.h -text
 gfshell/src-gui/system_properties.cpp -text
 gfshell/src-gui/system_properties.h -text
+gfshell2/Icons/CalculateBCCIcon.png -text
+gfshell2/Icons/CalculateBCCIcon24.png -text
+gfshell2/Icons/CalculateGEMIcon.png -text
+gfshell2/Icons/CalculateGEMIcon24.png -text
+gfshell2/Icons/CalculateRecordDataIcon.png -text
+gfshell2/Icons/CalculateRecordDataIcon24.png -text
+gfshell2/Icons/CancelIcon.png -text
+gfshell2/Icons/CancelIcon24.png -text
+gfshell2/Icons/ComposModuleIcon.png -text
+gfshell2/Icons/ComposModuleIcon24.png -text
+gfshell2/Icons/DCompModuleIcon.png -text
+gfshell2/Icons/DCompModuleIcon24.png -text
+gfshell2/Icons/DatabaseModeIcon.png -text
+gfshell2/Icons/DatabaseModeIcon24.png -text
+gfshell2/Icons/DeleteCurrentRecordIcon.png -text
+gfshell2/Icons/DeleteCurrentRecordIcon24.png -text
+gfshell2/Icons/DetailedCSDIcon.png -text
+gfshell2/Icons/DetailedCSDIcon24.png -text
+gfshell2/Icons/DisplayNextRecordIcon.png -text
+gfshell2/Icons/DisplayNextRecordIcon24.png -text
+gfshell2/Icons/DisplayPrevRecordIcon.png -text
+gfshell2/Icons/DisplayPrevRecordIcon24.png -text
+gfshell2/Icons/DualThModuleIcon.png -text
+gfshell2/Icons/DualThModuleIcon24.png -text
+gfshell2/Icons/EquilibriumModeIcon.png -text
+gfshell2/Icons/EquilibriumModeIcon24.png -text
+gfshell2/Icons/ErrorMessageIcon.png -text
+gfshell2/Icons/ErrorMessageIcon24.png -text
+gfshell2/Icons/FitSpaceModuleIcon.png -text
+gfshell2/Icons/FitSpaceModuleIcon24.png -text
+gfshell2/Icons/GEM2MTModuleIcon.png -text
+gfshell2/Icons/GEM2MTModuleIcon24.png -text
+gfshell2/Icons/GG_highres_tifs/CalculateBCCIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/CalculateGEMIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/CalculateRecordDataIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/CancelIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/ComposModuleIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/DCompModuleIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/DatabaseModeIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/DeleteCurrentRecordIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/DetailedCSDIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/DisplayNextRecordIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/DisplayPrevRecordIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/DualThModuleIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/EquilibriumModeIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/ErrorMessageIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/GEM2MTModuleIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/GtDemoModuleIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/HomeInHelpMenu.tif -text
+gfshell2/Icons/GG_highres_tifs/ICompModuleIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/InfoMessageIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/ModelingProjectIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/NewCloneRecordIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/NewCreateRecordIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/PhaseDiagramModuleIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/PhaseModuleIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/PlotDataOnGraphIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/PrintDataToFileIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/ProcessModuleIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/QuestionMessageIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/RTparmModuleIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/ReacDCModuleIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/RecipeWizardIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/RemakeRecordIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/SDrefModuleIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/SaveCurrentRecordIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/SearchBackwardIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/SearchForwardIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/SelectDisplayRecordIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/SetKeyTemplateIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/ShowFilesIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/ShowGEMResultsIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/ShowHelpWindowIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/SysEqModuleIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/UnSpaceModuleIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/WarningMessageIcon.tif -text
+gfshell2/Icons/GG_highres_tifs/gems1.tif -text
+gfshell2/Icons/GG_highres_tifs/gems1024.tif -text
+gfshell2/Icons/GG_sources_ai/CalculateBCCIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/CalculateBCCIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/CalculateGEMIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/CalculateGEMIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/CalculateRecordDataIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/CalculateRecordDataIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/CancelIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/CancelIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/ComposModuleIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/ComposModuleIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/DCompModuleIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/DCompModuleIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/DatabaseModeIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/DatabaseModeIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/DeleteCurrentRecordIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/DeleteCurrentRecordIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/DetailedCSDIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/DetailedCSDIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/DisplayNextRecordIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/DisplayNextRecordIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/DisplayPrevRecordIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/DisplayPrevRecordIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/DualThModuleIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/DualThModuleIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/EquilibriumModeIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/EquilibriumModeIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/ErrorMessageIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/ErrorMessageIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/GEM2MTModuleIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/GEM2MTModuleIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/GtDemoModuleIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/GtDemoModuleIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/HomeInHelpMenu.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/HomeInHelpMenu24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/ICompModuleIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/ICompModuleIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/InfoMessageIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/InfoMessageIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/ModelingProjectIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/ModelingProjectIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/NewCloneRecordIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/NewCloneRecordIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/NewCreateRecordIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/NewCreateRecordIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/PhaseDiagramModuleIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/PhaseDiagramModuleIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/PhaseModuleIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/PhaseModuleIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/PlotDataOnGraphIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/PlotDataOnGraphIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/PrintDataToFileIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/PrintDataToFileIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/ProcessModuleIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/ProcessModuleIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/QuestionMessageIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/QuestionMessageIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/RTparmModuleIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/RTparmModuleIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/ReacDCModuleIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/ReacDCModuleIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/RecipeWizardIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/RecipeWizardIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/RemakeRecordIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/RemakeRecordIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/SDrefModuleIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/SDrefModuleIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/SaveCurrentRecordIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/SaveCurrentRecordIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/SearchBackwardIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/SearchBackwardIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/SearchForwardIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/SearchForwardIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/SelectDisplayRecordIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/SelectDisplayRecordIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/SetKeyTemplateIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/SetKeyTemplateIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/ShowFilesIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/ShowFilesIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/ShowGEMResultsIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/ShowGEMResultsIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/ShowHelpWindowIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/ShowHelpWindowIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/SysEqModuleIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/SysEqModuleIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/UnSpaceModuleIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/UnSpaceModuleIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/WarningMessageIcon.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/WarningMessageIcon24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/gems1.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/gems1024.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/gems24.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/gems50.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GG_sources_ai/gems512.ai -text svneol=unset#application/octet-stream
+gfshell2/Icons/GtDemoModuleIcon.png -text
+gfshell2/Icons/GtDemoModuleIcon24.png -text
+gfshell2/Icons/HomeInHelpMenu.png -text
+gfshell2/Icons/HomeInHelpMenu24.png -text
+gfshell2/Icons/ICompModuleIcon.png -text
+gfshell2/Icons/ICompModuleIcon24.png -text
+gfshell2/Icons/InfoMessageIcon.png -text
+gfshell2/Icons/InfoMessageIcon24.png -text
+gfshell2/Icons/ModelingProjectIcon.png -text
+gfshell2/Icons/ModelingProjectIcon24.png -text
+gfshell2/Icons/NewCloneRecordIcon.png -text
+gfshell2/Icons/NewCloneRecordIcon24.png -text
+gfshell2/Icons/NewCreateRecordIcon.png -text
+gfshell2/Icons/NewCreateRecordIcon24.png -text
+gfshell2/Icons/PhaseDiagramModuleIcon.png -text
+gfshell2/Icons/PhaseDiagramModuleIcon24.png -text
+gfshell2/Icons/PhaseModuleIcon.png -text
+gfshell2/Icons/PhaseModuleIcon24.png -text
+gfshell2/Icons/PlotDataOnGraphIcon.png -text
+gfshell2/Icons/PlotDataOnGraphIcon24.png -text
+gfshell2/Icons/PrintDataToFileIcon.png -text
+gfshell2/Icons/PrintDataToFileIcon24.png -text
+gfshell2/Icons/ProcessModuleIcon.png -text
+gfshell2/Icons/ProcessModuleIcon24.png -text
+gfshell2/Icons/QuestionMessageIcon.png -text
+gfshell2/Icons/QuestionMessageIcon24.png -text
+gfshell2/Icons/RTparmModuleIcon.png -text
+gfshell2/Icons/RTparmModuleIcon24.png -text
+gfshell2/Icons/ReacDCModuleIcon.png -text
+gfshell2/Icons/ReacDCModuleIcon24.png -text
+gfshell2/Icons/RecipeWizardIcon.png -text
+gfshell2/Icons/RecipeWizardIcon24.png -text
+gfshell2/Icons/RemakeRecordIcon.png -text
+gfshell2/Icons/RemakeRecordIcon24.png -text
+gfshell2/Icons/SDrefModuleIcon.png -text
+gfshell2/Icons/SDrefModuleIcon24.png -text
+gfshell2/Icons/SaveCurrentRecordIcon.png -text
+gfshell2/Icons/SaveCurrentRecordIcon24.png -text
+gfshell2/Icons/SearchBackwardIcon.png -text
+gfshell2/Icons/SearchBackwardIcon24.png -text
+gfshell2/Icons/SearchForwardIcon.png -text
+gfshell2/Icons/SearchForwardIcon24.png -text
+gfshell2/Icons/SelectDisplayRecordIcon.png -text
+gfshell2/Icons/SelectDisplayRecordIcon24.png -text
+gfshell2/Icons/SetKeyTemplateIcon.png -text
+gfshell2/Icons/SetKeyTemplateIcon24.png -text
+gfshell2/Icons/ShowFilesIcon.png -text
+gfshell2/Icons/ShowFilesIcon24.png -text
+gfshell2/Icons/ShowGEMResultsIcon.png -text
+gfshell2/Icons/ShowGEMResultsIcon24.png -text
+gfshell2/Icons/ShowHelpWindowIcon.png -text
+gfshell2/Icons/ShowHelpWindowIcon24.png -text
+gfshell2/Icons/SysEqModuleIcon.png -text
+gfshell2/Icons/SysEqModuleIcon24.png -text
+gfshell2/Icons/UnSpaceModuleIcon.png -text
+gfshell2/Icons/UnSpaceModuleIcon24.png -text
+gfshell2/Icons/WarningMessageIcon.png -text
+gfshell2/Icons/WarningMessageIcon24.png -text
+gfshell2/Icons/gems1.png -text
+gfshell2/Icons/gems1024.png -text
+gfshell2/Icons/gems24.png -text
+gfshell2/Icons/gems50.png -text
+gfshell2/Icons/gems512.png -text
+gfshell2/Icons/icons_files_gems3mdi.doc -text
+gfshell2/Icons/icons_files_gems3mdi.odt -text
+gfshell2/Icons/icons_files_gems3mdi_2012_GG.doc -text
