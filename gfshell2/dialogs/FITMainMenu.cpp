@@ -1,6 +1,6 @@
 #include "FITMainWindow.h"
 #include "ui_FITMainWindow.h"
-
+#include "fservice.h"
 
 // -----------------------------------------------------------
 // Actions and commands
@@ -10,11 +10,11 @@ void FITMainWindow::setActions()
 {
 
  // Tasks
-    connect( ui->action_DataBase_mode, SIGNAL( triggered()), this, SLOT(CmIComp()));
-    connect( ui->action_Task_Mode, SIGNAL( triggered()), this, SLOT(CmDComp()));
-    connect( ui->action_New_Project, SIGNAL( triggered()), this, SLOT(CmReacDC()));
-    connect( ui->action_Select_project, SIGNAL( triggered()), this, SLOT(CmReacDC()));
-    connect( ui->actionSelect_GEMS, SIGNAL( triggered()), this, SLOT(CmRTparm()));
+    connect( ui->action_DataBase_mode, SIGNAL( triggered()), this, SLOT(CmDBMode()));
+    connect( ui->action_Task_Mode, SIGNAL( triggered()), this, SLOT(CmTaskMode()));
+    connect( ui->action_New_Project, SIGNAL( triggered()), this, SLOT(CmNewProject()));
+    connect( ui->action_Select_project, SIGNAL( triggered()), this, SLOT(CmSelectProject()));
+    connect( ui->actionSelect_GEMS, SIGNAL( triggered()), this, SLOT(CmSelectGEMS()));
     connect( ui->action_Exit, SIGNAL( triggered()), this, SLOT(close()));
 
  // Help
@@ -36,33 +36,90 @@ void FITMainWindow::setActions()
     connect( ui->actionDelete, SIGNAL( triggered()), this, SLOT(CmDelete()));
     connect( ui->actionNext, SIGNAL( triggered()), this, SLOT(CmNext()));
     connect( ui->actionPrevious, SIGNAL( triggered()), this, SLOT(CmPrevious()));
-    connect( ui->actionUpdate_Test, SIGNAL( triggered()), this, SLOT(CmFilter()));
+    //connect( ui->actionUpdate_Test, SIGNAL( triggered()), this, SLOT(CmFilter()));
+    connect( ui->actionUpdate_Test, SIGNAL( triggered()), this, SLOT(CmUpdateTest()));
 
 
  // Record list
-       connect( ui->actionBackup_to_JSON, SIGNAL( triggered()), this, SLOT(CmCopyList()));
-       connect( ui->actionRestore_from_JSON, SIGNAL( triggered()), this, SLOT(CmRenameList()));
-       connect( ui->actionBackup_to_csv, SIGNAL( triggered()), this, SLOT(CmTransferList()));
-       connect( ui->actionRestore_from_csv, SIGNAL( triggered()), this, SLOT(CmDeleteList()));
-       connect( ui->actionBackup_to_TXT, SIGNAL( triggered()), this, SLOT(CmKeysToTXT()));
-       connect( ui->actionRestore_from_TXT, SIGNAL( triggered()), this, SLOT(CmExport()));
-       connect( ui->actionBackup_to_YAML, SIGNAL( triggered()), this, SLOT(CmImport()));
-       connect( ui->actionRestore_from_YAML, SIGNAL( triggered()), this, SLOT(CmBackupEJDB()));
+       connect( ui->actionBackup_to_JSON, SIGNAL( triggered()), this, SLOT(CmBackupJSON()));
+       connect( ui->actionRestore_from_JSON, SIGNAL( triggered()), this, SLOT(CmRestoreJSON()));
+       connect( ui->actionBackup_to_csv, SIGNAL( triggered()), this, SLOT(CmBackupCSV()));
+       connect( ui->actionRestore_from_csv, SIGNAL( triggered()), this, SLOT(CmRestoreCSV()));
+       connect( ui->actionBackup_to_TXT, SIGNAL( triggered()), this, SLOT(CmBackupTXT()));
+       connect( ui->actionRestore_from_TXT, SIGNAL( triggered()), this, SLOT(CmRestoreTXT()));
+       connect( ui->actionBackup_to_YAML, SIGNAL( triggered()), this, SLOT(CmBackupYAML()));
+       connect( ui->actionRestore_from_YAML, SIGNAL( triggered()), this, SLOT(CmRestoreYAML()));
 
   //Calc
-    connect( ui->action_Run_test, SIGNAL( triggered()), this, SLOT(CmRunBCC()));
-    connect( ui->action_Show_Results, SIGNAL( triggered()), this, SLOT(CmRunIPM()));
+    connect( ui->action_Run_test, SIGNAL( triggered()), this, SLOT(CmRunTest()));
+    connect( ui->action_Show_Results, SIGNAL( triggered()), this, SLOT(CmShowResults()));
 
 
-   pLine = new QLineEdit( ui->toolBar );
-   pLine->setEnabled( true );
-   pLine->setFocusPolicy( Qt::ClickFocus );
-   pLine->setReadOnly( true );
-   pLine->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
-   ui->toolBar->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
-   ui->toolBar->addWidget( pLine ); // setStretchableWidget( pLine );
+   pLineTask = new QLineEdit( ui->toolBarTask );
+   pLineTask->setEnabled( true );
+   pLineTask->setFocusPolicy( Qt::ClickFocus );
+   pLineTask->setReadOnly( true );
+   pLineTask->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
+   ui->toolBarTask->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
+   ui->toolBarTask->addWidget( pLineTask ); // setStretchableWidget( pLine );
+
+   pLineGEMS = new QLineEdit( ui->toolBarGems );
+   pLineGEMS->setEnabled( true );
+   pLineGEMS->setFocusPolicy( Qt::ClickFocus );
+   pLineGEMS->setReadOnly( true );
+   pLineGEMS->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
+   ui->toolBarGems->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
+   ui->toolBarGems->addWidget( pLineGEMS ); // setStretchableWidget( pLine );
 
 }
+
+//-------------------------------------------------------------------------------------
+// Help menu
+void FITMainWindow::CmSettingth()
+{
+   // SettingsDialog dlg(this);
+   // dlg.exec();
+}
+
+void FITMainWindow::CmTutorial()
+{
+    OpenHelp( GEMS_TUTOR_HTML );
+}
+
+void FITMainWindow::CmHelp()
+{
+    if( currentMode == MDF_DATABASE )
+       OpenHelp( GEMS_TDBAS_HTML );
+    else
+       OpenHelp( GEMS_MODES_HTML );
+
+ }
+
+void FITMainWindow::CmHowto()
+{
+    OpenHelp( GEMS_HOWTO_HTML );
+}
+
+void FITMainWindow::CmHelpAbout()
+{
+    OpenHelp( GEMS_ABOUT_HTML );
+}
+
+void FITMainWindow::CmHelpAuthors()
+{
+    OpenHelp( GEMS_AUTHORS_HTML );
+}
+
+void FITMainWindow::CmHelpThanks()
+{
+    OpenHelp( GEMS_THANKS_HTML );
+}
+
+void FITMainWindow::CmHelpLicense()
+{
+    OpenHelp( GEMS_LICENSE_HTML );
+}
+
 
 
 

@@ -45,7 +45,7 @@ using namespace std;
 //#include "visor.h"
 
 const char *FIT_HOWHELP_HTML = "gems_miscel.html#HOWHELP";
-const char *FIT_ABOUT_HTML = "gems_about.html#PAGE_ABOUT";
+const char *GEMS_ABOUT_HTML = "gems_about.html#PAGE_ABOUT";
 
 const char *_FIT_version_stamp = " GEMS-GUI v.3.3 rc.2531 ";
 extern const char *_GEMIPM_version_stamp;
@@ -263,9 +263,8 @@ void HelpWindow::helpVersion()
 
 void HelpWindow::helpAbout()
 {
-    showDocumentation( FIT_ABOUT_HTML, 0 );
-    //AboutDialog dlg;
-    //dlg.exec();
+    showDocumentation( GEMS_ABOUT_HTML, 0 );
+
 }
 
 void HelpWindow::helpOnHelp()
