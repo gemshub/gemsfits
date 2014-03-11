@@ -15,21 +15,6 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
-    <property name="spacing">
-     <number>0</number>
-    </property>
-    <property name="leftMargin">
-     <number>0</number>
-    </property>
-    <property name="topMargin">
-     <number>0</number>
-    </property>
-    <property name="rightMargin">
-     <number>0</number>
-    </property>
-    <property name="bottomMargin">
-     <number>0</number>
-    </property>
     <item>
      <widget class="QSplitter" name="splV">
       <property name="orientation">
@@ -97,15 +82,15 @@
            </layout>
           </widget>
           <widget class="QWidget" name="widgetQuery" native="true">
-           <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0">
+           <layout class="QVBoxLayout" name="verticalLayout_3">
             <property name="spacing">
-             <number>0</number>
+             <number>5</number>
             </property>
             <property name="leftMargin">
              <number>0</number>
             </property>
             <property name="topMargin">
-             <number>0</number>
+             <number>3</number>
             </property>
             <property name="rightMargin">
              <number>0</number>
@@ -113,6 +98,13 @@
             <property name="bottomMargin">
              <number>0</number>
             </property>
+            <item>
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>Search</string>
+              </property>
+             </widget>
+            </item>
             <item>
              <widget class="QTextEdit" name="queryEdit"/>
             </item>
@@ -123,7 +115,7 @@
        </layout>
       </widget>
       <widget class="QWidget" name="widgetRecord" native="true">
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <layout class="QVBoxLayout" name="verticalLayout_6">
         <property name="spacing">
          <number>0</number>
         </property>
@@ -140,7 +132,69 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QTextEdit" name="recordEdit"/>
+         <widget class="QSplitter" name="splRecord">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <widget class="QWidget" name="widget" native="true">
+           <layout class="QVBoxLayout" name="verticalLayout_7">
+            <property name="spacing">
+             <number>5</number>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>3</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>Edit</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QTextEdit" name="recordEdit"/>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="widget_2" native="true">
+           <layout class="QVBoxLayout" name="verticalLayout_8">
+            <property name="spacing">
+             <number>5</number>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>3</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>Status</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QTextEdit" name="statusEdit"/>
+            </item>
+           </layout>
+          </widget>
+         </widget>
         </item>
        </layout>
       </widget>

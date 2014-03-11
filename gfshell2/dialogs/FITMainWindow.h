@@ -43,7 +43,7 @@ private slots:
 
 public slots:
     // Tasks
-    void CmDBMode(){}
+       void CmDBMode(){}
        void CmTaskMode(){}
        void CmNewProject(){}
        void CmSelectProject(){}

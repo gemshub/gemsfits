@@ -55,6 +55,8 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     ui->splKey->setStretchFactor(1, 1);
     ui->splGEMS->setStretchFactor(0, 1);
     ui->splGEMS->setStretchFactor(1, 3);
+    ui->splRecord->setStretchFactor(0, 4);
+    ui->splRecord->setStretchFactor(1, 1);
 
     ui->splV->setStretchFactor(0, 1);
     ui->splV->setStretchFactor(1, 3);
