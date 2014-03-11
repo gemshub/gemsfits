@@ -5,6 +5,8 @@
 #include <QLineEdit>
 #include <QTableWidget>
 #include "verror.h"
+#include "f_ejdb_file.h"
+#include "node.h"
 
 namespace Ui {
 class FITMainWindow;
@@ -31,8 +33,19 @@ class FITMainWindow : public QMainWindow
 
     int currentMode;    ///< DataBase or Task mode
 
+    string SysFITDir;   ///< Path to resources directory
     string LocalDocDir; ///< Path to help directory
+    TFile  gemsLstFile; ///< Path to GEMS3K files
+    TFile  fitTaskDir;  ///< Path to the database file
 
+    auto_ptr<TNode> aNode;
+    TNode* node() const
+    {
+      return aNode.get();
+    }
+    //TNode *node;
+
+    void setDefValues(int c, char** v);
     void setActions();
     void closeEvent( QCloseEvent* );
     void resizeEvent( QResizeEvent * event );
@@ -47,7 +60,7 @@ public slots:
        void CmTaskMode(){}
        void CmNewProject(){}
        void CmSelectProject(){}
-       void CmSelectGEMS(){}
+       void CmSelectGEMS( const string& fname_="" );
     // Help
        void CmHelp();
        void CmHowto();
@@ -86,13 +99,18 @@ public:
     explicit FITMainWindow(int c, char** v, QWidget *parent = 0);
     ~FITMainWindow();
 
-    const string& docDir() const {
-      return LocalDocDir;
-    }
-
-    void setDocDir(const string& localDir) {
-            LocalDocDir = localDir;
-        }
+       const string& sysDir() const {
+         return SysFITDir;
+       }
+       void setSysDir(const string& sysDir) {
+               SysFITDir = sysDir;
+           }
+       const string& docDir() const {
+         return LocalDocDir;
+       }
+       void setDocDir(const string& localDir) {
+               LocalDocDir = localDir;
+           }
 
     void GetHelp();
     void OpenHelp(const char* file, const char* item=0, int page =-1);
@@ -104,6 +122,10 @@ private:
     QLineEdit* pLineTask;  ///< Current Task name
     QLineEdit* pLineGEMS;  ///< Current CSD GEMS3K file lst name
     TKeyTable* keyTable;   ///< Curent collection EJDB keys list
+
+    void setTableIComp();
+    void setListPhase();
+
 };
 
 extern FITMainWindow* pFitImp;

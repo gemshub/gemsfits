@@ -74,6 +74,47 @@ void FITMainWindow::setActions()
 }
 
 //-------------------------------------------------------------------------------------
+
+/// Select new GEMS3K files list and setup windows
+void FITMainWindow::CmSelectGEMS( const string& fname_ )
+{
+  try
+    {
+       string fname = fname_;
+       if( fname.empty() )
+       { fname = gemsLstFile.GetPath();
+         //Select files
+         if( !gemsLstFile.ChooseFileOpen( this, fname, "Please, select GEMS3K lst file","*.lst" ))
+           return;
+       }
+
+       // Creates TNode structure instance accessible trough the "node" pointer
+       aNode.reset( new TNode() );
+
+       // (1) Initialization of GEMS3K internal data by reading  files
+       if( node()->GEM_init( fname.c_str() ) )
+       {
+           Error( fname, "GEMS3K Init() error: \n"
+                   "Some GEMS3K input files are corrupt or cannot be found.");
+       }
+       // setup icomp table
+       setTableIComp();
+
+       // setup phase list
+       setListPhase();
+
+       pLineGEMS->setText( trUtf8( gemsLstFile.Name().c_str() ) );
+
+    }
+    catch( TError& err )
+    {
+
+    }
+}
+
+
+
+//-------------------------------------------------------------------------------------
 // Help menu
 void FITMainWindow::CmSettingth()
 {

@@ -25,12 +25,24 @@ void TKeyTable::keyPressEvent(QKeyEvent* e)
 
 FITMainWindow* pFitImp;
 
+void FITMainWindow::setDefValues(int c, char** v)
+{
+   SysFITDir = "../Resources/";
+   LocalDocDir = SysFITDir+ "help/";
+
+   // may be gemsLstFile from arguments c,v
+   // may be fitTaskDir from arguments c,v
+}
+
 FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     QMainWindow(parent),
     ui(new Ui::FITMainWindow),
-    currentMode (MDF_DATABASE), LocalDocDir("HELP/")
+    currentMode (MDF_DATABASE), gemsLstFile(""), fitTaskDir(""), aNode(0)
 {
     ui->setupUi(this);
+
+    //set up main parameters
+    setDefValues( c, v);
 
     // define tool bar
     toolTasks = new QToolBar(this);
@@ -42,7 +54,6 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     toolTasks->addAction(ui->action_DataBase_mode);
     toolTasks->addAction(ui->action_Task_Mode);
     toolTasks->setWindowTitle("toolTasks");
-
 
     // define main window
     keyTable = new TKeyTable( this );
@@ -143,3 +154,45 @@ void  FITMainWindow::moveToolBar( int , int )
    ui->toolBarMenu->setFixedWidth(ui->splV->widget(1)->width());
 }
 
+void FITMainWindow::setTableIComp()
+{
+   string valStr;
+   QTableWidgetItem *item;
+
+   DATACH  *dCH =  node()->pCSD();
+   ui->tableIComp->clear();
+
+   ui->tableIComp->setColumnCount(5);
+   ui->tableIComp->setRowCount(dCH->nIC/5+1);
+
+   for( int ii = 0; ii<dCH->nIC; ii++ )
+   {
+     valStr = string( dCH->ICNL[ii], 0,MaxICN );
+     item = new QTableWidgetItem(tr("%1").arg( valStr.c_str()));
+     ui->tableIComp->setItem(ii/5, ii%5, item );
+   }
+}
+
+
+void FITMainWindow::setListPhase()
+{
+   int ii, jj,j;
+   string valStr;
+
+   DATACH  *dCH =  node()->pCSD();
+   ui->listPhases->clear();
+
+   for( ii = 0, jj=0; ii<dCH->nPH; ii++ )
+   {
+     valStr = string( dCH->PHNL[ii], 0,MaxPHN );
+     QTreeWidgetItem *phase = new QTreeWidgetItem(ui->listPhases);
+     phase->setText(0, trUtf8(valStr.c_str()));
+
+     for( j=0; j<dCH->nDCinPH[ii]; j++, jj++ )
+     {
+         valStr = string( dCH->DCNL[jj], 0, MaxDCN );
+         QTreeWidgetItem *dcomp = new QTreeWidgetItem(phase);
+         dcomp->setText(0, trUtf8(valStr.c_str()));
+     }
+   }
+}

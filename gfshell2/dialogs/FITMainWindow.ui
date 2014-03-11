@@ -15,10 +15,28 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
     <item>
      <widget class="QSplitter" name="splV">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="handleWidth">
+       <number>1</number>
       </property>
       <property name="childrenCollapsible">
        <bool>false</bool>
@@ -248,7 +266,51 @@
              </widget>
             </item>
             <item>
-             <widget class="QTableWidget" name="tableIComp"/>
+             <widget class="QTableWidget" name="tableIComp">
+              <property name="sizeAdjustPolicy">
+               <enum>QAbstractScrollArea::AdjustToContents</enum>
+              </property>
+              <property name="editTriggers">
+               <set>QAbstractItemView::NoEditTriggers</set>
+              </property>
+              <property name="dragEnabled">
+               <bool>true</bool>
+              </property>
+              <property name="defaultDropAction">
+               <enum>Qt::CopyAction</enum>
+              </property>
+              <property name="selectionMode">
+               <enum>QAbstractItemView::SingleSelection</enum>
+              </property>
+              <property name="rowCount">
+               <number>2</number>
+              </property>
+              <property name="columnCount">
+               <number>5</number>
+              </property>
+              <attribute name="horizontalHeaderVisible">
+               <bool>false</bool>
+              </attribute>
+              <attribute name="horizontalHeaderDefaultSectionSize">
+               <number>40</number>
+              </attribute>
+              <attribute name="horizontalHeaderMinimumSectionSize">
+               <number>10</number>
+              </attribute>
+              <attribute name="verticalHeaderVisible">
+               <bool>false</bool>
+              </attribute>
+              <attribute name="verticalHeaderDefaultSectionSize">
+               <number>20</number>
+              </attribute>
+              <row/>
+              <row/>
+              <column/>
+              <column/>
+              <column/>
+              <column/>
+              <column/>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -277,7 +339,25 @@
              </widget>
             </item>
             <item>
-             <widget class="QListWidget" name="listPhases"/>
+             <widget class="QTreeWidget" name="listPhases">
+              <property name="editTriggers">
+               <set>QAbstractItemView::NoEditTriggers</set>
+              </property>
+              <property name="tabKeyNavigation">
+               <bool>true</bool>
+              </property>
+              <property name="dragEnabled">
+               <bool>true</bool>
+              </property>
+              <attribute name="headerVisible">
+               <bool>false</bool>
+              </attribute>
+              <column>
+               <property name="text">
+                <string notr="true">1</string>
+               </property>
+              </column>
+             </widget>
             </item>
            </layout>
           </widget>
