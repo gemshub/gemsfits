@@ -1,5 +1,6 @@
 #include "FITMainWindow.h"
 #include "ui_FITMainWindow.h"
+#include "ProjectSettingsDialog.h"
 #include "fservice.h"
 
 // -----------------------------------------------------------
@@ -13,20 +14,21 @@ void FITMainWindow::setActions()
     connect( ui->action_DataBase_mode, SIGNAL( triggered()), this, SLOT(CmDBMode()));
     connect( ui->action_Task_Mode, SIGNAL( triggered()), this, SLOT(CmTaskMode()));
     connect( ui->action_New_Project, SIGNAL( triggered()), this, SLOT(CmNewProject()));
+    connect( ui->action_Config_Project, SIGNAL( triggered()), this, SLOT(CmConfigProject()));
     connect( ui->action_Select_project, SIGNAL( triggered()), this, SLOT(CmSelectProject()));
     connect( ui->actionSelect_GEMS, SIGNAL( triggered()), this, SLOT(CmSelectGEMS()));
     connect( ui->action_Exit, SIGNAL( triggered()), this, SLOT(close()));
 
  // Help
     connect( ui->actionHelp, SIGNAL( triggered()), this, SLOT(CmHelp()));
-    connect( ui->actionHow_to, SIGNAL( triggered()), this, SLOT(CmHowto()));
+    //connect( ui->actionHow_to, SIGNAL( triggered()), this, SLOT(CmHowto()));
     connect( ui->actionAbout, SIGNAL( triggered()), this, SLOT(CmHelpAbout()));
     connect( ui->actionAuthors, SIGNAL( triggered()), this, SLOT(CmHelpAuthors()));
-    connect( ui->actionThanks, SIGNAL( triggered()), this, SLOT(CmHelpThanks()));
+    //connect( ui->actionThanks, SIGNAL( triggered()), this, SLOT(CmHelpThanks()));
     connect( ui->actionLicense, SIGNAL( triggered()), this, SLOT(CmHelpLicense()));
     //connect( action_Help_2, SIGNAL( triggered()), this, SLOT(CmHelp2()));
     connect( ui->action_Preferences, SIGNAL( triggered()), this, SLOT(CmSettingth()));
-    connect( ui->actionTutorial, SIGNAL( triggered()), this, SLOT(CmTutorial()));
+    //connect( ui->actionTutorial, SIGNAL( triggered()), this, SLOT(CmTutorial()));
 
 // Record
     connect( ui->actionCreate_New , SIGNAL( triggered()), this, SLOT(CmCreate()));
@@ -74,6 +76,7 @@ void FITMainWindow::setActions()
 }
 
 //-------------------------------------------------------------------------------------
+// Project menu
 
 /// Select new GEMS3K files list and setup windows
 void FITMainWindow::CmSelectGEMS( const string& fname_ )
@@ -94,7 +97,7 @@ void FITMainWindow::CmSelectGEMS( const string& fname_ )
        // (1) Initialization of GEMS3K internal data by reading  files
        if( node()->GEM_init( fname.c_str() ) )
        {
-           Error( fname, "GEMS3K Init() error: \n"
+           Error( gemsLstFile.Name(), "GEMS3K Init() error: \n"
                    "Some GEMS3K input files are corrupt or cannot be found.");
        }
        // setup icomp table
@@ -105,27 +108,90 @@ void FITMainWindow::CmSelectGEMS( const string& fname_ )
 
        pLineGEMS->setText( trUtf8( gemsLstFile.Name().c_str() ) );
 
+       setStatusText( "Selected new GEMS3K files" );
     }
     catch( TError& err )
     {
-
+       setStatusText( err.title );
+       addLinetoStatus( err.mess );
     }
 }
 
+void FITMainWindow::CmSelectProject( const string& fname_ )
+{
+   string fname=fname_;
+
+   if( fname.empty())
+   { //Select fit project files
+      fname = fitTaskDir.GetPath();
+     if( !fitTaskDir.ChooseFileOpen( this, fname, "Please, select Project.ini file","*.ini *.conf" ))
+        return;
+   }
+
+   //load project settings
+   if (fname.empty())
+     return;
+   if( projectSettings )
+       delete projectSettings;
+   projectSettings = new QSettings(fname.c_str(), QSettings::IniFormat);
+   projectSettings->setValue("ProjectDir", fitTaskDir.Dir().c_str() );
+   projectSettings->setValue("ProjectName", fitTaskDir.Name().c_str() );
+   //
+   pLineTask->setText( projectSettings->value("ProjectName", "undefined").toString());
+   //connect to EJDB for project&update key list
+}
+
+void FITMainWindow::CmConfigProject()
+{
+    //Select fit project files
+    string fname = fitTaskDir.GetPath();
+    if( !fitTaskDir.ChooseFileOpen( this, fname, "Please, select Project.ini file","*.ini *.conf" ))
+        return;
+
+    //load project settings
+   if (fname.empty())
+     return;
+   if( projectSettings )
+       delete projectSettings;
+   projectSettings = new QSettings(fname.c_str(), QSettings::IniFormat);
+   projectSettings->setValue("ProjectDir", fitTaskDir.Dir().c_str() );
+   projectSettings->setValue("ProjectName", fitTaskDir.Name().c_str() );
+
+   // change settings
+   ProjectSettingsDialog dlg(projectSettings);
+   if( !dlg.exec() )
+      return;
+
+    //
+   pLineTask->setText( projectSettings->value("ProjectName", "undefined").toString());
+   //connect to EJDB for project&update key list
+}
+
+void FITMainWindow::CmNewProject()
+{
+  ProjectSettingsDialog dlg;
+  if( !dlg.exec() )
+   return;
+
+  if( projectSettings )
+   delete projectSettings;
+  projectSettings = dlg.getNewSettings();
+
+  //
+  pLineTask->setText( projectSettings->value("ProjectName", "undefined").toString());
+  //connect to EJDB for project&update key list
+}
 
 
 //-------------------------------------------------------------------------------------
 // Help menu
+
 void FITMainWindow::CmSettingth()
 {
    // SettingsDialog dlg(this);
    // dlg.exec();
 }
 
-void FITMainWindow::CmTutorial()
-{
-    OpenHelp( GEMS_TUTOR_HTML );
-}
 
 void FITMainWindow::CmHelp()
 {
@@ -133,12 +199,6 @@ void FITMainWindow::CmHelp()
        OpenHelp( GEMS_TDBAS_HTML );
     else
        OpenHelp( GEMS_MODES_HTML );
-
- }
-
-void FITMainWindow::CmHowto()
-{
-    OpenHelp( GEMS_HOWTO_HTML );
 }
 
 void FITMainWindow::CmHelpAbout()
@@ -151,10 +211,6 @@ void FITMainWindow::CmHelpAuthors()
     OpenHelp( GEMS_AUTHORS_HTML );
 }
 
-void FITMainWindow::CmHelpThanks()
-{
-    OpenHelp( GEMS_THANKS_HTML );
-}
 
 void FITMainWindow::CmHelpLicense()
 {

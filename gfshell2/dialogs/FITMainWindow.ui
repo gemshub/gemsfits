@@ -208,7 +208,11 @@
              </widget>
             </item>
             <item>
-             <widget class="QTextEdit" name="statusEdit"/>
+             <widget class="QTextEdit" name="statusEdit">
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -386,6 +390,7 @@
     <addaction name="actionSelect_GEMS"/>
     <addaction name="action_Select_project"/>
     <addaction name="action_New_Project"/>
+    <addaction name="action_Config_Project"/>
     <addaction name="separator"/>
     <addaction name="action_Task_Mode"/>
     <addaction name="action_DataBase_mode"/>
@@ -537,7 +542,7 @@
   </action>
   <action name="action_New_Project">
    <property name="text">
-    <string>&amp;New Project</string>
+    <string>&amp;New Project...</string>
    </property>
   </action>
   <action name="action_Select_project">
@@ -665,16 +670,6 @@
     <string>Help</string>
    </property>
   </action>
-  <action name="actionHow_to">
-   <property name="text">
-    <string>How to</string>
-   </property>
-  </action>
-  <action name="actionTutorial">
-   <property name="text">
-    <string>Tutorial</string>
-   </property>
-  </action>
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
@@ -683,11 +678,6 @@
   <action name="actionAuthors">
    <property name="text">
     <string>Authors</string>
-   </property>
-  </action>
-  <action name="actionThanks">
-   <property name="text">
-    <string>Thanks</string>
    </property>
   </action>
   <action name="actionLicense">
@@ -711,6 +701,11 @@
    </property>
    <property name="text">
     <string>Previous</string>
+   </property>
+  </action>
+  <action name="action_Config_Project">
+   <property name="text">
+    <string>&amp;Config Project...</string>
    </property>
   </action>
  </widget>

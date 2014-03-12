@@ -2,6 +2,7 @@
 #define FITMAINWINDOW_H
 
 #include <QMainWindow>
+#include <QSettings>
 #include <QLineEdit>
 #include <QTableWidget>
 #include "verror.h"
@@ -58,19 +59,17 @@ public slots:
     // Tasks
        void CmDBMode(){}
        void CmTaskMode(){}
-       void CmNewProject(){}
-       void CmSelectProject(){}
+       void CmConfigProject();
+       void CmNewProject();
+       void CmSelectProject( const string& fname_="" );
        void CmSelectGEMS( const string& fname_="" );
     // Help
        void CmHelp();
-       void CmHowto();
        void CmHelpAbout();
        void CmHelpAuthors();
-       void CmHelpThanks();
        void CmHelpLicense();
        //void CmHelp2();
        void CmSettingth();
-       void CmTutorial();
    // Record
        void CmCreate(){}
        void CmClone(){}
@@ -118,6 +117,8 @@ public:
 
 private:
     Ui::FITMainWindow *ui;
+    QSettings *projectSettings; ///< Properties for current project
+
     QToolBar *toolTasks;   ///< Tool bar to switch task/database mode
     QLineEdit* pLineTask;  ///< Current Task name
     QLineEdit* pLineGEMS;  ///< Current CSD GEMS3K file lst name
@@ -125,6 +126,9 @@ private:
 
     void setTableIComp();
     void setListPhase();
+    void setStatusText( const string& text );
+    void addLinetoStatus( const string& line );
+    void defineModuleKeysList( int nRT );
 
 };
 
