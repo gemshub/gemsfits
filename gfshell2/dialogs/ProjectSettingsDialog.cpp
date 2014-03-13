@@ -38,16 +38,17 @@ void ProjectSettingsDialog::CmSave()
 {
     if( !settings )
     {
-        QString fname = ui->projDir->text() + "/" + ui->projName->text() + ".ini";
+        QString fname = ui->projDir->text() + "/" + ui->projName->text() + ".pro";
         settings = new QSettings(fname, QSettings::IniFormat);
     }
-    settings->setValue("ProjectDir", ui->projDir->text() );
-    settings->setValue("ProjectName", ui->projName->text() );
-    settings->setValue("EJDBDir", ui->ejdbDir->text() );
-    settings->setValue("EJDBName", ui->ejdbName->text() );
-    settings->setValue("DataCollection", ui->experCollect->text() );
-    settings->setValue("TaskCollection", ui->taskCollection->text() );
-    settings->setValue("GEMSDir", ui->gemsDir->text() );
+    settings->setValue("ProjFolderPath",    ui->projDir->text() );
+    settings->setValue("ProjFileName",      ui->projName->text() );
+    settings->setValue("ProjDatabasePath",  ui->ejdbDir->text() );
+    settings->setValue("ProjDatabaseName",  ui->ejdbName->text() );
+    settings->setValue("ExpSamplesDataColl", ui->experCollect->text() );
+    settings->setValue("TaskCasesDataColl", ui->taskCollection->text() );
+    settings->setValue("GEMS3KFilesPath",   ui->gemsDir->text() );
+    settings->setValue("GEMSFITSAPP",       "v0.1" );  // _FIT_version_stamp
     settings->sync();
     accept();
 }

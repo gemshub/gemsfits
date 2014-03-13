@@ -11,13 +11,13 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>GEMSFITS project setup</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Project Directory</string>
+      <string>Project folder path</string>
      </property>
     </widget>
    </item>
@@ -45,21 +45,21 @@
    <item row="3" column="0">
     <widget class="QLineEdit" name="projName">
      <property name="text">
-      <string>project1</string>
+      <string>myproj1</string>
      </property>
     </widget>
    </item>
    <item row="4" column="0">
     <widget class="QLabel" name="label_3">
      <property name="text">
-      <string>EJDB Directory</string>
+      <string>Database path</string>
      </property>
     </widget>
    </item>
    <item row="5" column="0">
     <widget class="QLineEdit" name="ejdbDir">
      <property name="text">
-      <string>./EJDB</string>
+      <string>/EJDB</string>
      </property>
     </widget>
    </item>
@@ -73,21 +73,21 @@
    <item row="6" column="0">
     <widget class="QLabel" name="label_4">
      <property name="text">
-      <string>EJDB Name</string>
+      <string>Database file name</string>
      </property>
     </widget>
    </item>
    <item row="7" column="0">
     <widget class="QLineEdit" name="ejdbName">
      <property name="text">
-      <string>database</string>
+      <string>myprojdb1</string>
      </property>
     </widget>
    </item>
    <item row="8" column="0">
     <widget class="QLabel" name="label_5">
      <property name="text">
-      <string>Samples collection name</string>
+      <string>Experimental samples database collection name</string>
      </property>
     </widget>
    </item>
@@ -101,7 +101,7 @@
    <item row="10" column="0">
     <widget class="QLabel" name="label_6">
      <property name="text">
-      <string>Tasks collection name</string>
+      <string>Fitting task cases database collection name</string>
      </property>
     </widget>
    </item>
@@ -115,14 +115,14 @@
    <item row="12" column="0">
     <widget class="QLabel" name="label_7">
      <property name="text">
-      <string>GEMS3k files Dir</string>
+      <string>GEMS3K input file set path</string>
      </property>
     </widget>
    </item>
    <item row="13" column="0">
     <widget class="QLineEdit" name="gemsDir">
      <property name="text">
-      <string>./GEMS</string>
+      <string>/GEMS</string>
      </property>
     </widget>
    </item>
@@ -136,7 +136,7 @@
    <item row="14" column="0">
     <widget class="QLabel" name="label_8">
      <property name="text">
-      <string> </string>
+      <string/>
      </property>
     </widget>
    </item>

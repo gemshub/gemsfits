@@ -387,13 +387,14 @@
      <string>&amp;Project</string>
     </property>
     <addaction name="separator"/>
-    <addaction name="actionSelect_GEMS"/>
     <addaction name="action_Select_project"/>
     <addaction name="action_New_Project"/>
     <addaction name="action_Config_Project"/>
     <addaction name="separator"/>
     <addaction name="action_Task_Mode"/>
     <addaction name="action_DataBase_mode"/>
+    <addaction name="separator"/>
+    <addaction name="actionSelect_GEMS"/>
     <addaction name="separator"/>
     <addaction name="action_Exit"/>
    </widget>
@@ -442,6 +443,7 @@
     <addaction name="separator"/>
     <addaction name="actionHelp"/>
     <addaction name="actionAbout"/>
+    <addaction name="separator"/>
     <addaction name="actionAuthors"/>
     <addaction name="actionLicense"/>
    </widget>
@@ -547,7 +549,7 @@
   </action>
   <action name="action_Select_project">
    <property name="text">
-    <string>&amp;Select Project</string>
+    <string>&amp;Open Project...</string>
    </property>
   </action>
   <action name="actionSelect_GEMS">
@@ -648,7 +650,7 @@
   </action>
   <action name="action_Run_test">
    <property name="text">
-    <string>Task &amp;Run Fit</string>
+    <string>&amp;Run Fitting Task</string>
    </property>
   </action>
   <action name="action_Show_Results">
@@ -705,7 +707,7 @@
   </action>
   <action name="action_Config_Project">
    <property name="text">
-    <string>&amp;Config Project...</string>
+    <string>&amp;Reconfigure Project...</string>
    </property>
   </action>
  </widget>

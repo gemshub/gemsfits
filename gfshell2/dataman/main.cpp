@@ -78,7 +78,7 @@ TFITApp::TFITApp(int& c, char** v):
 #endif
 
        QIcon icon;
-       icon.addFile(QString::fromUtf8(":/Icons/gems50.png"), QSize(), QIcon::Normal, QIcon::Off);
+       icon.addFile(QString::fromUtf8(":/modules/Icons/UnSpaceModuleIcon.png"), QSize(), QIcon::Normal, QIcon::Off);
        setWindowIcon(icon);
    }
 }

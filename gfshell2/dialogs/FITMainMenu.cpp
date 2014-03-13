@@ -124,7 +124,7 @@ void FITMainWindow::CmSelectProject( const string& fname_ )
    if( fname.empty())
    { //Select fit project files
       fname = fitTaskDir.GetPath();
-     if( !fitTaskDir.ChooseFileOpen( this, fname, "Please, select Project.ini file","*.ini *.conf" ))
+     if( !fitTaskDir.ChooseFileOpen( this, fname, "Please, select a project file","*.pro *.conf" ))
         return;
    }
 
@@ -145,7 +145,7 @@ void FITMainWindow::CmConfigProject()
 {
     //Select fit project files
     string fname = fitTaskDir.GetPath();
-    if( !fitTaskDir.ChooseFileOpen( this, fname, "Please, select Project.ini file","*.ini *.conf" ))
+    if( !fitTaskDir.ChooseFileOpen( this, fname, "Please, select a project file","*.pro *.conf" ))
         return;
 
     //load project settings
