@@ -3,6 +3,7 @@
 #include "FITMainWindow.h"
 #include "ui_FITMainWindow.h"
 #include "HelpWindow.h"
+#include "f_ejdb.h"
 
 //--------------------------------------------------------------------------
 
@@ -213,90 +214,80 @@ void FITMainWindow::addLinetoStatus( const string& line )
     //ui->statusEdit->insertPlainText(vals);
 }
 
-/*
+
 //------------------------------------------------------------------------------------
 // Define list of Module keys using filter
-void TVisorImp::defineModuleKeysList( int nRT )
+void FITMainWindow::defineModuleKeysList( int nRT )
 {
-  int ii, jj, kk, ln, colsz;
+  int ii, jj, kk, ln;
   string keyfld;
   QTableWidgetItem *item, *curItem=0;
-  string oldKey = rt[nRT].UnpackKey();
-  settedCureentKeyIntotbKeys = false;
+  string oldKey = rtEJ[nRT].PackKey();
+  //settedCureentKeyIntotbKeys = false;
 
-  if(currentNrt != nRT)
+  if( currentMode != nRT)
     return;
 
-  pFilterKey->setText(((TCModule*)aMod[nRT])->getFilter());
-
   // define tbKeys
-  tbKeys->clear();
-  tbKeys->setSortingEnabled ( false );
-  tbKeys->setColumnCount( rt[nRT].KeyNumFlds());
-
+  keyTable->clear();
+  keyTable->setSortingEnabled ( false );
+  keyTable->setColumnCount( rtEJ[nRT].KeyNumFlds());
 
   // get list or record keys
-  string keyFilter = pFilterKey->text().toUtf8().data();
-  vector<int> colSizes;
+  string keyFilter = ui->filterEdit->text().toUtf8().data();
+  if( keyFilter.empty() )
+      keyFilter = ALLKEY;
   vector<string> keyList;
-  int nKeys = rt[nRT].GetKeyList( keyFilter.c_str(), keyList);
+  int nKeys = rtEJ[nRT].GetKeyList( keyFilter.c_str(), keyList);
 
-  for(jj=0; jj<rt[nRT].KeyNumFlds(); jj++)
-   colSizes.push_back( 0/*rt[nRT].FldLen(jj)* );
+  //vector<int> colSizes;
+  //for(jj=0; jj<rtEJ[nRT].KeyNumFlds(); jj++)
+  // colSizes.push_back( 0 );
 
   // define key list
-  tbKeys->setRowCount(nKeys);
+  keyTable->setRowCount(nKeys);
+
+  // set up table sizes
+  QFontMetrics fm(keyTable->fontMetrics());
+  int charWidth = fm.width("5");
+  int charHeight = fm.height();
 
   for( ii=0; ii<nKeys; ii++ )
   {
-      tbKeys->setRowHeight(ii, htF(ftString, 0)+2);
-      for(jj=0, kk=0; jj<rt[nRT].KeyNumFlds(); jj++)
+      keyTable->setRowHeight(ii, charHeight+2);
+      for(jj=0, kk=0; jj<rtEJ[nRT].KeyNumFlds(); jj++)
       {
-
-          ln = rt[nRT].FldLen(jj);
-          keyfld = string(keyList[ii], kk, ln);
+          ln = keyList[ii].find_first_of(':', kk);
+          keyfld = string(keyList[ii], kk, ln-kk);
           strip(keyfld);
-          colsz = keyfld.length()+1;
-          if( colsz > colSizes[jj])
-              colSizes[jj] = colsz;
-          kk += ln;
+          //colsz = keyfld.length()+1;
+          //if( colsz > colSizes[jj])
+          //    colSizes[jj] = colsz;
+          kk = ln+1;
           item = new QTableWidgetItem(tr("%1").arg( keyfld.c_str()));
-          tbKeys->setItem(ii, jj, item );
+          keyTable->setItem(ii, jj, item );
        }
       if( oldKey == keyList[ii] )
-      {    curItem = tbKeys->item(ii,0);
-           settedCureentKeyIntotbKeys = true;
+      {    curItem = keyTable->item(ii,0);
+    //       settedCureentKeyIntotbKeys = true;
       }
-
   }
-  for(jj=0; jj<rt[nRT].KeyNumFlds(); jj++)
+  for(jj=0; jj<rtEJ[nRT].KeyNumFlds(); jj++)
   {
-      tbKeys->setColumnWidth(jj, wdF( ftString, colSizes[jj], eNo ) );
-      item = new QTableWidgetItem(tr("%1").arg( jj+1));
-      item->setToolTip( ((TCModule*)aMod[nRT])->GetFldHelp(jj));
-      tbKeys->setHorizontalHeaderItem( jj, item );
+      //keyTable->setColumnWidth(jj, charWidth*colSizes[jj] );
+      item = new QTableWidgetItem(tr("%1").arg( rtEJ[nRT].FldKeyName(jj) ));
+      //item->setToolTip( ((TCModule*)aMod[nRT])->GetFldHelp(jj));
+      keyTable->setHorizontalHeaderItem( jj, item );
   }
 
-  tbKeys->setSortingEnabled ( true );
+  keyTable->setSortingEnabled ( true );
   if(curItem )
   {
-    tbKeys->setCurrentItem( curItem );
-    tbKeys->scrollToItem( curItem, QAbstractItemView::PositionAtCenter );
+    keyTable->setCurrentItem( curItem );
+    keyTable->scrollToItem( curItem, QAbstractItemView::PositionAtCenter );
   }
 
-  if( pVisor->ProfileMode == true && (nRT == RT_SYSEQ || nRT == RT_PROCES
-    || nRT == RT_UNSPACE  || nRT > RT_GTDEMO ) )
-  {
-     tbKeys->hideColumn(0);
-     tbKeys->hideColumn(1);
-  }
-  else
-  {
-     tbKeys->showColumn(0);
-     tbKeys->showColumn(1);
-  }
-
-  rt[nRT].SetKey(oldKey.c_str());
+  rtEJ[nRT].SetKey(oldKey.c_str());
 }
 
-*/
+

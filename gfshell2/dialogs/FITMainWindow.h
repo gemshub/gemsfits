@@ -25,9 +25,6 @@ class TKeyTable: public QTableWidget
        {}
 };
 
-// Mode enums
-enum { MDF_DATABASE=0, MDF_TASK=1 };
-
 class FITMainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -50,6 +47,7 @@ class FITMainWindow : public QMainWindow
     void setActions();
     void closeEJDB();
     void openEJDB();
+    void loadNewProject();
 
     void closeEvent( QCloseEvent* );
     void resizeEvent( QResizeEvent * event );

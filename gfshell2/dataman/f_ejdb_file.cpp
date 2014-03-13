@@ -18,11 +18,9 @@
 
 #include "f_ejdb_file.h"
 #include "v_user.h"
-//#include "visor.h"
+#include "ejdb.h"
 
 #include <unistd.h>
-#include <QDir>
-#include <QString>
 #include <QFile>
 #include <QFileInfo>
 #include <QFileDialog>

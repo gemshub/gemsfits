@@ -2,6 +2,7 @@
 #include "ui_FITMainWindow.h"
 #include "ProjectSettingsDialog.h"
 #include "fservice.h"
+#include "f_ejdb.h"
 
 //----------------------------------------------------------
 // Working with EJDB
@@ -9,15 +10,46 @@
 
 void FITMainWindow::closeEJDB()
 {
-
+  for( int ii; ii<rtEJ.size(); ii++ )
+     rtEJ[ii].Close();
+  EJDBFile.Close();
 }
 
+/// Connect project database
 void FITMainWindow::openEJDB()
 {
+    // close old project data
+    closeEJDB();
 
+    // set up new ejdb file
+    string ejdbPath  = projectSettings->value("ProjFolderPath", ".").toString().toUtf8().data();
+    ejdbPath  += projectSettings->value("ProjDatabasePath", "/EJDB").toString().toUtf8().data();
+    ejdbPath  += "/";
+    ejdbPath  += projectSettings->value("ProjDatabaseName", "myprojdb1" ).toString().toUtf8().data();
+    EJDBFile.ChangePath(ejdbPath);
+
+    // change collections names
+    string samlescolName = projectSettings->value("ExpSamplesDataColl", "experiments").toString().toUtf8().data();
+    rtEJ[MDF_DATABASE].SetKeywd(samlescolName);
+    rtEJ[MDF_DATABASE].Open();
+    string testcolName = projectSettings->value("TaskCasesDataColl", "tests").toString().toUtf8().data();
+    rtEJ[MDF_TASK].SetKeywd(testcolName);
+    rtEJ[MDF_TASK].Open();
 }
 
+/// Set up data for current project
+void FITMainWindow::loadNewProject()
+{
+    // Connect project database
+    openEJDB();
 
+    pLineTask->setText( projectSettings->value("ProjFileName", "undefined").toString());
+
+    // update key list
+    defineModuleKeysList( MDF_DATABASE );
+    // load first record
+
+}
 
 // -----------------------------------------------------------
 // Actions and commands
@@ -155,9 +187,9 @@ void FITMainWindow::CmSelectProject( const string& fname_ )
        Error( fname, "This is not a project file");
    projectSettings->setValue("ProjFolderPath", fitTaskDir.Dir().c_str() );
    projectSettings->setValue("ProjFileName", fitTaskDir.Name().c_str() );
-   //
-   pLineTask->setText( projectSettings->value("ProjFileName", "undefined").toString());
+
    //connect to EJDB for project&update key list
+   loadNewProject();
   }
    catch( TError& err )
    {
@@ -191,9 +223,8 @@ void FITMainWindow::CmConfigProject()
    if( !dlg.exec() )
       return;
 
-    //
-   pLineTask->setText( projectSettings->value("ProjFileName", "undefined").toString());
    //connect to EJDB for project&update key list
+   loadNewProject();
   }
     catch( TError& err )
     {
@@ -215,9 +246,8 @@ void FITMainWindow::CmNewProject()
         delete projectSettings;
       projectSettings = dlg.getNewSettings();
 
-     //
-     pLineTask->setText( projectSettings->value("ProjFileName", "undefined").toString());
      //connect to EJDB for project&update key list
+     loadNewProject();
   }
     catch( TError& err )
     {

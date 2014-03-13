@@ -165,6 +165,9 @@ protected:
     /// Get name of modules DB
     const char* GetKeywd() const
        {  return Keywd.c_str();   }
+    /// Set name of modules DB
+    void SetKeywd( const string& newKeywd )
+       {  Keywd = newKeywd;   }
     /// Get records count in opened files
     int RecCount() const
        {  return recList.size(); }
@@ -204,6 +207,9 @@ protected:
     /// Change i-th field of TEJDBKey to key
     void SetFldKey( int i, const char *fld )
         {  key.SetFldKey( i, fld ); }
+    /// Return record key field name i
+    const char* FldKeyName(int i) const
+    {   return key.FldKeyName(i); }
     // Make packed key to seach.
     void MakeKey( unsigned char nRtwrk, string& pkey, ...);
 
@@ -258,7 +264,7 @@ class EJDataBaseList:
 {
   public:
     EJDataBaseList()
-    { }
+    {  Init(); }
 
     ~EJDataBaseList()
     {}

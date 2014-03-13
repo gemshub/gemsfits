@@ -300,7 +300,7 @@ void TEJDataBase::KeyFromBson( const char* bsdata )
     // Try to insert new record to list
     key.SetKey( keyStr.c_str() );
     if( key.isPattern() )
-      Error("TEJDB0010", "Cannot save under record key template" );
+      Error("TEJDB0110", "Cannot save under record key template" );
 
     pair<set<IndexEntry>::iterator,bool> ret;
     ret = recList.insert( key.retIndex() );
@@ -699,7 +699,8 @@ void TEJDataBase::loadCollection( )
     bson_init_as_query(&bshits1);
     bson_append_start_object(&bshits1, "$fields");
     bson_append_int(&bshits1, "_id", 1);
-    bson_append_int(&bshits1, "key", 1);
+    for(int ii=0; ii<KeyNumFlds(); ii++ )
+        bson_append_int(&bshits1, key.FldKeyName(ii), 1);
     bson_append_finish_object(&bshits1);
     bson_finish(&bshits1);
 
@@ -765,14 +766,17 @@ int EJDataBaseList::Find(const char* s)
 // default configuration
 void EJDataBaseList::Init()
 {
-    // RT_SDATA default
-    //size_t sdref_rkfrm[3] = { 20, 5, 7 };
-    //push_back( TEJDataBase( size(), "sdref",
-    //                    o_sdauthr, o_sdauthr+8/*9*/, 3, 3, sdref_rkfrm ) );
-    // RT_CONST default
-    //size_t const_rkfrm[2] = { 8, 24 };
-    //push_back( TEJDataBase( size(), "const",
-    //                    o_constlab, o_constlab+2/*3*/, 1, 2, const_rkfrm ) );
+    // MDF_DATABASE default
+    vector<string> dbKeyFlds;
+    dbKeyFlds.push_back("sample");
+    dbKeyFlds.push_back("expdataset");
+    push_back( TEJDataBase( MDF_DATABASE, "experiments", dbKeyFlds  ));
+
+    // MDF_TASK default
+    vector<string> tsKeyFlds;    ///???? must be changed after disscusion
+    tsKeyFlds.push_back("DataSource");
+    tsKeyFlds.push_back("DataName");
+    push_back( TEJDataBase( MDF_TASK, "tests", tsKeyFlds  ));
 }
 
 

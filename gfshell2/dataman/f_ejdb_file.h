@@ -26,12 +26,16 @@
 #include <auto_ptr.h>   // deprecated
 #endif
 
-#include "verror.h"
-#include "ejdb.h"
 
+#include "verror.h"
 class QWidget;
+class EJDB;
+
+// Mode enums
+enum { MDF_DATABASE=0, MDF_TASK=1 };
 
 typedef ios::openmode FileStatus;
+
 
 /// Base class for file manipulation
 class TAbstractFile
