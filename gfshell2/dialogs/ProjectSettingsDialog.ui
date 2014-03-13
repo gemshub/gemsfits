@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>ProjectSettingsDialog</class>
  <widget class="QDialog" name="ProjectSettingsDialog">
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -12,6 +15,9 @@
   </property>
   <property name="windowTitle">
    <string>GEMSFITS project setup</string>
+  </property>
+  <property name="modal">
+   <bool>false</bool>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
@@ -146,7 +152,7 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>

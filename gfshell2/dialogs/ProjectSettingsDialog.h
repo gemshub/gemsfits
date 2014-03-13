@@ -19,6 +19,7 @@ public slots:
     void CmProjectDir();
     void CmEJDBDir();
     void CmGEMSDir();
+    void CmHelp();
 
 public:
     explicit ProjectSettingsDialog( QSettings *aSet=0,  QWidget *parent = 0);

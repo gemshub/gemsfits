@@ -34,6 +34,7 @@ void FITMainWindow::setDefValues(int c, char** v)
    // may be fitTaskDir from arguments c,v
 }
 
+
 FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     QMainWindow(parent),
     ui(new Ui::FITMainWindow),
@@ -121,7 +122,6 @@ void FITMainWindow::showEvent ( QShowEvent * event )
    because otherwise even that it allows work with parent window it will
    be always overlapping it. For modal windows (and thus modal help) we need parent
 */
-
 void FITMainWindow::GetHelp( )
 {
         (new HelpWindow(  0  ));
@@ -173,7 +173,6 @@ void FITMainWindow::setTableIComp()
      ui->tableIComp->setItem(ii/5, ii%5, item );
    }
 }
-
 
 void FITMainWindow::setListPhase()
 {
@@ -300,17 +299,4 @@ void TVisorImp::defineModuleKeysList( int nRT )
   rt[nRT].SetKey(oldKey.c_str());
 }
 
-
-
-void MainWindow::openPropertyList()
-{
-    QString fileName = QFileDialog::getOpenFileName(this,
-                               tr("Open Property List"),
-                               "", tr("Property List Files (*.plist)"));
-    if (!fileName.isEmpty()) {
-        QSettings *settings = new QSettings(fileName, QSettings::NativeFormat);
-        setSettingsObject(settings);
-        fallbacksAct->setEnabled(false);
-    }
-}
 */

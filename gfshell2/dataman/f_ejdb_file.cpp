@@ -81,6 +81,9 @@ bool TAbstractFile::Exist()
 bool TAbstractFile::ChooseFileOpen(QWidget* par, string& path_,
           const char* title, const char *filter )
 {
+    if( Test() )
+      Close();
+
     string path;
     if( path_.find('/') == string::npos )
     {
@@ -116,7 +119,10 @@ bool TAbstractFile::ChooseFileOpen(QWidget* par, string& path_,
 bool TAbstractFile::ChooseFileSave(QWidget* par, string& path_,
        const char* title, const char *filter)
 {
-     string path;
+    if( Test() )
+      Close();
+
+    string path;
      if( path_.find('/') == string::npos )
       {      path  = dir;  // userFitDir();
              path += path_;
@@ -152,6 +158,17 @@ bool TAbstractFile::ChooseFileSave(QWidget* par, string& path_,
     }
 }
 
+void TAbstractFile::ChangePath( const string& path )
+{
+    if( Test() )
+        Close();
+
+    Path = path;
+    if( path.empty() )
+      return;
+    u_splitpath(Path, dir, name, ext);
+    makeKeyword();
+}
 
 //-------------------------------------------------------------
 // TEJDB, files that contain EJDB records
@@ -211,12 +228,12 @@ void TEJDB::Open()
       if (!ejdbopen(ejDB, Path.c_str(), JBOWRITER | JBOCREAT ))
       {
         ejdbdel(ejDB);
-        cout << " ejdbopen error" << endl;
+        cout << "EJDB open error" << endl;
         ejDB = 0;
         isopened = false;
+        Error( Path, "EJDB open error");
         return;
        }
-
       numEJDB++;
       isopened = true;
     }

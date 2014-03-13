@@ -3,6 +3,22 @@
 #include "ProjectSettingsDialog.h"
 #include "fservice.h"
 
+//----------------------------------------------------------
+// Working with EJDB
+
+
+void FITMainWindow::closeEJDB()
+{
+
+}
+
+void FITMainWindow::openEJDB()
+{
+
+}
+
+
+
 // -----------------------------------------------------------
 // Actions and commands
 
@@ -120,7 +136,8 @@ void FITMainWindow::CmSelectGEMS( const string& fname_ )
 void FITMainWindow::CmSelectProject( const string& fname_ )
 {
    string fname=fname_;
-
+ try
+ {
    if( fname.empty())
    { //Select fit project files
       fname = fitTaskDir.GetPath();
@@ -134,16 +151,25 @@ void FITMainWindow::CmSelectProject( const string& fname_ )
    if( projectSettings )
        delete projectSettings;
    projectSettings = new QSettings(fname.c_str(), QSettings::IniFormat);
-   projectSettings->setValue("ProjectDir", fitTaskDir.Dir().c_str() );
-   projectSettings->setValue("ProjectName", fitTaskDir.Name().c_str() );
+   if( !projectSettings->contains("GEMSFITSAPP") )
+       Error( fname, "This is not a project file");
+   projectSettings->setValue("ProjFolderPath", fitTaskDir.Dir().c_str() );
+   projectSettings->setValue("ProjFileName", fitTaskDir.Name().c_str() );
    //
-   pLineTask->setText( projectSettings->value("ProjectName", "undefined").toString());
+   pLineTask->setText( projectSettings->value("ProjFileName", "undefined").toString());
    //connect to EJDB for project&update key list
+  }
+   catch( TError& err )
+   {
+      setStatusText( err.title );
+      addLinetoStatus( err.mess );
+   }
 }
 
 void FITMainWindow::CmConfigProject()
 {
-    //Select fit project files
+  try
+  {    //Select fit project files
     string fname = fitTaskDir.GetPath();
     if( !fitTaskDir.ChooseFileOpen( this, fname, "Please, select a project file","*.pro *.conf" ))
         return;
@@ -154,8 +180,11 @@ void FITMainWindow::CmConfigProject()
    if( projectSettings )
        delete projectSettings;
    projectSettings = new QSettings(fname.c_str(), QSettings::IniFormat);
-   projectSettings->setValue("ProjectDir", fitTaskDir.Dir().c_str() );
-   projectSettings->setValue("ProjectName", fitTaskDir.Name().c_str() );
+   if( !projectSettings->contains("GEMSFITSAPP") )
+       Error( fname, "This is not a project file");
+   projectSettings->setValue("ProjFolderPath", fitTaskDir.Dir().c_str() );
+   projectSettings->setValue("ProjFileName", fitTaskDir.Name().c_str() );
+   //
 
    // change settings
    ProjectSettingsDialog dlg(projectSettings);
@@ -163,23 +192,38 @@ void FITMainWindow::CmConfigProject()
       return;
 
     //
-   pLineTask->setText( projectSettings->value("ProjectName", "undefined").toString());
+   pLineTask->setText( projectSettings->value("ProjFileName", "undefined").toString());
    //connect to EJDB for project&update key list
+  }
+    catch( TError& err )
+    {
+       setStatusText( err.title );
+       addLinetoStatus( err.mess );
+    }
 }
 
 void FITMainWindow::CmNewProject()
 {
-  ProjectSettingsDialog dlg;
-  if( !dlg.exec() )
-   return;
+  try
+  {  // define new project
+     ProjectSettingsDialog dlg;
+      if( !dlg.exec() )
+          return;
 
-  if( projectSettings )
-   delete projectSettings;
-  projectSettings = dlg.getNewSettings();
+     // get new settings
+     if( projectSettings )
+        delete projectSettings;
+      projectSettings = dlg.getNewSettings();
 
-  //
-  pLineTask->setText( projectSettings->value("ProjectName", "undefined").toString());
-  //connect to EJDB for project&update key list
+     //
+     pLineTask->setText( projectSettings->value("ProjFileName", "undefined").toString());
+     //connect to EJDB for project&update key list
+  }
+    catch( TError& err )
+    {
+       setStatusText( err.title );
+       addLinetoStatus( err.mess );
+    }
 }
 
 

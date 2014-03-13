@@ -48,6 +48,9 @@ class FITMainWindow : public QMainWindow
 
     void setDefValues(int c, char** v);
     void setActions();
+    void closeEJDB();
+    void openEJDB();
+
     void closeEvent( QCloseEvent* );
     void resizeEvent( QResizeEvent * event );
     void showEvent( QShowEvent * event );

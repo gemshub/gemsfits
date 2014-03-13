@@ -2,6 +2,10 @@
 #include "ProjectSettingsDialog.h"
 #include "ui_ProjectSettingsDialog.h"
 
+#include "FITMainWindow.h"
+#include "fservice.h"
+extern const char *_FIT_version_stamp;
+
 ProjectSettingsDialog::ProjectSettingsDialog( QSettings *aSet, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ProjectSettingsDialog), settings(aSet)
@@ -9,20 +13,20 @@ ProjectSettingsDialog::ProjectSettingsDialog( QSettings *aSet, QWidget *parent) 
     ui->setupUi(this);
     if( settings ) //load old settings
     {
-        ui->projDir->setText( settings->value("ProjectDir", ".").toString() );
-        ui->projName->setText( settings->value("ProjectName", "project1").toString() );
-        ui->ejdbDir->setText( settings->value("EJDBDir", "./EJDB").toString() );
-        ui->ejdbName->setText( settings->value("EJDBName", "database").toString() );
-        ui->experCollect->setText( settings->value("DataCollection", "experiments").toString() );
-        ui->taskCollection->setText( settings->value("TaskCollection", "tests").toString() );
-        ui->gemsDir->setText( settings->value("GEMSDir", "./GEMS").toString() );
+        ui->projDir->setText( settings->value("ProjFolderPath", ".").toString() );
+        ui->projName->setText( settings->value("ProjFileName", "myproj1").toString() );
+        ui->ejdbDir->setText( settings->value("ProjDatabasePath", "/EJDB").toString() );
+        ui->ejdbName->setText( settings->value("ProjDatabaseName", "myprojdb1").toString() );
+        ui->experCollect->setText( settings->value("ExpSamplesDataColl", "experiments").toString() );
+        ui->taskCollection->setText( settings->value("TaskCasesDataColl", "tests").toString() );
+        ui->gemsDir->setText( settings->value("GEMS3KFilesPath", "/GEMS").toString() );
         ui->projDir->setEnabled(false);
         ui->projName->setEnabled(false);
         ui->projDirButton->setEnabled(false);
     }
 
     QObject::connect( ui->buttonBox, SIGNAL(accepted()), this, SLOT(CmSave()));
-    //QObject::connect( ui->buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    QObject::connect( ui->buttonBox, SIGNAL(helpRequested()), this, SLOT(CmHelp()));
     QObject::connect( ui->projDirButton, SIGNAL(clicked()), this, SLOT(CmProjectDir()));
     QObject::connect( ui->ejdbDirButton, SIGNAL(clicked()), this, SLOT(CmEJDBDir()));
     QObject::connect( ui->gemsDirButton, SIGNAL(clicked()), this, SLOT(CmGEMSDir()));
@@ -48,7 +52,7 @@ void ProjectSettingsDialog::CmSave()
     settings->setValue("ExpSamplesDataColl", ui->experCollect->text() );
     settings->setValue("TaskCasesDataColl", ui->taskCollection->text() );
     settings->setValue("GEMS3KFilesPath",   ui->gemsDir->text() );
-    settings->setValue("GEMSFITSAPP",       "v0.1" );  // _FIT_version_stamp
+    settings->setValue("GEMSFITSAPP",       _FIT_version_stamp );
     settings->sync();
     accept();
 }
@@ -62,15 +66,23 @@ void ProjectSettingsDialog::CmProjectDir()
 
 void ProjectSettingsDialog::CmEJDBDir()
 {
+    QString projDir = ui->projDir->text();
     QString dir = QFileDialog::getExistingDirectory(this, "Select EJDB Directory",
-     "",  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
+     projDir,  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
+    dir = dir.remove(projDir);
     ui->ejdbDir->setText( dir );
 }
 
 void ProjectSettingsDialog::CmGEMSDir()
 {
+    QString projDir = ui->projDir->text();
     QString dir = QFileDialog::getExistingDirectory(this, "Select GEMS Directory",
-     "",  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
+     projDir,  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
+    dir = dir.remove(projDir);
     ui->gemsDir->setText( dir );
 }
 
+void ProjectSettingsDialog::CmHelp()
+{
+    pFitImp->OpenHelp( GEMS_TDBAS_HTML );
+}

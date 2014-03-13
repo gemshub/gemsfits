@@ -106,6 +106,7 @@ public:
               const char* title, const char *filter );
     bool ChooseFileSave( QWidget* par, string& path_,
            const char* title, const char *filter);
+    virtual void ChangePath( const string& path );
 };
 
 

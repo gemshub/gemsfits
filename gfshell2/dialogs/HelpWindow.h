@@ -24,8 +24,6 @@
 #include <QTextBrowser>
 
 #include "ui_HelpWindow4.h"
-//#include "ui_AboutDialog4.h"
-//#include "ui_HowToStartDialog4.h"
 
 QT_BEGIN_NAMESPACE
 class QHelpEngineCore;
@@ -130,36 +128,6 @@ protected slots:
     void actionZoomOut();
     void showFind();
 };
-/*
-class AboutDialog : public QDialog, public Ui::AboutDialogData
-{
-    Q_OBJECT
 
-public:
-
-    AboutDialog( QWidget* parent = NULL );
-    virtual ~AboutDialog();
-
-
-protected slots:
-    virtual void languageChange();
-
-};
-
-class HowToStartDialog : public QDialog, public Ui::HowToStartDialogData
-{
-    Q_OBJECT
-
-public:
-
-    HowToStartDialog( QWidget* parent = NULL );
-    virtual ~HowToStartDialog();
-
-
-protected slots:
-    virtual void languageChange();
-
-};
-*/
 #endif // HelpWindow_included
 
