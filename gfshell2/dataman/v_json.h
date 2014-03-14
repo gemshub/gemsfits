@@ -3,14 +3,15 @@
 #define __v_json_h_
 
 #include <fstream>
-//#include "v_vals.h"
+#include <string>
+using namespace std;
+
 #include "ejdb.h"
 
-
 extern void print_bson_to_json(FILE *f, const bson *b);
-
 /// Print bson object to text file
 extern void print_bson_object_to_json(FILE *f, const bson *b);
+
 
 enum {
     jsBeginArray = '[',    //0x5b,
@@ -22,7 +23,7 @@ enum {
     jsQuote = '\"'      //0x22
 };
 
-/// Class for read bson structure from text file
+/// Class for read/write bson structure from/to text file or string
 class ParserJson
 {
 protected:
@@ -35,6 +36,7 @@ protected:
   void getString( string& str );
   void getNumber( double& value, int& type );
   void parseValue( const char *name, bson *brec );
+  void bson_print_raw_txt( iostream& os, const char *data, int depth, int datatype );
 
  public:
 
@@ -47,10 +49,13 @@ protected:
   void parseObject( bson *brec );
   void parseArray( bson *brec );
 
+  /// Print bson structure to JSON string
+  void printBsonObjectToJson( string& resStr, const bson *b);
+
   /// Read one json object from text file
   string readObjectText( fstream& fin );
   /// Set up internal jsontext before parsing
-  void  setJsonText( string json );
+  void  setJsonText( const string& json );
 
 };
 

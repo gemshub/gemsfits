@@ -42,12 +42,14 @@ class FITMainWindow : public QMainWindow
       return aNode.get();
     }
     //TNode *node;
+    bool contentsChanged; ///< Current record changed
 
     void setDefValues(int c, char** v);
     void setActions();
     void closeEJDB();
     void openEJDB();
     void loadNewProject();
+    bool MessageToSave(){ return true;}
 
     void closeEvent( QCloseEvent* );
     void resizeEvent( QResizeEvent * event );
@@ -57,6 +59,8 @@ private slots:
     void moveToolBar( int pos, int index );
 
 public slots:
+     void openRecordKey(  int row, int column  );
+
     // Tasks
        void CmDBMode(){}
        void CmTaskMode(){}
@@ -72,15 +76,16 @@ public slots:
        //void CmHelp2();
        void CmSettingth();
    // Record
+       void CmShow( const string& reckey="" );
        void CmCreate(){}
        void CmClone(){}
        void CmSave(){}
        void CmSaveAs(){}
        void CmDelete(){}
-       void CmNext(){}
-       void CmPrevious(){}
+       void CmNext();
+       void CmPrevious();
        //void CmFilter();
-       void CmUpdateTest(){}
+       void CmUpdateTest();
     // Record list
        void CmBackupJSON(){}
        void CmRestoreJSON(){}

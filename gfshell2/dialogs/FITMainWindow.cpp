@@ -17,8 +17,8 @@ void TKeyTable::keyPressEvent(QKeyEvent* e)
       case Qt::Key_Down:
       case Qt::Key_PageUp:
       case Qt::Key_PageDown:
+        pFitImp->openRecordKey(  currentRow(), currentColumn()  );
         break;
-        //pVisorImp->openRecordKey(  currentRow(), currentColumn()  );
     }
 }
 
@@ -40,7 +40,7 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     QMainWindow(parent),
     ui(new Ui::FITMainWindow),
     currentMode (MDF_DATABASE), gemsLstFile(""), fitTaskDir(""),
-    aNode(0), projectSettings(0)
+    aNode(0), contentsChanged(false), projectSettings(0)
 {
     ui->setupUi(this);
 
@@ -80,6 +80,9 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     setActions();
     connect(ui->splV, SIGNAL(splitterMoved( int , int  )),
                 this, SLOT(moveToolBar( int , int  )));
+    connect( keyTable, SIGNAL(cellClicked ( int , int  ) ),
+            this, SLOT(openRecordKey( int, int )));
+    ///   connect( pFilterKey, SIGNAL(editingFinished ()), this, SLOT(changeKeyList()) );
 }
 
 FITMainWindow::~FITMainWindow()
@@ -214,9 +217,54 @@ void FITMainWindow::addLinetoStatus( const string& line )
     //ui->statusEdit->insertPlainText(vals);
 }
 
+//----------------------------------------------------------
+// Working with EJDB
 
-//------------------------------------------------------------------------------------
-// Define list of Module keys using filter
+void FITMainWindow::closeEJDB()
+{
+  for( int ii; ii<rtEJ.size(); ii++ )
+     rtEJ[ii].Close();
+  EJDBFile.Close();
+}
+
+/// Connect project database
+void FITMainWindow::openEJDB()
+{
+    // close old project data
+    closeEJDB();
+
+    // set up new ejdb file
+    string ejdbPath  = projectSettings->value("ProjFolderPath", ".").toString().toUtf8().data();
+    ejdbPath  += projectSettings->value("ProjDatabasePath", "/EJDB").toString().toUtf8().data();
+    ejdbPath  += "/";
+    ejdbPath  += projectSettings->value("ProjDatabaseName", "myprojdb1" ).toString().toUtf8().data();
+    EJDBFile.ChangePath(ejdbPath);
+
+    // change collections names
+    string samlescolName = projectSettings->value("ExpSamplesDataColl", "experiments").toString().toUtf8().data();
+    rtEJ[MDF_DATABASE].SetKeywd(samlescolName);
+    rtEJ[MDF_DATABASE].Open();
+    string testcolName = projectSettings->value("TaskCasesDataColl", "tests").toString().toUtf8().data();
+    rtEJ[MDF_TASK].SetKeywd(testcolName);
+    rtEJ[MDF_TASK].Open();
+}
+
+/// Set up data for current project
+void FITMainWindow::loadNewProject()
+{
+    // Connect project database
+    openEJDB();
+
+    pLineTask->setText( projectSettings->value("ProjFileName", "undefined").toString());
+
+    // update key list
+    defineModuleKeysList( MDF_DATABASE );
+
+    // load first record
+
+}
+
+/// Define list of Module keys using filter
 void FITMainWindow::defineModuleKeysList( int nRT )
 {
   int ii, jj, kk, ln;

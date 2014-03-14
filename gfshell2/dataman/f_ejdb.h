@@ -138,7 +138,8 @@ class TEJDataBase
     // Work data
     RecStatus status;       /// ? Current states of keys record DB
     time_t crt;
-    bson *currentRecord;
+    //bson currentRecord;    ///< last read/save record
+    string currentJson;     ///< last read/save record json
 
 protected:
 
@@ -214,11 +215,18 @@ protected:
     void MakeKey( unsigned char nRtwrk, string& pkey, ...);
 
     //--- Manipulation records
-    /* Save current record to bson structure
+    /// Save current record to bson structure
     void RecToBson( bson *obj, time_t crtt, bson_oid_t *oid  = 0 );
     /// Load data from bson structure (return readed record key)
     string RecFromBson( bson *obj );
-    */
+    /// Test text is good bson structure
+    void TestBson( const string& recjson );
+
+
+    /// Return curent record in json format string
+    const string& GetJson();
+    /// Set json format string to curent record
+    void SetJson( const string& sjson);
 
     /// Find record with key into internal record keys list
     bool Find( const char *key );

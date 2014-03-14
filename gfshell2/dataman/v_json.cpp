@@ -1,5 +1,6 @@
-#include <iostream>
+#include <sstream>
 #include <cstring>
+#include <iomanip>
 
 #include "verror.h"
 #include "v_user.h"
@@ -69,9 +70,9 @@ time_t bson_find_time_t( const char *obj, const char *name )
    return ctm;
 }
 
-void bson_print_raw_txt(FILE *f, const char *data, int depth, int datatype );
+void bson_print_raw_txt_(FILE *f, const char *data, int depth, int datatype );
 
-void bson_print_raw_txt(FILE *f, const char *data, int depth, int datatype )
+void bson_print_raw_txt_(FILE *f, const char *data, int depth, int datatype )
 {
     bson_iterator i;
     const char *key;
@@ -136,14 +137,14 @@ void bson_print_raw_txt(FILE *f, const char *data, int depth, int datatype )
           // main constructions
           case BSON_OBJECT:
              fprintf(f, "{\n");
-             bson_print_raw_txt(f, bson_iterator_value(&i), depth + 1, BSON_OBJECT);
+             bson_print_raw_txt_( f, bson_iterator_value(&i), depth + 1, BSON_OBJECT);
              for (temp = 0; temp <= depth; temp++)
                fprintf(f, "\t");
              fprintf(f, "}");
              break;
           case BSON_ARRAY:
                fprintf(f, "[\n");
-               bson_print_raw_txt(f, bson_iterator_value(&i), depth + 1, BSON_ARRAY );
+               bson_print_raw_txt_(f, bson_iterator_value(&i), depth + 1, BSON_ARRAY );
                for (temp = 0; temp <= depth; temp++)
                  fprintf(f, "\t");
                fprintf(f, "]");
@@ -180,7 +181,7 @@ void bson_print_raw_txt(FILE *f, const char *data, int depth, int datatype )
                      /* bson_init( &scope ); */ /* review - stepped on by bson_iterator_code_scope? */
                      bson_iterator_code_scope(&i, &scope);
                      fprintf(f, "\n\t SCOPE: ");
-                     bson_print_raw_txt(f, (const char*) &scope, 0, BSON_CODEWSCOPE);
+                     bson_print_raw_txt_(f, (const char*) &scope, 0, BSON_CODEWSCOPE);
                      //bson_print(f, &scope);
                      /* bson_destroy( &scope ); */ /* review - causes free error */
                      break;
@@ -198,13 +199,13 @@ void bson_print_raw_txt(FILE *f, const char *data, int depth, int datatype )
 
 void print_bson_to_json(FILE *f, const bson *b)
 {
-    bson_print_raw_txt(f, b->data, 0, BSON_OBJECT);
+    bson_print_raw_txt_(f, b->data, 0, BSON_OBJECT);
 }
 
 void print_bson_object_to_json(FILE *f, const bson *b)
 {
     fprintf(f, "{\n");
-    bson_print_raw_txt(f, b->data, 0, BSON_OBJECT);
+    bson_print_raw_txt_(f, b->data, 0, BSON_OBJECT);
     fprintf(f, "}");
 }
 
@@ -233,7 +234,7 @@ string  ParserJson::readObjectText( fstream& ff )
 }
 
 // Load Json text
-void  ParserJson::setJsonText( string json )
+void  ParserJson::setJsonText( const string& json )
 {
   jsontext = json;
   curjson = jsontext.c_str();
@@ -444,5 +445,135 @@ void ParserJson::parseObject( bson *brec )
     curjson++;
 }
 
+void ParserJson::bson_print_raw_txt( iostream& os, const char *data, int depth, int datatype )
+{
+    bson_iterator i;
+    const char *key;
+    int temp;
+    bson_timestamp_t ts;
+    char oidhex[25];
+    bson scope;
+    bool first = true;
+
+    bson_iterator_from_buffer(&i, data);
+    while (bson_iterator_next(&i))
+    {
+        bson_type t = bson_iterator_type(&i);
+        if (t == 0)
+          break;
+        if( t == BSON_OID )
+          continue;
+
+        if(!first )
+         os <<  ",\n";
+        else
+         first = false;
+
+        key = bson_iterator_key(&i);
+
+         // before print
+        switch( datatype )
+        {
+         case BSON_OBJECT:
+           for (temp = 0; temp <= depth; temp++)
+             os <<  "\t";
+           os << "\"" << key << "\": ";
+           break;
+         case BSON_ARRAY:
+            for (temp = 0; temp <= depth; temp++)
+              os << "\t";
+            break;
+         default:
+            break;
+        }
+
+        switch (t)
+        {
+          // impotant datatypes
+          case BSON_NULL:
+               os << "null";
+              break;
+          case BSON_BOOL:
+               os << ( bson_iterator_bool(&i) ?  "true": "false");
+               break;
+          case BSON_INT:
+               os << bson_iterator_int(&i);
+               break;
+          case BSON_LONG:
+               os << bson_iterator_long(&i);
+               break;
+          case BSON_DOUBLE:
+               os << setprecision(15) << bson_iterator_double(&i);
+               break;
+          case BSON_STRING:
+               os << "\"" << bson_iterator_string(&i) << "\"";
+                break;
+
+          // main constructions
+          case BSON_OBJECT:
+             os << "{\n";
+             bson_print_raw_txt( os, bson_iterator_value(&i), depth + 1, BSON_OBJECT);
+             for (temp = 0; temp <= depth; temp++)
+               os << "\t";
+             os << "}";
+             break;
+          case BSON_ARRAY:
+              os << "[\n";
+              bson_print_raw_txt(os, bson_iterator_value(&i), depth + 1, BSON_ARRAY );
+               for (temp = 0; temp <= depth; temp++)
+                 os << "\t";
+               os << "]";
+               break;
+
+           // not used in GEMS data types
+              case BSON_SYMBOL:
+              //       os<<  "SYMBOL: " << bson_iterator_string(&i);
+                     break;
+              case BSON_OID:
+              //       bson_oid_to_string(bson_iterator_oid(&i), oidhex);
+              //       os << oidhex;
+                     break;
+              case BSON_DATE:
+              //       char buf[100];
+              //       tcdatestrhttp(bson_iterator_time_t(&i), INT_MAX, buf);
+              //       os << "\"" << buf <<"\"";
+                     break;
+              case BSON_BINDATA:
+              //       os << "BSON_BINDATA";
+                     break;
+              case BSON_UNDEFINED:
+              //      os << "BSON_UNDEFINED";
+                     break;
+              case BSON_REGEX:
+              //       os << "BSON_REGEX: " << bson_iterator_regex(&i);
+                     break;
+              case BSON_CODE:
+              //       os << "BSON_CODE: " << bson_iterator_code(&i);
+                     break;
+              case BSON_CODEWSCOPE:
+              //       os << "BSON_CODE_W_SCOPE: " << bson_iterator_code(&i);
+              //       bson_iterator_code_scope(&i, &scope);
+              //       os << "\n\t SCOPE: ";
+              //       bson_print_raw_txt( os, (const char*) &scope, 0, BSON_CODEWSCOPE);
+                     break;
+               case BSON_TIMESTAMP:
+              //       ts = bson_iterator_timestamp(&i);
+              //       os <<  "i: " << ts.i << ", t: " << ts.t;
+                     break;
+               default:
+                     os  << "can't print type : " << t;
+        }
+    }
+    os << "\n";
+}
+
+void ParserJson::printBsonObjectToJson( string& resStr, const bson *b)
+{
+    stringstream os;
+    os << "{\n";
+    bson_print_raw_txt( os, b->data, 0, BSON_OBJECT);
+    os << "}";
+    resStr = os.str();
+}
 
 // end of v_json.cpp

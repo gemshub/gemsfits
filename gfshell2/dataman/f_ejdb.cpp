@@ -228,7 +228,7 @@ bool TEJDBKey::compareTemplate( const IndexEntry& elm )
 
 /// Default configuration of the Data Base
 TEJDataBase::TEJDataBase( int nrt, const char* name, const vector<string>& nameKeyFlds  ):
-    Keywd( name ), nRT( nrt ), key( nameKeyFlds ), status( UNDF_), currentRecord(NULL)
+    Keywd( name ), nRT( nrt ), key( nameKeyFlds ), status( UNDF_)
 {
     crt = time(NULL);
 }
@@ -316,6 +316,55 @@ void TEJDataBase::KeyFromBson( const char* bsdata )
     itrL->setBsonOid(oidhex);
 }
 
+// Save current record to bson structure
+void TEJDataBase::RecToBson( bson *obj, time_t crtt, bson_oid_t *oid )
+{
+    ParserJson pars;
+    pars.setJsonText( currentJson );
+
+    bson_init( obj );
+    pars.parseObject(  obj );
+    // added Modify time
+    // bson_append_time_t( obj , "mtime", crtt );
+    if( oid )
+        bson_append_oid(obj, JDBIDKEYNAME, oid);
+    bson_finish( obj );
+}
+
+// Load data from bson structure
+string TEJDataBase::RecFromBson( bson *obj )
+{
+    // record to json string
+    ParserJson pars;
+    pars.printBsonObjectToJson( currentJson, obj );
+
+    // Get key of record
+    string keyStr = "", kbuf;
+    for(int ii=0; ii<KeyNumFlds(); ii++ )
+    {
+        if( !bson_find_string( obj->data, key.FldKeyName(ii), kbuf ) )
+            kbuf = "*";
+        strip( kbuf );
+        keyStr += kbuf;
+        keyStr += ":";
+    }
+    return keyStr;
+}
+
+// Test text is good bson structure
+void TEJDataBase::TestBson( const string& recjson )
+{
+    ParserJson pars;
+    pars.setJsonText( recjson );
+
+    bson obj;
+    bson_init( &obj );
+    pars.parseObject(  &obj );
+    bson_finish( &obj );
+    bson_destroy( &obj );
+}
+
+
 //Seach record index with key pkey.
 bool TEJDataBase::Find( const char *pkey )
 {
@@ -329,6 +378,20 @@ bool TEJDataBase::Find( const char *pkey )
         return  false;
     else
         return true;
+}
+
+
+// Return curent record in json format string
+const string& TEJDataBase::GetJson()
+{
+     return currentJson;
+}
+
+
+// Set json format string to curent record
+void TEJDataBase::SetJson( const string& sjson)
+{
+    currentJson = sjson;
 }
 
 //Test state of record with key key_ as template.
@@ -366,20 +429,21 @@ void TEJDataBase::Get( const char *pkey )
     // Get current collection file ( must be done )
     EJCOLL *coll = openCollection();
 
-    if( currentRecord )
-       bson_destroy(currentRecord);
-
-    // Read bson structure from collection by index oid
-    currentRecord = ejdbloadbson(coll, &oid);
-    // Close database (must be done for exeption )
+    bson *bsrec = ejdbloadbson(coll, &oid);
+     // Close database (must be done for exeption )
     closeCollection();
 
-    if( !currentRecord )
-    {  string errejdb = "Error Loading record ";
-              errejdb+= pkey;
-              errejdb+= " from EJDB";
-       Error( "TEJDB0025",  errejdb );
-    }
+     if( !bsrec )
+     {  string errejdb = "Error Loading record ";
+               errejdb+= pkey;
+               errejdb+= " from EJDB";
+        Error( "TEJDB0025",  errejdb );
+     }
+
+     // Save bson structure to internal arrays
+     RecFromBson( bsrec );
+     bson_destroy(bsrec);
+
     // Set up internal data
     status = ONEF_;
 }
@@ -448,32 +512,33 @@ void TEJDataBase::AddRecord( const char* pkey  )
         Error("TEJDB0004", erstr );
     }
 
-    if( !currentRecord )
-       Error("TEJDB0003", "Undefined record data to save" );
-
     // Get current collection file ( must be done )
     EJCOLL *coll = openCollection();
 
-    // Persist BSON object in the collection
-    char bytes[25];
-    bson_oid_t oid;
-    bool retSave = ejdbsavebson(coll, currentRecord, &oid);
-    // Close database (must be done for exeption )
-    closeCollection();
+    // Get bson structure from internal arrays
+     bson bsrec;
+     RecToBson( &bsrec, time(NULL) );
 
-    if( !retSave )
-    {  string errejdb = bson_first_errormsg(currentRecord);
-       bson_destroy(currentRecord);
-       currentRecord = NULL;
-       recList.erase(itrL);
-       Error( "TEJDB0021",  errejdb );
-    }
-    else
-    {
-      bson_oid_to_string( &oid, bytes );
-      itrL->setBsonOid(bytes);
-    }
-    cout << "Add record " << retSave << " oid " << bytes[25] << endl;
+     // Persist BSON object in the collection
+     char bytes[25];
+     bson_oid_t oid;
+     bool retSave = ejdbsavebson(coll, &bsrec, &oid);
+     // Close database (must be done for exeption )
+     closeCollection();
+     if( !retSave )
+     {  string errejdb = bson_first_errormsg(&bsrec);
+        bson_destroy(&bsrec);
+        recList.erase(itrL);
+        Error( "TEJDB0021",  errejdb );
+      }
+      else
+        {
+           bson_oid_to_string( &oid, bytes );
+          itrL->setBsonOid(bytes);
+          /// putndx(nF); work with indexes
+          bson_destroy(&bsrec);
+        }
+     cout << "Add record " << retSave << " oid " << bytes[25] << endl;
 
     // Set up internal data
     status = ONEF_;
@@ -483,6 +548,7 @@ void TEJDataBase::AddRecord( const char* pkey  )
 void TEJDataBase::SaveRecord(const char* pkey )
 {
    bson_oid_t oid;
+   bson bsrec;
 
    // Try to insert new record to list
    key.SetKey( pkey );
@@ -494,35 +560,42 @@ void TEJDataBase::SaveRecord(const char* pkey )
    ret = recList.insert( key.retIndex() );
    itrL = ret.first;
 
-   if( ret.second != true )   // update record in the collection
-        bson_oid_from_string( &oid, itrL->getBsonOid().c_str() );
+   if( ret.second == true ) // new record
+    {
+           // Get bson structure from internal arrays
+           RecToBson( &bsrec, time(NULL) );
+     }
+     else  // update record in the collection
+       {
+           bson_oid_from_string( &oid, itrL->getBsonOid().c_str() );
+           // Get bson structure from internal arrays
+           RecToBson( &bsrec, time(NULL), &oid );
+       }
 
-   if( !currentRecord )
-       Error("TEJDB0003", "Undefined record data to save" );
+     EJCOLL *coll = openCollection();
 
-   EJCOLL *coll = openCollection();
+     // Persist BSON object in the collection
+      bool retSave = ejdbsavebson(coll, &bsrec, &oid);
+      // Close database (must be done for exeption )
+      closeCollection();
 
-   // Persist BSON object in the collection
-   bool retSave = ejdbsavebson(coll, currentRecord, &oid);
-   // Close database (must be done for exeption )
-   closeCollection( );
-
-   if( !retSave )
-     {  string errejdb = bson_first_errormsg(currentRecord);
-        bson_destroy(currentRecord);
-        currentRecord = NULL;
+     if( !retSave )
+     {  string errejdb = bson_first_errormsg(&bsrec);
+        bson_destroy(&bsrec);
         if( ret.second == true )
-            recList.erase(itrL);
+              recList.erase(itrL);
         Error( "TEJDB0022",  errejdb );
-     }
+      }
 
-     if( ret.second == true ) // new record
-     {   char bytes[25];
-         bson_oid_to_string( &oid, bytes );
-         itrL->setBsonOid(bytes);
-     }
+      if( ret.second == true ) // new record
+        {   char bytes[25];
+            bson_oid_to_string( &oid, bytes );
+            itrL->setBsonOid(bytes);
+        }
+     bson_destroy(&bsrec);
      cout << "Saving record " << retSave <<
-              " oid " << itrL->getBsonOid().c_str() << endl;
+                 " oid " << itrL->getBsonOid().c_str() << endl;
+
      // Set up internal data
      status = ONEF_;
 }

@@ -4,53 +4,6 @@
 #include "fservice.h"
 #include "f_ejdb.h"
 
-//----------------------------------------------------------
-// Working with EJDB
-
-
-void FITMainWindow::closeEJDB()
-{
-  for( int ii; ii<rtEJ.size(); ii++ )
-     rtEJ[ii].Close();
-  EJDBFile.Close();
-}
-
-/// Connect project database
-void FITMainWindow::openEJDB()
-{
-    // close old project data
-    closeEJDB();
-
-    // set up new ejdb file
-    string ejdbPath  = projectSettings->value("ProjFolderPath", ".").toString().toUtf8().data();
-    ejdbPath  += projectSettings->value("ProjDatabasePath", "/EJDB").toString().toUtf8().data();
-    ejdbPath  += "/";
-    ejdbPath  += projectSettings->value("ProjDatabaseName", "myprojdb1" ).toString().toUtf8().data();
-    EJDBFile.ChangePath(ejdbPath);
-
-    // change collections names
-    string samlescolName = projectSettings->value("ExpSamplesDataColl", "experiments").toString().toUtf8().data();
-    rtEJ[MDF_DATABASE].SetKeywd(samlescolName);
-    rtEJ[MDF_DATABASE].Open();
-    string testcolName = projectSettings->value("TaskCasesDataColl", "tests").toString().toUtf8().data();
-    rtEJ[MDF_TASK].SetKeywd(testcolName);
-    rtEJ[MDF_TASK].Open();
-}
-
-/// Set up data for current project
-void FITMainWindow::loadNewProject()
-{
-    // Connect project database
-    openEJDB();
-
-    pLineTask->setText( projectSettings->value("ProjFileName", "undefined").toString());
-
-    // update key list
-    defineModuleKeysList( MDF_DATABASE );
-    // load first record
-
-}
-
 // -----------------------------------------------------------
 // Actions and commands
 
@@ -133,7 +86,12 @@ void FITMainWindow::CmSelectGEMS( const string& fname_ )
     {
        string fname = fname_;
        if( fname.empty() )
-       { fname = gemsLstFile.GetPath();
+       {
+         if( projectSettings)
+         {
+             fname  = projectSettings->value("ProjFolderPath", ".").toString().toUtf8().data();
+             fname  += projectSettings->value("GEMS3KFilesPath", "/GEMS").toString().toUtf8().data();
+         }
          //Select files
          if( !gemsLstFile.ChooseFileOpen( this, fname, "Please, select GEMS3K lst file","*.lst" ))
            return;
@@ -256,6 +214,98 @@ void FITMainWindow::CmNewProject()
     }
 }
 
+//-------------------------------------------------------------------------------------
+// Record menu
+
+void FITMainWindow::openRecordKey( int row, int    )
+{
+    string currentKey ="";
+
+    if( row >= keyTable->rowCount())
+        return;
+
+    for(int jj=0; jj<keyTable->columnCount(); jj++)
+    {
+        currentKey += keyTable->item( row, jj)->text().toUtf8().data();
+        strip(currentKey);
+        currentKey +=":";
+     }
+
+    CmShow( currentKey );
+}
+
+/// Show another record from DB (Without check)
+void FITMainWindow::CmShow( const string& reckey )
+{
+ try
+   {
+      if( !MessageToSave() )
+           return;
+
+      // get key of record
+      string str;
+      if( reckey.empty() )
+      { //str = GetKeyofRecord( 0, "Select data record key ", KEY_OLD );
+        //      if( str.empty() )
+                return;
+       }
+       else  str = string(reckey);
+      rtEJ[ MDF_DATABASE ].Get( str.c_str() );
+      contentsChanged = false;
+      string valDB =rtEJ[ MDF_DATABASE ].GetJson();
+      ui->recordEdit->setText( trUtf8(valDB.c_str()));
+
+           // SetTitle();
+           // pVisor->Update( true );
+           // defineModuleKeysList( actwin->rtNumRecord() );
+   }
+   catch( TError& err )
+        {
+           setStatusText( err.title );
+          addLinetoStatus( err.mess );
+        }
+}
+
+void FITMainWindow::CmNext()
+{
+
+  int row = keyTable->currentRow();
+  if( row < keyTable->rowCount()-1 )
+   {  row++;
+        QTableWidgetItem *curItem = keyTable->item(row,0);
+        keyTable->setCurrentItem( curItem );
+        keyTable->scrollToItem( curItem );
+        openRecordKey( row, 0  );
+   }
+}
+
+void FITMainWindow::CmPrevious()
+{
+       int row = keyTable->currentRow();
+       if( row > 0  )
+       {  row--;
+          QTableWidgetItem *curItem = keyTable->item(row,0);
+          keyTable->setCurrentItem( curItem );
+          keyTable->scrollToItem( curItem );
+          openRecordKey( row, 0  );
+       }
+}
+
+
+void FITMainWindow::CmUpdateTest()
+{
+  try
+    {
+      string recBson = ui->recordEdit->toPlainText().toUtf8().data();
+      rtEJ[ MDF_DATABASE ].TestBson( recBson );
+      setStatusText( "Edited text is a JSON format text" );
+    }
+    catch( TError& err )
+         {
+            setStatusText( err.title );
+           addLinetoStatus( err.mess );
+         }
+}
 
 //-------------------------------------------------------------------------------------
 // Help menu
