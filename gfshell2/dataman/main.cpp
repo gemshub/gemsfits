@@ -1,19 +1,19 @@
 //-------------------------------------------------------------------
-// $Id: main.cpp 968 2007-12-13 13:23:32Z gems $
+// $Id: main.cpp 333 2014-03-13 13:23:32Z gems $
 //
-// Implementation and Declaration of TIntegApp class, function main()
+// Implementation of GEMSFITS GUI Main Window, function main()
 //
-// Copyright (C) 1996-2001  S.Dmytriyeva, A.Rysin
-// Uses  string class (C) A.Rysin 1999
+// Copyright (C) 2014  S.V.Dmytriyeva, G.D.Miron, D.A.Kulik
+// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+//    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
-// This file is part of the GEM-Selektor GUI library which uses the
-// Qt v.4 cross-platform App & UI framework (http://qt.nokia.com)
+// This file is part of the GEMSFITS GUI, which uses the
+// Qt v.5 cross-platform App & UI framework (http://qt-project.org)
 // under LGPL v.2.1 (http://www.gnu.org/licenses/lgpl-2.1.html)
 //
-// This file may be distributed under the terms of GEMS3 Development
-// Quality Assurance Licence (GEMS3.QAL)
+// This file may be distributed under the terms of LGPL v.3 license
 //
-// See http://gems.web.psi.ch/ for more information
+// See http://gems.web.psi.ch/GEMSFIT for more information
 // E-mail gems2.support@psi.ch
 //-------------------------------------------------------------------
 

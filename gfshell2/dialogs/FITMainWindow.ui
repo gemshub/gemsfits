@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>931</width>
+    <height>670</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -265,7 +265,7 @@
             <item>
              <widget class="QLabel" name="label">
               <property name="text">
-               <string>  IComp</string>
+               <string>  IComp (Elements)</string>
               </property>
              </widget>
             </item>
@@ -338,7 +338,7 @@
             <item>
              <widget class="QLabel" name="label_2">
               <property name="text">
-               <string>Phases/Dcomps</string>
+               <string>Phases/Components</string>
               </property>
              </widget>
             </item>
@@ -378,7 +378,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>931</width>
      <height>20</height>
     </rect>
    </property>
@@ -447,10 +447,16 @@
     <addaction name="actionAuthors"/>
     <addaction name="actionLicense"/>
    </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+   </widget>
    <addaction name="menuTask"/>
    <addaction name="menuRecord"/>
    <addaction name="menuRecod_List"/>
    <addaction name="menu_Calc"/>
+   <addaction name="menuView"/>
    <addaction name="menu_Help"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
