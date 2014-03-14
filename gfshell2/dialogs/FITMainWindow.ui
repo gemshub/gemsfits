@@ -419,14 +419,14 @@
     <addaction name="actionBackup_to_JSON"/>
     <addaction name="actionRestore_from_JSON"/>
     <addaction name="separator"/>
-    <addaction name="actionBackup_to_csv"/>
     <addaction name="actionRestore_from_csv"/>
+    <addaction name="actionBackup_to_csv"/>
     <addaction name="separator"/>
-    <addaction name="actionBackup_to_TXT"/>
-    <addaction name="actionRestore_from_TXT"/>
-    <addaction name="separator"/>
-    <addaction name="actionBackup_to_YAML"/>
     <addaction name="actionRestore_from_YAML"/>
+    <addaction name="actionBackup_to_YAML"/>
+    <addaction name="separator"/>
+    <addaction name="actionRestore_from_TXT"/>
+    <addaction name="actionBackup_to_TXT"/>
    </widget>
    <widget class="QMenu" name="menu_Calc">
     <property name="title">
@@ -628,32 +628,32 @@
   </action>
   <action name="actionBackup_to_csv">
    <property name="text">
-    <string>Backup to &amp;CSV...</string>
+    <string>Export to &amp;CSV...</string>
    </property>
   </action>
   <action name="actionRestore_from_csv">
    <property name="text">
-    <string>Restore from C&amp;SV...</string>
+    <string>Import from C&amp;SV...</string>
    </property>
   </action>
   <action name="actionBackup_to_TXT">
    <property name="text">
-    <string>Backup to &amp;TXT...</string>
+    <string>Export to GF &amp;TXT...</string>
    </property>
   </action>
   <action name="actionRestore_from_TXT">
    <property name="text">
-    <string>Restore from T&amp;XT...</string>
+    <string>Import from GF T&amp;XT...</string>
    </property>
   </action>
   <action name="actionBackup_to_YAML">
    <property name="text">
-    <string>Backup to &amp;YAML...</string>
+    <string>Export to &amp;YAML...</string>
    </property>
   </action>
   <action name="actionRestore_from_YAML">
    <property name="text">
-    <string>Restore from Y&amp;AML...</string>
+    <string>Import from Y&amp;AML...</string>
    </property>
   </action>
   <action name="action_Run_test">
