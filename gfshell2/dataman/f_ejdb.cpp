@@ -319,8 +319,9 @@ void TEJDataBase::KeyFromBson( const char* bsdata )
 // Save current record to bson structure
 void TEJDataBase::RecToBson( bson *obj, time_t crtt, bson_oid_t *oid )
 {
+
     ParserJson pars;
-    pars.setJsonText( currentJson );
+    pars.setJsonText( currentJson.substr( currentJson.find_first_of('{')+1 ) );
 
     bson_init( obj );
     pars.parseObject(  obj );
@@ -355,7 +356,7 @@ string TEJDataBase::RecFromBson( bson *obj )
 void TEJDataBase::TestBson( const string& recjson )
 {
     ParserJson pars;
-    pars.setJsonText( recjson );
+    pars.setJsonText( recjson.substr( recjson.find_first_of('{')+1 ) );
 
     bson obj;
     bson_init( &obj );

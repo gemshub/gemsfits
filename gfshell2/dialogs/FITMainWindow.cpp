@@ -261,7 +261,12 @@ void FITMainWindow::loadNewProject()
     defineModuleKeysList( MDF_DATABASE );
 
     // load first record
-
+    if( keyTable->rowCount() > 0 )
+    {  QTableWidgetItem *curItem = keyTable->item(0,0);
+       keyTable->setCurrentItem( curItem );
+       keyTable->scrollToItem( curItem );
+       openRecordKey( 0, 0  );
+    }
 }
 
 /// Define list of Module keys using filter

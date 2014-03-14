@@ -38,6 +38,7 @@ protected:
   void parseValue( const char *name, bson *brec );
   void bson_print_raw_txt( iostream& os, const char *data, int depth, int datatype );
 
+
  public:
 
   ParserJson():curjson(0), end(0)
@@ -45,7 +46,7 @@ protected:
   virtual ~ParserJson()
     {}
 
-  /// Parse internal jsontext string to bson structure
+  /// Parse internal jsontext string to bson structure (without first {)
   void parseObject( bson *brec );
   void parseArray( bson *brec );
 
