@@ -476,12 +476,12 @@ void ParserJson::bson_print_raw_txt( iostream& os, const char *data, int depth, 
         {
          case BSON_OBJECT:
            for (temp = 0; temp <= depth; temp++)
-             os <<  "\t";
+             os <<  "     ";
            os << "\"" << key << "\": ";
            break;
          case BSON_ARRAY:
             for (temp = 0; temp <= depth; temp++)
-              os << "\t";
+              os << "     ";
             break;
          default:
             break;
@@ -514,14 +514,14 @@ void ParserJson::bson_print_raw_txt( iostream& os, const char *data, int depth, 
              os << "{\n";
              bson_print_raw_txt( os, bson_iterator_value(&i), depth + 1, BSON_OBJECT);
              for (temp = 0; temp <= depth; temp++)
-               os << "\t";
+               os << "     ";
              os << "}";
              break;
           case BSON_ARRAY:
               os << "[\n";
               bson_print_raw_txt(os, bson_iterator_value(&i), depth + 1, BSON_ARRAY );
                for (temp = 0; temp <= depth; temp++)
-                 os << "\t";
+                 os << "     ";
                os << "]";
                break;
 
@@ -553,7 +553,7 @@ void ParserJson::bson_print_raw_txt( iostream& os, const char *data, int depth, 
               case BSON_CODEWSCOPE:
               //       os << "BSON_CODE_W_SCOPE: " << bson_iterator_code(&i);
               //       bson_iterator_code_scope(&i, &scope);
-              //       os << "\n\t SCOPE: ";
+              //       os << "\n      SCOPE: ";
               //       bson_print_raw_txt( os, (const char*) &scope, 0, BSON_CODEWSCOPE);
                      break;
                case BSON_TIMESTAMP:
