@@ -93,7 +93,7 @@ void FITMainWindow::CmSelectGEMS( const string& fname_ )
              fname  += projectSettings->value("GEMS3KFilesPath", "/GEMS").toString().toUtf8().data();
          }
          //Select files
-         if( !gemsLstFile.ChooseFileOpen( this, fname, "Please, select GEMS3K lst file","*.lst" ))
+         if( !gemsLstFile.ChooseFileOpen( this, fname, "Please, select a GEMS3K lst file","*.lst" ))
            return;
        }
 
@@ -114,7 +114,7 @@ void FITMainWindow::CmSelectGEMS( const string& fname_ )
 
        pLineGEMS->setText( trUtf8( gemsLstFile.Name().c_str() ) );
 
-       setStatusText( "Selected new GEMS3K files" );
+       setStatusText( "GEMS3K input file set is selected" );
     }
     catch( TError& err )
     {
@@ -131,7 +131,7 @@ void FITMainWindow::CmSelectProject( const string& fname_ )
    if( fname.empty())
    { //Select fit project files
       fname = fitTaskDir.GetPath();
-     if( !fitTaskDir.ChooseFileOpen( this, fname, "Please, select a project file","*.pro *.conf" ))
+     if( !fitTaskDir.ChooseFileOpen( this, fname, "Please, select a GEMSFITS project file","*.pro *.conf" ))
         return;
    }
 
@@ -142,7 +142,7 @@ void FITMainWindow::CmSelectProject( const string& fname_ )
        delete projectSettings;
    projectSettings = new QSettings(fname.c_str(), QSettings::IniFormat);
    if( !projectSettings->contains("GEMSFITSAPP") )
-       Error( fname, "This is not a project file");
+       Error( fname, "This is not a GEMSFITS project file");
    projectSettings->setValue("ProjFolderPath", fitTaskDir.Dir().c_str() );
    projectSettings->setValue("ProjFileName", fitTaskDir.Name().c_str() );
 
@@ -161,7 +161,7 @@ void FITMainWindow::CmConfigProject()
   try
   {    //Select fit project files
     string fname = fitTaskDir.GetPath();
-    if( !fitTaskDir.ChooseFileOpen( this, fname, "Please, select a project file","*.pro *.conf" ))
+    if( !fitTaskDir.ChooseFileOpen( this, fname, "Please, select a GEMSFITS project file","*.pro *.conf" ))
         return;
 
     //load project settings
@@ -171,7 +171,7 @@ void FITMainWindow::CmConfigProject()
        delete projectSettings;
    projectSettings = new QSettings(fname.c_str(), QSettings::IniFormat);
    if( !projectSettings->contains("GEMSFITSAPP") )
-       Error( fname, "This is not a project file");
+       Error( fname, "This is not a GEMSFITS project file");
    projectSettings->setValue("ProjFolderPath", fitTaskDir.Dir().c_str() );
    projectSettings->setValue("ProjFileName", fitTaskDir.Name().c_str() );
    //
@@ -245,7 +245,7 @@ void FITMainWindow::CmShow( const string& reckey )
       // get key of record
       string str;
       if( reckey.empty() )
-      { //str = GetKeyofRecord( 0, "Select data record key ", KEY_OLD );
+      { //str = GetKeyofRecord( 0, "Select a document (data record) key ", KEY_OLD );
         //      if( str.empty() )
                 return;
        }
@@ -298,7 +298,7 @@ void FITMainWindow::CmUpdateTest()
     {
       string recBson = ui->recordEdit->toPlainText().toUtf8().data();
       rtEJ[ MDF_DATABASE ].TestBson( recBson );
-      setStatusText( "Edited text is a JSON format text" );
+      setStatusText( "Text in the editor is in valid JSON format" );
     }
     catch( TError& err )
          {
