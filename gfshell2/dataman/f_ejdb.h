@@ -216,7 +216,7 @@ protected:
 
     //--- Manipulation records
     /// Save current record to bson structure
-    void RecToBson( bson *obj, time_t crtt, bson_oid_t *oid  = 0 );
+    void RecToBson( bson *obj, time_t crtt, const char *pkey = 0 );
     /// Load data from bson structure (return readed record key)
     string RecFromBson( bson *obj );
     /// Test text is good bson structure
@@ -244,9 +244,7 @@ protected:
     /// Question for replase
     void SaveRecordQuestion(const char* pkey, bool& yesToAll );
     /// Save new record in the collection
-    /// Test unique keys name before add the record(s) ???? must be
-    // fnum - index into internal file list
-    void AddRecord(const char* key );
+    void InsertRecord();
     /// Test state of record with key pkey.
     /// If mode == 1 and one record, read this record.
     RecStatus Rtest( const char *key, int mode );

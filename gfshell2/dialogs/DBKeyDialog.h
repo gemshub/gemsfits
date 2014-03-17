@@ -25,14 +25,14 @@
 #include "ui_DBKeyDialog.h"
 #include "verror.h"
 
-/*
+/// List Keys Dialog
 class DBKeyDialog : public QDialog, public Ui::KeyDialogData
 {
     Q_OBJECT
 
     bool multi;
     string keyFilter;
-    int iRt;
+    int iRT;
     vector<string> old_sel;
 
     void SetList();
@@ -57,9 +57,9 @@ public:
     vector<string> allSelectedKeys();
     string getKey();
 };
-*/
-/*------------------------------------------------------------
-/// KeyEdit dialog
+
+//------------------------------------------------------------
+/// Key Edit Dialog
 class DBKeyFilter:   public QDialog
 {
     Q_OBJECT
@@ -67,7 +67,7 @@ class DBKeyFilter:   public QDialog
     QList<QLineEdit*> aEdit;
     QLineEdit *fullKey;
 
-    int iRt;
+    int iRT;
     bool allowTemplates;
 
 protected slots:
@@ -86,6 +86,6 @@ public:
 
     string getFilter();
 };
-*/
+
 
 #endif // DBKeyDialog_included

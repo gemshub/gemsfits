@@ -317,19 +317,41 @@ void TEJDataBase::KeyFromBson( const char* bsdata )
 }
 
 // Save current record to bson structure
-void TEJDataBase::RecToBson( bson *obj, time_t crtt, bson_oid_t *oid )
+void TEJDataBase::RecToBson( bson *obj, time_t crtt, const char *pkey )
 {
-
     ParserJson pars;
     pars.setJsonText( currentJson.substr( currentJson.find_first_of('{')+1 ) );
-
-    bson_init( obj );
     pars.parseObject(  obj );
     // added Modify time
     // bson_append_time_t( obj , "mtime", crtt );
-    if( oid )
-        bson_append_oid(obj, JDBIDKEYNAME, oid);
-    bson_finish( obj );
+
+    //get key from object
+    string keyStr = "", kbuf;
+    for(int ii=0; ii<KeyNumFlds(); ii++ )
+    {
+        if( !bson_find_string( obj->data, key.FldKeyName(ii), kbuf ) )
+            kbuf = "*";
+        strip( kbuf );
+        keyStr += kbuf;
+        keyStr += ":";
+    }
+
+    if( pkey )
+    {
+        // Try to insert new record to list
+        key.SetKey( pkey );
+        if( key.PackKey() !=  keyStr )
+        {
+            string mess = " Try to update record with changed key fields\n";
+                   mess += " You must use command Insert";
+            Error( pkey, mess );
+        }
+    } else
+        key.SetKey( keyStr.c_str() );
+
+    if( key.isPattern() )
+      Error("TEJDB0010", "Cannot save under record key template" );
+
 }
 
 // Load data from bson structure
@@ -492,23 +514,23 @@ void TEJDataBase::Del( const char *pkey )
 }
 
 /// Save new record in the collection
-/// fnum - index into internal file list
-void TEJDataBase::AddRecord( const char* pkey  )
+void TEJDataBase::InsertRecord()
 {
-    // Try to insert new record to list
-    key.SetKey( pkey );
-    if( key.isPattern() )
-      Error("TEJDB0010", "Cannot save under record key template" );
+    bson bsrec;
+
+    bson_init( &bsrec );
+    // Get bson structure from internal string
+    RecToBson( &bsrec, time(NULL) );
+    bson_finish( &bsrec );
 
     pair<set<IndexEntry>::iterator,bool> ret;
-
     ret = recList.insert( key.retIndex() );
     itrL = ret.first;
     // Test unique keys name before add the record(s)
     if( ret.second == false)
     {
-        string erstr = "Cannot add new record:\n";
-               erstr += pkey;
+        string erstr = "Cannot insert record:\n";
+               erstr += key.PackKey();
                erstr += ".\nTwo records with the same key!";
         Error("TEJDB0004", erstr );
     }
@@ -516,11 +538,7 @@ void TEJDataBase::AddRecord( const char* pkey  )
     // Get current collection file ( must be done )
     EJCOLL *coll = openCollection();
 
-    // Get bson structure from internal arrays
-     bson bsrec;
-     RecToBson( &bsrec, time(NULL) );
-
-     // Persist BSON object in the collection
+    // Persist BSON object in the collection
      char bytes[25];
      bson_oid_t oid;
      bool retSave = ejdbsavebson(coll, &bsrec, &oid);
@@ -551,36 +569,33 @@ void TEJDataBase::SaveRecord(const char* pkey )
    bson_oid_t oid;
    bson bsrec;
 
-   // Try to insert new record to list
-   key.SetKey( pkey );
-   if( key.isPattern() )
-     Error("TEJDB0010", "Cannot save under record key template" );
+   bson_init( &bsrec );
+   // Get bson structure from internal string
+   RecToBson( &bsrec, time(NULL), pkey );
 
    pair<set<IndexEntry>::iterator,bool> ret;
-
    ret = recList.insert( key.retIndex() );
    itrL = ret.first;
 
    if( ret.second == true ) // new record
-    {
-           // Get bson structure from internal arrays
-           RecToBson( &bsrec, time(NULL) );
-     }
-     else  // update record in the collection
+   {
+      // Get bson structure from internal arrays
+    }
+    else  // update record in the collection
        {
            bson_oid_from_string( &oid, itrL->getBsonOid().c_str() );
-           // Get bson structure from internal arrays
-           RecToBson( &bsrec, time(NULL), &oid );
+           bson_append_oid( &bsrec, JDBIDKEYNAME, &oid);
        }
+   bson_finish( &bsrec );
 
-     EJCOLL *coll = openCollection();
+   EJCOLL *coll = openCollection();
 
      // Persist BSON object in the collection
-      bool retSave = ejdbsavebson(coll, &bsrec, &oid);
+   bool retSave = ejdbsavebson(coll, &bsrec, &oid);
       // Close database (must be done for exeption )
-      closeCollection();
+    closeCollection();
 
-     if( !retSave )
+   if( !retSave )
      {  string errejdb = bson_first_errormsg(&bsrec);
         bson_destroy(&bsrec);
         if( ret.second == true )
@@ -607,14 +622,14 @@ void TEJDataBase::SaveRecordQuestion(const char* pkey, bool& yesToAll )
 {
     if( !yesToAll && Find( pkey ) )
     {
-/*      switch( vfQuestion3( pFitImp, pkey,
+      switch( vfQuestion3( pFitImp, pkey,
                          "Data record with this key already exists! Replace?",
                           "&Yes", "&No", "&Yes to All" ))
       {
          case VF3_3: yesToAll=true;
          case VF3_1: break;
          case VF3_2: return;
-      }*/
+      }
     }
     SaveRecord( pkey );
 }

@@ -1,6 +1,7 @@
 #include "FITMainWindow.h"
 #include "ui_FITMainWindow.h"
 #include "ProjectSettingsDialog.h"
+#include "DBKeyDialog.h"
 #include "fservice.h"
 #include "f_ejdb.h"
 
@@ -33,13 +34,12 @@ void FITMainWindow::setActions()
 
 // Record
     connect( ui->actionCreate_New , SIGNAL( triggered()), this, SLOT(CmCreate()));
-    connect( ui->actionNew_Clone, SIGNAL( triggered()), this, SLOT(CmClone()));
-    connect( ui->actionSave, SIGNAL( triggered()), this, SLOT(CmSave()));
-    connect( ui->actionSave_As, SIGNAL( triggered()), this, SLOT(CmSaveAs()));
+    connect( ui->action_Update, SIGNAL( triggered()), this, SLOT(CmUpdate()));
+    connect( ui->action_Insert, SIGNAL( triggered()), this, SLOT(CmInsert()));
     connect( ui->actionDelete, SIGNAL( triggered()), this, SLOT(CmDelete()));
     connect( ui->actionNext, SIGNAL( triggered()), this, SLOT(CmNext()));
     connect( ui->actionPrevious, SIGNAL( triggered()), this, SLOT(CmPrevious()));
-    //connect( ui->actionUpdate_Test, SIGNAL( triggered()), this, SLOT(CmFilter()));
+    connect( ui->action_Find, SIGNAL( triggered()), this, SLOT(CmFilter()));
     connect( ui->actionUpdate_Test, SIGNAL( triggered()), this, SLOT(CmUpdateTest()));
 
 
@@ -250,19 +250,19 @@ void FITMainWindow::CmShow( const string& reckey )
                 return;
        }
        else  str = string(reckey);
-      rtEJ[ MDF_DATABASE ].Get( str.c_str() );
-      contentsChanged = false;
-      string valDB =rtEJ[ MDF_DATABASE ].GetJson();
+      rtEJ[ currentMode ].Get( str.c_str() );
+      string valDB =rtEJ[ currentMode ].GetJson();
       ui->recordEdit->setText( trUtf8(valDB.c_str()));
+      contentsChanged = false;
 
-           // SetTitle();
-           // pVisor->Update( true );
-           // defineModuleKeysList( actwin->rtNumRecord() );
+      // SetTitle();
+      // pVisor->Update( true );
+      // defineModuleKeysList( actwin->rtNumRecord() );
    }
    catch( TError& err )
         {
            setStatusText( err.title );
-          addLinetoStatus( err.mess );
+           addLinetoStatus( err.mess );
         }
 }
 
@@ -291,21 +291,114 @@ void FITMainWindow::CmPrevious()
        }
 }
 
-
 void FITMainWindow::CmUpdateTest()
 {
   try
     {
       string recBson = ui->recordEdit->toPlainText().toUtf8().data();
-      rtEJ[ MDF_DATABASE ].TestBson( recBson );
+      rtEJ[ currentMode ].TestBson( recBson );
       setStatusText( "Text in the editor is in valid JSON format" );
     }
     catch( TError& err )
          {
-            setStatusText( err.title );
+           setStatusText( err.title );
            addLinetoStatus( err.mess );
          }
 }
+
+/// Save current record to DB file as new
+void FITMainWindow::CmUpdate()
+{
+    try
+    {
+       string recBson = ui->recordEdit->toPlainText().toUtf8().data();
+       RecSave( recBson, rtEJ[ currentMode ].PackKey() );
+       setStatusText( "Record saved" );
+    }
+    catch( TError& err )
+    {
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
+    }
+}
+
+
+/// Save current record to DB file as new
+void FITMainWindow::CmInsert()
+{
+    try
+    {
+        string recBsonText = ui->recordEdit->toPlainText().toUtf8().data();
+        rtEJ[ currentMode ].SetJson( recBsonText );
+        rtEJ[ currentMode ].InsertRecord();
+        changeKeyList(); // need change key list insert new record
+        contentsChanged = false;
+        setStatusText( "Record inserted" );
+    }
+    catch( TError& err )
+    {
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
+    }
+}
+
+/// Delete current record
+void FITMainWindow::CmDelete()
+{
+    try
+    {
+        string strKey = rtEJ[ currentMode ].PackKey();
+        if( !vfQuestion(window(), rtEJ[ currentMode ].GetKeywd(),
+               "Confirm deletion of data record keyed "+ strKey ))
+            return;
+        rtEJ[ currentMode ].Del( strKey.c_str() );
+        changeKeyList();
+        contentsChanged = false;
+        setStatusText( "Record deleted" );
+    }
+    catch( TError& err )
+    {
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
+    }
+}
+
+
+string templRec = "  template must be     ";
+
+
+/// Create new record
+void FITMainWindow::CmCreate()
+{
+    try
+    {
+        ui->recordEdit->setText( trUtf8(templRec.c_str()));
+        contentsChanged = true;
+    }
+    catch( TError& err )
+    {
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
+    }
+}
+
+/// Create new record
+void FITMainWindow::CmFilter()
+{
+    try
+    {
+        string filterText = ui->queryEdit->toPlainText().toUtf8().data();
+        // must be in future
+        //rtEJ[ currentMode ].searchFilter();
+        contentsChanged = false;
+    }
+    catch( TError& err )
+    {
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
+    }
+}
+
 
 //-------------------------------------------------------------------------------------
 // Help menu

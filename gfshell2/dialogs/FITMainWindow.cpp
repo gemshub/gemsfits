@@ -4,6 +4,7 @@
 #include "ui_FITMainWindow.h"
 #include "HelpWindow.h"
 #include "f_ejdb.h"
+#include "fservice.h"
 
 //--------------------------------------------------------------------------
 
@@ -75,14 +76,14 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     ui->splV->setStretchFactor(0, 1);
     ui->splV->setStretchFactor(1, 3);
     ui->splV->setStretchFactor(2, 2);
+    ui->filterEdit->setText("*");
 
     // set up menu
     setActions();
-    connect(ui->splV, SIGNAL(splitterMoved( int , int  )),
-                this, SLOT(moveToolBar( int , int  )));
-    connect( keyTable, SIGNAL(cellClicked ( int , int  ) ),
-            this, SLOT(openRecordKey( int, int )));
-    ///   connect( pFilterKey, SIGNAL(editingFinished ()), this, SLOT(changeKeyList()) );
+    connect(ui->splV, SIGNAL(splitterMoved( int , int  )), this, SLOT(moveToolBar( int , int  )));
+    connect( keyTable, SIGNAL(cellClicked ( int , int  ) ), this, SLOT(openRecordKey( int, int )));
+    connect( ui->recordEdit, SIGNAL(textChanged()),  this, SLOT(recEdited()));
+    connect( ui->filterEdit, SIGNAL( editingFinished ()), this, SLOT(changeKeyList()) );
 }
 
 FITMainWindow::~FITMainWindow()
@@ -258,7 +259,7 @@ void FITMainWindow::loadNewProject()
     pLineTask->setText( projectSettings->value("ProjFileName", "undefined").toString());
 
     // update key list
-    defineModuleKeysList( MDF_DATABASE );
+    defineModuleKeysList( currentMode );
 
     // load first record
     if( keyTable->rowCount() > 0 )
@@ -267,6 +268,11 @@ void FITMainWindow::loadNewProject()
        keyTable->scrollToItem( curItem );
        openRecordKey( 0, 0  );
     }
+}
+
+void FITMainWindow::changeKeyList()
+{
+   defineModuleKeysList( currentMode );
 }
 
 /// Define list of Module keys using filter
@@ -344,3 +350,38 @@ void FITMainWindow::defineModuleKeysList( int nRT )
 }
 
 
+/// Save record structure to Data Base
+void FITMainWindow::RecSave( const string& recBsonText, const char* key )
+{
+    rtEJ[ currentMode ].SetJson( recBsonText );
+    rtEJ[ currentMode ].SaveRecord( key );
+    //defineModuleKeysList( currentMode ); //?? need change key list if new record
+    contentsChanged = false;
+}
+
+/// Save solicitation
+/// Returns true if user pressed 'save' or 'discard' and false on 'cancel'
+bool FITMainWindow::MessageToSave()
+{
+    string key_str = rtEJ[ currentMode ].PackKey();
+    if( contentsChanged && key_str.find_first_of("*?") == string::npos )
+    {
+        int res = vfQuestion3(window(), key_str.c_str(),
+                       "Data record has been changed!",
+               "Save changes", "Discard changes", "Cancel");
+        if( res == VF3_3 )
+        {
+            // set current key as selected in table keys
+            defineModuleKeysList( currentMode ); //?? may be function copy of this to only reset current line in table
+            return false;
+        }
+
+        if( res == VF3_1 )
+        {
+            string recBson = ui->recordEdit->toPlainText().toUtf8().data();
+            RecSave( recBson, key_str.c_str() );
+         }
+    }
+    contentsChanged = false;
+    return true;
+}

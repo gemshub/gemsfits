@@ -49,7 +49,8 @@ class FITMainWindow : public QMainWindow
     void closeEJDB();
     void openEJDB();
     void loadNewProject();
-    bool MessageToSave(){ return true;}
+    bool MessageToSave();
+    void RecSave( const string& recBsonText, const char* key=0 );
 
     void closeEvent( QCloseEvent* );
     void resizeEvent( QResizeEvent * event );
@@ -57,6 +58,11 @@ class FITMainWindow : public QMainWindow
 
 private slots:
     void moveToolBar( int pos, int index );
+    void changeKeyList();
+    void recEdited()
+    {
+        contentsChanged = true;
+    }
 
 public slots:
      void openRecordKey(  int row, int column  );
@@ -77,14 +83,13 @@ public slots:
        void CmSettingth();
    // Record
        void CmShow( const string& reckey="" );
-       void CmCreate(){}
-       void CmClone(){}
-       void CmSave(){}
-       void CmSaveAs(){}
-       void CmDelete(){}
+       void CmCreate();
+       void CmUpdate();
+       void CmInsert();
+       void CmDelete();
        void CmNext();
        void CmPrevious();
-       //void CmFilter();
+       void CmFilter();
        void CmUpdateTest();
     // Record list
        void CmBackupJSON(){}

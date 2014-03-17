@@ -18,17 +18,110 @@
 //-------------------------------------------------------------------
 
 #include <QListWidget>
+#include <QMessageBox>
 
 
 #include "DBKeyDialog.h"
 #include "FITMainWindow.h"
 #include "f_ejdb.h"
+#include "fservice.h"
 
-/*
+//------------------------------------------------------------------
+// service functions
+
+void messageCritical(QWidget* par, const string& title, const string& mess )
+{
+    QString titl, spac, messag;
+    titl = title.c_str(); spac = "\n\n"; messag = mess.c_str();
+
+    QMessageBox::critical(par,
+#ifdef __unix
+#ifdef __APPLE__
+        "Title", titl.append(spac+=messag)
+#else
+        titl, messag
+#endif
+#else
+        titl, messag
+#endif
+                            );
+}
+
+
+static int posx=0, posy=0;
+// returns VF3_1, VF3_2 or VF3_3
+int vfQuestion3(QWidget* par, const string& title, const string& mess, const string& s1,
+            const string& s2,  const string& s3, bool i_mov )
+{
+  QString titl, spac, messag;
+  titl = title.c_str(); spac = "\n\n"; messag = mess.c_str();
+
+   QMessageBox qm(
+#ifdef __unix
+#ifdef __APPLE__
+         "Title", titl.append(spac+=messag),
+#else
+          titl, messag,
+#endif
+#else
+          titl, messag,
+#endif
+           QMessageBox::Question,
+           QMessageBox::Yes | QMessageBox::Default,
+           (s3.empty()) ? (QMessageBox::No | QMessageBox::Escape) : QMessageBox::No,
+           (s3.empty()) ? QMessageBox::NoButton : (QMessageBox::Cancel | QMessageBox::Escape),
+           par);
+
+    qm.setButtonText(QMessageBox::Yes, s1.c_str());
+    qm.setButtonText(QMessageBox::No, s2.c_str());
+    if( !s3.empty() )
+       qm.setButtonText(QMessageBox::Cancel, s3.c_str());
+    if( i_mov )
+        qm.move(posx, posy);
+    int res = qm.exec();
+    if( i_mov )
+    {
+        posx = qm.x();
+        posy = qm.y();
+    }
+    switch( res )
+    {
+    case QMessageBox::Yes :
+        return VF3_1;
+    case QMessageBox::No :
+        return VF3_2;
+    case QMessageBox::Cancel :
+        return VF3_3;
+    }
+    return VF3_3;
+}
+
+bool vfQuestion(QWidget* par, const string& title, const string& mess)
+{
+  QString titl, spac, messag;
+  titl = title.c_str(); spac = "\n\n"; messag = mess.c_str();
+
+  int rest = (QMessageBox::question(par,
+#ifdef __unix
+#ifdef __APPLE__
+         "Title", titl.append(spac+=messag),
+#else
+         titl, messag,
+#endif
+#else
+         titl, messag,
+#endif
+         "&Yes", "&No") == 0);
+    return rest;
+}
+
+//--------------------------------------------------------------------------------------------------------------
+
+
 DBKeyDialog::DBKeyDialog(QWidget* win, int irt, const char* key,
                      const char* caption, bool filter):
         QDialog( win),
-        multi(false), iRt(irt)
+        multi(false), iRT(irt)
 {
  	setupUi(this);
 	 
@@ -65,54 +158,42 @@ DBKeyDialog::DBKeyDialog(QWidget* win, int irt, const char* key,
             sel = ii;
     }
 
-    pList->setSelectionMode(QAbstractItemView::SingleSelection); // pList->setMultiSelection(false);
-    if( sel < 0 || sel > n )
-	sel = 0;
-    pList->setCurrentRow(sel); // pList->setSelected(sel, true);
+    pList->setSelectionMode(QAbstractItemView::SingleSelection);
+    pList->setCurrentRow(sel);
+
     pButton3->hide();
     pButton2->hide();
-    QObject::connect( bHelp, SIGNAL( clicked() ), this, SLOT( CmHelp() ) );
-
-
-    pList->setFocus();
-
     if( !filter )
-        pFilterButton->hide();
+      pFilterButton->hide();
+    QObject::connect( bHelp, SIGNAL( clicked() ), this, SLOT( CmHelp() ) );
+    pList->setFocus();
 }
 
 DBKeyDialog::DBKeyDialog(QWidget* win, int irt,
                      const vector<string>& sel,
                      const char* key, const char* caption):
         QDialog( win),
-        multi(true), iRt(irt)
+        multi(true), iRT(irt)
 {
 	setupUi(this);
 
     old_sel.clear();
     for(int ii=0; ii<sel.size(); ii++)
-    {   if( strchr( sel[ii].c_str(), ':' ))  // key in packed form
-        {
-          rt[irt].SetKey( sel[ii].c_str() );
-          old_sel.push_back(rt[irt].UnpackKey());
-        }
-        else
           old_sel.push_back( sel[ii] );
-    }
-    
-    pList->setFont( pVisorImp->getCellFont() );
-    pList->setSelectionMode(QAbstractItemView::MultiSelection);  // pList->setMultiSelection(true);
+
+    //pList->setFont( pVisorImp->getCellFont() );
+    pList->setSelectionMode(QAbstractItemView::MultiSelection);
     setWindowTitle( caption );
-    QObject::connect( bHelp, SIGNAL( clicked() ), this, SLOT( CmHelp() ) );
 
     ErrorIf(!key, "KeyDialog", "pkey is null");
     if( strpbrk(key, "*?") == 0 )
         keyFilter = "*";
     else
-       keyFilter = key;
+        keyFilter = key;
 
     SetList();
+    QObject::connect( bHelp, SIGNAL( clicked() ), this, SLOT( CmHelp() ) );
     pList->setFocus();
-
 }
 
 
@@ -121,13 +202,9 @@ DBKeyDialog::~DBKeyDialog()
 
 void DBKeyDialog::CmHelp()
 {
-  pFitImp->OpenHelp( GEMS_SELECT_HTML );
+   pFitImp->OpenHelp( GEMS_SELECT_HTML );
 }
 
-void DBKeyDialog::languageChange()
-{
-    retranslateUi(this);
-}
 
 void DBKeyDialog::SetList()
 {
@@ -137,7 +214,7 @@ void DBKeyDialog::SetList()
     s +=  keyFilter;
     pLabel->setText(s.c_str());
 
-    int n = rt[iRt].GetKeyList( keyFilter.c_str(), keyList );
+    int n = rtEJ[iRT].GetKeyList( keyFilter.c_str(), keyList );
 
     for( int ii=0; ii<n; ii++ )
        pList->addItem(keyList[ii].c_str());
@@ -151,51 +228,33 @@ void DBKeyDialog::SetList()
             string str(old_sel[jj], 0, pos);
             if( keyList[ii].find(str) != string::npos )
             {
-            	pList->item(ii)->setSelected( true); //pList->setSelected(ii, true);
+              pList->item(ii)->setSelected( true);
               break;
             }
            }
-      }
+    }
  }
 
 
-
-// olvase unpaked keys?
 string DBKeyDialog::getKey()
 {
-    int sel = pList->currentRow(); //pList->currentItem();
+    int sel = pList->currentRow();
     if( sel != -1 )
     {
-        ((TCModule*)aMod[iRt])->setFilter(keyFilter.c_str());
-        string res;
-        string s = pList->item(sel)->text().toUtf8().data();
-        //string s = ss;
-        int ln;
-        for( int ii=0, jj=0; ii<rt[iRt].KeyNumFlds(); ii++)
-        {
-          //pos = strchr( s+jj, ":" );
-          ln = rt[iRt].FldLen(ii);
-          // if( pos) ln = min( ln, pos-s+jj );
-
-          //res += string(s+jj, 0, ln);
-          res += string(s, jj, ln);
-          strip(res);
-          res += ":";
-          jj += ln;
-        }
+        /// !!!! ((TCModule*)aMod[iRt])->setFilter(keyFilter.c_str());
+        string res = pList->item(sel)->text().toUtf8().data();
         return res;
     }
     return string();
 }
 
 
-void
-DBKeyDialog::CmFilter()
+void DBKeyDialog::CmFilter()
 {
     string str_name = "Template for ";
-            str_name +=  rt[iRt].GetKeywd();
+            str_name +=  rtEJ[iRT].GetKeywd();
             str_name += " record key";
-    KeyFilter dbFilter(this, iRt, keyFilter.c_str(), str_name.c_str() );
+    DBKeyFilter dbFilter(this, iRT, keyFilter.c_str(), str_name.c_str() );
     if( dbFilter.exec() )
     {
         keyFilter = dbFilter.getFilter();
@@ -205,27 +264,22 @@ DBKeyDialog::CmFilter()
      }
 }
 
-void
-DBKeyDialog::CmSelectAll()
+void DBKeyDialog::CmSelectAll()
 {
-    // select all gstrings
+    // select all strings
     for( int ii=0; ii<pList->count(); ii++ )
         pList->item(ii)->setSelected( true);
 }
 
 
-void
-DBKeyDialog::CmClearAll()
+void DBKeyDialog::CmClearAll()
 {
     pList->clearSelection();
 }
 
 /// returns selection array
 ///    array is empty if nothing is selected
-
-
-vector<string>
-DBKeyDialog::allSelectedKeys()
+vector<string> DBKeyDialog::allSelectedKeys()
 {
     vector<string> arr;
 
@@ -245,10 +299,10 @@ DBKeyDialog::allSelectedKeys()
 // KeyEdit dialog
 //============================================================
 
-KeyFilter::KeyFilter(QWidget* win, int irt, const char* key,
+DBKeyFilter::DBKeyFilter(QWidget* win, int irt, const char* key,
                      const char* caption, bool allowTempl ):
         QDialog( win ),
-        iRt(irt),
+        iRT(irt),
         allowTemplates(allowTempl)
 {
     QLineEdit* pEdit;
@@ -257,32 +311,23 @@ KeyFilter::KeyFilter(QWidget* win, int irt, const char* key,
     setWindowModality(Qt::WindowModal);
     setWindowTitle(caption);
 
-    TEJDBKey dbKey( rt[irt].GetDBKey() );
-
+    TEJDBKey dbKey( rtEJ[irt].GetDBKey() );
     if( key )
         dbKey.SetKey(key);
 
     QGridLayout* editBox = new QGridLayout();
-    int editLine = dynamic_cast<TCModule*>(aMod[iRt])->keyEditField();
-
     for( int ii=0; ii<dbKey.KeyNumFlds(); ii++)
     {
         aEdit.append( pEdit = new QLineEdit(this) );
-        QString str = ((TCModule*)aMod[irt])->GetFldHelp(ii);
-        pEdit->setToolTip( str);
-        pEdit->setMaxLength( dbKey.FldLen(ii) );
-        pEdit->setMaximumWidth( (dbKey.FldLen(ii)+2) * pVisorImp->getCharWidth() );
-        pEdit->setMinimumWidth( (dbKey.FldLen(ii)+2) * pVisorImp->getCharWidth() );
-        string s = dbKey.FldKey(ii);
-        pEdit->setText( s.c_str() );
+        QString str = rtEJ[irt].FldKeyName(ii);
+        pEdit->setToolTip( str );
+        pEdit->setMaxLength( 100 );
+        pEdit->setText( dbKey.FldKey(ii) );
         connect( pEdit, SIGNAL(editingFinished ()), this, SLOT(setKeyLine()) );
 
         editBox->addWidget( pEdit, ii, 0, Qt::AlignRight);
         pLabel = new QLabel( str, this);
         editBox->addWidget( pLabel, ii, 1);
-
-        if( !allowTemplates && ii < editLine )
-            pEdit->setEnabled(false);
     }
     aEdit[0]->setFocus();
 
@@ -314,7 +359,6 @@ KeyFilter::KeyFilter(QWidget* win, int irt, const char* key,
 
     btn = new QPushButton(this);
     btn->setText("&Cancel");
-// qt3to4    btn->setAccel( Qt::Key_Escape );
     connect( btn, SIGNAL(clicked()), this, SLOT(reject()) );
     buttonBox->addWidget( btn );
 
@@ -329,7 +373,6 @@ KeyFilter::KeyFilter(QWidget* win, int irt, const char* key,
     line->setFrameShadow(QFrame::Sunken);
 
     QVBoxLayout* mainBox = new QVBoxLayout(this);
-
     mainBox->addWidget(fullKey);
     mainBox->addWidget(line);
     mainBox->addLayout(editBox);
@@ -340,90 +383,69 @@ KeyFilter::KeyFilter(QWidget* win, int irt, const char* key,
     line->setFrameShadow(QFrame::Sunken);
     mainBox->addWidget(line);
     mainBox->addLayout(buttonBox);
-    // setLayout(mainBox);
 }
 
-///  pVisor->SetStatus( aMod[iRt]->GetFldHelp(ii).c_str() );
-void
-KeyFilter::CmHelp()
+void DBKeyFilter::CmHelp()
 {
    string dbName =  DBM;
    dbName +="_";
-   dbName += string(aMod[iRt]->GetName());
-   pVisorImp->OpenHelp(  GEMS_REKEY_HTML, dbName.c_str() );
+   dbName += string(rtEJ[iRT].GetKeywd());
+   pFitImp->OpenHelp(  GEMS_REKEY_HTML, dbName.c_str() );
 }
 
-void
-KeyFilter::CmOk()
+void DBKeyFilter::CmOk()
 {
     if( allowTemplates || SetKeyString().find_first_of("*?") == string::npos )
     {
         accept();
         return;
     }
-
-    vfMessage(this, "Key error", "No templates allowed!", vfErr);
+    messageCritical(this, "Key error", "No templates allowed!");
 }
 
-string
-KeyFilter::SetKeyString()
+string DBKeyFilter::SetKeyString()
 {
-    TEJDBKey dbKey( rt[iRt].GetDBKey() );
-    string Key;
-
-    Key = "";
-    for( int ii=0, jj=0; ii<aEdit.count(); ii++, jj=Key.length())
+    string Key = "";
+    for( int ii=0; ii<aEdit.count(); ii++ )
     {
         string s = aEdit[ii]->text().toUtf8().data();
         Key += s;
         strip(Key);
-//Sveta 04/09/01 ????  if( Key.length()-jj < dbKey.FldLen(ii) )
-            Key += ":";
+        Key += ":";
     }
-
     return Key;
 }
 
-void
-KeyFilter::setKeyLine()
+void DBKeyFilter::setKeyLine()
 {
     fullKey->setText(SetKeyString().c_str());
 }
 
-void
-KeyFilter::EvSetAll()
+void DBKeyFilter::EvSetAll()
 {
     for( int ii=0; ii<aEdit.count(); ii++ )
         aEdit[ii]->setText("*");
     setKeyLine();
 }
 
-void
-KeyFilter::EvGetList()
+void DBKeyFilter::EvGetList()
 {
-    KeyDialog dlg(this, iRt, SetKeyString().c_str(), "Key template", false);
+    DBKeyDialog dlg(this, iRT, SetKeyString().c_str(), "Key template", false);
     if( !dlg.exec() )
         return;
 
-    TEJDBKey dbKey( rt[iRt].GetDBKey() );
-
+    TEJDBKey dbKey( rtEJ[iRT].GetDBKey() );
     dbKey.SetKey(dlg.getKey().c_str());
 
     for( int ii=0; ii<dbKey.KeyNumFlds(); ii++)
-    {
         aEdit[ii]->setText( dbKey.FldKey(ii) );
-    }
     setKeyLine();
 }
 
-string
-KeyFilter::getFilter()
+string DBKeyFilter::getFilter()
 {
-    //  if( result )
     return SetKeyString();
 }
 
-
-*/
 //--------------------- End of DBKeyDialog.cpp ---------------------------
 
