@@ -115,6 +115,23 @@ bool vfQuestion(QWidget* par, const string& title, const string& mess)
     return rest;
 }
 
+vector<string> vfMultiKeys(QWidget* par, const char* caption,
+                            int iRt, const char* key )
+{
+    vector<string> sel;
+    DBKeyDialog dbk(par, iRt, sel, key, caption);
+    dbk.exec();
+    return dbk.allSelectedKeys();
+}
+
+vector<string> vfMultiKeysSet(QWidget* par, const char* caption,
+                    int iRt, const char* key, vector<string>& sel )
+{
+    DBKeyDialog dbk(par, iRt, sel, key, caption);
+    dbk.exec();
+    return dbk.allSelectedKeys();
+}
+
 //--------------------------------------------------------------------------------------------------------------
 
 

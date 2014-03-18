@@ -399,6 +399,107 @@ void FITMainWindow::CmFilter()
     }
 }
 
+//-------------------------------------------------------------------------------------
+// Record list
+   void CmBackupJSON();
+   void CmRestoreJSON();
+
+/// Export Data Records to json txt-file
+void FITMainWindow::CmBackupJSON()
+{
+    try
+    {
+       if( !MessageToSave() )
+           return;
+
+       // get current filter
+       string keyFilter = ui->filterEdit->text().toUtf8().data();
+       if( keyFilter.empty() )
+           keyFilter = ALLKEY;
+
+       // select record list to unload
+       vector<string> aKey = vfMultiKeys( this, "Please, mark records to be unloaded to JSON",
+              currentMode, keyFilter.c_str() );
+        if( aKey.size() <1 )
+               return;
+
+       // open file to unloading
+        string fname;
+        TFile  outFile("", ios::out );
+        if( !outFile.ChooseFileSave( this, fname, "Please, give a file name for unloading records","*.json" ))
+             return;
+        outFile.Open();
+
+        outFile.ff << "[\n";
+        for(int i=0; i<aKey.size(); i++ )
+        {
+          rtEJ[ currentMode ].Get( aKey[i].c_str() );
+          string valDB =rtEJ[ currentMode ].GetJson();
+          outFile.ff << valDB;
+          if( i<aKey.size()-1)
+               outFile.ff <<  ",";
+          outFile.ff <<  "\n";
+        }
+        outFile.ff << "]";
+        outFile.Close();
+
+        changeKeyList();
+        contentsChanged = false;
+        setStatusText( "Records exported to json txt-file" );
+    }
+    catch( TError& err )
+    {
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
+    }
+}
+
+/// Import Data Records from json txt-file
+void FITMainWindow::CmRestoreJSON()
+{
+    try
+    {
+        if( !MessageToSave() )
+          return;
+
+        // open file to unloading
+         string fname;
+         TFile  inFile("", ios::in);
+         if( !inFile.ChooseFileOpen( this, fname, "Please, select file with unloaded records","*.json" ))
+              return;
+         inFile.Open();
+
+
+        // read bson records array from file
+        ParserJson parserJson;
+        char b;
+        string objStr;
+
+        while( !inFile.ff.eof() )
+        {
+          inFile.ff.get(b);
+          if( b == jsBeginObject )
+          {
+            objStr =  parserJson.readObjectText(inFile.ff);
+            objStr = "{" + objStr;
+            rtEJ[ currentMode ].SetJson( objStr );
+            if( ui->actionOverwrite->isChecked() )
+               rtEJ[ currentMode ].SaveRecord(0);
+            else
+               rtEJ[ currentMode ].InsertRecord();
+         }
+        }
+
+        changeKeyList();
+        contentsChanged = false;
+        setStatusText( "Records imported from json txt-file" );
+    }
+    catch( TError& err )
+    {
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
+    }
+}
 
 //-------------------------------------------------------------------------------------
 // Help menu

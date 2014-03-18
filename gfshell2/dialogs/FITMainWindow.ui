@@ -416,6 +416,8 @@
     <property name="title">
      <string>&amp;Database</string>
     </property>
+    <addaction name="actionOverwrite"/>
+    <addaction name="separator"/>
     <addaction name="actionBackup_to_JSON"/>
     <addaction name="actionRestore_from_JSON"/>
     <addaction name="separator"/>
@@ -750,6 +752,14 @@
   <action name="actionData_in_YAML">
    <property name="text">
     <string>Data in &amp;YAML</string>
+   </property>
+  </action>
+  <action name="actionOverwrite">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Overwrite</string>
    </property>
   </action>
  </widget>

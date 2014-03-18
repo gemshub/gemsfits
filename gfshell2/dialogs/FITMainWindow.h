@@ -92,8 +92,8 @@ public slots:
        void CmFilter();
        void CmUpdateTest();
     // Record list
-       void CmBackupJSON(){}
-       void CmRestoreJSON(){}
+       void CmBackupJSON();
+       void CmRestoreJSON();
        void CmBackupCSV(){}
        void CmRestoreCSV(){}
        void CmBackupTXT(){}

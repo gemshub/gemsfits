@@ -318,7 +318,7 @@ void TFile::Open()
 
     ff.open( Path.c_str(), mode );
     ErrorIf( !ff.good(), Path, "Error opening file" );
-    isopened = false;
+    isopened = true;
 }
 
 /// Close EJ DataBase
