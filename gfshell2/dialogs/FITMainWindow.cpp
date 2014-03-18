@@ -40,13 +40,10 @@ void FITMainWindow::setDefValues(int c, char** v)
 FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     QMainWindow(parent),
     ui(new Ui::FITMainWindow),
-    currentMode (MDF_DATABASE), gemsLstFile(""), fitTaskDir(""),
+    currentMode (MDF_TASK), gemsLstFile(""), fitTaskDir(""),
     aNode(0), contentsChanged(false), projectSettings(0)
 {
     ui->setupUi(this);
-
-    //set up main parameters
-    setDefValues( c, v);
 
     // define tool bar
     toolTasks = new QToolBar(this);
@@ -76,7 +73,6 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     ui->splV->setStretchFactor(0, 1);
     ui->splV->setStretchFactor(1, 3);
     ui->splV->setStretchFactor(2, 2);
-    ui->filterEdit->setText("*");
 
     // set up menu
     setActions();
@@ -84,6 +80,11 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     connect( keyTable, SIGNAL(cellClicked ( int , int  ) ), this, SLOT(openRecordKey( int, int )));
     connect( ui->recordEdit, SIGNAL(textChanged()),  this, SLOT(recEdited()));
     connect( ui->filterEdit, SIGNAL( editingFinished ()), this, SLOT(changeKeyList()) );
+
+   //set up main parameters
+    setDefValues( c, v);
+   // setup first lists
+    CmDBMode();
 }
 
 FITMainWindow::~FITMainWindow()
@@ -258,6 +259,16 @@ void FITMainWindow::loadNewProject()
 
     pLineTask->setText( projectSettings->value("ProjFileName", "undefined").toString());
 
+    // update key list, editor, filter
+    resetMainWindow();
+}
+
+/// Set up data for Main window
+void FITMainWindow::resetMainWindow()
+{
+    // set up filter
+    ui->filterEdit->setText("*");
+
     // update key list
     defineModuleKeysList( currentMode );
 
@@ -267,8 +278,17 @@ void FITMainWindow::loadNewProject()
        keyTable->setCurrentItem( curItem );
        keyTable->scrollToItem( curItem );
        openRecordKey( 0, 0  );
+    } else
+      {
+        // loadTemplate( currentModule );
+        ui->recordEdit->setText( trUtf8("must be template"));
+        contentsChanged = false;
     }
+
+    // reset  ui->queryEdit
+    ui->queryEdit->setText( trUtf8(""));
 }
+
 
 void FITMainWindow::changeKeyList()
 {

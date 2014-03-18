@@ -79,6 +79,63 @@ void FITMainWindow::setActions()
 //-------------------------------------------------------------------------------------
 // Project menu
 
+/// Select experiments DB mode
+void FITMainWindow::CmDBMode()
+{
+    if( !MessageToSave() )
+         return;
+
+   if( currentMode == MDF_DATABASE )
+   {
+       ui->action_DataBase_mode->setChecked(true);
+       return;
+   }
+   ui->action_DataBase_mode->setChecked(true);
+   ui->action_Task_Mode->setChecked(false);
+
+   currentMode = MDF_DATABASE;
+
+   // define actions
+   ui->actionBackup_to_csv->setEnabled(true);
+   ui->actionRestore_from_csv->setEnabled(true);
+   ui->actionBackup_to_TXT->setEnabled(false);
+   ui->actionRestore_from_TXT->setEnabled(false);
+   ui->menu_Calc->setEnabled(false);
+
+   // update key list, editor, filter
+   resetMainWindow();
+
+}
+
+/// Select experiments DB mode
+void FITMainWindow::CmTaskMode()
+{
+   if( !MessageToSave() )
+         return;
+
+   if( currentMode == MDF_TASK )
+   {
+       ui->action_Task_Mode->setChecked(true);
+       return;
+   }
+   ui->action_DataBase_mode->setChecked(false);
+   ui->action_Task_Mode->setChecked(true);
+
+   currentMode = MDF_TASK;
+
+   // define actions
+   ui->actionBackup_to_csv->setEnabled(false);
+   ui->actionRestore_from_csv->setEnabled(false);
+   ui->actionBackup_to_TXT->setEnabled(true);
+   ui->actionRestore_from_TXT->setEnabled(true);
+   ui->menu_Calc->setEnabled(true);
+
+   // update key list, editor, filter
+   resetMainWindow();
+
+}
+
+
 /// Select new GEMS3K files list and setup windows
 void FITMainWindow::CmSelectGEMS( const string& fname_ )
 {
@@ -401,8 +458,6 @@ void FITMainWindow::CmFilter()
 
 //-------------------------------------------------------------------------------------
 // Record list
-   void CmBackupJSON();
-   void CmRestoreJSON();
 
 /// Export Data Records to json txt-file
 void FITMainWindow::CmBackupJSON()

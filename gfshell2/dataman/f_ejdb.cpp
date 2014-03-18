@@ -863,8 +863,8 @@ void EJDataBaseList::Init()
 
     // MDF_TASK default
     vector<string> tsKeyFlds;    ///???? must be changed after disscusion
-    tsKeyFlds.push_back("DataSource");
-    tsKeyFlds.push_back("DataName");
+    tsKeyFlds.push_back("taskid");
+    tsKeyFlds.push_back("projectid");
     push_back( TEJDataBase( MDF_TASK, "tests", tsKeyFlds  ));
 }
 

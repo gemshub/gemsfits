@@ -49,6 +49,7 @@ class FITMainWindow : public QMainWindow
     void closeEJDB();
     void openEJDB();
     void loadNewProject();
+    void resetMainWindow();
     bool MessageToSave();
     void RecSave( const string& recBsonText, const char* key=0 );
 
@@ -68,8 +69,8 @@ public slots:
      void openRecordKey(  int row, int column  );
 
     // Tasks
-       void CmDBMode(){}
-       void CmTaskMode(){}
+       void CmDBMode();
+       void CmTaskMode();
        void CmConfigProject();
        void CmNewProject();
        void CmSelectProject( const string& fname_="" );
