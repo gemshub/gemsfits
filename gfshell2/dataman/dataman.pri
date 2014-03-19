@@ -10,6 +10,7 @@
                     $$DATAMAN_CPP/help.cpp \
 #                    $$DATAMAN_CPP/qwtplot.cpp \
                     $$DATAMAN_CPP/main.cpp \
-    dataman/v_user.cpp
+    dataman/v_user.cpp \
+    dataman/gemsfit_iobson.cpp
 
 

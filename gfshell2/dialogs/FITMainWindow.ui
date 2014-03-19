@@ -512,6 +512,7 @@
    <addaction name="action_Insert"/>
    <addaction name="action_Update"/>
    <addaction name="actionDelete"/>
+   <addaction name="action_Run_test"/>
    <addaction name="separator"/>
    <addaction name="actionHelp"/>
   </widget>
@@ -683,6 +684,10 @@
    </property>
   </action>
   <action name="action_Run_test">
+   <property name="icon">
+    <iconset resource="../fgui.qrc">
+     <normaloff>:/menu/Icons/CalculateRecordDataIcon.png</normaloff>:/menu/Icons/CalculateRecordDataIcon.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Run Fitting Task</string>
    </property>

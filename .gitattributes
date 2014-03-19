@@ -25,6 +25,7 @@ Tests/CASH/solcash_gs65.backup -text
 Tests/CASH/solcash_new.backup -text
 Tests/CSH3T2/EJDB/cshsolubil -text
 Tests/CSH3T2/EJDB/cshsolubil_experiments -text
+Tests/CSH3T2/EJDB/cshsolubil_tasks -text
 Tests/CSH3T2/GEMS/CSHQ-subl.zip -text
 Tests/CSHtob01/EJDB/cashsolub -text
 Tests/CSHtob01/EJDB/cashsolub_experiments -text

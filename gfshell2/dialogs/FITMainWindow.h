@@ -98,7 +98,7 @@ public slots:
        void CmBackupCSV(){}
        void CmRestoreCSV(){}
        void CmBackupTXT(){}
-       void CmRestoreTXT(){}
+       void CmRestoreTXT();
        void CmBackupYAML(){}
        void CmRestoreYAML(){}
      //Calc

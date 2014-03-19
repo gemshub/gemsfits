@@ -100,6 +100,7 @@ void FITMainWindow::CmDBMode()
    ui->actionRestore_from_csv->setEnabled(true);
    ui->actionBackup_to_TXT->setEnabled(false);
    ui->actionRestore_from_TXT->setEnabled(false);
+   ui->action_Run_test->setEnabled(false);
    ui->menu_Calc->setEnabled(false);
 
    // update key list, editor, filter
@@ -128,6 +129,7 @@ void FITMainWindow::CmTaskMode()
    ui->actionRestore_from_csv->setEnabled(false);
    ui->actionBackup_to_TXT->setEnabled(true);
    ui->actionRestore_from_TXT->setEnabled(true);
+   ui->action_Run_test->setEnabled(true);
    ui->menu_Calc->setEnabled(true);
 
    // update key list, editor, filter
@@ -555,6 +557,50 @@ void FITMainWindow::CmRestoreJSON()
         addLinetoStatus( err.mess );
     }
 }
+
+void get_bson_from_gems_fit_txt( const string& fname, bson *obj );
+/// Import Data Records from task configuration txt-file
+void FITMainWindow::CmRestoreTXT()
+{
+    try
+    {
+        if( !MessageToSave() )
+          return;
+
+        // open file to unloading
+         string fname;
+         TFile  inFile("", ios::in);
+         if( !inFile.ChooseFileOpen( this, fname, "Please, select file with GEMSFIT2 specificatins file","*.dat" ))
+              return;
+         inFile.Open();
+
+        // read bson records array from file
+         bson bsrec;
+         bson_init( &bsrec );
+         bson_append_string( &bsrec, "taskid", inFile.Name().c_str() );
+         bson_append_string( &bsrec, "projectid", fitTaskDir.Name().c_str() );
+         get_bson_from_gems_fit_txt( fname.c_str(), &bsrec );
+         bson_finish( &bsrec );
+
+         //set bson to string
+         ParserJson pars;
+         string bsonVal;
+         pars.printBsonObjectToJson( bsonVal, &bsrec );
+
+         //show result
+         ui->recordEdit->setText( trUtf8(bsonVal.c_str()));
+
+        changeKeyList();
+        contentsChanged = false;
+        setStatusText( "Records imported from json txt-file" );
+    }
+    catch( TError& err )
+    {
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
+    }
+}
+
 
 //-------------------------------------------------------------------------------------
 // Help menu
