@@ -8,6 +8,7 @@ DEFINES         += Use_mt_mode
 #DEFINES         += NODEARRAYLEVEL
 DEFINES         += IPMGEMPLUGIN
 DEFINES         += _MYNOZLIB
+DEFINES         += USEBSON
 
 CONFIG -= warn_on
 CONFIG += warn_off

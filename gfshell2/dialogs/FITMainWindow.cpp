@@ -281,8 +281,7 @@ void FITMainWindow::resetMainWindow()
     } else
       {
         // loadTemplate( currentModule );
-        ui->recordEdit->setText( trUtf8("must be template"));
-        contentsChanged = false;
+        CmCreate();
     }
 
     // reset  ui->queryEdit

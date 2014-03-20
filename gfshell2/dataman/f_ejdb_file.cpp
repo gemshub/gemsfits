@@ -94,7 +94,7 @@ bool TAbstractFile::ChooseFileOpen(QWidget* par, string& path_,
     if( filter )
         filt = QString("Text files (%1);;All files (*)").arg(filter);
     else
-        filt = "Text files (*.txt);;All files (*)";
+        filt = "All files (*)";
 
     QString fn = QFileDialog::getOpenFileName(  par, title,
           path.c_str(), filt, 0,

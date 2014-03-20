@@ -52,6 +52,7 @@ void FITMainWindow::setActions()
        connect( ui->actionRestore_from_TXT, SIGNAL( triggered()), this, SLOT(CmRestoreTXT()));
        connect( ui->actionBackup_to_YAML, SIGNAL( triggered()), this, SLOT(CmBackupYAML()));
        connect( ui->actionRestore_from_YAML, SIGNAL( triggered()), this, SLOT(CmRestoreYAML()));
+       connect( ui->action_Delete_multiple_data, SIGNAL( triggered()), this, SLOT(CmDeleteList()));
 
   //Calc
     connect( ui->action_Run_test, SIGNAL( triggered()), this, SLOT(CmRunTest()));
@@ -432,7 +433,7 @@ void FITMainWindow::CmCreate()
     try
     {
         ui->recordEdit->setText( trUtf8(templRec.c_str()));
-        contentsChanged = true;
+        contentsChanged = false;
     }
     catch( TError& err )
     {
@@ -644,6 +645,37 @@ void FITMainWindow::CmRestoreTXT()
     }
 }
 
+
+/// Delete the list of records
+void FITMainWindow::CmDeleteList()
+{
+    try
+    {
+        if( !MessageToSave() )
+            return;
+
+        // get current filter
+        string keyFilter = ui->filterEdit->text().toUtf8().data();
+        if( keyFilter.empty() )
+            keyFilter = ALLKEY;
+
+        // select record list to unload
+        vector<string> aKey = vfMultiKeys( this, "Please, mark record keys to be deleted from database",
+               currentMode, keyFilter.c_str() );
+        if( aKey.size() <1 )
+                return;
+
+        for(int i=0; i<aKey.size(); i++ )
+            rtEJ[currentMode].Del( aKey[i].c_str() );
+        rtEJ[currentMode].SetKey( ALLKEY );
+        changeKeyList();
+    }
+    catch( TError& err )
+    {
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
+    }
+}
 
 //-------------------------------------------------------------------------------------
 // Help menu

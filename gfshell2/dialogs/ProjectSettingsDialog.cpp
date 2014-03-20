@@ -4,6 +4,7 @@
 
 #include "FITMainWindow.h"
 #include "fservice.h"
+#include "f_ejdb_file.h"
 extern const char *_FIT_version_stamp;
 
 ProjectSettingsDialog::ProjectSettingsDialog( QSettings *aSet, QWidget *parent) :
@@ -67,10 +68,17 @@ void ProjectSettingsDialog::CmProjectDir()
 void ProjectSettingsDialog::CmEJDBDir()
 {
     QString projDir = ui->projDir->text();
-    QString dir = QFileDialog::getExistingDirectory(this, "Select EJDB Directory",
-     projDir,  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
+//    QString dir = QFileDialog::getExistingDirectory(this, "Select EJDB Directory",
+//     projDir,  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
+    string fname = ui->projDir->text().toUtf8().data();
+    //Select files
+    TFile file("");
+    if( !file.ChooseFileSave( this, fname, "Select EJDB Directory", "" ))
+        return;
+    QString dir( trUtf8( file.Dir().c_str() ));
     dir = dir.remove(projDir);
     ui->ejdbDir->setText( dir );
+    ui->ejdbName->setText( trUtf8( file.Name().c_str() ) );
 }
 
 void ProjectSettingsDialog::CmGEMSDir()
@@ -78,6 +86,8 @@ void ProjectSettingsDialog::CmGEMSDir()
     QString projDir = ui->projDir->text();
     QString dir = QFileDialog::getExistingDirectory(this, "Select GEMS Directory",
      projDir,  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
+    
+    
     dir = dir.remove(projDir);
     ui->gemsDir->setText( dir );
 }

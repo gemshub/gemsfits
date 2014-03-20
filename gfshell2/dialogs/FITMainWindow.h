@@ -101,6 +101,7 @@ public slots:
        void CmRestoreTXT();
        void CmBackupYAML(){}
        void CmRestoreYAML(){}
+       void CmDeleteList();
      //Calc
        void CmRunTest(){}
        void CmShowResults(){}
