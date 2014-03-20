@@ -477,7 +477,7 @@ void ParserJson::bson_print_raw_txt( iostream& os, const char *data, int depth, 
          case BSON_OBJECT:
            for (temp = 0; temp <= depth; temp++)
              os <<  "     ";
-           os << "\"" << key << "\": ";
+           os << "\"" << key << "\" :   ";
            break;
          case BSON_ARRAY:
             for (temp = 0; temp <= depth; temp++)
@@ -567,11 +567,11 @@ void ParserJson::bson_print_raw_txt( iostream& os, const char *data, int depth, 
     os << "\n";
 }
 
-void ParserJson::printBsonObjectToJson( string& resStr, const bson *b)
+void ParserJson::printBsonObjectToJson( string& resStr, const char *b)
 {
     stringstream os;
     os << "{\n";
-    bson_print_raw_txt( os, b->data, 0, BSON_OBJECT);
+    bson_print_raw_txt( os, b, 0, BSON_OBJECT);
     os << "}";
     resStr = os.str();
 }

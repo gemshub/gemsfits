@@ -127,7 +127,7 @@ void out_gems_fit_txt_bson( fstream& ff, /*TNode* node,*/ bson *obj, bool _comme
 //    prarCH.writeArray(  f_nDCinPH, CSD->nDCinPH, CSD->nPH, -1L,_comment, brief_mode);
 //    prarCH.writeArray(  f_TKval, CSD->TKval, CSD->nTp, -1L,_comment, brief_mode );
 //    prarCH.writeArray(  f_Pval, CSD->Pval, CSD->nPp,  -1L,_comment, brief_mode );
-    prarCH.writeArrayFromBson(  "G0", obj, 0, true);
+    prarCH.writeArrayFromBson(  "G0", obj, 1, true);
 
     if( _comment )
      ff << "\n \n# logK: Look-up array for logK at T * P * nr reactions. "
@@ -265,7 +265,7 @@ void out_gems_fit_txt_bson( fstream& ff, /*TNode* node,*/ bson *obj, bool _comme
 /// Mode GEMSFIT to generate input configuration file
 int generateTxtfromBson( string gemsfitfile, bson *obj, bool with_comments )
 {
-   fstream ff(gemsfitfile.c_str(), ios::out|ios::app );
+   fstream ff(gemsfitfile.c_str(), ios::out );
    ErrorIf( !ff.good() , gemsfitfile.c_str(), "OptParamFile text open error");
 
    // Writing Data sources section

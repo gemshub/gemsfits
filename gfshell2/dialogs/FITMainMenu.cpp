@@ -449,7 +449,7 @@ void FITMainWindow::CmFilter()
         string filterText = ui->queryEdit->toPlainText().toUtf8().data();
         // must be in future
         //rtEJ[ currentMode ].searchFilter();
-        contentsChanged = false;
+        contentsChanged = true;
     }
     catch( TError& err )
     {
@@ -558,6 +558,48 @@ void FITMainWindow::CmRestoreJSON()
     }
 }
 
+int generateTxtfromBson( string gemsfitfile, bson *obj, bool with_comments );
+
+/// Export Data Records from task configuration txt-file
+void FITMainWindow::CmBackupTXT()
+{
+    try
+    {
+       if( !MessageToSave() )
+           return;
+
+       // Load curent record to bson structure
+       bson bsrec;
+       string recBsonText = ui->recordEdit->toPlainText().toUtf8().data();
+       ParserJson pars;
+       pars.setJsonText( recBsonText.substr( recBsonText.find_first_of('{')+1 ) );
+       bson_init( &bsrec );
+       pars.parseObject(  &bsrec );
+       bson_finish( &bsrec );
+
+       // open file to unloading
+        string fname;
+        if( !bson_find_string( bsrec.data, "taskid", fname ) )
+                    fname = "undefined";
+        fname = fitTaskDir.Dir() + "/" + fname + ".dat";
+
+        // save txt data
+        generateTxtfromBson( fname, &bsrec, true );
+
+        bson_destroy( &bsrec);
+
+        changeKeyList();
+        contentsChanged = false;
+        setStatusText( "Records exported to json txt-file" );
+    }
+    catch( TError& err )
+    {
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
+    }
+}
+
+
 void get_bson_from_gems_fit_txt( const string& fname, bson *obj );
 /// Import Data Records from task configuration txt-file
 void FITMainWindow::CmRestoreTXT()
@@ -585,13 +627,14 @@ void FITMainWindow::CmRestoreTXT()
          //set bson to string
          ParserJson pars;
          string bsonVal;
-         pars.printBsonObjectToJson( bsonVal, &bsrec );
+         pars.printBsonObjectToJson( bsonVal, bsrec.data );
 
          //show result
          ui->recordEdit->setText( trUtf8(bsonVal.c_str()));
 
+        bson_destroy( &bsrec);
         changeKeyList();
-        contentsChanged = false;
+        contentsChanged = true;
         setStatusText( "Records imported from json txt-file" );
     }
     catch( TError& err )

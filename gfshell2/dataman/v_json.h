@@ -51,7 +51,7 @@ protected:
   void parseArray( bson *brec );
 
   /// Print bson structure to JSON string
-  void printBsonObjectToJson( string& resStr, const bson *b);
+  void printBsonObjectToJson( string& resStr, const char *b);
 
   /// Read one json object from text file
   string readObjectText( fstream& fin );

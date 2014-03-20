@@ -359,7 +359,7 @@ string TEJDataBase::RecFromBson( bson *obj )
 {
     // record to json string
     ParserJson pars;
-    pars.printBsonObjectToJson( currentJson, obj );
+    pars.printBsonObjectToJson( currentJson, obj->data );
 
     // Get key of record
     string keyStr = "", kbuf;
@@ -544,6 +544,8 @@ void TEJDataBase::InsertRecord()
      bool retSave = ejdbsavebson(coll, &bsrec, &oid);
      // Close database (must be done for exeption )
      closeCollection();
+     cout << "Add record " << retSave << " oid " << bytes[25] << endl;
+
      if( !retSave )
      {  string errejdb = bson_first_errormsg(&bsrec);
         bson_destroy(&bsrec);
@@ -557,7 +559,6 @@ void TEJDataBase::InsertRecord()
           /// putndx(nF); work with indexes
           bson_destroy(&bsrec);
         }
-     cout << "Add record " << retSave << " oid " << bytes[25] << endl;
 
     // Set up internal data
     status = ONEF_;
