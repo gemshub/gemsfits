@@ -429,6 +429,8 @@
     <addaction name="separator"/>
     <addaction name="actionRestore_from_TXT"/>
     <addaction name="actionBackup_to_TXT"/>
+    <addaction name="separator"/>
+    <addaction name="action_Delete_multiple_data"/>
    </widget>
    <widget class="QMenu" name="menu_Calc">
     <property name="title">
@@ -513,6 +515,7 @@
    <addaction name="action_Update"/>
    <addaction name="actionDelete"/>
    <addaction name="action_Run_test"/>
+   <addaction name="action_Show_Results"/>
    <addaction name="separator"/>
    <addaction name="actionHelp"/>
   </widget>
@@ -637,7 +640,7 @@
   <action name="actionUpdate_Test">
    <property name="icon">
     <iconset resource="../fgui.qrc">
-     <normaloff>:/menu/Icons/RemakeRecordIcon.png</normaloff>:/menu/Icons/RemakeRecordIcon.png</iconset>
+     <normaloff>:/menu/Icons/CalculateBCCIcon.png</normaloff>:/menu/Icons/CalculateBCCIcon.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Test Edited Record Format</string>
@@ -645,42 +648,42 @@
   </action>
   <action name="actionBackup_to_JSON">
    <property name="text">
-    <string>Backup to &amp;JSON...</string>
+    <string>Backup data to &amp;JSON...</string>
    </property>
   </action>
   <action name="actionRestore_from_JSON">
    <property name="text">
-    <string>Restore from JSO&amp;N...</string>
+    <string>Restore data from JSO&amp;N...</string>
    </property>
   </action>
   <action name="actionBackup_to_csv">
    <property name="text">
-    <string>Export to &amp;CSV...</string>
+    <string>Export data to &amp;CSV...</string>
    </property>
   </action>
   <action name="actionRestore_from_csv">
    <property name="text">
-    <string>Import from C&amp;SV...</string>
+    <string>Import data from C&amp;SV...</string>
    </property>
   </action>
   <action name="actionBackup_to_TXT">
    <property name="text">
-    <string>Export to GF &amp;TXT...</string>
+    <string>Export fit task &amp;TXT file...</string>
    </property>
   </action>
   <action name="actionRestore_from_TXT">
    <property name="text">
-    <string>Import from GF T&amp;XT...</string>
+    <string>Import fit task T&amp;XT file...</string>
    </property>
   </action>
   <action name="actionBackup_to_YAML">
    <property name="text">
-    <string>Export to &amp;YAML...</string>
+    <string>Export data to &amp;YAML...</string>
    </property>
   </action>
   <action name="actionRestore_from_YAML">
    <property name="text">
-    <string>Import from Y&amp;AML...</string>
+    <string>Import data from Y&amp;AML...</string>
    </property>
   </action>
   <action name="action_Run_test">
@@ -693,8 +696,12 @@
    </property>
   </action>
   <action name="action_Show_Results">
+   <property name="icon">
+    <iconset resource="../fgui.qrc">
+     <normaloff>:/menu/Icons/ShowGEMResultsIcon.png</normaloff>:/menu/Icons/ShowGEMResultsIcon.png</iconset>
+   </property>
    <property name="text">
-    <string>&amp;Show Results... </string>
+    <string>&amp;Show Task Results... </string>
    </property>
   </action>
   <action name="action_Preferences">
@@ -765,6 +772,11 @@
    </property>
    <property name="text">
     <string>Overwrite</string>
+   </property>
+  </action>
+  <action name="action_Delete_multiple_data">
+   <property name="text">
+    <string>&amp;Delete multiple data... </string>
    </property>
   </action>
  </widget>
