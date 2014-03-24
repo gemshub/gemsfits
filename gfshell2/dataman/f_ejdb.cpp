@@ -361,6 +361,10 @@ string TEJDataBase::RecFromBson( bson *obj )
     ParserJson pars;
     pars.printBsonObjectToJson( currentJson, obj->data );
 
+    // get gems3k name
+    if( !bson_find_string( obj->data, "SystemFiles", currentGems3kName ) )
+        currentGems3kName = "";
+
     // Get key of record
     string keyStr = "", kbuf;
     for(int ii=0; ii<KeyNumFlds(); ii++ )

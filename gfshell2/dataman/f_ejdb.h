@@ -140,6 +140,7 @@ class TEJDataBase
     time_t crt;
     //bson currentRecord;    ///< last read/save record
     string currentJson;     ///< last read/save record json
+    string currentGems3kName; ///< last read gems3k files name (<SystemFiles>) in record
 
 protected:
 
@@ -227,6 +228,12 @@ protected:
     const string& GetJson();
     /// Set json format string to curent record
     void SetJson( const string& sjson);
+    /// Return curent gems3k files name
+    const string& GetGems3kName()
+    {
+       return currentGems3kName;
+    }
+
 
     /// Find record with key into internal record keys list
     bool Find( const char *key );

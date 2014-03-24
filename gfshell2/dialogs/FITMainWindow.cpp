@@ -1,5 +1,7 @@
 
 #include <QKeyEvent>
+#include <QProcess>
+
 #include "FITMainWindow.h"
 #include "ui_FITMainWindow.h"
 #include "HelpWindow.h"
@@ -254,10 +256,21 @@ void FITMainWindow::openEJDB()
 /// Set up data for current project
 void FITMainWindow::loadNewProject()
 {
+    // clear old GEMS3K list windows
+    ui->tableIComp->clear();
+    ui->listPhases->clear();
+    pLineGEMS->setText( trUtf8( "" ) );
+
     // Connect project database
     openEJDB();
 
     pLineTask->setText( projectSettings->value("ProjFileName", "undefined").toString());
+    // change gemsLstFile information
+    string gemsname  = projectSettings->value("ProjFolderPath", ".").toString().toUtf8().data();
+    gemsname  += projectSettings->value("GEMS3KFilesPath", "/GEMS").toString().toUtf8().data();
+    gemsname += "/undef.lst";
+    gemsLstFile.ChangePath( gemsname );
+    gemsLstFile.ChangeName("");
 
     // update key list, editor, filter
     resetMainWindow();
@@ -403,4 +416,49 @@ bool FITMainWindow::MessageToSave()
     }
     contentsChanged = false;
     return true;
+}
+
+/// Change <SystemFiles> data in edit record
+void FITMainWindow::changeSystemFiles( const string& newname, const string& ext )
+{
+   // make new paht string
+   string newPath = ".";
+   if(projectSettings )
+          newPath += projectSettings->value("GEMS3KFilesPath", "/GEMS").toString().toUtf8().data();
+          newPath += "/" + newname + "." + ext;
+
+   // get value string
+   string valueStr = ui->recordEdit->toPlainText().toUtf8().data();
+
+   // delete old path string
+   size_t found = valueStr.find("SystemFiles");
+   if (found != string::npos)
+   {
+       // change value
+       found += 12;
+       size_t  found1 =  valueStr.find("\"", found );
+       size_t  found2 =  valueStr.find("\"", found1+1 );
+       valueStr.replace( found1+1, found2-found1-1, newPath);
+       ui->recordEdit->setText( trUtf8( valueStr.c_str() ));
+       contentsChanged = true;
+   }
+}
+
+
+void FITMainWindow::runProcess()
+{
+    /*
+    // Set up the command line which starts the external program as QStringList.
+    QStringList commandAndParameters;
+
+      // commandAndParameters<<"konqueror"
+      //                  <<"file:/home/thomas";
+    QProcess *process = new QProcess(this);
+    QString file = QDir::homepath + "/file.exe";
+    process->start(file);
+
+    QProcess myProcess(commandAndParameters);
+    // Start the QProcess instance.
+    myProcess.start();
+    */
 }

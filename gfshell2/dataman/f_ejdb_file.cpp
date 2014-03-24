@@ -163,10 +163,26 @@ void TAbstractFile::ChangePath( const string& path )
 
     Path = path;
     if( path.empty() )
-      return;
-    u_splitpath(Path, dir, name, ext);
+    {
+      dir = name = ext = "";
+    }
+    else
+    {
+      u_splitpath(Path, dir, name, ext);
+      makeKeyword();
+    }
+}
+
+void TAbstractFile::ChangeName( const string& newname )
+{
+    if( Test() )
+        Close();
+
+    name = newname;
+    Makepath();
     makeKeyword();
 }
+
 
 //-------------------------------------------------------------
 // TEJDB, files that contain EJDB records

@@ -1,3 +1,6 @@
+
+#include <QFileDialog>
+
 #include "FITMainWindow.h"
 #include "ui_FITMainWindow.h"
 #include "ProjectSettingsDialog.h"
@@ -138,25 +141,9 @@ void FITMainWindow::CmTaskMode()
 
 }
 
-
 /// Select new GEMS3K files list and setup windows
-void FITMainWindow::CmSelectGEMS( const string& fname_ )
+void FITMainWindow::selectGEMS( const string& fname )
 {
-  try
-    {
-       string fname = fname_;
-       if( fname.empty() )
-       {
-         if( projectSettings)
-         {
-             fname  = projectSettings->value("ProjFolderPath", ".").toString().toUtf8().data();
-             fname  += projectSettings->value("GEMS3KFilesPath", "/GEMS").toString().toUtf8().data();
-         }
-         //Select files
-         if( !gemsLstFile.ChooseFileOpen( this, fname, "Please, select a GEMS3K lst file","*.lst" ))
-           return;
-       }
-
        // Creates TNode structure instance accessible trough the "node" pointer
        aNode.reset( new TNode() );
 
@@ -173,6 +160,24 @@ void FITMainWindow::CmSelectGEMS( const string& fname_ )
        setListPhase();
 
        pLineGEMS->setText( trUtf8( gemsLstFile.Name().c_str() ) );
+}
+
+/// Select new GEMS3K files list and setup windows
+void FITMainWindow::CmSelectGEMS( const string& fname_ )
+{
+  try
+    {
+       string fname = fname_;
+       if( fname.empty() )
+       {
+         fname = gemsLstFile.GetPath();
+         //Select files
+         if( !gemsLstFile.ChooseFileOpen( this, fname, "Please, select a GEMS3K lst file","*.lst" ))
+           return;
+       }
+
+       selectGEMS( fname );
+       changeSystemFiles( gemsLstFile.Name(), gemsLstFile.Ext() );
 
        setStatusText( "GEMS3K input file set is selected" );
     }
@@ -315,9 +320,14 @@ void FITMainWindow::CmShow( const string& reckey )
       ui->recordEdit->setText( trUtf8(valDB.c_str()));
       contentsChanged = false;
 
-      // SetTitle();
-      // pVisor->Update( true );
-      // defineModuleKeysList( actwin->rtNumRecord() );
+      // load gems3k list
+      TFile newgems( rtEJ[ currentMode ].GetGems3kName() );
+      if( newgems.Name() != gemsLstFile.Name() ) // new list
+      {
+          gemsLstFile.ChangeName( newgems.Name() );
+          if( !newgems.Name().empty() )
+              selectGEMS( gemsLstFile.GetPath() );
+      }
    }
    catch( TError& err )
         {
@@ -569,6 +579,11 @@ void FITMainWindow::CmBackupTXT()
        if( !MessageToSave() )
            return;
 
+       string projDir = fitTaskDir.Dir();
+       QString dir = QFileDialog::getExistingDirectory(this, "Select Directory",
+        projDir.c_str(),  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
+       projDir = dir.toUtf8().data();
+
        // Load curent record to bson structure
        bson bsrec;
        string recBsonText = ui->recordEdit->toPlainText().toUtf8().data();
@@ -582,7 +597,7 @@ void FITMainWindow::CmBackupTXT()
         string fname;
         if( !bson_find_string( bsrec.data, "taskid", fname ) )
                     fname = "undefined";
-        fname = fitTaskDir.Dir() + "/" + fname + ".dat";
+        fname = projDir + "/" + fname + ".dat";
 
         // save txt data
         generateTxtfromBson( fname, &bsrec, true );

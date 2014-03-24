@@ -52,6 +52,9 @@ class FITMainWindow : public QMainWindow
     void resetMainWindow();
     bool MessageToSave();
     void RecSave( const string& recBsonText, const char* key=0 );
+    void changeSystemFiles( const string& newname, const string& ext );
+    void runProcess();
+    void selectGEMS( const string& fname );
 
     void closeEvent( QCloseEvent* );
     void resizeEvent( QResizeEvent * event );
