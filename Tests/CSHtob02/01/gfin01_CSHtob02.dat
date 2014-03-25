@@ -461,7 +461,7 @@ F-10258400
 
 # StatMCbool: perform Monte Carlo runs -> no (0) 
 #             yes (1) scatter added to (ideal) computed values | yes (2) scatter added to measured values 
-<StatMCbool> 1
+<StatMCbool> 0
 
 # StatMCruns: number of Monte Carlo runs for confidence interval generation
 <StatMCruns> 100
