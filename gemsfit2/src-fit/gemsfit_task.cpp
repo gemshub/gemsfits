@@ -36,6 +36,7 @@
 //#include "gemsfit_nested_functions.h"
 #include <cmath>
 #include "gemsfit_target_functions.h"
+#include "gemsfit_nested_functions.h"
 #include <iomanip>
 #include "s_solmod.h"
 #include "s_formula.h"
@@ -153,7 +154,18 @@ void TGfitTask::run_optim()
 {
 //    titration(this);
     gpf->flog << "13. gemsfit_task.cpp(151). Initializing optimization init_optim(); " << endl;
+    if (Tfun->objfun.size() > 0)
     init_optim (Opti->optv, weighted_Tfun_sum_of_residuals);
+    else
+    {
+        if (Opti->h_nestfun)
+        {
+            string old = Tfun->type;               // storing the old type of target function
+            Tfun->type = "abs_dif";                // seeting the target function to simple abslute difference
+            nestedfun(this);                             // optimizing the nested functions
+            Tfun->type = old;
+        }
+    }
 }
 
 void TGfitTask::Ainit_optim (std::vector<double> &optv_ /*,int &countit, double &weighted_Tfun_sum_of_residual */)
@@ -853,12 +865,14 @@ void TGfitTask::get_Lparams_delta()
             for (unsigned int e=0; e < experiments.size(); e++ )
             {
                 Opti->nest_optv.i_opt[i]->val.push_back(NodT[e]->Get_TK( ));
+                Opti->nest_optv.e_opt[i]->val.push_back(NodT[e]->Get_TK( ));
             }
         else
         if (Opti->nest_optv.Ptype[i] == "P")
             for (unsigned int e=0; e < experiments.size(); e++ )
             {
                 Opti->nest_optv.i_opt[i]->val.push_back(NodT[e]->Get_P( ));
+                Opti->nest_optv.e_opt[i]->val.push_back(NodT[e]->Get_P( ));
             }
     }
 }

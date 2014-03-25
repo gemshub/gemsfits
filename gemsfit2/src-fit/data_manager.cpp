@@ -989,24 +989,24 @@ void Data_Manager::parse_JSON_object(string query, const char* key, vector<strin
          }
         else
         {
-                if(json_is_string(object))
-                {
-                    result.push_back(json_string_value(object));
-                }
-                else if (json_is_real(object))
-                {
-                    ss << json_real_value(object);
-                    sss = ss.str();
-                    ss.str("");
-                    result.push_back(sss);
-                }
-                else if (json_is_integer(object))
-                {
-                    ss << json_integer_value(object);
-                    sss = ss.str();
-                    ss.str("");
-                    result.push_back(sss);
-                }
+            if(json_is_string(object))
+            {
+                result.push_back(json_string_value(object));
+            }
+            else if (json_is_real(object))
+            {
+                ss << json_real_value(object);
+                sss = ss.str();
+                ss.str("");
+                result.push_back(sss);
+            }
+            else if (json_is_integer(object))
+            {
+                ss << json_integer_value(object);
+                sss = ss.str();
+                ss.str("");
+                result.push_back(sss);
+            }
         }
     }
 }
@@ -1087,24 +1087,24 @@ void Data_Manager::parse_JSON_array_object( string data_, const char *arr , cons
         else
         {
 //            data = json_object_get(data1, key);  // maybe error
-                if(json_is_string(object))
-                {
-                    result.push_back(json_string_value(object));
-                }
-                else if (json_is_real(object))
-                {
-                    ss << json_real_value(object);
-                    sss = ss.str();
-                    ss.str("");
-                    result.push_back(sss);
-                }
-                else if (json_is_integer(object))
-                {
-                    ss << json_integer_value(object);
-                    sss = ss.str();
-                    ss.str("");
-                    result.push_back(sss);
-                }
+            if(json_is_string(object))
+            {
+                result.push_back(json_string_value(object));
+            }
+            else if (json_is_real(object))
+            {
+                ss << json_real_value(object);
+                sss = ss.str();
+                ss.str("");
+                result.push_back(sss);
+            }
+            else if (json_is_integer(object))
+            {
+                ss << json_integer_value(object);
+                sss = ss.str();
+                ss.str("");
+                result.push_back(sss);
+            }
         }
     }
 }

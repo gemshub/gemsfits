@@ -808,7 +808,7 @@ string OUTPUT_DIR = "output/";
 string RESULT_DIR = "results/";
 //const char *OPT_PARAM_FILE = "gemsfit2_input.dat";
 string FIT_CSV_FILE = "FIT_results.csv";
-string FIT_STATISTIC = "MyFitStatistics.txt";
+string FIT_STATISTIC = "Summary_Statistics.txt";
 string FIT_LOGFILE = "gemsfit2.log";
 
 TGfitPath::TGfitPath(int c, char *v[]):
@@ -968,8 +968,8 @@ TGfitPath::TGfitPath(int c, char *v[]):
 //                inputDir = path + INPUT_DIR;
                 mkdir(path_init.c_str(), 0775);
                 outputDir = path_init + OUTPUT_DIR;
-                resultDir = path_init + RESULT_DIR;
-                fitFile = resultDir+FIT_CSV_FILE;
+//                resultDir = path_init + RESULT_DIR;
+                fitFile = outputDir+FIT_CSV_FILE;
                 fitStatistics = outputDir+FIT_STATISTIC;
                 fitLogFile = outputDir+FIT_LOGFILE;
                 break;
@@ -979,8 +979,8 @@ TGfitPath::TGfitPath(int c, char *v[]):
                 // later these paths and filenames can be read from config file
 //                inputDir = path_run + INPUT_DIR;
                 outputDir = path_run + OUTPUT_DIR;
-                resultDir = path_run + RESULT_DIR;
-                fitFile = resultDir+FIT_CSV_FILE;
+//                resultDir = path_run + RESULT_DIR;
+                fitFile = outputDir+FIT_CSV_FILE;
                 fitStatistics = outputDir+FIT_STATISTIC;
                 fitLogFile = outputDir+FIT_LOGFILE;
                 // GEMSFIT logfile (usually log_gemsfit.log)
@@ -1005,8 +1005,8 @@ TGfitPath::TGfitPath(int c, char *v[]):
                 // later these paths and filenames can be read from config file
                 inputDir = path + INPUT_DIR;
                 outputDir = path + OUTPUT_DIR;
-                resultDir = path + RESULT_DIR;
-                fitFile = resultDir+FIT_CSV_FILE;
+//                resultDir = path + RESULT_DIR;
+                fitFile = outputDir+FIT_CSV_FILE;
                 fitStatistics = outputDir+FIT_STATISTIC;
                 fitLogFile = outputDir+FIT_LOGFILE;
         }
@@ -1108,7 +1108,7 @@ outField Data_Manager_fields[9] =
       "\n#          \"Q\" for amount; \"@coef\" for activity coeficient"
       "\n#      \"WT\": weight assigned to the objective function as real number e.g. \"WT\": 100. "
       "\n#      \"unit\":  units of measurement (override those given in the database for this value):"
-      "\n#          \"molal\":  mol/(kg H2O), \"logm\": log(molal), \"-loga\": negated log(activity) for pH;"
+      "\n#          \"molal\":  mol/(kg H2O), \"log_molal\": log(molal), \"-loga\": negated log(activity) for pH;"
       "\n#          \"g\"; \"kg\"; \"cm3\"; \"m3\"; \"molfrac\": mole fraction; J/mol for Gex "
       "\n#           ... (conversions will be performed automatically).\n"
       "\n#  \"NFUN\": nested objective function, a list [] of terms {} for measured properties to compare"
@@ -1434,10 +1434,12 @@ outField optimization_fields[25] =
     { "OptTuckey",  0, 0, 1, "\n# OptTuckey: (1) Use Tuckey Biweight for all data. (2) Use Tuckey Biweight for each OFUN independently. "},
     { "OptUserWeight",  0, 0, 1, "\n# OptUserWeight: (1) Use the weights provided in the \"weight\" column of the database. "},
     { "OptTolAbs",  0, 0, 1, "\n# OptTolAbs: stopping criterion -> specify absolute tolerance (default = 1e-04) of function value"},
-    { "OptHybridTolRel",  0, 0, 1, "\n# OptHybridTolRel: Comment"},
-    { "OptHybridTolAbs",  0, 0, 1, "\n# OptHybridTolAbs: Comment"},
+    { "OptTuckeyVal",  0, 0, 1, "\n# OptHybridTolRel: Comment"},
+    { "OptHybridTolAbs",  0, 0, 1, "\n# OptTuckeyVal: Empirical chosen value that is multiplied with the median of residuals to get the "
+                                   "\n# 		      weighting thereshold value C = Val * M. Default value 6. Residuals >C -> weight 0 "},
     { "OptHybridMaxEval",  0, 0, 1, "\n# OptHybridMaxEval: Comment"},
-    { "OptHybridMode",  0, 0, 1, "\n# OptHybridMode: Comment"},
+    { "OptEquilibrium",  0, 0, 1, "\n# OptEquilibrium: (1) Use GEMS3K warp to calculate thermodynamic equilibrium. (0) Use TSolmod wrap "
+                                  "\n#                  without calculating themrodynamic equilibrium (fitting activtiy model parameters)"},
     { "OptNmultistart",  0, 0, 1, "\n# OptNmultistart: Comment"},
     { "OptPerturbator",  0, 0, 1, "\n# OptPerturbator: The delta/difference used to to calculate the d(function_value)/d(parameter_value) gradient"},
     { "OptInitStep",  0, 0, 1, "\n# OptInitStep: specify initial stepsize for local minimizers "
@@ -1463,10 +1465,10 @@ typedef enum {  /// Field index into outField structure
     f_OptTuckey,
     f_OptUserWeight,
     f_OptTolAbs,
-    f_OptHybridTolRel,
-    f_OptHybridTolAbs,
+    f_OptTuckeyVal,
+    f_Opt_,
     f_OptHybridMaxEval,
-    f_OptHybridMode,
+    f_OptEquilibrium,
     f_OptNmultistart,
     f_OptPerturbator,
     f_OptInitStep,
@@ -1486,7 +1488,9 @@ void optimization::define_nlopt_param( )
     OptTolAbs = 1e-6;
     OptMaxEval = 500000;
     OptDoWhat = 0;
+    OptEquilibrium = 1;
     OptTuckey = 0;
+    OptTuckeyVal = 6;
     OptUserWeight = 0;
     OptTitration = 0;
     OptNormParam = 1;
@@ -1515,8 +1519,10 @@ void optimization::out_nlopt_param_txt( bool with_comments, bool brief_mode )
     }
 
     prar.writeField( f_OptDoWhat,  (long int)OptDoWhat, with_comments, brief_mode);
+    prar.writeField( f_OptEquilibrium,  (long int)OptEquilibrium, with_comments, brief_mode);
     prar.writeField( f_OptUserWeight,  (long int)OptUserWeight, with_comments, brief_mode);
     prar.writeField( f_OptTuckey,  (long int)OptTuckey, with_comments, brief_mode);
+    prar.writeField( f_OptTuckeyVal,  (long int)OptTuckeyVal, with_comments, brief_mode);
 //    prar.writeField( f_OptTitration,  (long int)OptTitration, with_comments, brief_mode);
     prar.writeField( f_OptAlgo,  OptAlgo, with_comments, brief_mode );
     prar.writeField( f_OptBoundPerc,  OptBoundPerc, with_comments, brief_mode );
@@ -1559,9 +1565,13 @@ void optimization::get_nlopt_param_txt(vector<double> optv)
                   break;
           case f_OptDoWhat: rdar.readArray( "OptDoWhat",  &OptDoWhat, 1);
                   break;
+          case f_OptEquilibrium: rdar.readArray( "OptEquilibrium",  &OptEquilibrium, 1);
+                  break;
           case f_OptUserWeight: rdar.readArray( "OptUserWeight",  &OptUserWeight, 1);
                   break;
           case f_OptTuckey: rdar.readArray( "OptTuckey",  &OptTuckey, 1);
+                  break;
+          case f_OptTuckeyVal: rdar.readArray( "OptTuckeyVal",  &OptTuckeyVal, 1);
                   break;
 //          case f_OptTitration: rdar.readArray( "OptTitration",  &OptTitration, 1);
 //                  break;

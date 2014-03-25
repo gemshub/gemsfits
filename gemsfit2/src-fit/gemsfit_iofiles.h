@@ -89,7 +89,6 @@ class TGfitPath
 
     string inputDir;
     string outputDir;
-    string resultDir;
 
     string optParamFile;
     string fitFile;
@@ -102,6 +101,7 @@ public:
 
     ofstream flog;  // GEMSFIT logfile
     ofstream fres;  // GEMSFIT results file logging all test runs
+    ofstream fstat;
 
     TGfitPath(int argc, char* argv[]);
     ~TGfitPath();
@@ -118,9 +118,9 @@ public:
         return outputDir;
     }
 
-    string ResultDir() const {
-        return resultDir;
-    }
+//    string ResultDir() const {
+//        return resultDir;
+//    }
 
     string GEMS3LstFilePath() const {
         return gems3LstFilePath;

@@ -65,7 +65,9 @@ double Equil_objective_function_callback( const std::vector<double> &opt, std::v
         sys->h_grad = false;
 
         // call tsolmod wrapper
+        if (sys->Opti->OptEquilibrium)
         gems3k_wrap( sum_of_squared_residuals_sys, optV, sys );
+        else tsolmod_wrap( sum_of_squared_residuals_sys, optV, sys );
         sum_of_squared_residuals_allsys = sum_of_squared_residuals_allsys + sum_of_squared_residuals_sys;
     }
     else
@@ -78,7 +80,9 @@ double Equil_objective_function_callback( const std::vector<double> &opt, std::v
         sys->h_grad = false;
 
         // call tsolmod wrapper
+        if (sys->Opti->OptEquilibrium)
         gems3k_wrap( sum_of_squared_residuals_sys, opt, sys );
+        else tsolmod_wrap( sum_of_squared_residuals_sys, opt, sys );
         sum_of_squared_residuals_allsys = sum_of_squared_residuals_allsys + sum_of_squared_residuals_sys;
     }
 
@@ -301,6 +305,15 @@ void gradient( vector<double> opt, vector<double> &grad, TGfitTask *sys )
 
 void tsolmod_wrap( double &residual, const std::vector<double> &opt, TGfitTask *sys )
 {
+
+    // Clear already stored results
+    sys->computed_values_v.clear();
+    sys->measured_values_v.clear();
+    sys->Weighted_Tfun_residuals_v.clear();
+    sys->Tfun_residuals_v.clear();
+    sys->residuals_v.clear();
+    sys->weights.clear();
+
     for (unsigned int i=0; i< sys->Opti->Ptype.size(); ++i)
     {
         if (sys->Opti->Ptype[i] == "PMc")
@@ -314,8 +327,7 @@ void tsolmod_wrap( double &residual, const std::vector<double> &opt, TGfitTask *
 
     } // END loop trough parameters
 
-double gam_dc1, gam_dc2, gam_dc3, gam_dc4;
-double ln_gama[40];
+//double gam_dc1, gam_dc2, gam_dc3, gam_dc4;
     // loop over the experiments
 
 //    ////#ifdef USE_MPI
@@ -328,32 +340,21 @@ double ln_gama[40];
 
             TMulti *multi = sys->NodT[i]->pMulti();
 
-                // Set the P in the node->CNode-P as in the experiments to avoind problem due to Psat notation as 0
-//            for (unsigned int e=0; e<sys->experiments.size(); ++e)
-//            {
-//                sys->NodT[e]->Set_TK(273.15 + sys->experiments[e]->sT);
-//                sys->NodT[e]->Set_P(100000 * sys->experiments[e]->sP);
-//            }
+            int sizeFIs = multi->get_sizeFIs();
 
-//            int sizeFIs = multi->get_sizeFIs();
+//            gam_dc1 = sys->NodT[i]->Get_gDC( 23 );
+//            gam_dc2 = sys->NodT[i]->Get_gDC( 24 );
 
-            gam_dc1 = sys->NodT[i]->Get_gDC( 23 );
-            gam_dc2 = sys->NodT[i]->Get_gDC( 24 );
+//            gam_dc1 = log(gam_dc1);
+//            gam_dc2 = log(gam_dc2);
 
-//            for (unsigned j=0; j<sizeFIs; j++)
-//            {
-
-////            TSolMod *sol = multi->pTSolMod(j);
-//            sol->Get_lnGamma(ln_gama);
-//            gam_dc3 = ln_gama[0];
-//            gam_dc4 = ln_gama[1];
-////            multi->Access_GEM_IMP_init();
-//            sol->PTparam();
-//            sol->MixMod();
-//            sol->Get_lnGamma(ln_gama);
-//            gam_dc3 = ln_gama[0];
-//            gam_dc4 = ln_gama[1];
-//            }
+            for (unsigned j=0; j<sizeFIs; j++)
+            {
+            TSolMod *sol = multi->pTSolMod(j);
+            multi->Access_GEM_IMP_init();
+            sol->PTparam();
+            sol->MixMod();
+            }
 
 //            vector<DATABR*> dBR;
 //            dBR.push_back(sys->NodT[i]->pCNode());
@@ -369,8 +370,6 @@ double ln_gama[40];
 
 
         }
-
-
 
 
 
@@ -398,9 +397,6 @@ double ln_gama[40];
             }
         }
     }
-
-
-
 
 }
 
@@ -444,7 +440,7 @@ void set_Tuckey_weight_global (TGfitTask *sys)
     }
 
     median_ = median(abs_res);
-    C = 6 * median_;
+    C = sys->Opti->OptTuckeyVal * median_;
 
     omp_set_num_threads(sys->MPI);
     #pragma omp parallel for
@@ -481,7 +477,7 @@ void set_Tuckey_weight_objfun (TGfitTask *sys)
 
         }
         median_.push_back(median(abs_res[j]));
-        C.push_back(6 * median_[j]);
+        C.push_back(sys->Opti->OptTuckeyVal * median_[j]);
     }
 
     omp_set_num_threads(sys->MPI);

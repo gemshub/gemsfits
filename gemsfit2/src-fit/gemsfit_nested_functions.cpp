@@ -59,8 +59,8 @@ void nestedfun (TGfitTask *sys)
                 vector <double> x, UB, LB;
                 for (unsigned int p = 0; p < sys->Opti->nest_optv.opt.size(); p++)
                 {
-                    if ((sys->Opti->nest_optv.Ptype[p] == param_type) || ((param_type == "P-T") && (sys->Opti->nest_optv.Ptype[p] == "P"))
-                            || ((param_type == "P-T") && (sys->Opti->nest_optv.Ptype[p] == "TK")) )
+                    if ((sys->Opti->nest_optv.Ptype[p] == param_type) || ((param_type == "T-P") && (sys->Opti->nest_optv.Ptype[p] == "P"))
+                            || ((param_type == "T-P") && (sys->Opti->nest_optv.Ptype[p] == "TK")) )
                     {
 //                        double val = 0.0;
                         if ((sys->Tfun->nestfun[sys->NEFndx[P_id]].exp_CN == "pH") && (sys->Tfun->nestfun[j].Telem.size() > 0))
@@ -132,6 +132,7 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, 
     double residual = 0.0;
     int P_id = omp_get_thread_num();
     long int NodeStatusCH;
+    bool notP = true, notT=true;
 
     // adjust parameters
     for (unsigned int i = 0; i < sys->vPAndx[P_id]->ndx.size(); i++) // index of the nest_func paramaters that will be adjusted with one DFUN
@@ -150,12 +151,14 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, 
                 {
                     sys->NodT[sys->EXPndx[P_id]]->Set_TK( opt[i] );
                     sys->experiments[sys->EXPndx[P_id]]->sT = opt[i] - 273.15; // temperature in C
+                    notT = false;
                 }
                 else
                 if (sys->Opti->nest_optv.Ptype[p] == "P")
                 {
                     sys->NodT[sys->EXPndx[P_id]]->Set_P( opt[i] );
                     sys->experiments[sys->EXPndx[P_id]]->sP = opt[i] / 1e5; // pressure in bar
+                    notP = false;
                 }
             }
         }
@@ -169,7 +172,9 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, 
 
 
     // claculate equilibrium
+    if (notT)
     sys->NodT[sys->EXPndx[P_id]]->Set_TK(273.15 + sys->experiments[sys->EXPndx[P_id]]->sT);
+    if (notP)
     sys->NodT[sys->EXPndx[P_id]]->Set_P(100000 * sys->experiments[sys->EXPndx[P_id]]->sP);
 
     vector<DATABR*> dBR;
@@ -193,8 +198,8 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, 
         cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
     }
 
-    double meas_pH = sys->experiments[sys->EXPndx[P_id]]->expphases[0]->phprop[0]->Qnt;
-    double calc_pH = sys->NodT[sys->EXPndx[P_id]]->Get_pH();
+//    double meas_pH = sys->experiments[sys->EXPndx[P_id]]->expphases[0]->phprop[0]->Qnt;
+//    double calc_pH = sys->NodT[sys->EXPndx[P_id]]->Get_pH();
 
 //    residual = abs (sys->experiments[sys->EXPndx[P_id]]->expphases[0]->phprop[0]->Qnt - sys->NodT[sys->EXPndx[P_id]]->Get_pH());
 

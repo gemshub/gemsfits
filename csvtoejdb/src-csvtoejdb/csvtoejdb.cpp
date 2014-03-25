@@ -73,14 +73,14 @@ cout << "csvtoejdb: processing data rows:" << endl;
                 {
                     if (row[i].empty()) { cout << "expdataset column cannot be emppty. Exiting..." << endl; bson_destroy(&exp); exit(1);}
                     bson_append_start_object(&bq1, expdataset);
-                    bson_append_string(&bq1, "$begin", row[i].c_str());
+                    bson_append_string(&bq1, "$in", row[i].c_str());
                     bson_append_finish_object(&bq1);
                 }
                 if (headline[i]==expsample)
                 {
                     if (row[i].empty()) { cout << "sample (sample name) column cannot be emppty. Exiting..." << endl; bson_destroy(&exp); exit(1);}
                     bson_append_start_object(&bq1, expsample);
-                    bson_append_string(&bq1, "$begin", row[i].c_str());
+                    bson_append_string(&bq1, "$in", row[i].c_str());
                     bson_append_finish_object(&bq1);
                 } // end for query
             }

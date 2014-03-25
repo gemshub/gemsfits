@@ -1,0 +1,3021 @@
+../EJDB/cashsolub
+csvtoejdb start: file ./CSHsoluDataGC65.csv; head row:
+id,sample,expdataset,comment,type,sT,sP,comp.SiO2@,error,unit,comp.H2O@,error,unit,comp.Ca(OH)2,error,unit,comp.N2,error,unit,comp.O2,error,unit,phase.aq_gen.pH,error,unit,phase.aq_gen.IC.Si.Q,error,unit,phase.aq_gen.IC.Ca.Q,error,unit,phase.CSH.Q,error,unit,phase.CSH.MF.Si/Si,error,unit,phase.CSH.MF.Ca/Si,error,unit
+csvtoejdb: processing data rows:
+1,GC65_1,GC65,solubility,coprec,25,1,8.05,,g,1000,,g,0.5,,g,0.008,,g,0.002,,g,9.32,0.02,-loga,0.00231,0.00001,molal,0.00074,0.00001,molal,0.05,,mol,1,,,0.67,0.05,
+2,GC65_2,GC65,,coprec,25,1,8.05,,g,1000,,g,0.69,,g,0.008,,g,0.002,,g,9.16,0.02,-loga,0.0026,0.00001,molal,0.00093,0.00001,molal,0.07,,mol,1,,,0.67,0.05,
+3,GC65_3,GC65,,coprec,25,1,8.05,,g,1000,,g,1.39,,g,0.008,,g,0.002,,g,9.65,0.02,-loga,0.0034,0.00001,molal,0.00147,0.00001,molal,0.14,,mol,1,,,0.67,0.05,
+4,GC65_4,GC65,,coprec,25,1,8.05,,g,1000,,g,2.28,,g,0.008,,g,0.002,,g,9.75,0.02,-loga,0.00433,0.00001,molal,0.00168,0.00001,molal,0.23,,mol,1,,,0.67,0.05,
+5,GC65_5,GC65,,coprec,25,1,8.05,,g,1000,,g,3.18,,g,0.008,,g,0.002,,g,9.8,0.02,-loga,0.00407,0.00001,molal,0.0019,0.00001,molal,0.32,,mol,1,,,0.67,0.05,
+6,GC65_6,GC65,,coprec,25,1,8.05,,g,1000,,g,4.07,,g,0.008,,g,0.002,,g,9.98,0.02,-loga,0.0039,0.00001,molal,0.00195,0.00001,molal,0.41,,mol,1,,,0.67,0.05,
+7,GC65_7,GC65,,coprec,25,1,8.05,,g,1000,,g,4.27,,g,0.008,,g,0.002,,g,10.02,0.02,-loga,0.00387,0.00001,molal,0.00197,0.00001,molal,0.43,,mol,1,,,0.67,0.05,
+8,GC65_8,GC65,,coprec,25,1,8.05,,g,1000,,g,6.75,,g,0.008,,g,0.002,,g,10.26,0.02,-loga,0.00377,0.00001,molal,0.002,0.00001,molal,0.68,,mol,1,,,0.67,0.05,
+9,GC65_9,GC65,,coprec,25,1,8.05,,g,1000,,g,7.54,,g,0.008,,g,0.002,,g,10.48,0.02,-loga,0.00147,0.00001,molal,0.00175,0.00001,molal,0.76,,mol,1,,,0.76,0.05,
+10,GC65_10,GC65,,coprec,25,1,8.05,,g,1000,,g,9.23,,g,0.008,,g,0.002,,g,11.4,0.03,-loga,0.00025,0.00001,molal,0.00213,0.00001,molal,0.93,,mol,1,,,0.93,0.05,
+11,GC65_11,GC65,,coprec,25,1,8.05,,g,1000,,g,10.03,,g,0.008,,g,0.002,,g,11.77,0.03,-loga,0.00009,0.00001,molal,0.0039,0.00001,molal,1.01,,mol,1,,,1.01,0.05,
+12,GC65_12,GC65,,coprec,25,1,8.05,,g,1000,,g,10.72,,g,0.008,,g,0.002,,g,11.92,0.03,-loga,0.00006,0.00001,molal,0.00528,0.00001,molal,1.08,,mol,1,,,1.08,0.05,
+13,GC65_13,GC65,,coprec,25,1,8.05,,g,1000,,g,11.61,,g,0.008,,g,0.002,,g,11.9,0.03,-loga,0.00007,0.00001,molal,0.00471,0.00001,molal,1.17,,mol,1,,,1.17,0.05,
+14,GC65_14,GC65,,coprec,25,1,8.05,,g,1000,,g,12.41,,g,0.008,,g,0.002,,g,11.95,0.03,-loga,0.00004,0.00001,molal,0.00572,0.00001,molal,1.25,,mol,1,,,1.25,0.05,
+15,GC65_15,GC65,,coprec,25,1,8.05,,g,1000,,g,13.2,,g,0.008,,g,0.002,,g,12.1,0.03,-loga,0.00003,0.00001,molal,0.00742,0.00001,molal,1.33,,mol,1,,,1.33,0.05,
+16,GC65_16,GC65,,coprec,25,1,8.05,,g,1000,,g,14.2,,g,0.008,,g,0.002,,g,12.1,0.03,-loga,0.00003,0.00001,molal,0.00645,0.00001,molal,1.43,,mol,1,,,1.43,0.05,
+17,GC65_17,GC65,,coprec,25,1,8.05,,g,1000,,g,14.79,,g,0.008,,g,0.002,,g,12.14,0.03,-loga,0.00002,0.00001,molal,0.00942,0.00001,molal,1.49,,mol,1,,,1.49,0.05,
+18,GC65_18,GC65,,coprec,25,1,8.05,,g,1000,,g,15.59,,g,0.008,,g,0.002,,g,12.16,0.03,-loga,0.00003,0.00001,molal,0.0105,0.00001,molal,1.57,,mol,1,,,1.57,0.05,
+19,GC65_19,GC65,,coprec,25,1,8.05,,g,1000,,g,16.18,,g,0.008,,g,0.002,,g,12.25,0.03,-loga,0.00002,0.00001,molal,0.015,0.00001,molal,1.63,,mol,1,,,1.63,0.05,
+20,GC65_20,GC65,,coprec,25,1,8.05,,g,1000,,g,16.78,,g,0.008,,g,0.002,,g,12.4,0.03,-loga,0.00002,0.00001,molal,0.0185,0.00001,molal,1.69,,mol,1,,,1.69,0.05,
+21,GC65_21,GC65,,coprec,25,1,8.05,,g,1000,,g,17.77,,g,0.008,,g,0.002,,g,12.33,0.03,-loga,0.00002,0.00001,molal,0.0164,0.00001,molal,1.79,,mol,1,,,1.79,0.05,
+csvtoejdb end: processed 21 samples (.csv rows)
+	_id : 7 	 53147b44d0d1317700000000
+	expdataset : 2 	 EL01-20-91
+	sample : 2 	 0.6-0-k0 91d
+	sP : 1 	 1.000000
+	sT : 1 	 20.000000
+	weight : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 0.090000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 0.021000
+			unit : 2 	 mole
+
+		2 : 3 	 
+			comp : 2 	 CaO
+			Q : 1 	 0.013000
+			unit : 2 	 mole
+
+		3 : 3 	 
+			comp : 2 	 CaOAl2O3
+			Q : 1 	 0.000000
+			unit : 2 	 mole
+
+		4 : 3 	 
+			comp : 2 	 KOH
+			Q : 1 	 0.000000
+			unit : 2 	 mole
+
+		5 : 3 	 
+			comp : 2 	 N2@
+			Q : 1 	 0.000400
+			unit : 2 	 mole
+
+		6 : 3 	 
+			comp : 2 	 O2@
+			Q : 1 	 0.000001
+			unit : 2 	 mole
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 9.700000
+					error : 1 	 0.100000
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.003891
+					error : 1 	 0.000389
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.001030
+					error : 1 	 0.000103
+
+
+
+		1 : 3 	 
+			phase : 2 	 CASHNK1
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 1.000000
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.605000
+					error : 1 	 0.060500
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.000000
+					error : 1 	 0.000000
+
+
+
+
+	_id : 7 	 53147b44d0d1317700000001
+	expdataset : 2 	 EL01-20-91
+	sample : 2 	 0.6-0.1-K0 91d
+	sP : 1 	 1.000000
+	sT : 1 	 20.000000
+	weight : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 0.090000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 0.020000
+			unit : 2 	 mole
+
+		2 : 3 	 
+			comp : 2 	 CaO
+			Q : 1 	 0.011000
+			unit : 2 	 mole
+
+		3 : 3 	 
+			comp : 2 	 CaOAl2O3
+			Q : 1 	 0.001000
+			unit : 2 	 mole
+
+		4 : 3 	 
+			comp : 2 	 KOH
+			Q : 1 	 0.000000
+			unit : 2 	 mole
+
+		5 : 3 	 
+			comp : 2 	 N2@
+			Q : 1 	 0.000400
+			unit : 2 	 mole
+
+		6 : 3 	 
+			comp : 2 	 O2@
+			Q : 1 	 0.000001
+			unit : 2 	 mole
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 10.400000
+					error : 1 	 0.100000
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.001185
+					error : 1 	 0.000119
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.000820
+					error : 1 	 0.000082
+
+
+
+		1 : 3 	 
+			phase : 2 	 CASHNK1
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 1.000000
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.596000
+					error : 1 	 0.059600
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.092000
+					error : 1 	 0.009200
+
+
+
+
+	_id : 7 	 53147b44d0d1317700000002
+	expdataset : 2 	 EL01-20-91
+	sample : 2 	 0.6-0.2-K0 91d
+	sP : 1 	 1.000000
+	sT : 1 	 20.000000
+	weight : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 0.090000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 0.019000
+			unit : 2 	 mole
+
+		2 : 3 	 
+			comp : 2 	 CaO
+			Q : 1 	 0.010000
+			unit : 2 	 mole
+
+		3 : 3 	 
+			comp : 2 	 CaOAl2O3
+			Q : 1 	 0.002000
+			unit : 2 	 mole
+
+		4 : 3 	 
+			comp : 2 	 KOH
+			Q : 1 	 0.000000
+			unit : 2 	 mole
+
+		5 : 3 	 
+			comp : 2 	 N2@
+			Q : 1 	 0.000400
+			unit : 2 	 mole
+
+		6 : 3 	 
+			comp : 2 	 O2@
+			Q : 1 	 0.000001
+			unit : 2 	 mole
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 10.300000
+					error : 1 	 0.100000
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.003362
+					error : 1 	 0.000336
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.001120
+					error : 1 	 0.000112
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.000000
+					error : 1 	 0.000000
+
+
+
+		1 : 3 	 
+			phase : 2 	 CASHNK1
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 1.000000
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.514000
+					error : 1 	 0.051400
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.086000
+					error : 1 	 0.008600
+
+
+
+
+	_id : 7 	 53147b44d0d1317700000003
+	expdataset : 2 	 EL01-20-91
+	sample : 2 	 0.6-0.33-K0 91d
+	sP : 1 	 1.000000
+	sT : 1 	 20.000000
+	weight : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 0.090000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 0.018000
+			unit : 2 	 mole
+
+		2 : 3 	 
+			comp : 2 	 CaO
+			Q : 1 	 0.008000
+			unit : 2 	 mole
+
+		3 : 3 	 
+			comp : 2 	 CaOAl2O3
+			Q : 1 	 0.003000
+			unit : 2 	 mole
+
+		4 : 3 	 
+			comp : 2 	 KOH
+			Q : 1 	 0.000000
+			unit : 2 	 mole
+
+		5 : 3 	 
+			comp : 2 	 N2@
+			Q : 1 	 0.000400
+			unit : 2 	 mole
+
+		6 : 3 	 
+			comp : 2 	 O2@
+			Q : 1 	 0.000001
+			unit : 2 	 mole
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 10.300000
+					error : 1 	 0.100000
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.003498
+					error : 1 	 0.000350
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.001220
+					error : 1 	 0.000122
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.000000
+
+
+
+		1 : 3 	 
+			phase : 2 	 CASHNK1
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 1.000000
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.464000
+					error : 1 	 0.046400
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.198000
+					error : 1 	 0.019800
+
+
+
+
+	_id : 7 	 53147b44d0d1317700000004
+	expdataset : 2 	 EL01-20-91
+	sample : 2 	 1-0-k0 91d
+	sP : 1 	 1.000000
+	sT : 1 	 20.000000
+	weight : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 0.090000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 0.017000
+			unit : 2 	 mole
+
+		2 : 3 	 
+			comp : 2 	 CaO
+			Q : 1 	 0.017000
+			unit : 2 	 mole
+
+		3 : 3 	 
+			comp : 2 	 CaOAl2O3
+			Q : 1 	 0.000000
+			unit : 2 	 mole
+
+		4 : 3 	 
+			comp : 2 	 KOH
+			Q : 1 	 0.000000
+			unit : 2 	 mole
+
+		5 : 3 	 
+			comp : 2 	 N2@
+			Q : 1 	 0.000400
+			unit : 2 	 mole
+
+		6 : 3 	 
+			comp : 2 	 O2@
+			Q : 1 	 0.000001
+			unit : 2 	 mole
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 12.000000
+					error : 1 	 0.100000
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.000080
+					error : 1 	 0.000008
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.002880
+					error : 1 	 0.000288
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.000000
+
+
+
+		1 : 3 	 
+			phase : 2 	 CASHNK1
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 1.000000
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 1.000000
+					error : 1 	 0.100000
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.000000
+					error : 1 	 0.000000
+
+
+
+
+	_id : 7 	 53147b44d0d1317700000005
+	expdataset : 2 	 EL01-20-91
+	sample : 2 	 1-0.01-k0 91d
+	sP : 1 	 1.000000
+	sT : 1 	 20.000000
+	weight : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 0.090000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 0.017136
+			unit : 2 	 mole
+
+		2 : 3 	 
+			comp : 2 	 CaO
+			Q : 1 	 0.017051
+			unit : 2 	 mole
+
+		3 : 3 	 
+			comp : 2 	 CaOAl2O3
+			Q : 1 	 0.000086
+			unit : 2 	 mole
+
+		4 : 3 	 
+			comp : 2 	 KOH
+			Q : 1 	 0.000000
+			unit : 2 	 mole
+
+		5 : 3 	 
+			comp : 2 	 N2@
+			Q : 1 	 0.000400
+			unit : 2 	 mole
+
+		6 : 3 	 
+			comp : 2 	 O2@
+			Q : 1 	 0.000001
+			unit : 2 	 mole
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 11.730000
+					error : 1 	 0.100000
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.000130
+					error : 1 	 0.000013
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.002320
+					error : 1 	 0.000232
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.000000
+					error : 1 	 0.000000
+
+
+
+		1 : 3 	 
+			phase : 2 	 CASHNK1
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 1.000000
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.954000
+					error : 1 	 0.095400
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.074000
+					error : 1 	 0.007400
+
+
+
+
+	_id : 7 	 53147b44d0d1317700000006
+	expdataset : 2 	 EL01-20-91
+	sample : 2 	 1-0.02-k0 91d
+	sP : 1 	 1.000000
+	sT : 1 	 20.000000
+	weight : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 0.090000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 0.017062
+			unit : 2 	 mole
+
+		2 : 3 	 
+			comp : 2 	 CaO
+			Q : 1 	 0.016891
+			unit : 2 	 mole
+
+		3 : 3 	 
+			comp : 2 	 CaOAl2O3
+			Q : 1 	 0.000171
+			unit : 2 	 mole
+
+		4 : 3 	 
+			comp : 2 	 KOH
+			Q : 1 	 0.000000
+			unit : 2 	 mole
+
+		5 : 3 	 
+			comp : 2 	 N2@
+			Q : 1 	 0.000400
+			unit : 2 	 mole
+
+		6 : 3 	 
+			comp : 2 	 O2@
+			Q : 1 	 0.000001
+			unit : 2 	 mole
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 11.680000
+					error : 1 	 0.100000
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.000130
+					error : 1 	 0.000013
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.002130
+					error : 1 	 0.000213
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.000000
+					error : 1 	 0.000000
+
+
+
+		1 : 3 	 
+			phase : 2 	 CASHNK1
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.017100
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.016800
+					error : 1 	 0.001710
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.000200
+					error : 1 	 0.000020
+
+
+
+
+	_id : 7 	 53147b44d0d1317700000007
+	expdataset : 2 	 EL01-20-91
+	sample : 2 	 1-0.03-k0 91d
+	sP : 1 	 1.000000
+	sT : 1 	 20.000000
+	weight : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 0.090000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 0.016988
+			unit : 2 	 mole
+
+		2 : 3 	 
+			comp : 2 	 CaO
+			Q : 1 	 0.016733
+			unit : 2 	 mole
+
+		3 : 3 	 
+			comp : 2 	 CaOAl2O3
+			Q : 1 	 0.000255
+			unit : 2 	 mole
+
+		4 : 3 	 
+			comp : 2 	 KOH
+			Q : 1 	 0.000000
+			unit : 2 	 mole
+
+		5 : 3 	 
+			comp : 2 	 N2@
+			Q : 1 	 0.000400
+			unit : 2 	 mole
+
+		6 : 3 	 
+			comp : 2 	 O2@
+			Q : 1 	 0.000001
+			unit : 2 	 mole
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 11.660000
+					error : 1 	 0.100000
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.000150
+					error : 1 	 0.000015
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.002250
+					error : 1 	 0.000225
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.000000
+					error : 1 	 0.000000
+
+
+
+		1 : 3 	 
+			phase : 2 	 CASHNK1
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.017100
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.016700
+					error : 1 	 0.001710
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.000300
+					error : 1 	 0.000030
+
+
+
+
+	_id : 7 	 53147b44d0d1317700000008
+	expdataset : 2 	 EL01-20-91
+	sample : 2 	 1-0.04-k0 91d
+	sP : 1 	 1.000000
+	sT : 1 	 20.000000
+	weight : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 0.090000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 0.016915
+			unit : 2 	 mole
+
+		2 : 3 	 
+			comp : 2 	 CaO
+			Q : 1 	 0.016577
+			unit : 2 	 mole
+
+		3 : 3 	 
+			comp : 2 	 CaOAl2O3
+			Q : 1 	 0.000338
+			unit : 2 	 mole
+
+		4 : 3 	 
+			comp : 2 	 KOH
+			Q : 1 	 0.000000
+			unit : 2 	 mole
+
+		5 : 3 	 
+			comp : 2 	 N2@
+			Q : 1 	 0.000400
+			unit : 2 	 mole
+
+		6 : 3 	 
+			comp : 2 	 O2@
+			Q : 1 	 0.000001
+			unit : 2 	 mole
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 11.600000
+					error : 1 	 0.100000
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.000140
+					error : 1 	 0.000014
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.002230
+					error : 1 	 0.000223
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.000000
+					error : 1 	 0.000000
+
+
+
+		1 : 3 	 
+			phase : 2 	 CASHNK1
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.017000
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.016500
+					error : 1 	 0.001700
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.000500
+					error : 1 	 0.000050
+
+
+
+
+	_id : 7 	 53147b44d0d1317700000009
+	expdataset : 2 	 EL01-20-91
+	sample : 2 	 1-0.05-k0 91d
+	sP : 1 	 1.000000
+	sT : 1 	 20.000000
+	weight : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 0.090000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 0.016842
+			unit : 2 	 mole
+
+		2 : 3 	 
+			comp : 2 	 CaO
+			Q : 1 	 0.016421
+			unit : 2 	 mole
+
+		3 : 3 	 
+			comp : 2 	 CaOAl2O3
+			Q : 1 	 0.000421
+			unit : 2 	 mole
+
+		4 : 3 	 
+			comp : 2 	 KOH
+			Q : 1 	 0.000000
+			unit : 2 	 mole
+
+		5 : 3 	 
+			comp : 2 	 N2@
+			Q : 1 	 0.000400
+			unit : 2 	 mole
+
+		6 : 3 	 
+			comp : 2 	 O2@
+			Q : 1 	 0.000001
+			unit : 2 	 mole
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 11.580000
+					error : 1 	 0.100000
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.000170
+					error : 1 	 0.000017
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.002160
+					error : 1 	 0.000216
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.000000
+					error : 1 	 0.000000
+
+
+
+		1 : 3 	 
+			phase : 2 	 CASHNK1
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.016900
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.016400
+					error : 1 	 0.001690
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.000700
+					error : 1 	 0.000070
+
+
+
+
+	_id : 7 	 53147b44d0d131770000000a
+	expdataset : 2 	 EL01-20-91
+	sample : 2 	 1-0.1-k0 91d
+	sP : 1 	 1.000000
+	sT : 1 	 20.000000
+	weight : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 0.090000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 0.016488
+			unit : 2 	 mole
+
+		2 : 3 	 
+			comp : 2 	 CaO
+			Q : 1 	 0.015664
+			unit : 2 	 mole
+
+		3 : 3 	 
+			comp : 2 	 CaOAl2O3
+			Q : 1 	 0.000824
+			unit : 2 	 mole
+
+		4 : 3 	 
+			comp : 2 	 KOH
+			Q : 1 	 0.000000
+			unit : 2 	 mole
+
+		5 : 3 	 
+			comp : 2 	 N2@
+			Q : 1 	 0.000400
+			unit : 2 	 mole
+
+		6 : 3 	 
+			comp : 2 	 O2@
+			Q : 1 	 0.000001
+			unit : 2 	 mole
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 11.800000
+					error : 1 	 0.100000
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.000220
+					error : 1 	 0.000022
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.002010
+					error : 1 	 0.000201
+
+
+
+		1 : 3 	 
+			phase : 2 	 CASHNK1
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 1.000000
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.933000
+					error : 1 	 0.100000
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.062000
+
+
+
+
+	_id : 7 	 53147b44d0d131770000000b
+	expdataset : 2 	 EL01-20-91
+	sample : 2 	 1-0.2-k0 91d
+	sP : 1 	 1.000000
+	sT : 1 	 20.000000
+	weight : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 0.090000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 0.015823
+			unit : 2 	 mole
+
+		2 : 3 	 
+			comp : 2 	 CaO
+			Q : 1 	 0.014240
+			unit : 2 	 mole
+
+		3 : 3 	 
+			comp : 2 	 CaOAl2O3
+			Q : 1 	 0.001582
+			unit : 2 	 mole
+
+		4 : 3 	 
+			comp : 2 	 KOH
+			Q : 1 	 0.000000
+			unit : 2 	 mole
+
+		5 : 3 	 
+			comp : 2 	 N2@
+			Q : 1 	 0.000400
+			unit : 2 	 mole
+
+		6 : 3 	 
+			comp : 2 	 O2@
+			Q : 1 	 0.000001
+			unit : 2 	 mole
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 11.600000
+					error : 1 	 0.100000
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.000420
+					error : 1 	 0.000042
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.001470
+					error : 1 	 0.000147
+
+
+
+		1 : 3 	 
+			phase : 2 	 CASHNK1
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 1.000000
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.872000
+					error : 1 	 0.100000
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.052000
+
+
+
+
+	_id : 7 	 53147b44d0d131770000000c
+	expdataset : 2 	 EL01-20-91
+	sample : 2 	 1.6-0-K0 91d
+	sP : 1 	 1.000000
+	sT : 1 	 20.000000
+	weight : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 0.090000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 0.013000
+			unit : 2 	 mole
+
+		2 : 3 	 
+			comp : 2 	 CaO
+			Q : 1 	 0.021000
+			unit : 2 	 mole
+
+		3 : 3 	 
+			comp : 2 	 CaOAl2O3
+			Q : 1 	 0.000000
+			unit : 2 	 mole
+
+		4 : 3 	 
+			comp : 2 	 KOH
+			Q : 1 	 0.000000
+			unit : 2 	 mole
+
+		5 : 3 	 
+			comp : 2 	 N2@
+			Q : 1 	 0.000400
+			unit : 2 	 mole
+
+		6 : 3 	 
+			comp : 2 	 O2@
+			Q : 1 	 0.000001
+			unit : 2 	 mole
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 12.400000
+					error : 1 	 0.100000
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.000010
+					error : 1 	 0.000001
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.025830
+					error : 1 	 0.002583
+
+
+
+		1 : 3 	 
+			phase : 2 	 CASHNK1
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 1.000000
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 1.481000
+					error : 1 	 0.148100
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.000000
+					error : 1 	 0.000000
+
+
+
+
+	_id : 7 	 53147b44d0d131770000000d
+	expdataset : 2 	 EL01-20-91
+	sample : 2 	 1.6-0.1-K0 91d
+	sP : 1 	 1.000000
+	sT : 1 	 20.000000
+	weight : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 0.090000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 0.013000
+			unit : 2 	 mole
+
+		2 : 3 	 
+			comp : 2 	 CaO
+			Q : 1 	 0.020000
+			unit : 2 	 mole
+
+		3 : 3 	 
+			comp : 2 	 CaOAl2O3
+			Q : 1 	 0.001000
+			unit : 2 	 mole
+
+		4 : 3 	 
+			comp : 2 	 KOH
+			Q : 1 	 0.000000
+			unit : 2 	 mole
+
+		5 : 3 	 
+			comp : 2 	 N2@
+			Q : 1 	 0.000400
+			unit : 2 	 mole
+
+		6 : 3 	 
+			comp : 2 	 O2@
+			Q : 1 	 0.000001
+			unit : 2 	 mole
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 12.400000
+					error : 1 	 0.100000
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.000010
+					error : 1 	 0.000001
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.025300
+					error : 1 	 0.002530
+
+
+
+		1 : 3 	 
+			phase : 2 	 CASHNK1
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 1.000000
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 1.428000
+					error : 1 	 0.142800
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.074000
+					error : 1 	 0.007400
+
+
+
+
+	_id : 7 	 53147b44d0d131770000000e
+	expdataset : 2 	 EL01-20-91
+	sample : 2 	 1.6-0.2-K0 91d
+	sP : 1 	 1.000000
+	sT : 1 	 20.000000
+	weight : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 0.090000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 0.012000
+			unit : 2 	 mole
+
+		2 : 3 	 
+			comp : 2 	 CaO
+			Q : 1 	 0.019000
+			unit : 2 	 mole
+
+		3 : 3 	 
+			comp : 2 	 CaOAl2O3
+			Q : 1 	 0.001000
+			unit : 2 	 mole
+
+		4 : 3 	 
+			comp : 2 	 KOH
+			Q : 1 	 0.000000
+			unit : 2 	 mole
+
+		5 : 3 	 
+			comp : 2 	 N2@
+			Q : 1 	 0.000400
+			unit : 2 	 mole
+
+		6 : 3 	 
+			comp : 2 	 O2@
+			Q : 1 	 0.000001
+			unit : 2 	 mole
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 12.400000
+					error : 1 	 0.100000
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.000030
+					error : 1 	 0.000003
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.011900
+					error : 1 	 0.001190
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.000000
+					error : 1 	 0.000000
+
+
+
+		1 : 3 	 
+			phase : 2 	 CASHNK1
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 1.000000
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 1.427000
+					error : 1 	 0.142700
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.147000
+					error : 1 	 0.014700
+
+
+
+
+	_id : 7 	 53147b44d0d131770000000f
+	expdataset : 2 	 EL01K0.5-20-91
+	sample : 2 	 1-0.1-K0.5 91d
+	sP : 1 	 1.000000
+	sT : 1 	 20.000000
+	weight : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 0.090000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 0.016000
+			unit : 2 	 mole
+
+		2 : 3 	 
+			comp : 2 	 CaO
+			Q : 1 	 0.016000
+			unit : 2 	 mole
+
+		3 : 3 	 
+			comp : 2 	 CaOAl2O3
+			Q : 1 	 0.001000
+			unit : 2 	 mole
+
+		4 : 3 	 
+			comp : 2 	 KOH
+			Q : 1 	 0.045000
+			unit : 2 	 mole
+
+		5 : 3 	 
+			comp : 2 	 N2@
+			Q : 1 	 0.000400
+			unit : 2 	 mole
+
+		6 : 3 	 
+			comp : 2 	 O2@
+			Q : 1 	 0.000001
+			unit : 2 	 mole
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 13.500000
+					error : 1 	 0.100000
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.000910
+					error : 1 	 0.000091
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.000000
+					error : 1 	 0.000000
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.000001
+					error : 1 	 0.000000
+
+				3 : 3 	 
+					IC : 2 	 Na
+					Q : 1 	 0.002800
+					error : 1 	 0.000280
+
+				4 : 3 	 
+					IC : 2 	 K
+					Q : 1 	 0.483660
+					error : 1 	 0.050000
+
+
+
+		1 : 3 	 
+			phase : 2 	 CASHNK1
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 1.000000
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.957000
+					error : 1 	 0.095700
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.076000
+					error : 1 	 0.007600
+
+				3 : 3 	 
+					IC : 2 	 K
+					Q : 1 	 0.339000
+					error : 1 	 0.033900
+					unit : 2 	 moles
+
+
+
+
+	_id : 7 	 53147b44d0d1317700000010
+	expdataset : 2 	 EL01K0.5-20-91
+	sample : 2 	 1.6-0.1-k0.5 91d
+	sP : 1 	 1.000000
+	sT : 1 	 20.000000
+	weight : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 0.090000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 0.013000
+			unit : 2 	 mole
+
+		2 : 3 	 
+			comp : 2 	 CaO
+			Q : 1 	 0.020000
+			unit : 2 	 mole
+
+		3 : 3 	 
+			comp : 2 	 CaOAl2O3
+			Q : 1 	 0.001000
+			unit : 2 	 mole
+
+		4 : 3 	 
+			comp : 2 	 KOH
+			Q : 1 	 0.045000
+			unit : 2 	 mole
+
+		5 : 3 	 
+			comp : 2 	 N2@
+			Q : 1 	 0.000400
+			unit : 2 	 mole
+
+		6 : 3 	 
+			comp : 2 	 O2@
+			Q : 1 	 0.000001
+			unit : 2 	 mole
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 13.500000
+					error : 1 	 0.100000
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.000010
+					error : 1 	 0.000001
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.000740
+					error : 1 	 0.000074
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.000000
+					error : 1 	 0.000000
+
+				3 : 3 	 
+					IC : 2 	 Na
+					Q : 1 	 0.002560
+					error : 1 	 0.000256
+
+				4 : 3 	 
+					IC : 2 	 K
+					Q : 1 	 0.443280
+					error : 1 	 0.040000
+
+
+
+		1 : 3 	 
+			phase : 2 	 CASHNK1
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 1.000000
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 1.309000
+					error : 1 	 0.130900
+
+				2 : 3 	 
+					IC : 2 	 Al
+					Q : 1 	 0.084000
+					error : 1 	 0.008400
+
+				3 : 3 	 
+					IC : 2 	 K
+					Q : 1 	 0.257000
+					error : 1 	 0.025700
+					unit : 2 	 moles
+
+
+
+
+	_id : 7 	 531f057e446c2a6400000000
+	sample : 2 	 GC65_1
+	expdataset : 2 	 GC65
+	sT : 1 	 25.000000
+	sP : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 8.050000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 1000.000000
+			unit : 2 	 g
+
+		2 : 3 	 
+			comp : 2 	 Ca(OH)2
+			Q : 1 	 0.500000
+			unit : 2 	 g
+
+		3 : 3 	 
+			comp : 2 	 N2
+			Q : 1 	 0.008000
+			unit : 2 	 g
+
+		4 : 3 	 
+			comp : 2 	 O2
+			Q : 1 	 0.002000
+			unit : 2 	 g
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 9.320000
+					error : 1 	 0.020000
+					unit : 2 	 -loga
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.002310
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.000740
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+
+
+		1 : 3 	 
+			phase : 2 	 CSH
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 Q
+					Q : 1 	 0.050000
+					unit : 2 	 mol
+
+
+
+
+	_id : 7 	 531f057e446c2a6400000001
+	sample : 2 	 GC65_2
+	expdataset : 2 	 GC65
+	sT : 1 	 25.000000
+	sP : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 8.050000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 1000.000000
+			unit : 2 	 g
+
+		2 : 3 	 
+			comp : 2 	 Ca(OH)2
+			Q : 1 	 0.690000
+			unit : 2 	 g
+
+		3 : 3 	 
+			comp : 2 	 N2
+			Q : 1 	 0.008000
+			unit : 2 	 g
+
+		4 : 3 	 
+			comp : 2 	 O2
+			Q : 1 	 0.002000
+			unit : 2 	 g
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 9.160000
+					error : 1 	 0.020000
+					unit : 2 	 -loga
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.002600
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.000930
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+
+
+		1 : 3 	 
+			phase : 2 	 CSH
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 Q
+					Q : 1 	 0.070000
+					unit : 2 	 mol
+
+
+
+
+	_id : 7 	 531f057e446c2a6400000002
+	sample : 2 	 GC65_3
+	expdataset : 2 	 GC65
+	sT : 1 	 25.000000
+	sP : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 8.050000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 1000.000000
+			unit : 2 	 g
+
+		2 : 3 	 
+			comp : 2 	 Ca(OH)2
+			Q : 1 	 1.390000
+			unit : 2 	 g
+
+		3 : 3 	 
+			comp : 2 	 N2
+			Q : 1 	 0.008000
+			unit : 2 	 g
+
+		4 : 3 	 
+			comp : 2 	 O2
+			Q : 1 	 0.002000
+			unit : 2 	 g
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 9.650000
+					error : 1 	 0.020000
+					unit : 2 	 -loga
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.003400
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.001470
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+
+
+		1 : 3 	 
+			phase : 2 	 CSH
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 Q
+					Q : 1 	 0.140000
+					unit : 2 	 mol
+
+
+
+
+	_id : 7 	 531f057e446c2a6400000003
+	sample : 2 	 GC65_4
+	expdataset : 2 	 GC65
+	sT : 1 	 25.000000
+	sP : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 8.050000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 1000.000000
+			unit : 2 	 g
+
+		2 : 3 	 
+			comp : 2 	 Ca(OH)2
+			Q : 1 	 2.280000
+			unit : 2 	 g
+
+		3 : 3 	 
+			comp : 2 	 N2
+			Q : 1 	 0.008000
+			unit : 2 	 g
+
+		4 : 3 	 
+			comp : 2 	 O2
+			Q : 1 	 0.002000
+			unit : 2 	 g
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 9.750000
+					error : 1 	 0.020000
+					unit : 2 	 -loga
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.004330
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.001680
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+
+
+		1 : 3 	 
+			phase : 2 	 CSH
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 Q
+					Q : 1 	 0.230000
+					unit : 2 	 mol
+
+
+
+
+	_id : 7 	 531f057e446c2a6400000004
+	sample : 2 	 GC65_5
+	expdataset : 2 	 GC65
+	sT : 1 	 25.000000
+	sP : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 8.050000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 1000.000000
+			unit : 2 	 g
+
+		2 : 3 	 
+			comp : 2 	 Ca(OH)2
+			Q : 1 	 3.180000
+			unit : 2 	 g
+
+		3 : 3 	 
+			comp : 2 	 N2
+			Q : 1 	 0.008000
+			unit : 2 	 g
+
+		4 : 3 	 
+			comp : 2 	 O2
+			Q : 1 	 0.002000
+			unit : 2 	 g
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 9.800000
+					error : 1 	 0.020000
+					unit : 2 	 -loga
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.004070
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.001900
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+
+
+		1 : 3 	 
+			phase : 2 	 CSH
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 Q
+					Q : 1 	 0.320000
+					unit : 2 	 mol
+
+
+
+
+	_id : 7 	 531f057e446c2a6400000005
+	sample : 2 	 GC65_6
+	expdataset : 2 	 GC65
+	sT : 1 	 25.000000
+	sP : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 8.050000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 1000.000000
+			unit : 2 	 g
+
+		2 : 3 	 
+			comp : 2 	 Ca(OH)2
+			Q : 1 	 4.070000
+			unit : 2 	 g
+
+		3 : 3 	 
+			comp : 2 	 N2
+			Q : 1 	 0.008000
+			unit : 2 	 g
+
+		4 : 3 	 
+			comp : 2 	 O2
+			Q : 1 	 0.002000
+			unit : 2 	 g
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 9.980000
+					error : 1 	 0.020000
+					unit : 2 	 -loga
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.003900
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.001950
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+
+
+		1 : 3 	 
+			phase : 2 	 CSH
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 Q
+					Q : 1 	 0.410000
+					unit : 2 	 mol
+
+
+
+
+	_id : 7 	 531f057e446c2a6400000006
+	sample : 2 	 GC65_7
+	expdataset : 2 	 GC65
+	sT : 1 	 25.000000
+	sP : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 8.050000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 1000.000000
+			unit : 2 	 g
+
+		2 : 3 	 
+			comp : 2 	 Ca(OH)2
+			Q : 1 	 4.270000
+			unit : 2 	 g
+
+		3 : 3 	 
+			comp : 2 	 N2
+			Q : 1 	 0.008000
+			unit : 2 	 g
+
+		4 : 3 	 
+			comp : 2 	 O2
+			Q : 1 	 0.002000
+			unit : 2 	 g
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 10.020000
+					error : 1 	 0.020000
+					unit : 2 	 -loga
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.003870
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.001970
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+
+
+		1 : 3 	 
+			phase : 2 	 CSH
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 Q
+					Q : 1 	 0.430000
+					unit : 2 	 mol
+
+
+
+
+	_id : 7 	 531f057e446c2a6400000007
+	sample : 2 	 GC65_8
+	expdataset : 2 	 GC65
+	sT : 1 	 25.000000
+	sP : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 8.050000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 1000.000000
+			unit : 2 	 g
+
+		2 : 3 	 
+			comp : 2 	 Ca(OH)2
+			Q : 1 	 6.750000
+			unit : 2 	 g
+
+		3 : 3 	 
+			comp : 2 	 N2
+			Q : 1 	 0.008000
+			unit : 2 	 g
+
+		4 : 3 	 
+			comp : 2 	 O2
+			Q : 1 	 0.002000
+			unit : 2 	 g
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 10.260000
+					error : 1 	 0.020000
+					unit : 2 	 -loga
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.003770
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.002000
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+
+
+		1 : 3 	 
+			phase : 2 	 CSH
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 Q
+					Q : 1 	 0.680000
+					unit : 2 	 mol
+
+
+
+
+	_id : 7 	 531f057e446c2a6400000008
+	sample : 2 	 GC65_9
+	expdataset : 2 	 GC65
+	sT : 1 	 25.000000
+	sP : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 8.050000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 1000.000000
+			unit : 2 	 g
+
+		2 : 3 	 
+			comp : 2 	 Ca(OH)2
+			Q : 1 	 7.540000
+			unit : 2 	 g
+
+		3 : 3 	 
+			comp : 2 	 N2
+			Q : 1 	 0.008000
+			unit : 2 	 g
+
+		4 : 3 	 
+			comp : 2 	 O2
+			Q : 1 	 0.002000
+			unit : 2 	 g
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 10.480000
+					error : 1 	 0.020000
+					unit : 2 	 -loga
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.001470
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.001750
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+
+
+		1 : 3 	 
+			phase : 2 	 CSH
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 Q
+					Q : 1 	 0.760000
+					unit : 2 	 mol
+
+
+
+
+	_id : 7 	 531f057e446c2a6400000009
+	sample : 2 	 GC65_10
+	expdataset : 2 	 GC65
+	sT : 1 	 25.000000
+	sP : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 8.050000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 1000.000000
+			unit : 2 	 g
+
+		2 : 3 	 
+			comp : 2 	 Ca(OH)2
+			Q : 1 	 9.230000
+			unit : 2 	 g
+
+		3 : 3 	 
+			comp : 2 	 N2
+			Q : 1 	 0.008000
+			unit : 2 	 g
+
+		4 : 3 	 
+			comp : 2 	 O2
+			Q : 1 	 0.002000
+			unit : 2 	 g
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 11.400000
+					error : 1 	 0.030000
+					unit : 2 	 -loga
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.000250
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.002130
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+
+
+		1 : 3 	 
+			phase : 2 	 CSH
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 Q
+					Q : 1 	 0.930000
+					unit : 2 	 mol
+
+
+
+
+	_id : 7 	 531f057e446c2a640000000a
+	sample : 2 	 GC65_11
+	expdataset : 2 	 GC65
+	sT : 1 	 25.000000
+	sP : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 8.050000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 1000.000000
+			unit : 2 	 g
+
+		2 : 3 	 
+			comp : 2 	 Ca(OH)2
+			Q : 1 	 10.030000
+			unit : 2 	 g
+
+		3 : 3 	 
+			comp : 2 	 N2
+			Q : 1 	 0.008000
+			unit : 2 	 g
+
+		4 : 3 	 
+			comp : 2 	 O2
+			Q : 1 	 0.002000
+			unit : 2 	 g
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 11.770000
+					error : 1 	 0.030000
+					unit : 2 	 -loga
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.000090
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.003900
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+
+
+		1 : 3 	 
+			phase : 2 	 CSH
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 Q
+					Q : 1 	 1.010000
+					unit : 2 	 mol
+
+
+
+
+	_id : 7 	 531f057e446c2a640000000b
+	sample : 2 	 GC65_12
+	expdataset : 2 	 GC65
+	sT : 1 	 25.000000
+	sP : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 8.050000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 1000.000000
+			unit : 2 	 g
+
+		2 : 3 	 
+			comp : 2 	 Ca(OH)2
+			Q : 1 	 10.720000
+			unit : 2 	 g
+
+		3 : 3 	 
+			comp : 2 	 N2
+			Q : 1 	 0.008000
+			unit : 2 	 g
+
+		4 : 3 	 
+			comp : 2 	 O2
+			Q : 1 	 0.002000
+			unit : 2 	 g
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 11.920000
+					error : 1 	 0.030000
+					unit : 2 	 -loga
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.000060
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.005280
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+
+
+		1 : 3 	 
+			phase : 2 	 CSH
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 Q
+					Q : 1 	 1.080000
+					unit : 2 	 mol
+
+
+
+
+	_id : 7 	 531f057e446c2a640000000c
+	sample : 2 	 GC65_13
+	expdataset : 2 	 GC65
+	sT : 1 	 25.000000
+	sP : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 8.050000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 1000.000000
+			unit : 2 	 g
+
+		2 : 3 	 
+			comp : 2 	 Ca(OH)2
+			Q : 1 	 11.610000
+			unit : 2 	 g
+
+		3 : 3 	 
+			comp : 2 	 N2
+			Q : 1 	 0.008000
+			unit : 2 	 g
+
+		4 : 3 	 
+			comp : 2 	 O2
+			Q : 1 	 0.002000
+			unit : 2 	 g
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 11.900000
+					error : 1 	 0.030000
+					unit : 2 	 -loga
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.000070
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.004710
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+
+
+		1 : 3 	 
+			phase : 2 	 CSH
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 Q
+					Q : 1 	 1.170000
+					unit : 2 	 mol
+
+
+
+
+	_id : 7 	 531f057e446c2a640000000d
+	sample : 2 	 GC65_14
+	expdataset : 2 	 GC65
+	sT : 1 	 25.000000
+	sP : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 8.050000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 1000.000000
+			unit : 2 	 g
+
+		2 : 3 	 
+			comp : 2 	 Ca(OH)2
+			Q : 1 	 12.410000
+			unit : 2 	 g
+
+		3 : 3 	 
+			comp : 2 	 N2
+			Q : 1 	 0.008000
+			unit : 2 	 g
+
+		4 : 3 	 
+			comp : 2 	 O2
+			Q : 1 	 0.002000
+			unit : 2 	 g
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 11.950000
+					error : 1 	 0.030000
+					unit : 2 	 -loga
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.000040
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.005720
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+
+
+		1 : 3 	 
+			phase : 2 	 CSH
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 Q
+					Q : 1 	 1.250000
+					unit : 2 	 mol
+
+
+
+
+	_id : 7 	 531f057e446c2a640000000e
+	sample : 2 	 GC65_15
+	expdataset : 2 	 GC65
+	sT : 1 	 25.000000
+	sP : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 8.050000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 1000.000000
+			unit : 2 	 g
+
+		2 : 3 	 
+			comp : 2 	 Ca(OH)2
+			Q : 1 	 13.200000
+			unit : 2 	 g
+
+		3 : 3 	 
+			comp : 2 	 N2
+			Q : 1 	 0.008000
+			unit : 2 	 g
+
+		4 : 3 	 
+			comp : 2 	 O2
+			Q : 1 	 0.002000
+			unit : 2 	 g
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 12.100000
+					error : 1 	 0.030000
+					unit : 2 	 -loga
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.000030
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.007420
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+
+
+		1 : 3 	 
+			phase : 2 	 CSH
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 Q
+					Q : 1 	 1.330000
+					unit : 2 	 mol
+
+
+
+
+	_id : 7 	 531f057e446c2a640000000f
+	sample : 2 	 GC65_16
+	expdataset : 2 	 GC65
+	sT : 1 	 25.000000
+	sP : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 8.050000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 1000.000000
+			unit : 2 	 g
+
+		2 : 3 	 
+			comp : 2 	 Ca(OH)2
+			Q : 1 	 14.200000
+			unit : 2 	 g
+
+		3 : 3 	 
+			comp : 2 	 N2
+			Q : 1 	 0.008000
+			unit : 2 	 g
+
+		4 : 3 	 
+			comp : 2 	 O2
+			Q : 1 	 0.002000
+			unit : 2 	 g
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 12.100000
+					error : 1 	 0.030000
+					unit : 2 	 -loga
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.000030
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.006450
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+
+
+		1 : 3 	 
+			phase : 2 	 CSH
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 Q
+					Q : 1 	 1.430000
+					unit : 2 	 mol
+
+
+
+
+	_id : 7 	 531f057e446c2a6400000010
+	sample : 2 	 GC65_17
+	expdataset : 2 	 GC65
+	sT : 1 	 25.000000
+	sP : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 8.050000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 1000.000000
+			unit : 2 	 g
+
+		2 : 3 	 
+			comp : 2 	 Ca(OH)2
+			Q : 1 	 14.790000
+			unit : 2 	 g
+
+		3 : 3 	 
+			comp : 2 	 N2
+			Q : 1 	 0.008000
+			unit : 2 	 g
+
+		4 : 3 	 
+			comp : 2 	 O2
+			Q : 1 	 0.002000
+			unit : 2 	 g
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 12.140000
+					error : 1 	 0.030000
+					unit : 2 	 -loga
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.000020
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.009420
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+
+
+		1 : 3 	 
+			phase : 2 	 CSH
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 Q
+					Q : 1 	 1.490000
+					unit : 2 	 mol
+
+
+
+
+	_id : 7 	 531f057e446c2a6400000011
+	sample : 2 	 GC65_18
+	expdataset : 2 	 GC65
+	sT : 1 	 25.000000
+	sP : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 8.050000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 1000.000000
+			unit : 2 	 g
+
+		2 : 3 	 
+			comp : 2 	 Ca(OH)2
+			Q : 1 	 15.590000
+			unit : 2 	 g
+
+		3 : 3 	 
+			comp : 2 	 N2
+			Q : 1 	 0.008000
+			unit : 2 	 g
+
+		4 : 3 	 
+			comp : 2 	 O2
+			Q : 1 	 0.002000
+			unit : 2 	 g
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 12.160000
+					error : 1 	 0.030000
+					unit : 2 	 -loga
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.000030
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.010500
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+
+
+		1 : 3 	 
+			phase : 2 	 CSH
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 Q
+					Q : 1 	 1.570000
+					unit : 2 	 mol
+
+
+
+
+	_id : 7 	 531f057e446c2a6400000012
+	sample : 2 	 GC65_19
+	expdataset : 2 	 GC65
+	sT : 1 	 25.000000
+	sP : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 8.050000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 1000.000000
+			unit : 2 	 g
+
+		2 : 3 	 
+			comp : 2 	 Ca(OH)2
+			Q : 1 	 16.180000
+			unit : 2 	 g
+
+		3 : 3 	 
+			comp : 2 	 N2
+			Q : 1 	 0.008000
+			unit : 2 	 g
+
+		4 : 3 	 
+			comp : 2 	 O2
+			Q : 1 	 0.002000
+			unit : 2 	 g
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 12.250000
+					error : 1 	 0.030000
+					unit : 2 	 -loga
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.000020
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.015000
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+
+
+		1 : 3 	 
+			phase : 2 	 CSH
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 Q
+					Q : 1 	 1.630000
+					unit : 2 	 mol
+
+
+
+
+	_id : 7 	 531f057e446c2a6400000013
+	sample : 2 	 GC65_20
+	expdataset : 2 	 GC65
+	sT : 1 	 25.000000
+	sP : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 8.050000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 1000.000000
+			unit : 2 	 g
+
+		2 : 3 	 
+			comp : 2 	 Ca(OH)2
+			Q : 1 	 16.780000
+			unit : 2 	 g
+
+		3 : 3 	 
+			comp : 2 	 N2
+			Q : 1 	 0.008000
+			unit : 2 	 g
+
+		4 : 3 	 
+			comp : 2 	 O2
+			Q : 1 	 0.002000
+			unit : 2 	 g
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 12.400000
+					error : 1 	 0.030000
+					unit : 2 	 -loga
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.000020
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.018500
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+
+
+		1 : 3 	 
+			phase : 2 	 CSH
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 Q
+					Q : 1 	 1.690000
+					unit : 2 	 mol
+
+
+
+
+	_id : 7 	 531f057e446c2a6400000014
+	sample : 2 	 GC65_21
+	expdataset : 2 	 GC65
+	sT : 1 	 25.000000
+	sP : 1 	 1.000000
+	sbcomp : 4 	 
+		0 : 3 	 
+			comp : 2 	 SiO2@
+			Q : 1 	 8.050000
+			unit : 2 	 g
+
+		1 : 3 	 
+			comp : 2 	 H2O@
+			Q : 1 	 1000.000000
+			unit : 2 	 g
+
+		2 : 3 	 
+			comp : 2 	 Ca(OH)2
+			Q : 1 	 17.770000
+			unit : 2 	 g
+
+		3 : 3 	 
+			comp : 2 	 N2
+			Q : 1 	 0.008000
+			unit : 2 	 g
+
+		4 : 3 	 
+			comp : 2 	 O2
+			Q : 1 	 0.002000
+			unit : 2 	 g
+
+
+	expphases : 4 	 
+		0 : 3 	 
+			phase : 2 	 aq_gen
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 pH
+					Q : 1 	 12.330000
+					error : 1 	 0.030000
+					unit : 2 	 -loga
+
+
+			phIC : 4 	 
+				0 : 3 	 
+					IC : 2 	 Si
+					Q : 1 	 0.000020
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+				1 : 3 	 
+					IC : 2 	 Ca
+					Q : 1 	 0.016400
+					error : 1 	 0.000010
+					unit : 2 	 molal
+
+
+
+		1 : 3 	 
+			phase : 2 	 CSH
+			phprop : 4 	 
+				0 : 3 	 
+					prop : 2 	 Q
+					Q : 1 	 1.790000
+					unit : 2 	 mol
+
+
+
+
+

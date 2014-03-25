@@ -90,7 +90,9 @@ public:
     int OptMaxEval;
 //    int OptConstraints;
     int OptDoWhat;
+    int OptEquilibrium;
     int OptTuckey;
+    int OptTuckeyVal;
     int OptTitration;
     int OptUserWeight;
 //    int OptHybridMode;

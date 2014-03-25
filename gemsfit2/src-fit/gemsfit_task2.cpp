@@ -116,6 +116,7 @@ double TGfitTask::get_residual(int exp, TGfitTask::TargetFunction::obj_fun &objf
 //                                            cout << "yes"<<endl;
                                     //                                    // check for unit
                                     //                                    check_dcomp_unit(i, p, dc, dcp, sys->objfun->exp_unit, sys );
+                                    check_unit_dcomp(exp, p, dc,dcp, objfun.exp_unit, this );
                                     residual = residual_phase_dcomp (exp, p, dc, dcp, objfun, this);
                                     count++;
                                 }
@@ -339,10 +340,11 @@ void TGfitTask:: print_global_results ()
 
     gpf->fres.setf(ios::fixed);
 
-    for (unsigned int i=0; i<aTfun.size(); i++)
-    {
-        for (unsigned int j = 0; j <aTfun[i].objfun.size(); j++)
+
+        for (unsigned int j = 0; j <Tfun->objfun.size(); j++)
         {
+            for (unsigned int i=0; i<aTfun.size(); i++)
+            {
             if (aTfun[i].objfun[j].isComputed)
             {
                 gpf->fres << experiments[i]->sample <<","<< aTfun[i].objfun[j].exp_phase <<","<< aTfun[i].objfun[j].exp_CN <<","<< aTfun[i].objfun[j].exp_unit <<","<<
@@ -363,20 +365,20 @@ void TGfitTask:: print_global_results ()
 //                cout /*<< gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])*/ << endl;
         } else
           gpf->fres <<"parameter " << Opti->Ptype[i] << " : "
-                 <<  Opti->optv[i] << endl;
+                 <<setprecision(8)  <<Opti->optv[i] << endl;
     }
     if (Opti->h_RDc)
     {
         for (unsigned i=0; i<Opti->reactions.size(); ++i)
         {
-            gpf->fres <<"Reac parameter "<<Opti->reactions[i]->Dc_name <<" : "<<Opti->reactions[i]->std_gibbs<<endl;
+            gpf->fres <<"Reac parameter "<<Opti->reactions[i]->Dc_name <<" : "<< setprecision(8)<<Opti->reactions[i]->std_gibbs<<endl;
         }
     }
     if (Opti->h_Lp)
     {
         for (unsigned i=0; i<Opti->Lparams.size(); ++i)
         {
-            gpf->fres <<"Linked parameter "<<Opti->Lparams[i]->name <<" : "<<Opti->Lparams[i]->EV<<endl;
+            gpf->fres <<"Linked parameter "<<Opti->Lparams[i]->name <<" : "<< setprecision(8)<<Opti->Lparams[i]->EV<<endl;
         }
     }
 
@@ -388,7 +390,14 @@ void TGfitTask:: print_nested_results ()
 
     for (unsigned int i= 0; i<Opti->nest_optv.Pindex.size(); i++)
     {
+
+        if (Opti->nest_optv.Ptype[i] == "bIC")
         gpf->fres << "," << NodT[0]->xCH_to_IC_name(Opti->nest_optv.Pindex[i]);
+        if (Opti->nest_optv.Ptype[i] == "TK")
+        gpf->fres << "," << "TKelvin";
+        if (Opti->nest_optv.Ptype[i] == "P")
+        gpf->fres << "," << "Pbar";
+
     }
 
     if (Opti->nest_optv.Lparams.size() > 0)

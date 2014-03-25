@@ -258,6 +258,63 @@ void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
     }
 }
 
+
+void check_unit_dcomp(int i, int p, int dc, int dcp, string unit, TGfitTask *sys )
+{
+    if (sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit != unit)
+    {
+        if (unit == keys::log_molfrac)
+        {
+            if (sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit == keys::molfrac)
+            {
+                double error_perc = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt;
+                sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt = log10(sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt);
+                sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt * error_perc / 100;
+                sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit = keys::log_molfrac;
+            }
+            else
+            if (sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit == keys::ln_molfrac)
+            {
+                double error_perc = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt;
+                sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt / 2.302585093;
+                sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt * error_perc / 100;
+                sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit = keys::log_molfrac;
+
+            }
+            else
+            {
+                cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+                exit(1);
+            }
+
+        }
+        else
+        if (unit == keys::ln_molfrac)
+        {
+            if (sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit == keys::molfrac)
+            {
+                double error_perc = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt;
+                sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt = log(sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt);
+                sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt * error_perc / 100;
+                sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit = keys::ln_molfrac;
+            }
+            else
+            if (sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit == keys::log_molfrac)
+            {
+                double error_perc = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt;
+                sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt * 2.302585093;
+                sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt * error_perc / 100;
+                sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit = keys::ln_molfrac;
+            }
+            else
+            {
+                cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+                exit(1);
+            }
+        }
+    }
+}
+
 void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
 {
     if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit != unit)
@@ -558,6 +615,7 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
     long int PHndx, DC0ndx, nDCinPH;
     double computed_value, measured_value;
     double Tfun_residual = 0.0, Weighted_Tfun_residual, weight_ = 1.0;
+    double ln_gama[40];
 //    DATACH* dCH = sys->NodT[i]->pCSD();
 
     phase_name = sys->experiments[i]->expphases[p]->phase.c_str();
@@ -629,7 +687,7 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
     } else
     if (objfun.exp_CN == keys::Gex )  // functionality added by DK on 03.01.2014
     {
-            double Gex = 0., gam_dc, x_dc;
+            double Gex = 0., gam_dc, x_dc, test =0.;
             long int jc;
 
             computed_value = 0.;
@@ -637,13 +695,23 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
 //          n_ph = sys->NodT[i]->Ph_Mole(PHndx);
             if( nDCinPH > 1 )
             {
-               for( jc = DC0ndx; jc<DC0ndx+nDCinPH; jc++ )
+//               for( jc = DC0ndx; jc<DC0ndx+nDCinPH; jc++ )
+//               {
+//                  gam_dc = sys->NodT[i]->Get_gDC( jc );  // activity coeff.
+//                  x_dc = sys->NodT[i]->Get_cDC( jc );  // concentration (mole fr.)
+//                  // n_dc = sys->NodT[i]->Get_nDC(DCndx);
+//                  Gex += log( gam_dc ) * x_dc;
+
+//               }
+
+               TMulti *multi = sys->NodT[i]->pMulti();
+               TSolMod *sol = multi->pTSolMod(PHndx);
+               sol->Get_lnGamma(ln_gama);
+               for (int g=0; g<nDCinPH; g++)
                {
-                  gam_dc = sys->NodT[i]->Get_gDC( jc );  // activity coeff.
-                  x_dc = sys->NodT[i]->Get_cDC( jc );  // concentration (mole fr.)
-                  // n_dc = sys->NodT[i]->Get_nDC(DCndx);
-                  Gex += log( gam_dc ) * x_dc;
+                   Gex+= ln_gama[g]*sys->NodT[i]->Get_cDC( g+DC0ndx );
                }
+
                computed_value = Gex * 8.31451 * sys->NodT[i]->cTK(); // in J/mol
             }
 //            if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::kJ_mol)
@@ -693,13 +761,30 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFun
         computed_value = sys->NodT[i]->Get_nDC(DCndx); // Retrieves the current mole amount of Dependent Component.
         if (sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit == keys::molfrac)
         {
-            computed_value = sys->NodT[i]->Get_cDC(DCndx);// for species in other phases - mole fraction.
+            /// Retrieves concentration of Dependent Component in its phase
+            /// in the respective concentration scale. For aqueous species, molality is returned;
+            /// for gas species, mole fraction not partial pressure; for surface complexes - molality;
+            /// for species in other phases - mole fraction.
+            /// \param xdc is DC DBR index
+            /// \return 0.0, if DC has zero amount.
+            computed_value = sys->NodT[i]->Get_cDC(DCndx);// for species in other phases - mole fraction
         }
+        if (sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit == keys::log_molfrac)
+            computed_value = log10(computed_value);
+        if (sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit == keys::ln_molfrac)
+            computed_value = log(computed_value);
     } else
     if (objfun.exp_DCP == keys::actcoef)
     {
         computed_value = sys->NodT[i]->Get_gDC(DCndx);
-    } else { cout << "Error in target functions line 685 "; exit(1);}
+    } else
+    if (objfun.exp_DCP == keys::activity)
+    {
+        computed_value = sys->NodT[i]->Get_aDC( DCndx, true );
+        if (sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit == keys::loga)
+            computed_value = sys->NodT[i]->Get_aDC( DCndx, false );
+    }
+      else { cout << "Error in target functions line 685 "; exit(1);}
 
     measured_value = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt;
 

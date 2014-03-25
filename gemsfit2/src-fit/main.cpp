@@ -86,44 +86,50 @@ int main( int argc, char *argv[] )
 //    if ( !bfs::exists( gpf->OutputDirPath() ) )
         mkdir(gpf->OutputDirPath().c_str(), 0775);
 //        bfs::create_directory(gpf->OutputDirPath() );
-    if ( access( gpf->ResultDir().c_str(), 0 ) != 0 )
+    if ( access( gpf->OutputDirPath().c_str(), 0 ) != 0 )
 //    if ( !bfs::exists( gpf->ResultDir() ) )
 //        bfs::create_directory(gpf->ResultDir());
-        mkdir(gpf->ResultDir().c_str(), 0775);
+        mkdir(gpf->OutputDirPath().c_str(), 0775);
     }
 
     if( gpf->isInitMode() ) // Mode GEMSFIT to generate input configuration file
       return generateConfig();
 
     // empty output directory
-    bfs::path fi(gpf->OutputDirPath() );
-    if(!bfs::exists(fi) || !bfs::is_directory(fi))
-    {
-        std::cout<<"output_GEMSFIT could not be created or is not a directory. Exiting now ... "<<endl;
-        exit(-1);
-    }
-    bfs::directory_iterator dir_iter(fi), dir_end;
-    for(;dir_iter != dir_end; ++dir_iter)
-    {
-        bfs::remove(*dir_iter);
-    }
+//    bfs::path fi(gpf->OutputDirPath() );
+//    if(!bfs::exists(fi) || !bfs::is_directory(fi))
+//    {
+//        std::cout<<"output_GEMSFIT could not be created or is not a directory. Exiting now ... "<<endl;
+//        exit(-1);
+//    }
+//    bfs::directory_iterator dir_iter(fi), dir_end;
+//    for(;dir_iter != dir_end; ++dir_iter)
+//    {
+//        bfs::remove(*dir_iter);
+//    }
 
     // GEMSFIT logfile
     //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
  //   ofstream fout;
- gpf->flog.open(gpf->FITLogFile().c_str(), ios::app);
- if( gpf->flog.fail() )
- { cout<<"Output fileopen error"<<endl; exit(1); }
+    gpf->flog.open(gpf->FITLogFile().c_str(), ios::trunc);
+    if( gpf->flog.fail() )
+    { cout<<"Log fileopen error"<<endl; exit(1); }
+
+    gpf->fstat.open(gpf->FITStatisticsFile().c_str(), ios::trunc);
+    if( gpf->fstat.fail() )
+    { cout<<"Summary and statistics fileopen error"<<endl; exit(1); }
 
     // GEMSFIT results file for all test runs. Keeps a log of all runs. The file has to be deleted manually.
     string path_ = gpf->FITFile();
-    gpf->fres.open(path_.c_str(), ios::app);
+    gpf->fres.open(path_.c_str(), ios::trunc);
     if( gpf->fres.fail() )
     { cout<<"Results fileopen error"<<endl; exit(1); }
 
    time_t now = time(0);
     char* dt = ctime(&now);
     gpf->fres<<dt<<endl; // writes the date and time of the begining of the run in the result file
+    gpf->flog<<dt<<endl;
+    gpf->fstat<<dt<<endl;
 
     // Reading in the data //
     gpf->flog << "01. main.cpp(125). Creating new TGfitTask" << endl;
@@ -150,22 +156,27 @@ int main( int argc, char *argv[] )
     countit = master_counter;
 
     // Perform statistical analysis: Instantiate object of Statistics class
-    statistics stat( gfittask, gfittask->weighted_Tfun_sum_of_residuals, (int) gfittask->Opti->optv.size(), countit );
-
-    // perform basic statistical analysis
-    stat.basic_stat( gfittask->Opti->optv, gfittask );
-
-    if( gfittask->Opti->OptDoWhat != 1 )
+    if (gfittask->Tfun->objfun.size() > 0)
     {
-        stat.sensitivity_correlation( gfittask->Opti->optv, gfittask );
+        statistics stat( gfittask, gfittask->weighted_Tfun_sum_of_residuals, (int) gfittask->Opti->optv.size(), countit );
+
+        // perform basic statistical analysis
+        stat.basic_stat( gfittask->Opti->optv, gfittask );
+
+        if( gfittask->Opti->OptDoWhat != 1 )
+        {
+            stat.sensitivity_correlation( gfittask->Opti->optv, gfittask );
+        }
+
+        if(stat.MCbool > 0)  stat.MC_confidence_interval( gfittask->Opti->optv, gfittask );
     }
 
 //    gfittask->print->print_result();
+    if (gfittask->Tfun->objfun.size() > 0)
     gfittask->print_global_results();
     if (gfittask->Opti->h_nestfun)
     gfittask->print_nested_results();
 
-    if(stat.MCbool > 0)  stat.MC_confidence_interval( gfittask->Opti->optv, gfittask );
 
     delete gfittask;
 
@@ -174,9 +185,9 @@ int main( int argc, char *argv[] )
     double delta = ((end.tv_sec  - start.tv_sec) * 1000000u +
              end.tv_usec - start.tv_usec) / 1.e6;
     gpf->flog <<"18. main.cpp(186): finished in ";
-    gpf->flog << delta << " seconds. GEMSFIT2: End. Bye!" << endl;
+    gpf->flog << delta << " seconds. GEMSFITS: End. Bye!" << endl;
 cout << delta << " seconds." << endl;
-cout << "GEMSFIT2: End. Bye!" << endl;
+cout << "GEMSFITS: End. Bye!" << endl;
    gpf->flog.close();
    gpf->fres.close();
 }

@@ -77,6 +77,7 @@ static const char *expphases = "expphases"; ///	                  1    	     arr
 ///                             *Qunit = "Qunit"; 	              4  	     string 		    units of measurement of quantity
 ///
               static const char *actcoef = "@coef"; ///	        ->4	         string		        name of peorperty - activity coef
+              static const char *activity ="activity";
                         // with Qerror and Qunit
         // Phase properties
     static const char *phprop = "phprop"; ///	                  2   	     array		        known bulk properties of the phase
@@ -169,7 +170,7 @@ static const char *inverr_norm = "inverr_norm"; ///                         stri
 // Kaywords for units
 static const char *molal = "molal"; ///                                     string              molality moles/kg
 static const char *loga = "loga"; ///                                       string              log(activity)
-static const char *logm = "logm"; ///                                       string              log(molality)
+static const char *logm = "log_molal"; ///                                       string              log(molality)
 static const char *_loga = "-loga"; ///                                     string              -log(consntration) used for pH
 static const char *gram = "g"; ///                                          string              mass, grams
 static const char *kgram = "kg"; ///                                        string              mass, kg
@@ -179,6 +180,8 @@ static const char *cm3 = "cm3"; ///                                         stri
 static const char *Simolfrac = "simolfrac"; ///                             string              mole ratio to 1 mole of Si
 static const char *molratio = "molratio"; ///                               string              mole ratio
 static const char *molfrac = "molfrac"; ///                                 string              mole fraction
+static const char *log_molfrac = "log_molfrac";
+static const char *ln_molfrac = "ln_molfrac";
 static const char *g_cm3 = "g/cm3"; ///                                     string              density, g/cm3
 static const char *Volts = "Volts"; ///                                     string              Eh, V
 static const char *J_mol = "J/mol"; ///                                     string              energy per mole, J/mol

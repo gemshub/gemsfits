@@ -1,5 +1,5 @@
 * text=auto !eol
-Tests/BHMsol/01/gf2run.bat -text
+Tests/BHMsol/01/gf2run.bat -text svneol=unset#application/octet-stream
 Tests/BHMsol/EJDB/Boehmite -text
 Tests/BHMsol/EJDB/Boehmite_experiments -text
 Tests/BHMsol/dbimport/Boehmite_Be.xlsx -text
@@ -29,6 +29,9 @@ Tests/CSH3T2/EJDB/cshsolubil_tasks -text
 Tests/CSH3T2/GEMS/CSHQ-subl.zip -text
 Tests/CSHtob01/EJDB/cashsolub -text
 Tests/CSHtob01/EJDB/cashsolub_experiments -text
+Tests/CSHtob02/CASH-DATA-TEMPLATE.xls -text
+Tests/CSHtob02/EJDB/cashsolub -text
+Tests/CSHtob02/EJDB/cashsolub_experiments -text
 Tests/CaSrCO3/EJDB/solargstr -text
 Tests/CaSrCO3/EJDB/solargstr_experiments -text
 Tests/CaSrCO3/GEMS/GF2-SrCaC.zip -text

@@ -13,6 +13,7 @@
 
 
 
+
   
 
   
@@ -117,7 +118,7 @@ name (from GEMS3K .DCH file)<br>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a href="gemsfit-useref.html#comp">comp</a>.</big></td>
-      <td style="vertical-align: top;">should be followed by a Dependent Component name (or <a href="#SALT_FORMULAE">salt formula</a>)<br>
+      <td style="vertical-align: top;">should be followed by a <a href="#SALT_FORMULAE">formula</a> or Dependent Component name<br>
 </td>
       <td style="vertical-align: top; font-family: monospace;"><big>SiO2</big></td>
     </tr>
@@ -773,175 +774,105 @@ properties can be used after &lt;dname&gt;. </td>
   </tbody>
 </table>
 <br>
+<br>
 
+<hr style="width: 100%; height: 2px;">
+<p><a name="SALT_FORMULAE"></a><span style="font-weight: bold;">Syntax of chemical formulae for compositions (modified, from GEM-Selektor documentation)</span></p>
+<p>Chemical formulae define any stoichiometry in terns of independent components (usually chemical elements), automatically parsed in the GEMSFIT2 code for calculation
+of bulk compositions of experimental systems. The formula parser works with a simple and convenient <a href="#FORMULASYNTAX">formula syntax</a>, very close to
+the conventional chemical notation. &nbsp; </p>
+
+<p>Formula is a string of text, maximum 60 characters long. Symbols of independent components
+from the currently loaded GEMS3K input files are assumed.
+Each symbol begins with an upper-case Latin
+letter, followed by
+zero to four lower-case Latin letters or _ (underscore) characters. If
+a symbol of independent component is not found in .dch file list, an
+error message will be generated.<br>
+</p>
+
+<p>Explicit<a href="../../../../../../Developer/upgrade/gems3gui-build-desktop-Debug/Resources/doc/html/gm_icomp.html#Valen"> </a>valence of independent component can be
+specified within vertical bars <tt>|| </tt>immediately after the symbol, e.g. <tt>H2S|-2|</tt>(hydrogen
+sulfide). Note that this option is not usable in GEMSFIT2 calculations,
+no charge balance (or imbalance) is checked. Any explicit charge (e.g.
+@, +, -, +2, ...) at the end of formula is ignored. <br>
+ </p>
+
+IC symbols with stoichiometry coefficients can be grouped in
+brackets <tt>()</tt>
+or braces <tt>[]</tt> followed by a common stoichiometry coefficient,
+e.g.
+like in <tt>Th(OH)4</tt>. Up to 3 levels of brackets can be nested
+into each
+other. The stoichiometry coefficient after brackets will be applied to
+each
+of IC symbols inside. For instance, <tt>Eu2(CO3)3</tt> will be
+interpreted as <tt>Eu2C3O9</tt>. Stoichiometry coefficients (except
+charge) must be
+positive, but not necessarily integer (decimal point notation is
+allowed,
+e.g. 2.67). Absence of the formula stoichiometry coefficient after the symbol or the right bracket
+means that this coefficient equals 1. <br>
+ 
+<h4><a name="FORMULASYNTAX"></a>Chemical formula syntax (simplified): </h4>
+
+<blockquote><big>
+  </big><p><big><tt>&lt;formula&gt; ::= &lt;fterm&gt; | &lt;fterm&gt;
+&lt;charge&gt;</tt> <br>
+
+  <tt>&lt;fterm&gt;&nbsp;&nbsp; ::= &lt;icterm&gt; |
+&lt;icterm&gt;&lt;charge&gt;</tt> <br>
+
+  <tt>&lt;icterm&gt;&nbsp; ::= &lt;elem&gt; | &lt;elem&gt;
+&lt;elem_st_coef&gt;</tt> <br>
+
+  <tt>&lt;elem&gt;&nbsp;&nbsp;&nbsp; ::= (&lt;fterm&gt;) |
+[&lt;fterm&gt;] |</tt> <br>
+
+  <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;isotope_mass&gt;&lt;icsymb&gt;&lt;valence&gt; |</tt> <br>
+
+  <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;isotope_mass&gt;&lt;icsymb&gt; |</tt> <br>
+
+  <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;icsymb&gt;&lt;valence&gt; | &lt;icsymb&gt;</tt> <br>
+
+  <tt>&lt;charge&gt;&nbsp; ::= +&lt;integer&gt; | -&lt;integer&gt; | +
+| - | @</tt> <br>
+
+  <tt>&lt;elem_st_coef&gt; ::= &lt;real&gt;</tt> <br>
+
+  <tt>&lt;icsymb&gt;&nbsp; ::= &lt;Capital_letter&gt; |
+&lt;icsymb&gt;&lt;lcase_letter&gt;</tt> <br>
+
+  <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+| &lt;icsymb&gt;_</tt> <br>
+
+  <tt>&lt;valence&gt; ::= |-&lt;integer&gt;| | |+&lt;integer&gt;| |
+|&lt;integer&gt;|</tt> <br>
+
+  <tt>&lt;isotope_mass&gt; ::= /&lt;integer&gt;/</tt> <br>
+
+  <tt>&lt;integer&gt; ::= &lt;num&gt;</tt> <br>
+
+  <tt>&lt;num&gt;&nbsp;&nbsp;&nbsp;&nbsp; ::= &lt;digit&gt; |
+&lt;num&gt;&lt;digit&gt;</tt> <br>
+
+  <tt>&lt;digit&gt;&nbsp;&nbsp; ::= 0 |&nbsp; 1 |&nbsp; 2 |&nbsp; 3
+|&nbsp; 4 |&nbsp; 5 |&nbsp; 6 |&nbsp; 7 |&nbsp; 8 |&nbsp; 9</tt> <br>
+
+  <tt>&lt;real&gt;&nbsp;&nbsp;&nbsp; ::= &lt;num&gt;.&lt;num&gt; |
+&lt;num&gt;. | .&lt;num&gt; | &lt;num&gt;</tt> </big></p><big>
+  </big></blockquote>
+
+In the <big><tt>&lt;elem&gt;</tt></big> term, up to three levels of nesting is
+allowed. The vertical bar <tt>"|"</tt> means "or", i.e. one selection
+from several possible values or terms.&nbsp; <br>
+The terms <big><span style="font-family: monospace;">&lt;valence&gt;</span></big> and <big><span style="font-family: monospace;">&lt;charge&gt;</span></big> are allowed, but ignored in this version of the GEMSFIT2 code. <br>
 <br>
-<p><a name="SALT_FORMULAE"></a><span style="font-weight: bold;">Salt (oxide) formulae,</span> currently implemented in GEMSFIT2 to facilitate setup of system compositions.</p>
-<table style="text-align: left; width: 501px; height: 564px;" border="1" cellpadding="2" cellspacing="2">
-  <tbody>
-    <tr>
-      <td style="vertical-align: top;">Formula (name)<br>
-      </td>
-      <td style="vertical-align: top;">Molar mass<br>
-      </td>
-      <td style="vertical-align: top;">Comment<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>H2O<br>
-      </big></td>
-      <td style="vertical-align: top;">18.0153<br>
-      </td>
-      <td style="vertical-align: top;"><br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>SiO2<br>
-      </big></td>
-      <td style="vertical-align: top;">60.08<br>
-      </td>
-      <td style="vertical-align: top;"><br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>Al2O3<br>
-      </big></td>
-      <td style="vertical-align: top;">101.9612772<br>
-      </td>
-      <td style="vertical-align: top;"><br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>K2O<br>
-      </big></td>
-      <td style="vertical-align: top;">94.19605<br>
-      </td>
-      <td style="vertical-align: top;"><br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>Na2O<br>
-      </big></td>
-      <td style="vertical-align: top;">61.97897<br>
-      </td>
-      <td style="vertical-align: top;"><br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>Al(OH)3<br>
-      </big></td>
-      <td style="vertical-align: top;">78.0035586<br>
-      </td>
-      <td style="vertical-align: top;"><br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>AlO(OH)<br>
-      </big></td>
-      <td style="vertical-align: top;">59.9822326<br>
-      </td>
-      <td style="vertical-align: top;"><br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>Ca(OH)2<br>
-      </big></td>
-      <td style="vertical-align: top;">74.09268<br>
-      </td>
-      <td style="vertical-align: top;"><br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>NaOH<br>
-      </big></td>
-      <td style="vertical-align: top;">39.99710928<br>
-      </td>
-      <td style="vertical-align: top;">salt<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>KOH<br>
-      </big></td>
-      <td style="vertical-align: top;">56.10564<br>
-      </td>
-      <td style="vertical-align: top;">salt<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>KCl<br>
-      </big></td>
-      <td style="vertical-align: top;">74.5513<br>
-      </td>
-      <td style="vertical-align: top;">salt<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>CO2<br>
-      </big></td>
-      <td style="vertical-align: top;">44.0095<br>
-      </td>
-      <td style="vertical-align: top;"><br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>HCl<br>
-      </big></td>
-      <td style="vertical-align: top;">36.4611<br>
-      </td>
-      <td style="vertical-align: top;"><br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>NaCl<br>
-      </big></td>
-      <td style="vertical-align: top;">58.4430<br>
-      </td>
-      <td style="vertical-align: top;">salt<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>CaCO3<br>
-      </big></td>
-      <td style="vertical-align: top;">100.087<br>
-      </td>
-      <td style="vertical-align: top;"><br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>SrCO3<br>
-      </big></td>
-      <td style="vertical-align: top;">147.629<br>
-      </td>
-      <td style="vertical-align: top;"><br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>Nit2<br>
-      </big></td>
-      <td style="vertical-align: top;">28.0134<br>
-      </td>
-      <td style="vertical-align: top;"><br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>O2<br>
-      </big></td>
-      <td style="vertical-align: top;">31.9988<br>
-      </td>
-      <td style="vertical-align: top;"><br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big>...<br>
-      </big></td>
-      <td style="vertical-align: top;"><br>
-      </td>
-      <td style="vertical-align: top;"><br>
-      </td>
-    </tr>
-  </tbody>
-</table>
-<br>
-<br>
+
+
 
 <hr style="width: 100%; height: 2px;">
 <h3>
