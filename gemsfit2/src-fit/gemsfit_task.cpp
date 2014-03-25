@@ -52,7 +52,7 @@ using namespace std;
 
 int master_counter;
 
-istream& f_getline(istream& is, gstring& str, char delim);
+istream& f_getline(istream& is, string& str, char delim);
 
 //extern outField DataBR_fields[58];
 

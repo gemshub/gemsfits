@@ -536,7 +536,8 @@ outField optimization_fields[25] =
     { "OptHybridTolRel",  0, 0, 1, "\n# OptHybridTolRel: Comment"},
     { "OptHybridTolAbs",  0, 0, 1, "\n# OptHybridTolAbs: Comment"},
     { "OptHybridMaxEval",  0, 0, 1, "\n# OptHybridMaxEval: Comment"},
-    { "OptHybridMode",  0, 0, 1, "\n# OptHybridMode: Comment"},
+    { "OptEquilibrium",  0, 0, 1, "\n# OptEquilibrium: (1) Use full GEMS3K to calculate thermodynamic equilibrium. (0) Use TSolMod shortcut "
+                                  "\n#                  without calculating equilibrium (only fitting activity model parameters)"},
     { "OptNmultistart",  0, 0, 1, "\n# OptNmultistart: Comment"},
     { "OptPerturbator",  0, 0, 1, "\n# OptPerturbator: The delta/difference used to to calculate the d(function_value)/d(parameter_value) gradient"},
     { "OptInitStep",  0, 0, 1, "\n# OptInitStep: specify initial stepsize for local minimizers "
@@ -565,7 +566,8 @@ typedef enum {  /// Field index into outField structure
     f_OptHybridTolRel,
     f_OptHybridTolAbs,
     f_OptHybridMaxEval,
-    f_OptHybridMode,
+    f_OptEquilibrium,
+//    f_OptHybridMode,
     f_OptNmultistart,
     f_OptPerturbator,
     f_OptInitStep,
@@ -588,6 +590,7 @@ void out_nlopt_param_txt_bson( fstream& ff, bson *obj, bool with_comments )
     }
 
     prar.writeArrayFromBson( f_OptDoWhat,  obj, 0L, with_comments);
+    prar.writeArrayFromBson( f_OptEquilibrium,  obj, 0L, with_comments);
     prar.writeArrayFromBson( f_OptUserWeight,  obj, 0L, with_comments);
     prar.writeArrayFromBson( f_OptTuckey,  obj, 0L, with_comments);
 //    prar.writeField( f_OptTitration,  (long int)OptTitration, with_comments, brief_mode);

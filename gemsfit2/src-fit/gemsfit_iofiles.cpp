@@ -1438,8 +1438,8 @@ outField optimization_fields[25] =
     { "OptHybridTolAbs",  0, 0, 1, "\n# OptTuckeyVal: Empirical chosen value that is multiplied with the median of residuals to get the "
                                    "\n# 		      weighting thereshold value C = Val * M. Default value 6. Residuals >C -> weight 0 "},
     { "OptHybridMaxEval",  0, 0, 1, "\n# OptHybridMaxEval: Comment"},
-    { "OptEquilibrium",  0, 0, 1, "\n# OptEquilibrium: (1) Use GEMS3K warp to calculate thermodynamic equilibrium. (0) Use TSolmod wrap "
-                                  "\n#                  without calculating themrodynamic equilibrium (fitting activtiy model parameters)"},
+    { "OptEquilibrium",  0, 0, 1, "\n# OptEquilibrium: (1) Use full GEMS3K to calculate thermodynamic equilibrium. (0) Use TSolMod shortcut "
+                                  "\n#                  without calculating equilibrium (only fitting activity model parameters)"},
     { "OptNmultistart",  0, 0, 1, "\n# OptNmultistart: Comment"},
     { "OptPerturbator",  0, 0, 1, "\n# OptPerturbator: The delta/difference used to to calculate the d(function_value)/d(parameter_value) gradient"},
     { "OptInitStep",  0, 0, 1, "\n# OptInitStep: specify initial stepsize for local minimizers "
