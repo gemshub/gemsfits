@@ -103,6 +103,7 @@ int generateConfig()
      // call GEM_init     --> read in input files
      if( (node->GEM_init( gpf->GEMS3LstFilePath().c_str() )) == 1 )
         {
+            cout << gpf->GEMS3LstFilePath() << endl;
             cout<<" .. ERROR occurred while reading GEMS3K input files !!! ..."<<endl;
             return 1;
         }
@@ -114,7 +115,7 @@ int generateConfig()
     cout << "Start writing the input specification file template"<< endl;
     Data_Manager *data_meas = new Data_Manager(1);
 
-    if ( access( gpf->OptParamFile().c_str(), 0 ) == 0 )
+   /* if ( access( gpf->OptParamFile().c_str(), 0 ) == 0 )
     {
         cout << gpf->OptParamFile() <<" exists. Do you want to overwrite it? write yes or no: ";
         cin >> YN;
@@ -130,7 +131,7 @@ int generateConfig()
         }
    }  //  else
 //    {
-    overwrite:
+    overwrite:*/
         // Writing Data sources section
     data_meas->out_db_specs_txt(with_comments, brief_mode);
 
@@ -228,13 +229,13 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
 
     if( _comment )
         ff << "\n# ICNL: List of Independent Component names (for readability; no need to modify)";
-    prarCH.writeArray(  "ICNL", CSD->ICNL[0], CSD->nIC, MaxICN );
+    prarCH.writeArrayS(  "ICNL", CSD->ICNL[0], CSD->nIC, MaxICN );
     if( _comment )
             ff << "\n# DCNL: List of Dependent Component names (for readability; no need to modify)";
-    prarCH.writeArray(  "DCNL", CSD->DCNL[0], CSD->nDC, MaxDCN );
+    prarCH.writeArrayS(  "DCNL", CSD->DCNL[0], CSD->nDC, MaxDCN );
     if( _comment )
             ff << "\n# PHNL: List of Phase names (for readability; no need to modify)";
-    prarCH.writeArray(  "PHNL", CSD->PHNL[0], CSD->nPH, MaxPHN );
+    prarCH.writeArrayS(  "PHNL", CSD->PHNL[0], CSD->nPH, MaxPHN );
 //    prarCH.writeArrayF(  f_ccPH, CSD->ccPH, CSD->nPH, 1L,_comment, brief_mode );
 //    prarCH.writeArray(  f_nDCinPH, CSD->nDCinPH, CSD->nPH, -1L,_comment, brief_mode);
 //    prarCH.writeArray(  f_TKval, CSD->TKval, CSD->nTp, -1L,_comment, brief_mode );
@@ -323,19 +324,19 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
     prar.writeField(f_P, CNode->P, _comment, brief_mode  );
     if( _comment )
      {   ff << "\n\n## (4) Data for Independent Components";
-         prar.writeArray(  NULL, CSD->ICNL[0], CSD->nIC, MaxICN );
+         prar.writeArrayS(  NULL, CSD->ICNL[0], CSD->nIC, MaxICN );
      }
     prar.writeArray(  f_bIC,  CNode->bIC, CSD->nICb, -1L,_comment, brief_mode );
     if( _comment )
     {    ff << "\n\n## (5) Data for Dependent Components";
-         prar.writeArray(  NULL, CSD->DCNL[0], CSD->nDC, MaxDCN );
+         prar.writeArrayS(  NULL, CSD->DCNL[0], CSD->nDC, MaxDCN );
      }
     prar.writeArray(  f_xDC,  CNode->xDC, CSD->nDCb, -1L,_comment, brief_mode  );
     prar.writeArray(  f_dll,  CNode->dll, CSD->nDCb, -1L,_comment, brief_mode  );
     prar.writeArray(  f_dul,  CNode->dul, CSD->nDCb, -1L,_comment, brief_mode  );
     if( _comment )
     {    ff << "\n\n## (6) Data for Phases";
-          prar.writeArray(  NULL, CSD->PHNL[0], CSD->nPH, MaxPHN );
+          prar.writeArrayS(  NULL, CSD->PHNL[0], CSD->nPH, MaxPHN );
     }
     prar.writeArray(  f_aPH,  CNode->aPH, CSD->nPHb, -1L,_comment, brief_mode );
 
@@ -352,21 +353,21 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
     if( _comment )
      {
          ff << "\n\n## (4) Data for Independent Components";
-         prar.writeArray(  NULL, CSD->ICNL[0], CSD->nIC, MaxICN );
+         prar.writeArrayS(  NULL, CSD->ICNL[0], CSD->nIC, MaxICN );
      }
     prar.writeArray(  f_uIC,  CNode->uIC, CSD->nICb, -1L,_comment, brief_mode );
     prar.writeArray(  f_bSP,  CNode->bSP, CSD->nICb, -1L,_comment, brief_mode );
 
     if( _comment )
     {    ff << "\n\n## (5) Data for Dependent Components";
-         prar.writeArray(  NULL, CSD->DCNL[0], CSD->nDC, MaxDCN );
+         prar.writeArrayS(  NULL, CSD->DCNL[0], CSD->nDC, MaxDCN );
     }
     //prar.writeArray(  f_xDC,  CNode->xDC, CSD->nDCb, -1L,_comment, brief_mode  );
     prar.writeArray(  f_gam,  CNode->gam, CSD->nDCb, -1L,_comment, brief_mode  );
 
     if( _comment )
     {    ff << "\n\n## (6) Data for Phases";
-          prar.writeArray(  NULL, CSD->PHNL[0], CSD->nPH, MaxPHN );
+          prar.writeArrayS(  NULL, CSD->PHNL[0], CSD->nPH, MaxPHN );
     }
     prar.writeArray(  f_xPH,  CNode->xPH, CSD->nPHb, -1L,_comment, brief_mode );
     prar.writeArray(  f_vPS,  CNode->vPS, CSD->nPSb, -1L,_comment, brief_mode );
@@ -377,7 +378,7 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
     {  if( _comment )
        {
             ff << DataBR_fields[f_bPS].comment.c_str();
-        prar.writeArray(  NULL, CSD->ICNL[0], CSD->nIC, MaxICN );
+        prar.writeArrayS(  NULL, CSD->ICNL[0], CSD->nIC, MaxICN );
         }
        prar.writeArray(  f_bPS,  CNode->bPS, CSD->nPSb*CSD->nICb, CSD->nICb,false, brief_mode );
     }
@@ -822,6 +823,12 @@ TGfitPath::TGfitPath(int c, char *v[]):
 //#else
 //        optParamFilePath = ".";
 //#endif
+    char cur_dir[300];
+        // let's try to find resources by path of the executable
+    getcwd(cur_dir, 300);
+    cout << cur_dir << endl;
+    for (int ii = 1; ii < argc; ii++)
+     cout << ii << " arg " << argv[ii] << endl;
 
     // parsing options -init, -run, -conf if given
 
@@ -1180,8 +1187,8 @@ void Data_Manager::define_db_specs( )
    datasource = 0;
    DBname = "../EJDB/<database name>";
    collection= "experiments";
-   DataSelect ="{...}";
-   DataTarget = "{[...]}";
+   DataSelect ="";
+   DataTarget = "";
    LimitOfDetection = 1e-06;
 
 }

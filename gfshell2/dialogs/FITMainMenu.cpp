@@ -177,7 +177,7 @@ void FITMainWindow::CmSelectGEMS( const string& fname_ )
        }
 
        selectGEMS( fname );
-       changeSystemFiles( gemsLstFile.Name(), gemsLstFile.Ext() );
+       changeSystemFiles();
 
        setStatusText( "GEMS3K input file set is selected" );
     }
@@ -324,9 +324,10 @@ void FITMainWindow::CmShow( const string& reckey )
       TFile newgems( rtEJ[ currentMode ].GetGems3kName() );
       if( newgems.Name() != gemsLstFile.Name() ) // new list
       {
-          gemsLstFile.ChangeName( newgems.Name() );
           if( !newgems.Name().empty() )
+          {   gemsLstFile.ChangeName( newgems.Name() );
               selectGEMS( gemsLstFile.GetPath() );
+          }
       }
    }
    catch( TError& err )
@@ -442,7 +443,10 @@ void FITMainWindow::CmCreate()
 {
     try
     {
-        ui->recordEdit->setText( trUtf8(templRec.c_str()));
+        if( currentMode == MDF_TASK )
+          createTaskTemplate();
+        else
+          ui->recordEdit->setText( trUtf8(templRec.c_str()));
         contentsChanged = false;
     }
     catch( TError& err )
@@ -617,7 +621,7 @@ void FITMainWindow::CmBackupTXT()
 
 
 void get_bson_from_gems_fit_txt( const string& fname, bson *obj );
-/// Import Data Records from task configuration txt-file
+/// Command Import Data Records from task configuration txt-file
 void FITMainWindow::CmRestoreTXT()
 {
     try
@@ -630,25 +634,8 @@ void FITMainWindow::CmRestoreTXT()
          TFile  inFile("", ios::in);
          if( !inFile.ChooseFileOpen( this, fname, "Please, select file with GEMSFIT2 specificatins file","*.dat" ))
               return;
-         inFile.Open();
 
-        // read bson records array from file
-         bson bsrec;
-         bson_init( &bsrec );
-         bson_append_string( &bsrec, "taskid", inFile.Name().c_str() );
-         bson_append_string( &bsrec, "projectid", fitTaskDir.Name().c_str() );
-         get_bson_from_gems_fit_txt( fname.c_str(), &bsrec );
-         bson_finish( &bsrec );
-
-         //set bson to string
-         ParserJson pars;
-         string bsonVal;
-         pars.printBsonObjectToJson( bsonVal, bsrec.data );
-
-         //show result
-         ui->recordEdit->setText( trUtf8(bsonVal.c_str()));
-
-        bson_destroy( &bsrec);
+        readTXT( inFile );
         changeKeyList();
         contentsChanged = true;
         setStatusText( "Records imported from json txt-file" );
@@ -660,6 +647,28 @@ void FITMainWindow::CmRestoreTXT()
     }
 }
 
+/// Import Data Record from task configuration txt-file
+void FITMainWindow::readTXT( TFile& inFile )
+{
+         inFile.Open();
+
+        // read bson records array from file
+         bson bsrec;
+         bson_init( &bsrec );
+         bson_append_string( &bsrec, "taskid", inFile.Name().c_str() );
+         bson_append_string( &bsrec, "projectid", fitTaskDir.Name().c_str() );
+         get_bson_from_gems_fit_txt( inFile.GetPath(), &bsrec );
+         bson_finish( &bsrec );
+
+         //set bson to string
+         ParserJson pars;
+         string bsonVal;
+         pars.printBsonObjectToJson( bsonVal, bsrec.data );
+
+         //show result
+        ui->recordEdit->setText( trUtf8(bsonVal.c_str()));
+        bson_destroy( &bsrec);
+}
 
 /// Delete the list of records
 void FITMainWindow::CmDeleteList()

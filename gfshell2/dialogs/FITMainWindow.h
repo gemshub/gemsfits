@@ -5,6 +5,7 @@
 #include <QSettings>
 #include <QLineEdit>
 #include <QTableWidget>
+#include <QProcess>
 #include "verror.h"
 #include "f_ejdb_file.h"
 #include "node.h"
@@ -52,9 +53,13 @@ class FITMainWindow : public QMainWindow
     void resetMainWindow();
     bool MessageToSave();
     void RecSave( const string& recBsonText, const char* key=0 );
-    void changeSystemFiles( const string& newname, const string& ext );
-    void runProcess();
+    void changeSystemFiles();
+    bool runProcess(const QStringList& cParameters);
     void selectGEMS( const string& fname );
+    string makeSystemFileName(const string& path );
+    bool createTaskTemplate();
+    void readTXT( TFile& inFile );
+
 
     void closeEvent( QCloseEvent* );
     void resizeEvent( QResizeEvent * event );
@@ -62,6 +67,7 @@ class FITMainWindow : public QMainWindow
 
 private slots:
     void moveToolBar( int pos, int index );
+    void showProcessMesage( );
     void changeKeyList();
     void recEdited()
     {
@@ -139,6 +145,7 @@ private:
     QLineEdit* pLineTask;  ///< Current Task name
     QLineEdit* pLineGEMS;  ///< Current CSD GEMS3K file lst name
     TKeyTable* keyTable;   ///< Curent collection EJDB keys list
+    QProcess*  fitProcess;
 
     void setTableIComp();
     void setListPhase();

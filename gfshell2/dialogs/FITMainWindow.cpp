@@ -1,6 +1,7 @@
 
 #include <QKeyEvent>
 #include <QProcess>
+#include <QtGlobal>
 
 #include "FITMainWindow.h"
 #include "ui_FITMainWindow.h"
@@ -87,6 +88,14 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     setDefValues( c, v);
    // setup first lists
     CmDBMode();
+
+   // setup process
+    fitProcess = new QProcess( this);
+    QString program( "/home/dmitrieva/DevGEMSFIT/devGFshell/GFandGUI/gemsfit2-build/gemsfit2");
+    fitProcess->setProgram( program );
+    connect( fitProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(showProcessMesage()) );
+    //connect( fitProcess, SIGNAL(readyReadStandardError()), this, SLOT(ReadErr()) );
+
 }
 
 FITMainWindow::~FITMainWindow()
@@ -213,13 +222,19 @@ void FITMainWindow::setStatusText( const string& text )
 
 void FITMainWindow::addLinetoStatus( const string& line )
 {
-    QString vals = ui->statusEdit->toPlainText();
-    vals += trUtf8(line.c_str()) + "\n";
-    ui->statusEdit->setPlainText( vals );
-    //QString vals = trUtf8(line.c_str()) + "\n";
-    //ui->statusEdit->textCursor().movePosition(QTextCursor::End);
-    //ui->statusEdit->insertPlainText(vals);
+    //QString vals = ui->statusEdit->toPlainText();
+    //vals += trUtf8(line.c_str()) + "\n";
+    //ui->statusEdit->setPlainText( vals );
+    ui->statusEdit->append( trUtf8( line.c_str()) + "\n" );
 }
+
+void FITMainWindow::showProcessMesage( )
+{
+    QProcess *p = dynamic_cast<QProcess *>( sender() );
+    if (p)
+        ui->statusEdit->append( p->readAllStandardOutput() );
+
+ }
 
 //----------------------------------------------------------
 // Working with EJDB
@@ -419,13 +434,20 @@ bool FITMainWindow::MessageToSave()
 }
 
 /// Change <SystemFiles> data in edit record
-void FITMainWindow::changeSystemFiles( const string& newname, const string& ext )
+string FITMainWindow::makeSystemFileName( const string& path  )
+{
+   string name = path;
+   if(projectSettings )
+          name += projectSettings->value("GEMS3KFilesPath", "/GEMS").toString().toUtf8().data();
+   name += "/" + gemsLstFile.Name() + "." + gemsLstFile.Ext();
+   return name;
+}
+
+/// Change <SystemFiles> data in edit record
+void FITMainWindow::changeSystemFiles()
 {
    // make new paht string
-   string newPath = ".";
-   if(projectSettings )
-          newPath += projectSettings->value("GEMS3KFilesPath", "/GEMS").toString().toUtf8().data();
-          newPath += "/" + newname + "." + ext;
+   string newPath = makeSystemFileName("..");
 
    // get value string
    string valueStr = ui->recordEdit->toPlainText().toUtf8().data();
@@ -445,20 +467,37 @@ void FITMainWindow::changeSystemFiles( const string& newname, const string& ext 
 }
 
 
-void FITMainWindow::runProcess()
+/// Make temlate for task record
+bool FITMainWindow::createTaskTemplate()
 {
-    /*
-    // Set up the command line which starts the external program as QStringList.
-    QStringList commandAndParameters;
+    if( gemsLstFile.Name().empty() )
+       Error("Create task template", "Undefined System File name.");
 
-      // commandAndParameters<<"konqueror"
-      //                  <<"file:/home/thomas";
-    QProcess *process = new QProcess(this);
-    QString file = QDir::homepath + "/file.exe";
-    process->start(file);
+    // create arguments string
+    string newPath = makeSystemFileName( "." );
+    QStringList cParameters;
+    cParameters << "-init" << newPath.c_str() << "template.dat";
 
-    QProcess myProcess(commandAndParameters);
-    // Start the QProcess instance.
-    myProcess.start();
-    */
+    if( !runProcess( cParameters) )
+       Error("Run gemsfit -init", "Error started process.");
+
+    int ret = fitProcess->waitForFinished();
+
+    // read "template.dat" to bson
+    string path = fitTaskDir.Dir()+ "/template.dat";
+    TFile  inFile(path, ios::in);
+    readTXT( inFile );
+
+    return ret;
 }
+
+
+bool FITMainWindow::runProcess( const QStringList& cParameters)
+{
+    fitProcess->setArguments( cParameters);
+    fitProcess->setWorkingDirectory( fitTaskDir.Dir().c_str() );
+
+    fitProcess->start();
+    return fitProcess->waitForStarted();
+}
+
