@@ -91,7 +91,7 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
 
    // setup process
     fitProcess = new QProcess( this);
-    QString program( "/home/dmitrieva/DevGEMSFIT/devGFshell/GFandGUI/gemsfit2-build/gemsfit2");
+    QString program( "/home/parallels/DevGEMSFIT/devGFshell/GFandGUI/gemsfit2-build/gemsfit2");
     fitProcess->setProgram( program );
     connect( fitProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(showProcessMesage()) );
     //connect( fitProcess, SIGNAL(readyReadStandardError()), this, SLOT(ReadErr()) );

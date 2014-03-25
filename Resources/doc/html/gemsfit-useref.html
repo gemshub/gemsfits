@@ -1,0 +1,1452 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>GEMSFIT2 Users Reference</title>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+  
+  <meta name="author" content="GEMS Development Team">
+
+  
+  <meta name="description" content="Version 2"></head><body style="background-image: url(bgimg-gray.jpg);">
+<h1><img style="width: 48px; height: 48px;" src="gemsfit2.png" alt="gemsfit2.png"> <font style="color: black;" color="#000066">GEMSFIT2<br>
+</font></h1>
+
+<h2>Users Reference - keywords used in the data management and fitting routine<br>
+</h2>
+
+<h2 style="font-family: Helvetica,Arial,sans-serif;"> </h2>
+
+<h4><span style="font-family: Helvetica,Arial,sans-serif;"></span></h4>
+
+<hr size="2" width="100%">
+<h4>Contents</h4>
+<ul>
+  <li><a href="#Keyword_variable_name_in_C_source">Experiment description and conditions</a></li>
+  <li><a href="#General_keywords">General kewords</a></li>
+  <li><a href="#System_composition">System composition</a></li>
+  <li><a href="#Metastability_constraints">Metastability constraints</a></li>
+  <li><a href="#parameter_marking">Parameter marking</a></li>
+  <li><a href="#DataTarget">What to comapare</a></li>
+  <li><a href="#target_function_and_weights">Target function and weights</a></li>
+  <li><a href="#Units">Units</a></li>
+</ul>
+
+
+<hr style="width: 100%; height: 2px;"><span style="font-family: monospace;"><br>
+<br>
+</span>
+<table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><a name="Keyword_variable_name_in_C_source"></a><span style="font-weight: bold;">Keyword (variable name in C++ source code)</span><br>
+      </td>
+      <td style="vertical-align: top;">Value*<br>
+      </td>
+      <td style="vertical-align: top;">Type<br>
+      </td>
+      <td style="vertical-align: top;">Description<br>
+      </td>
+      <td style="vertical-align: top;">Example<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>expdataset<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="expdataset"></a>expdataset<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>name of the set of experiments<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>Anderson_etal1967<br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>expsample<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="sample"></a>sample<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>name of one experiment/experimental run<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>A_01<br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>usedatasets<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="usedataset"></a>usedatasets<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>keyword used in DataSelect of the input file (which experimental sets to be used)<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>skipdatasets<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="skipdataset"></a>skipdatasets<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>keyword used in DataSelect of the input file (which experimental sets not to be used)</big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><big><span style="font-family: monospace;">usesamples</span></big><br>
+      </td>
+      <td style="vertical-align: top;"><big style="font-weight: bold;"><span style="font-family: monospace;"><a name="usesamples"></a>usesamples</span></big><br>
+      </td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>keyword used in DataSelect of the input file (which experimental samples to be used)</big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><big><span style="font-family: monospace;">skipsamples</span></big><br>
+      </td>
+      <td style="vertical-align: top;"><big style="font-weight: bold; font-family: monospace;"><a name="skipsamples"></a>skipsamples</big><br>
+      </td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>keyword used in DataSelect of the input file (which experimental samples not to be used)</big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>usepairs<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="usepairs"></a>usepairs<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array of JSON objects made of pairs of datasets-samples to use<br>
+      </big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>skipparis<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="skippairs"></a>skippairs<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array of JSON objects made of pairs of datasets-samples not to use.</big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+<tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>sT<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="sT"></a>sT<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>double<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>temperature of the experiment (ºC)<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>sP<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="sP"></a>sP<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>double<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>pressure of the experiment (bar)<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>sV<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="sV"></a>sV<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>double<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>volume of the experiment&nbsp; (cm<sup>3</sup>)<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><a name="General_keywords"></a><span style="font-weight: bold;">General keywords</span><br>
+      </td>
+      <td style="vertical-align: top; font-weight: bold;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>Qnt</big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="Q"></a>Q<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>double<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>qunatity/amount</big></td>
+      <td style="vertical-align: top;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>Qerror</big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="error"></a>error<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>double<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>error<br>
+</big></td>
+      <td style="vertical-align: top;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>Qunit</big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="unit"></a>unit<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>unit <br>
+
+      </big></td>
+      <td style="vertical-align: top;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><a name="System_composition"></a>System composition<br>
+      </td>
+      <td style="vertical-align: top; font-weight: bold;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>sbcomp<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="sbcomp"></a>sbcomp<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array of components in the database that define the bulk composition of one experiment<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp; comp<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="comp"></a>comp<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>formula definition of a component part of the experiment bulk composition (GEM-Selektor formula syntax)<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>SiO2, H2O@, NaCl<br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><a name="Metastability_constraints"></a>Metastability constraints<br>
+      </td>
+      <td style="vertical-align: top; font-weight: bold;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>UMC</big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="UMC"></a>UMC<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array of upper metastability constraints in the database</big></td>
+      <td style="vertical-align: top;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>LMC<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="LMC"></a>LMC<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array of lower metastability constraints in the database</big></td>
+      <td style="vertical-align: top;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><big><br>
+
+      </big></td>
+      <td style="vertical-align: top; font-weight: bold;"><big><br>
+
+      </big></td>
+      <td style="vertical-align: top;"><big><br>
+
+      </big></td>
+      <td style="vertical-align: top;"><big><br>
+
+      </big></td>
+      <td style="vertical-align: top;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>expphases<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="expphases"></a>expphases<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>arrary of phases in the database <br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp; phase<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="phase"></a>phase<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>phase name (GEMS3K syntax)<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>aq_gen<br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp; phIC<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="phIC"></a>phIC<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array of independent components in a phase (in the database)</big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IC<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="IC"></a>IC<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>name/formula of independent component/chemical element<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>Si, Al, Cl<br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp; phMR<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="phMF"></a>phMR<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array of reproted phase composition as molar ratio (in the database)</big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MF<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="MF"></a>MF<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>molar fraction formula<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>Si/Si+Ca<br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp; phDC<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="phDC"></a>phDC<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array of dependent components of a phase (in the database)</big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DC<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="DC"></a>DC<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>name of dependent component (GEMS3K syntax)<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>SiO2@<br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DCprop<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="DCprop"></a>DCprop<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array of dependent components properties (in the database)</big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp; phprop<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="phprop"></a>phprop<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array of phase properties (in the database)</big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; property<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="property"></a>property<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>name of the property <br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pH<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="pH"></a>pH<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>double<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Eh<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="Eh"></a>Eh<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>double<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IS<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="IS"></a>IS<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>double<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>ionic strength<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; all<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="all"></a>all<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>double<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>alkalinity<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pV<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="pV"></a>pV<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>double<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>volume<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sArea<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="sArea"></a>sArea<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>dobule<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>surface area<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RHO<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="RHO"></a>RHO<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>dobule<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>density<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><a name="parameter_marking"></a><span style="font-weight: bold;">Keywords for parameter markup</span><br>
+      </td>
+      <td style="vertical-align: top; font-weight: bold;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>IV<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="IV"></a>IV<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>double<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>initial value<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>UB<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="UB"></a>UB<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>double<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>upper bundary<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>LB<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="LB"></a>LB<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>double<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>lower bundary<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>Ref<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="Ref"></a>Ref<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>reference (for reaction dependent parameter)</big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>rDC<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="rDC"></a>rDC<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>rection constrined dependent component<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>KOH@<br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>nC<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="nC"></a>nC<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>integer<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>nuber of components involved in the reaction<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>4<br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>RC<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="RC"></a>RC<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array of reaction components (with the constrined one last)<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>K+, OH-, KOH@<br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>Rcoef<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="Rcoef"></a>Rcoef<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array of reaction coeficients in the same order as the components<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>-1, -1, 1<br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>order<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="order"></a>order<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>integer<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>order in which the reactions should be executed by gemsfit in parameter ajusting procedure<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>1<br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>LEs<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="LEs"></a>LEs<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array of linked bulk independent components (bIC)<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>S, Cl<br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>LE<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="LE"></a>LE<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>linked element<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>H<br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>Lcoef<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="Lcoef"></a>Lcoef<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array of linking coeficients<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>2, 1<br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><a name="DataTarget"></a><span style="font-weight: bold;">Keywords for DataTarget</span><br>
+      </td>
+      <td style="vertical-align: top; font-weight: bold;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>Target<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="Target"></a>Target<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>name of target function<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>TT<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="TT"></a>TT<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>target fucntion type<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>lsq (least squares)<br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>WT<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="WT"></a>WT<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>weighting scheme type<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>inverr3: 1/measured^2<br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>OFUN<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="OFUN"></a>OFUN<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array of what data to compare<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp; CT<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="CT"></a>CT<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>type of data to compare<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>IC (element concentration), property,&nbsp; DC <br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp; CN<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="CN"></a>CN<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>name of what to comapre (element notation, property notation, etc)<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>Al, Si, pH<br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp; EPH<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="EPH"></a>EPH<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>phase name which CT-CN belongs to<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>aq_gen<br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp; DCP<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="DCP"></a>DCP<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>dependent component property<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>Q (amount in molfraction)<br>
+
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp; WT<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><span style="font-weight: bold;"><a name="WT_"></a>WT</span><br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>real<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>objective function weight<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>default 1<br>
+      </big></td>
+    </tr>
+<tr>
+      <td style="vertical-align: top;"><a name="target_function_and_weights"></a><span style="font-weight: bold;">Keywords for target function and weights</span><br>
+      </td>
+      <td style="vertical-align: top; font-weight: bold;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>lsq<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="lsq"></a>lsq<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;(measured - computed)<sup>2</sup><br>
+
+      </big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>lsq_norm<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="lsq_norm"></a>lsq_norm<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;(measured/meas_average - computed/meas_average)<sup>2</sup></big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>abs_dif<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><span style="font-weight: bold;"><a name="abs_dif"></a>abs_dif</span><br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;abs(measured - computed)<br>
+      </big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+<tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>inverr<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="inverr"></a>inverr<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>1/error<br>
+
+      </big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>inverr2<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="inverr2"></a>inverr2<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>1/error<sup>2</sup><br>
+
+      </big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>inverr3<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="inverr3"></a>inverr3<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>1/measured<sup>2</sup><br>
+
+      </big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>inverr_norm<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="inverr_norm"></a>inverr_norm<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>1/(error/meas_average)<sup>2</sup><br>
+
+      </big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><a name="Units"></a><span style="font-weight: bold;">Units</span><br>
+      </td>
+      <td style="vertical-align: top; font-weight: bold;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>molal<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="molal"></a>molal<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>mol/Kg<br>
+
+      </big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>log_molak<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><span style="font-weight: bold;"><a name="logm"></a>log_molal</span><br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>log(mol/Kg)<br>
+      </big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+<tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>_loga<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="-loga"></a>-loga<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>-log(activity)<br>
+
+      </big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>gram<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="gram"></a>g<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>g grams<br>
+
+      </big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>kgram<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="kgram"></a>kg<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>Kilograms<br>
+
+      </big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>m3<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="m3"></a>m3<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>cubic meters<br>
+
+      </big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>cm3<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="cm3"></a>cm3<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>cubic centimeters<br>
+
+      </big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>molratio<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="molfrac"></a>molratio<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>mol ratio<br>
+
+      </big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>g_cm3<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="g_cm3"></a>g_cm3<br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>grams / cubic centimeters<br>
+
+      </big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>molfrac<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="molfrac2"></a>molfrac<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>mole fraction <br>
+      </big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>Volts<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><span style="font-weight: bold;"><a name="volts"></a>volts</span><br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>Volts<br>
+      </big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+<tr>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<span style="font-family: monospace;"></span><span style="font-family: monospace;"></span>*Value
+- notation used in the input file and database files (also the excel
+data file). This is the notation the user should use when making the
+excel file of experiments and in the gemsfit2 input file.<br style="font-family: monospace;">
+<br style="font-family: monospace;">
+<span style="font-family: monospace;"></span>
+<hr style="width: 100%; height: 2px;"><span style="font-family: monospace;"><br>
+</span>Example in JSON:<br style="font-family: monospace;">
+<big><span style="font-family: monospace;">{<br>
+&nbsp;&nbsp;&nbsp; "_id": "0x33b3679",<br>
+&nbsp;&nbsp;&nbsp; "sample": "Co_Ko17",<br>
+&nbsp;&nbsp;&nbsp; "sT": 600,<br>
+&nbsp;&nbsp;&nbsp; "sP": 1000,<br>
+&nbsp;&nbsp;&nbsp; "expdataset": "Co_HCl_Korzhinskiy1987",<br>
+&nbsp;&nbsp;&nbsp; "UMC": [],<br>
+&nbsp;&nbsp;&nbsp; "sbcomp": [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "comp": "Al2O3",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Q": 15,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Qunit": "g"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "comp": "H2O",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Q": 1000,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Qunit": "g"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "comp": "HCl",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Q": 39.9788,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Qunit": "g"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; ],<br>
+&nbsp;&nbsp;&nbsp; "expphases": [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "phase": "aq_gen",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "phIC": [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "IC": "Al",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+"Q": 0.00186209,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+"Qerror": 0.000186209,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+"Qunit": "molal"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; ]<br>
+}</span><br>
+</big>
+<hr style="width: 100%; height: 2px;">Last
+updated:&nbsp; 06. 03. 2014&nbsp; DM,DK <br style="font-family: Helvetica,Arial,sans-serif;">
+
+<br style="font-family: Helvetica,Arial,sans-serif;">
+
+Copyright&nbsp; (c) 2014&nbsp; <a href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a><br style="font-family: Helvetica,Arial,sans-serif;">
+
+<hr style="font-family: Helvetica,Arial,sans-serif;" size="2" width="100%"><br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+</body></html>

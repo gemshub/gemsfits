@@ -1,4 +1,7 @@
 * text=auto !eol
+Resources/doc/html/bgimg-gray.jpg -text
+Resources/doc/html/gemsfit2.png -text
+Resources/doc/html/gfshell2.png -text
 Tests/BHMsol/01/gf2run.bat -text svneol=unset#application/octet-stream
 Tests/BHMsol/EJDB/Boehmite -text
 Tests/BHMsol/EJDB/Boehmite_experiments -text

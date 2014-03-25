@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>About GEMSFIT2 Code</title>
+
+
+
+  
+
+  
+  
+  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+  
+  <meta name="author" content="GEMS Development Team">
+
+  
+  <meta name="description" content="Version 2"></head><body style="background-image: url(bgimg-gray.jpg);">
+<h1><img style="width: 48px; height: 48px;" src="gemsfit2.png" alt="gemsfit2.png"> <font style="color: black;" color="#000066">GEMSFIT2<br>
+</font></h1>
+
+<h2>About GEMSFIT2 code<br>
+</h2>
+
+<h2 style="font-family: Helvetica,Arial,sans-serif;"> </h2>
+
+<h4><span style="font-family: Helvetica,Arial,sans-serif;"></span></h4>
+
+<hr size="2" width="100%">
+<span style="font-weight: bold;"><br>
+</span>
+<ul>
+  <li>Data Source - Gemsfi2 uses local stored EJDB database generated using <a href="howto-csvtoejdb.html" target="_blank">csvtoejdb</a> tool</li>
+</ul>
+
+<ul>
+  <li>Data Select - The user can select individual experiments, and/or
+exclude datasets, and temperature and pressure intervals by editing the
+input file acordingly.</li>
+</ul>
+
+<ul>
+  <li>
+The residuals are calulated based on <a target="_blank" href="gemsfit-useref.html#target_function_and_weights">user selected functions</a>. Severeal weighting scheems are also available.</li>
+</ul>
+
+<ul>
+  <li>
+Data To Compare - phase <a href="gemsfit-useref.html#phIC">chemical (elements) composition</a>, given in <a href="gemsfit-useref.html#molal">molal</a> or <a href="gemsfit-useref.html#loga">loga</a> (meaning log) units; phase <a href="gemsfit-useref.html#phDC">dependent components</a> amount/fraction; <a href="gemsfit-useref.html#property">phase properties:</a> pH, Eh, amount, volume, RHO, alkalinity, surface area;<br>
+  </li>
+</ul>
+
+<ul>
+  <li>
+    <p>
+Parameters to fit - <span style="font-family: monospace; font-weight: bold;">&lt;G0&gt;</span> (Gibbs free energy at 25 C and 1 bar), <span style="font-weight: bold; font-family: monospace;">&lt;bIC&gt;</span> (bulk
+composition),<span style="font-family: monospace; font-weight: bold;"> &lt;PMc&gt;</span> (interaction parameter coefficients for non-ideal
+solutions), <span style="font-family: monospace; font-weight: bold;">&lt;DMc&gt;, &lt;fDQF&gt;, &lt;bIC&gt;</span>. The G0 parameters can be also reaction constrined and the bIC ones can be linked to each other (eg. titration). </p>
+</li>
+  <li>
+    <p>The optimization algorithms are provided in the <a href="http://ab-initio.mit.edu/wiki/index.php/NLopt" target="_blank">NLopt library</a>.</p>
+  </li>
+  <li>The statistics represent the goodness of fit (Coefficient of
+determination R^2, Pearson's Chi Square test, Reduced_chi_square) but
+fit independent statistics with sensitivity analysis, Composite Scaled
+Sensitivities, Variance-Covariance matrix, Parameter Standard
+Deviations/Errors, Confidence intervals, Coefficient of Variation,
+Parameter t-statistic, Correlation matrix. For details: Mary C. Hill,
+Claire R. Tiedeman (2007) Effective Groundwater Model Calibration: With
+Analysis of Data, Sensitivities, Predictions, and Uncertainty. 480
+pages.</li>
+
+</ul>
+
+<br>
+<hr style="width: 100%; height: 2px;">Last
+updated:&nbsp; 10.10. 2013&nbsp; DM,DK <br style="font-family: Helvetica,Arial,sans-serif;">
+
+<br style="font-family: Helvetica,Arial,sans-serif;">
+
+Copyright&nbsp; (c) 2013&nbsp; <a href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a><br style="font-family: Helvetica,Arial,sans-serif;">
+
+<hr style="font-family: Helvetica,Arial,sans-serif;" size="2" width="100%"><br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+</body></html>

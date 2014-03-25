@@ -1,0 +1,312 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>HOWTO GEMSFIT2 (workflow)</title>
+
+
+
+
+
+
+
+  
+
+  
+  
+  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+  
+  <meta name="author" content="GEMS Development Team">
+
+  
+  <meta name="description" content="Version 2"></head><body style="background-image: url(bgimg-gray.jpg);">
+<h1><img style="width: 48px; height: 48px;" src="gemsfit2.png" alt="gemsfit2.png"> <font style="color: black;" color="#000066">GEMSFIT2<br>
+</font></h1>
+
+<h2>How to work with GEMSFIT2 program<br>
+</h2>
+
+<h2 style="font-family: Helvetica,Arial,sans-serif;"> </h2>
+
+<h4><span style="font-family: Helvetica,Arial,sans-serif;"></span></h4>
+
+<hr size="2" width="100%">
+<h4>Contents</h4>
+<ul>
+  <li><a href="#csvtoejdb">csvtoejdb</a> - database oprations<br>
+  </li>
+  <li><a href="#GEM-Selektor">GEM-Selektor</a> - geochemical system setup <br>
+  </li>
+  <li><a href="#gemsfit2">gemsfit2 </a>- data optimization</li>
+  <li><a href="#Workflow">Workflow</a> - in steps</li>
+  <li>Test example setup<br>
+  </li>
+
+
+</ul>
+
+
+<hr style="width: 100%; height: 2px;">For building the executable file of gemsfit2, see <a href="gemsfit-techinfo.html">gemsfit-techinfo.html</a>.<br>
+<p>
+To process your data with GEMSFIT2, you will need to use the following tools: <span style="font-weight: bold;">1. csvtoejdb, 2. GEMS3, and 3. gemsfit2.</span></p>
+
+<h3>
+1. <a name="csvtoejdb"></a>csvtoejdb </h3>
+<p>
+
+
+csvtoejdb is a utility program that deals with the data management
+and is used to enter the experimental data into a JSON database file
+(uses EJDB, <a href="http://ejdb.org/%29">http://ejdb.org/)</a>. The program adds entries into the
+database, backups the database
+into a JSON format text file, and can restore the JSON file into
+the database. The&nbsp; EJDB database file created by the csvtoejdb utility program will be used
+by the gemsfit2 program for the data processing/fitting. Together with the database file, a file terminated with <a href="howto-csvtoejdb.html#distinctTP.csv">...._distinctTP.csv</a> will be
+created. This file, if opened in excel, will have the unique P and T points
+of all experiments in the database that are useful when exporting the
+GEMS3K input files, as described below (for runing csvtoejdb, see <a href="howto-csvtoejdb.html">howto-csvtoejdb.html</a>)</p>
+
+<br>
+<hr style="width: 100%; height: 2px;">
+<h3>
+2. <a name="GEM-Selektor"></a>GEM-Selektor </h3>
+<p>
+GEM-Selektor v3 code package (<a href="http://gems.web.psi.ch/GEMS3">http://gems.web.psi.ch/GEMS3</a>)
+is needed to create the chemical system definition to model the experiments. In
+GEMS3, elements in the system, dependent components, phases,
+and input thermodynamic data can be selected and combined within the chemical
+thermodynamic system, which can be checked in trial calculations. For
+an overview, installation, and use of GEMS3, see GEMS3 site, the
+program's help window, and test projects. </p>
+<p>After the&nbsp; system is created and tested, the user needs to
+export
+the GEMS3K system definition files that later will be input for
+gemsfit2 (which includes
+the same GEMS3K GEM solver of equilibria as GEM-Selektor v.3). This is
+done from the "Single Thermodynamic System" dialog of GEM-Selektor.
+Just calculate the equilibrium state, and use the menu "Data"-&gt;
+"Export GEMS3K
+files...", which opens the "GEMS3K files export" dialog.&nbsp; </p>
+<p>
+&nbsp;&nbsp;&nbsp; -In the "T and P values and look-up array
+structure",
+select "enter temperature and pressure values" and "disable
+interpolation". Important! If you want to fit presure and temperature
+do not select disable interpolation and make sure that the T and P
+points are withing the desired bounds, and that there are enough points
+(for interpolation) to represent the paramater searching space.<br>
+ </p>
+<p>
+&nbsp;&nbsp;&nbsp; -In the "number of P points or pairs", enter the
+number of unique T and P points which you can get from the
+<a href="howto-csvtoejdb.html#distinctTP.csv">..._distinctTP.csv</a> file exported by the <a href="howto-csvtoejdb.html">csvtoejdb</a> tool at the same time
+with adding data to the database file. <br>
+</p>
+<p>&nbsp;&nbsp;&nbsp; -At the next step, you have to copy and paste all
+the P and T points also found in the ..._distinctTP.csv file exported
+by the csvtoejdb tool. How to do this exactly, depends on the operation
+system and the spreadsheet program that you use. In GEM-Selektor,
+Ctrl-C copies the previously selected data to clipboard, and Ctrl-V
+pastes the data (click on the first cell before executing Paste
+operation).<br>
+</p>
+<p>
+The exported GEMS3K files will be then used to generate the gemsfit2
+input file template and are also necessary during the parameter fitting.</p>
+
+<br>
+<hr style="width: 100%; height: 2px;">
+<h3>
+3. <a name="gemsfit2"></a>gemsfit2 </h3>
+<p>The gemsfit2 code is actually the fitting tool, which reads the
+experimental data from the EJDB database, and based on the user defined
+settings in the input file, adjusts the desired GEM input
+parameters. gemsfit2 has two modes: </p>
+<p>
+&nbsp;&nbsp; <a href="howto-run-gemsfit.html#init"><big style="font-weight: bold; font-family: monospace;">-init</big></a>
+- writes the template input file (to be modified by the user before
+running the fitting procedure) using the exported GEMS3K files;</p>
+<p>
+&nbsp;&nbsp; <a href="howto-run-gemsfit.html#run"><big style="font-family: monospace;"><span style="font-weight: bold;">-run</span></big></a>&nbsp; - runs the prameter fitting procedure based on the settings given in the previously-edited input file.</p>
+<p>
+For running gemsfit2, see <a href="howto-run-gemsfit.html">howto-run-gemsfit.html</a> .</p>
+
+<br>
+<hr style="width: 100%; height: 2px;">
+<h3><a name="Workflow"></a>
+4. Workflow steps for the user:</h3>
+
+<ol>
+  <li>Create a fitting exercise (test example) folder, as described in the next section.<br>
+
+    </li>
+  <li>
+    <p>Create / update the experimental database using the csvtoejdb - see <a href="howto-csvtoejdb.html">howto-csvtoejdb.html</a></p>
+
+  </li>
+
+  <li>
+    <p>Create the chemical system in GEMS3 modeling project,
+test it, export the GEMS3K sytem files, and copy them to your fitting
+exercise folder.<br>
+</p>
+</li>
+  <li>
+    <p>
+Use gemsfit2 in the <a href="howto-run-gemsfit.html#init">-init</a> mode to create the template input file - see <a href="howto-run-gemsfit.html">howto-run-gemsfit.html</a></p>
+</li>
+  <li>
+    <p>Edit the input file for the specific parameter fitting task
+(indicate the paths to the GEMS3K system files, and to the database
+file) following the instructions for each section, present as comments
+in the file or as described in <a href="gemsfit-input-file.html">gemsfit-input-file.html</a>.</p>
+</li>
+  <li>
+    <p>Execute gemsfit2 in the <a href="howto-run-gemsfit.html#run">-run</a> mode with the path to the edited input file as command line argument, see <a href="howto-run-gemsfit.html">howto-run-gemsfit.html</a></p>
+</li>
+</ol>
+
+For trobleshooting in the case of reported errors or crashes of csvtoejdb or gemsfit2 codes, see <a href="howto-csvtoejdb.html#Return_codes_and_error_messages">howto-csvtoejdb.html</a>&nbsp; and <a href="howto-run-gemsfit.html#Return_codes_and_error_messages">howto-run-gemsfit.thml</a> documentation files.<br>
+<br>
+
+<hr style="width: 100%; height: 2px;">
+<h3><a name="TEST_FOLDER"></a> 5. Test example folder structure (recommended)<br>
+</h3>
+
+
+<p>Please, locate in <big style="font-weight: bold;"><span style="font-family: monospace;">gemsfit2/Tests</span></big>
+folder in the gemsfit2 folder tree. We recommend to create, organize,
+and run GEMSFIT2 test examples in this folder, as described below. To
+start a new test exercise, you can copy/rename&nbsp; the (almost empty)
+"Tests /NewTest" template folder subtree, and enhance it, as shown below for the "CSH" example test exercise.<br>
+</p>
+<p>The folder <big style="font-weight: bold;"><span style="font-family: monospace;">/Tests</span></big>
+should contain subfolders, each with a complete set of input and output
+files for a given test exercise for a set of GEMS3K I/O files exported
+from the GEM-Selektor code package. We recommend the following
+subfolder structure ("CSH" is the example name of the fitting exercise;
+"//" starts a comment):</p>
+<big><span style="font-family: monospace; font-weight: bold;">/Tests</span><br style="font-family: monospace;">
+<span style="font-family: monospace;"><span style="font-weight: bold;">/Tests/CSH</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// </span><small>this test example</small><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+gf2init.bat&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// </span><small>batch file to create the template of GEMSFIT2 input specification file</small><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+gfin00_CSHidss1.dat&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // </span><small>Template file generated by GEMSFIT2</small><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><br style="font-family: monospace;">
+<span style="font-family: monospace;"><span style="font-weight: bold;">/Tests/CSH/GEMS</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// </span><small>GEM-Selektor project with GEMS3K files</small><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+CSHclassic.zip&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// </span><small>project file (zipped), for future use</small><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+CSHidss1-ipm.dat&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // </span><small>exported IPM file</small><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+CSHidss1-dch.dat&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // </span><small>exported DCH file</small><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+CSHidss1-dbr-0-0000.dat&nbsp; // </span><small>exported DBR file</small><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+CSHidss1-dbr.lst&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // </span><small>list of DBR files</small><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+CSHidss1-dat.lst&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // </span><small>list of files for GEMS3K</small><br style="font-family: monospace;">
+<span style="font-family: monospace;"><span style="font-weight: bold;">/Tests/CSH/dbimport</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// </span><small>file(s) with experimental data </small><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+CSH-GC-1967.csv&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // </span><small>.csv file for csvtoejdb import</small><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+toejdbrun.bat&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// </span><small>batch file to run csvtoejdb</small><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+cshsolub_experiments.json&nbsp; // </span><small>generated by csvtoejdb</small><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+cshsolub_experiments_distinctTP.csv&nbsp; // </span><small>generated by csvtoejdb</small><br style="font-family: monospace;">
+<span style="font-family: monospace;"><span style="font-weight: bold;">/Tests/CSH/EJDB</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// </span><small>EJDB database files generated by csvtoejdb and used by gemsfit2</small><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+cshsolub&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// </span><small>database file</small><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+cshsolub_experiments&nbsp;&nbsp;&nbsp; // </span><small>experiments collection file</small><br style="font-family: monospace;">
+<span style="font-family: monospace;"><span style="font-weight: bold;">/Tests/CSH/01</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// </span><small>Files for the fitting task 01 (first selection of samples)</small><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+gfin01_CSHidss1.dat&nbsp;&nbsp;&nbsp;&nbsp; // </span><small>GEMSFIT2 input specification file</small><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+gf2run.bat&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// </span><small>batch file to run GEMSFIT2 for fitting</small><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+trace.log&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// </span><small>generated by GEMSFIT2 diagnostics</small><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ipmlog.txt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// </span><small>generated by GEMS3K diagnostics</small><br style="font-family: monospace;">
+<span style="font-family: monospace;"><span style="font-weight: bold;">/Tests/CSH/01/results</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // </span><small>files with results generated by GEMSFIT2</small><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Fit_results.csv&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // </span><small>.csv file with optimization results, each next run within this task is appended </small><br style="font-family: monospace;">
+<span style="font-family: monospace;"><span style="font-weight: bold;">/Tests/CSH/01/output</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// </span><small>supplementary output from GEMSFIT2</small><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+gemsfit2.log&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// </span><small>logging file generated by GEMSFIT2 (diagnostics)</small><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+MyFitStatistics.txt&nbsp;&nbsp;&nbsp; // </span><small>output of statictic analysis of the fit</small><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+SS_myFIT.out&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// </span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+qqplot.csv&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// </span><small>csv file for plotting quantiles </small><br style="font-family: monospace;">
+<span style="font-family: monospace; font-weight: bold;">...</span><br style="font-family: monospace;">
+<span style="font-family: monospace;"><span style="font-weight: bold;">/Tests/CSH/02&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// </span><small>Files for the fitting task 02 (second selection of samples)&nbsp;&nbsp;</small><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><br style="font-family: monospace;">
+<span style="font-family: monospace;"><span style="font-weight: bold;">/Tests/CSH/02/results&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // </span><small>files with results generated by GEMSFIT2</small><br style="font-family: monospace;">
+<span style="font-family: monospace;"><span style="font-weight: bold;">/Tests/CSH/01/output</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// </span><small>supplementary output from GEMSFIT2</small><br style="font-family: monospace;">
+<span style="font-family: monospace; font-weight: bold;">...</span><br style="font-family: monospace;">
+<span style="font-family: monospace;"><span style="font-weight: bold;">/Tests/CASH</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp; // </span><small>another test example</small><br style="font-family: monospace;">
+<span style="font-family: monospace; font-weight: bold;">...</span></big><br>
+<p>Content of batch files (edit them for consistency with folder- and file names) </p>
+<big><span style="font-family: monospace; font-weight: bold;">gf2init.bat:</span><br style="font-family: monospace;">
+<br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; ../../gemsfit2-build/gemsfit2 -init ./GEMS/CSHidss1-dat.lst ./gfin00_CSHidss1.dat</span><br style="font-family: monospace;">
+<br style="font-family: monospace;">
+<span style="font-family: monospace; font-weight: bold;">toejdbrun.bat:</span><br style="font-family: monospace;">
+<br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; ../../../csvtoejdb-build/csvtoejdb -run -t ../EJDB/cshsolub experiments ./CSH-GC-1967.csv</span><br style="font-family: monospace;">
+<br style="font-family: monospace;">
+<span style="font-family: monospace;"><span style="font-weight: bold;">gf2run.bat</span> in /Tests/CSH/01:</span><br style="font-family: monospace;">
+<br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; ../../../gemsfit2-build/gemsfit2 -run ./gfin01_CSHidss1.dat &gt; ./trace.log</span><br style="font-family: monospace;">
+<br style="font-family: monospace;">
+<span style="font-family: monospace;">...</span><br style="font-family: monospace;">
+<br style="font-family: monospace;">
+<span style="font-family: monospace;"><span style="font-weight: bold;">gf2run.bat</span> in /Tests/CSH/02:</span><br style="font-family: monospace;">
+<br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; ../../../gemsfit2-build/gemsfit2 -run ./gfin02_CSHidss1.dat &gt; ./trace.log</span><br style="font-family: monospace;">
+</big><br>
+<p>Edited paths in the <big><span style="font-family: monospace;">Tests/CSH/gfin01_CSHidss1.dat </span></big>(for the first time, use <big><span style="font-family: monospace;">Tests/CSH/gfin00_CSHidss1.dat</span></big> file as template):<br>
+</p>
+&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; <big><span style="font-family: monospace;">...&nbsp;&nbsp;&nbsp; </span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; # DataDB: EJDB database path (please, edit to put the actual path)</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">&lt;DataDB&gt;</span> '../EJDB/solargstr'</span><br style="font-family: monospace;">
+<br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; # DataCollection: database collection name (please, edit to put the actual name)</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">&lt;DataCollection&gt;</span>&nbsp; 'experiments'</span><br style="font-family: monospace;">
+<br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; # SystemFiles: path to the list of GEMS3K input files (also used for this template file)</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">&lt;SystemFiles&gt;</span>&nbsp; '../GEMS/ArgStrGex-dat.lst'</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; ...<br>
+</span><span style="font-family: monospace;"><br>
+</span><small>Edit the rest of this file, as described in the <a href="gemsfit-input-file.html" target="_blank">gemsfit-input-file.html</a> manual, or following comments inside of the file.</small></big><br>
+&nbsp;<br>
+<hr style="width: 100%; height: 2px;"><br>
+Last
+updated:&nbsp; 14.01.2013&nbsp; DM, DK <br style="font-family: Helvetica,Arial,sans-serif;">
+
+<br style="font-family: Helvetica,Arial,sans-serif;">
+
+Copyright&nbsp; (c) 2013-2014&nbsp; <a href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a><br style="font-family: Helvetica,Arial,sans-serif;">
+
+<hr style="font-family: Helvetica,Arial,sans-serif;" size="2" width="100%"><br>
+
+</body></html>
