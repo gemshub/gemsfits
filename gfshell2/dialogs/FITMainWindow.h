@@ -140,6 +140,7 @@ public:
 private:
     Ui::FITMainWindow *ui;
     QSettings *projectSettings; ///< Properties for current project
+    QSettings *mainSettings; ///< Properties for gemsfit-gui program
 
     QToolBar *toolTasks;   ///< Tool bar to switch task/database mode
     QLineEdit* pLineTask;  ///< Current Task name

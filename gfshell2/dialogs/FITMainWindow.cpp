@@ -35,8 +35,14 @@ void FITMainWindow::setDefValues(int c, char** v)
    SysFITDir = "../Resources/";
    LocalDocDir = SysFITDir+ "help/";
 
+   // load main programm settingth
+   mainSettings = new QSettings("gemsfits.ini", QSettings::IniFormat);
+
    // may be gemsLstFile from arguments c,v
    // may be fitTaskDir from arguments c,v
+
+
+
 }
 
 
@@ -44,7 +50,7 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     QMainWindow(parent),
     ui(new Ui::FITMainWindow),
     currentMode (MDF_TASK), gemsLstFile(""), fitTaskDir(""),
-    aNode(0), contentsChanged(false), projectSettings(0)
+    aNode(0), contentsChanged(false), projectSettings(0), mainSettings(0)
 {
     ui->setupUi(this);
 
