@@ -391,8 +391,9 @@
     <addaction name="action_New_Project"/>
     <addaction name="action_Config_Project"/>
     <addaction name="separator"/>
-    <addaction name="action_Task_Mode"/>
     <addaction name="action_DataBase_mode"/>
+    <addaction name="action_Task_Mode"/>
+    <addaction name="actionFits_View_Mode"/>
     <addaction name="separator"/>
     <addaction name="actionSelect_GEMS"/>
     <addaction name="separator"/>
@@ -509,11 +510,14 @@
    </attribute>
    <addaction name="actionPrevious"/>
    <addaction name="actionNext"/>
+   <addaction name="action_Find"/>
+   <addaction name="separator"/>
    <addaction name="actionCreate_New"/>
    <addaction name="actionUpdate_Test"/>
    <addaction name="action_Insert"/>
    <addaction name="action_Update"/>
    <addaction name="actionDelete"/>
+   <addaction name="separator"/>
    <addaction name="action_Run_test"/>
    <addaction name="action_Show_Results"/>
    <addaction name="separator"/>
@@ -551,10 +555,10 @@
    </property>
    <property name="icon">
     <iconset resource="../fgui.qrc">
-     <normaloff>:/modules/Icons/UnSpaceModuleIcon.png</normaloff>:/modules/Icons/UnSpaceModuleIcon.png</iconset>
+     <normaloff>:/modules/Icons/DualThModuleIcon.png</normaloff>:/modules/Icons/DualThModuleIcon.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Task Mode</string>
+    <string>Fit &amp;Task Mode</string>
    </property>
   </action>
   <action name="action_New_Project">
@@ -777,6 +781,18 @@
   <action name="action_Delete_multiple_data">
    <property name="text">
     <string>&amp;Delete multiple data... </string>
+   </property>
+  </action>
+  <action name="actionFits_View_Mode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../fgui.qrc">
+     <normaloff>:/modules/Icons/FitSpaceModuleIcon.png</normaloff>:/modules/Icons/FitSpaceModuleIcon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Fit &amp;View Mode</string>
    </property>
   </action>
  </widget>

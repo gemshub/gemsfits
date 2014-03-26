@@ -63,6 +63,7 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     toolTasks->setIconSize(QSize(40,40));
     toolTasks->addAction(ui->action_DataBase_mode);
     toolTasks->addAction(ui->action_Task_Mode);
+    toolTasks->addAction(ui->actionFits_View_Mode);
     toolTasks->setWindowTitle("toolTasks");
 
     // define main window

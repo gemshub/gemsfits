@@ -435,7 +435,7 @@ void FITMainWindow::CmDelete()
 }
 
 
-string templRec = "  template must be     ";
+string templRec = "  Please, open or create the project first!   ";
 
 
 /// Create new record
