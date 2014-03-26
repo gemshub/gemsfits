@@ -106,5 +106,5 @@ void ProjectSettingsDialog::CmGEMSDir()
 
 void ProjectSettingsDialog::CmHelp()
 {
-    pFitImp->OpenHelp( GEMS_TDBAS_HTML );
+    pFitImp->OpenHelp( GF_INDEX_HTML );
 }

@@ -161,4 +161,12 @@ private:
 
 extern FITMainWindow* pFitImp;
 
+extern const char *GF_INDEX_HTML; // = "gemsfit-index";
+extern const char *GF_PREFS_HTML; // = "gemsfit-prefs";
+extern const char *GF_EXPDB_HTML; // = "howto-csvtoejdb";
+extern const char *GF_TASKDB_HTML; //= "gemsfit-input-file";
+extern const char *GF_ABOUT_HTML; // = "gemsfit-about";
+extern const char *GF_AUTHORS_HTML; // = "gemsfit-about#AUTHORS";
+extern const char *GF_LICENSE_HTML; // = "gemsfit-about#LICENSE";
+
 #endif // FITMAINWINDOW_H

@@ -149,5 +149,5 @@ void PreferencesDialog::CmGenerateHelp()
 
 void PreferencesDialog::CmHelp()
 {
-    pFitImp->OpenHelp( GEMS_TDBAS_HTML );
+    pFitImp->OpenHelp( GF_PREFS_HTML );
 }

@@ -17,13 +17,13 @@
    <item row="0" column="0">
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string>Folders</string>
+      <string>Folder locations</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
        <widget class="QLabel" name="label">
         <property name="text">
-         <string> Program resources </string>
+         <string> Program resources</string>
         </property>
        </widget>
       </item>
@@ -40,7 +40,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>User's projects </string>
+         <string>User's projects</string>
         </property>
        </widget>
       </item>
@@ -57,7 +57,7 @@
       <item row="2" column="0">
        <widget class="QLabel" name="label_3">
         <property name="text">
-         <string>Help file</string>
+         <string>Help database</string>
         </property>
        </widget>
       </item>
@@ -74,14 +74,14 @@
       <item row="2" column="3">
        <widget class="QPushButton" name="pushButton">
         <property name="text">
-         <string>Generate</string>
+         <string>Generate ...</string>
         </property>
        </widget>
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="label_5">
         <property name="text">
-         <string>Gemsfit program</string>
+         <string>Gemsfit2 program</string>
         </property>
        </widget>
       </item>
@@ -107,7 +107,7 @@
       <item row="2" column="0">
        <widget class="QLabel" name="label_4">
         <property name="text">
-         <string>Current template to experiments</string>
+         <string>Select file with the experiments record template</string>
         </property>
        </widget>
       </item>
@@ -117,7 +117,7 @@
       <item row="1" column="0">
        <widget class="QCheckBox" name="commentsBox">
         <property name="text">
-         <string>Output comments to TXT</string>
+         <string>Output comments to task input TXT files</string>
         </property>
        </widget>
       </item>

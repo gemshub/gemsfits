@@ -44,8 +44,8 @@ using namespace std;
 #include "FITMainWindow.h"
 //#include "visor.h"
 
-const char *FIT_HOWHELP_HTML = "gems_miscel.html#HOWHELP";
-const char *GEMS_ABOUT_HTML = "gems_about.html#PAGE_ABOUT";
+const char *FIT_HOWHELP_HTML = "gemsfit-techinfo.html#HOWHELP";
+const char *FIT_ABOUT_HTML = "gemsfit-about.html#PAGE_ABOUT";
 
 const char *_FIT_version_stamp = " GEMSFITS v.0.1 r.333 ";
 extern const char *_GEMIPM_version_stamp;
@@ -263,7 +263,7 @@ void HelpWindow::helpVersion()
 
 void HelpWindow::helpAbout()
 {
-    showDocumentation( GEMS_ABOUT_HTML, 0 );
+    showDocumentation( FIT_ABOUT_HTML, 0 );
 
 }
 
@@ -589,78 +589,16 @@ const char *MWPAGE = "MWPAGE";
 const char *DBM = "DBM";
 const char *NUMSET = "NUMSET";
 
-// modules
-const char *GM_COMPOS_WZ_HTML = "gm_compos";
-const char *GM_COMPOS_HTML = "gm_compos";
-const char *GM_ICOMP_HTML = "gm_icomp";          //m_icomp.cpp
-const char *GM_DCOMP_HTML = "gm_dcomp";          //m_dcomp.cpp
-const char *GM_DCOMP_WZ_HTML = "gm_dcomp";       //DCompWizard
-const char *GM_REACDC_HTML = "gm_reacdc";        //m_reacdc.cpp
-const char *GM_REACDC_WZ_HTML = "gm_reacdc";     //ReacDCWizard
-const char *GM_RTPARM_HTML = "gm_rtparm";        //m_rtparm.cpp
-const char *GM_RTPARM_WZ_HTML = "gm_rtparm";     //RTparmWizard
-const char *GM_PHASE_HTML = "gm_phase";          //m_phase.cpp
-const char *GM_PHASE_WZ_HTML = "gm_phase";       //PhaseWizard
-const char *GM_SDREF_HTML = "gm_sdref";          //m_sdata.cpp
-const char *GM_CONST_HTML = "gm_const";          //m_const.cpp
-const char *GM_PROJECT_HTML = "gm_project";      //m_param.cpp
-const char *GM_PROJECT_WZ_HTML = "gm_project";   //ProjectWizard
-const char *GEMS_NUMSET_HTML = "gm_project";     //m_param.cpp
-const char *GM_SYSEQ_HTML = "gm_syseq";          //m_syseq.cpp
-const char *GEMS_SYSTEM_WZ_HTML = "gems_bcc";    //SystemWizard
-const char *GM_PROCES_HTML = "gm_proces";        //m_proces.cpp
-const char *GM_PROCES_WZ_HTML = "gm_proces";     //ProcesWizard
-const char *GM_GTDEMO_HTML = "gm_gtdemo";        //m_gtdemo.cpp
-const char *GM_GTDEMO_WZ_HTML = "gm_gtdemo";     //GtDemoWizard
-const char *GM_GEM2MT_HTML = "gm_gem2mt";        //m_gem2mt.cpp
-const char *GM_GEM2MT_WZ_HTML = "gm_gem2mt";     //GEM2MTWizard
-const char *GM_UNSPACE_HTML = "gm_unspace";      //m_unspace.cpp
-const char *GM_UNSPACE_WZ_HTML = "gm_unspace";   //UnSpaceWizard
-const char *GM_DUALTH_HTML = "gm_dualth";        //m_dualth.cpp
-const char *GM_DUALTH_WZ_HTML = "gm_dualth";     //DualThWizard
+// html files
+const char *GF_INDEX_HTML = "gemsfit-index";
+const char *GF_PREFS_HTML = "gemsfit-prefs";
 
-const char *GSM_SYSTEM_HTML = "gems_bcc";        //ms_system.cpp
-const char *GSM_MTPARM_HTML = "gems_systd";      //ms_mtparm.cpp
-const char *GSM_EQDEMO_HTML = "gems_sys";        //ms_calc.h
-const char *GSM_MULTI_HTML =  "gems_ipm";        //ms_calc.h
+const char *GF_EXPDB_HTML = "howto-csvtoejdb";
+const char *GF_TASKDB_HTML= "gemsfit-input-file";
+const char *GF_ABOUT_HTML = "gemsfit-about";
+const char *GF_AUTHORS_HTML = "gemsfit-about.html#AUTHORS";
+const char *GF_LICENSE_HTML = "gemsfit-about.html#LICENSE";
 
-// dialogs
-//const char *GEMS_ABOUT_HTML = "gems_about";       // MainDialog
-const char *GEMS_TUTOR_HTML = "gems_tutorial";    // MainDialog
-const char *GEMS_SETUP_HTML = "gems_setup";       // SettingsDialog
-const char *GEMS_TDBAS_HTML = "gems_tdbase";      // DBDialog
-const char *GEMS_MISCL_HTML = "gems_miscel";      // DBAdvDialog
-const char *GEMS_FORMT_HTML = "gems_miscel.html#FORMATS";   // DBAdvDialog
-const char *GEMS_REKEY_HTML = "gems_rekey";       // KeyFilter
-const char *GEMS_MPROJ_HTML = "gm_project.html#HOWTO";    // KeyProfile
-const char *GEMS_MPROJ_LF_HTML = "gm_project.html#FILES"; // ListFilesDialog
-const char *GEMS_ONESYS_HTML = "gems_sys";        // NewSystemDialog
-const char *GEMS_HOWTO_HTML = "gems_sys.html#HOWTO";
-const char *GEMS_BCC_HTML = "gems_bcc";
-const char *GEMS_HOWTOB_HTML = "gems_bcc.html#HOWTO";
-const char *GEMS_IPM_HTML = "gems_ipm";
-const char *GEMS_RECIPE_HTML = "gems_bcc.html#RECIPE"; // InputSystemDialog
-const char *GEMS_GRAPH_HTML = "gems_graph"; // GraphDialog
-const char *GEMS_GRAPH_CUS_HTML = "gems_graph.html#CUSTOMIZE"; // LegendDialog
-const char *GEMS_MISSING_HTML = "gems_bcc.html#MISSING";  // ExcludeFillDialog
-const char *GEMS_MODES_HTML = "gm_project.html#MODES";   //EQDialog
-const char *GEMS_ELEMENTS_HTML = "gems_elements"; // ElementsDialog
-const char *GEMS_SETFILT_HTML = "gems_elements.html#FILTERS"; // SetFiltersDialog
-const char *GEMS_APHSETUP_HTML = "gems_aphsetup"; // AutoPhaseDialog
-const char *GEMS_TEMPL_HTML = "gems_miscel.html#TEMPLATES";  // ChangeKeyDialog
-const char *GEMS_PHINFO_HTML = "gems_miscel.html#PHASEINFO";  // PhaseInfoDialog
-const char *GEMS_WRIPMF_HTML = "gems_ipm.html#WRITEIPMFILES"; // LookupDialog
-const char *GEMS_MARK_HTML = "gems_miscel.html#MARK"; // SelectDialog
-const char *GEMS_SELECT_HTML = "gems_miscel.html#SELECT"; // KeyDialog
-const char *GEMS_CALCUL_HTML = "gems_miscel.html#CALCULATOR";  // CalcDialog
-// MainDialog
-const char *GEMS_HOWTOSTART_HTML = "gems_about.html#PAGE_HOWTOSTART";
-//const char *GEMS_ABOUT_HTML = "gems_about.html#PAGE_ABOUT";
-const char *GEMS_AUTHORS_HTML = "gems_about.html#PAGE_AUTHORS";
-const char *GEMS_THANKS_HTML = "gems_about.html#PAGE_THANKS";
-const char *GEMS_LICENSE_HTML = "gems_about.html#PAGE_LICENSE";
-// old
-const char *GEMS_TOC_HTML = "gems_toc"; // default for modules
 
 //-------- End of file HelpWindow.cpp ----------------------------
 

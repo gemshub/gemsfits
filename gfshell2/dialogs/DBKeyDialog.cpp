@@ -219,7 +219,7 @@ DBKeyDialog::~DBKeyDialog()
 
 void DBKeyDialog::CmHelp()
 {
-   pFitImp->OpenHelp( GEMS_SELECT_HTML );
+   ; // pFitImp->OpenHelp( GEMS_SELECT_HTML );
 }
 
 
@@ -407,7 +407,7 @@ void DBKeyFilter::CmHelp()
    string dbName =  DBM;
    dbName +="_";
    dbName += string(rtEJ[iRT].GetKeywd());
-   pFitImp->OpenHelp(  GEMS_REKEY_HTML, dbName.c_str() );
+   // pFitImp->OpenHelp(  GEMS_REKEY_HTML, dbName.c_str() );
 }
 
 void DBKeyFilter::CmOk()

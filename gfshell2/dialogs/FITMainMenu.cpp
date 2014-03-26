@@ -726,25 +726,25 @@ void FITMainWindow::CmSettingth()
 void FITMainWindow::CmHelp()
 {
     if( currentMode == MDF_DATABASE )
-       OpenHelp( GEMS_TDBAS_HTML );
+       OpenHelp( GF_EXPDB_HTML );
     else
-       OpenHelp( GEMS_MODES_HTML );
+       OpenHelp( GF_TASKDB_HTML );
 }
 
 void FITMainWindow::CmHelpAbout()
 {
-    OpenHelp( GEMS_ABOUT_HTML );
+    OpenHelp( GF_ABOUT_HTML );
 }
 
 void FITMainWindow::CmHelpAuthors()
 {
-    OpenHelp( GEMS_AUTHORS_HTML );
+    OpenHelp( GF_AUTHORS_HTML );
 }
 
 
 void FITMainWindow::CmHelpLicense()
 {
-    OpenHelp( GEMS_LICENSE_HTML );
+    OpenHelp( GF_LICENSE_HTML );
 }
 
 
