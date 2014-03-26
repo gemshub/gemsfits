@@ -113,7 +113,7 @@ HelpWindow::HelpWindow( QWidget* parent):
     //End Ui form
 
 
-    QString collectionFile = QString( pFitImp->docDir().c_str() )+ QLatin1String("gems3help.qhc");
+    QString collectionFile = QString( pFitImp->docDir().c_str() )+ QLatin1String("/gfshelp.qhc");
  // "/home/gems/gemworks/gems3/shared/doc/html/gems3help.qhc";
 
     findLine = 0;
@@ -391,7 +391,7 @@ void HelpWindow::showDocumentation(const char* file, const char* item1)
    if (!hEngine)
        return;
 
-    string path = "qthelp://gems3/help/";
+    string path = "qthelp://gemsfits/help/";
     QUrl path_str;
 
     if( !file/*item1*/ )

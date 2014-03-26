@@ -3,6 +3,7 @@
 #include "ui_PreferencesDialog.h"
 #include "FITMainWindow.h"
 #include "fservice.h"
+#include "help.h"
 
 PreferencesDialog::PreferencesDialog(QSettings *aSet,QWidget *parent) :
     QDialog(parent),
@@ -94,6 +95,55 @@ void PreferencesDialog::CmGemsFit2File()
     QString dir = QFileDialog::getOpenFileName(  this,
        "Select gemsfite program", "", "All files (*)", 0, QFileDialog::DontConfirmOverwrite );
     ui->gemsfit2Edit->setText( dir );
+}
+
+void PreferencesDialog::CmGenerateHelp()
+{
+  try
+    {
+        QString phpdir =  ui->resourcesEdit->text()+"/doc/html/";
+        QString qhpFile = phpdir +"gfshelpconfig.qhp";
+        HelpConfigurator rr;
+        if( rr.readDir(phpdir.toUtf8().data()) )
+           rr.writeFile(qhpFile.toUtf8().data());
+
+        if (!pFitImp->helpProcess)
+             pFitImp->helpProcess = new QProcess();
+
+       if (pFitImp->helpProcess->state() != QProcess::Running)
+       {
+        QString docPath =  phpdir;
+        QString app;
+#ifdef __unix
+#ifdef __APPLE__
+                    app += QLatin1String("qcollectiongenerator");
+#else
+                   //app = QLatin1String(getenv("HOME"));
+                   //app += QLatin1String("/Gems3-app/qcollectiongenerator");
+        app += QLatin1String("qcollectiongenerator");
+#endif
+#else    // windows
+                    app += QLatin1String("qcollectiongenerator.exe");
+#endif
+       QStringList args;
+       args << docPath + QLatin1String("gfshelpconfig.qhcp")
+            << QLatin1String("-o")
+            << docPath + QLatin1String("gfshelp.qhc");
+                        ;
+       pFitImp->helpProcess->start(app, args);
+       cout << app.toUtf8().data() << endl;
+       cout << args[2].toUtf8().data() << endl;
+
+       if (!pFitImp->helpProcess->waitForStarted())
+       {
+           Error( "gemsfits", "Unable to launch qcollectiongenerator");
+       }
+     }
+   }
+   catch(TError& e)
+   {
+       cout <<  e.title <<  e.mess << endl;
+   }
 }
 
 

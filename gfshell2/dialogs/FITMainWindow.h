@@ -135,6 +135,7 @@ public:
          return LocalDocDir;
        }
 
+    QProcess*  helpProcess;
     void GetHelp();
     void OpenHelp(const char* file, const char* item=0, int page =-1);
 
@@ -148,6 +149,7 @@ private:
     QLineEdit* pLineGEMS;  ///< Current CSD GEMS3K file lst name
     TKeyTable* keyTable;   ///< Curent collection EJDB keys list
     QProcess*  fitProcess;
+
 
     void setTableIComp();
     void setListPhase();

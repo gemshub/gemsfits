@@ -20,7 +20,7 @@ public slots:
     void CmResourceDir();
     void CmHelpFile();
     void CmGemsFit2File();
-    void CmGenerateHelp(){}
+    void CmGenerateHelp();
     void CmHelp();
 
 public:

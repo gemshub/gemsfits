@@ -68,7 +68,8 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     QMainWindow(parent),
     ui(new Ui::FITMainWindow),
     currentMode (MDF_TASK), gemsLstFile(""), fitTaskDir(""),
-    aNode(0), contentsChanged(false), projectSettings(0), mainSettings(0)
+    aNode(0), contentsChanged(false), projectSettings(0),
+    mainSettings(0), helpProcess(0)
 {
     ui->setupUi(this);
 
