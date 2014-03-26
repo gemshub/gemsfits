@@ -20,6 +20,7 @@ ProjectSettingsDialog::ProjectSettingsDialog( QSettings *aSet, QWidget *parent) 
         ui->ejdbName->setText( settings->value("ProjDatabaseName", "myprojdb1").toString() );
         ui->experCollect->setText( settings->value("ExpSamplesDataColl", "experiments").toString() );
         ui->taskCollection->setText( settings->value("TaskCasesDataColl", "tests").toString() );
+        ui->fitCollection->setText( settings->value("FitsCasesDataColl", "fits").toString() );
         ui->gemsDir->setText( settings->value("GEMS3KFilesPath", "/GEMS").toString() );
         ui->projDir->setEnabled(false);
         ui->projName->setEnabled(false);
@@ -52,16 +53,27 @@ void ProjectSettingsDialog::CmSave()
     settings->setValue("ProjDatabaseName",  ui->ejdbName->text() );
     settings->setValue("ExpSamplesDataColl", ui->experCollect->text() );
     settings->setValue("TaskCasesDataColl", ui->taskCollection->text() );
+    settings->setValue("FitsCasesDataColl", ui->fitCollection->text() );
     settings->setValue("GEMS3KFilesPath",   ui->gemsDir->text() );
     settings->setValue("GEMSFITSAPP",       _FIT_version_stamp );
     settings->sync();
+
+    // create directories, if not exists
+    QDir dir(ui->projDir->text());
+    if( dir.mkpath(ui->projDir->text()) )
+    {
+       dir.mkpath(ui->projDir->text()+ui->gemsDir->text());
+       dir.mkpath(ui->projDir->text()+ui->ejdbDir->text());
+       dir.mkpath(ui->projDir->text()+"/work");
+       dir.mkpath(ui->projDir->text()+"/dbimport");
+    }
     accept();
 }
 
 void ProjectSettingsDialog::CmProjectDir()
 {
     QString dir = QFileDialog::getExistingDirectory(this, "Select Project Directory",
-     "",  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
+    pFitImp->userDir().c_str(),  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
     ui->projDir->setText( dir );
 }
 

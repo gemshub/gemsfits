@@ -2,6 +2,7 @@
 #include <QKeyEvent>
 #include <QProcess>
 #include <QtGlobal>
+#include <QTextStream>
 
 #include "FITMainWindow.h"
 #include "ui_FITMainWindow.h"
@@ -32,16 +33,33 @@ FITMainWindow* pFitImp;
 
 void FITMainWindow::setDefValues(int c, char** v)
 {
-   SysFITDir = "../Resources/";
-   LocalDocDir = SysFITDir+ "help/";
-
    // load main programm settingth
    mainSettings = new QSettings("gemsfits.ini", QSettings::IniFormat);
+   getDataFromPreferences();
+}
 
-   // may be gemsLstFile from arguments c,v
-   // may be fitTaskDir from arguments c,v
+void FITMainWindow::getDataFromPreferences()
+{
+  if( !mainSettings)
+   return;
 
+  SysFITDir =  mainSettings->value("ResourcesFolderPath", "../Resources/").toString().toUtf8().data();
+  LocalDocDir =  mainSettings->value("HelpFolderPath", "../Resources/help").toString().toUtf8().data();
+  UserDir = mainSettings->value("UserFolderPath", ".").toString().toUtf8().data();
+  useComments = mainSettings->value("PrintComments", false).toBool();
 
+  QString program = mainSettings->value("Gemsfit2ProgramPath", "gemsfit2").toString();
+  fitProcess->setProgram( program );
+
+  // load experiment template text
+  QString fname = SysFITDir.c_str();
+          fname += "/data/" + mainSettings->value("ExpTemplateFileName", "...").toString();
+  QFile tmpString(fname);
+  if(tmpString.open( QIODevice::ReadOnly))
+  {
+    ExpTemplate = tmpString.readAll();
+    tmpString.close();
+  }
 
 }
 
@@ -91,17 +109,17 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     connect( ui->recordEdit, SIGNAL(textChanged()),  this, SLOT(recEdited()));
     connect( ui->filterEdit, SIGNAL( editingFinished ()), this, SLOT(changeKeyList()) );
 
+    // setup process
+     fitProcess = new QProcess( this);
+     connect( fitProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(showProcessMesage()) );
+     //connect( fitProcess, SIGNAL(readyReadStandardError()), this, SLOT(ReadErr()) );
+
+
    //set up main parameters
     setDefValues( c, v);
    // setup first lists
     CmDBMode();
 
-   // setup process
-    fitProcess = new QProcess( this);
-    QString program( "/home/parallels/DevGEMSFIT/devGFshell/GFandGUI/gemsfit2-build/gemsfit2");
-    fitProcess->setProgram( program );
-    connect( fitProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(showProcessMesage()) );
-    //connect( fitProcess, SIGNAL(readyReadStandardError()), this, SLOT(ReadErr()) );
 
 }
 
@@ -273,6 +291,9 @@ void FITMainWindow::openEJDB()
     string testcolName = projectSettings->value("TaskCasesDataColl", "tests").toString().toUtf8().data();
     rtEJ[MDF_TASK].SetKeywd(testcolName);
     rtEJ[MDF_TASK].Open();
+    testcolName = projectSettings->value("FitsCasesDataColl", "fits").toString().toUtf8().data();
+    rtEJ[MDF_FITS].SetKeywd(testcolName);
+    rtEJ[MDF_FITS].Open();
 }
 
 /// Set up data for current project
@@ -450,24 +471,21 @@ string FITMainWindow::makeSystemFileName( const string& path  )
    return name;
 }
 
-/// Change <SystemFiles> data in edit record
-void FITMainWindow::changeSystemFiles()
+/// Change <SystemFiles> or <DataDB> data in edit record
+void FITMainWindow::changeEditeRecord(const string& tagname, const string& newValue)
 {
-   // make new paht string
-   string newPath = makeSystemFileName("..");
-
    // get value string
    string valueStr = ui->recordEdit->toPlainText().toUtf8().data();
 
    // delete old path string
-   size_t found = valueStr.find("SystemFiles");
+   size_t found = valueStr.find( tagname );
    if (found != string::npos)
    {
        // change value
        found += 12;
        size_t  found1 =  valueStr.find("\"", found );
        size_t  found2 =  valueStr.find("\"", found1+1 );
-       valueStr.replace( found1+1, found2-found1-1, newPath);
+       valueStr.replace( found1+1, found2-found1-1, newValue);
        ui->recordEdit->setText( trUtf8( valueStr.c_str() ));
        contentsChanged = true;
    }
@@ -495,6 +513,14 @@ bool FITMainWindow::createTaskTemplate()
     TFile  inFile(path, ios::in);
     readTXT( inFile );
 
+    // set up EJDB path
+    if( projectSettings )
+     { string ejdbPath  = "..";
+       ejdbPath  += projectSettings->value("ProjDatabasePath", "/EJDB").toString().toUtf8().data();
+       ejdbPath  += "/";
+       ejdbPath  += projectSettings->value("ProjDatabaseName", "myprojdb1" ).toString().toUtf8().data();
+       changeEditeRecord( "DataDB", ejdbPath);
+    }
     return ret;
 }
 

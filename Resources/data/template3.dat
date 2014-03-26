@@ -1,0 +1,72 @@
+[
+{
+     "sample" :   "template3",
+     "expdataset" :   "set",
+     "sT" :   22,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "SiO2@",
+               "Q" :   10,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Ca(OH)2",
+               "Q" :   17.76,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   12.16,
+                         "error" :   0.03,
+                         "unit" :   "-loga"
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   2e-05,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.01782,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "Q",
+                         "Q" :   1.44,
+                         "unit" :   "mol"
+                    }
+               ]
+          }
+     ]
+}
+]

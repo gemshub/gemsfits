@@ -4,6 +4,7 @@
 #include "FITMainWindow.h"
 #include "ui_FITMainWindow.h"
 #include "ProjectSettingsDialog.h"
+#include "PreferencesDialog.h"
 #include "DBKeyDialog.h"
 #include "fservice.h"
 #include "f_ejdb.h"
@@ -177,7 +178,10 @@ void FITMainWindow::CmSelectGEMS( const string& fname_ )
        }
 
        selectGEMS( fname );
-       changeSystemFiles();
+
+       // make new path string
+       string newPath = makeSystemFileName("..");
+       changeEditeRecord( "SystemFiles", newPath);
 
        setStatusText( "GEMS3K input file set is selected" );
     }
@@ -195,7 +199,7 @@ void FITMainWindow::CmSelectProject( const string& fname_ )
  {
    if( fname.empty())
    { //Select fit project files
-      fname = fitTaskDir.GetPath();
+      fname = userDir();
      if( !fitTaskDir.ChooseFileOpen( this, fname, "Please, select a GEMSFITS project file","*.pro *.conf" ))
         return;
    }
@@ -225,7 +229,7 @@ void FITMainWindow::CmConfigProject()
 {
   try
   {    //Select fit project files
-    string fname = fitTaskDir.GetPath();
+    string fname = userDir();
     if( !fitTaskDir.ChooseFileOpen( this, fname, "Please, select a GEMSFITS project file","*.pro *.conf" ))
         return;
 
@@ -435,9 +439,6 @@ void FITMainWindow::CmDelete()
 }
 
 
-string templRec = "  Please, open or create the project first!   ";
-
-
 /// Create new record
 void FITMainWindow::CmCreate()
 {
@@ -446,7 +447,7 @@ void FITMainWindow::CmCreate()
         if( currentMode == MDF_TASK )
           createTaskTemplate();
         else
-          ui->recordEdit->setText( trUtf8(templRec.c_str()));
+          ui->recordEdit->setText( ExpTemplate );
         contentsChanged = false;
     }
     catch( TError& err )
@@ -604,7 +605,7 @@ void FITMainWindow::CmBackupTXT()
         fname = projDir + "/" + fname + ".dat";
 
         // save txt data
-        generateTxtfromBson( fname, &bsrec, true );
+        generateTxtfromBson( fname, &bsrec, useComments );
 
         bson_destroy( &bsrec);
 
@@ -706,10 +707,21 @@ void FITMainWindow::CmDeleteList()
 
 void FITMainWindow::CmSettingth()
 {
-   // SettingsDialog dlg(this);
-   // dlg.exec();
-}
+  try
+  {  // define new project
+     PreferencesDialog dlg(mainSettings);
+      if( !dlg.exec() )
+          return;
 
+    //get data from settings
+    getDataFromPreferences();
+  }
+    catch( TError& err )
+    {
+       setStatusText( err.title );
+       addLinetoStatus( err.mess );
+    }
+}
 
 void FITMainWindow::CmHelp()
 {

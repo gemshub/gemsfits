@@ -32,7 +32,7 @@ class QWidget;
 class EJDB;
 
 // Mode enums
-enum { MDF_DATABASE=0, MDF_TASK=1 };
+enum { MDF_DATABASE=0, MDF_TASK=1, MDF_FITS=2 };
 
 typedef ios::openmode FileStatus;
 

@@ -17,8 +17,9 @@ class PreferencesDialog : public QDialog
 public slots:
     void CmSave();
     void CmProjectDir();
-    void CmResourceDir(){}
-    void CmHelpFile(){}
+    void CmResourceDir();
+    void CmHelpFile();
+    void CmGemsFit2File();
     void CmGenerateHelp(){}
     void CmHelp();
 

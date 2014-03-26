@@ -867,10 +867,13 @@ void EJDataBaseList::Init()
     push_back( TEJDataBase( MDF_DATABASE, "experiments", dbKeyFlds  ));
 
     // MDF_TASK default
-    vector<string> tsKeyFlds;    ///???? must be changed after disscusion
+    vector<string> tsKeyFlds;
     tsKeyFlds.push_back("taskid");
     tsKeyFlds.push_back("projectid");
     push_back( TEJDataBase( MDF_TASK, "tests", tsKeyFlds  ));
+
+    // MDF_FITS default
+    push_back( TEJDataBase( MDF_FITS, "fits", tsKeyFlds  ));
 }
 
 

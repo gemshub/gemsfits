@@ -34,6 +34,10 @@ class FITMainWindow : public QMainWindow
 
     string SysFITDir;   ///< Path to resources directory
     string LocalDocDir; ///< Path to help directory
+    string UserDir;     ///< Path to User directory
+    bool useComments;   ///< Write TXT files with comments
+    QString ExpTemplate; ///< Current template for experiments record
+
     TFile  gemsLstFile; ///< Path to GEMS3K files
     TFile  fitTaskDir;  ///< Path to the database file
 
@@ -46,6 +50,7 @@ class FITMainWindow : public QMainWindow
     bool contentsChanged; ///< Current record changed
 
     void setDefValues(int c, char** v);
+    void getDataFromPreferences();
     void setActions();
     void closeEJDB();
     void openEJDB();
@@ -53,7 +58,7 @@ class FITMainWindow : public QMainWindow
     void resetMainWindow();
     bool MessageToSave();
     void RecSave( const string& recBsonText, const char* key=0 );
-    void changeSystemFiles();
+    void changeEditeRecord(const string& tagname, const string& newValue);
     bool runProcess(const QStringList& cParameters);
     void selectGEMS( const string& fname );
     string makeSystemFileName(const string& path );
@@ -123,19 +128,15 @@ public:
        const string& sysDir() const {
          return SysFITDir;
        }
-       void setSysDir(const string& sysDir) {
-               SysFITDir = sysDir;
-           }
+       const string& userDir() const {
+         return UserDir;
+       }
        const string& docDir() const {
          return LocalDocDir;
        }
-       void setDocDir(const string& localDir) {
-               LocalDocDir = localDir;
-           }
 
     void GetHelp();
     void OpenHelp(const char* file, const char* item=0, int page =-1);
-
 
 private:
     Ui::FITMainWindow *ui;
