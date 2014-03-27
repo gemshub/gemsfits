@@ -1,7 +1,10 @@
+/home/dmitrieva/DevGEMSFIT/devGFshell/GFandGUI/Tests/CSH3T2/02
+1 arg -run
+2 arg ./gfin02_CSH3Ts2B.dat
 GEMSFIT2: Start
 optParamFile = ./gfin02_CSH3Ts2B.dat
-fitFile = ./results/FIT.csv
-fitLogFile = ./output/gemsfit2.log
+fitFile = output/FIT_results.csv
+fitLogFile = output/gemsfit2.log
 gems3LstFilePath = 
 ../EJDB/cshsolubil
 Node: 0  NodeStatusCH: 2
@@ -36,52 +39,137 @@ Node: 28  NodeStatusCH: 2
 Node: 29  NodeStatusCH: 2
 Node: 30  NodeStatusCH: 2
 Node: 31  NodeStatusCH: 2
+Node: 32  NodeStatusCH: 2
+Node: 33  NodeStatusCH: 2
+Node: 34  NodeStatusCH: 2
+Node: 35  NodeStatusCH: 2
+Node: 36  NodeStatusCH: 2
+Node: 37  NodeStatusCH: 2
+Node: 38  NodeStatusCH: 2
+Node: 39  NodeStatusCH: 2
+Node: 40  NodeStatusCH: 2
+Node: 41  NodeStatusCH: 2
+Node: 42  NodeStatusCH: 2
+Node: 43  NodeStatusCH: 2
+Node: 44  NodeStatusCH: 2
+Node: 45  NodeStatusCH: 2
+Node: 46  NodeStatusCH: 2
+Node: 47  NodeStatusCH: 2
+Node: 48  NodeStatusCH: 2
+Node: 49  NodeStatusCH: 2
+Node: 50  NodeStatusCH: 2
+Node: 51  NodeStatusCH: 2
+Node: 52  NodeStatusCH: 2
+Node: 53  NodeStatusCH: 2
+Node: 54  NodeStatusCH: 2
+Node: 55  NodeStatusCH: 2
+Node: 56  NodeStatusCH: 2
+Node: 57  NodeStatusCH: 2
+Node: 58  NodeStatusCH: 2
+Node: 59  NodeStatusCH: 2
+Node: 60  NodeStatusCH: 2
+Node: 61  NodeStatusCH: 2
+Node: 62  NodeStatusCH: 2
+Node: 63  NodeStatusCH: 2
+Node: 64  NodeStatusCH: 2
+Node: 65  NodeStatusCH: 2
+Node: 66  NodeStatusCH: 2
+Node: 67  NodeStatusCH: 2
+Node: 68  NodeStatusCH: 2
+Node: 69  NodeStatusCH: 2
+Node: 70  NodeStatusCH: 2
 Parameter: G0 CSH3-T2C Type 1 : 
 Parameter: G0 CSH3-T5C Type 1 : 
-For experiment 17
+For experiment 37
  GEMS3K did not converge properly !!!! continuing anyway ... 
 For experiment 26
  GEMS3K did not converge properly !!!! continuing anyway ... 
-~ m.count.= 1 sum.res.= 5.02093
-~ m.count.= 2 sum.res.= 6.33934
-~ m.count.= 3 sum.res.= 13.2597
-~ m.count.= 4 sum.res.= 598.032
-~ m.count.= 5 sum.res.= 791.393
-~ m.count.= 6 sum.res.= 85.5706
-~ m.count.= 7 sum.res.= 17.6915
-~ m.count.= 8 sum.res.= 18.4001
-~ m.count.= 9 sum.res.= 12.7734
-~ m.count.= 10 sum.res.= 15.5337
-~ m.count.= 11 sum.res.= 4.78383
-~ m.count.= 12 sum.res.= 4.03159
-~ m.count.= 13 sum.res.= 2.93602
-~ m.count.= 14 sum.res.= 4.6521
-~ m.count.= 15 sum.res.= 3.42489
-~ m.count.= 16 sum.res.= 2.86524
-~ m.count.= 17 sum.res.= 2.89663
-~ m.count.= 18 sum.res.= 2.8655
+For experiment 17
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+~ m.count.= 1 sum.res.= 0.00173274
+~ m.count.= 2 sum.res.= 0.00602052
+~ m.count.= 3 sum.res.= 0.00283303
+~ m.count.= 4 sum.res.= 63332.9
+~ m.count.= 5 sum.res.= 164989
+~ m.count.= 6 sum.res.= 0.0133618
+~ m.count.= 7 sum.res.= 0.00682482
+~ m.count.= 8 sum.res.= 0.00278032
+~ m.count.= 9 sum.res.= 0.00342146
+~ m.count.= 10 sum.res.= 0.00404988
+~ m.count.= 11 sum.res.= 0.00588439
+~ m.count.= 12 sum.res.= 0.00298361
+For experiment 11
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+~ m.count.= 13 sum.res.= 0.00201806
+~ m.count.= 14 sum.res.= 0.00173775
+~ m.count.= 15 sum.res.= 0.00175684
+For experiment 17
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+~ m.count.= 16 sum.res.= 0.00178399
+For experiment 37
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+For experiment 26
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+For experiment 17
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+~ m.count.= 17 sum.res.= 0.00172339
+For experiment 37
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+For experiment 26
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+For experiment 17
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+~ m.count.= 18 sum.res.= 0.00172352
+For experiment 37
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+For experiment 26
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+For experiment 17
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+~ m.count.= 19 sum.res.= 0.00172339
  NLopt return code: 4
  Optimization stopped because xtol_rel or xtol_abs was reached. 
-found minimum at <<f( -0.999165 -0.999437 ) = 2.86524
- after 18 evaluations
- Statistics Constructor: sum of squares: 2.86524
+found minimum at <<f( -0.999904 -0.999954 ) = 0.00172339
+ after 19 evaluations
+ Statistics Constructor: sum of squares: 0.00172339
  Statistics Constructor: number_of_parameters: 2
-~ m.count.= 19 sum.res.= 2.90013
-~ m.count.= 20 sum.res.= 2.89107
-~ m.count.= 21 sum.res.= 2.89307
-~ m.count.= 22 sum.res.= 2.90729
-~ m.count.= 23 sum.res.= 2.86524
+For experiment 37
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+For experiment 26
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+For experiment 45
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+For experiment 10
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+For experiment 48
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+For experiment 32
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+For experiment 17
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+~ m.count.= 20 sum.res.= 0.00174701
+~ m.count.= 21 sum.res.= 0.00173666
+~ m.count.= 22 sum.res.= 0.00173373
+For experiment 37
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+For experiment 26
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+~ m.count.= 23 sum.res.= 0.00173781
+For experiment 37
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+For experiment 26
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+For experiment 17
+ GEMS3K did not converge properly !!!! continuing anyway ... 
+~ m.count.= 24 sum.res.= 0.00172339
 Fisher Matrix:
-   1.1747e-07  -4.2052e-08
-  -4.2052e-08   1.3628e-07
+   8.2456e-11  -5.0876e-11
+  -5.0876e-11   3.6040e-11
 Variance Covariance Matrix:
-   9.5704e+06   2.9532e+06
-   2.9532e+06   8.2491e+06
+   9.4025e+10   1.3273e+11
+   1.3273e+11   2.1512e+11
 CorellationMatrix = 
-   1.0000   0.3324
-   0.3324   1.0000
-Corellation Matrix:
-   1.0000   0.3324
-   0.3324   1.0000
-0.366328 seconds.
-GEMSFIT2: End. Bye!
+  6.9533e-310  4.9407e-324
+  6.9533e-310  2.0817e-309
+0.776269 seconds.
+GEMSFITS: End. Bye!

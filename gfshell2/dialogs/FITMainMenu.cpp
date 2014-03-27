@@ -492,6 +492,69 @@ void FITMainWindow::CmFilter()
 }
 
 //-------------------------------------------------------------------------------------
+// Run and show commands
+
+/// Run gemsfit task
+void FITMainWindow::CmRunTest()
+{
+    try
+    {
+       //if( !MessageToSave() )
+       //    return;
+
+       // create work directory
+       QString workDir = trUtf8(fitTaskDir.Dir().c_str()) + "/work";
+       QDir dir(workDir);
+       if( !dir.mkpath(workDir ) )
+        Error( fitTaskDir.Dir(), "Error creating work directory");
+
+       // empty work directory
+       removeDirectoryEntry( dir );
+
+       // Load curent record to bson structure
+       bson bsrec;
+       string recBsonText = ui->recordEdit->toPlainText().toUtf8().data();
+       ParserJson pars;
+       pars.setJsonText( recBsonText.substr( recBsonText.find_first_of('{')+1 ) );
+       bson_init( &bsrec );
+       pars.parseObject(  &bsrec );
+       bson_finish( &bsrec );
+
+       // open file to unloading
+        string fname;
+        if( !bson_find_string( bsrec.data, "taskid", fname ) )
+                    fname = "undefined";
+        string fpath = "./" + fname + ".dat";
+        fname = fitTaskDir.Dir()+ "/work/" + fname + ".dat";
+
+        // save txt data
+        generateTxtfromBson( fname, &bsrec, useComments );
+        bson_destroy( &bsrec);
+
+        // start run
+        // create arguments string
+        QStringList cParameters;
+        cParameters << "-run" << fpath.c_str();
+
+        if( !runProcess( cParameters, workDir) )
+           Error("Run gemsfit -run", "Error started process.");
+
+        ui->action_Run_test->setEnabled(false);
+        ui->action_Show_Results->setEnabled(false);
+
+        setStatusText( "Start  run femsfit task" );
+    }
+    catch( TError& err )
+    {
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
+    }
+}
+
+
+
+
+//-------------------------------------------------------------------------------------
 // Record list
 
 /// Export Data Records to json txt-file
@@ -590,8 +653,6 @@ void FITMainWindow::CmRestoreJSON()
         addLinetoStatus( err.mess );
     }
 }
-
-int generateTxtfromBson( string gemsfitfile, bson *obj, bool with_comments );
 
 /// Export Data Records from task configuration txt-file
 void FITMainWindow::CmBackupTXT()

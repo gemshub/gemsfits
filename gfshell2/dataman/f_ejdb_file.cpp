@@ -345,5 +345,39 @@ void TFile::Close()
     isopened = false;
 }
 
+// internal functions
+bool removeDirectoryEntry( QDir dir )
+{
+    bool ok = dir.exists();
+    if ( ok )
+    {
+        QFileInfoList entries = dir.entryInfoList( QDir::NoDotAndDotDot |
+                QDir::Dirs | QDir::Files );
+        foreach ( QFileInfo entryInfo, entries )
+        {
+            QString path = entryInfo.absoluteFilePath();
+            if ( entryInfo.isDir() )
+            {
+                if ( !removeDirectoryEntry( QDir( path ) ) )
+                {
+                    ok = false;
+                    break;
+                }
+            }
+            else
+            {
+                QFile file( path );
+                if ( !file.remove() )
+                {
+                    ok = false;
+                    break;
+                }
+            }
+        }
+    }
+   return ok;
+}
+
+
 //--------------------- End of f_ejdb_file.cpp ---------------------------
 

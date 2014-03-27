@@ -127,6 +127,7 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     // setup process
      fitProcess = new QProcess( this);
      connect( fitProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(showProcessMesage()) );
+     connect( fitProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT( runFinished(int,QProcess::ExitStatus)));
      //connect( fitProcess, SIGNAL(readyReadStandardError()), this, SLOT(ReadErr()) );
 
 
@@ -518,7 +519,7 @@ bool FITMainWindow::createTaskTemplate()
     QStringList cParameters;
     cParameters << "-init" << newPath.c_str() << "template.dat";
 
-    if( !runProcess( cParameters) )
+    if( !runProcess( cParameters, fitTaskDir.Dir().c_str()) )
        Error("Run gemsfit -init", "Error started process.");
 
     int ret = fitProcess->waitForFinished();
@@ -540,13 +541,24 @@ bool FITMainWindow::createTaskTemplate()
 }
 
 
-bool FITMainWindow::runProcess( const QStringList& cParameters)
+bool FITMainWindow::runProcess( const QStringList& cParameters, const QString& workDir )
 {
     fitProcess->setArguments( cParameters);
-    fitProcess->setWorkingDirectory( fitTaskDir.Dir().c_str() );
+    fitProcess->setWorkingDirectory( workDir );
 
     fitProcess->start();
     return fitProcess->waitForStarted();
+}
+
+void FITMainWindow::runFinished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+    ui->action_Run_test->setEnabled(true);
+    ui->action_Show_Results->setEnabled(true);
+
+    if( exitCode==0 )
+        addLinetoStatus( "OK calculate gemsfit" );
+    else
+        addLinetoStatus( "Error in calulate gemsfit" );
 }
 
 //--------------- end of  FITMainWindow.cpp  -----------------------------

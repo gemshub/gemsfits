@@ -29,6 +29,7 @@
 #include "verror.h"
 class QWidget;
 class EJDB;
+class QDir;
 
 //----------------------------------------------------------------------
 // service functions
@@ -47,6 +48,8 @@ bool vfQuestion(QWidget* par, const string& title, const string& mess);
 
 vector<string> vfMultiKeys(QWidget* par, const char* caption,
                             int iRt, const char* key );
+
+bool removeDirectoryEntry( QDir dir );
 
 //----------------------------------------------------------------------
 

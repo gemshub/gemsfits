@@ -78,7 +78,7 @@ class FITMainWindow : public QMainWindow
     bool MessageToSave();
     void RecSave( const string& recBsonText, const char* key=0 );
     void changeEditeRecord(const string& tagname, const string& newValue);
-    bool runProcess(const QStringList& cParameters);
+    bool runProcess( const QStringList& cParameters, const QString& workDir );
     void selectGEMS( const string& fname );
     string makeSystemFileName(const string& path );
     bool createTaskTemplate();
@@ -92,6 +92,7 @@ class FITMainWindow : public QMainWindow
 private slots:
     void moveToolBar( int pos, int index );
     void showProcessMesage( );
+    void runFinished(int exitCode, QProcess::ExitStatus exitStatus);
     void changeKeyList();
     void recEdited()
     {
@@ -136,7 +137,7 @@ public slots:
        void CmRestoreYAML(){}
        void CmDeleteList();
      //Calc
-       void CmRunTest(){}
+       void CmRunTest();
        void CmShowResults(){}
 
 
@@ -188,6 +189,5 @@ extern const char *GF_ABOUT_HTML; // = "gemsfit-about";
 extern const char *GF_AUTHORS_HTML; // = "gemsfit-about#AUTHORS";
 extern const char *GF_LICENSE_HTML; // = "gemsfit-about#LICENSE";
 extern const char *DBM; // = "DBM";
-
 
 #endif // FITMAINWINDOW_H
