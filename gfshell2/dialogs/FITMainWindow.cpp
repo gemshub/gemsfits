@@ -556,9 +556,9 @@ void FITMainWindow::runFinished(int exitCode, QProcess::ExitStatus exitStatus)
     ui->action_Show_Results->setEnabled(true);
 
     if( exitCode==0 )
-        addLinetoStatus( "OK calculate gemsfit" );
+        addLinetoStatus( "gemsfit2 calculation o.k." );
     else
-        addLinetoStatus( "Error in calulate gemsfit" );
+        addLinetoStatus( "Error in gemsfit2 run." );
 }
 
 //--------------- end of  FITMainWindow.cpp  -----------------------------

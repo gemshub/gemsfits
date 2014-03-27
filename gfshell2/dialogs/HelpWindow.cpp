@@ -47,7 +47,7 @@ using namespace std;
 const char *FIT_HOWHELP_HTML = "gemsfit-techinfo.html#HOWHELP";
 const char *FIT_ABOUT_HTML = "gemsfit-about.html#PAGE_ABOUT";
 
-const char *_FIT_version_stamp = " GEMSFITS v.0.1 r.333 ";
+const char *_FIT_version_stamp = " GEMSFITS v.0.1 r.373 ";
 extern const char *_GEMIPM_version_stamp;
 
 HelpWindow* HelpWindow::pDia = 0;
