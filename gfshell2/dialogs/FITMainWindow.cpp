@@ -1,3 +1,21 @@
+//-------------------------------------------------------------------
+// $Id: FITMainWindow.cpp 333 2014-03-13 13:23:32Z gemsfits $
+//
+// Implementation of GEMSFITS GUI Main Window (window part)
+//
+// Copyright (C) 2014  S.V.Dmytriyeva, D.A.Kulik
+// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+//    yaml-cpp (https://code.google.com/p/yaml-cpp/)
+//
+// This file is part of the GEMSFITS GUI, which uses the
+// Qt v.5 cross-platform App & UI framework (http://qt-project.org)
+// under LGPL v.2.1 (http://www.gnu.org/licenses/lgpl-2.1.html)
+//
+// This file may be distributed under the terms of LGPL v.3 license
+//
+// See http://gems.web.psi.ch/GEMSFIT for more information
+// E-mail gems2.support@psi.ch
+//-------------------------------------------------------------------
 
 #include <QKeyEvent>
 #include <QProcess>
@@ -8,10 +26,8 @@
 #include "ui_FITMainWindow.h"
 #include "HelpWindow.h"
 #include "f_ejdb.h"
-#include "fservice.h"
 
 //--------------------------------------------------------------------------
-
 
 void TKeyTable::keyPressEvent(QKeyEvent* e)
 {
@@ -60,9 +76,7 @@ void FITMainWindow::getDataFromPreferences()
     ExpTemplate = tmpString.readAll();
     tmpString.close();
   }
-
 }
-
 
 FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     QMainWindow(parent),
@@ -535,3 +549,4 @@ bool FITMainWindow::runProcess( const QStringList& cParameters)
     return fitProcess->waitForStarted();
 }
 
+//--------------- end of  FITMainWindow.cpp  -----------------------------

@@ -1,28 +1,27 @@
 //-------------------------------------------------------------------
-// $Id: HelpWindow.h 968 2007-12-13 13:23:32Z gems $
+// $Id: HelpWindow.h 333 2014-03-13 13:23:32Z gemsfits $
 //
-// Declaration of HelpWindow class
+// Declaration of HelpBrowser, HelpWindow and  SearchWidget classes
 //
-// Copyright (C) 2010  A.Rysin
+// Copyright (C) 2012-2014  S.V.Dmytriyeva
+// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+//    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
-// This file is part of the GEM-Selektor GUI library which uses the
-// Qt v.4 cross-platform App & UI framework (http://qt.nokia.com)
+// This file is part of the GEMSFITS GUI, which uses the
+// Qt v.5 cross-platform App & UI framework (http://qt-project.org)
 // under LGPL v.2.1 (http://www.gnu.org/licenses/lgpl-2.1.html)
 //
-// This file may be distributed under the terms of GEMS3 Development
-// Quality Assurance Licence (GEMS3.QAL)
+// This file may be distributed under the terms of LGPL v.3 license
 //
-// See http://gems.web.psi.ch/ for more information
+// See http://gems.web.psi.ch/GEMSFIT for more information
 // E-mail gems2.support@psi.ch
 //-------------------------------------------------------------------
 
 #ifndef HelpWindow_included
 #define HelpWindow_included
 
-
 #include <QMainWindow>
 #include <QTextBrowser>
-
 #include "ui_HelpWindow4.h"
 
 QT_BEGIN_NAMESPACE
@@ -41,7 +40,6 @@ class HelpBrowser : public QTextBrowser
 
 public:
     HelpBrowser(QHelpEngine *hEngine, QWidget *parent);
-//    void showHelpForKeyword(const QString &id);
 
 private:
     QVariant loadResource(int type, const QUrl &name);
@@ -55,8 +53,6 @@ class SearchWidget : public QWidget
 
     QHelpSearchEngine *srchEngine;
     QHelpSearchResultWidget *rsltWidget;
-
-   // bool eventFilter(QObject* o, QEvent *e);
 
 public:
     SearchWidget(QHelpSearchEngine *engine, QWidget *parent = 0);
@@ -94,7 +90,6 @@ class HelpWindow : public QMainWindow, public Ui::HelpWindowData
     QWidget *tabSearch;
     QVBoxLayout *verticalLayout_2;
 
-
 public:
     static HelpWindow* pDia;
 
@@ -107,7 +102,6 @@ protected:
 
     QUrl showHelpForKeyword(const QString &id);
 
- //   void closeEvent(QCloseEvent* ev);
     void setActions();
 
 protected slots:
@@ -116,7 +110,6 @@ protected slots:
     void filterIndices(const QString &filter);
     void showAddres(const QUrl &name);
     void syncContents();
-    //void searchLine();
     void helpAbout();
     void helpVersion();
     void helpPrint();

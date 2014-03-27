@@ -1,26 +1,27 @@
 //-------------------------------------------------------------------
-// $Id: help.cpp 1720 2007-12-13 13:23:32Z gems $
+// $Id: help.h 333 2014-03-13 13:23:32Z gemsfits $
 //
 // Implementation of HelpConfigurator class
 //
-// Copyright (C) 2010 S.Dmytriyeva
+// Copyright (C) 2010-2014  S.V.Dmytriyeva
+// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+//    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
-// This file is part of the GEM-Selektor GUI library which uses the
-// Qt v.4 cross-platform App & UI framework (http://qt.nokia.com)
+// This file is part of the GEMSFITS GUI, which uses the
+// Qt v.5 cross-platform App & UI framework (http://qt-project.org)
 // under LGPL v.2.1 (http://www.gnu.org/licenses/lgpl-2.1.html)
 //
-// This file may be distributed under the terms of GEMS3 Development
-// Quality Assurance Licence (GEMS3.QAL)
+// This file may be distributed under the terms of LGPL v.3 license
 //
-// See http://gems.web.psi.ch/ for more information
+// See http://gems.web.psi.ch/GEMSFIT for more information
 // E-mail gems2.support@psi.ch
-//-------------------------------------------------------------------
+//-----------------------------------------------------------------
+
 #include <fstream>
 #include <iostream>
 using namespace std;
-#include "help.h"
-//#include "visor.h"
 
+#include "help.h"
 
 // read string untill "end"
 void HelpConfigurator::u_getline(istream& is, QString& str, QString end )
@@ -192,7 +193,6 @@ int HelpConfigurator::writeFile(const char *file)
     return 1;
 }
 
-
 void HelpConfigurator::writeFiles( fstream& f_out)
 {
     f_out << "      <files>" << endl;
@@ -208,7 +208,6 @@ void HelpConfigurator::writeFiles( fstream& f_out)
     }
     f_out << "      </files>" << endl;
 }
-
 
 void HelpConfigurator::writeKeywords( fstream& f_out)
 {

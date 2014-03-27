@@ -1,18 +1,19 @@
 //-------------------------------------------------------------------
-// $Id: HelpWindow.cpp 1949 2007-12-13 13:23:32Z gems $
+// $Id: HelpWindow.cpp 333 2014-03-13 13:23:32Z gemsfits $
 //
-// Implementation of HelpWindow class
+// Implementation of  HelpWindow, HelpBrowser and  SearchWidget classes
 //
-// Copyright (C) 2010,2012 S.Dmytriyeva
+// Copyright (C) 2012-2014  S.V.Dmytriyeva
+// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+//    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
-// This file is part of the GEM-Selektor GUI library which uses the
-// Qt v.4 cross-platform App & UI framework (http://qt.nokia.com)
+// This file is part of the GEMSFITS GUI, which uses the
+// Qt v.5 cross-platform App & UI framework (http://qt-project.org)
 // under LGPL v.2.1 (http://www.gnu.org/licenses/lgpl-2.1.html)
 //
-// This file may be distributed under the terms of GEMS3 Development
-// Quality Assurance Licence (GEMS3.QAL)
+// This file may be distributed under the terms of LGPL v.3 license
 //
-// See http://gems.web.psi.ch/ for more information
+// See http://gems.web.psi.ch/GEMSFIT for more information
 // E-mail gems2.support@psi.ch
 //-------------------------------------------------------------------
 
@@ -42,7 +43,6 @@ using namespace std;
 #include <QtHelp/QHelpSearchResultWidget>
 #include "HelpWindow.h"
 #include "FITMainWindow.h"
-//#include "visor.h"
 
 const char *FIT_HOWHELP_HTML = "gemsfit-techinfo.html#HOWHELP";
 const char *FIT_ABOUT_HTML = "gemsfit-about.html#PAGE_ABOUT";
@@ -545,43 +545,7 @@ void SearchWidget::searchingFinished(int hits)
     qApp->restoreOverrideCursor();
 }
 
-/*---------------------------------------------------------------
-
-AboutDialog::AboutDialog( QWidget* parent):
-        QDialog( parent )
-{
-   setupUi(this);
-   string titl = pVisorImp->getGEMTitle();
-           titl+= " : About the program package ";
-   setWindowTitle( trUtf8(titl.c_str()) );
-}
-
-AboutDialog::~AboutDialog()
-{}
-
-void AboutDialog::languageChange()
-{
-    retranslateUi(this);
-}
-
-HowToStartDialog::HowToStartDialog( QWidget* parent):
-        QDialog( parent )
-{
-   setupUi(this);
-   string titl = pVisorImp->getGEMTitle();
-           titl+= " : Start the program package ";
-   setWindowTitle( trUtf8(titl.c_str()) );
-}
-
-HowToStartDialog::~HowToStartDialog()
-{}
-
-void HowToStartDialog::languageChange()
-{
-    retranslateUi(this);
-}
-*/
-//----------------------------------------------------------------
+//---------------------------------------------------------------
 // Help file entry point constants
 
 const char *WZSTEP = "WZSTEP";

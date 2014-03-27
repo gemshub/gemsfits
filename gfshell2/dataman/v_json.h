@@ -1,3 +1,21 @@
+//-------------------------------------------------------------------
+// $Id: v_json.h 333 2014-03-13 13:23:32Z gemsfits $
+//
+// Declaration of ParserJson class and other bson functions
+//
+// Copyright (C) 2014  S.V.Dmytriyeva
+// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+//    yaml-cpp (https://code.google.com/p/yaml-cpp/)
+//
+// This file is part of the GEMSFITS GUI, which uses the
+// Qt v.5 cross-platform App & UI framework (http://qt-project.org)
+// under LGPL v.2.1 (http://www.gnu.org/licenses/lgpl-2.1.html)
+//
+// This file may be distributed under the terms of LGPL v.3 license
+//
+// See http://gems.web.psi.ch/GEMSFIT for more information
+// E-mail gems2.support@psi.ch
+//-------------------------------------------------------------------
 
 #ifndef __v_json_h_
 #define __v_json_h_
@@ -5,7 +23,6 @@
 #include <fstream>
 #include <string>
 using namespace std;
-
 #include "ejdb.h"
 
 extern void print_bson_to_json(FILE *f, const bson *b);

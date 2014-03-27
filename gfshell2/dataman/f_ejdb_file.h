@@ -1,18 +1,19 @@
 ﻿//-------------------------------------------------------------------
-// $Id: f_ejdb_file.h 968 2007-12-13 13:23:32Z gems $
+// $Id: f_ejdb_file.h 333 2014-03-13 13:23:32Z gemsfits $
 //
 // Declaration of TAbstractFile, TEJDB and TFile classes
 //
-// Copyright (C) 2014 S.Dmytriyeva
+// Copyright (C) 2014  S.V.Dmytriyeva
+// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+//    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
-// This file is part of the GEM-Selektor GUI library which uses the
-// Qt v.4 cross-platform App & UI framework (http://qt.nokia.com)
+// This file is part of the GEMSFITS GUI, which uses the
+// Qt v.5 cross-platform App & UI framework (http://qt-project.org)
 // under LGPL v.2.1 (http://www.gnu.org/licenses/lgpl-2.1.html)
 //
-// This file may be distributed under the terms of GEMS3 Development
-// Quality Assurance Licence (GEMS3.QAL)
+// This file may be distributed under the terms of LGPL v.3 license
 //
-// See http://gems.web.psi.ch/ for more information
+// See http://gems.web.psi.ch/GEMSFIT for more information
 // E-mail gems2.support@psi.ch
 //-------------------------------------------------------------------
 
@@ -21,15 +22,33 @@
 
 #include <fstream>
 #include <vector>
-
 #ifndef __APPLE__
 #include <auto_ptr.h>   // deprecated
 #endif
 
-
 #include "verror.h"
 class QWidget;
 class EJDB;
+
+//----------------------------------------------------------------------
+// service functions
+
+/// remove numbers!
+const int VF3_1 = 6;
+const int VF3_2 = 7;
+const int VF3_3 = 2;
+
+// returns VF3_1, VF3_2 or VF3_3
+int vfQuestion3(QWidget* par, const string& title, const string& mess,
+                const string& s1, const string& s2,  const string& s3="&Cancel",
+                bool i_mov = false);
+
+bool vfQuestion(QWidget* par, const string& title, const string& mess);
+
+vector<string> vfMultiKeys(QWidget* par, const char* caption,
+                            int iRt, const char* key );
+
+//----------------------------------------------------------------------
 
 // Mode enums
 enum { MDF_DATABASE=0, MDF_TASK=1, MDF_FITS=2 };

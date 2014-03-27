@@ -1,29 +1,30 @@
 //-------------------------------------------------------------------
-// $Id: f_ejdb_file.cpp 968 2007-12-13 13:23:32Z gems $
+// $Id: f_ejdb_file.cpp 333 2014-03-13 13:23:32Z gemsfits $
 //
 // Implementation of TAbstractFile, TEJDB and TFile classes
 //
-// Copyright (C) 2014 S.Dmytriyeva
+// Copyright (C) 2014  S.V.Dmytriyeva
+// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+//    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
-// This file is part of the GEM-Selektor GUI library which uses the
-// Qt v.4 cross-platform App & UI framework (http://qt.nokia.com)
+// This file is part of the GEMSFITS GUI, which uses the
+// Qt v.5 cross-platform App & UI framework (http://qt-project.org)
 // under LGPL v.2.1 (http://www.gnu.org/licenses/lgpl-2.1.html)
 //
-// This file may be distributed under the terms of GEMS3 Development
-// Quality Assurance Licence (GEMS3.QAL)
+// This file may be distributed under the terms of LGPL v.3 license
 //
-// See http://gems.web.psi.ch/ for more information
+// See http://gems.web.psi.ch/GEMSFIT for more information
 // E-mail gems2.support@psi.ch
 //-------------------------------------------------------------------
-
-#include "f_ejdb_file.h"
-#include "v_user.h"
-#include "ejdb.h"
 
 #include <unistd.h>
 #include <QFile>
 #include <QFileInfo>
 #include <QFileDialog>
+
+#include "f_ejdb_file.h"
+#include "v_user.h"
+#include "ejdb.h"
 
 //----------------------------------------------------------
 // TAbstractFile
@@ -343,7 +344,6 @@ void TFile::Close()
     ff.close();
     isopened = false;
 }
-
 
 //--------------------- End of f_ejdb_file.cpp ---------------------------
 

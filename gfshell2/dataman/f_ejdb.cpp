@@ -1,15 +1,29 @@
-//#pragma warning (disable:4786)
+//-------------------------------------------------------------------
+// $Id: f_ejdb.cpp 333 2014-03-13 13:23:32Z gemsfits $
+//
+// Implementation of TEJDBKey, TEJDataBase and EJDataBaseList classes
+//
+// Copyright (C) 2014  S.V.Dmytriyeva
+// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+//    yaml-cpp (https://code.google.com/p/yaml-cpp/)
+//
+// This file is part of the GEMSFITS GUI, which uses the
+// Qt v.5 cross-platform App & UI framework (http://qt-project.org)
+// under LGPL v.2.1 (http://www.gnu.org/licenses/lgpl-2.1.html)
+//
+// This file may be distributed under the terms of LGPL v.3 license
+//
+// See http://gems.web.psi.ch/GEMSFIT for more information
+// E-mail gems2.support@psi.ch
+//-------------------------------------------------------------------
+
 #include <iostream>
 #include <cstdarg>
 #include <cstring>
 
 #include "f_ejdb.h"
 #include "FITMainWindow.h"
-#include "fservice.h"
 #include "v_user.h"
-
-
-
 
 string replace( string str, const char* old_part, const char* new_part)
 {
@@ -888,4 +902,4 @@ EJDataBaseList::operator[](int ii)
 
 EJDataBaseList rtEJ;
 
-// --------------------------------------------------------------
+// ------------------------ end of f_ejdb.cpp --------------------------------------

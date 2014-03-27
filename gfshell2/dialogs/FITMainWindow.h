@@ -1,3 +1,22 @@
+//-------------------------------------------------------------------
+// $Id: FITMainWindow.h 333 2014-03-13 13:23:32Z gemsfits $
+//
+// Declaration of GEMSFITS GUI Main Window
+//
+// Copyright (C) 2014  S.V.Dmytriyeva, D.A.Kulik
+// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+//    yaml-cpp (https://code.google.com/p/yaml-cpp/)
+//
+// This file is part of the GEMSFITS GUI, which uses the
+// Qt v.5 cross-platform App & UI framework (http://qt-project.org)
+// under LGPL v.2.1 (http://www.gnu.org/licenses/lgpl-2.1.html)
+//
+// This file may be distributed under the terms of LGPL v.3 license
+//
+// See http://gems.web.psi.ch/GEMSFIT for more information
+// E-mail gems2.support@psi.ch
+//-------------------------------------------------------------------
+
 #ifndef FITMAINWINDOW_H
 #define FITMAINWINDOW_H
 
@@ -168,5 +187,7 @@ extern const char *GF_TASKDB_HTML; //= "gemsfit-input-file";
 extern const char *GF_ABOUT_HTML; // = "gemsfit-about";
 extern const char *GF_AUTHORS_HTML; // = "gemsfit-about#AUTHORS";
 extern const char *GF_LICENSE_HTML; // = "gemsfit-about#LICENSE";
+extern const char *DBM; // = "DBM";
+
 
 #endif // FITMAINWINDOW_H

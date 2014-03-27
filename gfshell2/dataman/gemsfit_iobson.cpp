@@ -1,36 +1,28 @@
-/*
-*	 Copyright (C) 2013 by Dmytriyeva S. (gems2.support@psi.ch)
-*    modified G. Dan Miron
-*
-*	 This file is part of the thermodynamic fitting program GEMSFIT2.
-*
-*    GEMSFIT2 is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU General Public License as published by
-*    the Free Software Foundation, either version 3 of the License, or
-*    (at your option) any later version.
-*
-*    GEMSFIT2 is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU  General Public License for more details.
-*
-*    You should have received a copy of the GNU General Public License
-*    along with GEMSFIT2.  If not, see <http://www.gnu.org/licenses/>.
-*/
+//-------------------------------------------------------------------
+// $Id: gemsfit_iobson.cpp 333 2014-03-13 13:23:32Z gemsfits $
+//
+// Read/Write GEMSFIT input configuration file functions
+//
+// Copyright (C) 2014  S.V.Dmytriyeva, G.D.Miron
+// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+//    yaml-cpp (https://code.google.com/p/yaml-cpp/)
+//
+// This file is part of the GEMSFITS GUI, which uses the
+// Qt v.5 cross-platform App & UI framework (http://qt-project.org)
+// under LGPL v.2.1 (http://www.gnu.org/licenses/lgpl-2.1.html)
+//
+// This file may be distributed under the terms of LGPL v.3 license
+//
+// See http://gems.web.psi.ch/GEMSFIT for more information
+// E-mail gems2.support@psi.ch
+//-------------------------------------------------------------------
 
 #include <iostream>
-using namespace std;
 #include <cstdlib>
-
+using namespace std;
 
 #include "node.h"
 #include "io_arrays.h"
-#include <omp.h>
-#include <sstream>
-#include <unistd.h>
-
-
-
 
 void out_db_specs_txt_bson( fstream& ff, bson *obj, bool with_comments  );
 void out_stat_param_txt_bson( fstream& ff, bson *obj, bool with_comments );
@@ -606,4 +598,4 @@ void out_nlopt_param_txt_bson( fstream& ff, bson *obj, bool with_comments )
 }
 
 
-// ----------- End of  visor.cpp ----------------------------
+// ----------- End of  gemsfit_iobson.cpp ----------------------------
