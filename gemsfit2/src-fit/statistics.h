@@ -103,6 +103,7 @@ class statistics
     /// degrees of freedom
     double degrees_of_freedom;
 
+
     /**
     * Read statistical input specifications from GEMSFIT_input.dat
     *
@@ -114,6 +115,24 @@ class statistics
 
 
     public:
+
+    struct parameters /// structure holding the target function information
+    {
+        string Ptype;
+        string Pfittype;
+        string Pname;
+        double Ival;
+        double Fval;
+        double CSS;
+        double mc95;
+        double mcSTDEV;
+        vector<double> corell;
+    };
+
+    vector<parameters*> fitparam;
+
+
+
         /**
         * Constructor for the Statistics class. It is derived from the PlotFit class.
         * Function reads statistical parameters and flags from GEMSFIT_input.dat,

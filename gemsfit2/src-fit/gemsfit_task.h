@@ -158,6 +158,7 @@ public:
             string exp_DCP;
             double meas_average;
             string Ptype;
+            string Otype;
             vector<string> Tformula;
             vector<string> Telem;
             double TuWeight;
@@ -175,8 +176,8 @@ public:
             bool isComputed;
         };
         vector<obj_fun> objfun;
-        vector<obj_fun> objfunold;
         vector<obj_fun> nestfun;
+        vector<obj_fun> addout;
     };
 
     TargetFunction* Tfun; /// pointer to target function structure
@@ -229,6 +230,7 @@ public:
    * @date 30.01.2014
    */
    double get_residual (int exp, TargetFunction::obj_fun &objfun, int &count);
+   void get_gems_calcprop (int exp, TargetFunction::obj_fun &addout );
 
    /**
    * Adds the Monte Carlo Scatter to the measured values

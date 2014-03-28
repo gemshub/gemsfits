@@ -167,6 +167,7 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys );
 */
 double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_fun &objfun, TGfitTask *sys);
 
+
 /**
 * Returns the residual from comparing the calculated with the measured
 * element mole ratio in a phase
@@ -179,6 +180,7 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
 * @date 17.08.2013
 */
 double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::obj_fun &objfun, TGfitTask *sys);
+
 
 /**
 * Returns the residual from comparing the calculated with the measured
@@ -193,6 +195,7 @@ double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::ob
 */
 double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj_fun &objfun, TGfitTask *sys);
 
+
 /**
 * Returns the residual from comparing the calculated with the measured
 * speciation in a phase
@@ -206,6 +209,8 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
 * @date 13.06.2013
 */
 double residual_phase_dcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFunction::obj_fun &objfun, TGfitTask *sys);
+
+
 
 /**
 * Returns the weight based on the weight type

@@ -94,7 +94,7 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     Opti = new optimization ( );
     gpf->flog << "12. gemsfit_task.cpp(89). Initializing the Target function structure & get_DatTarget(); " << endl;
     Tfun = new TargetFunction;
-    Tfun->objfunold = Tfun->objfun;
+//    Tfun->objfunold = Tfun->objfun;
 //    print = new ResPrint(Opti);
     get_DataTarget ( );
 
@@ -779,6 +779,74 @@ void TGfitTask::get_DataTarget ( )
         parse_JSON_object(out[i], keys::Ptype, out2);
         if (out2.size() == 0) { cout << "Data Target->NFUN->Ptype has to be speficied!"<< endl; exit(1);} // ERROR
         Tfun->nestfun[i].Ptype = out2[0];
+        out2.clear();
+
+
+    }
+    out.clear();
+
+
+    // get DFUN
+    parse_JSON_object(DataTarget, keys::ADDOUT, out);
+    for (unsigned int i = 0 ; i < out.size() ; i++)
+    {
+
+        TargetFunction::obj_fun addout;
+        Tfun->addout.push_back(addout); // initializing
+        Tfun->addout[i].exp_phase = "NULL";
+        Tfun->addout[i].exp_CT = "NULL";
+        Tfun->addout[i].exp_CN = "NULL";
+        Tfun->addout[i].exp_unit = "NULL";
+        Tfun->addout[i].exp_DCP = "NULL";
+        Tfun->addout[i].Otype = "NULL";
+        Tfun->addout[i].weight = 1;
+        Tfun->addout[i].TuWeight = 1;
+        Tfun->addout[i].isComputed = false;
+
+        parse_JSON_object(out[i], keys::EPH, out2);
+        if (out2.size() == 0) { cout << "Phase name has to be specified in Data Target->NFUN->EPH!"<< endl; exit(1);} // ERROR
+        Tfun->addout[i].exp_phase = out2[0];
+        out2.clear();
+
+        parse_JSON_object(out[i], keys::CT, out2);
+        if (out2.size() == 0) { cout << "Type of compared property has to be specified in Data Target->NFUN->CT!"<< endl; exit(1);} // ERROR
+        Tfun->addout[i].exp_CT = out2[0];
+        out2.clear();
+
+        parse_JSON_object(out[i], keys::DCP, out2);
+        if ((out2.size() == 0) && (Tfun->objfun[i].exp_CT == keys::DC)) { cout << "Name of dependent component compared property has to be specified in Data Target->NFUN->DCP!"<< endl; exit(1);} // ERROR
+        if (out2.size() > 0)
+        Tfun->addout[i].exp_DCP = out2[0];
+        out2.clear();
+
+        parse_JSON_object(out[i], keys::CN, out2);
+        if (out2.size() == 0) { cout << "Data Target->OFUN->CN has to be speficied!"<< endl; exit(1);} // ERROR
+        Tfun->addout[i].exp_CN = out2[0];
+        out2.clear();
+
+        parse_JSON_object(out[i], keys::Qunit, out2);
+        if (out2.size() > 0)
+        Tfun->addout[i].exp_unit = out2[0];
+        out2.clear();
+
+        parse_JSON_object(out[i], keys::WT, out2);
+        if (out2.size() > 0)
+        Tfun->addout[i].weight = atof(out2[0].c_str());
+        out2.clear();
+
+        parse_JSON_object(out[i], keys::Telem, out2);
+        if (out2.size() > 0)
+        Tfun->addout[i].Telem = out2;
+        out2.clear();
+
+        parse_JSON_object(out[i], keys::Tforumla, out2);
+        if (out2.size() > 0)
+        Tfun->addout[i].Tformula = out2;
+        out2.clear();
+
+        parse_JSON_object(out[i], keys::SRC, out2);
+        if (out2.size() == 0) { cout << "Data Target->ADDOUT->SRC has to be speficied!"<< endl; exit(1);} // ERROR
+        Tfun->addout[i].Otype = out2[0];
         out2.clear();
 
 

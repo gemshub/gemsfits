@@ -808,8 +808,12 @@ string INPUT_DIR = "input/";
 string OUTPUT_DIR = "output/";
 string RESULT_DIR = "results/";
 //const char *OPT_PARAM_FILE = "gemsfit2_input.dat";
-string FIT_CSV_FILE = "FIT_results.csv";
-string FIT_STATISTIC = "Summary_Statistics.txt";
+string FIT_CSV_FILE = "fit-results.csv";
+string FIT_QQ_FILE = "qq-plot-data.csv";
+string FIT_SENS_FILE = "meas-data-sensitivity.csv";
+string FIT_MC_FILE = "mc-results.csv";
+string FIT_PARAM_FILE = "fit-params.csv";
+string FIT_STATISTIC = "sum-statistics.txt";
 string FIT_LOGFILE = "gemsfit2.log";
 
 TGfitPath::TGfitPath(int c, char *v[]):
@@ -976,7 +980,11 @@ TGfitPath::TGfitPath(int c, char *v[]):
                 mkdir(path_init.c_str(), 0775);
                 outputDir = path_init + OUTPUT_DIR;
 //                resultDir = path_init + RESULT_DIR;
+                fitsens = outputDir+FIT_SENS_FILE;
                 fitFile = outputDir+FIT_CSV_FILE;
+                fitqq = outputDir+FIT_QQ_FILE;
+                fitparam = outputDir+FIT_PARAM_FILE;
+                fitmc = outputDir+FIT_MC_FILE;
                 fitStatistics = outputDir+FIT_STATISTIC;
                 fitLogFile = outputDir+FIT_LOGFILE;
                 break;
@@ -988,6 +996,10 @@ TGfitPath::TGfitPath(int c, char *v[]):
                 outputDir = path_run + OUTPUT_DIR;
 //                resultDir = path_run + RESULT_DIR;
                 fitFile = outputDir+FIT_CSV_FILE;
+                fitsens = outputDir+FIT_SENS_FILE;
+                fitqq = outputDir+FIT_QQ_FILE;
+                fitparam = outputDir+FIT_PARAM_FILE;
+                fitmc = outputDir+FIT_MC_FILE;
                 fitStatistics = outputDir+FIT_STATISTIC;
                 fitLogFile = outputDir+FIT_LOGFILE;
                 // GEMSFIT logfile (usually log_gemsfit.log)
@@ -1108,11 +1120,11 @@ outField Data_Manager_fields[9] =
       "\n#      \"EPH\": for what phase from the experiments"
       "\n#      \"CT\":  for the type of data to compare:"
       "\n#          \"IC\" for independent component; \"DC\" for dependent component; "
-      "\n#          \"prop\" for phase property; \"MR\" for mole fraction; "
+      "\n#          \"prop\" for phase property; \"MR\" for mole ratio; "
       "\n#      \"CN\":  the name/formula of the data to compare. e.g. \"Al\" if \"CT\" is \"IC\","
       "\n#          or \"pH\" if \"CT\" is \"prop\", or \"K/(Na+K)\" if \"CT\" is \"MR\" "
       "\n#      \"DCP\": used only if \"CT\" is \"DC\", to represent the name of dependent component property:"
-      "\n#          \"Q\" for amount; \"@coef\" for activity coeficient"
+      "\n#          \"Q\" for amount in mole fraction; \"@coef\" for activity coeficient"
       "\n#      \"WT\": weight assigned to the objective function as real number e.g. \"WT\": 100. "
       "\n#      \"unit\":  units of measurement (override those given in the database for this value):"
       "\n#          \"molal\":  mol/(kg H2O), \"log_molal\": log(molal), \"-loga\": negated log(activity) for pH;"
@@ -1127,6 +1139,10 @@ outField Data_Manager_fields[9] =
       "\n#    IMPORTANT: When \"NFUN\" is specified in DataTarget section, at least one element in \"Ptype\" "
       "\n#         property object must be marked for fitting. More than one NFUN entries with different "
       "\n#         \"Ptype\" input properties can be used with caution.\n "
+      "\n#  \"ADDOUT\": additional output, a list [] of terms {} for additional output in the results file"
+      "\n#    The options are the same as for OFUN with an additional \"Otype\" key whose value can be"
+      "\n#    \"GEMS\" if the aditional output is not present in the database but can be retreived trough GEMS claculation "
+      "\n#    \"DATAB\" if the additional output is present in the database but was not used in the OFUN "
       "\n#     The comparison options are: "
       "\n#       aqueous phase (\"aq_gen\") elemental composition in \"molal\" or \"loga\" "
       "\n#       aqueous phase (\"aq_gen\") properties (\"prop\"): \"pH\" in \"-loga\" (or \"molal\" "
@@ -1664,7 +1680,7 @@ void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat /* , string nfild */ )
     Data_Manager *temp = new Data_Manager(1);
 
     temp->parse_JSON_object(Jformat.format, keys::IV, out);
-    r->IV = atof(out.at(0).c_str());
+    r->Ival = atof(out.at(0).c_str());
     out.clear();
 
     temp->parse_JSON_object(Jformat.format, keys::Ref, out);

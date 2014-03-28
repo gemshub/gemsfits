@@ -45,6 +45,7 @@
 #include "gemsfit_task.h"
 #include "statistics.h"
 #include "gemsfit_global_functions.h"
+#include <iomanip>
 
 #define BOOST_FILESYSTEM_VERSION 3
 #define BOOST_FILESYSTEM_NO_DEPRECATED
@@ -95,22 +96,7 @@ int main( int argc, char *argv[] )
     if( gpf->isInitMode() ) // Mode GEMSFIT to generate input configuration file
       return generateConfig();
 
-    // empty output directory
-//    bfs::path fi(gpf->OutputDirPath() );
-//    if(!bfs::exists(fi) || !bfs::is_directory(fi))
-//    {
-//        std::cout<<"output_GEMSFIT could not be created or is not a directory. Exiting now ... "<<endl;
-//        exit(-1);
-//    }
-//    bfs::directory_iterator dir_iter(fi), dir_end;
-//    for(;dir_iter != dir_end; ++dir_iter)
-//    {
-//        bfs::remove(*dir_iter);
-//    }
 
-    // GEMSFIT logfile
-    //const char path[200] = "output_GEMSFIT/SS_GEMSFIT.log";
- //   ofstream fout;
     gpf->flog.open(gpf->FITLogFile().c_str(), ios::trunc);
     if( gpf->flog.fail() )
     { cout<<"Log fileopen error"<<endl; exit(1); }
@@ -118,6 +104,22 @@ int main( int argc, char *argv[] )
     gpf->fstat.open(gpf->FITStatisticsFile().c_str(), ios::trunc);
     if( gpf->fstat.fail() )
     { cout<<"Summary and statistics fileopen error"<<endl; exit(1); }
+
+    gpf->fsens.open(gpf->FITsensFile().c_str(), ios::trunc);
+    if( gpf->fsens.fail() )
+    { cout<<"Sensitivities fileopen error"<<endl; exit(1); }
+
+    gpf->fparam.open(gpf->FITparamFile().c_str(), ios::trunc);
+    if( gpf->fparam.fail() )
+    { cout<<"Fit parameters fileopen error"<<endl; exit(1); }
+
+    gpf->fqq.open(gpf->FITqqFile().c_str(), ios::trunc);
+    if( gpf->fqq.fail() )
+    { cout<<"QQ plot data fileopen error"<<endl; exit(1); }
+
+    gpf->fmc.open(gpf->FITmcFile().c_str(), ios::trunc);
+    if( gpf->fmc.fail() )
+    { cout<<"Fit Monte Carlo fileopen error"<<endl; exit(1); }
 
     // GEMSFIT results file for all test runs. Keeps a log of all runs. The file has to be deleted manually.
     string path_ = gpf->FITFile();
@@ -127,12 +129,12 @@ int main( int argc, char *argv[] )
 
    time_t now = time(0);
     char* dt = ctime(&now);
-    gpf->fres<<dt<<endl; // writes the date and time of the begining of the run in the result file
-    gpf->flog<<dt<<endl;
-    gpf->fstat<<dt<<endl;
+//    gpf->fres<< "# "<< dt; // writes the date and time of the begining of the run in the result file
+//    gpf->flog<<dt<<endl;
+//    gpf->fstat<<dt<<endl;
 
     // Reading in the data //
-    gpf->flog << "01. main.cpp(125). Creating new TGfitTask" << endl;
+    gpf->flog << "01. main.cpp(132). Creating new TGfitTask" << endl;
     TGfitTask* gfittask = new TGfitTask();
 
 //    cout << gfittask->NodT[0]->DenH2Ow(100000 *1, 25 + 273.15) << endl;
@@ -149,7 +151,7 @@ int main( int argc, char *argv[] )
         Equil_objective_function_callback(gfittask->Opti->optv, grad, gfittask);
     }
 
-    gpf->flog << endl <<"17. Back in main.cpp(156). Performing statistics ..."<< endl;
+    gpf->flog << endl <<"17. Back in main.cpp(149). Performing statistics ..."<< endl;
 
 //        gfittask->test();
 
@@ -169,11 +171,63 @@ int main( int argc, char *argv[] )
         }
 
         if(stat.MCbool > 0)  stat.MC_confidence_interval( gfittask->Opti->optv, gfittask );
+
+
+        // print param
+        gpf->fparam << "param.type," << "param.name,"	<< "init.value,"
+                       << "fit.value," << "mc.stdev," << "mc.95%.confidence," << "CSS.sensitivity,";
+
+        for (unsigned i= 0; i<stat.fitparam.size(); i++)
+        {
+            if (stat.fitparam[i]->Pfittype == "F")
+            gpf->fparam << "corell." << stat.fitparam[i]->Pname << "."<< i <<",";
+        }
+
+        gpf->fparam << endl;
+
+        for (unsigned i= 0; i<stat.fitparam.size(); i++)
+        {
+            gpf->fparam << stat.fitparam[i]->Pfittype;
+            gpf->fparam << "," << stat.fitparam[i]->Pname << ",";
+
+
+            gpf->fparam << setprecision(12) << stat.fitparam[i]->Ival << ",";
+            gpf->fparam << setprecision(12) <<stat.fitparam[i]->Fval << ",";
+
+            if (stat.fitparam[i]->mcSTDEV != 0)
+            {
+               gpf->fparam << stat.fitparam[i]->mcSTDEV << ",";
+               gpf->fparam << stat.fitparam[i]->mc95 << ",";
+            }
+
+            else
+                gpf->fparam << ",,";
+            if (stat.fitparam[i]->CSS != 0)
+            gpf->fparam << stat.fitparam[i]->CSS << ",";
+            else
+                gpf->fparam << ",";
+            for ( unsigned j=0; j < stat.fitparam[i]->corell.size(); j++)
+            {
+               if (stat.fitparam[i]->Pfittype == "F")
+               {
+                   if (stat.fitparam[i]->corell[j] !=0)
+                   {
+                       gpf->fparam << setprecision(4)<< stat.fitparam[i]->corell[j] << ",";
+                   } else
+                       gpf->fparam << ",";
+               }
+            }
+
+        gpf->fparam << endl;
+        }
+
+
+
     }
 
 //    gfittask->print->print_result();
     if (gfittask->Tfun->objfun.size() > 0)
-    gfittask->print_global_results();
+        gfittask->print_global_results( );
     if (gfittask->Opti->h_nestfun)
     gfittask->print_nested_results();
 
@@ -184,12 +238,16 @@ int main( int argc, char *argv[] )
 
     double delta = ((end.tv_sec  - start.tv_sec) * 1000000u +
              end.tv_usec - start.tv_usec) / 1.e6;
-    gpf->flog <<"18. main.cpp(186): finished in ";
+    gpf->flog <<"18. main.cpp(184): finished in ";
     gpf->flog << delta << " seconds. GEMSFITS: End. Bye!" << endl;
 cout << delta << " seconds." << endl;
 cout << "GEMSFITS: End. Bye!" << endl;
    gpf->flog.close();
    gpf->fres.close();
+   gpf->fqq.close();
+   gpf->fparam.close();
+   gpf->fmc.close();
+   gpf->fstat.close();
 }
 
 

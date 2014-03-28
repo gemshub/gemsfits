@@ -92,6 +92,10 @@ class TGfitPath
 
     string optParamFile;
     string fitFile;
+    string fitqq;
+    string fitparam;
+    string fitsens;
+    string fitmc;
     string fitStatistics;
     string fitLogFile;
 
@@ -101,7 +105,11 @@ public:
 
     ofstream flog;  // GEMSFIT logfile
     ofstream fres;  // GEMSFIT results file logging all test runs
+    ofstream fparam;
+    ofstream fqq;
+    ofstream fmc;
     ofstream fstat;
+    ofstream fsens;
 
     TGfitPath(int argc, char* argv[]);
     ~TGfitPath();
@@ -153,6 +161,22 @@ public:
     
     string FITStatisticsFile() {
         return fitStatistics;
+    }
+
+    string FITqqFile() {
+        return fitqq;
+    }
+
+    string FITsensFile() {
+        return fitsens;
+    }
+
+    string FITparamFile() {
+        return fitparam;
+    }
+
+    string FITmcFile() {
+        return fitmc;
     }
     
     string FITLogFile() const {

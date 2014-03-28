@@ -88,7 +88,7 @@ public:
     struct RDc /// structure storing reaction constraint information
     {
         int DcIndex; /// index of the dependent component
-        double IV; /// initial value
+        double Ival; /// initial value
 //        double logK; /// log K of the reaction
         vd logK_TPpairs; /// log K for all T and P pairs
         vd dG_reaction_TP; /// delta G of the reaction for all T and P pairs

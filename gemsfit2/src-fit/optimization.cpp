@@ -46,6 +46,7 @@ optimization::optimization()
     OptTuckey = 0;
 
     gpf->flog << "11. optimization.cpp(48). Reading NLopt optimization settings from the input file; " << endl;
+    define_nlopt_param();
     get_nlopt_param_txt( optv );
 
     //soring out the global paramaters vs the paramaters used in the dynamic functions

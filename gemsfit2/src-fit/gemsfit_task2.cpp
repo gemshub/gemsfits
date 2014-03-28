@@ -67,6 +67,7 @@ double TGfitTask::get_residual(int exp, TGfitTask::TargetFunction::obj_fun &objf
                     if ((this->experiments[exp]->expphases[p]->phIC[e]->comp == objfun.exp_CN) && (this->experiments[exp]->expphases[p]->phase == objfun.exp_phase ))
                     {
                         // check for unit
+                        if (objfun.exp_unit == "NULL") objfun.exp_unit = this->experiments[exp]->expphases[p]->phIC[e]->Qunit;
                         check_unit(exp, p, e, objfun.exp_unit, this );
                         residual =  residual_phase_elem (exp, p, e, objfun, this);
                         count++;
@@ -95,6 +96,7 @@ double TGfitTask::get_residual(int exp, TGfitTask::TargetFunction::obj_fun &objf
                     if ((this->experiments[exp]->expphases[p]->phprop[pp]->property == objfun.exp_CN) && (this->experiments[exp]->expphases[p]->phase == objfun.exp_phase ))
                     {
                         // check for unit
+                        if (objfun.exp_unit == "NULL") objfun.exp_unit = this->experiments[exp]->expphases[p]->phprop[pp]->Qunit;
                         check_prop_unit(exp, p, pp, objfun.exp_unit, this );
                         residual =  residual_phase_prop (exp, p, pp, objfun, this);
                         count++;
@@ -116,6 +118,7 @@ double TGfitTask::get_residual(int exp, TGfitTask::TargetFunction::obj_fun &objf
 //                                            cout << "yes"<<endl;
                                     //                                    // check for unit
                                     //                                    check_dcomp_unit(i, p, dc, dcp, sys->objfun->exp_unit, sys );
+                                    if (objfun.exp_unit == "NULL") objfun.exp_unit = this->experiments[exp]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit;
                                     check_unit_dcomp(exp, p, dc,dcp, objfun.exp_unit, this );
                                     residual = residual_phase_dcomp (exp, p, dc, dcp, objfun, this);
                                     count++;
@@ -285,6 +288,32 @@ void TGfitTask::add_MC_scatter( vector<double> scatter)
     }
 }
 
+void TGfitTask::get_gems_calcprop (int exp, TGfitTask::TargetFunction::obj_fun &addout )
+{
+    // loop trough objective function
+    /// Target function
+    if ((addout.exp_phase !="NULL") &&  (addout.exp_CT == keys::IC) /*&& (objfun->exp_property =="NULL")*/)
+    {
+       residual_phase_elem (exp, -1, -1,  addout, this);
+    }
+
+    if ((addout.exp_CT == keys::MR) /*&& (objfun->exp_property =="NULL")*/)
+    {
+       residual_phase_elemMR (exp,  -1, -1, addout, this);
+    }
+
+    if (addout.exp_CT == keys::property)
+    {
+       residual_phase_prop (exp,  -1,-1, addout, this);
+    }
+
+    if (addout.exp_CT == keys::DC)
+    {
+       residual_phase_dcomp (exp, -1, -1, -1, addout, this);
+    }
+}
+
+
 void TGfitTask::set_weights ()
 {
     // For onjective functions
@@ -332,55 +361,142 @@ void TGfitTask::set_results ( TGfitTask::TargetFunction::obj_fun &objfun, double
 
 void TGfitTask:: print_global_results ()
 {
-    gpf->fres << "experiment,,,unit,measured,computed,residual," <<"residual_"+Tfun->type <<  endl;
+//    gpf->fres << "experiment,,,unit,measured,computed,residual," <<"residual_"+Tfun->type <<  endl;
 
-    setprecision(12);
+    int prec = 12;
+    setprecision(prec);
     scientific(gpf->fres);
-
-
     gpf->fres.setf(ios::fixed);
 
+    vector<string> header;
+    header.push_back(keys::expsample);
+    header.push_back(keys::expdataset);
+    header.push_back(keys::sT);
+    header.push_back(keys::sP);
 
-        for (unsigned int j = 0; j <Tfun->objfun.size(); j++)
+//    gpf->fres << " <" << this->param_file <<"> <" << this->anNodes<<" samples> " <<endl;
+
+    for (unsigned int i = 0; i <aTfun.size(); i++)
+    {
+        for (unsigned j = 0; j <Tfun->addout.size(); j++)
         {
-            for (unsigned int i=0; i<aTfun.size(); i++)
-            {
-            if (aTfun[i].objfun[j].isComputed)
-            {
-                gpf->fres << experiments[i]->sample <<","<< aTfun[i].objfun[j].exp_phase <<","<< aTfun[i].objfun[j].exp_CN <<","<< aTfun[i].objfun[j].exp_unit <<","<<
-                             aTfun[i].objfun[j].results.measured_value <<","<< aTfun[i].objfun[j].results.computed_value << ","<< aTfun[i].objfun[j].results.residual<<","<< aTfun[i].objfun[j].results.WTfun_residual << endl;
-            }
+            int count = 0;
+            if (Tfun->addout[j].Otype == keys::meas)
+            get_residual(i, aTfun[i].addout[j], count );
         }
     }
+
+    for (unsigned int i = 0; i <aTfun.size(); i++)
+    {
+        for (unsigned j = 0; j <Tfun->addout.size(); j++)
+        {
+            if (Tfun->addout[j].Otype == keys::calc)
+            get_gems_calcprop(i, aTfun[i].addout[j] );
+        }
+    }
+
+
+    for (unsigned i = 0; i < Tfun->objfun.size(); i++)
+    {
+        string temp ="";
+        temp += Tfun->objfun[i].exp_phase + "." + Tfun->objfun[i].exp_CN ;
+        header.push_back(temp + "." + keys::meas);
+        header.push_back(temp + "." + keys::calc);
+        header.push_back("residual");
+//        header.push_back("residual."+ Tfun->type);
+    }
+
+    for (unsigned i = 0; i < Tfun->addout.size(); i++)
+    {
+        string temp ="";
+        temp += Tfun->addout[i].exp_phase + "." + Tfun->addout[i].exp_CN;
+        if (Tfun->addout[i].Otype == keys::calc)
+        header.push_back(temp + "." + keys::calc);
+        if (Tfun->addout[i].Otype == keys::meas)
+        header.push_back(temp + "." + keys::meas);
+
+    }
+
+    for (unsigned i = 0; i<header.size(); i++)
+    {
+        gpf->fres << header[i] << ",";
+    }
+
     gpf->fres << endl;
 
-    for(unsigned i=0; i< Opti->optv.size(); i++ ) // cols
+    for (unsigned i = 0; i<aTfun.size(); i++)
     {
-        // Print optimized parameter values to file
-        if (Opti->Ptype[i] == "G0")
+        gpf->fres << experiments[i]->sample <<",";
+        gpf->fres << experiments[i]->expdataset <<",";
+        gpf->fres << experiments[i]->sT <<",";
+        gpf->fres << experiments[i]->sP <<",";
+        for (unsigned j=0; j < Tfun->objfun.size(); j++)
         {
-            gpf->fres <<"parameter G0 "<<
-                     NodT[0]->xCH_to_DC_name(Opti->Pindex[i])
-                   <<" : " << Opti->optv[i] << endl;
-//                cout /*<< gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])*/ << endl;
-        } else
-          gpf->fres <<"parameter " << Opti->Ptype[i] << " : "
-                 <<setprecision(8)  <<Opti->optv[i] << endl;
-    }
-    if (Opti->h_RDc)
-    {
-        for (unsigned i=0; i<Opti->reactions.size(); ++i)
-        {
-            gpf->fres <<"Reac parameter "<<Opti->reactions[i]->Dc_name <<" : "<< setprecision(8)<<Opti->reactions[i]->std_gibbs<<endl;
+            if (aTfun[i].objfun[j].isComputed)
+            {
+                gpf->fres << setprecision(prec) << aTfun[i].objfun[j].results.measured_value <<","<<
+                             setprecision(prec) << aTfun[i].objfun[j].results.computed_value << ","<<
+                             setprecision(prec) << aTfun[i].objfun[j].results.residual<<","/*<< aTfun[i].objfun[j].results.WTfun_residual << ","*/;
+            } else
+                gpf->fres << ","<< ","<<","/*<< ","*/;
+
         }
-    }
-    if (Opti->h_Lp)
-    {
-        for (unsigned i=0; i<Opti->Lparams.size(); ++i)
+
+        for (unsigned j=0; j < Tfun->addout.size(); j++)
         {
-            gpf->fres <<"Linked parameter "<<Opti->Lparams[i]->name <<" : "<< setprecision(8)<<Opti->Lparams[i]->EV<<endl;
+            if (aTfun[i].addout[j].isComputed)
+            {
+                if (aTfun[i].addout[j].Otype == keys::calc)
+                gpf->fres << setprecision(prec) << aTfun[i].addout[j].results.computed_value <<",";
+                if (aTfun[i].addout[j].Otype == keys::meas)
+                gpf->fres << setprecision(prec) << aTfun[i].addout[j].results.measured_value <<",";
+            } else
+                gpf->fres << ",";
         }
+
+        gpf->fres << endl;
     }
+
+//    for (unsigned int j = 0; j <Tfun->objfun.size(); j++)
+//    {
+//        for (unsigned int i=0; i<aTfun.size(); i++)
+//        {
+//            if (aTfun[i].objfun[j].isComputed)
+//            {
+//                gpf->fres << experiments[i]->sample <<","<< aTfun[i].objfun[j].exp_phase <<","<< aTfun[i].objfun[j].exp_CN <<","<< aTfun[i].objfun[j].exp_unit <<","<<
+//                             aTfun[i].objfun[j].results.measured_value <<","<< aTfun[i].objfun[j].results.computed_value << ","<< aTfun[i].objfun[j].results.residual<<","<< aTfun[i].objfun[j].results.WTfun_residual << endl;
+//            }
+//        }
+//    }
+    gpf->fres << endl;
+
+//    for(unsigned i=0; i< Opti->optv.size(); i++ ) // cols
+//    {
+//        // Print optimized parameter values to file
+//        if (Opti->Ptype[i] == "G0")
+//        {
+//            gpf->fres <<"parameter G0 "<<
+//                     NodT[0]->xCH_to_DC_name(Opti->Pindex[i])
+//                   <<" : " << Opti->optv[i] << endl;
+////                cout /*<< gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])*/ << endl;
+//        } else
+//          gpf->fres <<"parameter " << Opti->Ptype[i] << " : "
+//                 <<setprecision(8)  <<Opti->optv[i] << endl;
+//    }
+//    if (Opti->h_RDc)
+//    {
+//        for (unsigned i=0; i<Opti->reactions.size(); ++i)
+//        {
+//            gpf->fres <<"Reac parameter "<<Opti->reactions[i]->Dc_name <<" : "<< setprecision(8)<<Opti->reactions[i]->std_gibbs<<endl;
+//        }
+//    }
+//    if (Opti->h_Lp)
+//    {
+//        for (unsigned i=0; i<Opti->Lparams.size(); ++i)
+//        {
+//            gpf->fres <<"Linked parameter "<<Opti->Lparams[i]->name <<" : "<< setprecision(8)<<Opti->Lparams[i]->EV<<endl;
+//        }
+//    }
 
 }
 
