@@ -101,31 +101,6 @@ int main( int argc, char *argv[] )
     if( gpf->flog.fail() )
     { cout<<"Log fileopen error"<<endl; exit(1); }
 
-    gpf->fstat.open(gpf->FITStatisticsFile().c_str(), ios::trunc);
-    if( gpf->fstat.fail() )
-    { cout<<"Summary and statistics fileopen error"<<endl; exit(1); }
-
-    gpf->fsens.open(gpf->FITsensFile().c_str(), ios::trunc);
-    if( gpf->fsens.fail() )
-    { cout<<"Sensitivities fileopen error"<<endl; exit(1); }
-
-    gpf->fparam.open(gpf->FITparamFile().c_str(), ios::trunc);
-    if( gpf->fparam.fail() )
-    { cout<<"Fit parameters fileopen error"<<endl; exit(1); }
-
-    gpf->fqq.open(gpf->FITqqFile().c_str(), ios::trunc);
-    if( gpf->fqq.fail() )
-    { cout<<"QQ plot data fileopen error"<<endl; exit(1); }
-
-    gpf->fmc.open(gpf->FITmcFile().c_str(), ios::trunc);
-    if( gpf->fmc.fail() )
-    { cout<<"Fit Monte Carlo fileopen error"<<endl; exit(1); }
-
-    // GEMSFIT results file for all test runs. Keeps a log of all runs. The file has to be deleted manually.
-    string path_ = gpf->FITFile();
-    gpf->fres.open(path_.c_str(), ios::trunc);
-    if( gpf->fres.fail() )
-    { cout<<"Results fileopen error"<<endl; exit(1); }
 
    time_t now = time(0);
     char* dt = ctime(&now);
@@ -171,58 +146,16 @@ int main( int argc, char *argv[] )
         }
 
         if(stat.MCbool > 0)  stat.MC_confidence_interval( gfittask->Opti->optv, gfittask );
-
-
-        // print param
-        gpf->fparam << "param.type," << "param.name,"	<< "init.value,"
-                       << "fit.value," << "mc.stdev," << "mc.95%.confidence," << "CSS.sensitivity,";
-
-        for (unsigned i= 0; i<stat.fitparam.size(); i++)
+        else
         {
-            if (stat.fitparam[i]->Pfittype == "F")
-            gpf->fparam << "corell." << stat.fitparam[i]->Pname << "."<< i <<",";
+            gpf->fmc.open(gpf->FITmcFile().c_str(), ios::trunc);
+            if( gpf->fmc.fail() )
+            { cout<<"Fit Monte Carlo fileopen error"<<endl; exit(1); }
+            gpf->fmc << endl;
+            gpf->fmc.close();
         }
 
-        gpf->fparam << endl;
-
-        for (unsigned i= 0; i<stat.fitparam.size(); i++)
-        {
-            gpf->fparam << stat.fitparam[i]->Pfittype;
-            gpf->fparam << "," << stat.fitparam[i]->Pname << ",";
-
-
-            gpf->fparam << setprecision(12) << stat.fitparam[i]->Ival << ",";
-            gpf->fparam << setprecision(12) <<stat.fitparam[i]->Fval << ",";
-
-            if (stat.fitparam[i]->mcSTDEV != 0)
-            {
-               gpf->fparam << stat.fitparam[i]->mcSTDEV << ",";
-               gpf->fparam << stat.fitparam[i]->mc95 << ",";
-            }
-
-            else
-                gpf->fparam << ",,";
-            if (stat.fitparam[i]->CSS != 0)
-            gpf->fparam << stat.fitparam[i]->CSS << ",";
-            else
-                gpf->fparam << ",";
-            for ( unsigned j=0; j < stat.fitparam[i]->corell.size(); j++)
-            {
-               if (stat.fitparam[i]->Pfittype == "F")
-               {
-                   if (stat.fitparam[i]->corell[j] !=0)
-                   {
-                       gpf->fparam << setprecision(4)<< stat.fitparam[i]->corell[j] << ",";
-                   } else
-                       gpf->fparam << ",";
-               }
-            }
-
-        gpf->fparam << endl;
-        }
-
-
-
+        stat.print_param();
     }
 
 //    gfittask->print->print_result();
@@ -240,13 +173,9 @@ int main( int argc, char *argv[] )
              end.tv_usec - start.tv_usec) / 1.e6;
     gpf->flog <<"18. main.cpp(184): finished in ";
     gpf->flog << delta << " seconds. GEMSFITS: End. Bye!" << endl;
-cout << delta << " seconds." << endl;
-cout << "GEMSFITS: End. Bye!" << endl;
+    cout << delta << " seconds." << endl;
+    cout << "GEMSFITS: End. Bye!" << endl;
    gpf->flog.close();
-   gpf->fres.close();
-   gpf->fqq.close();
-   gpf->fparam.close();
-   gpf->fmc.close();
    gpf->fstat.close();
 }
 

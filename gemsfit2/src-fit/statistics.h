@@ -46,6 +46,22 @@ class statistics
 
     private:
 
+    struct parameters /// structure holding the target function information
+    {
+        string Ptype;
+        string Pfittype;
+        string Pname;
+        double Ival;
+        double Fval;
+        double CSS;
+        double mc95;
+        double mcSTDEV;
+        vector<double> mcconfi;
+        vector<double> correl;
+    };
+
+    vector<parameters*> fitparam;
+
     double Weighted_mean_res;
     double means_res;
     double Weighted_max_res;
@@ -116,22 +132,6 @@ class statistics
 
     public:
 
-    struct parameters /// structure holding the target function information
-    {
-        string Ptype;
-        string Pfittype;
-        string Pname;
-        double Ival;
-        double Fval;
-        double CSS;
-        double mc95;
-        double mcSTDEV;
-        vector<double> corell;
-    };
-
-    vector<parameters*> fitparam;
-
-
 
         /**
         * Constructor for the Statistics class. It is derived from the PlotFit class.
@@ -198,6 +198,9 @@ class statistics
         * @date 06.12.2012
         */
         void sensitivity_correlation(vector<double> &optv_, TGfitTask* gfittask );
+
+
+        void print_param ();
 
 //		// Compute Pearson's sample correlation coefficient
 //		//void correlation(  );

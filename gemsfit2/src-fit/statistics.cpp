@@ -156,6 +156,18 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     vector<double> quantiles_v;
 //    vector<double> abs_residuals_v;
 
+    gpf->fstat.open(gpf->FITStatisticsFile().c_str(), ios::trunc);
+    if( gpf->fstat.fail() )
+    { cout<<"Summary and statistics fileopen error"<<endl; exit(1); }
+
+    gpf->fsens.open(gpf->FITsensFile().c_str(), ios::trunc);
+    if( gpf->fsens.fail() )
+    { cout<<"Sensitivities fileopen error"<<endl; exit(1); }
+
+    gpf->fqq.open(gpf->FITqqFile().c_str(), ios::trunc);
+    if( gpf->fqq.fail() )
+    { cout<<"QQ plot data fileopen error"<<endl; exit(1); }
+
     int np = 0;
 
     for(unsigned i=0; i< optv_.size(); i++ ) // cols
@@ -165,7 +177,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         np++;
         if (gfittask->Opti->Ptype[i] == "G0")
         {
-//            fitparam[i]->Ptype = gfittask->Opti->Ptype[i];
+            fitparam[i]->Ptype = gfittask->Opti->Ptype[i];
             fitparam[i]->Pfittype = "F";
             fitparam[i]->Pname = gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]);
             fitparam[i]->Fval = optv_[i];
@@ -176,7 +188,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 
         } else
         {
-//            fitparam[i]->Ptype = gfittask->Opti->Ptype[i];
+            fitparam[i]->Ptype = gfittask->Opti->Ptype[i];
             fitparam[i]->Pfittype = "F";
             fitparam[i]->Pname = gfittask->Opti->Ptype[i];
             fitparam[i]->Fval = optv_[i];
@@ -194,7 +206,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
             fitparam.push_back(new parameters);
             np++;
 
-//            fitparam[np+i]->Ptype = gfittask->Opti->Ptype[i];
+            fitparam[np+i]->Ptype = "G0";
             fitparam[np+i]->Pfittype = "R";
             fitparam[np+i]->Pname = gfittask->Opti->reactions[i]->Dc_name;
             fitparam[np+i]->Fval = gfittask->Opti->reactions[i]->std_gibbs;
@@ -212,7 +224,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         {
             fitparam.push_back(new parameters);
             np++;
-//            fitparam[np+i]->Ptype = gfittask->Opti->Ptype[i];
+            fitparam[np+i]->Ptype = "bIC";
             fitparam[np+i]->Pfittype = "L";
             fitparam[np+i]->Pname = gfittask->Opti->Lparams[i]->name;
             fitparam[np+i]->Fval = gfittask->Opti->Lparams[i]->EV;
@@ -295,10 +307,41 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         quantiles_v.push_back( boost::math::quantile( dist, percentiles_v[i] ) );
 
     // Generate Q-Q Plot (Quantile-Quantile Plot)
-    gpf->fqq << "residuals,quantiles" << endl;
-    for (i=0; i<N; ++i)
+    int exp = 0;
+
+    gpf->fqq << "sample,";
+
+    for (unsigned k = 0; k<gfittask->Tfun->objfun.size(); k++)
     {
-        gpf->fqq <<gfittask->residuals_v[i]<<","<<quantiles_v[i]<< endl;
+        gpf->fqq << gfittask->Tfun->objfun[k].exp_phase + "." + gfittask->Tfun->objfun[k].exp_CN;
+        gpf->fqq << ".residual"<<",";
+        gpf->fqq << gfittask->Tfun->objfun[k].exp_phase + "." + gfittask->Tfun->objfun[k].exp_CN;
+        gpf->fqq << ".quantile"<<",";
+    }
+
+    gpf->fqq << endl;
+
+    for( i=0; i<  N;  i++ )
+    {
+        i--;
+        gpf->fqq << gfittask->experiments[exp]->sample << ",";
+        for (unsigned p = 0; p<gfittask->Tfun->objfun.size(); p++)
+        {
+            if (gfittask->aTfun[exp].objfun[p].isComputed)
+            {
+                i++;
+                gpf->fqq <<gfittask->residuals_v[i]<<","<<quantiles_v[i]<< ",";
+
+            } else
+            {
+                for(unsigned j=0; j<  optv_.size(); j++ )
+                {
+                    gpf->fqq << ",";
+                }
+            }
+        }
+        exp++;
+        gpf->fqq << endl;
     }
     gpf->fqq.close();
 
@@ -353,9 +396,9 @@ if( W2 < 1.)  // workaround to suppress nan() and zdiv crash
 
 
     // Write first statistcs to file
-        gpf->fstat << "#####################################################################################" << endl;
-        gpf->fstat << "#>>>>>>>>>>>>>>>>>>>> Summary and statistics from Gemsfits run >>>>>>>>>>>>>>>>>>>>>#" << endl;
-        gpf->fstat << "#####################################################################################" << endl;
+        gpf->fstat << "############################################" << endl;
+        gpf->fstat << "# Summary and statistics from Gemsfits run #" << endl;
+        gpf->fstat << "############################################" << endl;
         gpf->fstat << endl;
         gpf->fstat << " Best fit results for parameters from regression : "                         <<endl;
         for(unsigned i=0; i< optv_.size(); i++ ) // cols
@@ -386,48 +429,32 @@ if( W2 < 1.)  // workaround to suppress nan() and zdiv crash
             }
         }
         gpf->fstat << endl;
-        gpf->fstat << endl;
-        gpf->fstat << " Basic statistics:" << endl;
+//        gpf->fstat << " Basic statistics:" << endl;
         gpf->fstat << " Number of measurements :                    " << number_of_measurements     << endl;
-        gpf->fstat << endl;
         gpf->fstat << " Number of parameters :                      " << number_of_parameters 	<< endl;
-        gpf->fstat << endl;
         gpf->fstat << " Number of runs needed for regression :      " << num_of_runs 		<< endl;
-        gpf->fstat << endl;
         gpf->fstat << " Degrees of freedom :                        " << degrees_of_freedom	 	<< endl;
-        gpf->fstat << endl;
 
 //        gpf->fstat << " - - - - - - - RESIDUAL STATISTICS - - - - - - - " << endl;
         gpf->fstat << " Value of the minimized function sum :       " << Weighted_Tfun_sum_of_residuals 		<< endl;
-        gpf->fstat << endl;
 //        gpf->fstat << " Target function sum  :                                                	" << Tfun_sum_of_residuals 		<< endl;
 //        gpf->fstat << endl;
 //        gpf->fstat << " Sum of absolute values of residuals:                                    " << Abs_sum_of_residuals << endl;
 //        gpf->fstat << endl;
         gpf->fstat << " Sum of absolute values of residuals:        " << Weighted_Abs_sum_of_residuals << endl;
-        gpf->fstat << endl;
 //        gpf->fstat << " Standard deviation of the residuals :                               	" << SD_of_residuals 		<< endl;
 //        gpf->fstat << endl;
         gpf->fstat << " Standard deviation of the residuals :       " << Weighted_SD_of_residuals 		<< endl;
-        gpf->fstat << endl;
 //        gpf->fstat << " Standard deviation of the weighted target function values :             " << Weighted_TF_SD_of_residuals 		<< endl;
 //        gpf->fstat << endl;
 //        gpf->fstat << " Standard deviation of the absolute values of the residuals :            " << Abs_SD_of_residuals 		<< endl;
 //        gpf->fstat << endl;
         gpf->fstat << " Average residual :                          " << Weighted_mean_res 		<< endl;
-        gpf->fstat << endl;
         gpf->fstat << " Maximum residual :                          " << Weighted_max_res 		<< endl;
-        gpf->fstat << endl;
         gpf->fstat << " Minimum residual :                          " << Weighted_min_res 		<< endl;
-        gpf->fstat << endl;
         gpf->fstat << " Number of positive residuals :              " << pos_residuals 		<< endl;
-        gpf->fstat << endl;
         gpf->fstat << " Number of negative residuals :              " << neg_residuals 		<< endl;
-        gpf->fstat << endl;
-
-
         gpf->fstat << " Coefficient of determination R^2 :          " << coeff_of_determination     << endl;
-        gpf->fstat << endl;
 //        gpf->fstat << " Correlation coefficient (Brockwell and Davis, 1987, p304) RN^2:         " << Correlation_coef     << endl;
 //        gpf->fstat << endl;
 //        gpf->fstat << " Pearson's Chi Square test :                                             " << Pearsons_chi_square   	<< endl;
@@ -441,8 +468,11 @@ if( W2 < 1.)  // workaround to suppress nan() and zdiv crash
 //        gpf->fstat << endl;
 //        gpf->fstat << " Probability that K squared follows Chi-squared distribution :           " << K2test << endl;
 //        gpf->fstat << endl;
-//        gpf->fstat << endl;
+        gpf->fstat << endl;
 //        gpf->fstat.close();
+
+
+        gpf->fqq.close();
 }
 
 
@@ -571,15 +601,11 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
                 }
             }
             exp++;
-            if (exp == 63)
-            {
-                cout << "here" << endl;
-            }
-                                gpf->fsens << endl;
+            gpf->fsens << endl;
         }
 
 
-        gpf->fstat << " Composite Scaled Sensitivities: "<<endl;
+        gpf->fstat << " Composite Scaled Sensitivities (CSS): "<<endl;
         {
             // Write sensitivities to file
             for( i=0; i< optv_.size(); i++ )
@@ -758,7 +784,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
         {
             for( j=0; j< optv_.size(); j++ )
             {
-                fitparam[i]->corell.push_back(CorellationMatrix(i,j));
+                fitparam[i]->correl.push_back(CorellationMatrix(i,j));
             }
         }
 
@@ -814,6 +840,10 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
     std::vector<std::vector<double> > measured_values_backup;
     std::vector<std::vector<double> > computed_values_backup;
     std::vector<double> sum_res;
+
+    gpf->fmc.open(gpf->FITmcFile().c_str(), ios::trunc);
+    if( gpf->fmc.fail() )
+    { cout<<"Fit Monte Carlo fileopen error"<<endl; exit(1); }
 
     int n_Rparam = gfittask->Opti->reactions.size();
 
@@ -1004,15 +1034,17 @@ pid_ = 0;
 //        gpf->fmc.open(path2.c_str(), ios::trunc);
 
         gpf->fmc << "MC_run,";
+        int p=0;
 
         for( j=0; j<n_param; j++ ) // cols
         {
-            gpf->fmc << "Fparam."<<j+1<<",";
+            gpf->fmc << "F."<<fitparam[j]->Pname<<",";
+            p++;
         }
 
         for( j=0; j<n_Rparam; j++ ) // cols
         {
-            gpf->fmc << "Rparam."<<j+1<<",";
+            gpf->fmc << "R."<<fitparam[j+p]->Pname<<",";
         }
         gpf->fmc << "minimized_sum";
         gpf->fmc << endl;
@@ -1037,16 +1069,23 @@ pid_ = 0;
         gpf->fmc << "Standard_deviation,";
 
         double T, w;
-        int p=0;
+        p=0;
         int DegreesOfFreedom = number_of_measurements - number_of_parameters;
         boost::math::students_t dist( DegreesOfFreedom );
 
         for( j=0; j<n_param; j++ ) // cols
         {
             gpf->fmc << SD_Fparam[j]<<",";
-            T = boost::math::quantile(boost::math::complement(dist, 0.05/ 2));
+            T = boost::math::quantile(boost::math::complement(dist, 0.01/ 2));
             w = T * SD_Fparam[j] / sqrt(double( number_of_measurements ));
             fitparam[j]->mc95 = w;
+            fitparam[j]->mcconfi.push_back(w);
+            T = boost::math::quantile(boost::math::complement(dist, 0.05/ 2));
+            w = T * SD_Fparam[j] / sqrt(double( number_of_measurements ));
+            fitparam[j]->mcconfi.push_back(w);
+            T = boost::math::quantile(boost::math::complement(dist, 0.1/ 2));
+            w = T * SD_Fparam[j] / sqrt(double( number_of_measurements ));
+            fitparam[j]->mcconfi.push_back(w);
             fitparam[j]->mcSTDEV = SD_Fparam[j];
             p++;
         }
@@ -1054,10 +1093,16 @@ pid_ = 0;
         for( j=0; j<n_Rparam; j++ ) // cols
         {
             gpf->fmc << SD_Rparam[j]<<",";
-            T = boost::math::quantile(boost::math::complement(dist, 0.05/ 2));
-            w = T * SD_Rparam[j] / sqrt(double( number_of_measurements ));
+            T = boost::math::quantile(boost::math::complement(dist, 0.01/ 2));
+            w = T * SD_Fparam[j] / sqrt(double( number_of_measurements ));
             fitparam[j+p]->mc95 = w;
-            fitparam[j+p]->mcSTDEV = SD_Rparam[j];
+            fitparam[j+p]->mcconfi.push_back(w);
+            T = boost::math::quantile(boost::math::complement(dist, 0.05/ 2));
+            w = T * SD_Fparam[j] / sqrt(double( number_of_measurements ));
+            fitparam[j+p]->mcconfi.push_back(w);
+            T = boost::math::quantile(boost::math::complement(dist, 0.1/ 2));
+            w = T * SD_Fparam[j] / sqrt(double( number_of_measurements ));
+            fitparam[j+p]->mcconfi.push_back(w);
         }
 
 
@@ -1071,5 +1116,71 @@ pid_ = 0;
 
     delete[] scatter_all;
 
+
+
 }// end of function MC_confidence_interval
+
+void statistics::print_param()
+{
+
+    gpf->fparam.open(gpf->FITparamFile().c_str(), ios::trunc);
+    if( gpf->fparam.fail() )
+    { cout<<"Fit parameters fileopen error"<<endl; exit(1); }
+
+    // print param
+    gpf->fparam << "ptype,parameter," << "name,"	<< "init.value,"
+                   << "fittted.value," << "mc.stdev," << "confi99,confi95,confi90," << "CSS.sensitivity,";
+
+    for (unsigned i= 0; i<fitparam.size(); i++)
+    {
+        if (fitparam[i]->Pfittype == "F")
+        gpf->fparam << "correl.coef." << fitparam[i]->Pname  <<",";
+    }
+
+    gpf->fparam << endl;
+
+    for (unsigned i= 0; i<fitparam.size(); i++)
+    {
+        gpf->fparam << fitparam[i]->Pfittype;
+        gpf->fparam << "," << fitparam[i]->Ptype;
+        gpf->fparam << "," << fitparam[i]->Pname << ",";
+
+
+        gpf->fparam << setprecision(12) << fitparam[i]->Ival << ",";
+        gpf->fparam << setprecision(12) <<fitparam[i]->Fval << ",";
+
+        if (fitparam[i]->mcSTDEV != 0)
+        {
+           gpf->fparam << fitparam[i]->mcSTDEV << ",";
+           for (unsigned j=0; j < fitparam[i]->mcconfi.size(); j++)
+           {
+               gpf->fparam << fitparam[i]->mcconfi[j] << ",";
+           }
+//           gpf->fparam << fitparam[i]->mc95 << ",";
+        }
+
+        else
+            gpf->fparam << ",,,,";
+        if (fitparam[i]->CSS != 0)
+        gpf->fparam << fitparam[i]->CSS << ",";
+        else
+            gpf->fparam << ",";
+        for ( unsigned j=0; j < fitparam[i]->correl.size(); j++)
+        {
+           if (fitparam[i]->Pfittype == "F")
+           {
+               if (fitparam[i]->correl[j] !=0)
+               {
+                   gpf->fparam << setprecision(4)<< fitparam[i]->correl[j] << ",";
+               } else
+                   gpf->fparam << ",";
+           }
+        }
+
+    gpf->fparam << endl;
+    }
+
+gpf->fparam.close();
+
+}
 

@@ -362,6 +362,11 @@ void TGfitTask::set_results ( TGfitTask::TargetFunction::obj_fun &objfun, double
 void TGfitTask:: print_global_results ()
 {
 //    gpf->fres << "experiment,,,unit,measured,computed,residual," <<"residual_"+Tfun->type <<  endl;
+    // GEMSFIT results file for all test runs. Keeps a log of all runs. The file has to be deleted manually.
+    string path_ = gpf->FITFile();
+    gpf->fres.open(path_.c_str(), ios::trunc);
+    if( gpf->fres.fail() )
+    { cout<<"Results fileopen error"<<endl; exit(1); }
 
     int prec = 12;
     setprecision(prec);
@@ -457,6 +462,8 @@ void TGfitTask:: print_global_results ()
         gpf->fres << endl;
     }
 
+    gpf->fres.close();
+
 //    for (unsigned int j = 0; j <Tfun->objfun.size(); j++)
 //    {
 //        for (unsigned int i=0; i<aTfun.size(); i++)
@@ -468,7 +475,7 @@ void TGfitTask:: print_global_results ()
 //            }
 //        }
 //    }
-    gpf->fres << endl;
+
 
 //    for(unsigned i=0; i< Opti->optv.size(); i++ ) // cols
 //    {
@@ -502,6 +509,12 @@ void TGfitTask:: print_global_results ()
 
 void TGfitTask:: print_nested_results ()
 {
+    // GEMSFIT results file for all test runs. Keeps a log of all runs. The file has to be deleted manually.
+    string path_ = gpf->FITFile();
+    gpf->fres.open(path_.c_str(), ios::trunc);
+    if( gpf->fres.fail() )
+    { cout<<"Results fileopen error"<<endl; exit(1); }
+
     gpf->fres << "experiment,,,unit,measured,computed,residual";
 
     for (unsigned int i= 0; i<Opti->nest_optv.Pindex.size(); i++)
@@ -554,5 +567,6 @@ void TGfitTask:: print_nested_results ()
         }
     }
     gpf->fres << endl;
+    gpf->fres.close();
 
 }
