@@ -108,7 +108,7 @@ void TMatrixModel::matrixFromCsvString( const QString& valueCsv )
 #if QT_VERSION >= 0x050000
     beginResetModel();
 #endif
-   int ii, jj;
+   int ii, jj, nlines;
   // clear old data
   colHeads.clear();
   matrix.clear();
@@ -118,20 +118,23 @@ void TMatrixModel::matrixFromCsvString( const QString& valueCsv )
 
   // get header
   QStringList cells = rows[0].split(',', QString::KeepEmptyParts);
-  for( ii=0; cells.count(); ii++ )
+  for( ii=0; ii< cells.count(); ii++ )
       colHeads.push_back( cells[ii] );
 
   // get values
-  for( jj=1; jj<rows.count(); jj++ )
+  for( jj=1, nlines=0;  jj<rows.count(); jj++ )
   {
+     cells = rows[jj].split(',', QString::KeepEmptyParts);
+     if(cells.count() < colHeads.size() )
+        continue;
      QVector<QVariant> vec;
      matrix.push_back( vec );
-     cells = rows[jj].split(',', QString::KeepEmptyParts);
-     for( ii=0; cells.count(); ii++ )
+     for( ii=0; ii<cells.count(); ii++ )
        if( ii < numberStringColumns )
-         matrix[jj].push_back( cells[ii] );
+         matrix[nlines].push_back( cells[ii] );
        else
-         matrix[jj].push_back( cells[ii].toDouble() );
+         matrix[nlines].push_back( cells[ii].toDouble() );
+     nlines++;
   }
 
 #if QT_VERSION >= 0x050000
@@ -156,7 +159,7 @@ QString TMatrixModel::matrixToCsvString( )
     valCsv += "\n";
 
     QVectorIterator<QVector<QVariant> > line(matrix);
-    while (head.hasNext())
+    while (line.hasNext())
     {
         int col =0;
         QVectorIterator<QVariant> valC(line.next());
@@ -188,6 +191,11 @@ void TMatrixModel::matrixFromCsvFile( const QString& dir )
       valCsv = tmpStriam.readAll();
       tmpStriam.close();
     }
+    else
+      {
+        cout << "error open file " << fpath.toUtf8().data() << endl;
+        return;
+      }
 
     //delete all comments // #
     int foundStart = valCsv.indexOf('#');
@@ -222,7 +230,7 @@ void TMatrixModel::matrixToCsvFile( const QString& dir )
     // write file
     QString fpath = dir + "/" + fname +".csv";
     QFile tmpStriam(fpath);
-    if(tmpStriam.open( QIODevice::Truncate))
+    if(tmpStriam.open( QIODevice::WriteOnly|QIODevice::Truncate))
     {
       tmpStriam.write(valCsv.toUtf8());
       tmpStriam.close();

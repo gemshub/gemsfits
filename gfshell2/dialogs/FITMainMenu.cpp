@@ -551,6 +551,24 @@ void FITMainWindow::CmRunTest()
     }
 }
 
+/// Show after Run gemsfit task
+void FITMainWindow::CmShowResults()
+{
+    try
+    {
+       //if( !MessageToSave() )
+       //    return;
+
+       // create work directory
+       QString workDir = trUtf8(fitTaskDir.Dir().c_str()) + "/work";
+       OpenResults( "must be key?" );
+    }
+    catch( TError& err )
+    {
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
+    }
+}
 
 
 

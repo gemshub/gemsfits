@@ -79,11 +79,6 @@ class TMatrixModel: public QAbstractTableModel
     //QString ValToString( double val ) const;
     //double ValFromString( const QVariant& strval  );
 
-    void matrixFromCsvString( const QString& valueCsv );
-    QString matrixToCsvString( );
-
-    void matrixFromCsvFile( const QString& dir );
-    void matrixToCsvFile( const QString& dir );
 
 public:
 	  
@@ -97,6 +92,10 @@ public:
      Qt::ItemFlags flags( const QModelIndex & index ) const;
 
      void defineMode();
+     void matrixFromCsvFile( const QString& dir );
+     void matrixToCsvFile( const QString& dir );
+     void matrixFromCsvString( const QString& valueCsv );
+     QString matrixToCsvString( );
 };
 
 /*!

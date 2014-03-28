@@ -84,7 +84,6 @@ class FITMainWindow : public QMainWindow
     bool createTaskTemplate();
     void readTXT( TFile& inFile );
 
-
     void closeEvent( QCloseEvent* );
     void resizeEvent( QResizeEvent * event );
     void showEvent( QShowEvent * event );
@@ -138,7 +137,7 @@ public slots:
        void CmDeleteList();
      //Calc
        void CmRunTest();
-       void CmShowResults(){}
+       void CmShowResults();
 
 
 public:
@@ -158,6 +157,7 @@ public:
     QProcess*  helpProcess;
     void GetHelp();
     void OpenHelp(const char* file, const char* item=0, int page =-1);
+    void OpenResults( const string& key );
 
 private:
     Ui::FITMainWindow *ui;

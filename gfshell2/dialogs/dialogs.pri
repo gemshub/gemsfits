@@ -5,7 +5,8 @@ HEADERS += $$DIALOGS_CPP/FITMainWindow.h \
     dialogs/ProjectSettingsDialog.h \
     dialogs/DBKeyDialog.h \
     dialogs/PreferencesDialog.h \
-    dialogs/CalcDialog.h
+    dialogs/CalcDialog.h \
+    dialogs/FitResultsWindow.h
 
 SOURCES += $$DIALOGS_CPP/FITMainWindow.cpp \
 #           $$DIALOGS_CPP/GraphDialog.cpp \
@@ -15,7 +16,8 @@ SOURCES += $$DIALOGS_CPP/FITMainWindow.cpp \
     dialogs/ProjectSettingsDialog.cpp \
     dialogs/DBKeyDialog.cpp \
     dialogs/PreferencesDialog.cpp \
-    dialogs/CalcDialog.cpp
+    dialogs/CalcDialog.cpp \
+    dialogs/FitResultsWindow.cpp
 
 
 FORMS += $$DIALOGS_CPP/HelpWindow4.ui \
@@ -23,6 +25,7 @@ FORMS += $$DIALOGS_CPP/HelpWindow4.ui \
     dialogs/ProjectSettingsDialog.ui \
     dialogs/DBKeyDialog.ui \
     dialogs/PreferencesDialog.ui \
-    dialogs/CalcDialog4.ui
+    dialogs/CalcDialog4.ui \
+    dialogs/FitResultsWindow.ui
 #         $$DIALOGS_CPP/GraphDialog4.ui \
 #         $$DIALOGS_CPP/LegendDialog4.ui \

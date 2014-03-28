@@ -25,6 +25,7 @@
 #include "FITMainWindow.h"
 #include "ui_FITMainWindow.h"
 #include "HelpWindow.h"
+#include "FitResultsWindow.h"
 #include "f_ejdb.h"
 
 //--------------------------------------------------------------------------
@@ -153,6 +154,8 @@ void FITMainWindow::closeEvent(QCloseEvent* e)
        if( HelpWindow::pDia )
           delete HelpWindow::pDia;
 
+       if( FitResultsWindow::pDia )
+         delete  FitResultsWindow::pDia;
        //mdiArea->closeAllSubWindows();
        //if( mdiArea->subWindowList().count() > 0 )
        //    e->ignore();
@@ -205,6 +208,17 @@ void FITMainWindow::OpenHelp(const char* file, const char* item1, int page )
     }
    // old help assistantClient->showDocumentation( file, item);
 }
+
+void FITMainWindow::OpenResults( const string& key )
+{
+    if( !FitResultsWindow::pDia )
+    {
+        ( new FitResultsWindow(0) );
+    }
+    FitResultsWindow::pDia->show();
+    FitResultsWindow::pDia->raise();
+}
+
 
 void  FITMainWindow::moveToolBar( int , int )
 {
