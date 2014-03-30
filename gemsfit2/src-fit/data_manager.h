@@ -219,16 +219,6 @@ class Data_Manager : public TNode
         */
         void parse_JSON_array_object( string data_, const char *arr , const char *key, vector<string> &result );
 
-
-
-//        /**
-//        * Read measurement data from CSV file
-//        * @param sysdata   pointer to measdata struct which holds all measurement data.
-//        * @author DM
-//        * @date 06.11.2012
-//        */
-//        void get_CSV( /*vector<experiment*> allexp*/ );
-
     private:
 
         /// get measurement data from EJDB (default) (0) CSV file (1) or PostgreSQL database (2)
@@ -270,14 +260,6 @@ class Data_Manager : public TNode
         * @date 19.04.2013
         */
         void get_EJDB( );
-
-        /**
-        * Returns JSON string from input file
-        * @author DM
-        * @param key string pointing to the position in the input file of the JSON string e.g <DatSelect>.
-        * @date 19.04.2013
-        */
-        string readin_JSON (string key );
 
         /**
         * Puts the in BSON format (e.g. returned from an EJDB query) into Data Manager class

@@ -62,6 +62,10 @@ private:
     virtual void get_nlopt_param_txt( vector<double> optv );
     virtual void define_nlopt_param( );
 
+    /**
+     * @brief sort_nestfun_param sort the NFUN parameters from the global ones and puts them in thier respective structure
+     * @author DM
+     */
     void sort_nestfun_param();
 
 public:

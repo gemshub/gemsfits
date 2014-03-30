@@ -115,9 +115,7 @@ double TGfitTask::get_residual(int exp, TGfitTask::TargetFunction::obj_fun &objf
                             {
                                 if (this->experiments[exp]->expphases[p]->phDC[dc]->DCprop[dcp]->property == objfun.exp_DCP)
                                 {
-//                                            cout << "yes"<<endl;
-                                    //                                    // check for unit
-                                    //                                    check_dcomp_unit(i, p, dc, dcp, sys->objfun->exp_unit, sys );
+                                    // check for unit
                                     if (objfun.exp_unit == "NULL") objfun.exp_unit = this->experiments[exp]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit;
                                     check_unit_dcomp(exp, p, dc,dcp, objfun.exp_unit, this );
                                     residual = residual_phase_dcomp (exp, p, dc, dcp, objfun, this);
@@ -156,9 +154,10 @@ double TGfitTask::get_sum_of_residuals( )
     // loop trough objective function
     double residual = 0.0;
     int count = 0;
+
+    // Loop trough target function
     for (unsigned int j=0; j<Tfun->objfun.size(); ++j)
     {
-    /// Target function
     // Loop trough all experiments
         for (unsigned int i=0; i<this->experiments.size(); ++i)
         {
@@ -288,7 +287,7 @@ void TGfitTask::add_MC_scatter( vector<double> scatter)
     }
 }
 
-void TGfitTask::get_gems_calcprop (int exp, TGfitTask::TargetFunction::obj_fun &addout )
+void TGfitTask::get_addout_calcprop (int exp, TGfitTask::TargetFunction::obj_fun &addout )
 {
     // loop trough objective function
     /// Target function
@@ -396,7 +395,7 @@ void TGfitTask:: print_global_results ()
         for (unsigned j = 0; j <Tfun->addout.size(); j++)
         {
             if (Tfun->addout[j].Otype == keys::calc)
-            get_gems_calcprop(i, aTfun[i].addout[j] );
+            get_addout_calcprop(i, aTfun[i].addout[j] );
         }
     }
 
@@ -464,84 +463,40 @@ void TGfitTask:: print_global_results ()
 
     gpf->fres.close();
 
-//    for (unsigned int j = 0; j <Tfun->objfun.size(); j++)
-//    {
-//        for (unsigned int i=0; i<aTfun.size(); i++)
-//        {
-//            if (aTfun[i].objfun[j].isComputed)
-//            {
-//                gpf->fres << experiments[i]->sample <<","<< aTfun[i].objfun[j].exp_phase <<","<< aTfun[i].objfun[j].exp_CN <<","<< aTfun[i].objfun[j].exp_unit <<","<<
-//                             aTfun[i].objfun[j].results.measured_value <<","<< aTfun[i].objfun[j].results.computed_value << ","<< aTfun[i].objfun[j].results.residual<<","<< aTfun[i].objfun[j].results.WTfun_residual << endl;
-//            }
-//        }
-//    }
-
-
-//    for(unsigned i=0; i< Opti->optv.size(); i++ ) // cols
-//    {
-//        // Print optimized parameter values to file
-//        if (Opti->Ptype[i] == "G0")
-//        {
-//            gpf->fres <<"parameter G0 "<<
-//                     NodT[0]->xCH_to_DC_name(Opti->Pindex[i])
-//                   <<" : " << Opti->optv[i] << endl;
-////                cout /*<< gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])*/ << endl;
-//        } else
-//          gpf->fres <<"parameter " << Opti->Ptype[i] << " : "
-//                 <<setprecision(8)  <<Opti->optv[i] << endl;
-//    }
-//    if (Opti->h_RDc)
-//    {
-//        for (unsigned i=0; i<Opti->reactions.size(); ++i)
-//        {
-//            gpf->fres <<"Reac parameter "<<Opti->reactions[i]->Dc_name <<" : "<< setprecision(8)<<Opti->reactions[i]->std_gibbs<<endl;
-//        }
-//    }
-//    if (Opti->h_Lp)
-//    {
-//        for (unsigned i=0; i<Opti->Lparams.size(); ++i)
-//        {
-//            gpf->fres <<"Linked parameter "<<Opti->Lparams[i]->name <<" : "<< setprecision(8)<<Opti->Lparams[i]->EV<<endl;
-//        }
-//    }
-
 }
 
 void TGfitTask:: print_nested_results ()
 {
-    // GEMSFIT results file for all test runs. Keeps a log of all runs. The file has to be deleted manually.
-    string path_ = gpf->FITFile();
-    gpf->fres.open(path_.c_str(), ios::trunc);
-    if( gpf->fres.fail() )
-    { cout<<"Results fileopen error"<<endl; exit(1); }
+    gpf->fnfres.open(gpf->FITnfunFile().c_str(), ios::trunc);
+    if( gpf->fnfres.fail() )
+    { cout<<"Nested Results fileopen error"<<endl; exit(1); }
 
-    gpf->fres << "experiment,,,unit,measured,computed,residual";
+    gpf->fnfres << "sample,phase,name,unit,measured,computed,residual";
 
     for (unsigned int i= 0; i<Opti->nest_optv.Pindex.size(); i++)
     {
-
         if (Opti->nest_optv.Ptype[i] == "bIC")
-        gpf->fres << "," << NodT[0]->xCH_to_IC_name(Opti->nest_optv.Pindex[i]);
+        gpf->fnfres << "," << NodT[0]->xCH_to_IC_name(Opti->nest_optv.Pindex[i]);
         if (Opti->nest_optv.Ptype[i] == "TK")
-        gpf->fres << "," << "TKelvin";
+        gpf->fnfres << "," << "TKelvin";
         if (Opti->nest_optv.Ptype[i] == "P")
-        gpf->fres << "," << "Pbar";
-
+        gpf->fnfres << "," << "Pbar";
     }
 
     if (Opti->nest_optv.Lparams.size() > 0)
         for (unsigned int i = 0; i<Opti->nest_optv.Lparams.size(); i++)
         {
-            gpf->fres << "," << NodT[0]->xCH_to_IC_name(Opti->nest_optv.Lparams[i]->index);
+            gpf->fnfres << "," << NodT[0]->xCH_to_IC_name(Opti->nest_optv.Lparams[i]->index);
         }
-    gpf->fres << endl << endl;
+
+    gpf->fnfres << endl;
 
 
     setprecision(12);
-    scientific(gpf->fres);
+    scientific(gpf->fnfres);
 
 
-    gpf->fres.setf(ios::fixed);
+    gpf->fnfres.setf(ios::fixed);
 
     for (unsigned int i=0; i<aTfun.size(); i++)
     {
@@ -549,24 +504,24 @@ void TGfitTask:: print_nested_results ()
         {
             if (aTfun[i].nestfun[j].isComputed)
             {
-                gpf->fres << experiments[i]->sample <<","<< aTfun[i].nestfun[j].exp_phase <<","<< aTfun[i].nestfun[j].exp_CN <<","<< aTfun[i].nestfun[j].exp_unit <<","<<
+                gpf->fnfres << experiments[i]->sample <<","<< aTfun[i].nestfun[j].exp_phase <<","<< aTfun[i].nestfun[j].exp_CN <<","<< aTfun[i].nestfun[j].exp_unit <<","<<
                              aTfun[i].nestfun[j].results.measured_value <<","<< aTfun[i].nestfun[j].results.computed_value << ","<< aTfun[i].nestfun[j].results.residual;
 
                 for (unsigned int p= 0; p<Opti->nest_optv.Pindex.size(); p++)
                 {
-                    gpf->fres << "," << Opti->nest_optv.e_opt[p]->val[i] ;
+                    gpf->fnfres << "," << Opti->nest_optv.e_opt[p]->val[i] ;
                 }
 
                 if (Opti->nest_optv.Lparams.size() > 0)
                     for (unsigned int l = 0; l<Opti->nest_optv.Lparams.size(); l++)
                     {
-                        gpf->fres << "," << Opti->nest_optv.Lparams[l]->e_val[i];
+                        gpf->fnfres << "," << Opti->nest_optv.Lparams[l]->e_val[i];
                     }
-                gpf->fres << endl;
+                gpf->fnfres << endl;
             }
         }
     }
-    gpf->fres << endl;
-    gpf->fres.close();
+
+    gpf->fnfres.close();
 
 }

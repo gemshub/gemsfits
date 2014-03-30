@@ -45,7 +45,7 @@ optimization::optimization()
 
     OptTuckey = 0;
 
-    gpf->flog << "11. optimization.cpp(48). Reading NLopt optimization settings from the input file; " << endl;
+    gpf->flog << "09. optimization.cpp(48). Reading NLopt optimization settings from the input file; " << endl;
     define_nlopt_param();
     get_nlopt_param_txt( optv );
 
@@ -111,22 +111,8 @@ void optimization::normalize_params(const vector<double> initguesses , bool Norm
 
 void optimization::sort_nestfun_param()
 {
-    int /*Nparam1 = optv.size(),*/ Nparam2 = optv.size();
-//    for (unsigned int i = 0; i<Nparam1; i++)
-//    {
-//        if ((nest_optv.Ptype[i] != "bIC") && (nest_optv.Ptype[i] != "TK") && (nest_optv.Ptype[i] != "P"))
-//        {
-//            nest_optv.LB.erase(nest_optv.LB.begin() + i);
-//            nest_optv.Pindex.erase(nest_optv.Pindex.begin() +i);
-//            nest_optv.Ptype.erase(nest_optv.Ptype.begin() +i);
-//            nest_optv.UB.erase(nest_optv.UB.begin() +i);
-//            nest_optv.opt.erase(nest_optv.opt.begin() +i);
-//            nest_optv.optv0.erase(nest_optv.optv0.begin() + i);
-//            Nparam1--; i--;
-//        }
-//    }
+    int Nparam2 = optv.size();
 
-//    nest_optv.reactions.clear();
     nest_optv.Lparams = Lparams;
     Lparams.clear();
 

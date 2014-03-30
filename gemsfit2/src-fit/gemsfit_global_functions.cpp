@@ -179,18 +179,6 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 //        titration (sys);
 //    cout << "finished titration correction"<< endl;
 
-//    cout << sys->NodT[1]->Get_pH() << endl;
-
-//     sys->NodT[0]->GEM_run( true );
-//     TSolMod *sol = reinterpret_cast<TSolMod*>(sys->NodT[0]->get_ptrTSolMod(2));
-//     sol->PTparam();
-//     sol->MixMod();
-//     adjust_PMc(0, 1500, sys);
-//     sol->PTparam();
-//     sol->MixMod();
-
-
-
 ////#ifdef USE_MPI
     omp_set_num_threads(sys->MPI);
     #pragma omp parallel for
@@ -242,9 +230,6 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     }
     gpf->flog << "~ m.count.= " << master_counter << " sum.res.= " << residuals_sys << endl;
     cout << "~ m.count.= " << master_counter << " sum.res.= " << residuals_sys << endl;
-
-//    if(master_counter == 50)
-//        cout << "pause"<< endl;
 
     for (unsigned int i = 0; i < sys->aTfun.size(); i++)
     {
@@ -314,6 +299,15 @@ void tsolmod_wrap( double &residual, const std::vector<double> &opt, TGfitTask *
     sys->residuals_v.clear();
     sys->weights.clear();
 
+    if (sys->Opti->OptTuckey == 1)
+    {
+        set_Tuckey_weight_global(sys);
+    } else
+        if (sys->Opti->OptTuckey == 2)
+    {
+        set_Tuckey_weight_objfun(sys);
+    }
+
     for (unsigned int i=0; i< sys->Opti->Ptype.size(); ++i)
     {
         if (sys->Opti->Ptype[i] == "PMc")
@@ -327,60 +321,40 @@ void tsolmod_wrap( double &residual, const std::vector<double> &opt, TGfitTask *
 
     } // END loop trough parameters
 
-//double gam_dc1, gam_dc2, gam_dc3, gam_dc4;
-    // loop over the experiments
-
 //    ////#ifdef USE_MPI
 //        omp_set_num_threads(sys->MPI);
 //        #pragma omp parallel for
 //    ////#endif
-        // Loop trough all nodes for calculationg the pahse properties
-        for (unsigned int i=0; i<sys->NodT.size(); ++i)
+
+    // Loop trough all nodes for calculationg the pahse properties
+    for (unsigned int i=0; i<sys->NodT.size(); ++i)
+    {
+
+        TMulti *multi = sys->NodT[i]->pMulti();
+
+        int sizeFIs = multi->get_sizeFIs();
+
+        for (unsigned j=0; j<sizeFIs; j++)
         {
+        TSolMod *sol = multi->pTSolMod(j);
+        multi->Access_GEM_IMP_init();
+        sol->PTparam();
+        sol->MixMod();
+        }
 
-            TMulti *multi = sys->NodT[i]->pMulti();
-
-            int sizeFIs = multi->get_sizeFIs();
-
-//            gam_dc1 = sys->NodT[i]->Get_gDC( 23 );
-//            gam_dc2 = sys->NodT[i]->Get_gDC( 24 );
-
-//            gam_dc1 = log(gam_dc1);
-//            gam_dc2 = log(gam_dc2);
-
-            for (unsigned j=0; j<sizeFIs; j++)
-            {
-            TSolMod *sol = multi->pTSolMod(j);
-            multi->Access_GEM_IMP_init();
-            sol->PTparam();
-            sol->MixMod();
-            }
-
-//            vector<DATABR*> dBR;
-//            dBR.push_back(sys->NodT[i]->pCNode());
-//            long int NodeStatusCH;
-
-                // Set the P in the node->CNode-P as in the experiments to avoind problem due to Psat notation as 0
-
-            // for SorpMod and KinMet
+        // for SorpMod and KinMet
 //            for (unsigned j=0; j<multi->sizeFIa; j++)
 //            {
 
 //            }
 
 
-        }
-
-
+    }
 
     residual = sys->get_sum_of_residuals( );
 
-
     gpf->flog << "~ m.count.= " << master_counter << " sum.res.= " << residual << endl;
     cout << "~ m.count.= " << master_counter << " sum.res.= " << residual << endl;
-
-//    if(master_counter == 50)
-//        cout << "pause"<< endl;
 
     for (unsigned int i = 0; i < sys->aTfun.size(); i++)
     {
@@ -397,9 +371,7 @@ void tsolmod_wrap( double &residual, const std::vector<double> &opt, TGfitTask *
             }
         }
     }
-
 }
-
 
 
 double median(vector<double> absresiduals)

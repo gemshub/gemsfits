@@ -28,7 +28,7 @@
 
 #define USE_MPI
 
-//#include <stdio.h>
+#include <stdio.h>
 #include <iostream>
 #include <vector>
 #include <string>
@@ -69,12 +69,19 @@ struct timeval start, end;
  
 int main( int argc, char *argv[] )
 {
-//    clockid_t startTime = clock();
-
     // benchmark code
     gettimeofday(&start, NULL);
 
     gpf = new TGfitPath(argc, argv);
+
+    remove( gpf->FITFile().c_str() );
+    remove( gpf->FITLogFile().c_str() );
+    remove( gpf->FITmcFile().c_str() );
+    remove( gpf->FITnfunFile().c_str() );
+    remove( gpf->FITparamFile().c_str() );
+    remove( gpf->FITqqFile().c_str() );
+    remove( gpf->FITsensFile().c_str() );
+    remove( gpf->FITStatisticsFile().c_str() );
 
     if (gpf->isHelpMode())
         return 0;
@@ -84,51 +91,35 @@ int main( int argc, char *argv[] )
     if( gpf->isRunMode() )
     {
     if ( access( gpf->OutputDirPath().c_str(), 0 ) != 0 )
-//    if ( !bfs::exists( gpf->OutputDirPath() ) )
-        mkdir(gpf->OutputDirPath().c_str(), 0775);
-//        bfs::create_directory(gpf->OutputDirPath() );
-    if ( access( gpf->OutputDirPath().c_str(), 0 ) != 0 )
-//    if ( !bfs::exists( gpf->ResultDir() ) )
-//        bfs::create_directory(gpf->ResultDir());
         mkdir(gpf->OutputDirPath().c_str(), 0775);
     }
 
     if( gpf->isInitMode() ) // Mode GEMSFIT to generate input configuration file
       return generateConfig();
 
-
     gpf->flog.open(gpf->FITLogFile().c_str(), ios::trunc);
     if( gpf->flog.fail() )
     { cout<<"Log fileopen error"<<endl; exit(1); }
 
-
-   time_t now = time(0);
-    char* dt = ctime(&now);
-//    gpf->fres<< "# "<< dt; // writes the date and time of the begining of the run in the result file
-//    gpf->flog<<dt<<endl;
-//    gpf->fstat<<dt<<endl;
+//    time_t now = time(0);
+//    char* dt = ctime(&now);
 
     // Reading in the data //
-    gpf->flog << "01. main.cpp(132). Creating new TGfitTask" << endl;
+    gpf->flog << "01. main.cpp(108). Creating new TGfitTask" << endl;
     TGfitTask* gfittask = new TGfitTask();
-
-//    cout << gfittask->NodT[0]->DenH2Ow(100000 *1, 25 + 273.15) << endl;
 
     // if optimization with statistics, without statistics or >2 only statistics
     if (gfittask->Opti->OptDoWhat < 2)
     {
         // ++++++++++ RUN OPTIMIZATION ++++++++++ //
         gfittask->run_optim();
-
     } else
     {
         vector<double> grad;
         Equil_objective_function_callback(gfittask->Opti->optv, grad, gfittask);
     }
 
-    gpf->flog << endl <<"17. Back in main.cpp(149). Performing statistics ..."<< endl;
-
-//        gfittask->test();
+    gpf->flog << endl <<"15. Back in main.cpp(122). Performing statistics ..."<< endl;
 
     countit = master_counter;
 
@@ -146,24 +137,11 @@ int main( int argc, char *argv[] )
         }
 
         if(stat.MCbool > 0)  stat.MC_confidence_interval( gfittask->Opti->optv, gfittask );
-        else
-        {
-            gpf->fmc.open(gpf->FITmcFile().c_str(), ios::trunc);
-            if( gpf->fmc.fail() )
-            { cout<<"Fit Monte Carlo fileopen error"<<endl; exit(1); }
-            gpf->fmc << endl;
-            gpf->fmc.close();
-        }
-
         stat.print_param();
-    }
-
-//    gfittask->print->print_result();
-    if (gfittask->Tfun->objfun.size() > 0)
         gfittask->print_global_results( );
+    }   
     if (gfittask->Opti->h_nestfun)
     gfittask->print_nested_results();
-
 
     delete gfittask;
 
@@ -171,12 +149,12 @@ int main( int argc, char *argv[] )
 
     double delta = ((end.tv_sec  - start.tv_sec) * 1000000u +
              end.tv_usec - start.tv_usec) / 1.e6;
-    gpf->flog <<"18. main.cpp(184): finished in ";
+    gpf->flog <<"16. main.cpp(152): finished in ";
     gpf->flog << delta << " seconds. GEMSFITS: End. Bye!" << endl;
     cout << delta << " seconds." << endl;
     cout << "GEMSFITS: End. Bye!" << endl;
-   gpf->flog.close();
-   gpf->fstat.close();
+    gpf->flog.close();
+    gpf->fstat.close();
 }
 
 

@@ -71,7 +71,6 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     }
     h_grad = false;
 
-
     // file containing the input parameters of the system and of the optimization class
     param_file  = gpf->OptParamFile().c_str();
 
@@ -87,17 +86,15 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     }
 
     // initialize nodes with the experimental data
-    gpf->flog << "08. gemsfit_task.cpp(84). Initializing nodes with the experimental data; " << endl;
+    gpf->flog << "06. gemsfit_task.cpp(89). Initializing nodes with the experimental data; " << endl;
     setnodes ( );  // initialization of nodes each for one experimental point (system)
     // getting the parameters to be optimized from DCH, DBR and multi structures, and optimization settings form the input file
-    gpf->flog << "09. gemsfit_task.cpp(87). Initializing optimization structure; " << endl;
+    gpf->flog << "07. gemsfit_task.cpp(92). Initializing optimization structure; " << endl;
     Opti = new optimization ( );
-    gpf->flog << "12. gemsfit_task.cpp(89). Initializing the Target function structure & get_DatTarget(); " << endl;
+    gpf->flog << "10. gemsfit_task.cpp(94). Initializing the Target function structure & get_DatTarget(); " << endl;
     Tfun = new TargetFunction;
-//    Tfun->objfunold = Tfun->objfun;
-//    print = new ResPrint(Opti);
-    get_DataTarget ( );
 
+    get_DataTarget ( );
 
     for (unsigned int i=0; i < experiments.size(); i++)
     {
@@ -119,7 +116,6 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     if (this->LimitOfDetection > (this->minimum_value/100))
         this->LimitOfDetection = this->minimum_value/100; // sets the limit of detection not more than 100 times smaller than the lowest experimental value
 
-//    print->print_header(Tfun->type, Tfun->weight, Opti->optv.size());
 }
 
 void TGfitTask::gfit_error ( )
@@ -153,7 +149,7 @@ void TGfitTask::gfit_error ( )
 void TGfitTask::run_optim()
 {
 //    titration(this);
-    gpf->flog << "13. gemsfit_task.cpp(151). Initializing optimization init_optim(); " << endl;
+    gpf->flog << "11. gemsfit_task.cpp(152). Initializing optimization init_optim(); " << endl;
     if (Tfun->objfun.size() > 0)
     init_optim (Opti->optv, weighted_Tfun_sum_of_residuals);
     else
@@ -177,42 +173,42 @@ void TGfitTask::Ainit_optim (std::vector<double> &optv_ /*,int &countit, double 
 void TGfitTask::init_optim( std::vector<double> &optv_, /*int &countit,*/ double &weighted_Tfun_sum_of_residuals )
 {
     // Instantiate nlopt::opt object
-    if( Opti->OptAlgo.compare( "'LN_COBYLA'" ) == 0 )
+    if( Opti->OptAlgo.compare( "LN_COBYLA" ) == 0 )
     {
         nlopt::opt nlopti_( nlopt::LN_COBYLA, optv_.size() );
         build_optim( nlopti_, optv_, weighted_Tfun_sum_of_residuals );
     }
-    else if( Opti->OptAlgo.compare( "'GN_ISRES'" ) == 0 )
+    else if( Opti->OptAlgo.compare( "GN_ISRES" ) == 0 )
     {
         nlopt::opt nlopti_( nlopt::GN_ISRES, optv_.size() );
         build_optim( nlopti_, optv_, weighted_Tfun_sum_of_residuals );
     }
-    else if( Opti->OptAlgo.compare( "'LN_BOBYQA'" ) == 0 )
+    else if( Opti->OptAlgo.compare( "LN_BOBYQA" ) == 0 )
     {
         nlopt::opt nlopti_( nlopt::LN_BOBYQA, optv_.size() );
         build_optim( nlopti_, optv_, weighted_Tfun_sum_of_residuals );
     }
-    else if( Opti->OptAlgo.compare( "'GN_ORIG_DIRECT'" ) == 0 )
+    else if( Opti->OptAlgo.compare( "GN_ORIG_DIRECT" ) == 0 )
     {
         nlopt::opt nlopti_( nlopt::GN_ORIG_DIRECT, optv_.size() );
         build_optim( nlopti_, optv_, weighted_Tfun_sum_of_residuals );
     }
-    else if( Opti->OptAlgo.compare( "'GN_ORIG_DIRECT_L'" ) == 0 )
+    else if( Opti->OptAlgo.compare( "GN_ORIG_DIRECT_L" ) == 0 )
     {
         nlopt::opt nlopti_( nlopt::GN_ORIG_DIRECT_L, optv_.size() );
         build_optim( nlopti_, optv_, weighted_Tfun_sum_of_residuals );
     }
-    else if( Opti->OptAlgo.compare( "'LD_MMA'" ) == 0 )
+    else if( Opti->OptAlgo.compare( "LD_MMA" ) == 0 )
     {
         nlopt::opt nlopti_( nlopt::LD_MMA, optv_.size() );
         build_optim( nlopti_, optv_, weighted_Tfun_sum_of_residuals );
     }
-    else if( Opti->OptAlgo.compare( "'LD_SLSQP'" ) == 0 )
+    else if( Opti->OptAlgo.compare( "LD_SLSQP" ) == 0 )
     {
         nlopt::opt nlopti_( nlopt::LD_SLSQP, optv_.size() );
         build_optim( nlopti_, optv_, weighted_Tfun_sum_of_residuals );
     }
-    else if( Opti->OptAlgo.compare( "'GD_MLSL'" ) == 0 )
+    else if( Opti->OptAlgo.compare( "GD_MLSL" ) == 0 )
     {
         nlopt::opt nlopti_( nlopt::GD_MLSL, optv_.size() );
         build_optim( nlopti_, optv_, weighted_Tfun_sum_of_residuals );
@@ -288,7 +284,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
 
 
     /// specify objective function
-    gpf->flog << endl << "14. in gemsfit_task.cpp(284). Setting target (objective) function to minimize." << endl;
+    gpf->flog << endl << "12. in gemsfit_task.cpp(287). Setting target (objective) function to minimize." << endl;
     NLopti.set_min_objective( Equil_objective_function_callback, this );
 
 //        if( OptConstraints )
@@ -309,51 +305,48 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
         NLopti.set_initial_step( inistep );
     }
 
-    gpf->flog << "15. gemsfit_task.cpp(305). Performing optimization."<<endl;
+    gpf->flog << "13. gemsfit_task.cpp(308). Performing optimization."<<endl;
 
 //    //===== For testing the objective function without oprimization =====//
 //    weighted_Tfun_sum_of_residuals = Equil_objective_function_callback(Opti->optv, grad, this);
-
-//    NLopti.set_maxeval(3);
 
     nlopt::result result = NLopti.optimize( Opti->optv, weighted_Tfun_sum_of_residuals );
     gpf->flog << "optv[0] = "<<Opti->optv[0]<<endl;
     gpf->flog << "size of optv = "<<Opti->optv.size()<<endl;
 
-    gpf->flog << "16. gemsfit_task.cpp(313). Finished optimization; " << endl;
+    gpf->flog << "14. gemsfit_task.cpp(317). Finished optimization; " << endl;
 
     Equil_objective_function_callback(Opti->optv, grad, this);
 
+    // check results
+    if( result < 0 )
+    {
+        std::cout<<endl;
+        std::cout<<"   !!!  nlopt failed  !!!   "<<std::endl;
+        std::cout<<"   !!!  error code:   "<<result<<std::endl;
+        Opti->print_return_message( result );
+        std::cout<<endl;
+    }
+    else
+    {
+        std::cout<<" NLopt return code: "<<result<<endl;
+        Opti->print_return_message( result );
+        gpf->flog<<"found minimum at <<f( ";
+        for( unsigned i=0; i<Opti->optv.size(); i++ )
+        {
+            gpf->flog<<Opti->optv[i]<<" ";
+        }
+        gpf->flog<<") = "<<weighted_Tfun_sum_of_residuals<<std::endl;
+        gpf->flog<<" after "<< master_counter <<" evaluations."<<std::endl;
 
-            // check results
-                if( result < 0 )
-                {
-                    std::cout<<endl;
-                    std::cout<<"   !!!  nlopt failed  !!!   "<<std::endl;
-                    std::cout<<"   !!!  error code:   "<<result<<std::endl;
-                    Opti->print_return_message( result );
-                    std::cout<<endl;
-                }
-                else
-                {
-                    std::cout<<" NLopt return code: "<<result<<endl;
-                    Opti->print_return_message( result );
-                    gpf->flog<<"found minimum at <<f( ";
-                    for( unsigned i=0; i<Opti->optv.size(); i++ )
-                    {
-                        gpf->flog<<Opti->optv[i]<<" ";
-                    }
-                    gpf->flog<<") = "<<weighted_Tfun_sum_of_residuals<<std::endl;
-                    gpf->flog<<" after "<< master_counter <<" evaluations."<<std::endl;
-
-                    std::cout<<"found minimum at <<f( ";
-                    for( unsigned i=0; i<Opti->optv.size(); i++ )
-                    {
-                        std::cout<<Opti->optv[i]<<" ";
-                    }
-                    std::cout<<") = "<<weighted_Tfun_sum_of_residuals<<std::endl;
-                }
-                std::cout<<" after "<< master_counter <<" evaluations"<<std::endl;
+        std::cout<<"found minimum at <<f( ";
+        for( unsigned i=0; i<Opti->optv.size(); i++ )
+        {
+            std::cout<<Opti->optv[i]<<" ";
+        }
+        std::cout<<") = "<<weighted_Tfun_sum_of_residuals<<std::endl;
+    }
+    std::cout<<" after "<< master_counter <<" evaluations"<<std::endl;
 
 
    // copy resulting vector back to incoming optv vector (needed for printing results)
@@ -371,8 +364,6 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
                   optv_[i] = Opti->optv[i] * fabs(Opti->opt[i]);
               }
       }
-
-  //
 }
 
 void TGfitTask::setnodes()
@@ -402,12 +393,6 @@ void TGfitTask::setnodes()
             cout<<" .. ERROR occurred while reading input files !!! ..."<<endl;
         }
     }
-
-//    NodT[0]->AtcivityCoeficient();
-
-
-
-//    NodT[0]->multi->Get_TSolmod(1);
 
     // initialize the nodes using the input GEMS3 file
     for (n=0; n<NodT.size(); ++n)
@@ -780,8 +765,6 @@ void TGfitTask::get_DataTarget ( )
         if (out2.size() == 0) { cout << "Data Target->NFUN->Ptype has to be speficied!"<< endl; exit(1);} // ERROR
         Tfun->nestfun[i].Ptype = out2[0];
         out2.clear();
-
-
     }
     out.clear();
 
@@ -790,7 +773,6 @@ void TGfitTask::get_DataTarget ( )
     parse_JSON_object(DataTarget, keys::ADDOUT, out);
     for (unsigned int i = 0 ; i < out.size() ; i++)
     {
-
         TargetFunction::obj_fun addout;
         Tfun->addout.push_back(addout); // initializing
         Tfun->addout[i].exp_phase = "NULL";
@@ -848,8 +830,6 @@ void TGfitTask::get_DataTarget ( )
         if (out2.size() == 0) { cout << "Data Target->ADDOUT->SRC has to be speficied!"<< endl; exit(1);} // ERROR
         Tfun->addout[i].Otype = out2[0];
         out2.clear();
-
-
     }
     out.clear();
 

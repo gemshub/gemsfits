@@ -66,8 +66,6 @@ void nestedfun (TGfitTask *sys);
 
 double nestminfunc(const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data );
 
-double get_pH(double x, int EXPndx, TGfitTask *sys);
-
 bool isTitration (TGfitTask *sys, int i, int j, int p);
 
 

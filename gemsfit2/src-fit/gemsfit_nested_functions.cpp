@@ -485,16 +485,6 @@ double titfunc(const std::vector<double> &x, std::vector<double> &grad, void *ob
     return residual;
 }
 
-double get_pH(double x, int EXPndx, TGfitTask *sys)
-{
-
-    vector<double> gr, x2;
-    x2.push_back(x);
-    titfunc(x2, gr, sys);
-
-    return sys->NodT[EXPndx]->Get_pH();
-
-}
 
 bool isTitration (TGfitTask *sys, int i, int j, int p)
 {

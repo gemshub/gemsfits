@@ -251,6 +251,7 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
     }
 
     ff << "\n \n# logK: Look-up array for logK at T * P * nr reactions. "
+          "\n#    The list has to be finished with End>"
           "\n#    If at least one G0 parameter is marked as \'R\' (reaction-constrained)"
           "\n#    and the list below is left commented out, then logK values for all T,P pairs and reactions"
           "\n#    will be calculated based on the initial values of all parameters, and this logK array"
@@ -625,7 +626,6 @@ cout << " : " << vFormats[ii].format << endl;
     }
     size = size*sizep;
 
-
     if (op->h_RDc)
     {
         vector<string> data;
@@ -636,7 +636,7 @@ cout << " : " << vFormats[ii].format << endl;
         unsigned int i;
         ifstream param_stream;
         string f3("<logK>");
-        string f4("#");
+        string f4("End");
 
         param_stream.open(fname.c_str());
         if( param_stream.fail() )
@@ -805,10 +805,11 @@ cout<< vFormats[ii].format << endl;
 //----------------------------------------------------------------
 //----- subfolder and default file names  ------------------------
 string INPUT_DIR = "input/";
-string OUTPUT_DIR = "output/";
+string OUTPUT_DIR = "work/";
 string RESULT_DIR = "results/";
 //const char *OPT_PARAM_FILE = "gemsfit2_input.dat";
 string FIT_CSV_FILE = "fit-results.csv";
+string FIT_NFUN_FILE = "fit-inverse-results.csv";
 string FIT_QQ_FILE = "qq-plot-data.csv";
 string FIT_SENS_FILE = "meas-data-sensitivity.csv";
 string FIT_MC_FILE = "mc-results.csv";
@@ -982,6 +983,7 @@ TGfitPath::TGfitPath(int c, char *v[]):
 //                resultDir = path_init + RESULT_DIR;
                 fitsens = outputDir+FIT_SENS_FILE;
                 fitFile = outputDir+FIT_CSV_FILE;
+                fitnfun = outputDir+FIT_NFUN_FILE;
                 fitqq = outputDir+FIT_QQ_FILE;
                 fitparam = outputDir+FIT_PARAM_FILE;
                 fitmc = outputDir+FIT_MC_FILE;
@@ -997,6 +999,7 @@ TGfitPath::TGfitPath(int c, char *v[]):
 //                resultDir = path_run + RESULT_DIR;
                 fitFile = outputDir+FIT_CSV_FILE;
                 fitsens = outputDir+FIT_SENS_FILE;
+                fitnfun = outputDir+FIT_NFUN_FILE;
                 fitqq = outputDir+FIT_QQ_FILE;
                 fitparam = outputDir+FIT_PARAM_FILE;
                 fitmc = outputDir+FIT_MC_FILE;
@@ -1140,9 +1143,9 @@ outField Data_Manager_fields[9] =
       "\n#         property object must be marked for fitting. More than one NFUN entries with different "
       "\n#         \"Ptype\" input properties can be used with caution.\n "
       "\n#  \"ADDOUT\": additional output, a list [] of terms {} for additional output in the results file"
-      "\n#    The options are the same as for OFUN with an additional \"Otype\" key whose value can be"
-      "\n#    \"GEMS\" if the aditional output is not present in the database but can be retreived trough GEMS claculation "
-      "\n#    \"DATAB\" if the additional output is present in the database but was not used in the OFUN "
+      "\n#    The options are the same as for OFUN with an additional \"SRC\" key whose value can be"
+      "\n#    \"calc\" if the aditional output is not present in the database but can be retreived trough GEMS claculation "
+      "\n#    \"meas\" if the additional output is present in the database but was not used in the OFUN "
       "\n#     The comparison options are: "
       "\n#       aqueous phase (\"aq_gen\") elemental composition in \"molal\" or \"loga\" "
       "\n#       aqueous phase (\"aq_gen\") properties (\"prop\"): \"pH\" in \"-loga\" (or \"molal\" "
@@ -1302,9 +1305,9 @@ void Data_Manager::get_db_specs_txt( )
                     break;
             case f_LimitOfDetection: rdar.readArray( "LimitOfDetection",  &LimitOfDetection, 1);
                     break;
-            case f_DataSelect: rdar.readArray( "DataSelect",  DataSelect );
+            case f_DataSelect: rdar.readArray( "DataSelect",  DataSelect, 10000);
                     break;
-            case f_DataTarget: rdar.readArray( "DataTarget",  DataTarget );
+            case f_DataTarget: rdar.readArray( "DataTarget",  DataTarget, 10000 );
                     break;
             case f_SystemFiles: rdar.readArray( "SystemFiles",  inputstr );
                     remove_copy(inputstr.begin(), inputstr.end(), std::back_inserter(result), '\'');

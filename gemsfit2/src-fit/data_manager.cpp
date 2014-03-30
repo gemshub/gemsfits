@@ -51,18 +51,11 @@ Data_Manager::Data_Manager( )
     gpf->flog << "02. data_manager.cpp(51). Reading database parameter get_db_specs(); " << endl;
     get_db_specs_txt();
 
-    // Read measurement data from EJDB server
-    gpf->flog << "03. data_manager.cpp(55). Reading in the data selection query; " << endl;
-    // Readin in the data slection query
-    DataSelect = readin_JSON("<DataSelect>");
-    gpf->flog << "04. data_manager.cpp(58). Reading in the Target function form the input file; " << endl;
-    DataTarget = readin_JSON("<DataTarget>");
-
     // Getting the query result data into the Data_Manager class
-    gpf->flog << "05. data_manager.cpp(62). Getting data form the EJDB database; " << endl;
+    gpf->flog << "03. data_manager.cpp(55). Getting data form the EJDB database; " << endl;
     get_EJDB();
 
-    gpf->flog << "07. data_manager.cpp(65). Getting distinct T and P pairs; " << endl;
+    gpf->flog << "04. data_manager.cpp(58). Getting distinct T and P pairs; " << endl;
     get_distinct_TP();
 
 }
@@ -99,55 +92,54 @@ void Data_Manager::get_EJDB( )
 
     if(root)
     {
+        // processing DataSelect
+        parse_JSON_object(DataSelect, keys::usesamples, out);
+        usesample = out; // query for selecting samples
+        out.clear();
 
-    // processing DataSelect
-    parse_JSON_object(DataSelect, keys::usesamples, out);
-    usesample = out; // query for selecting samples
-    out.clear();
+        parse_JSON_object(DataSelect, keys::skipsamples, out);
+        skipsample = out; // query for selecting samples
+        out.clear();
 
-    parse_JSON_object(DataSelect, keys::skipsamples, out);
-    skipsample = out; // query for selecting samples
-    out.clear();
+        parse_JSON_object(DataSelect, keys::usedatasets, out);
+        usedataset = out; // query for selecting expdatasets
+        out.clear();
 
-    parse_JSON_object(DataSelect, keys::usedatasets, out);
-    usedataset = out; // query for selecting expdatasets
-    out.clear();
+        parse_JSON_object(DataSelect, keys::skipdatasets, out);
+        skipdataset = out; // query for skipping expdatasets
+        out.clear();
 
-    parse_JSON_object(DataSelect, keys::skipdatasets, out);
-    skipdataset = out; // query for skipping expdatasets
-    out.clear();
+        parse_JSON_array_object(DataSelect, keys::usepair, keys::dataset, out);
+        if (out.size() == 0) parse_JSON_array_object(DataSelect, keys::usepair, keys::usedatasets, out);
+        usepdatasets = out; // query for skipping expdatasets
+        out.clear();
 
-    parse_JSON_array_object(DataSelect, keys::usepair, keys::dataset, out);
-    if (out.size() == 0) parse_JSON_array_object(DataSelect, keys::usepair, keys::usedatasets, out);
-    usepdatasets = out; // query for skipping expdatasets
-    out.clear();
+        parse_JSON_array_object(DataSelect, keys::usepair, keys::samples, out);
+        usepsamples = out; // query for skipping expdatasets
+        out.clear();
 
-    parse_JSON_array_object(DataSelect, keys::usepair, keys::samples, out);
-    usepsamples = out; // query for skipping expdatasets
-    out.clear();
+        parse_JSON_array_object(DataSelect, keys::skippair, keys::dataset, out);
+        if (out.size() == 0) parse_JSON_array_object(DataSelect, keys::skippair, keys::skipdatasets, out);
+        skippdatasets = out; // query for skipping expdatasets
+        out.clear();
 
-    parse_JSON_array_object(DataSelect, keys::skippair, keys::dataset, out);
-    if (out.size() == 0) parse_JSON_array_object(DataSelect, keys::skippair, keys::skipdatasets, out);
-    skippdatasets = out; // query for skipping expdatasets
-    out.clear();
+        parse_JSON_array_object(DataSelect, keys::skippair, keys::samples, out);
+        skippsamples = out; // query for skipping expdatasets
+        out.clear();
 
-    parse_JSON_array_object(DataSelect, keys::skippair, keys::samples, out);
-    skippsamples = out; // query for skipping expdatasets
-    out.clear();
+        parse_JSON_object(DataSelect, keys::sT, out);
+        for (unsigned int i = 0 ; i < out.size() ; i++)
+        {
+            qsT.push_back( atof(out.at(i).c_str()) ); // query for selecting T
+        }
+        out.clear();
 
-    parse_JSON_object(DataSelect, keys::sT, out);
-    for (unsigned int i = 0 ; i < out.size() ; i++)
-    {
-        qsT.push_back( atof(out.at(i).c_str()) ); // query for selecting T
-    }
-    out.clear();
-
-    parse_JSON_object(DataSelect, keys::sP, out);
-    for (unsigned int i = 0 ; i < out.size() ; i++)
-    {
-        qsP.push_back( atof(out.at(i).c_str()) ); // query for selecting P
-    }
-    out.clear();
+        parse_JSON_object(DataSelect, keys::sP, out);
+        for (unsigned int i = 0 ; i < out.size() ; i++)
+        {
+            qsP.push_back( atof(out.at(i).c_str()) ); // query for selecting P
+        }
+        out.clear();
     }
 
     // Build the query in EJDB format
@@ -370,7 +362,7 @@ cout << DBname.c_str() << endl;
              // set experiments variables false
          }
 
-         gpf->flog << "06. data_manager.cpp(287). Adding the data returned by the selection query into the data structure; " << endl;
+         gpf->flog << "05. data_manager.cpp(365). Adding the data returned by the selection query into the data structure; " << endl;
 
 //#ifdef USE_MPI
          omp_set_num_threads(MPI);
@@ -893,52 +885,6 @@ void Data_Manager::get_distinct_TP( )
         isfound = false;
         isfound2 = false;
     }
-}
-
-string Data_Manager::readin_JSON(string key)
-{
-    // Variable declarations
-    vector<string> vdata;
-    string line, allparam;
-    string json_s, result;
-    string fname = gpf->OptParamFile();
-    int pos_start, pos_end;
-    unsigned int i;
-    ifstream param_stream;
-
-    // Keywords
-    string f7(key);
-    string f4("#");
-
-    // Read parameter file into string
-    param_stream.open(fname.c_str());
-    if( param_stream.fail() )
-    {
-        cout << "Opening of file "<<fname<<" failed !!"<<endl;
-        exit(1);
-    }
-    while( getline(param_stream, line) )
-    {
-        vdata.push_back(line);
-    }
-    param_stream.close();
-    for( i=0; i < vdata.size(); i++ )
-    allparam += vdata[i];
-
-    // GEMSFIT logfile
-//    ofstream fout;
-//    fout.open(gpf->FITLogFile().c_str(), ios::app);
-//    if( fout.fail() )
-//    { cout<<"Output fileopen error"<<endl; exit(1); }
-
-    pos_start = allparam.find(f7);
-    pos_end   = allparam.find(f4,pos_start);
-    json_s = allparam.substr((pos_start+f7.length()),(pos_end-pos_start-f7.length()));
-
-    remove_copy(json_s.begin(), json_s.end(), std::back_inserter(result), '\'');
-    json_s = result;
-
-    return json_s;
 }
 
 void Data_Manager::parse_JSON_object(string query, const char* key, vector<string> &result)

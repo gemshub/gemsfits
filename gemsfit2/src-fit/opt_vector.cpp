@@ -32,16 +32,16 @@ opti_vector::opti_vector( )
     TNode* node  = new TNode();
     // call GEM_init     --> read in input files
     if( (node->GEM_init( gpf->GEMS3LstFilePath().c_str() )) == 1 )
-       {
-            cout << gpf->GEMS3LstFilePath().c_str() << endl;
-            cout<<" .. ERROR occurred while reading GEMS3K input files !!! ..."<<endl;
-            exit(1);
-       }
+    {
+        cout << gpf->GEMS3LstFilePath().c_str() << endl;
+        cout<<" .. ERROR occurred while reading GEMS3K input files !!! ..."<<endl;
+        exit(1);
+    }
     this->h_RDc     = false;
     this->h_Lp      = false;
     this->h_nestfun  = false;
 
-    gpf->flog << "10. opt_vector.cpp(44). Reading optimized parameters from the input file; " << endl;
+    gpf->flog << "08. opt_vector.cpp(44). Reading optimized parameters from the input file; " << endl;
     get_gems_fit_DCH_txt( node, this ); // reading DCH parameters
     get_gems_fit_DBR_txt( node, this ); // reading DBR parameters
     get_gems_fit_multi_txt( node, this ); // reading multi parameters
@@ -49,7 +49,7 @@ opti_vector::opti_vector( )
     // getting indexes of components in the DCH
     if (h_RDc)
     {
-        gpf->flog << "10-1. opt_vector.cpp(52). Getting the indexes of species involved in the reaction constraints; " << endl;
+        gpf->flog << "08-1. opt_vector.cpp(52). Getting the indexes of species involved in the reaction constraints; " << endl;
         get_RDc_indexes (node, this);
     }
 

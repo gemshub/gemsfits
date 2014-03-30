@@ -168,13 +168,12 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     if( gpf->fqq.fail() )
     { cout<<"QQ plot data fileopen error"<<endl; exit(1); }
 
-    int np = 0;
+    int np = optv_.size()-1;
 
     for(unsigned i=0; i< optv_.size(); i++ ) // cols
     {
         // Print optimized parameter values to file
         fitparam.push_back(new parameters);
-        np++;
         if (gfittask->Opti->Ptype[i] == "G0")
         {
             fitparam[i]->Ptype = gfittask->Opti->Ptype[i];
@@ -203,17 +202,17 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     {
         for (unsigned i=0; i<gfittask->Opti->reactions.size(); ++i)
         {
-            fitparam.push_back(new parameters);
             np++;
-
+            fitparam.push_back(new parameters);
             fitparam[np+i]->Ptype = "G0";
             fitparam[np+i]->Pfittype = "R";
             fitparam[np+i]->Pname = gfittask->Opti->reactions[i]->Dc_name;
             fitparam[np+i]->Fval = gfittask->Opti->reactions[i]->std_gibbs;
             fitparam[np+i]->Ival = gfittask->Opti->reactions[i]->Ival;
-            fitparam[i]->CSS = 0.0;
-            fitparam[i]->mc95 = 0.0;
-            fitparam[i]->mcSTDEV = 0.0;
+            fitparam[np+i]->CSS = 0.0;
+            fitparam[np+i]->mc95 = 0.0;
+            fitparam[np+i]->mcSTDEV = 0.0;
+
 
 
         }
@@ -229,9 +228,9 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
             fitparam[np+i]->Pname = gfittask->Opti->Lparams[i]->name;
             fitparam[np+i]->Fval = gfittask->Opti->Lparams[i]->EV;
             fitparam[np+i]->Ival = gfittask->Opti->Lparams[i]->IV;
-            fitparam[i]->CSS = 0.0;
-            fitparam[i]->mc95 = 0.0;
-            fitparam[i]->mcSTDEV = 0.0;
+            fitparam[np+i]->CSS = 0.0;
+            fitparam[np+i]->mc95 = 0.0;
+            fitparam[np+i]->mcSTDEV = 0.0;
         }
     }
 
@@ -254,9 +253,6 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         TotalSumSquares += pow( (gfittask->measured_values_v[i] - mean), 2);
     }
     coeff_of_determination = 1 - ResSumSquares / TotalSumSquares;
-
-
-
 
     // Pearson Chi Square test
     Pearsons_chi_square = 0.;
@@ -883,14 +879,12 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
 //            string path = gpf->OutputDirPath() + "myScatter_all.txt";
 //            myScatter_all.open(path.c_str());
 
-            ofstream log;
-            log.open(gpf->FITLogFile().c_str());
 
-//        for( i=0; i<(number_of_measurements * num_of_MC_runs); i++ )
-//        {
-//            scatter_all[i] = get_rand();
+        for( i=0; i<(number_of_measurements * num_of_MC_runs); i++ )
+        {
+            scatter_all[i] = get_rand();
 //            myScatter_all << " scatter_all["<<i<<"] : "<< scatter_all[i] <<endl;
-//        }
+        }
 //            myScatter_all.close();
 
 
@@ -901,7 +895,7 @@ pid_ = 0;
     {
 //        sum_of_squares_MC = 0.;
 
-        log << " #MC: " << imc << endl;
+        gpf->flog << " #MC: " << imc << endl;
         cout << " #MC: " << imc << endl;
 
         for( i=0; i<number_of_measurements; i++ )
@@ -1027,7 +1021,7 @@ pid_ = 0;
         }
         gpf->fstat << endl;
         gpf->fstat.close();
-        log.close();
+
 
 //        ofstream gpf->fmc;
 //        string path2 = gpf->OutputDirPath() + "gpf->fmc.csv";
@@ -1089,6 +1083,7 @@ pid_ = 0;
             fitparam[j]->mcSTDEV = SD_Fparam[j];
             p++;
         }
+        p--;
 
         for( j=0; j<n_Rparam; j++ ) // cols
         {

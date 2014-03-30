@@ -114,12 +114,7 @@ public:
 
     optimization *Opti; ///< pointer to optimization
 
-
-
     void test();
-
-//    /// Monte Carlo flag: if true, then the MPI commands within the objective function call will not be executed. Instead, the loop over Monte Carlo runs is parallelized
-//    bool MC_MPI;
 
     double weighted_Tfun_sum_of_residuals;
 
@@ -127,8 +122,6 @@ public:
     bool NormParams;
 
     static TGfitTask* gft;   ///< static pointer to this class
-
-//    ResPrint* print;
 
     // indexes used in the dynamic functions//
     vector<int> EXPndx, COMPndx, PHndx, PHPndx, PAndx, NEFndx;
@@ -192,14 +185,11 @@ public:
     /// Computed residuals
     double_v residuals_v; // measured - calculated residuals
     double mean_reisdulas;
-//    double_v relative_residuals_v; // 100*(measured-calculated)/measured in %
     double_v Weighted_Tfun_residuals_v; // Target function "residuals"
     double_v Tfun_residuals_v;
     double_v weights; // weights
-//    double_v Tuckey_weights; // hoding the Tuckey weights
 
     int number_of_residuals;
-
 
    TGfitTask ();   ///< Constructor
 
@@ -213,24 +203,28 @@ public:
    */
    void run_optim ();
 
-
    /**
    * Gets the sum of residuals based on the Objective and target functions. This value is minimized by the fitter.
    * @author DM
    * @date 24.07.2013
    */
-   void get_sum_of_residuals (double &residual);
    double get_sum_of_residuals( );
-//   void get_sum_of_residuals (double &residual, TargetFunction *objfun);
 
    /**
-   * Gets the residual from one experiment (exp index) and based on one comparison option (obj index in Tfun->objfun[obj])
+   * Gets the residual from one experiment (exp index) and based on one comparison option (objfun)
    * @param exp index of experiment
    * @author DM
    * @date 30.01.2014
    */
    double get_residual (int exp, TargetFunction::obj_fun &objfun, int &count);
-   void get_gems_calcprop (int exp, TargetFunction::obj_fun &addout );
+
+   /**
+   * Gets the ADDOUT calculated properties
+   * @param exp index of experiment
+   * @author DM
+   * @date 25.03.2014
+   */
+   void get_addout_calcprop (int exp, TargetFunction::obj_fun &addout );
 
    /**
    * Adds the Monte Carlo Scatter to the measured values
@@ -247,12 +241,23 @@ public:
    */
    int get_number_of_residuals( );
 
+   /**
+    * @brief set_average_objfun Sets the average measured value for each objfun in aTfun[i].objfun[j].meas_average
+    * @author DM
+    * @date 30.10.2013
+    */
    void set_average_objfun ();
 
+   /**
+    * @brief Ainit_optim initializes the optimization inside the Monte Carlo function
+    * @param optv_ vector of optimized parameters
+    * @author DM
+    * @date 30.10.2013
+    */
    void Ainit_optim (std::vector<double> &optv_);
 
    /**
-   * Stores the values for each experiment after runing GEMS
+   * @brief set_results Stores the values for each experiment after runing GEMS
    * @author DM
    * @param computed computed value
    * @param measured measured value
@@ -263,9 +268,25 @@ public:
    */
    void set_results ( TGfitTask::TargetFunction::obj_fun &objfun, double computed, double measured, double Weighted_Tfun_residual, double Tfun_residual, double weight );
 
+   /**
+    * @brief set_weights sets the weights for each sample form the database and for each objfun (if present), default weight is 1
+    * @author DM
+    * @date 20.01.2014
+    */
    void set_weights ();
 
+   /**
+    * @brief print_global_results prints the results of the global fitting to fit-results.csv
+    * @author DM
+    * @date 20.01.2014
+    */
    void print_global_results ();
+
+   /**
+    * @brief print_nested_results prints the results of nfun and inverse modeling in fit-inverse-results.csv
+    * @author DM
+    * @date 20.01.2014
+    */
    void print_nested_results ();
 
 };
