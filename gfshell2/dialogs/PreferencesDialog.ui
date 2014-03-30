@@ -11,13 +11,17 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>GEMSFITS Preferences</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../fgui.qrc">
+    <normaloff>:/menu/Icons/RemakeRecordIcon.png</normaloff>:/menu/Icons/RemakeRecordIcon.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
    <item row="0" column="0">
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string>Folder locations</string>
+      <string>Project folders locations</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
@@ -107,7 +111,7 @@
       <item row="2" column="0">
        <widget class="QLabel" name="label_4">
         <property name="text">
-         <string>Select file with the experiments record template</string>
+         <string>Select template file for the experiments record</string>
         </property>
        </widget>
       </item>
@@ -117,7 +121,7 @@
       <item row="1" column="0">
        <widget class="QCheckBox" name="commentsBox">
         <property name="text">
-         <string>Output comments to task input TXT files</string>
+         <string>Add comments to exported task input TXT files</string>
         </property>
        </widget>
       </item>
@@ -136,7 +140,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../fgui.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>

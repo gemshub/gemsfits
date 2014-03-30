@@ -16,6 +16,8 @@
 
 
 
+
+
   
 
   
@@ -201,7 +203,12 @@ experiment independently of <big style="font-weight: bold;"><span style="font-fa
 The former refers to ajusting some parts of the bulk composition of the
 system representing the sample. The latter refers to adjusting the
 temperature, the pressure, or both.<br>
-&nbsp;&nbsp;&nbsp; IMPORTANT: When <big style="font-weight: bold;"><span style="font-family: monospace;">"NFUN"</span></big> is specified in DataTarget section, at least one element in <big><span style="font-family: monospace; font-weight: bold;">"Ptype"</span></big> property object must be marked for fitting. More than one <big style="font-weight: bold;"><span style="font-family: monospace;">NFUN</span></big> entries with different <big><span style="font-family: monospace; font-weight: bold;">"Ptype"</span></big> input properties can be used with caution.<big><small>&nbsp;  </small></big><br>
+&nbsp;&nbsp;&nbsp; IMPORTANT: When <big style="font-weight: bold;"><span style="font-family: monospace;">"NFUN"</span></big> is specified in DataTarget section, at least one element in <big><span style="font-family: monospace; font-weight: bold;">"Ptype"</span></big> property object must be marked for fitting. More than one <big style="font-weight: bold;"><span style="font-family: monospace;">NFUN</span></big> entries with different <big><span style="font-family: monospace; font-weight: bold;">"Ptype"</span></big> input properties can be used with caution.<big><small>&nbsp;  <br>
+<br>
+</small></big><big><small>&nbsp;&nbsp;&nbsp; <a href="gemsfit-useref.html#ADDOUT"><big style="font-weight: bold;"><span style="font-family: monospace;">"ADDOUT"</span></big></a>: additional output, a list [] of terms {} for additional output in the results file. The options are the same as for <big style="font-weight: bold;"><span style="font-family: monospace;">OFUN</span></big> with an additional <big style="font-family: monospace; font-weight: bold;">"SRC"</big> key whose value can be:</small></big><br>
+<big><small>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <big style="font-weight: bold;"><span style="font-family: monospace;">"calc"</span></big> if the aditional output is not present in the database but can be retreived trough GEMS claculation<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <big style="font-family: monospace; font-weight: bold;">"meas"</big> if the additional output is present in the database but was not used in the OFUN <br>
+</small></big>
 <big style="font-weight: bold;"><span style="font-family: monospace;"></span></big><big style="font-weight: bold;"><span style="font-family: monospace;">
 </span></big>&nbsp;<br>
 &nbsp;&nbsp;&nbsp; The comparison options are:<br>

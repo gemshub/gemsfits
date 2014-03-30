@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>GEMSFITS Results Viewer</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../fgui.qrc">
+    <normaloff>:/modules/Icons/FitSpaceModuleIcon.png</normaloff>:/modules/Icons/FitSpaceModuleIcon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -20,36 +24,36 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="tabFitResults">
-       <attribute name="title">
-        <string>Fit Results</string>
-       </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout"/>
-      </widget>
       <widget class="QWidget" name="tabFitParams">
        <attribute name="title">
-        <string>Fit Params</string>
-       </attribute>
-      </widget>
-      <widget class="QWidget" name="tabMcResults">
-       <attribute name="title">
-        <string>Mc Resuts</string>
-       </attribute>
-      </widget>
-      <widget class="QWidget" name="tabPlotData">
-       <attribute name="title">
-        <string>Plot Data</string>
+        <string>Fitted Parameters</string>
        </attribute>
       </widget>
       <widget class="QWidget" name="tabStatistic">
        <attribute name="title">
-        <string>Statistic</string>
+        <string>Statistics</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
          <widget class="QTextEdit" name="textStatistic"/>
         </item>
        </layout>
+      </widget>
+      <widget class="QWidget" name="tabMcResults">
+       <attribute name="title">
+        <string>Monte Carlo Results</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="tabFitResults">
+       <attribute name="title">
+        <string>Fit Results</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout"/>
+      </widget>
+      <widget class="QWidget" name="tabPlotData">
+       <attribute name="title">
+        <string>Plot Setup</string>
+       </attribute>
       </widget>
      </widget>
     </item>
@@ -70,9 +74,61 @@
     </property>
     <addaction name="actionOpen_File"/>
     <addaction name="actionSave_File"/>
+    <addaction name="actionPrint"/>
+    <addaction name="separator"/>
     <addaction name="actionClose"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionPlot_Results"/>
+    <addaction name="actionPlot_Residuals"/>
+    <addaction name="actionPlot_Quantiles"/>
+    <addaction name="separator"/>
+    <addaction name="actionCalculator"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout_Results_window"/>
+    <addaction name="actionAbout_Graph_Dialog"/>
+    <addaction name="actionAbout_GEMSFITS"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="action_Find"/>
+    <addaction name="separator"/>
+    <addaction name="action_Copy"/>
+    <addaction name="action_Paste"/>
+    <addaction name="actionClear"/>
+    <addaction name="separator"/>
+    <addaction name="actionAdd_Columns"/>
+    <addaction name="actionDelete_Columns"/>
+    <addaction name="actionMark_Columns_as_X"/>
+    <addaction name="actionMark_Columns_as_Y"/>
+   </widget>
+   <widget class="QMenu" name="menuDatabase">
+    <property name="title">
+     <string>Database</string>
+    </property>
+    <addaction name="action_Insert"/>
+    <addaction name="separator"/>
+    <addaction name="actionNext"/>
+    <addaction name="actionPrevious"/>
+    <addaction name="actionUpdate"/>
+    <addaction name="actionDelete"/>
+    <addaction name="separator"/>
+    <addaction name="actionExport"/>
+   </widget>
    <addaction name="menuFiles"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuDatabase"/>
+   <addaction name="menuTools"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -86,24 +142,191 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionOpen_File"/>
+   <addaction name="actionSave_File"/>
+   <addaction name="separator"/>
+   <addaction name="actionPrevious"/>
+   <addaction name="actionNext"/>
+   <addaction name="action_Find"/>
+   <addaction name="action_Insert"/>
+   <addaction name="actionUpdate"/>
+   <addaction name="actionDelete"/>
+   <addaction name="separator"/>
+   <addaction name="actionPlot_Results"/>
+   <addaction name="actionPlot_Residuals"/>
+   <addaction name="separator"/>
+   <addaction name="actionAbout_Results_window"/>
   </widget>
   <action name="actionOpen_File">
    <property name="icon">
     <iconset resource="../fgui.qrc">
-     <normaloff>:/menu/Icons/ShowGEMResultsIcon.png</normaloff>:/menu/Icons/ShowGEMResultsIcon.png</iconset>
+     <normaloff>:/menu/Icons/ShowFilesIcon.png</normaloff>:/menu/Icons/ShowFilesIcon.png</iconset>
    </property>
    <property name="text">
-    <string>Open File...</string>
+    <string>Load from File...</string>
    </property>
   </action>
   <action name="actionSave_File">
+   <property name="icon">
+    <iconset resource="../fgui.qrc">
+     <normaloff>:/menu/Icons/SaveCurrentRecordIcon.png</normaloff>:/menu/Icons/SaveCurrentRecordIcon.png</iconset>
+   </property>
    <property name="text">
-    <string>Save File...</string>
+    <string>Save to File...</string>
    </property>
   </action>
   <action name="actionClose">
    <property name="text">
     <string>Close</string>
+   </property>
+  </action>
+  <action name="action_Insert">
+   <property name="icon">
+    <iconset resource="../fgui.qrc">
+     <normaloff>:/menu/Icons/NewCreateRecordIcon.png</normaloff>:/menu/Icons/NewCreateRecordIcon.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Add Record</string>
+   </property>
+  </action>
+  <action name="actionNext">
+   <property name="icon">
+    <iconset resource="../fgui.qrc">
+     <normaloff>:/menu/Icons/DisplayNextRecordIcon.png</normaloff>:/menu/Icons/DisplayNextRecordIcon.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Next</string>
+   </property>
+  </action>
+  <action name="actionPrevious">
+   <property name="icon">
+    <iconset resource="../fgui.qrc">
+     <normaloff>:/menu/Icons/DisplayPrevRecordIcon.png</normaloff>:/menu/Icons/DisplayPrevRecordIcon.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Previous</string>
+   </property>
+  </action>
+  <action name="actionUpdate">
+   <property name="icon">
+    <iconset resource="../fgui.qrc">
+     <normaloff>:/menu/Icons/NewCloneRecordIcon.png</normaloff>:/menu/Icons/NewCloneRecordIcon.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Update</string>
+   </property>
+  </action>
+  <action name="actionDelete">
+   <property name="icon">
+    <iconset resource="../fgui.qrc">
+     <normaloff>:/menu/Icons/DeleteCurrentRecordIcon.png</normaloff>:/menu/Icons/DeleteCurrentRecordIcon.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Delete</string>
+   </property>
+  </action>
+  <action name="actionExport">
+   <property name="text">
+    <string>&amp;Export...</string>
+   </property>
+  </action>
+  <action name="action_Copy">
+   <property name="text">
+    <string>&amp;Copy</string>
+   </property>
+  </action>
+  <action name="action_Paste">
+   <property name="text">
+    <string>&amp;Paste</string>
+   </property>
+  </action>
+  <action name="actionPlot_Results">
+   <property name="icon">
+    <iconset resource="../fgui.qrc">
+     <normaloff>:/modules/Icons/RTparmModuleIcon.png</normaloff>:/modules/Icons/RTparmModuleIcon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Plot Fit Results</string>
+   </property>
+  </action>
+  <action name="actionPlot_Residuals">
+   <property name="icon">
+    <iconset resource="../fgui.qrc">
+     <normaloff>:/modules/Icons/GtDemoModuleIcon.png</normaloff>:/modules/Icons/GtDemoModuleIcon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Plot Residuals</string>
+   </property>
+  </action>
+  <action name="actionAbout_Results_window">
+   <property name="icon">
+    <iconset resource="../fgui.qrc">
+     <normaloff>:/menu/Icons/ShowHelpWindowIcon.png</normaloff>:/menu/Icons/ShowHelpWindowIcon.png</iconset>
+   </property>
+   <property name="text">
+    <string>About Results Window</string>
+   </property>
+  </action>
+  <action name="actionAbout_Graph_Dialog">
+   <property name="text">
+    <string>About Graph Dialog</string>
+   </property>
+  </action>
+  <action name="actionAbout_GEMSFITS">
+   <property name="text">
+    <string>About GEMSFITS</string>
+   </property>
+  </action>
+  <action name="actionPrint">
+   <property name="text">
+    <string>Print</string>
+   </property>
+  </action>
+  <action name="actionPlot_Quantiles">
+   <property name="text">
+    <string>Plot Quantiles</string>
+   </property>
+  </action>
+  <action name="actionCalculator">
+   <property name="icon">
+    <iconset resource="../fgui.qrc">
+     <normaloff>:/menu/Icons/CalculateRecordDataIcon.png</normaloff>:/menu/Icons/CalculateRecordDataIcon.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Cell Calculator</string>
+   </property>
+  </action>
+  <action name="actionAdd_Columns">
+   <property name="text">
+    <string>Add Columns...</string>
+   </property>
+  </action>
+  <action name="actionDelete_Columns">
+   <property name="text">
+    <string>Delete Columns...</string>
+   </property>
+  </action>
+  <action name="actionMark_Columns_as_X">
+   <property name="text">
+    <string>Mark Columns as X...</string>
+   </property>
+  </action>
+  <action name="actionMark_Columns_as_Y">
+   <property name="text">
+    <string>Mark Columns as Y...</string>
+   </property>
+  </action>
+  <action name="actionClear">
+   <property name="text">
+    <string>Clear</string>
+   </property>
+  </action>
+  <action name="action_Find">
+   <property name="icon">
+    <iconset resource="../fgui.qrc">
+     <normaloff>:/menu/Icons/SelectDisplayRecordIcon.png</normaloff>:/menu/Icons/SelectDisplayRecordIcon.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Find...</string>
    </property>
   </action>
  </widget>

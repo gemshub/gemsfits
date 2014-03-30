@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>GEMSFITS v.0.1</string>
+   <string>GEMSFITS: Optimization of GEM Input Parameters</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../fgui.qrc">
+    <normaloff>:/modules/Icons/FitSpaceModuleIcon.png</normaloff>:/modules/Icons/FitSpaceModuleIcon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
@@ -119,7 +123,7 @@
             <item>
              <widget class="QLabel" name="label_5">
               <property name="text">
-               <string>Search</string>
+               <string>Find</string>
               </property>
              </widget>
             </item>
@@ -439,6 +443,7 @@
     </property>
     <addaction name="action_Run_test"/>
     <addaction name="action_Show_Results"/>
+    <addaction name="actionSave_Results_to_Database"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -515,10 +520,10 @@
    <addaction name="actionCreate_New"/>
    <addaction name="actionUpdate_Test"/>
    <addaction name="action_Insert"/>
-   <addaction name="action_Update"/>
    <addaction name="actionDelete"/>
    <addaction name="separator"/>
    <addaction name="action_Run_test"/>
+   <addaction name="action_Update"/>
    <addaction name="action_Show_Results"/>
    <addaction name="separator"/>
    <addaction name="actionHelp"/>
@@ -647,7 +652,7 @@
      <normaloff>:/menu/Icons/CalculateBCCIcon.png</normaloff>:/menu/Icons/CalculateBCCIcon.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Test Edited Record Format</string>
+    <string>&amp;Test Record Format</string>
    </property>
   </action>
   <action name="actionBackup_to_JSON">
@@ -709,6 +714,10 @@
    </property>
   </action>
   <action name="action_Preferences">
+   <property name="icon">
+    <iconset resource="../fgui.qrc">
+     <normaloff>:/menu/Icons/RemakeRecordIcon.png</normaloff>:/menu/Icons/RemakeRecordIcon.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Preferences ...</string>
    </property>
@@ -756,6 +765,10 @@
    </property>
   </action>
   <action name="action_Config_Project">
+   <property name="icon">
+    <iconset resource="../fgui.qrc">
+     <normaloff>:/modules/Icons/ModelingProjectIcon.png</normaloff>:/modules/Icons/ModelingProjectIcon.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Reconfigure Project...</string>
    </property>
@@ -793,6 +806,15 @@
    </property>
    <property name="text">
     <string>Fit &amp;View Mode</string>
+   </property>
+  </action>
+  <action name="actionSave_Results_to_Database">
+   <property name="icon">
+    <iconset resource="../fgui.qrc">
+     <normaloff>:/menu/Icons/SaveCurrentRecordIcon.png</normaloff>:/menu/Icons/SaveCurrentRecordIcon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save Results to Database</string>
    </property>
   </action>
  </widget>

@@ -14,7 +14,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>GEMSFITS project setup</string>
+   <string>GEMSFITS Project Setup</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../fgui.qrc">
+    <normaloff>:/modules/Icons/ModelingProjectIcon.png</normaloff>:/modules/Icons/ModelingProjectIcon.png</iconset>
   </property>
   <property name="modal">
    <bool>false</bool>
@@ -107,7 +111,7 @@
    <item row="10" column="0">
     <widget class="QLabel" name="label_6">
      <property name="text">
-      <string>Fitting task cases database collection name</string>
+      <string>Fitting tasks database collection name</string>
      </property>
     </widget>
    </item>
@@ -172,7 +176,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../fgui.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>

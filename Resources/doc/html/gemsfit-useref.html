@@ -14,6 +14,7 @@
 
 
 
+
   
 
   
@@ -467,16 +468,16 @@
       </big></td>
     </tr>
     <tr>
-      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MF<br>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MR<br>
 
       </big></td>
-      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="MF"></a>MF<br>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="MF"></a>MR<br>
 
       </big></td>
       <td style="vertical-align: top; font-family: monospace;"><big>string<br>
 
       </big></td>
-      <td style="vertical-align: top; font-family: monospace;"><big>molar fraction formula<br>
+      <td style="vertical-align: top; font-family: monospace;"><big>molar ratio formula<br>
 
       </big></td>
       <td style="vertical-align: top; font-family: monospace;"><big>Si/Si+Ca<br>
@@ -1053,6 +1054,57 @@
       <td style="vertical-align: top; font-family: monospace;"><big>objective function weight<br>
       </big></td>
       <td style="vertical-align: top; font-family: monospace;"><big>default 1<br>
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>NFUN<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="NFUN"></a>NFUN<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>list of nested functions (data to compare) same options as for OFUN<br>
+      </big></td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ptype<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="Ptype"></a>Ptype<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>input ptoperty type adjusted by NFUN (can be "bIC" or "T-P")<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>has to be specified in NFUN<br>
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>ADDOUT<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="ADDOUT"></a>ADDOUT<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>array<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>list of aditional output to be written in the results csv file. Same options as for OFUN apply<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big><br>
+      </big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;"><big>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SRC<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace; font-weight: bold;"><big><a name="Otype"></a>SRC<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>string<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>type
+of outpud data, can be "calc" for data not present in the database but
+which can be retreived form GEM calculation, or "meas" for values
+present in the database.<br>
+      </big></td>
+      <td style="vertical-align: top; font-family: monospace;"><big>Has to be specified in ADDOUT<br>
       </big></td>
     </tr>
 <tr>

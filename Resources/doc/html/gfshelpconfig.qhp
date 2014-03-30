@@ -42,6 +42,7 @@
         <keyword name="-run" ref="howto-run-gemsfit.html#-run"/>
         <keyword name="1._Prepare_your_data_" ref="howto-csvtoejdb.html#1._Prepare_your_data_"/>
         <keyword name="5._Optimization_algorithm_and_statistics" ref="gemsfit-input-file.html#5._Optimization_algorithm_and_statistics"/>
+        <keyword name="ADDOUT" ref="gemsfit-useref.html#ADDOUT"/>
         <keyword name="Basic_Statistics" ref="gemsfit-statistics.html#Basic_Statistics"/>
         <keyword name="CN" ref="gemsfit-useref.html#CN"/>
         <keyword name="CSVTOEJDB_INTRO" ref="howto-csvtoejdb.html#CSVTOEJDB_INTRO"/>
@@ -76,9 +77,12 @@
         <keyword name="Lcoef" ref="gemsfit-useref.html#Lcoef"/>
         <keyword name="MF" ref="gemsfit-useref.html#MF"/>
         <keyword name="Metastability_constraints" ref="gemsfit-useref.html#Metastability_constraints"/>
+        <keyword name="NFUN" ref="gemsfit-useref.html#NFUN"/>
         <keyword name="OFUN" ref="gemsfit-useref.html#OFUN"/>
+        <keyword name="Otype" ref="gemsfit-useref.html#Otype"/>
         <keyword name="Output_and_results" ref="howto-run-gemsfit.html#Output_and_results"/>
         <keyword name="Parameters_to_fit" ref="gemsfit-input-file.html#Parameters_to_fit"/>
+        <keyword name="Ptype" ref="gemsfit-useref.html#Ptype"/>
         <keyword name="Q" ref="gemsfit-useref.html#Q"/>
         <keyword name="RC" ref="gemsfit-useref.html#RC"/>
         <keyword name="RESULTS" ref="howto-csvtoejdb.html#RESULTS"/>
