@@ -1305,9 +1305,9 @@ void Data_Manager::get_db_specs_txt( )
                     break;
             case f_LimitOfDetection: rdar.readArray( "LimitOfDetection",  &LimitOfDetection, 1);
                     break;
-            case f_DataSelect: rdar.readArray( "DataSelect",  DataSelect, 10000);
+            case f_DataSelect: rdar.readArray( "DataSelect",  DataSelect);
                     break;
-            case f_DataTarget: rdar.readArray( "DataTarget",  DataTarget, 10000 );
+            case f_DataTarget: rdar.readArray( "DataTarget",  DataTarget );
                     break;
             case f_SystemFiles: rdar.readArray( "SystemFiles",  inputstr );
                     remove_copy(inputstr.begin(), inputstr.end(), std::back_inserter(result), '\'');
