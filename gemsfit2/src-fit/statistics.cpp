@@ -866,26 +866,65 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
 
     double* scatter_all 	  = new double[ number_of_measurements * num_of_MC_runs ];
 
-        // mersenne twister generator
-        typedef boost::mt19937 RNGType;
-        RNGType rng;
 
-        boost::normal_distribution<> rdist(0.0, SD_of_residuals);
-
-        boost::variate_generator< RNGType, boost::normal_distribution<> > get_rand(rng, rdist);
-
-        // for each MC run generate number_of_measurements random variables
-//            ofstream myScatter_all;
-//            string path = gpf->OutputDirPath() + "myScatter_all.txt";
-//            myScatter_all.open(path.c_str());
-
-
-        for( i=0; i<(number_of_measurements * num_of_MC_runs); i++ )
+    // calculate the stddev of residuals for each individual objfun
+        for (j = 0; j<gfittask->Tfun->objfun.size(); j++)
         {
-            scatter_all[i] = get_rand();
-//            myScatter_all << " scatter_all["<<i<<"] : "<< scatter_all[i] <<endl;
+            v_scatter.push_back(new statistics::scatter);
+            v_scatter[j]->stdev_res = 0.0;
+            v_scatter[j]->mean = 0.0;
+            v_scatter[j]->nr = 0;
+
+            for (i=0; i<gfittask->aTfun.size(); i++)
+            {
+                if (gfittask->aTfun[i].objfun[j].isComputed)
+                {
+                    v_scatter[j]->mean += gfittask->aTfun[i].objfun[j].results.residual / gfittask->aTfun[i].objfun[j].results.measured_value;
+                    v_scatter[j]->nr++;
+                }
+            }
+            v_scatter[j]->mean = v_scatter[j]->mean / v_scatter[j]->nr;
+
         }
-//            myScatter_all.close();
+
+        for (j = 0; j<gfittask->Tfun->objfun.size(); j++)
+        {
+            for (i = 0; i< num_of_MC_runs * v_scatter[j]->nr; i++)
+            {
+                v_scatter[j]->obj_scatter.push_back(0.0);
+            }
+        }
+
+        for (j = 0; j<gfittask->Tfun->objfun.size(); j++)
+        {
+            for (i=0; i<gfittask->aTfun.size(); i++)
+            {
+                if (gfittask->aTfun[i].objfun[j].isComputed)
+                {
+                    v_scatter[j]->stdev_res += pow (((gfittask->aTfun[i].objfun[j].results.residual/gfittask->aTfun[i].objfun[j].results.measured_value) - v_scatter[j]->mean), 2);
+                }
+            }
+            v_scatter[j]->stdev_res = sqrt(v_scatter[j]->stdev_res / v_scatter[j]->nr);
+        }
+
+// get the scatter values for each individual objfun for all MC runs
+        for (j= 0; j<gfittask->Tfun->objfun.size(); j++)
+        {
+            // mersenne twister generator
+            typedef boost::mt19937 RNGType;
+            RNGType rng;
+
+            boost::normal_distribution<> rdist(v_scatter[j]->mean, v_scatter[j]->stdev_res);
+
+            boost::variate_generator< RNGType, boost::normal_distribution<> > get_rand(rng, rdist);
+
+            for( i=0; i<(v_scatter[j]->nr * num_of_MC_runs); i++ )
+            {
+                 v_scatter[j]->obj_scatter[i] = get_rand();
+            }
+        }
+
+
 
 
 pid_ = 0;
@@ -898,10 +937,21 @@ pid_ = 0;
         gpf->flog << " #MC: " << imc << endl;
         cout << " #MC: " << imc << endl;
 
-        for( i=0; i<number_of_measurements; i++ )
+        i= 0;
+        // make the scatter vector by adding the scatter value for each objfun for the #imc mc run
+        for (j = 0; j<v_scatter.size(); j++)
         {
-            scatter_v[i] = scatter_all[ (imc/p_ * number_of_measurements + i) ];
+            for (unsigned n = imc*v_scatter[j]->nr; n < ((imc*v_scatter[j]->nr) + v_scatter[j]->nr); n++)
+            {
+                scatter_v[i] = v_scatter[j]->obj_scatter[n];
+                i++;
+            }
         }
+
+//        for( i=0; i<number_of_measurements; i++ )
+//        {
+//            scatter_v[i] = scatter_all[ (imc/p_ * number_of_measurements + i) ];
+//        }
 
 
 //        ofstream myScatter_pid_0;
@@ -921,27 +971,22 @@ pid_ = 0;
         if (MCbool == 1) // the new simulated values are from scatter + computed values
             for (i=0; i<number_of_measurements; i++)
             {
-                MC_computed_v[i] = scatter_v[i] + gfittask->computed_values_v[i];
+                MC_computed_v[i] = scatter_v[i]*gfittask->measured_values_v[i] + gfittask->computed_values_v[i];
             }
         else
             if (MCbool == 2) // the new simulated values are from scatter + measured values
             {
                 for (i=0; i<number_of_measurements; i++)
                 {
-                    MC_computed_v[i] = scatter_v[i] + gfittask->measured_values_v[i];
+                    MC_computed_v[i] = scatter_v[i]*gfittask->measured_values_v[i] + gfittask->measured_values_v[i];
                 }
             }
 
         gfittask->add_MC_scatter(MC_computed_v);
 
 
-//        delete[] simulated_measurements;
-
-
-        // perform optimization
-//            gfittask->Opti->OptLoBounds = gfittask->Opti->LB;
-//            gfittask->Opti->OptUpBounds = gfittask->Opti->UB;
         optv_ = optv_backup;
+        optv_ = gfittask->Opti->opt;
 
         gfittask->Ainit_optim( optv_ ); //, sum_of_squares_MC);
 
@@ -971,6 +1016,9 @@ pid_ = 0;
 
         id++;
     }// end Monte Carlo for-loop
+
+    double residuals_sys;
+    residuals_sys = gfittask->get_sum_of_residuals( );
 
         double StandardDeviation = 0.;
         arma::vec MCparams( num_of_MC_runs );
@@ -1027,6 +1075,8 @@ pid_ = 0;
 //        string path2 = gpf->OutputDirPath() + "gpf->fmc.csv";
 //        gpf->fmc.open(path2.c_str(), ios::trunc);
 
+
+        // print mc-results.csv
         gpf->fmc << "MC_run,";
         int p=0;
 

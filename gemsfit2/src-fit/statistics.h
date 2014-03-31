@@ -62,6 +62,16 @@ class statistics
 
     vector<parameters*> fitparam;
 
+    struct scatter
+    {
+        vector<double> obj_scatter;
+        double stdev_res;
+        double mean;
+        int nr;
+    };
+
+    vector<scatter*> v_scatter;
+
     double Weighted_mean_res;
     double means_res;
     double Weighted_max_res;

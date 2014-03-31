@@ -231,9 +231,9 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     gpf->flog << "~ m.count.= " << master_counter << " sum.res.= " << residuals_sys << endl;
     cout << "~ m.count.= " << master_counter << " sum.res.= " << residuals_sys << endl;
 
-    for (unsigned int i = 0; i < sys->aTfun.size(); i++)
+    for (unsigned j = 0; j < sys->Tfun->objfun.size(); j++)
     {
-        for (unsigned j = 0; j < sys->aTfun[i].objfun.size(); j++)
+        for (unsigned int i = 0; i < sys->aTfun.size(); i++)
         {
             if (sys->aTfun[i].objfun[j].isComputed)
             {
@@ -356,9 +356,9 @@ void tsolmod_wrap( double &residual, const std::vector<double> &opt, TGfitTask *
     gpf->flog << "~ m.count.= " << master_counter << " sum.res.= " << residual << endl;
     cout << "~ m.count.= " << master_counter << " sum.res.= " << residual << endl;
 
-    for (unsigned int i = 0; i < sys->aTfun.size(); i++)
+    for (unsigned j = 0; j < sys->Tfun->objfun.size(); j++)
     {
-        for (unsigned j = 0; j < sys->aTfun[i].objfun.size(); j++)
+        for (unsigned int i = 0; i < sys->aTfun.size(); i++)
         {
             if (sys->aTfun[i].objfun[j].isComputed)
             {

@@ -836,10 +836,10 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFun
             computed_value = sys->NodT[i]->Get_cDC(DCndx);// for species in other phases - mole fraction
         } else
         if (sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit == keys::log_molfrac)
-            computed_value = log10(computed_value);
+            computed_value = log10(sys->NodT[i]->Get_cDC(DCndx));
         else
         if (sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit == keys::ln_molfrac)
-            computed_value = log(computed_value);
+            computed_value = log(sys->NodT[i]->Get_cDC(DCndx));
         else
         {
             computed_value = sys->NodT[i]->Get_cDC(DCndx);
@@ -855,7 +855,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFun
 
         if (objfun.exp_unit == keys::loga)
             computed_value = sys->NodT[i]->Get_aDC( DCndx, false );
-        else computed_value = sys->NodT[i]->Get_aDC( DCndx, true );
+        else computed_value = sys->NodT[i]->Get_aDC( DCndx, false );;
     }
       else { cout << "Error in target functions line 685 "; exit(1);}
 
