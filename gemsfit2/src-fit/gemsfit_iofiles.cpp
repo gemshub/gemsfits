@@ -805,7 +805,7 @@ cout<< vFormats[ii].format << endl;
 //----------------------------------------------------------------
 //----- subfolder and default file names  ------------------------
 string INPUT_DIR = "input/";
-string OUTPUT_DIR = "work/";
+string OUTPUT_DIR = "output/";
 string RESULT_DIR = "results/";
 //const char *OPT_PARAM_FILE = "gemsfit2_input.dat";
 string FIT_CSV_FILE = "fit-results.csv";
