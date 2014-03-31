@@ -1,3 +1,4 @@
+#include <iostream>
 #include <QFileDialog>
 #include <QCloseEvent>
 #include "FitResultsWindow.h"
@@ -10,20 +11,63 @@ FitResultsWindow::FitResultsWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::FitResultsWindow)
 {
+
     ui->setupUi(this);
     pDia = this;
+    TMatrixDelegate *deleg;
 
-
-    // set up 1 tab
-    modelFitResults = new TMatrixModel( "fit-results", 2, this );
-    tableFitResults = new TMatrixTable(ui->tabFitResults);
-    //TMatrixDelegate *deleg = new TMatrixDelegate(  this);
-    //tableFitResults->setItemDelegate(deleg);
+    // set up FIT_CSV_FILE
+    modelFitResults = new TMatrixModel( "fit-results", 2 );
+    tableFitResults = new TMatrixTable(0/*ui->tabFitResults*/);
+    deleg = new TMatrixDelegate( 2, this);
+    tableFitResults->setItemDelegate(deleg);
     tableFitResults->setModel(modelFitResults);
-    ui->horizontalLayout->addWidget(tableFitResults);
+    ui->verticalLayout_6->addWidget(tableFitResults);
+
+    // set up FIT_SENS_FILE
+    modelSensitivity = new TMatrixModel( "meas-data-sensitivity", 1 );
+    tableSensitivity = new TMatrixTable(0/*ui->tabSensitivity*/);
+    deleg = new TMatrixDelegate( 1, this);
+    tableSensitivity->setItemDelegate(deleg);
+    tableSensitivity->setModel(modelSensitivity);
+    ui->verticalLayout_7->addWidget(tableSensitivity);
+
+    // set up FIT_PARAM_FILE
+    modelFitParams = new TMatrixModel( "fit-params", 3, 0 );
+    tableFitParams = new TMatrixTable(  /*ui->tabFitParams*/);
+    deleg = new TMatrixDelegate( 3, this);
+    tableFitParams->setItemDelegate(deleg);
+    tableFitParams->setModel(modelFitParams);
+    ui->verticalLayout_4->addWidget(tableFitParams);
+
+    // set up FIT_SENS_FILE
+    modelQQplot = new TMatrixModel( "qq-plot-data", 1 );
+    tableQQplot = new TMatrixTable( 0 /*ui->tabQuantiles*/);
+    deleg = new TMatrixDelegate( 1, this);
+    tableQQplot->setItemDelegate(deleg);
+    tableQQplot->setModel(modelQQplot);
+    ui->verticalLayout_8->addWidget(tableQQplot);
+
+    // set up FIT_NFUN_FILE
+    modelFitInverse = new TMatrixModel( "fit-inverse-results", 4, 0 );
+    tableFitInverse = new TMatrixTable( 0 /*ui->tabInverse*/);
+    deleg = new TMatrixDelegate( 4, this);
+    tableFitInverse->setItemDelegate(deleg);
+    tableFitInverse->setModel(modelFitInverse);
+    ui->verticalLayout_9->addWidget(tableFitInverse);
+
+    // set up FIT_MC_FILE
+    modelMCResults = new TMatrixModel( "mc-results", 0, 0 );
+    tableMCResults = new TMatrixTable( 0 /*ui->tabMcResults*/);
+    deleg = new TMatrixDelegate( 0, this);
+    tableMCResults->setItemDelegate(deleg);
+    tableMCResults->setModel(modelMCResults);
+    ui->verticalLayout_5->addWidget(tableMCResults);
+
+    fFitStatistic = "sum-statistics.txt";   // name file  FIT_STATISTIC
+    fFitLogfile = "gemsfit2.log";  // name file  FIT_LOGFILE
 
     setActions();
-
 }
 
 
@@ -38,20 +82,54 @@ void FitResultsWindow::closeEvent(QCloseEvent* ev)
        ev->accept();
 }
 
+void FitResultsWindow::ShowResults( const string& key )
+{
+
+   show();
+}
+
+void FitResultsWindow::ShowResults( const string& key, const QString& dir )
+{
+   pLineTask->setText( trUtf8( key.c_str() ));
+   CmOpenFile( dir );
+   show();
+}
+
+
 //  Connect all actions
 void FitResultsWindow::setActions()
 {
     connect( ui->actionOpen_File, SIGNAL( triggered()), this, SLOT(CmOpenFile()));
     connect( ui->actionSave_File, SIGNAL( triggered()), this, SLOT(CmSaveFile()));
     connect( ui->actionClose, SIGNAL( triggered()), this, SLOT(close()));
+
+    pLineTask = new QLineEdit( ui->toolBarKey );
+    pLineTask->setEnabled( true );
+    pLineTask->setFocusPolicy( Qt::ClickFocus );
+    pLineTask->setReadOnly( true );
+    pLineTask->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
+    ui->toolBarKey->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
+    ui->toolBarKey->addWidget( pLineTask ); // setStretchableWidget( pLine );
+
 }
 
-void FitResultsWindow::CmOpenFile()
+void FitResultsWindow::CmOpenFile( const QString& dir_ )
 {
-  // select directory
-    QString dir = QFileDialog::getExistingDirectory(this, "Select work/output  Directory (Only test!!!)",
+   QString dir;
+   if( dir_.isEmpty() )
+   { // select directory
+     dir = QFileDialog::getExistingDirectory(this, "Select work/output  Directory (Only test!!!)",
      "",  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
+   } else
+      dir = dir_;
+
   modelFitResults->matrixFromCsvFile( dir );
+  modelFitParams->matrixFromCsvFile( dir );
+  modelMCResults->matrixFromCsvFile( dir );
+  modelSensitivity->matrixFromCsvFile( dir );
+  modelQQplot->matrixFromCsvFile( dir );
+  modelFitInverse->matrixFromCsvFile( dir );
+  editFiledsFromFile( dir );
 }
 
 void FitResultsWindow::CmSaveFile()
@@ -60,4 +138,66 @@ void FitResultsWindow::CmSaveFile()
       QString dir = QFileDialog::getExistingDirectory(this, "Select work/output  Directory (Only test!!!)",
        "",  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
     modelFitResults->matrixToCsvFile( dir );
+    modelFitParams->matrixToCsvFile( dir );
+    modelMCResults->matrixToCsvFile( dir );
+    modelSensitivity->matrixToCsvFile( dir );
+    modelQQplot->matrixToCsvFile( dir );
+    modelFitInverse->matrixToCsvFile( dir );
+    editFiledsToFile( dir );
+}
+
+void FitResultsWindow::editFiledsFromFile( const QString& dir )
+{
+    QString valCsv;
+
+    // read file  FIT_STATISTIC
+    QString fpath = dir + "/" + fFitStatistic;
+    QFile tmpStriam(fpath);
+    if(tmpStriam.open( QIODevice::ReadOnly ))
+    {
+      valCsv = tmpStriam.readAll();
+      ui->textStatistic->setText(valCsv);
+      tmpStriam.close();
+    }
+    else
+      {
+        cout << "error open file " << fpath.toUtf8().data() << endl;
+      }
+
+    // read file  FIT_LOGFILE
+    fpath = dir + "/" + fFitLogfile;
+    QFile tmpStriam1(fpath);
+    if(tmpStriam1.open( QIODevice::ReadOnly ))
+    {
+      valCsv = tmpStriam1.readAll();
+      ui->textEdit->setText(valCsv);
+      tmpStriam1.close();
+    }
+    else
+      {
+        cout << "error open file " << fpath.toUtf8().data() << endl;
+      }
+
+}
+
+void FitResultsWindow::editFiledsToFile( const QString& dir )
+{
+    // write file  FIT_STATISTIC
+    QString valCsv = ui->textStatistic->toPlainText();
+    QString fpath = dir + "/" + fFitStatistic;
+    QFile tmpStriam(fpath);
+    if(tmpStriam.open( QIODevice::WriteOnly|QIODevice::Truncate))
+    {
+      tmpStriam.write(valCsv.toUtf8());
+      tmpStriam.close();
+    }
+    // write file  FIT_LOGFILE
+    valCsv = ui->textEdit->toPlainText();
+    fpath = dir + "/" + fFitLogfile;
+    QFile tmpStriam1(fpath);
+    if(tmpStriam1.open( QIODevice::WriteOnly|QIODevice::Truncate))
+    {
+      tmpStriam1.write(valCsv.toUtf8());
+      tmpStriam1.close();
+    }
 }

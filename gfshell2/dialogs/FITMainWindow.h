@@ -60,6 +60,8 @@ class FITMainWindow : public QMainWindow
     TFile  gemsLstFile; ///< Path to GEMS3K files
     TFile  fitTaskDir;  ///< Path to the database file
 
+
+    string lastCalcRecordKey;  ///< Last calculated record key
     auto_ptr<TNode> aNode;
     TNode* node() const
     {
@@ -157,7 +159,7 @@ public:
     QProcess*  helpProcess;
     void GetHelp();
     void OpenHelp(const char* file, const char* item=0, int page =-1);
-    void OpenResults( const string& key );
+    void OpenResults(  const string& key, const QString& dir );
 
 private:
     Ui::FITMainWindow *ui;

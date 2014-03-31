@@ -123,6 +123,7 @@ void FITMainWindow::CmDBMode()
    ui->actionBackup_to_TXT->setEnabled(false);
    ui->actionRestore_from_TXT->setEnabled(false);
    ui->action_Run_test->setEnabled(false);
+   ui->action_Show_Results->setEnabled(false);
    ui->menu_Calc->setEnabled(false);
 
    // update key list, editor, filter
@@ -152,6 +153,7 @@ void FITMainWindow::CmTaskMode()
    ui->actionBackup_to_TXT->setEnabled(true);
    ui->actionRestore_from_TXT->setEnabled(true);
    ui->action_Run_test->setEnabled(true);
+   ui->action_Show_Results->setEnabled(!lastCalcRecordKey.empty());
    ui->menu_Calc->setEnabled(true);
 
    // update key list, editor, filter
@@ -520,6 +522,9 @@ void FITMainWindow::CmRunTest()
        pars.parseObject(  &bsrec );
        bson_finish( &bsrec );
 
+       //test current key
+       lastCalcRecordKey = rtEJ[ currentMode ].getKeyFromBson(bsrec.data);
+
        // open file to unloading
         string fname;
         if( !bson_find_string( bsrec.data, "taskid", fname ) )
@@ -559,9 +564,9 @@ void FITMainWindow::CmShowResults()
        //if( !MessageToSave() )
        //    return;
 
-       // create work directory
-       QString workDir = trUtf8(fitTaskDir.Dir().c_str()) + "/work";
-       OpenResults( "must be key?" );
+       // path to work directory
+       QString workDir = trUtf8(fitTaskDir.Dir().c_str()) + "/work/output";
+       OpenResults( lastCalcRecordKey, workDir );
     }
     catch( TError& err )
     {

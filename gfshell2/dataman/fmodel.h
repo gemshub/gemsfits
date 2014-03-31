@@ -156,9 +156,11 @@ class TMatrixDelegate: public QItemDelegate
 {
 	Q_OBJECT
 
+    int numberStringColumns;
+
  public:
 	
-   TMatrixDelegate( QObject * parent = 0 );
+   TMatrixDelegate( int nStringColumn, QObject * parent = 0 );
    QWidget *createEditor(QWidget *parent,
                          const QStyleOptionViewItem &option,
                          const QModelIndex &index) const;

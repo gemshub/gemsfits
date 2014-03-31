@@ -618,8 +618,8 @@ void TMatrixTable::CmCalc()
  // TObjectDelegate -  individuak items in views are rendered and edited using delegates
  //-------------------------------------------------------------------------------------
 
- TMatrixDelegate::TMatrixDelegate(  QObject * parent ):
-        QItemDelegate( parent )
+ TMatrixDelegate::TMatrixDelegate( int nStringColumn,  QObject * parent ):
+        QItemDelegate( parent ), numberStringColumns(nStringColumn)
  {
  }
 
@@ -628,8 +628,12 @@ void TMatrixTable::CmCalc()
          const QStyleOptionViewItem &option,
          const QModelIndex &index) const
  {
-     TCellInput* editor =  new TCellInput( index.row(), index.column(), parent);
-     return editor;
+     if( index.column() < numberStringColumns )
+         return QItemDelegate::createEditor( parent, option, index);
+     else
+     {   TCellInput* editor =  new TCellInput( index.row(), index.column(), parent);
+         return editor;
+      }
  }
 
  void TMatrixDelegate::setEditorData(QWidget *editor,
@@ -638,8 +642,9 @@ void TMatrixTable::CmCalc()
     TCellInput *cellEdit = dynamic_cast<TCellInput*>(editor);
  	if( cellEdit)
  	{   
-        cellEdit->setData( index.data(Qt::EditRole).toString());
- 	}    
+      cellEdit->setData( index.data(Qt::EditRole).toString());
+    } else
+        QItemDelegate::setEditorData(editor, index);
  }
 
  void TMatrixDelegate::setModelData(QWidget *editor,
@@ -651,7 +656,9 @@ void TMatrixTable::CmCalc()
  	{	
           if( cellEdit->dataCh() )
               model->setData(index, cellEdit->getData(),  Qt::EditRole);
- 	}   
+    } else
+         QItemDelegate::setModelData(editor, model, index);
+
   }
 
  

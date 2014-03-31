@@ -203,6 +203,7 @@ protected:
     time_t Rtime() const
         {  return crt;  }
     time_t GetTime( const char *pkey );
+    string getKeyFromBson( const char* bsdata  );
 
     //--- Selectors for key
     /* Return record key length

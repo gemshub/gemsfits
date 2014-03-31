@@ -293,18 +293,8 @@ void TEJDataBase::closeCollection( )
 // Load data from bson structure
 void TEJDataBase::KeyFromBson( const char* bsdata )
 {
-    int ii;
-
     // Get key of record
-    string keyStr = "", kbuf;
-    for( ii=0; ii<KeyNumFlds(); ii++ )
-    {
-        if( !bson_find_string( bsdata, key.FldKeyName(ii), kbuf ) )
-            kbuf = "*";
-        strip( kbuf );
-        keyStr += kbuf;
-        keyStr += ":";
-    }
+    string keyStr = getKeyFromBson( bsdata );
 
     char oidhex[25];
     bson_iterator it;
@@ -340,15 +330,7 @@ void TEJDataBase::RecToBson( bson *obj, time_t crtt, const char *pkey )
     // bson_append_time_t( obj , "mtime", crtt );
 
     //get key from object
-    string keyStr = "", kbuf;
-    for(int ii=0; ii<KeyNumFlds(); ii++ )
-    {
-        if( !bson_find_string( obj->data, key.FldKeyName(ii), kbuf ) )
-            kbuf = "*";
-        strip( kbuf );
-        keyStr += kbuf;
-        keyStr += ":";
-    }
+    string keyStr = getKeyFromBson( obj->data );
 
     if( pkey )
     {
@@ -368,6 +350,22 @@ void TEJDataBase::RecToBson( bson *obj, time_t crtt, const char *pkey )
 
 }
 
+/// Get current record key from bson structure
+string TEJDataBase::getKeyFromBson( const char* bsdata )
+{
+    //get key from object
+    string keyStr = "", kbuf;
+    for(int ii=0; ii<KeyNumFlds(); ii++ )
+    {
+        if( !bson_find_string( bsdata, key.FldKeyName(ii), kbuf ) )
+            kbuf = "*";
+        strip( kbuf );
+        keyStr += kbuf;
+        keyStr += ":";
+    }
+    return keyStr;
+}
+
 // Load data from bson structure
 string TEJDataBase::RecFromBson( bson *obj )
 {
@@ -380,15 +378,7 @@ string TEJDataBase::RecFromBson( bson *obj )
         currentGems3kName = "";
 
     // Get key of record
-    string keyStr = "", kbuf;
-    for(int ii=0; ii<KeyNumFlds(); ii++ )
-    {
-        if( !bson_find_string( obj->data, key.FldKeyName(ii), kbuf ) )
-            kbuf = "*";
-        strip( kbuf );
-        keyStr += kbuf;
-        keyStr += ":";
-    }
+    string keyStr = getKeyFromBson( obj->data );
     return keyStr;
 }
 

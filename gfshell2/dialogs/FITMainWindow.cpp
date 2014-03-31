@@ -209,13 +209,17 @@ void FITMainWindow::OpenHelp(const char* file, const char* item1, int page )
    // old help assistantClient->showDocumentation( file, item);
 }
 
-void FITMainWindow::OpenResults( const string& key )
+void FITMainWindow::OpenResults( const string& key, const QString& dir )
 {
     if( !FitResultsWindow::pDia )
     {
         ( new FitResultsWindow(0) );
     }
-    FitResultsWindow::pDia->show();
+    if( !dir.isEmpty() )
+      FitResultsWindow::pDia->ShowResults(key, dir);
+    else
+      FitResultsWindow::pDia->ShowResults(key );
+
     FitResultsWindow::pDia->raise();
 }
 
