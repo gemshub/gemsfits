@@ -39,7 +39,10 @@ QVariant TMatrixModel::data( const QModelIndex& index, int role ) const
         {
           QVariant val = matrix.at(index.row()).at(index.column());
           if( index.column() >= numberStringColumns )
-            return QString::number( val.toDouble(), 'g', 12);
+          {
+//             return QString::number( val.toDouble(), 'g', 12);
+             return QString::number( val.toDouble(), 'g', 8 );
+          }
           else
             return val;
         }

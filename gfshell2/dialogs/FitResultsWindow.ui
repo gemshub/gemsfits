@@ -30,6 +30,12 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_4"/>
       </widget>
+      <widget class="QWidget" name="tabFitResults">
+       <attribute name="title">
+        <string>Fit for Samples</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_6"/>
+      </widget>
       <widget class="QWidget" name="tabStatistic">
        <attribute name="title">
         <string>Statistics</string>
@@ -40,18 +46,6 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tabMcResults">
-       <attribute name="title">
-        <string>Monte Carlo Results</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_5"/>
-      </widget>
-      <widget class="QWidget" name="tabFitResults">
-       <attribute name="title">
-        <string>Fit Results</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_6"/>
-      </widget>
       <widget class="QWidget" name="tabSensitivity">
        <attribute name="title">
         <string>Sensitivity</string>
@@ -60,19 +54,25 @@
       </widget>
       <widget class="QWidget" name="tabQuantiles">
        <attribute name="title">
-        <string>Quantiles</string>
+        <string>QuantResid</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_8"/>
       </widget>
+      <widget class="QWidget" name="tabMcResults">
+       <attribute name="title">
+        <string>MC Results</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_5"/>
+      </widget>
       <widget class="QWidget" name="tabInverse">
        <attribute name="title">
-        <string>Inverse Results</string>
+        <string>InvMod Results</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_9"/>
       </widget>
       <widget class="QWidget" name="tabLog">
        <attribute name="title">
-        <string>Log Data</string>
+        <string>gemsfit2 log</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
@@ -147,8 +147,6 @@
     </property>
     <addaction name="action_Insert"/>
     <addaction name="separator"/>
-    <addaction name="actionNext"/>
-    <addaction name="actionPrevious"/>
     <addaction name="actionUpdate"/>
     <addaction name="actionDelete"/>
     <addaction name="separator"/>
@@ -226,7 +224,7 @@
      <normaloff>:/menu/Icons/NewCreateRecordIcon.png</normaloff>:/menu/Icons/NewCreateRecordIcon.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Add Record</string>
+    <string>&amp;Save Results</string>
    </property>
   </action>
   <action name="actionNext">
@@ -304,7 +302,7 @@
      <normaloff>:/menu/Icons/ShowHelpWindowIcon.png</normaloff>:/menu/Icons/ShowHelpWindowIcon.png</iconset>
    </property>
    <property name="text">
-    <string>About Results Window</string>
+    <string>About Results Viewer</string>
    </property>
   </action>
   <action name="actionAbout_Graph_Dialog">
@@ -318,6 +316,10 @@
    </property>
   </action>
   <action name="actionPrint">
+   <property name="icon">
+    <iconset resource="../fgui.qrc">
+     <normaloff>:/menu/Icons/PrintDataToFileIcon.png</normaloff>:/menu/Icons/PrintDataToFileIcon.png</iconset>
+   </property>
    <property name="text">
     <string>Print</string>
    </property>

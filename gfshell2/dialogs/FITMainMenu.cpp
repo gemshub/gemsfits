@@ -153,7 +153,8 @@ void FITMainWindow::CmTaskMode()
    ui->actionBackup_to_TXT->setEnabled(true);
    ui->actionRestore_from_TXT->setEnabled(true);
    ui->action_Run_test->setEnabled(true);
-   ui->action_Show_Results->setEnabled(!lastCalcRecordKey.empty());
+   ui->action_Show_Results->setEnabled(true);  // temporary
+//   ui->action_Show_Results->setEnabled(!lastCalcRecordKey.empty());
    ui->menu_Calc->setEnabled(true);
 
    // update key list, editor, filter

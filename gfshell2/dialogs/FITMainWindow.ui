@@ -520,10 +520,10 @@
    <addaction name="actionCreate_New"/>
    <addaction name="actionUpdate_Test"/>
    <addaction name="action_Insert"/>
+   <addaction name="action_Update"/>
    <addaction name="actionDelete"/>
    <addaction name="separator"/>
    <addaction name="action_Run_test"/>
-   <addaction name="action_Update"/>
    <addaction name="action_Show_Results"/>
    <addaction name="separator"/>
    <addaction name="actionHelp"/>
@@ -710,7 +710,7 @@
      <normaloff>:/menu/Icons/ShowGEMResultsIcon.png</normaloff>:/menu/Icons/ShowGEMResultsIcon.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Show Task Results... </string>
+    <string>&amp;View Fitting Results... </string>
    </property>
   </action>
   <action name="action_Preferences">
@@ -811,7 +811,7 @@
   <action name="actionSave_Results_to_Database">
    <property name="icon">
     <iconset resource="../fgui.qrc">
-     <normaloff>:/menu/Icons/SaveCurrentRecordIcon.png</normaloff>:/menu/Icons/SaveCurrentRecordIcon.png</iconset>
+     <normaloff>:/menu/Icons/DatabaseModeIcon.png</normaloff>:/menu/Icons/DatabaseModeIcon.png</iconset>
    </property>
    <property name="text">
     <string>Save Results to Database</string>
