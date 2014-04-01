@@ -468,6 +468,14 @@ void FITMainWindow::RecSave( const string& recBsonText, const char* key )
     contentsChanged = false;
 }
 
+/// Delete record structure from Data Base
+void FITMainWindow::RecDelete( const char* key )
+{
+    rtEJ[ currentMode ].Del( key );
+    if( currentMode == MDF_TASK && rtEJ[ MDF_FITS ].Find(key) )
+         rtEJ[ MDF_FITS ].Del( key );
+}
+
 /// Save solicitation
 /// Returns true if user pressed 'save' or 'discard' and false on 'cancel'
 bool FITMainWindow::MessageToSave()

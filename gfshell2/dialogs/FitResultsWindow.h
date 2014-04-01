@@ -1,3 +1,22 @@
+//-------------------------------------------------------------------
+// $Id: FitResultsWindow.cpp 333 2014-03-13 13:23:32Z gemsfits $
+//
+// Declaration of GEMSFITS GUI Results Window
+//
+// Copyright (C) 2014  S.V.Dmytriyeva, D.A.Kulik
+// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+//    yaml-cpp (https://code.google.com/p/yaml-cpp/)
+//
+// This file is part of the GEMSFITS GUI, which uses the
+// Qt v.5 cross-platform App & UI framework (http://qt-project.org)
+// under LGPL v.2.1 (http://www.gnu.org/licenses/lgpl-2.1.html)
+//
+// This file may be distributed under the terms of LGPL v.3 license
+//
+// See http://gems.web.psi.ch/GEMSFIT for more information
+// E-mail gems2.support@psi.ch
+//-------------------------------------------------------------------
+
 #ifndef FITRESULTSWINDOW_H
 #define FITRESULTSWINDOW_H
 
@@ -15,12 +34,19 @@ class FitResultsWindow : public QMainWindow
     void setActions();
     void editFiledsFromFile( const QString& dir );
     void editFiledsToFile( const QString& dir );
+    void readBsonRecord();
 
     void closeEvent(QCloseEvent* ev);
 
 public slots:
     void CmOpenFile( const QString& dir_="" );
     void CmSaveFile();
+    void CmSaveBsonRecord();
+    void CmBackupJSON();
+
+    void CmAboutGEMSFITS();
+    void CmAbout_Graph_Dialog();
+    void CmAbout_Results_window();
 
 public:
     static FitResultsWindow* pDia;

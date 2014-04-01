@@ -77,7 +77,8 @@ void FITMainWindow::setActions()
 
   //Calc
     connect( ui->action_Run_test, SIGNAL( triggered()), this, SLOT(CmRunTest()));
-    connect( ui->action_Show_Results, SIGNAL( triggered()), this, SLOT(CmShowResults()));
+    connect( ui->action_Show_Results, SIGNAL( triggered()), this, SLOT(CmShowCalcResults()));
+    connect( ui->actionFits_View_Mode, SIGNAL( triggered()), this, SLOT(CmShowFitResults()));
 
 
    pLineTask = new QLineEdit( ui->toolBarTask );
@@ -124,6 +125,7 @@ void FITMainWindow::CmDBMode()
    ui->actionRestore_from_TXT->setEnabled(false);
    ui->action_Run_test->setEnabled(false);
    ui->action_Show_Results->setEnabled(false);
+   ui->actionFits_View_Mode->setEnabled(false);
    ui->menu_Calc->setEnabled(false);
 
    // update key list, editor, filter
@@ -153,8 +155,9 @@ void FITMainWindow::CmTaskMode()
    ui->actionBackup_to_TXT->setEnabled(true);
    ui->actionRestore_from_TXT->setEnabled(true);
    ui->action_Run_test->setEnabled(true);
-   ui->action_Show_Results->setEnabled(true);  // temporary
-//   ui->action_Show_Results->setEnabled(!lastCalcRecordKey.empty());
+   ui->actionFits_View_Mode->setEnabled(true);
+//   ui->action_Show_Results->setEnabled(true);  // temporary
+   ui->action_Show_Results->setEnabled(!lastCalcRecordKey.empty());
    ui->menu_Calc->setEnabled(true);
 
    // update key list, editor, filter
@@ -306,12 +309,12 @@ void FITMainWindow::CmNewProject()
 //-------------------------------------------------------------------------------------
 // Record menu
 
-void FITMainWindow::openRecordKey( int row, int    )
+string FITMainWindow::getRecordKey( int row )
 {
     string currentKey ="";
 
     if( row >= keyTable->rowCount())
-        return;
+        return "";
 
     for(int jj=0; jj<keyTable->columnCount(); jj++)
     {
@@ -320,6 +323,14 @@ void FITMainWindow::openRecordKey( int row, int    )
         currentKey +=":";
      }
 
+    return currentKey;
+}
+
+void FITMainWindow::openRecordKey( int row, int    )
+{
+    string currentKey =getRecordKey( row );
+    if( currentKey.empty() )
+        return;
     CmShow( currentKey );
 }
 
@@ -446,7 +457,7 @@ void FITMainWindow::CmDelete()
         if( !vfQuestion(window(), rtEJ[ currentMode ].GetKeywd(),
                "Confirm deletion of data record keyed "+ strKey ))
             return;
-        rtEJ[ currentMode ].Del( strKey.c_str() );
+        RecDelete(  strKey.c_str() );
         changeKeyList();
         contentsChanged = false;
         setStatusText( "Record deleted" );
@@ -525,6 +536,11 @@ void FITMainWindow::CmRunTest()
 
        //test current key
        lastCalcRecordKey = rtEJ[ currentMode ].getKeyFromBson(bsrec.data);
+        //save record before run
+       if( rtEJ[ currentMode ].Find( lastCalcRecordKey.c_str() ))
+           rtEJ[ currentMode ].SaveRecord( lastCalcRecordKey.c_str());
+       else
+           rtEJ[ currentMode ].InsertRecord();
 
        // open file to unloading
         string fname;
@@ -558,7 +574,7 @@ void FITMainWindow::CmRunTest()
 }
 
 /// Show after Run gemsfit task
-void FITMainWindow::CmShowResults()
+void FITMainWindow::CmShowCalcResults()
 {
     try
     {
@@ -576,6 +592,24 @@ void FITMainWindow::CmShowResults()
     }
 }
 
+/// Show saved gemsfit results
+void FITMainWindow::CmShowFitResults()
+{
+    try
+    {
+       //if( !MessageToSave() )
+       //    return;
+
+       // path to work directory
+       string reckey = getRecordKey(  keyTable->currentRow()  );
+       OpenResults( reckey );
+    }
+    catch( TError& err )
+    {
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
+    }
+}
 
 
 //-------------------------------------------------------------------------------------
@@ -793,7 +827,7 @@ void FITMainWindow::CmDeleteList()
                 return;
 
         for(int i=0; i<aKey.size(); i++ )
-            rtEJ[currentMode].Del( aKey[i].c_str() );
+            RecDelete( aKey[i].c_str() );
         rtEJ[currentMode].SetKey( ALLKEY );
         changeKeyList();
     }

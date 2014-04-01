@@ -79,12 +79,15 @@ class FITMainWindow : public QMainWindow
     void resetMainWindow();
     bool MessageToSave();
     void RecSave( const string& recBsonText, const char* key=0 );
+    void RecDelete( const char* key );
     void changeEditeRecord(const string& tagname, const string& newValue);
     bool runProcess( const QStringList& cParameters, const QString& workDir );
     void selectGEMS( const string& fname );
     string makeSystemFileName(const string& path );
     bool createTaskTemplate();
     void readTXT( TFile& inFile );
+    string getRecordKey( int row );
+
 
     void closeEvent( QCloseEvent* );
     void resizeEvent( QResizeEvent * event );
@@ -139,7 +142,8 @@ public slots:
        void CmDeleteList();
      //Calc
        void CmRunTest();
-       void CmShowResults();
+       void CmShowCalcResults();
+       void CmShowFitResults();
 
 
 public:
@@ -159,7 +163,7 @@ public:
     QProcess*  helpProcess;
     void GetHelp();
     void OpenHelp(const char* file, const char* item=0, int page =-1);
-    void OpenResults(  const string& key, const QString& dir );
+    void OpenResults(  const string& key, const QString& dir = "");
 
 private:
     Ui::FITMainWindow *ui;

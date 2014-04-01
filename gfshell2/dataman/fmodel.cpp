@@ -116,17 +116,18 @@ void TMatrixModel::matrixFromCsvString( const QString& valueCsv )
   colHeads.clear();
   matrix.clear();
 
-  //
-  const QStringList rows = valueCsv.split('\n', QString::KeepEmptyParts);
+  if(!valueCsv.isEmpty())
+  { //
+    const QStringList rows = valueCsv.split('\n', QString::KeepEmptyParts);
 
-  // get header
-  QStringList cells = rows[0].split(',', QString::KeepEmptyParts);
-  for( ii=0; ii< cells.count(); ii++ )
-      colHeads.push_back( cells[ii] );
+    // get header
+    QStringList cells = rows[0].split(',', QString::KeepEmptyParts);
+    for( ii=0; ii< cells.count(); ii++ )
+       colHeads.push_back( cells[ii] );
 
-  // get values
-  for( jj=1, nlines=0;  jj<rows.count(); jj++ )
-  {
+    // get values
+    for( jj=1, nlines=0;  jj<rows.count(); jj++ )
+    {
      cells = rows[jj].split(',', QString::KeepEmptyParts);
      if(cells.count() < colHeads.size() )
         continue;
@@ -138,8 +139,8 @@ void TMatrixModel::matrixFromCsvString( const QString& valueCsv )
        else
          matrix[nlines].push_back( cells[ii].toDouble() );
      nlines++;
-  }
-
+    }
+   }
 #if QT_VERSION >= 0x050000
     endResetModel();
 #else
@@ -151,6 +152,9 @@ void TMatrixModel::matrixFromCsvString( const QString& valueCsv )
 QString TMatrixModel::matrixToCsvString( )
 {
     QString valCsv;
+
+    if(colHeads.size() == 0 )
+      return "";
 
     QVectorIterator<QString> head(colHeads);
     while (head.hasNext())
@@ -184,7 +188,7 @@ QString TMatrixModel::matrixToCsvString( )
 
 void TMatrixModel::matrixFromCsvFile( const QString& dir )
 {
-    QString valCsv;
+    QString valCsv="";
 
     // read file
     QString fpath = dir + "/" + fname +".csv";
@@ -197,7 +201,7 @@ void TMatrixModel::matrixFromCsvFile( const QString& dir )
     else
       {
         cout << "error open file " << fpath.toUtf8().data() << endl;
-        return;
+        //return;
       }
 
     //delete all comments // #
@@ -240,6 +244,28 @@ void TMatrixModel::matrixToCsvFile( const QString& dir )
     }
 
 }
+
+/// write model to bson structure
+void TMatrixModel::matrixToBson(  bson *obj )
+{
+    // get string to output
+    string name = fname.toUtf8().data();
+    string valCsv = matrixToCsvString().toUtf8().data();
+    int iRet = bson_append_string( obj, name.c_str(), valCsv.c_str() );
+    ErrorIf( iRet == BSON_ERROR, name, "Error append string"+name );
+}
+
+/// read model from bson structure
+void TMatrixModel::matrixFromBson(  const char *bsdata )
+{
+    // get string from obj
+    string valCsv;
+    if( !bson_find_string( bsdata, fname.toUtf8().data(), valCsv ) )
+        valCsv = "";
+    //set up data
+    matrixFromCsvString( trUtf8(valCsv.c_str()) );
+}
+
 
 //-------------------------------------------------------------------------------------
 // class TVectorTable implements a table view that displays items from a model.
@@ -296,25 +322,28 @@ TMatrixTable::TMatrixTable( QWidget * parent ):
 
  void TMatrixTable::slotPopupContextMenu(const QPoint &pos)
  {
+     QModelIndex index = indexAt( pos );
+     TMatrixModel* model =(TMatrixModel *)index.model();
      QMenu *menu = new QMenu(this);
      //no_menu_out = false;
      //no_menu_in = false;
 
      QAction* act;
-     act =  new QAction(tr("&Help"), this);
+     /*act =  new QAction(tr("&Help"), this);
      act->setIcon(QIcon(":/menu/Icons/ShowHelpWindowIcon.png"));
      act->setShortcut(tr("F1"));
      act->setStatusTip(tr("Help to the specified cell"));
      connect(act, SIGNAL(triggered()), this, SLOT(CmHelp()));
-     menu->addAction(act);
+     menu->addAction(act);*/
 
-     act =  new QAction(tr("&Calculator"), this);
-     act->setShortcut(tr("F8"));
-     act->setStatusTip(tr("Use calculator  to the specified cells"));
-     connect(act, SIGNAL(triggered()), this, SLOT(CmCalc()));
-     menu->addAction(act);
-
-     menu->addSeparator();
+     if( index.column() >= model->getNumberStringColumns() )
+     { act =  new QAction(tr("&Calculator"), this);
+       act->setShortcut(tr("F8"));
+       act->setStatusTip(tr("Use calculator  to the specified cells"));
+       connect(act, SIGNAL(triggered()), this, SLOT(CmCalc()));
+       menu->addAction(act);
+       menu->addSeparator();
+     }
         
      act =  new QAction(tr("Select co&lumn"), this);
      act->setShortcut(tr("Ctrl+L"));
@@ -387,7 +416,7 @@ TMatrixTable::TMatrixTable( QWidget * parent ):
                     return;
 		  case Qt::Key_T:
                      PasteTransposedData();
-                                     return;
+                     return;
 		  case Qt::Key_Delete:
 		    ClearData();
                     return;
@@ -395,22 +424,15 @@ TMatrixTable::TMatrixTable( QWidget * parent ):
 	}
     switch( e->key() )
  	{
-      case Qt::Key_F1:
-            CmHelp();
-            return;
+//      case Qt::Key_F1:
+//            CmHelp();
+//            return;
  	  case Qt::Key_F8:
  	         CmCalc();
  	          return;
      }
  	QTableView::keyPressEvent(e);
  }
-
- // Help on F1 pressed on data field
- void TMatrixTable::CmHelp()
- {
-   // pVisorImp->OpenHelp( 0, item.c_str());
- }
-
 
 // Calculator on F8 pressed on data field
 void TMatrixTable::CmCalc()

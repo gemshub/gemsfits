@@ -14,6 +14,7 @@ using namespace std;
 #include <QModelIndex>
 #include <QSize>
 
+#include "f_ejdb.h"
 
 #ifdef __APPLE__
 const char  splitRow = '\r';
@@ -79,7 +80,6 @@ class TMatrixModel: public QAbstractTableModel
     //QString ValToString( double val ) const;
     //double ValFromString( const QVariant& strval  );
 
-
 public:
 	  
      TMatrixModel( const QString& fname, int aNumCol, QObject * parent = 0 );
@@ -96,6 +96,11 @@ public:
      void matrixToCsvFile( const QString& dir );
      void matrixFromCsvString( const QString& valueCsv );
      QString matrixToCsvString( );
+     void matrixToBson(  bson *obj );
+     void matrixFromBson(  const char *bsdata );
+     int getNumberStringColumns() const
+     {   return numberStringColumns; }
+
 };
 
 /*!
@@ -131,7 +136,6 @@ class TMatrixTable: public QTableView
     void slotPopupContextMenu(const QPoint& pos);
 
  public slots:
-    void CmHelp();
     void CmCalc();
     void SelectColumn();
     void SelectAll();

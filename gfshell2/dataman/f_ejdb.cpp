@@ -320,6 +320,13 @@ void TEJDataBase::KeyFromBson( const char* bsdata )
     itrL->setBsonOid(oidhex);
 }
 
+/// put current record key to bson structure
+void TEJDataBase::putKeyToBson( bson *obj )
+{
+    for( int ii=0; ii < KeyNumFlds(); ii++)
+       bson_append_string( obj, FldKeyName(ii), FldKey(ii) );
+}
+
 // Save current record to bson structure
 void TEJDataBase::RecToBson( bson *obj, time_t crtt, const char *pkey )
 {
@@ -552,8 +559,6 @@ void TEJDataBase::InsertRecord()
      bool retSave = ejdbsavebson(coll, &bsrec, &oid);
      // Close database (must be done for exeption )
      closeCollection();
-     cout << "Add record " << retSave << " oid " << bytes[25] << endl;
-
      if( !retSave )
      {  string errejdb = bson_first_errormsg(&bsrec);
         bson_destroy(&bsrec);
@@ -567,6 +572,8 @@ void TEJDataBase::InsertRecord()
           /// putndx(nF); work with indexes
           bson_destroy(&bsrec);
         }
+
+    cout << "Add record " << retSave << " oid " << bytes[25] << endl;
 
     // Set up internal data
     status = ONEF_;
