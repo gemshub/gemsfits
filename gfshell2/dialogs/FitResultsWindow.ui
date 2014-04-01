@@ -22,7 +22,7 @@
     <item>
      <widget class="QTabWidget" name="tabsResults">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tabFitParams">
        <attribute name="title">
@@ -38,7 +38,7 @@
       </widget>
       <widget class="QWidget" name="tabStatistic">
        <attribute name="title">
-        <string>Statistics</string>
+        <string>Sum. Statistics</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
@@ -54,7 +54,7 @@
       </widget>
       <widget class="QWidget" name="tabQuantiles">
        <attribute name="title">
-        <string>QuantResid</string>
+        <string>Quantile Resid.</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_8"/>
       </widget>
@@ -113,10 +113,6 @@
      <string>Tools</string>
     </property>
     <addaction name="actionPlot_Results"/>
-    <addaction name="actionPlot_Residuals"/>
-    <addaction name="actionPlot_Quantiles"/>
-    <addaction name="separator"/>
-    <addaction name="actionCalculator"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -172,15 +168,12 @@
    <addaction name="actionOpen_File"/>
    <addaction name="actionSave_File"/>
    <addaction name="separator"/>
-   <addaction name="actionPrevious"/>
-   <addaction name="actionNext"/>
    <addaction name="action_Find"/>
    <addaction name="action_Insert"/>
    <addaction name="actionUpdate"/>
    <addaction name="actionDelete"/>
    <addaction name="separator"/>
    <addaction name="actionPlot_Results"/>
-   <addaction name="actionPlot_Residuals"/>
    <addaction name="separator"/>
    <addaction name="actionAbout_Results_window"/>
   </widget>
@@ -227,24 +220,6 @@
     <string>&amp;Save Results</string>
    </property>
   </action>
-  <action name="actionNext">
-   <property name="icon">
-    <iconset resource="../fgui.qrc">
-     <normaloff>:/menu/Icons/DisplayNextRecordIcon.png</normaloff>:/menu/Icons/DisplayNextRecordIcon.png</iconset>
-   </property>
-   <property name="text">
-    <string>&amp;Next</string>
-   </property>
-  </action>
-  <action name="actionPrevious">
-   <property name="icon">
-    <iconset resource="../fgui.qrc">
-     <normaloff>:/menu/Icons/DisplayPrevRecordIcon.png</normaloff>:/menu/Icons/DisplayPrevRecordIcon.png</iconset>
-   </property>
-   <property name="text">
-    <string>&amp;Previous</string>
-   </property>
-  </action>
   <action name="actionUpdate">
    <property name="icon">
     <iconset resource="../fgui.qrc">
@@ -265,7 +240,7 @@
   </action>
   <action name="actionExport">
    <property name="text">
-    <string>&amp;Export...</string>
+    <string>&amp;Export to JSON file...</string>
    </property>
   </action>
   <action name="action_Copy">

@@ -443,7 +443,6 @@
     </property>
     <addaction name="action_Run_test"/>
     <addaction name="action_Show_Results"/>
-    <addaction name="actionSave_Results_to_Database"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">

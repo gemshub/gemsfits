@@ -18,6 +18,7 @@
 //-------------------------------------------------------------------
 
 #include <iostream>
+#include <QLabel>
 #include <QFileDialog>
 #include <QCloseEvent>
 #include "FitResultsWindow.h"
@@ -131,6 +132,9 @@ void FitResultsWindow::setActions()
     connect( ui->actionAbout_Graph_Dialog, SIGNAL( triggered()), this, SLOT(CmAbout_Graph_Dialog()));
     connect( ui->actionAbout_Results_window, SIGNAL( triggered()), this, SLOT(CmAbout_Results_window()));
 
+
+    QLabel * pTask = new QLabel( "   Task:   ", ui->toolBarKey );
+    ui->toolBarKey->addWidget( pTask ); // setStretchableWidget( pLine );
 
     pLineTask = new QLineEdit( ui->toolBarKey );
     pLineTask->setEnabled( true );
