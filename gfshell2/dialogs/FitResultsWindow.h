@@ -42,6 +42,7 @@ public slots:
     void CmOpenFile( const QString& dir_="" );
     void CmSaveFile();
     void CmSaveBsonRecord();
+    void CmDeleteRecord();
     void CmBackupJSON();
 
     void CmAboutGEMSFITS();

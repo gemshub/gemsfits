@@ -126,6 +126,8 @@ void FitResultsWindow::setActions()
     connect( ui->actionClose, SIGNAL( triggered()), this, SLOT(close()));
 
     connect( ui->action_Insert, SIGNAL( triggered()), this, SLOT(CmSaveBsonRecord()));
+    connect( ui->actionUpdate, SIGNAL( triggered()), this, SLOT(CmSaveBsonRecord()));
+    connect( ui->actionDelete, SIGNAL( triggered()), this, SLOT(CmDeleteRecord()));
     connect( ui->actionExport, SIGNAL( triggered()), this, SLOT(CmBackupJSON()));
 
     connect( ui->actionAbout_GEMSFITS, SIGNAL( triggered()), this, SLOT(CmAboutGEMSFITS()));
@@ -386,6 +388,26 @@ void FitResultsWindow::CmBackupJSON()
         cout << err.title << err.mess << endl;
     }
 }
+
+/// Delete current record
+void FitResultsWindow::CmDeleteRecord()
+{
+    try
+    {
+        string key = pLineTask->text().toUtf8().data();
+        if( !rtEJ[ MDF_FITS ].Find(key.c_str()) )
+           return;
+
+        if( vfQuestion( this, rtEJ[ MDF_FITS ].GetKeywd(),
+               "Confirm deletion of data record keyed "+ key ))
+             rtEJ[ MDF_FITS ].Del( key.c_str() );
+    }
+    catch( TError& err )
+    {
+        cout << err.title << err.mess << endl;
+    }
+}
+
 
 void FitResultsWindow::CmAboutGEMSFITS()
 {

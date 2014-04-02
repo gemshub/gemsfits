@@ -103,7 +103,7 @@ QString CalcDialog::fun(double val)
       pos = str.indexOf('(');
       if( pos >= 0 )
        str.truncate(pos);
-      if( (str.indexOf("---") != -1) || str[0] == '`' )
+      if( (str.indexOf("---") != -1) || str[0] == '`' || str.isEmpty() )
          val2 = DOUBLE_EMPTY;
       else
          val2 = str.toDouble();  /// check for error
@@ -172,91 +172,10 @@ QString CalcDialog::fun(double val)
 
     QString retstr;
     if( ret == DOUBLE_EMPTY )
-        retstr = "---";
+        retstr = "";//---";
     else
-        retstr = QString::number(  ret, 'g', 6 );//QVariant(ret).toString();
+        retstr = QString::number(  ret, 'g', 8 );//QVariant(ret).toString();
     return retstr;
 }
-
-int CalcDialog::funName(double& val)
-{
-    int ii, pos;
-
-    ii = allButtons->checkedId();
-
-    val=0.;
-    if( ii <= 5 )
-    {
-      QString str = pValue->currentText();
-      pos = str.indexOf('(');
-      if( pos >= 0 )
-       str.truncate(pos);
-      if( (str.indexOf("---") != -1) || str[0] == '`' )
-         val = DOUBLE_EMPTY;
-      else
-         val = str.toDouble();  /// check for error
-    }
-    return ii;
-}
-
-
-string CalcDialog::funText(const char * valText )
-{
-    int ii, pos;
-    QString res;
-
-    ii = allButtons->checkedId();
-    QString strText = "";
-
-    if( ii <= 5 )
-    {
-      strText = pValue->currentText();
-      pos = strText.indexOf('(');
-      if( pos >= 0 )
-       strText.truncate(pos);
-      if( (strText.indexOf("---") != -1) || strText[0] == '`' )
-         strText = "empty()";
-    }
-
-   switch( ii )
-    {
-    case 0:
-        res = valText; break;
-    case 1:
-        res = QString("%1+%2").arg(valText, strText); break;
-    case 2:
-        res = QString("%1-%2").arg(valText, strText); break;
-    case 3:
-        res = QString("%1*%2").arg(valText, strText);; break;
-    case 4:
-        res = QString("%1/%2").arg(valText, strText);; break;
-    case 5:
-        res = QString("%1^%2").arg(valText, strText);; break;
-    case 6:
-        res = QString( "( %1 ? (1/%1) : empty() )" ).arg(valText) ; break;
-    case 7:
-        res = QString( "( %1 > 0. ? sqrt(%1) : empty() )" ).arg(valText) ; break;
-    case 8:
-        res = QString( "( %1 > 0. ? lg(%1) : empty() )" ).arg(valText) ; break;
-    case 9:
-        res = QString( "( %1 > 0. ? ln(%1) : empty() )" ).arg(valText) ; break;
-    case 10:
-        res = QString("10.^%1").arg(valText); break;
-    case 11:
-        res = QString("exp(%1)").arg(valText); break;
-    case 12:
-        res = QString("sin(%1)").arg(valText); break;
-    case 13:
-        res = QString("cos(%1)").arg(valText); break;
-    case 14:
-        res = QString("tan(%1)").arg(valText); break;
-    case 15:
-        res = "empty()"; //No Data value
-    }
-
-    string rres = res.toLatin1().data();
-    return rres;
-}
-
 
 //--------------------- End of CalcDialog.cpp ---------------------------

@@ -24,7 +24,7 @@ const char  splitRow = '\n';
 const char  splitCol = '\t';
 #endif
 
-const string emptiness("---");
+//const string emptiness("---");
 
 struct Selection {
     int N1;
@@ -46,19 +46,6 @@ struct Selection {
 // TVectorModel class
 //===========================================
 
-/*
-QVector< QVector<T> > vectors = QVector< QVector<T> >();
-
-int totalSize = 0;
-for (int i = 0; i < vectors.size(); ++i)
-    totalSize += vectors.at(i).size();
-
-QVector<T> collected;
-collected.reserve(totalSize);
-
-for (int i = 0; i < vectors.size(); ++i)
-    collected << vectors[i];
-*/
 /*!
   \ class TMatrixModel
   \ class for represents the data set and is responsible for fetchin
@@ -77,8 +64,8 @@ class TMatrixModel: public QAbstractTableModel
     QVector< QString > colHeads;
     QVector< QVector<QVariant> > matrix;
 
-    //QString ValToString( double val ) const;
-    //double ValFromString( const QVariant& strval  );
+    QString ValToString( double val, int digits ) const;
+    double ValFromString( const QVariant& strval  );
 
 public:
 	  
@@ -91,7 +78,6 @@ public:
      QVariant headerData ( int section, Qt::Orientation orientation, int role ) const;
      Qt::ItemFlags flags( const QModelIndex & index ) const;
 
-     void defineMode();
      void matrixFromCsvFile( const QString& dir );
      void matrixToCsvFile( const QString& dir );
      void matrixFromCsvString( const QString& valueCsv );
@@ -102,6 +88,7 @@ public:
      {   return numberStringColumns; }
 
 };
+
 
 /*!
   \ class TMatrixTable implements a table view

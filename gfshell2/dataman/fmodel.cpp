@@ -6,6 +6,7 @@
 
 #include "fmodel.h"
 #include "CalcDialog.h"
+#include "v_user.h"
 
 
 //--------------------------------------------------------------------------------------
@@ -27,6 +28,28 @@ int TMatrixModel::columnCount( const QModelIndex & /*parent*/ ) const
    return colHeads.size();
 }	
 
+QString TMatrixModel::ValToString( double val, int digits ) const
+{
+    QString retstr;
+    if( val == DOUBLE_EMPTY )
+        retstr = "";
+    else
+        retstr = QString::number(  val, 'g', digits );
+
+    return  retstr;
+}
+
+double TMatrixModel::ValFromString( const QVariant& strval  )
+{
+    double val;
+    if( strval.toString().isEmpty() )
+       val = DOUBLE_EMPTY;
+    else
+       val = strval.toDouble();
+    return val;
+}
+
+
 QVariant TMatrixModel::data( const QModelIndex& index, int role ) const
 {
 	if(!index.isValid())
@@ -41,7 +64,7 @@ QVariant TMatrixModel::data( const QModelIndex& index, int role ) const
           if( index.column() >= numberStringColumns )
           {
 //             return QString::number( val.toDouble(), 'g', 12);
-             return QString::number( val.toDouble(), 'g', 8 );
+             return  ValToString(val.toDouble(), 8);
           }
           else
             return val;
@@ -57,7 +80,11 @@ bool TMatrixModel::setData( const QModelIndex &index, const QVariant& value, int
 {
 	if( index.isValid() && ( role == Qt::EditRole ) )
 	{
-       matrix[index.row()].replace(index.column(), value);
+       if( index.column() < numberStringColumns )
+        matrix[index.row()].replace(index.column(), value);
+       else
+        matrix[index.row()].replace(index.column(), ValFromString( value ));
+
        emit dataChanged(index, index);
        return true;
 	} 
@@ -92,19 +119,6 @@ Qt::ItemFlags TMatrixModel::flags( const QModelIndex & index ) const
     return flags;
 }
 
-void TMatrixModel::defineMode()
-{
-#if QT_VERSION >= 0x050000
-
-    beginResetModel();
-    //myData.clear();
-    endResetModel();
-#else
-    reset();
-#endif
-
-}
-
 // internal part
 void TMatrixModel::matrixFromCsvString( const QString& valueCsv )
 {
@@ -137,7 +151,7 @@ void TMatrixModel::matrixFromCsvString( const QString& valueCsv )
        if( ii < numberStringColumns )
          matrix[nlines].push_back( cells[ii] );
        else
-         matrix[nlines].push_back( cells[ii].toDouble() );
+         matrix[nlines].push_back( ValFromString( cells[ii] ) );
      nlines++;
     }
    }
@@ -174,11 +188,12 @@ QString TMatrixModel::matrixToCsvString( )
         {
           QVariant val = valC.next();
           if( col  >= numberStringColumns )
-              valCsv += QString::number( val.toDouble(), 'g', 12);
+              valCsv += ValToString(val.toDouble(), 12);
             else
               valCsv += val.toString();
           if(valC.hasNext() )
                valCsv += ",";
+          col++;
         }
         valCsv += "\n";
     }
@@ -472,7 +487,7 @@ void TMatrixTable::CmCalc()
   {
      TMatrixModel *  model = ((TMatrixModel *)(currentIndex().model() ));
      foreach( QModelIndex ndx,  selectedIndexes()  )
-           model->setData(ndx, emptiness.c_str(),  Qt::EditRole);
+           model->setData(ndx, ""/*emptiness.c_str()*/,  Qt::EditRole);
  }
 
  void TMatrixTable::CopyData()
@@ -514,7 +529,7 @@ void TMatrixTable::CmCalc()
 		  if( jj > sel.M1 )
             clipText += splitCol;
 		  cText = wIndex.data(Qt::EditRole).toString();
-		  if( cText == emptiness.c_str() )
+          if( cText.isEmpty() /*cText == emptiness.c_str()*/ )
 			  cText = "  ";//"\r"; 
 	     clipText += cText;
 		}
@@ -577,8 +592,8 @@ void TMatrixTable::CmCalc()
   	    {
           string value = (const char*)cells[ cellIt ].toLatin1().data();
           strip( value );
-  		  if( value.empty() || value == emptiness )
-              value = "---";
+          //if( value.empty() /*|| value == emptiness*/ )
+          //    value = "";//"---";
     	  
   		   if( transpose ) 
   		   { ii = (cellNum-sel.M1)+sel.N1;
@@ -706,11 +721,11 @@ void TMatrixTable::CmCalc()
 
  QValidator::State TDoubleValidator::validate(QString &input, int &pos) const
  {
-   if (input == "--" )
+   /*if (input == "--" )
          return Intermediate;
    if (input == "---" )
          return Acceptable;
-
+   */
   return QDoubleValidator::validate(input, pos);
  }
 

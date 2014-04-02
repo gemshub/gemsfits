@@ -46,8 +46,6 @@ public:
     virtual ~CalcDialog();
 
     QString fun(double val);
-    int    funName(double& val);
-    string funText(const char * valText );
 
  };
 

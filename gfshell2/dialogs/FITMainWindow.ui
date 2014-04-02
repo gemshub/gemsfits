@@ -796,9 +796,6 @@
    </property>
   </action>
   <action name="actionFits_View_Mode">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
    <property name="icon">
     <iconset resource="../fgui.qrc">
      <normaloff>:/modules/Icons/FitSpaceModuleIcon.png</normaloff>:/modules/Icons/FitSpaceModuleIcon.png</iconset>
