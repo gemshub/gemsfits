@@ -99,7 +99,12 @@ QVariant TMatrixModel::headerData( int section, Qt::Orientation orientation, int
 
          if( orientation == Qt::Horizontal )
          {
-              return colHeads.at(section);
+            QString valh = colHeads.at(section);
+            if( xcolms.contains( section ))
+                valh += "(x)";
+            if( ycolms.contains( section ))
+                valh += "(y)";
+            return valh;
          }
          else
           return QVariant(section);
@@ -281,6 +286,25 @@ void TMatrixModel::matrixFromBson(  const char *bsdata )
     matrixFromCsvString( trUtf8(valCsv.c_str()) );
 }
 
+void TMatrixModel::ToggleX( int ncolmn )
+{
+    if( xcolms.contains(ncolmn ))
+       xcolms.remove( ncolmn );
+    else
+       xcolms.insert( ncolmn );
+
+    // Update headers
+}
+
+void TMatrixModel::ToggleY( int ncolmn )
+{
+    if( ycolms.contains( ncolmn ))
+       ycolms.remove( ncolmn );
+    else
+       ycolms.insert( ncolmn );
+
+    // Update headers
+}
 
 //-------------------------------------------------------------------------------------
 // class TVectorTable implements a table view that displays items from a model.
@@ -352,11 +376,25 @@ TMatrixTable::TMatrixTable( QWidget * parent ):
      menu->addAction(act);*/
 
      if( index.column() >= model->getNumberStringColumns() )
-     { act =  new QAction(tr("&Calculator"), this);
+     {
+       act =  new QAction(tr("&Calculator"), this);
        act->setShortcut(tr("F8"));
        act->setStatusTip(tr("Use calculator  to the specified cells"));
        connect(act, SIGNAL(triggered()), this, SLOT(CmCalc()));
        menu->addAction(act);
+
+       act =  new QAction(tr("Toggle &X"), this);
+       act->setShortcut(tr("Ctrl+X"));
+       act->setStatusTip(tr("Mark Columns as Y..."));
+       connect(act, SIGNAL(triggered()), this, SLOT(ToggleX()));
+       menu->addAction(act);
+
+       act =  new QAction(tr("Toggle &Y"), this);
+       act->setShortcut(tr("Ctrl+Y"));
+       act->setStatusTip(tr("Mark Columns as Y..."));
+       connect(act, SIGNAL(triggered()), this, SLOT(ToggleY()));
+       menu->addAction(act);
+
        menu->addSeparator();
      }
         
@@ -414,6 +452,12 @@ TMatrixTable::TMatrixTable( QWidget * parent ):
     {
 		switch ( e->key() ) 
 		{
+          case Qt::Key_X:
+            ToggleX();
+            return;
+          case Qt::Key_Y:
+            ToggleY();
+            return;
           case Qt::Key_L:
 		    SelectColumn();
 		    return;
@@ -448,6 +492,26 @@ TMatrixTable::TMatrixTable( QWidget * parent ):
      }
  	QTableView::keyPressEvent(e);
  }
+
+void TMatrixTable::ToggleX()
+{
+    QModelIndex index = currentIndex();
+    TMatrixModel* model =(TMatrixModel *)index.model();
+
+    model->ToggleX( index.column() );
+    horizontalHeader()->update();
+}
+
+
+void TMatrixTable::ToggleY()
+{
+    QModelIndex index = currentIndex();
+    TMatrixModel* model =(TMatrixModel *)index.model();
+
+    model->ToggleY( index.column() );
+    horizontalHeader()->update();
+}
+
 
 // Calculator on F8 pressed on data field
 void TMatrixTable::CmCalc()

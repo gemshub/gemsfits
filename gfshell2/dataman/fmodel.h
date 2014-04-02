@@ -63,6 +63,8 @@ class TMatrixModel: public QAbstractTableModel
     int numberStringColumns;
     QVector< QString > colHeads;
     QVector< QVector<QVariant> > matrix;
+    QSet<int> xcolms;  ///< Abscissa columns list
+    QSet<int> ycolms;  ///< Ordinate columns list
 
     QString ValToString( double val, int digits ) const;
     double ValFromString( const QVariant& strval  );
@@ -86,6 +88,9 @@ public:
      void matrixFromBson(  const char *bsdata );
      int getNumberStringColumns() const
      {   return numberStringColumns; }
+
+     void ToggleX( int ncolmn );
+     void ToggleY( int ncolmn );
 
 };
 
@@ -131,6 +136,9 @@ class TMatrixTable: public QTableView
     void CopyData();
     void PasteData();
     void PasteTransposedData();
+    void ToggleX();
+    void ToggleY();
+
 
  public:
     TMatrixTable( QWidget * parent = 0 );
