@@ -163,7 +163,7 @@ void TPlotWidget::replotPlot( bool  isFragment )
 
 void TPlotWidget::showGrid()
 {
-    axisFont = pVisorImp->getAxisLabelFont();
+    axisFont = pFitImp->getAxisLabelFont();
     //font.setBold(true);
     QwtText text;
     text.setFont(axisFont);
@@ -386,7 +386,7 @@ void TPlotWidget::printPlot()
 
 void TPlotWidget::savePlot()
 {
-    QString fileName =   pVisor->localDir().c_str();
+    QString fileName =   pFitImp->userDir().c_str();
             fileName +=  "image.pdf";
 
 #ifndef QT_NO_FILEDIALOG
@@ -421,15 +421,6 @@ void TPlotWidget::savePlot()
     {
         QwtPlotRenderer renderer;
         renderer.renderDocument( m_plot, fileName, QSizeF( 200, 200 ), 85 );
-
-        string path = fileName.toUtf8().data();
-        string dir;
-        string name;
-        string newname;
-        u_splitpath( path, dir, name, newname );
-        dir  += "/";
-        pVisor->setLocalDir( dir );
-
     }
 
 }
@@ -625,7 +616,7 @@ SpectrogramData::SpectrogramData(GraphData* aGr_data)
     double x, y, z;
     double minX, minY, minZ;
     double maxX, maxY, maxZ;
-
+/*
     minX = maxX  =  aObj[aGr_data->plots[0].getObjY()].GetEmpty(0,0);
     minY = maxY  =  aObj[aGr_data->plots[0].getObjY()].GetEmpty(0,1);
     minZ = maxZ  =  aObj[aGr_data->plots[0].getObjY()].GetEmpty(0,2);
@@ -667,6 +658,7 @@ SpectrogramData::SpectrogramData(GraphData* aGr_data)
     setInterval( Qt::XAxis, QwtInterval( minX, maxX ) );
     setInterval( Qt::YAxis, QwtInterval( minY, maxY ) );
     setInterval( Qt::ZAxis, QwtInterval( minZ, maxZ ) );
+*/
 }
 
 double SpectrogramData::value( double x, double y ) const

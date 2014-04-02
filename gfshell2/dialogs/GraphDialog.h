@@ -28,11 +28,10 @@
 
 #include "ui_GraphDialog4.h"
 #include  "qwtplot.h"
-//#include  "v_2module.h"
+#include  "fmodel.h"
 
 // Widgets for legend and plotting dialogs
 void paintIcon( QIcon &icon, TPlotLine &plLine );
-
 
 //=========================================================================
 // Added for new legend table
@@ -86,7 +85,7 @@ class GraphDialog: public QDialog, public Ui::GraphDialogData
     Q_OBJECT
 
     TPlotWidget* plot;
-    TCModule *pModule;
+    TMatrixModel *pModel;
     DragTableWidget *tbLegend;
     LabelDelegate *dgLegend;
 
@@ -101,12 +100,12 @@ class GraphDialog: public QDialog, public Ui::GraphDialogData
 protected slots:
     void changeIcon( int row, int column );
     void changeNdx( int row, int column );
-    virtual void languageChange();
-    virtual void CmFragment();
-    virtual void CmLegend();
-    virtual void CmPrint();
-    virtual void CmSave();
-    virtual void CmHelp();
+    void languageChange();
+    void CmFragment();
+    void CmLegend();
+    void CmPrint();
+    void CmSave();
+    void CmHelp();
 
 public slots:
     void selectedFragment( const QRectF& );
@@ -115,20 +114,11 @@ public:
 
     GraphData gr_data;
 
-    GraphDialog(TCModule *pmodule, GraphData& data);
+    GraphDialog(TMatrixModel *pmodule, const GraphData& data, QWidget *parent );
     ~GraphDialog();
 
-    string moduleName() const
-    {  return  (string("gr")+pModule->GetName());   }
-
-    string iconFile() const
-    {  return  pModule->GetIcon();   }
-
-    int rtNum() const
-    {  return  pModule->rtNum();   }
-
-    string mainModuleName() const
-    {  return  pModule->GetName();   }
+    string modelName() const
+    {  return  pModel->getName();   }
 
     // Show dialog
     void ShowNew( const char *capAdd );

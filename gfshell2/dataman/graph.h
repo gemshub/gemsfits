@@ -29,8 +29,7 @@
 #include <qwt_series_data.h>
 #include  "verror.h"
 #include  "bson.h"
-class GemDataStream;
-//struct bson;
+#include  "fmodel.h"
 
 //const int maxPLOT = 20;
 
@@ -151,17 +150,13 @@ public:
         ndxX = aNdxX;
     }
 
-    void read(GemDataStream& stream);
-    void write(GemDataStream& stream);
-    void read(fstream& stream);
-    void write(fstream& stream);
-
-    //QJsonObject toJsonObject();
-    //void fromJsonObject( QJsonObject obj );
+    ///void read(GemDataStream& stream);
+    ///void write(GemDataStream& stream);
+    ///void read(fstream& stream);
+    ///void write(fstream& stream);
 
     void toBsonObject( bson *obj );
     void fromBsonObject( const char *obj );
-
 
 };
 
@@ -170,25 +165,30 @@ public:
 /// a series of curves in the x-y plane
 class TPlot
 {
-    int nObjX; /// index of Abscissa in TObjList aObj
-    int nObjY; /// index of Ordinate in TObjList aObj
+    TMatrixModel *pModel;
+
+    vector<string> ynames; ///< Ordinate names
+    vector<int> xcolms;  ///< Abscissa columns list
+    vector<int> ycolms;  ///< Ordinate columns list
+///  int nObjX; // index of Abscissa in TObjList aObj
+///  int nObjY; // index of Ordinate in TObjList aObj
 
     // work variables
     int dX;   // number of point in one line
     int nAbs; //number of different Abscissa lines
     int dY1;  // number of lines (Ordinate)
-    bool foString;
+ ///   bool foString;
     int first;
 
 public:
 
-    TPlot( int aObjX, int aObjY );
+    TPlot( TMatrixModel *aModel );
     TPlot( const TPlot& plt, int aFirst );
     ~TPlot();
 
-    int getObjX() const { return nObjX; }
-    int getObjY() const { return nObjY; }
-    bool getfoString() const { return foString; }
+///    int getObjX() const { return nObjX; }
+///    int getObjY() const { return nObjY; }
+///    bool getfoString() const { return foString; }
 
     /// Get number of points for one curve
     int getdX() const
@@ -207,7 +207,7 @@ public:
     {  return first;  }
 
     /// Return string with Ordinate name and line index
-    string getName( int ii);
+    const string& getName( int ii);
 
     /// Get one line to paint (ndxX - column in Abscissa table)
     int getPointLine( int line, QVector<QPointF>& points, int ndxX );
@@ -218,11 +218,6 @@ public:
 
     /// Get min and max values x,y for one curve line
     void getMaxMinLine( QPointF& min, QPointF& max, int line, int ndxX );
-
-    /// obsolete
-    //void getMaxMin( QPointF& min, QPointF& max );
-    //void getMaxMinIso( QPointF& min, QPointF& max );
-
 };
 
 
@@ -261,10 +256,10 @@ struct GraphData
 
     GraphData( const vector<TPlot>& aPlots, const char * title,
             const char *aXName, const char *aYname,
-            const vector<string>& line_names,
+///            const vector<string>& line_names,
             int agraphType = LINES_POINTS );
 
-    GraphData( GraphData& data );
+    GraphData( const GraphData& data );
 
     ~GraphData();
 
@@ -336,17 +331,17 @@ public:
 
   GraphDialog *graph_dlg;
 
-  GraphWindow( TCModule *pmodule,
+  GraphWindow( QWidget *parent, TMatrixModel *pmodule,
                const vector<TPlot>& aPlots, const char * title,
             float *sizeReg, float *sizePrt,
             TPlotLine * aLinesDesc, short *aAxisType,
             const char *aXName = 0, const char *aYname = 0 );
 
-  GraphWindow( TCModule *pmodule,
+  GraphWindow( QWidget *parent, TMatrixModel *pmodule,
                const vector<TPlot>& aPlots, const char * title,
-            const char *aXName, const char *aYname,
-            const vector<string>& line_names,
-            int agraphType = LINES_POINTS );
+               const char *aXName, const char *aYname,
+ //           const vector<string>& line_names,
+               int agraphType = LINES_POINTS );
 
   ~GraphWindow();
 

@@ -63,6 +63,7 @@ class TMatrixModel: public QAbstractTableModel
     int numberStringColumns;
     QVector< QString > colHeads;
     QVector< QVector<QVariant> > matrix;
+
     QSet<int> xcolms;  ///< Abscissa columns list
     QSet<int> ycolms;  ///< Ordinate columns list
 
@@ -89,8 +90,15 @@ public:
      int getNumberStringColumns() const
      {   return numberStringColumns; }
 
+     string getName()
+     {   return string(fname.toUtf8().data()); }
+
      void ToggleX( int ncolmn );
      void ToggleY( int ncolmn );
+
+     // get graph info
+     void getXYvectors( int& lines, vector<int>& xval, vector<int>& yval, vector<string>& ynames );
+
 
 };
 

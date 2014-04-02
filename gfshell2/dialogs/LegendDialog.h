@@ -28,7 +28,6 @@
 #include <qfont.h>
 
 #include <QDialog>
-
 #include "ui_LegendDialog4.h"
 #include "GraphDialog.h"
 
@@ -48,16 +47,16 @@ class LegendDialog :public QDialog, public Ui::LegendDialogData
 
 public:
     LegendDialog( GraphDialog * aGraph );
-    virtual ~LegendDialog();
+    ~LegendDialog();
 
 protected slots:
-    virtual void CmApply();
+    void CmApply();
     void CmHelp();
-    virtual void accept();
-    virtual void CmBackground();
-    virtual void CmChangeLabelFont();
-    virtual void CmChangeGraphType(int);
-    virtual void languageChange();
+    void accept();
+    void CmBackground();
+    void CmChangeLabelFont();
+    void CmChangeGraphType(int);
+    void languageChange();
 
 };
 

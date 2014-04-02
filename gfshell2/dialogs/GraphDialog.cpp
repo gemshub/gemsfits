@@ -41,11 +41,8 @@
 
 #include "GraphDialog.h"
 #include "LegendDialog.h"
-//#include "SymbolDialog.h"
-#include "GemsMainWindow.h"
-#include "visor.h"
-#include "service.h"
-#include "model_w.h"
+#include "SymbolDialog.h"
+#include "FITMainWindow.h"
 
 void paintIcon( QIcon &icon, TPlotLine &plLine )
 {
@@ -88,12 +85,12 @@ void paintIcon( QIcon &icon, TPlotLine &plLine )
 //==========================================================================================
 
 /// The constructor
-GraphDialog::GraphDialog(TCModule *pmodule, GraphData& data):
-        QDialog( pmodule->window() ),
-        pModule(pmodule),  isFragment(false), gr_data(data)
+GraphDialog::GraphDialog(TMatrixModel *pmodule, const GraphData& data, QWidget *parent ):
+        QDialog( parent ),
+        pModel(pmodule),  isFragment(false), gr_data(data)
 {
 	setupUi(this);
-    string cap = "GEM-Selektor v.3 Graphics Dialog";
+    string cap = "GEMSFIT v.3 Graphics Dialog";
     setWindowTitle( cap.c_str() );
 
     // define plot window
@@ -110,7 +107,7 @@ GraphDialog::GraphDialog(TCModule *pmodule, GraphData& data):
     tbLegend->setColumnWidth(1, 30 );
     tbLegend->horizontalHeader()->setStretchLastSection( true);
     //tbLegend->setColumnWidth(1, wdF( ftString, 15, eNo ) );
-    tbLegend->setMaximumWidth( 80+wdF( ftString, 15, eNo ) );
+    tbLegend->setMaximumWidth( 80+180 /*wdF( ftString, 15, eNo )*/ );
     tbLegend->verticalHeader()->setVisible(false);
     tbLegend->horizontalHeader()->setVisible(false);
 
@@ -163,7 +160,6 @@ void GraphDialog::closeEvent(QCloseEvent* ev)
 {
     // close module
     ev->accept();
-    pVisorImp->closeMdiChild( this );
 }
 
 // Insert labels in legend box
@@ -180,7 +176,7 @@ void GraphDialog::ShowLegend()
     tbLegend->setRowCount(gr_data.lines.size());
     for(int ii=0; ii<gr_data.lines.size(); ii++ )
     {
-        tbLegend->setRowHeight(ii, htF(ftString, 0)+4);
+        tbLegend->setRowHeight(ii, 21/*htF(ftString, 0)+4*/);
 
         QIcon icon;
         paintIcon( icon, gr_data.lines[ii] );
@@ -216,7 +212,7 @@ void GraphDialog::ShowIsolineLegend()
     tbLegend->setRowCount(gr_data.scale.size());
     for(int ii=0; ii<gr_data.scale.size(); ii++ )
     {
-        tbLegend->setRowHeight(ii, htF(ftString, 0)+4);
+        tbLegend->setRowHeight(ii, 21/*htF(ftString, 0)+4*/);
 
         TPlotLine pl( "Scale",  QwtSymbol::Rect, 0, 0, gr_data.scale[ii].red(),
                       gr_data.scale[ii].green(), gr_data.scale[ii].blue() );
@@ -301,8 +297,7 @@ void GraphDialog::changeNdx( int row, int column )
 // If this is for adding points - we don't need Clear() and Show() - just add
 void GraphDialog::ShowNew( const char* capAdd )
 {
-    string cap = "GEM-Selektor v.3 Graphics Dialog";
-    //string cap = windowTitle().toUtf8().data();
+    string cap = "GEMSFIT v.3 Graphics Dialog";
     if(capAdd)
        cap += capAdd;
     setWindowTitle( cap.c_str() );
@@ -323,7 +318,7 @@ void GraphDialog::AddPoint( int nPlot, int nPoint )
 
 void  GraphDialog::SaveGraphData()
 {
-    if( !pModule->SaveGraphData( &gr_data ) )
+    /// if( !pModule->SaveGraphData( &gr_data ) )
        ; // message "Changes cannot be saved"
 }
 
@@ -389,52 +384,7 @@ void GraphDialog::CmFragment()
 
 void GraphDialog::CmSave()
 {
-    /*QString filter;
-    QList<QByteArray> formatList = QImageWriter::supportedImageFormats ();
-
-   if( formatList.contains("png") )
-        filter.append("png Files (*.png)");
-
-   QListIterator<QByteArray> it( formatList );
-    while( it.hasNext() )
-    {
-      QString str = it.next();
-      if( str == "png" )
-         continue;
-      if( !filter.isEmpty() )
-        filter.append(";;");
-      filter.append(str);
-      filter.append(" Files (*.");
-      filter.append(str.toLower());
-      filter.append(")");
-   }
-
-    QString selectedFilter;
-    string path = pVisor->localDir();
-
-    QString fn = QFileDialog::getSaveFileName(this, "Saving Plotting Image",
-                  path.c_str(), filter, &selectedFilter );
-    if ( !fn.isEmpty() )
-    {
-      QString format( selectedFilter.left(3) );
-      if( !fn.contains('.') )
-      {
-        fn.append(".");
-        fn.append(format.toLower());
-      }
-      QPixmap::grabWidget(plot).save(fn, format.toUtf8().data());
-
-
-        path = fn.toUtf8().data();
-        string dir;
-        string name;
-        string newname;
-        u_splitpath( path, dir, name, newname );
-        dir  += "/";
-        pVisor->setLocalDir( dir );
-    }*/
    plot->savePlot();
-
 }
 
 // Print graph screen to printer device
@@ -467,7 +417,7 @@ void GraphDialog::CmPrint()
 
 void GraphDialog::CmHelp()
 {
-    pVisorImp->OpenHelp( GEMS_GRAPH_HTML );
+       pFitImp->OpenHelp( GF_PREFS_HTML );
 }
 
 //=======================================================================================

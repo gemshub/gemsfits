@@ -16,11 +16,11 @@
 // See http://gems.web.psi.ch/ for more information
 // E-mail gems2.support@psi.ch
 //-------------------------------------------------------------------
+
 #include <cstdio>
 #include <QColorDialog>
 #include <QFontDialog>
 
-#include "fservice.h"
 #include "LegendDialog.h"
 #include "FITMainWindow.h"
 
@@ -39,7 +39,7 @@ LegendDialog::LegendDialog( GraphDialog * aGraph ):
     cap += graph->title;
     setWindowTitle( cap.c_str() );
 
-    labelFont = pVisorImp->getAxisLabelFont();
+    labelFont = pFitImp->getAxisLabelFont();
     pLabelFont->setText(labelFont.toString());
 
     pAxisX->setValue( graph->axisTypeX );
@@ -107,8 +107,8 @@ void  LegendDialog::CmChangeGraphType( int new_type )
     }
     catch( TError& xcpt )
     {
-        vfMessage(this, xcpt.title, xcpt.mess);
-        comboBox1->setCurrentIndex( oldGraphType );
+      cout << xcpt.title <<  xcpt.mess << endl;
+      comboBox1->setCurrentIndex( oldGraphType );
     }
 }
 
@@ -135,7 +135,7 @@ void LegendDialog::CmApply()
 
 int LegendDialog::apply()
 {
-    pVisorImp->setAxisLabelFont(labelFont);
+    pFitImp->setAxisLabelFont(labelFont);
 
     double x0 =  pX0->text().toDouble();
     double xn =  pXn->text().toDouble();
@@ -149,9 +149,9 @@ int LegendDialog::apply()
 
     if ( x0 >= xn || y0 >= yn || fx0 >= fxn || fy0 >= fyn )
     {
-	vfMessage( this, "Plot parameters",
-		"Incorrect intervals, please check!", vfErr);
-	return 1;
+        cout << "Plot parameters" <<  "Incorrect intervals, please check!" << endl;
+        // vfMessage( this, "Plot parameters", 	"Incorrect intervals, please check!", vfErr);
+        return 1;
     }
 
     graph->axisTypeX = pAxisX->value();
@@ -191,7 +191,7 @@ void LegendDialog::CmChangeLabelFont()
 
 void LegendDialog::CmHelp()
 {
-    pVisorImp->OpenHelp( GEMS_GRAPH_CUS_HTML );
+    pFitImp->OpenHelp( GF_PREFS_HTML );
 }
 
 //--------------------- End of LegendDialog.cpp ---------------------------

@@ -306,6 +306,24 @@ void TMatrixModel::ToggleY( int ncolmn )
     // Update headers
 }
 
+void TMatrixModel::getXYvectors(  int& lines, vector<int>& xval, vector<int>& yval, vector<string>& ynames )
+{
+   xval.clear();
+   yval.clear();
+   ynames.clear();
+
+   lines = matrix.size();
+
+   foreach (const int &value, xcolms)
+      xval.push_back( value);
+
+   foreach (const int &value, ycolms)
+   {   yval.push_back( value);
+       ynames.push_back( colHeads[value].toUtf8().data() );
+   }
+
+}
+
 //-------------------------------------------------------------------------------------
 // class TVectorTable implements a table view that displays items from a model.
 //-------------------------------------------------------------------------------------

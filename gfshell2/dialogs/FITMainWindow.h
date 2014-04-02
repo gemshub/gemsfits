@@ -60,6 +60,7 @@ class FITMainWindow : public QMainWindow
     TFile  gemsLstFile; ///< Path to GEMS3K files
     TFile  fitTaskDir;  ///< Path to the database file
 
+    QFont	axisLabelFont; // used in graphics
 
     string lastCalcRecordKey;  ///< Last calculated record key
     auto_ptr<TNode> aNode;
@@ -159,6 +160,10 @@ public:
        const string& docDir() const {
          return LocalDocDir;
        }
+       const QFont& getAxisLabelFont() const
+           {  return axisLabelFont; }
+       void setAxisLabelFont(const QFont& newAxisLabelFont)
+           {  axisLabelFont = newAxisLabelFont;  }
 
     QProcess*  helpProcess;
     void GetHelp();

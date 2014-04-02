@@ -87,6 +87,7 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     mainSettings(0), helpProcess(0)
 {
     ui->setupUi(this);
+    axisLabelFont = QFont("Courier New", 14);
 
     // define tool bar
     toolTasks = new QToolBar(this);

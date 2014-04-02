@@ -20,76 +20,14 @@
 
 #include <cstdio>
 #include "GraphDialog.h"
-#include "GemsMainWindow.h"
-#include "gdatastream.h"
-#include "v_ejdb.h"
-#include "v_object.h"
+#include "FITMainWindow.h"
+//#include "gdatastream.h"
+//#include "v_ejdb.h"
+//#include "v_object.h"
 
 //---------------------------------------------------------------------------
 // TPlotLine
 //---------------------------------------------------------------------------
-
-void TPlotLine::read(GemDataStream& stream)
-{
-    stream >> type;
-    stream >> sizes;
-    stream >> ndxX;
-    stream >> red >> green >> blue;
-    stream.readArray(name, sizeof(name));
-}
-
-void TPlotLine::write(GemDataStream& stream)
-{
-    stream << type;
-    stream << sizes;
-    stream << ndxX;
-    stream << red << green << blue;
-    stream.writeArray(name, sizeof(name));
-}
-
-void TPlotLine::read(fstream& stream)
-{
-    stream >> type;
-    stream >> sizes;
-    stream >> ndxX;
-    stream >> red >> green >> blue;
-    stream.get( name, 16, '\n');
- }
-
-void TPlotLine::write(fstream& stream)
-{
-    stream << type << " ";
-    stream << sizes << " ";
-    stream << ndxX << " ";
-    stream << red << " " << green << " " << blue << " ";
-    stream << name;
-    stream << endl;
-}
-
-/*QJsonObject TPlotLine::toJsonObject()
-{
-   QJsonObject obj;
-   obj.insert("gtp", QJsonValue(type) );
-   obj.insert("gsz", QJsonValue(sizes) );
-   obj.insert("gndx", QJsonValue(ndxX) );
-   obj.insert("grd", QJsonValue(red) );
-   obj.insert("ggr",  QJsonValue(green) );
-   obj.insert("gbl",  QJsonValue(blue) );
-   obj.insert("gnm",  QJsonValue(QString(name)) );
-   return obj;
-}
-
-void TPlotLine::fromJsonObject( QJsonObject obj )
-{
-    type = obj.value("gtp").toDouble(1);
-    sizes = obj.value("gsz").toDouble(4);
-    ndxX = obj.value("gndx").toDouble(1);
-    red = obj.value("grd").toDouble(0);
-    green = obj.value("ggr").toDouble(0);
-    blue = obj.value("gbl").toDouble(0);
-    memcpy( name, obj.value("gnm").toString().toUtf8().data(), 15);
-}
-*/
 
 void TPlotLine::toBsonObject( bson *obj )
 {
@@ -125,44 +63,19 @@ void TPlotLine::fromBsonObject( const char *obj )
 // TPlot
 //---------------------------------------------------------------------------
 
-TPlot::TPlot( int aObjX, int aObjY ):
-     nObjX(aObjX), nObjY(aObjY), first(0)
+TPlot::TPlot( TMatrixModel *aModel ):
+     pModel(aModel), first(0)
 {
-    int dNy, dMy, dY;
+    pModel->getXYvectors( dX, xcolms, ycolms,  ynames);
 
-    foString = ( aObjX < 0 || aObj[aObjX].GetN() >= 1 );
-
-    dNy = aObj[aObjY].GetN();
-    dMy = aObj[aObjY].GetM();
-
-    if( foString == true )
-    {
-        dY=dNy;
-        dY1=dMy;
-
-        if( aObjX < 0 ) // numbers
-        {    dX = dNy;  nAbs = 1;   }
-        else
-        {    dX = aObj[aObjX].GetN();
-             nAbs = aObj[aObjX].GetM();
-        }
-
-    } // put graph by column
-    else
-    {
-        dY=dMy;
-        dY1=dNy;
-        dX = aObj[aObjX].GetM();
-        nAbs = aObj[aObjX].GetN();
-    } // put graph by string
-
-    ErrorIf( dX!=dY, "Graphics demo", "Invalid size of objects.");
+   // put graph by column
+    dY1 = ycolms.size();
+    nAbs = xcolms.size();
 }
 
 TPlot::TPlot( const TPlot& plt, int aFirst ):
-        nObjX(plt.nObjX), nObjY(plt.nObjY), first(aFirst)
+        xcolms(plt.xcolms), ycolms(plt.ycolms), ynames(plt.ynames), first(aFirst)
 {
-    foString = plt.foString;
     dX =plt.dX;
     nAbs = plt.nAbs;
     dY1 =plt.dY1;
@@ -171,11 +84,9 @@ TPlot::TPlot( const TPlot& plt, int aFirst ):
 TPlot::~TPlot()
 {}
 
-string TPlot::getName( int ii )
+const string& TPlot::getName( int ii )
 {
-    char s[40];
-    sprintf(s, "%s[%u]",aObj[nObjY].GetKeywd(), ii);
-    return string(s);
+    return ynames[ii];
 }
 
 // get point to draw one line
@@ -189,20 +100,14 @@ QPointF TPlot::getPoint( int line, int number, int ndxAbs )
     if( ndxAbs < 0 )
         return QPointF( DOUBLE_EMPTY, DOUBLE_EMPTY );
 
-    if( foString == true )  // put graph by column
-    {
-        if( nObjX < 0 )
-            x = number;
-        else
-            x = aObj[nObjX].GetEmpty( number, ndxAbs );
+    QModelIndex wIndex = 	pModel->index( number, line );
+     y = wIndex.data(Qt::EditRole).toDouble();
 
-        y = aObj[nObjY].GetEmpty( number, line );
-    }
-    else    // put graph by string
-    {
-       x = aObj[nObjX].GetEmpty( ndxAbs, number );
-       y = aObj[nObjY].GetEmpty( line, number );
-    }
+    // put graph by column
+      if( nAbs <= 0 )
+            x = number;
+      else
+            x =  wIndex.sibling( number, ndxAbs ).data(Qt::EditRole).toDouble();
 
     return QPointF( x, y);
 }
@@ -271,30 +176,6 @@ void TPlot::getMaxMinLine( QPointF& min, QPointF& max, int line, int ndxAbs )
 }
 
 
-// must be changed ---------------------------------------------------------
-
-/*void TPlot::getMaxMinIso( QPointF& min, QPointF& max )
-{
-    double x,y;
-    x = aObj[nObjY].Get(0,0);
-    min.setX( x );
-    max.setX( x );
-    y = aObj[nObjY].Get(0,1);
-    min.setY( y );
-    max.setY( y );
-
-    for( int ii =0; ii<dX; ii++)
-    {
-         x = aObj[nObjY].Get(ii,0);
-         y = aObj[nObjY].Get(ii,1);
-         if( min.x() > x ) min.setX( x );
-         if( max.x() < x ) max.setX( x );
-         if( min.y() > y ) min.setY( y );
-         if( max.y() < y ) max.setY( y );
-   }
-}
-*/
-
 //---------------------------------------------------------------------------
 // GraphData
 //---------------------------------------------------------------------------
@@ -350,7 +231,7 @@ GraphData::GraphData( const vector<TPlot>& aPlots, const char * aTitle,
 }
 
 /// The constructor
-GraphData::GraphData( GraphData& data ):
+GraphData::GraphData( const GraphData& data ):
         title(data.title), axisTypeX(data.axisTypeX), axisTypeY(data.axisTypeY),
         graphType(data.graphType), xName(data.xName), yName(data.yName)
         //isBackgr_color(data.isBackgr_color)
@@ -389,10 +270,8 @@ GraphData::GraphData( GraphData& data ):
 
 /// The constructor
 GraphData::GraphData( const vector<TPlot>&  aPlots, const char * aTitle,
-               const char *aXName, const char *aYName,
-               const vector<string>& line_names, int agraphType ):
+               const char *aXName, const char *aYName, int agraphType ):
         title(aTitle), axisTypeX(4), axisTypeY(4), graphType( agraphType )
-        // isBackgr_color(false)
 {
     int ii;
     int jj, nLines, ndxAbs;
@@ -414,10 +293,7 @@ GraphData::GraphData( const vector<TPlot>&  aPlots, const char * aTitle,
            if( jj < plots[ii].getNAbs() )
              ndxAbs = jj;
           else  ndxAbs = 0;
-          if( nLines < line_names.size() )
-            lines.push_back( TPlotLine( jj, nLinN, line_names[nLines].c_str(), 0, 4,2, ndxAbs ) );
-          else
-            lines.push_back( TPlotLine( jj, nLinN, plots[ii].getName(jj).c_str(), 0, 4,2, ndxAbs  ) );
+          lines.push_back( TPlotLine( jj, nLinN, plots[ii].getName(jj).c_str(), 0, 4,2, ndxAbs  ) );
         }
     }
 
@@ -520,7 +396,7 @@ bool GraphData::goodIsolineStructure( int aGraphType )
         ) )
    {
      string str = "Invalid sizes of graphic arrays:";
-     if(plots.size() >= 1)
+     /*if(plots.size() >= 1)
              str += aObj[ plots[0].getObjY()].GetKeywd();
      else
              str = "Must be two objects in graphic";
@@ -529,6 +405,7 @@ bool GraphData::goodIsolineStructure( int aGraphType )
              str += aObj[ plots[1].getObjY()].GetKeywd();
      else
              str = "Must be two objects in graphic";
+     */
      Error( " ISOLINES graphic", str );
     }
   return true;
@@ -538,19 +415,19 @@ bool GraphData::goodIsolineStructure( int aGraphType )
 // get data from plots[1] object, colums 2, 3, 4
 void GraphData::setColorList()
 {
-  int cred, cgreen, cblue;
-  int nObjY = plots[1].getObjY();
+  ///int cred, cgreen, cblue;
+  ///int nObjY = plots[1].getObjY();
   scale.clear();
 
   for( int ii=0; ii< plots[1].getdX(); ii++ )
   {
-     cred = (int)aObj[nObjY].Get(ii,2);
-     cgreen = (int)aObj[nObjY].Get(ii,3);
-     cblue = (int)aObj[nObjY].Get(ii,4);
+     ///cred = (int)aObj[nObjY].Get(ii,2);
+     ///cgreen = (int)aObj[nObjY].Get(ii,3);
+     ///cblue = (int)aObj[nObjY].Get(ii,4);
 
-     if( ( cred ==0 && cgreen == 0 && cblue == 0 ) ||
-         cred < 0 || cgreen < 0 || cblue < 0 ||
-         cred > 255 || cgreen > 255 || cblue > 255 )
+     ///if( ( cred ==0 && cgreen == 0 && cblue == 0 ) ||
+     ///    cred < 0 || cgreen < 0 || cblue < 0 ||
+     ///    cred > 255 || cgreen > 255 || cblue > 255 )
      { //default
          if(!ii)
             scale.push_back( QColor( Qt::red ) );
@@ -559,27 +436,27 @@ void GraphData::setColorList()
               else
                 scale.push_back( QColor( Qt::yellow ) );
      }
-     else
-       scale.push_back( QColor( cred, cgreen, cblue ));
+     ///else
+     ///  scale.push_back( QColor( cred, cgreen, cblue ));
   }
 
 }
 
 double GraphData::getValueIsoline(int ii)
 {
-    return aObj[plots[1].getObjY()].Get(ii,0);
+    ///return aObj[plots[1].getObjY()].Get(ii,0);
 }
 
 void GraphData::setValueIsoline(double val, int ii)
 {
-    aObj[plots[1].getObjY()].Put( val, ii,0);
+   /// aObj[plots[1].getObjY()].Put( val, ii,0);
 }
 
 // put color scale for ISOLINE graphics to object plots[1]
 //  colums 2, 3, 4
 void GraphData::getColorList()
 {
-  int nObjY = plots[1].getObjY();
+  /** int nObjY = plots[1].getObjY();
   for( int ii=0; ii< plots[1].getdX(); ii++ )
   {
      if( ii >= (int)scale.size() )
@@ -588,13 +465,14 @@ void GraphData::getColorList()
      aObj[nObjY].Put( scale[ii].green(), ii, 3 );
      aObj[nObjY].Put( scale[ii].blue(),  ii, 4 );
   }
+  */
 }
 
 // put sizes scale for ISOLINE graphics to object plots[1]
 //  colum 0
 void GraphData::setScales()
 {
-  int nObjY = plots[1].getObjY();
+  /** int nObjY = plots[1].getObjY();
   double delta = 1. / (plots[1].getdX()-1);
 
   for( int ii=0; ii< plots[1].getdX()-1; ii++ )
@@ -603,13 +481,14 @@ void GraphData::setScales()
      aObj[nObjY].Put( 1.-delta*(ii), ii, 0 );
   }
   aObj[nObjY].Put( 0., plots[1].getdX()-1, 0 );
+  */
 }
 
 
 //---------------------------------------------------------------------------
 
 ///   The constructor
-GraphWindow::GraphWindow(TCModule *pmodule,
+GraphWindow::GraphWindow(QWidget *parent, TMatrixModel *pmodule,
                const vector<TPlot>& aPlots,
                const char * aTitle,
                float *sizeReg,  float * sizePart,
@@ -619,20 +498,20 @@ GraphWindow::GraphWindow(TCModule *pmodule,
 
        GraphData data(aPlots, aTitle, sizeReg, sizePart,
                 aLinesDesc, aAxisType, aXName, aYName);
-       graph_dlg = new GraphDialog( pmodule, data );
-       pVisorImp->openMdiChild( graph_dlg );
+       graph_dlg = new GraphDialog( pmodule, data, parent );
+       graph_dlg->show();
 }
 
 ///   The constructor
-GraphWindow::GraphWindow( TCModule *pmodule,
+GraphWindow::GraphWindow( QWidget *parent, TMatrixModel *pmodule,
                          const vector<TPlot>& aPlots, const char * title,
-                      const char *aXName, const char *aYName,
-                      const vector<string>& line_names,
+                         const char *aXName, const char *aYName,
+//                      const vector<string>& line_names,
                       int agraphType  )
 {
-   GraphData  data( aPlots, title, aXName, aYName, line_names, agraphType );
-   graph_dlg = new GraphDialog(pmodule, data);
-   pVisorImp->openMdiChild( graph_dlg );
+   GraphData  data( aPlots, title, aXName, aYName, agraphType );
+   graph_dlg = new GraphDialog(pmodule, data, parent);
+   graph_dlg->show();
 }
 
 GraphWindow::~GraphWindow()
