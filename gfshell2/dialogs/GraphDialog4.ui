@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>770</width>
-    <height>747</height>
+    <width>895</width>
+    <height>471</height>
    </rect>
   </property>
   <property name="font">
@@ -21,7 +21,10 @@
   <property name="windowTitle">
    <string>GEM-Selektor v.3 Graphics Dialog</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_2">
+  <property name="modal">
+   <bool>false</bool>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0" colspan="6">
     <widget class="QFrame" name="framePrn">
      <property name="frameShape">
@@ -30,90 +33,104 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0" rowspan="2">
-       <widget class="QFrame" name="plotFrame">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QSplitter" name="splitter">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
-        <property name="minimumSize">
-         <size>
-          <width>400</width>
-          <height>400</height>
-         </size>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout_2">
-         <property name="spacing">
-          <number>0</number>
+        <widget class="QFrame" name="plotFrame">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
-         <property name="margin">
-          <number>0</number>
+         <property name="minimumSize">
+          <size>
+           <width>400</width>
+           <height>400</height>
+          </size>
          </property>
-        </layout>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QGroupBox" name="pGrpLegend">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="title">
-         <string>Legend| x# |Label </string>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout"/>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QGroupBox" name="groupBox">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="title">
-         <string/>
-        </property>
-        <layout class="QGridLayout">
-         <item row="0" column="0">
-          <widget class="QLabel" name="TextLabel1">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Click legend symbols to adjust curves; select abscissae under x#; edit labels, drag-drop them to plot area</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignVCenter</set>
-           </property>
-           <property name="wordWrap">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="widget" native="true">
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QGroupBox" name="pGrpLegend">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="title">
+             <string>Legend| x# |Label </string>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout"/>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="title">
+             <string/>
+            </property>
+            <layout class="QGridLayout">
+             <item row="0" column="0">
+              <widget class="QLabel" name="TextLabel1">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Click legend symbols to adjust curves; select abscissae under x#; edit labels, drag-drop them to plot area</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignVCenter</set>
+               </property>
+               <property name="wordWrap">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </widget>
       </item>
      </layout>
-     <zorder>plotFrame</zorder>
-     <zorder>pGrpLegend</zorder>
-     <zorder>TextLabel1</zorder>
-     <zorder>groupBox</zorder>
     </widget>
    </item>
    <item row="1" column="0">
@@ -137,7 +154,7 @@
       <string>&amp;Fragment</string>
      </property>
      <attribute name="buttonGroup">
-      <string>buttonGroup</string>
+      <string notr="true">buttonGroup</string>
      </attribute>
     </widget>
    </item>
@@ -165,7 +182,7 @@
       <bool>false</bool>
      </property>
      <attribute name="buttonGroup">
-      <string>buttonGroup</string>
+      <string notr="true">buttonGroup</string>
      </attribute>
     </widget>
    </item>
@@ -203,7 +220,7 @@
       <string>&amp;Print</string>
      </property>
      <attribute name="buttonGroup">
-      <string>buttonGroup</string>
+      <string notr="true">buttonGroup</string>
      </attribute>
     </widget>
    </item>
@@ -228,7 +245,7 @@
       <string>Save Image</string>
      </property>
      <attribute name="buttonGroup">
-      <string>buttonGroup</string>
+      <string notr="true">buttonGroup</string>
      </attribute>
     </widget>
    </item>
@@ -256,7 +273,7 @@
       <string>F1</string>
      </property>
      <attribute name="buttonGroup">
-      <string>buttonGroup</string>
+      <string notr="true">buttonGroup</string>
      </attribute>
     </widget>
    </item>

@@ -421,8 +421,10 @@ void FitResultsWindow::CmPlotTable()
         TMatrixModel *pmodel = (TMatrixModel *)tableCurrent->model();
         vector<TPlot> plt;
         plt.push_back( TPlot( pmodel ));
-        GraphWindow *  gd_gr = new GraphWindow(  this, pmodel, plt, "title",
-             "xname", "yname" );
+        string title = "Task ";
+               title  += pLineTask->text().toUtf8().data();
+               title += "."+pmodel->getName();
+        GraphWindow *  gd_gr = new GraphWindow(  this, pmodel, plt, title.c_str(), "x", "y" );
     }
     catch( TError& err )
     {

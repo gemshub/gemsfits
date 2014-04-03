@@ -293,7 +293,7 @@ GraphData::GraphData( const vector<TPlot>&  aPlots, const char * aTitle,
            if( jj < plots[ii].getNAbs() )
              ndxAbs = jj;
           else  ndxAbs = 0;
-          lines.push_back( TPlotLine( jj, nLinN, plots[ii].getName(jj).c_str(), 0, 4,2, ndxAbs  ) );
+          lines.push_back( TPlotLine( jj, nLinN, plots[ii].getName(jj).c_str(), 0, 4, 0, ndxAbs  ) );
         }
     }
 

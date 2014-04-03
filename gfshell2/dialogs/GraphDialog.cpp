@@ -107,7 +107,7 @@ GraphDialog::GraphDialog(TMatrixModel *pmodule, const GraphData& data, QWidget *
     tbLegend->setColumnWidth(1, 30 );
     tbLegend->horizontalHeader()->setStretchLastSection( true);
     //tbLegend->setColumnWidth(1, wdF( ftString, 15, eNo ) );
-    tbLegend->setMaximumWidth( 80+180 /*wdF( ftString, 15, eNo )*/ );
+    tbLegend->setMaximumWidth( 80+170 /*wdF( ftString, 15, eNo )*/ );
     tbLegend->verticalHeader()->setVisible(false);
     tbLegend->horizontalHeader()->setVisible(false);
 
@@ -118,6 +118,9 @@ GraphDialog::GraphDialog(TMatrixModel *pmodule, const GraphData& data, QWidget *
     LabelDelegate *dgLegend = new LabelDelegate( first, maxXndx );
     tbLegend->setItemDelegate(dgLegend);
     verticalLayout->addWidget( tbLegend );
+
+    splitter->setStretchFactor(0, 2);
+    splitter->setStretchFactor(1, 1);
 
     // Insert labels in legend box
     if( gr_data.graphType != ISOLINES )

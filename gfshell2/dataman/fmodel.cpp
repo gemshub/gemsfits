@@ -352,7 +352,8 @@ TMatrixTable::TMatrixTable( QWidget * parent ):
     setVerticalScrollMode( QAbstractItemView::ScrollPerItem );
     setHorizontalScrollMode( QAbstractItemView::ScrollPerItem );
     setEditTriggers( QAbstractItemView::DoubleClicked|QAbstractItemView::AnyKeyPressed );
-    
+
+    setSortingEnabled( true);
     connect( this, SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(slotPopupContextMenu(QPoint)));
 }
