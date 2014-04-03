@@ -49,6 +49,9 @@ public slots:
     void CmAbout_Graph_Dialog();
     void CmAbout_Results_window();
 
+    void CmPlotTable();
+    void CmPrintTable();
+
 public:
     static FitResultsWindow* pDia;
 

@@ -74,7 +74,7 @@ TPlot::TPlot( TMatrixModel *aModel ):
 }
 
 TPlot::TPlot( const TPlot& plt, int aFirst ):
-        xcolms(plt.xcolms), ycolms(plt.ycolms), ynames(plt.ynames), first(aFirst)
+       pModel(plt.pModel), xcolms(plt.xcolms), ycolms(plt.ycolms), ynames(plt.ynames), first(aFirst)
 {
     dX =plt.dX;
     nAbs = plt.nAbs;
@@ -100,14 +100,14 @@ QPointF TPlot::getPoint( int line, int number, int ndxAbs )
     if( ndxAbs < 0 )
         return QPointF( DOUBLE_EMPTY, DOUBLE_EMPTY );
 
-    QModelIndex wIndex = 	pModel->index( number, line );
+    QModelIndex wIndex = 	pModel->index( number, ycolms[ line ] );
      y = wIndex.data(Qt::EditRole).toDouble();
 
     // put graph by column
       if( nAbs <= 0 )
             x = number;
       else
-            x =  wIndex.sibling( number, ndxAbs ).data(Qt::EditRole).toDouble();
+            x =  wIndex.sibling( number, xcolms[ ndxAbs ] ).data(Qt::EditRole).toDouble();
 
     return QPointF( x, y);
 }

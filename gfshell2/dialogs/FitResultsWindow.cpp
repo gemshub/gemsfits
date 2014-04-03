@@ -24,6 +24,7 @@
 #include "FitResultsWindow.h"
 #include "FITMainWindow.h"
 #include "ui_FitResultsWindow.h"
+#include "graph.h"
 
 
 FitResultsWindow* FitResultsWindow::pDia = 0;
@@ -134,6 +135,8 @@ void FitResultsWindow::setActions()
     connect( ui->actionAbout_Graph_Dialog, SIGNAL( triggered()), this, SLOT(CmAbout_Graph_Dialog()));
     connect( ui->actionAbout_Results_window, SIGNAL( triggered()), this, SLOT(CmAbout_Results_window()));
 
+    connect( ui->actionPlot_Results, SIGNAL( triggered()), this, SLOT(CmPlotTable()));
+    connect( ui->actionPrint, SIGNAL( triggered()), this, SLOT(CmPrintTable()));
 
     QLabel * pTask = new QLabel( "   Task:   ", ui->toolBarKey );
     ui->toolBarKey->addWidget( pTask ); // setStretchableWidget( pLine );
@@ -401,6 +404,37 @@ void FitResultsWindow::CmDeleteRecord()
         if( vfQuestion( this, rtEJ[ MDF_FITS ].GetKeywd(),
                "Confirm deletion of data record keyed "+ key ))
              rtEJ[ MDF_FITS ].Del( key.c_str() );
+    }
+    catch( TError& err )
+    {
+        cout << err.title << err.mess << endl;
+    }
+}
+
+void FitResultsWindow::CmPlotTable()
+{
+    try
+    {
+        TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+        if( !tableCurrent )
+          return;
+        TMatrixModel *pmodel = (TMatrixModel *)tableCurrent->model();
+        vector<TPlot> plt;
+        plt.push_back( TPlot( pmodel ));
+        GraphWindow *  gd_gr = new GraphWindow(  this, pmodel, plt, "title",
+             "xname", "yname" );
+    }
+    catch( TError& err )
+    {
+        cout << err.title << err.mess << endl;
+    }
+}
+
+void FitResultsWindow::CmPrintTable()
+{
+    try
+    {
+
     }
     catch( TError& err )
     {
