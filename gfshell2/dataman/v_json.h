@@ -26,6 +26,8 @@ using namespace std;
 #include "ejdb.h"
 
 extern int generateTxtfromBson( string gemsfitfile, bson *obj, bool with_comments );
+extern void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>& row );
+
 extern void print_bson_to_json(FILE *f, const bson *b);
 /// Print bson object to text file
 extern void print_bson_object_to_json(FILE *f, const bson *b);

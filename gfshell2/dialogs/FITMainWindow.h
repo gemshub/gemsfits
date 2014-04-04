@@ -135,7 +135,7 @@ public slots:
        void CmBackupJSON();
        void CmRestoreJSON();
        void CmBackupCSV(){}
-       void CmRestoreCSV(){}
+       void CmRestoreCSV();
        void CmBackupTXT();
        void CmRestoreTXT();
        void CmBackupYAML(){}

@@ -712,6 +712,78 @@ void FITMainWindow::CmRestoreJSON()
     }
 }
 
+/// Import Data Records experements from csv-file
+void FITMainWindow::CmRestoreCSV()
+{
+    try
+    {
+        QString valCsv ="";
+        if( !MessageToSave() )
+          return;
+
+        // select file with data
+        string fname;
+        TFile  inFile("", ios::in);
+        if( !inFile.ChooseFileOpen( this, fname, "Please, select file with unloaded csv format","*.csv" ))
+             return;
+
+        // read file
+        QString fpath = fname.c_str();
+        QFile tmpStriam(fpath);
+        if(!tmpStriam.open( QIODevice::ReadOnly ))
+           Error( fname, "File open error");
+        valCsv = tmpStriam.readAll();
+        tmpStriam.close();
+
+        // split csv data
+        const QStringList allrows = valCsv.split('\n', QString::KeepEmptyParts);
+        int ii, jj;
+        vector<string> headline;
+        vector<string> row;
+        bson exp;
+
+         //get header
+        QStringList cells = allrows[0].split(',', QString::KeepEmptyParts);
+        for( ii=0; ii< cells.count(); ii++ )
+           headline.push_back( cells[ii].toUtf8().data() );
+
+        for( jj=1; jj< allrows.count(); jj++ )
+        {
+          // get row
+          cells = allrows[jj].split(',', QString::KeepEmptyParts);
+          row.clear();
+          for( ii=0; ii< cells.count(); ii++ )
+              row.push_back( cells[ii].toUtf8().data() );
+
+          // convert row to bson
+          csvToBson( &exp, headline, row );
+
+          // convert bson to json string
+          ParserJson pars;
+          string bsonVal;
+          pars.printBsonObjectToJson( bsonVal, exp.data );
+
+          //save results to EJDB
+          rtEJ[ currentMode ].SetJson( bsonVal );
+          if( ui->actionOverwrite->isChecked() )
+             rtEJ[ currentMode ].SaveRecord(0);
+          else
+             rtEJ[ currentMode ].InsertRecord();
+
+         bson_destroy( &exp );
+        }
+
+        changeKeyList();
+        contentsChanged = false;
+        setStatusText( "Records imported from csv-file" );
+    }
+    catch( TError& err )
+    {
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
+    }
+}
+
 /// Export Data Records from task configuration txt-file
 void FITMainWindow::CmBackupTXT()
 {
