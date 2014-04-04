@@ -469,7 +469,17 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
             // Default
             computed_value = IC_in_PH[ICndx]; // phase bulk composition in moles (mol)
             objfun.exp_unit = keys::mole;
-        } else { cout << "Error in target functions line 405 "; exit(1);}
+        } else
+        { if (PHndx < 0)
+             {
+                 cout << "Error: "<< phase_name <<" is not present in the GEMS3K CSD files "; exit(1);
+             } else
+          if (ICndx < 0)
+             {
+                 cout << "Error: "<< elem_name <<" is not present in the " <<phase_name; exit(1);
+             } else
+               cout << "Error in target functions line 481 "; exit(1);
+        }
 
 
     if ((p >= 0) && (e >= 0))
@@ -528,11 +538,20 @@ double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::ob
 
     interpretMR (&nom, &denom, objfun.exp_CN);
 
+    if (PHndx < 0)
+    {
+        cout << "Error: "<< phase_name <<" is not present in the GEMS3K CSD files "; exit(1);
+    }
+
     // calculating nominator
     for (unsigned int k = 0; k < nom.size(); ++k)
     {
         elem_name =  nom[k].c_str();
         ICndx = sys->NodT[i]->IC_name_to_xDB(elem_name);
+        if (ICndx < 0)
+        {
+           cout << "Error: "<< elem_name <<" is not present in the " <<phase_name; exit(1);
+        }
         if ( (objfun.exp_phase == keys::aqueous) && (PHndx >=0))
         {
             computed_nom = computed_nom + sys->NodT[i]->Get_mIC(ICndx)/* * sys->NodT[i]-> Ph_Mass(PHndx)*/;
@@ -548,6 +567,10 @@ double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::ob
     {
         elem_name =  denom[k].c_str();
         ICndx = sys->NodT[i]->IC_name_to_xDB(elem_name);
+        if (ICndx < 0)
+        {
+           cout << "Error: "<< elem_name <<" is not present in the " <<phase_name; exit(1);
+        }
         if ( (objfun.exp_phase == keys::aqueous)&& (PHndx >=0))
         {
             computed_denom = computed_denom + sys->NodT[i]->Get_mIC(ICndx)/* * sys->NodT[i]-> Ph_Mass(PHndx)*/;
@@ -769,7 +792,12 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
 //            if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::kJ_mol)
                                                // so far Gex only in J/mol
     }
-    else { cout << "Error in target functions line 633 "; exit(1);}
+    else
+    { if (PHndx < 0)
+         {
+             cout << "Error: "<< phase_name <<" is not present in the GEMS3K CSD files "; exit(1);
+         } else cout << "Error in target functions line 777 "; exit(1);
+    }
 
     if ((p >= 0) && (pp >= 0))
     {
@@ -856,8 +884,12 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFun
         if (objfun.exp_unit == keys::loga)
             computed_value = sys->NodT[i]->Get_aDC( DCndx, false );
         else computed_value = sys->NodT[i]->Get_aDC( DCndx, false );;
+    } else
+    { if (DCndx < 0)
+         {
+             cout << "Error: "<< dcomp_name <<" is not present in the GEMS3K CSD files "; exit(1);
+         } else cout << "Error in target functions line 869 "; exit(1);
     }
-      else { cout << "Error in target functions line 685 "; exit(1);}
 
     if ((p >= 0) && (dc >= 0) && (dcp >= 0))
     {

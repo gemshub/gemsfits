@@ -1121,14 +1121,14 @@ pid_ = 0;
         {
             gpf->fmc << SD_Fparam[j]<<",";
             T = boost::math::quantile(boost::math::complement(dist, 0.01/ 2));
-            w = T * SD_Fparam[j] / sqrt(double( number_of_measurements ));
+            w = T * SD_Fparam[j] /*/ sqrt(double( number_of_measurements ))*/;
             fitparam[j]->mc95 = w;
             fitparam[j]->mcconfi.push_back(w);
             T = boost::math::quantile(boost::math::complement(dist, 0.05/ 2));
-            w = T * SD_Fparam[j] / sqrt(double( number_of_measurements ));
+            w = T * SD_Fparam[j] /*/ sqrt(double( number_of_measurements ))*/;
             fitparam[j]->mcconfi.push_back(w);
             T = boost::math::quantile(boost::math::complement(dist, 0.1/ 2));
-            w = T * SD_Fparam[j] / sqrt(double( number_of_measurements ));
+            w = T * SD_Fparam[j] /*/ sqrt(double( number_of_measurements ))*/;
             fitparam[j]->mcconfi.push_back(w);
             fitparam[j]->mcSTDEV = SD_Fparam[j];
             p++;
@@ -1139,14 +1139,14 @@ pid_ = 0;
         {
             gpf->fmc << SD_Rparam[j]<<",";
             T = boost::math::quantile(boost::math::complement(dist, 0.01/ 2));
-            w = T * SD_Fparam[j] / sqrt(double( number_of_measurements ));
+            w = T * SD_Fparam[j] /*/ sqrt(double( number_of_measurements ))*/;
             fitparam[j+p]->mc95 = w;
             fitparam[j+p]->mcconfi.push_back(w);
             T = boost::math::quantile(boost::math::complement(dist, 0.05/ 2));
-            w = T * SD_Fparam[j] / sqrt(double( number_of_measurements ));
+            w = T * SD_Fparam[j] /*/ sqrt(double( number_of_measurements ))*/;
             fitparam[j+p]->mcconfi.push_back(w);
             T = boost::math::quantile(boost::math::complement(dist, 0.1/ 2));
-            w = T * SD_Fparam[j] / sqrt(double( number_of_measurements ));
+            w = T * SD_Fparam[j] /*/ sqrt(double( number_of_measurements ))*/;
             fitparam[j+p]->mcconfi.push_back(w);
         }
 
