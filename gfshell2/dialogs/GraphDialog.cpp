@@ -85,7 +85,7 @@ void paintIcon( QIcon &icon, TPlotLine &plLine )
 //==========================================================================================
 
 /// The constructor
-GraphDialog::GraphDialog(TMatrixModel *pmodule, const GraphData& data, QWidget *parent ):
+GraphDialog::GraphDialog(QSortFilterProxyModel *pmodule, const GraphData& data, QWidget *parent ):
         QDialog( parent ),
         pModel(pmodule),  isFragment(false), gr_data(data)
 {

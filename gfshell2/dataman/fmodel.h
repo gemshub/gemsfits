@@ -8,6 +8,7 @@ using namespace std;
 #include <QItemDelegate>
 #include <QLineEdit>
 #include <QTableView>
+#include <QSortFilterProxyModel>
 
 #include <QAbstractItemDelegate>
 #include <QFontMetrics>
@@ -41,6 +42,20 @@ struct Selection {
      {}
 
 };
+
+class TSortFilterProxyModel : public QSortFilterProxyModel
+ {
+     Q_OBJECT
+
+ public:
+     TSortFilterProxyModel(QObject *parent = 0):
+         QSortFilterProxyModel(parent)
+     { }
+
+ protected:
+     bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
+
+ };
 
 //===========================================
 // TVectorModel class

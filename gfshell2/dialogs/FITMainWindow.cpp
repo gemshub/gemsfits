@@ -156,7 +156,10 @@ void FITMainWindow::closeEvent(QCloseEvent* e)
           delete HelpWindow::pDia;
 
        if( FitResultsWindow::pDia )
-         delete  FitResultsWindow::pDia;
+       {
+           FitResultsWindow::pDia->close();
+           //delete  FitResultsWindow::pDia;
+       }
        //mdiArea->closeAllSubWindows();
        //if( mdiArea->subWindowList().count() > 0 )
        //    e->ignore();

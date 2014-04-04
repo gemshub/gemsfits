@@ -165,7 +165,7 @@ public:
 /// a series of curves in the x-y plane
 class TPlot
 {
-    TMatrixModel *pModel;
+    QSortFilterProxyModel *pModel;
 
     vector<string> ynames; ///< Ordinate names
     vector<int> xcolms;  ///< Abscissa columns list
@@ -182,7 +182,7 @@ class TPlot
 
 public:
 
-    TPlot( TMatrixModel *aModel );
+    TPlot( QSortFilterProxyModel *aModel );
     TPlot( const TPlot& plt, int aFirst );
     ~TPlot();
 
@@ -319,7 +319,7 @@ struct GraphData
 
 };
 
-// must be changed ============================================
+/* must be changed ============================================
 
 class GraphDialog;
 class TCModule;
@@ -331,13 +331,13 @@ public:
 
   GraphDialog *graph_dlg;
 
-  GraphWindow( QWidget *parent, TMatrixModel *pmodule,
+  GraphWindow( QWidget *parent, QSortFilterProxyModel *pmodule,
                const vector<TPlot>& aPlots, const char * title,
             float *sizeReg, float *sizePrt,
             TPlotLine * aLinesDesc, short *aAxisType,
             const char *aXName = 0, const char *aYname = 0 );
 
-  GraphWindow( QWidget *parent, TMatrixModel *pmodule,
+  GraphWindow( QWidget *parent, QSortFilterProxyModel *pmodule,
                const vector<TPlot>& aPlots, const char * title,
                const char *aXName, const char *aYname,
  //           const vector<string>& line_names,
@@ -351,6 +351,7 @@ public:
   GraphData *getGraphData() const;
 
 };
+*/
 
 #endif   // _graph_data_h
 

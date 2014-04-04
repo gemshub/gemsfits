@@ -85,7 +85,7 @@ class GraphDialog: public QDialog, public Ui::GraphDialogData
     Q_OBJECT
 
     TPlotWidget* plot;
-    TMatrixModel *pModel;
+    QSortFilterProxyModel *pModel;
     DragTableWidget *tbLegend;
     LabelDelegate *dgLegend;
 
@@ -114,11 +114,11 @@ public:
 
     GraphData gr_data;
 
-    GraphDialog(TMatrixModel *pmodule, const GraphData& data, QWidget *parent );
+    GraphDialog(QSortFilterProxyModel *pmodule, const GraphData& data, QWidget *parent );
     ~GraphDialog();
 
     string modelName() const
-    {  return  pModel->getName();   }
+    {  return  ((TMatrixModel *)pModel->sourceModel())->getName();   }
 
     // Show dialog
     void ShowNew( const char *capAdd );

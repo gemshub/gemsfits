@@ -3,10 +3,25 @@
 #include <QMenu>
 #include <QKeyEvent>
 #include <QClipboard>
+#include <QSortFilterProxyModel>
 
 #include "fmodel.h"
 #include "CalcDialog.h"
 #include "v_user.h"
+
+
+bool TSortFilterProxyModel::lessThan(const QModelIndex &left,
+                                      const QModelIndex &right) const
+{
+    TMatrixModel* model =(TMatrixModel *)sourceModel();
+    QVariant leftData = sourceModel()->data(left);
+    QVariant rightData = sourceModel()->data(right);
+
+    if (left.column() >= model->getNumberStringColumns() )
+        return leftData.toDouble() < rightData.toDouble();
+     else
+        return QSortFilterProxyModel::lessThan( left, right);
+}
 
 
 //--------------------------------------------------------------------------------------
@@ -381,7 +396,10 @@ TMatrixTable::TMatrixTable( QWidget * parent ):
  void TMatrixTable::slotPopupContextMenu(const QPoint &pos)
  {
      QModelIndex index = indexAt( pos );
-     TMatrixModel* model =(TMatrixModel *)index.model();
+     //TMatrixModel* model =(TMatrixModel *)index.model();
+     QSortFilterProxyModel *sortmodel = (QSortFilterProxyModel *)index.model();
+     TMatrixModel* model =(TMatrixModel *)sortmodel->sourceModel();
+
      QMenu *menu = new QMenu(this);
      //no_menu_out = false;
      //no_menu_in = false;
@@ -515,7 +533,9 @@ TMatrixTable::TMatrixTable( QWidget * parent ):
 void TMatrixTable::ToggleX()
 {
     QModelIndex index = currentIndex();
-    TMatrixModel* model =(TMatrixModel *)index.model();
+    QSortFilterProxyModel *sortmodel = (QSortFilterProxyModel *)index.model();
+    //    TMatrixModel* model =(TMatrixModel *)index.model();
+    TMatrixModel* model =(TMatrixModel *)sortmodel->sourceModel();
 
     model->ToggleX( index.column() );
     horizontalHeader()->update();
@@ -525,7 +545,9 @@ void TMatrixTable::ToggleX()
 void TMatrixTable::ToggleY()
 {
     QModelIndex index = currentIndex();
-    TMatrixModel* model =(TMatrixModel *)index.model();
+    //TMatrixModel* model =(TMatrixModel *)index.model();
+    QSortFilterProxyModel *sortmodel = (QSortFilterProxyModel *)index.model();
+    TMatrixModel* model =(TMatrixModel *)sortmodel->sourceModel();
 
     model->ToggleY( index.column() );
     horizontalHeader()->update();
@@ -535,8 +557,11 @@ void TMatrixTable::ToggleY()
 // Calculator on F8 pressed on data field
 void TMatrixTable::CmCalc()
 {
-  TMatrixModel *  model = ((TMatrixModel *)(currentIndex().model() ));
-  QString res;
+  //TMatrixModel *  model = ((TMatrixModel *)(currentIndex().model() ));
+   QSortFilterProxyModel *sortmodel = (QSortFilterProxyModel *)currentIndex().model();
+   TMatrixModel* model =(TMatrixModel *)sortmodel->sourceModel();
+
+    QString res;
 
   CalcDialog calc(topLevelWidget() );
   if( calc.exec() )
@@ -568,7 +593,10 @@ void TMatrixTable::CmCalc()
 
   void TMatrixTable::ClearData()
   {
-     TMatrixModel *  model = ((TMatrixModel *)(currentIndex().model() ));
+     //TMatrixModel *  model = ((TMatrixModel *)(currentIndex().model() ));
+     QSortFilterProxyModel *sortmodel = (QSortFilterProxyModel *)currentIndex().model();
+     TMatrixModel* model =(TMatrixModel *)sortmodel->sourceModel();
+
      foreach( QModelIndex ndx,  selectedIndexes()  )
            model->setData(ndx, ""/*emptiness.c_str()*/,  Qt::EditRole);
  }
@@ -652,7 +680,10 @@ void TMatrixTable::CmCalc()
   void  TMatrixTable::setFromString(char splitrow, const QString& str,
           Selection sel, bool transpose)
   {
-     TMatrixModel *  model = ((TMatrixModel *)(currentIndex().model() ));
+     //TMatrixModel *  model = ((TMatrixModel *)(currentIndex().model() ));
+     QSortFilterProxyModel *sortmodel = (QSortFilterProxyModel *)currentIndex().model();
+     TMatrixModel* model =(TMatrixModel *)sortmodel->sourceModel();
+
      if( str.isEmpty() )
   	    return;
   	

@@ -21,10 +21,10 @@
 #include <QLabel>
 #include <QFileDialog>
 #include <QCloseEvent>
+#include <QSortFilterProxyModel>
 #include "FitResultsWindow.h"
 #include "FITMainWindow.h"
 #include "ui_FitResultsWindow.h"
-#include "graph.h"
 
 
 FitResultsWindow* FitResultsWindow::pDia = 0;
@@ -37,53 +37,66 @@ FitResultsWindow::FitResultsWindow(QWidget *parent) :
     ui->setupUi(this);
     pDia = this;
     TMatrixDelegate *deleg;
+    TSortFilterProxyModel *proxyModel;
 
     // set up FIT_CSV_FILE
     modelFitResults = new TMatrixModel( "fit-results", 2 );
     tableFitResults = new TMatrixTable(0/*ui->tabFitResults*/);
+    proxyModel = new TSortFilterProxyModel();
+    proxyModel->setSourceModel( modelFitResults );
     deleg = new TMatrixDelegate( 2, this);
     tableFitResults->setItemDelegate(deleg);
-    tableFitResults->setModel(modelFitResults);
+    tableFitResults->setModel(proxyModel/*modelFitResults*/);
     ui->verticalLayout_6->addWidget(tableFitResults);
 
     // set up FIT_SENS_FILE
     modelSensitivity = new TMatrixModel( "meas-data-sensitivity", 1 );
+    proxyModel = new TSortFilterProxyModel();
+    proxyModel->setSourceModel( modelSensitivity );
     tableSensitivity = new TMatrixTable(0/*ui->tabSensitivity*/);
     deleg = new TMatrixDelegate( 1, this);
     tableSensitivity->setItemDelegate(deleg);
-    tableSensitivity->setModel(modelSensitivity);
+    tableSensitivity->setModel(proxyModel/*modelSensitivity*/);
     ui->verticalLayout_7->addWidget(tableSensitivity);
 
     // set up FIT_PARAM_FILE
     modelFitParams = new TMatrixModel( "fit-params", 3, 0 );
+    proxyModel = new TSortFilterProxyModel();
+    proxyModel->setSourceModel( modelFitParams );
     tableFitParams = new TMatrixTable(  /*ui->tabFitParams*/);
     deleg = new TMatrixDelegate( 3, this);
     tableFitParams->setItemDelegate(deleg);
-    tableFitParams->setModel(modelFitParams);
+    tableFitParams->setModel(proxyModel/*modelFitParams*/);
     ui->verticalLayout_4->addWidget(tableFitParams);
 
     // set up FIT_SENS_FILE
     modelQQplot = new TMatrixModel( "qq-plot-data", 1 );
+    proxyModel = new TSortFilterProxyModel();
+    proxyModel->setSourceModel( modelQQplot );
     tableQQplot = new TMatrixTable( 0 /*ui->tabQuantiles*/);
     deleg = new TMatrixDelegate( 1, this);
     tableQQplot->setItemDelegate(deleg);
-    tableQQplot->setModel(modelQQplot);
+    tableQQplot->setModel(proxyModel/*modelQQplot*/);
     ui->verticalLayout_8->addWidget(tableQQplot);
 
     // set up FIT_NFUN_FILE
     modelFitInverse = new TMatrixModel( "fit-inverse-results", 4, 0 );
+    proxyModel = new TSortFilterProxyModel();
+    proxyModel->setSourceModel( modelFitInverse );
     tableFitInverse = new TMatrixTable( 0 /*ui->tabInverse*/);
     deleg = new TMatrixDelegate( 4, this);
     tableFitInverse->setItemDelegate(deleg);
-    tableFitInverse->setModel(modelFitInverse);
+    tableFitInverse->setModel(proxyModel/*modelFitInverse*/);
     ui->verticalLayout_9->addWidget(tableFitInverse);
 
     // set up FIT_MC_FILE
     modelMCResults = new TMatrixModel( "mc-results", 0, 0 );
+    proxyModel = new TSortFilterProxyModel();
+    proxyModel->setSourceModel( modelMCResults );
     tableMCResults = new TMatrixTable( 0 /*ui->tabMcResults*/);
     deleg = new TMatrixDelegate( 0, this);
     tableMCResults->setItemDelegate(deleg);
-    tableMCResults->setModel(modelMCResults);
+    tableMCResults->setModel(proxyModel/*modelMCResults*/);
     ui->verticalLayout_5->addWidget(tableMCResults);
 
     fFitStatistic = "sum-statistics";   // name file  FIT_STATISTIC
@@ -95,11 +108,17 @@ FitResultsWindow::FitResultsWindow(QWidget *parent) :
 
 FitResultsWindow::~FitResultsWindow()
 {
+    //foreach (GraphDialog*value, graphList)
+    //   delete value;
+
     delete ui;
 }
 
 void FitResultsWindow::closeEvent(QCloseEvent* ev)
 {
+     foreach (GraphDialog*value, graphList)
+       delete value;
+
        pDia = 0;
        ev->accept();
 }
@@ -416,15 +435,22 @@ void FitResultsWindow::CmPlotTable()
     try
     {
         TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+
         if( !tableCurrent )
           return;
-        TMatrixModel *pmodel = (TMatrixModel *)tableCurrent->model();
+        QSortFilterProxyModel *pmodel = (QSortFilterProxyModel *)tableCurrent->model();
         vector<TPlot> plt;
         plt.push_back( TPlot( pmodel ));
         string title = "Task ";
                title  += pLineTask->text().toUtf8().data();
-               title += "."+pmodel->getName();
-        GraphWindow *  gd_gr = new GraphWindow(  this, pmodel, plt, title.c_str(), "x", "y" );
+               title += "."+((TMatrixModel *)pmodel->sourceModel())->getName();
+
+       // Set up GraphDialog
+               GraphData  data( plt, title.c_str(), "x", "y" );
+               GraphDialog *graph_dlg = new GraphDialog(pmodel, data, 0/*this*/ );
+               graph_dlg->show();
+               graphList.insert( graph_dlg );
+       //   GraphWindow *  gd_gr = new GraphWindow(  this, pmodel, plt, title.c_str(), "x", "y" );
     }
     catch( TError& err )
     {
@@ -444,6 +470,70 @@ void FitResultsWindow::CmPrintTable()
     }
 }
 
+/*
+ *
+ * void MainWindow::Print()
+{
+QPrinter printer(QPrinter::HighResolution);
+QPrintDialog *dlg = new QPrintDialog(&printer, this);
+dlg->setWindowTitle(tr("Print ACLs"));
+
+if (dlg->exec() != QDialog::Accepted)
+return;
+
+PrintTableView *tempTableView = new PrintTableView();
+tempTableView->setModel(model);
+tempTableView->printTable(printer);
+}
+
+PrintTableView::PrintTableView(QWidget *parent) : QTableView (parent)
+{
+
+}
+
+void PrintTableView::printTable(QPrinter &printer)
+{
+QString str;
+QPainter painter;
+painter.begin(&printer);
+const int ItemSize = 256;
+int rows = model()->rowCount(QModelIndex());
+int columns = model()->columnCount(QModelIndex());
+int sourceWidth = (columns+1) * ItemSize;
+int sourceHeight = (rows+1) * ItemSize;
+painter.save();
+
+double xscale = printer.pageRect().width();
+double yscale = printer.pageRect().height();
+double scale = qMin(xscale, yscale);
+
+painter.translate(printer.paperRect().x() + printer.pageRect().width()/2,
+printer.paperRect().y() + printer.pageRect().height()/2);
+painter.scale(scale, scale);
+painter.translate(-sourceWidth/2, -sourceHeight/2);
+
+QStyleOptionViewItem option = viewOptions();
+
+float x = ItemSize /2;
+for (int printRow = 0; printRow < rows; ++printRow) {
+float y = ItemSize /2;
+for (int column = 0; column < columns; ++column) {
+option.rect = QRect(int(x), int(y), ItemSize, ItemSize);
+itemDelegate()->paint(&painter, option, model()->index(printRow, column, QModelIndex()));
+x = x + 256;
+}
+y = y + 256;
+}
+painter.restore();
+painter.end();
+}
+
+QStyleOptionViewItem PrintTableView::viewOptions() const
+{
+QStyleOptionViewItem option = QAbstractItemView->viewOptions();
+return option;
+}
+ * */
 
 void FitResultsWindow::CmAboutGEMSFITS()
 {

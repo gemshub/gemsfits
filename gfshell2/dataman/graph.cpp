@@ -63,14 +63,15 @@ void TPlotLine::fromBsonObject( const char *obj )
 // TPlot
 //---------------------------------------------------------------------------
 
-TPlot::TPlot( TMatrixModel *aModel ):
+TPlot::TPlot( QSortFilterProxyModel *aModel ):
      pModel(aModel), first(0)
 {
-    pModel->getXYvectors( dX, xcolms, ycolms,  ynames);
+    ((TMatrixModel *)pModel->sourceModel())->getXYvectors( dX, xcolms, ycolms,  ynames);
 
    // put graph by column
     dY1 = ycolms.size();
     nAbs = xcolms.size();
+    ErrorIf( dY1== 0, "Graphics", "You fogot select an ordinate" );
 }
 
 TPlot::TPlot( const TPlot& plt, int aFirst ):
@@ -485,10 +486,10 @@ void GraphData::setScales()
 }
 
 
-//---------------------------------------------------------------------------
+/*---------------------------------------------------------------------------
 
 ///   The constructor
-GraphWindow::GraphWindow(QWidget *parent, TMatrixModel *pmodule,
+GraphWindow::GraphWindow(QWidget *parent, QSortFilterProxyModel *pmodule,
                const vector<TPlot>& aPlots,
                const char * aTitle,
                float *sizeReg,  float * sizePart,
@@ -503,7 +504,7 @@ GraphWindow::GraphWindow(QWidget *parent, TMatrixModel *pmodule,
 }
 
 ///   The constructor
-GraphWindow::GraphWindow( QWidget *parent, TMatrixModel *pmodule,
+GraphWindow::GraphWindow( QWidget *parent, QSortFilterProxyModel *pmodule,
                          const vector<TPlot>& aPlots, const char * title,
                          const char *aXName, const char *aYName,
 //                      const vector<string>& line_names,
@@ -533,5 +534,5 @@ GraphData *GraphWindow::getGraphData() const
 {
   return &graph_dlg->gr_data;
 }
-
+*/
 //--------------------- End of graph.cpp ---------------------------
