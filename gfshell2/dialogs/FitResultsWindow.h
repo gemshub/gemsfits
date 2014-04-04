@@ -54,6 +54,18 @@ public slots:
     void CmPlotTable();
     void CmPrintTable();
 
+   void CmCalc();
+   void SelectColumn();
+   void SelectAll();
+   void CutData();
+   void ClearData();
+   void CopyData();
+   void PasteData();
+   void PasteTransposedData();
+   void ToggleX();
+   void ToggleY();
+
+
 public:
     static FitResultsWindow* pDia;
 

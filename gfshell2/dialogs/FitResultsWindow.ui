@@ -129,16 +129,19 @@
     <property name="title">
      <string>Edit</string>
     </property>
-    <addaction name="action_Find"/>
     <addaction name="separator"/>
-    <addaction name="action_Copy"/>
-    <addaction name="action_Paste"/>
-    <addaction name="actionClear"/>
-    <addaction name="separator"/>
-    <addaction name="actionAdd_Columns"/>
-    <addaction name="actionDelete_Columns"/>
+    <addaction name="actionCalculator"/>
     <addaction name="actionMark_Columns_as_X"/>
     <addaction name="actionMark_Columns_as_Y"/>
+    <addaction name="separator"/>
+    <addaction name="actionSelect_column"/>
+    <addaction name="actionSelect_all"/>
+    <addaction name="separator"/>
+    <addaction name="actionC_ut"/>
+    <addaction name="action_Copy"/>
+    <addaction name="action_Paste"/>
+    <addaction name="actionPaste_transposed"/>
+    <addaction name="actionClear"/>
    </widget>
    <widget class="QMenu" name="menuDatabase">
     <property name="title">
@@ -265,15 +268,6 @@
     <string>Plot Fit Results</string>
    </property>
   </action>
-  <action name="actionPlot_Residuals">
-   <property name="icon">
-    <iconset resource="../fgui.qrc">
-     <normaloff>:/modules/Icons/GtDemoModuleIcon.png</normaloff>:/modules/Icons/GtDemoModuleIcon.png</iconset>
-   </property>
-   <property name="text">
-    <string>Plot Residuals</string>
-   </property>
-  </action>
   <action name="actionAbout_Results_window">
    <property name="icon">
     <iconset resource="../fgui.qrc">
@@ -302,20 +296,6 @@
     <string>Print</string>
    </property>
   </action>
-  <action name="actionPlot_Quantiles">
-   <property name="text">
-    <string>Plot Quantiles</string>
-   </property>
-  </action>
-  <action name="actionCalculator">
-   <property name="icon">
-    <iconset resource="../fgui.qrc">
-     <normaloff>:/menu/Icons/CalculateRecordDataIcon.png</normaloff>:/menu/Icons/CalculateRecordDataIcon.png</iconset>
-   </property>
-   <property name="text">
-    <string>&amp;Cell Calculator</string>
-   </property>
-  </action>
   <action name="actionAdd_Columns">
    <property name="text">
     <string>Add Columns...</string>
@@ -328,17 +308,20 @@
   </action>
   <action name="actionMark_Columns_as_X">
    <property name="text">
-    <string>Mark Columns as X...</string>
+    <string>Mark Columns as &amp;X (toggle) ... </string>
    </property>
   </action>
   <action name="actionMark_Columns_as_Y">
    <property name="text">
-    <string>Mark Columns as Y...</string>
+    <string>Mark Columns as Y (toggle)...</string>
    </property>
   </action>
   <action name="actionClear">
    <property name="text">
     <string>Clear</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Del</string>
    </property>
   </action>
   <action name="action_Find">
@@ -348,6 +331,31 @@
    </property>
    <property name="text">
     <string>&amp;Find...</string>
+   </property>
+  </action>
+  <action name="actionCalculator">
+   <property name="text">
+    <string>Calculator ...</string>
+   </property>
+  </action>
+  <action name="actionSelect_column">
+   <property name="text">
+    <string>Select co&amp;lumn</string>
+   </property>
+  </action>
+  <action name="actionSelect_all">
+   <property name="text">
+    <string>Select &amp;all</string>
+   </property>
+  </action>
+  <action name="actionC_ut">
+   <property name="text">
+    <string>C&amp;ut</string>
+   </property>
+  </action>
+  <action name="actionPaste_transposed">
+   <property name="text">
+    <string>Paste &amp;transposed</string>
    </property>
   </action>
  </widget>

@@ -157,6 +157,18 @@ void FitResultsWindow::setActions()
     connect( ui->actionPlot_Results, SIGNAL( triggered()), this, SLOT(CmPlotTable()));
     connect( ui->actionPrint, SIGNAL( triggered()), this, SLOT(CmPrintTable()));
 
+    // edit menu
+    connect( ui->actionCalculator, SIGNAL( triggered()), this, SLOT(CmCalc()));
+    connect( ui->actionSelect_column, SIGNAL( triggered()), this, SLOT(SelectColumn()));
+    connect( ui->actionSelect_all, SIGNAL( triggered()), this, SLOT(SelectAll()));
+    connect( ui->actionC_ut, SIGNAL( triggered()), this, SLOT(CutData()));
+    connect( ui->actionClear, SIGNAL( triggered()), this, SLOT(ClearData()));
+    connect( ui->action_Copy, SIGNAL( triggered()), this, SLOT(CopyData()));
+    connect( ui->action_Paste, SIGNAL( triggered()), this, SLOT(PasteData()));
+    connect( ui->actionPaste_transposed, SIGNAL( triggered()), this, SLOT(PasteTransposedData()));
+    connect( ui->actionMark_Columns_as_X, SIGNAL( triggered()), this, SLOT(ToggleX()));
+    connect( ui->actionMark_Columns_as_Y, SIGNAL( triggered()), this, SLOT(ToggleY()));
+
     QLabel * pTask = new QLabel( "   Task:   ", ui->toolBarKey );
     ui->toolBarKey->addWidget( pTask ); // setStretchableWidget( pLine );
 
@@ -548,6 +560,77 @@ void FitResultsWindow::CmAbout_Graph_Dialog()
 void FitResultsWindow::CmAbout_Results_window()
 {
     pFitImp->OpenHelp( GF_PREFS_HTML );
+}
+
+void FitResultsWindow::CmCalc()
+{
+    TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+    if( tableCurrent && tableCurrent->model()->rowCount()>0 )
+      tableCurrent->CmCalc();
+}
+
+void FitResultsWindow::SelectColumn()
+{
+    TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+    if( tableCurrent && tableCurrent->model()->rowCount()>0)
+      tableCurrent->SelectColumn();
+}
+
+void FitResultsWindow::SelectAll()
+{
+    TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+    if( tableCurrent && tableCurrent->model()->rowCount()>0)
+      tableCurrent->SelectAll();
+}
+
+void FitResultsWindow::CutData()
+
+{
+    TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+    if( tableCurrent && tableCurrent->model()->rowCount()>0)
+      tableCurrent->CutData();
+}
+
+void FitResultsWindow::ClearData()
+{
+    TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+    if( tableCurrent && tableCurrent->model()->rowCount()>0)
+      tableCurrent->ClearData();
+}
+
+void FitResultsWindow::CopyData()
+{
+    TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+    if( tableCurrent && tableCurrent->model()->rowCount()>0)
+      tableCurrent->CopyData();
+}
+
+void FitResultsWindow::PasteData()
+{
+    TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+    if( tableCurrent && tableCurrent->model()->rowCount()>0)
+      tableCurrent->PasteData();
+}
+
+void FitResultsWindow::PasteTransposedData()
+{
+    TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+    if( tableCurrent && tableCurrent->model()->rowCount()>0)
+      tableCurrent->PasteTransposedData();
+}
+
+void FitResultsWindow::ToggleX()
+{
+    TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+    if( tableCurrent && tableCurrent->model()->rowCount()>0)
+      tableCurrent->ToggleX();
+}
+
+void FitResultsWindow::ToggleY()
+{
+    TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+    if( tableCurrent && tableCurrent->model()->rowCount()>0)
+      tableCurrent->ToggleY();
 }
 
 // ------------------------ end of FitResultsWindow.cpp ------------------------------------------
