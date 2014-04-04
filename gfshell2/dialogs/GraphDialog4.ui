@@ -93,7 +93,7 @@
              </sizepolicy>
             </property>
             <property name="title">
-             <string>Legend| x# |Label </string>
+             <string>Legend| x# |Label Y </string>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout"/>
            </widget>
@@ -119,7 +119,7 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>Click legend symbols to adjust curves; select abscissae under x#; edit labels, drag-drop them to plot area</string>
+                <string>Click legend symbols to adjust curves; select abscissae under x#; edit Y (ordinate) labels, drag-drop them to plot area</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignVCenter</set>
