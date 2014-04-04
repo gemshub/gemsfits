@@ -751,6 +751,8 @@ void FITMainWindow::CmRestoreCSV()
         {
           // get row
           cells = allrows[jj].split(',', QString::KeepEmptyParts);
+          if( cells.count() < headline.size() )
+              continue;
           row.clear();
           for( ii=0; ii< cells.count(); ii++ )
               row.push_back( cells[ii].toUtf8().data() );
