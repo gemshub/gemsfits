@@ -63,10 +63,11 @@ void TPlotLine::fromBsonObject( const char *obj )
 // TPlot
 //---------------------------------------------------------------------------
 
-TPlot::TPlot( QSortFilterProxyModel *aModel ):
-     pModel(aModel), first(0)
+TPlot::TPlot( QSortFilterProxyModel *aModel, int lines, const vector<int>& xval,
+              const vector<int>& yval, const vector<string>& aynames ):
+     pModel(aModel), first(0), ynames(aynames), xcolms(xval), ycolms(yval), dX(lines)
 {
-    ((TMatrixModel *)pModel->sourceModel())->getXYvectors( dX, xcolms, ycolms,  ynames);
+  //  ((TMatrixModel *)pModel->sourceModel())->getXYvectors( dX, xcolms, ycolms,  ynames);
 
    // put graph by column
     dY1 = ycolms.size();
@@ -176,62 +177,164 @@ void TPlot::getMaxMinLine( QPointF& min, QPointF& max, int line, int ndxAbs )
     }
 }
 
+bool operator ==( const TPlot& iEl,  const TPlot& iEr)
+{
+    if( iEl.xcolms.size() != iEr.xcolms.size() ||
+          iEl.ycolms.size() != iEr.ycolms.size()  )
+       return false;
+    return ( equal( iEl.xcolms.begin(), iEl.xcolms.end(), iEr.xcolms.begin()) &&
+             equal( iEl.ycolms.begin(), iEl.ycolms.end(), iEr.ycolms.begin()) );
+}
 
 //---------------------------------------------------------------------------
 // GraphData
 //---------------------------------------------------------------------------
 
-/// The constructor
-GraphData::GraphData( const vector<TPlot>& aPlots, const char * aTitle,
-               float *sizeReg,  float * sizePart,
-               TPlotLine* aLinesDesc, short *aAxisType,
-               const char *aXName, const char *aYName ):
-        title(aTitle), axisTypeX(aAxisType[0]), axisTypeY(aAxisType[5]),
-        graphType(aAxisType[4])//,  isBackgr_color(true)
+void GraphData::toBsonObject( bson *obj )
 {
     int ii;
-    int jj, nLines;
+    char buf[100];
 
-    xName = string( aXName, 0, 9);
-    yName = string( aYName, 0, 9);
+    // !!!!  vector<TPlot> plots;    loaded/unloaded separately
 
-    // Insert Plots and curves description
-    plots.clear();
-    lines.clear();
-    for( ii=0, nLines=0; ii<aPlots.size(); ii++)
+    bson_append_string( obj,"title", title.c_str() );
+    bson_append_int( obj, "graphType", graphType );
+
+    // define grid of plot
+    bson_append_int( obj, "axisTypeX", axisTypeX );
+    bson_append_int( obj, "axisTypeY", axisTypeY );
+    bson_append_string( obj,"xName", xName.c_str() );
+    bson_append_string( obj,"yName", yName.c_str() );
+
+    bson_append_start_array(obj, "region");
+    for( ii=0; ii<4; ii++)
     {
-        plots.push_back( TPlot(aPlots[ii], nLines ));
-        for( jj=0; jj<plots[ii].getLinesNumber(); jj++, nLines++ )
-        {
-            if(aLinesDesc )
-                lines.push_back( TPlotLine( aLinesDesc[nLines] ) );
-            else
-                lines.push_back( TPlotLine( ii, plots[ii].getLinesNumber(), plots[ii].getName(jj).c_str() ) );
-
-            if( lines[nLines].getName().empty() )
-                lines[nLines].setName( plots[ii].getName(jj).c_str());
-        }
+        sprintf(buf, "%d", ii);
+        bson_append_double( obj, buf, region[ii] );
     }
+    bson_append_finish_array(obj);
 
-   for(int i=0; i<4; i++ )
-   {
-        region[i] = sizeReg[i];
-        part[i]   = sizePart[i];
-   }
+    bson_append_start_array(obj, "part");
+    for( ii=0; ii<4; ii++)
+    {
+        sprintf(buf, "%d", ii);
+        bson_append_double( obj, buf, part[ii] );
+    }
+    bson_append_finish_array(obj);
 
-   b_color[0] = aAxisType[1];
-   b_color[1] = aAxisType[2];
-   b_color[2] = aAxisType[3];
+    bson_append_start_array(obj, "b_color");
+    for( ii=0; ii<3; ii++)
+    {
+        sprintf(buf, "%d", ii);
+        bson_append_int( obj, buf, b_color[ii] );
+    }
+    bson_append_finish_array(obj);
 
-   if( graphType == ISOLINES )
-   {
-        goodIsolineStructure( graphType );
-        setColorList();
-        setScales();
-   }
+     // define curves
+     bson_append_start_array(obj, "lines");
+          for(int ii=0; ii<lines.size(); ii++)
+          {
+              sprintf(buf, "%d", ii);
+              bson_append_start_object( obj, buf);
+              lines[ii].toBsonObject( obj );
+              bson_append_finish_object( obj );
+          }
+      bson_append_finish_array(obj);
+
+      // data to isoline plots
+      bson_append_start_array(obj, "scale");
+           for(int ii=0; ii<scale.size(); ii++)
+           {
+               sprintf(buf, "%d", ii);
+               bson_append_start_object( obj, buf);
+               bson_append_int( obj, "grd", scale[ii].red() );
+               bson_append_int( obj, "ggr",  scale[ii].green());
+               bson_append_int( obj, "gbl", scale[ii].blue() );
+               bson_append_finish_object( obj );
+           }
+       bson_append_finish_array(obj);
 }
 
-/// The constructor
+void GraphData::fromBsonObject( const char *obj )
+{
+    int ii;
+    char buf[100];
+   const char *arr;
+
+   if( !bson_find_string( obj, "title", title ) )
+        title = "title";
+    if(!bson_find_value( obj, "graphType", graphType ) )
+        graphType = LINES_POINTS;
+
+    // define grid of plot
+    if(!bson_find_value( obj, "axisTypeX", axisTypeX ) )
+        axisTypeX = 4;
+    if(!bson_find_value( obj, "axisTypeY", axisTypeY ) )
+        axisTypeY = 4;
+
+    if( !bson_find_string( obj, "xName", xName ) )
+        xName = "x";
+    if( !bson_find_string( obj, "yName", yName ) )
+        yName = "y";
+
+    arr  = bson_find_array(  obj, "region" );
+    for( ii=0; ii<4; ii++)
+    {
+        sprintf(buf, "%d", ii);
+        if(!bson_find_value( obj,  buf, region[ii] ) )
+            region[ii] = 0;
+    }
+
+    arr  = bson_find_array(  obj, "part" );
+    for( ii=0; ii<4; ii++)
+    {
+        sprintf(buf, "%d", ii);
+        if(!bson_find_value( obj,  buf, part[ii] ) )
+            part[ii] = 0;
+    }
+
+    arr  = bson_find_array(  obj, "b_color" );
+    for( ii=0; ii<3; ii++)
+    {
+        sprintf(buf, "%d", ii);
+        if(!bson_find_value( obj,  buf, b_color[ii] ) )
+            b_color[ii] = 255;
+    }
+
+    lines.clear();
+    TPlotLine linebuf;
+    //bson_iterator it;
+    //bson_type type;
+    //type =  bson_find_from_buffer(&it, obj, "lines" );
+    //ErrorIf( type != BSON_ARRAY, "E005BSon: ", "Must be array.");
+    arr  = bson_find_array(  obj, "lines" );
+    bson_iterator iter;
+    bson_iterator_from_buffer(&iter, arr /*bson_iterator_value(it)*/);
+    while (bson_iterator_next(&iter))
+    {
+        linebuf.fromBsonObject( bson_iterator_value(&iter) );
+        lines.push_back( linebuf );
+    }
+
+    scale.clear();
+    int red, green, blue;
+    arr  = bson_find_array(  obj, "scale" );
+    //bson_iterator iter;
+    bson_iterator_from_buffer(&iter, arr );
+    while (bson_iterator_next(&iter))
+    {
+
+        if(!bson_find_value( bson_iterator_value(&iter), "grd", red ) )
+            red = 256;
+        if(!bson_find_value( bson_iterator_value(&iter), "ggr", green ) )
+            green = 256;
+        if(!bson_find_value( bson_iterator_value(&iter), "gbl", blue ) )
+            blue = 256;
+        scale.push_back( QColor( red, green, blue ) );
+    }
+}
+
+/* The constructor
 GraphData::GraphData( const GraphData& data ):
         title(data.title), axisTypeX(data.axisTypeX), axisTypeY(data.axisTypeY),
         graphType(data.graphType), xName(data.xName), yName(data.yName)
@@ -268,6 +371,7 @@ GraphData::GraphData( const GraphData& data ):
             scale.push_back( QColor( data.scale[ii] ));
     }
  }
+ */
 
 /// The constructor
 GraphData::GraphData( const vector<TPlot>&  aPlots, const char * aTitle,
@@ -276,8 +380,6 @@ GraphData::GraphData( const vector<TPlot>&  aPlots, const char * aTitle,
 {
     int ii;
     int jj, nLines, ndxAbs;
-    double minX, maxX, minY, maxY;
-    QPointF min, max;
 
     xName = string( aXName, 0, 9);
     yName = string( aYName, 0, 9);
@@ -289,7 +391,7 @@ GraphData::GraphData( const vector<TPlot>&  aPlots, const char * aTitle,
     {
         plots.push_back( TPlot(aPlots[ii], nLines ));
         int nLinN = plots[ii].getLinesNumber();
-        for( int jj=0; jj<nLinN; jj++, nLines++ )
+        for( jj=0; jj<nLinN; jj++, nLines++ )
         {
            if( jj < plots[ii].getNAbs() )
              ndxAbs = jj;
@@ -297,6 +399,65 @@ GraphData::GraphData( const vector<TPlot>&  aPlots, const char * aTitle,
           lines.push_back( TPlotLine( jj, nLinN, plots[ii].getName(jj).c_str(), 0, 4, 0, ndxAbs  ) );
         }
     }
+
+   resetMinMaxRegion();
+
+   QColor color(Qt::white);
+   b_color[0] = color.red();
+   b_color[1] = color.green();
+   b_color[2] = color.blue();
+
+}
+
+GraphData::~GraphData()
+{}
+
+/// Change plot lines selection
+void GraphData::setNewPlot( const vector<TPlot>& aPlots )
+{
+    int ii;
+    int jj, nLines, ndxAbs;
+
+    // test change a Plots
+    if( !(plots.size() != aPlots.size() ) &&
+            equal( plots.begin(), plots.end(), aPlots.begin()) )
+    {
+        cout << "Plots does not changed" << endl;
+        return; // plots does not changed
+    }
+    cout << "!!! Plots changed" << endl;
+    plots.clear();
+    int defined_lines = lines.size();
+    for( ii=0, nLines=0; ii<aPlots.size(); ii++)
+    {
+        plots.push_back( TPlot(aPlots[ii], nLines ));
+        for( jj=0; jj<plots[ii].getLinesNumber(); jj++, nLines++ )
+        {
+            if( jj < plots[ii].getNAbs() )
+              ndxAbs = jj;
+           else  ndxAbs = 0;
+
+           if( nLines >= defined_lines )
+              lines.push_back( TPlotLine( nLines, plots[ii].getLinesNumber(), plots[ii].getName(jj).c_str(), 0, 4, 0, ndxAbs  ) );
+           else // change line name
+           {   lines[nLines].setName( plots[ii].getName(jj).c_str());
+               lines[nLines].setIndex( ndxAbs );
+           }
+        }
+    }
+    if( defined_lines > nLines )
+      lines.resize(nLines);
+    resetMinMaxRegion();
+}
+
+void GraphData::resetMinMaxRegion()
+{
+    int ii, jj, nLines;
+    double minX, maxX, minY, maxY;
+    QPointF min, max;
+
+    if( plots.size() == 0 )
+      return;
 
     if( graphType == ISOLINES )
     {
@@ -321,7 +482,7 @@ GraphData::GraphData( const vector<TPlot>&  aPlots, const char * aTitle,
       minY = min.y();
       maxY = max.y();
 
-      for( ii=0, nLines=0; ii<aPlots.size(); ii++)
+      for( ii=0, nLines=0; ii<plots.size(); ii++)
        for( jj=0; jj<plots[ii].getLinesNumber(); jj++, nLines++ )
        {  plots[ii].getMaxMinLine( min, max, jj, getIndex(nLines) );
          if( minX > min.x() ) minX = min.x();
@@ -346,15 +507,9 @@ GraphData::GraphData( const vector<TPlot>&  aPlots, const char * aTitle,
    part[2] = minY+(maxY-minY)/3;
    part[3] = maxY-(maxY-minY)/3;
 
-   QColor color(Qt::white);
-   b_color[0] = color.red();
-   b_color[1] = color.green();
-   b_color[2] = color.blue();
-
 }
 
-GraphData::~GraphData()
-{}
+
 
 void GraphData::getIndexes( QVector<int>& first, QVector<int>& maxXndx )
 {
@@ -485,54 +640,4 @@ void GraphData::setScales()
   */
 }
 
-
-/*---------------------------------------------------------------------------
-
-///   The constructor
-GraphWindow::GraphWindow(QWidget *parent, QSortFilterProxyModel *pmodule,
-               const vector<TPlot>& aPlots,
-               const char * aTitle,
-               float *sizeReg,  float * sizePart,
-               TPlotLine* aLinesDesc, short *aAxisType,
-               const char *aXName, const char *aYName )
-{
-
-       GraphData data(aPlots, aTitle, sizeReg, sizePart,
-                aLinesDesc, aAxisType, aXName, aYName);
-       graph_dlg = new GraphDialog( pmodule, data, parent );
-       graph_dlg->show();
-}
-
-///   The constructor
-GraphWindow::GraphWindow( QWidget *parent, QSortFilterProxyModel *pmodule,
-                         const vector<TPlot>& aPlots, const char * title,
-                         const char *aXName, const char *aYName,
-//                      const vector<string>& line_names,
-                      int agraphType  )
-{
-   GraphData  data( aPlots, title, aXName, aYName, agraphType );
-   graph_dlg = new GraphDialog(pmodule, data, parent);
-   graph_dlg->show();
-}
-
-GraphWindow::~GraphWindow()
-{
-}
-
-void GraphWindow::AddPoint( int nPlot, int nPoint )
-{
-   graph_dlg->AddPoint( nPlot, nPoint );
-}
-
-void GraphWindow::Show( const char * capAdd )
-{
-    if( graph_dlg )
-     graph_dlg->ShowNew(capAdd);
-}
-
-GraphData *GraphWindow::getGraphData() const
-{
-  return &graph_dlg->gr_data;
-}
-*/
 //--------------------- End of graph.cpp ---------------------------

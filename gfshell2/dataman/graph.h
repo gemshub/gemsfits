@@ -25,11 +25,12 @@
 #include <QVector>
 #include <QColor>
 #include <QJsonObject>
+#include <QSortFilterProxyModel>
 
 #include <qwt_series_data.h>
 #include  "verror.h"
 #include  "bson.h"
-#include  "fmodel.h"
+//#include  "fmodel.h"
 
 //const int maxPLOT = 20;
 
@@ -62,7 +63,8 @@ public:
     {
         ndxX = 0;
         setChanges( aPointType, aPointSize, aPutLine, QColor(aRed, aGreen, aBlue) );
-        memcpy( name, aName, 15);
+        if( aName )
+          memcpy( name, aName, 15);
         name[15] = '\0';
     }
 
@@ -74,7 +76,8 @@ public:
         QColor aColor;
         aColor.setHsv( 360/maxII*ii, 200, 200);
         setChanges( aPointType, aPointSize, aPutLine, aColor );
-        memcpy( name, aName, 15);
+        if( aName )
+          memcpy( name, aName, 15);
         name[15] = '\0';
     }
 
@@ -182,7 +185,8 @@ class TPlot
 
 public:
 
-    TPlot( QSortFilterProxyModel *aModel );
+    TPlot( QSortFilterProxyModel *aModel, int lines, const vector<int>& xval,
+           const vector<int>& yval, const vector<string>& ynames );
     TPlot( const TPlot& plt, int aFirst );
     ~TPlot();
 
@@ -218,6 +222,8 @@ public:
 
     /// Get min and max values x,y for one curve line
     void getMaxMinLine( QPointF& min, QPointF& max, int line, int ndxX );
+
+    friend bool operator==( const TPlot&,  const TPlot& );
 };
 
 
@@ -250,18 +256,16 @@ struct GraphData
  public:
 
     GraphData( const vector<TPlot>& aPlots, const char * title,
-            float *sizeReg, float *sizePrt,
-            TPlotLine * aLinesDesc, short *aAxisType,
-            const char *aXName = 0, const char *aYname = 0 );
-
-    GraphData( const vector<TPlot>& aPlots, const char * title,
             const char *aXName, const char *aYname,
-///            const vector<string>& line_names,
+//            const vector<string>& line_names,
             int agraphType = LINES_POINTS );
 
-    GraphData( const GraphData& data );
+    //GraphData( const GraphData& data );
 
     ~GraphData();
+
+    /// Change plot lines selection
+    void setNewPlot( const vector<TPlot>& aPlots );
 
     int getSize( int line ) const
     { return lines[line].getSize();   }
@@ -302,8 +306,12 @@ struct GraphData
 
     void getIndexes( QVector<int>& first, QVector<int>& maxXndx );
 
+    void toBsonObject( bson *obj );
+    void fromBsonObject( const char *obj );
+
     /// set default grid data
     void adjustAxis( double& min, double& max, int& numTicks);
+    void resetMinMaxRegion();
 
    // functions to isoline plot
    void setColorList();
@@ -319,39 +327,6 @@ struct GraphData
 
 };
 
-/* must be changed ============================================
-
-class GraphDialog;
-class TCModule;
-
-class GraphWindow
-{
-
-public:
-
-  GraphDialog *graph_dlg;
-
-  GraphWindow( QWidget *parent, QSortFilterProxyModel *pmodule,
-               const vector<TPlot>& aPlots, const char * title,
-            float *sizeReg, float *sizePrt,
-            TPlotLine * aLinesDesc, short *aAxisType,
-            const char *aXName = 0, const char *aYname = 0 );
-
-  GraphWindow( QWidget *parent, QSortFilterProxyModel *pmodule,
-               const vector<TPlot>& aPlots, const char * title,
-               const char *aXName, const char *aYname,
- //           const vector<string>& line_names,
-               int agraphType = LINES_POINTS );
-
-  ~GraphWindow();
-
-  // Add new point to graph
-  void AddPoint( int nPlot, int nPoint );
-  void Show(const char * capAdd=0); // new show all lines
-  GraphData *getGraphData() const;
-
-};
-*/
 
 #endif   // _graph_data_h
 

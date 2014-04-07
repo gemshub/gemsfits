@@ -108,16 +108,19 @@ FitResultsWindow::FitResultsWindow(QWidget *parent) :
 
 FitResultsWindow::~FitResultsWindow()
 {
-    //foreach (GraphDialog*value, graphList)
-    //   delete value;
-
-    delete ui;
+     delete ui;
 }
 
 void FitResultsWindow::closeEvent(QCloseEvent* ev)
 {
-     foreach (GraphDialog*value, graphList)
-       delete value;
+//     foreach (GraphDialog*value, graphList)
+//       delete value;
+    modelFitParams->CloseGraph();
+    modelFitResults->CloseGraph();
+    modelMCResults->CloseGraph();
+    modelSensitivity->CloseGraph();
+    modelQQplot->CloseGraph();
+    modelFitInverse->CloseGraph();
 
        pDia = 0;
        ev->accept();
@@ -450,19 +453,12 @@ void FitResultsWindow::CmPlotTable()
 
         if( !tableCurrent )
           return;
-        QSortFilterProxyModel *pmodel = (QSortFilterProxyModel *)tableCurrent->model();
-        vector<TPlot> plt;
-        plt.push_back( TPlot( pmodel ));
         string title = "Task ";
                title  += pLineTask->text().toUtf8().data();
-               title += "."+((TMatrixModel *)pmodel->sourceModel())->getName();
+        QSortFilterProxyModel *pmodel = (QSortFilterProxyModel *)tableCurrent->model();
+        ((TMatrixModel *)pmodel->sourceModel())->getGraphData(pmodel, title );
 
-       // Set up GraphDialog
-               GraphData  data( plt, title.c_str(), "x", "y" );
-               GraphDialog *graph_dlg = new GraphDialog(pmodel, data, 0/*this*/ );
-               graph_dlg->show();
-               graphList.insert( graph_dlg );
-       //   GraphWindow *  gd_gr = new GraphWindow(  this, pmodel, plt, title.c_str(), "x", "y" );
+        //graphList.insert( graph_dlg );
     }
     catch( TError& err )
     {

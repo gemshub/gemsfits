@@ -85,16 +85,15 @@ void paintIcon( QIcon &icon, TPlotLine &plLine )
 //==========================================================================================
 
 /// The constructor
-GraphDialog::GraphDialog(QSortFilterProxyModel *pmodule, const GraphData& data, QWidget *parent ):
-        QDialog( parent ),
-        pModel(pmodule),  isFragment(false), gr_data(data)
+GraphDialog::GraphDialog( GraphData *data, QWidget *parent ):
+        QDialog( parent ), isFragment(false), gr_data(data)
 {
 	setupUi(this);
     string cap = "GEMSFIT v.3 Graphics Dialog";
     setWindowTitle( cap.c_str() );
 
     // define plot window
-    plot = new TPlotWidget( &gr_data, this);
+    plot = new TPlotWidget( gr_data, this);
     verticalLayout_2->addWidget( plot);
 
    // Define legend table
@@ -114,7 +113,7 @@ GraphDialog::GraphDialog(QSortFilterProxyModel *pmodule, const GraphData& data, 
 
     QVector<int> first;
     QVector<int> maxXndx;
-    gr_data.getIndexes( first, maxXndx );
+    gr_data->getIndexes( first, maxXndx );
     LabelDelegate *dgLegend = new LabelDelegate( first, maxXndx );
     tbLegend->setItemDelegate(dgLegend);
     verticalLayout->addWidget( tbLegend );
@@ -123,7 +122,7 @@ GraphDialog::GraphDialog(QSortFilterProxyModel *pmodule, const GraphData& data, 
     splitter->setStretchFactor(1, 1);
 
     // Insert labels in legend box
-    if( gr_data.graphType != ISOLINES )
+    if( gr_data->graphType != ISOLINES )
       ShowLegend();
     else
       ShowIsolineLegend();
@@ -150,10 +149,10 @@ void GraphDialog::selectedFragment( const QRectF & rect)
         rect.width() < plot->getPlot()->axisInterval(QwtPlot::xBottom).width()/100  )
          return;
 
-    gr_data.part[0] = rect.left();
-    gr_data.part[1] = rect.right();
-    gr_data.part[2] = rect.top();
-    gr_data.part[3] = rect.bottom();
+    gr_data->part[0] = rect.left();
+    gr_data->part[1] = rect.right();
+    gr_data->part[2] = rect.top();
+    gr_data->part[3] = rect.bottom();
     isFragment = false;
     CmFragment();
     SaveGraphData();
@@ -176,24 +175,24 @@ void GraphDialog::ShowLegend()
     tbLegend->setEditTriggers( QAbstractItemView::DoubleClicked|QAbstractItemView::AnyKeyPressed );
 
     tbLegend->clear();
-    tbLegend->setRowCount(gr_data.lines.size());
-    for(int ii=0; ii<gr_data.lines.size(); ii++ )
+    tbLegend->setRowCount(gr_data->lines.size());
+    for(int ii=0; ii<gr_data->lines.size(); ii++ )
     {
         tbLegend->setRowHeight(ii, 21/*htF(ftString, 0)+4*/);
 
         QIcon icon;
-        paintIcon( icon, gr_data.lines[ii] );
+        paintIcon( icon, gr_data->lines[ii] );
         itemL = new QTableWidgetItem(icon, "");
         flags = itemL->flags();
         itemL->setFlags(flags & ~Qt::ItemIsEditable);
         itemL->setToolTip("Legend column 1");
         tbLegend->setItem(ii, 0, itemL );
 
-        itemN = new QTableWidgetItem(tr("%1").arg(gr_data.getIndex( ii )));
+        itemN = new QTableWidgetItem(tr("%1").arg(gr_data->getIndex( ii )));
         itemN->setToolTip("Legend column 2");
         tbLegend->setItem(ii, 1, itemN );
 
-        itemN = new QTableWidgetItem(tr("%1").arg(gr_data.getName( ii ).c_str()));
+        itemN = new QTableWidgetItem(tr("%1").arg(gr_data->getName( ii ).c_str()));
         itemN->setToolTip("Legend column 3");
         tbLegend->setItem(ii, 2, itemN );
     }
@@ -212,13 +211,13 @@ void GraphDialog::ShowIsolineLegend()
     tbLegend->setEditTriggers( QAbstractItemView::DoubleClicked|QAbstractItemView::AnyKeyPressed );
 
     tbLegend->clear();
-    tbLegend->setRowCount(gr_data.scale.size());
-    for(int ii=0; ii<gr_data.scale.size(); ii++ )
+    tbLegend->setRowCount(gr_data->scale.size());
+    for(int ii=0; ii<gr_data->scale.size(); ii++ )
     {
         tbLegend->setRowHeight(ii, 21/*htF(ftString, 0)+4*/);
 
-        TPlotLine pl( "Scale",  QwtSymbol::Rect, 0, 0, gr_data.scale[ii].red(),
-                      gr_data.scale[ii].green(), gr_data.scale[ii].blue() );
+        TPlotLine pl( "Scale",  QwtSymbol::Rect, 0, 0, gr_data->scale[ii].red(),
+                      gr_data->scale[ii].green(), gr_data->scale[ii].blue() );
         QIcon icon;
         paintIcon( icon, pl );
         itemL = new QTableWidgetItem(icon, "");
@@ -227,7 +226,7 @@ void GraphDialog::ShowIsolineLegend()
         itemL->setToolTip("Legend column 1");
 
         tbLegend->setItem(ii, 0, itemL );
-        itemN = new QTableWidgetItem(tr("%1").arg(gr_data.getValueIsoline(ii)));
+        itemN = new QTableWidgetItem(tr("%1").arg(gr_data->getValueIsoline(ii)));
         itemN->setToolTip("Legend column 3");
         tbLegend->setItem(ii, 2, itemN );
     }
@@ -237,14 +236,14 @@ void GraphDialog::changeIcon( int row, int column )
 {
     if( column == 0 )
     {
-        if( gr_data.graphType != ISOLINES )
+        if( gr_data->graphType != ISOLINES )
         {
-            SymbolDialog cd( gr_data.lines[row], this);
+            SymbolDialog cd( gr_data->lines[row], this);
             if( cd.exec() )
             {
-               gr_data.lines[row] =  cd.GetPlotLine();
+               gr_data->lines[row] =  cd.GetPlotLine();
                QIcon icon;// = tbLegend->item(row, column)->icon();
-               paintIcon( icon, gr_data.lines[row] );
+               paintIcon( icon, gr_data->lines[row] );
                tbLegend->item(row, column)->setIcon(icon);
                plot->replotPlotLine(row);
                SaveGraphData();
@@ -252,13 +251,13 @@ void GraphDialog::changeIcon( int row, int column )
        }else
         {
              // select isoline color
-            QColor color(gr_data.scale[row]);
+            QColor color(gr_data->scale[row]);
             QColor backColor = QColorDialog::getColor( color, this );
             if( backColor.isValid() )
             {
-               gr_data.scale[row] =backColor;
-               TPlotLine pl( "Scale",  QwtSymbol::Rect, 0, 0, gr_data.scale[row].red(),
-                             gr_data.scale[row].green(), gr_data.scale[row].blue() );
+               gr_data->scale[row] =backColor;
+               TPlotLine pl( "Scale",  QwtSymbol::Rect, 0, 0, gr_data->scale[row].red(),
+                             gr_data->scale[row].green(), gr_data->scale[row].blue() );
                QIcon icon;
                paintIcon( icon, pl );
                tbLegend->item(row, column)->setIcon(icon);
@@ -271,25 +270,25 @@ void GraphDialog::changeIcon( int row, int column )
 
 void GraphDialog::changeNdx( int row, int column )
 {
-    if( column == 1 &&  gr_data.graphType != ISOLINES )
+    if( column == 1 &&  gr_data->graphType != ISOLINES )
     {
        int ndxX = tbLegend->item(row, column)->text().toInt();
-       gr_data.setIndex( row, ndxX );
+       gr_data->setIndex( row, ndxX );
        plot->replotPlotLine(row);
        SaveGraphData();
    }
     if( column == 2 )
     {
-      if( gr_data.graphType != ISOLINES )
+      if( gr_data->graphType != ISOLINES )
       {
         string  name = tbLegend->item(row, column)->text().toUtf8().data();
-        gr_data.setName( row, name.c_str() );
+        gr_data->setName( row, name.c_str() );
         SaveGraphData();
       }
       else
       {
          double  val = tbLegend->item(row, column)->text().toDouble();
-         gr_data.setValueIsoline( val, row );
+         gr_data->setValueIsoline( val, row );
          SaveGraphData();
       }
    }
@@ -311,7 +310,7 @@ void GraphDialog::ShowNew( const char* capAdd )
 
 void GraphDialog::AddPoint( int nPlot, int nPoint )
 {
-  if( gr_data.graphType != LINES_POINTS )
+  if( gr_data->graphType != LINES_POINTS )
         return;
 
   if( nPlot>=0 && nPoint>=0 )
@@ -333,7 +332,7 @@ void GraphDialog::Apply()
             this, SLOT(changeNdx( int, int )));
 
     // Insert labels in legend box
-    if( gr_data.graphType != ISOLINES )
+    if( gr_data->graphType != ISOLINES )
       ShowLegend();
     else
       ShowIsolineLegend();
@@ -350,15 +349,15 @@ void GraphDialog::Apply()
 
 void GraphDialog::setBackgrColor( QColor color )
 {
-    gr_data.b_color[0] =   color.red();
-    gr_data.b_color[1] =   color.green();
-    gr_data.b_color[2]  =  color.blue();
- //   gr_data.isBackgr_color = true;
+    gr_data->b_color[0] =   color.red();
+    gr_data->b_color[1] =   color.green();
+    gr_data->b_color[2]  =  color.blue();
+ //   gr_data->isBackgr_color = true;
 }
 
 QColor GraphDialog::getBackgrColor()
 {
-   return  QColor( gr_data.b_color[0], gr_data.b_color[1], gr_data.b_color[2] );
+   return  QColor( gr_data->b_color[0], gr_data->b_color[1], gr_data->b_color[2] );
    //plot->palette().color(QPalette::Window);
 }
 

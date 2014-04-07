@@ -7,6 +7,7 @@
 
 #include "fmodel.h"
 #include "CalcDialog.h"
+#include "GraphDialog.h"
 #include "v_user.h"
 
 
@@ -28,7 +29,8 @@ bool TSortFilterProxyModel::lessThan(const QModelIndex &left,
 //  class TMatrixModel
 
 TMatrixModel::TMatrixModel( const QString& afname, int aNumCol, QObject * parent ):
-    QAbstractTableModel(parent), fname(afname), numberStringColumns(aNumCol)
+    QAbstractTableModel(parent), fname(afname), numberStringColumns(aNumCol),
+    grdata(0), graph_dlg(0)
 {
 }
 
@@ -283,11 +285,41 @@ void TMatrixModel::matrixToCsvFile( const QString& dir )
 /// write model to bson structure
 void TMatrixModel::matrixToBson(  bson *obj )
 {
+    int ii;
+    char buf[100];
+
     // get string to output
     string name = fname.toUtf8().data();
     string valCsv = matrixToCsvString().toUtf8().data();
     int iRet = bson_append_string( obj, name.c_str(), valCsv.c_str() );
     ErrorIf( iRet == BSON_ERROR, name, "Error append string"+name );
+
+    // added graphic part
+    if( grdata )
+    {
+      string label= "graph_"+name;
+      bson_append_start_object( obj, label.c_str());
+      //
+      bson_append_start_array(obj, "xcolms");
+      for( ii=0; ii<xcolms.size(); ii++)
+      {
+          sprintf(buf, "%d", ii);
+          bson_append_double( obj, buf, xcolms[ii] );
+      }
+      bson_append_finish_array(obj);
+
+      bson_append_start_array(obj, "ycolms");
+      for( ii=0; ii<ycolms.size(); ii++)
+      {
+          sprintf(buf, "%d", ii);
+          bson_append_double( obj, buf, ycolms[ii] );
+      }
+      bson_append_finish_array(obj);
+
+      grdata->toBsonObject(obj);
+      bson_append_finish_object( obj );
+    }
+
 }
 
 /// read model from bson structure
@@ -295,49 +327,103 @@ void TMatrixModel::matrixFromBson(  const char *bsdata )
 {
     // get string from obj
     string valCsv;
-    if( !bson_find_string( bsdata, fname.toUtf8().data(), valCsv ) )
+    string name = fname.toUtf8().data();
+    if( !bson_find_string( bsdata, name.c_str(), valCsv ) )
         valCsv = "";
     //set up data
     matrixFromCsvString( trUtf8(valCsv.c_str()) );
+
+    // load graphic part
+    string label= "graph_"+name;
+    bson_iterator it;
+    bson_type type;
+    type =  bson_find_from_buffer(&it, bsdata, label.c_str() );
+    if( type != BSON_OBJECT )
+       return; // no graphic
+
+    const char *objbson = bson_iterator_value(&it);
+
+    xcolms.clear();
+    const char *arr  = bson_find_array(  objbson, "xcolms" );
+    bson_iterator iter;
+    bson_iterator_from_buffer(&iter, arr );
+    while (bson_iterator_next(&iter))
+        xcolms.push_back( bson_iterator_int(&iter));
+    ycolms.clear();
+    arr  = bson_find_array(  objbson, "ycolms" );
+    bson_iterator_from_buffer(&iter, arr );
+    while (bson_iterator_next(&iter))
+        ycolms.push_back( bson_iterator_int(&iter));
+
+    if( !grdata )
+    {   vector<TPlot> plt;
+        grdata = new GraphData( plt, "", "x", "y" );
+    }
+    grdata->fromBsonObject(objbson);
 }
 
 void TMatrixModel::ToggleX( int ncolmn )
 {
-    if( xcolms.contains(ncolmn ))
-       xcolms.remove( ncolmn );
+    int ii = xcolms.indexOf( ncolmn );
+    if( ii != -1 )
+       xcolms.remove( ii );
     else
-       xcolms.insert( ncolmn );
+       xcolms.append( ncolmn );
 
     // Update headers
 }
 
 void TMatrixModel::ToggleY( int ncolmn )
 {
-    if( ycolms.contains( ncolmn ))
-       ycolms.remove( ncolmn );
+    int ii = ycolms.indexOf( ncolmn );
+    if( ii != -1 )
+       ycolms.remove( ii );
     else
-       ycolms.insert( ncolmn );
+       ycolms.append( ncolmn );
 
     // Update headers
 }
 
-void TMatrixModel::getXYvectors(  int& lines, vector<int>& xval, vector<int>& yval, vector<string>& ynames )
+void TMatrixModel::CloseGraph()
 {
-   xval.clear();
-   yval.clear();
-   ynames.clear();
-
-   lines = matrix.size();
-
-   foreach (const int &value, xcolms)
-      xval.push_back( value);
-
-   foreach (const int &value, ycolms)
-   {   yval.push_back( value);
-       ynames.push_back( colHeads[value].toUtf8().data() );
-   }
-
+    if( graph_dlg )
+      graph_dlg->close();
 }
+
+void TMatrixModel::getGraphData( QSortFilterProxyModel *pmodel,  string& title )
+{
+    vector<int> xval;
+    vector<int> yval;
+    vector<string> ynames;
+    int lines = matrix.size();
+
+    foreach (const int &value, xcolms)
+       xval.push_back( value);
+
+    foreach (const int &value, ycolms)
+    {   yval.push_back( value);
+        ynames.push_back( colHeads[value].toUtf8().data() );
+    }
+
+    vector<TPlot> plt;
+    plt.push_back( TPlot( pmodel, lines, xval, yval, ynames ));
+    title += "."+ getName();
+
+   // Set up GraphDialog
+    if( !grdata )
+         grdata = new GraphData( plt, title.c_str(), "x", "y" );
+    else
+         grdata->setNewPlot( plt );
+
+    if( graph_dlg )
+     delete  graph_dlg;
+    graph_dlg = new GraphDialog( grdata, 0 );
+    graph_dlg->show();
+
+    //return grdata;
+}
+
+
 
 //-------------------------------------------------------------------------------------
 // class TVectorTable implements a table view that displays items from a model.

@@ -101,7 +101,7 @@ private:
     QString fFitStatistic;   // name file  FIT_STATISTIC
     QString fFitLogfile;  // name file  FIT_LOGFILE
 
-    QSet< GraphDialog*> graphList; // list of opened graphics
+    //QSet< GraphDialog*> graphList; /// internal list of opened graphics
 };
 
 #endif // FITRESULTSWINDOW_H

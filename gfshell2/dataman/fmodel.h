@@ -16,6 +16,9 @@ using namespace std;
 #include <QSize>
 
 #include "f_ejdb.h"
+#include "graph.h"
+
+class GraphDialog;
 
 #ifdef __APPLE__
 const char  splitRow = '\r';
@@ -57,6 +60,7 @@ class TSortFilterProxyModel : public QSortFilterProxyModel
 
  };
 
+
 //===========================================
 // TVectorModel class
 //===========================================
@@ -79,8 +83,10 @@ class TMatrixModel: public QAbstractTableModel
     QVector< QString > colHeads;
     QVector< QVector<QVariant> > matrix;
 
-    QSet<int> xcolms;  ///< Abscissa columns list
-    QSet<int> ycolms;  ///< Ordinate columns list
+    QVector<int> xcolms;  ///< Abscissa columns list
+    QVector<int> ycolms;  ///< Ordinate columns list
+    struct GraphData* grdata;    /// last definition of graphic
+    GraphDialog *graph_dlg;
 
     QString ValToString( double val, int digits ) const;
     double ValFromString( const QVariant& strval  );
@@ -88,7 +94,12 @@ class TMatrixModel: public QAbstractTableModel
 public:
 	  
      TMatrixModel( const QString& fname, int aNumCol, QObject * parent = 0 );
-	 
+     ~TMatrixModel()
+     {
+       if( graph_dlg )
+         delete graph_dlg;
+     }
+
 	 int rowCount ( const QModelIndex & parent ) const;	
 	 int columnCount ( const QModelIndex & parent  ) const;
 	 QVariant data ( const QModelIndex & index, int role ) const;
@@ -112,8 +123,9 @@ public:
      void ToggleY( int ncolmn );
 
      // get graph info
-     void getXYvectors( int& lines, vector<int>& xval, vector<int>& yval, vector<string>& ynames );
-
+     //void getXYvectors( int& lines, vector<int>& xval, vector<int>& yval, vector<string>& ynames );
+     void getGraphData( QSortFilterProxyModel *pmodel, string& title );
+     void CloseGraph();
 
 };
 

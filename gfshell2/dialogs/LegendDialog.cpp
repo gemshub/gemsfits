@@ -29,7 +29,7 @@
 // Plot Legend windows
 LegendDialog::LegendDialog( GraphDialog * aGraph ):
         QDialog(aGraph),
-        graph(&(aGraph->gr_data)), graph_dlg(aGraph)
+        graph((aGraph->gr_data)), graph_dlg(aGraph)
 {
     setupUi(this);
 
