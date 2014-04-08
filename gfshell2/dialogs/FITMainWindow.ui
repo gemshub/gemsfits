@@ -126,7 +126,7 @@
             <item>
              <widget class="QLabel" name="label_5">
               <property name="text">
-               <string>Find</string>
+               <string>Search Query Editor</string>
               </property>
              </widget>
             </item>
@@ -181,7 +181,7 @@
             <item>
              <widget class="QLabel" name="label_3">
               <property name="text">
-               <string>Edit</string>
+               <string>JSON Data Editor</string>
               </property>
              </widget>
             </item>
@@ -210,7 +210,7 @@
             <item>
              <widget class="QLabel" name="label_4">
               <property name="text">
-               <string>Status</string>
+               <string>Run Status</string>
               </property>
              </widget>
             </item>

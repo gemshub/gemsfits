@@ -207,7 +207,8 @@ void FITMainWindow::OpenHelp(const char* file, const char* item1, int page )
 {
     if( HelpWindow::pDia )
     {
-       if( item1 && page>=0 )
+cout << "OpenHelp: " << file << endl;
+        if( item1 && page>=0 )
        {
           QString res = item1;
           res += QString("_%1").arg(page);
