@@ -56,6 +56,7 @@ class FITMainWindow : public QMainWindow
     string UserDir;     ///< Path to User directory
     bool useComments;   ///< Write TXT files with comments
     QString ExpTemplate; ///< Current template for experiments record
+    QString SrchTemplate; ///< Current template for experiments search
 
     TFile  gemsLstFile; ///< Path to GEMS3K files
     TFile  fitTaskDir;  ///< Path to the database file
@@ -129,9 +130,15 @@ public slots:
        void CmDelete();
        void CmNext();
        void CmPrevious();
-       void CmFilter();
+       //void CmFilter();
        void CmUpdateTest();
-    // Record list
+
+       void CmSearch();
+       void CmResetSearch();
+       void CmSaveSearch();
+       void CmLoadSearch();
+
+       // Record list
        void CmBackupJSON();
        void CmRestoreJSON();
        void CmBackupCSV(){}

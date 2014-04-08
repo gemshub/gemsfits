@@ -245,6 +245,7 @@ TEJDataBase::TEJDataBase( int nrt, const char* name, const vector<string>& nameK
     Keywd( name ), nRT( nrt ), key( nameKeyFlds ), status( UNDF_)
 {
     crt = time(NULL);
+    currentSearchJson = "";
 }
 
 
@@ -430,6 +431,12 @@ const string& TEJDataBase::GetJson()
 void TEJDataBase::SetJson( const string& sjson)
 {
     currentJson = sjson;
+}
+
+// Set json format string to curent record
+void TEJDataBase::SetQueryJson( const string& qrjson)
+{
+    currentSearchJson = replace_all( qrjson, "\'", "\"");
 }
 
 //Test state of record with key key_ as template.
@@ -798,6 +805,11 @@ void TEJDataBase::loadCollection( )
     // select all records
     bson bsq1;
     bson_init_as_query(&bsq1);
+    if( !currentSearchJson.empty() )
+    { ParserJson pars;
+      pars.setJsonText( currentSearchJson.substr( currentSearchJson.find_first_of('{')+1 ) );
+      pars.parseObject( &bsq1 );
+    }
     bson_finish(&bsq1);
 
     bson bshits1;

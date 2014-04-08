@@ -60,8 +60,13 @@ void FITMainWindow::setActions()
     connect( ui->actionDelete, SIGNAL( triggered()), this, SLOT(CmDelete()));
     connect( ui->actionNext, SIGNAL( triggered()), this, SLOT(CmNext()));
     connect( ui->actionPrevious, SIGNAL( triggered()), this, SLOT(CmPrevious()));
-    connect( ui->action_Find, SIGNAL( triggered()), this, SLOT(CmFilter()));
     connect( ui->actionUpdate_Test, SIGNAL( triggered()), this, SLOT(CmUpdateTest()));
+
+    connect( ui->action_Find, SIGNAL( triggered()), this, SLOT(CmSearch()));
+    connect( ui->actionReset_Search, SIGNAL( triggered()), this, SLOT(CmResetSearch()));
+    connect( ui->actionSave_Search, SIGNAL( triggered()), this, SLOT(CmSaveSearch()));
+    connect( ui->actionLoad_Search, SIGNAL( triggered()), this, SLOT(CmLoadSearch()));
+
 
 
  // Record list
@@ -489,13 +494,22 @@ void FITMainWindow::CmCreate()
 }
 
 /// Create new record
-void FITMainWindow::CmFilter()
+void FITMainWindow::CmSearch()
 {
     try
     {
         string filterText = ui->queryEdit->toPlainText().toUtf8().data();
-        // must be in future
-        //rtEJ[ currentMode ].searchFilter();
+
+        if( currentMode == MDF_DATABASE )
+        {
+          rtEJ[MDF_DATABASE].SetQueryJson(filterText);
+          // reopen records
+          rtEJ[MDF_DATABASE].Close();
+          rtEJ[MDF_DATABASE].Open();
+          changeKeyList(); // need change key list insert new record
+          contentsChanged = false;
+          setStatusText( "Record filtered" );
+        }
         contentsChanged = true;
     }
     catch( TError& err )
@@ -505,6 +519,78 @@ void FITMainWindow::CmFilter()
     }
 }
 
+/// Load search from current temlate file
+void FITMainWindow::CmResetSearch()
+{
+    try
+    {
+       if( currentMode == MDF_DATABASE )
+         ui->queryEdit->setText(SrchTemplate);
+    }
+    catch( TError& err )
+    {
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
+    }
+}
+
+/// Save current search to txt file
+void FITMainWindow::CmSaveSearch()
+{
+    try
+    {
+        // open file to unloading
+         string fname= fitTaskDir.Dir()+ "/search1.txt";
+         TFile  inFile( fname, ios::out);
+         if( !inFile.ChooseFileSave( this, fname, "Please, select file name to save search template","*.txt" ))
+              return;
+
+         QString filterText = ui->queryEdit->toPlainText();
+
+         QFile tmpStriam(fname.c_str());
+         if(tmpStriam.open( QIODevice::WriteOnly|QIODevice::Truncate))
+         {
+           tmpStriam.write(filterText.toUtf8());
+           tmpStriam.close();
+         }
+
+    }
+    catch( TError& err )
+    {
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
+    }
+}
+
+/// Load current search from txt file
+void FITMainWindow::CmLoadSearch()
+{
+    try
+    {
+        // open file to unloading
+         string fname = fitTaskDir.Dir();
+         TFile  inFile(fname, ios::in);
+         if( !inFile.ChooseFileOpen( this, fname, "Please, select file name to load search template","*.txt" ))
+              return;
+
+         QString valStr;
+         QFile tmpStriam(fname.c_str());
+         if(tmpStriam.open( QIODevice::ReadOnly ))
+         {
+           valStr = tmpStriam.readAll();
+           tmpStriam.close();
+         }
+         else
+             Error( fname,  "error open file ");
+
+        ui->queryEdit->setText(valStr);
+    }
+    catch( TError& err )
+    {
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
+    }
+}
 //-------------------------------------------------------------------------------------
 // Run and show commands
 

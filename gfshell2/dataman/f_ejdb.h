@@ -160,6 +160,7 @@ class TEJDataBase
     //bson currentRecord;    ///< last read/save record
     string currentJson;     ///< last read/save record json
     string currentGems3kName; ///< last read gems3k files name (<SystemFiles>) in record
+    string currentSearchJson;     ///< last query for select record json
 
 protected:
 
@@ -254,6 +255,8 @@ protected:
     {
        return currentGems3kName;
     }
+    /// Set json query string for collection
+    void SetQueryJson( const string& qrjson);
 
     /// Find record with key into internal record keys list
     bool Find( const char *key );

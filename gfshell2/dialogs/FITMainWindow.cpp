@@ -77,6 +77,16 @@ void FITMainWindow::getDataFromPreferences()
     ExpTemplate = tmpString.readAll();
     tmpString.close();
   }
+
+  // load experiment search text
+  fname = SysFITDir.c_str();
+          fname += "/templates/" + mainSettings->value("TemplateSearchFileName", "...").toString();
+  QFile tmpString1(fname);
+  if(tmpString1.open( QIODevice::ReadOnly))
+  {
+    SrchTemplate = tmpString1.readAll();
+    tmpString1.close();
+  }
 }
 
 FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):

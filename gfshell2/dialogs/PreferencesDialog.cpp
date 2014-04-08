@@ -55,6 +55,25 @@ PreferencesDialog::PreferencesDialog(QSettings *aSet,QWidget *parent) :
         }
     }
 
+    // load all template files
+    QDir thisDir(ui->resourcesEdit->text()+"/templates");
+    if (thisDir.exists())
+    {
+        // thisDir.setFilter(QDir::Files|QDir::NoDot | QDir::NoDotDot);
+        QStringList filters;
+        filters << "*.dat";
+        thisDir.setNameFilters(filters);
+        QListIterator<QFileInfo> it(thisDir.entryInfoList());
+        QFileInfo f;
+        while ( it.hasNext() )
+        {
+            f = it.next();;
+            ui->searchBox->addItem(f.fileName());
+        }
+     ui->searchBox->setCurrentText(settings->value("TemplateSearchFileName", "...").toString());
+    }
+
+
     QObject::connect( ui->buttonBox, SIGNAL(accepted()), this, SLOT(CmSave()));
     QObject::connect( ui->buttonBox, SIGNAL(helpRequested()), this, SLOT(CmHelp()));
     QObject::connect( ui->helpButton, SIGNAL(clicked()), this, SLOT(CmHelpFile()));
@@ -80,6 +99,7 @@ void PreferencesDialog::CmSave()
     settings->setValue("Gemsfit2ProgramPath",    ui->gemsfit2Edit->text() );
 
     settings->setValue("ExpTemplateFileName", ui->experimentsBox->currentData(  Qt::DisplayRole ) );
+    settings->setValue("TemplateSearchFileName", ui->searchBox->currentData(  Qt::DisplayRole ) );
     settings->setValue("PrintComments",  ui->commentsBox->isChecked() );
 
     settings->sync();
