@@ -339,9 +339,9 @@ void TMatrixModel::matrixFromBson(  const char *bsdata )
     bson_type type;
     type =  bson_find_from_buffer(&it, bsdata, label.c_str() );
     if( type != BSON_OBJECT )
-    {  if(grdata)
-         delete grdata;
-        grdata = 0;
+    {  //if(grdata)
+       //  delete grdata;
+       // grdata = 0;
         return; // no graphic
     }
     const char *objbson = bson_iterator_value(&it);
