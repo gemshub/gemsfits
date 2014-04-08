@@ -1,0 +1,11 @@
+# search maching expdatasets, samples, sT, and sP;
+# leave out fields that are not necessary in the search e.g. "sT" :   {'$in' : [num1, num2]}
+# '$in' - matches the values
+
+{
+     "expdataset" :   {'$in' : ["val1", "val2", "val3"]},
+     "sample" :   {'$in' : ["val1", "val2", "val3"]},
+     "sT" :   {'$in' : [num1, num2, num3]},
+     "sP" :   {'$in' : [num1, num2, num3]}
+}
+
