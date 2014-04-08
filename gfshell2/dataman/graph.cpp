@@ -418,7 +418,7 @@ void GraphData::setNewPlot( const vector<TPlot>& aPlots )
     int ii;
     int jj, nLines, ndxAbs;
 
-    // test change a Plots
+    /* test change a Plots
     if( !(plots.size() != aPlots.size() ) &&
             equal( plots.begin(), plots.end(), aPlots.begin()) )
     {
@@ -426,6 +426,7 @@ void GraphData::setNewPlot( const vector<TPlot>& aPlots )
         return; // plots does not changed
     }
     cout << "!!! Plots changed" << endl;
+    */
     plots.clear();
     int defined_lines = lines.size();
     for( ii=0, nLines=0; ii<aPlots.size(); ii++)
