@@ -8,27 +8,29 @@ DialogFindFromPlot::DialogFindFromPlot(GraphData* data, QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->xminVal->setMaximum( data->region[1]);
-    ui->xminVal->setMinimum( data->region[0]);
-    ui->xminVal->setValue( data->part[0]);
+   if( data )
+   { ui->xminVal->setMaximum( data->region[1]);
+     ui->xminVal->setMinimum( data->region[0]);
+     ui->xminVal->setValue( data->part[0]);
 
-    ui->xmaxVal->setMaximum( data->region[1]);
-    ui->xmaxVal->setMinimum( data->region[0]);
-    ui->xmaxVal->setValue( data->part[1]);
+     ui->xmaxVal->setMaximum( data->region[1]);
+     ui->xmaxVal->setMinimum( data->region[0]);
+     ui->xmaxVal->setValue( data->part[1]);
 
-    ui->yminVal->setMaximum( data->region[3]);
-    ui->yminVal->setMinimum( data->region[2]);
-    ui->yminVal->setValue( data->part[2]);
+     ui->yminVal->setMaximum( data->region[3]);
+     ui->yminVal->setMinimum( data->region[2]);
+     ui->yminVal->setValue( data->part[2]);
 
-    ui->ymaxVal->setMaximum( data->region[3]);
-    ui->ymaxVal->setMinimum( data->region[2]);
-    ui->ymaxVal->setValue( data->part[3]);
+     ui->ymaxVal->setMaximum( data->region[3]);
+     ui->ymaxVal->setMinimum( data->region[2]);
+     ui->ymaxVal->setValue( data->part[3]);
 
     for(int ii=0; ii<data->lines.size(); ii++ )
      ui->namesBox->addItem( data->getName(ii).c_str());
 
+    ChangeIndex(0);
     QObject::connect( ui->namesBox, SIGNAL(currentIndexChanged(int)), this, SLOT(ChangeIndex(int)));
-
+   }
 }
 
 DialogFindFromPlot::~DialogFindFromPlot()

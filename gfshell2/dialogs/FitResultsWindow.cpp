@@ -644,8 +644,8 @@ void FitResultsWindow::CmFindFromPlot()
      QSortFilterProxyModel *pmodel = (QSortFilterProxyModel *)tableCurrent->model();
      TMatrixModel *matrmodel = (TMatrixModel *)pmodel->sourceModel();
      GraphData *grdata = matrmodel->getGraphData();
-     if( !grdata )
-       return;
+     //if( !grdata )
+     //  return;
 
      // define new project
      DialogFindFromPlot dlg( grdata, this);
@@ -660,7 +660,9 @@ void FitResultsWindow::CmFindFromPlot()
     //search by data
     int frstrow = matrmodel->findRow( xyndx, reg);
     if( frstrow >= 0 )
-    tableCurrent->selectRow(frstrow);
+    { QModelIndex ind = pmodel->mapFromSource(matrmodel->index(frstrow, 0));
+      tableCurrent->selectRow(ind.row());
+    }
 
   }
     catch( TError& err )
