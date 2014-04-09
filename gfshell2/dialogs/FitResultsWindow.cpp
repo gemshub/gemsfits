@@ -653,13 +653,13 @@ void FitResultsWindow::CmFindFromPlot()
           return;
 
     //find data from dlg
-      string xname, yname;
-      int xyndx[2];
-      double reg[4];
-    dlg.getData( xname, yname, xyndx, reg );
+    int xyndx[2];
+    double reg[4];
+    dlg.getData( xyndx, reg );
 
     //search by data
-    int frstrow = matrmodel->findRow(xname, yname, xyndx, reg);
+    int frstrow = matrmodel->findRow( xyndx, reg);
+    if( frstrow >= 0 )
     tableCurrent->selectRow(frstrow);
 
   }

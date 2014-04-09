@@ -210,6 +210,16 @@ public:
     int getFirstLine() const
     {  return first;  }
 
+    int getXColumnNumber( int ndx )
+    {
+       if( nAbs > 0 )
+        return xcolms[ndx];
+       else
+        return -1;
+    }
+    int getYColumnNumber( int ndx )
+    {  return ycolms[ndx];  }
+
     /// Return string with Ordinate name and line index
     const string& getName( int ii);
 
@@ -305,6 +315,17 @@ struct GraphData
     }
 
     void getIndexes( QVector<int>& first, QVector<int>& maxXndx );
+
+    void getXYColumns( int line, int& xcol, int& ycol )
+    {
+      int nplot = getPlot( line );
+
+      xcol = getIndex( line );
+      if( xcol >= 0 )
+         xcol = plots[nplot].getXColumnNumber(xcol);
+      ycol = line - plots[nplot].getFirstLine();
+      ycol = plots[nplot].getYColumnNumber(ycol);
+    }
 
     void toBsonObject( bson *obj );
     void fromBsonObject( const char *obj );

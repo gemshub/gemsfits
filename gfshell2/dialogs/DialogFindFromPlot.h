@@ -12,12 +12,15 @@ class DialogFindFromPlot : public QDialog
 {
     Q_OBJECT
 
+    GraphData* grdata;
+public slots:
+    void ChangeIndex(int index);
+
 public:
     explicit DialogFindFromPlot(GraphData* data, QWidget *parent = 0);
     ~DialogFindFromPlot();
 
-    void getData( string& xname, string& yname, int *xyndx, double *reg );
-
+    void getData( int *xyndx, double *reg );
 
 private:
     Ui::DialogFindFromPlot *ui;

@@ -131,7 +131,7 @@ public:
          return grdata;
      }
 
-     int findRow( string& xname, string& yname, int *xyndx, double *reg );
+     int findRow( int *xyndx, double *reg );
 };
 
 

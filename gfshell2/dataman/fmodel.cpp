@@ -431,27 +431,16 @@ void TMatrixModel::showGraphData( QSortFilterProxyModel *pmodel,  string& title 
     //return grdata;
 }
 
-int TMatrixModel::findRow( string& xname, string& yname,
-                                      int *xynd, double *reg )
+int TMatrixModel::findRow( int *xynd, double *reg )
 {
    int ndx;
    QVector<int> xfcol;
    QVector<int> yfcol;
 
-   ndx = colHeads.indexOf(xname.c_str());
-   if( ndx != -1 )
-       xynd[0] = ndx;
-
-   if( xynd[0] < colHeads.size() && xynd[0] > 0 )
+   if( xynd[0] < colHeads.size() && xynd[0] >= 0 )
      xfcol.push_back( xynd[0] );
-   else
-     xfcol = xcolms;  // all x
 
-   ndx = colHeads.indexOf(yname.c_str());
-   if( ndx != -1 )
-       xynd[1] = ndx;
-
-   if( xynd[1] < colHeads.size() && xynd[1] > 0 )
+   if( xynd[1] < colHeads.size() && xynd[1] >= 0 )
      yfcol.push_back( xynd[1] );
    else
      yfcol = ycolms; // ally
@@ -475,8 +464,6 @@ int TMatrixModel::findRow( string& xname, string& yname,
        }
        ndx++;
    }
-
-
    return -1;
 }
 
