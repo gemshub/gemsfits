@@ -922,7 +922,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
         {
             // mersenne twister generator
             typedef boost::mt19937 RNGType;
-            RNGType rng;
+            RNGType rng(2);
 
             boost::normal_distribution<> rdist(v_scatter[j]->mean, v_scatter[j]->stdev_res);
 
@@ -996,6 +996,7 @@ pid_ = 0;
 
 
         optv_ = optv_backup;
+        gfittask->Opti->opt = optv_backup;
 //        optv_ = gfittask->Opti->opt;
 
         gfittask->Ainit_optim( optv_ ); //, sum_of_squares_MC);
