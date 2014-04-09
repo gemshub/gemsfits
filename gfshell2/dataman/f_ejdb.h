@@ -257,6 +257,11 @@ protected:
     }
     /// Set json query string for collection
     void SetQueryJson( const string& qrjson);
+    /// Return curent query string value
+    const string& GetLastQuery()
+    {
+       return currentSearchJson;
+    }
 
     /// Find record with key into internal record keys list
     bool Find( const char *key );
@@ -288,7 +293,7 @@ protected:
 
     //--- Manipulation Data Base
 
-    void Open( vector<int>& indx);
+    //void Open( vector<int>& indx);
     void Open( );
     void Close();
 

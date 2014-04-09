@@ -11,6 +11,25 @@
 #include "v_user.h"
 
 
+void removeComments( QString& valCsv )
+{
+    int foundStart = valCsv.indexOf('#');
+    int foundEnd;
+    while( foundStart >= 0 )
+    {
+      foundEnd = valCsv.indexOf('\n');
+      if( foundEnd > 0 )
+        valCsv.remove( foundStart, foundEnd-foundStart+1 );
+      else
+        {
+           valCsv.remove( foundStart);
+           break;
+        }
+      foundStart = valCsv.indexOf('#', foundStart );
+    }
+
+}
+
 bool TSortFilterProxyModel::lessThan(const QModelIndex &left,
                                       const QModelIndex &right) const
 {
@@ -242,21 +261,7 @@ void TMatrixModel::matrixFromCsvFile( const QString& dir )
       }
 
     //delete all comments // #
-    int foundStart = valCsv.indexOf('#');
-    int foundEnd;
-    while( foundStart > 0 )
-    {
-      foundEnd = valCsv.indexOf('\n');
-      if( foundEnd > 0 )
-        valCsv.remove( foundStart, foundEnd-foundStart+1 );
-      else
-        {
-           valCsv.remove( foundStart);
-           break;
-        }
-      foundStart = valCsv.indexOf('#', foundStart );
-    }
-
+    removeComments( valCsv );
     // remove all ' ' and '\t'
     valCsv.remove(QChar(' '), Qt::CaseInsensitive);
     valCsv.remove(QChar('\t'), Qt::CaseInsensitive);

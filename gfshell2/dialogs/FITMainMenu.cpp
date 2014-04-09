@@ -493,12 +493,20 @@ void FITMainWindow::CmCreate()
     }
 }
 
+/*{
+     "expdataset" :   { '$in' : ["CH04D" ] }
+}
+*/
+
+
 /// Create new record
 void FITMainWindow::CmSearch()
 {
     try
     {
-        string filterText = ui->queryEdit->toPlainText().toUtf8().data();
+        QString valQuery = ui->queryEdit->toPlainText();
+        removeComments( valQuery );
+        string filterText = valQuery.toUtf8().data();
 
         if( currentMode == MDF_DATABASE )
         {
@@ -506,11 +514,10 @@ void FITMainWindow::CmSearch()
           // reopen records
           rtEJ[MDF_DATABASE].Close();
           rtEJ[MDF_DATABASE].Open();
-          changeKeyList(); // need change key list insert new record
+          resetMainWindow(); // need change key list& current record
           contentsChanged = false;
           setStatusText( "Record filtered" );
         }
-        contentsChanged = true;
     }
     catch( TError& err )
     {

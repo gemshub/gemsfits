@@ -30,6 +30,7 @@
 class QWidget;
 class EJDB;
 class QDir;
+class QString;
 
 //----------------------------------------------------------------------
 // service functions
@@ -51,6 +52,7 @@ vector<string> vfMultiKeys(QWidget* par, const char* caption,
 
 bool removeDirectoryEntry( QDir dir );
 
+void removeComments( QString& valCsv );
 //----------------------------------------------------------------------
 
 // Mode enums

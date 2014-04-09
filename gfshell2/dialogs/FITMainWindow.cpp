@@ -352,6 +352,11 @@ void FITMainWindow::loadNewProject()
     ui->tableIComp->clear();
     ui->listPhases->clear();
     pLineGEMS->setText( trUtf8( "" ) );
+    // clear all queries
+    ui->queryEdit->setText(trUtf8( "" ) );
+    rtEJ[MDF_DATABASE].SetQueryJson("");
+    rtEJ[MDF_TASK].SetQueryJson("");
+    rtEJ[MDF_FITS].SetQueryJson("");
 
     // Connect project database
     openEJDB();
@@ -390,7 +395,29 @@ void FITMainWindow::resetMainWindow()
     }
 
     // reset  ui->queryEdit
-    ui->queryEdit->setText( trUtf8(""));
+    ui->queryEdit->setText( trUtf8( rtEJ[currentMode].GetLastQuery().c_str()));
+    if(  !rtEJ[currentMode].GetLastQuery().empty() )
+    {
+      ui->action_Insert->setEnabled(false);
+      ui->actionCreate_New->setEnabled(false);
+
+      ui->actionRestore_from_csv->setEnabled(false);
+      ui->actionRestore_from_JSON->setEnabled(false);
+      ui->actionRestore_from_TXT->setEnabled(false);
+      ui->actionRestore_from_YAML->setEnabled(false);
+    }
+    else
+    {
+      ui->action_Insert->setEnabled(true);
+      ui->actionCreate_New->setEnabled(true);
+      ui->actionRestore_from_JSON->setEnabled(true);
+      ui->actionRestore_from_YAML->setEnabled(true);
+      if( currentMode == MDF_DATABASE )
+        ui->actionRestore_from_csv->setEnabled(true);
+      else
+        ui->actionRestore_from_TXT->setEnabled(true);
+    }
+
 }
 
 

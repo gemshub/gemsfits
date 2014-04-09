@@ -136,6 +136,7 @@ void FitResultsWindow::ShowResults( const string& key )
 void FitResultsWindow::ShowResults( const string& key, const QString& dir )
 {
    pLineTask->setText( trUtf8( key.c_str() ));
+   readBsonRecord();
    CmOpenFile( dir );
    show();
 }
