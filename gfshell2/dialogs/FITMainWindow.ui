@@ -422,6 +422,8 @@
     <addaction name="action_Find"/>
     <addaction name="actionSave_Search"/>
     <addaction name="actionLoad_Search"/>
+    <addaction name="separator"/>
+    <addaction name="actionInsert_search_results_into_task_definition"/>
    </widget>
    <widget class="QMenu" name="menuRecod_List">
     <property name="title">
@@ -838,6 +840,11 @@
   <action name="actionCancel_gemsfit2_run">
    <property name="text">
     <string>Cancel gemsfit2 run</string>
+   </property>
+  </action>
+  <action name="actionInsert_search_results_into_task_definition">
+   <property name="text">
+    <string>Insert search results into task definition </string>
    </property>
   </action>
  </widget>
