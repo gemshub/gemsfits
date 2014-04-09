@@ -53,6 +53,7 @@ public slots:
 
     void CmPlotTable();
     void CmPrintTable();
+    void CmFindFromPlot();
 
    void CmCalc();
    void SelectColumn();

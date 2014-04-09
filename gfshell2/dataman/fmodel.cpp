@@ -398,7 +398,7 @@ void TMatrixModel::CloseGraph()
       graph_dlg->close();
 }
 
-void TMatrixModel::getGraphData( QSortFilterProxyModel *pmodel,  string& title )
+void TMatrixModel::showGraphData( QSortFilterProxyModel *pmodel,  string& title )
 {
     vector<int> xval;
     vector<int> yval;
@@ -431,6 +431,54 @@ void TMatrixModel::getGraphData( QSortFilterProxyModel *pmodel,  string& title )
     //return grdata;
 }
 
+int TMatrixModel::findRow( string& xname, string& yname,
+                                      int *xynd, double *reg )
+{
+   int ndx;
+   QVector<int> xfcol;
+   QVector<int> yfcol;
+
+   ndx = colHeads.indexOf(xname.c_str());
+   if( ndx != -1 )
+       xynd[0] = ndx;
+
+   if( xynd[0] < colHeads.size() && xynd[0] > 0 )
+     xfcol.push_back( xynd[0] );
+   else
+     xfcol = xcolms;  // all x
+
+   ndx = colHeads.indexOf(yname.c_str());
+   if( ndx != -1 )
+       xynd[1] = ndx;
+
+   if( xynd[1] < colHeads.size() && xynd[1] > 0 )
+     yfcol.push_back( xynd[1] );
+   else
+     yfcol = ycolms; // ally
+
+   ndx = 0;
+   QVectorIterator<QVector<QVariant> > line(matrix);
+   while (line.hasNext())
+   {
+       QVector<QVariant> valC(line.next());
+       foreach (const int &valuey, yfcol)
+       {
+           if( reg[2] <= valC[valuey].toDouble() && valC[valuey].toDouble() <= reg[3] )
+           {  if( xfcol.count() < 1 &&  ( reg[0] <= ndx && ndx <= reg[1] ) )
+                  return ndx;
+              foreach (const int &valuex, xfcol)
+              {
+                if( reg[0] <= valC[valuex].toDouble() && valC[valuex].toDouble() <= reg[1] )
+                    return ndx;
+             }
+           }
+       }
+       ndx++;
+   }
+
+
+   return -1;
+}
 
 
 //-------------------------------------------------------------------------------------

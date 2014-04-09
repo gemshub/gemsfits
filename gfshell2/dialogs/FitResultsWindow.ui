@@ -116,6 +116,7 @@
      <string>Tools</string>
     </property>
     <addaction name="actionPlot_Results"/>
+    <addaction name="action_Find_from_Plot"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -356,6 +357,11 @@
   <action name="actionPaste_transposed">
    <property name="text">
     <string>Paste &amp;transposed</string>
+   </property>
+  </action>
+  <action name="action_Find_from_Plot">
+   <property name="text">
+    <string>&amp;Find from Plot...</string>
    </property>
   </action>
  </widget>

@@ -25,6 +25,7 @@
 #include "FitResultsWindow.h"
 #include "FITMainWindow.h"
 #include "ui_FitResultsWindow.h"
+#include "DialogFindFromPlot.h"
 
 
 FitResultsWindow* FitResultsWindow::pDia = 0;
@@ -159,6 +160,7 @@ void FitResultsWindow::setActions()
     connect( ui->actionAbout_Results_window, SIGNAL( triggered()), this, SLOT(CmAbout_Results_window()));
 
     connect( ui->actionPlot_Results, SIGNAL( triggered()), this, SLOT(CmPlotTable()));
+    connect( ui->action_Find_from_Plot, SIGNAL( triggered()), this, SLOT(CmFindFromPlot()));
     connect( ui->actionPrint, SIGNAL( triggered()), this, SLOT(CmPrintTable()));
 
     // edit menu
@@ -451,13 +453,13 @@ void FitResultsWindow::CmPlotTable()
     try
     {
         TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
-
         if( !tableCurrent )
           return;
+
         string title = "Task ";
                title  += pLineTask->text().toUtf8().data();
         QSortFilterProxyModel *pmodel = (QSortFilterProxyModel *)tableCurrent->model();
-        ((TMatrixModel *)pmodel->sourceModel())->getGraphData(pmodel, title );
+        ((TMatrixModel *)pmodel->sourceModel())->showGraphData(pmodel, title );
 
         //graphList.insert( graph_dlg );
     }
@@ -628,6 +630,43 @@ void FitResultsWindow::ToggleY()
     TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
     if( tableCurrent && tableCurrent->model()->rowCount()>0)
       tableCurrent->ToggleY();
+}
+
+void FitResultsWindow::CmFindFromPlot()
+{
+  try
+  {
+
+     TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+     if( !tableCurrent )
+        return;
+
+     QSortFilterProxyModel *pmodel = (QSortFilterProxyModel *)tableCurrent->model();
+     TMatrixModel *matrmodel = (TMatrixModel *)pmodel->sourceModel();
+     GraphData *grdata = matrmodel->getGraphData();
+     if( !grdata )
+       return;
+
+     // define new project
+     DialogFindFromPlot dlg( grdata, this);
+      if( !dlg.exec() )
+          return;
+
+    //find data from dlg
+      string xname, yname;
+      int xyndx[2];
+      double reg[4];
+    dlg.getData( xname, yname, xyndx, reg );
+
+    //search by data
+    int frstrow = matrmodel->findRow(xname, yname, xyndx, reg);
+    tableCurrent->selectRow(frstrow);
+
+  }
+    catch( TError& err )
+    {
+    cout << err.title << err.mess << endl;
+    }
 }
 
 // ------------------------ end of FitResultsWindow.cpp ------------------------------------------

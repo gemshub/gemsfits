@@ -124,9 +124,14 @@ public:
 
      // get graph info
      //void getXYvectors( int& lines, vector<int>& xval, vector<int>& yval, vector<string>& ynames );
-     void getGraphData( QSortFilterProxyModel *pmodel, string& title );
+     void showGraphData( QSortFilterProxyModel *pmodel, string& title );
      void CloseGraph();
+     GraphData *getGraphData() const
+     {
+         return grdata;
+     }
 
+     int findRow( string& xname, string& yname, int *xyndx, double *reg );
 };
 
 
