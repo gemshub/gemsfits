@@ -535,7 +535,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
 
                 OnePercentScaledSensitivities(k,i) = (SensitivityMatrix(k,i)) * optv_[i] / 100;
 
-                if (gfittask->Tfun->weight == keys::inverr) // the weight matrix is added (weighting with 1/error)
+/*                if (gfittask->Tfun->weight == keys::inverr) // the weight matrix is added (weighting with 1/error)
                 {
                     DimensionlessScaledSensitivities(k,i) = SensitivityMatrix(k,i) * fabs( optv_[i] ) * gfittask->weights[k];
                 } else
@@ -543,7 +543,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
                     {
                         DimensionlessScaledSensitivities(k,i) = SensitivityMatrix(k,i) * fabs( optv_[i] ) * sqrt(gfittask->weights[k]);
                     }
-                    else  DimensionlessScaledSensitivities(k,i) = SensitivityMatrix(k,i) * fabs( optv_[i] ) * 1;
+                    else */ DimensionlessScaledSensitivities(k,i) = SensitivityMatrix(k,i) * fabs( optv_[i] ) * sqrt(gfittask->weights[k]);
                 CompositeScaledSensitivities(i)      += sqrt( DimensionlessScaledSensitivities(k,i)*DimensionlessScaledSensitivities(k,i)/len_meas );
             }
 //            gfittask->print->sensitivity.push_back(sens);

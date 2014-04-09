@@ -81,8 +81,9 @@ void Data_Manager::get_EJDB( )
     json_t *root;
     json_error_t jerror;
 
-    string_v out, usesample, skipsample, usedataset, skipdataset, skippdatasets,skippsamples, usepdatasets, usepsamples ;
-    double_v qsT, qsP;
+    string_v out, out2, usesample, skipsample, usedataset, skipdataset, skippdatasets,skippsamples, usepdatasets, usepsamples, SA, DS ;
+    double_v qsT, qsP, WT;
+    int Nsamples;
 
     stringstream ss;
     string sss;
@@ -140,6 +141,28 @@ void Data_Manager::get_EJDB( )
             qsP.push_back( atof(out.at(i).c_str()) ); // query for selecting P
         }
         out.clear();
+
+
+        parse_JSON_object(DataSelect, keys::samplelist, out);
+        Nsamples = out.size();
+        for (unsigned int i = 0; i <out.size(); i++)
+        {
+            parse_JSON_object(out[i], keys::SA, out2);
+//            if (out2.size() == 0) { cout << "Phase name has to be specified in Data Target->OFUN->EPH!"<< endl; exit(1);} // ERROR
+            SA.push_back(out2[0]);
+            out2.clear();
+
+            parse_JSON_object(out[i], keys::DS, out2);
+//            if (out2.size() == 0) { cout << "Phase name has to be specified in Data Target->OFUN->EPH!"<< endl; exit(1);} // ERROR
+            DS.push_back(out2[0]);
+            out2.clear();
+
+            parse_JSON_object(out[i], keys::WT, out2);
+//            if (out2.size() == 0) { cout << "Phase name has to be specified in Data Target->OFUN->EPH!"<< endl; exit(1);} // ERROR
+            WT.push_back(atof(out2[0].c_str()));
+            out2.clear();
+        }
+
     }
 
     // Build the query in EJDB format
@@ -160,186 +183,219 @@ cout << DBname.c_str() << endl;
         bson bq2;
         bson_init_as_query(&bq2);
 
-        // for selecting expdatasets
-        if  (usedataset.size() > 0)
+        if (Nsamples == 0)
         {
-            if (!usedataset[0].empty())
+            // for selecting expdatasets
+            if  (usedataset.size() > 0)
             {
-                bson_append_start_object(&bq2, keys::expdataset);
-                bson_append_start_array(&bq2, "$in");
-                for (unsigned int j=0; j<usedataset.size(); ++j)
+                if (!usedataset[0].empty())
                 {
-                    ss << j;
-                    sss = ss.str();
-                    ss.str("");
-                    bson_append_string(&bq2, sss.c_str(), usedataset[j].c_str());
+                    bson_append_start_object(&bq2, keys::expdataset);
+                    bson_append_start_array(&bq2, "$in");
+                    for (unsigned int j=0; j<usedataset.size(); ++j)
+                    {
+                        ss << j;
+                        sss = ss.str();
+                        ss.str("");
+                        bson_append_string(&bq2, sss.c_str(), usedataset[j].c_str());
+                    }
+                    bson_append_finish_array(&bq2);
+                    bson_append_finish_object(&bq2);
                 }
-                bson_append_finish_array(&bq2);
-                bson_append_finish_object(&bq2);
             }
-        }
 
-        // for skipping expdatasets
-        if (skipdataset.size() > 0)
-        {
-            if (!skipdataset[0].empty())
+            // for skipping expdatasets
+            if (skipdataset.size() > 0)
             {
-                bson_append_start_object(&bq2, keys::expdataset);
-                bson_append_start_array(&bq2, "$nin");
-                for (unsigned int j=0; j<skipdataset.size(); ++j)
+                if (!skipdataset[0].empty())
                 {
-                    ss << j;
-                    sss = ss.str();
-                    ss.str("");
-                    bson_append_string(&bq2, sss.c_str(), skipdataset[j].c_str());
+                    bson_append_start_object(&bq2, keys::expdataset);
+                    bson_append_start_array(&bq2, "$nin");
+                    for (unsigned int j=0; j<skipdataset.size(); ++j)
+                    {
+                        ss << j;
+                        sss = ss.str();
+                        ss.str("");
+                        bson_append_string(&bq2, sss.c_str(), skipdataset[j].c_str());
+                    }
+                    bson_append_finish_array(&bq2);
+                    bson_append_finish_object(&bq2);
                 }
-                bson_append_finish_array(&bq2);
-                bson_append_finish_object(&bq2);
             }
-        }
 
-        // for selecting usesamples
-        if (usesample.size() > 0)
-        {
-            if (!usesample[0].empty())
+            // for selecting usesamples
+            if (usesample.size() > 0)
             {
-                bson_append_start_object(&bq2, keys::expsample);
-                bson_append_start_array(&bq2, "$in");
-                for (unsigned int j=0; j<usesample.size(); ++j)
+                if (!usesample[0].empty())
                 {
-                    ss << j;
-                    sss = ss.str();
-                    ss.str("");
-                    bson_append_string(&bq2, sss.c_str(), usesample[j].c_str());
-     // cout << usesample[j].c_str() <<  endl;
+                    bson_append_start_object(&bq2, keys::expsample);
+                    bson_append_start_array(&bq2, "$in");
+                    for (unsigned int j=0; j<usesample.size(); ++j)
+                    {
+                        ss << j;
+                        sss = ss.str();
+                        ss.str("");
+                        bson_append_string(&bq2, sss.c_str(), usesample[j].c_str());
+         // cout << usesample[j].c_str() <<  endl;
+                    }
+                    bson_append_finish_array(&bq2);
+                    bson_append_finish_object(&bq2);
                 }
-                bson_append_finish_array(&bq2);
-                bson_append_finish_object(&bq2);
             }
-        }
 
-        // for skipping skipsamples
-        if (skipsample.size() > 0)
-        {
-            if (!skipsample[0].empty())
+            // for skipping skipsamples
+            if (skipsample.size() > 0)
             {
-                bson_append_start_object(&bq2, keys::expsample);
-                bson_append_start_array(&bq2, "$nin");
-                for (unsigned int j=0; j<skipsample.size(); ++j)
+                if (!skipsample[0].empty())
                 {
-                    ss << j;
-                    sss = ss.str();
-                    ss.str("");
-                    bson_append_string(&bq2, sss.c_str(), skipsample[j].c_str());
-     // cout << skipsample[j].c_str() <<  endl;
+                    bson_append_start_object(&bq2, keys::expsample);
+                    bson_append_start_array(&bq2, "$nin");
+                    for (unsigned int j=0; j<skipsample.size(); ++j)
+                    {
+                        ss << j;
+                        sss = ss.str();
+                        ss.str("");
+                        bson_append_string(&bq2, sss.c_str(), skipsample[j].c_str());
+         // cout << skipsample[j].c_str() <<  endl;
+                    }
+                    bson_append_finish_array(&bq2);
+                    bson_append_finish_object(&bq2);
                 }
-                bson_append_finish_array(&bq2);
-                bson_append_finish_object(&bq2);
             }
-        }
 
-        // for selection of temperatures
-        if (qsT.size() > 0)
-        {
-            if ((qsT.size() == 2))
+            // for selection of temperatures
+            if (qsT.size() > 0)
             {
-                // for selecting T interval
-                bson_append_start_object(&bq2, keys::sT);
-                bson_append_start_array(&bq2, "$bt");
-                bson_append_double(&bq2, "0", qsT[0]);
-                bson_append_double(&bq2, "1", qsT[1]);
-                bson_append_finish_array(&bq2);
-                bson_append_finish_object(&bq2);
-            } else
-                if (!(qsT[0] == 0))
+                if ((qsT.size() == 2))
                 {
+                    // for selecting T interval
                     bson_append_start_object(&bq2, keys::sT);
-                    bson_append_start_array(&bq2, "$in");
-                    for (unsigned int j=0; j<qsT.size(); ++j)
-                    {
-                        ss << j;
-                        sss = ss.str();
-                        ss.str("");
-                        bson_append_int(&bq2, sss.c_str(), qsT[j]);
-                    }
+                    bson_append_start_array(&bq2, "$bt");
+                    bson_append_double(&bq2, "0", qsT[0]);
+                    bson_append_double(&bq2, "1", qsT[1]);
                     bson_append_finish_array(&bq2);
                     bson_append_finish_object(&bq2);
-                }
-        }
-
-        // for selection of pressures
-        if (qsP.size() > 0)
-        {
-            if ((qsP.size() == 2))
-            {
-                // for selecting P interval
-                bson_append_start_object(&bq2, keys::sP);
-                bson_append_start_array(&bq2, "$bt");
-                bson_append_double(&bq2, "0", qsP[0]);
-                bson_append_double(&bq2, "1", qsP[1]);
-                bson_append_finish_array(&bq2);
-                bson_append_finish_object(&bq2);
-            } else
-                if (!(qsP[0] == 0))
-                {
-                    bson_append_start_object(&bq2, keys::sP);
-                    bson_append_start_array(&bq2, "$in");
-                    for (unsigned int j=0; j<qsP.size(); ++j)
+                } else
+                    if (!(qsT[0] == 0))
                     {
-                        ss << j;
-                        sss = ss.str();
-                        ss.str("");
-                        bson_append_int(&bq2, sss.c_str(), qsP[j]);
-                    }
-                    bson_append_finish_array(&bq2);
-                    bson_append_finish_object(&bq2);
-                }
-        }
-
-        // for selecting pairs of datasets-samples
-        if (usepdatasets.size() > 0)
-        {
-            if (!usepdatasets[0].empty())
-            {
-                bson_append_start_array(&bq2, "$or");
-                unsigned int k=0; // counts trough the usesamples vector
-                int count = 0;
-                for (unsigned int j=0; j<usepdatasets.size(); ++j)
-                {
-//                    for (k; k<usepsamples.size(); k++)
-                        while (k<usepsamples.size())
-                    {
-                        if (!(usepsamples[k] == ""))
+                        bson_append_start_object(&bq2, keys::sT);
+                        bson_append_start_array(&bq2, "$in");
+                        for (unsigned int j=0; j<qsT.size(); ++j)
                         {
-                            ss << count;
+                            ss << j;
                             sss = ss.str();
                             ss.str("");
-                            bson_append_start_object(&bq2, sss.c_str());
-
-                            bson_append_start_array(&bq2, "$and");
-
-                            bson_append_start_object(&bq2, "0");
-                            bson_append_string(&bq2, keys::expdataset, usepdatasets[j].c_str());
-                            bson_append_finish_object(&bq2);
-
-                            bson_append_start_object(&bq2, "1");
-                            bson_append_string(&bq2, keys::expsample, usepsamples[k].c_str());
-                            bson_append_finish_object(&bq2);
-
-                            bson_append_finish_array(&bq2);
-                            bson_append_finish_object(&bq2);
-
-                            count++;
-
-                        } else
-                        {
-                            k++;
-                            break;
+                            bson_append_int(&bq2, sss.c_str(), qsT[j]);
                         }
-                        k++;
+                        bson_append_finish_array(&bq2);
+                        bson_append_finish_object(&bq2);
                     }
+            }
+
+            // for selection of pressures
+            if (qsP.size() > 0)
+            {
+                if ((qsP.size() == 2))
+                {
+                    // for selecting P interval
+                    bson_append_start_object(&bq2, keys::sP);
+                    bson_append_start_array(&bq2, "$bt");
+                    bson_append_double(&bq2, "0", qsP[0]);
+                    bson_append_double(&bq2, "1", qsP[1]);
+                    bson_append_finish_array(&bq2);
+                    bson_append_finish_object(&bq2);
+                } else
+                    if (!(qsP[0] == 0))
+                    {
+                        bson_append_start_object(&bq2, keys::sP);
+                        bson_append_start_array(&bq2, "$in");
+                        for (unsigned int j=0; j<qsP.size(); ++j)
+                        {
+                            ss << j;
+                            sss = ss.str();
+                            ss.str("");
+                            bson_append_int(&bq2, sss.c_str(), qsP[j]);
+                        }
+                        bson_append_finish_array(&bq2);
+                        bson_append_finish_object(&bq2);
+                    }
+            }
+
+            // for selecting pairs of datasets-samples
+            if (usepdatasets.size() > 0)
+            {
+                if (!usepdatasets[0].empty())
+                {
+                    bson_append_start_array(&bq2, "$or");
+                    unsigned int k=0; // counts trough the usesamples vector
+                    int count = 0;
+                    for (unsigned int j=0; j<usepdatasets.size(); ++j)
+                    {
+    //                    for (k; k<usepsamples.size(); k++)
+                            while (k<usepsamples.size())
+                        {
+                            if (!(usepsamples[k] == ""))
+                            {
+                                ss << count;
+                                sss = ss.str();
+                                ss.str("");
+                                bson_append_start_object(&bq2, sss.c_str());
+
+                                bson_append_start_array(&bq2, "$and");
+
+                                bson_append_start_object(&bq2, "0");
+                                bson_append_string(&bq2, keys::expdataset, usepdatasets[j].c_str());
+                                bson_append_finish_object(&bq2);
+
+                                bson_append_start_object(&bq2, "1");
+                                bson_append_string(&bq2, keys::expsample, usepsamples[k].c_str());
+                                bson_append_finish_object(&bq2);
+
+                                bson_append_finish_array(&bq2);
+                                bson_append_finish_object(&bq2);
+
+                                count++;
+
+                            } else
+                            {
+                                k++;
+                                break;
+                            }
+                            k++;
+                        }
+                    }
+                    bson_append_finish_array(&bq2);
                 }
-                bson_append_finish_array(&bq2);
+            }
+        } else // if we have samples list the search query is bulil as follows
+        {
+            // for selecting pairs of datasets-samples
+            if (DS.size() > 0)
+            {
+                if (!DS[0].empty())
+                {
+                    bson_append_start_array(&bq2, "$or");
+                    for  (unsigned k = 0; k<SA.size(); k++)
+                    {
+                        ss << k;
+                        sss = ss.str();
+                        ss.str("");
+                        bson_append_start_object(&bq2, sss.c_str());
+                        bson_append_start_array(&bq2, "$and");
+
+                        bson_append_start_object(&bq2, "0");
+                        bson_append_string(&bq2, keys::expdataset, DS[k].c_str());
+                        bson_append_finish_object(&bq2);
+
+                        bson_append_start_object(&bq2, "1");
+                        bson_append_string(&bq2, keys::expsample, SA[k].c_str());
+                        bson_append_finish_object(&bq2);
+
+                        bson_append_finish_array(&bq2);
+                        bson_append_finish_object(&bq2);
+                    }
+                    bson_append_finish_array(&bq2);
+                }
             }
         }
 
@@ -384,6 +440,22 @@ cout << DBname.c_str() << endl;
         //Close database
         ejdbclose(jb);
         ejdbdel(jb);
+
+// Set weights provided in the sample list
+        if (Nsamples > 0)
+        {
+            for (unsigned i = 0; i<experiments.size(); i++)
+            {
+                for (unsigned j = 0; j<Nsamples; j++)
+                {
+                    if ((experiments[i]->sample == SA[j]) && (experiments[i]->expdataset == DS[j]))
+                    {
+                        experiments[j]->weight = experiments[j]->weight * WT[j];
+                    }
+                }
+            }
+        }
+
 
         // for skipping expdataset-expsamples pairs
         if (skippdatasets.size() > 0)

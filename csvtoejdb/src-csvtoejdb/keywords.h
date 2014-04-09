@@ -17,6 +17,9 @@ static const char *Qerror = "error";  ///                                       
 static const char *experiments = "experiments"; ///               0          collection         data for experimental samples
 // data for experimental samples
 static const char *expsample = "sample"; ///                      1		     string 	        ID of this experimental sample
+static const char *samplelist = "samplelist"; ///
+static const char *SA = "SA";
+static const char *DS = "DS";
 static const char *samples = "samples";
 static const char *dataset = "dataset";
 static const char *usesamples = "usesamples";
