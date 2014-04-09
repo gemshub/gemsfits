@@ -25,7 +25,7 @@
     <item>
      <widget class="QTabWidget" name="tabsResults">
       <property name="currentIndex">
-       <number>1</number>
+       <number>6</number>
       </property>
       <widget class="QWidget" name="tabFitParams">
        <attribute name="title">
@@ -51,7 +51,7 @@
       </widget>
       <widget class="QWidget" name="tabSensitivity">
        <attribute name="title">
-        <string>Sensitivity</string>
+        <string>Sensitivity Data</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_7"/>
       </widget>
@@ -69,7 +69,7 @@
       </widget>
       <widget class="QWidget" name="tabInverse">
        <attribute name="title">
-        <string>InvMod Results</string>
+        <string>Inv. Mod. Results</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_9"/>
       </widget>
@@ -116,6 +116,7 @@
      <string>Tools</string>
     </property>
     <addaction name="actionPlot_Results"/>
+    <addaction name="separator"/>
     <addaction name="action_Find_from_Plot"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -125,6 +126,7 @@
     <addaction name="actionAbout_Results_window"/>
     <addaction name="actionAbout_Graph_Dialog"/>
     <addaction name="actionAbout_GEMSFITS"/>
+    <addaction name="actionAbout_gemsfits2_Code"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -201,7 +203,7 @@
      <normaloff>:/menu/Icons/ShowFilesIcon.png</normaloff>:/menu/Icons/ShowFilesIcon.png</iconset>
    </property>
    <property name="text">
-    <string>Load from File...</string>
+    <string>Load results from gemsfit2 output files...</string>
    </property>
   </action>
   <action name="actionSave_File">
@@ -210,12 +212,12 @@
      <normaloff>:/menu/Icons/SaveCurrentRecordIcon.png</normaloff>:/menu/Icons/SaveCurrentRecordIcon.png</iconset>
    </property>
    <property name="text">
-    <string>Save to File...</string>
+    <string>Save results table to csv file...</string>
    </property>
   </action>
   <action name="actionClose">
    <property name="text">
-    <string>Close</string>
+    <string>Close results viewer window</string>
    </property>
   </action>
   <action name="action_Insert">
@@ -224,7 +226,7 @@
      <normaloff>:/menu/Icons/NewCreateRecordIcon.png</normaloff>:/menu/Icons/NewCreateRecordIcon.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Save Results</string>
+    <string>&amp;Save gemsfit2 fitting results to record</string>
    </property>
   </action>
   <action name="actionUpdate">
@@ -233,7 +235,7 @@
      <normaloff>:/menu/Icons/NewCloneRecordIcon.png</normaloff>:/menu/Icons/NewCloneRecordIcon.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Update</string>
+    <string>&amp;Update record with saved results</string>
    </property>
   </action>
   <action name="actionDelete">
@@ -242,12 +244,12 @@
      <normaloff>:/menu/Icons/DeleteCurrentRecordIcon.png</normaloff>:/menu/Icons/DeleteCurrentRecordIcon.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Delete</string>
+    <string>&amp;Delete record with saved results</string>
    </property>
   </action>
   <action name="actionExport">
    <property name="text">
-    <string>&amp;Export to JSON file...</string>
+    <string>&amp;Export record to JSON file...</string>
    </property>
   </action>
   <action name="action_Copy">
@@ -266,7 +268,7 @@
      <normaloff>:/modules/Icons/RTparmModuleIcon.png</normaloff>:/modules/Icons/RTparmModuleIcon.png</iconset>
    </property>
    <property name="text">
-    <string>Plot Fit Results</string>
+    <string>Plot parameter optimization results...</string>
    </property>
   </action>
   <action name="actionAbout_Results_window">
@@ -309,12 +311,12 @@
   </action>
   <action name="actionMark_Columns_as_X">
    <property name="text">
-    <string>Mark Columns as &amp;X (toggle) ... </string>
+    <string>Mark columns as &amp;X (toggle) ... </string>
    </property>
   </action>
   <action name="actionMark_Columns_as_Y">
    <property name="text">
-    <string>Mark Columns as Y (toggle)...</string>
+    <string>Mark columns as Y (toggle)...</string>
    </property>
   </action>
   <action name="actionClear">
@@ -346,7 +348,7 @@
   </action>
   <action name="actionSelect_all">
    <property name="text">
-    <string>Select &amp;all</string>
+    <string>Select &amp;all columns</string>
    </property>
   </action>
   <action name="actionC_ut">
@@ -361,7 +363,12 @@
   </action>
   <action name="action_Find_from_Plot">
    <property name="text">
-    <string>&amp;Find from Plot...</string>
+    <string>&amp;Find a sample located on plot fragment...</string>
+   </property>
+  </action>
+  <action name="actionAbout_gemsfits2_Code">
+   <property name="text">
+    <string>About gemsfits2 code</string>
    </property>
   </action>
  </widget>

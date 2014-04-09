@@ -17,7 +17,7 @@
    <item row="0" column="0" colspan="2">
     <widget class="QLabel" name="label_4">
      <property name="text">
-      <string>Name of line</string>
+      <string>Select plot ordinate</string>
      </property>
     </widget>
    </item>
