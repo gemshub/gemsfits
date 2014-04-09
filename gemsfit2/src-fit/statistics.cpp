@@ -189,7 +189,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         {
             fitparam[i]->Ptype = gfittask->Opti->Ptype[i];
             fitparam[i]->Pfittype = "F";
-            fitparam[i]->Pname = gfittask->Opti->Ptype[i];
+            fitparam[i]->Pname = gfittask->Opti->Pindex[i];
             fitparam[i]->Fval = optv_[i];
             fitparam[i]->Ival = gfittask->Opti->opt[i];
             fitparam[i]->CSS = 0.0;
@@ -317,16 +317,26 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 
     gpf->fqq << endl;
 
-    for( i=0; i<  N;  i++ )
+    for( int j=0; j<  N;  j++ )
     {
-        i--;
+        j--;
+
+
+
         gpf->fqq << gfittask->experiments[exp]->sample << ",";
         for (unsigned p = 0; p<gfittask->Tfun->objfun.size(); p++)
         {
             if (gfittask->aTfun[exp].objfun[p].isComputed)
             {
-                i++;
-                gpf->fqq <<gfittask->residuals_v[i]<<","<<quantiles_v[i]<< ",";
+                j++;
+                for (i = 0; i< gfittask->residuals_v.size(); i++)
+                {
+                    if (gfittask->aTfun[exp].objfun[p].results.residual == gfittask->residuals_v[i])
+                    {
+                    gpf->fqq <<gfittask->residuals_v[i]<<","<<quantiles_v[i]<< ",";
+                    }
+                }
+
 
             } else
             {
@@ -828,8 +838,8 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
 
 //cout<<"pid : "<<pid<<" entered Statistics::MC_confidence_interval ..."<<endl;
 
-    int i,n_param,id,imc;
-    int j, p_=1, pid_=0; // k
+    unsigned int i,n_param,id,imc;
+    unsigned int j, p_=1, pid_=0; // k
 //    double sum_of_squares_MC;
     std::vector<double> scatter_v, MC_computed_v;
     std::vector<double> optv_backup;
@@ -971,14 +981,14 @@ pid_ = 0;
         if (MCbool == 1) // the new simulated values are from scatter + computed values
             for (i=0; i<number_of_measurements; i++)
             {
-                MC_computed_v[i] = scatter_v[i]*gfittask->measured_values_v[i] + gfittask->computed_values_v[i];
+                MC_computed_v[i] = (scatter_v[i]*gfittask->measured_values_v[i]) + gfittask->computed_values_v[i];
             }
         else
             if (MCbool == 2) // the new simulated values are from scatter + measured values
             {
                 for (i=0; i<number_of_measurements; i++)
                 {
-                    MC_computed_v[i] = scatter_v[i]*gfittask->measured_values_v[i] + gfittask->measured_values_v[i];
+                    MC_computed_v[i] = (scatter_v[i]*gfittask->measured_values_v[i]) + gfittask->measured_values_v[i];
                 }
             }
 
@@ -986,7 +996,7 @@ pid_ = 0;
 
 
         optv_ = optv_backup;
-        optv_ = gfittask->Opti->opt;
+//        optv_ = gfittask->Opti->opt;
 
         gfittask->Ainit_optim( optv_ ); //, sum_of_squares_MC);
 
@@ -1025,7 +1035,7 @@ pid_ = 0;
         arma::vec MCRparams( num_of_MC_runs );
 
 
-        vector<double> SD_Fparam, SD_Rparam;
+        vector<double> SD_Fparam, SD_Rparam, MN_Fparam, MN_Rparam;
 
         gpf->fstat << " Confidence intervals of MC parameters : "<<endl;
         gpf->fstat << " -> standard deviation of parameters generated during Monte Carlo runs "<<endl;
@@ -1041,6 +1051,8 @@ pid_ = 0;
             // compute standard deviation of generated parameters
             StandardDeviation = arma::stddev( MCparams, 0 );
             SD_Fparam.push_back(StandardDeviation);
+            double mean = arma::mean( MCparams );
+            MN_Fparam.push_back(mean);
 
             // Print Standard Deviations of parameters generated during MC runs to file
             gpf->fstat <<"			parameter "<< j;
@@ -1059,6 +1071,8 @@ pid_ = 0;
             // compute standard deviation of generated parameters
             StandardDeviation = arma::stddev( MCRparams, 0 );
             SD_Rparam.push_back(StandardDeviation);
+            double mean = arma::mean( MCRparams );
+            MN_Rparam.push_back(mean);
 
             // Print Standard Deviations of parameters generated during MC runs to file
             gpf->fstat <<"			parameter "<< j;
@@ -1077,7 +1091,7 @@ pid_ = 0;
 
 
         // print mc-results.csv
-        gpf->fmc << "MC_run,";
+//        gpf->fmc << "MC_run,";
         int p=0;
 
         for( j=0; j<n_param; j++ ) // cols
@@ -1095,7 +1109,7 @@ pid_ = 0;
 
         for( i=0; i<num_of_MC_runs; i++ ) // rows
         {
-            gpf->fmc << i+1 << ",";
+//            gpf->fmc << i+1 << ",";
             for( j=0; j<n_param; j++ ) // cols
             {
                 gpf->fmc <<MC_fitted_parameters_all[ i ][ j ]<<",";
@@ -1109,8 +1123,8 @@ pid_ = 0;
             gpf->fmc << endl;
         }
 
-
-        gpf->fmc << "Standard_deviation,";
+        gpf->fmc.close();
+//        gpf->fmc << "Standard_deviation,";
 
         double T, w;
         p=0;
@@ -1119,7 +1133,7 @@ pid_ = 0;
 
         for( j=0; j<n_param; j++ ) // cols
         {
-            gpf->fmc << SD_Fparam[j]<<",";
+//            gpf->fmc << SD_Fparam[j]<<",";
             T = boost::math::quantile(boost::math::complement(dist, 0.01/ 2));
             w = T * SD_Fparam[j] /*/ sqrt(double( number_of_measurements ))*/;
             fitparam[j]->mc95 = w;
@@ -1131,13 +1145,14 @@ pid_ = 0;
             w = T * SD_Fparam[j] /*/ sqrt(double( number_of_measurements ))*/;
             fitparam[j]->mcconfi.push_back(w);
             fitparam[j]->mcSTDEV = SD_Fparam[j];
+            fitparam[j]->mcMEAN = MN_Fparam[j];
             p++;
         }
         p--;
 
         for( j=0; j<n_Rparam; j++ ) // cols
         {
-            gpf->fmc << SD_Rparam[j]<<",";
+//            gpf->fmc << SD_Rparam[j]<<",";
             T = boost::math::quantile(boost::math::complement(dist, 0.01/ 2));
             w = T * SD_Fparam[j] /*/ sqrt(double( number_of_measurements ))*/;
             fitparam[j+p]->mc95 = w;
@@ -1147,11 +1162,11 @@ pid_ = 0;
             fitparam[j+p]->mcconfi.push_back(w);
             T = boost::math::quantile(boost::math::complement(dist, 0.1/ 2));
             w = T * SD_Fparam[j] /*/ sqrt(double( number_of_measurements ))*/;
+            fitparam[j]->mcSTDEV = SD_Rparam[j];
+            fitparam[j]->mcMEAN = MN_Rparam[j];
             fitparam[j+p]->mcconfi.push_back(w);
         }
 
-
-        gpf->fmc.close();
 
     free (MC_fitted_parameters_all[0]);
     free (MC_fitted_parameters_all);
@@ -1174,7 +1189,7 @@ void statistics::print_param()
 
     // print param
     gpf->fparam << "ptype,parameter," << "name,"	<< "init.value,"
-                   << "fittted.value," << "mc.stdev," << "confi99,confi95,confi90," << "CSS.sensitivity,";
+                   << "fittted.value," << "mc.mean," << "mc.stdev," << "confi99,confi95,confi90," << "CSS.sensitivity,";
 
     for (unsigned i= 0; i<fitparam.size(); i++)
     {
@@ -1196,6 +1211,7 @@ void statistics::print_param()
 
         if (fitparam[i]->mcSTDEV != 0)
         {
+           gpf->fparam << fitparam[i]->mcMEAN << ",";
            gpf->fparam << fitparam[i]->mcSTDEV << ",";
            for (unsigned j=0; j < fitparam[i]->mcconfi.size(); j++)
            {
@@ -1205,7 +1221,7 @@ void statistics::print_param()
         }
 
         else
-            gpf->fparam << ",,,,";
+            gpf->fparam << ",,,,,";
         if (fitparam[i]->CSS != 0)
         gpf->fparam << fitparam[i]->CSS << ",";
         else

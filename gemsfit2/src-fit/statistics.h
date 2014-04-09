@@ -56,6 +56,7 @@ class statistics
         double CSS;
         double mc95;
         double mcSTDEV;
+        double mcMEAN;
         vector<double> mcconfi;
         vector<double> correl;
     };
