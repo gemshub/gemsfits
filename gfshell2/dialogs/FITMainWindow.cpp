@@ -103,6 +103,7 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
 {
     ui->setupUi(this);
     axisLabelFont = QFont("Courier New", 14);
+    ui->actionCancel_gemsfit2_run->setEnabled(false);
 
     // define tool bar
     toolTasks = new QToolBar(this);
@@ -627,8 +628,9 @@ void FITMainWindow::runFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
     ui->action_Run_test->setEnabled(true);
     ui->action_Show_Results->setEnabled(true);
+    ui->actionCancel_gemsfit2_run->setEnabled(false);
 
-    if( exitCode==0 )
+    if( exitStatus==0 && exitCode==0 )
         addLinetoStatus( "gemsfit2 calculation o.k." );
     else
         addLinetoStatus( "Error in gemsfit2 run." );

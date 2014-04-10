@@ -154,7 +154,7 @@ public slots:
        void CmRunTest();
        void CmShowCalcResults();
        void CmShowFitResults();
-
+       void CmCancelGemsfit();
 
 public:
     explicit FITMainWindow(int c, char** v, QWidget *parent = 0);

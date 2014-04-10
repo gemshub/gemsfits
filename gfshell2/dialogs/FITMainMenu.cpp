@@ -85,6 +85,7 @@ void FITMainWindow::setActions()
     connect( ui->action_Run_test, SIGNAL( triggered()), this, SLOT(CmRunTest()));
     connect( ui->action_Show_Results, SIGNAL( triggered()), this, SLOT(CmShowCalcResults()));
     connect( ui->actionFits_View_Mode, SIGNAL( triggered()), this, SLOT(CmShowFitResults()));
+    connect( ui->actionCancel_gemsfit2_run, SIGNAL( triggered()), this, SLOT(CmCancelGemsfit()));
 
 
    pLineTask = new QLineEdit( ui->toolBarTask );
@@ -710,6 +711,7 @@ void FITMainWindow::CmRunTest()
 
         ui->action_Run_test->setEnabled(false);
         ui->action_Show_Results->setEnabled(false);
+        ui->actionCancel_gemsfit2_run->setEnabled(true);
 
         setStatusText( "Start  run femsfit task" );
     }
@@ -719,6 +721,28 @@ void FITMainWindow::CmRunTest()
         addLinetoStatus( err.mess );
     }
 }
+
+
+/// Kill gemsfit task
+void FITMainWindow::CmCancelGemsfit()
+{
+    try
+    {
+
+        fitProcess->kill();
+        //ui->action_Run_test->setEnabled(false);
+        //ui->action_Show_Results->setEnabled(false);
+        //ui->actionCancel_gemsfit2_run->setEnabled(true);
+
+        setStatusText( "Killed  run femsfit task" );
+    }
+    catch( TError& err )
+    {
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
+    }
+}
+
 
 /// Show after Run gemsfit task
 void FITMainWindow::CmShowCalcResults()
