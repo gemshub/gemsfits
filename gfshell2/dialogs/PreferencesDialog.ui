@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>556</width>
-    <height>355</height>
+    <width>521</width>
+    <height>405</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -115,15 +115,19 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0" rowspan="2" colspan="2">
+      <item row="1" column="0" colspan="2">
        <widget class="QCheckBox" name="turnoff">
         <property name="text">
          <string>Turn on runtime log output in the Run Status field </string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1" rowspan="2">
-       <widget class="QComboBox" name="experimentsBox"/>
+      <item row="2" column="0" colspan="2">
+       <widget class="QCheckBox" name="yamlBox">
+        <property name="text">
+         <string>View record data in &amp;YAML Format (tbd)</string>
+        </property>
+       </widget>
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="label_4">
@@ -131,6 +135,9 @@
          <string>Select template file for the experiments record</string>
         </property>
        </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QComboBox" name="experimentsBox"/>
       </item>
       <item row="4" column="0">
        <widget class="QLabel" name="label_6">
