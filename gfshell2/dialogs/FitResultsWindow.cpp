@@ -363,12 +363,12 @@ void FitResultsWindow::readBsonRecord()
      bson_finish( &bsrec );
 
         //  tableViews from bson Record
-       modelFitParams->matrixFromBson( bsrec.data );
-       modelFitResults->matrixFromBson( bsrec.data );
-       modelMCResults->matrixFromBson( bsrec.data );
-       modelSensitivity->matrixFromBson( bsrec.data );
-       modelQQplot->matrixFromBson( bsrec.data );
-       modelFitInverse->matrixFromBson( bsrec.data );
+       modelFitParams->matrixFromBson( (QSortFilterProxyModel *)tableFitParams->model(), bsrec.data );
+       modelFitResults->matrixFromBson( (QSortFilterProxyModel *)tableFitResults->model(), bsrec.data );
+       modelMCResults->matrixFromBson( (QSortFilterProxyModel *)tableMCResults->model(), bsrec.data );
+       modelSensitivity->matrixFromBson( (QSortFilterProxyModel *)tableSensitivity->model(), bsrec.data );
+       modelQQplot->matrixFromBson( (QSortFilterProxyModel *)tableQQplot->model(),  bsrec.data );
+       modelFitInverse->matrixFromBson( (QSortFilterProxyModel *)tableFitInverse->model(), bsrec.data );
 
        // added text bufers to bson record
        // write file  FIT_STATISTIC

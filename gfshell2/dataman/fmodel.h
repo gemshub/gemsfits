@@ -90,6 +90,8 @@ class TMatrixModel: public QAbstractTableModel
 
     QString ValToString( double val, int digits ) const;
     double ValFromString( const QVariant& strval  );
+    void setGraphData( QSortFilterProxyModel *pmodel, const string& title );
+
 
 public:
 	  
@@ -112,7 +114,7 @@ public:
      void matrixFromCsvString( const QString& valueCsv );
      QString matrixToCsvString( );
      void matrixToBson(  bson *obj );
-     void matrixFromBson(  const char *bsdata );
+     void matrixFromBson( QSortFilterProxyModel *pmodel,  const char *bsdata );
      int getNumberStringColumns() const
      {   return numberStringColumns; }
 
@@ -123,15 +125,14 @@ public:
      void ToggleY( int ncolmn );
 
      // get graph info
-     //void getXYvectors( int& lines, vector<int>& xval, vector<int>& yval, vector<string>& ynames );
-     void showGraphData( QSortFilterProxyModel *pmodel, string& title );
+     void showGraphData( QSortFilterProxyModel *pmodel, const string& title );
      void CloseGraph();
-     GraphData *getGraphData() const
+     GraphData *getGraphData()
      {
          return grdata;
      }
-
      int findRow( int *xyndx, double *reg );
+
 };
 
 

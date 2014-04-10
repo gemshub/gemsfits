@@ -328,7 +328,7 @@ void TMatrixModel::matrixToBson(  bson *obj )
 }
 
 /// read model from bson structure
-void TMatrixModel::matrixFromBson(  const char *bsdata )
+void TMatrixModel::matrixFromBson( QSortFilterProxyModel *pmodel, const char *bsdata )
 {
     // get string from obj
     string valCsv;
@@ -363,10 +363,11 @@ void TMatrixModel::matrixFromBson(  const char *bsdata )
     while (bson_iterator_next(&iter))
         ycolms.push_back( bson_iterator_int(&iter));
 
-    if( !grdata )
-    {   vector<TPlot> plt;
-        grdata = new GraphData( plt, "", "x", "y" );
-    }
+    setGraphData( pmodel,  "" );
+    //if( !grdata )
+    //{   vector<TPlot> plt;
+    //    grdata = new GraphData( plt, "", "x", "y" );
+    //}
     grdata->fromBsonObject(objbson);
 }
 
@@ -398,8 +399,9 @@ void TMatrixModel::CloseGraph()
       graph_dlg->close();
 }
 
-void TMatrixModel::showGraphData( QSortFilterProxyModel *pmodel,  string& title )
+void TMatrixModel::setGraphData( QSortFilterProxyModel *pmodel,  const string& title_ )
 {
+    string title = title_;
     vector<int> xval;
     vector<int> yval;
     vector<string> ynames;
@@ -422,13 +424,18 @@ void TMatrixModel::showGraphData( QSortFilterProxyModel *pmodel,  string& title 
          grdata = new GraphData( plt, title.c_str(), "x", "y" );
     else
          grdata->setNewPlot( plt );
+}
 
-    if( graph_dlg )
+
+void TMatrixModel::showGraphData( QSortFilterProxyModel *pmodel,  const string& title )
+{
+   // Set up GraphDialog
+   setGraphData( pmodel,  title );
+
+   if( graph_dlg )
      delete  graph_dlg;
-    graph_dlg = new GraphDialog( grdata, 0 );
-    graph_dlg->show();
-
-    //return grdata;
+   graph_dlg = new GraphDialog( grdata, 0 );
+   graph_dlg->show();
 }
 
 int TMatrixModel::findRow( int *xynd, double *reg )

@@ -281,7 +281,7 @@ void GraphData::fromBsonObject( const char *obj )
     for( ii=0; ii<4; ii++)
     {
         sprintf(buf, "%d", ii);
-        if(!bson_find_value( obj,  buf, region[ii] ) )
+        if(!bson_find_value( arr,  buf, region[ii] ) )
             region[ii] = 0;
     }
 
@@ -289,7 +289,7 @@ void GraphData::fromBsonObject( const char *obj )
     for( ii=0; ii<4; ii++)
     {
         sprintf(buf, "%d", ii);
-        if(!bson_find_value( obj,  buf, part[ii] ) )
+        if(!bson_find_value( arr,  buf, part[ii] ) )
             part[ii] = 0;
     }
 
@@ -297,7 +297,7 @@ void GraphData::fromBsonObject( const char *obj )
     for( ii=0; ii<3; ii++)
     {
         sprintf(buf, "%d", ii);
-        if(!bson_find_value( obj,  buf, b_color[ii] ) )
+        if(!bson_find_value( arr,  buf, b_color[ii] ) )
             b_color[ii] = 255;
     }
 
@@ -418,7 +418,7 @@ void GraphData::setNewPlot( const vector<TPlot>& aPlots )
     int ii;
     int jj, nLines, ndxAbs;
 
-    /* test change a Plots
+    // test change a Plots
     if( !(plots.size() != aPlots.size() ) &&
             equal( plots.begin(), plots.end(), aPlots.begin()) )
     {
@@ -426,7 +426,7 @@ void GraphData::setNewPlot( const vector<TPlot>& aPlots )
         return; // plots does not changed
     }
     cout << "!!! Plots changed" << endl;
-    */
+
     plots.clear();
     int defined_lines = lines.size();
     for( ii=0, nLines=0; ii<aPlots.size(); ii++)
