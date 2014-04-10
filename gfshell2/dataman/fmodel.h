@@ -15,6 +15,12 @@ using namespace std;
 #include <QModelIndex>
 #include <QSize>
 
+#if QT_VERSION >= 0x050000
+#include <QtPrintSupport/QPrinter>
+#else
+#include <QPrinter>
+#endif
+
 #include "f_ejdb.h"
 #include "graph.h"
 
@@ -163,6 +169,7 @@ class TMatrixTable: public QTableView
         void pasteIntoArea( Selection& sel, bool transpose);
         void  setFromString(char splitrow, const QString& str,
                 Selection sel, bool transpose);
+        QStyleOptionViewItem viewOptions() const;
 
  protected slots:
 //    void currentChanged( const QModelIndex& current, const QModelIndex& previous );
@@ -183,6 +190,8 @@ class TMatrixTable: public QTableView
 
  public:
     TMatrixTable( QWidget * parent = 0 );
+    void printTable(QPrinter &printer);
+
 };
 
 

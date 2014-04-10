@@ -22,6 +22,8 @@
 #include <QFileDialog>
 #include <QCloseEvent>
 #include <QSortFilterProxyModel>
+#include <QPrintDialog>
+
 #include "FitResultsWindow.h"
 #include "FITMainWindow.h"
 #include "ui_FitResultsWindow.h"
@@ -488,78 +490,32 @@ void FitResultsWindow::CmPrintTable()
 {
     try
     {
+        TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+        if( !(tableCurrent && tableCurrent->model()->rowCount()>0) )
+             return;
 
+        QPrinter printer(QPrinter::HighResolution);
+        QPrintDialog *dlg = new QPrintDialog(&printer, this);
+        dlg->setWindowTitle(tr("Print table"));
+
+        if (dlg->exec() != QDialog::Accepted)
+             return;
+
+        if( QPrinter::Landscape != printer.orientation() )
+            printer.setOrientation(QPrinter::Landscape);
+
+
+        QPoint startPoint = QPoint(20, 20);
+        QRegion printRegion = QRegion( 20, 20, printer.paperRect().width(),printer.paperRect().height() );
+
+        tableCurrent->render( &printer, startPoint, printRegion, QWidget::DrawChildren );
+        //tableCurrent->printTable(printer);
     }
     catch( TError& err )
     {
         cout << err.title << err.mess << endl;
     }
 }
-
-/*
- *
- * void MainWindow::Print()
-{
-QPrinter printer(QPrinter::HighResolution);
-QPrintDialog *dlg = new QPrintDialog(&printer, this);
-dlg->setWindowTitle(tr("Print ACLs"));
-
-if (dlg->exec() != QDialog::Accepted)
-return;
-
-PrintTableView *tempTableView = new PrintTableView();
-tempTableView->setModel(model);
-tempTableView->printTable(printer);
-}
-
-PrintTableView::PrintTableView(QWidget *parent) : QTableView (parent)
-{
-
-}
-
-void PrintTableView::printTable(QPrinter &printer)
-{
-QString str;
-QPainter painter;
-painter.begin(&printer);
-const int ItemSize = 256;
-int rows = model()->rowCount(QModelIndex());
-int columns = model()->columnCount(QModelIndex());
-int sourceWidth = (columns+1) * ItemSize;
-int sourceHeight = (rows+1) * ItemSize;
-painter.save();
-
-double xscale = printer.pageRect().width();
-double yscale = printer.pageRect().height();
-double scale = qMin(xscale, yscale);
-
-painter.translate(printer.paperRect().x() + printer.pageRect().width()/2,
-printer.paperRect().y() + printer.pageRect().height()/2);
-painter.scale(scale, scale);
-painter.translate(-sourceWidth/2, -sourceHeight/2);
-
-QStyleOptionViewItem option = viewOptions();
-
-float x = ItemSize /2;
-for (int printRow = 0; printRow < rows; ++printRow) {
-float y = ItemSize /2;
-for (int column = 0; column < columns; ++column) {
-option.rect = QRect(int(x), int(y), ItemSize, ItemSize);
-itemDelegate()->paint(&painter, option, model()->index(printRow, column, QModelIndex()));
-x = x + 256;
-}
-y = y + 256;
-}
-painter.restore();
-painter.end();
-}
-
-QStyleOptionViewItem PrintTableView::viewOptions() const
-{
-QStyleOptionViewItem option = QAbstractItemView->viewOptions();
-return option;
-}
- * */
 
 void FitResultsWindow::CmAboutGEMSFITS()
 {

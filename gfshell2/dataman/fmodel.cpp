@@ -529,6 +529,53 @@ TMatrixTable::TMatrixTable( QWidget * parent ):
     //no_menu_in = true;
   }
 
+ void TMatrixTable::printTable(QPrinter &printer)
+ {
+     QString str;
+     QPainter painter;
+     painter.begin(&printer);
+     const int ItemSize = 256;
+     int rows = model()->rowCount(QModelIndex());
+     int columns = model()->columnCount(QModelIndex());
+     int sourceWidth = (columns+1) * ItemSize;
+     int sourceHeight = (rows+1) * ItemSize;
+     painter.save();
+
+    double xscale = printer.pageRect().width();
+    double yscale = printer.pageRect().height();
+    double scale = qMin(xscale, yscale);
+
+    painter.translate(printer.paperRect().x() + printer.pageRect().width()/2,
+    printer.paperRect().y() + printer.pageRect().height()/2);
+    painter.scale(scale, scale);
+    painter.translate(-sourceWidth/2, -sourceHeight/2);
+
+    QStyleOptionViewItem option = viewOptions();
+
+   float x = ItemSize /2;
+   for (int printRow = 0; printRow < rows; ++printRow)
+   {
+    float y = ItemSize /2;
+    for (int column = 0; column < columns; ++column)
+    {
+      option.rect = QRect(int(x), int(y), ItemSize, ItemSize);
+      itemDelegate()->paint(&painter, option, model()->index(printRow, column, QModelIndex()));
+      x = x + 256;
+    }
+    y = y + 256;
+  }
+  painter.restore();
+  painter.end();
+ }
+
+
+ QStyleOptionViewItem TMatrixTable::viewOptions() const
+ {
+    QStyleOptionViewItem option = QAbstractItemView::viewOptions();
+    return option;
+ }
+
+
  void TMatrixTable::slotPopupContextMenu(const QPoint &pos)
  {
      QModelIndex index = indexAt( pos );
