@@ -460,8 +460,13 @@ void get_gems_fit_multi_txt(TNode* node, opti_vector *op )
               // Here write your code for input parameters
               for(unsigned int ii=0; ii<vFormats.size(); ii++ )
               {
-cout << "Parameter: " << MULTI_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
-cout << " : " << vFormats[ii].format << endl;
+                  string format = vFormats[ii].format;
+                  std::string::size_type k = 0;
+                  while((k=format.find('\"',k))!=format.npos) {
+                  format.erase(k, 1);
+                  }
+gpf->flog << "Parameter: " << MULTI_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
+gpf->flog << " : " << format << endl;
                   if ((vFormats[ii].type == ft_F))
                   {
                       if (vFormats[ii].format.size() >1)
@@ -469,15 +474,15 @@ cout << " : " << vFormats[ii].format << endl;
                           switch( nfild )
                           {
                              case f_LsMod:  // interaction parameters     (PMc table)
-gpf->flog << "    Parameter: " << fPMc << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
+//gpf->flog << "    Parameter: " << fPMc << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
                                  F_to_OP(op, vFormats[ii], fPMc );
                                  break;
                              case f_LsMdc:  // phase component parameters (DMc table)
-gpf->flog << "    Parameter: " << fDMc << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
+//gpf->flog << "    Parameter: " << fDMc << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
                                  F_to_OP(op, vFormats[ii], fDMc );
                                  break;
                              default:
-gpf->flog << "    Parameter: " << MULTI_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
+//gpf->flog << "    Parameter: " << MULTI_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
                                  F_to_OP(op, vFormats[ii], MULTI_dynamic_fields[nfild].name );
                           }
                       } else
@@ -495,7 +500,7 @@ gpf->flog << "    Parameter: " << MULTI_dynamic_fields[nfild].name << " Type " <
                                             {
                                             }
                                             if(LsModSum )
-gpf->flog << "    Parameter: " << fPMc << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
+//gpf->flog << "    Parameter: " << fPMc << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
                                                 F_to_OP(pmp->PMc[vFormats[ii].index], op, vFormats[ii], fPMc );
                                         break;
                                        }
@@ -506,18 +511,18 @@ gpf->flog << "    Parameter: " << fPMc << " Type " << vFormats[ii].type <<  " In
                                             long int LsSitSum;
                                             node->pMulti()->getLsMdcsum( LsMdcSum,LsMsnSum, LsSitSum );
                                             if(LsMdcSum )
-gpf->flog << "    Parameter: " << fDMc << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
+//gpf->flog << "    Parameter: " << fDMc << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
                                             F_to_OP(pmp->DMc[vFormats[ii].index], op, vFormats[ii], fDMc );
                                         break;
                                         }
                           case f_fDQF:
-gpf->flog << "    Parameter: " << MULTI_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
+//gpf->flog << "    Parameter: " << MULTI_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
                                F_to_OP(pmp->fDQF[vFormats[ii].index], op, vFormats[ii], MULTI_dynamic_fields[nfild].name );
                                         break;
                           }
                       }
                   }
-gpf->flog << " : " << vFormats[ii].format << endl;
+//gpf->flog << " : " << vFormats[ii].format << endl;
               }
               vFormats.clear();
           }
@@ -579,8 +584,14 @@ void get_gems_fit_DCH_txt(TNode* node, opti_vector* op )
             // Hear you must write your code
             for(unsigned  int ii=0; ii<vFormats.size(); ii++ )
             {
-cout << "Parameter: " << DataCH_dynamic_fields[nfild].name << " " << node->xCH_to_DC_name(vFormats[ii].index)<< " Type " << vFormats[ii].type;
-cout << " : " << vFormats[ii].format << endl;
+                string format = vFormats[ii].format;
+                std::string::size_type k = 0;
+                while((k=format.find('\"',k))!=format.npos) {
+                format.erase(k, 1);
+                }
+
+gpf->flog << "Parameter: " << DataCH_dynamic_fields[nfild].name << " " << node->xCH_to_DC_name(vFormats[ii].index)<< " Type " << vFormats[ii].type;
+gpf->flog << " : " << format << endl;
                 if ((vFormats[ii].type == ft_F))
                 {
                     if (vFormats[ii].format.size() > 1)
@@ -765,8 +776,13 @@ void get_gems_fit_DBR_txt(TNode* node , opti_vector *op)
             op->h_nestfun = true;
             for(unsigned  int ii=0; ii<vFormats.size(); ii++ )
             {
-cout<< "Parameter: " << DataBR_fields[nfild].name << " Type " << vFormats[ii].type << " Index " << vFormats[ii].index << endl;
-cout<< vFormats[ii].format << endl;
+                string format = vFormats[ii].format;
+                std::string::size_type k = 0;
+                while((k=format.find('\"',k))!=format.npos) {
+                format.erase(k, 1);
+                }
+gpf->flog<< "Parameter: " << DataBR_fields[nfild].name << " Type " << vFormats[ii].type << " Index " << vFormats[ii].index << endl;
+gpf->flog<< vFormats[ii].format << endl;
                 if ((vFormats[ii].type == ft_F))
                 {
                     if (vFormats[ii].format.size() > 1)
