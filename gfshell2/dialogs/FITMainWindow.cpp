@@ -87,6 +87,11 @@ void FITMainWindow::getDataFromPreferences()
     SrchTemplate = tmpString1.readAll();
     tmpString1.close();
   }
+
+  if( mainSettings->value("PrintGEMSFITMessages", true).toBool())
+   connect( fitProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(showProcessMesage()) );
+  else
+   disconnect( fitProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(showProcessMesage()) );
 }
 
 FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
@@ -138,7 +143,7 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
 
     // setup process
      fitProcess = new QProcess( this);
-     connect( fitProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(showProcessMesage()) );
+     //connect( fitProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(showProcessMesage()) );
      connect( fitProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT( runFinished(int,QProcess::ExitStatus)));
      //connect( fitProcess, SIGNAL(readyReadStandardError()), this, SLOT(ReadErr()) );
 

@@ -611,7 +611,7 @@ void FITMainWindow::CmInsertSearch()
         {
             string samplelist;
             defineModuleKeysList( samplelist );
-            cout << samplelist << endl;
+            //cout << samplelist << endl;
 
             // Load curent record to bson structure
             ParserJson pars;
