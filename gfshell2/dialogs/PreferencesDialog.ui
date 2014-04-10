@@ -111,14 +111,14 @@
       <item row="0" column="0" colspan="2">
        <widget class="QCheckBox" name="commentsBox">
         <property name="text">
-         <string>Add comments to exported task input TXT files</string>
+         <string>Add comments to exported demsfit2 task input TXT files</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0" rowspan="2" colspan="2">
        <widget class="QCheckBox" name="turnoff">
         <property name="text">
-         <string>Turn on/off the on screen writing</string>
+         <string>Turn on runtime log output in the Run Status field </string>
         </property>
        </widget>
       </item>

@@ -685,12 +685,12 @@
   </action>
   <action name="actionBackup_to_TXT">
    <property name="text">
-    <string>Export fitting task to gemsfit2 input &amp;TXT file...</string>
+    <string>Export task to gemsfit2 input &amp;TXT file...</string>
    </property>
   </action>
   <action name="actionRestore_from_TXT">
    <property name="text">
-    <string>Import fitting task from gemsfit2 T&amp;XT input file...</string>
+    <string>Import task from gemsfit2 input T&amp;XT file...</string>
    </property>
   </action>
   <action name="actionBackup_to_YAML">
@@ -718,7 +718,7 @@
      <normaloff>:/menu/Icons/ShowGEMResultsIcon.png</normaloff>:/menu/Icons/ShowGEMResultsIcon.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;View parameter optimization results... </string>
+    <string>&amp;View parameter fitting task results... </string>
    </property>
   </action>
   <action name="action_Preferences">
@@ -844,7 +844,7 @@
   </action>
   <action name="actionInsert_search_results_into_task_definition">
    <property name="text">
-    <string>Insert search results into task definition </string>
+    <string>Insert record list into task definition </string>
    </property>
   </action>
  </widget>

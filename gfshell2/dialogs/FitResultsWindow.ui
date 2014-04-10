@@ -25,7 +25,7 @@
     <item>
      <widget class="QTabWidget" name="tabsResults">
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabFitParams">
        <attribute name="title">
@@ -171,7 +171,6 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionOpen_File"/>
-   <addaction name="actionSave_File"/>
    <addaction name="separator"/>
    <addaction name="action_Find"/>
    <addaction name="action_Insert"/>
@@ -199,14 +198,10 @@
      <normaloff>:/menu/Icons/ShowFilesIcon.png</normaloff>:/menu/Icons/ShowFilesIcon.png</iconset>
    </property>
    <property name="text">
-    <string>Load results from gemsfit2 output files...</string>
+    <string>Load gemsfit2 output files...</string>
    </property>
   </action>
   <action name="actionSave_File">
-   <property name="icon">
-    <iconset resource="../fgui.qrc">
-     <normaloff>:/menu/Icons/SaveCurrentRecordIcon.png</normaloff>:/menu/Icons/SaveCurrentRecordIcon.png</iconset>
-   </property>
    <property name="text">
     <string>Save results table to csv file...</string>
    </property>
@@ -219,16 +214,16 @@
   <action name="action_Insert">
    <property name="icon">
     <iconset resource="../fgui.qrc">
-     <normaloff>:/menu/Icons/NewCreateRecordIcon.png</normaloff>:/menu/Icons/NewCreateRecordIcon.png</iconset>
+     <normaloff>:/menu/Icons/NewCloneRecordIcon.png</normaloff>:/menu/Icons/NewCloneRecordIcon.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Save gemsfit2 fitting results to record</string>
+    <string>&amp;Save gemsfit2 results to record</string>
    </property>
   </action>
   <action name="actionUpdate">
    <property name="icon">
     <iconset resource="../fgui.qrc">
-     <normaloff>:/menu/Icons/NewCloneRecordIcon.png</normaloff>:/menu/Icons/NewCloneRecordIcon.png</iconset>
+     <normaloff>:/menu/Icons/SaveCurrentRecordIcon.png</normaloff>:/menu/Icons/SaveCurrentRecordIcon.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Update record with saved results</string>
@@ -359,7 +354,7 @@
   </action>
   <action name="action_Find_from_Plot">
    <property name="text">
-    <string>&amp;Find a sample located on plot fragment...</string>
+    <string>&amp;Find a sample on the plot fragment...</string>
    </property>
   </action>
   <action name="actionAbout_gemsfits2_Code">
