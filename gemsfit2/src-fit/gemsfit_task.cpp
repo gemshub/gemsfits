@@ -381,10 +381,10 @@ void TGfitTask::setnodes()
     double h2o_kgamount = 0.0;
 
 
-//#ifdef USE_MPI
-    omp_set_num_threads(MPI);
+#ifdef useomp
+    omp_set_num_threads(this->MPI);
     #pragma omp parallel for
-//#endif
+#endif
     for (n=0; n<NodT.size(); ++n)
     {
         if( NodT[n]->GEM_init( gpf->GEMS3LstFilePath().c_str() ) == 1 )

@@ -43,8 +43,10 @@ void nestedfun (TGfitTask *sys)
     for  (unsigned int i = 0; i<sys->experiments.size(); i++)
     {
 
-        omp_set_num_threads(sys->MPI);
-        #pragma omp parallel for
+#ifdef useomp
+    omp_set_num_threads(sys->MPI);
+    #pragma omp parallel for
+#endif
         for (unsigned int j = 0; j<sys->Tfun->nestfun.size(); j++)
         {
             string param_type = sys->Tfun->nestfun[j].Ptype;

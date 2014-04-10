@@ -189,7 +189,9 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         {
             fitparam[i]->Ptype = gfittask->Opti->Ptype[i];
             fitparam[i]->Pfittype = "F";
-            fitparam[i]->Pname = gfittask->Opti->Pindex[i];
+            stringstream ss;
+            ss << gfittask->Opti->Pindex[i];
+            fitparam[i]->Pname = ss.str();
             fitparam[i]->Fval = optv_[i];
             fitparam[i]->Ival = gfittask->Opti->opt[i];
             fitparam[i]->CSS = 0.0;

@@ -118,9 +118,9 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 //    sys->print->print_clear();
 
     // going trough the adjusted parameters in Opti->Ptype and adjusts them with the new value
-//#ifdef USE_MPI
-    omp_set_num_threads(sys->MPI);
-    #pragma omp parallel for
+//#ifdef useomp
+//    omp_set_num_threads(sys->MPI);
+//    #pragma omp parallel for
 //#endif
     for (unsigned int i=0; i< sys->Opti->Ptype.size(); ++i)
     {
@@ -179,10 +179,12 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 //        titration (sys);
 //    cout << "finished titration correction"<< endl;
 
-////#ifdef USE_MPI
+
+
+#ifdef useomp
     omp_set_num_threads(sys->MPI);
     #pragma omp parallel for
-////#endif
+#endif
     // +++ Calculating equilibrium with GEMS3K +++ //
     for (unsigned int i=0; i<sys->NodT.size(); ++i)
     {
@@ -414,8 +416,10 @@ void set_Tuckey_weight_global (TGfitTask *sys)
     median_ = median(abs_res);
     C = sys->Opti->OptTuckeyVal * median_;
 
-    omp_set_num_threads(sys->MPI);
-    #pragma omp parallel for
+//#ifdef useomp
+//    omp_set_num_threads(sys->MPI);
+//    #pragma omp parallel for
+//#endif
     for (unsigned int i = 0; i < sys->aTfun.size(); i++)
     {
         for (unsigned int j = 0; j < sys->aTfun[i].objfun.size(); j++)
@@ -452,8 +456,10 @@ void set_Tuckey_weight_objfun (TGfitTask *sys)
         C.push_back(sys->Opti->OptTuckeyVal * median_[j]);
     }
 
-    omp_set_num_threads(sys->MPI);
-    #pragma omp parallel for
+//#ifdef useomp
+//    omp_set_num_threads(sys->MPI);
+//    #pragma omp parallel for
+//#endif
     for (unsigned int j = 0; j < sys->Tfun->objfun.size(); j++)
     {
         for (unsigned int i = 0; i < sys->aTfun.size(); i++)

@@ -35,7 +35,8 @@ TARGET		= gemsfit2
 VERSION         = 2.0.0
 
 DEFINES         += IPMGEMPLUGIN
-#DEFINES         += NODEARRAYLEVEL
+DEFINES         += useomp
+
 
 DEFINES         += _MYNOZLIB
 

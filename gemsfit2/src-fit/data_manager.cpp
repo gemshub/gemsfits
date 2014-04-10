@@ -420,10 +420,10 @@ cout << DBname.c_str() << endl;
 
          gpf->flog << "05. data_manager.cpp(365). Adding the data returned by the selection query into the data structure; " << endl;
 
-//#ifdef USE_MPI
-         omp_set_num_threads(MPI);
-         #pragma omp parallel for
-//#endif
+#ifdef useomp
+    omp_set_num_threads(this->MPI);
+    #pragma omp parallel for
+#endif
          for (int i = 0; i < TCLISTNUM(res); ++i) {
              void *bsdata = TCLISTVALPTR(res, i);
              char *bsdata_ = static_cast<char*>(bsdata);

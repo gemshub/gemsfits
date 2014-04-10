@@ -152,6 +152,7 @@ int TGfitTask::get_number_of_residuals( )
 double TGfitTask::get_sum_of_residuals( )
 {
     // loop trough objective function
+    // think about pararelizing it
     double residual = 0.0;
     int count = 0;
 
@@ -191,8 +192,10 @@ void TGfitTask::set_average_objfun ()
         count = 0;
     }
 
-    omp_set_num_threads(MPI);
-    #pragma omp parallel for
+//#ifdef useomp
+//    omp_set_num_threads(this->MPI);
+//    #pragma omp parallel for
+//#endif
     for (unsigned int j = 0; j<Tfun->objfun.size(); j++)
     {
         for (unsigned int i = 0; i <aTfun.size(); i++)
@@ -316,8 +319,10 @@ void TGfitTask::get_addout_calcprop (int exp, TGfitTask::TargetFunction::obj_fun
 void TGfitTask::set_weights ()
 {
     // For onjective functions
-    omp_set_num_threads(MPI);
-    #pragma omp parallel for
+//#ifdef useomp
+//    omp_set_num_threads(this->MPI);
+//    #pragma omp parallel for
+//#endif
     for (unsigned i = 0; i<aTfun.size(); i++)
     {
         for (unsigned j = 0; j < aTfun[i].objfun.size(); j++)
@@ -332,8 +337,10 @@ void TGfitTask::set_weights ()
     }
 
     // For nested functions
-    omp_set_num_threads(MPI);
-    #pragma omp parallel for
+//#ifdef useomp
+//    omp_set_num_threads(this->MPI);
+//    #pragma omp parallel for
+//#endif
     for (unsigned i = 0; i<aTfun.size(); i++)
     {
         for (unsigned j = 0; j < aTfun[i].nestfun.size(); j++)

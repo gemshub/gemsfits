@@ -26,7 +26,6 @@
 	GEMFSIT - fitting tool for thermodynamic data
 */
 
-#define USE_MPI
 
 #include <stdio.h>
 #include <iostream>
