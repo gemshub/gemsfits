@@ -422,8 +422,8 @@ void GraphData::setNewPlot( const vector<TPlot>& aPlots )
     if( !(plots.size() != aPlots.size() ) &&
             equal( plots.begin(), plots.end(), aPlots.begin()) )
     {
-        cout << "Plots does not changed" << endl;
-        return; // plots does not changed
+        cout << "Graphics settings did not change ..." << endl;
+        return; // plot settings did not change
     }
     cout << "!!! Plots changed" << endl;
 
