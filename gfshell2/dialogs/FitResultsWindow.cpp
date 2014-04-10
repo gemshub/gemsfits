@@ -504,12 +504,22 @@ void FitResultsWindow::CmPrintTable()
         if( QPrinter::Landscape != printer.orientation() )
             printer.setOrientation(QPrinter::Landscape);
 
+        QPainter painter;
+        painter.begin(&printer);
+        double xscale = printer.pageRect().width()/double(tableCurrent->width());
+        double yscale = printer.pageRect().height()/double(tableCurrent->height());
+        double scale = qMin(xscale, yscale);
+        painter.translate(printer.paperRect().x() + printer.pageRect().width()/2,
+                          printer.paperRect().y() + printer.pageRect().height()/2);
+        painter.scale(scale, scale);
+        painter.translate(-width()/2, -height()/2);
 
-        QPoint startPoint = QPoint(20, 20);
-        QRegion printRegion = QRegion( 20, 20, printer.paperRect().width(),printer.paperRect().height() );
+        tableCurrent->render(&painter);
 
-        tableCurrent->render( &printer, startPoint, printRegion, QWidget::DrawChildren );
-        //tableCurrent->printTable(printer);
+
+        //QPainter painter(&printer);
+        //tableCurrent->printTable(&painter, printer.pageRect());
+
     }
     catch( TError& err )
     {

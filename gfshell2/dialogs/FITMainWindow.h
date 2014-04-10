@@ -195,7 +195,7 @@ private:
     void setListPhase();
     void setStatusText( const string& text );
     void addLinetoStatus( const string& line );
-    void defineModuleKeysList( int nRT );
+    int defineModuleKeysList( int nRT );
 
 };
 

@@ -36,6 +36,7 @@ PreferencesDialog::PreferencesDialog(QSettings *aSet,QWidget *parent) :
         ui->gemsfit2Edit->setText( settings->value("Gemsfit2ProgramPath", "gemsfit2").toString() );
         ui->commentsBox->setChecked( settings->value("PrintComments", false).toBool() );
         ui->turnoff->setChecked( settings->value("PrintGEMSFITMessages", true).toBool() );
+        ui->yamlBox->setChecked( settings->value("ViewinYAMLFormat", false).toBool() );
 
         // load all template files
         QDir thisDir(ui->resourcesEdit->text()+"/data");
@@ -103,6 +104,7 @@ void PreferencesDialog::CmSave()
     settings->setValue("TemplateSearchFileName", ui->searchBox->currentData(  Qt::DisplayRole ) );
     settings->setValue("PrintComments",  ui->commentsBox->isChecked() );
     settings->setValue("PrintGEMSFITMessages",  ui->turnoff->isChecked() );
+    settings->setValue("ViewinYAMLFormat",  ui->yamlBox->isChecked() );
 
     settings->sync();
     accept();

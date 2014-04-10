@@ -465,18 +465,10 @@
     <addaction name="actionAuthors"/>
     <addaction name="actionLicense"/>
    </widget>
-   <widget class="QMenu" name="menuView">
-    <property name="title">
-     <string>View</string>
-    </property>
-    <addaction name="actionData_in_JSON"/>
-    <addaction name="actionData_in_YAML"/>
-   </widget>
    <addaction name="menuTask"/>
    <addaction name="menuRecord"/>
    <addaction name="menuRecod_List"/>
    <addaction name="menu_Calc"/>
-   <addaction name="menuView"/>
    <addaction name="menu_Help"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -779,16 +771,6 @@
    </property>
    <property name="text">
     <string>&amp;Reconfigure project...</string>
-   </property>
-  </action>
-  <action name="actionData_in_JSON">
-   <property name="text">
-    <string>View record data in &amp;JSON Format</string>
-   </property>
-  </action>
-  <action name="actionData_in_YAML">
-   <property name="text">
-    <string>View record data in &amp;YAML Format (tbd)</string>
    </property>
   </action>
   <action name="actionOverwrite">

@@ -529,44 +529,52 @@ TMatrixTable::TMatrixTable( QWidget * parent ):
     //no_menu_in = true;
   }
 
- void TMatrixTable::printTable(QPrinter &printer)
+ void TMatrixTable::printTable(QPainter* painter, const QRect& area)
  {
-     QString str;
-     QPainter painter;
-     painter.begin(&printer);
-     const int ItemSize = 256;
-     int rows = model()->rowCount(QModelIndex());
-     int columns = model()->columnCount(QModelIndex());
-     int sourceWidth = (columns+1) * ItemSize;
-     int sourceHeight = (rows+1) * ItemSize;
-     painter.save();
+     const int rows = model()->rowCount();
+     const int cols = model()->columnCount();
 
-    double xscale = printer.pageRect().width();
-    double yscale = printer.pageRect().height();
-    double scale = qMin(xscale, yscale);
+     // calculate the total width/height table would need without scaling
+     double totalWidth = 0.0;
+     for (int c = 0; c < cols; ++c)
+     {
+         totalWidth += columnWidth(c);
+     }
+     double totalHeight = 0.0;
+     for (int r = 0; r < rows; ++r)
+     {
+         totalHeight += rowHeight(r);
+     }
 
-    painter.translate(printer.paperRect().x() + printer.pageRect().width()/2,
-    printer.paperRect().y() + printer.pageRect().height()/2);
-    painter.scale(scale, scale);
-    painter.translate(-sourceWidth/2, -sourceHeight/2);
+     // calculate proper scale factors
+     const double scaleX = area.width() / totalWidth;
+     const double scaleY = area.height() / totalHeight;
+     painter->scale(scaleX, scaleY);
 
-    QStyleOptionViewItem option = viewOptions();
-
-   float x = ItemSize /2;
-   for (int printRow = 0; printRow < rows; ++printRow)
-   {
-    float y = ItemSize /2;
-    for (int column = 0; column < columns; ++column)
-    {
-      option.rect = QRect(int(x), int(y), ItemSize, ItemSize);
-      itemDelegate()->paint(&painter, option, model()->index(printRow, column, QModelIndex()));
-      x = x + 256;
-    }
-    y = y + 256;
-  }
-  painter.restore();
-  painter.end();
+     // paint cells
+     for (int r = 0; r < rows; ++r)
+     {
+         for (int c = 0; c <cols; ++c)
+         {
+             QModelIndex idx = model()->index(r, c);
+             QStyleOptionViewItem option = viewOptions();
+             option.rect = visualRect(idx);
+             itemDelegate()->paint(painter, option, idx);
+         }
+     }
  }
+
+ /*
+ // printer usage
+ QPainter painter(&printer);
+ tableView->print(&painter, printer.pageRect());
+
+ // test on pixmap
+ QPixmap pixmap(320, 240);
+ QPainter painter(&pixmap);
+ tableView->print(&painter, pixmap.rect());
+ pixmap.save("table.png", "PNG");
+
 
 
  QStyleOptionViewItem TMatrixTable::viewOptions() const
@@ -574,7 +582,7 @@ TMatrixTable::TMatrixTable( QWidget * parent ):
     QStyleOptionViewItem option = QAbstractItemView::viewOptions();
     return option;
  }
-
+*/
 
  void TMatrixTable::slotPopupContextMenu(const QPoint &pos)
  {

@@ -169,7 +169,7 @@ class TMatrixTable: public QTableView
         void pasteIntoArea( Selection& sel, bool transpose);
         void  setFromString(char splitrow, const QString& str,
                 Selection sel, bool transpose);
-        QStyleOptionViewItem viewOptions() const;
+//        QStyleOptionViewItem viewOptions() const;
 
  protected slots:
 //    void currentChanged( const QModelIndex& current, const QModelIndex& previous );
@@ -190,7 +190,7 @@ class TMatrixTable: public QTableView
 
  public:
     TMatrixTable( QWidget * parent = 0 );
-    void printTable(QPrinter &printer);
+    void printTable(QPainter* painter, const QRect& area);
 
 };
 

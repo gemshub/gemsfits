@@ -386,14 +386,19 @@ void FITMainWindow::resetMainWindow()
     ui->filterEdit->setText("*");
 
     // update key list
-    defineModuleKeysList( currentMode );
+    int curInd = defineModuleKeysList( currentMode );
 
     // load first record
     if( keyTable->rowCount() > 0 )
-    {  QTableWidgetItem *curItem = keyTable->item(0,0);
-       keyTable->setCurrentItem( curItem );
-       keyTable->scrollToItem( curItem );
-       openRecordKey( 0, 0  );
+    {
+       if( curInd >= 0 )
+         openRecordKey( curInd, 0  );
+       else
+       { QTableWidgetItem *curItem = keyTable->item(0,0);
+         keyTable->setCurrentItem( curItem );
+         keyTable->scrollToItem( curItem );
+         openRecordKey( 0, 0  );
+       }
     } else
       {
         // loadTemplate( currentModule );
@@ -433,16 +438,17 @@ void FITMainWindow::changeKeyList()
 }
 
 /// Define list of Module keys using filter
-void FITMainWindow::defineModuleKeysList( int nRT )
+int FITMainWindow::defineModuleKeysList( int nRT )
 {
   int ii, jj, kk, ln;
+  int curInd = -1;
   string keyfld;
   QTableWidgetItem *item, *curItem=0;
   string oldKey = rtEJ[nRT].PackKey();
   //settedCureentKeyIntotbKeys = false;
 
   if( currentMode != nRT)
-    return;
+    return curInd;
 
   // define tbKeys
   keyTable->clear();
@@ -485,6 +491,7 @@ void FITMainWindow::defineModuleKeysList( int nRT )
        }
       if( oldKey == keyList[ii] )
       {    curItem = keyTable->item(ii,0);
+           curInd = ii;
     //       settedCureentKeyIntotbKeys = true;
       }
   }
@@ -504,6 +511,7 @@ void FITMainWindow::defineModuleKeysList( int nRT )
   }
 
   rtEJ[nRT].SetKey(oldKey.c_str());
+  return curInd;
 }
 
 
