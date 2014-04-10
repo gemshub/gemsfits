@@ -224,7 +224,14 @@ public:
    * @author DM
    * @date 25.03.2014
    */
-   void get_addout_calcprop (int exp, TargetFunction::obj_fun &addout );
+   void get_addout_calc (int exp, TargetFunction::obj_fun &addout );
+
+   /**
+    * @brief get_addout_meas Gets addout measured property form experiments read from the database
+    * @param exp index of experiment
+    * @param objfun objfun object
+    */
+   void get_addout_meas(int exp, TGfitTask::TargetFunction::obj_fun &objfun);
 
    /**
    * Adds the Monte Carlo Scatter to the measured values

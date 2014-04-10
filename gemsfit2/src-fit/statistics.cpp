@@ -131,6 +131,10 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
             Abs_SD_of_residuals = sqrt((Abs_SD_of_residuals/degrees_of_freedom));           // standard deviation of the absolute value of residuals
        Weighted_SD_of_residuals = sqrt((Weighted_SD_of_residuals/degrees_of_freedom));      // standard deviation of residuals*weight (same as means_res if weight is 1)
                 SD_of_residuals = sqrt((SD_of_residuals/degrees_of_freedom));               // standard deviation of residuals
+
+
+
+
 }
 
 

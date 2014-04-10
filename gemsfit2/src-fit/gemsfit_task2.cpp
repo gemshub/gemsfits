@@ -290,7 +290,7 @@ void TGfitTask::add_MC_scatter( vector<double> scatter)
     }
 }
 
-void TGfitTask::get_addout_calcprop (int exp, TGfitTask::TargetFunction::obj_fun &addout )
+void TGfitTask::get_addout_calc (int exp, TGfitTask::TargetFunction::obj_fun &addout )
 {
     // loop trough objective function
     /// Target function
@@ -391,9 +391,9 @@ void TGfitTask:: print_global_results ()
     {
         for (unsigned j = 0; j <Tfun->addout.size(); j++)
         {
-            int count = 0;
             if (Tfun->addout[j].Otype == keys::meas)
-            get_residual(i, aTfun[i].addout[j], count );
+                // before get_residual function was used
+            get_addout_meas(i, aTfun[i].addout[j] );
         }
     }
 
@@ -402,7 +402,7 @@ void TGfitTask:: print_global_results ()
         for (unsigned j = 0; j <Tfun->addout.size(); j++)
         {
             if (Tfun->addout[j].Otype == keys::calc)
-            get_addout_calcprop(i, aTfun[i].addout[j] );
+            get_addout_calc(i, aTfun[i].addout[j] );
         }
     }
 
@@ -530,5 +530,87 @@ void TGfitTask:: print_nested_results ()
     }
 
     gpf->fnfres.close();
+
+}
+
+
+void TGfitTask::get_addout_meas(int exp, TGfitTask::TargetFunction::obj_fun &objfun )
+{
+    // loop trough objective function
+    /// Target function
+    if ((objfun.exp_phase !="NULL") && (this->experiments[exp]->expphases.size() > 0))
+    {
+        // loop trough all phases
+        for (unsigned int p=0; p<this->experiments[exp]->expphases.size(); ++p)
+        {
+            if ((objfun.exp_CT == keys::IC) /*&& (objfun->exp_property =="NULL")*/)
+            {
+                // loop trough all elements
+                for (unsigned int e=0; e<this->experiments[exp]->expphases[p]->phIC.size(); ++e)
+                {
+                    if ((this->experiments[exp]->expphases[p]->phIC[e]->comp == objfun.exp_CN) && (this->experiments[exp]->expphases[p]->phase == objfun.exp_phase ))
+                    {
+                        // check for unit
+                        if (objfun.exp_unit == "NULL") objfun.exp_unit = this->experiments[exp]->expphases[p]->phIC[e]->Qunit;
+                        objfun.results.measured_value = this->experiments[exp]->expphases[p]->phIC[e]->Qnt;
+                        objfun.isComputed = true;
+                        ///
+                    }
+                }
+            } else
+                if ((objfun.exp_CT == keys::MR) /*&& (objfun->exp_property =="NULL")*/)
+                {
+                    // loop trough all elements
+                    for (unsigned int f=0; f<this->experiments[exp]->expphases[p]->phMR.size(); ++f)
+                    {
+                        if ((this->experiments[exp]->expphases[p]->phMR[f]->comp == objfun.exp_CN) && (this->experiments[exp]->expphases[p]->phase == objfun.exp_phase ))
+                        {
+
+                            objfun.results.measured_value = this->experiments[exp]->expphases[p]->phMR[f]->Qnt;
+                            objfun.isComputed = true;
+                            ///
+
+                        }
+                    }
+                } else
+                if ((objfun.exp_CT == keys::property) && (this->experiments[exp]->expphases[p]->phprop.size() > 0) /*&& (objfun->exp_dcomp == "NULL")*/)
+                {
+                // loop trough all properties
+                for (unsigned int pp = 0; pp< this->experiments[exp]->expphases[p]->phprop.size(); ++pp)
+                {
+                    if ((this->experiments[exp]->expphases[p]->phprop[pp]->property == objfun.exp_CN) && (this->experiments[exp]->expphases[p]->phase == objfun.exp_phase ))
+                    {
+                        // check for unit
+                        if (objfun.exp_unit == "NULL") objfun.exp_unit = this->experiments[exp]->expphases[p]->phprop[pp]->Qunit;
+                        objfun.results.measured_value = this->experiments[exp]->expphases[p]->phprop[pp]->Qnt;
+                        objfun.isComputed = true;
+                        ///
+                    }
+                }
+            } else
+                if (/*(objfun->exp_property !="NULL") &&*/ (this->experiments[exp]->expphases[p]->phDC.size() > 0) && (objfun.exp_CT == keys::DC))
+                {
+                    // loop trough all dependent components
+                    for (unsigned int dc = 0; dc< this->experiments[exp]->expphases[p]->phDC.size(); ++dc)
+                    {
+                        if ((this->experiments[exp]->expphases[p]->phDC[dc]->DC == objfun.exp_CN) && (this->experiments[exp]->expphases[p]->phase == objfun.exp_phase ))
+                        {
+                            // loop trough all dep comp properties
+                            for (unsigned int dcp = 0; dcp < this->experiments[exp]->expphases[p]->phDC[dc]->DCprop.size(); ++dcp)
+                            {
+                                if (this->experiments[exp]->expphases[p]->phDC[dc]->DCprop[dcp]->property == objfun.exp_DCP)
+                                {
+                                    // check for unit
+                                    if (objfun.exp_unit == "NULL") objfun.exp_unit = this->experiments[exp]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit;
+                                    objfun.results.measured_value = this->experiments[exp]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt;
+                                    objfun.isComputed = true;
+                                    ///
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+    }
 
 }
