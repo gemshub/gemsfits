@@ -66,6 +66,7 @@ void FITMainWindow::setActions()
     connect( ui->actionReset_Search, SIGNAL( triggered()), this, SLOT(CmResetSearch()));
     connect( ui->actionSave_Search, SIGNAL( triggered()), this, SLOT(CmSaveSearch()));
     connect( ui->actionLoad_Search, SIGNAL( triggered()), this, SLOT(CmLoadSearch()));
+    connect( ui->actionInsert_search_results_into_task_definition, SIGNAL( triggered()), this, SLOT(CmInsertSearch()));
 
 
 
@@ -598,6 +599,59 @@ void FITMainWindow::CmLoadSearch()
         addLinetoStatus( err.mess );
     }
 }
+
+/// Insert search results into task definition
+void FITMainWindow::CmInsertSearch()
+{
+    bson bsrec, inprec, out;
+
+    try
+    {
+        if( currentMode == MDF_TASK )
+        {
+            string samplelist;
+            defineModuleKeysList( samplelist );
+            cout << samplelist << endl;
+
+            // Load curent record to bson structure
+            ParserJson pars;
+
+            string recBsonText = ui->recordEdit->toPlainText().toUtf8().data();
+            pars.setJsonText( recBsonText.substr( recBsonText.find_first_of('{')+1 ) );
+            bson_init( &bsrec );
+            pars.parseObject(  &bsrec );
+            bson_finish( &bsrec );
+
+            pars.setJsonText( samplelist  );
+            bson_init( &inprec );
+            pars.parseObject(  &inprec );
+            bson_finish( &inprec );
+
+            bson_init( &out );
+            bson_merge( &bsrec,&inprec, true, &out );
+            bson_finish( &out );
+
+            pars.printBsonObjectToJson( recBsonText, out.data );
+
+            //show result
+            ui->recordEdit->setText( trUtf8(recBsonText.c_str()));
+
+            bson_destroy( &bsrec);
+            bson_destroy( &inprec);
+            bson_destroy( &out);
+            setStatusText( "List inserted" );
+        }
+    }
+    catch( TError& err )
+    {
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
+    }
+
+
+}
+
+
 //-------------------------------------------------------------------------------------
 // Run and show commands
 

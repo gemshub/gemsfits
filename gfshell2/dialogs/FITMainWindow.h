@@ -89,6 +89,7 @@ class FITMainWindow : public QMainWindow
     bool createTaskTemplate();
     void readTXT( TFile& inFile );
     string getRecordKey( int row );
+    void defineModuleKeysList( string& samplelist );
 
 
     void closeEvent( QCloseEvent* );
@@ -137,6 +138,7 @@ public slots:
        void CmResetSearch();
        void CmSaveSearch();
        void CmLoadSearch();
+       void CmInsertSearch();
 
        // Record list
        void CmBackupJSON();

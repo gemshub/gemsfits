@@ -629,4 +629,38 @@ void FITMainWindow::runFinished(int exitCode, QProcess::ExitStatus exitStatus)
         addLinetoStatus( "Error in gemsfit2 run." );
 }
 
+/// Make list of Experiments keys using query
+void FITMainWindow::defineModuleKeysList( string& samplelist )
+{
+  int ii, kk, ln;
+  string keyfld;
+
+  // get list or record keys
+  string keyFilter = ALLKEY;
+  vector<string> keyList;
+  int nKeys = rtEJ[ MDF_DATABASE ].GetKeyList( keyFilter.c_str(), keyList);
+
+  samplelist = " \"DataSelect\": {\n    \"samplelist\": [\n";
+  for( ii=0; ii<nKeys; ii++ )
+  {
+      samplelist += "{ \"SA\": \"";
+      kk=0;
+      ln = keyList[ii].find_first_of(':', kk);
+      keyfld = string(keyList[ii], kk, ln-kk);
+      strip(keyfld);
+      kk = ln+1;
+      samplelist += keyfld + "\", \"DS\": \"";
+      ln = keyList[ii].find_first_of(':', kk);
+      keyfld = string(keyList[ii], kk, ln-kk);
+      strip(keyfld);
+      samplelist += keyfld;
+      samplelist += "\", \"WT\": 1 }";
+      if( ii != nKeys-1)
+          samplelist += ",\n";
+      else
+          samplelist += "\n";
+  }
+  samplelist += "]\n } }";
+}
+
 //--------------- end of  FITMainWindow.cpp  -----------------------------
