@@ -404,65 +404,66 @@ if( W2 < 1.)  // workaround to suppress nan() and zdiv crash
 
 
     // Write first statistcs to file
-        gpf->fstat << "############################################" << endl;
-        gpf->fstat << "# Summary and statistics from Gemsfits run #" << endl;
-        gpf->fstat << "############################################" << endl;
-        gpf->fstat << endl;
-        gpf->fstat << " Best fit results for parameters from regression : "                         <<endl;
-        for(unsigned i=0; i< optv_.size(); i++ ) // cols
-        {
-            // Print optimized parameter values to file
-            if (gfittask->Opti->Ptype[i] == "G0")
-            {
-                gpf->fstat <<"          parameter G0 "<<
-                         gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])
-                       <<" : " << optv_[i] << endl;
-//                cout /*<< gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])*/ << endl;
-            } else
-              gpf->fstat <<"            parameter " << gfittask->Opti->Ptype[i] << " : "
-                     << setprecision(8) << optv_[i] << endl;
-        }
-        if (gfittask->Opti->h_RDc)
-        {
-            for (unsigned i=0; i<gfittask->Opti->reactions.size(); ++i)
-            {
-                gpf->fstat <<"          Reac parameter "<<gfittask->Opti->reactions[i]->Dc_name <<" : "<<setprecision(8)<<gfittask->Opti->reactions[i]->std_gibbs<<endl;
-            }
-        }
-        if (gfittask->Opti->h_Lp)
-        {
-            for (unsigned i=0; i<gfittask->Opti->Lparams.size(); ++i)
-            {
-                gpf->fstat <<"          Linked parameter "<<gfittask->Opti->Lparams[i]->name <<" : "<<setprecision(8)<<gfittask->Opti->Lparams[i]->EV<<endl;
-            }
-        }
-        gpf->fstat << endl;
+//        gpf->fstat << "############################################" << endl;
+//        gpf->fstat << "# Summary and statistics from Gemsfits run #" << endl;
+//        gpf->fstat << "############################################" << endl;
+//        gpf->fstat << endl;
+//        gpf->fstat << " Best fit results for parameters from regression : "                         <<endl;
+//        for(unsigned i=0; i< optv_.size(); i++ ) // cols
+//        {
+//            // Print optimized parameter values to file
+//            if (gfittask->Opti->Ptype[i] == "G0")
+//            {
+//                gpf->fstat <<"          parameter G0 "<<
+//                         gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])
+//                       <<" : " << optv_[i] << endl;
+////                cout /*<< gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])*/ << endl;
+//            } else
+//              gpf->fstat <<"            parameter " << gfittask->Opti->Ptype[i] << " : "
+//                     << setprecision(8) << optv_[i] << endl;
+//        }
+//        if (gfittask->Opti->h_RDc)
+//        {
+//            for (unsigned i=0; i<gfittask->Opti->reactions.size(); ++i)
+//            {
+//                gpf->fstat <<"          Reac parameter "<<gfittask->Opti->reactions[i]->Dc_name <<" : "<<setprecision(8)<<gfittask->Opti->reactions[i]->std_gibbs<<endl;
+//            }
+//        }
+//        if (gfittask->Opti->h_Lp)
+//        {
+//            for (unsigned i=0; i<gfittask->Opti->Lparams.size(); ++i)
+//            {
+//                gpf->fstat <<"          Linked parameter "<<gfittask->Opti->Lparams[i]->name <<" : "<<setprecision(8)<<gfittask->Opti->Lparams[i]->EV<<endl;
+//            }
+//        }
+//        gpf->fstat << endl;
 //        gpf->fstat << " Basic statistics:" << endl;
-        gpf->fstat << " Number of measurements :                    " << number_of_measurements     << endl;
-        gpf->fstat << " Number of parameters :                      " << number_of_parameters 	<< endl;
-        gpf->fstat << " Number of runs needed for regression :      " << num_of_runs 		<< endl;
-        gpf->fstat << " Degrees of freedom :                        " << degrees_of_freedom	 	<< endl;
+        gpf->fstat << "Statistics-Parameter,Value" << endl;
+        gpf->fstat << "Number-of-measurements," << number_of_measurements     << endl;
+        gpf->fstat << "Number-of-parameters," << number_of_parameters 	<< endl;
+        gpf->fstat << "Number-of-runs-needed-for-regression," << num_of_runs 		<< endl;
+        gpf->fstat << "Degrees-of-freedom," << degrees_of_freedom	 	<< endl;
 
 //        gpf->fstat << " - - - - - - - RESIDUAL STATISTICS - - - - - - - " << endl;
-        gpf->fstat << " Value of the minimized function sum :       " << Weighted_Tfun_sum_of_residuals 		<< endl;
+        gpf->fstat << "Value-of-the-minimized-function-sum," << Weighted_Tfun_sum_of_residuals 		<< endl;
 //        gpf->fstat << " Target function sum  :                                                	" << Tfun_sum_of_residuals 		<< endl;
 //        gpf->fstat << endl;
-//        gpf->fstat << " Sum of absolute values of residuals:                                    " << Abs_sum_of_residuals << endl;
+        gpf->fstat << "Sum-of-absolute-values-of-residuals," << Abs_sum_of_residuals << endl;
 //        gpf->fstat << endl;
-        gpf->fstat << " Sum of absolute values of residuals:        " << Weighted_Abs_sum_of_residuals << endl;
-//        gpf->fstat << " Standard deviation of the residuals :                               	" << SD_of_residuals 		<< endl;
+//        gpf->fstat << " Sum-of-absolute-values-of-residuals:        " << Weighted_Abs_sum_of_residuals << endl;
+        gpf->fstat << "Standard-deviation-of-residuals," << SD_of_residuals 		<< endl;
 //        gpf->fstat << endl;
-        gpf->fstat << " Standard deviation of the residuals :       " << Weighted_SD_of_residuals 		<< endl;
+//        gpf->fstat << " Standard deviation of the residuals :       " << Weighted_SD_of_residuals 		<< endl;
 //        gpf->fstat << " Standard deviation of the weighted target function values :             " << Weighted_TF_SD_of_residuals 		<< endl;
 //        gpf->fstat << endl;
 //        gpf->fstat << " Standard deviation of the absolute values of the residuals :            " << Abs_SD_of_residuals 		<< endl;
 //        gpf->fstat << endl;
-        gpf->fstat << " Average residual :                          " << Weighted_mean_res 		<< endl;
-        gpf->fstat << " Maximum residual :                          " << Weighted_max_res 		<< endl;
-        gpf->fstat << " Minimum residual :                          " << Weighted_min_res 		<< endl;
-        gpf->fstat << " Number of positive residuals :              " << pos_residuals 		<< endl;
-        gpf->fstat << " Number of negative residuals :              " << neg_residuals 		<< endl;
-        gpf->fstat << " Coefficient of determination R^2 :          " << coeff_of_determination     << endl;
+        gpf->fstat << "Average-residual," << Weighted_mean_res 		<< endl;
+        gpf->fstat << "Maximum-residual," << Weighted_max_res 		<< endl;
+        gpf->fstat << "Minimum-residual," << Weighted_min_res 		<< endl;
+        gpf->fstat << "Number-of-positive-residuals," << pos_residuals 		<< endl;
+        gpf->fstat << "Number-of-negative-residuals," << neg_residuals 		<< endl;
+        gpf->fstat << "Coefficient-of-determination-R^2," << coeff_of_determination     << endl;
 //        gpf->fstat << " Correlation coefficient (Brockwell and Davis, 1987, p304) RN^2:         " << Correlation_coef     << endl;
 //        gpf->fstat << endl;
 //        gpf->fstat << " Pearson's Chi Square test :                                             " << Pearsons_chi_square   	<< endl;
@@ -613,20 +614,20 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
         }
 
 
-        gpf->fstat << " Composite Scaled Sensitivities (CSS): "<<endl;
+//        gpf->fstat << " Composite Scaled Sensitivities (CSS): "<<endl;
         {
             // Write sensitivities to file
             for( i=0; i< optv_.size(); i++ )
             {
                 fitparam[i]->CSS = CompositeScaledSensitivities(i);
 
-                gpf->fstat <<"            parameter "<< i;
-                         if (gfittask->Opti->Ptype[i] == "G0") gpf->fstat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]);
-                         else gpf->fstat << "  " << gfittask->Opti->Ptype[i];
-                gpf->fstat <<" :	     " << CompositeScaledSensitivities(i)	<< endl;
+//                gpf->fstat <<"            parameter "<< i;
+//                         if (gfittask->Opti->Ptype[i] == "G0") gpf->fstat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]);
+//                         else gpf->fstat << "  " << gfittask->Opti->Ptype[i];
+//                gpf->fstat <<" :	     " << CompositeScaledSensitivities(i)	<< endl;
             }
         }
-        gpf->fstat << endl;
+//        gpf->fstat << endl;
 
 
 //SensitivityMatrix.print("SensitivityMatrix:");
@@ -1057,11 +1058,11 @@ pid_ = 0;
             double mean = arma::mean( MCparams );
             MN_Fparam.push_back(mean);
 
-            // Print Standard Deviations of parameters generated during MC runs to file
-            gpf->fstat <<"			parameter "<< j;
-            if (gfittask->Opti->Ptype[j] == "G0") gpf->fstat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[j]);
-            else gpf->fstat << "  " << gfittask->Opti->Ptype[j];
-            gpf->fstat <<" :	           " << StandardDeviation << endl;
+//            // Print Standard Deviations of parameters generated during MC runs to file
+//            gpf->fstat <<"			parameter "<< j;
+//            if (gfittask->Opti->Ptype[j] == "G0") gpf->fstat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[j]);
+//            else gpf->fstat << "  " << gfittask->Opti->Ptype[j];
+//            gpf->fstat <<" :	           " << StandardDeviation << endl;
 
         }
 
@@ -1099,13 +1100,13 @@ pid_ = 0;
 
         for( j=0; j<n_param; j++ ) // cols
         {
-            gpf->fmc << "F."<<fitparam[j]->Pname<<",";
+            gpf->fmc << "F."<<fitparam[j]->Ptype<<"."<<fitparam[j]->Pname<<",";
             p++;
         }
 
         for( j=0; j<n_Rparam; j++ ) // cols
         {
-            gpf->fmc << "R."<<fitparam[j+p]->Pname<<",";
+            gpf->fmc << "R."<<fitparam[j+p]->Ptype<<"."<<fitparam[j+p]->Pname<<",";
         }
         gpf->fmc << "minimized_sum";
         gpf->fmc << endl;

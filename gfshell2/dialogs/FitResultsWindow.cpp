@@ -90,6 +90,16 @@ FitResultsWindow::FitResultsWindow(QWidget *parent) :
     tableFitInverse->setModel(proxyModel/*modelFitInverse*/);
     ui->verticalLayout_9->addWidget(tableFitInverse);
 
+    // set up FIT_STAT_FILE
+    modelFitStatistics = new TMatrixModel( "sum-statistics", 1, 0 );
+    proxyModel = new TSortFilterProxyModel();
+    proxyModel->setSourceModel( modelFitStatistics );
+    tableFitStatistics = new TMatrixTable( 0 /*ui->tabStatistics*/);
+    deleg = new TMatrixDelegate( 1, this);
+    tableFitStatistics->setItemDelegate(deleg);
+    tableFitStatistics->setModel(proxyModel/*modelFitStatistics*/);
+    ui->verticalLayout_2->addWidget(tableFitStatistics);
+
     // set up FIT_MC_FILE
     modelMCResults = new TMatrixModel( "mc-results", 0, 0 );
     proxyModel = new TSortFilterProxyModel();
@@ -100,7 +110,7 @@ FitResultsWindow::FitResultsWindow(QWidget *parent) :
     tableMCResults->setModel(proxyModel/*modelMCResults*/);
     ui->verticalLayout_5->addWidget(tableMCResults);
 
-    fFitStatistic = "sum-statistics";   // name file  FIT_STATISTIC
+//    fFitStatistic = "sum-statistics";   // name file  FIT_STATISTIC
     fFitLogfile = "gemsfit2";  // name file  FIT_LOGFILE
 
     setActions();
@@ -122,6 +132,7 @@ void FitResultsWindow::closeEvent(QCloseEvent* ev)
     modelSensitivity->CloseGraph();
     modelQQplot->CloseGraph();
     modelFitInverse->CloseGraph();
+    modelFitStatistics->CloseGraph();
 
        pDia = 0;
        ev->accept();
@@ -204,6 +215,7 @@ void FitResultsWindow::CmOpenFile( const QString& dir_ )
   modelSensitivity->matrixFromCsvFile( dir );
   modelQQplot->matrixFromCsvFile( dir );
   modelFitInverse->matrixFromCsvFile( dir );
+  modelFitStatistics->matrixFromCsvFile( dir );
   editFiledsFromFile( dir );
 }
 
@@ -218,6 +230,7 @@ void FitResultsWindow::CmSaveFile()
     modelSensitivity->matrixToCsvFile( dir );
     modelQQplot->matrixToCsvFile( dir );
     modelFitInverse->matrixToCsvFile( dir );
+    modelFitStatistics->matrixToCsvFile( dir );
     editFiledsToFile( dir );
 }
 
@@ -226,22 +239,22 @@ void FitResultsWindow::editFiledsFromFile( const QString& dir )
     QString valCsv ="";
 
     // read file  FIT_STATISTIC
-    QString fpath = dir + "/" + fFitStatistic+".txt";
-    QFile tmpStriam(fpath);
-    if(tmpStriam.open( QIODevice::ReadOnly ))
-    {
-      valCsv = tmpStriam.readAll();
-      tmpStriam.close();
-    }
-    else
-      {
-        cout << "error open file " << fpath.toUtf8().data() << endl;
-      }
-    ui->textStatistic->setText(valCsv);
+//    QString fpath = dir + "/" + fFitStatistic+".txt";
+//    QFile tmpStriam(fpath);
+//    if(tmpStriam.open( QIODevice::ReadOnly ))
+//    {
+//      valCsv = tmpStriam.readAll();
+//      tmpStriam.close();
+//    }
+//    else
+//      {
+//        cout << "error open file " << fpath.toUtf8().data() << endl;
+//      }
+//    ui->textStatistic->setText(valCsv);
 
     // read file  FIT_LOGFILE
     valCsv ="";
-    fpath = dir + "/" + fFitLogfile+".log";
+    QString fpath = dir + "/" + fFitLogfile+".log";
     QFile tmpStriam1(fpath);
     if(tmpStriam1.open( QIODevice::ReadOnly ))
     {
@@ -259,17 +272,17 @@ void FitResultsWindow::editFiledsFromFile( const QString& dir )
 void FitResultsWindow::editFiledsToFile( const QString& dir )
 {
     // write file  FIT_STATISTIC
-    QString valCsv = ui->textStatistic->toPlainText();
-    QString fpath = dir + "/" + fFitStatistic+".txt";
-    QFile tmpStriam(fpath);
-    if(tmpStriam.open( QIODevice::WriteOnly|QIODevice::Truncate))
-    {
-      tmpStriam.write(valCsv.toUtf8());
-      tmpStriam.close();
-    }
+//    QString valCsv = ui->textStatistic->toPlainText();
+//    QString fpath = dir + "/" + fFitStatistic+".txt";
+//    QFile tmpStriam(fpath);
+//    if(tmpStriam.open( QIODevice::WriteOnly|QIODevice::Truncate))
+//    {
+//      tmpStriam.write(valCsv.toUtf8());
+//      tmpStriam.close();
+//    }
     // write file  FIT_LOGFILE
-    valCsv = ui->textEdit->toPlainText();
-    fpath = dir + "/" + fFitLogfile+".log";
+    QString valCsv = ui->textEdit->toPlainText();
+    QString fpath = dir + "/" + fFitLogfile+".log";
     QFile tmpStriam1(fpath);
     if(tmpStriam1.open( QIODevice::WriteOnly|QIODevice::Truncate))
     {
@@ -300,17 +313,18 @@ void FitResultsWindow::CmSaveBsonRecord()
     modelSensitivity->matrixToBson( &bsrec );
     modelQQplot->matrixToBson( &bsrec );
     modelFitInverse->matrixToBson( &bsrec );
+    modelFitStatistics->matrixToBson( &bsrec );
 
     // added text bufers to bson record
     // write file  FIT_STATISTIC
-    string valCsv = ui->textStatistic->toPlainText().toUtf8().data();
-    string name = fFitStatistic.toUtf8().data();
-    int iRet = bson_append_string( &bsrec, name.c_str(), valCsv.c_str() );
-    ErrorIf( iRet == BSON_ERROR, name, "Error append string"+name );
+//    string valCsv = ui->textStatistic->toPlainText().toUtf8().data();
+//    string name = fFitStatistic.toUtf8().data();
+//    int iRet = bson_append_string( &bsrec, name.c_str(), valCsv.c_str() );
+//    ErrorIf( iRet == BSON_ERROR, name, "Error append string"+name );
     // write file  FIT_LOGFILE
-    valCsv = ui->textEdit->toPlainText().toUtf8().data();
-    name = fFitLogfile.toUtf8().data();
-    iRet = bson_append_string( &bsrec, name.c_str(), valCsv.c_str() );
+    string valCsv = ui->textEdit->toPlainText().toUtf8().data();
+    string name = fFitLogfile.toUtf8().data();
+    int iRet = bson_append_string( &bsrec, name.c_str(), valCsv.c_str() );
     ErrorIf( iRet == BSON_ERROR, name, "Error append string"+name );
 
     bson_finish( &bsrec );
@@ -369,19 +383,20 @@ void FitResultsWindow::readBsonRecord()
        modelSensitivity->matrixFromBson( (QSortFilterProxyModel *)tableSensitivity->model(), bsrec.data );
        modelQQplot->matrixFromBson( (QSortFilterProxyModel *)tableQQplot->model(),  bsrec.data );
        modelFitInverse->matrixFromBson( (QSortFilterProxyModel *)tableFitInverse->model(), bsrec.data );
+       modelFitStatistics->matrixFromBson( (QSortFilterProxyModel *)tableFitStatistics->model(), bsrec.data );
 
        // added text bufers to bson record
        // write file  FIT_STATISTIC
-       string name = fFitStatistic.toUtf8().data();
+//       string name = fFitStatistic.toUtf8().data();
        string valCsv;
-       if( !bson_find_string( bsrec.data, name.c_str(), valCsv ) )
-           valCsv = "";
-       ui->textStatistic->setText(valCsv.c_str());
+//       if( !bson_find_string( bsrec.data, name.c_str(), valCsv ) )
+//           valCsv = "";
+//       ui->textStatistic->setText(valCsv.c_str());
 
        // write file  FIT_LOGFILE
-       name = fFitLogfile.toUtf8().data();
+       string name = fFitLogfile.toUtf8().data();
        if( !bson_find_string( bsrec.data, name.c_str(), valCsv ) )
-           valCsv = "";
+            valCsv = "";
        ui->textEdit->setText(valCsv.c_str());
 
     bson_destroy( &bsrec);

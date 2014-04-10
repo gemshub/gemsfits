@@ -99,7 +99,10 @@ private:
     TMatrixModel *modelFitInverse;   // model reading fit-inverse-results.csv file
     TMatrixTable *tableFitInverse;
 
-    QString fFitStatistic;   // name file  FIT_STATISTIC
+    TMatrixModel *modelFitStatistics;   // model reading sum-statistics.csv file
+    TMatrixTable *tableFitStatistics;
+
+//    QString fFitStatistic;   // name file  FIT_STATISTIC
     QString fFitLogfile;  // name file  FIT_LOGFILE
 
     //QSet< GraphDialog*> graphList; /// internal list of opened graphics

@@ -814,7 +814,7 @@ string FIT_QQ_FILE = "qq-plot-data.csv";
 string FIT_SENS_FILE = "meas-data-sensitivity.csv";
 string FIT_MC_FILE = "mc-results.csv";
 string FIT_PARAM_FILE = "fit-params.csv";
-string FIT_STATISTIC = "sum-statistics.txt";
+string FIT_STATISTIC = "sum-statistics.csv";
 string FIT_LOGFILE = "gemsfit2.log";
 
 TGfitPath::TGfitPath(int c, char *v[]):
