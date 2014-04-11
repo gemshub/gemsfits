@@ -512,7 +512,7 @@ void FitResultsWindow::CmPrintTable()
         painter.translate(printer.paperRect().x() + printer.pageRect().width()/2,
                           printer.paperRect().y() + printer.pageRect().height()/2);
         painter.scale(scale, scale);
-        painter.translate(-width()/2, -height()/2);
+        painter.translate(-tableCurrent->width()/2, -tableCurrent->height()/2);
 
         tableCurrent->render(&painter);
 

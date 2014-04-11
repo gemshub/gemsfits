@@ -398,6 +398,21 @@ void GraphDialog::CmPrint()
     QPrintDialog dialog( &printer );
     if ( dialog.exec()  )
     {
+
+        //if( QPrinter::Landscape != printer.orientation() )
+         //   printer.setOrientation(QPrinter::Landscape);
+
+        QPainter painter;
+        painter.begin(&printer);
+        double xscale = printer.pageRect().width()/double(framePrn->width());
+        double yscale = printer.pageRect().height()/double(framePrn->height());
+        double scale = qMin(xscale, yscale);
+        painter.translate(printer.paperRect().x() + printer.pageRect().width()/2,
+                          printer.paperRect().y() + printer.pageRect().height()/2);
+        painter.scale(scale, scale);
+        painter.translate(-framePrn->width()/2, -framePrn->height()/2);
+        /*
+
         QPainter painter(&printer);
 
         double dx = (double)(printer.widthMM()*printer.logicalDpiX())
@@ -409,10 +424,10 @@ void GraphDialog::CmPrint()
         dx = min(dx, dy);
         painter.scale(dx, dx);
         painter.setClipRect(framePrn->geometry());
+       */
         groupBox->hide();
         framePrn->render( &painter );
         groupBox->show();
-       //plot->printPlot();
     }
 
 }
