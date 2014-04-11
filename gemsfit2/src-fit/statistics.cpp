@@ -131,8 +131,62 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
             Abs_SD_of_residuals = sqrt((Abs_SD_of_residuals/degrees_of_freedom));           // standard deviation of the absolute value of residuals
        Weighted_SD_of_residuals = sqrt((Weighted_SD_of_residuals/degrees_of_freedom));      // standard deviation of residuals*weight (same as means_res if weight is 1)
                 SD_of_residuals = sqrt((SD_of_residuals/degrees_of_freedom));               // standard deviation of residuals
+/*////////////////////////////////////////////////////////*/
 
+  // calculate the stddev of residuals for each individual objfun
+  for (unsigned j = 0; j<gfittask->Tfun->objfun.size(); j++)
+  {
+      min_res = 0.0; max_res =0.0; neg_residuals = 0; pos_residuals = 0;
+      objfun_stat.push_back(new statistics::objfunstat);
+      objfun_stat[j]->stdev_res = 0.0;
+      objfun_stat[j]->mean_res = 0.0;
+      objfun_stat[j]->mean_meas = 0.0;
+      objfun_stat[j]->norm_stdev_res = 0.0;
+      objfun_stat[j]->norm_mean_res = 0.0;
+      objfun_stat[j]->R2 = 0.0;
+      objfun_stat[j]->nr = 0;
 
+      for (unsigned i=0; i<gfittask->aTfun.size(); i++)
+      {
+
+          if (gfittask->aTfun[i].objfun[j].isComputed)
+          {
+              objfun_stat[j]->norm_mean_res += gfittask->aTfun[i].objfun[j].results.residual / gfittask->aTfun[i].objfun[j].results.measured_value;
+              objfun_stat[j]->mean_res += gfittask->aTfun[i].objfun[j].results.residual;
+              objfun_stat[j]->mean_meas += gfittask->aTfun[i].objfun[j].results.measured_value;
+              objfun_stat[j]->orderd_res.push_back (gfittask->aTfun[i].objfun[j].results.residual) ;
+
+              if (min_res > gfittask->aTfun[i].objfun[j].results.residual) min_res = gfittask->aTfun[i].objfun[j].results.residual;
+              if (max_res < gfittask->aTfun[i].objfun[j].results.residual) max_res = gfittask->aTfun[i].objfun[j].results.residual;
+              if (gfittask->aTfun[i].objfun[j].results.residual < 0) ++neg_residuals;
+              if (gfittask->aTfun[i].objfun[j].results.residual >= 0) ++pos_residuals;
+
+              objfun_stat[j]->nr++;
+          }
+      }
+      objfun_stat[j]->norm_mean_res = objfun_stat[j]->norm_mean_res / objfun_stat[j]->nr;
+      objfun_stat[j]->mean_res = objfun_stat[j]->mean_res / objfun_stat[j]->nr;
+      objfun_stat[j]->mean_meas = objfun_stat[j]->mean_meas / objfun_stat[j]->nr;
+
+      objfun_stat[j]->min_res = min_res;
+      objfun_stat[j]->max_res = max_res;
+      objfun_stat[j]->nr_pos_res = pos_residuals;
+      objfun_stat[j]->nr_neg_res = neg_residuals;
+  }
+
+  for (unsigned j = 0; j<gfittask->Tfun->objfun.size(); j++)
+  {
+      for (unsigned i=0; i<gfittask->aTfun.size(); i++)
+      {
+          if (gfittask->aTfun[i].objfun[j].isComputed)
+          {
+              objfun_stat[j]->norm_stdev_res += pow (((gfittask->aTfun[i].objfun[j].results.residual/gfittask->aTfun[i].objfun[j].results.measured_value) - objfun_stat[j]->norm_mean_res), 2);
+              objfun_stat[j]->stdev_res += pow (((gfittask->aTfun[i].objfun[j].results.residual) - objfun_stat[j]->mean_res), 2);
+          }
+      }
+      objfun_stat[j]->norm_stdev_res = sqrt(objfun_stat[j]->norm_stdev_res / objfun_stat[j]->nr);
+      objfun_stat[j]->stdev_res = sqrt(objfun_stat[j]->stdev_res / objfun_stat[j]->nr);
+  }
 
 
 }
@@ -218,9 +272,6 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
             fitparam[np+i]->CSS = 0.0;
             fitparam[np+i]->mc95 = 0.0;
             fitparam[np+i]->mcSTDEV = 0.0;
-
-
-
         }
     }
     if (gfittask->Opti->h_Lp)
@@ -242,7 +293,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 
 
 
-    // Compute R^2: coefficient of determination
+    // Compute R^2: coefficient of determination for all data
         mean = 0;
     for (i=0; i< number_of_measurements; i++)
     {
@@ -259,6 +310,22 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         TotalSumSquares += pow( (gfittask->measured_values_v[i] - mean), 2);
     }
     coeff_of_determination = 1 - ResSumSquares / TotalSumSquares;
+    ResSumSquares = 0.0; TotalSumSquares = 0.0;
+
+    // Compute R^2 for each objfun term
+    for (unsigned j = 0; j<gfittask->Tfun->objfun.size(); j++)
+    {
+        for (unsigned i=0; i<gfittask->aTfun.size(); i++)
+        {
+            if (gfittask->aTfun[i].objfun[j].isComputed)
+            {
+                ResSumSquares += pow( (gfittask->aTfun[i].objfun[j].results.measured_value - gfittask->aTfun[i].objfun[j].results.computed_value), 2);
+                TotalSumSquares += pow( (gfittask->aTfun[i].objfun[j].results.measured_value - objfun_stat[j]->mean_meas), 2);
+            }
+        }
+        objfun_stat[j]->R2 = 1 - ResSumSquares / TotalSumSquares;
+    }
+
 
     // Pearson Chi Square test
     Pearsons_chi_square = 0.;
@@ -308,11 +375,25 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     for( i=0; i< N; i++ )
         quantiles_v.push_back( boost::math::quantile( dist, percentiles_v[i] ) );
 
+    // Generate Q-Q Plot (Quantile-Quantile Plot) for each term of the objfun
+
+    for (unsigned j = 0; j < objfun_stat.size(); j++)
+    {
+        boost::math::normal distobj(  0., objfun_stat[j]->stdev_res );
+        for (i = 0; i < objfun_stat[j]->nr; i++)
+        {
+            objfun_stat[j]->percentiles.push_back( (i+1-0.5)/ objfun_stat[j]->nr );
+            objfun_stat[j]->quantiles.push_back( boost::math::quantile( distobj, objfun_stat[j]->percentiles[i] ));
+        }
+        // sorting residuals
+        sort( objfun_stat[j]->orderd_res.begin(), objfun_stat[j]->orderd_res.end() );
+    }
+
+
     // Generate Q-Q Plot (Quantile-Quantile Plot)
     int exp = 0;
 
     gpf->fqq << "sample,";
-
     for (unsigned k = 0; k<gfittask->Tfun->objfun.size(); k++)
     {
         gpf->fqq << gfittask->Tfun->objfun[k].exp_phase + "." + gfittask->Tfun->objfun[k].exp_CN;
@@ -321,29 +402,27 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         gpf->fqq << ".quantile"<<",";
     }
 
-    gpf->fqq << endl;
 
+
+    gpf->fqq << endl;
+    bool waswritten = false;
     for( int j=0; j<  N;  j++ )
     {
         j--;
-
-
-
         gpf->fqq << gfittask->experiments[exp]->sample << ",";
         for (unsigned p = 0; p<gfittask->Tfun->objfun.size(); p++)
         {
             if (gfittask->aTfun[exp].objfun[p].isComputed)
             {
                 j++;
-                for (i = 0; i< gfittask->residuals_v.size(); i++)
+                for (i = 0; i< objfun_stat[p]->orderd_res.size(); i++)
                 {
-                    if (gfittask->aTfun[exp].objfun[p].results.residual == gfittask->residuals_v[i])
+                    if ((gfittask->aTfun[exp].objfun[p].results.residual == objfun_stat[p]->orderd_res[i]) && (!waswritten))
                     {
-                    gpf->fqq <<gfittask->residuals_v[i]<<","<<quantiles_v[i]<< ",";
+                    gpf->fqq <<objfun_stat[p]->orderd_res[i]<<","<<objfun_stat[p]->quantiles[i]<< ",";
+                    waswritten = true;
                     }
                 }
-
-
             } else
             {
                 for(unsigned j=0; j<  optv_.size(); j++ )
@@ -351,6 +430,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
                     gpf->fqq << ",";
                 }
             }
+            waswritten = false;
         }
         exp++;
         gpf->fqq << endl;
@@ -884,44 +964,13 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
     double* scatter_all 	  = new double[ number_of_measurements * num_of_MC_runs ];
 
 
-    // calculate the stddev of residuals for each individual objfun
+        // make scatter object vector for each objfun
         for (j = 0; j<gfittask->Tfun->objfun.size(); j++)
         {
-            v_scatter.push_back(new statistics::scatter);
-            v_scatter[j]->stdev_res = 0.0;
-            v_scatter[j]->mean = 0.0;
-            v_scatter[j]->nr = 0;
-
-            for (i=0; i<gfittask->aTfun.size(); i++)
+            for (i = 0; i< num_of_MC_runs * objfun_stat[j]->nr; i++)
             {
-                if (gfittask->aTfun[i].objfun[j].isComputed)
-                {
-                    v_scatter[j]->mean += gfittask->aTfun[i].objfun[j].results.residual / gfittask->aTfun[i].objfun[j].results.measured_value;
-                    v_scatter[j]->nr++;
-                }
+                objfun_stat[j]->scatter.push_back(0.0);
             }
-            v_scatter[j]->mean = v_scatter[j]->mean / v_scatter[j]->nr;
-
-        }
-
-        for (j = 0; j<gfittask->Tfun->objfun.size(); j++)
-        {
-            for (i = 0; i< num_of_MC_runs * v_scatter[j]->nr; i++)
-            {
-                v_scatter[j]->obj_scatter.push_back(0.0);
-            }
-        }
-
-        for (j = 0; j<gfittask->Tfun->objfun.size(); j++)
-        {
-            for (i=0; i<gfittask->aTfun.size(); i++)
-            {
-                if (gfittask->aTfun[i].objfun[j].isComputed)
-                {
-                    v_scatter[j]->stdev_res += pow (((gfittask->aTfun[i].objfun[j].results.residual/gfittask->aTfun[i].objfun[j].results.measured_value) - v_scatter[j]->mean), 2);
-                }
-            }
-            v_scatter[j]->stdev_res = sqrt(v_scatter[j]->stdev_res / v_scatter[j]->nr);
         }
 
 // get the scatter values for each individual objfun for all MC runs
@@ -931,20 +980,20 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
             typedef boost::mt19937 RNGType;
             RNGType rng(2);
 
-            boost::normal_distribution<> rdist(v_scatter[j]->mean, v_scatter[j]->stdev_res);
+            boost::normal_distribution<> rdist(objfun_stat[j]->norm_mean_res, objfun_stat[j]->norm_stdev_res);
 
             boost::variate_generator< RNGType, boost::normal_distribution<> > get_rand(rng, rdist);
 
-            for( i=0; i<(v_scatter[j]->nr * num_of_MC_runs); i++ )
+            for( i=0; i<(objfun_stat[j]->nr * num_of_MC_runs); i++ )
             {
-                 v_scatter[j]->obj_scatter[i] = get_rand();
+                 objfun_stat[j]->scatter[i] = get_rand();
             }
         }
 
 
 
 
-pid_ = 0;
+    pid_ = 0;
     id = 0;
     // Perform Monte Carlo runs
     for( imc=pid_; imc<num_of_MC_runs; ++imc /*+= p*/)
@@ -956,34 +1005,14 @@ pid_ = 0;
 
         i= 0;
         // make the scatter vector by adding the scatter value for each objfun for the #imc mc run
-        for (j = 0; j<v_scatter.size(); j++)
+        for (j = 0; j<objfun_stat.size(); j++)
         {
-            for (unsigned n = imc*v_scatter[j]->nr; n < ((imc*v_scatter[j]->nr) + v_scatter[j]->nr); n++)
+            for (unsigned n = imc*objfun_stat[j]->nr; n < ((imc*objfun_stat[j]->nr) + objfun_stat[j]->nr); n++)
             {
-                scatter_v[i] = v_scatter[j]->obj_scatter[n];
+                scatter_v[i] = objfun_stat[j]->scatter[n];
                 i++;
             }
         }
-
-//        for( i=0; i<number_of_measurements; i++ )
-//        {
-//            scatter_v[i] = scatter_all[ (imc/p_ * number_of_measurements + i) ];
-//        }
-
-
-//        ofstream myScatter_pid_0;
-//        myScatter_pid_0.open("output_GEMSFIT/myScatter_pid_0.txt",ios::app);
-//        for( i=0; i<number_of_measurements; i++ )
-//        {
-//            myScatter_pid_0 << " scatter_v["<<i<<"] : "<<scatter_v[i]<<endl;
-//        }
-//        myScatter_pid_0 << endl;
-//        myScatter_pid_0.close();
-
-
-
-        // loop over systems and add MC scatter to calculated values to simulate new set of experimental data
-//        double* simulated_measurements = new double[gfittask->computed_values_v.size()];
 
         if (MCbool == 1) // the new simulated values are from scatter + computed values
             for (i=0; i<number_of_measurements; i++)

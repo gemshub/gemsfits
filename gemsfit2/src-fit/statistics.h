@@ -63,15 +63,24 @@ class statistics
 
     vector<parameters*> fitparam;
 
-    struct scatter
+    struct objfunstat
     {
-        vector<double> obj_scatter;
+        vector<double> scatter;
+        vector<double> percentiles;
+        vector<double> quantiles;
+        vector<double> orderd_res;
         double stdev_res;
-        double mean;
+        double norm_stdev_res;
+        double mean_res;
+        double mean_meas;
+        double norm_mean_res;
+        double R2;
+        double min_res, max_res;
+        int nr_pos_res, nr_neg_res;
         int nr;
     };
 
-    vector<scatter*> v_scatter;
+    vector<objfunstat*> objfun_stat;
 
     double Weighted_mean_res;
     double means_res;
