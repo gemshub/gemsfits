@@ -437,6 +437,42 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     }
     gpf->fqq.close();
 
+
+//    gpf->fqq << endl;
+//    bool waswritten = false;
+//    for( int j=0; j<  N;  j++ )
+//    {
+//        j--;
+//        gpf->fqq << gfittask->experiments[exp]->sample << ",";
+//        for (unsigned p = 0; p<gfittask->Tfun->objfun.size(); p++)
+//        {
+//            if (gfittask->aTfun[exp].objfun[p].isComputed)
+//            {
+//                j++;
+//                for (i = 0; i< gfittask->residuals_v.size(); i++)
+//                {
+//                    if ((gfittask->aTfun[exp].objfun[p].results.residual == gfittask->residuals_v[i]) && (!waswritten))
+//                    {
+//                    gpf->fqq <<gfittask->residuals_v[i]<<","<<quantiles_v[i]<< ",";
+//                    waswritten = true;
+//                    }
+//                }
+
+
+//            } else
+//            {
+//                for(unsigned j=0; j<  optv_.size(); j++ )
+//                {
+//                    gpf->fqq << ",";
+//                }
+//            }
+//            waswritten = false;
+//        }
+//        exp++;
+//        gpf->fqq << endl;
+//    }
+//    gpf->fqq.close();
+
     // D'Agostino K square test for normality
     mean = 0;
     for (unsigned i=0; i< gfittask->residuals_v.size(); i++)
@@ -659,7 +695,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
 
         for (k = 0; k<gfittask->Tfun->objfun.size(); k++)
         {
-            for (i=0; i < fitparam.size(); i++)
+            for (i=0; i < (fitparam.size() - gfittask->Opti->reactions.size()) ; i++)
             {
                 gpf->fsens << gfittask->Tfun->objfun[k].exp_phase + "." + gfittask->Tfun->objfun[k].exp_CN;
                 gpf->fsens << ".param." << i <<",";
@@ -1220,6 +1256,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
 void statistics::print_param()
 {
 
+    int nrcor = 0;
     gpf->fparam.open(gpf->FITparamFile().c_str(), ios::trunc);
     if( gpf->fparam.fail() )
     { cout<<"Fit parameters fileopen error"<<endl; exit(1); }
@@ -1231,7 +1268,10 @@ void statistics::print_param()
     for (unsigned i= 0; i<fitparam.size(); i++)
     {
         if (fitparam[i]->Pfittype == "F")
-        gpf->fparam << "correl.coef." << fitparam[i]->Pname  <<",";
+        {
+            gpf->fparam << "correl.coef." << fitparam[i]->Pname  <<",";
+            nrcor++;
+        }
     }
 
     gpf->fparam << endl;
@@ -1262,7 +1302,8 @@ void statistics::print_param()
         if (fitparam[i]->CSS != 0)
         gpf->fparam << fitparam[i]->CSS << ",";
         else
-            gpf->fparam << ",";
+            gpf->fparam << "0,";
+
         for ( unsigned j=0; j < fitparam[i]->correl.size(); j++)
         {
            if (fitparam[i]->Pfittype == "F")
@@ -1271,9 +1312,19 @@ void statistics::print_param()
                {
                    gpf->fparam << setprecision(4)<< fitparam[i]->correl[j] << ",";
                } else
-                   gpf->fparam << ",";
-           }
+                   gpf->fparam << "0,";
+           } else
+               gpf->fparam << "0,";
         }
+
+        if (fitparam[i]->Pfittype == "R")
+        {
+            for ( unsigned j=0; j < (nrcor ); j++)
+            {
+                gpf->fparam << "0,";
+            }
+        }
+
 
     gpf->fparam << endl;
     }

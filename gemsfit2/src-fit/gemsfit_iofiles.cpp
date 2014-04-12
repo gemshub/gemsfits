@@ -643,11 +643,12 @@ gpf->flog << " : " << format << endl;
         string line, allparam;
         string LogK_s;
         string sub_LogK;
-        int pos_start, pos_end;
+        int pos_start, pos_end, check;
         unsigned int i;
         ifstream param_stream;
         string f3("<logK>");
-        string f4("End");
+        string f4;
+
 
         param_stream.open(fname.c_str());
         if( param_stream.fail() )
@@ -663,8 +664,12 @@ gpf->flog << " : " << format << endl;
         for( i=0; i < data.size(); i++ )
         allparam += data[i];
 
+        check = allparam.find("#");
+        if (check < 0)  f4 = "<";
+        else f4 = "#";
+
             pos_start = allparam.find(f3);
-            pos_end   = allparam.find(f4,pos_start);
+            pos_end   = allparam.find(f4,pos_start +1 );
             LogK_s = allparam.substr((pos_start+f3.length()),(pos_end-pos_start-f3.length()));
             istringstream LogK_ss(LogK_s);
             istringstream test_ss(LogK_s);
@@ -782,7 +787,7 @@ void get_gems_fit_DBR_txt(TNode* node , opti_vector *op)
                 format.erase(k, 1);
                 }
 gpf->flog<< "Parameter: " << DataBR_fields[nfild].name << " Type " << vFormats[ii].type << " Index " << vFormats[ii].index << endl;
-gpf->flog<< vFormats[ii].format << endl;
+gpf->flog<< format << endl;
                 if ((vFormats[ii].type == ft_F))
                 {
                     if (vFormats[ii].format.size() > 1)

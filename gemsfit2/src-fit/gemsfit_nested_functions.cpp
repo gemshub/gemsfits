@@ -40,13 +40,12 @@
 void nestedfun (TGfitTask *sys)
 {
     // loop over the nested functions
-    for  (unsigned int i = 0; i<sys->experiments.size(); i++)
-    {
-
 #ifdef useomp
     omp_set_num_threads(sys->MPI);
     #pragma omp parallel for
 #endif
+    for  (unsigned int i = 0; i<sys->experiments.size(); i++)
+    {
         for (unsigned int j = 0; j<sys->Tfun->nestfun.size(); j++)
         {
             string param_type = sys->Tfun->nestfun[j].Ptype;
@@ -120,11 +119,8 @@ void nestedfun (TGfitTask *sys)
                 x.clear(); UB.clear(); LB.clear(); sys->PAndx.clear(); sys->vPAndx[P_id]->ndx.clear();
 
 //                cout << "after: "<<sys->NodT[i]->Get_IC() << endl;
-
             }
-
         }
-
     }
 }
 
