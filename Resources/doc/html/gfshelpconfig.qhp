@@ -5,19 +5,19 @@
     <filterSection>
  <toc>
  	<section title="About the GEMSFITS Code Package" ref="gemsfit-about.html">
-    	<section title="Development team and history" ref="gemsfit-team.html"></section>
-      	<section title="Bibliography" ref="gemsfit-litref.html"></section>
-      	<section title="License and terms of use" ref="gemsfit-terms-of-use.html"></section>
+	    	<section title="Development team and history" ref="gemsfit-team.html"></section>
+      		<section title="Bibliography" ref="gemsfit-litref.html"></section>
+     	 	<section title="License and terms of use" ref="gemsfit-terms-of-use.html"></section>
    	</section>
    	<section title="How to Use GEMSFITS Shell" ref="gemsfits-howto.html">
 		<section title="How to do GEM input parameter fitting using gemsfit2" ref="howto-gemsfit.html"></section>
-      	<section title="How to maintain experimental database using csvtoejdb utility" ref="howto-csvtoejdb.html"></section>
-      	<section title="How to prepare the gemsfit2 task input file" ref="gemsfit-input-file.html"></section>
-      	<section title="How to run the gemsfit2 program" ref="howto-run-gemsfit.html"></section>
-      	<section title="How to interpret gemsfit2 output files" ref="gemsfit_statistics.html"></section>
-    </section>
-    <section title="GEMSFITS Users Reference" ref="gemsfit-useref.html">
-      <section title="Technical information and how to build GEMSFITS" ref="gemsfit-techinfo.html"></section>        
+      		<section title="How to maintain experimental database using csvtoejdb utility" ref="howto-csvtoejdb.html"></section>
+      		<section title="How to prepare the gemsfit2 task input file" ref="gemsfit-input-file.html"></section>
+      		<section title="How to run the gemsfit2 program" ref="howto-run-gemsfit.html"></section>
+      		<section title="How to interpret gemsfit2 output files" ref="gemsfit_statistics.html"></section>
+    	</section>
+   	 <section title="GEMSFITS Users Reference" ref="gemsfit-useref.html">
+     		 <section title="Technical information and how to build GEMSFITS" ref="gemsfit-techinfo.html"></section>        
    	</section>
  </toc>
 
