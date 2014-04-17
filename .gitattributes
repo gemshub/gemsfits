@@ -40,6 +40,8 @@ Tests/CSH3T2/EJDB/cshsolubil_tasks -text
 Tests/CSH3T2/GEMS/CSHQ-subl.zip -text
 Tests/CSHQsol/EJDB/cshqsoldata -text
 Tests/CSHQsol/EJDB/cshqsoldata_experiments -text
+Tests/CSHQsol/EJDB/cshqsoldata_fits -text
+Tests/CSHQsol/EJDB/cshqsoldata_tasks -text
 Tests/CSHtob01/EJDB/cashsolub -text
 Tests/CSHtob01/EJDB/cashsolub_experiments -text
 Tests/CSHtob02/CASH-DATA-TEMPLATE.xls -text
