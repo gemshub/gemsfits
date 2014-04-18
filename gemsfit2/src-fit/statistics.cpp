@@ -1235,8 +1235,8 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
             fitparam[j+p]->mcconfi.push_back(w);
             T = boost::math::quantile(boost::math::complement(dist, 0.1/ 2));
             w = T * SD_Fparam[j] /*/ sqrt(double( number_of_measurements ))*/;
-            fitparam[j]->mcSTDEV = SD_Rparam[j];
-            fitparam[j]->mcMEAN = MN_Rparam[j];
+            fitparam[j+p]->mcSTDEV = SD_Rparam[j];
+            fitparam[j+p]->mcMEAN = MN_Rparam[j];
             fitparam[j+p]->mcconfi.push_back(w);
         }
 
