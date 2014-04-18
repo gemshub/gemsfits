@@ -130,7 +130,7 @@ static const char *url = "url"; ///	                              1		     string
     // Reaction specific
     static const char *Ref = "Ref"; ///                                     string              reference for logK
     static const char *logK = "logK"; ///                                   double              reaction constant
-    static const char *rDC = "rDC";///                                      string              rection dependent component
+    static const char *rDC = "rDC";///                                      string              reaction dependent component
     static const char *nC = "nC"; ///                                       integer             number of components involved in the reaction
                         // species
     static const char *RC = "RC"; ///                                       array               array of components names
@@ -177,7 +177,7 @@ static const char *inverr_norm = "inverr_norm"; ///                         stri
 // Kaywords for units
 static const char *molal = "molal"; ///                                     string              molality moles/kg
 static const char *loga = "loga"; ///                                       string              log(activity)
-static const char *logm = "log_molal"; ///                                       string              log(molality)
+static const char *logm = "log_molal"; ///                                  string              log(molality)
 static const char *_loga = "-loga"; ///                                     string              -log(consntration) used for pH
 static const char *gram = "g"; ///                                          string              mass, grams
 static const char *kgram = "kg"; ///                                        string              mass, kg

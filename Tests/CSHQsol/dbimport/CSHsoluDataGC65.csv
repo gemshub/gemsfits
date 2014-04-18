@@ -1,4 +1,4 @@
-id,sample,expdataset,comment,type,sT,sP,comp.SiO2@,error,unit,comp.H2O@,error,unit,comp.Ca(OH)2,error,unit,comp.N2,error,unit,comp.O2,error,unit,phase.aq_gen.pH,error,unit,phase.aq_gen.IC.Si.Q,error,unit,phase.aq_gen.IC.Ca.Q,error,unit,phase.C-S-H-Q.Q,error,unit,phase.C-S-H-Q.MF.Si/Si,error,unit,phase.C-S-H-Q.MF.Ca/Si,error,unit
+id,sample,expdataset,comment,type,sT,sP,comp.SiO2@,error,unit,comp.H2O@,error,unit,comp.Ca(OH)2,error,unit,comp.N2,error,unit,comp.O2,error,unit,phase.aq_gen.pH,error,unit,phase.aq_gen.IC.Si.Q,error,unit,phase.aq_gen.IC.Ca.Q,error,unit,phase.C-S-H-Q.Q,error,unit,phase.C-S-H-Q.MR.Si/Si,error,unit,phase.C-S-H-Q.MR.Ca/Si,error,unit
 1,T0.05,GC65,solubility,coprec,25,1,8.05,,g,1000,,g,0.5,,g,0.008,,g,0.002,,g,9.32,0.02,-loga,0.00231,0.00001,molal,0.00074,0.00001,molal,0.05,,mol,1,,,0.67,0.05,molratio
 2,T0.07,GC65,,coprec,25,1,8.05,,g,1000,,g,0.69,,g,0.008,,g,0.002,,g,9.16,0.02,-loga,0.0026,0.00001,molal,0.00093,0.00001,molal,0.07,,mol,1,,,0.67,0.05,molratio
 3,T0.14,GC65,,coprec,25,1,8.05,,g,1000,,g,1.39,,g,0.008,,g,0.002,,g,9.65,0.02,-loga,0.0034,0.00001,molal,0.00147,0.00001,molal,0.14,,mol,1,,,0.67,0.05,molratio

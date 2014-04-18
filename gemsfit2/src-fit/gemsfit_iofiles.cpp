@@ -1192,7 +1192,7 @@ outField Data_Manager_fields[9] =
       "\n#  Example of a target function with a nested objective function to titrate for a given pH:"
       "\n#  \'{ \"Target\": \"name\", \"TT\": \"lsq\", \"WT\": \"inverr\", \"OFUN\":"
       "\n#      ["
-      "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"IC\", \"CN\": \"Al\", \"unit\": \"logm\" },"
+      "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"IC\", \"CN\": \"Al\", \"unit\": \"log_molal\" },"
       "\n#      ], \"NFUN\": "
       "\n#      ["
       "\n#         { \"Ptype\": \"bIC\", \"EPH\": \"aq_gen\", \"CT\": \"prop\", \"CN\": \"pH\", \"unit\": \"-loga\" } "

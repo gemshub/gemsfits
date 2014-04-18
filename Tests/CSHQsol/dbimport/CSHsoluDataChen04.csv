@@ -1,4 +1,4 @@
-id,sample,expdataset,comment,type,sT,sP,comp.SiO2@,error,unit,comp.H2O@,error,unit,comp.Ca(OH)2,error,unit,comp.N2,error,unit,comp.O2,error,unit,phase.aq_gen.pH,error,unit,phase.aq_gen.IC.Si.Q,error,unit,phase.aq_gen.IC.Ca.Q,error,unit,phase.C-S-H-Q.Q,error,unit,phase.C-S-H-Q.MF.Si/Si,error,unit,phase.C-S-H-Q.MF.Ca/Si,error,unit
+id,sample,expdataset,comment,type,sT,sP,comp.SiO2@,error,unit,comp.H2O@,error,unit,comp.Ca(OH)2,error,unit,comp.N2,error,unit,comp.O2,error,unit,phase.aq_gen.pH,error,unit,phase.aq_gen.IC.Si.Q,error,unit,phase.aq_gen.IC.Ca.Q,error,unit,phase.C-S-H-Q.Q,error,unit,phase.C-S-H-Q.MR.Si/Si,error,unit,phase.C-S-H-Q.MR.Ca/Si,error,unit
 22,C_01,CH04,curve_C,C3S_hyd,22,1,10,,g,1000,,g,36.99,,g,0.008,,g,0.002,,g,,,,0.00005,0.00001,molal,0.02083,0.00001,molal,3,,mol,1,,,1.5,0.05,molratio
 23,C_02,CH04,curve_C,C3S_hyd,22,1,10,,g,1000,,g,36.87,,g,0.008,,g,0.002,,g,,,,0.00004,0.00001,molal,0.02059,0.00001,molal,2.99,,mol,1,,,1.5,0.05,molratio
 24,C_03,CH04,curve_C,C3S_hyd,22,1,10,,g,1000,,g,32.56,,g,0.008,,g,0.002,,g,,,,0.00005,0.00001,molal,0.01922,0.00001,molal,2.64,,mol,1,,,1.5,0.05,molratio
