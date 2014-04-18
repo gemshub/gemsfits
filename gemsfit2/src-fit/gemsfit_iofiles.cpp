@@ -681,12 +681,12 @@ gpf->flog << " : " << format << endl;
             }while(test_ss);
             test.pop_back();
 
-            if ((test.size() != size*nr_reac) && (test.size() != 0))
-            {
-                cout << "Number of logk's doesn't correspond to number of T*P*reactions! " << endl;
-                cout << "You need " << size*nr_reac << " <logK> entries in the input file, you have " << test.size() << endl;
-                exit(1);
-            }
+//            if ((test.size() != size*nr_reac) && (test.size() != 0))
+//            {
+//                cout << "Number of logk's doesn't correspond to number of T*P*reactions! " << endl;
+//                cout << "You need " << size*nr_reac << " <logK> entries in the input file, you have " << test.size() << endl;
+//                exit(1);
+//            }
 
             if (test.size() != 0)
             do
@@ -1719,7 +1719,7 @@ void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat /* , string nfild */ )
     r->nC = atoi(out.at(0).c_str());
     out.clear();
 
-    temp->parse_JSON_object(Jformat.format, keys::rDC, out);
+    temp->parse_JSON_object(Jformat.format, keys::DC, out);
     r->Dc_name = out.at(0);
     out.clear();
 

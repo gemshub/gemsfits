@@ -238,7 +238,7 @@ void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
             {
                 double error_perc = sys->experiments[i]->expphases[p]->phIC[e]->Qerror * 100 / sys->experiments[i]->expphases[p]->phIC[e]->Qnt;
                 sys->experiments[i]->expphases[p]->phIC[e]->Qnt = log10(sys->experiments[i]->expphases[p]->phIC[e]->Qnt);
-                sys->experiments[i]->expphases[p]->phIC[e]->Qerror = sys->experiments[i]->expphases[p]->phIC[e]->Qnt * error_perc / 100;
+                sys->experiments[i]->expphases[p]->phIC[e]->Qerror = fabs(sys->experiments[i]->expphases[p]->phIC[e]->Qnt * error_perc / 100);
                 sys->experiments[i]->expphases[p]->phIC[e]->Qunit = keys::logm;
             }
             else
@@ -269,7 +269,7 @@ void check_unit_dcomp(int i, int p, int dc, int dcp, string unit, TGfitTask *sys
             {
                 double error_perc = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt;
                 sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt = log10(sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt);
-                sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt * error_perc / 100;
+                sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror = fabs(sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt * error_perc / 100);
                 sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit = keys::log_molfrac;
             }
             else
@@ -277,7 +277,7 @@ void check_unit_dcomp(int i, int p, int dc, int dcp, string unit, TGfitTask *sys
             {
                 double error_perc = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt;
                 sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt / 2.302585093;
-                sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt * error_perc / 100;
+                sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror = fabs(sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt * error_perc / 100);
                 sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit = keys::log_molfrac;
 
             }
@@ -295,7 +295,7 @@ void check_unit_dcomp(int i, int p, int dc, int dcp, string unit, TGfitTask *sys
             {
                 double error_perc = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt;
                 sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt = log(sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt);
-                sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt * error_perc / 100;
+                sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror = fabs(sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt * error_perc / 100);
                 sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit = keys::ln_molfrac;
             }
             else
@@ -303,7 +303,7 @@ void check_unit_dcomp(int i, int p, int dc, int dcp, string unit, TGfitTask *sys
             {
                 double error_perc = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt;
                 sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt * 2.302585093;
-                sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt * error_perc / 100;
+                sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror = fabs(sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt * error_perc / 100);
                 sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit = keys::ln_molfrac;
             }
             else
@@ -326,7 +326,7 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
             {
                 double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->Qnt;
                 sys->experiments[i]->expphases[p]->phprop[pp]->Qnt = -log10(sys->experiments[i]->expphases[p]->phprop[pp]->Qnt);
-                sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt * error_perc / 100;
+                sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = fabs(sys->experiments[i]->expphases[p]->phprop[pp]->Qnt * error_perc / 100);
                 sys->experiments[i]->expphases[p]->phprop[pp]->Qunit = keys::_loga;
             }
             else
@@ -342,7 +342,7 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
                 {
                     double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->Qnt;
                     sys->experiments[i]->expphases[p]->phprop[pp]->Qnt = pow(10,-(sys->experiments[i]->expphases[p]->phprop[pp]->Qnt));
-                    sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt * error_perc / 100;
+                    sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = fabs(sys->experiments[i]->expphases[p]->phprop[pp]->Qnt * error_perc / 100);
                     sys->experiments[i]->expphases[p]->phprop[pp]->Qunit = keys::molal;
                 }
                 else
@@ -359,7 +359,7 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
                     {
                         double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->Qnt;
                         sys->experiments[i]->expphases[p]->phprop[pp]->Qnt = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt / 1000;
-                        sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt * error_perc / 100;
+                        sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = fabs(sys->experiments[i]->expphases[p]->phprop[pp]->Qnt * error_perc / 100);
                         sys->experiments[i]->expphases[p]->phprop[pp]->Qunit = keys::kgram;
                     }
                     else
@@ -376,7 +376,7 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
                         {
                             double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->Qnt;
                             sys->experiments[i]->expphases[p]->phprop[pp]->Qnt = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt * 1000;
-                            sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt * error_perc / 100;
+                            sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = fabs(sys->experiments[i]->expphases[p]->phprop[pp]->Qnt * error_perc / 100);
                             sys->experiments[i]->expphases[p]->phprop[pp]->Qunit = keys::gram;
                         }
                         else
@@ -393,7 +393,7 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
                             {
                                 double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->Qnt;
                                 sys->experiments[i]->expphases[p]->phprop[pp]->Qnt = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt * 1e06;
-                                sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt * error_perc / 100;
+                                sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = fabs(sys->experiments[i]->expphases[p]->phprop[pp]->Qnt * error_perc / 100);
                                 sys->experiments[i]->expphases[p]->phprop[pp]->Qunit = keys::cm3;
                             }
                             else
@@ -410,7 +410,7 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
                                 {
                                     double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->Qnt;
                                     sys->experiments[i]->expphases[p]->phprop[pp]->Qnt = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt / 1e06;
-                                    sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt * error_perc / 100;
+                                    sys->experiments[i]->expphases[p]->phprop[pp]->Qerror = fabs(sys->experiments[i]->expphases[p]->phprop[pp]->Qnt * error_perc / 100);
                                     sys->experiments[i]->expphases[p]->phprop[pp]->Qunit = keys::m3;
                                 }
                                 else
