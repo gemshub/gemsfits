@@ -1100,8 +1100,13 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
         id++;
     }// end Monte Carlo for-loop
 
-    double residuals_sys;
-    residuals_sys = gfittask->get_sum_of_residuals( );
+    double residual_sys;
+    residual_sys = gfittask->get_sum_of_residuals( );
+
+
+    if (gfittask->Opti->OptEquilibrium)
+    gems3k_wrap( residual_sys, optv_backup, gfittask );
+    else tsolmod_wrap( residual_sys, optv_backup, gfittask );
 
         double StandardDeviation = 0.;
         arma::vec MCparams( num_of_MC_runs );
