@@ -164,9 +164,9 @@ void adjust_RDc (TGfitTask *sys)
                 int species_index = sys->Opti->reactions[i]->rdc_species_ind[sys->Opti->reactions[i]->rdc_species_ind.size()-1];
 
                 // for standard sate at 25 C and 1 bar
-                for (unsigned int j=0; j < sys->Opti->reactions[i]->rdc_species.size()/*-1*/; ++j ) // calculates DG without the last species which is the constrained one
+                for (unsigned int j=0; j < sys->Opti->reactions[i]->rdc_species.size()-1; ++j ) // calculates DG without the last species which is the constrained one
                 {
-                    if (sys->Opti->reactions[i]->rdc_species[j] != sys->Opti->reactions[i]->Dc_name )
+//                    if (sys->Opti->reactions[i]->rdc_species[j] != sys->Opti->reactions[i]->Dc_name )
                     delta_G += sys->Opti->reactions[i]->rdc_species_coef[j] * sys->NodT[n]->DC_G0(sys->Opti->reactions[i]->rdc_species_ind[j], 1e+05, 298.15, false);
                 }
 
@@ -182,9 +182,9 @@ void adjust_RDc (TGfitTask *sys)
                 // for all TP pairs
                 for (unsigned int j=0; j<sys->TP_pairs[0].size(); j++) // loops trough all unique TP_pairs
                 {
-                    for (unsigned int k=0; k < sys->Opti->reactions[i]->rdc_species.size()/*-1*/; ++k ) // calculates DG without the last species which is the constrained one
+                    for (unsigned int k=0; k < sys->Opti->reactions[i]->rdc_species.size()-1; ++k ) // calculates DG without the last species which is the constrained one
                     {
-                        if (sys->Opti->reactions[i]->rdc_species[k] != sys->Opti->reactions[i]->Dc_name )
+//                        if (sys->Opti->reactions[i]->rdc_species[k] != sys->Opti->reactions[i]->Dc_name )
                         delta_G += sys->Opti->reactions[i]->rdc_species_coef[k]
                                 * sys->NodT[n]->DC_G0(sys->Opti->reactions[i]->rdc_species_ind[k], sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, false);
                     }
