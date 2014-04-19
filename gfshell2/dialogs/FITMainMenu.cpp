@@ -734,7 +734,7 @@ void FITMainWindow::CmCancelGemsfit()
         //ui->action_Show_Results->setEnabled(false);
         //ui->actionCancel_gemsfit2_run->setEnabled(true);
 
-        setStatusText( "Killed  run femsfit task" );
+        setStatusText( "Killed gemsfit2 run for the current task..." );
     }
     catch( TError& err )
     {
