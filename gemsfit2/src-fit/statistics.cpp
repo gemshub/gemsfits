@@ -1226,7 +1226,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
             fitparam[j]->mcMEAN = MN_Fparam[j];
             p++;
         }
-        p--;
+//        p--;
 
         for( j=0; j<n_Rparam; j++ ) // cols
         {
