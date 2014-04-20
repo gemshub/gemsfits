@@ -155,7 +155,7 @@
 
 # PMc: Tables (in TSolMod convention) of interaction parameter coefficients  for non-ideal solutions
 <PMc>
-0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 1 0 0 0 0 0 11 0 0 12 0 0 13 0 0 14 0 0 15 0 0 16 0 0 
 
 # LsMdc: Dimensions of TSolMod <DMc> and <MoiSN> arrays [nPS*3]: In each row (for phase):
 # [0] number of parameters per component; [1] 0; [2] 0. For multi-site (sublattice) models: 
@@ -167,7 +167,7 @@
 
 # DMc: Tables (in TSolMod convention) of  parameter coefficients for dependent components
 <DMc>
-0 0 0 0 
+1 1 1 1 
 # LsMdc2: [3*FIs] - number of DQF coeffs; reciprocal coeffs per end member
 <LsMdc2>
 0 0 0 
