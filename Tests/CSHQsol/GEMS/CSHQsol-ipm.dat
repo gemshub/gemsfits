@@ -59,7 +59,7 @@
 <pa_DP>  130
 
 # IIM: Maximum allowed number of iterations in one main GEM IPM descent run { 7000 }
-<pa_IIM>  1000
+<pa_IIM>  7000
 
 # PD: Mode of calculation of DC activity coefficients { 2 } 
 <pa_PD>  2
@@ -155,7 +155,7 @@
 
 # PMc: Tables (in TSolMod convention) of interaction parameter coefficients  for non-ideal solutions
 <PMc>
-0 0 1 0 0 0 0 0 11 0 0 12 0 0 13 0 0 14 0 0 15 0 0 16 0 0 
+0 0 1 0 0 0 0 0 1e-3 0 0 2e-3 0 0 3e-3 0 0 4e-3 0 0 5e-3 0 0 6e-3 0 0 
 
 # LsMdc: Dimensions of TSolMod <DMc> and <MoiSN> arrays [nPS*3]: In each row (for phase):
 # [0] number of parameters per component; [1] 0; [2] 0. For multi-site (sublattice) models: 
