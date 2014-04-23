@@ -27,6 +27,7 @@ using namespace std;
     extern int slave_counter;
 //}
 
+//    extern int sizeTP;
 
     extern int	n_procs_boost;
     extern int	proc_id_boost;

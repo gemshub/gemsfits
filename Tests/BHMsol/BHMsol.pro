@@ -6,5 +6,5 @@ GEMSFITSAPP=" GEMSFITS v.0.1 r.373 "
 ProjDatabaseName=BHMsol
 ProjDatabasePath=/EJDB
 ProjFileName=BHMsol
-ProjFolderPath=/home/dmiron/devGEMSFIT2/devShell/gemsfit/Tests/BHMsol
+ProjFolderPath=/home/dmiron/devGEMSFITS/devGFshell/gemsfits/Tests/BHMsol
 TaskCasesDataColl=tasks

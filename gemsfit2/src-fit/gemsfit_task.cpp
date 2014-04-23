@@ -51,6 +51,7 @@
 using namespace std;
 
 int master_counter;
+//int sizeTP;
 
 istream& f_getline(istream& is, string& str, char delim);
 
@@ -90,6 +91,12 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     setnodes ( );  // initialization of nodes each for one experimental point (system)
     // getting the parameters to be optimized from DCH, DBR and multi structures, and optimization settings form the input file
     gpf->flog << "07. gemsfit_task.cpp(92). Initializing optimization structure; " << endl;
+
+//    gpf->ftmp.open("tmp", ios::trunc);
+//    if( gpf->ftmp.fail() )
+//    { cout<<"Log fileopen error"<<endl; exit(1); }
+    gpf->sizeTP = this->TP_pairs[0].size();
+
     Opti = new optimization ( );
     gpf->flog << "10. gemsfit_task.cpp(94). Initializing the Target function structure & get_DatTarget(); " << endl;
     Tfun = new TargetFunction;

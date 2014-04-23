@@ -531,7 +531,7 @@ gpf->flog << " : " << format << endl;
 }
 
 /// Reading part dataCH structure from OptParamFile text file
-void get_gems_fit_DCH_txt(TNode* node, opti_vector* op )
+void get_gems_fit_DCH_txt(TNode* node, opti_vector* op)
 {
     // open file for reading
     string fname = gpf->OptParamFile();
@@ -636,6 +636,8 @@ gpf->flog << " : " << format << endl;
             ++sizep;
     }
     size = size*sizep;
+    size = gpf->sizeTP;
+    if (size > 1) size++;
 
     if (op->h_RDc)
     {
@@ -681,12 +683,12 @@ gpf->flog << " : " << format << endl;
             }while(test_ss);
             test.pop_back();
 
-//            if ((test.size() != size*nr_reac) && (test.size() != 0))
-//            {
-//                cout << "Number of logk's doesn't correspond to number of T*P*reactions! " << endl;
-//                cout << "You need " << size*nr_reac << " <logK> entries in the input file, you have " << test.size() << endl;
-//                exit(1);
-//            }
+            if ((test.size() != size*nr_reac) && (test.size() != 0))
+            {
+                cout << "Number of logk's doesn't correspond to number of T*P*reactions! " << endl;
+                cout << "You need " << size*nr_reac << " <logK> entries in the input file, you have " << test.size() << endl;
+                exit(1);
+            }
 
             if (test.size() != 0)
             do

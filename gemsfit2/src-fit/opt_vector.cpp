@@ -25,6 +25,7 @@
 
 #include "opt_vector.h"
 #include "gemsfit_iofiles.h"
+#include "gemsfit_global_variables.h"
 
 opti_vector::opti_vector( )
 {
@@ -40,6 +41,8 @@ opti_vector::opti_vector( )
     this->h_RDc     = false;
     this->h_Lp      = false;
     this->h_nestfun  = false;
+
+//    cout << sizeTP << endl;
 
     gpf->flog << "08. opt_vector.cpp(44). Reading optimized parameters from the input file; " << endl;
     get_gems_fit_DCH_txt( node, this ); // reading DCH parameters

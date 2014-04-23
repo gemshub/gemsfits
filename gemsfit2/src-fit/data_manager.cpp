@@ -956,7 +956,7 @@ void Data_Manager::get_distinct_TP( )
         }
         isfound = false;
         isfound2 = false;
-    }
+    }   
 }
 
 void Data_Manager::parse_JSON_object(string query, const char* key, vector<string> &result)

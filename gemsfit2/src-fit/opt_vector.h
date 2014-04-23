@@ -37,6 +37,7 @@
 #include "node.h"
 #include "verror.h"
 
+
 class opti_vector
 {
 private:

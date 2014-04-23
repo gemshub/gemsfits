@@ -189,7 +189,9 @@ void adjust_RDc (TGfitTask *sys)
                                 * sys->NodT[n]->DC_G0(sys->Opti->reactions[i]->rdc_species_ind[k], sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, false);
                     }
 
+                    if (sys->Opti->reactions[i]->logK_TPpairs.size() > 1) // more than just 25 deg C 1 bar experimental data
                     new_G0 = (Rln*(sys->TP_pairs[0][j]+273.15)*sys->Opti->reactions[i]->logK_TPpairs[j+1]) - delta_G; // j = 0 the 25 C 1 bar
+                    else new_G0 = (Rln*(sys->TP_pairs[0][j]+273.15)*sys->Opti->reactions[i]->logK_TPpairs[j]) - delta_G;
                     delta_G = 0.0;
 
                     sys->NodT[n]->Set_DC_G0(species_index, sys->TP_pairs[1][j]*100000, sys->TP_pairs[0][j]+273.15, new_G0);

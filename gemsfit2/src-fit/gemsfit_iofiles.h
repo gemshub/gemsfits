@@ -112,6 +112,9 @@ public:
     ofstream fmc;
     ofstream fstat;
     ofstream fsens;
+    ofstream ftmp;
+
+    int sizeTP = 0;
 
     TGfitPath(int argc, char* argv[]);
     ~TGfitPath();
