@@ -1722,7 +1722,7 @@ void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat /* , string nfild */ )
     out.clear();
 
     temp->parse_JSON_object(Jformat.format, keys::DC, out);
-    r->Dc_name = out.at(0);
+    r->DCn = out.at(0);
     out.clear();
 
     temp->parse_JSON_object(Jformat.format, keys::RC, out);

@@ -71,14 +71,14 @@ void opti_vector::get_RDc_indexes (TNode *node, opti_vector *ov)
     // maybe try to add MPI here??
     for (unsigned int j = 0; j < ov->reactions.size(); ++j )
     {
-        index_species = node->DC_name_to_xCH( ov->reactions[j]->Dc_name.c_str() );
+        index_species = node->DC_name_to_xCH( ov->reactions[j]->DCn.c_str() );
         if( index_species < 0 )
         {
             throw index_species;
         }
         else
         {
-            ov->reactions[j]->DcIndex = index_species;
+            ov->reactions[j]->DCndx = index_species;
         }
 
         for (unsigned int i=0; i<ov->reactions[j]->rdc_species.size(); ++i )

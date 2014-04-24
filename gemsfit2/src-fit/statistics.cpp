@@ -266,7 +266,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
             fitparam.push_back(new parameters);
             fitparam[np+i]->Ptype = "G0";
             fitparam[np+i]->Pfittype = "R";
-            fitparam[np+i]->Pname = gfittask->Opti->reactions[i]->Dc_name;
+            fitparam[np+i]->Pname = gfittask->Opti->reactions[i]->DCn;
             fitparam[np+i]->Fval = gfittask->Opti->reactions[i]->std_gibbs;
             fitparam[np+i]->Ival = gfittask->Opti->reactions[i]->Ival;
             fitparam[np+i]->CSS = 0.0;

@@ -88,13 +88,13 @@ public:
 
     struct RDc /// structure storing reaction constraint information
     {
-        int DcIndex; /// index of the dependent component
+        int DCndx; /// index of the dependent component
         double Ival; /// initial value
 //        double logK; /// log K of the reaction
         vd logK_TPpairs; /// log K for all T and P pairs
         vd dG_reaction_TP; /// delta G of the reaction for all T and P pairs
         int nC; /// number of components
-        string Dc_name; /// species name
+        string DCn; /// species name
         vs rdc_species; /// Names of species involved in reaction (the last one is the fixed species)
         vi rdc_species_ind; /// indices of RDC species in GEMS3K - read from node class after reading the experimental data
         vi rdc_species_coef; /// reaction coeficients
