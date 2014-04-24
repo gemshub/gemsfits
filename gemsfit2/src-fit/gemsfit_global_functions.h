@@ -78,7 +78,7 @@ void tsolmod_wrap( double &residual, const std::vector<double> &opt, TGfitTask *
 * @author DM
 * @date 10.06.2013
 */
-void gradient( vector<double> opt, vector<double> &grad, TGfitTask *sys );
+void gradient(vector<double> optn, vector<double> &grad, TGfitTask *sys );
 
 /**
 * Gets the median form a vector of values

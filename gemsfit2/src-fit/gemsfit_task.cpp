@@ -215,9 +215,45 @@ void TGfitTask::init_optim( std::vector<double> &optv_, /*int &countit,*/ double
         nlopt::opt nlopti_( nlopt::LD_SLSQP, optv_.size() );
         build_optim( nlopti_, optv_, weighted_Tfun_sum_of_residuals );
     }
+    else if( Opti->OptAlgo.compare( "LN_SBPLX" ) == 0 )
+    {
+        nlopt::opt nlopti_( nlopt::LN_SBPLX, optv_.size() );
+        build_optim( nlopti_, optv_, weighted_Tfun_sum_of_residuals );
+    }
+    else if( Opti->OptAlgo.compare( "LN_NEWUOA" ) == 0 )
+    {
+        nlopt::opt nlopti_( nlopt::LN_NEWUOA, optv_.size() );
+        build_optim( nlopti_, optv_, weighted_Tfun_sum_of_residuals );
+    }
+    else if( Opti->OptAlgo.compare( "LN_PRAXIS" ) == 0 )
+    {
+        nlopt::opt nlopti_( nlopt::LN_PRAXIS, optv_.size() );
+        build_optim( nlopti_, optv_, weighted_Tfun_sum_of_residuals );
+    }
+    else if( Opti->OptAlgo.compare( "LD_VAR1" ) == 0 )
+    {
+        nlopt::opt nlopti_( nlopt::LD_VAR1, optv_.size() );
+        build_optim( nlopti_, optv_, weighted_Tfun_sum_of_residuals );
+    }
+    else if( Opti->OptAlgo.compare( "LD_LBFGS" ) == 0 )
+    {
+        nlopt::opt nlopti_( nlopt::LD_LBFGS, optv_.size() );
+        build_optim( nlopti_, optv_, weighted_Tfun_sum_of_residuals );
+    }
     else if( Opti->OptAlgo.compare( "GD_MLSL" ) == 0 )
     {
         nlopt::opt nlopti_( nlopt::GD_MLSL, optv_.size() );
+        nlopt::opt local ( nlopt::LN_BOBYQA, optv_.size() );
+
+        local.set_xtol_rel( Opti->OptTolRel );
+
+        // specify absolute tolerance on function value
+        local.set_xtol_abs( Opti->OptTolAbs );
+
+        // maximum number of iterations
+        local.set_maxeval( 100 );
+
+        nlopti_.set_local_optimizer(local);
         build_optim( nlopti_, optv_, weighted_Tfun_sum_of_residuals );
     }
     else

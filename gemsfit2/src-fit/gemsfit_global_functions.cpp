@@ -51,16 +51,17 @@ double Equil_objective_function_callback( const std::vector<double> &opt, std::v
     // Rescale optimization to unconvert normalization of parameters
     if( sys->NormParams )
     {
+
+        /// GRadient calculation
+        if (sys->Opti->OptAlgo.compare(1,1,"D") == 0)
+        {
+            gradient(opt, grad, sys);
+        }
+
         vector<double> optV( opt.size() );
         for( i=0; i<opt.size(); i++ )
         {
             optV[i] = opt[i] * fabs(sys->Opti->opt[i]);
-        }
-
-        /// GRadient calculation
-        if (sys->Opti->OptAlgo.compare(2,1,"D") == 0)
-        {
-            gradient(optV, grad, sys);
         }
         sys->h_grad = false;
 
@@ -251,15 +252,20 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 }
 
 
-void gradient( vector<double> opt, vector<double> &grad, TGfitTask *sys )
+void gradient( vector<double> optn, vector<double> &grad, TGfitTask *sys )
 {
     double residual_sys;
 
     double computed_up, param_up;
     double computed_lo, param_lo;
-    std::vector<double> opt_scan;
+    std::vector<double> opt_scan, opt;
 
     sys->h_grad = true;
+
+    for(unsigned i=0; i<optn.size(); i++ )
+    {
+        opt.push_back(optn[i] * fabs(sys->Opti->opt[i]));
+    }
 
     grad.clear();
     grad.resize(opt.size());
@@ -273,14 +279,14 @@ void gradient( vector<double> opt, vector<double> &grad, TGfitTask *sys )
 
         // Central finite differences:
         opt_scan[i] = opt[i] + opt[i]*delta;
-        param_up = opt[i] + opt[i]*delta;
+        param_up = optn[i] + optn[i]*delta;
         residual_sys = 0.;
         gems3k_wrap( residual_sys, opt_scan, sys );
 //cout<<"residual_sys = "<<residual_sys<<endl;
         computed_up = residual_sys;
 
         opt_scan[i] = opt[i] - opt[i]*delta;
-        param_lo = opt[i] - opt[i]*delta;
+        param_lo = optn[i] - optn[i]*delta;
         residual_sys = 0.;
         gems3k_wrap( residual_sys, opt_scan, sys );
 //cout<<"residual_sys = "<<residual_sys<<endl;
