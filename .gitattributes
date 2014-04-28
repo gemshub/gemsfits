@@ -6,6 +6,9 @@ Resources/doc/html/gfshelp.qch -text
 Resources/doc/html/gfshelp.qhc -text
 Resources/help/gfshelp.qch -text
 Resources/help/gfshelp.qhc -text
+Tests/1CASHNK/EJDB/cashnkdata -text
+Tests/1CASHNK/EJDB/cashnkdata_experiments -text
+Tests/1CASHNK/EJDB/cashnkdata_tasks -text
 Tests/BHMsol/01/gf2run.bat -text svneol=unset#application/octet-stream
 Tests/BHMsol/EJDB/BHMsol -text
 Tests/BHMsol/EJDB/BHMsol_experiments -text
