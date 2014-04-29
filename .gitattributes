@@ -56,6 +56,12 @@ Tests/CaSrCO3/EJDB/solargstr -text
 Tests/CaSrCO3/EJDB/solargstr_experiments -text
 Tests/CaSrCO3/GEMS/GF2-SrCaC.zip -text
 Tests/Kinet/GEMS/CarbSea.zip -text
+Tests/Pitzer/EJDB/NaCl_RHO -text
+Tests/Pitzer/EJDB/NaCl_RHO_experiments -text
+Tests/Pitzer/EJDB/NaCl_RHO_tasks -text
+Tests/Pitzer/GEMS/Selektor-Prj-Pitzer.zip -text
+Tests/Pitzer/dbimport/data_densNaCl.xlsx -text
+Tests/Pitzer/dbimport/densNaCl.xlsx -text
 Tests/SS_INPUT/SS_GEMSFIT_input.dat -text
 Tests/SS_INPUT/qtz_h2o_test-dat.lst -text
 Tests/SS_INPUT/qtz_h2o_test-dbr-0-0000.dat -text
