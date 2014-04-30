@@ -72,7 +72,7 @@ TPlot::TPlot( QSortFilterProxyModel *aModel, int lines, const vector<int>& xval,
    // put graph by column
     dY1 = ycolms.size();
     nAbs = xcolms.size();
-    ErrorIf( dY1== 0, "Graphics", "You fogot select an ordinate" );
+    ErrorIf( dY1== 0, "Graphics:", " Please, select an ordinate ..." );
 }
 
 TPlot::TPlot( const TPlot& plt, int aFirst ):
