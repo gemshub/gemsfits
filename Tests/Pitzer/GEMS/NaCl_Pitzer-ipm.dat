@@ -1,5 +1,5 @@
 #  GEMS3K v.3.3 r.929 (dev) 
-# File: /home/dmiron/devGEMSFITS/devGFshell/gemsfits/Tests/Pitzer/GEMS/NaCl_Pitzer-ipm.dat
+# File: /home/dmiron/devGEMSFITS/devGFshell/gemsfits/Tests/Pitzer2/GEMS/NaCl_Pitzer-ipm.dat
 # Comments can be marked with # $ ; as the first character in the line
 # IPM text input file for the internal GEM IPM-3 kernel data
 # (should be read after the DCH file and before DBR files)
@@ -139,13 +139,14 @@
 ## (4) Initial data for multicomponent phases (see DCH file for dimension nPHs)
 # sMod: Codes for TSolMod built-in  models of mixing in multicomponent phases [nPS*8]
 <sMod>
-'ZNNSNN-N' 
+'ZNNSNNNN' 'INNINNNN' 
 
 # LsMod: Dimensions of TSolMod <IPxPH> and <PMc> data arrays [nPS*3]. In each row (for phase):
 # [0] number of interaction parameters (rows in <IPx>); [1] max. parameter order (columns in <IPx>);
 # [2] number of coefficients per interaction parameter in <PMc> array
 <LsMod>
 15 4 5 
+0 0 0 
 
 # IPxPH: Index lists (in TSolMod convention) for interaction parameters of non-ideal solutions
 <IPxPH>
@@ -162,90 +163,102 @@
 #   [1] number of sublattices nS; [2] total number of moieties nM acting in sublattice sites
 <LsMdc>
 0 0 0 
+0 0 0 
 # LsMdc2: [3*FIs] - number of DQF coeffs; reciprocal coeffs per end member
 <LsMdc2>
+0 0 0 
 0 0 0 
 # LsPhl: Number of phase links; number of link parameters; [Fi][2]
 <LsPhl>
 0 0 
+0 0 
+0 0 
 # SorMc: Phase-related kinetics and sorption model parameters: [Fis][16]
 <SorMc>
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
 # LsISmo: number of surface sites; isotherm coeffs per site; isotherm coeffs per DC; max.denticity of DC [Fis][4]
 <LsISmo>
 0 0 0 0 
+0 0 0 0 
 # LsESmo: number of EIL model layers; EIL params per layer; CD coefs per DC; reserved  [Fis][4]
 <LsESmo>
 0 0 0 0 
+0 0 0 0 
 # kMod: Codes for built-in kinetic models [Fi*6]
 <kMod>
-'NNNNNN' 
+'NNNNNN' 'NNNNNN' 'NNNNNN' 
 # LsKin: number of parallel reactions; of species in activity products; of parameter coeffs in parallel reaction;
 # of parameters per species; parameter coefficients in As correction; of (separately considered) crystal faces or surface patches ( 1 to 4 ) [Fi][6]
 <LsKin>
 0 0 0 0 0 0 
+0 0 0 0 0 0 
+0 0 0 0 0 0 
 # LsUpt: number of uptake kinetics model parameters (coefficients) numpC[k]; (reserved)
 <LsUpt>
 0 0 
+0 0 
 # PfFact: form factors for phases (taken from TKinMet or set from TNode) [FI] (reserved)
 <PfFact>
+1 
+1 
 1 
 
 ## (5) Data arrays which are provided neither in DCH nor in DBR files
 # B: Full total bulk composition (vector b), moles [nIC] (will be partially re-written from DBR files)
 <B>
-0.1 111.016746657646 0.1 55.5083733288231 0 
+0.1 111.016766657646 0.1 55.5083733288231 0 
 
 # Initial data for DCs - see DATACH file for dimensions nDC, nDCs
 # Pparc: Partial pressures or fugacities of pure Dependent Components [nDC] (reserved)
 <Pparc>
-50 50 50 50 50 
+50 50 50 50 50 50 50 50 
 
 # fDQF: DQF parameters of end members or pure gas fugacities, (J/mol/(RT) [nDC]
 <fDQF>
-0 0 0 0 0 
+0 0 0 0 0 0 0 0 
 
 # lnGmf: Natural logarithms of DC activity coefficients used at Simplex LP approximation only [nDC]
 <lnGmf>
-0 0 0 0 0 
+0 0 0 0 0 0 0 0 
 
 # (6) Metastability constraints on DC amounts from above (DUL) and below (DLL)
 # RLC: Code of metastability constraints for DCs {L U B (default)} [nDC]
 <RLC>
-'B' 'B' 'B' 'B' 'B' 
+'B' 'B' 'B' 'B' 'B' 'B' 'B' 'B' 
 
 # RSC: Units of metastability/kinetic constraints for DCs {M} moles [nDC]
 <RSC>
-'M' 'M' 'M' 'M' 'M' 
+'M' 'M' 'M' 'M' 'M' 'M' 'M' 'M' 
 
 # DLL: Lower metastability constraints on DC amounts <xDC>, moles [nDC] (default: 0)
 <DLL>
-0 0 0 0 0 
+0 0 0 0 0 0 0 0 
 
 # DUL: Upper metastability constraints on DC amounts <xDC>, moles [nDC] (default: 1e6)
 <DUL>
-1000000 1000000 1000000 1000000 1000000 
+1000000 1000000 1000000 1000000 1000000 1000000 1000000 1000000 
 
 # (7) Initial data for Phases
 
 # Aalp: Specific surface areas of phases, m2/g [nPH]
 <Aalp>
-0 
+0 0 0 
 
 # Sigw: Specific surface free energy for phase-water interface, J/m2 [nPH] (reserved)
 <Sigw>
-0 
+0 0 0 
 
 # Sigg: Specific surface free energy for phase-gas interface, J/m2 (not yet used) [nPH]
 <Sigg>
-0 
+0 0 0 
 
 # YOF: Surface free energy parameter for phases in J/g (to accomodate for variable phase composition)  [nPH]
 <YOF>
-0 
+0 0 0 
 # dcMod: Codes for PT corrections of DC thermodynamic data [nDC] (reserved)
 <dcMod>
-'HKF' 'HKF' 'HKF' 'HKF' 'HWF' 
+'HKF' 'HKF' 'HKF' 'HKF' 'HWF' 'CSNN' 'CSNN' 'CSE' 
 
 # mui: IC indices in parent RMULTS IC list (not used in standalone GEMS3K)
 <mui>
@@ -253,10 +266,10 @@
 
 # muk: Phase indices in parent RMULTS Phase list (not used in standalone GEMS3K)
 <muk>
-0 
+0 1 2 
 
 # muj: DC indices in parent RMULTS DC list (not used in standalone GEMS3K)
 <muj>
-0 1 2 3 4 
+0 1 2 3 4 5 6 7 
 
 # End of file
