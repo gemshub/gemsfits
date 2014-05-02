@@ -54,6 +54,7 @@ using namespace std;
 /// if after F comes an JSON object ( F{...} )
 void F_to_OP (opti_vector *op, IOJFormat Jformat, string nfild);
 /// if after F comes the initial value ( F5000 )
+void S_to_OP (double val, opti_vector::fixed *op, IOJFormat Jformat, string nfild);
 void F_to_OP (double val, opti_vector *op, IOJFormat Jformat, string nfild);
 /// if the parameter is reaction constrained ( R{...} )
 void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat);
@@ -521,6 +522,50 @@ gpf->flog << " : " << format << endl;
                                         break;
                           }
                       }
+
+                  }
+
+                  if (vFormats[ii].type == ft_S)
+                  {
+                      // after S comes initial value
+
+                      switch( nfild )
+                      {
+                      case f_sMod:
+                                   break;
+                      case f_LsMod:{ if( !pmp->LsMod )
+                                        Error( "Error", "Arrays LsMod and PMc are not used in this GEM system definition!");
+                                        long int LsModSum;
+                                        long int LsIPxSum;
+                                        node->pMulti()->getLsModsum( LsModSum, LsIPxSum );
+                                        if(LsIPxSum )
+                                        {
+                                        }
+                                        if(LsModSum )
+                                        {
+                                            op->fixed_param.push_back(new opti_vector::fixed);
+                                            S_to_OP(pmp->PMc[vFormats[ii].index], op->fixed_param[op->fixed_param.size()-1], vFormats[ii], fPMc );
+                                        }
+                                    break;
+                                   }
+                      case f_LsMdc:{ if( !pmp->LsMdc )
+                                        Error( "Error", "Array LsMdc and DMc are not used in this GEM system definition!");
+                                        long int LsMdcSum;
+                                        long int LsMsnSum;
+                                        long int LsSitSum;
+                                        node->pMulti()->getLsMdcsum( LsMdcSum,LsMsnSum, LsSitSum );
+                                        if(LsMdcSum )
+                                        {
+                                            op->fixed_param.push_back(new opti_vector::fixed);
+                                            S_to_OP(pmp->DMc[vFormats[ii].index], op->fixed_param[op->fixed_param.size()-1], vFormats[ii], fDMc );
+                                        }
+                                    break;
+                                    }
+                      case f_fDQF:
+                           op->fixed_param.push_back(new opti_vector::fixed);
+                           S_to_OP(pmp->fDQF[vFormats[ii].index], op->fixed_param[op->fixed_param.size()-1], vFormats[ii], MULTI_dynamic_fields[nfild].name );
+                                    break;
+                      }
                   }
 //gpf->flog << " : " << vFormats[ii].format << endl;
               }
@@ -543,6 +588,11 @@ void get_gems_fit_DCH_txt(TNode* node, opti_vector* op)
     vector<IOJFormat> vFormats;
     int nr_reac = 0;
 //    double logK[9];
+
+    vector<double> go2;
+    go2.resize(100);
+    for (unsigned jj=0; jj<go2.size();jj++)
+    go2[jj] = CSD->G0[jj];
 
     long int nfild = rddar.findNextNotAll();
     while( nfild >=0 )
@@ -572,12 +622,12 @@ void get_gems_fit_DCH_txt(TNode* node, opti_vector* op)
                                 op->reactions.push_back(new opti_vector::RDc);
                             }
                         }
+//                        rddar.readArray( "G0", CSD->G0, CSD->nDC*node->gridTP() );
                   break;
                         // not working until dealing on how to get the logK look-up array into the input file
 //        case f_logK: rddar.readFormatArray( "logK", logK, nr_reac*1/**node->gridTP()*/, vFormats );
 //                  break;
          }
-
         if( !vFormats.empty() )
         {
             int nr = 0;
@@ -604,7 +654,8 @@ gpf->flog << " : " << format << endl;
                         switch( nfild )
                         {
                         // Case G0
-                        case f_G0: F_to_OP(CSD->G0[vFormats[ii].index], op, vFormats[ii], DataCH_dynamic_fields[nfild].name );
+                        case f_G0:
+                            F_to_OP(CSD->G0[vFormats[ii].index], op, vFormats[ii], DataCH_dynamic_fields[nfild].name );
                                   break;
                         // add other parameters
                          }
@@ -621,7 +672,19 @@ gpf->flog << " : " << format << endl;
                     out.clear();
 
                     R_to_OP(op->reactions[nr], vFormats[ii] ); // , DataCH_dynamic_fields[nfild].name );
-
+                }
+                if (vFormats[ii].type == ft_S)
+                {
+                    // after S comes initial value
+                    switch( nfild )
+                    {
+                    // Case G0
+                    case f_G0:
+                        op->fixed_param.push_back(new opti_vector::fixed);
+                        S_to_OP(CSD->G0[vFormats[ii].index], op->fixed_param[op->fixed_param.size()-1], vFormats[ii], DataCH_dynamic_fields[nfild].name );
+                              break;
+                    // add other parameters
+                     }
                 }
             }
             vFormats.clear();
@@ -815,6 +878,26 @@ gpf->flog<< format << endl;
                     op->h_Lp = true;
                     L_to_OP(op->Lparams[nl], vFormats[ii], DataBR_fields[nfild].name );
                     nl++;
+                }
+                if (vFormats[ii].type == ft_S)
+                {
+                    // after S comes initial value
+                    switch( nfild )
+                    {
+                        case f_TK:
+                        op->fixed_param.push_back(new opti_vector::fixed);
+                        S_to_OP(CNode->TK, op->fixed_param[op->fixed_param.size()-1], vFormats[ii], DataBR_fields[nfild].name );
+                              break;
+                        case f_P:
+                        op->fixed_param.push_back(new opti_vector::fixed);
+                        S_to_OP(CNode->P, op->fixed_param[op->fixed_param.size()-1], vFormats[ii], DataBR_fields[nfild].name );
+                              break;
+                        case f_bIC:
+                        op->fixed_param.push_back(new opti_vector::fixed);
+                        S_to_OP(CNode->bIC[vFormats[ii].index], op->fixed_param[op->fixed_param.size()-1], vFormats[ii], DataBR_fields[nfild].name ); // i
+                              break;
+                    // add other parameters
+                     }
                 }
             }
             vFormats.clear();
@@ -1665,7 +1748,7 @@ void F_to_OP (opti_vector *op, IOJFormat Jformat, string nfild)
     vector<string> out;
     Data_Manager *temp = new Data_Manager(1);
     temp->parse_JSON_object(Jformat.format, keys::IV, out);
-
+    if (out.size() == 0)  { cout << "Name of dependent component compared property has to be specified in Data Target->OFUN->DCP!"<< endl; exit(1);} // ERROR
     op->opt.push_back( atof(out.at(0).c_str()) );
     op->optv0.push_back( atof(out.at(0).c_str()) );
     out.clear();
@@ -1699,6 +1782,14 @@ void F_to_OP (double val, opti_vector *op, IOJFormat Jformat, string nfild)
     op->Ptype.push_back( nfild );
     op->Pindex.push_back( Jformat.index );
 }
+
+void S_to_OP (double val, opti_vector::fixed *op, IOJFormat Jformat, string nfild)
+{
+    op->Pval = val ;
+    op->Ptype = nfild ;
+    op->Pindex = Jformat.index ;
+}
+
 
 void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat /* , string nfild */ )
 {

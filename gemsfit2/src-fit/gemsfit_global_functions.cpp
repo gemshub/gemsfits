@@ -39,6 +39,7 @@
 #include "gemsfit_target_functions.h"
 #include "gemsfit_nested_functions.h"
 #include "gemsfit_task.h"
+#include <iomanip>
 
 double Equil_objective_function_callback( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data )
 {
@@ -231,8 +232,8 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
             cout<<"parameter "<<i<<" : "<<opt[i]<<endl;
         }
     }
-    gpf->flog << "~ m.count.= " << master_counter << " sum.res.= " << residuals_sys << endl;
-    cout << "~ m.count.= " << master_counter << " sum.res.= " << residuals_sys << endl;
+    gpf->flog << "~ m.count.= " << master_counter << " sum.res.= " << setprecision(15) << residuals_sys << endl;
+    cout << "~ m.count.= " << master_counter << " sum.res.= " << setprecision(15) << residuals_sys << endl;
 
     for (unsigned j = 0; j < sys->Tfun->objfun.size(); j++)
     {

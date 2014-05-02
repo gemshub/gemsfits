@@ -118,6 +118,14 @@ public:
         vd L_coef; /// linking coefiecients e.g 1.0 for Cl and 2.0 for S
     };
     vector<Lp*> Lparams;
+
+    struct fixed /// structure holding liked parameters information
+    {
+        double Pval; /// position 0 specie 0 etc.
+        string Ptype; /// name of parameter e.g G0
+        int Pindex; /// index formatted value into reading array, index of phase, species
+    };
+    vector<fixed*> fixed_param; ///< pointer to nested optimization
 };
 
 #endif // OPT_VECTOR_H

@@ -31,6 +31,7 @@ opti_vector::opti_vector( )
 {
     // call GEM_init to read GEMS3K input files
     TNode* node  = new TNode();
+    long int NodeStatusCH;
     // call GEM_init     --> read in input files
     if( (node->GEM_init( gpf->GEMS3LstFilePath().c_str() )) == 1 )
     {
@@ -61,7 +62,7 @@ opti_vector::opti_vector( )
     {
         get_Lp_indexes (node, this);
     }
-    //int c = 0;
+
 }
 
 

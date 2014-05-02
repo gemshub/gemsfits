@@ -614,3 +614,46 @@ void TGfitTask::get_addout_meas(int exp, TGfitTask::TargetFunction::obj_fun &obj
     }
 
 }
+
+void TGfitTask::set_fixed_parameters()
+{
+    for (unsigned p = 0; p<Opti->fixed_param.size(); p++)
+    {
+        string Ptype;
+        int Pindex;
+        double Pval;
+        Ptype = Opti->fixed_param[p]->Ptype;
+        Pindex = Opti->fixed_param[p]->Pindex;
+        Pval = Opti->fixed_param[p]->Pval;
+        if (Ptype == "G0")
+            for (unsigned n=0; n<NodT.size(); n++  )
+            {
+                this->NodT[n]->Set_DC_G0(Pindex, 1e+05, 298.15, Pval);
+            }
+        if (Ptype == "PMc")
+            for (unsigned n=0; n<NodT.size(); n++  )
+            {
+                this->NodT[n]->Set_PMc(Pval, Pindex );
+            }
+        if (Ptype == "DMc")
+            for (unsigned n=0; n<NodT.size(); n++  )
+            {
+                this->NodT[n]->Set_DMc(Pval, Pindex );
+            }
+        if (Ptype == "bIC")
+            for (unsigned n=0; n<NodT.size(); n++  )
+            {
+                this->NodT[n]->Set_bIC(Pindex, Pval );
+            }
+        if (Ptype == "TK")
+            for (unsigned n=0; n<NodT.size(); n++  )
+            {
+                this->NodT[n]->Set_P(Pval );
+            }
+        if (Ptype == "P")
+            for (unsigned n=0; n<NodT.size(); n++  )
+            {
+                this->NodT[n]->Set_P(Pval );
+            }
+    }
+}

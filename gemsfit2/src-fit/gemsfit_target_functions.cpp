@@ -108,7 +108,7 @@ void adjust_P (double new_P, TGfitTask *sys)
 {
     for (unsigned int n=0; n<sys->NodT.size(); ++n)
     {
-        sys->NodT[n]->Set_TK(new_P );
+        sys->NodT[n]->Set_P(new_P );
         sys->NodT[n]->Set_mLook(0); // activate interpolation of themrodynamic properties lookup array
     }
 }

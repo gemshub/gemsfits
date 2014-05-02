@@ -168,7 +168,6 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, 
         adjust_Lp(sys, sys->Opti->nest_optv, sys->EXPndx[P_id]);
     }
 
-
     // claculate equilibrium
     if (notT)
     sys->NodT[sys->EXPndx[P_id]]->Set_TK(273.15 + sys->experiments[sys->EXPndx[P_id]]->sT);

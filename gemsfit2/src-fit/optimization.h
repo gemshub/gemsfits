@@ -148,6 +148,8 @@ public:
     nested nest_optv; ///< pointer to nested optimization
 
 
+
+
     /// printing information (get from SS_GEMSFIT_input.dat)
 //        PlotFit* Plot_ActMod;
 

@@ -101,6 +101,8 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     gpf->flog << "10. gemsfit_task.cpp(94). Initializing the Target function structure & get_DatTarget(); " << endl;
     Tfun = new TargetFunction;
 
+    set_fixed_parameters();
+
     get_DataTarget ( );
 
     for (unsigned int i=0; i < experiments.size(); i++)
@@ -437,6 +439,11 @@ void TGfitTask::setnodes()
         }
     }
 
+//    cout << NodT[0]->Get_bIC(0) << endl;
+//    cout << NodT[0]->Get_bIC(1) << endl;
+//    cout << NodT[0]->Get_bIC(2) << endl;
+//    cout << NodT[0]->Get_bIC(3) << endl;
+
     // initialize the nodes using the input GEMS3 file
     for (n=0; n<NodT.size(); ++n)
     {
@@ -651,6 +658,12 @@ void TGfitTask::setnodes()
         // variant (8c) of GEM_from_MT()
         NodT[n]->GEM_from_MT( NodeHandle, NEED_GEM_AIA, T_k, P_pa, new_moles_IC, xDC_up, xDC_lo );  // bugfix DK 09.01.2014
 
+//            cout << NodT[0]->Get_bIC(0) << endl;
+//            cout << NodT[0]->Get_bIC(1) << endl;
+//            cout << NodT[0]->Get_bIC(2) << endl;
+//            cout << NodT[0]->Get_bIC(3) << endl;
+
+
         // Calling GEMIPM calculation
         NodeStatusCH = NodT[n]->GEM_run( true );
 cout << "Node: " << NodeHandle << "  NodeStatusCH: " << NodeStatusCH << endl;
@@ -740,9 +753,6 @@ void TGfitTask::get_DataTarget ( )
         if (out2.size() > 0)
         Tfun->objfun[i].weight = atof(out2[0].c_str());
         out2.clear();
-
-
-
     }
     out.clear();
 
