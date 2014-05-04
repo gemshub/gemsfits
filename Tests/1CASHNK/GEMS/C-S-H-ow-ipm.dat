@@ -1,5 +1,5 @@
 #  GEMS3K v.3.3 r.929 (dev) 
-# File: /home/parallels/DevGEMSFIT/defGFshell/GFIT/Tests/1CASHNK/GEMS/C-S-H-ow-ipm.dat
+# File: /home/parallels/DevGEMSFIT/devGFshell/GFandGUI/Tests/1CASHNK/GEMS/C-S-H-ow-ipm.dat
 # Comments can be marked with # $ ; as the first character in the line
 # IPM text input file for the internal GEM IPM-3 kernel data
 # (should be read after the DCH file and before DBR files)
@@ -119,7 +119,7 @@
 <pa_DT>  1
 
 # GAS: Threshold for primal-dual chemical potential difference used in SpeciationCleanup() { 0.001 }
-<pa_GAS>  0.001
+<pa_GAS>  0.0001
 # Total number of moles used in internal re-scaling of the system (disabled if < 1e-4) { 1000 }
 <pa_DG>  1000
 # DNS: Standard surface number density, nm-2 for calculating activity of surface species { 12.05 }
@@ -147,15 +147,17 @@
 <LsMod>
 2 0 4 
 0 0 0 
-10 4 3 
+11 4 3 
 
 # IPxPH: Index lists (in TSolMod convention) for interaction parameters of non-ideal solutions
 <IPxPH>
 0 0 1 1 0 0 6 6 0 1 6 6 1 2 4 4 2 3 5 5 0 0 0 1 0 0 0 6 0 1 1 6 1 2 2 4 2 3 3 5 
+0 0 1 6 
 
 # PMc: Tables (in TSolMod convention) of interaction parameter coefficients  for non-ideal solutions
 <PMc>
-0.0640000030398369 3.72000002861023 0 0 0 0 0 0 2127 0 0 -14287 0 0 -8022 0 0 -21559 0 0 3769 0 0 -2299 0 0 -7270 0 0 -5583 0 0 -33407 0 0 6759 0 0 
+0.0640000030398369 3.72000002861023 0 0 0 0 0 0 860.869750976562 0 0 -15533.8505859375 0 0 -6371.21240234375 0 0 -22552.2578125 0 0 4417.607421875 0 0 -667.974670410156 0 0 -7505.578125 0 0 -7292.8125 0 0 -33429.05859375 0 0 6873.064453125 0 0 2832.00805664062 0 
+0 
 
 # LsMdc: Dimensions of TSolMod <DMc> and <MoiSN> arrays [nPS*3]: In each row (for phase):
 # [0] number of parameters per component; [1] 0; [2] 0. For multi-site (sublattice) models: 
@@ -241,7 +243,7 @@
 
 # lnGmf: Natural logarithms of DC activity coefficients used at Simplex LP approximation only [nDC]
 <lnGmf>
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 6.90775527898214 0 6.90775527898214 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 6.90775527898214 6.90775527898214 6.90775527898214 6.90775527898214 0 0 0 
 
 # (6) Metastability constraints on DC amounts from above (DUL) and below (DLL)
 # RLC: Code of metastability constraints for DCs {L U B (default)} [nDC]
@@ -287,10 +289,10 @@
 
 # muk: Phase indices in parent RMULTS Phase list (not used in standalone GEMS3K)
 <muk>
-0 1 2 8 13 
+0 1 2 11 16 
 
 # muj: DC indices in parent RMULTS DC list (not used in standalone GEMS3K)
 <muj>
-8 9 10 11 18 19 20 21 24 28 29 38 39 40 41 42 43 45 46 47 48 49 59 64 
+8 9 10 11 18 19 20 21 24 28 29 38 39 40 41 42 43 45 46 47 48 49 62 67 
 
 # End of file
