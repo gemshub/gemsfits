@@ -65,6 +65,9 @@ void adjust_G0 (int i, double G0, TGfitTask *sys)
 void adjust_PMc (int i, double new_PMc, TGfitTask *sys)
 {
     int index_PMc = sys->Opti->Pindex[i];
+    // 0_param
+    if (fabs(new_PMc) <9e-8)
+        new_PMc = 0;
     for (unsigned int n=0; n<sys->NodT.size(); ++n)
     {
         sys->NodT[n]->Set_PMc(new_PMc, index_PMc );
@@ -74,6 +77,9 @@ void adjust_PMc (int i, double new_PMc, TGfitTask *sys)
 void adjust_DMc (int i, double new_DMc, TGfitTask *sys)
 {
     int index_DMc = sys->Opti->Pindex[i];
+    // 0_param
+    if (fabs(new_DMc) <9e-8)
+        new_DMc = 0;
     for (unsigned int n=0; n<sys->NodT.size(); ++n)
     {
         sys->NodT[n]->Set_DMc(new_DMc, index_DMc );
@@ -97,6 +103,8 @@ void adjust_bIC (int i, int exp, double new_bIC, TGfitTask *sys)
 
 void adjust_TK ( double new_TK, TGfitTask *sys)
 {
+//    if (fabs(new_PMc) <9e-8)
+//        new_PMc = 0;
     for (unsigned int n=0; n<sys->NodT.size(); ++n)
     {
         sys->NodT[n]->Set_TK(new_TK );
@@ -106,6 +114,8 @@ void adjust_TK ( double new_TK, TGfitTask *sys)
 
 void adjust_P (double new_P, TGfitTask *sys)
 {
+//    if (fabs(new_PMc) <9e-8)
+//        new_PMc = 0;
     for (unsigned int n=0; n<sys->NodT.size(); ++n)
     {
         sys->NodT[n]->Set_P(new_P );

@@ -1714,7 +1714,10 @@ void optimization::get_nlopt_param_txt(vector<double> optv)
           case f_OptNormParam:{
                 int bb;
                 rdar.readArray( "OptNormParam",  &bb, 1);
-                OptNormParam = bb;
+                if (bb<0)
+                OptNormParam = false;
+                else
+                    OptNormParam = true;
                  }
                   break;
           }
@@ -1727,8 +1730,12 @@ void optimization::get_nlopt_param_txt(vector<double> optv)
         OptLoBounds.resize( optv.size() );
         for(unsigned int i=0; i<optv.size(); i++ )
         {
-            OptUpBounds[i] = optv[i] + fabs( optv[i]*OptBoundPerc/100. );
-            OptLoBounds[i] = optv[i] - fabs( optv[i]*OptBoundPerc/100. );
+            // take the existing bounds if initial value of the parameter is 0 or <9e-11)
+            if ((optv[i]!=0) && (fabs(optv[i])>9e-11))
+            {
+                OptUpBounds[i] = optv[i] + fabs( optv[i]*OptBoundPerc/100. );
+                OptLoBounds[i] = optv[i] - fabs( optv[i]*OptBoundPerc/100. );
+            }
         }
     }
 
@@ -1748,8 +1755,15 @@ void F_to_OP (opti_vector *op, IOJFormat Jformat, string nfild)
     vector<string> out;
     Data_Manager *temp = new Data_Manager(1);
     temp->parse_JSON_object(Jformat.format, keys::IV, out);
-    if (out.size() == 0)  { cout << "Name of dependent component compared property has to be specified in Data Target->OFUN->DCP!"<< endl; exit(1);} // ERROR
+    if (out.size() == 0)  { cout << "You need to set an IV if after F comes a JSON object {...}!"<< endl
+                                    << "for parameter type: " << nfild << " index: " << Jformat.index << endl; exit(1);} // ERROR
+    // 0_param
+    if (out.at(0) == "0")
+        out.at(0) = "1e-9";
     op->opt.push_back( atof(out.at(0).c_str()) );
+    if (out.at(0) == "1e-9")
+        op->optv0.push_back( 0 );
+    else
     op->optv0.push_back( atof(out.at(0).c_str()) );
     out.clear();
 
@@ -1777,6 +1791,12 @@ void F_to_OP (double val, opti_vector *op, IOJFormat Jformat, string nfild)
     {
         op->UB.push_back(val-val*keys::bperc/100);
         op->LB.push_back(val+val*keys::bperc/100);
+    }
+    if (val == 0)
+    {
+        cout << "ERROR: If the intial value of the parameter is 0 you must specify the UB (upper) and LB (lower) bounds in JSON format F{ \"IV\": val, \"UB\": val, \"LB\": val}" << endl
+                << "for parameter type: " << nfild << " index: " << Jformat.index << endl;
+        exit(1);
     }
 
     op->Ptype.push_back( nfild );
@@ -1864,7 +1884,7 @@ void L_to_OP (opti_vector::Lp *l, IOJFormat Jformat, string nfild)
     temp->parse_JSON_object(Jformat.format, keys::Lcoef, out);
     if (out.size() != l->L_param.size())
     {
-        cout << "ERROR: Number og linked parameters is not equal with the number of link coeficients" << endl;
+        cout << "ERROR: Number of linked parameters is not equal with the number of link coeficients" << endl;
         exit(1);
     }
     for (unsigned int i = 0 ; i < out.size() ; i++)

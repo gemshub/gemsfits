@@ -50,6 +50,7 @@ optimization::optimization()
     get_nlopt_param_txt( optv );
 
     //soring out the global paramaters vs the paramaters used in the dynamic functions
+    // the nested_optv object is populated
     if (h_nestfun)
     {
         sort_nestfun_param();
@@ -78,17 +79,20 @@ void optimization::normalize_params(const vector<double> initguesses , bool Norm
     optv.resize( initguesses.size() );
     for(i=0; i<optv.size(); i++)
     {
+        if (optv[i] != 0)
         optv[i] = initguesses[i] / fabs(initguesses[i]);
     }
 
     // Normalize upper bounds vector
+    NormBounds = false; // the bounds are normalized each time to the new param values
     if (!NormBounds)
     {
     for(i=0; i<OptUpBounds.size(); i++)
     {
         gpf->flog << "     Init guess ["<<i<<"] = " << initguesses[i] << endl;
         gpf->flog << "     Upper Bound old ["<<i<<"]= " << OptUpBounds[i] << endl;
-        OptUpBounds[i] = OptUpBounds[i] / fabs(initguesses[i]);
+//        if ((optv[i] != 0) && (fabs(initguesses[i]) > 9e-11))
+        OptUpBounds[i] = UB[i] / fabs(initguesses[i]);
         gpf->flog << "     Upper Bound new ["<<i<<"]= " << OptUpBounds[i] << endl;
     }
 
@@ -97,13 +101,15 @@ void optimization::normalize_params(const vector<double> initguesses , bool Norm
     {
         gpf->flog << "     Init guess ["<<i<<"] = " << initguesses[i] << endl;
         gpf->flog << "     Lower Bound old ["<<i<<"]= " << OptLoBounds[i] << endl;
-        OptLoBounds[i] = OptLoBounds[i] / fabs(initguesses[i]);
+//        if ((optv[i] != 0) && (fabs(initguesses[i]) > 9e-11))
+        OptLoBounds[i] = LB[i] / fabs(initguesses[i]);
         gpf->flog << "     Lower Bound new ["<<i<<"]= " << OptLoBounds[i] << endl;
     }
 
     // Normalize constraints vector
     for(i=0; i<constraint_data_v.size(); i++)
     {
+//        if ((optv[i] != 0) && (fabs(initguesses[i]) > 9e-11))
         constraint_data_v[i].Constraints = constraint_data_v[i].Constraints / fabs(initguesses[i]);
     }
     }

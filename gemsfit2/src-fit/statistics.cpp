@@ -238,7 +238,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
             fitparam[i]->Pfittype = "F";
             fitparam[i]->Pname = gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]);
             fitparam[i]->Fval = optv_[i];
-            fitparam[i]->Ival = gfittask->Opti->opt[i];
+            fitparam[i]->Ival = gfittask->Opti->optv0[i];
             fitparam[i]->CSS = 0.0;
             fitparam[i]->mc95 = 0.0;
             fitparam[i]->mcSTDEV = 0.0;
@@ -251,7 +251,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
             ss << gfittask->Opti->Pindex[i];
             fitparam[i]->Pname = ss.str();
             fitparam[i]->Fval = optv_[i];
-            fitparam[i]->Ival = gfittask->Opti->opt[i];
+            fitparam[i]->Ival = gfittask->Opti->optv0[i];
             fitparam[i]->CSS = 0.0;
             fitparam[i]->mc95 = 0.0;
             fitparam[i]->mcSTDEV = 0.0;
@@ -1320,6 +1320,12 @@ void statistics::print_param()
                    gpf->fparam << "0,";
            } else
                gpf->fparam << "0,";
+        }
+
+        if ((fitparam[i]->Pfittype == "F") && (fitparam[i]->correl.size() == 0))
+        for ( unsigned j=0; j < (nrcor ); j++)
+        {
+            gpf->fparam << "0,";
         }
 
         if (fitparam[i]->Pfittype == "R")

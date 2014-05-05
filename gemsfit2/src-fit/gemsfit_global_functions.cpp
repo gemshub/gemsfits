@@ -62,6 +62,7 @@ double Equil_objective_function_callback( const std::vector<double> &opt, std::v
         vector<double> optV( opt.size() );
         for( i=0; i<opt.size(); i++ )
         {
+            if (opt[i] != 0)
             optV[i] = opt[i] * fabs(sys->Opti->opt[i]);
         }
         sys->h_grad = false;

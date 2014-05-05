@@ -106,7 +106,6 @@ private:
 
     void set_fixed_parameters();
 
-
     /// the GEMSFIT configuration file (fixed to SS_GEMSFIT_input.dat)
     string param_file;
 
