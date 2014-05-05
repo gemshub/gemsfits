@@ -1,11 +1,11 @@
 #  GEMS3K v.3.3 r.929 (dev) 
-# File: /home/parallels/DevGEMSFIT/devGFshell/GFandGUI/Tests/1CASHNK/GEMS/C-S-H-A-ipm.dat
+# File: /home/parallels/DevGEMSFIT/devGFshell/GFandGUI/Tests/1CASHNK/GEMS/C-S-H-A-p-ipm.dat
 # Comments can be marked with # $ ; as the first character in the line
 # IPM text input file for the internal GEM IPM-3 kernel data
 # (should be read after the DCH file and before DBR files)
 
 # ID key of the initial chemical system definition
-"CASH_tob  G  CSHA10      0    0       1       25      0   "
+"CASH_tob  G  CSHA10p     0    0       1       25      0   "
 
 ## (1) Flags that affect memory allocation
 # PE: Flag for using electroneutrality condition in GEM IPM calculations (1 or 0)
@@ -158,8 +158,8 @@
 # PMc: Tables (in TSolMod convention) of interaction parameter coefficients  for non-ideal solutions
 <PMc>
 0.0640000030398369 3.72000002861023 0 0 0 0 0 0 860.869750976562 0 0 -15533.8505859375 0 0 -6371.21240234375 0 0 -22552.2578125 0 0 4417.607421875 0 0 -667.974670410156 0 0 -7505.578125 0 0 -7292.8125 0 0 -33429.05859375 0 0 6873.064453125 0 0 2832.00805664062 0 
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-0 0 0 0 0 0 
+0 384.22314453125 0 0 -14106.2216796875 0 0 11406.2138671875 0 0 -29670.73046875 0 0 -2813.00390625 0 0 9413.6611328125 0 0 19969.087890625 0 0 -10157.765625 0 0 -23471.734375 0 0 -5338.0703125 0 0 -9349.8173828125 0 0 35006.3515625 0 0 -2269.5732421875 0 0 
+8881.3935546875 0 0 -17520.6796875 0 0 
 
 # LsMdc: Dimensions of TSolMod <DMc> and <MoiSN> arrays [nPS*3]: In each row (for phase):
 # [0] number of parameters per component; [1] 0; [2] 0. For multi-site (sublattice) models: 
