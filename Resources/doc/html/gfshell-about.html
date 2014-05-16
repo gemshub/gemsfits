@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=windows-1252" http-equiv="content-type">
+    <title>gfshell About</title>
+  </head>
+  <body style="                      background-image: url(bgimg-gray.jpg);">
+    <h1> <img title="GEMSFITS" alt="GEMSFITS" src="gfshell2.png"> GEMSFITS Code
+      for GEM Input Parameter Optimization</h1>
+    <h2>About gfshell GUI (Graphical User Interface)</h2>
+    <hr> A graphical user interface (GUI) gfshell2 is designed to assist the
+    user throughout the whole workflow of parameter optimization. The GUI also
+    offers a detailed help functionality on how to maintain the experimental
+    database, edit and prepare the gemsfit2 task specification (files), run
+    gemsfit2 program, and explore, save, and plot the fitting results. <br>
+    <h3>Contents</h3>
+    <ul>
+      <li><a href="#runing_modes">Running modes</a></li>
+      <li><a href="#create_project">How to create fitting projects</a><br>
+      </li>
+    </ul>
+    <hr>
+    <h3><a id="runing_modes">1. Running modes:</a></h3>
+    <table style="width: 100%;" border="0">
+      <tbody>
+        <tr>
+          <td>
+            <p><img title="Database Mode" alt="Database Mode" src="DatabaseModeIcon.png"
+                align="left"><a href="gfshell-dbmode.html"><span style="font-weight: bold;">Database
+                  Mode</span></a> - the experimental records from the project
+              database can be viewed in a list and edited in JSON format (Figure
+              4). Bulk data can be backed up and restored form JSON format files
+              or imported and exported from pre-formatted spreadsheets files
+              previously saved in csv format. The database selection queries can
+              be added and edited in the “Search Query Editor”. The record
+              (sample) list resulted by executing the search query can be then
+              easily exported into the task specification with help of a menu
+              command,&nbsp; to be used during the fitting run.</p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p> <img style="width: 94px; height: 75px;" title="Fitting Task Mode"
+                alt="Fitting Task Mode" src="TaskModeIcon.png" align="left"><a href="gfshell-taskmode.html"><span
+                  style="font-weight: bold;">Fit Task Mode</span></a> -&nbsp;
+              fitting task specifications can be edited, saved to database, or
+              new tasks created from them, and they can all be exported to task
+              input files and executed in gemsfit2 for parameter optimization.</p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p> <img title="View Results Mode" alt="View Results Mode" src="gfshell2.png"
+                align="left"> <a href="gfshell-resultsmode.html"><span style="font-weight: bold;">View
+                  Results Mode</span></a> - the results can be imported from
+              gemsfit2 output csv files, viewed and plotted. </p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+    <hr>
+    <h3><a id="create_project">2. How to create fitting projects:</a></h3>
+    <p style="height: 41px;">To create a new project from the menu click: <span
+        style="font-weight: bold;">Project -&gt; New Project</span>. A Project
+      setup window opens.</p>
+    <table style="width: 1696px; height: 537px;" border="0">
+      <tbody>
+        <tr>
+          <td><img title="Project Setup" alt="Project Setup" src="img/ProjectSetup.png"
+              align="left"></td>
+          <td>
+            <p><br>
+              <span style="font-weight: bold;"></span></p>
+            <p><span style="font-weight: bold;"><br>
+              </span></p>
+            <p><span style="font-weight: bold;">Project folder path</span> -
+              select the folder where the project will be stored. In this folder
+              dbimport, GEMS, and EJDB sub-folders will be automatically
+              created.</p>
+            <p><span style="font-weight: bold;">Project name</span> - give name
+              of the project (avoid spaces). A *.pro file with the project name
+              will be created</p>
+            <p><span style="font-weight: bold;">Database path</span> -&nbsp;
+              sub-folder in the project folder where the database related files
+              will be stored. Default <span style="font-weight: bold;">/EJDB</span>,
+              no change required.</p>
+            <p><span style="font-weight: bold;">Database file name</span> - name
+              of the database. The database with the desired name will be
+              created and stored in the sub-folders specified above.</p>
+            <p><span style="font-weight: bold;">Experimental samples database
+                collection name</span> - collection name where the experiments
+              will be stored. Default <span style="font-weight: bold;">experiments</span>,
+              no change required.</p>
+            <p><span style="font-weight: bold;">Fitting tasks database
+                collection name</span> - collection name where the tasks will be
+              stored. Default <span style="font-weight: bold;">tasks</span>, no
+              change required.</p>
+            <p><span style="font-weight: bold;">Results database collection name</span>
+              - collection name where the results will be stored. Default <span
+                style="font-weight: bold;">fits</span>, no change required.</p>
+            <p><span style="font-weight: bold;">GEMS3K input file set path</span>
+              - sub-folder in the project folder where the GEMS3K files are
+              stored. Default <span style="font-weight: bold;">/GEMS</span>, no
+              change required.</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <hr>
+    <p>Last updated:&nbsp; 15. 05. 2014&nbsp; DM, DK</p>
+    <p>Copyright&nbsp; (c) 2014&nbsp; <a target="_blank" title="http://gems.web.psi.ch/teamhist.html"
+        href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a></p>
+    <hr>
+    <p><br>
+    </p>
+  </body>
+</html>

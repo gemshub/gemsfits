@@ -130,7 +130,7 @@ static const char *url = "url"; ///	                              1		     string
     // Reaction specific
     static const char *Ref = "Ref"; ///                                     string              reference for logK
     static const char *logK = "logK"; ///                                   double              reaction constant
-    static const char *rDC = "rDC";///                                      string              reaction dependent component
+//    static const char *rDC = "rDC";///                                      string              reaction dependent component
     static const char *nC = "nC"; ///                                       integer             number of components involved in the reaction
                         // species
     static const char *RC = "RC"; ///                                       array               array of components names
@@ -184,7 +184,7 @@ static const char *kgram = "kg"; ///                                        stri
 static const char *mole = "mole";  ///                                      string              amount, moles
 static const char *m3 = "m3"; ///                                           string              volume, m3
 static const char *cm3 = "cm3"; ///                                         string              volume, cm3
-static const char *Simolfrac = "simolfrac"; ///                             string              mole ratio to 1 mole of Si
+//static const char *Simolfrac = "simolfrac"; ///                             string              mole ratio to 1 mole of Si
 static const char *molratio = "molratio"; ///                               string              mole ratio
 static const char *molfrac = "molfrac"; ///                                 string              mole fraction
 static const char *log_molfrac = "log_molfrac";

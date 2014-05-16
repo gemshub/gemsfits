@@ -1,9 +1,26 @@
 * text=auto !eol
+Resources/doc/html/DatabaseModeIcon.png -text
+Resources/doc/html/TaskModeIcon.png -text
 Resources/doc/html/bgimg-gray.jpg -text
+Resources/doc/html/gemsfit-json.html -text
 Resources/doc/html/gemsfit2.png -text
 Resources/doc/html/gfshell2.png -text
 Resources/doc/html/gfshelp.qch -text
 Resources/doc/html/gfshelp.qhc -text
+Resources/doc/html/img/CalculateBCCIcon24.png -text
+Resources/doc/html/img/CalculateRecordDataIcon24.png -text
+Resources/doc/html/img/DeleteCurrentRecordIcon24.png -text
+Resources/doc/html/img/DualThModuleIcon24.png -text
+Resources/doc/html/img/FitSpaceModuleIcon24.png -text
+Resources/doc/html/img/NewCloneRecordIcon24.png -text
+Resources/doc/html/img/NewCreateRecordIcon24.png -text
+Resources/doc/html/img/ProjectSetup.png -text
+Resources/doc/html/img/RTparmModuleIcon24.png -text
+Resources/doc/html/img/Results_window.png -text
+Resources/doc/html/img/SaveCurrentRecordIcon24.png -text
+Resources/doc/html/img/SelectDisplayRecordIcon24.png -text
+Resources/doc/html/img/ShowGEMResultsIcon24.png -text
+Resources/doc/html/img/Tuckey.png -text
 Resources/help/gfshelp.qch -text
 Resources/help/gfshelp.qhc -text
 Tests/1CASHNK/EJDB/cashnkdata -text

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=windows-1252" http-equiv="content-type">
+    <title>gfshell View Results Mode</title>
+  </head>
+  <body style="     background-image: url(bgimg-gray.jpg);">
+    <h1> <img style="width: 48px; height: 48px;" title="GEMSFITS" alt="GEMSFITS"
+        src="gemsfit2.png"> GEMSFITS Code for GEM Input Parameter Optimization</h1>
+    <h2>gfshell Fit Results View Mode</h2>
+    <hr>
+    <h3>Contents</h3>
+    <ul>
+      <li><a href="#res_window">Results window</a></li>
+      <li><a href="#res_window">Plotting the results</a></li>
+    </ul>
+    <hr>
+    <h3><a id="res_window">1. Results window</a></h3>
+    <p><span style="font-weight: bold;">Save gemsfit2 results to record</span> <img
+        style="width: 24px; height: 24px;" alt="Save results to record" title="Save results to record"
+        src="img/NewCloneRecordIcon24.png">
+      and <span style="font-weight: bold;">Update record with saved results</span>
+      <img style="width: 24px; height: 24px;" alt="Update record with saved results"
+        title="Update record with saved results" src="img/SaveCurrentRecordIcon24.png">.&nbsp;
+      By saving the results to the database, they can be latter accessed in the
+      <span style="font-weight: bold;">Fit results view mode</span> <img style="width: 25px; height: 24px;"
+        alt="Fit results view mode" title="Fit results view mode" src="img/FitSpaceModuleIcon24.png">.</p>
+    <ul>
+      <li>
+        <p>In the View Results window, the gemsfit2 output is displayed in
+          several tabs in a spreadsheet format. The output contains:</p>
+      </li>
+      <li>
+        <p>Fitted Parameters tab with the initial and fitted values of the
+          parameters and the associated parameter statistics;</p>
+      </li>
+      <li>
+        <p>Fit for Samples tab containing the dependent/calculated and measured
+          properties, residuals, as well as the weights and other user
+          pre-defined output using ADDOUT;</p>
+      </li>
+      <li>
+        <p>Sum. Statistics tab with the summary statistics describing the
+          goodness of fit;</p>
+      </li>
+      <li>
+        <p>Sensitivity Data tab containing the calculated sensitivities for each
+          measured value per each parameter;</p>
+      </li>
+      <li>
+        <p>Quantile Residual tab with the ordered residuals and their respective
+          quantiles (points taken at regular intervals form the cumulative
+          distribution function of the residuals);</p>
+      </li>
+      <li>
+        <p>MC results tab containing the resulted parameter values for each
+          Monte Carlo optimization run;</p>
+      </li>
+      <li>
+        <p>Inverse Modeling Results tab showing the result of an executed
+          inverse modeling problem;</p>
+      </li>
+      <li>
+        <p>gemsfit2 log tab containing some diagnostic information related to
+          the fitting run.</p>
+      </li>
+    </ul>
+    <p><img style="width: 1081px; height: 520px;" alt="Results window" title="Results window"
+        src="img/Results_window.png"></p>
+    <p></p>
+    <hr>
+    <h3><a id="plotting">2. Plotting the results</a></h3>
+    <p>The values&nbsp; from any results&nbsp; window tab can be plotted in XY
+      plots. To do this one can select the desired X-axis and multiple Y-axis
+      using the right mouse click and chose Toggle X or Toggle Y on the desired
+      tab columns. If this columns were correctly set&nbsp; (x) or (y) will
+      appear at the end of the column name. To plot the selected column values
+      click Plot parameter optimization results <img style="width: 24px; height: 24px;"
+        alt="Plot" title="Plot" src="img/RTparmModuleIcon24.png">.
+      The chosen plot settings are saved together with the otpimization results
+      in the database (collection "fits") upon clicking Update record with saved
+      results <img style="width: 24px; height: 24px;" alt="Update record with saved results"
+        title="Update record with saved results" src="img/SaveCurrentRecordIcon24.png">.
+    </p>
+    <hr>
+    <p>Last updated:&nbsp; 15. 05. 2014&nbsp; DM, DK</p>
+    <p>Copyright&nbsp; (c) 2013&nbsp; <a target="_blank" title="http://gems.web.psi.ch/teamhist.html"
+        href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a></p>
+    <hr>
+    <p><br>
+    </p>
+  </body>
+</html>

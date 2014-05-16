@@ -439,6 +439,7 @@ void TGfitTask::setnodes()
         }
     }
 
+
 //    cout << NodT[0]->Get_bIC(0) << endl;
 //    cout << NodT[0]->Get_bIC(1) << endl;
 //    cout << NodT[0]->Get_bIC(2) << endl;

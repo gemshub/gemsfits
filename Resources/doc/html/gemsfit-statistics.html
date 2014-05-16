@@ -1,112 +1,68 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html><head><title>GEMSFIT2 Statistics</title>
-
-
-  
-
-  
-  
-  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
-
-  
-  <meta name="author" content="GEMS Development Team">
-
-  
-  <meta name="description" content="Version 2"></head><body style="background-image: url(bgimg-gray.jpg);">
-<h1><img style="width: 48px; height: 48px;" src="gemsfit2.png" alt="gemsfit2.png"> <font style="color: black;" color="#000066">GEMSFIT2<br>
-</font></h1>
-
-<h2><font><font style="color: black;" color="#000066">Statistics <br>
-</font></font></h2>
-
-<h2>
-</h2>
-
-<h2 style="font-family: Helvetica,Arial,sans-serif;"> </h2>
-
-<h4><span style="font-family: Helvetica,Arial,sans-serif;"></span></h4>
-
-<hr size="2" width="100%">
-<h4>Contents</h4>
-
-<ul>
-
-  <li><a href="#Basic_Statistics" target="_top">Basic statistics</a></li>
-  <li><a href="#Sensitivity">Sensitivity analysis and paramater stitistics</a></li>
-  <li>Monte Carlo confidence interval generation</li>
-  <li>References<br>
-  </li>
-
-</ul>
-<hr style="width: 100%; height: 2px;">
-<h3>1. <a name="Basic_Statistics"></a>Basic Statistics</h3><br>
-<hr style="width: 100%; height: 2px;">
-<h3>2. <a name="Sensitivity"></a>Sensitivity analysis and paramater stitistics</h3>
-<div style="text-align: left;">A. Composite Scaled Sensitivities: <br>
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; See ref. [1] section 4.3.4. If
-there is no weighting the weight is asumed 1 for all measured values.
-Larger values indicate parameters for which observations provide more
-information. A value less than 1 or less than &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; (or close to) 1% of the highest value, means that
-the parameter is poorly estimated. These parameters should be fixed
-during regression. <br>
-B. Variance-Covariance matrix:<br>
-&nbsp;See ref. [1] section 7.2. V(b) = s^2([X]trans*[X])^1;&nbsp; [W] -
-weight matrix is considered as 1 as there is no full weight matrix
-calculted, based on true experimental error (not provided for all
-experiments). X - sensitivity matrix. When the chosen weight is other
-than inverr (1/sigma), inverr3 (1/measured^2) or inverr_norm
-(w=1/(error/&lt;meas(average)&gt;)^2), the error variance (s^2) is
-assumed 1. For inverr2, the error variance is calculated as
-weighted_Tfun_sum_of_residuals/degrees of freedom.<br>
-
-</div>
-<hr style="width: 100%; height: 2px;">
-<h3>4. References&nbsp;<br>
-</h3>
-&nbsp;[1] Mary C. Hill, Claire R. Tiedeman (2007) Effective Groundwater
-Model Calibration: With Analysis of Data, Sensitivities, Predictions,
-and Uncertainty. 480 pages.<br>
-&nbsp;[2] Eileen P, Poeter &amp; Marc C. Hill DOCUMENTATION OF UCODE, A
-Computer Code for Universal Inverse Modeling.
-http://inside.mines.edu/~epoeter/583/UCODEmanual_wrir98-4080.pdf<br>
-<br>
-
-
-
-<hr style="width: 100%; height: 2px;">Last
-updated:&nbsp; 02. 10. 2013&nbsp; DM,DK <br style="font-family: Helvetica,Arial,sans-serif;">
-
-<br style="font-family: Helvetica,Arial,sans-serif;">
-
-Copyright&nbsp; (c) 2013&nbsp; <a href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a><br style="font-family: Helvetica,Arial,sans-serif;">
-
-<hr style="font-family: Helvetica,Arial,sans-serif;" size="2" width="100%"><br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-</body></html>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=windows-1252" http-equiv="content-type">
+    <title>GEMSFITS Statistics</title>
+  </head>
+  <body style="       background-image: url(bgimg-gray.jpg);">
+    <h1> <img style="width: 48px; height: 48px;" title="GEMSFITS" alt="GEMSFITS"
+        src="gemsfit2.png"> GEMSFITS Code for GEM Input Parameter Optimization</h1>
+    <h2>Statistics</h2>
+    <hr>
+    <h3>Contents</h3>
+    <ul>
+      <li><a href="file:///home/dmiron/devGEMSFITS/devGFshell/gemsfits/Resources/doc/html/gemsfit-statistics.html#Basic_Statistics"
+          target="_top">Basic statistics</a></li>
+      <li><a href="file:///home/dmiron/devGEMSFITS/devGFshell/gemsfits/Resources/doc/html/gemsfit-statistics.html#Sensitivity">Sensitivity
+          analysis and paramater stitistics</a></li>
+      <li>Monte Carlo confidence interval generation</li>
+      <li>References</li>
+    </ul>
+    <hr>
+    <h3>1. <a name="Basic_Statistics"></a>Basic Statistics</h3>
+    <br>
+    <hr style="width: 100%; height: 2px;">
+    <h3>2. <a name="Sensitivity"></a>Sensitivity analysis and paramater
+      stitistics</h3>
+    <div style="text-align: left;"><span style="font-weight: bold;">A. Composite
+        Scaled Sensitivities: </span><br>
+      <p>See ref. [1] section 4.3.4. If there is no weighting the weight is
+        assumed 1 for all measured values.
+        Larger values indicate parameters for which observations provide more
+        information. A value less than 1 or less than &nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp; (or close to) 1% of the highest value, means thatthe
+        parameter is poorly estimated. These parameters should be fixed
+        during regression. </p>
+      <span style="font-weight: bold;">B. Variance-Covariance matrix:</span><br>
+      <p>
+        See ref. [1] section 7.2. V(b) = s^2([X]trans*[X])^1;&nbsp; [W] -weight
+        matrix is considered as 1 as there is no full weight matrix calculated,
+        based on true experimental error (not provided for all experiments). X -
+        sensitivity matrix. When the chosen weight is other
+        than inverr (1/sigma), inverr3 (1/measured^2) or
+        inverr_norm(w=1/(error/&lt;meas(average)&gt;)^2), the error variance
+        (s^2) is
+        assumed 1. For inverr2, the error variance is calculated
+        asweighted_Tfun_sum_of_residuals/degrees of freedom.</p>
+      <p>
+      </p>
+    </div>
+    <hr style="width: 100%; height: 2px;">
+    <h3>4. References&nbsp;<br>
+    </h3>
+    [1] Mary C. Hill, Claire R. Tiedeman (2007) Effective Groundwater
+    Model Calibration: With Analysis of Data, Sensitivities, Predictions,and
+    Uncertainty. 480 pages.<br>
+    [2] Eileen P, Poeter &amp; Marc C. Hill DOCUMENTATION OF UCODE, AComputer
+    Code for Universal Inverse Modeling.
+    http://inside.mines.edu/~epoeter/583/UCODEmanual_wrir98-4080.pdf<br>
+    <p> </p>
+    <hr>
+    <p>Last updated:&nbsp; 15. 05. 2014&nbsp; DM, DK</p>
+    <p>Copyright&nbsp; (c) 2014&nbsp; <a target="_blank" title="http://gems.web.psi.ch/teamhist.html"
+        href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a></p>
+    <hr>
+    <p><br>
+    </p>
+  </body>
+</html>

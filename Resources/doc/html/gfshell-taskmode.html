@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=windows-1252" http-equiv="content-type">
+    <title>gfshell Fitting Task Mode</title>
+  </head>
+  <body style="                       background-image: url(bgimg-gray.jpg);">
+    <h1> <img style="width: 48px; height: 48px;" title="GEMSFITS" alt="GEMSFITS"
+        src="gemsfit2.png"> GEMSFITS Code for GEM Input Parameter Optimization</h1>
+    <h2>gfshell Fitting Task Mode</h2>
+    <hr>
+    <h3>Contents</h3>
+    <ul>
+      <li><a href="#newtask">Create new fitting task</a> - generate a new
+        fitting task specification template</li>
+      <li><a href="#taskeditor">Edit the task specification</a></li>
+      <ul>
+        <li><a href="#dataselect">DataSelect</a> - which experimental data to
+          select</li>
+        <li><a href="#datatarget">DataTarget</a> - what data to compare and how
+          to calculate the sum of the minimized value</li>
+        <ul>
+          <li><a href="#weighting">Weighting</a> - options and how to assign
+            weights</li>
+        </ul>
+        <li><a href="#markup">Parameter Markup</a> - which parameters can be
+          optimized and how to mark them</li>
+        <li><a href="#opti_stat">Optimization and Statistics</a> - options
+          regarding the optimization algorithms and statistics</li>
+      </ul>
+      <li><a href="#run">Run gemsfits</a> (gemsfit2 optimization code)</li>
+    </ul>
+    <hr>
+    <h3><a id="newtask">1. Create new task</a></h3>
+    To create the first task specification file in the <span style="font-weight: bold;">Database
+      Mode go to Project -&gt; Select GEMS3K files</span>. The chemical system
+    definition files (<span style="font-family: Courier New,Courier,monospace;">GEMS3K</span>)
+    should be exported using the GEM-Selektor program in the<span style="font-weight: bold;">
+      /GEMS</span> project sub-folder. If the <span style="font-family: Courier New,Courier,monospace;">GEMS3K</span>
+    files are loaded correctly the IComp (elements) and Phases/Components should
+    be loaded and visible on the right side of the gfshell window. After
+    selecting the <span style="font-family: Courier New,Courier,monospace;">GEMS3K</span>
+    files by clicking on the F<span style="font-weight: bold;">itting Task
+      Mode&nbsp;</span> <img style="width: 24px; height: 24px;" alt="Fitting Task Mode"
+      title="Fitting Task Mode" src="img/DualThModuleIcon24.png">, a task
+    specification template using the selected chemical system definition is
+    created.<br>
+    <p>To insert the task specification as a record in the project database
+      click <span style="font-weight: bold;">Insert new record&nbsp;</span> <img
+        style="width: 24px; height: 24px;" alt="Insert record" title="Insert record"
+        src="img/NewCloneRecordIcon24.png">. The new task specification should
+      appear in the task list with the given "<span style="font-family: Courier New,Courier,monospace;">taskid</span>"
+      (name of task - default <span style="font-family: Courier New,Courier,monospace;">"template"</span>)
+      and <span style="font-family: Courier New,Courier,monospace;">"projectid"</span>
+      (name of current project).</p>
+    To create more specification tasks, use the <span style="font-weight: bold;">Create
+      new by template button</span> <img style="width: 24px; height: 24px;" alt="Create new by template"
+      title="Create new by template" src="img/NewCreateRecordIcon24.png"> and
+    change the <span style="font-family: Courier New,Courier,monospace;">"taskid"</span>
+    key text value to give a new task name (small description) and click <span
+      style="font-weight: bold;">Insert new record</span> <img style="width: 24px; height: 24px;"
+      alt="Insert record" title="Insert record" src="img/NewCloneRecordIcon24.png">.
+    This will create a template task specification and save it to the database.
+    This can also be done by changing the <span style="font-family: Courier New,Courier,monospace;">"taskid"</span>
+    key text value of an already existing task specification and click <span style="font-weight: bold;">Insert
+      new record</span> <img style="width: 24px; height: 24px;" alt="Insert record"
+      title="Insert record" src="img/NewCloneRecordIcon24.png"> to save it in
+    the database.<br>
+    <br>
+    <hr>
+    <h3><a id="taskeditor">2. Task specification file editor</a></h3>
+    <p>The data entries have been copied from the respective GEMS3K input (.ipm,
+      .dbr, .dch) files used upon creation of the task specification template
+      file and to be used by GEMS3K kernel codes in gemsfit2 calculations later
+      on. For the format and syntax of GEMS3K input files, see GEMS3K
+      documentation (<a title="GEMS3K" href="http://gems.web.psi.ch/GEMS3K">http://gems.web.psi.ch/GEMS3K</a>).</p>
+    <p>The user edits the values of appropriate <a href="gemsfit-useref.html">keys</a>
+      to setup the desired options for performing a parameter optimization task.
+      The file has to be in valid <a href="gemsfit-json.html">JSON format</a>
+      which can be tested using Test JSON format <img style="width: 24px; height: 24px;"
+        alt="Test JSON format" title="Test JSON format" src="img/CalculateBCCIcon24.png">.
+      The possible keywords are described in the <a href="gemsfit-useref.html">user
+        reference</a> or are related to components / pahse names used in GEMS.<span
+        style="font-weight: bold;"><br>
+      </span></p>
+    <p> <span style="font-weight: bold;">Non-optimization related options:</span><br>
+      These values can be changed but the optimization process will run without
+      making any change to them.<br>
+    </p>
+    <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+      <tbody>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;">Keyword<br>
+          </td>
+          <td style="vertical-align: top; font-weight: bold; width: 305.5px;">Example<br>
+          </td>
+          <td style="vertical-align: top; width: 1182.5px;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">"taskid"</span></td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">"task_name"</span></td>
+          <td style="vertical-align: top;">task name (important for database
+            storing)<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">"projectid"</span></td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">"project_name"</span></td>
+          <td style="vertical-align: top;">project name (important for database
+            storing)</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">"MPI"</span></td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">4<br>
+            </span> </td>
+          <td style="vertical-align: top;">maximum number of processor threads
+            to be used&nbsp; during the optimization (default numberdepending on
+            the PC architecture is the maximum nuber of threads allowed)<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">"DataSource"</span></td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">0<br>
+            </span> </td>
+          <td style="vertical-align: top;">0 only options meaning EJDB
+            datasource; leave as is.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">"DataDB"</span></td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">"../EJDB/CSHQ"</span></td>
+          <td style="vertical-align: top;">path to the database files; is set
+            automatically from the project settings but can be changed if
+            thefiles are located elswhere than the default location;<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">"DataCollection"</span></td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">"experiments"</span></td>
+          <td style="vertical-align: top;">name of the database collection
+            containing the experimental data; default "experiments"<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">"SystemFiles"</span></td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">"../GEMS/export-cshq-dat.lst"</span></td>
+          <td style="vertical-align: top;">path and name of the GEMS3K *.lst
+            system file; is set automatically when creating the templatefile;
+            can be change is the files are prresent elswhere than the default
+            location; it is not recomended to use other GEMS3K files for
+            parameterotpimisation than the ones used for generating the task
+            specification. <br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; color: #ffccff;"> <span style="font-family: Courier New,Courier,monospace;">
+            </span>
+            <p style="margin: 0px; text-indent: 0px;"><span style="color: black;"><span
+                  style="font-family: Courier New,Courier,monospace;">"LimitOfDetection"</span></span></p>
+            <span style="font-family: Courier New,Courier,monospace;"> </span>
+          </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">1e-06<br>
+            </span> </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr style="font-weight: bold;">
+          <td colspan="3" rowspan="1" style="vertical-align: top; height: 50px;"><br>
+            GEMS3K / Chemical system definition related fields<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"> <span style="font-family: Courier New,Courier,monospace;">
+            </span>
+            <p style="margin: 0px; text-indent: 0px;"><span style="font-family: Courier New,Courier,monospace;">"ICNL"</span></p>
+            <span style="font-family: Courier New,Courier,monospace;"> </span>
+          </td>
+          <td style="vertical-align: top;"> <br>
+          </td>
+          <td style="vertical-align: top;">List of Independent Component names
+            (&lt;=4 characters per name)<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"> <span style="font-family: Courier New,Courier,monospace;">
+            </span>
+            <p style="margin: 0px; text-indent: 0px;"><span style="font-family: Courier New,Courier,monospace;">"DCNL"</span></p>
+            <span style="font-family: Courier New,Courier,monospace;"> </span>
+          </td>
+          <td style="vertical-align: top;"> <br>
+          </td>
+          <td style="vertical-align: top;">Name list of Dependent Components
+            (&lt;=16 characters per name)<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"> <span style="font-family: Courier New,Courier,monospace;">
+            </span>
+            <p style="margin: 0px; text-indent: 0px;"><span style="font-family: Courier New,Courier,monospace;">"PHNL"</span></p>
+            <span style="font-family: Courier New,Courier,monospace;"> </span>
+          </td>
+          <td style="vertical-align: top;"> <br>
+          </td>
+          <td style="vertical-align: top;">List of Phase names (&lt;=16
+            characters per name)<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"> <span style="font-family: Courier New,Courier,monospace;">
+            </span>
+            <p style="margin: 0px; text-indent: 0px;"><span style="font-family: Courier New,Courier,monospace;">"sMod"</span></p>
+            <span style="font-family: Courier New,Courier,monospace;"> </span>
+          </td>
+          <td style="vertical-align: top;"> <br>
+          </td>
+          <td style="vertical-align: top;">Codes (GEMS3K) for TSolMod
+            built-in&nbsp; models of mixing in multicomponent phases<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"> <span style="font-family: Courier New,Courier,monospace;">
+            </span>
+            <p style="margin: 0px; text-indent: 0px;"><span style="font-family: Courier New,Courier,monospace;">"LsMod"</span></p>
+            <span style="font-family: Courier New,Courier,monospace;"> </span>
+          </td>
+          <td style="vertical-align: top;"> <br>
+          </td>
+          <td style="vertical-align: top;">Dimensions of TSolMod &lt;IPxPH&gt;
+            and &lt;PMc&gt; data arrays [nPS*3]. In each row (forphase):<br>
+            [0] number of interaction parameters (rows in &lt;IPx&gt;); [1]
+            max.parameter order (columns in &lt;IPx&gt;);<br>
+            [2] number of coefficients per interaction parameter in
+            &lt;PMc&gt;array<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"> <span style="font-family: Courier New,Courier,monospace;">
+            </span>
+            <p style="margin: 0px; text-indent: 0px;"><span style="font-family: Courier New,Courier,monospace;">"IPxPH"</span></p>
+            <span style="font-family: Courier New,Courier,monospace;"> </span>
+          </td>
+          <td style="vertical-align: top;"> <br>
+          </td>
+          <td style="vertical-align: top;">Index lists (in TSolMod convention)
+            for interaction parameters of non-ideal solutions<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"> <span style="font-family: Courier New,Courier,monospace;">
+            </span>
+            <p style="margin: 0px; text-indent: 0px;"><span style="font-family: Courier New,Courier,monospace;">"LsMdc"</span></p>
+            <span style="font-family: Courier New,Courier,monospace;"> </span>
+          </td>
+          <td style="vertical-align: top;"> <br>
+          </td>
+          <td style="vertical-align: top;">Dimensions of TSolMod &lt;DMc&gt; and
+            &lt;MoiSN&gt; arrays [nPS*3]: In each row (for phase):<br>
+            [0] number of parameters per component; [1] 0; [2] 0. For
+            multi-site(sublattice) models: <br>
+            [1] number of sublattices nS; [2] total number of moieties nM acting
+            insublattice sites<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">
+              .....<br>
+            </span></td>
+          <td style="vertical-align: top;"> <br>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+    <hr>
+    <h3><a id="dataselect">a. DataSelec</a>t</h3>
+    <p>DataSelect section contains a query in JSON object format, used by the
+      gemsfit2 code for obtaining the experimental data from the provided
+      database. The selected database records will be the ones used during the
+      optimization procedure.</p>
+    <p>Any&nbsp; selection option can be left out. Leave empty <span style="font-family: Courier New,Courier,monospace;">"DataSelect"
+        : ""</span> to select all data in the database</p>
+    <table style="width: 100%" border="1">
+      <tbody>
+        <tr>
+          <td><span style="font-weight: bold;">Keyword</span></td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;">{ ... }
+              :</span></td>
+          <td>object in JSON format (in braces) describing what to select.</td>
+        </tr>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;">"usedatasets":
+              [...]</span></td>
+          <td>list of comma-separated names of experimental datasets to be used,
+            or empty string "" to select all available datasets.</td>
+        </tr>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;">"skipdatasets":
+              [...]</span></td>
+          <td>list of comma-separated names of experimental datasets to be
+            skipped, or empty string "" to not skip (in this case, usedataset
+            list will apply).</td>
+        </tr>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;">"uesamples":
+              [...]</span></td>
+          <td>list of comma-separated names of samples, or empty string "" to
+            select all samples.</td>
+        </tr>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;">"skipsamples":
+              [...]</span></td>
+          <td>list of comma-separated names of samples to be skipped, or empty
+            string "" to not skip (in this case, sample list will apply).</td>
+        </tr>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;">"usepairs":
+              [...]</span></td>
+          <td>list of pairs each consisting of an experimental dataset name and
+            a list of comma-separated sample names to be taken from this dataset
+            only; or an empty string "" for other options to apply.</td>
+        </tr>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;">"skippairs":
+              [...]<br>
+            </span></td>
+          <td>list of pairs each consisting of an experimental dataset name and
+            a list of comma-separated sample names to be skipped from this
+            dataset only; or an empty string "" for other options toappl&lt;</td>
+        </tr>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;">"sT":
+              [...]</span></td>
+          <td>list of comma-separated minimum and maximum temperature, C, or
+            empty string "" to select the data for all available temperatures.</td>
+        </tr>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;">"sP":
+              [...]</span></td>
+          <td>list of comma-separated minimum and maximum pressures, bar, or
+            empty string "" to select the data for all available pressures.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><span style="font-weight: bold;">Example query in JSON object format:</span><br>
+      <span style="font-family: Courier New,Courier,monospace;"><br>
+        "DataSelect" : { "usedatasets" : ["CH04", "CH04D"],<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "skipdatasets" : ["CH03", "CH03D"],<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "usesamples" : "",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "skipsamples" : "",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "usepairs" : "",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "skippairs" : [<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        { "dataset": "CHO4", "samples": ["01", "02"]},<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        { "dataset": "CHO4D", "samples": ["01", "02"]},<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        ],<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "sT" : [100, 1000],<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "sP" : [1, 2500]<br>
+        }<br>
+      </span><br>
+      <span style="font-weight: bold;"><a name="samplelist"></a>Importing to <span
+          style="font-family: Courier New,Courier,monospace;">"DataSelect"</span>
+        already selected records using the search query in the Database Mode:</span><br>
+    </p>
+    <p>The already sorted records using the search (query) function in the
+      database mode can be automatically inserted as a value of <span style="font-family: Courier New,Courier,monospace;">"DataSelect"</span>
+      using: <span style="font-weight: bold;">Fitting Task Mode -&gt; select
+        the task where you want to use the queried record list -&gt; Record
+        -&gt; Insert record list into task definition</span>. The sample list
+      can also be entered manually.</p>
+    <table style="width: 100%" border="1">
+      <tbody>
+        <tr>
+          <td><span style="font-weight: bold;">Keyword</span></td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;">"samplelist"
+              : [...]</span></td>
+          <td>list of JSON objects containing the dataset name (<span style="font-family: Courier New,Courier,monospace;">"DS"</span>),
+            sample name (<span style="font-family: Courier New,Courier,monospace;">"SA"</span>),
+            and weight (<span style="font-family: Courier New,Courier,monospace;">"WT"</span>).</td>
+        </tr>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;">"DS"</span></td>
+          <td>dataset name</td>
+        </tr>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;">"SA"</span></td>
+          <td>sample name</td>
+        </tr>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;">"WT"</span></td>
+          <td>weight (double)</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><span style="font-weight: bold;">&nbsp;Example of <span style="font-family: Courier New,Courier,monospace;">"samplelist"</span>
+        query in JSON object format:</span><br>
+      <br>
+      <span style="font-family: Courier New,Courier,monospace;">"DataSelect" : {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "samplelist" : [<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {"DS" : "Bhm_Ben_etal2001", "SA" : "Ben_1", "WT" : "1"},<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {"DS" : "Bhm_Ben_etal2001", "SA" : "Ben_2", "WT" : "1"},<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {"DS" : "Bhm_Ben_etal2001", "SA" : "Ben_3", "WT" : "1"},<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        ...,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {"DS" : "Bhm_Ben_etal2001", "SA" : "Ben_n", "WT" : "1"}<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]<br>
+        }</span></p>
+    <hr>
+    <h3><a id="datatarget">b. DataTarget</a></h3>
+    <p>Data Target section contains a JSON-format object used to describe which
+      GEM output data to compare with what experimental data.</p>
+    <p><span style="font-weight: bold;">Options:</span></p>
+    <table style="width: 100%" border="1">
+      <tbody>
+        <tr>
+          <td>Keyword</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;">{ ... }
+              <br>
+            </span></td>
+          <td> object in JSON format (in braces) describing what to compare and
+            which type of target function should be minimized.</td>
+        </tr>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;"><a title="Target"
+                href="gemsfit-useref.html#Target">"Target</a>"</span></td>
+          <td>name of the target (objective) function (optional)</td>
+        </tr>
+        <tr>
+          <td><a title="TT" href="gemsfit-useref.html#TT"><span style="font-family: Courier New,Courier,monospace;">"TT"</span></a></td>
+          <td>type of target function as sum of following terms:</td>
+        </tr>
+        <tr>
+          <td><br>
+          </td>
+          <td>
+            <table style="width: 100%" border="1">
+              <tbody>
+                <tr>
+                  <td><span style="font-style: italic;"><span style="font-family: Courier New,Courier,monospace;">"lsq"</span></span></td>
+                  <td> w*(measured-simulated)^2</td>
+                </tr>
+                <tr>
+                  <td><span style="font-family: Courier New,Courier,monospace; font-style: italic;">"lsq-norm"</span>
+                  </td>
+                  <td>w*(measured/avgm-simulated/avgm)^2; avgm is the arithmetic
+                    mean of measured values.</td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td><a title="WT" href="gemsfit-useref.html#WT"><span style="font-family: Courier New,Courier,monospace;"></span></a><a
+              name="WT"></a>"WT"</td>
+          <td>weighting scheme for samples, one of the following options:</td>
+        </tr>
+        <tr>
+          <td><br>
+          </td>
+          <td>
+            <table style="width: 100%" border="1">
+              <tbody>
+                <tr>
+                  <td><span style="font-style: italic;"><span style="font-family: Courier New,Courier,monospace;">"inverr"</span></span></td>
+                  <td> w=1/error</td>
+                </tr>
+                <tr>
+                  <td><span style="font-style: italic;"><span style="font-family: Courier New,Courier,monospace;">"inverr2"</span></span>
+                  </td>
+                  <td>w=1/error^2</td>
+                </tr>
+                <tr>
+                  <td><span style="font-style: italic;"><span style="font-family: Courier New,Courier,monospace;">"inverr3"</span></span></td>
+                  <td>w=1/measured^2</td>
+                </tr>
+                <tr>
+                  <td><span style="font-style: italic;"><span style="font-family: Courier New,Courier,monospace;">"inverr_norm"</span></span></td>
+                  <td>w=1/(error/avgm)^2; avgm is the arithmetic mean of
+                    measured values.</td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td><a title="OFUN" href="gemsfit-useref.html#OFUN"><span style="font-family: Courier New,Courier,monospace;">"OFUN"</span></a></td>
+          <td>objective function, a list <span style="font-family: Courier New,Courier,monospace;">[]</span>
+            of terms <span style="font-family: Courier New,Courier,monospace;">{}
+              </span>for measured properties to compare with their computed
+            counterparts. Each term can contain property-value pairs</td>
+        </tr>
+        <tr>
+          <td><br>
+          </td>
+          <td>
+            <table style="width: 100%;" border="1">
+              <tbody>
+                <tr>
+                  <td><span style="font-family: Courier New,Courier,monospace;">"EPH"</span></td>
+                  <td>for what phase from the experiments</td>
+                </tr>
+                <tr>
+                  <td><span style="font-family: Courier New,Courier,monospace;">"CT"</span></td>
+                  <td>for the type of data to compare; Possible values:</td>
+                </tr>
+                <tr>
+                  <td><br>
+                  </td>
+                  <td>
+                    <table style="width: 100%" border="1">
+                      <tbody>
+                        <tr>
+                          <td><span style="font-style: italic;"><span style="font-family: Courier New,Courier,monospace;">"IC"</span></span></td>
+                          <td>for independent component </td>
+                        </tr>
+                        <tr>
+                          <td><span style="font-style: italic;"><span style="font-family: Courier New,Courier,monospace;">"DC"</span></span></td>
+                          <td>for dependent component </td>
+                        </tr>
+                        <tr>
+                          <td><span style="font-style: italic;"><span style="font-family: Courier New,Courier,monospace;">"prop"</span></span></td>
+                          <td>for phase property</td>
+                        </tr>
+                        <tr>
+                          <td><span style="font-style: italic;"><span style="font-family: Courier New,Courier,monospace;">"MR"</span></span></td>
+                          <td>for mole fraction</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span style="font-family: Courier New,Courier,monospace;">"CN"</span></td>
+                  <td style="height: 20px;">the name/formula of the data to
+                    compare. e.g. <span style="font-family: Courier New,Courier,monospace; font-style: italic;">"Al"</span>
+                    if <span style="font-family: Courier New,Courier,monospace;">"CT"</span>
+                    is <span style="font-family: Courier New,Courier,monospace; font-style: italic;">"IC"</span>,
+                    or <span style="font-family: Courier New,Courier,monospace; font-style: italic;">"pH"</span>
+                    if <span style="font-family: Courier New,Courier,monospace;">"CT"</span>
+                    is <span style="font-family: Courier New,Courier,monospace; font-style: italic;">"prop"</span>,
+                    or <span style="font-family: Courier New,Courier,monospace; font-style: italic;">"K/(Na+K)"</span>
+                    if <span style="font-family: Courier New,Courier,monospace;">"CT"</span>
+                    is <span style="font-family: Courier New,Courier,monospace; font-style: italic;">"MR"</span></td>
+                </tr>
+                <tr>
+                  <td><span style="font-family: Courier New,Courier,monospace;">"DCP"</span></td>
+                  <td>used only if <span style="font-family: Courier New,Courier,monospace;">"CT"
+                      : <span style="font-style: italic;">"DC"</span></span>,
+                    to represent the name of the dependent component property</td>
+                </tr>
+                <tr>
+                  <td><span style="font-family: Courier New,Courier,monospace;"></span><br>
+                  </td>
+                  <td>
+                    <table style="width: 100%" border="1">
+                      <tbody>
+                        <tr>
+                          <td><em><span style="font-family: Courier New,Courier,monospace;">"Q"</span></em></td>
+                          <td>for amount</td>
+                        </tr>
+                        <tr>
+                          <td><span style="font-style: italic;"><span style="font-family: Courier New,Courier,monospace;">"@coef"</span></span></td>
+                          <td>for activity coefficient</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span style="font-family: Courier New,Courier,monospace;">"unit"</span></td>
+                  <td>what unit the values should are given in (overrides the
+                    units given in the database for this entry) (optional);<br>
+                    <span style="font-family: Courier New,Courier,monospace; font-style: italic;">"molal"</span>:&nbsp;
+                    mol/(kg H2O), <span style="font-family: Courier New,Courier,monospace; font-style: italic;">"logm"</span>:
+                    log(molal), <span style="font-family: Courier New,Courier,monospace; font-style: italic;">"-loga"</span>:
+                    negated log(activity); <span style="font-style: italic;"><span
+                        style="font-family: Courier New,Courier,monospace;">"g"</span>;
+                    </span><span style="font-family: Courier New,Courier,monospace;"><span
+                        style="font-style: italic;">"kg"; "cm3"; "m3";</span> <span
+                        style="font-style: italic;">"molratio"</span></span>:
+                    mole ratio; <span style="font-style: italic;">"<span style="font-family: Courier New,Courier,monospace;">kJ/mol"</span></span>:
+                    energy units for Gex; <span style="font-family: Courier New,Courier,monospace; font-style: italic;">"volts"</span>.</td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td><a title="NFUN" href="gemsfit-useref.html#NFUN"><span style="font-family: Courier New,Courier,monospace;">"NFUN"</span></a></td>
+          <td>nested objective function, a list<span style="font-family: Courier New,Courier,monospace;">
+              []</span> of terms <span style="font-family: Courier New,Courier,monospace;">{}</span>
+            for measured properties to compare with their computed counterparts
+            for each experiment independently of <span style="font-family: Courier New,Courier,monospace;">"OFUN"</span>
+            for adjusting a input property <span style="font-family: Courier New,Courier,monospace;">"Ptype</span>"
+            to obtain an output value given by <span style="font-family: Courier New,Courier,monospace;">"EPH"</span>,
+            <span style="font-family: Courier New,Courier,monospace;">"CT"</span>
+            and <span style="font-family: Courier New,Courier,monospace;">"CN"</span>
+            pairs.<br>
+            <span style="font-weight: bold;">IMPORTANT</span>: When "NFUN" is
+            specified in Data Target section, at least one element in "Ptype"
+            property object must be marked for fitting. More than one NFUN
+            entries with different "Ptype" input properties can be used with
+            caution. </td>
+        </tr>
+        <tr>
+          <td><br>
+          </td>
+          <td>
+            <table style="width: 100%;" border="1">
+              <tbody>
+                <tr>
+                  <td><span style="font-family: Courier New,Courier,monospace;">"Ptype"</span></td>
+                  <td>can have a value <span style="font-family: Courier New,Courier,monospace; font-style: italic;">"bIC"</span>
+                    or <span style="font-family: Courier New,Courier,monospace; font-style: italic;">"T-P"</span>.
+                    The former refers to adjusting some parts of the bulk
+                    composition of the system representing the sample. The
+                    latter refers to adjusting the temperature, the pressure, or
+                    both.</td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td><a title="ADDOUT" href="gemsfit-useref.html#ADDOUT"><span style="font-family: Courier New,Courier,monospace;"></span></a>
+            <a name="addout"></a> <a href="gemsfit-useref.html#ADDOUT"><span style="font-family: Courier New,Courier,monospace;">"ADDOUT"</span></a></td>
+          <td> additional output, a list <span style="font-family: Courier New,Courier,monospace;">[]</span>
+            of terms <span style="font-family: Courier New,Courier,monospace;">{}</span>
+            for additional output in the results file. The options are the same
+            as for <span style="font-family: Courier New,Courier,monospace;">OFUN</span>
+            with an additional <span style="font-family: Courier New,Courier,monospace;">"SRC"</span>
+            key </td>
+        </tr>
+        <tr>
+          <td><br>
+          </td>
+          <td>
+            <table style="width: 100%" border="1">
+              <tbody>
+                <tr>
+                  <td><span style="font-family: Courier New,Courier,monospace;">"SRC"</span></td>
+                  <td>whose value can be: <br>
+                    <span style="font-family: Courier New,Courier,monospace; font-style: italic;">"calc"</span>
+                    if the aditional output is not present in the database but
+                    can be retrieved trough GEMS calculation<br>
+                    <span style="font-family: Courier New,Courier,monospace; font-style: italic;">"meas"</span>
+                    if the additional output is present in the database but was
+                    not used in the <span style="font-family: Courier New,Courier,monospace;">OFUN</span><br>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p> <span style="font-weight: bold;"></span><span style="font-weight: bold;">The
+        comparison options are:</span><span style="font-weight: bold;"></span></p>
+    <p> </p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; aqueous phase ("aq_gen") elemental
+      composition in "molal" or "loga"<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; aqueous phase ("aq_gen") properties
+      ("prop"):<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "pH" in "-loga" (or "molal" - molal
+      concentration of H+); "Q" - mass in "g" or "kg" <br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; other phases composition as element
+      bulk amount in moles ("mol") or "MR".<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; other phases properties ("prop"): "Q"
+      - mass in "g" or "kg"; "pV" - volume in "cm3" or "m3"; "Eh" - Eh in
+      "Volts" ;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      "Gex"&nbsp; - excess Gibbs energy of mixing (in "kJ/mol").<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dependent components ("DC")
+      properties: "Q" - amount in "molfrac"; "@coef" - activity coefficient<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...</p>
+    <p><span style="font-weight: bold;">Example definition of target function in
+        JSON-style format:</span></p>
+    <p><span style="font-family: Courier New,Courier,monospace;">"DataTarget" :
+        { "Target": "name", "TT": "lsq", "WT": "inverr", "OFUN":<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { "EPH": "aq_gen",
+        "CT": "IC", "CN": "Si", "unit": "molal" },<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { "EPH": "aq_gen",
+        "CT": "IC", "CN": "Al", "unit": "molal" },<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { "EPH": "aq_gen",
+        "CT": "prop", "CN": "pH",&nbsp; "unit": "-loga" }<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { "EPH": "aq_gen",
+        "CT": "DC", "CN": "SiO2@", "DCP": "Q", "unit": "molal" },<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]<br>
+        &nbsp;&nbsp; }'<br>
+      </span></p>
+    <p><span style="font-family: Courier New,Courier,monospace;">"DataTarget" :{
+        "Target": "name", "TT": "lsq", "WT": "1", "OFUN":<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { "EPH": "aq_gen",
+        "CT": "IC", "CN": "Si", "unit": "molal" },<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { "EPH": "aq_gen",
+        "CT": "IC", "CN": "Al", "unit": "molal" },<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ], "NFUN":<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { "Ptype": "bIC",
+        "EPH": "aq_gen", "CT": "prop", "CN": "pH", "unit": "-loga" }<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]<br>
+        &nbsp; }<br>
+      </span></p>
+    <p><span style="font-family: Courier New,Courier,monospace;"> <font style="font-weight: bold; font-family: monospace;"><font
+            size="2"> <a name="DTE3"></a> </font></font> "DataTarget" :
+        {&nbsp; "TT" : "lsq", "WT" : "inverr3",&nbsp; "OFUN" :<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {
+        "EPH":"aq_gen", "CT":"IC", "CN":"Ca", "unit":"log_molal", "WT":1 },<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {
+        "EPH":"aq_gen", "CT":"IC", "CN":"Si", "unit":"log_molal", "WT":5 },<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {
+        "EPH":"C-S-H-Q", "CT":"MR", "CN":"Ca/Si", "unit":"molratio", "WT":3 }<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ],<br>
+        &nbsp;&nbsp;&nbsp; "ADDOUT" :<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {
+        "SRC":"meas", "EPH":"C-S-H-Q", "CT":"prop", "CN":"Q", "unit":"molal"}<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]<br>
+        }</span></p>
+    <p><span style="font-family: Courier New,Courier,monospace;">TT</span> –
+      type of function used to calculate the residuals (e.g.“<span style="font-family: Courier New,Courier,monospace;">lsq</span>”
+      least squares); <span style="font-family: Courier New,Courier,monospace;">WT</span>
+      – type of weight;</p>
+    <p><span style="font-family: Courier New,Courier,monospace;">OFUN</span>
+      –array of objective function terms, describing the type of data to
+      compare; <span style="font-family: Courier New,Courier,monospace;">EPH</span>
+      – from which phase (name); <span style="font-family: Courier New,Courier,monospace;">CT</span>
+      – what data from the phase (e.g. <span style="font-family: Courier New,Courier,monospace;">IC</span>
+      – independent component/element; prop – property); <span style="font-family: Courier New,Courier,monospace;">CN</span>
+      – name/formula of the property to compare; unit – the unit in which the
+      property will be used throughout the fitting process (internal conversion
+      when possible, otherwise the default units have to be used).</p>
+    <p><span style="font-family: Courier New,Courier,monospace;">NFUN</span>
+      –array of nested function terms describing what property should be used
+      for fitting parameters related to each experimental sample; <span style="font-family: Courier New,Courier,monospace;">Ptype</span>
+      – type of the parameters optimized with the nested function (e.g. <span style="font-family: Courier New,Courier,monospace;">bIC</span>
+      – bulk chemical composition; <span style="font-family: Courier New,Courier,monospace;">T-P</span>
+      – temperature and/or pressure); optional pairs: <span style="font-family: Courier New,Courier,monospace;">Tformula</span>
+      – the acid and base titrants formula (specific for titration problems); <span
+        style="font-family: Courier New,Courier,monospace;">Telem</span> – <span
+        style="font-family: Courier New,Courier,monospace;">bIC</span> free
+      fitted elements that are part of the titrants composition in the same
+      order as <span style="font-family: Courier New,Courier,monospace;">Tformula</span>;<span
+        style="font-family: Courier New,Courier,monospace;"><br>
+      </span></p>
+    <p><span style="font-family: Courier New,Courier,monospace;">ADDOUT</span> –
+      array of additional output terms (written in the fit output csv file and
+      viewable in the Fit for Sample tab in the gfshell Fit Results View Mode);
+      <span style="font-family: Courier New,Courier,monospace;">SCR</span> –
+      type of additional output data, can be&nbsp;<span style="font-family: Courier New,Courier,monospace;"><span
+          style="font-family: Courier New,Courier,monospace;">"calc"</span></span>
+      from GEMS3K output or <span style="font-family: Courier New,Courier,monospace;">"meas"</span>
+      from the database.</p>
+    <hr>
+    <h3><a id="weighting">Weighting:</a></h3>
+    <p>1. Weights can be provided by the user in the column <span style="font-family: Courier New,Courier,monospace;">"weight"</span>
+      of the experimental data spread sheet. These weights are used when <span
+        style="font-family: Courier New,Courier,monospace;">"OptUserWeight"</span>
+      in the input file is set to 1.<br>
+      <br>
+      2. Weights can be provided for each experiment using the <a href="gfshell-taskmode.html#samplelist"><span
+          style="font-family: Courier New,Courier,monospace;">"samplelist"</span>
+        method in the <span style="font-family: Courier New,Courier,monospace;">"DataSelect</span></a><span
+        style="font-family: Courier New,Courier,monospace;">"</span> as <span style="font-family: Courier New,Courier,monospace;">"WT":
+        value</span>.<br>
+      <br>
+      3. A general weighing option applied the hole selected data can be
+      provided in the <span style="font-family: Courier New,Courier,monospace;">"DataTarget"</span>
+      as <span style="font-family: Courier New,Courier,monospace;">"WT": value</span><a
+        href="gfshell-taskmode.html#WT"> described above</a>.<br>
+      <br>
+      4. Each objective function (type of data to compare) can have a separate
+      weight as a value provided in the <span style="font-family: Courier New,Courier,monospace;">"WT"</span>
+      <a href="gfshell-taskmode.html#DTE3">of each respective <span style="font-family: Courier New,Courier,monospace;">OFUN</span></a>.<br>
+      <br>
+      5. <a name="Tuckey"></a>Tuckey biweight is a relative wighting method for
+      dealing with outliers which get a weight of 0 if thier residual is &gt;
+      than C=6*(median of residuals) or a relative weight dependeing on the
+      distance from C.&nbsp; The weight can be applied for all data, by setting
+      <span style="font-family: Courier New,Courier,monospace;">"OptTuckey": 1</span>,
+      or a C is calculated for each objective function separately, by setting "<span
+        style="font-family: Courier New,Courier,monospace;">OptTuckey": 2</span>,
+      deactivate <span style="font-family: Courier New,Courier,monospace;">"OptTuckey":
+        -1</span>. The weights are calculated as follows:<br>
+      <img style="width: 109px; height: 51px;" alt="Tuckey" title="Tuckey" src="img/Tuckey.png"><br>
+      wi - weight; Ri - residual; C cutoff value</p>
+    <hr>
+    <h3><a id="markup">&nbsp;c. Parameter Markup</a></h3>
+    <p>Some parameters can be used for global optimization (are common to all
+      experiments) and others only for nested optimization (are related to each
+      individual experiment)</p>
+    <p>To tell GEMSFITS which GEM input parameters must be fitted, locate them
+      in <span style="font-weight: bold;">"<span style="font-family: Courier New,Courier,monospace;">TKval",
+          "Pval", "G0",&nbsp; "PMc", "DMc", "fDQF", "bIC"</span></span> ... JSON
+      object entries in the task specification, and mark them using the JSON
+      format as described bellow:</p>
+    <table style="width: 100%" border="1">
+      <tbody>
+        <tr>
+          <td>Parameter</td>
+          <td>Fitting Mode</td>
+          <td>Objective function</td>
+        </tr>
+        <tr>
+          <td>Standard state Gibbs free energy (25 °C and 1 bar) of phase
+            components <span style="font-family: Courier New,Courier,monospace; font-weight: bold;">"G0"
+              </span></td>
+          <td><a href="gfshell-taskmode.html#F_JSON">Free (<i>F</i>)</a><br>
+            <a href="gfshell-taskmode.html#R_JSON">Reaction constrained (<i>R</i>)</a><br>
+            <a href="gfshell-taskmode.html#S_JSON">Set (<span style="font-style: italic;">S</span>)</a><br>
+          </td>
+          <td>global</td>
+        </tr>
+        <tr>
+          <td>Mixing models interaction parameter coefficients "<span style="font-family: Courier New,Courier,monospace; font-weight: bold;">PMc",
+              "DMc</span>"<br>
+            DQF parameters of end members pure gas fugacities <span style="font-family: Courier New,Courier,monospace; font-weight: bold;">"fDQF"</span></td>
+          <td><a href="gfshell-taskmode.html#F_JSON">Free (<i>F</i>)</a><br>
+            <a href="gfshell-taskmode.html#S_JSON">Set (<span style="font-style: italic;">S</span>)</a></td>
+          <td>global</td>
+        </tr>
+        <tr>
+          <td>Temperature and pressure <span style="font-family: Courier New,Courier,monospace; font-weight: bold;">"TK",
+              "P</span></td>
+          <td><a href="gfshell-taskmode.html#F_JSON">Free (<i>F</i>)</a><br>
+            <a href="gfshell-taskmode.html#S_JSON">Set (<span style="font-style: italic;">S</span>)</a></td>
+          <td>nested</td>
+        </tr>
+        <tr>
+          <td>Element bulk composition <span style="font-family: Courier New,Courier,monospace; font-weight: bold;">"bIC"</span></td>
+          <td><a href="gfshell-taskmode.html#F_JSON">Free (<i>F</i>)</a><br>
+            <a href="gfshell-taskmode.html#L_JSON">Linearly constrained (<i>L</i>)</a><br>
+            <a href="gfshell-taskmode.html#S_JSON">Set (<span style="font-style: italic;">S</span>)</a></td>
+          <td>nested</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><span style="font-weight: bold;">Restrictions:</span> It is not possible
+      to fit <span style="font-family: Courier New,Courier,monospace;">G0</span>
+      paramaters together with P and/or T<br>
+      <br>
+      Parameters marked with "F", "L", and "R" will be adjusted during the
+      optimization run. Entries without "F", "L", "R" and "S" markup will not be
+      modified by gemsfit2; they will be used&nbsp; in GEM IPM and/or TSolMod
+      calculations, as provided form the GEMS3K files. To set a parameter value
+      to a desired new value that will not be adjusted during fitting use the
+      "S" markup. With "F" and "S" you can mark any type of parameters; with "L"
+      only bIC vector elements, and with "R"<span style="font-family: Courier New,Courier,monospace;">
+        "G0"</span>s which the user wants to handle as reaction-constrained.<br>
+      <br>
+      Mark with 'F' the parameter (value) that you want to adjust independently
+      of other fitting parameters. Shorthand option:<br>
+      <span style="font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;
+        {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "ptype" : "F",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "spec" : &lt;initval&gt;<br>
+        &nbsp;&nbsp;&nbsp; }</span></p>
+    <p><span style="font-family: Courier New,Courier,monospace;">&lt;initval&gt;</span>
+      : the initial value with default (10%) upper- and lower boundaries.&nbsp;
+      Of course, the &lt;initval&gt; can be modified to any desired value, if
+      necessary.<br>
+      <br>
+      <span style="font-weight: bold;">An example for fitting G0(298):</span><br>
+      <span style="font-family: Courier New,Courier,monospace;"></span></p>
+    <p><span style="font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;
+        "G0" : [<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "ptype" : "F",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "spec" : -899506<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "ptype" : "F",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "spec" : -1101740<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
+        &nbsp;&nbsp;&nbsp; -261881,<br>
+        &nbsp;&nbsp;&nbsp; -1567370,<br>
+        &nbsp;&nbsp;&nbsp; ...<br>
+        &nbsp;&nbsp;&nbsp; ]</span><br>
+      <br>
+      <span style="font-family: Courier New,Courier,monospace;"><a style="font-weight: bold;"
+          name="F_JSON"></a></span>The full JSON-style markup syntax for the
+      independently adjusted parameter (with explicitly given upper and lower
+      boundaries):<span style="font-family: Courier New,Courier,monospace;"><br>
+      </span></p>
+    <p><span style="font-family: Courier New,Courier,monospace;">&nbsp; {<br>
+        &nbsp;&nbsp;&nbsp; "ptype" : "F",<br>
+        &nbsp;&nbsp;&nbsp; "spec" : { "IV" :&lt;initval&gt;, "UB" :
+        &lt;upperbound&gt;, "LB" : &lt;lowbound&gt; }<br>
+        &nbsp; }</span><br>
+      <br>
+      <span style="font-weight: bold;">Example for marking Cl and Na mole
+        amounts (only in nested fitting):</span></p>
+    <p><span style="font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;
+        "bIC" : [<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 0.1666993,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "ptype" : "F",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "spec" : { "IV" :0.0109558194, "UB" : 0.1, "LB" : 0.001 }<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 44.57614,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "ptype" : "F",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "spec" : { "IV" :0.008213159, "UB" : 0.1, "LB" : 0.001 }<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 22.53674795,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 0<br>
+        &nbsp;&nbsp; ]</span><br>
+      <br>
+      &nbsp;&nbsp;&nbsp; Here,&nbsp; <span style="font-family: Courier New,Courier,monospace;">"IV"</span>:
+      is a keyword for the initial value <span style="font-family: Courier New,Courier,monospace;">&lt;initval&gt;</span>;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">"UB"</span>:
+      keyword upper boundary ( <span style="font-family: Courier New,Courier,monospace;">&gt;=
+        &lt;initval&gt;</span>);<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">"LB"</span>:
+      lower bundary;<br>
+      <br>
+      <span style="font-family: Courier New,Courier,monospace;"><a name="R_JSON"></a></span>Mark
+      with <span style="font-family: Courier New,Courier,monospace;">'R'</span>
+      the G0(298) value of a dependent component, which depends on G0 of other
+      dependent components via a reaction constraint. Example:<br>
+      <br>
+      <span style="font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;
+        "G0" : [<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ...,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "ptype": "R", "spec": { "IV": -2273990, "Ref": "reciprocal",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "order": 1, "nC": 4, "DC": "CSH-JenH",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "RC":
+        [ "CSH-JenD", "CSH-TobH", "CSH-TobD", "CSH-JenH ],<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "Rcoef": [ -1, -1, 1, 1 ] }<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ...<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ]</span><br>
+      <br>
+      &nbsp;&nbsp;&nbsp; Here,&nbsp; <span style="font-family: Courier New,Courier,monospace;">"IV"</span>:
+      initial value;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">"Ref</span>":
+      bibliographic reference;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">"logK"</span>:
+      reaction equilibrium constant at 298 K, 1 bar;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">"nC"</span>:
+      numer of components (species) involved in the reaction;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">"DC"</span>:
+      name of dependent component whose properties are constrained with this
+      reaction;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">"RC"</span>:
+      list [ ] of names of all components (species) involved in the reaction
+      (comma-separated);<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">"Rcoef"</span>:
+      array [ ] of reaction stoichiometry coeficients (comma-separated), in the
+      same order as in the "RC" list.<br>
+      <br>
+      <span style="font-family: Courier New,Courier,monospace;"><span style="font-family: monospace;"><a
+            name="L_JSON"></a></span></span>Mark with L the <span style="font-family: Courier New,Courier,monospace;">bIC
+        </span>(element bulk composition) value of an independent component,
+      which depends on <span style="font-family: Courier New,Courier,monospace;">bIC</span>
+      of other elements via a titration constraint similar to the following
+      template in place of the <span style="font-family: Courier New,Courier,monospace;">bIC</span>
+      value, and edit it to make the desired changes. Example of linking H and O
+      mole amount to Cl and Na, trough HCl and NaOH.<br>
+      <br>
+      <span style="font-family: Courier New,Courier,monospace;">
+        &nbsp;&nbsp;&nbsp;&nbsp; "bIC" : [<br>
+        &nbsp;&nbsp;&nbsp; 0.1666993,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "ptype" : "F", "spec" : 0.01095581941<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "ptype" : "L",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "spec" : { "LE" :"H", "IV" :44.57614, "LEs" :["Na", "Cl"],<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "Lcoef" :[1,1]}<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "ptype" : "F", "spec" : 0.008213159<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "ptype" : "L",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "spec" : { "LE" :"O", "IV" :22.53674795, "LEs" :"Na",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "Lcoef" :1}<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
+        &nbsp;&nbsp;&nbsp; 0<br>
+        &nbsp;&nbsp;&nbsp; ]</span><br>
+      <br>
+      &nbsp;&nbsp;&nbsp; Here, <span style="font-family: Courier New,Courier,monospace;">H</span>
+      (hydrogen) and <span style="font-family: Courier New,Courier,monospace;">O</span>
+      (oxigen) is linked to <span style="font-family: Courier New,Courier,monospace;">Cl</span>
+      (clorine) and <span style="font-family: Courier New,Courier,monospace;">Na
+        </span>(sodium) by titration of HCl and NaOH.<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">"LE"</span>:
+      linked element<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">"IV"</span>:
+      initial value<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">"LEs"</span>:
+      the elements linked to<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">"Lcoef"</span>:
+      linking coeficients (stoechiometric coeficients)<br>
+      <br>
+      <span style="font-family: Courier New,Courier,monospace;"><font style="font-weight: bold;"
+          face="Courier New, monospace"><font size="2"><a name="S_JSON"></a></font></font></span>To
+      set a parameter value to a desired new value that will not be adjusted
+      during fitting use the 'S' markup:<br>
+      <span style="font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;
+        {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "ptype" : "S",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "spec" : &lt;val&gt;<br>
+        &nbsp;&nbsp;&nbsp; }</span></p>
+    <hr>
+    <h3><a id="opti_stat">d. Optimization and Statistics options</a></h3>
+    <p>The user can select various optimization and statistics options by
+      assigning the appropriate values to the following task specification JSON
+      entries:</p>
+    <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+      <tbody>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;">Keyword<br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-weight: bold;">Options
+/
+              Description</span><br>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <p style="margin: 0px; text-indent: 0px;"><span style="font-family: Courier New,Courier,monospace;">"OptDoWhat"</span></p>
+          </td>
+          <td style="vertical-align: top;">(0) perform optimization and
+            statistics;<br>
+            (1) only optimization with basic Statistics;<br>
+            (2) only Statistics&nbsp; with initial guesses as best fit
+            parametters;<br>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <p style="margin: 0px; text-indent: 0px;"><span style="font-family: Courier New,Courier,monospace;">"OptEquilibrium"</span></p>
+          </td>
+          <td style="vertical-align: top;">(-1) no GEMS3K equilibirum is
+            performed, greately imporves computational speed (when optimizing
+            activity model parameters against the data such as osmotic
+            coefficients of water or excess Gibbs energy of a solid solution,
+            when the equilibrium phase composition is known, so the calculation
+            of equilibrium in the whole system is not necessary);<br>
+            ( 1) calculates thermodynamic equlibrium for each experiment at each
+            optimization step;<br>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <p style="margin: 0px; text-indent: 0px;"><span style="font-family: Courier New,Courier,monospace;">"OptUserWeight"</span></p>
+          </td>
+          <td style="vertical-align: top;">(-1) don't use (if present) the
+            weight provided in the "weight" column of the experimental database;<br>
+            ( 1) use (if present) the weight provided in the "weight" column of
+            the experimental database;<br>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <p style="margin: 0px; text-indent: 0px;"><span style="font-family: Courier New,Courier,monospace;">"OptTuckey"</span></p>
+          </td>
+          <td style="vertical-align: top;">(-1) don't use <a href="gfshell-taskmode.html#Tuckey">Tuckey
+Biweight
+              method</a><br>
+            ( 1) use with Tuckey Biweight method C (outlier cutoff value) is
+            calculated for all data<br>
+            ( 2) use with Tuckey Biweight method C (outlier cutoff value) is
+            calculated for each type of data (objective function OFUN)
+            separately<br>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"> <span style="font-family: Courier New,Courier,monospace;"><br>
+              "OptTuckeyVal"</span></td>
+          <td style="vertical-align: top;">mutiplier value used to calculate C <a
+              href="gfshell-taskmode.html#Tuckey">(outlier cutoff value)</a>;
+            default 6;<br>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"> <span style="font-family: Courier New,Courier,monospace;"><br>
+              "OptAlgo" <br>
+            </span> </td>
+          <td style="vertical-align: top;">code of the algorithm to be used;
+            available algorithms: "<a href="http://ab-initio.mit.edu/wiki/index.php/NLopt_Algorithms"
+              target="_blank">GN_ISRES", "GN_ORIG_DIRECT", "GD_MLSL", "</a><a href="http://ab-initio.mit.edu/wiki/index.php/NLopt_Algorithms"
+              target="_blank">LN_COBYLA", "LN_BOBYQA", "LN_NEWUOA", "LN_PRAXIS",
+              "LD_VAR1", "LD_LBFGS", "LD_MMA", "LD_SLSQP". </a><br>
+            L - local algorithm; G - global algorithm; N - derivative/gradient
+            free; D - gradient based;<br>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">
+              "OptBoundPerc"</span></td>
+          <td style="vertical-align: top;">(-1) user specific bounds, defined in
+            parameter markup, if not default 10% for parameters without assigned
+            bounds;<br>
+            (0 &lt; val)&nbsp; bound % assigned to all parameters, except for
+            the parameters with initial value 0; overwrites bounds assigned
+            trough parameter markup; <br>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">
+              "OptTolRel"</span></td>
+          <td style="vertical-align: top;">stopping criterion -&gt; specify
+            relative tolerance (default = 1e-06); STOP when an optimization step
+            (or an estimate of the optimum) changes the objective function value
+            by less than OptTolRel multiplied by the absolute value of the
+            function value;&nbsp; use higher tolerance values for global
+            algorithms;<br>
+            (-1) deactivated;<br>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">
+              "OptTolAbs"</span></td>
+          <td style="vertical-align: top;">stopping criterion -&gt; specify
+            absolute tolerance (default = 1e-06); STOP when an optimization step
+            (or an estimate of the optimum) changes the function value by less
+            than OptTolAbs;&nbsp; use higher tolerance values for global
+            algorithms;<br>
+            (-1) deactivated;<br>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">
+              "OptMaxEval"</span></td>
+          <td style="vertical-align: top;">stopping criterion; STOP when the
+            number of function evaluations exceeds OptMaxEval;<br>
+            use 1 for evaulating the results with the initial parameter values;<br>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">
+              "OptInitStep"</span></td>
+          <td style="vertical-align: top;">initial stepsize for local minimizers
+            (factor will be multiplied to all optimization parameters); <br>
+            (0) use default;<br>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">
+              "OptNormParam"</span></td>
+          <td style="vertical-align: top;">( 1) Default, normalize
+            bounds/constraints/fitting parameters with initial guess vector;<br>
+            (-1) Use non-nomralized values;<br>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">
+              "OptPerturbator"</span></td>
+          <td style="vertical-align: top;">The delta/difference (d) used to to
+            calculate the d(function_value)/d(parameter_value) gradient<br>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">
+              "StatMCbool"</span></td>
+          <td style="vertical-align: top;">(-1) No Monte Carlo runs<br>
+            ( 1) Perform Monte Carlo runs<br>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">
+              "StatMCruns"</span></td>
+          <td style="vertical-align: top;">Number of Monte Carlo runs<br>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">
+              "StatSensitivity"</span></td>
+          <td style="vertical-align: top;">number of evaluations points per
+            parameter for sensitivity evaluation<br>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">
+              "StatPerturbator"</span></td>
+          <td style="vertical-align: top;">used for calculating sensitivities by
+            central diference; delta/difference (d) used to to calculate the
+            d(calcualted_value)/d(parameter_value);<br>
+            adjust the value so that the clculated values are sensitive to&nbsp;
+            the change of the parameters with&nbsp; the StatPerturbator value; <br>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+    <hr>
+    <h3><a id="run">3. Run gemsfits</a></h3>
+    After setting <span style="font-family: Courier New,Courier,monospace;">"DataSelect"</span>,
+    <span style="font-family: Courier New,Courier,monospace;">"DataTarget"</span>,
+    marking the parameters, choosing the appropriate optimization and statistics
+    options to run GEMSFITS click <span style="font-weight: bold;">Run Gemsfit2
+      parameter fitting task</span> <img style="width: 21px; height: 24px;" alt="Run gemsfit2"
+      title="Run gesmfit2" src="img/CalculateRecordDataIcon24.png">. If the
+    program run successfully and no errors were reported the results are
+    viewable from <span style="font-weight: bold;">View parameter fitting task
+      results</span> <img style="width: 24px; height: 23px;" alt="Fit Results"
+      title="Fit Results" src="img/ShowGEMResultsIcon24.png">. After opening the
+    results window, the results can be saved into the fits collection of the
+    project database with <span style="font-weight: bold; color: red;"><a name="save_results"></a></span><span
+      style="font-weight: bold;">Save gemsfit2 results to record</span> <img style="width: 24px; height: 24px;"
+      alt="Save results to record" title="Save results to record" src="img/NewCloneRecordIcon24.png">
+    and <span style="font-weight: bold;">Update record with saved results</span>
+    <img style="width: 24px; height: 24px;" alt="Update record with saved results"
+      title="Update record with saved results" src="img/SaveCurrentRecordIcon24.png">.&nbsp;
+    By saving the results to the database, they can be latter accessed in the <span
+      style="font-weight: bold;">Fit results view mode</span> <img style="width: 25px; height: 24px;"
+      alt="Fit results view mode" title="Fit results view mode" src="img/FitSpaceModuleIcon24.png">.&nbsp;
+    A description of the results window and how to plot them can be fund <a href="html/gfshell-resultsmode.html">here<span
+        style="color: black;">.</span></a><br>
+    <br>
+    <hr>
+    <p>Last updated:&nbsp; 15. 05. 2014&nbsp; DM, DK</p>
+    <p>Copyright&nbsp; (c) 2014&nbsp; <a target="_blank" title="http://gems.web.psi.ch/teamhist.html"
+        href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a></p>
+    <hr>
+    <p><br>
+    </p>
+  </body>
+</html>
