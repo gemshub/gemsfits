@@ -145,6 +145,8 @@ int TGfitTask::get_number_of_residuals( )
             get_residual(i, aTfun[i].objfun[j],count);
             nr_res +=count;
         }
+        if (count > 0)
+            Tfun->objfun[j].isComputed = true;
     }
     return nr_res;
 }

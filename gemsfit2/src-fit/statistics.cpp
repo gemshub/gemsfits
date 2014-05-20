@@ -228,7 +228,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     if( gpf->fqq.fail() )
     { cout<<"QQ plot data fileopen error"<<endl; exit(1); }
 
-    int np = optv_.size()-1;
+    int np = optv_.size();
 
     for(unsigned i=0; i< optv_.size(); i++ ) // cols
     {
@@ -264,7 +264,6 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     {
         for (unsigned i=0; i<gfittask->Opti->reactions.size(); ++i)
         {
-            np++;
             fitparam.push_back(new parameters);
             fitparam[np+i]->Ptype = "G0";
             fitparam[np+i]->Pfittype = "R";
@@ -274,14 +273,15 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
             fitparam[np+i]->CSS = 0.0;
             fitparam[np+i]->mc95 = 0.0;
             fitparam[np+i]->mcSTDEV = 0.0;
+
         }
     }
+    np = fitparam.size();
     if (gfittask->Opti->h_Lp)
     {
         for (unsigned i=0; i<gfittask->Opti->Lparams.size(); ++i)
         {
             fitparam.push_back(new parameters);
-            np++;
             fitparam[np+i]->Ptype = "bIC";
             fitparam[np+i]->Pfittype = "L";
             fitparam[np+i]->Pname = gfittask->Opti->Lparams[i]->name;
