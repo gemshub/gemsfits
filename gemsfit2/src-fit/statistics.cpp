@@ -145,6 +145,7 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
       objfun_stat[j]->norm_mean_res = 0.0;
       objfun_stat[j]->R2 = 0.0;
       objfun_stat[j]->nr = 0;
+      objfun_stat[j]->isComputed = false;
 
       for (unsigned i=0; i<gfittask->aTfun.size(); i++)
       {
@@ -162,6 +163,7 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
               if (gfittask->aTfun[i].objfun[j].results.residual >= 0) ++pos_residuals;
 
               objfun_stat[j]->nr++;
+              objfun_stat[j]->isComputed = true;
           }
       }
       objfun_stat[j]->norm_mean_res = objfun_stat[j]->norm_mean_res / objfun_stat[j]->nr;
@@ -379,14 +381,17 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 
     for (unsigned j = 0; j < objfun_stat.size(); j++)
     {
-        boost::math::normal distobj(  0., objfun_stat[j]->stdev_res );
-        for (i = 0; i < objfun_stat[j]->nr; i++)
+        if (objfun_stat[j]->isComputed)
         {
-            objfun_stat[j]->percentiles.push_back( (i+1-0.5)/ objfun_stat[j]->nr );
-            objfun_stat[j]->quantiles.push_back( boost::math::quantile( distobj, objfun_stat[j]->percentiles[i] ));
+            boost::math::normal distobj(  0., objfun_stat[j]->stdev_res );
+            for (i = 0; i < objfun_stat[j]->nr; i++)
+            {
+                objfun_stat[j]->percentiles.push_back( (i+1-0.5)/ objfun_stat[j]->nr );
+                objfun_stat[j]->quantiles.push_back( boost::math::quantile( distobj, objfun_stat[j]->percentiles[i] ));
+            }
+            // sorting residuals
+            sort( objfun_stat[j]->orderd_res.begin(), objfun_stat[j]->orderd_res.end() );
         }
-        // sorting residuals
-        sort( objfun_stat[j]->orderd_res.begin(), objfun_stat[j]->orderd_res.end() );
     }
 
 
@@ -401,8 +406,6 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         gpf->fqq << gfittask->Tfun->objfun[k].exp_phase + "." + gfittask->Tfun->objfun[k].exp_CN;
         gpf->fqq << ".quantile"<<",";
     }
-
-
 
     gpf->fqq << endl;
     bool waswritten = false;

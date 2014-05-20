@@ -414,6 +414,7 @@ void TGfitTask:: print_global_results ()
         header.push_back(temp + "." + keys::meas);
         header.push_back(temp + "." + keys::calc);
         header.push_back("residual");
+        header.push_back("weight");
 //        header.push_back("residual."+ Tfun->type);
     }
 
@@ -447,9 +448,10 @@ void TGfitTask:: print_global_results ()
             {
                 gpf->fres << setprecision(prec) << aTfun[i].objfun[j].results.measured_value <<","<<
                              setprecision(prec) << aTfun[i].objfun[j].results.computed_value << ","<<
-                             setprecision(prec) << aTfun[i].objfun[j].results.residual<<","/*<< aTfun[i].objfun[j].results.WTfun_residual << ","*/;
+                             setprecision(prec) << aTfun[i].objfun[j].results.residual<<","/*<< aTfun[i].objfun[j].results.WTfun_residual << ","*/ <<
+                             setprecision(prec) << aTfun[i].objfun[j].results.weight <<",";
             } else
-                gpf->fres << ","<< ","<<","/*<< ","*/;
+                gpf->fres << ","<< ","<<","<< ",";
 
         }
 

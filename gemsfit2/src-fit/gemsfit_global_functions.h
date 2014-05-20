@@ -95,7 +95,9 @@ double median(vector<double> absresiduals);
 * @date 18.12.2014
 */
 void set_Tuckey_weight_global (TGfitTask *sys);
+void set_Tuckey_weight_global_norm (TGfitTask *sys);
 void set_Tuckey_weight_objfun (TGfitTask *sys);
+void set_Tuckey_weight_objfun_norm (TGfitTask *sys);
 //ADD! void Tuckey_exp_objfun (TGfitTask *sys);
 
 

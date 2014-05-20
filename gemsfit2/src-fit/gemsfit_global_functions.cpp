@@ -101,14 +101,14 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     // Temporary storage vectors
     master_counter++;
 
-    if (sys->Opti->OptTuckey == 1)
-    {
-        set_Tuckey_weight_global(sys);
-    } else
-        if (sys->Opti->OptTuckey == 2)
-    {
-        set_Tuckey_weight_objfun(sys);
-    }
+//    if (sys->Opti->OptTuckey == 1)
+//    {
+//        set_Tuckey_weight_global(sys);
+//    } else
+//        if (sys->Opti->OptTuckey == 2)
+//    {
+//        set_Tuckey_weight_objfun(sys);
+//    }
 
     // Clear already stored results
     sys->computed_values_v.clear();
@@ -216,9 +216,30 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         {
             // possible return status analysis, error message
 //            sys->NodT[i]->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
-            cout<<"For experiment "<<i+1<< endl;
+            cout<<"For node: "<< i+1 <<" sample "<< sys->experiments[i]->sample << endl;
             cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
         }
+    }
+
+    if (sys->Opti->OptTuckey == 1)
+    {
+        residuals_sys = sys->get_sum_of_residuals( );
+        set_Tuckey_weight_global(sys);
+    } else
+        if (sys->Opti->OptTuckey == 3)
+    {
+        residuals_sys = sys->get_sum_of_residuals( );
+        set_Tuckey_weight_objfun(sys);
+    } else
+        if (sys->Opti->OptTuckey == 2)
+    {
+        residuals_sys = sys->get_sum_of_residuals( );
+        set_Tuckey_weight_global_norm(sys);
+    }  else
+        if (sys->Opti->OptTuckey == 4)
+    {
+        residuals_sys = sys->get_sum_of_residuals( );
+        set_Tuckey_weight_objfun_norm(sys);
     }
 
     residuals_sys = sys->get_sum_of_residuals( );
@@ -443,6 +464,46 @@ void set_Tuckey_weight_global (TGfitTask *sys)
     }
 }
 
+void set_Tuckey_weight_global_norm (TGfitTask *sys)
+{
+    double C = 0.0;
+    double median_ = 0.0;
+    vector <double> abs_res;
+
+    for (unsigned int i = 0; i < sys->aTfun.size(); i++)
+    {
+        for (unsigned int j = 0; j < sys->aTfun[i].objfun.size(); j++)
+        {
+            if (sys->aTfun[i].objfun[j].isComputed)
+            {
+                abs_res.push_back(fabs(sys->aTfun[i].objfun[j].results.residual/sys->aTfun[i].objfun[j].results.computed_value));
+            }
+
+        }
+    }
+
+    median_ = median(abs_res);
+    C = sys->Opti->OptTuckeyVal * median_;
+
+//#ifdef useomp
+//    omp_set_num_threads(sys->MPI);
+//    #pragma omp parallel for
+//#endif
+    for (unsigned int i = 0; i < sys->aTfun.size(); i++)
+    {
+        for (unsigned int j = 0; j < sys->aTfun[i].objfun.size(); j++)
+        {
+            if (sys->aTfun[i].objfun[j].isComputed)
+            {
+                if (( C - abs_res[i]) < 0)
+                    sys->aTfun[i].objfun[j].TuWeight = 0;
+                else
+                    sys->aTfun[i].objfun[j].TuWeight = pow((1 - pow((abs_res[i]/C), 2) ), 2);
+            }
+        }
+    }
+}
+
 void set_Tuckey_weight_objfun (TGfitTask *sys)
 {
     vector<double> C;
@@ -483,4 +544,43 @@ void set_Tuckey_weight_objfun (TGfitTask *sys)
     }
 }
 
+void set_Tuckey_weight_objfun_norm (TGfitTask *sys)
+{
+    vector<double> C;
+    vector<double> median_;
+    const int ln = sys->Tfun->objfun.size();
+    vector<double> abs_res[ln];
+
+    for (unsigned int j = 0; j < sys->Tfun->objfun.size(); j++)
+    {
+        for (unsigned int i = 0; i < sys->aTfun.size(); i++)
+        {
+            if (sys->aTfun[i].objfun[j].isComputed)
+            {
+                abs_res[j].push_back(fabs((sys->aTfun[i].objfun[j].results.residual/sys->aTfun[i].objfun[j].results.computed_value)));
+            }
+
+        }
+        median_.push_back(median(abs_res[j]));
+        C.push_back(sys->Opti->OptTuckeyVal * median_[j]);
+    }
+
+//#ifdef useomp
+//    omp_set_num_threads(sys->MPI);
+//    #pragma omp parallel for
+//#endif
+    for (unsigned int j = 0; j < sys->Tfun->objfun.size(); j++)
+    {
+        for (unsigned int i = 0; i < sys->aTfun.size(); i++)
+        {
+            if (sys->aTfun[i].objfun[j].isComputed)
+            {
+                if (( C[j] - abs_res[j][i]) < 0)
+                    sys->aTfun[i].objfun[j].TuWeight = 0;
+                else
+                    sys->aTfun[i].objfun[j].TuWeight = pow((1 - pow((abs_res[j][i]/C[j]), 2) ), 2);
+            }
+        }
+    }
+}
 

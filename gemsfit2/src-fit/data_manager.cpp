@@ -921,7 +921,7 @@ void Data_Manager::bson_to_Data_Manager(/* FILE *f, */ const char *data, int pos
 
 void Data_Manager::get_distinct_TP( )
 {
-    vector<int> TP[2];
+    vector<double> TP[2];
     unsigned int i, j;
     bool isfound = false, isfound2 = false;
 

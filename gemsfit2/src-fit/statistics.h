@@ -78,6 +78,7 @@ class statistics
         double min_res, max_res;
         int nr_pos_res, nr_neg_res;
         int nr;
+        bool isComputed;
     };
 
     vector<objfunstat*> objfun_stat;

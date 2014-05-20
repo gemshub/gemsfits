@@ -508,6 +508,11 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
             computed_value = rand() % 100 + 1;
         }
 
+        if ((objfun.exp_unit == keys::logm) && ((computed_value < log10(sys->LimitOfDetection))))
+        {
+            computed_value = rand() % 100 + 1;
+        }
+
         // check Target function type and calculate the Tfun_residual
         weight_ = weight(i, p, e, objfun, sys->Tfun->weight, sys) * objfun.TuWeight * objfun.weight;
         Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun);

@@ -734,6 +734,8 @@ gpf->flog << " : " << format << endl;
         else f4 = "#";
 
             pos_start = allparam.find(f3);
+            if (pos_start > 0)
+            {
             pos_end   = allparam.find(f4,pos_start +1 );
             LogK_s = allparam.substr((pos_start+f3.length()),(pos_end-pos_start-f3.length()));
             istringstream LogK_ss(LogK_s);
@@ -767,6 +769,7 @@ gpf->flog << " : " << format << endl;
                 LogK_ss >> sub_LogK;
             }while(LogK_ss);
 //            charges.pop_back();
+            }
     }
 
 

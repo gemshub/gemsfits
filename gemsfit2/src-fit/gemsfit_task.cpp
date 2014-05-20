@@ -153,6 +153,13 @@ void TGfitTask::gfit_error ( )
         }
     }
     }
+
+    if (this->Opti->opt.size() == 0)
+    {
+        cout << "No parameters were marked (correctly marked) for optimization! " << endl;
+        exit (1);
+    }
+
 }
 
 void TGfitTask::run_optim()
@@ -667,7 +674,7 @@ void TGfitTask::setnodes()
 
         // Calling GEMIPM calculation
         NodeStatusCH = NodT[n]->GEM_run( true );
-cout << "Node: " << NodeHandle << "  NodeStatusCH: " << NodeStatusCH << endl;
+cout << "Node: " << NodeHandle+1 << " Sample: " << experiments[n]->sample <<"  NodeStatusCH: " << NodeStatusCH << endl;
 
         if( ( NodeStatusCH == ERR_GEM_AIA || NodeStatusCH == ERR_GEM_SIA ||
                        NodeStatusCH ==  T_ERROR_GEM ) )
@@ -850,7 +857,7 @@ void TGfitTask::get_DataTarget ( )
         out2.clear();
 
         parse_JSON_object(out[i], keys::DCP, out2);
-        if ((out2.size() == 0) && (Tfun->objfun[i].exp_CT == keys::DC)) { cout << "Name of dependent component compared property has to be specified in Data Target->NFUN->DCP!"<< endl; exit(1);} // ERROR
+        if ((out2.size() == 0) && (Tfun->addout[i].exp_CT == keys::DC)) { cout << "Name of dependent component compared property has to be specified in Data Target->NFUN->DCP!"<< endl; exit(1);} // ERROR
         if (out2.size() > 0)
         Tfun->addout[i].exp_DCP = out2[0];
         out2.clear();

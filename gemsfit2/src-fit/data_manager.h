@@ -108,7 +108,7 @@ class Data_Manager : public TNode
         double LimitOfDetection; /// Experimetal limit of detection
         double minimum_value; /// Minimum measured avlue
 
-        std::vector<int> TP_pairs[2]; /// Stores unique TP pairs of the experiments. TP_pairs[0] temperature; TP_pairs[1] pressure.
+        std::vector<double> TP_pairs[2]; /// Stores unique TP pairs of the experiments. TP_pairs[0] temperature; TP_pairs[1] pressure.
 
         // structure holding one experimental set composed of more samples (experimental runs)
 
