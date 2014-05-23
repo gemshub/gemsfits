@@ -690,6 +690,7 @@ cout << "Node: " << NodeHandle+1 << " Sample: " << experiments[n]->sample <<"  N
               << NodeHandle << endl;
            }
         }
+
         delete[] new_moles_IC;
         delete[] xDC_up;
         delete[] xDC_lo;

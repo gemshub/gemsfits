@@ -671,6 +671,9 @@ gpf->flog << " : " << format << endl;
                     nr = atoi(out.at(0).c_str())-1;
                     out.clear();
 
+                    //ERROR
+//                    if (op->reactions[nr])
+
                     R_to_OP(op->reactions[nr], vFormats[ii] ); // , DataCH_dynamic_fields[nfild].name );
                 }
                 if (vFormats[ii].type == ft_S)

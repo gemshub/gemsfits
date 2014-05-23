@@ -144,9 +144,9 @@ int TGfitTask::get_number_of_residuals( )
         {
             get_residual(i, aTfun[i].objfun[j],count);
             nr_res +=count;
+            if (count > 0)
+                Tfun->objfun[j].isComputed = true;
         }
-        if (count > 0)
-            Tfun->objfun[j].isComputed = true;
     }
     return nr_res;
 }
@@ -473,6 +473,23 @@ void TGfitTask:: print_global_results ()
     }
 
     gpf->fres.close();
+
+
+    // print rhoW csv
+    ofstream fRHO;
+    path_ = gpf->OutputDirPath() + "RHO.csv";
+    fRHO.open(path_.c_str(), ios::trunc);
+    if( fRHO.fail() )
+    { cout<<"Results fileopen error"<<endl; exit(1); }
+    fRHO << "Pb,TK,RHO_gcm-3" << endl;
+
+    for (unsigned i = 0; i<TP_pairs[0].size(); i++)
+    {
+        fRHO <<TP_pairs[1][i] <<","<<TP_pairs[0][i] <<"," << NodT[i]->DenH2Ow(TP_pairs[1][i]*100000,TP_pairs[0][i]+273.15) << endl;
+    }
+
+    fRHO.close();
+
 
 }
 

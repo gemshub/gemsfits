@@ -101,14 +101,14 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     // Temporary storage vectors
     master_counter++;
 
-//    if (sys->Opti->OptTuckey == 1)
-//    {
-//        set_Tuckey_weight_global(sys);
-//    } else
-//        if (sys->Opti->OptTuckey == 2)
-//    {
-//        set_Tuckey_weight_objfun(sys);
-//    }
+    if (sys->Opti->OptTuckey == 5)
+    {
+        set_Tuckey_weight_global(sys);
+    } else
+        if (sys->Opti->OptTuckey == 6)
+    {
+        set_Tuckey_weight_objfun(sys);
+    }
 
     // Clear already stored results
     sys->computed_values_v.clear();
@@ -230,6 +230,16 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     {
         residuals_sys = sys->get_sum_of_residuals( );
         set_Tuckey_weight_objfun_norm(sys);
+    } else
+    if (sys->Opti->OptTuckey == 3)
+    {
+        residuals_sys = sys->get_sum_of_residuals( );
+        set_Tuckey_weight_global(sys);
+    } else
+    if (sys->Opti->OptTuckey == 4)
+    {
+        residuals_sys = sys->get_sum_of_residuals( );
+        set_Tuckey_weight_global(sys);
     }
 
     residuals_sys = sys->get_sum_of_residuals( );
@@ -320,14 +330,7 @@ void tsolmod_wrap( double &residual, const std::vector<double> &opt, TGfitTask *
     sys->residuals_v.clear();
     sys->weights.clear();
 
-    if (sys->Opti->OptTuckey == 1)
-    {
-        set_Tuckey_weight_global(sys);
-    } else
-        if (sys->Opti->OptTuckey == 2)
-    {
-        set_Tuckey_weight_objfun(sys);
-    }
+
 
     for (unsigned int i=0; i< sys->Opti->Ptype.size(); ++i)
     {
@@ -372,6 +375,16 @@ void tsolmod_wrap( double &residual, const std::vector<double> &opt, TGfitTask *
 
     }
 
+    if (sys->Opti->OptTuckey == 1)
+    {
+        residual = sys->get_sum_of_residuals( );
+        set_Tuckey_weight_global(sys);
+    } else
+        if (sys->Opti->OptTuckey == 2)
+    {
+        residual = sys->get_sum_of_residuals( );
+        set_Tuckey_weight_objfun(sys);
+    }
     residual = sys->get_sum_of_residuals( );
 
     gpf->flog << "~ m.count.= " << master_counter << " sum.res.= " << residual << endl;
