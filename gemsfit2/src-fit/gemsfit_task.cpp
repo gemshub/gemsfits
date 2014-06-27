@@ -662,7 +662,7 @@ void TGfitTask::setnodes()
         // in the future - implement a Tnode function that stes just T, P and bIC vector of amount of independent components.
         // ---- // ---- // Transfer new temperature, pressure and b-vector to GEMS3K // ---- // ---- //
 //        NodT[n]->GEM_from_MT( NodeHandle, NodeStatusCH, T_k, P_pa, 0., 0., new_moles_IC, xDC_up, xDC_lo, Ph_surf );
-
+//cout << new_moles_IC[0] << " " << new_moles_IC[1] << " " <<new_moles_IC[2] << " " <<new_moles_IC[3] << " " <<new_moles_IC[4] << " " <<new_moles_IC[5] << " " <<new_moles_IC[6] << " " << endl;
         // variant (8c) of GEM_from_MT()
         NodT[n]->GEM_from_MT( NodeHandle, NEED_GEM_AIA, T_k, P_pa, new_moles_IC, xDC_up, xDC_lo );  // bugfix DK 09.01.2014
 

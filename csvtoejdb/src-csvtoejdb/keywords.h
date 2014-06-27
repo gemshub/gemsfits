@@ -186,6 +186,7 @@ static const char *m3 = "m3"; ///                                           stri
 static const char *cm3 = "cm3"; ///                                         string              volume, cm3
 //static const char *Simolfrac = "simolfrac"; ///                             string              mole ratio to 1 mole of Si
 static const char *molratio = "molratio"; ///                               string              mole ratio
+static const char *log_molratio = "log_molratio";
 static const char *molfrac = "molfrac"; ///                                 string              mole fraction
 static const char *log_molfrac = "log_molfrac";
 static const char *ln_molfrac = "ln_molfrac";

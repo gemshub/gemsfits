@@ -272,6 +272,38 @@ void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
     }
 }
 
+void check_MR_unit(int i, int p, int f, string unit, TGfitTask *sys )
+{
+    if (sys->experiments[i]->expphases[p]->phMR[f]->Qunit != unit)
+    {
+        if (unit == keys::log_molratio)
+        {
+            // MR molal/molal to MR log(molal/molal)
+            if (sys->experiments[i]->expphases[p]->phMR[f]->Qunit == keys::molratio)
+            {
+                double error_perc = sys->experiments[i]->expphases[p]->phMR[f]->Qerror * 100 / sys->experiments[i]->expphases[p]->phMR[f]->Qnt;
+                sys->experiments[i]->expphases[p]->phMR[f]->Qnt = log10(sys->experiments[i]->expphases[p]->phMR[f]->Qnt);
+                sys->experiments[i]->expphases[p]->phMR[f]->Qerror = fabs(sys->experiments[i]->expphases[p]->phMR[f]->Qnt * error_perc / 100);
+                sys->experiments[i]->expphases[p]->phMR[f]->Qunit = keys::log_molratio;
+            }
+            else
+            {
+                cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+                exit(1);
+            }
+        }
+    }
+    else
+    {
+        if (sys->experiments[i]->expphases[p]->phMR[f]->Qunit != unit)
+        {
+            cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+            exit(1);
+        }
+    }
+
+}
+
 
 void check_unit_dcomp(int i, int p, int dc, int dcp, string unit, TGfitTask *sys )
 {
@@ -601,6 +633,10 @@ double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::ob
     }
 
     computed_value = computed_nom / computed_denom;
+    if (objfun.exp_unit == keys::log_molratio)
+    {
+        computed_value = log10(computed_value);
+    }
 
     if ((p >= 0) && (f >= 0))
     {

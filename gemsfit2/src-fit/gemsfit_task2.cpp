@@ -82,7 +82,7 @@ double TGfitTask::get_residual(int exp, TGfitTask::TargetFunction::obj_fun &objf
                         if ((this->experiments[exp]->expphases[p]->phMR[f]->comp == objfun.exp_CN) && (this->experiments[exp]->expphases[p]->phase == objfun.exp_phase ))
                         {
                             // check for unit
-//                                    check_unit(i, p, e, objfun->exp_unit, this );
+                            check_MR_unit(exp, p, f, objfun.exp_unit, this );
                             residual = residual_phase_elemMR (exp, p, f, objfun, this);
                             count++;
                         }

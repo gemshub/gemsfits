@@ -139,6 +139,7 @@ void adjust_Lp (TGfitTask *sys, optimization::nested optv, int exp);
 */
 void check_unit(int i, int p, int e, string unit, TGfitTask *sys );
 void check_unit_dcomp(int i, int p, int dc, int dcp, string unit, TGfitTask *sys );
+void check_MR_unit(int i, int p, int f, string unit, TGfitTask *sys );
 
 /**
 * Checks if the unit specified in the target function in the input file corresponds with the unit in the
