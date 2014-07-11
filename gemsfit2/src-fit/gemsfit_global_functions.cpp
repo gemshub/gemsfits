@@ -234,9 +234,14 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     if (sys->Opti->OptTuckey == 3)
     {
         residuals_sys = sys->get_sum_of_residuals( );
-        set_Tuckey_weight_global(sys);
+        set_Tuckey_weight_objfun_norm2(sys);
     } else
     if (sys->Opti->OptTuckey == 4)
+    {
+        residuals_sys = sys->get_sum_of_residuals( );
+        set_Tuckey_weight_global(sys);
+    } else
+    if (sys->Opti->OptTuckey == 5)
     {
         residuals_sys = sys->get_sum_of_residuals( );
         set_Tuckey_weight_global(sys);
@@ -593,6 +598,54 @@ void set_Tuckey_weight_objfun_norm (TGfitTask *sys)
                         sys->aTfun[i].objfun[j].TuWeight = 0;
                     else
                         sys->aTfun[i].objfun[j].TuWeight = pow((1 - pow((absres/C[j]), 2) ), 2);
+                }
+            }
+        }
+    }
+}
+
+void set_Tuckey_weight_objfun_norm2 (TGfitTask *sys)
+{
+    vector<double> C;
+    vector<double> median_;
+    vector<vector<double> > vabs_res;
+    vector<double> abs_res;
+
+    for (unsigned int j = 0; j < sys->Tfun->objfun.size(); j++)
+    {
+        if (sys->Tfun->objfun[j].isComputed)
+        {
+            for (unsigned int i = 0; i < sys->aTfun.size(); i++)
+            {
+                if (sys->aTfun[i].objfun[j].isComputed)
+                {
+                    abs_res.push_back(fabs((sys->aTfun[i].objfun[j].results.residual/sys->aTfun[i].objfun[j].results.computed_value)));
+                }
+            }
+            median_.push_back(median(abs_res));
+            C.push_back(sys->Opti->OptTuckeyVal * median_[j]);
+            vabs_res.push_back(abs_res);
+            abs_res.clear();
+        }
+    }
+
+//#ifdef useomp
+//    omp_set_num_threads(sys->MPI);
+//    #pragma omp parallel for
+//#endif
+    for (unsigned int j = 0; j < sys->Tfun->objfun.size(); j++)
+    {
+        if (sys->Tfun->objfun[j].isComputed)
+        {
+            for (unsigned int i = 0; i < sys->aTfun.size(); i++)
+            {
+                if (sys->aTfun[i].objfun[j].isComputed)
+                {
+                    double absres = fabs((sys->aTfun[i].objfun[j].results.residual/sys->aTfun[i].objfun[j].results.computed_value));
+                    if (( C[j] - absres) < 0)
+                        sys->aTfun[i].objfun[j].TuWeight = 0;
+                    else
+                        sys->aTfun[i].objfun[j].TuWeight = 1;
                 }
             }
         }
