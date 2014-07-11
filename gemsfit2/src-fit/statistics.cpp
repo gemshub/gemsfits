@@ -99,6 +99,7 @@ cout<<" Statistics Constructor: number_of_parameters: "<<number_of_parameters<<e
     // Degrees of freedom
     degrees_of_freedom = number_of_measurements-number_of_parameters;
 
+
     // Compute standard deviation of residuals
     for (int i=0; i<number_of_measurements; i++)
     {
@@ -136,7 +137,7 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
   // calculate the stddev of residuals for each individual objfun
   for (unsigned j = 0; j<gfittask->Tfun->objfun.size(); j++)
   {
-      min_res = 0.0; max_res =0.0; neg_residuals = 0; pos_residuals = 0;
+      min_res = 0.0; max_res =0.0; int obj_neg_residuals = 0; int obj_pos_residuals = 0;
       objfun_stat.push_back(new statistics::objfunstat);
       objfun_stat[j]->stdev_res = 0.0;
       objfun_stat[j]->mean_res = 0.0;
@@ -152,15 +153,20 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
 
           if (gfittask->aTfun[i].objfun[j].isComputed)
           {
-              objfun_stat[j]->norm_mean_res += gfittask->aTfun[i].objfun[j].results.residual / gfittask->aTfun[i].objfun[j].results.measured_value;
+              double test_norm_res = gfittask->aTfun[i].objfun[j].results.residual / gfittask->aTfun[i].objfun[j].results.measured_value;
+              if (test_norm_res > 1)
+              {
+                  objfun_stat[j]->norm_mean_res += gfittask->aTfun[i].objfun[j].results.residual;
+              }
+              else objfun_stat[j]->norm_mean_res += gfittask->aTfun[i].objfun[j].results.residual / gfittask->aTfun[i].objfun[j].results.measured_value;
               objfun_stat[j]->mean_res += gfittask->aTfun[i].objfun[j].results.residual;
               objfun_stat[j]->mean_meas += gfittask->aTfun[i].objfun[j].results.measured_value;
               objfun_stat[j]->orderd_res.push_back (gfittask->aTfun[i].objfun[j].results.residual) ;
 
               if (min_res > gfittask->aTfun[i].objfun[j].results.residual) min_res = gfittask->aTfun[i].objfun[j].results.residual;
               if (max_res < gfittask->aTfun[i].objfun[j].results.residual) max_res = gfittask->aTfun[i].objfun[j].results.residual;
-              if (gfittask->aTfun[i].objfun[j].results.residual < 0) ++neg_residuals;
-              if (gfittask->aTfun[i].objfun[j].results.residual >= 0) ++pos_residuals;
+              if (gfittask->aTfun[i].objfun[j].results.residual < 0) ++obj_neg_residuals;
+              if (gfittask->aTfun[i].objfun[j].results.residual >= 0) ++obj_pos_residuals;
 
               objfun_stat[j]->nr++;
               objfun_stat[j]->isComputed = true;
@@ -172,8 +178,8 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
 
       objfun_stat[j]->min_res = min_res;
       objfun_stat[j]->max_res = max_res;
-      objfun_stat[j]->nr_pos_res = pos_residuals;
-      objfun_stat[j]->nr_neg_res = neg_residuals;
+      objfun_stat[j]->nr_pos_res = obj_pos_residuals;
+      objfun_stat[j]->nr_neg_res = obj_neg_residuals;
   }
 
   for (unsigned j = 0; j<gfittask->Tfun->objfun.size(); j++)
@@ -182,7 +188,12 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
       {
           if (gfittask->aTfun[i].objfun[j].isComputed)
           {
-              objfun_stat[j]->norm_stdev_res += pow (((gfittask->aTfun[i].objfun[j].results.residual/gfittask->aTfun[i].objfun[j].results.measured_value) - objfun_stat[j]->norm_mean_res), 2);
+              double test_norm_res = gfittask->aTfun[i].objfun[j].results.residual / gfittask->aTfun[i].objfun[j].results.measured_value;
+              if (test_norm_res > 1)
+              {
+                  objfun_stat[j]->norm_stdev_res += pow (((gfittask->aTfun[i].objfun[j].results.residual) - objfun_stat[j]->mean_res), 2);
+              }
+              else objfun_stat[j]->norm_stdev_res += pow (((gfittask->aTfun[i].objfun[j].results.residual/gfittask->aTfun[i].objfun[j].results.measured_value) - objfun_stat[j]->norm_mean_res), 2);
               objfun_stat[j]->stdev_res += pow (((gfittask->aTfun[i].objfun[j].results.residual) - objfun_stat[j]->mean_res), 2);
           }
       }
