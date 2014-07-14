@@ -643,7 +643,43 @@ void TGfitTask::setnodes()
        cout<< err.title << err.mess << endl;
        exit(1);
      }
-        } // for j
+            // check if we are dealing with HKF TSolMod !!!!
+            // ................ //
+            // major salts interation parameters
+            if (experiments[n]->sbcomp[j]->comp == "NaCl")
+            {
+                NodT[n]->Set_PMc(0.064, 0 );
+                NodT[n]->Set_PMc(3.72, 1 );
+                NodT[n]->Set_PMc(1, 4 );
+            } else
+            if (experiments[n]->sbcomp[j]->comp == "KCl")
+            {
+                NodT[n]->Set_PMc(0.025, 0 );
+                NodT[n]->Set_PMc(4.08, 1 );
+                NodT[n]->Set_PMc(2, 4 );
+            } else
+            if (experiments[n]->sbcomp[j]->comp == "NaOH")
+            {
+                NodT[n]->Set_PMc(0.098, 0 );
+                NodT[n]->Set_PMc(3.31, 1 );
+                NodT[n]->Set_PMc(3, 4 );
+            } else
+            if (experiments[n]->sbcomp[j]->comp == "KOH")
+            {
+                NodT[n]->Set_PMc(0.123, 0 );
+                NodT[n]->Set_PMc(3.67, 1 );
+                NodT[n]->Set_PMc(4, 4 );
+            } else // default NaCl
+            {
+                NodT[n]->Set_PMc(0.064, 0 );
+                NodT[n]->Set_PMc(3.72, 1 );
+                NodT[n]->Set_PMc(1, 4 );
+            }
+        }
+
+
+
+        // for j
 //        if (!salt)
 //        {
 //            // use NaCl
