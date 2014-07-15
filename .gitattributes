@@ -21,10 +21,17 @@ Resources/doc/html/img/SaveCurrentRecordIcon24.png -text
 Resources/doc/html/img/SelectDisplayRecordIcon24.png -text
 Resources/doc/html/img/ShowGEMResultsIcon24.png -text
 Resources/doc/html/img/Tuckey.png -text
+Resources/help/.gfshelp/_b.cfs -text
+Resources/help/.gfshelp/deletable -text
+Resources/help/.gfshelp/segments -text
 Resources/help/gfshelp.qch -text
 Resources/help/gfshelp.qhc -text
+Tests/1CASHNK-May14/EJDB/cashnkdata -text
+Tests/1CASHNK-May14/EJDB/cashnkdata_experiments -text
+Tests/1CASHNK-May14/EJDB/cashnkdata_tasks -text
 Tests/1CASHNK/EJDB/cashnkdata -text
 Tests/1CASHNK/EJDB/cashnkdata_experiments -text
+Tests/1CASHNK/EJDB/cashnkdata_fits -text
 Tests/1CASHNK/EJDB/cashnkdata_tasks -text
 Tests/Aqueous/EJDB/aqueous_all -text
 Tests/Aqueous/EJDB/aqueous_all_experiments -text
@@ -158,6 +165,7 @@ csvtoejdb/src-csvtoejdb/keywords.h -text
 csvtoejdb/src-csvtoejdb/main.cpp -text
 csvtoejdb/src-csvtoejdb/read_ejdb.cpp -text
 csvtoejdb/src-csvtoejdb/read_ejdb.h -text
+gemsfit2-build/gemsfit2 -text
 gemsfit2-build/gemsfit_input.dat -text
 gemsfit2-build/test_input/AllDa3T-fwd-dat.lst -text
 gemsfit2-build/test_input/AllDa3T-fwd-dbr-0-0000.dat -text
@@ -208,6 +216,7 @@ gfshell/src-gui/sqlscript.cpp -text
 gfshell/src-gui/sqlscript.h -text
 gfshell/src-gui/system_properties.cpp -text
 gfshell/src-gui/system_properties.h -text
+gfshell2-build/gemsfits -text
 gfshell2/Icons/CalculateBCCIcon.png -text
 gfshell2/Icons/CalculateBCCIcon24.png -text
 gfshell2/Icons/CalculateGEMIcon.png -text
