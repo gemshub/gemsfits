@@ -814,6 +814,8 @@
         -1</span>. The weights are calculated as follows:<br>
       <img style="width: 109px; height: 51px;" alt="Tuckey" title="Tuckey" src="img/Tuckey.png"><br>
       wi - weight; Ri - residual; C cutoff value</p>
+    <p>!!! If more than one weight option is set, all weights are multiplied in
+      one weight value !!!</p>
     <hr>
     <h3><a id="markup">&nbsp;c. Parameter Markup</a></h3>
     <p>Some parameters can be used for global optimization (are common to all
@@ -1090,7 +1092,7 @@
             statistics;<br>
             (1) only optimization with basic Statistics;<br>
             (2) only Statistics&nbsp; with initial guesses as best fit
-            parametters;<br>
+            parameters;<br>
           </td>
           <td style="vertical-align: top;"><br>
           </td>
@@ -1099,14 +1101,14 @@
           <td style="vertical-align: top;">
             <p style="margin: 0px; text-indent: 0px;"><span style="font-family: Courier New,Courier,monospace;">"OptEquilibrium"</span></p>
           </td>
-          <td style="vertical-align: top;">(-1) no GEMS3K equilibirum is
-            performed, greately imporves computational speed (when optimizing
+          <td style="vertical-align: top;">(-1) no GEMS3K equilibrium is
+            performed, greatly improves computational speed (when optimizing
             activity model parameters against the data such as osmotic
             coefficients of water or excess Gibbs energy of a solid solution,
             when the equilibrium phase composition is known, so the calculation
             of equilibrium in the whole system is not necessary);<br>
-            ( 1) calculates thermodynamic equlibrium for each experiment at each
-            optimization step;<br>
+            ( 1) calculates thermodynamic equilibrium for each experiment at
+            each optimization step;<br>
           </td>
           <td style="vertical-align: top;"><br>
           </td>
@@ -1127,15 +1129,19 @@
           <td style="vertical-align: top;">
             <p style="margin: 0px; text-indent: 0px;"><span style="font-family: Courier New,Courier,monospace;">"OptTuckey"</span></p>
           </td>
-          <td style="vertical-align: top;">(-1) don't use <a href="gfshell-taskmode.html#Tuckey">Tuckey
+          <td style="vertical-align: top; height: 95px;">(-1) don't use <a href="gfshell-taskmode.html#Tuckey">Tuckey
 Biweight
               method</a><br>
             ( 1) use with Tuckey Biweight method C (outlier cutoff value) is
-            calculated for each type of data (objective function OFUN)
-            separately<br>
+            calculated for each type of data (objective function OFUN) with
+            normal residuals<br>
             ( 2) use with Tuckey Biweight method C (outlier cutoff value) is
-            calculated for each type of data (objective function OFUN)
-            separately based on residuals normalized to calculated value </td>
+            calculated for each type of data (objective function OFUN) using
+            residuals normalized to calculated value<br>
+            ( 3) the samples that have the residuals &gt; than C are given 0
+            Tuckey weight and 1 to the other samples<br>
+            !!! If other weights are set (e.g. in the OFUN) the Tuckey weight
+            value is multiplied with the already existing weight !!!</td>
           <td style="vertical-align: top;"><br>
           </td>
         </tr>
@@ -1247,8 +1253,12 @@ Biweight
           <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">
               "StatMCbool"</span></td>
           <td style="vertical-align: top;">(-1) No Monte Carlo runs<br>
-            ( 1) Perform Monte Carlo runs<br>
-          </td>
+            ( 1) Perform Monte Carlo runs. The synthetic data-set is created
+            using the model calculated values<br>
+            ( 2) Perform Monte Carlo runs. The synthetic data-set is created
+            using the experimental measured values. Use this options when the
+            residuals are not normal distributed, or the model dosn't accurately
+            represent the measured data for all conditions (P, T, pH) </td>
           <td style="vertical-align: top;"><br>
           </td>
         </tr>
@@ -1310,7 +1320,7 @@ Biweight
         style="color: black;">.</span></a><br>
     <br>
     <hr>
-    <p>Last updated:&nbsp; 15. 05. 2014&nbsp; DM, DK</p>
+    <p>Last updated:&nbsp; 27.07. 2014&nbsp; DM, DK</p>
     <p>Copyright&nbsp; (c) 2014&nbsp; <a target="_blank" title="http://gems.web.psi.ch/teamhist.html"
         href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a></p>
     <hr>

@@ -84,6 +84,10 @@ csvtoejdb documentation:
 - "dynamic regression run" when some parameters are correlated, with different input file for the different sets of parameters. 1st fits one set with the other fixed, then fits the 2nd with first
 	fixed in a loop (unitl ??)
 
+- try yo get rid of class opt_vector and add everything in class optimization
+- arrange the printing functions in one clear place - now in the statistics functions + make the print possible even if the statistics fails.
+- look to simplifiy or generalize all the functions that go trough the OFUN - (residual calculations, MC dataset generation etc.)
+
 
 future
 - iterative regresion

@@ -4,21 +4,22 @@
     <meta content="text/html; charset=windows-1252" http-equiv="content-type">
     <title>GEMSFITS Technical Info</title>
   </head>
-  <body style="     background-image: url(bgimg-gray.jpg);">
+  <body style="      background-image: url(bgimg-gray.jpg);">
     <h1> <img style="width: 48px; height: 48px;" title="GEMSFITS" alt="GEMSFITS"
         src="gemsfit2.png"> GEMSFITS Code for GEM Input Parameter Optimization</h1>
-    <h2>HTML Documentation (opens in separate browser windows or tabs)</h2>
+    <h2>Technical information</h2>
     <hr>
     <h3>Contents</h3>
     <ul>
       <li><a href="#external">external libraries:</a> have to be installed
         before building the code</li>
+      <li><a href="#build_ubuntu14">build in ubuntu 14.04</a></li>
       <li><a href="#standalone">standalone libraries:</a> come together with
         gemsfit2 code in predefined directory structure<br>
       </li>
     </ul>
     <hr>
-    <h3><a id="external">GEMSFIT2 external libaries:</a></h3>
+    <h3><a id="external">GEMSFIT2 external libraries:</a></h3>
     <ul>
       <li>
         <p>boost - search for libboost and istall libboost-all-dev. Ot in
@@ -66,6 +67,21 @@
         make check<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         make install</span></p>
+    <h3><a id="build_ubuntu14" name="build_ubuntu14"></a>Build GEMSFITS in
+      ubuntu 14.04 64bit LTS:</h3>
+    Execute the following commands to install the necessary libraries:<br>
+    <span style="font-family: monospace;"><br>
+    </span><span style="font-family: Courier New,Courier,monospace;">~$ sudo
+      apt-add-repository ppa:comp-phys/stable<br>
+      ~$ sudo apt-get update<br>
+      ~$ sudo apt-get install g++ libboost-all-dev liblapack3gf liblapack-dev
+      libarmadillo-dev libnlopt0 libnlopt-dev libjansson4 libjansson-doc
+      libjansson-dev libjansson-dbg<br>
+      <br>
+    </span>For Qt5 execute the following command as well:<br>
+    <span style="font-family: Courier New,Courier,monospace;"><br>
+      ~$ sudo apt-get install libgl1-mesa-glx libgl1-mesa-dev</span><br>
+    <br>
     <hr>
     <h3><a id="standalone">GEMSFIT2 standalone libraries</a></h3>
     <p>GEMSFIT2 is also linked with the following standalone libraries:</p>
@@ -81,7 +97,7 @@
       </li>
     </ul>
     <hr>
-    <p>Last updated:&nbsp; 15. 05. 2014&nbsp; DM, DK</p>
+    <p>Last updated:&nbsp; 27. 07. 2014&nbsp; DM, DK</p>
     <p>Copyright&nbsp; (c) 2014&nbsp; <a target="_blank" title="http://gems.web.psi.ch/teamhist.html"
         href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a></p>
     <hr>

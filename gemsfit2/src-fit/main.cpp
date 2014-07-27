@@ -31,12 +31,9 @@
 #include <iostream>
 #include <vector>
 #include <string>
-//#include <cmath>
-//#include <nlopt.hpp>
 #include <ctime>
 #include <fstream>
 
-//#include <sys/stat.h>
 #include <unistd.h>
 #include <sys/time.h>
 
@@ -73,6 +70,7 @@ int main( int argc, char *argv[] )
 
     gpf = new TGfitPath(argc, argv);
 
+    // cleaning work folder
     remove( gpf->FITFile().c_str() );
     remove( gpf->FITLogFile().c_str() );
     remove( gpf->FITmcFile().c_str() );

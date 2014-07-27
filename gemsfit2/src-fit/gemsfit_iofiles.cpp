@@ -33,24 +33,8 @@ using namespace std;
 
 #include "statistics.h"
 #include "optimization.h"
-//#include "plot_class.h"
-//using namespace opti;
-//
 
-
-// subfolder and file names default
-//const char *INPUT_DIR = "input/";
-//const char *OUTPUT_DIR = "output/";
-//const char *RESULT_DIR = "results/";
-//const char *OPT_PARAM_FILE = "gemsfit2_input.dat";
-//const char *FIT_CSV_FILE = "FIT.csv";
-//const char *FIT_STATISTIC = "MyFitStatistics.txt";
-//const char *FIT_LOGFILE = "gemsfit2.log";
-
-//void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode );
-//void get_gems_fit_multi_txt( TNode* node );
-//void get_gems_fit_DCH_txt( TNode* node );
-//void get_gems_fit_DBR_txt( TNode* node );
+// Function that read in JSON objects form the inptu file
 /// if after F comes an JSON object ( F{...} )
 void F_to_OP (opti_vector *op, IOJFormat Jformat, string nfild);
 /// if after F comes the initial value ( F5000 )
@@ -60,6 +44,7 @@ void F_to_OP (double val, opti_vector *op, IOJFormat Jformat, string nfild);
 void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat);
 /// if the parameter is linked e.g. in titration (L{...} )
 void L_to_OP (opti_vector::Lp *l, IOJFormat Jformat, string nfild);
+/////////////////////////////////////////////////////////
 
 // this constructor implicitly calls another constructor
 // opti_vector::opti_vector( ) which calls GEM_init() and reads in all
@@ -72,7 +57,7 @@ optimization::optimization( int i )
     ii=i;
 }
 
-//// Constructor
+// Constructor
 statistics::statistics()
 {
     number_of_measurements = 0;
@@ -116,33 +101,16 @@ int generateConfig()
     cout << "Start writing the input specification file template"<< endl;
     Data_Manager *data_meas = new Data_Manager(1);
 
-   /* if ( access( gpf->OptParamFile().c_str(), 0 ) == 0 )
-    {
-        cout << gpf->OptParamFile() <<" exists. Do you want to overwrite it? write yes or no: ";
-        cin >> YN;
-        if ((YN == "yes") || (YN == "Yes") || (YN == "YES") || (YN == "yEs") || (YN == "yeS"))
-        {
-            goto overwrite;
-        } else
-        {
-            cout << "Please, enter the new file name: ";
-            cin >> YN;
-            gpf->OptParamFileRename(YN.c_str());
-            goto overwrite;
-        }
-   }  //  else
-//    {
-    overwrite:*/
-        // Writing Data sources section
+    // Writing Data sources section
     data_meas->out_db_specs_txt(with_comments, brief_mode);
 
 cout << "start writing out_gems_fit_txt()" << endl;
-        // Writing Parameters to Fit section &
+    // Writing Parameters to Fit section &
     out_gems_fit_txt( node, with_comments, brief_mode );
 
 cout << "start writing out_nlopt_param_txt()" << endl;
     // Create instance of optimization class derived from base class Optimization
-    optimization opti( 1 );
+    optimization opti(1);
         // Writing Optimization Methods section
     opti.out_nlopt_param_txt(with_comments, brief_mode);
 
@@ -329,63 +297,812 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
          prar.writeArrayS(  NULL, CSD->ICNL[0], CSD->nIC, MaxICN );
      }
     prar.writeArray(  f_bIC,  CNode->bIC, CSD->nICb, -1L,_comment, brief_mode );
-    if( _comment )
-    {    ff << "\n\n## (5) Data for Dependent Components";
-         prar.writeArrayS(  NULL, CSD->DCNL[0], CSD->nDC, MaxDCN );
-     }
-    prar.writeArray(  f_xDC,  CNode->xDC, CSD->nDCb, -1L,_comment, brief_mode  );
-    prar.writeArray(  f_dll,  CNode->dll, CSD->nDCb, -1L,_comment, brief_mode  );
-    prar.writeArray(  f_dul,  CNode->dul, CSD->nDCb, -1L,_comment, brief_mode  );
-    if( _comment )
-    {    ff << "\n\n## (6) Data for Phases";
-          prar.writeArrayS(  NULL, CSD->PHNL[0], CSD->nPH, MaxPHN );
-    }
-    prar.writeArray(  f_aPH,  CNode->aPH, CSD->nPHb, -1L,_comment, brief_mode );
+//    if( _comment )
+//    {    ff << "\n\n## (5) Data for Dependent Components";
+//         prar.writeArrayS(  NULL, CSD->DCNL[0], CSD->nDC, MaxDCN );
+//     }
+//    prar.writeArray(  f_xDC,  CNode->xDC, CSD->nDCb, -1L,_comment, brief_mode  );
+//    prar.writeArray(  f_dll,  CNode->dll, CSD->nDCb, -1L,_comment, brief_mode  );
+//    prar.writeArray(  f_dul,  CNode->dul, CSD->nDCb, -1L,_comment, brief_mode  );
+//    if( _comment )
+//    {    ff << "\n\n## (6) Data for Phases";
+//          prar.writeArrayS(  NULL, CSD->PHNL[0], CSD->nPH, MaxPHN );
+//    }
+//    prar.writeArray(  f_aPH,  CNode->aPH, CSD->nPHb, -1L,_comment, brief_mode );
 
-    prar.writeField(f_Vs, CNode->Vs, _comment, brief_mode  );
-    prar.writeField(f_Ms, CNode->Ms, _comment, brief_mode  );
-    prar.writeField(f_Gs, CNode->Gs, _comment, brief_mode  );
-    if( CSD->ccPH[0] == PH_AQUEL )
+//    prar.writeField(f_Vs, CNode->Vs, _comment, brief_mode  );
+//    prar.writeField(f_Ms, CNode->Ms, _comment, brief_mode  );
+//    prar.writeField(f_Gs, CNode->Gs, _comment, brief_mode  );
+//    if( CSD->ccPH[0] == PH_AQUEL )
+//    {
+//       prar.writeField(f_IS, CNode->IC, _comment, brief_mode  );
+//       prar.writeField(f_pH, CNode->pH, _comment, brief_mode  );
+//       prar.writeField(f_pe, CNode->pe, _comment, brief_mode  );
+//       prar.writeField(f_Eh, CNode->Eh, _comment, brief_mode  );
+//    }
+//    if( _comment )
+//     {
+//         ff << "\n\n## (4) Data for Independent Components";
+//         prar.writeArrayS(  NULL, CSD->ICNL[0], CSD->nIC, MaxICN );
+//     }
+//    prar.writeArray(  f_uIC,  CNode->uIC, CSD->nICb, -1L,_comment, brief_mode );
+//    prar.writeArray(  f_bSP,  CNode->bSP, CSD->nICb, -1L,_comment, brief_mode );
+
+//    if( _comment )
+//    {    ff << "\n\n## (5) Data for Dependent Components";
+//         prar.writeArrayS(  NULL, CSD->DCNL[0], CSD->nDC, MaxDCN );
+//    }
+//    //prar.writeArray(  f_xDC,  CNode->xDC, CSD->nDCb, -1L,_comment, brief_mode  );
+//    prar.writeArray(  f_gam,  CNode->gam, CSD->nDCb, -1L,_comment, brief_mode  );
+
+//    if( _comment )
+//    {    ff << "\n\n## (6) Data for Phases";
+//          prar.writeArrayS(  NULL, CSD->PHNL[0], CSD->nPH, MaxPHN );
+//    }
+//    prar.writeArray(  f_xPH,  CNode->xPH, CSD->nPHb, -1L,_comment, brief_mode );
+//    prar.writeArray(  f_vPS,  CNode->vPS, CSD->nPSb, -1L,_comment, brief_mode );
+//    prar.writeArray(  f_mPS,  CNode->mPS, CSD->nPSb, -1L,_comment, brief_mode );
+//    prar.writeArray(  f_xPA,  CNode->xPA, CSD->nPSb, -1L,_comment, brief_mode );
+
+//    if(!brief_mode || prar.getAlws( f_bPS ))
+//    {  if( _comment )
+//       {
+//            ff << DataBR_fields[f_bPS].comment.c_str();
+//        prar.writeArrayS(  NULL, CSD->ICNL[0], CSD->nIC, MaxICN );
+//        }
+//       prar.writeArray(  f_bPS,  CNode->bPS, CSD->nPSb*CSD->nICb, CSD->nICb,false, brief_mode );
+//    }
+    ff.close();
+}
+
+
+
+//----------------------------------------------------------------
+// TGfitPath  class implementation
+//----------------------------------------------------------------
+//----- subfolder and default file names  ------------------------
+string INPUT_DIR = "input/";
+string OUTPUT_DIR = "output/";
+string RESULT_DIR = "results/";
+//const char *OPT_PARAM_FILE = "gemsfit2_input.dat";
+string FIT_CSV_FILE = "fit-results.csv";
+string FIT_NFUN_FILE = "fit-inverse-results.csv";
+string FIT_QQ_FILE = "qq-plot-data.csv";
+string FIT_SENS_FILE = "meas-data-sensitivity.csv";
+string FIT_MC_FILE = "mc-results.csv";
+string FIT_PARAM_FILE = "fit-params.csv";
+string FIT_STATISTIC = "sum-statistics.csv";
+string FIT_LOGFILE = "gemsfit2.log";
+
+TGfitPath::TGfitPath(int c, char *v[]):
+        argc(c), argv(v)
+{
+    optParamFilePath = "";
+    gems3LstFilePath = "";
+
+    char cur_dir[300];
+        // let's try to find resources by path of the executable
+    getcwd(cur_dir, 300);
+    cout << cur_dir << endl;
+    for (int ii = 1; ii < argc; ii++)
+     cout << ii << " arg " << argv[ii] << endl;
+
+    // parsing options -init, -run, -conf if given
+
+    int iinit = 0;		// index of -init option
+    int irun = 0;		// index of -run option
+    int iconf = 0;		// index of -conf option
+    int ihelp = 0;      // index of -help option
+
+    for (int ii = 1; ii < argc; ii++)
     {
-       prar.writeField(f_IS, CNode->IC, _comment, brief_mode  );
-       prar.writeField(f_pH, CNode->pH, _comment, brief_mode  );
-       prar.writeField(f_pe, CNode->pe, _comment, brief_mode  );
-       prar.writeField(f_Eh, CNode->Eh, _comment, brief_mode  );
+        if (strcmp(argv[ii], "-init") == 0 )
+          iinit = ii;
+        else if (strcmp(argv[ii], "-run") == 0 )
+            irun = ii;
+                 else if (strcmp(argv[ii], "-conf") == 0)
+                     iconf = ii;
+                        else if (strcmp(argv[ii], "-help") == 0)
+                            ihelp = ii;
     }
-    if( _comment )
-     {
-         ff << "\n\n## (4) Data for Independent Components";
-         prar.writeArrayS(  NULL, CSD->ICNL[0], CSD->nIC, MaxICN );
-     }
-    prar.writeArray(  f_uIC,  CNode->uIC, CSD->nICb, -1L,_comment, brief_mode );
-    prar.writeArray(  f_bSP,  CNode->bSP, CSD->nICb, -1L,_comment, brief_mode );
 
-    if( _comment )
-    {    ff << "\n\n## (5) Data for Dependent Components";
-         prar.writeArrayS(  NULL, CSD->DCNL[0], CSD->nDC, MaxDCN );
-    }
-    //prar.writeArray(  f_xDC,  CNode->xDC, CSD->nDCb, -1L,_comment, brief_mode  );
-    prar.writeArray(  f_gam,  CNode->gam, CSD->nDCb, -1L,_comment, brief_mode  );
-
-    if( _comment )
-    {    ff << "\n\n## (6) Data for Phases";
-          prar.writeArrayS(  NULL, CSD->PHNL[0], CSD->nPH, MaxPHN );
-    }
-    prar.writeArray(  f_xPH,  CNode->xPH, CSD->nPHb, -1L,_comment, brief_mode );
-    prar.writeArray(  f_vPS,  CNode->vPS, CSD->nPSb, -1L,_comment, brief_mode );
-    prar.writeArray(  f_mPS,  CNode->mPS, CSD->nPSb, -1L,_comment, brief_mode );
-    prar.writeArray(  f_xPA,  CNode->xPA, CSD->nPSb, -1L,_comment, brief_mode );
-
-    if(!brief_mode || prar.getAlws( f_bPS ))
-    {  if( _comment )
-       {
-            ff << DataBR_fields[f_bPS].comment.c_str();
-        prar.writeArrayS(  NULL, CSD->ICNL[0], CSD->nIC, MaxICN );
+    if (ihelp !=0)
+    {
+        cout << " USAGE: \n"
+                "   gemsfit2  -help \n"
+                "   gemsfit2  -run      <path to gemsfit2 input file> [ <path to GEMS3K input file list *-dat.lst> ] \n"
+                "   gemsfit2  -init     <path to GEMS3K input file list *-dat.lst> [ <init file template name> ] \n\n"
+                " WHERE: \n"
+                "   -run:   runs the program with the settings from the input file \n"
+                "   -init:  writes a template input file using the exported GEMS3K system files \n"
+                "   -help:  displays this help for command-line options." << endl;
+        mode = HELP_;
+//        return 0;
+    } else
+    {
+        if (irun != 0)
+        {
+            if (argc <= irun + 1)
+                Error("Wrong options", "Wrong argument for option -run");
+            optParamFile = argv[irun + 1];
+            mode = RUN_;
         }
-       prar.writeArray(  f_bPS,  CNode->bPS, CSD->nPSb*CSD->nICb, CSD->nICb,false, brief_mode );
+
+       if (iinit != 0)
+        {
+            if (argc <= iinit + 1)
+                Error("Wrong options", "Wrong argument for option -init");
+            gems3LstFilePath = argv[iinit+1];
+            mode = INIT_;
+            if (argc > iinit + 2)  // Optional: file name for the GEMSFIT2 init file template
+            {
+                optParamFile = optParamFilePath;
+//                optParamFile += "/";
+                optParamFile += argv[iinit+2];
+            }
+        }
+
+        if (iconf != 0)  // needs reconsideration
+        {
+            if (argc <= iconf + 1)
+                Error("Wrong options", "Wrong argument for option -conf");
+            optParamFile = argv[iconf + 1];
+        }
+
+        string dir;
+
+        if( optParamFile.empty() )
+        {
+            optParamFile = optParamFilePath;
+            optParamFile += "00/gfin00_";
+            dir = "00/";
+            int pos = 0;
+            string input_file = gems3LstFilePath, new_input;
+            do
+            {
+                new_input = input_file.substr(pos+1, input_file.size());
+                pos = new_input.find("/");
+                input_file = new_input;
+            } while (pos >-1);
+
+            pos = input_file.find("-dat.lst");
+            if (pos <0)
+            {
+                pos = input_file.find(".lst");
+                if (pos < 0)
+                {
+                    Error("Wrong file name", "Wrong name for the GEMS3K system file *.lst");
+                }
+            }
+
+
+            optParamFile += input_file.substr(0, pos);
+            optParamFile += ".dat";
+            pos = gems3LstFilePath.find(input_file.c_str());
+            new_input = gems3LstFilePath.substr(0, gems3LstFilePath.size() - input_file.size());
+
+        }
+        else
+        {
+            string name;
+            string ext;
+            u_splitpath( optParamFile, optParamFilePath, name, ext );
+        }
+
+        string path_init = optParamFilePath + dir;
+        string path_run, path;
+
+        switch( mode )
+        {
+            case INIT_:
+                // set up default paths
+                // later these paths and filenames can be read from the task file
+                mkdir(path_init.c_str(), 0775);
+                outputDir = path_init + OUTPUT_DIR;
+                fitsens = outputDir+FIT_SENS_FILE;
+                fitFile = outputDir+FIT_CSV_FILE;
+                fitnfun = outputDir+FIT_NFUN_FILE;
+                fitqq = outputDir+FIT_QQ_FILE;
+                fitparam = outputDir+FIT_PARAM_FILE;
+                fitmc = outputDir+FIT_MC_FILE;
+                fitStatistics = outputDir+FIT_STATISTIC;
+                fitLogFile = outputDir+FIT_LOGFILE;
+                break;
+            case RUN_:
+                // set up default paths
+                // later these paths and filenames can be read from the task file
+                outputDir = path_run + OUTPUT_DIR;
+                fitFile = outputDir+FIT_CSV_FILE;
+                fitsens = outputDir+FIT_SENS_FILE;
+                fitnfun = outputDir+FIT_NFUN_FILE;
+                fitqq = outputDir+FIT_QQ_FILE;
+                fitparam = outputDir+FIT_PARAM_FILE;
+                fitmc = outputDir+FIT_MC_FILE;
+                fitStatistics = outputDir+FIT_STATISTIC;
+                fitLogFile = outputDir+FIT_LOGFILE;
+                // GEMSFIT logfile
+                flog << "GEMSFIT2: Start" << endl;
+                flog << "optParamFile = " << optParamFile << endl;
+                flog << "fitFile = " << fitFile << endl;
+                flog << "fitLogFile = " << fitLogFile << endl;
+                flog << "gems3LstFilePath = " << gems3LstFilePath << endl;
+                flog.close();
+                break;
+            default:
+                // set up default paths
+                // later these paths and filenames can be read from the task file
+                inputDir = path + INPUT_DIR;
+                outputDir = path + OUTPUT_DIR;
+                fitFile = outputDir+FIT_CSV_FILE;
+                fitStatistics = outputDir+FIT_STATISTIC;
+                fitLogFile = outputDir+FIT_LOGFILE;
+        }
+
+cout << "GEMSFIT2: Start" << endl;
+cout << "optParamFile = " << optParamFile << endl;
+cout << "fitFile = " << fitFile << endl;
+cout << "fitLogFile = " << fitLogFile << endl;
+cout << "gems3LstFilePath = " << gems3LstFilePath << endl;
+    }
+ }
+
+TGfitPath::~TGfitPath()
+{}
+
+void TGfitPath::deleteOutputDir(const char *dir)
+{
+}
+
+
+void TGfitPath::makeOutputDir(const char *dir)
+{
+}
+
+TGfitPath *gpf;
+
+//-------------------------------------------------------------------------------------------------
+
+outField Data_Manager_fields[8] =
+{
+    { "MPI", 0, 0, 1, "\n# MPI: Number of threads for parallelization\n" },
+    { "DataDB",  0, 0, 1, "\n# DataDB: EJDB database path (please, edit to put the actual path)\n" },
+    { "DataCollection",  0, 0, 1, "\n# DataCollection: database collection name (please, edit to put the actual name)\n" },
+    { "DataSource",  1, 0, 1, "\n# DataSource: get experimental data from the EJDB format database"
+      "\n#     (default:0, no other sources yet implemented in GEMSFIT2)\n" },
+
+    { "DataSelect", 0, 0, 1, "# DataSelect: query for obtaining the experimental data from the database."
+      "\n# Options: "
+      "\n#      leave empty ot { } to select all data in the database"
+      "\n#    \'{ ... }\': script in JSON format (in braces) describing what experimental data to select. "
+      "\n#      \"usedatasets\": [...]: list of comma-separated names of experimental datasets to be used, "
+      "\n#         or empty string \"\" to select all available datasets."
+      "\n#      \"skipdatasets\": [...]: list of comma-separated names of experimental datasets to be skipped, "
+      "\n#         or empty string \"\" to not skip (in this case, \"usedatasets\" will apply)."
+      "\n#      \"usesamples\": [...]: list of comma-separated names of samples, or empty string \"\" "
+      "\n#         to select all available samples. Note that samples with the same name can be present "
+      "\n#         in two or more different experimental datasets."
+      "\n#      \"skipsamples\": [...]: list of comma-separated names of samples to be skipped, "
+      "\n#         or empty string \"\" to not to skip (in this case, \"usesamples\" will apply)."
+      "\n#      \"usepairs\": [...]: list of pairs each consisting of an experimental dataset name and a list"
+      "\n#         of comma-separated sample names to be taken from this dataset only; or an empty string \"\" "
+      "\n#         for other options to apply."
+      "\n#      \"skippairs\": [...]: list of pairs each consisting of an experimental dataset name and a list"
+      "\n#         of comma-separated sample names to be skipped from this dataset only; or an empty string \"\" "
+      "\n#         for other options to apply."
+      "\n#      \"sT\": [...]: list of comma-separated minimum and maximum temperature, C, "
+      "\n#         or empty string \"\" to select data for all available temperatures. "
+      "\n#      \"sP\": [...]: list of comma-separated minimum and maximum pressures, bar, "
+      "\n#         or empty string \"\" to select data for all available pressures.  "
+      "\n#      Example: "
+      "\n#      \'{ \"usedatasets\" : [\"CH04\", \"CH04D\"],"
+      "\n#          \"skipdatasets\" : [\"CH03\", \"CH03D\"],"
+      "\n#          \"usesamples\" : \"\", "
+      "\n#          \"skipsamples\" : \"\", "
+      "\n#          \"usepairs\" : \"\", "
+      "\n#          \"skippairs\" : [ "
+      "\n#                            { \"dataset\": \"CHO4\", \"samples\": [\"01\", \"02\"]}, "
+      "\n#                            { \"dataset\": \"CHO4D\", \"samples\": [\"01\", \"02\"]}, "
+      "\n#                          ], "
+      "\n#          \"sT\" : [100, 1000],"
+      "\n#          \"sP\" : [1, 2500] }\'"
+      "\n#      Copy the example and paste it below, remove comment symbols (#), and edit as necessary."
+      "\n#      Any main query option that has no value (empty string \"\") can be left out. In this example,"
+      "\n#        the lines for \"usesamples\", \"skipsamples\", and \"usepairs\" can be left out. \n"
+    },
+
+    { "DataTarget",  0, 0, 1, "# DataTarget: Target function for parameter fitting, described in JSON style"
+      "\n#     as text in single quotes and braces: \'{ ... }\' "
+      "\n#  \"Target\":  name of the target (objective) function (optional)"
+      "\n#  \"TT\":  type of the target function as sum of the following terms: "
+      "\n#     \"lsq\":       w*(measured-simulated)^2;"
+      "\n#     \"lsq-norm\":  w*(measured/avgm-simulated/avgm)^2;"
+      "\n#      ... "
+      "\n#      here, avgm is the arithmetic mean of measured values."
+      "\n#  \"WT\":  weighting scheme for samples, one of the following options:"
+      "\n#       empty string \"\": w = 1 (equal weights);"
+      "\n#      \"inverr\": w=1/error; \"inverr2\": w=1/error^2; \"inverr3\": w=1/measured^2;"
+      "\n#      \"inverr_norm\": w=1/(error/avgm)^2; "
+      "\n#       ... "
+      "\n#  \"OFUN\": objective function, a list [] of terms {} for measured properties to compare"
+      "\n#     with their computed counterparts. Each term can contain property-value pairs:"
+      "\n#      \"EPH\": for what phase from the experiments"
+      "\n#      \"CT\":  for the type of data to compare:"
+      "\n#          \"IC\" for independent component; \"DC\" for dependent component; "
+      "\n#          \"prop\" for phase property; \"MR\" for mole ratio; "
+      "\n#      \"CN\":  the name/formula of the data to compare. e.g. \"Al\" if \"CT\" is \"IC\","
+      "\n#          or \"pH\" if \"CT\" is \"prop\", or \"K/(Na+K)\" if \"CT\" is \"MR\" "
+      "\n#      \"DCP\": used only if \"CT\" is \"DC\", to represent the name of dependent component property:"
+      "\n#          \"Q\" for amount in mole fraction; \"@coef\" for activity coeficient"
+      "\n#      \"WT\": weight assigned to the objective function as real number e.g. \"WT\": 100. "
+      "\n#      \"unit\":  units of measurement (override those given in the database for this value):"
+      "\n#          \"molal\":  mol/(kg H2O), \"log_molal\": log(molal), \"-loga\": negated log(activity) for pH;"
+      "\n#          \"g\"; \"kg\"; \"cm3\"; \"m3\"; \"molfrac\": mole fraction; J/mol for Gex "
+      "\n#           ... (conversions will be performed automatically).\n"
+      "\n#  \"NFUN\": nested objective function, a list [] of terms {} for measured properties to compare"
+      "\n#    with their computed counterparts for each experiment independently of \"OFUN\" for adjusting"
+      "\n#    a input property \"Ptype\" to obtain an output value given by \"EPH\", \"CT\" and \"CN\" pairs."
+      "\n#       \"Ptype\": can have a value \"bIC\" or \"T-P\". The former refers to ajusting some parts of"
+      "\n#         the bulk composition of the system representing the sample. The latter refers to adjusting"
+      "\n#         the temperature, the pressure, or both."
+      "\n#    IMPORTANT: When \"NFUN\" is specified in DataTarget section, at least one element in \"Ptype\" "
+      "\n#         property object must be marked for fitting. More than one NFUN entries with different "
+      "\n#         \"Ptype\" input properties can be used with caution.\n "
+      "\n#  \"ADDOUT\": additional output, a list [] of terms {} for additional output in the results file"
+      "\n#    The options are the same as for OFUN with an additional \"SRC\" key whose value can be"
+      "\n#    \"calc\" if the aditional output is not present in the database but can be retreived trough GEMS claculation "
+      "\n#    \"meas\" if the additional output is present in the database but was not used in the OFUN "
+      "\n#     The comparison options are: "
+      "\n#       aqueous phase (\"aq_gen\") elemental composition in \"molal\" or \"loga\" "
+      "\n#       aqueous phase (\"aq_gen\") properties (\"prop\"): \"pH\" in \"-loga\" (or \"molal\" "
+      "\n#          - molality concentration of H+); \"Q\" - mass in \"g\" or \"kg\"  "
+      "\n#       other phases composition as element bulk amount in moles (\"mol\") "
+      "\n#          or to /Si molar ratio (\"Simolfrac\")"
+      "\n#       other phases properties (\"prop\"): \"Q\" - mass in \"g\" or \"kg\"; "
+      "\n#          \"pV\" - volume in \"cm3\" or \"m3\";  \"Eh\" - volume in \"Volts\"; "
+      "\n#          \"Gex\"  - excess Gibbs energy of mixing (in \"J/mol\"). "
+      "\n#       dependent components (\"DC\") properties: \"Q\" - amount in \"mol\"; "
+      "\n#          \"@coef\" - activity coefficient < add activity and mole fraction >"
+      "\n#           ..."
+      "\n#  Example of target (objective) function definition:"
+      "\n#  \'{ \"Target\": \"name\", \"TT\": \"lsq\", \"WT\": \"inverr\", \"OFUN\":"
+      "\n#      ["
+      "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"IC\", \"CN\": \"Si\", \"unit\": \"molal\" },"
+      "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"IC\", \"CN\": \"Al\", \"unit\": \"molal\" },"
+      "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"prop\", \"CN\": \"pH\", \"unit\": \"-loga\" },"
+      "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"DC\", \"CN\": \"SiO2@\", \"DCP\" : \"Q\", \"unit\": \"mol\"}"
+      "\n#      ]"
+      "\n#   }\'"
+      "\n# "
+      "\n#  Example of a target function with a nested objective function to titrate for a given pH:"
+      "\n#  \'{ \"Target\": \"name\", \"TT\": \"lsq\", \"WT\": \"inverr\", \"OFUN\":"
+      "\n#      ["
+      "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"IC\", \"CN\": \"Al\", \"unit\": \"log_molal\" },"
+      "\n#      ], \"NFUN\": "
+      "\n#      ["
+      "\n#         { \"Ptype\": \"bIC\", \"EPH\": \"aq_gen\", \"CT\": \"prop\", \"CN\": \"pH\", \"unit\": \"-loga\" } "
+      "\n#      ]"
+      "\n#   }\'"
+      "\n#  Copy one of the examples, paste it below, remove the comment symbols (#), and edit as necessary. "
+      "\n#     Remove unnecessary rows. Note that in the example for nested function, at least one element in"
+      "\n#     the \"bIC\" vector should be marked as freely adjustable parameter 'F'. \n"
+    },
+    { "SystemFiles",  0, 0, 1, "\n# SystemFiles: path to the list of GEMS3K input files (also used for this template file)\n" },
+    { "LimitOfDetection",  0, 0, 1, "\n# LimitOfDetection: Limit of detection of the measured values."
+      "\n#     Ensures that wrongly computed output values due to non-physical input parameter values are ignored.\n" }
+};
+
+typedef enum { /// Field index into outField structure
+    f_MPI = 0,
+    f_DataDB,
+    f_DataCollection,
+    f_DataSource,
+    f_DataSelect,
+    f_DataTarget,
+    f_SystemFiles,
+    f_LimitOfDetection
+} Data_Manager_FIELDS;
+
+/// Set up default values for structure
+void Data_Manager::define_db_specs( )
+{
+   MPI = omp_get_num_threads() * omp_get_num_procs();
+   datasource = 0;
+   DBname = "../EJDB/<database name>";
+   collection= "experiments";
+   DataSelect ="";
+   DataTarget = "";
+   LimitOfDetection = 1e-06;
+
+}
+
+/// Writes structure to the GEMSFIT2 input specification file
+void Data_Manager::out_db_specs_txt( bool with_comments, bool brief_mode )
+{
+    string fname = gpf->OptParamFile();
+    fstream ff(fname.c_str(), ios::out/*|ios::app*/ );
+    ErrorIf( !ff.good() , fname.c_str(), "OptParamFile text open error");
+
+    TPrintArrays  prar(10, Data_Manager_fields, ff);
+    // define data that must be written
+
+    if (datasource == 0)
+    {
+        prar.setAlws( f_MPI );
+        prar.setAlws( f_DataDB );
+        prar.setAlws( f_DataCollection );
+        prar.setAlws( f_DataSelect );
+        prar.setAlws( f_LimitOfDetection );
+    }
+
+    if(with_comments )
+    {
+        ff << "#########################################################################" << endl;
+        ff << "#>>>>>>>>>>> GEMSFIT2 input specification file template >>>>>>>>>>>>>>>>#" << endl;
+        ff << "#########################################################################" << endl;
+        ff << "#  Character '#' means a comment line ";
+    }
+
+    prar.writeField(f_MPI, (long int)MPI, with_comments, brief_mode  );
+
+    if(with_comments )
+    {
+        ff << "\n\n#########################################################################" << endl;
+        ff << "#>>>>>>>>>>>>>>>>>>>>>>>> Data Sources section >>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
+        ff << "#########################################################################";
+    }
+    prar.writeField(f_DataSource, (long int)datasource, with_comments, brief_mode  );
+    prar.writeField(f_DataDB, DBname, with_comments, brief_mode  );
+    prar.writeField(f_DataCollection, collection, with_comments, brief_mode  );
+    prar.writeField(f_SystemFiles, "."+gpf->GEMS3LstFilePath(), with_comments, brief_mode  );
+//    prar.writeField(f_RecipeFiles, "", with_comments, brief_mode  );
+
+    if(with_comments )
+    {
+        ff << "\n\n#########################################################################" << endl;
+        ff << "#>>>>>>>>>>>>>>>>>>>>>>> DataSelect section >>>>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
+        ff << "#########################################################################" << endl;
+    }
+    prar.writeField(f_DataSelect, DataSelect, with_comments, brief_mode );
+
+    if(with_comments )
+    {
+        ff << "\n\n#########################################################################" << endl;
+        ff << "#>>>>>>>>>>>>>>>>>>>>>>> DataTarget section >>>>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
+        ff << "#########################################################################" << endl;
+    }
+    prar.writeField(f_DataTarget, DataTarget, with_comments, brief_mode );
+    prar.writeField(f_LimitOfDetection, (double)LimitOfDetection, with_comments, brief_mode  );
+
+    if(with_comments )
+    {
+        ff << "\n\n#########################################################################" << endl;
+        ff << "#>>>>>>>>>>>>>>>>>>>>>> ParameterMarkup section >>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
+        ff << "#########################################################################" << endl;
     }
     ff.close();
 }
+
+// get database connection parameters
+void Data_Manager::get_db_specs_txt( )
+{
+    // open file for reading
+    string inputstr, result;
+    string fname = gpf->OptParamFile();
+    fstream ff(fname.c_str(), ios::in );
+    ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
+
+    TReadArrays  rdar(8, Data_Manager_fields, ff);
+
+    long int nfild = rdar.findNextNotAll();
+    while( nfild >=0 )
+        {
+          switch( nfild )
+          {
+            case f_MPI: rdar.readArray( "MPI",  &MPI, 1 );
+                    break;
+            case f_DataDB: rdar.readArray( "DataDB",  DBname );
+                    break;
+            case f_DataCollection: rdar.readArray( "DataCollection",  collection );
+                    break;
+            case f_DataSource: rdar.readArray( "DataSource",  &datasource, 1);
+                    break;
+            case f_LimitOfDetection: rdar.readArray( "LimitOfDetection",  &LimitOfDetection, 1);
+                    break;
+            case f_DataSelect: rdar.readArray( "DataSelect",  DataSelect);
+                    break;
+            case f_DataTarget: rdar.readArray( "DataTarget",  DataTarget );
+                    break;
+            case f_SystemFiles: rdar.readArray( "SystemFiles",  inputstr );
+                    remove_copy(inputstr.begin(), inputstr.end(), std::back_inserter(result), '\'');
+                    inputstr = result;
+                    result.clear();
+                    gpf->setGEMS3LstFilePath(inputstr.c_str() );
+                    break;
+          }
+          nfild = rdar.findNextNotAll();
+        }
+
+    // define data that must be read
+    if (datasource == 0)
+    {
+        rdar.setAlws( f_MPI );
+        rdar.setAlws( f_DataDB );
+        rdar.setAlws( f_DataCollection );
+        rdar.setAlws( f_DataSelect );
+        rdar.setAlws( f_LimitOfDetection );
+    }
+
+    // testing read
+        string ret = rdar.testRead();
+        if( !ret.empty() )
+         { ret += " - fields must be read from OptParamFile structure";
+           Error( "Error", ret);
+         }
+
+    // removing inverted comma
+        remove_copy(DBname.begin(), DBname.end(), std::back_inserter(result), '\'');
+        DBname = result;
+        result.clear();
+
+        remove_copy(collection.begin(), collection.end(), std::back_inserter(result), '\'');
+        collection = result;
+}
+
+//-----------------------------------------------------------------------------------------
+
+outField statistics_fields[3] =
+{
+    { "StatMCbool",  0, 0, 1, "\n# StatMCbool: perform Monte Carlo runs -> no (0) "
+                              "\n#             yes (1) scatter added to (ideal) computed values | yes (2) scatter added to measured values "},
+    { "StatMCruns",  0, 0, 1, "\n# StatMCruns: number of Monte Carlo runs for confidence interval generation"},
+    { "StatPerturbator", 0, 0, 1, "\n# StatPerturbator: used for calculating sensitivities by central diference, see ref [2]"}
+};
+
+typedef enum {  /// Field index into outField structure
+    f_StatMCbool = 0,
+    f_StatMCruns,
+    f_StatPerturbator
+} statistics_FIELDS;
+
+
+///// Set up default values for structure
+void statistics::default_stat_param()
+{
+  MCbool =  0;
+  num_of_MC_runs = 100;
+  perturbator = 0.0001;
+}
+
+///// Writes  structure to  the GEMSFIT configuration file
+void statistics::out_stat_param_txt( bool with_comments, bool brief_mode )
+{
+    string fname = gpf->OptParamFile();
+    fstream ff(fname.c_str(), ios::out|ios::app);
+    ErrorIf( !ff.good() , fname.c_str(), "OptParamFile text open error");
+
+    TPrintArrays  prar(3, statistics_fields, ff);
+    prar.writeField(f_StatMCbool, (long int)MCbool, with_comments, brief_mode  );
+    prar.writeField(f_StatMCruns, (long int)num_of_MC_runs, with_comments, brief_mode  );
+    prar.writeField(f_StatPerturbator, (double)perturbator, with_comments, brief_mode  );
+
+    if(with_comments )
+    {
+        ff << endl << endl;
+        ff << "#########################################################################" << endl;
+        ff << "#>>>>>>>>>> end of GEMSFIT2 input specification file template >>>>>>>>>>#" << endl;
+        ff << "#########################################################################" << endl;
+    }
+
+    ff.close();
+}
+
+//// Read statistical input specifications from configurator
+void statistics::get_stat_param_txt( )
+{
+    // open file for reading
+    string fname = gpf->OptParamFile();
+    fstream ff(fname.c_str(), ios::in );
+    ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
+
+    TReadArrays  rdar(3, statistics_fields, ff);
+
+    long int nfild = rdar.findNextNotAll();
+    while( nfild >=0 )
+        {
+          switch( nfild )
+          {
+          case f_StatMCbool:
+          { /*int bb;*/
+              rdar.readArray( "StatMCbool",  &MCbool, 1 );
+//              MCbool = (bool)bb;
+          }
+              break;
+          case f_StatMCruns: rdar.readArray( "StatMCruns",  &num_of_MC_runs, 1 );
+              break;
+          case f_StatPerturbator: rdar.readArray( "StatPerturbator",  &perturbator, 1 );
+              break;
+          }
+          nfild = rdar.findNextNotAll();
+        }
+
+    // testing read
+        string ret = rdar.testRead();
+        if( !ret.empty() )
+         { ret += " - fields must be read from OptParamFile structure";
+           Error( "Error", ret);
+         }
+}
+
+
+////-------------------------------------------------------------------------------------------------
+
+outField optimization_fields[13] =
+{   { "OptDoWhat",  0, 0, 1, "\n# OptDoWhat: perform optimization and statistics (0); only optimization with basic Statistics (1);"
+       "\n#            only Statistics (2) with initial guesses as best fit parametters"},
+    { "OptEquilibrium",  0, 0, 1, "\n# OptEquilibrium: (1) Use full GEMS3K to calculate thermodynamic equilibrium. (0) Use TSolMod shortcut "
+                                   "\n#                  without calculating equilibrium (only fitting activity model parameters)"},
+    { "OptUserWeight",  0, 0, 1, "\n# OptUserWeight: (1) Use the weights provided in the \"weight\" column of the database. "},
+    { "OptTuckey",  0, 0, 1, "\n# OptTuckey: (1) Use Tuckey Biweight for all data. (2) Use Tuckey Biweight for each OFUN independently. "},
+    { "OptTuckeyVal",  0, 0, 1, "\n# OptTuckeyVal: Empirical chosen value that is multiplied with the median of residuals to get the "
+      "\n# 		      weighting thereshold value C = Val * M. Default value 6. Residuals >C -> weight 0 "},
+    { "OptAlgo",  0, 0, 1, "\n# OptAlgo: specify algorithm: GN_ISRES | GN_ORIG_DIRECT | GN_ORIG_DIRECT_L | LN_COBYLA | LN_BOBYQA "},
+    { "OptBoundPerc",  0, 0, 1, "\n# OptBoundPerc: Generate bounds from initial guess vector: specify percentage deviation "
+                                "\n#               (user-specific, user-defined bounds when set to -1)"},
+    { "OptTolRel",  0, 0, 1, "\n# OptTolRel: stopping criterion -> specify relative tolerance (default = 1e-06) of function value"},
+    { "OptTolAbs",  0, 0, 1, "\n# OptTolAbs: stopping criterion -> specify absolute tolerance (default = 1e-06) of function value"},
+    { "OptMaxEval",  0, 0, 1, "\n# OptMaxEval: specify max number of evaluations"},
+    { "OptInitStep",  0, 0, 1, "\n# OptInitStep: specify initial stepsize for local minimizers "
+                               "\n#              (factor will be multiplied to all optimization parameters); 0 => use default"},
+    { "OptNormParam",  0, 0, 1, "\n# OptNormParam: Normalize bounds/constraints/fitting parameters with the initial guess vector"},
+    { "OptPerturbator",  0, 0, 1, "\n# OptPerturbator: The delta/difference used to to calculate the d(function_value)/d(parameter_value) gradient"}
+};
+
+typedef enum {  /// Field index into outField structure
+    f_OptDoWhat = 0,
+    f_OptEquilibrium,
+    f_OptUserWeight,
+    f_OptTuckey,
+    f_OptTuckeyVal,
+    f_OptAlgo,
+    f_OptBoundPerc,
+    f_OptTolRel,
+    f_OptTolAbs,
+    f_OptMaxEval,
+    f_OptInitStep,
+    f_OptNormParam,
+    f_OptPerturbator,
+} optimization_FIELDS;
+
+
+///// Set up default values for structure
+void optimization::define_nlopt_param( )
+{
+    OptAlgo = "LN_BOBYQA";
+    OptBoundPerc = -1.0;
+    OptTolRel = 1e-6;
+    OptTolAbs = 1e-6;
+    OptMaxEval = 10000;
+    OptDoWhat = 0;
+    OptEquilibrium = 1;
+    OptTuckey = 0;
+    OptTuckeyVal = 6;
+    OptUserWeight = 0;
+    OptTitration = 0;
+    OptNormParam = 1;
+    OptPerturbator = 0.0001;
+    OptInitStep = 0;
+
+}
+
+///// Writes  structure to  the GEMSFIT configuration file
+void optimization::out_nlopt_param_txt( bool with_comments, bool brief_mode )
+{
+    string fname = gpf->OptParamFile();
+    fstream ff(fname.c_str(), ios::out|ios::app );
+    ErrorIf( !ff.good() , fname.c_str(), "OptParamFile text open error");
+    TPrintArrays  prar(13, optimization_fields, ff);
+    if(with_comments )
+    {
+        ff << "\n\n#########################################################################" << endl;
+        ff << "#>>>>>>>>>>>>>>>> OptimizationMethods section >>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
+        ff << "#########################################################################" << endl;
+    }
+
+    prar.writeField( f_OptDoWhat,  (long int)OptDoWhat, with_comments, brief_mode);
+    prar.writeField( f_OptEquilibrium,  (long int)OptEquilibrium, with_comments, brief_mode);
+    prar.writeField( f_OptUserWeight,  (long int)OptUserWeight, with_comments, brief_mode);
+    prar.writeField( f_OptTuckey,  (long int)OptTuckey, with_comments, brief_mode);
+    prar.writeField( f_OptTuckeyVal,  (long int)OptTuckeyVal, with_comments, brief_mode);
+    prar.writeField( f_OptAlgo,  OptAlgo, with_comments, brief_mode );
+    prar.writeField( f_OptBoundPerc,  OptBoundPerc, with_comments, brief_mode );
+    prar.writeField( f_OptTolRel,  OptTolRel, with_comments, brief_mode);
+    prar.writeField( f_OptTolAbs,  OptTolAbs, with_comments, brief_mode);
+    prar.writeField( f_OptMaxEval,  (long int)OptMaxEval, with_comments, brief_mode);
+    prar.writeField( f_OptInitStep,  OptInitStep, with_comments, brief_mode);
+    prar.writeField( f_OptNormParam,  (long int)OptNormParam, with_comments, brief_mode);
+    prar.writeField( f_OptPerturbator,  OptPerturbator, with_comments, brief_mode);
+
+    ff.close();
+}
+
+//// populate nlopt instance: set bounds, constraints, stopping criteria
+void optimization::get_nlopt_param_txt(vector<double> optv)
+{
+    // open file for reading
+//    int i;
+    string fname = gpf->OptParamFile();
+    fstream ff(fname.c_str(), ios::in );
+    ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
+
+    TReadArrays  rdar(13, optimization_fields, ff);
+
+    long int nfild = rdar.findNextNotAll();
+    while( nfild >=0 )
+        {
+          switch( nfild )
+          {
+          case f_OptAlgo: rdar.readArray( "OptAlgo",  OptAlgo );
+                   break;
+          case f_OptBoundPerc: rdar.readArray( "OptBoundPerc",  &OptBoundPerc, 1 );
+                  if( OptBoundPerc < 0.) OptBoundPerc = -1;
+                 break;
+          case f_OptTolRel: rdar.readArray( "OptTolRel",  &OptTolRel, 1);
+                   break;
+          case f_OptTolAbs: rdar.readArray( "OptTolAbs",  &OptTolAbs, 1);
+                  break;
+          case f_OptMaxEval: rdar.readArray( "OptMaxEval",  &OptMaxEval, 1);
+                  break;
+          case f_OptDoWhat: rdar.readArray( "OptDoWhat",  &OptDoWhat, 1);
+                  break;
+          case f_OptEquilibrium: rdar.readArray( "OptEquilibrium",  &OptEquilibrium, 1);
+                  break;
+          case f_OptUserWeight: rdar.readArray( "OptUserWeight",  &OptUserWeight, 1);
+                  break;
+          case f_OptTuckey: rdar.readArray( "OptTuckey",  &OptTuckey, 1);
+                  break;
+          case f_OptTuckeyVal: rdar.readArray( "OptTuckeyVal",  &OptTuckeyVal, 1);
+                  break;
+          case f_OptInitStep: rdar.readArray( "OptInitStep",  &OptInitStep, 1);
+                  break;
+          case f_OptPerturbator: rdar.readArray( "OptPerturbator",  &OptPerturbator, 1);
+                  break;
+          case f_OptNormParam:{
+                int bb;
+                rdar.readArray( "OptNormParam",  &bb, 1);
+                if (bb<0)
+                OptNormParam = false;
+                else
+                    OptNormParam = true;
+                 }
+                  break;
+          }
+          nfild = rdar.findNextNotAll();
+        }
+
+    if( OptBoundPerc > 0. )
+    {
+        OptUpBounds.resize( optv.size() );
+        OptLoBounds.resize( optv.size() );
+        for(unsigned int i=0; i<optv.size(); i++ )
+        {
+            // take the existing bounds if initial value of the parameter is 0 or <9e-11)
+            if ((optv[i]!=0) && (fabs(optv[i])>9e-11))
+            {
+                OptUpBounds[i] = optv[i] + fabs( optv[i]*OptBoundPerc/100. );
+                OptLoBounds[i] = optv[i] - fabs( optv[i]*OptBoundPerc/100. );
+            }
+        }
+    }
+
+        // testing read
+        string ret = rdar.testRead();
+        if( !ret.empty() )
+         { ret += " - fields must be read from OptParamFile structure";
+           Error( "Error", ret);
+         }
+}
+
+////-------------------------------------------------------------------------------------------------
 
 /// Reading part of the MULTI structure from OptParamFile text file
 void get_gems_fit_multi_txt(TNode* node, opti_vector *op )
@@ -802,48 +1519,48 @@ void get_gems_fit_DBR_txt(TNode* node , opti_vector *op)
                 break;
         case f_P: rdar.readFormatArray( "P",  &CNode->P, 1, vFormats);  // i
                 break;
-        case f_Vs: rdar.readFormatArray( "Vs", &CNode->Vs, 1, vFormats);
-                break;
-        case f_Ms: rdar.readFormatArray( "Ms",  &CNode->Ms, 1, vFormats);
-                break;
-        case f_Hs: rdar.readFormatArray( "Hs",  &CNode->Hs, 1, vFormats);
-                break;
-        case f_Gs: rdar.readFormatArray( "Gs",  &CNode->Gs, 1, vFormats);
-                 break;
-        case f_IS: rdar.readFormatArray( "IS",  &CNode->IC, 1, vFormats);
-                break;
-        case f_pH: rdar.readFormatArray( "pH",  &CNode->pH, 1, vFormats);
-                break;
-        case f_pe: rdar.readFormatArray( "pe",  &CNode->pe, 1, vFormats);
-                break;
-        case f_Eh: rdar.readFormatArray( "Eh",  &CNode->Eh, 1, vFormats);
+//        case f_Vs: rdar.readFormatArray( "Vs", &CNode->Vs, 1, vFormats);
+//                break;
+//        case f_Ms: rdar.readFormatArray( "Ms",  &CNode->Ms, 1, vFormats);
+//                break;
+//        case f_Hs: rdar.readFormatArray( "Hs",  &CNode->Hs, 1, vFormats);
+//                break;
+//        case f_Gs: rdar.readFormatArray( "Gs",  &CNode->Gs, 1, vFormats);
+//                 break;
+//        case f_IS: rdar.readFormatArray( "IS",  &CNode->IC, 1, vFormats);
+//                break;
+//        case f_pH: rdar.readFormatArray( "pH",  &CNode->pH, 1, vFormats);
+//                break;
+//        case f_pe: rdar.readFormatArray( "pe",  &CNode->pe, 1, vFormats);
+//                break;
+//        case f_Eh: rdar.readFormatArray( "Eh",  &CNode->Eh, 1, vFormats);
                 break;
         case f_bIC: rdar.readFormatArray( "bIC",  CNode->bIC, CSD->nICb, vFormats ); // i
                 break;
-        case f_uIC: rdar.readFormatArray( "uIC",  CNode->uIC, CSD->nICb, vFormats );
-                break;
-        case f_xDC: rdar.readFormatArray( "xDC",  CNode->xDC, CSD->nDCb, vFormats );
-                break;
-        case f_gam: rdar.readFormatArray( "gam",  CNode->gam, CSD->nDCb, vFormats );
-                break;
-        case f_dll: rdar.readFormatArray( "dll",  CNode->dll, CSD->nDCb, vFormats );  // i
-                break;
-        case f_dul: rdar.readFormatArray( "dul",  CNode->dul, CSD->nDCb, vFormats );  // i
-                break;
-        case f_aPH: rdar.readFormatArray( "aPH",  CNode->aPH, CSD->nPHb, vFormats );  // i
-                break;
-        case f_xPH: rdar.readFormatArray( "xPH",  CNode->xPH, CSD->nPHb, vFormats );
-                break;
-        case f_vPS: rdar.readFormatArray( "vPS",  CNode->vPS, CSD->nPSb, vFormats );
-                break;
-        case f_mPS: rdar.readFormatArray( "mPS",  CNode->mPS, CSD->nPSb, vFormats );
-                break;
-        case f_bPS: rdar.readFormatArray( "bPS",  CNode->bPS, CSD->nPSb*CSD->nICb, vFormats );
-                break;
-        case f_xPA: rdar.readFormatArray( "xPA",  CNode->xPA, CSD->nPSb, vFormats );
-                break;
-        case f_bSP: rdar.readFormatArray( "bSP",  CNode->bSP, CSD->nICb, vFormats );
-               break;
+//        case f_uIC: rdar.readFormatArray( "uIC",  CNode->uIC, CSD->nICb, vFormats );
+//                break;
+//        case f_xDC: rdar.readFormatArray( "xDC",  CNode->xDC, CSD->nDCb, vFormats );
+//                break;
+//        case f_gam: rdar.readFormatArray( "gam",  CNode->gam, CSD->nDCb, vFormats );
+//                break;
+//        case f_dll: rdar.readFormatArray( "dll",  CNode->dll, CSD->nDCb, vFormats );  // i
+//                break;
+//        case f_dul: rdar.readFormatArray( "dul",  CNode->dul, CSD->nDCb, vFormats );  // i
+//                break;
+//        case f_aPH: rdar.readFormatArray( "aPH",  CNode->aPH, CSD->nPHb, vFormats );  // i
+//                break;
+//        case f_xPH: rdar.readFormatArray( "xPH",  CNode->xPH, CSD->nPHb, vFormats );
+//                break;
+//        case f_vPS: rdar.readFormatArray( "vPS",  CNode->vPS, CSD->nPSb, vFormats );
+//                break;
+//        case f_mPS: rdar.readFormatArray( "mPS",  CNode->mPS, CSD->nPSb, vFormats );
+//                break;
+//        case f_bPS: rdar.readFormatArray( "bPS",  CNode->bPS, CSD->nPSb*CSD->nICb, vFormats );
+//                break;
+//        case f_xPA: rdar.readFormatArray( "xPA",  CNode->xPA, CSD->nPSb, vFormats );
+//                break;
+//        case f_bSP: rdar.readFormatArray( "bSP",  CNode->bSP, CSD->nICb, vFormats );
+//               break;
          }
         if( !vFormats.empty() )
         {
@@ -912,848 +1629,7 @@ gpf->flog<< format << endl;
         }
 }
 
-//----------------------------------------------------------------
-// TGfitPath  class implementation
-//----------------------------------------------------------------
-//----- subfolder and default file names  ------------------------
-string INPUT_DIR = "input/";
-string OUTPUT_DIR = "output/";
-string RESULT_DIR = "results/";
-//const char *OPT_PARAM_FILE = "gemsfit2_input.dat";
-string FIT_CSV_FILE = "fit-results.csv";
-string FIT_NFUN_FILE = "fit-inverse-results.csv";
-string FIT_QQ_FILE = "qq-plot-data.csv";
-string FIT_SENS_FILE = "meas-data-sensitivity.csv";
-string FIT_MC_FILE = "mc-results.csv";
-string FIT_PARAM_FILE = "fit-params.csv";
-string FIT_STATISTIC = "sum-statistics.csv";
-string FIT_LOGFILE = "gemsfit2.log";
 
-TGfitPath::TGfitPath(int c, char *v[]):
-        argc(c), argv(v)
-{
-    optParamFilePath = "";
-    gems3LstFilePath = "";
-
-//#ifdef __unix
-//        optParamFilePath = getenv("HOME");
-//#else
-//        optParamFilePath = ".";
-//#endif
-    char cur_dir[300];
-        // let's try to find resources by path of the executable
-    getcwd(cur_dir, 300);
-    cout << cur_dir << endl;
-    for (int ii = 1; ii < argc; ii++)
-     cout << ii << " arg " << argv[ii] << endl;
-
-    // parsing options -init, -run, -conf if given
-
-    int iinit = 0;		// index of -init option
-    int irun = 0;		// index of -run option
-    int iconf = 0;		// index of -conf option
-    int ihelp = 0;      // index of -help option
-
-    for (int ii = 1; ii < argc; ii++)
-    {
-        if (strcmp(argv[ii], "-init") == 0 )
-          iinit = ii;
-        else if (strcmp(argv[ii], "-run") == 0 )
-            irun = ii;
-                 else if (strcmp(argv[ii], "-conf") == 0)
-                     iconf = ii;
-                        else if (strcmp(argv[ii], "-help") == 0)
-                            ihelp = ii;
-    }
-
-    if (ihelp !=0)
-    {
-        cout << " USAGE: \n"
-                "   gemsfit2  -help \n"
-                "   gemsfit2  -run      <path to gemsfit2 input file> [ <path to GEMS3K input file list *-dat.lst> ] \n"
-                "   gemsfit2  -init     <path to GEMS3K input file list *-dat.lst> [ <init file template name> ] \n\n"
-                " WHERE: \n"
-                "   -run:   runs the program with the settings from the input file \n"
-                "   -init:  writes a template input file using the exported GEMS3K system files \n"
-                "   -help:  displays this help for command-line options." << endl;
-        mode = HELP_;
-//        return 0;
-    } else
-    {
-        if (irun != 0)
-        {
-            if (argc <= irun + 1)
-                Error("Wrong options", "Wrong argument for option -run");
-            optParamFile = argv[irun + 1];
-            mode = RUN_;
-        }
-
-       if (iinit != 0)
-        {
-            if (argc <= iinit + 1)
-                Error("Wrong options", "Wrong argument for option -init");
-            gems3LstFilePath = argv[iinit+1];
-            mode = INIT_;
-            if (argc > iinit + 2)  // Optional: file name for the GEMSFIT2 init file template
-            {
-                optParamFile = optParamFilePath;
-//                optParamFile += "/";
-                optParamFile += argv[iinit+2];
-            }
-        }
-
-        if (iconf != 0)  // needs reconsideration
-        {
-            if (argc <= iconf + 1)
-                Error("Wrong options", "Wrong argument for option -conf");
-            optParamFile = argv[iconf + 1];
-        }
-
-        string dir;
-
-        if( optParamFile.empty() )
-        {
-            optParamFile = optParamFilePath;
-            optParamFile += "00/gfin00_";
-            dir = "00/";
-            int pos = 0;
-            string input_file = gems3LstFilePath, new_input;
-            do
-            {
-                new_input = input_file.substr(pos+1, input_file.size());
-                pos = new_input.find("/");
-                input_file = new_input;
-            } while (pos >-1);
-
-            pos = input_file.find("-dat.lst");
-            if (pos <0)
-            {
-                pos = input_file.find(".lst");
-                if (pos < 0)
-                {
-                    Error("Wrong file name", "Wrong name for the GEMS3K system file *.lst");
-                }
-            }
-
-
-            optParamFile += input_file.substr(0, pos);
-            optParamFile += ".dat";
-//            optParamFile += OPT_PARAM_FILE;
-            pos = gems3LstFilePath.find(input_file.c_str());
-            new_input = gems3LstFilePath.substr(0, gems3LstFilePath.size() - input_file.size());
-
-        }
-        else
-        {
-            string name;
-            string ext;
-            u_splitpath( optParamFile, optParamFilePath, name, ext );
-//            dir = "/00/";
-        }
-
-        string path_init = optParamFilePath + dir;
-        string path_run, path;
-//        string path_ = resultDir+"FIT_results.csv";
-
-//        time_t t1 = time(0);
-//        struct tm * now = localtime( & t1 );
-//        ostringstream ss, sss;
-//        ss << (now->tm_year+1900);
-//        ss << "-";
-//        ss << (now->tm_mon+1);
-//        ss << "-";
-//        ss << now->tm_mday;
-//        ss << "-";
-//        string time_folder = ss.str();
-
-
-//        sss << now->tm_hour;
-//        sss << "-";
-//        sss << now->tm_min;
-//        sss << "-";
-//        sss << now->tm_sec;
-//        sss << "-";
-//        string time_file = sss.str() ;
-
-//        OUTPUT_DIR = time_folder + OUTPUT_DIR;
-//        RESULT_DIR = time_folder + RESULT_DIR;
-
-//        FIT_CSV_FILE = time_file + FIT_CSV_FILE;
-//        FIT_STATISTIC = time_file + FIT_STATISTIC;
-//        FIT_LOGFILE = time_file + FIT_LOGFILE;
-
-
-
-        switch( mode )
-        {
-            case INIT_:
-                // set up default paths
-                // later these paths and filenames can be read from config file
-//                inputDir = path + INPUT_DIR;
-                mkdir(path_init.c_str(), 0775);
-                outputDir = path_init + OUTPUT_DIR;
-//                resultDir = path_init + RESULT_DIR;
-                fitsens = outputDir+FIT_SENS_FILE;
-                fitFile = outputDir+FIT_CSV_FILE;
-                fitnfun = outputDir+FIT_NFUN_FILE;
-                fitqq = outputDir+FIT_QQ_FILE;
-                fitparam = outputDir+FIT_PARAM_FILE;
-                fitmc = outputDir+FIT_MC_FILE;
-                fitStatistics = outputDir+FIT_STATISTIC;
-                fitLogFile = outputDir+FIT_LOGFILE;
-                break;
-            case RUN_:
-//                path_run += "/";
-                // set up default paths
-                // later these paths and filenames can be read from config file
-//                inputDir = path_run + INPUT_DIR;
-                outputDir = path_run + OUTPUT_DIR;
-//                resultDir = path_run + RESULT_DIR;
-                fitFile = outputDir+FIT_CSV_FILE;
-                fitsens = outputDir+FIT_SENS_FILE;
-                fitnfun = outputDir+FIT_NFUN_FILE;
-                fitqq = outputDir+FIT_QQ_FILE;
-                fitparam = outputDir+FIT_PARAM_FILE;
-                fitmc = outputDir+FIT_MC_FILE;
-                fitStatistics = outputDir+FIT_STATISTIC;
-                fitLogFile = outputDir+FIT_LOGFILE;
-                // GEMSFIT logfile (usually log_gemsfit.log)
-//                flog.open( fitLogFile.c_str(), ios::out | ios::trunc );
-//                if( flog.fail() )
-//                { cout<<"Logfile fileopen error"<<endl;
-//                   exit(1); }
-//                // GEMSFIT logfile
-//                flog_.open(path_.c_str(), ios::out | ios::trunc );
-//                if( flog_.fail() )
-//                { cout<<"Output fileopen error"<<endl;
-//                   exit(1); }
-                flog << "GEMSFIT2: Start" << endl;
-                flog << "optParamFile = " << optParamFile << endl;
-                flog << "fitFile = " << fitFile << endl;
-                flog << "fitLogFile = " << fitLogFile << endl;
-                flog << "gems3LstFilePath = " << gems3LstFilePath << endl;
-                flog.close();
-                break;
-            default:
-                // set up default paths
-                // later these paths and filenames can be read from config file
-                inputDir = path + INPUT_DIR;
-                outputDir = path + OUTPUT_DIR;
-//                resultDir = path + RESULT_DIR;
-                fitFile = outputDir+FIT_CSV_FILE;
-                fitStatistics = outputDir+FIT_STATISTIC;
-                fitLogFile = outputDir+FIT_LOGFILE;
-        }
-
-cout << "GEMSFIT2: Start" << endl;
-cout << "optParamFile = " << optParamFile << endl;
-cout << "fitFile = " << fitFile << endl;
-cout << "fitLogFile = " << fitLogFile << endl;
-cout << "gems3LstFilePath = " << gems3LstFilePath << endl;
-    }
- }
-
-TGfitPath::~TGfitPath()
-{}
-
-void TGfitPath::deleteOutputDir(const char *dir)
-{
-}
-
-
-void TGfitPath::makeOutputDir(const char *dir)
-{
-}
-
-TGfitPath *gpf;
-
-//-------------------------------------------------------------------------------------------------
-
-outField Data_Manager_fields[9] =
-{
-    { "MPI", 0, 0, 1, "\n# MPI: Number of threads for parallelization\n" },
-    { "DataDB",  0, 0, 1, "\n# DataDB: EJDB database path (please, edit to put the actual path)\n" },
-    { "DataCollection",  0, 0, 1, "\n# DataCollection: database collection name (please, edit to put the actual name)\n" },
-    { "DataSource",  1, 0, 1, "\n# DataSource: get experimental data from the EJDB format database"
-      "\n#     (default:0, no other sources yet implemented in GEMSFIT2)\n" },
-
-    { "DataSelect", 0, 0, 1, "# DataSelect: query for obtaining the experimental data from the database."
-      "\n# Options: "
-      "\n#      leave empty ot { } to select all data in the database"
-      "\n#    \'{ ... }\': script in JSON format (in braces) describing what experimental data to select. "
-      "\n#      \"usedatasets\": [...]: list of comma-separated names of experimental datasets to be used, "
-      "\n#         or empty string \"\" to select all available datasets."
-      "\n#      \"skipdatasets\": [...]: list of comma-separated names of experimental datasets to be skipped, "
-      "\n#         or empty string \"\" to not skip (in this case, \"usedatasets\" will apply)."
-      "\n#      \"usesamples\": [...]: list of comma-separated names of samples, or empty string \"\" "
-      "\n#         to select all available samples. Note that samples with the same name can be present "
-      "\n#         in two or more different experimental datasets."
-      "\n#      \"skipsamples\": [...]: list of comma-separated names of samples to be skipped, "
-      "\n#         or empty string \"\" to not to skip (in this case, \"usesamples\" will apply)."
-      "\n#      \"usepairs\": [...]: list of pairs each consisting of an experimental dataset name and a list"
-      "\n#         of comma-separated sample names to be taken from this dataset only; or an empty string \"\" "
-      "\n#         for other options to apply."
-      "\n#      \"skippairs\": [...]: list of pairs each consisting of an experimental dataset name and a list"
-      "\n#         of comma-separated sample names to be skipped from this dataset only; or an empty string \"\" "
-      "\n#         for other options to apply."
-      "\n#      \"sT\": [...]: list of comma-separated minimum and maximum temperature, C, "
-      "\n#         or empty string \"\" to select data for all available temperatures. "
-      "\n#      \"sP\": [...]: list of comma-separated minimum and maximum pressures, bar, "
-      "\n#         or empty string \"\" to select data for all available pressures.  "
-      "\n#      Example: "
-      "\n#      \'{ \"usedatasets\" : [\"CH04\", \"CH04D\"],"
-      "\n#          \"skipdatasets\" : [\"CH03\", \"CH03D\"],"
-      "\n#          \"usesamples\" : \"\", "
-      "\n#          \"skipsamples\" : \"\", "
-      "\n#          \"usepairs\" : \"\", "
-      "\n#          \"skippairs\" : [ "
-      "\n#                            { \"dataset\": \"CHO4\", \"samples\": [\"01\", \"02\"]}, "
-      "\n#                            { \"dataset\": \"CHO4D\", \"samples\": [\"01\", \"02\"]}, "
-      "\n#                          ], "
-      "\n#          \"sT\" : [100, 1000],"
-      "\n#          \"sP\" : [1, 2500] }\'"
-      "\n#      Copy the example and paste it below, remove comment symbols (#), and edit as necessary."
-      "\n#      Any main query option that has no value (empty string \"\") can be left out. In this example,"
-      "\n#        the lines for \"usesamples\", \"skipsamples\", and \"usepairs\" can be left out. \n"
-    },
-
-    { "DataTarget",  0, 0, 1, "# DataTarget: Target function for parameter fitting, described in JSON style"
-      "\n#     as text in single quotes and braces: \'{ ... }\' "
-      "\n#  \"Target\":  name of the target (objective) function (optional)"
-      "\n#  \"TT\":  type of the target function as sum of the following terms: "
-      "\n#     \"lsq\":       w*(measured-simulated)^2;"
-      "\n#     \"lsq-norm\":  w*(measured/avgm-simulated/avgm)^2;"
-      "\n#      ... "
-      "\n#      here, avgm is the arithmetic mean of measured values."
-      "\n#  \"WT\":  weighting scheme for samples, one of the following options:"
-      "\n#       empty string \"\": w = 1 (equal weights);"
-      "\n#      \"inverr\": w=1/error; \"inverr2\": w=1/error^2; \"inverr3\": w=1/measured^2;"
-      "\n#      \"inverr_norm\": w=1/(error/avgm)^2; "
-      "\n#       ... "
-      "\n#  \"OFUN\": objective function, a list [] of terms {} for measured properties to compare"
-      "\n#     with their computed counterparts. Each term can contain property-value pairs:"
-      "\n#      \"EPH\": for what phase from the experiments"
-      "\n#      \"CT\":  for the type of data to compare:"
-      "\n#          \"IC\" for independent component; \"DC\" for dependent component; "
-      "\n#          \"prop\" for phase property; \"MR\" for mole ratio; "
-      "\n#      \"CN\":  the name/formula of the data to compare. e.g. \"Al\" if \"CT\" is \"IC\","
-      "\n#          or \"pH\" if \"CT\" is \"prop\", or \"K/(Na+K)\" if \"CT\" is \"MR\" "
-      "\n#      \"DCP\": used only if \"CT\" is \"DC\", to represent the name of dependent component property:"
-      "\n#          \"Q\" for amount in mole fraction; \"@coef\" for activity coeficient"
-      "\n#      \"WT\": weight assigned to the objective function as real number e.g. \"WT\": 100. "
-      "\n#      \"unit\":  units of measurement (override those given in the database for this value):"
-      "\n#          \"molal\":  mol/(kg H2O), \"log_molal\": log(molal), \"-loga\": negated log(activity) for pH;"
-      "\n#          \"g\"; \"kg\"; \"cm3\"; \"m3\"; \"molfrac\": mole fraction; J/mol for Gex "
-      "\n#           ... (conversions will be performed automatically).\n"
-      "\n#  \"NFUN\": nested objective function, a list [] of terms {} for measured properties to compare"
-      "\n#    with their computed counterparts for each experiment independently of \"OFUN\" for adjusting"
-      "\n#    a input property \"Ptype\" to obtain an output value given by \"EPH\", \"CT\" and \"CN\" pairs."
-      "\n#       \"Ptype\": can have a value \"bIC\" or \"T-P\". The former refers to ajusting some parts of"
-      "\n#         the bulk composition of the system representing the sample. The latter refers to adjusting"
-      "\n#         the temperature, the pressure, or both."
-      "\n#    IMPORTANT: When \"NFUN\" is specified in DataTarget section, at least one element in \"Ptype\" "
-      "\n#         property object must be marked for fitting. More than one NFUN entries with different "
-      "\n#         \"Ptype\" input properties can be used with caution.\n "
-      "\n#  \"ADDOUT\": additional output, a list [] of terms {} for additional output in the results file"
-      "\n#    The options are the same as for OFUN with an additional \"SRC\" key whose value can be"
-      "\n#    \"calc\" if the aditional output is not present in the database but can be retreived trough GEMS claculation "
-      "\n#    \"meas\" if the additional output is present in the database but was not used in the OFUN "
-      "\n#     The comparison options are: "
-      "\n#       aqueous phase (\"aq_gen\") elemental composition in \"molal\" or \"loga\" "
-      "\n#       aqueous phase (\"aq_gen\") properties (\"prop\"): \"pH\" in \"-loga\" (or \"molal\" "
-      "\n#          - molality concentration of H+); \"Q\" - mass in \"g\" or \"kg\"  "
-      "\n#       other phases composition as element bulk amount in moles (\"mol\") "
-      "\n#          or to /Si molar ratio (\"Simolfrac\")"
-      "\n#       other phases properties (\"prop\"): \"Q\" - mass in \"g\" or \"kg\"; "
-      "\n#          \"pV\" - volume in \"cm3\" or \"m3\";  \"Eh\" - volume in \"Volts\"; "
-      "\n#          \"Gex\"  - excess Gibbs energy of mixing (in \"J/mol\"). "
-      "\n#       dependent components (\"DC\") properties: \"Q\" - amount in \"mol\"; "
-      "\n#          \"@coef\" - activity coefficient < add activity and mole fraction >"
-      "\n#           ..."
-      "\n#  Example of target (objective) function definition:"
-      "\n#  \'{ \"Target\": \"name\", \"TT\": \"lsq\", \"WT\": \"inverr\", \"OFUN\":"
-      "\n#      ["
-      "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"IC\", \"CN\": \"Si\", \"unit\": \"molal\" },"
-      "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"IC\", \"CN\": \"Al\", \"unit\": \"molal\" },"
-      "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"prop\", \"CN\": \"pH\", \"unit\": \"-loga\" },"
-      "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"DC\", \"CN\": \"SiO2@\", \"DCP\" : \"Q\", \"unit\": \"mol\"}"
-      "\n#      ]"
-      "\n#   }\'"
-      "\n# "
-      "\n#  Example of a target function with a nested objective function to titrate for a given pH:"
-      "\n#  \'{ \"Target\": \"name\", \"TT\": \"lsq\", \"WT\": \"inverr\", \"OFUN\":"
-      "\n#      ["
-      "\n#         { \"EPH\": \"aq_gen\", \"CT\": \"IC\", \"CN\": \"Al\", \"unit\": \"log_molal\" },"
-      "\n#      ], \"NFUN\": "
-      "\n#      ["
-      "\n#         { \"Ptype\": \"bIC\", \"EPH\": \"aq_gen\", \"CT\": \"prop\", \"CN\": \"pH\", \"unit\": \"-loga\" } "
-      "\n#      ]"
-      "\n#   }\'"
-      "\n#  Copy one of the examples, paste it below, remove the comment symbols (#), and edit as necessary. "
-      "\n#     Remove unnecessary rows. Note that in the example for nested function, at least one element in"
-      "\n#     the \"bIC\" vector should be marked as freely adjustable parameter 'F'. \n"
-    },
-    { "SystemFiles",  0, 0, 1, "\n# SystemFiles: path to the list of GEMS3K input files (also used for this template file)\n" },
-//    { "RecipeFiles",  0, 0, 1, "\n# RecipeFiles: Comment"},
-    { "LimitOfDetection",  0, 0, 1, "\n# LimitOfDetection: Limit of detection of the measured values."
-      "\n#     Ensures that wrongly computed output values due to non-physical input parameter values are ignored.\n" }
-};
-
-typedef enum { /// Field index into outField structure
-    f_MPI = 0,
-    f_DataDB,
-    f_DataCollection,
-    f_DataSource,
-    f_DataSelect,
-    f_DataTarget,
-    f_SystemFiles,
-//    f_RecipeFiles,
-    f_LimitOfDetection
-} Data_Manager_FIELDS;
-
-/// Set up default values for structure
-void Data_Manager::define_db_specs( )
-{
-   MPI = omp_get_num_threads() * omp_get_num_procs();
-   datasource = 0;
-   DBname = "../EJDB/<database name>";
-   collection= "experiments";
-   DataSelect ="";
-   DataTarget = "";
-   LimitOfDetection = 1e-06;
-
-}
-
-/// Writes structure to the GEMSFIT2 input specification file
-void Data_Manager::out_db_specs_txt( bool with_comments, bool brief_mode )
-{
-    string fname = gpf->OptParamFile();
-    fstream ff(fname.c_str(), ios::out/*|ios::app*/ );
-    ErrorIf( !ff.good() , fname.c_str(), "OptParamFile text open error");
-
-    TPrintArrays  prar(10, Data_Manager_fields, ff);
-    // define data that must be written
-
-    if (datasource == 0)
-    {
-        prar.setAlws( f_MPI );
-        prar.setAlws( f_DataDB );
-        prar.setAlws( f_DataCollection );
-        prar.setAlws( f_DataSelect );
-        prar.setAlws( f_LimitOfDetection );
-    }
-
-    if(with_comments )
-    {
-        ff << "#########################################################################" << endl;
-        ff << "#>>>>>>>>>>> GEMSFIT2 input specification file template >>>>>>>>>>>>>>>>#" << endl;
-        ff << "#########################################################################" << endl;
-        ff << "#  Character '#' means a comment line ";
-    }
-
-    prar.writeField(f_MPI, (long int)MPI, with_comments, brief_mode  );
-
-    if(with_comments )
-    {
-        ff << "\n\n#########################################################################" << endl;
-        ff << "#>>>>>>>>>>>>>>>>>>>>>>>> Data Sources section >>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
-        ff << "#########################################################################";
-    }
-    prar.writeField(f_DataSource, (long int)datasource, with_comments, brief_mode  );
-    prar.writeField(f_DataDB, DBname, with_comments, brief_mode  );
-    prar.writeField(f_DataCollection, collection, with_comments, brief_mode  );
-    prar.writeField(f_SystemFiles, "."+gpf->GEMS3LstFilePath(), with_comments, brief_mode  );
-//    prar.writeField(f_RecipeFiles, "", with_comments, brief_mode  );
-
-    if(with_comments )
-    {
-        ff << "\n\n#########################################################################" << endl;
-        ff << "#>>>>>>>>>>>>>>>>>>>>>>> DataSelect section >>>>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
-        ff << "#########################################################################" << endl;
-    }
-    prar.writeField(f_DataSelect, DataSelect, with_comments, brief_mode );
-
-    if(with_comments )
-    {
-        ff << "\n\n#########################################################################" << endl;
-        ff << "#>>>>>>>>>>>>>>>>>>>>>>> DataTarget section >>>>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
-        ff << "#########################################################################" << endl;
-    }
-    prar.writeField(f_DataTarget, DataTarget, with_comments, brief_mode );
-    prar.writeField(f_LimitOfDetection, (double)LimitOfDetection, with_comments, brief_mode  );
-
-    if(with_comments )
-    {
-        ff << "\n\n#########################################################################" << endl;
-        ff << "#>>>>>>>>>>>>>>>>>>>>>> ParameterMarkup section >>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
-        ff << "#########################################################################" << endl;
-    }
-    ff.close();
-}
-
-// get database connection parameters
-void Data_Manager::get_db_specs_txt( )
-{
-    // open file for reading
-    string inputstr, result;
-    string fname = gpf->OptParamFile();
-    fstream ff(fname.c_str(), ios::in );
-    ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
-
-    TReadArrays  rdar(8, Data_Manager_fields, ff);
-
-    long int nfild = rdar.findNextNotAll();
-    while( nfild >=0 )
-        {
-          switch( nfild )
-          {
-            case f_MPI: rdar.readArray( "MPI",  &MPI, 1 );
-                    break;
-            case f_DataDB: rdar.readArray( "DataDB",  DBname );
-                    break;
-            case f_DataCollection: rdar.readArray( "DataCollection",  collection );
-                    break;
-            case f_DataSource: rdar.readArray( "DataSource",  &datasource, 1);
-                    break;
-            case f_LimitOfDetection: rdar.readArray( "LimitOfDetection",  &LimitOfDetection, 1);
-                    break;
-            case f_DataSelect: rdar.readArray( "DataSelect",  DataSelect);
-                    break;
-            case f_DataTarget: rdar.readArray( "DataTarget",  DataTarget );
-                    break;
-            case f_SystemFiles: rdar.readArray( "SystemFiles",  inputstr );
-                    remove_copy(inputstr.begin(), inputstr.end(), std::back_inserter(result), '\'');
-                    inputstr = result;
-                    result.clear();
-                    gpf->setGEMS3LstFilePath(inputstr.c_str() );
-                    break;
- //           case f_RecipeFiles: rdar.readArray( "RecipeFiles",  inputstr );
- //                   gpf->setGEMS3RecipeFilePath(inputstr.c_str());
- //                   break;
-          }
-          nfild = rdar.findNextNotAll();
-        }
-
-    // define data that must be read
-    if (datasource == 0)
-    {
-        rdar.setAlws( f_MPI );
-        rdar.setAlws( f_DataDB );
-        rdar.setAlws( f_DataCollection );
-        rdar.setAlws( f_DataSelect );
-        rdar.setAlws( f_LimitOfDetection );
-    }
-
-    // testing read
-        string ret = rdar.testRead();
-        if( !ret.empty() )
-         { ret += " - fields must be read from OptParamFile structure";
-           Error( "Error", ret);
-         }
-
-    // removing inverted comma
-        remove_copy(DBname.begin(), DBname.end(), std::back_inserter(result), '\'');
-        DBname = result;
-        result.clear();
-
-        remove_copy(collection.begin(), collection.end(), std::back_inserter(result), '\'');
-        collection = result;
-}
-
-//-----------------------------------------------------------------------------------------
-
-outField statistics_fields[4] =
-{
-    { "StatMCbool",  0, 0, 1, "\n# StatMCbool: perform Monte Carlo runs -> no (0) "
-                              "\n#             yes (1) scatter added to (ideal) computed values | yes (2) scatter added to measured values "},
-    { "StatMCruns",  0, 0, 1, "\n# StatMCruns: number of Monte Carlo runs for confidence interval generation"},
-    { "StatSensitivity",  0, 0, 1, "\n# StatSensitivity: number of evaluations points per parameter for sensitivity evaluation"},
-    { "StatPerturbator", 0, 0, 1, "\n# StatPerturbator: used for calculating sensitivities by central diference, see ref [2]"}
-};
-
-typedef enum {  /// Field index into outField structure
-    f_StatMCbool = 0,
-    f_StatMCruns,
-    f_StatSensitivity,
-    f_StatPerturbator
-} statistics_FIELDS;
-
-
-///// Set up default values for structure
-void statistics::default_stat_param()
-{
-  MCbool =  0;
-  num_of_MC_runs = 1000;
-  sensitivity_points = 50;
-  perturbator = 0.0001;
-}
-
-///// Writes  structure to  the GEMSFIT configuration file
-void statistics::out_stat_param_txt( bool with_comments, bool brief_mode )
-{
-    string fname = gpf->OptParamFile();
-    fstream ff(fname.c_str(), ios::out|ios::app);
-    ErrorIf( !ff.good() , fname.c_str(), "OptParamFile text open error");
-
-    TPrintArrays  prar(4, statistics_fields, ff);
-    prar.writeField(f_StatMCbool, (long int)MCbool, with_comments, brief_mode  );
-    prar.writeField(f_StatMCruns, (long int)num_of_MC_runs, with_comments, brief_mode  );
-    prar.writeField(f_StatSensitivity, (long int)sensitivity_points, with_comments, brief_mode  );
-    prar.writeField(f_StatPerturbator, (double)perturbator, with_comments, brief_mode  );
-
-    if(with_comments )
-    {
-        ff << endl << endl;
-        ff << "#########################################################################" << endl;
-        ff << "#>>>>>>>>>> end of GEMSFIT2 input specification file template >>>>>>>>>>#" << endl;
-        ff << "#########################################################################" << endl;
-    }
-
-    ff.close();
-}
-
-//// Read statistical input specifications from configurator
-void statistics::get_stat_param_txt( )
-{
-    // open file for reading
-    string fname = gpf->OptParamFile();
-    fstream ff(fname.c_str(), ios::in );
-    ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
-
-    TReadArrays  rdar(4, statistics_fields, ff);
-
-    long int nfild = rdar.findNextNotAll();
-    while( nfild >=0 )
-        {
-          switch( nfild )
-          {
-          case f_StatMCbool:
-          { /*int bb;*/
-              rdar.readArray( "StatMCbool",  &MCbool, 1 );
-//              MCbool = (bool)bb;
-          }
-              break;
-          case f_StatMCruns: rdar.readArray( "StatMCruns",  &num_of_MC_runs, 1 );
-              break;
-          case f_StatSensitivity: rdar.readArray( "StatSensitivity",  &sensitivity_points, 1 );
-              break;
-          case f_StatPerturbator: rdar.readArray( "StatPerturbator",  &perturbator, 1 );
-              break;
-          }
-          nfild = rdar.findNextNotAll();
-        }
-
-    // testing read
-        string ret = rdar.testRead();
-        if( !ret.empty() )
-         { ret += " - fields must be read from OptParamFile structure";
-           Error( "Error", ret);
-         }
-}
-
-
-////-------------------------------------------------------------------------------------------------
-
-outField optimization_fields[25] =
-{
-    { "OptAlgo",  0, 0, 1, "\n# OptAlgo: specify algorithm: GN_ISRES | GN_ORIG_DIRECT | GN_ORIG_DIRECT_L | LN_COBYLA | LN_BOBYQA "},
-    { "OptThreads",  0, 0, 1, "\n# OptThreads: Comment"},
-    { "OptUpBounds",  0, 0, 1, "\n# OptUpBounds: Comment"},
-    { "OptLoBounds",  0, 0, 1, "\n# OptLoBounds: Comment"},
-    { "OptTolRel",  0, 0, 1, "\n# OptTolRel: stopping criterion -> specify relative tolerance (default = 1e-04) of function value"},
-    { "OptMaxEval",  0, 0, 1, "\n# OptMaxEval: specify max number of evaluations"},
-    { "OptUpConstraints",  0, 0, 1, "\n# OptUpConstraints: specify parameter vectors for constraint function"},
-    { "OptLoConstraints",  0, 0, 1, "\n# OptLoConstraints: Comment"},
-    { "OptConstraints",  0, 0, 1, "\n# OptConstraints:  Optimization: apply constraints (1=yes, 0=no)"},
-    { "OptDoWhat",  0, 0, 1, "\n# OptDoWhat: perform optimization and statistics (0); only optimization with basic Statistics (1);"
-                             "\n#            only Statistics (2) with initial guesses as best fit parametters"},
-    { "OptTitration",  0, 0, 1, "\n# OptTitration: Adjusts the computed pH by changing NaOH or HCl amount to match the measured pH"
-                                "\n#               read from the database for each experiment"},
-    { "OptTuckey",  0, 0, 1, "\n# OptTuckey: (1) Use Tuckey Biweight for all data. (2) Use Tuckey Biweight for each OFUN independently. "},
-    { "OptUserWeight",  0, 0, 1, "\n# OptUserWeight: (1) Use the weights provided in the \"weight\" column of the database. "},
-    { "OptTolAbs",  0, 0, 1, "\n# OptTolAbs: stopping criterion -> specify absolute tolerance (default = 1e-04) of function value"},
-    { "OptTuckeyVal",  0, 0, 1, "\n# OptHybridTolRel: Comment"},
-    { "OptHybridTolAbs",  0, 0, 1, "\n# OptTuckeyVal: Empirical chosen value that is multiplied with the median of residuals to get the "
-                                   "\n# 		      weighting thereshold value C = Val * M. Default value 6. Residuals >C -> weight 0 "},
-    { "OptHybridMaxEval",  0, 0, 1, "\n# OptHybridMaxEval: Comment"},
-    { "OptEquilibrium",  0, 0, 1, "\n# OptEquilibrium: (1) Use full GEMS3K to calculate thermodynamic equilibrium. (0) Use TSolMod shortcut "
-                                  "\n#                  without calculating equilibrium (only fitting activity model parameters)"},
-    { "OptNmultistart",  0, 0, 1, "\n# OptNmultistart: Comment"},
-    { "OptPerturbator",  0, 0, 1, "\n# OptPerturbator: The delta/difference used to to calculate the d(function_value)/d(parameter_value) gradient"},
-    { "OptInitStep",  0, 0, 1, "\n# OptInitStep: specify initial stepsize for local minimizers "
-                               "\n#              (factor will be multiplied to all optimization parameters); 0 => use default"},
-    { "OptScaleParam",  0, 0, 1, "\n# OptScaleParam: Comment"},
-    { "OptNormParam",  0, 0, 1, "\n# OptNormParam: Normalize bounds/constraints/fitting parameters with the initial guess vector"},
-    { "OptBoundPerc",  0, 0, 1, "\n# OptBoundPerc: Generate bounds from initial guess vector: specify percentage deviation "
-                                "\n#               (user-specific, user-defined bounds when set to -1)"}
-};
-
-typedef enum {  /// Field index into outField structure
-    f_OptAlgo= 0,
-    f_OptThreads,
-    f_OptUpBounds,
-    f_OptLoBounds,
-    f_OptTolRel,
-    f_OptMaxEval,
-    f_OptUpConstraints,
-    f_OptLoConstraints,
-    f_OptConstraints,
-    f_OptDoWhat,
-    f_OptTitration,
-    f_OptTuckey,
-    f_OptUserWeight,
-    f_OptTolAbs,
-    f_OptTuckeyVal,
-    f_Opt_,
-    f_OptHybridMaxEval,
-    f_OptEquilibrium,
-    f_OptNmultistart,
-    f_OptPerturbator,
-    f_OptInitStep,
-    f_OptScaleParam,
-    f_OptNormParam,
-    f_OptBoundPerc
-
-} optimization_FIELDS;
-
-
-///// Set up default values for structure
-void optimization::define_nlopt_param( )
-{
-    OptAlgo = "LN_BOBYQA";
-    OptBoundPerc = -1.0;
-    OptTolRel = 1e-6;
-    OptTolAbs = 1e-6;
-    OptMaxEval = 500000;
-    OptDoWhat = 0;
-    OptEquilibrium = 1;
-    OptTuckey = 0;
-    OptTuckeyVal = 6;
-    OptUserWeight = 0;
-    OptTitration = 0;
-    OptNormParam = 1;
-    OptPerturbator = 0.0001;
-    OptInitStep = 0;
-
-}
-
-///// Writes  structure to  the GEMSFIT configuration file
-void optimization::out_nlopt_param_txt( bool with_comments, bool brief_mode )
-{
-    string fname = gpf->OptParamFile();
-    fstream ff(fname.c_str(), ios::out|ios::app );
-    ErrorIf( !ff.good() , fname.c_str(), "OptParamFile text open error");
-
-    vector<double> OptUpConstraints_;
-    vector<double> OptLoConstraints_;
-// cout << "point 1" << endl;
-    TPrintArrays  prar(24, optimization_fields, ff);
-// cout << "point 2" << endl;
-    if(with_comments )
-    {
-        ff << "\n\n#########################################################################" << endl;
-        ff << "#>>>>>>>>>>>>>>>> OptimizationMethods section >>>>>>>>>>>>>>>>>>>>>>>>>>#" << endl;
-        ff << "#########################################################################" << endl;
-    }
-
-    prar.writeField( f_OptDoWhat,  (long int)OptDoWhat, with_comments, brief_mode);
-    prar.writeField( f_OptEquilibrium,  (long int)OptEquilibrium, with_comments, brief_mode);
-    prar.writeField( f_OptUserWeight,  (long int)OptUserWeight, with_comments, brief_mode);
-    prar.writeField( f_OptTuckey,  (long int)OptTuckey, with_comments, brief_mode);
-    prar.writeField( f_OptTuckeyVal,  (long int)OptTuckeyVal, with_comments, brief_mode);
-//    prar.writeField( f_OptTitration,  (long int)OptTitration, with_comments, brief_mode);
-    prar.writeField( f_OptAlgo,  OptAlgo, with_comments, brief_mode );
-    prar.writeField( f_OptBoundPerc,  OptBoundPerc, with_comments, brief_mode );
-    prar.writeField( f_OptTolRel,  OptTolRel, with_comments, brief_mode);
-    prar.writeField( f_OptTolAbs,  OptTolAbs, with_comments, brief_mode);
-    prar.writeField( f_OptMaxEval,  (long int)OptMaxEval, with_comments, brief_mode);
-    prar.writeField( f_OptInitStep,  OptInitStep, with_comments, brief_mode);
-    prar.writeField( f_OptNormParam,  (long int)OptNormParam, with_comments, brief_mode);
-    prar.writeField( f_OptPerturbator,  OptPerturbator, with_comments, brief_mode);
-
-    ff.close();
-}
-
-//// populate nlopt instance: set bounds, constraints, stopping criteria
-void optimization::get_nlopt_param_txt(vector<double> optv)
-{
-    // open file for reading
-//    int i;
-    string fname = gpf->OptParamFile();
-    fstream ff(fname.c_str(), ios::in );
-    ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
-
-    TReadArrays  rdar(24, optimization_fields, ff);
-
-    long int nfild = rdar.findNextNotAll();
-    while( nfild >=0 )
-        {
-          switch( nfild )
-          {
-          case f_OptAlgo: rdar.readArray( "OptAlgo",  OptAlgo );
-                   break;
-          case f_OptBoundPerc: rdar.readArray( "OptBoundPerc",  &OptBoundPerc, 1 );
-                  if( OptBoundPerc < 0.) OptBoundPerc = -1;
-                 break;
-          case f_OptTolRel: rdar.readArray( "OptTolRel",  &OptTolRel, 1);
-                   break;
-          case f_OptTolAbs: rdar.readArray( "OptTolAbs",  &OptTolAbs, 1);
-                  break;
-          case f_OptMaxEval: rdar.readArray( "OptMaxEval",  &OptMaxEval, 1);
-                  break;
-          case f_OptDoWhat: rdar.readArray( "OptDoWhat",  &OptDoWhat, 1);
-                  break;
-          case f_OptEquilibrium: rdar.readArray( "OptEquilibrium",  &OptEquilibrium, 1);
-                  break;
-          case f_OptUserWeight: rdar.readArray( "OptUserWeight",  &OptUserWeight, 1);
-                  break;
-          case f_OptTuckey: rdar.readArray( "OptTuckey",  &OptTuckey, 1);
-                  break;
-          case f_OptTuckeyVal: rdar.readArray( "OptTuckeyVal",  &OptTuckeyVal, 1);
-                  break;
-//          case f_OptTitration: rdar.readArray( "OptTitration",  &OptTitration, 1);
-//                  break;
-          case f_OptInitStep: rdar.readArray( "OptInitStep",  &OptInitStep, 1);
-                  break;
-          case f_OptPerturbator: rdar.readArray( "OptPerturbator",  &OptPerturbator, 1);
-                  break;
-          case f_OptNormParam:{
-                int bb;
-                rdar.readArray( "OptNormParam",  &bb, 1);
-                if (bb<0)
-                OptNormParam = false;
-                else
-                    OptNormParam = true;
-                 }
-                  break;
-          }
-          nfild = rdar.findNextNotAll();
-        }
-
-    if( OptBoundPerc > 0. )
-    {
-        OptUpBounds.resize( optv.size() );
-        OptLoBounds.resize( optv.size() );
-        for(unsigned int i=0; i<optv.size(); i++ )
-        {
-            // take the existing bounds if initial value of the parameter is 0 or <9e-11)
-            if ((optv[i]!=0) && (fabs(optv[i])>9e-11))
-            {
-                OptUpBounds[i] = optv[i] + fabs( optv[i]*OptBoundPerc/100. );
-                OptLoBounds[i] = optv[i] - fabs( optv[i]*OptBoundPerc/100. );
-            }
-        }
-    }
-
-        // testing read
-        string ret = rdar.testRead();
-        if( !ret.empty() )
-         { ret += " - fields must be read from OptParamFile structure";
-           Error( "Error", ret);
-         }
-}
-
-////-------------------------------------------------------------------------------------------------
 
 
 void F_to_OP (opti_vector *op, IOJFormat Jformat, string nfild)
