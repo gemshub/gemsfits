@@ -18,6 +18,7 @@
 
 
 
+
   
 
   
@@ -104,11 +105,11 @@ database (specified before in the <big><span style="font-family: monospace;">&lt
 <p><span style="font-family: monospace; font-weight: bold;"><big>'{ ... }</big>'</span>: object in JSON format (in braces) describing what to select.</p>
 
 
-<p><span style="font-weight: bold; font-family: monospace;"><big>"usedataset"</big>: [...]</span>: list of comma-separated names of experimental datasets to be used, or empty string "" to select all available datasets.</p>
-<p><span style="font-family: monospace; font-weight: bold;"><big>"skipdataset"</big>: [...]</span>: list of comma-separated names of experimental datasets to be skipped, or empty string "" to not skip (in this case, <big><span style="font-family: monospace;">usedataset</span></big> list will apply).</p>
-<p><span style="font-family: monospace; font-weight: bold;">"<big>uesample"</big>: [...]</span>: list of comma-separated names of samples, or empty string "" to select all samples.</p>
+<p><span style="font-weight: bold; font-family: monospace;"><big>"usedatasets"</big>: [...]</span>: list of comma-separated names of experimental datasets to be used, or empty string "" to select all available datasets.</p>
+<p><span style="font-family: monospace; font-weight: bold;"><big>"skipdatasets"</big>: [...]</span>: list of comma-separated names of experimental datasets to be skipped, or empty string "" to not skip (in this case, <big><span style="font-family: monospace;">usedataset</span></big> list will apply).</p>
+<p><span style="font-family: monospace; font-weight: bold;">"<big>uesamples"</big>: [...]</span>: list of comma-separated names of samples, or empty string "" to select all samples.</p>
 
-<p><span style="font-family: monospace; font-weight: bold;"><big>"skipsample"</big>: [...]</span>: list of comma-separated names of samples to be skipped, or empty string "" to not skip (in this case, <big><span style="font-family: monospace;">sample</span></big> list will apply).</p><big style="font-weight: bold;"><span style="font-family: monospace;">"usepairs": [...]: </span></big>list
+<p><span style="font-family: monospace; font-weight: bold;"><big>"skipsamples"</big>: [...]</span>: list of comma-separated names of samples to be skipped, or empty string "" to not skip (in this case, <big><span style="font-family: monospace;">sample</span></big> list will apply).</p><big style="font-weight: bold;"><span style="font-family: monospace;">"usepairs": [...]: </span></big>list
 of pairs each consisting of an experimental dataset name and a list of
 comma-separated sample names to be taken from this dataset only; or an
 empty string "" for other options to apply.<br>
