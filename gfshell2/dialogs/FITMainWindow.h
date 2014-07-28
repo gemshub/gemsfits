@@ -150,6 +150,7 @@ public slots:
        void CmBackupYAML(){}
        void CmRestoreYAML(){}
        void CmDeleteList();
+       void CmTPpairsCSV();
      //Calc
        void CmRunTest();
        void CmShowCalcResults();

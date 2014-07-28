@@ -444,6 +444,8 @@
     <addaction name="actionBackup_to_TXT"/>
     <addaction name="separator"/>
     <addaction name="action_Delete_multiple_data"/>
+    <addaction name="separator"/>
+    <addaction name="actionExport_TP_pairs_to_CSV_file"/>
    </widget>
    <widget class="QMenu" name="menu_Calc">
     <property name="title">
@@ -827,6 +829,11 @@
   <action name="actionInsert_search_results_into_task_definition">
    <property name="text">
     <string>Insert record list into task definition </string>
+   </property>
+  </action>
+  <action name="actionExport_TP_pairs_to_CSV_file">
+   <property name="text">
+    <string>Export TP pairs to CSV file...</string>
    </property>
   </action>
  </widget>

@@ -182,6 +182,7 @@ protected:
 
     // Save definition of chain to configuration file
     //void toCFG( fstream& f );
+    EJCOLL *openCollection2( bool createifempty = true );
 
     //--- Selectors
     /// Get name of modules DB

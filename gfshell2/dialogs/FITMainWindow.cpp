@@ -411,7 +411,6 @@ void FITMainWindow::resetMainWindow()
     {
       ui->action_Insert->setEnabled(false);
       ui->actionCreate_New->setEnabled(false);
-
       ui->actionRestore_from_csv->setEnabled(false);
       ui->actionRestore_from_JSON->setEnabled(false);
       ui->actionRestore_from_TXT->setEnabled(false);

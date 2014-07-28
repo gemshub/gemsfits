@@ -80,6 +80,7 @@ void FITMainWindow::setActions()
        connect( ui->actionBackup_to_YAML, SIGNAL( triggered()), this, SLOT(CmBackupYAML()));
        connect( ui->actionRestore_from_YAML, SIGNAL( triggered()), this, SLOT(CmRestoreYAML()));
        connect( ui->action_Delete_multiple_data, SIGNAL( triggered()), this, SLOT(CmDeleteList()));
+       connect( ui->actionExport_TP_pairs_to_CSV_file, SIGNAL( triggered()), this, SLOT(CmTPpairsCSV()));
 
   //Calc
     connect( ui->action_Run_test, SIGNAL( triggered()), this, SLOT(CmRunTest()));
@@ -133,6 +134,8 @@ void FITMainWindow::CmDBMode()
    ui->action_Run_test->setEnabled(false);
    ui->action_Show_Results->setEnabled(false);
    ui->actionFits_View_Mode->setEnabled(false);
+   ui->action_Delete_multiple_data->setEnabled(true);
+   ui->actionExport_TP_pairs_to_CSV_file->setEnabled(true);
    ui->menu_Calc->setEnabled(false);
 
    // update key list, editor, filter
@@ -159,6 +162,7 @@ void FITMainWindow::CmTaskMode()
    // define actions
    ui->actionBackup_to_csv->setEnabled(false);
    ui->actionRestore_from_csv->setEnabled(false);
+   ui->actionExport_TP_pairs_to_CSV_file->setEnabled(false);
    ui->actionBackup_to_TXT->setEnabled(true);
    ui->actionRestore_from_TXT->setEnabled(true);
    ui->action_Run_test->setEnabled(true);
@@ -1081,6 +1085,114 @@ void FITMainWindow::CmDeleteList()
         setStatusText( err.title );
         addLinetoStatus( err.mess );
     }
+}
+
+// write TP paris file
+void FITMainWindow::CmTPpairsCSV()
+{
+    // Select all
+    bson bq;
+    bson_init_as_query(&bq);
+//    bson_append_start_object(&bq, "sT");
+//    bson_append_start_array(&bq, "$bt");
+//    bson_append_string(&bq, "0", "0");
+//    bson_append_string(&bq, "1", "2000");
+//    bson_append_finish_array(&bq);
+//    bson_append_finish_object(&bq);
+    bson_finish(&bq);
+
+    EJDBFile.Open();
+    EJQ *q = ejdbcreatequery(EJDBFile.ejDB, &bq, NULL, 0, NULL);
+
+    uint32_t count;
+
+    EJCOLL *coll = rtEJ[ currentMode ].openCollection2();
+//    coll = ejdbcreatecoll(EJDBFile.ejDB, "experiments", NULL );
+    TCLIST *res = ejdbqryexecute(coll, q, &count, 0, NULL);
+
+    vector<double> TP[2], TP_pairs[2];
+    bool isfound = false, isfound2 = false;
+
+    for (int i = 0; i < TCLISTNUM(res); ++i) {
+        void *bsdata = TCLISTVALPTR(res, i);
+        char *bsdata_ = static_cast<char*>(bsdata);
+
+        // filing in the TP[]                                                  //D.1 getting the T and P of the experiments which will be later used to select the distinct P and T pairs
+        bson_iterator it;
+        const char *key;
+        string key_;
+
+        bson_iterator_from_buffer(&it, bsdata_);
+
+        while (bson_iterator_next(&it))
+        {
+            bson_type t = bson_iterator_type(&it);
+            if (t == 0)
+                break;
+            key = bson_iterator_key(&it);
+            key_ = key;
+
+            if (key_ == "sT")
+            {
+                // adding temperature
+                TP[0].push_back(bson_iterator_double(&it));
+            } else
+            if (key_ == "sP")
+            {
+                // adding pressure
+                TP[1].push_back(bson_iterator_double(&it));
+            }
+        }
+    }
+   tclistdel(res);
+   //Dispose query
+   ejdbquerydel(q);
+   bson_destroy(&bq);
+
+   // get distinct TP                                                          //D.2 getting the distinct T and P pairs
+   for (int i=0; i<TP[0].size(); i++)
+   {
+       // check if TP pair is presnt more than once in the TP vector
+       for (int j=0; j<TP[0].size(); j++)
+       {
+           if ((TP[0][i] == TP[0][j]) && (TP[1][i] == TP[1][j]) && (i != j))
+           {
+               isfound = true;
+           }
+       }
+       // check if TP pair was added to the unique TP pairs container
+       for (int j=0; j<TP_pairs[0].size(); ++j)
+       {
+           if ((TP[0][i] == TP_pairs[0][j]) && (TP[1][i] == TP_pairs[1][j]))
+           {
+               isfound2 = true;
+           }
+       }
+       // add TP pair if it does not repeat itself or was not added already in the container
+       if ((!isfound) || (!isfound2))
+       {
+           TP_pairs[0].push_back(TP[0][i]);
+           TP_pairs[1].push_back(TP[1][i]);
+       }
+       isfound = false;
+       isfound2 = false;
+   }
+
+   string fname;
+   TFile  outFile("", ios::out );
+   if( !outFile.ChooseFileSave( this, fname, "Please, give a file name for exporting the P-T pairs ", "*.csv" ))
+        return;
+   outFile.Open();
+
+   for (int i=0; i<TP_pairs[1].size(); ++i)
+   {
+       outFile.ff <<TP_pairs[1][i]<<";"<<TP_pairs[0][i]<<endl;
+   }
+   outFile.ff << TP_pairs[1].size() <<endl;
+   outFile.Close();
+
+   setStatusText( "P-T pairs of the experiments in the database were exported to the csv file" );
+
 }
 
 //-------------------------------------------------------------------------------------

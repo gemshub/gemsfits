@@ -536,6 +536,53 @@ void TGfitTask::setnodes()
                 }
             }
         }
+
+        string majorsalt = "";
+        double maxsalt = 0.0;
+
+        for (j=0; j<experiments[n]->sbcomp.size(); ++j)
+        {
+            if (experiments[n]->sbcomp[j]->comp == "NaCl")
+            {
+                if (experiments[n]->sbcomp[j]->Qnt > maxsalt)
+                {
+                    majorsalt = experiments[n]->sbcomp[j]->comp;
+                    maxsalt = experiments[n]->sbcomp[j]->Qnt;
+                }
+            } else
+            if (experiments[n]->sbcomp[j]->comp == "KCl")
+            {
+                if (experiments[n]->sbcomp[j]->Qnt > maxsalt)
+                {
+                    majorsalt = experiments[n]->sbcomp[j]->comp;
+                    maxsalt = experiments[n]->sbcomp[j]->Qnt;
+                }
+            } else
+            if (experiments[n]->sbcomp[j]->comp == "NaOH")
+            {
+                if (experiments[n]->sbcomp[j]->Qnt > maxsalt)
+                {
+                    majorsalt = experiments[n]->sbcomp[j]->comp;
+                    maxsalt = experiments[n]->sbcomp[j]->Qnt;
+                }
+            } else
+            if (experiments[n]->sbcomp[j]->comp == "KOH")
+            {
+                if (experiments[n]->sbcomp[j]->Qnt > maxsalt)
+                {
+                    majorsalt = experiments[n]->sbcomp[j]->comp;
+                    maxsalt = experiments[n]->sbcomp[j]->Qnt;
+                }
+            } else // default NaCl
+            {
+                if (experiments[n]->sbcomp[j]->Qnt > maxsalt)
+                {
+                    majorsalt = experiments[n]->sbcomp[j]->comp;
+                    maxsalt = experiments[n]->sbcomp[j]->Qnt;
+                }
+            }
+        }
+
 // ....................................................................
 // NodT[n]->  This is written using TNode functions on 05.01.2014 by DK
         // Set amounts of dependent components (GEMS3K: DBR indexing)
@@ -646,25 +693,25 @@ void TGfitTask::setnodes()
             // check if we are dealing with HKF TSolMod !!!!
             // ................ //
             // major salts interation parameters
-            if (experiments[n]->sbcomp[j]->comp == "NaCl")
+            if (majorsalt == "NaCl")
             {
                 NodT[n]->Set_PMc(0.064, 0 );
                 NodT[n]->Set_PMc(3.72, 1 );
                 NodT[n]->Set_PMc(1, 4 );
             } else
-            if (experiments[n]->sbcomp[j]->comp == "KCl")
+            if (majorsalt == "KCl")
             {
                 NodT[n]->Set_PMc(0.025, 0 );
                 NodT[n]->Set_PMc(4.08, 1 );
                 NodT[n]->Set_PMc(2, 4 );
             } else
-            if (experiments[n]->sbcomp[j]->comp == "NaOH")
+            if (majorsalt == "NaOH")
             {
                 NodT[n]->Set_PMc(0.098, 0 );
                 NodT[n]->Set_PMc(3.31, 1 );
                 NodT[n]->Set_PMc(3, 4 );
             } else
-            if (experiments[n]->sbcomp[j]->comp == "KOH")
+            if (majorsalt == "KOH")
             {
                 NodT[n]->Set_PMc(0.123, 0 );
                 NodT[n]->Set_PMc(3.67, 1 );

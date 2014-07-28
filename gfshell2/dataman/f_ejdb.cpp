@@ -280,6 +280,11 @@ EJCOLL *TEJDataBase::openCollection( bool createifempty )
 
    return coll;
 }
+EJCOLL *TEJDataBase::openCollection2( bool createifempty )
+{
+    return openCollection(createifempty);
+}
+
 
 /// Close
 void TEJDataBase::closeCollection( )
