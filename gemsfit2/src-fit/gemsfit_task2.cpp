@@ -644,14 +644,25 @@ void TGfitTask::set_fixed_parameters()
         string Ptype;
         int Pindex;
         double Pval;
+        double new_GTP=0.0;
+        double delta_G0old_G0new;
         Ptype = Opti->fixed_param[p]->Ptype;
         Pindex = Opti->fixed_param[p]->Pindex;
         Pval = Opti->fixed_param[p]->Pval;
+
         if (Ptype == "G0")
             for (unsigned n=0; n<NodT.size(); n++  )
             {
+                delta_G0old_G0new = fabs(this->NodT[n]->DC_G0(Pindex, 1e+05, 298.15, false)) - fabs(Pval);
+                // going trough all TP pairs
+                for (unsigned int j=0; j<this->TP_pairs[0].size(); ++j)
+                {
+                    new_GTP = delta_G0old_G0new + this->NodT[n]->DC_G0(Pindex, this->TP_pairs[1][j]*100000, this->TP_pairs[0][j]+273.15, false);
+                    // Set the new G0 in GEMS
+                    this->NodT[n]->Set_DC_G0(Pindex, this->TP_pairs[1][j]*100000, this->TP_pairs[0][j]+273.15, new_GTP);
+                }
                 this->NodT[n]->Set_DC_G0(Pindex, 1e+05, 298.15, Pval);
-            }
+             }
         if (Ptype == "PMc")
             for (unsigned n=0; n<NodT.size(); n++  )
             {

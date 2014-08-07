@@ -702,8 +702,6 @@ void TGfitTask::setnodes()
      }
             string sMod;
             NodT[n]->Get_sMod(sMod);
-            int ex;
-            ex=1;
 
             // check if we are dealing with HKF TSolMod !!!!
             // ................ //
