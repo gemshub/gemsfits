@@ -422,7 +422,7 @@ void TGfitTask::setnodes()
 {
     unsigned int n, i, j;
     // DATACH structure content
-    unsigned int nIC, nDC, nPH, ICndx, DCndx/*, PHndx*/;
+    int nIC, nDC, nPH, ICndx, DCndx/*, PHndx*/;
     long int NodeStatusCH, NodeHandle;
     double P_pa, T_k/*, PMc*/;
     double* new_moles_IC;
@@ -482,6 +482,11 @@ void TGfitTask::setnodes()
                 if (experiments.at(n)->U_KC[i]->type == keys::DC)
                 {
                     DCndx = NodT[n]->DC_name_to_xDB(experiments.at(n)->U_KC[i]->name.c_str());
+                    if (DCndx < 0)
+                    {
+                        cout << "The DC name ("<<experiments.at(n)->U_KC[i]->name.c_str()<<") for the metastability constraint present in the database is different form the one in the exported GEMS3K files! " << endl;
+                        exit (1);
+                    }
                     xDC_up[DCndx] = experiments.at(n)->U_KC[i]->Qnt;
                 } // else phase metastability constraints
             }
@@ -494,6 +499,11 @@ void TGfitTask::setnodes()
                 if (experiments.at(n)->L_KC[i]->type == keys::DC)
                 {
                     DCndx = NodT[n]->DC_name_to_xDB(experiments.at(n)->L_KC[i]->name.c_str());
+                    if (DCndx < 0)
+                    {
+                        cout << "The DC name ("<<experiments.at(n)->U_KC[i]->name.c_str()<<") for the metastability constraint present in the database is different form the one in the exported GEMS3K files! " << endl;
+                        exit (1);
+                    }
                     xDC_lo[DCndx] = experiments.at(n)->L_KC[i]->Qnt;
                 } // else phase metastability constraints
             }
@@ -690,9 +700,16 @@ void TGfitTask::setnodes()
        cout<< err.title << err.mess << endl;
        exit(1);
      }
+            string sMod;
+            NodT[n]->Get_sMod(sMod);
+            int ex;
+            ex=1;
+
             // check if we are dealing with HKF TSolMod !!!!
             // ................ //
             // major salts interation parameters
+            if (sMod.compare(0,1,"H") == 0)
+            {
             if (majorsalt == "NaCl")
             {
                 NodT[n]->Set_PMc(0.064, 0 );
@@ -721,6 +738,7 @@ void TGfitTask::setnodes()
                 NodT[n]->Set_PMc(0.064, 0 );
                 NodT[n]->Set_PMc(3.72, 1 );
                 NodT[n]->Set_PMc(1, 4 );
+            }
             }
         }
 
