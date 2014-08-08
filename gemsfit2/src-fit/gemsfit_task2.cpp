@@ -332,7 +332,10 @@ void TGfitTask::set_weights ()
             if (Opti->OptUserWeight)
                 aTfun[i].objfun[j].weight = aTfun[i].objfun[j].weight * experiments[i]->weight;
             else
-                aTfun[i].objfun[j].weight = aTfun[i].objfun[j].weight;
+                if ((h_datasetlist))
+                    aTfun[i].objfun[j].weight = aTfun[i].objfun[j].weight * experiments[i]->weight;
+                    else
+                        aTfun[i].objfun[j].weight = aTfun[i].objfun[j].weight;
 
         }
 

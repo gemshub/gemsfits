@@ -68,7 +68,10 @@ void nestedfun (TGfitTask *sys)
                         {
                             if (isTitration(sys, i, j, p))
                             {
-                                x.push_back(sys->Opti->nest_optv.opt[p]);
+                                // correction with initial value from actual experiment
+                                x.push_back( sys->NodT[sys->EXPndx[P_id]]->IC_b( sys->Opti->nest_optv.Pindex[p] ) );
+
+//                                x.push_back(sys->Opti->nest_optv.opt[p]);
                                 UB.push_back(sys->Opti->nest_optv.UB[p]);
                                 LB.push_back(sys->Opti->nest_optv.LB[p]);
                                 sys->vPAndx[P_id]->ndx.push_back(p);
@@ -191,7 +194,7 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, 
     {
         // possible return status analysis, error message
 //            sys->NodT[i]->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
-        cout<<"For experiment nested "<<sys->EXPndx[P_id]+1<< endl;
+        cout<<"For experiment nested sample "<<sys->experiments[sys->EXPndx[P_id]]->sample <<" dataset "<<sys->experiments[sys->EXPndx[P_id]]->expdataset<< endl;
         cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
     }
 

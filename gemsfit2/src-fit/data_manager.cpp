@@ -83,7 +83,7 @@ void Data_Manager::get_EJDB( )
 
     string_v out, out2, usesample, skipsample, usedataset, skipdataset, skippdatasets,skippsamples, usepdatasets, usepsamples, SA, DS ;
     double_v qsT, qsP, WT;
-    int Nsamples;
+    int Nsamples = 0 , Ndatasets = 0;
 
     stringstream ss;
     string sss;
@@ -162,6 +162,27 @@ void Data_Manager::get_EJDB( )
             WT.push_back(atof(out2[0].c_str()));
             out2.clear();
         }
+        out.clear();
+        parse_JSON_object(DataSelect, keys::datasetlist, out);
+        Ndatasets = out.size();
+        if ( (out.size() > 0) && (Nsamples > 0) )
+        {
+            cout << "You can't have samplelist and datasetlist options at the same time. Use only one at a time. " << endl;
+            exit(1);
+        }
+        for (unsigned int i = 0; i <out.size(); i++)
+        {
+
+            parse_JSON_object(out[i], keys::DS, out2);
+//            if (out2.size() == 0) { cout << "Phase name has to be specified in Data Target->OFUN->EPH!"<< endl; exit(1);} // ERROR
+            DS.push_back(out2[0]);
+            out2.clear();
+
+            parse_JSON_object(out[i], keys::WT, out2);
+//            if (out2.size() == 0) { cout << "Phase name has to be specified in Data Target->OFUN->EPH!"<< endl; exit(1);} // ERROR
+            WT.push_back(atof(out2[0].c_str()));
+            out2.clear();
+        }
 
     }
 
@@ -183,25 +204,41 @@ cout << DBname.c_str() << endl;
         bson bq2;
         bson_init_as_query(&bq2);
 
-        if (Nsamples == 0)
+        if ((Nsamples == 0))
         {
             // for selecting expdatasets
-            if  (usedataset.size() > 0)
+            if  ((usedataset.size() > 0) || (Ndatasets > 0))
             {
-                if (!usedataset[0].empty())
-                {
+
                     bson_append_start_object(&bq2, keys::expdataset);
                     bson_append_start_array(&bq2, "$in");
-                    for (unsigned int j=0; j<usedataset.size(); ++j)
+                    if ((usedataset.size() > 0))
+                    if (!usedataset[0].empty())
                     {
-                        ss << j;
-                        sss = ss.str();
-                        ss.str("");
-                        bson_append_string(&bq2, sss.c_str(), usedataset[j].c_str());
+                        for (unsigned int j=0; j<usedataset.size(); ++j)
+                        {
+                            ss << j;
+                            sss = ss.str();
+                            ss.str("");
+                            bson_append_string(&bq2, sss.c_str(), usedataset[j].c_str());
+                        }
                     }
+                    // add datasetlist
+                    if (Ndatasets > 0)
+                    {
+                        this->h_datasetlist = true;
+                        for (unsigned int j=usedataset.size(); j<DS.size()+usedataset.size(); ++j)
+                        {
+                            ss << j;
+                            sss = ss.str();
+                            ss.str("");
+                            bson_append_string(&bq2, sss.c_str(), DS[j].c_str());
+                        }
+                    }
+
                     bson_append_finish_array(&bq2);
                     bson_append_finish_object(&bq2);
-                }
+
             }
 
             // for skipping expdatasets
@@ -370,6 +407,8 @@ cout << DBname.c_str() << endl;
         } else // if we have samples list the search query is bulil as follows
         {
             // for selecting pairs of datasets-samples
+            if (Nsamples > 0)
+
             if (DS.size() > 0)
             {
                 if (!DS[0].empty())
@@ -450,12 +489,25 @@ cout << DBname.c_str() << endl;
                 {
                     if ((experiments[i]->sample == SA[j]) && (experiments[i]->expdataset == DS[j]))
                     {
-                        experiments[j]->weight = experiments[j]->weight * WT[j];
+                        experiments[i]->weight = experiments[i]->weight * WT[j];
                     }
                 }
             }
         }
-
+// Set weights provided in the dataset list
+        if (Ndatasets > 0)
+        {
+            for (unsigned i = 0; i<experiments.size(); i++)
+            {
+                for (unsigned j = 0; j<Ndatasets; j++)
+                {
+                    if (experiments[i]->expdataset == DS[j])
+                    {
+                        experiments[i]->weight = experiments[i]->weight * WT[j];
+                    }
+                }
+            }
+        }
 
         // for skipping expdataset-expsamples pairs
         if (skippdatasets.size() > 0)
@@ -535,7 +587,8 @@ void Data_Manager::bson_to_Data_Manager(/* FILE *f, */ const char *data, int pos
         } else
         if (key_ == keys::Weight)
         {
-            // adding volume
+            // adding weight
+            if (!h_datasetlist)
             experiments[pos]->weight = bson_iterator_double(i);
         } else
 
