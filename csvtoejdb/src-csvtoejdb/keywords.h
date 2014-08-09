@@ -18,6 +18,7 @@ static const char *experiments = "experiments"; ///               0          col
 // data for experimental samples
 static const char *expsample = "sample"; ///                      1		     string 	        ID of this experimental sample
 static const char *samplelist = "samplelist"; ///
+static const char *datasetlist = "datasetlist";
 static const char *SA = "SA";
 static const char *DS = "DS";
 static const char *samples = "samples";
