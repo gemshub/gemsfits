@@ -71,6 +71,9 @@ void adjust_PMc (int i, double new_PMc, TGfitTask *sys)
     for (unsigned int n=0; n<sys->NodT.size(); ++n)
     {
         sys->NodT[n]->Set_PMc(new_PMc, index_PMc );
+//        double xxx;
+//        sys->NodT[n]->Get_PMc( xxx, index_PMc);
+//        cout << xxx;
     }
 }
 

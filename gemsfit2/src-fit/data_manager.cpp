@@ -232,7 +232,7 @@ cout << DBname.c_str() << endl;
                             ss << j;
                             sss = ss.str();
                             ss.str("");
-                            bson_append_string(&bq2, sss.c_str(), DS[j].c_str());
+                            bson_append_string(&bq2, sss.c_str(), DS[j-usedataset.size()].c_str());
                         }
                     }
 
