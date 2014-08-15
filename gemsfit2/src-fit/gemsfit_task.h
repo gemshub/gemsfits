@@ -297,6 +297,17 @@ public:
     */
    void print_nested_results ();
 
+   /**
+    * @brief sets the paramteres for the extended Debye-Hueckel equation (Helgeson). For mixed salts it calculates a weighted average of the parameters
+    * @author DM
+    * @date 14.08.2014
+    */
+   void set_DH_Helgeson (int n);
+
+   double BgammaTP(int flag, TNode *node, double Gf, double EpsW);
+   double Gfunction (double RhoW, double Tc, double Pbar);
+   double IonsizeTP(int flag, double Gf);
+
 };
 
 #endif   // _GEMSFT_TASK_H

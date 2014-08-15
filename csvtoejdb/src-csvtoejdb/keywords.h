@@ -198,5 +198,11 @@ static const char *kJ_mol = "kJ/mol"; ///                                   stri
 
 
 static const char *aqueous = "aq_gen"; ///
+
+static const double mNaCl = 58.442308;
+static const double mNaOH = 39.997115;
+static const double mKCl = 74.550840;
+static const double mKOH = 56.105647;
+
 }
 #endif // KEYWORDS_H

@@ -583,13 +583,52 @@ void TGfitTask::setnodes()
                     majorsalt = experiments[n]->sbcomp[j]->comp;
                     maxsalt = experiments[n]->sbcomp[j]->Qnt;
                 }
-            } else // default NaCl
+            } /*else // default NaCl
             {
                 if (experiments[n]->sbcomp[j]->Qnt > maxsalt)
                 {
                     majorsalt = experiments[n]->sbcomp[j]->comp;
                     maxsalt = experiments[n]->sbcomp[j]->Qnt;
                 }
+            }*/
+
+            string sMod;
+            NodT[n]->Get_sMod(0, sMod);
+
+            // check if we are dealing with HKF TSolMod !!!!
+            // ................ //
+            // major salts interation parameters
+            if (sMod.compare(0,1,"H") == 0)
+            {
+            if (majorsalt == "NaCl")
+            {
+                NodT[n]->Set_PMc(0.064, 0 );
+                NodT[n]->Set_PMc(3.72, 1 );
+                NodT[n]->Set_PMc(1, 4 );
+            } else
+            if (majorsalt == "KCl")
+            {
+                NodT[n]->Set_PMc(0.025, 0 );
+                NodT[n]->Set_PMc(4.08, 1 );
+                NodT[n]->Set_PMc(2, 4 );
+            } else
+            if (majorsalt == "NaOH")
+            {
+                NodT[n]->Set_PMc(0.098, 0 );
+                NodT[n]->Set_PMc(3.31, 1 );
+                NodT[n]->Set_PMc(3, 4 );
+            } else
+            if (majorsalt == "KOH")
+            {
+                NodT[n]->Set_PMc(0.123, 0 );
+                NodT[n]->Set_PMc(3.67, 1 );
+                NodT[n]->Set_PMc(4, 4 );
+            } else // default NaCl
+            {
+                NodT[n]->Set_PMc(0.064, 0 );
+                NodT[n]->Set_PMc(3.72, 1 );
+                NodT[n]->Set_PMc(1, 4 );
+            }
             }
         }
 
@@ -700,45 +739,7 @@ void TGfitTask::setnodes()
        cout<< err.title << err.mess << endl;
        exit(1);
      }
-            string sMod;
-            NodT[n]->Get_sMod(sMod);
-
-            // check if we are dealing with HKF TSolMod !!!!
-            // ................ //
-            // major salts interation parameters
-            if (sMod.compare(0,1,"H") == 0)
-            {
-            if (majorsalt == "NaCl")
-            {
-                NodT[n]->Set_PMc(0.064, 0 );
-                NodT[n]->Set_PMc(3.72, 1 );
-                NodT[n]->Set_PMc(1, 4 );
-            } else
-            if (majorsalt == "KCl")
-            {
-                NodT[n]->Set_PMc(0.025, 0 );
-                NodT[n]->Set_PMc(4.08, 1 );
-                NodT[n]->Set_PMc(2, 4 );
-            } else
-            if (majorsalt == "NaOH")
-            {
-                NodT[n]->Set_PMc(0.098, 0 );
-                NodT[n]->Set_PMc(3.31, 1 );
-                NodT[n]->Set_PMc(3, 4 );
-            } else
-            if (majorsalt == "KOH")
-            {
-                NodT[n]->Set_PMc(0.123, 0 );
-                NodT[n]->Set_PMc(3.67, 1 );
-                NodT[n]->Set_PMc(4, 4 );
-            } else // default NaCl
-            {
-                NodT[n]->Set_PMc(0.064, 0 );
-                NodT[n]->Set_PMc(3.72, 1 );
-                NodT[n]->Set_PMc(1, 4 );
-            }
-            }
-        }
+   }
 
 
 
@@ -774,6 +775,32 @@ void TGfitTask::setnodes()
         // Calling GEMIPM calculation
         NodeStatusCH = NodT[n]->GEM_run( true );
 cout << "Node: " << NodeHandle+1 << " Sample: " << experiments[n]->sample <<"  NodeStatusCH: " << NodeStatusCH << endl;
+
+        if( ( NodeStatusCH == ERR_GEM_AIA || NodeStatusCH == ERR_GEM_SIA ||
+                       NodeStatusCH ==  T_ERROR_GEM ) )
+        {
+             cout << "Error: GEM calculation results are not retrieved upon initializing experimental system (node) "
+                  << NodeHandle << endl;
+        }
+        else
+        {
+           if( ( NodeStatusCH == BAD_GEM_AIA || NodeStatusCH == BAD_GEM_SIA  ) )
+           {
+              cout << "Insufficient quality of GEM solution, but GEM results are retrieved upon initializing experimental system (node) "
+              << NodeHandle << endl;
+           }
+        }
+
+        // mixed salt
+        string sMod;
+        NodT[n]->Get_sMod(0, sMod);
+        if (sMod.compare(0,1,"H") == 0)
+        {
+            set_DH_Helgeson(n);
+        }
+
+        NodT[n]->GEM_from_MT( NodeHandle, NEED_GEM_AIA, T_k, P_pa, new_moles_IC, xDC_up, xDC_lo );
+        NodeStatusCH = NodT[n]->GEM_run( true );
 
         if( ( NodeStatusCH == ERR_GEM_AIA || NodeStatusCH == ERR_GEM_SIA ||
                        NodeStatusCH ==  T_ERROR_GEM ) )
@@ -1085,6 +1112,260 @@ void TGfitTask::get_Lparams_delta()
             }
     }
 }
+
+void TGfitTask::set_DH_Helgeson (int n)
+{
+
+    double  Tk, Ppa, Gf, bgama, ao, Wbgama, Wao, TotAmount;
+    vector<double> RhoW, EpsW, SaltAmount;
+    vector<int> SaltIndex;
+
+
+    Tk = NodT[n]->cTK();
+    Ppa = NodT[n]->cP();
+
+    if (this->experiments[n]->sP == 0)
+    {
+        NodT[n]->DensArrayH2Ow(0, Tk, RhoW);
+        NodT[n]->EpsArrayH2Ow(0, Tk, EpsW);
+    } else
+    {
+        NodT[n]->DensArrayH2Ow(Ppa, Tk, RhoW);
+        NodT[n]->EpsArrayH2Ow(Ppa, Tk, EpsW);
+    }
+
+    for (int j=0; j<experiments[n]->sbcomp.size(); ++j)
+    {
+        double amount = 0.0;
+        if (experiments[n]->sbcomp[j]->comp == "NaCl")
+        {
+            SaltIndex.push_back(1);
+            if (experiments[n]->sbcomp[j]->Qunit == keys::gram)
+            {
+                amount = experiments[n]->sbcomp[j]->Qnt / keys::mNaCl;
+            } else
+                if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
+                {
+                    amount = experiments[n]->sbcomp[j]->Qnt;
+                }
+            SaltAmount.push_back(amount);
+        } else
+        if (experiments[n]->sbcomp[j]->comp == "KCl")
+        {
+            SaltIndex.push_back(2);
+            if (experiments[n]->sbcomp[j]->Qunit == keys::gram)
+            {
+                amount = experiments[n]->sbcomp[j]->Qnt / keys::mKCl;
+            } else
+                if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
+                {
+                    amount = experiments[n]->sbcomp[j]->Qnt;
+                }
+            SaltAmount.push_back(amount);
+        } else
+        if (experiments[n]->sbcomp[j]->comp == "NaOH")
+        {
+            SaltIndex.push_back(3);
+            if (experiments[n]->sbcomp[j]->Qunit == keys::gram)
+            {
+                amount = experiments[n]->sbcomp[j]->Qnt / keys::mNaOH;
+            } else
+                if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
+                {
+                    amount = experiments[n]->sbcomp[j]->Qnt;
+                }
+            SaltAmount.push_back(amount);
+        } else
+        if (experiments[n]->sbcomp[j]->comp == "KOH")
+        {
+            SaltIndex.push_back(4);
+            if (experiments[n]->sbcomp[j]->Qunit == keys::gram)
+            {
+                amount = experiments[n]->sbcomp[j]->Qnt / keys::mKOH;
+            } else
+                if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
+                {
+                    amount = experiments[n]->sbcomp[j]->Qnt;
+                }
+            SaltAmount.push_back(amount);
+        }
+    }
+
+    Gf = Gfunction(RhoW[0], Tk-273.15, Ppa / 100000);
+
+    TotAmount = 0.0; Wbgama = 0.0; Wao = 0.0;
+    for (int j = 0; j < SaltIndex.size(); j++)
+    {
+        bgama = 0.0; ao = 0.0;
+
+        bgama = BgammaTP(SaltIndex[j],  NodT[n], Gf, EpsW[0]);
+        ao = IonsizeTP(SaltIndex[j], Gf);
+
+        Wbgama += bgama * SaltAmount[j];
+        Wao += ao * SaltAmount[j];
+
+        TotAmount += SaltAmount[j];
+    }
+
+    if (SaltIndex.size() > 0)
+    {
+        Wbgama = Wbgama / TotAmount;
+        Wao = Wao / TotAmount;
+
+        NodT[n]->Set_PMc(Wbgama, 0 );
+        NodT[n]->Set_PMc(Wao, 1 );
+        NodT[n]->Set_PMc(0, 4 );
+
+        TMulti *multi = NodT[n]->pMulti();
+
+        // aq_gen has index 0
+        TSolMod *sol = multi->pTSolMod(0);
+        sol->Set_Felect_bc(0, Wbgama, Wao);
+
+    } else
+    {
+        // default NaCl
+        NodT[n]->Set_PMc(0.064, 0 );
+        NodT[n]->Set_PMc(3.72, 1 );
+        NodT[n]->Set_PMc(1, 4 );
+    }
+
+
+
+}
+
+/// calculates TP dependence of b_gamma (and derivatives)
+double TGfitTask::BgammaTP(int flag, TNode *node, double Gf, double EpsW)
+{
+    // ni: stoichiometric number of moles of ions in one mole of electrolyte
+    // rc, ra: radius of cation and anion, respectively at 298 K/1 bar
+    // units are cal, kg, K, mol, bar
+    double ni, nc, na, zc, za, rc, ra, a1, a2, a3, a4, a5, c1, c2, omg, bg, bs, bh, rec, rea,
+            omgpt, nbg;
+    double eps, eta, bgam;
+
+    double Ppa, Pbar, Tk ;
+
+    Tk = node->cTK();
+    Ppa = node->cP();
+    Pbar = Ppa / 100000;
+
+    // set parameters
+    eps = EpsW;
+    eta = (1.66027e5);
+
+    switch ( flag )
+    {
+        case 1:  // NaCl
+            ni = 2.; nc = 1.; na = 1.; zc = 1.; za = -1.;
+            a1 = 0.030056; a2 = -202.55; a3 = -2.9092; a4 = 20302;
+            a5 = -0.206; c1 = -1.50; c2 = 53300.; omg = 178650.;
+            bg = -174.623; bs = 2.164; rc = 0.97; ra = 1.81;
+            break;
+        case 2:  // KCl
+            ni = 2.; nc = 1.; na = 1.; zc = 1.; za = -1.;
+            a1 = 0.0172; a2 = -115.36; a3 = -1.1857; a4 = 13854.2;
+            a5 = -0.262; c1 = -2.53; c2 = 38628.4; omg = 164870.;
+            bg = -70.0; bs = 1.727; rc = 1.33; ra = 1.81;
+            break;
+        case 3:  // NaOH
+            ni = 2.; nc = 1.; na = 1.; zc = 1.; za = -1.;
+            a1 = 0.030056; a2 = -202.55; a3 = -2.9092; a4 = 20302;
+            a5 = -0.206; c1 = -1.50; c2 = 53300.; omg = 205520.;
+            bg = -267.4; bs = 1.836; rc = 0.97; ra = 1.40;
+            break;
+        case 4:  // KOH
+            ni = 2.; nc = 1.; na = 1.; zc = 1.; za = -1.;
+            a1 = 0.0172; a2 = -115.36; a3 = -1.1857; a4 = 13854.2;
+            a5 = -0.262; c1 = -2.53; c2 = 38628.4; omg = 191730.;
+            bg = -335.7; bs = 1.26; rc = 1.33; ra = 1.40;
+            break;
+        default:  // wrong mode
+            return -1;
+    }
+
+    // calculation part
+    bh = bg + (298.15)*bs;
+    rec = rc + fabs(zc)*(0.94+Gf);
+    rea = ra + fabs(za)*Gf;
+
+    omgpt = eta*( nc*pow(zc,2.)/rec + na*pow(za,2.)/rea );
+
+    nbg = - ni*bg/2. + ni*bs*(Tk-298.15)/2. - c1*(Tk*log(Tk/298.15)-Tk+298.15)
+                + a1*(Pbar-1.) + a2*log((2600.+Pbar)/(2600.+1.))
+                - c2*((1./(Tk-228.)-1./(298.15-228.))*(228.-Tk)/228.-Tk/(228.*228.)
+                * log((298.15*(Tk-228.))/(Tk*(298.15-228.))))
+                + 1./(Tk-228.)*(a3*(Pbar-1.) + a4*log((2600.+Pbar)/(2600.+1.)))
+                + a5*(omgpt*(1./eps-1.)-omg*(1./(78.24513795)-1.)+(-5.798650444e-5)*omg*(Tk-298.15));
+
+    bgam = nbg/(2.*log(10.)*(1.98721)*Tk)*2./ni;
+
+    return bgam;
+}
+
+double TGfitTask::IonsizeTP(int flag, double Gf)
+{
+    double nc, na, ni, zc, za, c, ao, ac;
+
+    switch ( flag )
+    {
+        case 1:  // NaCl
+            nc = 1.; na = 1.; ni = 2.;
+            zc = 1.; za = -1.; ac = 3.72;
+            break;
+        case 2:  // KCl
+            nc = 1.; na = 1.; ni = 2.;
+            zc = 1.; za = -1.; ac = 4.08;
+            break;
+        case 3:  // NaOH
+            nc = 1.; na = 1.; ni = 2.;
+            zc = 1.; za = -1.; ac = 3.31;
+            break;
+        case 4:  // KOH
+            nc = 1.; na = 1.; ni = 2.;
+            zc = 1.; za = -1.; ac = 3.67;
+            break;
+        default:  // wrong mode
+            return -1;
+    }
+
+    c = 2./ni * ( nc*fabs(zc) + na*fabs(za) );
+    ao = ac + c*Gf;
+    return ao;
+
+}
+
+double TGfitTask::Gfunction ( double RhoW, double Tc, double Pbar)
+{
+    // g-function - DM modified form s_solmod4.cpp
+    double Gf, D, a, b, tempy, ft, fp, f;
+
+    Gf = 0.0;
+    D = RhoW / 1000;
+    double C[6]  = {-0.2037662e+01,  0.5747000e-02, -0.6557892e-05,
+            0.6107361e+01, -0.1074377e-01,  0.1268348e-04 };
+    double cC[3] = { 0.3666666e+02, -0.1504956e-09,  0.5017997e-13 };
+    double pw = fabs(1.0 - D); // insert Sveta 19/02/2000
+
+    // calculation part
+    a = C[0] + C[1]*Tc + C[2]*pow(Tc,2.);
+    b = C[3] + C[4]*Tc + C[5]*pow(Tc,2.);
+    Gf = a * pow(pw, b);
+
+    if((Tc < 155.0) || (Pbar > 1000.0) || (Tc > 355.0))
+        return Gf;
+
+    tempy = ((Tc - 155.0) / 300.0);
+    ft = pow(tempy,4.8) + cC[0] * pow(tempy,16.);
+    fp = cC[1] * pow((1000.0 - Pbar),3.) + cC[2] * pow((1000.0 - Pbar),4.);
+    f = ft * fp;
+
+    Gf -= f;
+
+    return Gf;
+}
+
+
 
 TGfitTask::~TGfitTask(   )
 {

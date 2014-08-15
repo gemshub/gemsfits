@@ -944,7 +944,7 @@ outField optimization_fields[13] =
     { "OptUserWeight",  0, 0, 1, "\n# OptUserWeight: (1) Use the weights provided in the \"weight\" column of the database. "},
     { "OptTuckey",  0, 0, 1, "\n# OptTuckey: (1) Use Tuckey Biweight for all data. (2) Use Tuckey Biweight for each OFUN independently. "},
     { "OptTuckeyVal",  0, 0, 1, "\n# OptTuckeyVal: Empirical chosen value that is multiplied with the median of residuals to get the "
-      "\n# 		      weighting thereshold value C = Val * M. Default value 6. Residuals >C -> weight 0 "},
+      "\n# 		      weighting thereshold value C = Val * M. Default value 6. Residuals >C -> weight 0. "},
     { "OptAlgo",  0, 0, 1, "\n# OptAlgo: specify algorithm: GN_ISRES | GN_ORIG_DIRECT | GN_ORIG_DIRECT_L | LN_COBYLA | LN_BOBYQA "},
     { "OptBoundPerc",  0, 0, 1, "\n# OptBoundPerc: Generate bounds from initial guess vector: specify percentage deviation "
                                 "\n#               (user-specific, user-defined bounds when set to -1)"},

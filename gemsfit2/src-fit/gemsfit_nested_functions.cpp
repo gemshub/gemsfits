@@ -76,14 +76,27 @@ void nestedfun (TGfitTask *sys)
                                 LB.push_back(sys->Opti->nest_optv.LB[p]);
                                 sys->vPAndx[P_id]->ndx.push_back(p);
 //                                sys->PAndx.push_back(p);
+
+                                if ((sys->Opti->nest_optv.UB[p] < sys->NodT[sys->EXPndx[P_id]]->IC_b( sys->Opti->nest_optv.Pindex[p] ) ) || (sys->Opti->nest_optv.LB[p] > sys->NodT[sys->EXPndx[P_id]]->IC_b( sys->Opti->nest_optv.Pindex[p] )))
+                                {
+                                    cout << "Nested function: The initial value of the parameter with index "<< sys->Opti->nest_optv.Pindex[p] << " is not within the assigned bounds!!!"<< endl;
+                                    exit(1);
+                                }
                             }
                         } else
                         {
-                        x.push_back(sys->Opti->nest_optv.opt[p]);
-                        UB.push_back(sys->Opti->nest_optv.UB[p]);
-                        LB.push_back(sys->Opti->nest_optv.LB[p]);
-//                        sys->PAndx.push_back(p); // index of the parameter in the nest_optv->opt vector
-                        sys->vPAndx[P_id]->ndx.push_back(p);
+                            x.push_back( sys->NodT[sys->EXPndx[P_id]]->IC_b( sys->Opti->nest_optv.Pindex[p] ) );
+    //                        x.push_back(sys->Opti->nest_optv.opt[p]);
+                            UB.push_back(sys->Opti->nest_optv.UB[p]);
+                            LB.push_back(sys->Opti->nest_optv.LB[p]);
+    //                        sys->PAndx.push_back(p); // index of the parameter in the nest_optv->opt vector
+                            sys->vPAndx[P_id]->ndx.push_back(p);
+
+                            if ((sys->Opti->nest_optv.UB[p] > sys->NodT[sys->EXPndx[P_id]]->IC_b( sys->Opti->nest_optv.Pindex[p] ) ) || (sys->Opti->nest_optv.LB[p] < sys->NodT[sys->EXPndx[P_id]]->IC_b( sys->Opti->nest_optv.Pindex[p] )))
+                            {
+                                cout << "Nested function: The initial value of the parameter with index "<< sys->Opti->nest_optv.Pindex[p] << " is not within the assigned bounds!!!"<< endl;
+                                exit (1);
+                            }
                         }
                     }
                 }
