@@ -6,5 +6,5 @@ GEMSFITSAPP=" GEMSFITS v.0.1 r.373 "
 ProjDatabaseName=cshqsoldata
 ProjDatabasePath=/EJDB
 ProjFileName=cshqsol
-ProjFolderPath=/home/dmiron/devGEMSFITS/devGFshell/gemsfits/Tests/CSHQsol
+ProjFolderPath=/home/kulik/DevGEMSFITS/devGFS/GFS/Tests/CSHQsol
 TaskCasesDataColl=tasks

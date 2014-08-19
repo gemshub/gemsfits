@@ -589,7 +589,7 @@ void FITMainWindow::changeEditeRecord(const string& tagname, const string& newVa
 }
 
 
-/// Make temlate for task record
+/// Make template for task record
 bool FITMainWindow::createTaskTemplate()
 {
     if( gemsLstFile.Name().empty() )
