@@ -76,6 +76,7 @@ class statistics
         double norm_mean_res;
         double R2;
         double min_res, max_res;
+        double SumWTFun;
         int nr_pos_res, nr_neg_res;
         int nr;
         bool isComputed;

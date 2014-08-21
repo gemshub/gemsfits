@@ -168,6 +168,7 @@ public:
             };
             rslts results;
             bool isComputed;
+            double SumWTFun = 0.0;
         };
         vector<obj_fun> objfun;
         vector<obj_fun> nestfun;

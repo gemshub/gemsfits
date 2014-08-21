@@ -88,16 +88,17 @@ csvtoejdb documentation:
 - arrange the printing functions in one clear place - now in the statistics functions + make the print possible even if the statistics fails.
 - look to simplifiy or generalize all the functions that go trough the OFUN - (residual calculations, MC dataset generation etc.)
 
-- calculate the contribution of each OFUN term to the total OFUN
++ calculate the contribution of each OFUN term to the total OFUN
 - calculate the composite sensitivities for each OFUN term type of observations
 - think about a mode in which the sensitivities of the parameters are computed afert each fitting step and the program decides which parameter to keep fixed during the optimization...
 probably the NLopt doesn't allow such dynamic change in the parameter vector.
-- bootstrap samping of residuals / measured values
-- intorduce polynomials of the logK dependence as in ReacDC
+
+- bootstrap sampling of residuals / measured values
++ intorduce polynomials of the logK dependence as in ReacDC
 
 - JSON format input for Parameters to fit in a similar way as for DataSelect and DataTarget
 - a way to connect the names in the databse with the names in the GEMS3K
-
+	- when reading in form the database store all comp, species, etc. names.
 
 future
 - iterative regresion

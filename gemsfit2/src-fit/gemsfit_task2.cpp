@@ -155,17 +155,21 @@ double TGfitTask::get_sum_of_residuals( )
 {
     // loop trough objective function
     // think about pararelizing it
-    double residual = 0.0;
+    double residual = 0.0, ofun_residual;
     int count = 0;
 
     // Loop trough target function
     for (unsigned int j=0; j<Tfun->objfun.size(); ++j)
     {
     // Loop trough all experiments
+        ofun_residual =0.0;
         for (unsigned int i=0; i<this->experiments.size(); ++i)
         {
-           residual = residual + get_residual(i, aTfun[i].objfun[j],count);
+            double res = get_residual(i, aTfun[i].objfun[j],count);
+            ofun_residual = ofun_residual + res;
+            residual = residual + res;
         }
+        Tfun->objfun[j].SumWTFun = ofun_residual;
     }
     return residual;
 }

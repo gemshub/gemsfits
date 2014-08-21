@@ -147,6 +147,7 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
       objfun_stat[j]->R2 = 0.0;
       objfun_stat[j]->nr = 0;
       objfun_stat[j]->isComputed = false;
+      objfun_stat[j]->SumWTFun = 0.0;
 
       for (unsigned i=0; i<gfittask->aTfun.size(); i++)
       {
@@ -162,6 +163,7 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
               objfun_stat[j]->mean_res += gfittask->aTfun[i].objfun[j].results.residual;
               objfun_stat[j]->mean_meas += gfittask->aTfun[i].objfun[j].results.measured_value;
               objfun_stat[j]->orderd_res.push_back (gfittask->aTfun[i].objfun[j].results.residual) ;
+              objfun_stat[j]->SumWTFun += gfittask->aTfun[i].objfun[j].results.WTfun_residual;
 
               if (min_res > gfittask->aTfun[i].objfun[j].results.residual) min_res = gfittask->aTfun[i].objfun[j].results.residual;
               if (max_res < gfittask->aTfun[i].objfun[j].results.residual) max_res = gfittask->aTfun[i].objfun[j].results.residual;
@@ -611,9 +613,23 @@ if( W2 < 1.)  // workaround to suppress nan() and zdiv crash
 //        gpf->fstat << endl;
 //        gpf->fstat << " Probability that K squared follows Chi-squared distribution :           " << K2test << endl;
 //        gpf->fstat << endl;
-        gpf->fstat << endl;
+        gpf->fstat <<", ," << endl;
 //        gpf->fstat.close();
 
+        for (unsigned o = 0; o<gfittask->Tfun->objfun.size(); o++)
+        {
+            gpf->fstat << "OFUN-"<< gfittask->Tfun->objfun[o].exp_CT << "-"<< gfittask->Tfun->objfun[o].exp_CN << ","<<endl;
+            gpf->fstat << "minimized-function-sum-("<<setprecision(2) << objfun_stat[o]->SumWTFun*100/Weighted_Tfun_sum_of_residuals<<"%-of-total)," << objfun_stat[o]->SumWTFun 	<<endl;
+            gpf->fstat << "Standard-deviation-of-residuals," << objfun_stat[o]->stdev_res 		<< endl;
+            gpf->fstat << "Average-residual," << objfun_stat[o]->mean_res 		<< endl;
+            gpf->fstat << "Maximum-residual," << objfun_stat[o]->max_res 		<< endl;
+            gpf->fstat << "Minimum-residual," << objfun_stat[o]->min_res 		<< endl;
+            gpf->fstat << "Number-of-positive-residuals," << objfun_stat[o]->nr_pos_res 		<< endl;
+            gpf->fstat << "Number-of-negative-residuals," << objfun_stat[o]->nr_neg_res 		<< endl;
+            gpf->fstat << "Coefficient-of-determination-R^2," << objfun_stat[o]->R2     << endl;
+
+            gpf->fstat <<", ," << endl;
+        }
 
         gpf->fqq.close();
 }
@@ -695,6 +711,32 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
             }
 //            gfittask->print->sensitivity.push_back(sens);
         }
+
+
+//for (unsigned pr = 0; pr <optv_.size(); pr++)
+//{
+//    arma::vec CompositeScaledSensitivities2 = arma::zeros<arma::vec>( (int) gfittask->Tfun->objfun.size(), 1 );
+//    int meas =0;
+//        for ( j=0; j<gfittask->Tfun->objfun.size(); ++j)
+//        {
+//            arma::mat DimensionlessScaledSensitivities2( objfun_stat[j]->nr, (int) optv_.size() );
+//            int nr = 0;
+//            for (i = 0; i < gfittask->aTfun.size(); i++)
+//            {
+//                if (gfittask->aTfun[i].objfun[j].isComputed)
+//                {
+//                DimensionlessScaledSensitivities2(nr, pr) = SensitivityMatrix(meas,pr) * fabs( gfittask->aTfun[i].objfun[j].results.measured_value );
+//                nr++;
+//                meas++;
+
+//                CompositeScaledSensitivities2(j) += sqrt( DimensionlessScaledSensitivities(nr, pr)*DimensionlessScaledSensitivities(nr, pr)/objfun_stat[j]->nr);
+//                }
+//            }
+
+//            cout << CompositeScaledSensitivities2(j) << endl;
+//        }
+
+//}
 
         if (gfittask->Opti->OptEquilibrium)
         gems3k_wrap( residual_sys, optv_, gfittask );
