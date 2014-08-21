@@ -178,6 +178,16 @@ public:
 
     vector<TargetFunction> aTfun;
 
+    struct FunctionLogK
+    {
+        string Ftype;
+        vector<double> Fcoef;
+        unsigned int Rndx;
+    };
+
+    vector<FunctionLogK> FlogK;
+
+
     /// Computed values for Monte Carlo confidence interval generation
     double_v computed_values_v;
     /// Measurement values for Monte Carlo confidence interval generation
@@ -296,6 +306,12 @@ public:
     * @date 20.01.2014
     */
    void print_nested_results ();
+
+   void get_DataLogK ( );
+   void calc_logK_TP( );
+   double calc_logK_dT (vector<double> A, double Tk, double P , int Rndx);
+   double calc_logK_dRHOw( vector<double> A, double Tk , double P );
+
 
    /**
     * @brief sets the paramteres for the extended Debye-Hueckel equation (Helgeson). For mixed salts it calculates a weighted average of the parameters

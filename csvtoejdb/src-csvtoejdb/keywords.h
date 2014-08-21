@@ -136,12 +136,15 @@ static const char *url = "url"; ///	                              1		     string
                         // species
     static const char *RC = "RC"; ///                                       array               array of components names
     static const char *Rcoef = "Rcoef"; ///                                 array               array of reaction coeficients
-    static const char *order ="order"; ///                                  integer             order of the reactions
+    static const char *Rndx ="Rndx"; ///                                  integer             order of the reactions
     // Linked parameters
     static const char *LEs = "LEs"; ///                                     array               array of linked elements
     static const char *LE = "LE"; ///                                       string              linked element
     static const char *Lcoef = "Lcoef"; ///                                 array               array of linking coeficients
-// optimization specific
+static const char *FunList = "FunList";
+static const char *Ftype = "Ftype";
+static const char *Fcoef = "Fcoef";
+    // optimization specific
     static const int bperc = 10; ///                                        integer             default up/lo bound percentage of the parameters
 
 // keywords DatTarget
@@ -203,6 +206,8 @@ static const double mNaCl = 58.442308;
 static const double mNaOH = 39.997115;
 static const double mKCl = 74.550840;
 static const double mKOH = 56.105647;
+static const double lg_to_ln = 2.302585093;
+static const double R_CONSTANT = 8.31451;
 
 }
 #endif // KEYWORDS_H

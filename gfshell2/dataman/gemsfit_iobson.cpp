@@ -35,6 +35,24 @@ extern outField DataCH_dynamic_fields[30];
 extern outField MULTI_dynamic_fields[70];
 extern outField DataBR_fields[f_lga+1/*58*/];
 
+outField Par_Other_fields[2] =
+{
+    { "logK",  0, 0, 1, "\n# logK: Look-up array for logK at T * P * nr reactions. "
+      "\n#    The list has to be finished with End>"
+      "\n#    If at least one G0 parameter is marked as \'R\' (reaction-constrained)"
+      "\n#    and the list below is left commented out, then logK values for all T,P pairs and reactions"
+      "\n#    will be calculated based on the initial values of all parameters, and this logK array"
+      "\n#    will be used throughout the fitting process. " },
+    { "DataLogK",  0, 0, 1, "\n# DataLogK:  "
+      "\n#      \n" }
+};
+
+
+typedef enum { /// Field index into outField structure
+    f_LogK,
+    f_DataLogK
+} Par_Other_FIELDS;
+
 
 //// Read input specifications from configurator
 void get_bson_from_gems_fit_txt( const string& fname, bson *obj )
@@ -52,8 +70,8 @@ void get_bson_from_gems_fit_txt( const string& fname, bson *obj )
        rdar.readFormatArrayToBson( label.c_str(),  obj );
        rdar.getNext( label);
      }
-
 }
+
 
 void out_gems_fit_txt_bson( fstream& ff, /*TNode* node,*/ bson *obj, bool _comment )
 {
@@ -122,6 +140,13 @@ void out_gems_fit_txt_bson( fstream& ff, /*TNode* node,*/ bson *obj, bool _comme
 //    prarCH.writeArray(  f_TKval, CSD->TKval, CSD->nTp, -1L,_comment, brief_mode );
 //    prarCH.writeArray(  f_Pval, CSD->Pval, CSD->nPp,  -1L,_comment, brief_mode );
     prarCH.writeArrayFromBson(  "G0", obj, 1, true);
+
+
+    TPrintArrays  par_other(2, Par_Other_fields, ff);
+
+    string DataLogK = "";
+
+    par_other.writeArrayFromBson("DataLogK",  obj, 0, _comment );
 
     if( _comment )
      ff << "\n \n# logK: Look-up array for logK at T * P * nr reactions. "
@@ -509,7 +534,7 @@ void out_stat_param_txt_bson( fstream& ff, bson *obj, bool with_comments )
 
 ////-------------------------------------------------------------------------------------------------
 
-outField optimization_fields[25] =
+outField optimization_fields[26] =
 {
     { "OptAlgo",  0, 0, 1, "\n# OptAlgo: specify algorithm: GN_ISRES | GN_ORIG_DIRECT | GN_ORIG_DIRECT_L | LN_COBYLA | LN_BOBYQA "},
     { "OptThreads",  0, 0, 1, "\n# OptThreads: Comment"},
@@ -525,6 +550,8 @@ outField optimization_fields[25] =
     { "OptTitration",  0, 0, 1, "\n# OptTitration: Adjusts the computed pH by changing NaOH or HCl amount to match the measured pH"
                                 "\n#               read from the database for each experiment"},
     { "OptTuckey",  0, 0, 1, "\n# OptTuckey: (1) Use Tuckey Biweight for all data. (2) Use Tuckey Biweight for each OFUN independently. "},
+    { "OptTuckeyVal",  0, 0, 1, "\n# OptTuckeyVal: Empirical chosen value that is multiplied with the median of residuals to get the "
+      "\n# 		      weighting thereshold value C = Val * M. Default value 6. Residuals >C -> weight 0. "},
     { "OptUserWeight",  0, 0, 1, "\n# OptUserWeight: (1) Use the weights provided in the \"weight\" column of the database. "},
     { "OptTolAbs",  0, 0, 1, "\n# OptTolAbs: stopping criterion -> specify absolute tolerance (default = 1e-04) of function value"},
     { "OptHybridTolRel",  0, 0, 1, "\n# OptHybridTolRel: Comment"},
@@ -555,6 +582,7 @@ typedef enum {  /// Field index into outField structure
     f_OptDoWhat,
     f_OptTitration,
     f_OptTuckey,
+    f_OptTuckeyVal,
     f_OptUserWeight,
     f_OptTolAbs,
     f_OptHybridTolRel,
@@ -587,6 +615,7 @@ void out_nlopt_param_txt_bson( fstream& ff, bson *obj, bool with_comments )
     prar.writeArrayFromBson( f_OptEquilibrium,  obj, 0L, with_comments);
     prar.writeArrayFromBson( f_OptUserWeight,  obj, 0L, with_comments);
     prar.writeArrayFromBson( f_OptTuckey,  obj, 0L, with_comments);
+    prar.writeArrayFromBson( f_OptTuckeyVal,  obj, 0L, with_comments);
 //    prar.writeField( f_OptTitration,  (long int)OptTitration, with_comments, brief_mode);
     prar.writeArrayFromBson( f_OptAlgo,  obj, 0L, with_comments);
     prar.writeArrayFromBson( f_OptBoundPerc,  obj, 0L, with_comments );

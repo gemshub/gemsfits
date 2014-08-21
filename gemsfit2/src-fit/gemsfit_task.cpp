@@ -111,6 +111,11 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     }
 
     /// function in iofiles.cpp to read the logK lookup array instead of get function!
+    get_DataLogK();
+    if (FlogK.size() > 0)
+    {
+        calc_logK_TP ();
+    }
     get_logK_TPpairs ();
     get_Lparams_delta ();
 
@@ -797,24 +802,24 @@ cout << "Node: " << NodeHandle+1 << " Sample: " << experiments[n]->sample <<"  N
         if (sMod.compare(0,1,"H") == 0)
         {
             set_DH_Helgeson(n);
-        }
 
-        NodT[n]->GEM_from_MT( NodeHandle, NEED_GEM_AIA, T_k, P_pa, new_moles_IC, xDC_up, xDC_lo );
-        NodeStatusCH = NodT[n]->GEM_run( true );
+            NodT[n]->GEM_from_MT( NodeHandle, NEED_GEM_AIA, T_k, P_pa, new_moles_IC, xDC_up, xDC_lo );
+            NodeStatusCH = NodT[n]->GEM_run( true );
 
-        if( ( NodeStatusCH == ERR_GEM_AIA || NodeStatusCH == ERR_GEM_SIA ||
-                       NodeStatusCH ==  T_ERROR_GEM ) )
-        {
-             cout << "Error: GEM calculation results are not retrieved upon initializing experimental system (node) "
+            if( ( NodeStatusCH == ERR_GEM_AIA || NodeStatusCH == ERR_GEM_SIA ||
+                           NodeStatusCH ==  T_ERROR_GEM ) )
+            {
+                 cout << "Error: GEM calculation results are not retrieved upon initializing experimental system (node) "
+                      << NodeHandle << endl;
+            }
+            else
+            {
+               if( ( NodeStatusCH == BAD_GEM_AIA || NodeStatusCH == BAD_GEM_SIA  ) )
+               {
+                  cout << "Insufficient quality of GEM solution, but GEM results are retrieved upon initializing experimental system (node) "
                   << NodeHandle << endl;
-        }
-        else
-        {
-           if( ( NodeStatusCH == BAD_GEM_AIA || NodeStatusCH == BAD_GEM_SIA  ) )
-           {
-              cout << "Insufficient quality of GEM solution, but GEM results are retrieved upon initializing experimental system (node) "
-              << NodeHandle << endl;
-           }
+               }
+            }
         }
 
         delete[] new_moles_IC;
@@ -822,6 +827,38 @@ cout << "Node: " << NodeHandle+1 << " Sample: " << experiments[n]->sample <<"  N
         delete[] xDC_lo;
         delete[] Ph_surf;
     }  // for n
+
+}
+
+void TGfitTask::get_DataLogK()
+{
+    vector<string> out, out2;
+
+    parse_JSON_object(DataLogK, keys::FunList, out);
+    FlogK.resize(out.size());
+    for (unsigned int i = 0 ; i < out.size() ; i++)
+    {
+
+        parse_JSON_object(out[i], keys::Ftype, out2);
+        if (out2.size() == 0) { cout << "Ftype has to be specified in DataLogK " << i << endl; exit(1);} // ERROR
+        FlogK[i].Ftype = out2[0];
+        out2.clear();
+
+        parse_JSON_object(out[i], keys::Rndx, out2);
+        if (out2.size() == 0) { cout << "Rndx has to be specified in DataLogK " << i << endl; exit(1);} // ERROR
+        FlogK[i].Rndx = atoi(out2[0].c_str());
+        out2.clear();
+
+        parse_JSON_object(out[i], keys::Fcoef, out2);
+        if (out2.size() != 7) { cout << "Fcoef has to be contain 7 coefficients (number or 0 for no coefficient)! " << i << endl; exit(1);} // ERROR
+        FlogK[i].Fcoef.resize(7);
+        for (unsigned int j = 0; j < out2.size(); j++)
+        {
+           FlogK[i].Fcoef[j] = atof(out2[j].c_str());
+        }
+
+        out2.clear();
+    }
 
 }
 
@@ -1034,7 +1071,7 @@ void TGfitTask::get_logK_TPpairs()
     // loop trough reactions
     for (unsigned int i = 0; i< this->Opti->reactions.size(); ++i)
     {
-        // checks if not the logK values were not already read from the input file
+        // checks if the logK values were not already read from the input file
         if (this->Opti->reactions[i]->logK_TPpairs.size() == 0) h_logK = true;
 
         // 25 C 1 bar
@@ -1363,6 +1400,87 @@ double TGfitTask::Gfunction ( double RhoW, double Tc, double Pbar)
     Gf -= f;
 
     return Gf;
+}
+
+
+void TGfitTask::calc_logK_TP ()
+{
+    for (unsigned int i = 0; i < FlogK.size(); i++)
+    {
+        // 25 C 1 bar
+        Opti->reactions[FlogK[i].Rndx-1]->logK_TPpairs.push_back(
+        calc_logK_dRHOw(FlogK[i].Fcoef, 25 + 273.15, 1 ));
+
+        for (unsigned int j = 0; j < TP_pairs[0].size(); j++)
+        {
+            double Pbar = TP_pairs[1][j];
+            if (FlogK[i].Ftype == "logK_dT")
+            {
+                if (TP_pairs[1][j] == 0)
+                {
+                    for (unsigned n = 0; n < experiments.size(); n++)
+                    {
+                        if ((experiments[n]->sP == TP_pairs[1][j]) && (experiments[n]->sT==TP_pairs[0][j]))
+                        {
+                            Pbar = NodT[n]->cP() / 100000;
+                        }
+                    }
+                }
+                Opti->reactions[FlogK[i].Rndx-1]->logK_TPpairs.push_back(
+                calc_logK_dT(FlogK[i].Fcoef, TP_pairs[0][j] + 273.15, Pbar, FlogK[i].Rndx-1 ));
+            } else
+            if (FlogK[i].Ftype == "logK_dRHOw")
+            {
+                Opti->reactions[FlogK[i].Rndx-1]->logK_TPpairs.push_back(
+                calc_logK_dRHOw(FlogK[i].Fcoef, TP_pairs[0][j] + 273.15, TP_pairs[1][j]) );
+            } else
+            {
+                cout << "Unknown type of logK function: " << FlogK[i].Ftype << endl;
+                exit(1);
+            }
+        }
+    }
+}
+
+double TGfitTask::calc_logK_dT(vector<double> A, double Tk, double P, int Rndx)
+{
+    double logK = 0.0;
+    double dV0 = 0.0;
+
+    logK =  A[0] + A[1]*Tk + A[2]/Tk + A[3]/log(Tk)
+           + A[4]/(Tk*Tk) + A[5]*(Tk*Tk) + A[6]/(pow(Tk,0.5));
+
+    // Calculating pressure correction to logK
+
+    for (unsigned s = 0; s < Opti->reactions[Rndx]->rdc_species.size(); s++)
+    {
+        dV0 +=   (NodT[0]->DC_V0(Opti->reactions[Rndx]->rdc_species_ind[s], 100000, 298.15))
+               * ( Opti->reactions[Rndx]->rdc_species_coef[s] );
+    }
+
+    logK -= dV0 * ( P - 1 ) / keys::R_CONSTANT*Tk / keys::lg_to_ln;
+
+    return logK;
+
+//    aW.twp->lgK -= aW.twp->dV * (aW.twp->P - aW.twp->Pst) / aW.twp->RT / lg_to_ln;
+
+
+}
+
+double TGfitTask::calc_logK_dRHOw(vector<double> A, double Tk, double P )
+{
+    vector<double> RhoW;
+
+    double logK = 0.0;
+    double Ppa = P * 100000;
+
+    NodT[0]->DensArrayH2Ow(Ppa, Tk, RhoW);
+
+    logK =   ( A[0] + A[1]/Tk + A[2]/(Tk*Tk) + A[3]/(Tk*Tk*Tk) )
+           + ( A[4] + A[5]/Tk + A[6]/(Tk*Tk) )* log10(RhoW[0] / 1000);
+
+    return logK;
+
 }
 
 

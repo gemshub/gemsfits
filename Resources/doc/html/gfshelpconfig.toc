@@ -1,18 +1,20 @@
  <toc>
- 	<section title="About the GEMSFITS Code Package" ref="gemsfit-about.html">
-	    	<section title="Development team and history" ref="gemsfit-team.html"></section>
-      		<section title="Bibliography" ref="gemsfit-litref.html"></section>
-     	 	<section title="License and terms of use" ref="gemsfit-terms-of-use.html"></section>
+ 	<section title="About the GEMSFITS Code Package" ref="gemsfits-about.html">
+	    	<section title="Development team and history" ref="gemsfits-team.html"></section>
+      		<section title="Bibliography" ref="gemsfits-litref.html"></section>
+     	 	<section title="License and terms of use" ref="gemsfits-terms-of-use.html"></section>
    	</section>
-   	<section title="How to Use GEMSFITS Shell" ref="gemsfits-howto.html">
-		<section title="How to do GEM input parameter fitting using gemsfit2" ref="howto-gemsfit.html"></section>
-      		<section title="How to maintain experimental database using csvtoejdb utility" ref="howto-csvtoejdb.html"></section>
-      		<section title="How to prepare the gemsfit2 task input file" ref="gemsfit-input-file.html"></section>
-      		<section title="How to run the gemsfit2 program" ref="howto-run-gemsfit.html"></section>
-      		<section title="How to interpret gemsfit2 output files" ref="gemsfit_statistics.html"></section>
+   	<section title="How to Use GEMSFITS Shell" ref="gfshell-about.html">
+		<section title="GEMSFITS Shell Database Mode" ref="gfshell-dbmode.html"></section>
+		<section title="GEMSFITS Shell Fitting Task Mode" ref="gfshell-taskmode.html"></section>
+		<section title="GEMSFITS Shell Fit Results View Mode" ref="gfshell-resultsmode.html"></section>
+		<section title="How To Do Parameter optimization / Workflow" ref="gfshell-howto-gemsfit.html"></section>
     	</section>
-   	 <section title="GEMSFITS Users Reference" ref="gemsfit-useref.html">
-     		 <section title="Technical information and how to build GEMSFITS" ref="gemsfit-techinfo.html"></section>        
+   	<section title="GEMSFITS Users Reference / JSON keywords" ref="gemsfit-useref.html">
+		<section title="About JSON" ref="gemsfit-json.html"></section>
+		<section title="How to prepare the experimental spreadsheet" ref="howto-csvtoejdb.html"></section>
+		<section title="About the output statistics" ref="gemsfit-statistics.html"></section>
+		<section title="How to build GEMSFITS (gemsfit2, gfshell2)" ref="gemsfit-techinfo.html"></section>
    	</section>
  </toc>
 

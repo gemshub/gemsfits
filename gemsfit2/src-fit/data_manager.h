@@ -102,6 +102,7 @@ class Data_Manager : public TNode
 
         /// JSON object for building the target function
         string DataTarget;
+        string DataLogK;
         double h_datasetlist = false;
 
         int MPI; /// number of paralele threads

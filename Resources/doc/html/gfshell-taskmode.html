@@ -4,7 +4,7 @@
     <meta content="text/html; charset=windows-1252" http-equiv="content-type">
     <title>gfshell Fitting Task Mode</title>
   </head>
-  <body style="                       background-image: url(bgimg-gray.jpg);">
+  <body style="                         background-image: url(bgimg-gray.jpg);">
     <h1> <img style="width: 48px; height: 48px;" title="GEMSFITS" alt="GEMSFITS"
         src="gemsfit2.png"> GEMSFITS Code for GEM Input Parameter Optimization</h1>
     <h2>gfshell Fitting Task Mode</h2>
@@ -25,6 +25,10 @@
         </ul>
         <li><a href="#markup">Parameter Markup</a> - which parameters can be
           optimized and how to mark them</li>
+        <ul>
+          <li><a href="#DataLogK">DataLogK</a> - analytical formula for
+            calculating the logK of the reaction constrained parameters</li>
+        </ul>
         <li><a href="#opti_stat">Optimization and Statistics</a> - options
           regarding the optimization algorithms and statistics</li>
       </ul>
@@ -968,7 +972,7 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         "ptype": "R", "spec": { "IV": -2273990, "Ref": "reciprocal",<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        "order": 1, "nC": 4, "DC": "CSH-JenH",<br>
+        "Rndx": 1, "nC": 4, "DC": "CSH-JenH",<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "RC":
         [ "CSH-JenD", "CSH-TobH", "CSH-TobD", "CSH-JenH ],<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -982,6 +986,12 @@
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <span style="font-family: Courier New,Courier,monospace;">"Ref</span>":
       bibliographic reference;<br>
+      &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; <span
+        style="font-family: Courier New,Courier,monospace;">"Rndx"</span>:
+      reaction index; from 1 to n, gives the order in which the reactions are
+      calculated and also serves as a identifier for assigning an analytical
+      function from <span style="font-family: Courier New,Courier,monospace;">"DataLogK"</span>
+      <br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <span style="font-family: Courier New,Courier,monospace;">"logK"</span>:
       reaction equilibrium constant at 298 K, 1 bar;<br>
@@ -1067,6 +1077,97 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "ptype" : "S",<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "spec" : &lt;val&gt;<br>
         &nbsp;&nbsp;&nbsp; }</span></p>
+    <h3><a id="DataLogK">c1. DataLogK</a></h3>
+    <p>Contains the analytical formula type and the parameters for calculating
+      the logK of the reaction constrained parameters in the parameter markup
+      section. The user has to specify the reaction index (Rndx) to which a
+      specific formula belongs. If a reaction constrained parameter does not
+      have an analytical formula specified the logK of the reaction for each T-P
+      of the experiments will be calculated based on the initial values of the
+      thermodynamic properties.&nbsp;</p>
+    <table style="width: 100%;" border="1">
+      <tbody>
+        <tr>
+          <td>Keyword</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;">{ ... }
+              <br>
+            </span></td>
+          <td> object in JSON format (in braces) containing a list of
+            descriptions of analytical formulas for logK calculations</td>
+        </tr>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;">"FunList"</span></td>
+          <td style="height: 19px;">array of JSON objects that describe the logK
+            analytical functions <span style="font-family: Courier New,Courier,monospace;">[.....]</span></td>
+        </tr>
+        <tr>
+          <td><br>
+          </td>
+          <td>
+            <table style="width: 100%" border="1">
+              <tbody>
+                <tr>
+                  <td> <span style="font-family: Courier New,Courier,monospace;">"Ftype"</span></td>
+                  <td>Analytical function type: <br>
+                    <span style="font-family: Courier New,Courier,monospace; font-weight: bold;">"logK_dRHOw"</span>
+                    - as given by Marshall and Franck (1981); the
+                    unknown/unnecessary parameters should be assigned 0 value;
+                    it can simplify into the modified-density model of Andreson
+                    et al. (1991) with C, D, E, and G set as 0.<br>
+                    <img title="Marshall and Franck 1981" alt="MF81" src="img/Marshall_Franck.png"><br>
+                    <span style="font-family: Courier New,Courier,monospace; font-weight: bold;">"logK_dT"</span>
+                    - as implemented in temperature corrections of standard
+                    molar (partial molal) thermodynamic properties of substances
+                    and reactions using data in ReacDC records of GEM-Selektor (
+                    see Resources/doc/pdf/T-corrections-Reac.pdf in the
+                    GEM-Selektor installation folder).<br>
+                    <img title="AC93" alt="AC93" src="img/Anderson_Crear.png"><br>
+                    for the pressure correction the constant volume
+                    approximation is used:<br>
+                    <img title="P-corr" alt="P-corr" src="img/P-corr.png"><br>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span style="font-family: Courier New,Courier,monospace;">"Fcoef"</span></td>
+                  <td>array (of size 7) containing appropriate coefficients for
+                    the above formulas or 0 for the unknown or unnecessary
+                    values e.g&nbsp; [ 2.477, -951.53, 0, 0, -9.307, 3482.8, 0 ]<br>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span style="font-family: Courier New,Courier,monospace;">"Rndx"</span></td>
+                  <td>the index of the reaction from the parameter markup
+                    section to which the analytical formula belongs<br>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+    Example:<br>
+    <br>
+    <span style="font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
+      "DataLogK" :&nbsp;&nbsp; {<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "FunList"
+      :&nbsp;&nbsp; [<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      "Ftype" : "logK_dRHOw",<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      "Fcoef" : [ 2.477, -951.53, 0, 0, -9.307, 3482.8, 0 ],<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      "Rndx"&nbsp; : 1<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      }<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] },</span><br>
     <hr>
     <h3><a id="opti_stat">d. Optimization and Statistics options</a></h3>
     <p>The user can select various optimization and statistics options by
@@ -1320,7 +1421,7 @@ Biweight
         style="color: black;">.</span></a><br>
     <br>
     <hr>
-    <p>Last updated:&nbsp; 27.07. 2014&nbsp; DM, DK</p>
+    <p>Last updated:&nbsp; 21.08. 2014&nbsp; DM, DK</p>
     <p>Copyright&nbsp; (c) 2014&nbsp; <a target="_blank" title="http://gems.web.psi.ch/teamhist.html"
         href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a></p>
     <hr>

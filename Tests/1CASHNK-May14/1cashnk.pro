@@ -6,5 +6,5 @@ GEMSFITSAPP=" GEMSFITS v.0.1 r.450 "
 ProjDatabaseName=cashnkdata
 ProjDatabasePath=/EJDB
 ProjFileName=1cashnk
-ProjFolderPath=/home/dmiron/devGEMSFITS/devGFshell/gemsfits/Tests/1CASHNK
+ProjFolderPath=/home/dmiron/devGEMSFITS/gemsfit/Tests/1CASHNK-May14
 TaskCasesDataColl=tasks

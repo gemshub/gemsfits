@@ -139,6 +139,24 @@ extern outField DataCH_dynamic_fields[30];
 extern outField MULTI_dynamic_fields[70];
 extern outField DataBR_fields[f_lga+1/*58*/];
 
+outField Par_Other_fields[2] =
+{
+    { "logK",  0, 0, 1, "\n# logK: Look-up array for logK at T * P * nr reactions. "
+      "\n#    The list has to be finished with End>"
+      "\n#    If at least one G0 parameter is marked as \'R\' (reaction-constrained)"
+      "\n#    and the list below is left commented out, then logK values for all T,P pairs and reactions"
+      "\n#    will be calculated based on the initial values of all parameters, and this logK array"
+      "\n#    will be used throughout the fitting process. " },
+    { "DataLogK",  0, 0, 1, "\n# DataLogK:  "
+      "\n#      \n" }
+};
+
+typedef enum { /// Field index into outField structure
+    f_logK,
+    f_DataLogK
+} Par_Other_FIELDS;
+
+
 void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
 {
     DATACH* CSD = node->pCSD();
@@ -219,13 +237,20 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
         i += node->gridTP()-1;
     }
 
-    ff << "\n \n# logK: Look-up array for logK at T * P * nr reactions. "
-          "\n#    The list has to be finished with End>"
-          "\n#    If at least one G0 parameter is marked as \'R\' (reaction-constrained)"
-          "\n#    and the list below is left commented out, then logK values for all T,P pairs and reactions"
-          "\n#    will be calculated based on the initial values of all parameters, and this logK array"
-          "\n#    will be used throughout the fitting process. " << endl;
-    ff << "<logK>" << endl;
+    TPrintArrays  par_other(2, Par_Other_fields, ff);
+
+    string DataLogK = "", logK = "";
+
+    par_other.writeField(f_DataLogK, DataLogK, _comment, brief_mode );
+    par_other.writeField(f_logK, logK, _comment, brief_mode );
+
+//    ff << "\n \n# logK: Look-up array for logK at T * P * nr reactions. "
+//          "\n#    The list has to be finished with End>"
+//          "\n#    If at least one G0 parameter is marked as \'R\' (reaction-constrained)"
+//          "\n#    and the list below is left commented out, then logK values for all T,P pairs and reactions"
+//          "\n#    will be calculated based on the initial values of all parameters, and this logK array"
+//          "\n#    will be used throughout the fitting process. " << endl;
+//    ff << "<logK>" << endl;
 
     if(_comment )
     {
@@ -699,7 +724,7 @@ typedef enum { /// Field index into outField structure
     f_DataSelect,
     f_DataTarget,
     f_SystemFiles,
-    f_LimitOfDetection
+    f_LimitOfDetection,
 } Data_Manager_FIELDS;
 
 /// Set up default values for structure
@@ -712,6 +737,7 @@ void Data_Manager::define_db_specs( )
    DataSelect ="";
    DataTarget = "";
    LimitOfDetection = 1e-06;
+   DataLogK = "";
 
 }
 
@@ -722,7 +748,7 @@ void Data_Manager::out_db_specs_txt( bool with_comments, bool brief_mode )
     fstream ff(fname.c_str(), ios::out/*|ios::app*/ );
     ErrorIf( !ff.good() , fname.c_str(), "OptParamFile text open error");
 
-    TPrintArrays  prar(10, Data_Manager_fields, ff);
+    TPrintArrays  prar(8, Data_Manager_fields, ff);
     // define data that must be written
 
     if (datasource == 0)
@@ -846,6 +872,21 @@ void Data_Manager::get_db_specs_txt( )
 
         remove_copy(collection.begin(), collection.end(), std::back_inserter(result), '\'');
         collection = result;
+
+    // reading other implemented fields
+    fstream fff(fname.c_str(), ios::in );
+    ErrorIf( !fff.good() , fname, "OptParamFile Fileopen error");
+    TReadArrays  par_other (2, Par_Other_fields, fff);
+    nfild = par_other.findNextNotAll();
+    while( nfild >=0 )
+        {
+          switch( nfild )
+          {
+            case f_DataLogK: par_other.readArray( "DataLogK",  DataLogK);
+                    break;
+          }
+          nfild = rdar.findNextNotAll();
+        }
 }
 
 //-----------------------------------------------------------------------------------------
@@ -1384,8 +1425,13 @@ gpf->flog << " : " << format << endl;
                     op->h_RDc = true;
                     vector<string> out;
                     Data_Manager *temp = new Data_Manager(1);
-                    temp->parse_JSON_object(vFormats[ii].format, keys::order, out);
+                    temp->parse_JSON_object(vFormats[ii].format, keys::Rndx, out);
                     nr = atoi(out.at(0).c_str())-1;
+                    if (nr < 0)
+                    {
+                        cout<< " Reaction " << ii << " can't have Rndx smaller than 1!"<< endl;
+                        exit(1);
+                    }
                     out.clear();
 
                     //ERROR
@@ -1468,7 +1514,7 @@ gpf->flog << " : " << format << endl;
             }while(test_ss);
             test.pop_back();
 
-            if ((test.size() != size*nr_reac) && (test.size() != 0))
+            if ((test.size() != size*nr_reac) && (test.size() != 0) )
             {
                 cout << "Number of logk's doesn't correspond to number of T*P*reactions! " << endl;
                 cout << "You need " << size*nr_reac << " <logK> entries in the input file, you have " << test.size() << endl;

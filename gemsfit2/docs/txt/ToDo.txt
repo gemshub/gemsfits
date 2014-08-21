@@ -92,6 +92,8 @@ csvtoejdb documentation:
 - calculate the composite sensitivities for each OFUN term type of observations
 - think about a mode in which the sensitivities of the parameters are computed afert each fitting step and the program decides which parameter to keep fixed during the optimization...
 probably the NLopt doesn't allow such dynamic change in the parameter vector.
+- bootstrap samping of residuals / measured values
+- intorduce polynomials of the logK dependence as in ReacDC
 
 - JSON format input for Parameters to fit in a similar way as for DataSelect and DataTarget
 - a way to connect the names in the databse with the names in the GEMS3K

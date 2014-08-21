@@ -103,12 +103,10 @@
         </tr>
         <tr>
           <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">usesamples
-              <br>
-            </span> </td>
+              <br> </span> </td>
           <td style="vertical-align: top;"><span style="font-weight: bold;"><span
                 style="font-family: Courier New,Courier,monospace;"><a name="usesamples"></a>usesamples
-                <br>
-              </span></span> </td>
+                <br> </span></span> </td>
           <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">string<br>
             </span> </td>
           <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">keyword
@@ -119,8 +117,7 @@
         </tr>
         <tr>
           <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">skipsamples
-              <br>
-            </span> </td>
+              <br> </span> </td>
           <td style="vertical-align: top;"><span style="font-weight: bold;"><span
                 style="font-family: Courier New,Courier,monospace;"><a name="skipsamples"></a>skipsamples
                 <br></span></span> </td>
@@ -786,16 +783,17 @@
             </span> </td>
         </tr>
         <tr>
-          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">order<br>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">Rndx<br>
             </span> </td>
           <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;"><a
-                name="order"></a>order<br>
+                name="order"></a>Rndx<br>
             </span> </td>
           <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">integer<br>
             </span> </td>
           <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">order
               in which the reactions should be executed by gemsfit in parameter
-              adjusting procedure<br>
+              adjusting procedure; from 1 to n; connects with the analytical
+              function in DataLogK.<br>
             </span> </td>
           <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">1<br>
             </span> </td>
@@ -843,6 +841,71 @@
           <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">2,
               1<br>
             </span> </td>
+        </tr>
+        <tr>
+          <td><span style="font-weight: bold;">Keywords for DataLogK</span></td>
+          <td><br>
+          </td>
+          <td><br>
+          </td>
+          <td><br>
+          </td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;">FunList<br>
+            </span></td>
+          <td><span style="font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;"><a
+                  id="FunList">FunList</a><br>
+              </span></span></td>
+          <td><span style="font-family: Courier New,Courier,monospace;">array<br>
+            </span></td>
+          <td><span style="font-family: Courier New,Courier,monospace;">array of
+              JSON objects that describe the logK analytical functions [.....]</span></td>
+          <td><span style="font-family: Courier New,Courier,monospace;"><br>
+            </span></td>
+        </tr>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;">Ftype<br>
+            </span></td>
+          <td><span style="font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;"><a
+                  id="Ftype">Ftype</a><br>
+              </span></span></td>
+          <td><span style="font-family: Courier New,Courier,monospace;">string<br>
+            </span></td>
+          <td><span style="font-family: Courier New,Courier,monospace;">Analytical
+              function type</span></td>
+          <td><span style="font-family: Courier New,Courier,monospace;"><br>
+            </span></td>
+        </tr>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;">Fcoef<br>
+            </span></td>
+          <td><span style="font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;"><a
+                  id="Fcoef">Fcoef</a><br>
+              </span></span></td>
+          <td><span style="font-family: Courier New,Courier,monospace;">array
+              (double)<br>
+            </span></td>
+          <td><span style="font-family: Courier New,Courier,monospace;">array
+              (of size 7) containing appropriate coefficients for the above
+              formulas or 0 for the unknown or unnecessary values.</span></td>
+          <td><span style="font-family: Courier New,Courier,monospace;">2.477,
+              -951.53, 0, 0, -9.307, 3482.8, 0</span></td>
+        </tr>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;"><a href="#order">Rndx</a><br>
+            </span></td>
+          <td><span style="font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;">Rndx<br>
+              </span></span></td>
+          <td><span style="font-family: Courier New,Courier,monospace;">integer<br>
+            </span></td>
+          <td><span style="font-family: Courier New,Courier,monospace;">the
+              index of the reaction from the parameter markup section to which
+              the analytical formula belongs</span></td>
+          <td><span style="font-family: Courier New,Courier,monospace;">1<br>
+            </span></td>
         </tr>
         <tr>
           <td style="vertical-align: top;"><a name="DataTarget"></a><span style="font-weight: bold;">Keywords
@@ -1339,10 +1402,10 @@
         </tr>
       </tbody>
     </table>
-    <p> <span style="font-family: monospace;"></span>*Value
-      - notation used in the input file and database files (also the excel data
-      file). This is the notation the user should use when making the excel file
-      of experiments and in the gemsfit2 input file.</p>
+    <p> <span style="font-family: monospace;"></span>*Value - notation used in
+      the input file and database files (also the excel data file). This is the
+      notation the user should use when making the excel file of experiments and
+      in the gemsfit2 input file.</p>
     <hr>
     <p><span style="font-weight: bold;">Example in JSON:</span></p>
     <p><span style="font-family: Courier New,Courier,monospace;">{<br>
@@ -1401,7 +1464,7 @@
         &nbsp;&nbsp;&nbsp; ]<br>
         }</span></p>
     <hr>
-    <p>Last updated:&nbsp; 15. 05. 2014&nbsp; DM, DK</p>
+    <p>Last updated:&nbsp; 21. 08. 2014&nbsp; DM, DK</p>
     <p>Copyright&nbsp; (c) 2014&nbsp; <a target="_blank" title="http://gems.web.psi.ch/teamhist.html"
         href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a></p>
     <hr>
