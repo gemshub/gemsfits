@@ -1355,11 +1355,21 @@ Biweight
               "StatMCbool"</span></td>
           <td style="vertical-align: top;">(-1) No Monte Carlo runs<br>
             ( 1) Perform Monte Carlo runs. The synthetic data-set is created
-            using the model calculated values<br>
+            using the model calculated values and adding a random scatter value
+            from a scatter arry that has the same average and standard deviation
+            as the residuals (normalized) specific to each objfun term<br>
             ( 2) Perform Monte Carlo runs. The synthetic data-set is created
-            using the experimental measured values. Use this options when the
-            residuals are not normal distributed, or the model dosn't accurately
-            represent the measured data for all conditions (P, T, pH) </td>
+            as in ( 1) but using the experimental measured values. Use this
+            options when the residuals are not normal distributed, or the model
+            dosn't accurately represent the measured data for all conditions (P,
+            T, pH)<br>
+            ( 3) Perform Monte Carlo runs. Residual bootstrap sampling. The
+            synthetic data-set is created using the model calculated values and
+            adding a random extracted (normalized) residual from a certain
+            dataset and objfun type<br>
+            ( 4) Perform Monte Carlo runs. Residual bootstrap sampling. The
+            synthetic data-set is created as in ( 3) but using the experimental
+            measured values.</td>
           <td style="vertical-align: top;"><br>
           </td>
         </tr>

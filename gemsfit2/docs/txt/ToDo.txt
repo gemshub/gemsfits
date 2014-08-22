@@ -31,19 +31,19 @@ Roadmap of GEMSFIT2 development
 + add normalized target function (by average from experimental data)
 + add documentation for normalized target function
 + solid-solution composition as element bulk phase concentration
-- test solid-solution with solchas
++ test solid-solution with solchas
 + test the reaction constraint 
-- also test if logk is respected at higher temperatures
-- test interaction parameters
++ also test if logk is respected at higher temperatures
++ test interaction parameters
 
 - problems with GEMS convergence - can affect the convergence as BOBYQA - decides how to change parameters based on first residuals
 
-- type of data to compare (molality and log molality) etc...
++ type of data to compare (molality and log molality) etc...
 + add density for data to compare.
 + add DMc, fDQF parameters (needs merge from devPhase first)
 + check Tk and P - if implemented
-- make test for Linked parameters - simple pH titration system
-- make test of geobarometry with qtz rutile paper.
++ make test for Linked parameters - simple pH titration system
++ make test of geobarometry with qtz rutile paper.
 + added phase amount, phase volume, dcomp amount, dcomp activity coeficient
 + added Gex phase property in kJ/mol to target function (Gex: excess Gibbs energy of mixing)
 + not yet added: Eh, osmotic coeficient.
@@ -79,8 +79,7 @@ csvtoejdb documentation:
 
 + add different options for monte carlo simulation (add scatter to computed values or measured values or use the actual residuals and randomly add them to the data pg.108)
 + implement the Tukey-Biweight scheme to weight out the outlighers.
-- maybe write matlab scripts for ploting form gemsfit output files??
-- add option of adding weight for different type of data.
++ add option of adding weight for different type of data.
 - "dynamic regression run" when some parameters are correlated, with different input file for the different sets of parameters. 1st fits one set with the other fixed, then fits the 2nd with first
 	fixed in a loop (unitl ??)
 
@@ -93,7 +92,7 @@ csvtoejdb documentation:
 - think about a mode in which the sensitivities of the parameters are computed afert each fitting step and the program decides which parameter to keep fixed during the optimization...
 probably the NLopt doesn't allow such dynamic change in the parameter vector.
 
-- bootstrap sampling of residuals / measured values
++ bootstrap sampling of residuals / measured values
 + intorduce polynomials of the logK dependence as in ReacDC
 
 - JSON format input for Parameters to fit in a similar way as for DataSelect and DataTarget

@@ -182,6 +182,41 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
       objfun_stat[j]->max_res = max_res;
       objfun_stat[j]->nr_pos_res = obj_pos_residuals;
       objfun_stat[j]->nr_neg_res = obj_neg_residuals;
+
+      int dscount = -1;
+      string dataset = "";
+      for (unsigned i=0; i<gfittask->aTfun.size(); i++)
+      {
+          if (gfittask->aTfun[i].objfun[j].isComputed)
+          {
+              if (dataset == gfittask->experiments[i]->expdataset)
+              {
+                  objfun_stat[j]->exp_dataset[dscount].measured_value.push_back(gfittask->aTfun[i].objfun[j].results.measured_value);
+                  objfun_stat[j]->exp_dataset[dscount].residuals.push_back(gfittask->aTfun[i].objfun[j].results.residual);
+                  objfun_stat[j]->exp_dataset[dscount].norm_residuals.push_back(
+                              gfittask->aTfun[i].objfun[j].results.residual / gfittask->aTfun[i].objfun[j].results.measured_value);
+              } else
+              {
+                  statistics::objfunstat::expdataset expdataset;
+                  objfun_stat[j]->exp_dataset.push_back(expdataset);
+                  dscount++;
+                  objfun_stat[j]->exp_dataset[dscount].name = gfittask->experiments[i]->expdataset;
+                  dataset = gfittask->experiments[i]->expdataset;
+                  objfun_stat[j]->exp_dataset[dscount].measured_value.push_back(gfittask->aTfun[i].objfun[j].results.measured_value);
+                  objfun_stat[j]->exp_dataset[dscount].residuals.push_back(gfittask->aTfun[i].objfun[j].results.residual);
+                  objfun_stat[j]->exp_dataset[dscount].norm_residuals.push_back(
+                              gfittask->aTfun[i].objfun[j].results.residual / gfittask->aTfun[i].objfun[j].results.measured_value);
+              }
+          }
+      }
+
+      for (unsigned d =0; d < objfun_stat[j]->exp_dataset.size(); d++)
+      {
+          for (unsigned s = 0; s < objfun_stat[j]->exp_dataset[d].residuals.size(); s++)
+          {
+            objfun_stat[j]->exp_dataset[d].scatter.push_back(0.0);
+          }
+      }
   }
 
   for (unsigned j = 0; j<gfittask->Tfun->objfun.size(); j++)
@@ -1055,7 +1090,35 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
 
     double* scatter_all 	  = new double[ number_of_measurements * num_of_MC_runs ];
 
-
+    int count = 0;
+    if ((MCbool == 3) || (MCbool == 4)) // bootstrap sampling
+    {
+        for (i = 0; i < num_of_MC_runs; i++)
+        {
+            for (j = 0; j<gfittask->Tfun->objfun.size(); j++)
+            {
+                for (unsigned d = 0; d < objfun_stat[j]->exp_dataset.size(); d++)
+                {
+                    typedef boost::mt19937 RNGType;
+                    RNGType rng(i+1);
+                    boost::uniform_int<> interval ( 0 ,  objfun_stat[j]->exp_dataset[d].residuals.size()-1 );
+                    boost::variate_generator< RNGType, boost::uniform_int<> >
+                                  dice(rng, interval);
+                    for ( int r = 0; r < objfun_stat[j]->exp_dataset[d].residuals.size(); r++ )
+                    {
+                        int x  = dice();
+                        // the residual will be de-normalized when added to the scatter vector in the MC runs
+                        objfun_stat[j]->exp_dataset[d].scatter[r] = objfun_stat[j]->exp_dataset[d].norm_residuals[x] /* * objfun_stat[j]->exp_dataset[d].measured_value[r]*/;
+                        count ++;
+                    }
+                    // add to the scatter
+                    objfun_stat[j]->scatter.insert( objfun_stat[j]->scatter.end(), objfun_stat[j]->exp_dataset[d].scatter.begin(), objfun_stat[j]->exp_dataset[d].scatter.end() );
+                }
+            }
+        }
+    }
+    if ((MCbool == 1) || (MCbool == 2)) // sampling per each individual objfun
+    {
         // make scatter object vector for each objfun
         for (j = 0; j<gfittask->Tfun->objfun.size(); j++)
         {
@@ -1065,12 +1128,12 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
             }
         }
 
-// get the scatter values for each individual objfun for all MC runs
+        // get the scatter values for each individual objfun for all MC runs
         for (j= 0; j<gfittask->Tfun->objfun.size(); j++)
         {
             // mersenne twister generator
             typedef boost::mt19937 RNGType;
-            RNGType rng(2);
+            RNGType rng(j+1);
 
             boost::normal_distribution<> rdist(objfun_stat[j]->norm_mean_res, objfun_stat[j]->norm_stdev_res);
 
@@ -1081,9 +1144,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
                  objfun_stat[j]->scatter[i] = get_rand();
             }
         }
-
-
-
+    }
 
     pid_ = 0;
     id = 0;
@@ -1106,13 +1167,13 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
             }
         }
 
-        if (MCbool == 1) // the new simulated values are from scatter + computed values
+        if ((MCbool == 1) || (MCbool == 3))// the new simulated values are from scatter + computed values
             for (i=0; i<number_of_measurements; i++)
             {
                 MC_computed_v[i] = (scatter_v[i]*gfittask->measured_values_v[i]) + gfittask->computed_values_v[i];
             }
         else
-            if (MCbool == 2) // the new simulated values are from scatter + measured values
+            if ((MCbool == 2) || (MCbool == 4))  // the new simulated values are from scatter + measured values
             {
                 for (i=0; i<number_of_measurements; i++)
                 {
@@ -1120,10 +1181,12 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
                 }
             }
 
+        // adding the new syntetic measured values
         gfittask->add_MC_scatter(MC_computed_v);
 
 
         optv_ = optv_backup;
+        // always staring form the fitted parameters
         gfittask->Opti->opt = optv_backup;
 //        optv_ = gfittask->Opti->opt;
 

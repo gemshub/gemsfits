@@ -65,7 +65,7 @@ class statistics
 
     struct objfunstat
     {
-        vector<double> scatter;
+        vector<double> scatter, scatter2;
         vector<double> percentiles;
         vector<double> quantiles;
         vector<double> orderd_res;
@@ -80,6 +80,16 @@ class statistics
         int nr_pos_res, nr_neg_res;
         int nr;
         bool isComputed;
+
+        struct expdataset
+        {
+            string name;
+            vector<double> scatter;
+            vector<double> residuals;
+            vector<double> norm_residuals;
+            vector<double> measured_value;
+        };
+        vector<expdataset> exp_dataset;
     };
 
     vector<objfunstat*> objfun_stat;
