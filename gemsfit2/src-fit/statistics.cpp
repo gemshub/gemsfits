@@ -1271,11 +1271,11 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
             double mean = arma::mean( MCRparams );
             MN_Rparam.push_back(mean);
 
-            // Print Standard Deviations of parameters generated during MC runs to file
-            gpf->fstat <<"			parameter "<< j;
-            if (gfittask->Opti->Ptype[j] == "G0") gpf->fstat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[j]);
-            else gpf->fstat << "  " << gfittask->Opti->Ptype[j];
-            gpf->fstat <<" :	           " << StandardDeviation << endl;
+//            // Print Standard Deviations of parameters generated during MC runs to file
+//            gpf->fstat <<"			parameter "<< j;
+//            if (gfittask->Opti->Ptype[j] == "G0") gpf->fstat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[j]);
+//            else gpf->fstat << "  " << gfittask->Opti->Ptype[j];
+//            gpf->fstat <<" :	           " << StandardDeviation << endl;
 
         }
         gpf->fstat << endl;
@@ -1351,14 +1351,14 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
         {
 //            gpf->fmc << SD_Rparam[j]<<",";
             T = boost::math::quantile(boost::math::complement(dist, 0.01/ 2));
-            w = T * SD_Fparam[j] /*/ sqrt(double( number_of_measurements ))*/;
+            w = T * SD_Rparam[j] /*/ sqrt(double( number_of_measurements ))*/;
             fitparam[j+p]->mc95 = w;
             fitparam[j+p]->mcconfi.push_back(w);
             T = boost::math::quantile(boost::math::complement(dist, 0.05/ 2));
-            w = T * SD_Fparam[j] /*/ sqrt(double( number_of_measurements ))*/;
+            w = T * SD_Rparam[j] /*/ sqrt(double( number_of_measurements ))*/;
             fitparam[j+p]->mcconfi.push_back(w);
             T = boost::math::quantile(boost::math::complement(dist, 0.1/ 2));
-            w = T * SD_Fparam[j] /*/ sqrt(double( number_of_measurements ))*/;
+            w = T * SD_Rparam[j] /*/ sqrt(double( number_of_measurements ))*/;
             fitparam[j+p]->mcSTDEV = SD_Rparam[j];
             fitparam[j+p]->mcMEAN = MN_Rparam[j];
             fitparam[j+p]->mcconfi.push_back(w);
