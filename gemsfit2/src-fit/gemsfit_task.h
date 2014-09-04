@@ -308,11 +308,36 @@ public:
     */
    void print_nested_results ();
 
+   /**
+    * @brief reads in the DataLogK JSON entry form the input file
+    * @author DM
+    * @date 20.08.2014
+    */
    void get_DataLogK ( );
-   void calc_logK_TP( );
-   double calc_logK_dT (vector<double> A, double Tk, double P , int Rndx);
-   double calc_logK_dRHOw( vector<double> A, double Tk , double P );
 
+   /**
+    * @brief calculates the logK of the reactions involning the reaction constrined parameters
+    * @author DM
+    * @date 20.01.2014
+    */
+   void calc_logK_TP( );
+
+   /**
+    * @brief calculates the logK using the T-depedence polynomial
+    * @author DM
+    * @date 20.01.2014
+    */
+   double calc_logK_dT (vector<double> A, double Tk, double P , int Rndx);
+
+   /**
+    * @brief calculates the logK using the RHO-depedence polynomial
+    * @param A
+    * @param Tk
+    * @param P
+    * @author DM
+    * @date 20.01.2014
+    */
+   double calc_logK_dRHOw( vector<double> A, double Tk , double P );
 
    /**
     * @brief sets the paramteres for the extended Debye-Hueckel equation (Helgeson). For mixed salts it calculates a weighted average of the parameters

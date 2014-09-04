@@ -921,10 +921,10 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFun
             /// \return 0.0, if DC has zero amount.
             computed_value = sys->NodT[i]->Get_cDC(DCndx);// for species in other phases - mole fraction
         } else
-        if (sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit == keys::log_molfrac)
+        if (/*sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit*/ objfun.exp_unit == keys::log_molfrac)
             computed_value = log10(sys->NodT[i]->Get_cDC(DCndx));
         else
-        if (sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit == keys::ln_molfrac)
+        if (/*sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit*/ objfun.exp_unit== keys::ln_molfrac)
             computed_value = log(sys->NodT[i]->Get_cDC(DCndx));
         else
         {

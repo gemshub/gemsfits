@@ -86,7 +86,7 @@ Weighted_Abs_sum_of_residuals += fabs(gfittask->residuals_v[i])*gfittask->weight
 cout<<" Statistics Constructor: sum of squares: "<<Weighted_Tfun_sum_of_residuals<<endl;
 
     number_of_ind_parameters   = num_of_params_;
-    number_of_parameters = number_of_ind_parameters + gfittask->Opti->reactions.size() + gfittask->Opti->Lparams.size();
+    number_of_parameters = number_of_ind_parameters /*+ gfittask->Opti->reactions.size() + gfittask->Opti->Lparams.size()*/;
 
 cout<<" Statistics Constructor: number_of_parameters: "<<number_of_parameters<<endl;
 
@@ -569,9 +569,10 @@ if( W2 < 1.)  // workaround to suppress nan() and zdiv crash
 
 
     // Create chi-squared distribution object
+    if(W2 != 1){
     boost::math::chi_squared chi_dist( 2 );
     // 1 - cumulative distribution function
-    K2test = 1 - boost::math::cdf( chi_dist, K2 );
+    K2test = 1 - boost::math::cdf( chi_dist, K2 );}
 
 
     // Write first statistcs to file
@@ -1144,7 +1145,12 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
                  objfun_stat[j]->scatter[i] = get_rand();
             }
         }
-    }
+    } /*else
+    {
+        if (MCbool != 0)
+        cout << "MCBool doesn't have a correct value between 0-4! "<< endl;
+        exit(1);
+    }*/
 
     pid_ = 0;
     id = 0;

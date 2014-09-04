@@ -521,19 +521,26 @@ void set_Tuckey_weight_objfun (TGfitTask *sys)
 
     for (unsigned int j = 0; j < sys->Tfun->objfun.size(); j++)
     {
-        for (unsigned int i = 0; i < sys->aTfun.size(); i++)
+        if (sys->Tfun->objfun[j].isComputed)
         {
-            if (sys->aTfun[i].objfun[j].isComputed)
+            for (unsigned int i = 0; i < sys->aTfun.size(); i++)
             {
-                abs_res.push_back(fabs(sys->aTfun[i].objfun[j].results.residual));
-            }
+                if (sys->aTfun[i].objfun[j].isComputed)
+                {
+                    abs_res.push_back(fabs(sys->aTfun[i].objfun[j].results.residual));
+                }
 
+            }
+            if (abs_res.size()>0)
+            median_.push_back(median(abs_res));
+            C.push_back(sys->Opti->OptTuckeyVal * median_[j]);
+            vabs_res.push_back(abs_res);
+            abs_res.clear();
+        } else
+        {
+        median_.push_back(0.0);
+        C.push_back(-1000);
         }
-        if (abs_res.size()>0)
-        median_.push_back(median(abs_res));
-        C.push_back(sys->Opti->OptTuckeyVal * median_[j]);
-        vabs_res.push_back(abs_res);
-        abs_res.clear();
     }
 
 //#ifdef useomp
@@ -578,6 +585,10 @@ void set_Tuckey_weight_objfun_norm (TGfitTask *sys)
             C.push_back(sys->Opti->OptTuckeyVal * median_[j]);
             vabs_res.push_back(abs_res);
             abs_res.clear();
+        } else
+        {
+        median_.push_back(0.0);
+        C.push_back(-1000);
         }
     }
 
@@ -626,6 +637,10 @@ void set_Tuckey_weight_objfun_norm2 (TGfitTask *sys)
             C.push_back(sys->Opti->OptTuckeyVal * median_[j]);
             vabs_res.push_back(abs_res);
             abs_res.clear();
+        } else
+        {
+        median_.push_back(0.0);
+        C.push_back(-1000);
         }
     }
 
