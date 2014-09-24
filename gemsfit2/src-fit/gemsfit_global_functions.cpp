@@ -97,6 +97,8 @@ return sum_of_squared_residuals_allsys;
 void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTask* sys )
 {
     // Call GEMS3K and run GEM_run();
+    double test_residual = 0.0;
+    int count;
 
     // Temporary storage vectors
     master_counter++;
@@ -219,35 +221,42 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
             cout<<"For node: "<< i+1 <<" sample "<< sys->experiments[i]->sample << endl;
             cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
         }
+
+        for (unsigned j = 0; j< sys->Tfun->objfun.size(); ++j)
+        {
+            test_residual += sys->get_residual(i, sys->aTfun[i].objfun[j], count);
+        }
     }
 
     if (sys->Opti->OptTuckey == 1)
     {
-        residuals_sys = sys->get_sum_of_residuals( );
+//        residuals_sys = sys->get_sum_of_residuals( );
         set_Tuckey_weight_objfun(sys);
     } else
     if (sys->Opti->OptTuckey == 2)
     {
-        residuals_sys = sys->get_sum_of_residuals( );
+//        residuals_sys = sys->get_sum_of_residuals( );
         set_Tuckey_weight_objfun_norm(sys);
     } else
     if (sys->Opti->OptTuckey == 3)
     {
-        residuals_sys = sys->get_sum_of_residuals( );
+//        residuals_sys = sys->get_sum_of_residuals( );
         set_Tuckey_weight_objfun_norm2(sys);
     } else
     if (sys->Opti->OptTuckey == 4)
     {
-        residuals_sys = sys->get_sum_of_residuals( );
+//        residuals_sys = sys->get_sum_of_residuals( );
         set_Tuckey_weight_global(sys);
     } else
     if (sys->Opti->OptTuckey == 5)
     {
-        residuals_sys = sys->get_sum_of_residuals( );
+//        residuals_sys = sys->get_sum_of_residuals( );
         set_Tuckey_weight_global(sys);
     }
 
     residuals_sys = sys->get_sum_of_residuals( );
+
+//    residuals_sys = test_residual;
 
     // debug for when using global algorithm
     if (master_counter%1000 == 0)

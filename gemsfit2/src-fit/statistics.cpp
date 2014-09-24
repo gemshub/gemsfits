@@ -193,6 +193,7 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
               {
                   objfun_stat[j]->exp_dataset[dscount].measured_value.push_back(gfittask->aTfun[i].objfun[j].results.measured_value);
                   objfun_stat[j]->exp_dataset[dscount].residuals.push_back(gfittask->aTfun[i].objfun[j].results.residual);
+
                   objfun_stat[j]->exp_dataset[dscount].norm_residuals.push_back(
                               gfittask->aTfun[i].objfun[j].results.residual / gfittask->aTfun[i].objfun[j].results.measured_value);
               } else
@@ -204,6 +205,7 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
                   dataset = gfittask->experiments[i]->expdataset;
                   objfun_stat[j]->exp_dataset[dscount].measured_value.push_back(gfittask->aTfun[i].objfun[j].results.measured_value);
                   objfun_stat[j]->exp_dataset[dscount].residuals.push_back(gfittask->aTfun[i].objfun[j].results.residual);
+
                   objfun_stat[j]->exp_dataset[dscount].norm_residuals.push_back(
                               gfittask->aTfun[i].objfun[j].results.residual / gfittask->aTfun[i].objfun[j].results.measured_value);
               }

@@ -89,8 +89,8 @@ csvtoejdb documentation:
 
 + calculate the contribution of each OFUN term to the total OFUN
 - calculate the composite sensitivities for each OFUN term type of observations
-- think about a mode in which the sensitivities of the parameters are computed afert each fitting step and the program decides which parameter to keep fixed during the optimization...
-probably the NLopt doesn't allow such dynamic change in the parameter vector.
+- think about a mode in which the sensitivities of the parameters are computed after each fitting step and the program decides which parameter to keep fixed during the optimization...
+probably the NLopt doesn't allow such dynamic change in the parameter vector!!
 
 + bootstrap sampling of residuals / measured values
 + intorduce polynomials of the logK dependence as in ReacDC

@@ -104,12 +104,10 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
 //    set_fixed_parameters();
 
     get_DataTarget ( );
-
     for (unsigned int i=0; i < experiments.size(); i++)
     {
         aTfun.push_back(*Tfun);
     }
-
     /// function in iofiles.cpp to read the logK lookup array instead of get function!
     get_DataLogK();
     if (FlogK.size() > 0)
@@ -208,6 +206,11 @@ void TGfitTask::init_optim( std::vector<double> &optv_, /*int &countit,*/ double
     else if( Opti->OptAlgo.compare( "GN_ESCH" ) == 0 )
     {
         nlopt::opt nlopti_( nlopt::GN_ESCH, optv_.size() );
+        build_optim( nlopti_, optv_, weighted_Tfun_sum_of_residuals );
+    }
+    else if( Opti->OptAlgo.compare( "GN_CRS" ) == 0 )
+    {
+        nlopt::opt nlopti_( nlopt::GN_CRS2_LM, optv_.size() );
         build_optim( nlopti_, optv_, weighted_Tfun_sum_of_residuals );
     }
     else if( Opti->OptAlgo.compare( "LN_BOBYQA" ) == 0 )
