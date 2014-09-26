@@ -612,6 +612,20 @@
                     mole ratio; <span style="font-style: italic;">"<span style="font-family: Courier New,Courier,monospace;">kJ/mol"</span></span>:
                     energy units for Gex; <span style="font-family: Courier New,Courier,monospace; font-style: italic;">"volts"</span>.</td>
                 </tr>
+                <tr>
+                  <td>"expr"</td>
+                  <td>mathematical expression for calculating a certain phase
+                    property unavailable in GEMS3K direct output. E.g. for "CT":
+                    "prop", "CN": "mChainL", "expr" :&nbsp;&nbsp;
+                    "3/sum(end_memeber1, end_mmber2,...)-1". more details on the
+                    possible expressions: <a target="_blank" title="http://muparser.beltoforion.de/mup_features.html#idDef2"
+                      href="http://muparser.beltoforion.de/mup_features.html#idDef2">http://muparser.beltoforion.de/mup_features.html#idDef2</a><a
+                      target="_blank" title="http://muparser.beltoforion.de/mup_features.html#idDef2"><br>
+                    </a><span style="color: red; font-weight: bold;">!!!!</span>
+                    The variable names (e.g. end_member1) should not contain
+                    symols that represent mathematical operators (e.g. +,-,*,/).<br>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </td>
@@ -627,11 +641,11 @@
             <span style="font-family: Courier New,Courier,monospace;">"CT"</span>
             and <span style="font-family: Courier New,Courier,monospace;">"CN"</span>
             pairs.<br>
-            <span style="font-weight: bold;">IMPORTANT</span>: When "NFUN" is
-            specified in Data Target section, at least one element in "Ptype"
-            property object must be marked for fitting. More than one NFUN
-            entries with different "Ptype" input properties can be used with
-            caution. </td>
+            <span style="font-weight: bold; color: red;">IMPORTANT</span><span style="color: red;">:</span>
+            When "NFUN" is specified in Data Target section, at least one
+            element in "Ptype" property object must be marked for fitting. More
+            than one NFUN entries with different "Ptype" input properties can be
+            used with caution. </td>
         </tr>
         <tr>
           <td><br>
@@ -700,7 +714,8 @@
       - mass in "g" or "kg"; "pV" - volume in "cm3" or "m3"; "Eh" - Eh in
       "Volts" ;<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      "Gex"&nbsp; - excess Gibbs energy of mixing (in "kJ/mol").<br>
+      "Gex"&nbsp; - excess Gibbs energy of mixing (in "kJ/mol"); "mChainL" -
+      mean Chain Lenght for cement based materials.<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dependent components ("DC")
       properties: "Q" - amount in "molfrac"; "@coef" - activity coefficient<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...</p>
@@ -751,6 +766,29 @@
         "SRC":"meas", "EPH":"C-S-H-Q", "CT":"prop", "CN":"Q", "unit":"molal"}<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]<br>
         }</span></p>
+    <p><span style="font-family: Courier New,Courier,monospace;">"DataTarget"
+        :&nbsp;&nbsp; { "Target" :&nbsp;&nbsp; "name", "TT" :&nbsp;&nbsp; "lsq",
+        "WT" :&nbsp;&nbsp; "inverr3", "OFUN" :&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <br>
+      </span></p>
+    <p><span style="font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;
+        [<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "EPH" :&nbsp;&nbsp; "C-S-H-Q",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "CT" :&nbsp;&nbsp; "prop",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "CN" :&nbsp;&nbsp; "mChainL",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "expr" :&nbsp;&nbsp; "3/sum(CSH_JenD,CSH_TobH)-1",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "WT" :&nbsp;&nbsp; 3<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        }<br>
+        &nbsp;&nbsp;&nbsp; ]<br>
+        },<br>
+      </span></p>
     <p><span style="font-family: Courier New,Courier,monospace;">TT</span> –
       type of function used to calculate the residuals (e.g.“<span style="font-family: Courier New,Courier,monospace;">lsq</span>”
       least squares); <span style="font-family: Courier New,Courier,monospace;">WT</span>
@@ -1358,11 +1396,10 @@ Biweight
             using the model calculated values and adding a random scatter value
             from a scatter arry that has the same average and standard deviation
             as the residuals (normalized) specific to each objfun term<br>
-            ( 2) Perform Monte Carlo runs. The synthetic data-set is created
-            as in ( 1) but using the experimental measured values. Use this
-            options when the residuals are not normal distributed, or the model
-            dosn't accurately represent the measured data for all conditions (P,
-            T, pH)<br>
+            ( 2) Perform Monte Carlo runs. The synthetic data-set is created as
+            in ( 1) but using the experimental measured values. Use this options
+            when the residuals are not normal distributed, or the model dosn't
+            accurately represent the measured data for all conditions (P, T, pH)<br>
             ( 3) Perform Monte Carlo runs. Residual bootstrap sampling. The
             synthetic data-set is created using the model calculated values and
             adding a random extracted (normalized) residual from a certain

@@ -51,6 +51,7 @@ DATAMAN_CPP    =  ./dataman
 DIALOGS_CPP   =  ./dialogs
 EJDB_CPP       =  ../gemsfit2/tcejdb
 GEMS3K_CPP     =  ../../standalone/GEMS3K
+KEYS_CPP     =  ../csvtoejdb/src-csvtoejdb
 
 QWT6_H       =  $$QWT6_CPP
 DATAMAN_H    =  $$DATAMAN_CPP
@@ -58,6 +59,7 @@ DIALOGS_H    =  $$DIALOGS_CPP
 EJDB_H       =  $$EJDB_CPP
 GEMS3K_H     =  $$GEMS3K_CPP
 PLATFORM_H     =  $$PLATFORM_CPP
+KEYS_H       =   $$KEYS_CPP
 
 
 DEPENDPATH   += $$QWT6_H
@@ -66,6 +68,7 @@ DEPENDPATH   += $$DIALOGS_H
 DEPENDPATH   += $$EJDB_H
 DEPENDPATH   += $$GEMS3K_H
 DEPENDPATH   += $$PLATFORM_H
+DEPENDPATH   += $$KEYS_H
 
 INCLUDEPATH   += $$QWT6_H
 INCLUDEPATH   += $$DATAMAN_H
@@ -73,6 +76,7 @@ INCLUDEPATH   += $$DIALOGS_H
 INCLUDEPATH   += $$EJDB_H
 INCLUDEPATH   += $$GEMS3K_H
 INCLUDEPATH   += $$PLATFORM_H
+INCLUDEPATH   += $$KEYS_H
 
 MOC_DIR = tmp
 UI_DIR        = $$MOC_DIR

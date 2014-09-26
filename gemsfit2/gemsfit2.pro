@@ -95,28 +95,33 @@ FIT_CPP      =  ./src-fit
 GEMS3K_CPP   =  ../../standalone/GEMS3K
 EJDB_CPP     =  ./tcejdb
 KEYS_CPP     =  ../csvtoejdb/src-csvtoejdb
+MUP_CPP      =  ./muparser/src
 
 
 FIT_H        =   $$FIT_CPP
 GEMS3K_H     =   $$GEMS3K_CPP
 EJDB_H       =   $$EJDB_CPP
 KEYS_H       =   $$KEYS_CPP
-PLATFORM_H   =  $$PLATFORM_CPP
+PLATFORM_H   =   $$PLATFORM_CPP
+MUP_H        =   $$MUP_CPP
 
 DEPENDPATH   += $$FIT_H
 DEPENDPATH   += $$GEMS3K_H
 DEPENDPATH   += $$EJDB_H
 DEPENDPATH   += $$KEYS_H
 DEPENDPATH   += $$PLATFORM_H
+DEPENDPATH   += $$MUP_H
 
 INCLUDEPATH  += $$FIT_H
 INCLUDEPATH  += $$GEMS3K_H   
 INCLUDEPATH  += $$EJDB_H
 INCLUDEPATH  += $$KEYS_H
 INCLUDEPATH  += $$PLATFORM_H
+INCLUDEPATH  += $$MUP_H
 
 OBJECTS_DIR       = obj
 
 include($$FIT_CPP/fit.pri)
 include($$GEMS3K_CPP/gems3k.pri)
 include($$EJDB_CPP/tcejdb.pri)
+include($$MUP_CPP/muparser.pri)

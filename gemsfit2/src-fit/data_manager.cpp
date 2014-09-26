@@ -565,7 +565,7 @@ void Data_Manager::bson_to_Data_Manager(/* FILE *f, */ const char *data, int pos
             // adding sample name
             experiments[pos]->sample = bson_iterator_string(i);
         } else
-        if (key_ == keys::Type)
+        if (key_ == keys::type)
         {
             // adding sample type
             experiments[pos]->Type = bson_iterator_string(i);
@@ -753,14 +753,15 @@ void Data_Manager::bson_to_Data_Manager(/* FILE *f, */ const char *data, int pos
                         {
                             experiments[pos]->expphases[ip]->phIC.push_back( new samples::components );
                             ipc++; // position of the component in phcomp vector
+                            // default values
                             experiments[pos]->expphases[ip]->phIC[ipc]->Qerror = 1.;
                             experiments[pos]->expphases[ip]->phIC[ipc]->Qnt   = 0.;
                             string p_name = experiments[pos]->expphases[ip]->phase;
-                            if (p_name == keys::aqueous)
-                            {
-                                experiments[pos]->expphases[ip]->phIC[ipc]->Qunit = keys::molal;
-                            } else
-                                experiments[pos]->expphases[ip]->phIC[ipc]->Qunit = keys::molratio;
+//                            if (p_name == keys::aqueous)
+//                            {
+//                                experiments[pos]->expphases[ip]->phIC[ipc]->Qunit = keys::molal;
+//                            } else
+//                                experiments[pos]->expphases[ip]->phIC[ipc]->Qunit = keys::molratio;
 
                             bson_iterator_subiterator( k, d2 );
                             while ( bson_iterator_next(d2) != BSON_EOO )
@@ -798,10 +799,10 @@ void Data_Manager::bson_to_Data_Manager(/* FILE *f, */ const char *data, int pos
                             experiments[pos]->expphases[ip]->phMR[ipm]->Qerror = 1.;
                             experiments[pos]->expphases[ip]->phMR[ipm]->Qnt   = 0.;
                             string p_name = experiments[pos]->expphases[ip]->phase;
-                            if (p_name == keys::aqueous)
-                            {
-                                experiments[pos]->expphases[ip]->phMR[ipm]->Qunit = keys::molratio;
-                            } else
+//                            if (p_name == keys::aqueous)
+//                            {
+//                                experiments[pos]->expphases[ip]->phMR[ipm]->Qunit = keys::molratio;
+//                            } else
                                 experiments[pos]->expphases[ip]->phMR[ipm]->Qunit = keys::molratio;
 
                             bson_iterator_subiterator( k, d2 );

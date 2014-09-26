@@ -899,6 +899,7 @@ void TGfitTask::get_DataTarget ( )
         Tfun->objfun[i].exp_CN = "NULL";
         Tfun->objfun[i].exp_unit = "NULL";
         Tfun->objfun[i].exp_DCP = "NULL";
+        Tfun->objfun[i].expr = "NULL";
         Tfun->objfun[i].meas_average = 0.0;
         Tfun->objfun[i].TuWeight = 1;
         Tfun->objfun[i].weight = 1;
@@ -930,6 +931,11 @@ void TGfitTask::get_DataTarget ( )
         Tfun->objfun[i].exp_unit = out2[0];
         out2.clear();
 
+        parse_JSON_object(out[i], keys::expr, out2);
+        if (out2.size() > 0)
+        Tfun->objfun[i].expr = out2[0];
+        out2.clear();
+
         parse_JSON_object(out[i], keys::WT, out2);
         if (out2.size() > 0)
         Tfun->objfun[i].weight = atof(out2[0].c_str());
@@ -949,6 +955,7 @@ void TGfitTask::get_DataTarget ( )
         Tfun->nestfun[i].exp_CN = "NULL";
         Tfun->nestfun[i].exp_unit = "NULL";
         Tfun->nestfun[i].exp_DCP = "NULL";
+        Tfun->nestfun[i].expr = "NULL";
         Tfun->nestfun[i].Ptype = "NULL";
         Tfun->nestfun[i].weight = 1;
         Tfun->nestfun[i].TuWeight = 1;
@@ -983,6 +990,11 @@ void TGfitTask::get_DataTarget ( )
         parse_JSON_object(out[i], keys::WT, out2);
         if (out2.size() > 0)
         Tfun->nestfun[i].weight = atof(out2[0].c_str());
+        out2.clear();
+
+        parse_JSON_object(out[i], keys::expr, out2);
+        if (out2.size() > 0)
+        Tfun->nestfun[i].expr = out2[0];
         out2.clear();
 
         parse_JSON_object(out[i], keys::Telem, out2);

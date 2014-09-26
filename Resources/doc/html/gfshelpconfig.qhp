@@ -4,7 +4,7 @@
     <virtualFolder>help</virtualFolder>
     <filterSection>
  <toc>
- 	<section title="About the GEMSFITS Code Package" ref="gemsfits-about.html">
+ 	<section title="About the GEMSFITS Code Package" ref="gemsfit-about.html">
 	    	<section title="Development team and history" ref="gemsfits-team.html"></section>
       		<section title="Bibliography" ref="gemsfits-litref.html"></section>
      	 	<section title="License and terms of use" ref="gemsfits-terms-of-use.html"></section>
@@ -24,7 +24,7 @@
  </toc>
 
       <files>
-        <file>gemsfits-about.html</file>
+        <file>gemsfit-about.html</file>
         <file>gfshell-about.html</file>
         <file>gfshell-dbmode.html</file>
         <file>gfshell-taskmode.html</file>

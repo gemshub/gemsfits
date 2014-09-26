@@ -489,6 +489,7 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
     double Tfun_residual = 0.0, Weighted_Tfun_residual = 0.0, weight_ = 1.0;
     DATACH* dCH = sys->NodT[i]->pCSD();
     double* IC_in_PH;
+    char ccPH;
 
     elem_name =  objfun.exp_CN.c_str();
     ICndx = sys->NodT[i]->IC_name_to_xDB(elem_name);
@@ -498,9 +499,10 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
     nIC = dCH->nIC;	// nr of independent components
     IC_in_PH = new double[ nIC ];
     sys->NodT[i]->Ph_BC(PHndx, IC_in_PH);
+    ccPH = sys->NodT[i]->xCH_to_ccPH(PHndx);
 
     // Get composition of aqueous phase
-    if ((objfun.exp_phase == keys::aqueous) && (PHndx >=0) && (ICndx >=0))
+    if ((ccPH == *keys::aq) && (PHndx >=0) && (ICndx >=0))
     {
         if (objfun.exp_unit == keys::logm)
         {
@@ -513,7 +515,7 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
             objfun.exp_unit == keys::molal;
         }
     } else // other than aqueous phase
-        if ((objfun.exp_phase != keys::aqueous) && (PHndx >=0) && (ICndx >=0))
+        if ((ccPH != *keys::aq) && (PHndx >=0) && (ICndx >=0))
         {
             // Default
             computed_value = IC_in_PH[ICndx]; // phase bulk composition in moles (mol)
@@ -582,6 +584,8 @@ double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::ob
     DATACH* dCH = sys->NodT[i]->pCSD();
     double* IC_in_PH;
     vector<string> nom, denom;
+    char ccPH;
+
 
     phase_name = objfun.exp_phase.c_str();
     PHndx = sys->NodT[i]->Ph_name_to_xDB(phase_name);
@@ -589,53 +593,46 @@ double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::ob
     nIC = dCH->nIC;	// nr of independent components
     IC_in_PH = new double[ nIC ];
     sys->NodT[i]->Ph_BC(PHndx, IC_in_PH);
-
-    interpretMR (&nom, &denom, objfun.exp_CN);
+    ccPH = sys->NodT[i]->xCH_to_ccPH(PHndx);
 
     if (PHndx < 0)
     {
         cout << "Error: "<< phase_name <<" is not present in the GEMS3K CSD files "; exit(1);
     }
 
-    // calculating nominator
-    for (unsigned int k = 0; k < nom.size(); ++k)
+    vector<double> varDbl;
+
+    mu::Parser parser;
+    parser.SetExpr(objfun.exp_CN);
+
+    vector<string> varStr;
+    parser.SetVarFactory(AddVariable, &varStr);
+    parser.GetUsedVar();
+
+    for (int d = 0; d < varStr.size(); d++)
     {
-        elem_name =  nom[k].c_str();
-        ICndx = sys->NodT[i]->IC_name_to_xDB(elem_name);
-        if (ICndx < 0)
+        if ((ccPH == *keys::aq) && (PHndx >=0))
         {
-           cout << "Error: "<< elem_name <<" is not present in the " <<phase_name; exit(1);
+        ICndx = sys->NodT[i]->IC_name_to_xDB(varStr[d].c_str());
+        varDbl.push_back(sys->NodT[i]->Get_mIC(ICndx));
+        } else
+        {
+            ICndx = sys->NodT[i]->IC_name_to_xDB(varStr[d].c_str());
+            varDbl.push_back(IC_in_PH[ICndx]);
         }
-        if ( (objfun.exp_phase == keys::aqueous) && (PHndx >=0))
-        {
-            computed_nom = computed_nom + sys->NodT[i]->Get_mIC(ICndx)/* * sys->NodT[i]-> Ph_Mass(PHndx)*/;
-        } else // other than aqueous phase
-            if ((objfun.exp_phase != keys::aqueous) && (PHndx >=0))
-            {
-                computed_nom = computed_nom + IC_in_PH[ICndx];
-            }
     }
 
-    // calculating denominator
-    for (unsigned int k = 0; k < denom.size(); ++k)
+    for (int d = 0; d < varStr.size(); d++)
     {
-        elem_name =  denom[k].c_str();
-        ICndx = sys->NodT[i]->IC_name_to_xDB(elem_name);
-        if (ICndx < 0)
-        {
-           cout << "Error: "<< elem_name <<" is not present in the " <<phase_name; exit(1);
-        }
-        if ( (objfun.exp_phase == keys::aqueous)&& (PHndx >=0))
-        {
-            computed_denom = computed_denom + sys->NodT[i]->Get_mIC(ICndx)/* * sys->NodT[i]-> Ph_Mass(PHndx)*/;
-        } else // other than aqueous phase
-            if ((objfun.exp_phase != keys::aqueous)&& (PHndx >=0))
-            {
-                computed_denom = computed_denom + IC_in_PH[ICndx];
-            }
+        parser.DefineVar(varStr[d], &varDbl[d]);
     }
+    computed_value = parser.Eval();
 
-    computed_value = computed_nom / computed_denom;
+    parser.ClearConst();
+    parser.ClearVar();
+
+
+//    computed_value = computed_nom / computed_denom;
     if (objfun.exp_unit == keys::log_molratio)
     {
         computed_value = log10(computed_value);
@@ -666,55 +663,6 @@ double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::ob
     return Weighted_Tfun_residual;
 }
 
-//interprets the molar fraction formula
-void interpretMR (vector<string> *nom, vector<string> *denom, string name)
-{
-    int pos_f2, pos_f1/*, pos_end*/;
-    string f1 = "+", f2 ="/", nominator, denominator, elem, temp_nom, temp_denom;
-
-    pos_f2 = name.find(f2);
-//    pos_end   = name.find(f2,pos_f2+1);
-
-    nominator = name.substr(0, pos_f2);
-    denominator = name.substr(pos_f2+1, (name.size()-1-pos_f2));
-
-    pos_f1 = nominator.find(f1);
-    if(pos_f1 == -1)
-    {
-        nom->push_back(nominator);
-    } else
-        while (pos_f1 != -1)
-        {
-            elem = nominator.substr(0, pos_f1);
-            temp_nom = nominator.substr(pos_f1+1, (nominator.size()-1-pos_f1));
-            nominator = temp_nom;
-            nom->push_back(elem);
-            pos_f1 = nominator.find(f1);
-            if(pos_f1 == -1)
-            {
-                nom->push_back(nominator);
-            }
-        }
-
-    pos_f1 = denominator.find(f1);
-    if(pos_f1 == -1)
-    {
-        denom->push_back(denominator);
-    } else
-        while (pos_f1 != -1)
-        {
-            elem = denominator.substr(0, pos_f1);
-            temp_denom = denominator.substr(pos_f1+1, (denominator.size()-1-pos_f1));
-            denominator = temp_denom;
-            denom->push_back(elem);
-            pos_f1 = denominator.find(f1);
-            if(pos_f1 == -1)
-            {
-                denom->push_back(denominator);
-            }
-        }
-}
-
 // calculates residual for phase properties
 double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj_fun &objfun, TGfitTask *sys)
 {
@@ -723,13 +671,15 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
     double computed_value = 0.0, measured_value= 0.0;
     double Tfun_residual = 0.0, Weighted_Tfun_residual, weight_ = 1.0;
     double ln_gama[40];
+    char ccPH;
 //    DATACH* dCH = sys->NodT[i]->pCSD();
 
     phase_name = objfun.exp_phase.c_str();
     PHndx = sys->NodT[i]->Ph_name_to_xDB(phase_name);
+    ccPH = sys->NodT[i]->xCH_to_ccPH(PHndx);
 // gpf->fout << "i=" << i << " p=" << p << " pp=" << pp << " j=" << j << " : ";
     // Get aqueous phase pH
-    if ((objfun.exp_CN == keys::pH)  && (objfun.exp_phase == keys::aqueous) && (PHndx >=0))
+    if ((objfun.exp_CN == keys::pH)  && (ccPH == *keys::aq) && (PHndx >=0))
     {
         if (objfun.exp_unit == keys::_loga)
         {
@@ -741,7 +691,7 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
         }
 
     } else //Get aqueous phase Eh
-    if ((objfun.exp_CN == keys::Eh) && (objfun.exp_phase == keys::aqueous) && (PHndx >=0))
+    if ((objfun.exp_CN == keys::Eh) && (ccPH == *keys::aq) && (PHndx >=0))
     {
         // Default
         computed_value = sys->NodT[i]->Get_Eh();
@@ -794,7 +744,7 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
             objfun.exp_unit = keys::g_cm3;
         }
     } else
-    if ((objfun.exp_CN == keys::pe) && (objfun.exp_phase == keys::aqueous) && (PHndx >=0))
+    if ((objfun.exp_CN == keys::pe) && (ccPH == *keys::aq) && (PHndx >=0))
     {
         if (objfun.exp_unit == keys::_loga)
         {
@@ -806,16 +756,48 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
             objfun.exp_unit == keys::_loga;
         }
     } else
-    if ((objfun.exp_CN == keys::IS) && (objfun.exp_phase == keys::aqueous) && (PHndx >=0))
+    if ((objfun.exp_CN == keys::IS) && (ccPH == *keys::aq) && (PHndx >=0))
     {
         // Default
         computed_value = sys->NodT[i]->Get_IC();
 
     } else
-    if ((objfun.exp_CN == keys::oscw) && (objfun.exp_phase == keys::aqueous) && (PHndx >=0))
+    if ((objfun.exp_CN == keys::oscw) && (ccPH == *keys::aq) && (PHndx >=0))
     {
     //  computed_value = ;
         // ++++++++++ !!!!! NOT IMPLEMENTED !!!! +++++
+    } else
+    if ((objfun.exp_CN == keys::mChainL) && (PHndx >=0))
+    {
+        vector<double> varDbl;
+
+        if (objfun.expr == "NULL")
+        {
+            cout << "An expression \"expr\" is needed to calculate the Chain Length. " << endl;
+            exit(1);
+        }
+
+        mu::Parser parser;
+        parser.SetExpr(objfun.expr);
+
+        vector<string> varStr;
+        parser.SetVarFactory(AddVariable, &varStr);
+        parser.GetUsedVar();
+
+        int DCndx = -1;
+
+        for (int d = 0; d < varStr.size(); d++)
+        {
+            DCndx = sys->NodT[i]->DC_name_to_xCH(varStr[d].c_str());
+            varDbl.push_back(sys->NodT[i]->Get_cDC(DCndx));
+        }
+
+        for (int d = 0; d < varStr.size(); d++)
+        {
+            parser.DefineVar(varStr[d], &varDbl[d]);
+        }
+        computed_value = parser.Eval();
+
     } else
     if ((objfun.exp_CN == keys::Gex ) && (PHndx >=0))  // functionality added by DK on 03.01.2014
     {
@@ -854,7 +836,7 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
     { if (PHndx < 0)
          {
              cout << "Error: "<< phase_name <<" is not present in the GEMS3K CSD files "; exit(1);
-         } else cout << "Error in target functions line 777 "; exit(1);
+         } else cout << "Error in target functions line 857 "; exit(1);
     }
 
     if ((p >= 0) && (pp >= 0))
@@ -1086,4 +1068,18 @@ double weight_phdcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFunction:
         return 1;
 }
 
+double* AddVariable(const char *a_szName, void *pUserData)
+{
+   double afValBuf[100];
+   int iVal = -1;
 
+  vector<string> *test = reinterpret_cast<vector<string> *>(pUserData);
+  iVal++;
+  test->push_back(a_szName);
+  afValBuf[iVal] = 0;
+
+  if (iVal>=99)
+    throw mu::ParserError("Variable buffer overflow.");
+  else
+    return &afValBuf[iVal];
+}

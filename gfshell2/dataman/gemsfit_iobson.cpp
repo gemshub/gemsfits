@@ -673,7 +673,7 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
             {
                 h_UMC = true;
             }
-            if ((headline[i]==expsample) || (headline[i]==expdataset) || (headline[i]==Tunit) || (headline[i]==Punit)|| (headline[i]==Vunit) || (headline[i]==Type))
+            if ((headline[i]==expsample) || (headline[i]==expdataset) || (headline[i]==Tunit) || (headline[i]==Punit)|| (headline[i]==Vunit) || (headline[i]==type) || (headline[i]==comment))
             {
                 bson_append_string(exp, headline[i].c_str(), row[i].c_str());
                 // for query
@@ -694,7 +694,16 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
             else if (headline[i]==sV)
             {
                 bson_append_double(exp, headline[i].c_str(), atof(row[i].c_str()));
-            } else if (headline[i] == Weight)
+            }
+            else if (headline[i]==type)
+            {
+                bson_append_string(exp, headline[i].c_str(), row[i].c_str());
+            }
+            else if (headline[i]==comment)
+            {
+                bson_append_string(exp, headline[i].c_str(), row[i].c_str());
+            }
+            else if (headline[i] == Weight)
             {
                 if (!row[i].empty())
                 {
@@ -924,7 +933,7 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
                                     ph_prop   = ph_prop_1.substr((0),(pos_start));
 
                                     // if property present
-                                    if (((ph_prop == Qnt) || (ph_prop == pH) || (ph_prop == pV) ||  (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) ||  (ph_prop == sArea) || (ph_prop == RHO) || (ph_prop == Gex) || (ph_prop == pe) || (ph_prop == oscw)) && (!row[j].empty()))
+                                    if (((ph_prop == Qnt) || (ph_prop == pH) || (ph_prop == pV) ||  (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) ||  (ph_prop == sArea) || (ph_prop == RHO) || (ph_prop == Gex) || (ph_prop == pe) || (ph_prop == oscw) || (ph_prop == mChainL)) && (!row[j].empty()))
                                     {
                                         h_phprop = true;
                                     }
@@ -963,9 +972,9 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
                                         ph_prop = headline[j].substr((pos_end+f1.length()),(headline[j].size()));
 
                                         // amount of the property of the phase in the experiment
-                                        if (((ph_prop == Qnt) || (ph_prop == pH) || (ph_prop == pV) ||  (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) ||  (ph_prop == sArea) || (ph_prop == RHO) || (ph_prop == Gex) || (ph_prop == pe) || (ph_prop == oscw)) && (!row[j].empty()))
+                                        if (((ph_prop == Qnt) || (ph_prop == pH) || (ph_prop == pV) ||  (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) ||  (ph_prop == sArea) || (ph_prop == RHO) || (ph_prop == Gex) || (ph_prop == pe) || (ph_prop == oscw) || (ph_prop == mChainL)) && (!row[j].empty()))
                                         {
-                                            if (((ph_prop == pH) || (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) || (ph_prop == pe) || (ph_prop == oscw)) && (phase_name != aqueous))
+                                            if (((ph_prop == pH) || (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) || (ph_prop == pe) || (ph_prop == oscw)) /*&& (phase_name != aqueous)*/)
                                             {
                                                 cout << ph_prop << " only works with aqueous phase (aq_gen)!"<< endl;
                                                 exit(1);
@@ -1038,7 +1047,7 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
                                         ph_prop   = ph_prop_3.substr((0),(pos_start));
 
                                         // qunatity of this comp in the phase
-                                        if (((ph_prop != Qnt) && (ph_prop_1 == Qnt) && (ph_prop_2 == IC) && (ph_prop != pH) && (ph_prop != pV) &&  (ph_prop != Eh) && (ph_prop != IS) && (ph_prop != all) &&  (ph_prop != sArea) && (ph_prop != RHO) && (ph_prop != Gex) && (ph_prop != pe) && (ph_prop != oscw)) && (strncmp(ph_prop.c_str(),"Dc", 2) != 0) && (!row[j].empty()))
+                                        if (((ph_prop != Qnt) && (ph_prop_1 == Qnt) && (ph_prop_2 == IC) && (ph_prop != pH) && (ph_prop != pV) &&  (ph_prop != Eh) && (ph_prop != IS) && (ph_prop != all) &&  (ph_prop != sArea) && (ph_prop != RHO) && (ph_prop != Gex) && (ph_prop != pe) && (ph_prop != oscw) && (ph_prop != mChainL)) && (strncmp(ph_prop.c_str(),"Dc", 2) != 0) && (!row[j].empty()))
                                         {
                                             ss << ic;
                                             sss = ss.str();

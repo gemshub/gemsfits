@@ -39,6 +39,8 @@
 #include <vector>
 #include <iostream>
 #include "gemsfit_task.h"
+#include <muParser.h>
+
 
 
 // Set new Gibbs free energy
@@ -239,17 +241,6 @@ double weight (int i, int p, int e, TGfitTask::TargetFunction::obj_fun &objfun, 
 */
 double weight_MR (int i, int p, int f, TGfitTask::TargetFunction::obj_fun &objfun, string type, TGfitTask *sys);
 
-
-/**
-* Returns two vectors of names of elements form the molar fraction formula
-* @param nom      vector of element names of the nominator
-* @param denom    vector of element names of the denominator
-* @param name     string representing the molar fraction formula e.g. "Na/Na+K"
-* @author DM
-* @date 17.08.2013
-*/
-void interpretMR (vector<string> *nom, vector<string> *denom, string name);
-
 /**
 * Returns the weight based on the weight type
 * @param i      position in the experiments vector (which experiment)
@@ -288,7 +279,7 @@ double weight_phdcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFunction:
 */
 double Tfunction (double computed_value, double measured_value, string type, TGfitTask::TargetFunction::obj_fun objfun);
 
-
+double* AddVariable(const char *a_szName, void *pUserData);
 
 
 #endif // GEMSFIT_TARGET_FUNCTIONS_H

@@ -32,7 +32,8 @@ static const char *usedatasets = "usedatasets"; ///                 1		     stri
 static const char *skipdatasets = "skipdatasets"; ///               1		     string		        ID of set of experimental data
 static const char *usedataset = "usedataset"; ///                 1		     string		        ID of set of experimental data
 static const char *skipdataset = "skipdataset"; ///               1		     string		        ID of set of experimental data
-static const char *Type = "Type";///
+static const char *type = "type";///
+static const char *comment = "comment";///
 static const char *Weight = "weight"; ///                         1          double             artificial assigned weight
 static const char *sT = "sT"; ///                                 1		     float		        temperature for this experimental sample
 static const char *Tunit = "Tunit"; ///   	                      1          string		        units of temperature { 'C' (default) or 'K' or 'F' }
@@ -96,7 +97,7 @@ static const char *expphases = "expphases"; ///	                  1    	     arr
         static const char *Gex = "Gex"; ///                     ->3          double             name of property - excess Gibbs energy of mixing in the phase
         static const char *oscw = "oscw"; ///
         static const char *pe = "pe"; ///
-
+        static const char *mChainL = "mChainL"; ///
 ///                       *Qnt = "Q";                             3       	 float		        quantity
 ///                       *Qerror = "Qerror";   	              3	         float 		        error
 ///                       *Qunit = "Qunit"; 	                  3  	     string 		    units of measurement of quantity
@@ -115,7 +116,7 @@ static const char *Trange = "Trange"; ///	                      1		     struct		
     static const char *Tmin = "Tmin"; ///	                      2	         float
     static const char *Tmax = "Tmax"; ///	                      2	         float
 static const char *reference = "reference"; ///	                  1	         string		        bib.reference(s) for the experimental dataset
-static const char *comment	= "comment"; ///	                  1	         string		        comment
+//static const char *comment	= "comment"; ///	                  1	         string		        comment
 static const char *file = "file"; ///	                          1		     string 		    file name(s), e.g. image, word,
 static const char *url = "url"; ///	                              1		     string 		    URL to source of experimental data on web
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -166,7 +167,7 @@ static const char *Fcoef = "Fcoef";
         static const char *Ptype = "Ptype"; ///
         static const char *Tforumla ="Tformula"; ///                        string              name of titrants
         static const char *Telem ="Telem"; ///                              string              name of elements
-
+        static const char *expr ="expr";
 
 
 // Name of Target Functions and weights
@@ -200,7 +201,7 @@ static const char *J_mol = "J/mol"; ///                                     stri
 static const char *kJ_mol = "kJ/mol"; ///                                   string              energy per mole, kJ/mol
 
 
-static const char *aqueous = "aq_gen"; ///
+static const char *aq = "a"; ///
 
 static const double mNaCl = 58.442308;
 static const double mNaOH = 39.997115;

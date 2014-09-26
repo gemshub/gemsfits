@@ -154,6 +154,7 @@ public:
             string Ptype;
             string Otype;
             vector<string> Tformula;
+            string expr;
             vector<string> Telem;
             double TuWeight;
             double weight;
