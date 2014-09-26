@@ -17,6 +17,10 @@ static const char *Qerror = "error";  ///                                       
 static const char *experiments = "experiments"; ///               0          collection         data for experimental samples
 // data for experimental samples
 static const char *expsample = "sample"; ///                      1		     string 	        ID of this experimental sample
+static const char *samplelist = "samplelist"; ///
+static const char *datasetlist = "datasetlist";
+static const char *SA = "SA";
+static const char *DS = "DS";
 static const char *samples = "samples";
 static const char *dataset = "dataset";
 static const char *usesamples = "usesamples";
@@ -28,7 +32,8 @@ static const char *usedatasets = "usedatasets"; ///                 1		     stri
 static const char *skipdatasets = "skipdatasets"; ///               1		     string		        ID of set of experimental data
 static const char *usedataset = "usedataset"; ///                 1		     string		        ID of set of experimental data
 static const char *skipdataset = "skipdataset"; ///               1		     string		        ID of set of experimental data
-static const char *Type = "Type";///
+static const char *type = "type";///
+static const char *comment = "comment";///
 static const char *Weight = "weight"; ///                         1          double             artificial assigned weight
 static const char *sT = "sT"; ///                                 1		     float		        temperature for this experimental sample
 static const char *Tunit = "Tunit"; ///   	                      1          string		        units of temperature { 'C' (default) or 'K' or 'F' }
@@ -92,7 +97,7 @@ static const char *expphases = "expphases"; ///	                  1    	     arr
         static const char *Gex = "Gex"; ///                     ->3          double             name of property - excess Gibbs energy of mixing in the phase
         static const char *oscw = "oscw"; ///
         static const char *pe = "pe"; ///
-
+        static const char *mChainL = "mChainL"; ///
 ///                       *Qnt = "Q";                             3       	 float		        quantity
 ///                       *Qerror = "Qerror";   	              3	         float 		        error
 ///                       *Qunit = "Qunit"; 	                  3  	     string 		    units of measurement of quantity
@@ -111,7 +116,7 @@ static const char *Trange = "Trange"; ///	                      1		     struct		
     static const char *Tmin = "Tmin"; ///	                      2	         float
     static const char *Tmax = "Tmax"; ///	                      2	         float
 static const char *reference = "reference"; ///	                  1	         string		        bib.reference(s) for the experimental dataset
-static const char *comment	= "comment"; ///	                  1	         string		        comment
+//static const char *comment	= "comment"; ///	                  1	         string		        comment
 static const char *file = "file"; ///	                          1		     string 		    file name(s), e.g. image, word,
 static const char *url = "url"; ///	                              1		     string 		    URL to source of experimental data on web
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -127,17 +132,20 @@ static const char *url = "url"; ///	                              1		     string
     // Reaction specific
     static const char *Ref = "Ref"; ///                                     string              reference for logK
     static const char *logK = "logK"; ///                                   double              reaction constant
-    static const char *rDC = "rDC";///                                      string              rection dependent component
+//    static const char *rDC = "rDC";///                                      string              reaction dependent component
     static const char *nC = "nC"; ///                                       integer             number of components involved in the reaction
                         // species
     static const char *RC = "RC"; ///                                       array               array of components names
     static const char *Rcoef = "Rcoef"; ///                                 array               array of reaction coeficients
-    static const char *order ="order"; ///                                  integer             order of the reactions
+    static const char *Rndx ="Rndx"; ///                                  integer             order of the reactions
     // Linked parameters
     static const char *LEs = "LEs"; ///                                     array               array of linked elements
     static const char *LE = "LE"; ///                                       string              linked element
     static const char *Lcoef = "Lcoef"; ///                                 array               array of linking coeficients
-// optimization specific
+static const char *FunList = "FunList";
+static const char *Ftype = "Ftype";
+static const char *Fcoef = "Fcoef";
+    // optimization specific
     static const int bperc = 10; ///                                        integer             default up/lo bound percentage of the parameters
 
 // keywords DatTarget
@@ -159,7 +167,7 @@ static const char *url = "url"; ///	                              1		     string
         static const char *Ptype = "Ptype"; ///
         static const char *Tforumla ="Tformula"; ///                        string              name of titrants
         static const char *Telem ="Telem"; ///                              string              name of elements
-
+        static const char *expr ="expr";
 
 
 // Name of Target Functions and weights
@@ -174,15 +182,16 @@ static const char *inverr_norm = "inverr_norm"; ///                         stri
 // Kaywords for units
 static const char *molal = "molal"; ///                                     string              molality moles/kg
 static const char *loga = "loga"; ///                                       string              log(activity)
-static const char *logm = "log_molal"; ///                                       string              log(molality)
+static const char *logm = "log_molal"; ///                                  string              log(molality)
 static const char *_loga = "-loga"; ///                                     string              -log(consntration) used for pH
 static const char *gram = "g"; ///                                          string              mass, grams
 static const char *kgram = "kg"; ///                                        string              mass, kg
 static const char *mole = "mole";  ///                                      string              amount, moles
 static const char *m3 = "m3"; ///                                           string              volume, m3
 static const char *cm3 = "cm3"; ///                                         string              volume, cm3
-static const char *Simolfrac = "simolfrac"; ///                             string              mole ratio to 1 mole of Si
+//static const char *Simolfrac = "simolfrac"; ///                             string              mole ratio to 1 mole of Si
 static const char *molratio = "molratio"; ///                               string              mole ratio
+static const char *log_molratio = "log_molratio";
 static const char *molfrac = "molfrac"; ///                                 string              mole fraction
 static const char *log_molfrac = "log_molfrac";
 static const char *ln_molfrac = "ln_molfrac";
@@ -192,6 +201,14 @@ static const char *J_mol = "J/mol"; ///                                     stri
 static const char *kJ_mol = "kJ/mol"; ///                                   string              energy per mole, kJ/mol
 
 
-static const char *aqueous = "aq_gen"; ///
+static const char *aq = "a"; ///
+
+static const double mNaCl = 58.442308;
+static const double mNaOH = 39.997115;
+static const double mKCl = 74.550840;
+static const double mKOH = 56.105647;
+static const double lg_to_ln = 2.302585093;
+static const double R_CONSTANT = 8.31451;
+
 }
 #endif // KEYWORDS_H
