@@ -534,76 +534,49 @@ void out_stat_param_txt_bson( fstream& ff, bson *obj, bool with_comments )
 
 ////-------------------------------------------------------------------------------------------------
 
-outField optimization_fields[26] =
-{
-    { "OptAlgo",  0, 0, 1, "\n# OptAlgo: specify algorithm: GN_ISRES | GN_ORIG_DIRECT | GN_ORIG_DIRECT_L | LN_COBYLA | LN_BOBYQA "},
-    { "OptThreads",  0, 0, 1, "\n# OptThreads: Comment"},
-    { "OptUpBounds",  0, 0, 1, "\n# OptUpBounds: Comment"},
-    { "OptLoBounds",  0, 0, 1, "\n# OptLoBounds: Comment"},
-    { "OptTolRel",  0, 0, 1, "\n# OptTolRel: stopping criterion -> specify relative tolerance (default = 1e-04) of function value"},
-    { "OptMaxEval",  0, 0, 1, "\n# OptMaxEval: specify max number of evaluations"},
-    { "OptUpConstraints",  0, 0, 1, "\n# OptUpConstraints: specify parameter vectors for constraint function"},
-    { "OptLoConstraints",  0, 0, 1, "\n# OptLoConstraints: Comment"},
-    { "OptConstraints",  0, 0, 1, "\n# OptConstraints:  Optimization: apply constraints (1=yes, 0=no)"},
+outField optimization_fields[14] =
+{   { "OptParameters",  0, 0, 1, "\n# OptParameters:    "},
     { "OptDoWhat",  0, 0, 1, "\n# OptDoWhat: perform optimization and statistics (0); only optimization with basic Statistics (1);"
-                             "\n#            only Statistics (2) with initial guesses as best fit parametters"},
-    { "OptTitration",  0, 0, 1, "\n# OptTitration: Adjusts the computed pH by changing NaOH or HCl amount to match the measured pH"
-                                "\n#               read from the database for each experiment"},
+       "\n#            only Statistics (2) with initial guesses as best fit parametters"},
+    { "OptEquilibrium",  0, 0, 1, "\n# OptEquilibrium: (1) Use full GEMS3K to calculate thermodynamic equilibrium. (0) Use TSolMod shortcut "
+                                   "\n#                  without calculating equilibrium (only fitting activity model parameters)"},
+    { "OptUserWeight",  0, 0, 1, "\n# OptUserWeight: (1) Use the weights provided in the \"weight\" column of the database. "},
     { "OptTuckey",  0, 0, 1, "\n# OptTuckey: (1) Use Tuckey Biweight for all data. (2) Use Tuckey Biweight for each OFUN independently. "},
     { "OptTuckeyVal",  0, 0, 1, "\n# OptTuckeyVal: Empirical chosen value that is multiplied with the median of residuals to get the "
       "\n# 		      weighting thereshold value C = Val * M. Default value 6. Residuals >C -> weight 0. "},
-    { "OptUserWeight",  0, 0, 1, "\n# OptUserWeight: (1) Use the weights provided in the \"weight\" column of the database. "},
-    { "OptTolAbs",  0, 0, 1, "\n# OptTolAbs: stopping criterion -> specify absolute tolerance (default = 1e-04) of function value"},
-    { "OptHybridTolRel",  0, 0, 1, "\n# OptHybridTolRel: Comment"},
-    { "OptHybridTolAbs",  0, 0, 1, "\n# OptHybridTolAbs: Comment"},
-    { "OptHybridMaxEval",  0, 0, 1, "\n# OptHybridMaxEval: Comment"},
-    { "OptEquilibrium",  0, 0, 1, "\n# OptEquilibrium: (1) Use full GEMS3K to calculate thermodynamic equilibrium. (0) Use TSolMod shortcut "
-                                  "\n#                  without calculating equilibrium (only fitting activity model parameters)"},
-    { "OptNmultistart",  0, 0, 1, "\n# OptNmultistart: Comment"},
-    { "OptPerturbator",  0, 0, 1, "\n# OptPerturbator: The delta/difference used to to calculate the d(function_value)/d(parameter_value) gradient"},
+    { "OptAlgo",  0, 0, 1, "\n# OptAlgo: specify algorithm: GN_ISRES | GN_ORIG_DIRECT | GN_ORIG_DIRECT_L | LN_COBYLA | LN_BOBYQA "},
+    { "OptBoundPerc",  0, 0, 1, "\n# OptBoundPerc: Generate bounds from initial guess vector: specify percentage deviation "
+                                "\n#               (user-specific, user-defined bounds when set to -1)"},
+    { "OptTolRel",  0, 0, 1, "\n# OptTolRel: stopping criterion -> specify relative tolerance (default = 1e-06) of function value"},
+    { "OptTolAbs",  0, 0, 1, "\n# OptTolAbs: stopping criterion -> specify absolute tolerance (default = 1e-06) of function value"},
+    { "OptMaxEval",  0, 0, 1, "\n# OptMaxEval: specify max number of evaluations"},
     { "OptInitStep",  0, 0, 1, "\n# OptInitStep: specify initial stepsize for local minimizers "
                                "\n#              (factor will be multiplied to all optimization parameters); 0 => use default"},
-    { "OptScaleParam",  0, 0, 1, "\n# OptScaleParam: Comment"},
     { "OptNormParam",  0, 0, 1, "\n# OptNormParam: Normalize bounds/constraints/fitting parameters with the initial guess vector"},
-    { "OptBoundPerc",  0, 0, 1, "\n# OptBoundPerc: Generate bounds from initial guess vector: specify percentage deviation "
-                                "\n#               (user-specific, user-defined bounds when set to -1)"}
+    { "OptPerturbator",  0, 0, 1, "\n# OptPerturbator: The delta/difference used to to calculate the d(function_value)/d(parameter_value) gradient"}
 };
 
 typedef enum {  /// Field index into outField structure
-    f_OptAlgo= 0,
-    f_OptThreads,
-    f_OptUpBounds,
-    f_OptLoBounds,
-    f_OptTolRel,
-    f_OptMaxEval,
-    f_OptUpConstraints,
-    f_OptLoConstraints,
-    f_OptConstraints,
+    f_OptParameters = 0,
     f_OptDoWhat,
-    f_OptTitration,
+    f_OptEquilibrium,
+    f_OptUserWeight,
     f_OptTuckey,
     f_OptTuckeyVal,
-    f_OptUserWeight,
+    f_OptAlgo,
+    f_OptBoundPerc,
+    f_OptTolRel,
     f_OptTolAbs,
-    f_OptHybridTolRel,
-    f_OptHybridTolAbs,
-    f_OptHybridMaxEval,
-    f_OptEquilibrium,
-//    f_OptHybridMode,
-    f_OptNmultistart,
-    f_OptPerturbator,
+    f_OptMaxEval,
     f_OptInitStep,
-    f_OptScaleParam,
     f_OptNormParam,
-    f_OptBoundPerc
-
+    f_OptPerturbator,
 } optimization_FIELDS;
-
 
 ///// Writes  structure to  the GEMSFIT configuration file
 void out_nlopt_param_txt_bson( fstream& ff, bson *obj, bool with_comments )
 {
-    TPrintArrays  prar(24, optimization_fields, ff);
+    TPrintArrays  prar(14, optimization_fields, ff);
     if(with_comments )
     {
         ff << "\n\n#########################################################################" << endl;
@@ -611,6 +584,7 @@ void out_nlopt_param_txt_bson( fstream& ff, bson *obj, bool with_comments )
         ff << "#########################################################################" << endl;
     }
 
+    prar.writeArrayFromBson( f_OptParameters,  obj, 0L, with_comments);
     prar.writeArrayFromBson( f_OptDoWhat,  obj, 0L, with_comments);
     prar.writeArrayFromBson( f_OptEquilibrium,  obj, 0L, with_comments);
     prar.writeArrayFromBson( f_OptUserWeight,  obj, 0L, with_comments);
@@ -974,7 +948,7 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
                                         // amount of the property of the phase in the experiment
                                         if (((ph_prop == Qnt) || (ph_prop == pH) || (ph_prop == pV) ||  (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) ||  (ph_prop == sArea) || (ph_prop == RHO) || (ph_prop == Gex) || (ph_prop == pe) || (ph_prop == oscw) || (ph_prop == mChainL)) && (!row[j].empty()))
                                         {
-                                            if (((ph_prop == pH) || (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) || (ph_prop == pe) || (ph_prop == oscw)) /*&& (phase_name != aqueous)*/)
+                                            if (((ph_prop == pH) || (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) || (ph_prop == pe) || (ph_prop == oscw)) && (phase_name != aq))
                                             {
                                                 cout << ph_prop << " only works with aqueous phase (aq_gen)!"<< endl;
                                                 exit(1);
@@ -1260,6 +1234,8 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
                                                     //++ END dcompprop array
                                                     bson_append_finish_array(exp);
                                                 } //++ END if h_dcomp
+                                                // end dcomp onject
+                                                bson_append_finish_array(exp);
                                             } // END comparison to check fo unique dcomps
                                             ph_old = phase_name;
                                         } // search for "DC" indicator of dependent component entry in the csv headline
@@ -1271,6 +1247,7 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
                             bson_append_finish_array(exp);
                         } h_phDC = false;
                         // end object in the array phases
+                        dcc = 0;
                         bson_append_finish_object(exp); //++ END phase object ++
                     } // END if h_phases
                 } // END ph_new != ph_old
