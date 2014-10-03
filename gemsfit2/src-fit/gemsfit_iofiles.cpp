@@ -1514,14 +1514,15 @@ gpf->flog << " : " << format << endl;
             }while(test_ss);
             test.pop_back();
 
-            if ((test.size() != size*nr_reac) && (test[0] != 0) )
+            if ((test.size() != size*nr_reac) && (test.size() != 0) )
             {
+                if (test.at(0) != 0) {
                 cout << "Number of logk's doesn't correspond to number of T*P*reactions! " << endl;
                 cout << "You need " << size*nr_reac << " <logK> entries in the input file, you have " << test.size() << endl;
-                exit(1);
+                exit(1);}
             }
 
-            if (test[0] != 0)
+            if ((test.size() != 0) && (test.at(0) != 0))
             do
             {
                 for (int i = 0; i<nr_reac; ++i)

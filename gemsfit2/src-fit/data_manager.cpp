@@ -444,6 +444,7 @@ cout << DBname.c_str() << endl;
 
         uint32_t count;
         TCLIST *res = ejdbqryexecute(coll, q2, &count, 0, NULL);
+        cout << "Records found: "<< count << endl;
         fprintf(stderr, "Records found: %d\n", count);
 
          // adding data into Data_manager storage class
