@@ -201,7 +201,7 @@ static const char *J_mol = "J/mol"; ///                                     stri
 static const char *kJ_mol = "kJ/mol"; ///                                   string              energy per mole, kJ/mol
 
 
-static const char *aq = "a"; ///
+static const char *aq = "aq_gen"; ///
 
 static const double mNaCl = 58.442308;
 static const double mNaOH = 39.997115;
