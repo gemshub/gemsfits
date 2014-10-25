@@ -280,46 +280,38 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 
     int np = optv_.size();
 
-    for(unsigned i=0; i< optv_.size(); i++ ) // cols
+//    for(unsigned i=0; i< optv_.size(); i++ ) // cols
+//    {
+    for (unsigned e =0; e < gfittask->Opti->optParam.size(); e++)
     {
-        // Print optimized parameter values to file
-        fitparam.push_back(new parameters);
-        if (gfittask->Opti->Ptype[i] == "G0")
+        for (unsigned i=0; i<gfittask->Opti->optParam[e]->Get_optFPsize(); ++i)
         {
-            fitparam[i]->Ptype = gfittask->Opti->Ptype[i];
-            fitparam[i]->Pfittype = "F";
-            fitparam[i]->Pname = gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]);
-            fitparam[i]->Fval = optv_[i];
-            fitparam[i]->Ival = gfittask->Opti->optv0[i];
-            fitparam[i]->CSS = 0.0;
-            fitparam[i]->mc95 = 0.0;
-            fitparam[i]->mcSTDEV = 0.0;
+            // Print optimized parameter values to file
+            fitparam.push_back(new parameters);
 
-        } else
-        {
-            fitparam[i]->Ptype = gfittask->Opti->Ptype[i];
+            fitparam[i]->Ptype = gfittask->Opti->optParam[e]->Get_optType();
             fitparam[i]->Pfittype = "F";
-            stringstream ss;
-            ss << gfittask->Opti->Pindex[i];
-            fitparam[i]->Pname = ss.str();
-            fitparam[i]->Fval = optv_[i];
-            fitparam[i]->Ival = gfittask->Opti->optv0[i];
+
+            gfittask->Opti->optParam[e]->Get_Fparam(i, fitparam[i]->Pname,
+                    fitparam[i]->Ival, fitparam[i]->Fval);
             fitparam[i]->CSS = 0.0;
             fitparam[i]->mc95 = 0.0;
             fitparam[i]->mcSTDEV = 0.0;
         }
-
     }
-    if (gfittask->Opti->h_RDc)
+
+//    }
+
+    for (unsigned e =0; e < gfittask->Opti->optParam.size(); e++)
     {
-        for (unsigned i=0; i<gfittask->Opti->reactions.size(); ++i)
+        for (unsigned i=0; i<gfittask->Opti->optParam[e]->Get_optRPsize(); ++i)
         {
             fitparam.push_back(new parameters);
-            fitparam[np+i]->Ptype = "G0";
+            fitparam[np+i]->Ptype = gfittask->Opti->optParam[e]->Get_optType();
             fitparam[np+i]->Pfittype = "R";
-            fitparam[np+i]->Pname = gfittask->Opti->reactions[i]->DCn;
-            fitparam[np+i]->Fval = gfittask->Opti->reactions[i]->std_gibbs;
-            fitparam[np+i]->Ival = gfittask->Opti->reactions[i]->Ival;
+
+            gfittask->Opti->optParam[e]->Get_Rparam(i, fitparam[np+i]->Pname,
+                    fitparam[np+i]->Ival, fitparam[np+i]->Fval);
             fitparam[np+i]->CSS = 0.0;
             fitparam[np+i]->mc95 = 0.0;
             fitparam[np+i]->mcSTDEV = 0.0;
@@ -327,16 +319,16 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         }
     }
     np = fitparam.size();
-    if (gfittask->Opti->h_Lp)
+    for (unsigned e =0; e < gfittask->Opti->optParam.size(); e++)
     {
-        for (unsigned i=0; i<gfittask->Opti->Lparams.size(); ++i)
+        for (unsigned i=0; i<gfittask->Opti->optParam[e]->Get_optLPsize(); ++i)
         {
             fitparam.push_back(new parameters);
-            fitparam[np+i]->Ptype = "bIC";
+            fitparam[np+i]->Ptype = gfittask->Opti->optParam[e]->Get_optType();
             fitparam[np+i]->Pfittype = "L";
-            fitparam[np+i]->Pname = gfittask->Opti->Lparams[i]->name;
-            fitparam[np+i]->Fval = gfittask->Opti->Lparams[i]->EV;
-            fitparam[np+i]->Ival = gfittask->Opti->Lparams[i]->IV;
+
+            gfittask->Opti->optParam[e]->Get_Lparam(i, fitparam[np+i]->Pname,
+                    fitparam[np+i]->Ival, fitparam[np+i]->Fval);
             fitparam[np+i]->CSS = 0.0;
             fitparam[np+i]->mc95 = 0.0;
             fitparam[np+i]->mcSTDEV = 0.0;
@@ -787,9 +779,15 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
 
         gpf->fsens << "sample,";
 
+        int n_Rparam = 0;
+        for (unsigned e = 0; e<gfittask->Opti->optParam.size(); e++)
+        {
+            n_Rparam += gfittask->Opti->optParam[e]->Get_optRPsize();
+        }
+
         for (k = 0; k<gfittask->Tfun->objfun.size(); k++)
         {
-            for (i=0; i < (fitparam.size() - gfittask->Opti->reactions.size()) ; i++)
+            for (i=0; i < (fitparam.size() - n_Rparam) ; i++)
             {
                 gpf->fsens << gfittask->Tfun->objfun[k].exp_phase + "." + gfittask->Tfun->objfun[k].exp_CN;
                 gpf->fsens << ".param." << i <<",";
@@ -1068,7 +1066,13 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
     if( gpf->fmc.fail() )
     { cout<<"Fit Monte Carlo fileopen error"<<endl; exit(1); }
 
-    int n_Rparam = gfittask->Opti->reactions.size();
+    int n_Rparam = 0;
+    for (unsigned e = 0; e<gfittask->Opti->optParam.size(); e++)
+    {
+        n_Rparam += gfittask->Opti->optParam[e]->Get_optRPsize();
+    }
+
+//     = gfittask->Opti->reactions.size();
 
     scatter_v.resize(number_of_measurements);
     MC_computed_v.resize(number_of_measurements);
@@ -1195,7 +1199,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
 
         optv_ = optv_backup;
         // always staring form the fitted parameters
-        gfittask->Opti->opt = optv_backup;
+        gfittask->Opti->optv_0 = optv_backup;
 //        optv_ = gfittask->Opti->opt;
 
         gfittask->Ainit_optim( optv_ ); //, sum_of_squares_MC);
@@ -1210,10 +1214,19 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
         }
 
         // Store reaction parameters
-        for ( j=0; j<n_Rparam; ++j)
+        string name; double IV, EV;
+        j=0;
+
+        for (unsigned e = 0; e<gfittask->Opti->optParam.size(); e++)
         {
-            MCR_fitted_parameters_all[ id ][ j ] = gfittask->Opti->reactions[j]->std_gibbs;
+            for (unsigned r = 0; r< gfittask->Opti->optParam[e]->Get_optRPsize(); r++)
+            {
+                gfittask->Opti->optParam[e]->Get_Rparam(r, name, IV, EV );
+                MCR_fitted_parameters_all[ id ][ j ] = EV;
+                j++;
+            }
         }
+
 
 
         // loop over systems and subtract MC scatter to retain the original measurement data

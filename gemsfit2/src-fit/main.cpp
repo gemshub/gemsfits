@@ -137,7 +137,7 @@ int main( int argc, char *argv[] )
         stat.print_param();
         gfittask->print_global_results( );
     }   
-    if (gfittask->Opti->h_nestfun)
+    if (gfittask->Opti->h_optNF)
     gfittask->print_nested_results();
 
     delete gfittask;

@@ -33,28 +33,26 @@
 
 
 #include "optimization.h"
+#include "json_parse.h"
+#include "keywords.h"
+
 
 optimization::optimization()
 {
+    h_optNF = false;
     constraint_data = new my_constraint_data;
-    // assigining the vector that stores the optimized parameters
-    optv = opt;
-
-    OptUpBounds = UB;
-    OptLoBounds = LB;
 
     OptTuckey = 0;
 
     gpf->flog << "09. optimization.cpp(48). Reading NLopt optimization settings from the input file; " << endl;
-    define_nlopt_param();
-    get_nlopt_param_txt( optv );
 
-    //soring out the global paramaters vs the paramaters used in the dynamic functions
-    // the nested_optv object is populated
-    if (h_nestfun)
-    {
-        sort_nestfun_param();
-    }
+    define_nlopt_param();
+
+    get_nlopt_param_txt( );
+
+    OptParameterCreate();
+
+    GetParameters ();
 
     if (OptBoundPerc > 0.)
     {
@@ -62,6 +60,322 @@ optimization::optimization()
         LB = OptLoBounds;
     }
 }
+
+void optimization::OptParameterCreate ()
+{
+    unsigned  p = 0;
+    vector<string> out;
+
+    OptParameter* myOPT = 0;
+
+    // call GEM_init to read GEMS3K input files
+    TNode* node  = new TNode();
+
+    // call GEM_init     --> read in input files
+    if( (node->GEM_init( GEMSsys.c_str() )) == 1 )
+       {
+           cout << GEMSsys << endl;
+           cout<<" .. ERROR occurred while reading GEMS3K input files !!! ..."<<endl;
+           exit(1);
+       }
+
+    //OFUN parameters
+    // NFUN parameters
+    parse_JSON_object(OptParameters, "G0", out);
+    if (out.size() > 0)
+    {
+        Opt_G0* myPT = new Opt_G0( out, OptBoundPerc, p );
+        myPT->SetIndex_param(node);
+        myOPT = (Opt_G0*)myPT;
+    }
+    if(myOPT) { optParam.push_back( myOPT ); myOPT = 0; };
+    out.clear();
+
+
+    // NFUN parameters
+    parse_JSON_object(NFunParameters, "bIC", out);
+    if (out.size() > 0)
+    {
+        Opt_bIC* myPT = new Opt_bIC( out, OptBoundPerc, p );
+        myPT->SetIndex_param(node);
+        myOPT = (Opt_bIC*)myPT;
+    }
+    if(myOPT) { optNFParam.push_back( myOPT ); myOPT = 0; };
+    out.clear();
+
+    parse_JSON_object(NFunParameters, "TK", out);
+    if (out.size() > 0)
+    {
+        Opt_Tk* myPT = new Opt_Tk( out, OptBoundPerc, p );
+        myPT->SetIndex_param( );
+        myOPT = (Opt_Tk*)myPT;
+    }
+    if(myOPT) { optNFParam.push_back( myOPT ); myOPT = 0; };
+    out.clear();
+
+    parse_JSON_object(NFunParameters, "P", out);
+    if (out.size() > 0)
+    {
+        Opt_P* myPT = new Opt_P( out, OptBoundPerc, p );
+        myPT->SetIndex_param( );
+        myOPT = (Opt_P*)myPT;
+    }
+    if(myOPT) { optNFParam.push_back( myOPT ); myOPT = 0; };
+    out.clear();
+}
+
+void optimization::GetParameters ()
+{
+    vector<double> opt_, UB_, LB_;
+    for (unsigned i = 0; i <optParam.size(); i++)
+    {
+        optParam[i]->Get_IVparam(opt_, UB_, LB_);
+    }
+
+    optv0 = opt_; UB = UB_; LB=LB_;
+
+    optv_0 = optv0;
+    optv = optv0;
+
+    OptUpBounds = UB;
+    OptLoBounds = LB;
+}
+
+//void optimization::get_OptParameters ( )
+//{
+//    vector<string> out, out2;
+//    int p = -1;
+//    optimization::F_parameter optF; optimization::R_parameter optR;
+//    /*optimization::L_parameter optL;*/ optimization::S_parameter optS;
+//    optF.Pclass =""; optF.UB = 0.0;
+//    optF.LB = 0.0; optF.opt = 0.0; optF.Pindex = -1;
+//    optR.DCn=""; optR.DCndx = -1; optR.Ival = 0.0;
+//    optR.nC = 0; optR.std_gibbs = 0.0;
+//    optS.Pclass = ""; optS.Pindex = -1; optS.Pval = 0.0;
+
+//    // call GEM_init to read GEMS3K input files
+//    TNode* node  = new TNode();
+
+//    // call GEM_init     --> read in input files
+//    if( (node->GEM_init( GEMSsys.c_str() )) == 1 )
+//       {
+//           cout << GEMSsys << endl;
+//           cout<<" .. ERROR occurred while reading GEMS3K input files !!! ..."<<endl;
+//           exit(1);
+//       }
+
+//    // G0 of dependent components
+//    parse_JSON_object(OptParameters, "G0", out);
+//    for (unsigned int i = 0 ; i < out.size() ; i++)
+//    {
+//        p++;
+//        parse_JSON_object(out[i], keys::ptype, out2);
+
+//        if (out2.size() !=1) { cout << "Parameter " << p+1 << " has no \"ptype\" defined! "<< endl; exit(1); }
+//        // independent optimized parameters
+//        if (out2[0] == "F")
+//        {
+//            out2.clear();
+//            optF.Pclass = "G0";
+//            Pval_to_optF (optPF.size(), out[i], optF);
+
+//            parse_JSON_object(out[i], keys::DCN, out2);
+//            if (out2.size() !=1) { cout << "Parameter \"F\"-type " << optPF.size()+1 << " has no \"DCN\" defined! "<< endl; exit(1); }
+//            optF.Pindex = node->DC_name_to_xCH(out2[0].c_str());
+
+//            optPF.push_back(optF);
+
+//        }
+//        if (out2[0] == "R")
+//        {
+//            out2.clear();
+//            optR.Pclass = "G0";
+//            Pval_to_optR (optPR.size(), out[i], optR);
+//            optR.DCndx = node->DC_name_to_xCH(optR.DCn.c_str());
+
+//            optPR.push_back(optR);
+
+//            optR.rdc_species.clear();
+//            optR.rdc_species_coef.clear();
+
+//            h_optR = true;
+//        }
+//        if (out2[0] == "S")
+//        {
+//            out2.clear();
+//            optS.Pclass = "G0";
+//            parse_JSON_object(out[i], keys::DCN, out2);
+//            if (out2.size() !=1) { cout << "Parameter \"S\"-type " << optPS.size()+1 << " has no \"DCN\" defined! "<< endl; exit(1); }
+//            optS.Pindex = node->DC_name_to_xCH(out2[0].c_str());
+//            out2.clear();
+//            parse_JSON_object(out[i], keys::spec, out2);
+//            if (out2.size() !=1) { cout << "Parameter \"S\"-type " << optPS.size()+1 << " has no \"spec\" initial value defined! "<< endl; exit(1); }
+//            optS.Pval = atof(out2[0].c_str());
+
+//            optPS.push_back(optS);
+
+
+//        }
+//        out2.clear();
+//    }
+//    out.clear();
+
+
+
+//    DATACH* dCH = node->pCSD();
+//    long int PHndx = -1, IPndx = -1, IPCndx = -1, index = 0, DCndx = -1, nDC = dCH->nDC, nDCPH = 0, nDCPH_=0, DCndx_ = -1;
+//    long int *LsMod = node->Get_LsMod();
+//    long int *LsMdc = node->Get_LsMdc();
+
+//    // PMc
+//    parse_JSON_object(OptParameters, "PMc", out);
+//    for (unsigned int i = 0 ; i < out.size() ; i++)
+//    {
+//        p++;
+//        parse_JSON_object(out[i], keys::EPH, out2);
+//        if (out2.size() !=1) { cout << "Parameter PMc " << i << " has no \"EPH\" defined! "<< endl; exit(1); }
+//        PHndx = node->Ph_name_to_xCH(out2[0].c_str());
+//        out2.clear();
+//        parse_JSON_object(out[i], "IPndx", out2);
+//        if (out2.size() !=1) { cout << "Parameter PMc " << i << " has no \"IPndx\" defined! "<< endl; exit(1); }
+//        IPndx = atoi(out2[0].c_str());
+//        out2.clear();
+//        parse_JSON_object(out[i], "IPCndx", out2);
+//        if (out2.size() !=1) { cout << "Parameter PMc " << i << " has no \"IPCndx\" defined! "<< endl; exit(1); }
+//        IPCndx = atoi(out2[0].c_str());
+//        out2.clear();
+
+//        // Function to determine the parameter index
+//        int x=0;
+//        for (unsigned j = 0; j <= PHndx; j++)
+//        {
+//            index += LsMod[x+j]*LsMod[x+j+2];
+//            x +=2;
+//        }
+//        index = index - ( (LsMod[PHndx*3] - IPndx - 1)*LsMod[PHndx*3+2] + LsMod[PHndx*3+2] - IPCndx ); // gets the PMc index
+
+//        parse_JSON_object(out[i], keys::ptype, out2);
+//        if (out2.size() !=1) { cout << "Parameter " << p+1 << " has no \"ptype\" defined! "<< endl; exit(1); }
+//        if (out2[0] == "F")
+//        {
+//            out2.clear();
+//            optF.Pclass = "PMc";
+//            Pval_to_optF (optPF.size(), out[i], optF);
+//            optF.Pindex = index;
+//            optPF.push_back(optF);
+
+
+//        } else
+//        if (out2[0] == "S")
+//        {
+//            out2.clear();
+//            optS.Pclass = "PMc";
+//            optS.Pindex = index;
+//            out2.clear();
+//            parse_JSON_object(out[i], keys::spec, out2);
+//            if (out2.size() !=1) { cout << "Parameter \"S\"-type " << i << " has no \"spec\" initial value defined! "<< endl; exit(1); }
+//            optS.Pval = atof(out2[0].c_str());
+//            optPS.push_back(optS);
+//        }
+//        out2.clear();
+//        index = 0;
+//    }
+//    out.clear();
+
+//    parse_JSON_object(OptParameters, "DMc", out);
+//    for (unsigned int i = 0 ; i < out.size() ; i++)
+//    {
+//        p++;
+
+//        parse_JSON_object(out[i], keys::EPH, out2);
+//        if (out2.size() !=1) { cout << "Parameter \"F\"-type " << optPF.size()+1 << " has no \"EPH\" defined! "<< endl; exit(1); }
+//        PHndx = node->Ph_name_to_xCH(out2[0].c_str());
+//        out2.clear();
+
+//        parse_JSON_object(out[i], keys::DCN, out2);
+//        if (out2.size() !=1) { cout << "Parameter \"F\"-type " << optPF.size()+1 << " has no \"DCN\" defined! "<< endl; exit(1); }
+//        DCndx = node->DC_name_to_xCH(out2[0].c_str());;
+//        out2.clear();
+
+//        DCndx_ = node->PhtoDC_DCH(PHndx, nDCPH); // returns the index of the first DC in the phase and the number of DC in the pahse.
+
+//        int x =0;
+//        for (unsigned j=0; j<PHndx; j++)
+//        {
+//            node->PhtoDC_DCH(j, nDCPH_);
+//            index += LsMdc[j+x]*nDCPH_;
+//            x +=2;
+//        }
+//        index = index + (DCndx - DCndx_);
+
+//        parse_JSON_object(out[i], keys::ptype, out2);
+//        if (out2.size() !=1) { cout << "Parameter " << p+1 << " has no \"ptype\" defined! "<< endl; exit(1); }
+//        if (out2[0] == "F")
+//        {
+//            out2.clear();
+//            optF.Pclass = "DMc";
+//            Pval_to_optF (optPF.size(), out[i], optF);
+//            optF.Pindex = index;
+//            optPF.push_back(optF);
+//        } else
+//        if (out2[0] == "S")
+//        {
+//            out2.clear();
+//            optS.Pclass = "DMc";
+//            optS.Pindex = index;
+//            out2.clear();
+//            parse_JSON_object(out[i], keys::spec, out2);
+//            if (out2.size() !=1) { cout << "Parameter \"S\"-type " << i << " has no \"spec\" initial value defined! "<< endl; exit(1); }
+//            optS.Pval = atof(out2[0].c_str());
+//            optPS.push_back(optS);
+//        }
+//        out2.clear();
+//        index = 0;
+//    }
+
+//    // bIC
+//    parse_JSON_object(OptParameters, "bIC", out);
+//    for (unsigned int i = 0 ; i < out.size() ; i++)
+//    {
+//        p++;
+//        parse_JSON_object(out[i], keys::ptype, out2);
+//        if (out2.size() !=1) { cout << "Parameter " << p+1 << " has no \"ptype\" defined! "<< endl; exit(1); }
+//        if (out2[0] == "F")
+//        {
+//            out2.clear();
+//            optF.Pclass = "bIC";
+//            Pval_to_optF (this->optPF.size(), out[i], optF);
+
+//            parse_JSON_object(out[i], keys::ICN, out2);
+//            if (out2.size() !=1) { cout << "Parameter \"F\"-type " << this->optPF.size()+1 << " has no \"ICN\" defined! "<< endl; exit(1); }
+//            optF.Pindex = node->IC_name_to_xCH(out2[0].c_str());
+
+//            this->optPF.push_back(optF);
+//        }
+//        if (out2[0] == "L")
+//        {
+//            out2.clear();
+//            optL.Pclass = "bIC";
+//            Pval_to_optL (this->optPL.size(), out[i], optL);
+//            optL.index = node->IC_name_to_xCH(optL.name.c_str());
+
+//            this->optPL.push_back(optL);
+//            optL.L_param.clear();
+//            optL.L_coef.clear();
+
+
+//        }
+//        out2.clear();
+//    }
+//    out.clear();
+
+
+//    get_optR_indexes(node, this->optPR);
+
+//    out.clear();
+
+//}
+
 
 optimization::~optimization()
 {
@@ -115,43 +429,6 @@ void optimization::normalize_params(const vector<double> initguesses , bool Norm
     }
 }
 
-void optimization::sort_nestfun_param()
-{
-    int Nparam2 = optv.size();
-
-    nest_optv.Lparams = Lparams;
-    Lparams.clear();
-
-    for (int i = 0; i<Nparam2; i++)
-    {
-        if ((Ptype[i] == "bIC") || (Ptype[i] == "TK") || (Ptype[i] == "P"))
-        {
-            nest_optv.LB.push_back(LB[i]);
-            LB.erase(LB.begin() + i);
-
-            nest_optv.Pindex.push_back(Pindex[i]);
-            Pindex.erase(Pindex.begin() + i);
-
-            nest_optv.Ptype.push_back(Ptype[i]);
-            Ptype.erase(Ptype.begin() + i);
-
-            nest_optv.UB.push_back(UB[i]);
-            UB.erase(UB.begin() + i);
-
-            nest_optv.opt.push_back(opt[i]);
-            opt.erase(opt.begin() + i);
-
-            nest_optv.optv0.push_back(optv0[i]);
-            optv0.erase(optv0.begin() + i);
-
-            OptLoBounds.erase(OptLoBounds.begin() + i);
-            OptUpBounds.erase(OptUpBounds.begin() + i);
-            optv.erase(optv.begin() + i);
-            Nparam2--; i--;
-        }
-    }
-}
-
 
 // NLopt return codes
 void optimization::print_return_message( const int result )
@@ -193,3 +470,4 @@ void optimization::print_return_message( const int result )
             break;
     }
 }// end print_return_message
+

@@ -41,6 +41,7 @@
 #include "s_solmod.h"
 #include "s_formula.h"
 #include <memory>
+#include "json_parse.h"
 
 
 #ifndef __unix
@@ -69,6 +70,7 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
         EXPndx.push_back(-1);COMPndx.push_back(-1);PHndx.push_back(-1);PHPndx.push_back(-1);
         iNa.push_back(0.0); iO.push_back(0.0); iH.push_back(0.0); iCl.push_back(0.0); NEFndx.push_back(-1);
         vPAndx.push_back( new vect);
+        vEAndx.push_back( new vect);
     }
     h_grad = false;
 
@@ -115,7 +117,14 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
         calc_logK_TP ();
     }
     get_logK_TPpairs ();
-    get_Lparams_delta ();
+
+    for (unsigned e=0; e < Opti->optParam.size(); e++)
+    {
+        Opti->optParam[e]->Set_TPpairs(this->TP_pairs);
+    }
+
+    get_Lparams_delta (); // change
+
     set_fixed_parameters();
 
     // check for errors and inconsitencies of input options and parameters
@@ -137,11 +146,7 @@ void TGfitTask::gfit_error ( )
     if (Tfun->nestfun.size() > 0)
     {
         h_nestfun = true;
-
-    for (unsigned int i=0; i<Opti->nest_optv.opt.size(); ++i)
-    {
-        if ((Opti->nest_optv.Ptype[i] == "bIC") || (Opti->nest_optv.Ptype[i] == "TK") || (Opti->nest_optv.Ptype[i] == "P"))  h_param_nestfun = true;
-    }
+    if ( Opti->optNFParam.size() > 0)  h_param_nestfun = true;
 
     if (!(h_nestfun == h_param_nestfun))
     {
@@ -158,12 +163,11 @@ void TGfitTask::gfit_error ( )
     }
     }
 
-    if (this->Opti->opt.size() == 0)
+    if ((this->Opti->optParam.size() == 0) && (!h_nestfun))
     {
         cout << "No parameters were marked (correctly marked) for optimization! " << endl;
         exit (1);
     }
-
 }
 
 void TGfitTask::run_optim()
@@ -174,7 +178,7 @@ void TGfitTask::run_optim()
     init_optim (Opti->optv, weighted_Tfun_sum_of_residuals);
     else
     {
-        if (Opti->h_nestfun)
+        if (Opti->h_optNF) // if nested function
         {
             string old = Tfun->type;               // storing the old type of target function
             Tfun->type = "abs_dif";                // seeting the target function to simple abslute difference
@@ -427,7 +431,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
       {
           for( i=0; i<Opti->optv.size(); i++ )
               {
-                  optv_[i] = Opti->optv[i] * fabs(Opti->opt[i]);
+                  optv_[i] = Opti->optv[i] * fabs(Opti->optv_0[i]);
               }
       }
 }
@@ -947,7 +951,7 @@ void TGfitTask::get_DataTarget ( )
     parse_JSON_object(DataTarget, keys::NFUN, out);
     for (unsigned int i = 0 ; i < out.size() ; i++)
     {
-        Opti->h_nestfun = true;
+        Opti->h_optNF = true;
         TargetFunction::obj_fun objfun;
         Tfun->nestfun.push_back(objfun); // initializing
         Tfun->nestfun[i].exp_phase = "NULL";
@@ -1084,91 +1088,23 @@ void TGfitTask::get_DataTarget ( )
 // will go away after implementing way to read logK's from the input file
 void TGfitTask::get_logK_TPpairs()
 {
-    double DG = 0.0;
-    const double Rln = -2.302585093*8.314472;
-    double RTln = 0.0;
-    bool h_logK = false;
-
-    // loop trough reactions
-    for (unsigned int i = 0; i< this->Opti->reactions.size(); ++i)
+    for (unsigned i=0; i <Opti->optParam.size(); i++)
     {
-        // checks if the logK values were not already read from the input file
-        if (this->Opti->reactions[i]->logK_TPpairs.size() == 0) h_logK = true;
-
-        // 25 C 1 bar
-        for (unsigned int k = 0; k<this->Opti->reactions[i]->rdc_species.size(); ++k)
-        {
-            DG += this->NodT[0]->DC_G0(this->Opti->reactions[i]->rdc_species_ind[k], 100000, 25+273.15, false) * this->Opti->reactions[i]->rdc_species_coef[k];
-        }
-        RTln = Rln * (25+273.15);
-        if (h_logK) {
-        this->Opti->reactions[i]->dG_reaction_TP.push_back(DG);
-        this->Opti->reactions[i]->logK_TPpairs.push_back(DG/RTln);}
-        DG = 0.0;
-
-        // loop trough TP
-        for (unsigned int j = 0; j<this->TP_pairs[0].size(); ++j)
-        {
-            // loop trough rection species to calculate delta G of reaction
-            for (unsigned int k = 0; k<this->Opti->reactions[i]->rdc_species.size(); ++k)
-            {
-                DG += this->NodT[0]->DC_G0(this->Opti->reactions[i]->rdc_species_ind[k], this->TP_pairs[1][j]*100000, this->TP_pairs[0][j]+273.15, false) * this->Opti->reactions[i]->rdc_species_coef[k];
-            }
-            RTln = Rln * (this->TP_pairs[0][j]+273.15);
-            if (h_logK) {
-            this->Opti->reactions[i]->dG_reaction_TP.push_back(DG);
-            this->Opti->reactions[i]->logK_TPpairs.push_back(DG/RTln);}
-            DG = 0.0;
-        }
-        h_logK = false;
+        Opti->optParam[i]->Set_logKTP(this->NodT[0], this->TP_pairs );
     }
 }
 
 void TGfitTask::get_Lparams_delta()
 {
-    double delta;
-    for (unsigned int i=0; i < Opti->nest_optv.Lparams.size(); ++i )
+
+    for (unsigned int e=0; e < experiments.size(); e++ )
     {
-        if (Opti->nest_optv.Ptype[i] == "bIC")
-            for (unsigned int e=0; e < experiments.size(); e++ )
-            {
-                delta=0.0;
-                for (unsigned int j=0; j < Opti->nest_optv.Lparams[i]->L_param.size(); ++j )
-                {
-                    delta += Opti->nest_optv.Lparams[i]->L_coef[j] * NodT[e]->Get_bIC(Opti->nest_optv.Lparams[i]->L_param_ind[j]);
-                }
-                Opti->nest_optv.Lparams[i]->delta.push_back(delta);
-                Opti->nest_optv.Lparams[i]->i_val.push_back(NodT[e]->Get_bIC(Opti->nest_optv.Lparams[i]->index));
-                Opti->nest_optv.Lparams[i]->e_val.push_back(NodT[e]->Get_bIC(Opti->nest_optv.Lparams[i]->index));
-            }
+       for (unsigned i=0; i< Opti->optNFParam.size(); i++)
+       {
+           Opti->optNFParam[i]->SetIVvEVvDelta(NodT[e]);
+       }
     }
 
-    // stores the initial values of the linked parameter bIC, ...
-    for (unsigned int i=0; i < Opti->nest_optv.Ptype.size(); ++i )
-    {
-        Opti->nest_optv.i_opt.push_back(new optimization::nested::ival);
-        Opti->nest_optv.e_opt.push_back(new optimization::nested::ival);
-        if (Opti->nest_optv.Ptype[i] == "bIC")
-            for (unsigned int e=0; e < experiments.size(); e++ )
-            {
-                Opti->nest_optv.i_opt[i]->val.push_back(NodT[e]->Get_bIC(Opti->nest_optv.Pindex[i]));
-                Opti->nest_optv.e_opt[i]->val.push_back(NodT[e]->Get_bIC(Opti->nest_optv.Pindex[i]));
-            }
-        else
-        if (Opti->nest_optv.Ptype[i] == "TK")
-            for (unsigned int e=0; e < experiments.size(); e++ )
-            {
-                Opti->nest_optv.i_opt[i]->val.push_back(NodT[e]->Get_TK( ));
-                Opti->nest_optv.e_opt[i]->val.push_back(NodT[e]->Get_TK( ));
-            }
-        else
-        if (Opti->nest_optv.Ptype[i] == "P")
-            for (unsigned int e=0; e < experiments.size(); e++ )
-            {
-                Opti->nest_optv.i_opt[i]->val.push_back(NodT[e]->Get_P( ));
-                Opti->nest_optv.e_opt[i]->val.push_back(NodT[e]->Get_P( ));
-            }
-    }
 }
 
 void TGfitTask::set_DH_Helgeson (int n)
@@ -1429,8 +1365,11 @@ void TGfitTask::calc_logK_TP ()
     for (unsigned int i = 0; i < FlogK.size(); i++)
     {
         // 25 C 1 bar
-        Opti->reactions[FlogK[i].Rndx-1]->logK_TPpairs.push_back(
-        calc_logK_dRHOw(FlogK[i].Fcoef, 25 + 273.15, 1 ));
+        for (unsigned e=0; e <Opti->optParam.size(); e++)
+        {
+            if (Opti->optParam[e]->Get_optType() == "G0")
+            Opti->optParam[e]->Set_logKTP(FlogK[i].Rndx-1, calc_logK_dRHOw(FlogK[i].Fcoef, 25 + 273.15, 1 ) );
+        }
 
         for (unsigned int j = 0; j < TP_pairs[0].size(); j++)
         {
@@ -1447,13 +1386,22 @@ void TGfitTask::calc_logK_TP ()
                         }
                     }
                 }
-                Opti->reactions[FlogK[i].Rndx-1]->logK_TPpairs.push_back(
-                calc_logK_dT(FlogK[i].Fcoef, TP_pairs[0][j] + 273.15, Pbar, FlogK[i].Rndx-1 ));
+                for (unsigned e=0; e <Opti->optParam.size(); e++)
+                {
+                    if (Opti->optParam[e]->Get_optType() == "G0")
+                    Opti->optParam[e]->Set_logKTP(FlogK[i].Rndx-1, calc_logK_dT(FlogK[i].Fcoef, TP_pairs[0][j] + 273.15, Pbar, FlogK[i].Rndx-1, e ) );
+                }
+
+
             } else
             if (FlogK[i].Ftype == "logK_dRHOw")
             {
-                Opti->reactions[FlogK[i].Rndx-1]->logK_TPpairs.push_back(
-                calc_logK_dRHOw(FlogK[i].Fcoef, TP_pairs[0][j] + 273.15, TP_pairs[1][j]) );
+                for (unsigned e=0; e <Opti->optParam.size(); e++)
+                {
+                    if (Opti->optParam[e]->Get_optType() == "G0")
+                    Opti->optParam[e]->Set_logKTP(FlogK[i].Rndx-1, calc_logK_dRHOw(FlogK[i].Fcoef, TP_pairs[0][j] + 273.15, TP_pairs[1][j]) );
+                }
+
             } else
             {
                 cout << "Unknown type of logK function: " << FlogK[i].Ftype << endl;
@@ -1463,7 +1411,7 @@ void TGfitTask::calc_logK_TP ()
     }
 }
 
-double TGfitTask::calc_logK_dT(vector<double> A, double Tk, double P, int Rndx)
+double TGfitTask::calc_logK_dT(vector<double> A, double Tk, double P, int Rndx, int e)
 {
     double logK = 0.0;
     double dV0 = 0.0;
@@ -1472,11 +1420,13 @@ double TGfitTask::calc_logK_dT(vector<double> A, double Tk, double P, int Rndx)
            + A[4]/(Tk*Tk) + A[5]*(Tk*Tk) + A[6]/(pow(Tk,0.5));
 
     // Calculating pressure correction to logK
+    vector<int> vNdx,vCoef;
 
-    for (unsigned s = 0; s < Opti->reactions[Rndx]->rdc_species.size(); s++)
+    Opti->optParam[e]->Get_R_vNdx_vCoef(Rndx, vNdx, vCoef );
+    for (unsigned s = 0; s < vNdx.size(); s++)
     {
-        dV0 +=   (NodT[0]->DC_V0(Opti->reactions[Rndx]->rdc_species_ind[s], 100000, 298.15))
-               * ( Opti->reactions[Rndx]->rdc_species_coef[s] );
+        dV0 +=   (NodT[0]->DC_V0(vNdx[s], 100000, 298.15))
+               * ( vCoef[s] );
     }
 
     logK -= dV0 * ( P - 1 ) / keys::R_CONSTANT*Tk / keys::lg_to_ln;

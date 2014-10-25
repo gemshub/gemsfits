@@ -129,6 +129,9 @@ static const char *url = "url"; ///	                              1		     string
     static const char *IV = "IV"; ///                                       double              initial value
     static const char *UB = "UB"; ///                                       double              upper boundary
     static const char *LB = "LB"; ///                                       double              lower boundary
+    static const char *spec = "spec";
+    static const char *DCN = "DCN"; ///                                     string              dependent comp name
+    static const char *ICN = "ICN"; ///                                     string              independent comp name
     // Reaction specific
     static const char *Ref = "Ref"; ///                                     string              reference for logK
     static const char *logK = "logK"; ///                                   double              reaction constant
@@ -139,6 +142,7 @@ static const char *url = "url"; ///	                              1		     string
     static const char *Rcoef = "Rcoef"; ///                                 array               array of reaction coeficients
     static const char *Rndx ="Rndx"; ///                                  integer             order of the reactions
     // Linked parameters
+    static const char *NFndx = "NFndx";
     static const char *LEs = "LEs"; ///                                     array               array of linked elements
     static const char *LE = "LE"; ///                                       string              linked element
     static const char *Lcoef = "Lcoef"; ///                                 array               array of linking coeficients
@@ -165,6 +169,7 @@ static const char *Fcoef = "Fcoef";
 //        static const char *Eunit = "Unit"; ///                              string              experiment element unit
         static const char *DCP = "DCP"; ///                                 string              dependent comp property
         static const char *Ptype = "Ptype"; ///
+        static const char *ptype = "ptype";
         static const char *Tforumla ="Tformula"; ///                        string              name of titrants
         static const char *Telem ="Telem"; ///                              string              name of elements
         static const char *expr ="expr";

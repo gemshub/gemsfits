@@ -39,10 +39,12 @@
 #include <fstream>
 #include <iostream>
 #include "gemsfit_iofiles.h"
+#include <jansson.h>
+#include <sstream>
 using namespace std;
 
 
-class optimization : public opti_vector
+class optimization
 {
 
 private:
@@ -59,23 +61,28 @@ private:
 
     // Populate nlopt instance
 //    virtual void set_nlopt_param( );
-    virtual void get_nlopt_param_txt( vector<double> optv );
+    virtual void get_nlopt_param_txt();
     virtual void define_nlopt_param( );
 
-    /**
-     * @brief sort_nestfun_param sort the NFUN parameters from the global ones and puts them in thier respective structure
-     * @author DM
-     */
-    void sort_nestfun_param();
 
 public:
 
+    typedef vector<double> vd;        // vector of double
+    typedef vector<vector<double> > vvd;  // 2D vector of double
+    typedef vector<string> vs;        // vector of string
+    typedef vector<int> vi;           // vecotr of integer
+    typedef vector<vector<int> > vvi; // 2D vector of integer
+
+
     // opt vector
-    vector<double> optv;
+    vector<double> optv, optv_0, optv0;
 
     // Constructor
     optimization( );
     optimization( int i); // init mode constructor DS
+
+//    bool h_RDc; /// handle for checking if there are reaction constraints in the input file
+
 
     // Destructor
     virtual ~optimization();
@@ -86,72 +93,28 @@ public:
     // configuration data for nlopt instance (get from SS_GEMSFIT_input.dat)
     /// name of the optimization algorithm from NLOPT library
     string OptAlgo;
+    string OptParameters;
+    string NFunParameters;
+    string GEMSsys;
     /// number of threads for parallel execution
 //    int OptThreads;
     ///
     double OptTolRel;
     double OptTolAbs;
     int OptMaxEval;
-//    int OptConstraints;
     int OptDoWhat;
     int OptEquilibrium;
     int OptTuckey;
     int OptTuckeyVal;
     int OptTitration;
     int OptUserWeight;
-//    int OptHybridMode;
-//    double OptHybridTolRel;
-//    double OptHybridTolAbs;
-//    int OptHybridMaxEval;
-//    int OptNmultistart;
-//    string OptHybridAlgo;
     double OptInitStep;
-//    double OptScaleParam;
     bool OptNormParam;
     double OptBoundPerc;
     double OptPerturbator;
 
-//    vector<double> OptStatOnlyBestFitParam;
-//    double OptStatOnlySSR;
-//    bool OptEquil;
-
-//    bool test;
-
-    // optimization vector and bounds (get from SS_GEMSFIT_input.dat)
-//    vector<double> optv;
-    vector<double> OptUpBounds;
-    vector<double> OptLoBounds;
-
-    struct nested /// structure holding liked parameters information
-    {
-
-        vd opt; /// position 0 specie 0 etc.
-        // optimized parameter information
-        vd UB; /// upper boundary
-        vd LB; /// lower boundary
-        vs Ptype; /// name of parameter e.g G0
-        vi Pindex; /// index formatted value into reading array, index of phase, species
-
-        // vector containing the first guesses for normalization of the opt vector
-        vd optv0; /// vector storing initial parameter values
-
-        struct ival
-        {
-            vd val;
-        };
-        vector<ival*>i_opt;
-        vector<ival*>e_opt;
-
-        vector<Lp*> Lparams;
-    };
-
-    nested nest_optv; ///< pointer to nested optimization
-
-
-
-
-    /// printing information (get from SS_GEMSFIT_input.dat)
-//        PlotFit* Plot_ActMod;
+    vector<double> OptUpBounds, UB;
+    vector<double> OptLoBounds, LB;
 
     /// Normalize init vector, bounds and constraints
     virtual void normalize_params( const vector<double> initguesses, bool NormBounds );
@@ -159,6 +122,18 @@ public:
     /// NLopt return codes
     virtual void print_return_message( const int result );
 
+    void get_OptParameters ( );
+
+    bool h_optNF; /// handle for checking if there are dynamic function in the DataTarget
+
+
+    long int sizeOPs;     ///
+    vector<OptParameter*> optParam; ///
+    vector<OptParameter*> optNFParam;
+
+    void OptParameterCreate ();
+
+    void GetParameters ();
 
 };
 

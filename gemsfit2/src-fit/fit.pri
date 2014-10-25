@@ -9,7 +9,8 @@ HEADERS += $$FIT_H/gemsfit_iofiles.h \
     src-fit/gemsfit_target_functions.h \
     src-fit/statistics.h \
     src-fit/gemsfit_nested_functions.h \
-    src-fit/s_formula.h
+    src-fit/s_formula.h \
+    $$PWD/json_parse.h
 
 SOURCES += $$FIT_CPP/main.cpp \
            $$FIT_CPP/gemsfit_iofiles.cpp \
@@ -22,7 +23,8 @@ SOURCES += $$FIT_CPP/main.cpp \
     src-fit/statistics.cpp \
     src-fit/gemsfit_nested_functions.cpp \
     src-fit/gemsfit_task2.cpp \
-    src-fit/s_formula.cpp
+    src-fit/s_formula.cpp \
+    $$PWD/json_parse.cpp
 
 
 

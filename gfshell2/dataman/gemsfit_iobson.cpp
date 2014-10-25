@@ -534,8 +534,9 @@ void out_stat_param_txt_bson( fstream& ff, bson *obj, bool with_comments )
 
 ////-------------------------------------------------------------------------------------------------
 
-outField optimization_fields[14] =
+outField optimization_fields[15] =
 {   { "OptParameters",  0, 0, 1, "\n# OptParameters:    "},
+    { "OptNfunParameters",  0, 0, 1, "\n# OptNfunParameters:    "},
     { "OptDoWhat",  0, 0, 1, "\n# OptDoWhat: perform optimization and statistics (0); only optimization with basic Statistics (1);"
        "\n#            only Statistics (2) with initial guesses as best fit parametters"},
     { "OptEquilibrium",  0, 0, 1, "\n# OptEquilibrium: (1) Use full GEMS3K to calculate thermodynamic equilibrium. (0) Use TSolMod shortcut "
@@ -558,6 +559,7 @@ outField optimization_fields[14] =
 
 typedef enum {  /// Field index into outField structure
     f_OptParameters = 0,
+    f_OptNfunParameters,
     f_OptDoWhat,
     f_OptEquilibrium,
     f_OptUserWeight,
@@ -576,7 +578,7 @@ typedef enum {  /// Field index into outField structure
 ///// Writes  structure to  the GEMSFIT configuration file
 void out_nlopt_param_txt_bson( fstream& ff, bson *obj, bool with_comments )
 {
-    TPrintArrays  prar(14, optimization_fields, ff);
+    TPrintArrays  prar(15, optimization_fields, ff);
     if(with_comments )
     {
         ff << "\n\n#########################################################################" << endl;
@@ -585,6 +587,7 @@ void out_nlopt_param_txt_bson( fstream& ff, bson *obj, bool with_comments )
     }
 
     prar.writeArrayFromBson( f_OptParameters,  obj, 0L, with_comments);
+    prar.writeArrayFromBson( f_OptNfunParameters,  obj, 0L, with_comments);
     prar.writeArrayFromBson( f_OptDoWhat,  obj, 0L, with_comments);
     prar.writeArrayFromBson( f_OptEquilibrium,  obj, 0L, with_comments);
     prar.writeArrayFromBson( f_OptUserWeight,  obj, 0L, with_comments);

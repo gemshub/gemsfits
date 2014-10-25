@@ -35,97 +35,332 @@
 #include <vector>
 #include <string>
 #include "node.h"
-#include "verror.h"
 
 
-class opti_vector
+/// Base class for the optimized parameters
+class OptParameter
 {
-private:
-//    vector<int> Error;
-    /**
-    * Gets the indexes of the RDc species
-    * @author DM
-    * @param node
-    * @param ov opti_vector class
-    * @date 06.05.2013
-    */
-    void get_RDc_indexes (TNode *node, opti_vector *ov);
+    protected:
 
-    /**
-    * Gets the indexes of the linked parameters/elements form bulk composition
-    * @author DM
-    * @param node
-    * @param ov opti_vector class
-    * @date 06.05.2013
-    */
-    void get_Lp_indexes (TNode *node, opti_vector *ov);
+        typedef vector<double> vd;        // vector of double
+        typedef vector<vector<double> > vvd;  // 2D vector of double
+        typedef vector<string> vs;        // vector of string
+        typedef vector<int> vi;           // vecotr of integer
+        typedef vector<vector<int> > vvi; // 2D vector of integer
+
+        string Ptype; /// stores the type of parameter (G0, bIC, DMc, PMc, TK, P, etc.)
+
+        vector<string> Jdata; /// JSON string containing the parameter information read from the configuration file
+
+        double OptBoundPerc; /// Bounds percentage read from the configuration file
+
+        vector<double> TP_pairs[2];
+
+        struct parameter /// base structure for storing parameter information
+        {
+            double IV; /// initial value
+            double opt; /// parameter value that gets changed during the optimization
+            int    optNdx; /// index in the global optimization vector
+            double Pndx; /// parameter index
+            string Pname; /// parameter name (DCName, ICname, etc.)
+            vd IVv; /// vector of initial values for each node/experiment - used in nested optimization
+            vd EVv; /// vector of end values for each node/experiment - used in nested optimization
+        };
+
+        struct F_parameter : parameter /// structure storing F-type parameter iformation
+        {
+//            string Ftype; /// function type (OFUN, NFUN)
+            int    Fndx; /// function index
+            double UB; /// upper boundary
+            double LB; /// lower boundary
+        };
+        vector<F_parameter*> optFP; /// vector of pointers to F-type parameters
+
+        struct R_parameter : parameter /// structure storing reaction constraint information
+        {
+            vd logK_TPpairs; /// log K for all T and P pairs
+            vd dG_reaction_TP; /// delta G of the reaction for all T and P pairs
+            int nC; /// number of components
+            vs rdc_species; /// Names of species involved in reaction (the last one is the fixed species)
+            vi rdc_species_ind; /// indices of RDC species in GEMS3K - read from node class after reading the experimental data
+            vi rdc_species_coef; /// reaction coeficients
+            string Ref; /// reference for log K
+        };
+        vector<R_parameter*> optRP; /// Vector of reactions (rdc_species struct that hold the reaction dependent species and the reaction properties)
+
+        struct L_parameter : parameter /// structure holding liked parameters information
+        {
+            vd delta; /// c = a + b; delta = (a + b) initial
+            vs L_param; /// name of the parameters that the linked parameters is linked to eg. Cl in HCl and S in H2SO4
+            vi L_param_ind; /// GEMS3K indexes of the linked parameters
+            vd L_param_coef; /// linking coefiecients e.g 1.0 for Cl and 2.0 for S
+        };
+        vector<L_parameter*> optLP; /// Vector of pointers to L-type parameters
+
+        struct S_parameter : parameter /// structure holding liked parameters information
+        { };
+        vector<S_parameter*> optSP; /// Vector of pointers to S-type parameters
+
+        /**
+        * Reads in the attributes of the F-type parameters
+        * @author DM
+        * @param p counts the parameters
+        * @param data JSON string holding the parameter attributes
+        * @param *opt pointer to the F_parameter object
+        * @date 17.10.2014
+        */
+        void Pval_to_optF (int p, string data, F_parameter *opt);
+
+        void Pval_to_optR (int p, string data, R_parameter *opt);
+
+        /**
+        * Reads in the attributes of the L-type parameters
+        * @author DM
+        * @param p counts the parameters
+        * @param data JSON string holding the parameter attributes
+        * @param *opt pointer to the L_parameter object
+        * @date 17.10.2014
+        */
+        void Pval_to_optL (int p, string data, L_parameter *opt);
+
+    public:
+        /// Generic constructor
+        OptParameter (vector<string> data, double OptBoundPerc );
+        /// Destructor
+        virtual ~OptParameter();
 
 
-public:
-    typedef vector<double> vd;        // vector of double
-    typedef vector<vector<double> > vvd;  // 2D vector of double
-    typedef vector<string> vs;        // vector of string
-    typedef vector<int> vi;           // vecotr of integer
-    typedef vector<vector<int> > vvi; // 2D vector of integer
+        virtual long int Set_param(vector<double> opt, unsigned &p)
+        {
+            return 0;
+        };
 
-    opti_vector( );
+        virtual long int Set_logKTP(TNode *node, vector<double> TP_pairs[2] )
+        {
+            return 0;
+        };
 
-    // optimization vector that weill be sent to NLopt
-    vd opt; /// position 0 specie 0 etc.
-    // optimized parameter information
-    vd UB; /// upper boundary
-    vd LB; /// lower boundary
-    vs Ptype; /// name of parameter e.g G0
-    vi Pindex; /// index formatted value into reading array, index of phase, species
+        virtual long int Set_logKTP(int RPndx, double logK  )
+        {
+            return 0;
+        };
 
-    // vector containing the first guesses for normalization of the opt vector
-    vd optv0; /// vector storing initial parameter values
+        virtual long int Adjust_param(TNode *node, vector<double> opt)
+        {
+            return 0;
+        };
 
-    bool h_RDc; /// handle for checking if there are reaction constraints in the input file
-    bool h_Lp; /// handle for checking if there are linked parameters in the input file
-    bool h_nestfun; /// handle for checking if there are dynamic function in the DataTarget
+        virtual long int Adjust_Fparam(TNode *node, int Pndx, double Pval)
+        {
+            return 0;
+        };
 
+        virtual long int Adjust_Sparam(TNode *node )
+        {
+            return 0;
+        };
 
-    struct RDc /// structure storing reaction constraint information
-    {
-        int DCndx; /// index of the dependent component
-        double Ival; /// initial value
-//        double logK; /// log K of the reaction
-        vd logK_TPpairs; /// log K for all T and P pairs
-        vd dG_reaction_TP; /// delta G of the reaction for all T and P pairs
-        int nC; /// number of components
-        string DCn; /// species name
-        vs rdc_species; /// Names of species involved in reaction (the last one is the fixed species)
-        vi rdc_species_ind; /// indices of RDC species in GEMS3K - read from node class after reading the experimental data
-        vi rdc_species_coef; /// reaction coeficients
-        string Ref; /// reference for log K
-        double std_gibbs; /// standard state Gibbs free energy of the reaction constrained species at T=25 C and P=1 bar
-    };
-    vector<RDc*> reactions; /// Vector of pointer to reactions (rdc_species struct that hold the reaction dependent species and the reaction properties)
+        virtual long int Adjust_Lparam(TNode *node, int exp )
+        {
+            return 0;
+        };
 
-    struct Lp /// structure holding liked parameters information
-    {
-        int index;
-        string type;
-        string name; /// name of the linked parameter e.g H
-        vd i_val; /// initial values
-        vd e_val; /// vector end values
-        double IV;
-        double EV; /// end value
-        vd delta; /// c = a + b; delta = (a + b) initial
-        vs L_param; /// name of the parameters that the linked parameters is linked to eg. Cl in HCl and S in H2SO4
-        vi L_param_ind;
-        vd L_coef; /// linking coefiecients e.g 1.0 for Cl and 2.0 for S
-    };
-    vector<Lp*> Lparams;
+        virtual long int SetIndex_param(TNode node)
+        {
+            return 0;
+        };
 
-    struct fixed /// structure holding liked parameters information
-    {
-        double Pval; /// position 0 specie 0 etc.
-        string Ptype; /// name of parameter e.g G0
-        int Pindex; /// index formatted value into reading array, index of phase, species
-    };
-    vector<fixed*> fixed_param; ///< pointer to nested optimization
+        virtual string Print_param(  )
+        {
+            return 0;
+        };
+
+        virtual long int SetIVvEVvDelta(TNode *node)
+        {
+            return 0;
+        };
+
+        /**
+        * Gets the size of optFP, F parameters vector
+        * @author DM
+        * @date 17.10.2014
+        */
+        long int Get_optFPsize ()
+        { return optFP.size(); }
+
+        long int Get_optLPsize ()
+        { return optLP.size(); }
+
+        long int Get_optRPsize ()
+        { return optRP.size(); }
+
+        string Get_optType ()
+        { return Ptype; }
+
+        void Set_TPpairs (vector<double> TPpairs[2]);
+
+        /**
+        * Gets the size of F parameter GEMS3K index
+        * @author DM
+        * @param ndx index on the optFP vector
+        * @date 17.10.2014
+        */
+        long int Get_FPndx(int ndx)
+        { return optFP[ndx]->Pndx; }
+
+        void Get_IVparam(vd &opt, vd &UB, vd &LB );
+
+        double Get_Fparam(int ndx, int exp );
+
+        double Get_Lparam(int ndx, int exp );
+
+        void Get_Fparam(int ndx, string &name, double &IV, double &EV );
+
+        void Get_Rparam(int ndx, string &name, double &IV, double &EV );
+
+        void Get_R_vNdx_vCoef(int ndx, vi &vNdx, vi &vCoef );
+
+        void Get_Lparam(int ndx, string &name, double &IV, double &EV );
+
+        /**
+        * Gets the attributes of the F-type parameter with index ndx
+        * @author DM
+        * @param ndx index on the optFP vector
+        * @param &Fndx retrieves the index of the OFUN or NFUN function
+        * @param &Pndx retrieves the GEMS3K index of the parameter
+        * @param &Pval retrieves the value of the parameter
+        * @param &Ub retrieves the upper bound of the parameter
+        * @param &Lb retrieves the lower bound of the parameter
+        * @date 17.10.2014
+        */
+        long int Get_Fparam(int ndx, int &Fndx, int &Pndx, double &Pval, double &Ub, double &Lb);
+
+        /**
+        * Gets the attributes of the F-type parameter with index ndx and OptPndx
+        * @author DM
+        * @param ndx index on the optFP vector
+        * @param exp index of the current node/experiment
+        * @param &Fndx retrieves the index of the OFUN or NFUN function
+        * @param &Pndx retrieves the GEMS3K index of the parameter
+        * @param &Pval retrieves the value of the parameter
+        * @param &Ub retrieves the upper bound of the parameter
+        * @param &Lb retrieves the lower bound of the parameter
+        * @date 17.10.2014
+        */
+        long int Get_Fparam(int ndx, int exp, int &Fndx, int &Pndx, double &Pval, double &Ub, double &Lb);
+
+        /**
+        * Sets the value of the F-type parameter with index ndx
+        * @author DM
+        * @param ndx index of the optFP vector
+        * @param Pval new value of the parameter
+        * @date 17.10.2014
+        */
+        void Set_Fparam(int ndx, double Pval);
+
+        /**
+        * Sets the value of the F-type parameter with index ndx
+        * @author DM
+        * @param ndx index in the optFP vector
+        * @param exp index of the current node/experiment
+        * @param Pval new value of the parameter
+        * @date 17.10.2014
+        */
+        void Set_Fparam(int ndx, int exp, double Pval);
 };
+
+class Opt_bIC : public OptParameter
+{
+    public:
+
+    /// Constructor
+    Opt_bIC (vector<string> data, double OptBoundPrc, unsigned &p );
+    /// Destructor
+    virtual ~Opt_bIC();
+
+    long int SetIndex_param(TNode *node);
+
+    long int SetIVvEVvDelta(TNode *node);
+
+    long int Adjust_Fparam(TNode *node, int Pndx, double Pval);
+
+    long int Adjust_Lparam(TNode *node, int exp);
+
+    string Print_param();
+};
+
+class Opt_Tk : public OptParameter
+{
+    public:
+
+    /// Constructor
+    Opt_Tk (vector<string> data, double OptBoundPrc, unsigned &p );
+    /// Destructor
+    virtual ~Opt_Tk();
+
+    long int SetIndex_param();
+
+    long int SetIVvEVvDelta(TNode *node);
+
+    long int Adjust_Fparam(TNode *node, int Pndx, double Pval);
+
+//    long int Adjust_Lparam(TNode *node, int exp);
+
+    string Print_param();
+};
+
+class Opt_P : public OptParameter
+{
+    public:
+
+    /// Constructor
+    Opt_P (vector<string> data, double OptBoundPrc, unsigned &p );
+    /// Destructor
+    virtual ~Opt_P();
+
+    long int SetIndex_param();
+
+    long int SetIVvEVvDelta(TNode *node);
+
+    long int Adjust_Fparam(TNode *node, int Pndx, double Pval);
+
+//    long int Adjust_Lparam(TNode *node, int exp);
+
+    string Print_param();
+};
+
+
+class Opt_G0 : public OptParameter
+{
+    public:
+
+    /// Constructor
+    Opt_G0 (vector<string> data, double OptBoundPrc, unsigned &p );
+    /// Destructor
+    virtual ~Opt_G0();
+
+    long int SetIndex_param(TNode *node);
+
+//    long int Get_param(vector<double> &opt);
+
+//    long int Set_param(vector<double> opt, unsigned &p);
+
+    long int Set_logKTP(TNode *node, vector<double> TP_pairs[2] );
+
+    long int Set_logKTP(int RPndx, double logK  );
+
+    long int Adjust_param(TNode *node, vector<double> opt);
+
+    long int Adjust_Fparam(TNode *node, int Pndx, double Pval);
+
+    long int Adjust_Sparam(TNode *node );
+
+    long int Adjust_Rparam(TNode *node, R_parameter &optR );
+
+//    long int Adjust_Lparam(TNode *node, int exp);
+
+//    string Print_param();
+};
+
 
 #endif // OPT_VECTOR_H

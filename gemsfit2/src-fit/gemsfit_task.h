@@ -130,7 +130,7 @@ public:
     {
        vector<int> ndx;
     };
-    vector<vect*> vPAndx;
+    vector<vect*> vPAndx, vEAndx; // keeps the indexes of the parameters (optPF, optPL, etc) and vector optNFParam when paralelized
 
     // true if gradient method is used
     bool h_grad;
@@ -328,7 +328,7 @@ public:
     * @author DM
     * @date 20.01.2014
     */
-   double calc_logK_dT (vector<double> A, double Tk, double P , int Rndx);
+   double calc_logK_dT (vector<double> A, double Tk, double P , int Rndx, int e);
 
    /**
     * @brief calculates the logK using the RHO-depedence polynomial

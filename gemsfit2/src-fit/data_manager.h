@@ -200,27 +200,6 @@ class Data_Manager : public TNode
         */
         void out_db_specs_txt( bool with_comments, bool brief_mode );
 
-        /**
-        * Interprets 1 level JSON object pointed by the variable key
-        * @author DM
-        * @param query JSON object
-        * @param key JSON object member that we want to have the value/s returned
-        * @param result vector of strings representing the values of the key in the JSON object
-        * @date 19.04.2013
-        */
-        void parse_JSON_object( string query, const char *key, vector<string> &result );
-
-        /**
-        * Interprets 2 level JSON object in the array arr pointed by the variable key
-        * @author DM
-        * @param data_ JSON object
-        * @param arr JSON array name that we want to parse
-        * @param key JSON array-object member that we want to have the value/s returned
-        * @param result vector of strings representing the values of the key in the JSON object
-        * @date 08.05.2013
-        */
-        void parse_JSON_array_object( string data_, const char *arr , const char *key, vector<string> &result );
-
     private:
 
         /// get measurement data from EJDB (default) (0) CSV file (1) or PostgreSQL database (2)
@@ -279,7 +258,6 @@ class Data_Manager : public TNode
         * @date 19.04.2013
         */
         void get_distinct_TP( );
-
 };
 
 

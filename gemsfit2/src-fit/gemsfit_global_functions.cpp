@@ -63,7 +63,7 @@ double Equil_objective_function_callback( const std::vector<double> &opt, std::v
         for( i=0; i<opt.size(); i++ )
         {
             if (opt[i] != 0)
-            optV[i] = opt[i] * fabs(sys->Opti->opt[i]);
+            optV[i] = opt[i] * fabs(sys->Opti->optv_0[i]);
         }
         sys->h_grad = false;
 
@@ -122,68 +122,23 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 
 //    sys->print->print_clear();
 
-    // going trough the adjusted parameters in Opti->Ptype and adjusts them with the new value
-//#ifdef useomp
-//    omp_set_num_threads(sys->MPI);
-//    #pragma omp parallel for
-//#endif
-    for (unsigned int i=0; i< sys->Opti->Ptype.size(); ++i)
+//adjust parameters
+    for (unsigned i=0; i<sys->NodT.size(); ++i)
     {
-        // parameter is Std State Gibbs free energy
-        if (sys->Opti->Ptype[i] == "G0")
+        for (unsigned e=0; e < sys->Opti->optParam.size(); e++)
         {
-            adjust_G0(i, opt[i], sys);
-        } else // adjust PMc
-        if (sys->Opti->Ptype[i] == "PMc")
-        {
-           adjust_PMc(i, opt[i], sys);
-        } else // adjust DMc
-        if (sys->Opti->Ptype[i] == "DMc")
-        {
-           adjust_DMc(i, opt[i], sys);
-        } /*else // adjust bIC
-        if (sys->Opti->Ptype[i] == "bIC")
-        {
-           adjust_bIC(i, opt[i], sys);
-        } else // adjust TK
-        if (sys->Opti->Ptype[i] == "TK")
-        {
-           adjust_TK( i, opt[i], sys);
-        } else // adjust P
-        if (sys->Opti->Ptype[i] == "P")
-        {
-           adjust_P( i, opt[i], sys);
-        }*/
-
-        /// if other parameters...
-
-    } // END loop trough parameters
-
-    /// REACTION DC
-    if (sys->Opti->h_RDc)
-    {
-        adjust_RDc(sys);
+            sys->Opti->optParam[e]->Adjust_param(sys->NodT[i], opt);
+        }
     }
 
     /// NESTED FUNCTION
-    if (sys->Opti->h_nestfun)
+    if (sys->Opti->h_optNF)
     {
         string old = sys->Tfun->type;               // storing the old type of target function
         sys->Tfun->type = "abs_dif";                // seeting the target function to simple abslute difference
         nestedfun(sys);                             // optimizing the nested functions
         sys->Tfun->type = old;
     }
-
-//    /// Linked parameters
-//    if (sys->Opti->h_Lp)
-//    {
-//        adjust_Lp(sys);
-//    }
-
-//    if (!sys->h_grad && sys->Opti->OptTitration == 1)
-//        titration (sys);
-//    cout << "finished titration correction"<< endl;
-
 
 
 #ifdef useomp
@@ -301,7 +256,7 @@ void gradient( vector<double> optn, vector<double> &grad, TGfitTask *sys )
 
     for(unsigned i=0; i<optn.size(); i++ )
     {
-        opt.push_back(optn[i] * fabs(sys->Opti->opt[i]));
+        opt.push_back(optn[i] * fabs(sys->Opti->optv_0[i]));
     }
 
     grad.clear();
@@ -344,25 +299,13 @@ void tsolmod_wrap( double &residual, const std::vector<double> &opt, TGfitTask *
     sys->residuals_v.clear();
     sys->weights.clear();
 
-
-
-    for (unsigned int i=0; i< sys->Opti->Ptype.size(); ++i)
+    for (unsigned i=0; i<sys->NodT.size(); ++i)
     {
-        if (sys->Opti->Ptype[i] == "PMc")
+        for (unsigned e=0; e < sys->Opti->optParam.size(); e++)
         {
-           adjust_PMc(i, opt[i], sys);
-        } else // adjust DMc
-        if (sys->Opti->Ptype[i] == "DMc")
-        {
-           adjust_DMc(i, opt[i], sys);
+            sys->Opti->optParam[e]->Adjust_param(sys->NodT[i], opt);
         }
-
-    } // END loop trough parameters
-
-//    ////#ifdef USE_MPI
-//        omp_set_num_threads(sys->MPI);
-//        #pragma omp parallel for
-//    ////#endif
+    }
 
     // Loop trough all nodes for calculationg the pahse properties
     for (unsigned int i=0; i<sys->NodT.size(); ++i)
@@ -379,14 +322,6 @@ void tsolmod_wrap( double &residual, const std::vector<double> &opt, TGfitTask *
         sol->PTparam();
         sol->MixMod();
         }
-
-        // for SorpMod and KinMet
-//            for (unsigned j=0; j<multi->sizeFIa; j++)
-//            {
-
-//            }
-
-
     }
 
     if (sys->Opti->OptTuckey == 1)

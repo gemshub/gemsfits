@@ -481,7 +481,6 @@ void TGfitTask:: print_global_results ()
 
     gpf->fres.close();
 
-
     // print rhoW csv
     ofstream fRHO;
     path_ = gpf->OutputDirPath() + "RHO.csv";
@@ -497,8 +496,6 @@ void TGfitTask:: print_global_results ()
     }
 
     fRHO.close();
-
-
 }
 
 void TGfitTask:: print_nested_results ()
@@ -509,57 +506,48 @@ void TGfitTask:: print_nested_results ()
 
     gpf->fnfres << "sample,phase,name,unit,measured,computed,residual";
 
-    for (unsigned int i= 0; i<Opti->nest_optv.Pindex.size(); i++)
+    for (unsigned i = 0; i<Opti->optNFParam.size(); i++)
     {
-        if (Opti->nest_optv.Ptype[i] == "bIC")
-        gpf->fnfres << "," << NodT[0]->xCH_to_IC_name(Opti->nest_optv.Pindex[i]);
-        if (Opti->nest_optv.Ptype[i] == "TK")
-        gpf->fnfres << "," << "TKelvin";
-        if (Opti->nest_optv.Ptype[i] == "P")
-        gpf->fnfres << "," << "Pbar";
+        gpf->fnfres << Opti->optNFParam[i]->Print_param();
     }
 
-    if (Opti->nest_optv.Lparams.size() > 0)
-        for (unsigned int i = 0; i<Opti->nest_optv.Lparams.size(); i++)
-        {
-            gpf->fnfres << "," << NodT[0]->xCH_to_IC_name(Opti->nest_optv.Lparams[i]->index);
-        }
-
     gpf->fnfres << endl;
-
-
     setprecision(12);
     scientific(gpf->fnfres);
 
-
     gpf->fnfres.setf(ios::fixed);
 
-    for (unsigned int i=0; i<aTfun.size(); i++)
+    for (unsigned  i=0; i<aTfun.size(); i++)
     {
-        for (unsigned int j = 0; j <aTfun[i].nestfun.size(); j++)
+        for (unsigned  j = 0; j <aTfun[i].nestfun.size(); j++)
         {
             if (aTfun[i].nestfun[j].isComputed)
             {
                 gpf->fnfres << experiments[i]->sample <<","<< aTfun[i].nestfun[j].exp_phase <<","<< aTfun[i].nestfun[j].exp_CN <<","<< aTfun[i].nestfun[j].exp_unit <<","<<
                              aTfun[i].nestfun[j].results.measured_value <<","<< aTfun[i].nestfun[j].results.computed_value << ","<< aTfun[i].nestfun[j].results.residual;
 
-                for (unsigned int p= 0; p<Opti->nest_optv.Pindex.size(); p++)
+                for (unsigned o = 0; o<Opti->optNFParam.size(); o++)
                 {
-                    gpf->fnfres << "," << Opti->nest_optv.e_opt[p]->val[i] ;
+
+                    for (unsigned int p= 0; p<Opti->optNFParam[o]->Get_optFPsize(); p++)
+                    {
+                        gpf->fnfres << "," << Opti->optNFParam[o]->Get_Fparam(p, i);
+                    }
                 }
 
-                if (Opti->nest_optv.Lparams.size() > 0)
-                    for (unsigned int l = 0; l<Opti->nest_optv.Lparams.size(); l++)
+                for (unsigned o = 0; o<Opti->optNFParam.size(); o++)
+                {
+
+                    for (unsigned int p= 0; p<Opti->optNFParam[o]->Get_optLPsize(); p++)
                     {
-                        gpf->fnfres << "," << Opti->nest_optv.Lparams[l]->e_val[i];
+                        gpf->fnfres << "," << Opti->optNFParam[o]->Get_Lparam(p, i);
                     }
+                }
                 gpf->fnfres << endl;
             }
         }
     }
-
     gpf->fnfres.close();
-
 }
 
 
@@ -646,54 +634,12 @@ void TGfitTask::get_addout_meas(int exp, TGfitTask::TargetFunction::obj_fun &obj
 
 void TGfitTask::set_fixed_parameters()
 {
-    for (unsigned p = 0; p<Opti->fixed_param.size(); p++)
-    {
-        string Ptype;
-        int Pindex;
-        double Pval;
-        double new_GTP=0.0;
-        double delta_G0old_G0new;
-        Ptype = Opti->fixed_param[p]->Ptype;
-        Pindex = Opti->fixed_param[p]->Pindex;
-        Pval = Opti->fixed_param[p]->Pval;
 
-        if (Ptype == "G0")
-            for (unsigned n=0; n<NodT.size(); n++  )
-            {
-                delta_G0old_G0new = fabs(this->NodT[n]->DC_G0(Pindex, 1e+05, 298.15, false)) - fabs(Pval);
-                // going trough all TP pairs
-                for (unsigned int j=0; j<this->TP_pairs[0].size(); ++j)
-                {
-                    new_GTP = delta_G0old_G0new + this->NodT[n]->DC_G0(Pindex, this->TP_pairs[1][j]*100000, this->TP_pairs[0][j]+273.15, false);
-                    // Set the new G0 in GEMS
-                    this->NodT[n]->Set_DC_G0(Pindex, this->TP_pairs[1][j]*100000, this->TP_pairs[0][j]+273.15, new_GTP);
-                }
-                this->NodT[n]->Set_DC_G0(Pindex, 1e+05, 298.15, Pval);
-             }
-        if (Ptype == "PMc")
-            for (unsigned n=0; n<NodT.size(); n++  )
-            {
-                this->NodT[n]->Set_PMc(Pval, Pindex );
-            }
-        if (Ptype == "DMc")
-            for (unsigned n=0; n<NodT.size(); n++  )
-            {
-                this->NodT[n]->Set_DMc(Pval, Pindex );
-            }
-        if (Ptype == "bIC")
-            for (unsigned n=0; n<NodT.size(); n++  )
-            {
-                this->NodT[n]->Set_bIC(Pindex, Pval );
-            }
-        if (Ptype == "TK")
-            for (unsigned n=0; n<NodT.size(); n++  )
-            {
-                this->NodT[n]->Set_P(Pval );
-            }
-        if (Ptype == "P")
-            for (unsigned n=0; n<NodT.size(); n++  )
-            {
-                this->NodT[n]->Set_P(Pval );
-            }
+    for (unsigned n=0; n<NodT.size(); n++  )
+    {
+        for (unsigned e = 0; e <Opti->optParam.size(); e++)
+        {
+            Opti->optParam[e]->Adjust_Sparam(NodT[n]);
+        }
     }
 }

@@ -19,32 +19,35 @@
 //-------------------------------------------------------------------
 //
 
-/**
- *	@file gemsfit_nested_functions.h
- *
- *	@brief this header file contains definitions of dynamic functions needed during specific optimization.
- *	tasks. Wehn the user wants to dyamically adjust other system parameters during fitting. For example
- *  adjusting the NaOH or HCl amount so that the pH is the same as measured since there is no clear info
- *  of their amount from the experimental paper.
- *
- *	@author G. Dan Miron
- *
- * 	@date 01.12.2013
- *
- */
 
+#ifndef JSON_PARSE_H
+#define JSON_PARSE_H
 
-#ifndef GEMSFIT_NESTED_FUNCTIONS_H
-#define GEMSFIT_NESTED_FUNCTIONS_H
-
+#include <string>
 #include <vector>
-#include <iostream>
-#include "gemsfit_task.h"
 
-void nestedfun (TGfitTask *sys);
+using namespace std;
 
-double nestminfunc(const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data );
 
-bool isTitration (TGfitTask *sys, int i, int j, int p);
+/**
+* Interprets 1 level JSON object pointed by the variable key
+* @author DM
+* @param query JSON object
+* @param key JSON object member that we want to have the value/s returned
+* @param result vector of strings representing the values of the key in the JSON object
+* @date 19.04.2013
+*/
+void parse_JSON_object( string query, const char *key, vector<string> &result );
 
-#endif // GEMSFIT_DYNAMIC_FUNCTIONS_H
+/**
+* Interprets 2 level JSON object in the array arr pointed by the variable key
+* @author DM
+* @param data_ JSON object
+* @param arr JSON array name that we want to parse
+* @param key JSON array-object member that we want to have the value/s returned
+* @param result vector of strings representing the values of the key in the JSON object
+* @date 08.05.2013
+*/
+void parse_JSON_array_object( string data_, const char *arr , const char *key, vector<string> &result );
+
+#endif // JSON_PARSE_H

@@ -25,7 +25,8 @@ using namespace std;
 #include "gemsfit_iofiles.h"
 #include "v_user.h"
 #include "io_arrays.h"
-#include "data_manager.h"
+//#include "data_manager.h"
+#include "json_parse.h"
 #include "keywords.h"
 #include <omp.h>
 #include <sstream>
@@ -34,21 +35,6 @@ using namespace std;
 #include "statistics.h"
 #include "optimization.h"
 
-// Function that read in JSON objects form the inptu file
-/// if after F comes an JSON object ( F{...} )
-void F_to_OP (opti_vector *op, IOJFormat Jformat, string nfild);
-/// if after F comes the initial value ( F5000 )
-void S_to_OP (double val, opti_vector::fixed *op, IOJFormat Jformat, string nfild);
-void F_to_OP (double val, opti_vector *op, IOJFormat Jformat, string nfild);
-/// if the parameter is reaction constrained ( R{...} )
-void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat);
-/// if the parameter is linked e.g. in titration (L{...} )
-void L_to_OP (opti_vector::Lp *l, IOJFormat Jformat, string nfild);
-/////////////////////////////////////////////////////////
-
-// this constructor implicitly calls another constructor
-// opti_vector::opti_vector( ) which calls GEM_init() and reads in all
-// GEMS3K files!  needs to be resolved!
 optimization::optimization( int i )
 {
     int ii;
@@ -223,10 +209,7 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
     if( _comment )
             ff << "\n# PHNL: List of Phase names (for readability; no need to modify)";
     prarCH.writeArrayS(  "PHNL", CSD->PHNL[0], CSD->nPH, MaxPHN );
-//    prarCH.writeArrayF(  f_ccPH, CSD->ccPH, CSD->nPH, 1L,_comment, brief_mode );
-//    prarCH.writeArray(  f_nDCinPH, CSD->nDCinPH, CSD->nPH, -1L,_comment, brief_mode);
-//    prarCH.writeArray(  f_TKval, CSD->TKval, CSD->nTp, -1L,_comment, brief_mode );
-//    prarCH.writeArray(  f_Pval, CSD->Pval, CSD->nPp,  -1L,_comment, brief_mode );
+
     vector <double> xG0;
     ff << "\n \n# G0: Look-up array for DC Gibbs energy function g(T,P), J/mol at 298.15K and 1 bar \n";
     ff << "<G0>" << endl;
@@ -243,14 +226,6 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
 
     par_other.writeField(f_DataLogK, DataLogK, _comment, brief_mode );
     par_other.writeField(f_logK, logK, _comment, brief_mode );
-
-//    ff << "\n \n# logK: Look-up array for logK at T * P * nr reactions. "
-//          "\n#    The list has to be finished with End>"
-//          "\n#    If at least one G0 parameter is marked as \'R\' (reaction-constrained)"
-//          "\n#    and the list below is left commented out, then logK values for all T,P pairs and reactions"
-//          "\n#    will be calculated based on the initial values of all parameters, and this logK array"
-//          "\n#    will be used throughout the fitting process. " << endl;
-//    ff << "<logK>" << endl;
 
     if(_comment )
     {
@@ -322,61 +297,7 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
          prar.writeArrayS(  NULL, CSD->ICNL[0], CSD->nIC, MaxICN );
      }
     prar.writeArray(  f_bIC,  CNode->bIC, CSD->nICb, -1L,_comment, brief_mode );
-//    if( _comment )
-//    {    ff << "\n\n## (5) Data for Dependent Components";
-//         prar.writeArrayS(  NULL, CSD->DCNL[0], CSD->nDC, MaxDCN );
-//     }
-//    prar.writeArray(  f_xDC,  CNode->xDC, CSD->nDCb, -1L,_comment, brief_mode  );
-//    prar.writeArray(  f_dll,  CNode->dll, CSD->nDCb, -1L,_comment, brief_mode  );
-//    prar.writeArray(  f_dul,  CNode->dul, CSD->nDCb, -1L,_comment, brief_mode  );
-//    if( _comment )
-//    {    ff << "\n\n## (6) Data for Phases";
-//          prar.writeArrayS(  NULL, CSD->PHNL[0], CSD->nPH, MaxPHN );
-//    }
-//    prar.writeArray(  f_aPH,  CNode->aPH, CSD->nPHb, -1L,_comment, brief_mode );
 
-//    prar.writeField(f_Vs, CNode->Vs, _comment, brief_mode  );
-//    prar.writeField(f_Ms, CNode->Ms, _comment, brief_mode  );
-//    prar.writeField(f_Gs, CNode->Gs, _comment, brief_mode  );
-//    if( CSD->ccPH[0] == PH_AQUEL )
-//    {
-//       prar.writeField(f_IS, CNode->IC, _comment, brief_mode  );
-//       prar.writeField(f_pH, CNode->pH, _comment, brief_mode  );
-//       prar.writeField(f_pe, CNode->pe, _comment, brief_mode  );
-//       prar.writeField(f_Eh, CNode->Eh, _comment, brief_mode  );
-//    }
-//    if( _comment )
-//     {
-//         ff << "\n\n## (4) Data for Independent Components";
-//         prar.writeArrayS(  NULL, CSD->ICNL[0], CSD->nIC, MaxICN );
-//     }
-//    prar.writeArray(  f_uIC,  CNode->uIC, CSD->nICb, -1L,_comment, brief_mode );
-//    prar.writeArray(  f_bSP,  CNode->bSP, CSD->nICb, -1L,_comment, brief_mode );
-
-//    if( _comment )
-//    {    ff << "\n\n## (5) Data for Dependent Components";
-//         prar.writeArrayS(  NULL, CSD->DCNL[0], CSD->nDC, MaxDCN );
-//    }
-//    //prar.writeArray(  f_xDC,  CNode->xDC, CSD->nDCb, -1L,_comment, brief_mode  );
-//    prar.writeArray(  f_gam,  CNode->gam, CSD->nDCb, -1L,_comment, brief_mode  );
-
-//    if( _comment )
-//    {    ff << "\n\n## (6) Data for Phases";
-//          prar.writeArrayS(  NULL, CSD->PHNL[0], CSD->nPH, MaxPHN );
-//    }
-//    prar.writeArray(  f_xPH,  CNode->xPH, CSD->nPHb, -1L,_comment, brief_mode );
-//    prar.writeArray(  f_vPS,  CNode->vPS, CSD->nPSb, -1L,_comment, brief_mode );
-//    prar.writeArray(  f_mPS,  CNode->mPS, CSD->nPSb, -1L,_comment, brief_mode );
-//    prar.writeArray(  f_xPA,  CNode->xPA, CSD->nPSb, -1L,_comment, brief_mode );
-
-//    if(!brief_mode || prar.getAlws( f_bPS ))
-//    {  if( _comment )
-//       {
-//            ff << DataBR_fields[f_bPS].comment.c_str();
-//        prar.writeArrayS(  NULL, CSD->ICNL[0], CSD->nIC, MaxICN );
-//        }
-//       prar.writeArray(  f_bPS,  CNode->bPS, CSD->nPSb*CSD->nICb, CSD->nICb,false, brief_mode );
-//    }
     ff.close();
 }
 
@@ -977,8 +898,10 @@ void statistics::get_stat_param_txt( )
 
 ////-------------------------------------------------------------------------------------------------
 
-outField optimization_fields[13] =
-{   { "OptDoWhat",  0, 0, 1, "\n# OptDoWhat: perform optimization and statistics (0); only optimization with basic Statistics (1);"
+outField optimization_fields[15] =
+{   { "OptParameters",  0, 0, 1, "\n# OptParameters:    "},
+    { "OptNfunParameters",  0, 0, 1, "\n# OptNfunParameters:    "},
+    { "OptDoWhat",  0, 0, 1, "\n# OptDoWhat: perform optimization and statistics (0); only optimization with basic Statistics (1);"
        "\n#            only Statistics (2) with initial guesses as best fit parametters"},
     { "OptEquilibrium",  0, 0, 1, "\n# OptEquilibrium: (1) Use full GEMS3K to calculate thermodynamic equilibrium. (0) Use TSolMod shortcut "
                                    "\n#                  without calculating equilibrium (only fitting activity model parameters)"},
@@ -999,7 +922,9 @@ outField optimization_fields[13] =
 };
 
 typedef enum {  /// Field index into outField structure
-    f_OptDoWhat = 0,
+    f_OptParameters = 0,
+    f_OptNfunParameters,
+    f_OptDoWhat,
     f_OptEquilibrium,
     f_OptUserWeight,
     f_OptTuckey,
@@ -1032,6 +957,8 @@ void optimization::define_nlopt_param( )
     OptNormParam = 1;
     OptPerturbator = 0.0001;
     OptInitStep = 0;
+    OptParameters ="";
+    NFunParameters ="";
 
 }
 
@@ -1041,7 +968,7 @@ void optimization::out_nlopt_param_txt( bool with_comments, bool brief_mode )
     string fname = gpf->OptParamFile();
     fstream ff(fname.c_str(), ios::out|ios::app );
     ErrorIf( !ff.good() , fname.c_str(), "OptParamFile text open error");
-    TPrintArrays  prar(13, optimization_fields, ff);
+    TPrintArrays  prar(15, optimization_fields, ff);
     if(with_comments )
     {
         ff << "\n\n#########################################################################" << endl;
@@ -1049,6 +976,8 @@ void optimization::out_nlopt_param_txt( bool with_comments, bool brief_mode )
         ff << "#########################################################################" << endl;
     }
 
+    prar.writeField( f_OptParameters,  OptParameters, with_comments, brief_mode);
+    prar.writeField( f_OptNfunParameters,  NFunParameters, with_comments, brief_mode);
     prar.writeField( f_OptDoWhat,  (long int)OptDoWhat, with_comments, brief_mode);
     prar.writeField( f_OptEquilibrium,  (long int)OptEquilibrium, with_comments, brief_mode);
     prar.writeField( f_OptUserWeight,  (long int)OptUserWeight, with_comments, brief_mode);
@@ -1067,7 +996,7 @@ void optimization::out_nlopt_param_txt( bool with_comments, bool brief_mode )
 }
 
 //// populate nlopt instance: set bounds, constraints, stopping criteria
-void optimization::get_nlopt_param_txt(vector<double> optv)
+void optimization::get_nlopt_param_txt( )
 {
     // open file for reading
 //    int i;
@@ -1075,7 +1004,7 @@ void optimization::get_nlopt_param_txt(vector<double> optv)
     fstream ff(fname.c_str(), ios::in );
     ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
 
-    TReadArrays  rdar(13, optimization_fields, ff);
+    TReadArrays  rdar(15, optimization_fields, ff);
 
     long int nfild = rdar.findNextNotAll();
     while( nfild >=0 )
@@ -1107,6 +1036,10 @@ void optimization::get_nlopt_param_txt(vector<double> optv)
                   break;
           case f_OptPerturbator: rdar.readArray( "OptPerturbator",  &OptPerturbator, 1);
                   break;
+          case f_OptParameters: rdar.readArray( "OptParameters",  OptParameters);
+                  break;
+          case f_OptNfunParameters: rdar.readArray( "NFunParameters",  NFunParameters);
+                  break;
           case f_OptNormParam:{
                 int bb;
                 rdar.readArray( "OptNormParam",  &bb, 1);
@@ -1120,20 +1053,7 @@ void optimization::get_nlopt_param_txt(vector<double> optv)
           nfild = rdar.findNextNotAll();
         }
 
-    if( OptBoundPerc > 0. )
-    {
-        OptUpBounds.resize( optv.size() );
-        OptLoBounds.resize( optv.size() );
-        for(unsigned int i=0; i<optv.size(); i++ )
-        {
-            // take the existing bounds if initial value of the parameter is 0 or <9e-11)
-            if ((optv[i]!=0) && (fabs(optv[i])>9e-11))
-            {
-                OptUpBounds[i] = optv[i] + fabs( optv[i]*OptBoundPerc/100. );
-                OptLoBounds[i] = optv[i] - fabs( optv[i]*OptBoundPerc/100. );
-            }
-        }
-    }
+    GEMSsys = gpf->GEMS3LstFilePath();
 
         // testing read
         string ret = rdar.testRead();
@@ -1141,688 +1061,11 @@ void optimization::get_nlopt_param_txt(vector<double> optv)
          { ret += " - fields must be read from OptParamFile structure";
            Error( "Error", ret);
          }
+
 }
 
 ////-------------------------------------------------------------------------------------------------
 
-/// Reading part of the MULTI structure from OptParamFile text file
-void get_gems_fit_multi_txt(TNode* node, opti_vector *op )
-{
-    // open file for reading
-    string fname = gpf->OptParamFile();
-    fstream ff(fname.c_str(), ios::in );
-    ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
 
-    TReadArrays  rddar(70, MULTI_dynamic_fields, ff);
-    MULTI* pmp = node->pMulti()->GetPM();
-    vector<IOJFormat> vFormats;
-
-    long int nfild = rddar.findNextNotAll();
-    while( nfild >=0 )
-        {
-          switch( nfild )
-          {
-          case f_sMod: if( !pmp->sMod )
-                          Error( "Error", "Array sMod is not used in this problem");
-                        rddar.readArray( "sMod" , pmp->sMod[0], pmp->FIs, 8 );
-                        break;
-          case f_LsMod:{ if( !pmp->LsMod )
-                          Error( "Error", "Array LsMod is not used in this problem");
-                        rddar.readArray( "LsMod" , pmp->LsMod, pmp->FIs*3) ;
-                        long int LsModSum;
-                        long int LsIPxSum;
-                        node->pMulti()->getLsModsum( LsModSum, LsIPxSum );
-                        if(LsIPxSum )
-                        { rddar.readNext( "IPxPH");
-                          if(!pmp->IPx )
-                            pmp->IPx = new long int[LsIPxSum];
-                          rddar.readArray( "IPxPH", pmp->IPx,  LsIPxSum);
-                        }
-                        if(LsModSum )
-                        { rddar.readNext( "PMc");
-                          if(!pmp->PMc )
-                            pmp->PMc = new double[LsModSum];
-                          rddar.readFormatArray( "PMc", pmp->PMc,  LsModSum, vFormats ); // expect params to fit here
-                        }
-                        break;
-                       }
-                case f_LsMdc: { if( !pmp->LsMdc )
-                             Error( "Error", "Array LsMdc not used in this problem");
-                          rddar.readArray( "LsMdc" , pmp->LsMdc, pmp->FIs*3 );
-                          long int LsMdcSum;
-                          long int LsMsnSum;
-                          long int LsSitSum;
-                          node->pMulti()->getLsMdcsum( LsMdcSum,LsMsnSum, LsSitSum );
-                          if(LsMdcSum )
-                          { rddar.readNext( "DMc");
-                            if(!pmp->DMc )
-                               pmp->DMc = new double[LsMdcSum];
-                          rddar.readFormatArray( "DMc", pmp->DMc,  LsMdcSum, vFormats );
-                          }
-                        if(LsMsnSum )
-                        { rddar.readNext( "MoiSN");
-                          if(!pmp->MoiSN )
-                             pmp->MoiSN = new double[LsMsnSum];
-                        rddar.readArray( "MoiSN", pmp->MoiSN,  LsMsnSum);
-                        }
-                        break;
-                      }
-                case f_fDQF: rddar.readFormatArray( "fDQF", pmp->fDQF,  pmp->L, vFormats );
-                        break;
-          }
-
-          if( !vFormats.empty() )
-          {
-              string fPMc = "PMc";
-              string fDMc = "DMc";
-              string ffDQF = "fDQF";
-              // Here write your code for input parameters
-              for(unsigned int ii=0; ii<vFormats.size(); ii++ )
-              {
-                  string format = vFormats[ii].format;
-                  std::string::size_type k = 0;
-                  while((k=format.find('\"',k))!=format.npos) {
-                  format.erase(k, 1);
-                  }
-gpf->flog << "Parameter: " << MULTI_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
-gpf->flog << " : " << format << endl;
-                  if ((vFormats[ii].type == ft_F))
-                  {
-                      if (vFormats[ii].format.size() >1)
-                      {   // after F comes a JSON object
-                          switch( nfild )
-                          {
-                             case f_LsMod:  // interaction parameters     (PMc table)
-//gpf->flog << "    Parameter: " << fPMc << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
-                                 F_to_OP(op, vFormats[ii], fPMc );
-                                 break;
-                             case f_LsMdc:  // phase component parameters (DMc table)
-//gpf->flog << "    Parameter: " << fDMc << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
-                                 F_to_OP(op, vFormats[ii], fDMc );
-                                 break;
-                             default:
-//gpf->flog << "    Parameter: " << MULTI_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
-                                 F_to_OP(op, vFormats[ii], MULTI_dynamic_fields[nfild].name );
-                          }
-                      } else
-                      {   // after F comes the initial value
-                          switch( nfild )
-                          {
-                          case f_sMod:
-                                       break;
-                          case f_LsMod:{ if( !pmp->LsMod )
-                                            Error( "Error", "Arrays LsMod and PMc are not used in this GEM system definition!");
-                                            long int LsModSum;
-                                            long int LsIPxSum;
-                                            node->pMulti()->getLsModsum( LsModSum, LsIPxSum );
-                                            if(LsIPxSum )
-                                            {
-                                            }
-                                            if(LsModSum )
-//gpf->flog << "    Parameter: " << fPMc << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
-                                                F_to_OP(pmp->PMc[vFormats[ii].index], op, vFormats[ii], fPMc );
-                                        break;
-                                       }
-                          case f_LsMdc:{ if( !pmp->LsMdc )
-                                            Error( "Error", "Array LsMdc and DMc are not used in this GEM system definition!");
-                                            long int LsMdcSum;
-                                            long int LsMsnSum;
-                                            long int LsSitSum;
-                                            node->pMulti()->getLsMdcsum( LsMdcSum,LsMsnSum, LsSitSum );
-                                            if(LsMdcSum )
-//gpf->flog << "    Parameter: " << fDMc << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
-                                            F_to_OP(pmp->DMc[vFormats[ii].index], op, vFormats[ii], fDMc );
-                                        break;
-                                        }
-                          case f_fDQF:
-//gpf->flog << "    Parameter: " << MULTI_dynamic_fields[nfild].name << " Type " << vFormats[ii].type <<  " Index " << vFormats[ii].index;
-                               F_to_OP(pmp->fDQF[vFormats[ii].index], op, vFormats[ii], MULTI_dynamic_fields[nfild].name );
-                                        break;
-                          }
-                      }
-
-                  }
-
-                  if (vFormats[ii].type == ft_S)
-                  {
-                      // after S comes initial value
-
-                      switch( nfild )
-                      {
-                      case f_sMod:
-                                   break;
-                      case f_LsMod:{ if( !pmp->LsMod )
-                                        Error( "Error", "Arrays LsMod and PMc are not used in this GEM system definition!");
-                                        long int LsModSum;
-                                        long int LsIPxSum;
-                                        node->pMulti()->getLsModsum( LsModSum, LsIPxSum );
-                                        if(LsIPxSum )
-                                        {
-                                        }
-                                        if(LsModSum )
-                                        {
-                                            op->fixed_param.push_back(new opti_vector::fixed);
-                                            S_to_OP(pmp->PMc[vFormats[ii].index], op->fixed_param[op->fixed_param.size()-1], vFormats[ii], fPMc );
-                                        }
-                                    break;
-                                   }
-                      case f_LsMdc:{ if( !pmp->LsMdc )
-                                        Error( "Error", "Array LsMdc and DMc are not used in this GEM system definition!");
-                                        long int LsMdcSum;
-                                        long int LsMsnSum;
-                                        long int LsSitSum;
-                                        node->pMulti()->getLsMdcsum( LsMdcSum,LsMsnSum, LsSitSum );
-                                        if(LsMdcSum )
-                                        {
-                                            op->fixed_param.push_back(new opti_vector::fixed);
-                                            S_to_OP(pmp->DMc[vFormats[ii].index], op->fixed_param[op->fixed_param.size()-1], vFormats[ii], fDMc );
-                                        }
-                                    break;
-                                    }
-                      case f_fDQF:
-                           op->fixed_param.push_back(new opti_vector::fixed);
-                           S_to_OP(pmp->fDQF[vFormats[ii].index], op->fixed_param[op->fixed_param.size()-1], vFormats[ii], MULTI_dynamic_fields[nfild].name );
-                                    break;
-                      }
-                  }
-//gpf->flog << " : " << vFormats[ii].format << endl;
-              }
-              vFormats.clear();
-          }
-          nfild = rddar.findNextNotAll();
-        }
-}
-
-/// Reading part dataCH structure from OptParamFile text file
-void get_gems_fit_DCH_txt(TNode* node, opti_vector* op)
-{
-    // open file for reading
-    string fname = gpf->OptParamFile();
-    fstream ff(fname.c_str(), ios::in );
-    ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
-
-    TReadArrays  rddar(30, DataCH_dynamic_fields, ff);
-    DATACH* CSD = node->pCSD();
-    vector<IOJFormat> vFormats;
-    int nr_reac = 0;
-//    double logK[9];
-
-    vector<double> go2;
-    go2.resize(100);
-    for (unsigned jj=0; jj<go2.size();jj++)
-    go2[jj] = CSD->G0[jj];
-
-    long int nfild = rddar.findNextNotAll();
-    while( nfild >=0 )
-      {
-        switch( nfild )
-        {
-        case f_ICNL: rddar.readArray( "ICNL", CSD->ICNL[0], CSD->nIC, MaxICN );
-                break;
-        case f_DCNL: rddar.readArray( "DCNL", CSD->DCNL[0], CSD->nDC, MaxDCN );
-                break;
-        case f_PHNL: rddar.readArray( "PHNL", CSD->PHNL[0], CSD->nPH, MaxPHN );
-                break;
-//        case f_ccPH: rddar.readArray( "ccPH", CSD->ccPH, CSD->nPH, 1 );
-//                break;
-//        case f_nDCinPH: rddar.readArray( "nDCinPH", CSD->nDCinPH, CSD->nPH);
-//                break;
-//        case f_TKval: rddar.readArray( "TKval", CSD->TKval, CSD->nTp );
-//                break;
-//        case f_Pval: rddar.readArray( "Pval", CSD->Pval, CSD->nPp );
-//                  break;
-        case f_G0: rddar.readFormatArray( "G0", CSD->G0, CSD->nDC*node->gridTP(), vFormats );
-                        for (unsigned int i=0; i<vFormats.size(); ++i)
-                        {
-                            if (vFormats[i].type == ft_R )
-                            {
-                                ++nr_reac;
-                                op->reactions.push_back(new opti_vector::RDc);
-                            }
-                        }
-//                        rddar.readArray( "G0", CSD->G0, CSD->nDC*node->gridTP() );
-                  break;
-                        // not working until dealing on how to get the logK look-up array into the input file
-//        case f_logK: rddar.readFormatArray( "logK", logK, nr_reac*1/**node->gridTP()*/, vFormats );
-//                  break;
-         }
-        if( !vFormats.empty() )
-        {
-            int nr = 0;
-            // Hear you must write your code
-            for(unsigned  int ii=0; ii<vFormats.size(); ii++ )
-            {
-                string format = vFormats[ii].format;
-                std::string::size_type k = 0;
-                while((k=format.find('\"',k))!=format.npos) {
-                format.erase(k, 1);
-                }
-
-gpf->flog << "Parameter: " << DataCH_dynamic_fields[nfild].name << " " << node->xCH_to_DC_name(vFormats[ii].index)<< " Type " << vFormats[ii].type;
-gpf->flog << " : " << format << endl;
-                if ((vFormats[ii].type == ft_F))
-                {
-                    if (vFormats[ii].format.size() > 1)
-                    {
-                        // after F comes a JSON object
-                        F_to_OP(op, vFormats[ii], DataCH_dynamic_fields[nfild].name );
-                    } else
-                    {
-                        // after F comes initial value
-                        switch( nfild )
-                        {
-                        // Case G0
-                        case f_G0:
-                            F_to_OP(CSD->G0[vFormats[ii].index], op, vFormats[ii], DataCH_dynamic_fields[nfild].name );
-                                  break;
-                        // add other parameters
-                         }
-                    }
-                }
-                if (vFormats[ii].type == ft_R)
-                {
-//                    op->reactions.push_back(new opti_vector::RDc);
-                    op->h_RDc = true;
-                    vector<string> out;
-                    Data_Manager *temp = new Data_Manager(1);
-                    temp->parse_JSON_object(vFormats[ii].format, keys::Rndx, out);
-                    nr = atoi(out.at(0).c_str())-1;
-                    if (nr < 0)
-                    {
-                        cout<< " Reaction " << ii << " can't have Rndx smaller than 1!"<< endl;
-                        exit(1);
-                    }
-                    out.clear();
-
-                    //ERROR
-//                    if (op->reactions[nr])
-
-                    R_to_OP(op->reactions[nr], vFormats[ii] ); // , DataCH_dynamic_fields[nfild].name );
-                }
-                if (vFormats[ii].type == ft_S)
-                {
-                    // after S comes initial value
-                    switch( nfild )
-                    {
-                    // Case G0
-                    case f_G0:
-                        op->fixed_param.push_back(new opti_vector::fixed);
-                        S_to_OP(CSD->G0[vFormats[ii].index], op->fixed_param[op->fixed_param.size()-1], vFormats[ii], DataCH_dynamic_fields[nfild].name );
-                              break;
-                    // add other parameters
-                     }
-                }
-            }
-            vFormats.clear();
-        }
-        nfild = rddar.findNextNotAll();
-    }
-
-    unsigned int size = CSD->nTp, sizep = 0;
-    for (int i=0; i<CSD->nPp; ++i)
-    {
-        if (CSD->Pval[i] != 0)
-            ++sizep;
-    }
-    size = size*sizep;
-    size = gpf->sizeTP;
-    if (size > 1) size++;
-
-    if (op->h_RDc)
-    {
-        vector<string> data;
-        string line, allparam;
-        string LogK_s;
-        string sub_LogK;
-        int pos_start, pos_end, check;
-        unsigned int i;
-        ifstream param_stream;
-        string f3("<logK>");
-        string f4;
-
-
-        param_stream.open(fname.c_str());
-        if( param_stream.fail() )
-        {
-            cout << "Opening of file "<<fname<<" failed !!"<<endl;
-            exit(1);
-        }
-        while( getline(param_stream, line) )
-        {
-            data.push_back(line);
-        }
-        param_stream.close();
-        for( i=0; i < data.size(); i++ )
-        allparam += data[i];
-
-        check = allparam.find("#");
-        if (check < 0)  f4 = "<";
-        else f4 = "#";
-
-            pos_start = allparam.find(f3);
-            if (pos_start > 0)
-            {
-            pos_end   = allparam.find(f4,pos_start +1 );
-            LogK_s = allparam.substr((pos_start+f3.length()),(pos_end-pos_start-f3.length()));
-            istringstream LogK_ss(LogK_s);
-            istringstream test_ss(LogK_s);
-            vector <double> test;
-            do
-            {
-             test_ss >> sub_LogK;
-            test.push_back(atof(sub_LogK.c_str()));
-            }while(test_ss);
-            test.pop_back();
-
-            if ((test.size() != size*nr_reac) && (test.size() != 0) )
-            {
-                if (test.at(0) != 0) {
-                cout << "Number of logk's doesn't correspond to number of T*P*reactions! " << endl;
-                cout << "You need " << size*nr_reac << " <logK> entries in the input file, you have " << test.size() << endl;
-                exit(1);}
-            }
-
-            if ((test.size() != 0) && (test.at(0) != 0))
-            do
-            {
-                for (int i = 0; i<nr_reac; ++i)
-                {
-                    for (unsigned int j=0; j<size; ++j)
-                    {
-                        LogK_ss >> sub_LogK;
-                        op->reactions[i]->logK_TPpairs.push_back(atof(sub_LogK.c_str()));
-                    }
-                }
-                LogK_ss >> sub_LogK;
-            }while(LogK_ss);
-//            charges.pop_back();
-            }
-    }
-
-
-
-}
-
-
-/// Reading part dataBR structure from OptParamFile text file
-void get_gems_fit_DBR_txt(TNode* node , opti_vector *op)
-{
-    // open file for reading
-    string fname = gpf->OptParamFile();
-    fstream ff(fname.c_str(), ios::in );
-    ErrorIf( !ff.good() , fname, "OptParamFile Fileopen error");
-
-    TReadArrays  rdar(f_bSP+1/*52*/, DataBR_fields, ff);
-    DATACH* CSD = node->pCSD();
-    DATABR* CNode = node->pCNode();
-    vector<IOJFormat> vFormats;
-
-    long int nfild = rdar.findNextNotAll();
-    while( nfild >=0 )
-      {
-        switch( nfild )
-        {
-        case f_TK: rdar.readFormatArray( "TK",  &CNode->TK, 1, vFormats); // i
-                break;
-        case f_P: rdar.readFormatArray( "P",  &CNode->P, 1, vFormats);  // i
-                break;
-//        case f_Vs: rdar.readFormatArray( "Vs", &CNode->Vs, 1, vFormats);
-//                break;
-//        case f_Ms: rdar.readFormatArray( "Ms",  &CNode->Ms, 1, vFormats);
-//                break;
-//        case f_Hs: rdar.readFormatArray( "Hs",  &CNode->Hs, 1, vFormats);
-//                break;
-//        case f_Gs: rdar.readFormatArray( "Gs",  &CNode->Gs, 1, vFormats);
-//                 break;
-//        case f_IS: rdar.readFormatArray( "IS",  &CNode->IC, 1, vFormats);
-//                break;
-//        case f_pH: rdar.readFormatArray( "pH",  &CNode->pH, 1, vFormats);
-//                break;
-//        case f_pe: rdar.readFormatArray( "pe",  &CNode->pe, 1, vFormats);
-//                break;
-//        case f_Eh: rdar.readFormatArray( "Eh",  &CNode->Eh, 1, vFormats);
-                break;
-        case f_bIC: rdar.readFormatArray( "bIC",  CNode->bIC, CSD->nICb, vFormats ); // i
-                break;
-//        case f_uIC: rdar.readFormatArray( "uIC",  CNode->uIC, CSD->nICb, vFormats );
-//                break;
-//        case f_xDC: rdar.readFormatArray( "xDC",  CNode->xDC, CSD->nDCb, vFormats );
-//                break;
-//        case f_gam: rdar.readFormatArray( "gam",  CNode->gam, CSD->nDCb, vFormats );
-//                break;
-//        case f_dll: rdar.readFormatArray( "dll",  CNode->dll, CSD->nDCb, vFormats );  // i
-//                break;
-//        case f_dul: rdar.readFormatArray( "dul",  CNode->dul, CSD->nDCb, vFormats );  // i
-//                break;
-//        case f_aPH: rdar.readFormatArray( "aPH",  CNode->aPH, CSD->nPHb, vFormats );  // i
-//                break;
-//        case f_xPH: rdar.readFormatArray( "xPH",  CNode->xPH, CSD->nPHb, vFormats );
-//                break;
-//        case f_vPS: rdar.readFormatArray( "vPS",  CNode->vPS, CSD->nPSb, vFormats );
-//                break;
-//        case f_mPS: rdar.readFormatArray( "mPS",  CNode->mPS, CSD->nPSb, vFormats );
-//                break;
-//        case f_bPS: rdar.readFormatArray( "bPS",  CNode->bPS, CSD->nPSb*CSD->nICb, vFormats );
-//                break;
-//        case f_xPA: rdar.readFormatArray( "xPA",  CNode->xPA, CSD->nPSb, vFormats );
-//                break;
-//        case f_bSP: rdar.readFormatArray( "bSP",  CNode->bSP, CSD->nICb, vFormats );
-//               break;
-         }
-        if( !vFormats.empty() )
-        {
-            int nl = 0;
-            // Here you must write your code
-            op->h_nestfun = true;
-            for(unsigned  int ii=0; ii<vFormats.size(); ii++ )
-            {
-                string format = vFormats[ii].format;
-                std::string::size_type k = 0;
-                while((k=format.find('\"',k))!=format.npos) {
-                format.erase(k, 1);
-                }
-gpf->flog<< "Parameter: " << DataBR_fields[nfild].name << " Type " << vFormats[ii].type << " Index " << vFormats[ii].index << endl;
-gpf->flog<< format << endl;
-                if ((vFormats[ii].type == ft_F))
-                {
-                    if (vFormats[ii].format.size() > 1)
-                    {             // after F comes a JSON object
-                        F_to_OP(op, vFormats[ii], DataBR_fields[nfild].name );
-                    } else
-                    {              // after F comes initial value
-                        switch( nfild )
-                        {
-                            case f_TK: F_to_OP(CNode->TK, op, vFormats[ii], DataBR_fields[nfild].name );
-                                      break;
-                            case f_P: F_to_OP(CNode->P, op, vFormats[ii], DataBR_fields[nfild].name );
-                                      break;
-                            case f_bIC: F_to_OP(CNode->bIC[vFormats[ii].index], op, vFormats[ii], DataBR_fields[nfild].name ); // i
-                                      break;
-                        // add other parameters
-                        }
-                    }
-                }
-                if (vFormats[ii].type == ft_L)
-                {
-                    op->Lparams.push_back(new opti_vector::Lp);
-                    op->h_Lp = true;
-                    L_to_OP(op->Lparams[nl], vFormats[ii], DataBR_fields[nfild].name );
-                    nl++;
-                }
-                if (vFormats[ii].type == ft_S)
-                {
-                    // after S comes initial value
-                    switch( nfild )
-                    {
-                        case f_TK:
-                        op->fixed_param.push_back(new opti_vector::fixed);
-                        S_to_OP(CNode->TK, op->fixed_param[op->fixed_param.size()-1], vFormats[ii], DataBR_fields[nfild].name );
-                              break;
-                        case f_P:
-                        op->fixed_param.push_back(new opti_vector::fixed);
-                        S_to_OP(CNode->P, op->fixed_param[op->fixed_param.size()-1], vFormats[ii], DataBR_fields[nfild].name );
-                              break;
-                        case f_bIC:
-                        op->fixed_param.push_back(new opti_vector::fixed);
-                        S_to_OP(CNode->bIC[vFormats[ii].index], op->fixed_param[op->fixed_param.size()-1], vFormats[ii], DataBR_fields[nfild].name ); // i
-                              break;
-                    // add other parameters
-                     }
-                }
-            }
-            vFormats.clear();
-        }
-        nfild = rdar.findNextNotAll();
-        }
-}
-
-
-
-
-void F_to_OP (opti_vector *op, IOJFormat Jformat, string nfild)
-{
-    vector<string> out;
-    Data_Manager *temp = new Data_Manager(1);
-    temp->parse_JSON_object(Jformat.format, keys::IV, out);
-    if (out.size() == 0)  { cout << "You need to set an IV if after F comes a JSON object {...}!"<< endl
-                                    << "for parameter type: " << nfild << " index: " << Jformat.index << endl; exit(1);} // ERROR
-    // 0_param
-    if (out.at(0) == "0")
-        out.at(0) = "1e-9";
-    op->opt.push_back( atof(out.at(0).c_str()) );
-    if (out.at(0) == "1e-9")
-        op->optv0.push_back( 0 );
-    else
-    op->optv0.push_back( atof(out.at(0).c_str()) );
-    out.clear();
-
-    temp->parse_JSON_object(Jformat.format, keys::UB, out);
-    op->UB.push_back( atof(out.at(0).c_str()) );
-    out.clear();
-
-    temp->parse_JSON_object(Jformat.format, keys::LB, out);
-    op->LB.push_back( atof(out.at(0).c_str()) );
-    out.clear();
-
-    op->Ptype.push_back( nfild );
-    op->Pindex.push_back( Jformat.index );
-}
-
-void F_to_OP (double val, opti_vector *op, IOJFormat Jformat, string nfild)
-{
-    op->opt.push_back(val);
-    op->optv0.push_back(val);
-    if (val > 0)
-    {
-        op->LB.push_back(val-val*keys::bperc/100);
-        op->UB.push_back(val+val*keys::bperc/100);
-    } else
-    {
-        op->UB.push_back(val-val*keys::bperc/100);
-        op->LB.push_back(val+val*keys::bperc/100);
-    }
-    if (val == 0)
-    {
-        cout << "ERROR: If the intial value of the parameter is 0 you must specify the UB (upper) and LB (lower) bounds in JSON format F{ \"IV\": val, \"UB\": val, \"LB\": val}" << endl
-                << "for parameter type: " << nfild << " index: " << Jformat.index << endl;
-        exit(1);
-    }
-
-    op->Ptype.push_back( nfild );
-    op->Pindex.push_back( Jformat.index );
-}
-
-void S_to_OP (double val, opti_vector::fixed *op, IOJFormat Jformat, string nfild)
-{
-    op->Pval = val ;
-    op->Ptype = nfild ;
-    op->Pindex = Jformat.index ;
-}
-
-
-void R_to_OP (opti_vector::RDc *r, IOJFormat Jformat /* , string nfild */ )
-{
-    vector<string> out;
-    Data_Manager *temp = new Data_Manager(1);
-
-    temp->parse_JSON_object(Jformat.format, keys::IV, out);
-    r->Ival = atof(out.at(0).c_str());
-    out.clear();
-
-    temp->parse_JSON_object(Jformat.format, keys::Ref, out);
-    r->Ref = out.at(0);
-    out.clear();
-
-//    temp->parse_JSON_object(Jformat.format, keys::logK, out);
-//    r->logK = atof(out.at(0).c_str());
-//    out.clear();
-
-    temp->parse_JSON_object(Jformat.format, keys::nC, out);
-    r->nC = atoi(out.at(0).c_str());
-    out.clear();
-
-    temp->parse_JSON_object(Jformat.format, keys::DC, out);
-    r->DCn = out.at(0);
-    out.clear();
-
-    temp->parse_JSON_object(Jformat.format, keys::RC, out);
-    for (unsigned int i = 0 ; i < out.size() ; i++)
-    {
-        r->rdc_species.push_back( out.at(i) );
-    }
-    out.clear();
-
-    temp->parse_JSON_object(Jformat.format, keys::Rcoef, out);
-    if (out.size() != r->rdc_species.size())
-    {
-        cout << "ERROR: Number of reaction components is not equal with the number of reaction coeficients" << endl;
-        exit(1);
-    }
-    for (unsigned int i = 0 ; i < out.size() ; i++)
-    {
-        r->rdc_species_coef.push_back( atof(out.at(i).c_str()) );
-    }
-
-    out.clear();
-}
-
-
-void L_to_OP (opti_vector::Lp *l, IOJFormat Jformat, string nfild)
-{
-    vector<string> out;
-    Data_Manager *temp = new Data_Manager(1);
-
-    l->type = nfild ;
-    l->index = Jformat.index ;
-
-    temp->parse_JSON_object(Jformat.format, keys::IV, out);
-    l->IV = atof(out.at(0).c_str());
-    out.clear();
-
-    temp->parse_JSON_object(Jformat.format, keys::LE, out);
-    l->name = out.at(0);
-    out.clear();
-
-    temp->parse_JSON_object(Jformat.format, keys::LEs, out);
-    for (unsigned int i = 0 ; i < out.size() ; i++)
-    {
-        l->L_param.push_back( out.at(i) );
-    }
-    out.clear();
-
-    temp->parse_JSON_object(Jformat.format, keys::Lcoef, out);
-    if (out.size() != l->L_param.size())
-    {
-        cout << "ERROR: Number of linked parameters is not equal with the number of link coeficients" << endl;
-        exit(1);
-    }
-    for (unsigned int i = 0 ; i < out.size() ; i++)
-    {
-        l->L_coef.push_back( atof(out.at(i).c_str()) );
-    }
-
-    out.clear();
-
-}
 
 // ----------- End of  visor.cpp ----------------------------
