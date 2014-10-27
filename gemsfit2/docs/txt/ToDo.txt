@@ -3,7 +3,7 @@ Roadmap of GEMSFIT2 development
 + completed or partially completed
 - to be completed
 
-- (important!): re-write TGfitTask::setnodes() to avoid hardcoded compounds;
++ (important!): re-write TGfitTask::setnodes() to avoid hardcoded compounds;
   instead, use name lists of DCs from node-> (DCH file) and TNode access to A matrix and at. masses!
   in perspective (Sveta) to re-use GEMS formula parser class.  
 
@@ -27,7 +27,7 @@ Roadmap of GEMSFIT2 development
 + problem in csvtoejdb tool when adding the same pair of sample and expdataset - the program should skip it and not add it again to the database.
 
 + Printing class - printing in /results/FIT_results.csv
-- test inverse weighting more
++ test inverse weighting more
 + add normalized target function (by average from experimental data)
 + add documentation for normalized target function
 + solid-solution composition as element bulk phase concentration
@@ -94,13 +94,21 @@ probably the NLopt doesn't allow such dynamic change in the parameter vector!!
 
 + bootstrap sampling of residuals / measured values
 + intorduce polynomials of the logK dependence as in ReacDC
+- check for (input) variable initialization when calling optimization algorithms (esp. global ones)
+ to achieve reproducible results for the same task. 
 
-- JSON format input for Parameters to fit in a similar way as for DataSelect and DataTarget
-- a way to connect the names in the databse with the names in the GEMS3K
-	- when reading in form the database store all comp, species, etc. names.
+- JSON format input for Parameters to fit in a similar way as for DataSelect and DataTarget (critical)
+- a way to connect the names (synonims) in the database with the names in the GEMS3K system definition
+	- when reading in from the experimental database all comp, species, etc. names. (critical)
+- Short/vs long (self-explanatory) keywords, e.g. "OFUN|ObjectiveFunction"  (potentially important)
+- Improve documentation structure (TOC) and organization of help database, add missing keywords (usability)
 
-future
-- iterative regresion
+- Check cross-compiling of gemsfit2 and gfshell2 with MinGW on linux to produce executable on Windows 7/8
+- Check if it is possible (instead) to pack gfshell2 + gemsfit2 and their dependence libraries into a docker container
+- Think how to deploy GEMSFITS package (i.e. prepare the installer) - for future distribution
+
+Future
+- iterative regression
 - 2-3 step regrestion: 1 - using global algoritm; 2 - using local algorithm.
 - Bayesian linear regression
 
