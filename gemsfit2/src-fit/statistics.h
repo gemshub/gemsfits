@@ -158,8 +158,8 @@ class statistics
     * @author SD
     * @date 14.03.2013
     */
-    void get_stat_param_txt( );
-    void default_stat_param();
+    void get_stat_param( );
+//    void default_stat_param();
 
 
     public:
@@ -178,7 +178,7 @@ class statistics
         * @date 21.11.2012
         */
         statistics( TGfitTask *system, double weighted_Tfun_sum_of_residuals_, int num_of_params_, int num_of_runs_  );
-        statistics(); // init mode SD
+//        statistics(); // init mode SD
 
         /// int indicating if Monte Carlo runs for confidence interval analysis should be performed (=1 || =2) or not (=0)
         int MCbool;

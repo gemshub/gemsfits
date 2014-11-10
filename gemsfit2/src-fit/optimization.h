@@ -41,6 +41,7 @@
 #include "gemsfit_iofiles.h"
 #include <jansson.h>
 #include <sstream>
+#include "opt_vector.h"
 using namespace std;
 
 
@@ -49,7 +50,7 @@ class optimization
 
 private:
 
-    /// struct holding constraint values (retrieved from SS_GEMSFIT_input.dat)
+//    /// struct holding constraint values (retrieved from SS_GEMSFIT_input.dat)
     typedef struct
     {
         int id;
@@ -60,9 +61,9 @@ private:
 
 
     // Populate nlopt instance
-//    virtual void set_nlopt_param( );
-    virtual void get_nlopt_param_txt();
-    virtual void define_nlopt_param( );
+////    virtual void set_nlopt_param( );
+    void get_nlopt_param ( );
+//    virtual void define_nlopt_param( );
 
 
 public:
@@ -79,16 +80,16 @@ public:
 
     // Constructor
     optimization( );
-    optimization( int i); // init mode constructor DS
+//    optimization( int i); // init mode constructor DS
 
 //    bool h_RDc; /// handle for checking if there are reaction constraints in the input file
 
 
     // Destructor
-    virtual ~optimization();
+     ~optimization();
 
-    /// Writes the NLopt parameters in the input tamplat file
-    virtual void out_nlopt_param_txt(  bool with_comments, bool brief_mode );
+//    /// Writes the NLopt parameters in the input tamplat file
+//    virtual void out_nlopt_param_txt(  bool with_comments, bool brief_mode );
 
     // configuration data for nlopt instance (get from SS_GEMSFIT_input.dat)
     /// name of the optimization algorithm from NLOPT library
@@ -96,6 +97,7 @@ public:
     string OptParameters;
     string NFunParameters;
     string GEMSsys;
+    int mode=-1;
     /// number of threads for parallel execution
 //    int OptThreads;
     ///
@@ -117,10 +119,10 @@ public:
     vector<double> OptLoBounds, LB;
 
     /// Normalize init vector, bounds and constraints
-    virtual void normalize_params( const vector<double> initguesses, bool NormBounds );
+    void normalize_params( const vector<double> initguesses, bool NormBounds );
 
     /// NLopt return codes
-    virtual void print_return_message( const int result );
+    void print_return_message( const int result );
 
     void get_OptParameters ( );
 

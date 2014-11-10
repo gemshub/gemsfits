@@ -33,6 +33,7 @@
 
 #include "statistics.h"
 #include "gemsfit_global_functions.h"
+#include "json_parse.h"
 #include <armadillo>
 #include <boost/math/distributions/students_t.hpp>
 #include <boost/math/distributions/normal.hpp>
@@ -90,7 +91,7 @@ cout<<" Statistics Constructor: sum of squares: "<<Weighted_Tfun_sum_of_residual
 
 cout<<" Statistics Constructor: number_of_parameters: "<<number_of_parameters<<endl;
 
-    get_stat_param_txt();
+    get_stat_param(); // <----------------------------------------------------++++++
 //stat->set_plotfit_vars_txt();
 
 //    /// Instantiate pointer to PlotFit class to print results
@@ -247,6 +248,33 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
 // Destructor
 statistics::~statistics()
 {
+
+}
+
+void statistics::get_stat_param()
+{
+    string fname, str, data;
+    vector<string> out;
+    int mode = gpf->KeysNdx;
+
+    fname = gpf->OptParamFile();
+
+    std::ifstream file(fname.c_str());
+    std::ostringstream tmp;
+    tmp<<file.rdbuf();
+    std::string s = tmp.str();
+
+    parse_JSON_object(s, keys::StatMC[mode], out);
+    MCbool = atoi(out[0].c_str());
+    out.clear();
+
+    parse_JSON_object(s, keys::StatMCr[mode], out);
+    num_of_MC_runs = atoi(out[0].c_str());
+    out.clear();
+
+    parse_JSON_object(s, keys::StatPer[mode], out);
+    perturbator = atof(out[0].c_str());
+    out.clear();
 
 }
 

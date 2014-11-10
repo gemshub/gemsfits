@@ -56,6 +56,7 @@ int countit = 0;
 
 
 int generateConfig(); // Mode GEMSFIT to generate input configuration file
+int generateJConfig();
 
 struct timeval start, end;
 
@@ -91,8 +92,11 @@ int main( int argc, char *argv[] )
         mkdir(gpf->OutputDirPath().c_str(), 0775);
     }
 
-    if( gpf->isInitMode() ) // Mode GEMSFIT to generate input configuration file
-      return generateConfig();
+//    if( gpf->isInitMode() ) // Mode GEMSFIT to generate input configuration file
+//      return generateConfig();
+
+    if( gpf->isInitJMode() ) // Mode GEMSFIT to generate input configuration file
+      return generateJConfig();
 
     gpf->flog.open(gpf->FITLogFile().c_str(), ios::trunc);
     if( gpf->flog.fail() )

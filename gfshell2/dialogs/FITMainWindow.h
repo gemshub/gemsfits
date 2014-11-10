@@ -54,7 +54,7 @@ class FITMainWindow : public QMainWindow
     string SysFITDir;   ///< Path to resources directory
     string LocalDocDir; ///< Path to help directory
     string UserDir;     ///< Path to User directory
-    bool useComments;   ///< Write TXT files with comments
+    bool KeysLength;   ///< Write TXT files with comments
     QString ExpTemplate; ///< Current template for experiments record
     QString SrchTemplate; ///< Current template for experiments search
 

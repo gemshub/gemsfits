@@ -74,6 +74,8 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     }
     h_grad = false;
 
+    mode = gpf->KeysNdx; // determines if the long keys or short keys
+
     // file containing the input parameters of the system and of the optimization class
     param_file  = gpf->OptParamFile().c_str();
 
@@ -379,6 +381,8 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
 
 //    //===== For testing the objective function without oprimization =====//
 //    weighted_Tfun_sum_of_residuals = Equil_objective_function_callback(Opti->optv, grad, this);
+    if (optv_.size() == 0)
+    { cout << "No Parameter was marked for optimization! Check that there are parameter with PType : F! "<< endl; exit (1);}
 
     nlopt::result result = NLopti.optimize( Opti->optv, weighted_Tfun_sum_of_residuals );
     gpf->flog << "optv[0] = "<<Opti->optv[0]<<endl;
@@ -882,6 +886,8 @@ void TGfitTask::get_DataTarget ( )
     out.clear();
 
     parse_JSON_object(DataTarget, keys::Target, out);
+    if (out.size() == 0)
+    { cout << "No Target function defined!! "<< endl; exit(1);}
     Tfun->name = out[0]; // Name of target function
     out.clear();
 
@@ -909,7 +915,7 @@ void TGfitTask::get_DataTarget ( )
         Tfun->objfun[i].weight = 1;
         Tfun->objfun[i].isComputed = false;
 
-        parse_JSON_object(out[i], keys::EPH, out2);
+        parse_JSON_object(out[i], keys::EPH[mode], out2);
         if (out2.size() == 0) { cout << "Phase name has to be specified in Data Target->OFUN->EPH!"<< endl; exit(1);} // ERROR
         Tfun->objfun[i].exp_phase = out2[0];
         out2.clear();
@@ -965,7 +971,7 @@ void TGfitTask::get_DataTarget ( )
         Tfun->nestfun[i].TuWeight = 1;
         Tfun->nestfun[i].isComputed = false;
 
-        parse_JSON_object(out[i], keys::EPH, out2);
+        parse_JSON_object(out[i], keys::EPH[mode], out2);
         if (out2.size() == 0) { cout << "Phase name has to be specified in Data Target->NFUN->EPH!"<< endl; exit(1);} // ERROR
         Tfun->nestfun[i].exp_phase = out2[0];
         out2.clear();
@@ -1011,10 +1017,10 @@ void TGfitTask::get_DataTarget ( )
         Tfun->nestfun[i].Tformula = out2;
         out2.clear();
 
-        parse_JSON_object(out[i], keys::Ptype, out2);
-        if (out2.size() == 0) { cout << "Data Target->NFUN->Ptype has to be speficied!"<< endl; exit(1);} // ERROR
-        Tfun->nestfun[i].Ptype = out2[0];
-        out2.clear();
+//        parse_JSON_object(out[i], keys::PType[mode], out2);
+//        if (out2.size() == 0) { cout << "Data Target->NFUN->Ptype has to be speficied!"<< endl; exit(1);} // ERROR
+//        Tfun->nestfun[i].Ptype = out2[0];
+//        out2.clear();
     }
     out.clear();
 
@@ -1035,7 +1041,7 @@ void TGfitTask::get_DataTarget ( )
         Tfun->addout[i].TuWeight = 1;
         Tfun->addout[i].isComputed = false;
 
-        parse_JSON_object(out[i], keys::EPH, out2);
+        parse_JSON_object(out[i], keys::EPH[mode], out2);
         if (out2.size() == 0) { cout << "Phase name has to be specified in Data Target->NFUN->EPH!"<< endl; exit(1);} // ERROR
         Tfun->addout[i].exp_phase = out2[0];
         out2.clear();
@@ -1223,9 +1229,6 @@ void TGfitTask::set_DH_Helgeson (int n)
         NodT[n]->Set_PMc(3.72, 1 );
         NodT[n]->Set_PMc(1, 4 );
     }
-
-
-
 }
 
 /// calculates TP dependence of b_gamma (and derivatives)

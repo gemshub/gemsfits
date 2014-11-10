@@ -76,13 +76,13 @@ class Data_Manager : public TNode
         * @date 06.11.2012
         */
         Data_Manager( );
-        /**
-        * Constructor for the Data_Manager class.
-        * Used in the gemsfit2 -init mode
-        * @author DM
-        * @date 08.05.2013
-        */
-        Data_Manager( int );
+//        /**
+//        * Constructor for the Data_Manager class.
+//        * Used in the gemsfit2 -init mode
+//        * @author DM
+//        * @date 08.05.2013
+//        */
+//        Data_Manager( int );
 
         /**
         * Destructor of the Data_Manager class. This functions deletes frees the memory
@@ -193,12 +193,12 @@ class Data_Manager : public TNode
             vector<samples*> experiments;         /// vector of samples from one experimental dataset
 
 
-        /**
-        * Writes database connection parameters in the template input file
-        * @author SD
-        * @date 14.03.2013
-        */
-        void out_db_specs_txt( bool with_comments, bool brief_mode );
+//        /**
+//        * Writes database connection parameters in the template input file
+//        * @author SD
+//        * @date 14.03.2013
+//        */
+//        void out_db_specs_txt( bool with_comments, bool brief_mode );
 
     private:
 
@@ -233,7 +233,8 @@ class Data_Manager : public TNode
         * @date 14.03.2013
         */
         void get_db_specs_txt( );
-        void define_db_specs( );
+
+//        void define_db_specs( );
 
         /**
         * Read measurement data from EJDB database

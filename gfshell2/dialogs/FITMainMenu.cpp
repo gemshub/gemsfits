@@ -25,6 +25,8 @@
 #include "PreferencesDialog.h"
 #include "DBKeyDialog.h"
 #include "f_ejdb.h"
+#include "keywords.h"
+#include "sstream"
 
 // -----------------------------------------------------------
 // Actions and commands
@@ -215,7 +217,8 @@ void FITMainWindow::CmSelectGEMS( const string& fname_ )
 
        // make new path string
        string newPath = makeSystemFileName("..");
-       changeEditeRecord( "SystemFiles", newPath);
+       changeEditeRecord( keys::G3Ksys[0] ,newPath); changeEditeRecord( keys::G3Ksys[1] ,newPath);
+//       changeEditeRecord( "SystemFiles", newPath);
 
        setStatusText( "GEMS3K input file set is selected" );
     }
@@ -698,17 +701,26 @@ void FITMainWindow::CmRunTest()
         string fname;
         if( !bson_find_string( bsrec.data, "taskid", fname ) )
                     fname = "undefined";
-        string fpath = "./" + fname + ".dat";
-        fname = fitTaskDir.Dir()+ "/work/" + fname + ".dat";
+        string fpath = "./" + fname + ".json";
+        fname = fitTaskDir.Dir()+ "/work/" + fname + ".json";
 
         // save txt data
-        generateTxtfromBson( fname, &bsrec, useComments );
+        fstream ff(fname.c_str(), ios::out );
+        ff << recBsonText;
+        ff.close();
+//        generateTxtfromBson( fname, &bsrec, useComments );
         bson_destroy( &bsrec);
 
         // start run
         // create arguments string
+        stringstream ss;
+        ss << KeysLength;
+        string sss = ss.str();
+        ss.str("");
+
+
         QStringList cParameters;
-        cParameters << "-run" << fpath.c_str();
+        cParameters << "-run" << sss.c_str() << fpath.c_str();
 
         if( !runProcess( cParameters, workDir) )
            Error("Run gemsfit -run", "Error started process.");
@@ -987,16 +999,19 @@ void FITMainWindow::CmBackupTXT()
         string fname;
         if( !bson_find_string( bsrec.data, "taskid", fname ) )
                     fname = "undefined";
-        fname = projDir + "/" + fname + ".dat";
+        fname = projDir + "/" + fname + ".json";
 
         // save txt data
-        generateTxtfromBson( fname, &bsrec, useComments );
+        fstream ff(fname.c_str(), ios::out );
+        ff << recBsonText;
+        ff.close();
+//        generateTxtfromBson( fname, &bsrec, useComments );
 
         bson_destroy( &bsrec);
 
         changeKeyList();
         contentsChanged = false;
-        setStatusText( "Records exported to json txt-file" );
+        setStatusText( "Records exported to json json-file" );
     }
     catch( TError& err )
     {
@@ -1039,21 +1054,41 @@ void FITMainWindow::readTXT( TFile& inFile )
          inFile.Open();
 
         // read bson records array from file
-         bson bsrec;
-         bson_init( &bsrec );
-         bson_append_string( &bsrec, "taskid", inFile.Name().c_str() );
-         bson_append_string( &bsrec, "projectid", fitTaskDir.Name().c_str() );
-         get_bson_from_gems_fit_txt( inFile.GetPath(), &bsrec );
-         bson_finish( &bsrec );
+//         bson bsrec;
+//         bson_init( &bsrec );
+//         bson_append_string( &bsrec, "taskid", inFile.Name().c_str() );
+//         bson_append_string( &bsrec, "projectid", fitTaskDir.Name().c_str() );
+//         get_bson_from_gems_fit_txt( inFile.GetPath(), &bsrec );
+//         bson_finish( &bsrec );
 
-         //set bson to string
-         ParserJson pars;
-         string bsonVal;
-         pars.printBsonObjectToJson( bsonVal, bsrec.data );
+//         //set bson to string
+//         ParserJson pars;
+//         string bsonVal;
+//         pars.printBsonObjectToJson( bsonVal, bsrec.data );
+
+
+         std::ifstream t(inFile.GetPath().c_str());
+         std::string str, str2;
+
+         t.seekg(0, std::ios::end);
+         str.reserve(t.tellg());
+         t.seekg(0, std::ios::beg);
+
+         str.assign((std::istreambuf_iterator<char>(t)),
+                     std::istreambuf_iterator<char>());
+
+         size_t found;
+
+         // adds taskid and projectid fileds to the task configuration file
+         found = str.find("{");
+         str2 = "{\n     \"taskid\":   \""; str2 += inFile.Name().c_str(); str2 +="\", \n";
+         str2 += "     \"projectid\":   \""; str2 += fitTaskDir.Name().c_str(); str2 +="\", ";
+         str = str.substr(found+1, str.size());
+         str2 += str;
 
          //show result
-        ui->recordEdit->setText( trUtf8(bsonVal.c_str()));
-        bson_destroy( &bsrec);
+        ui->recordEdit->setText( trUtf8(str2.c_str()));
+//        bson_destroy( &bsrec);
 }
 
 /// Delete the list of records

@@ -40,15 +40,17 @@
 optimization::optimization()
 {
     h_optNF = false;
+    mode = gpf->KeysNdx;
+
     constraint_data = new my_constraint_data;
 
     OptTuckey = 0;
+    OptInitStep = 0;
 
     gpf->flog << "09. optimization.cpp(48). Reading NLopt optimization settings from the input file; " << endl;
 
-    define_nlopt_param();
-
-    get_nlopt_param_txt( );
+//    define_nlopt_param();
+    get_nlopt_param();
 
     OptParameterCreate();
 
@@ -61,10 +63,83 @@ optimization::optimization()
     }
 }
 
+void optimization::get_nlopt_param()
+{
+    string fname, str, data;
+    vector<string> out;
+    int mode = gpf->KeysNdx;
+
+    fname = gpf->OptParamFile();
+
+    std::ifstream file(fname.c_str());
+    std::ostringstream tmp;
+    tmp<<file.rdbuf();
+    std::string s = tmp.str();
+
+    GEMSsys = gpf->GEMS3LstFilePath();
+
+    parse_JSON_object(s, keys::OptParameters[mode], out);
+    OptParameters = out[0];
+    out.clear();
+
+    parse_JSON_object(s, keys::OptNFParameters[mode], out);
+    NFunParameters = out[0];
+    out.clear();
+
+    parse_JSON_object(s, keys::OptDW[mode], out);
+    OptDoWhat = atoi(out[0].c_str());
+    out.clear();
+
+    parse_JSON_object(s, keys::OptEQ[mode], out);
+    OptEquilibrium = atoi(out[0].c_str());
+    out.clear();
+
+    parse_JSON_object(s, keys::OptUW[mode], out);
+    OptUserWeight = atoi(out[0].c_str());
+    out.clear();
+
+    parse_JSON_object(s, keys::OptTu[mode], out);
+    OptTuckey = atoi(out[0].c_str());
+    out.clear();
+
+    parse_JSON_object(s, keys::OptTuVal[mode], out);
+    OptTuckeyVal = atoi(out[0].c_str());
+    out.clear();
+
+    parse_JSON_object(s, keys::OptAlg[mode], out);
+    OptAlgo = out[0].c_str();
+    out.clear();
+
+    parse_JSON_object(s, keys::OptPBP[mode], out);
+    OptBoundPerc = atof(out[0].c_str());
+    out.clear();
+
+    parse_JSON_object(s, keys::OptTRel[mode], out);
+    OptTolRel = atof(out[0].c_str());
+    out.clear();
+
+    parse_JSON_object(s, keys::OptTAbs[mode], out);
+    OptTolAbs = atof(out[0].c_str());
+    out.clear();
+
+    parse_JSON_object(s, keys::OptMEv[mode], out);
+    OptMaxEval = atoi(out[0].c_str());
+    out.clear();
+
+    parse_JSON_object(s, keys::OptNormP[mode], out);
+    OptNormParam = atoi(out[0].c_str());
+    out.clear();
+
+    parse_JSON_object(s, keys::OptPer[mode], out);
+    OptPerturbator = atof(out[0].c_str());
+    out.clear();
+
+}
+
 void optimization::OptParameterCreate ()
 {
     unsigned  p = 0;
-    vector<string> out;
+    vector<string> out, out2, out3, outPMc, outDMc;
 
     OptParameter* myOPT = 0;
 
@@ -81,7 +156,7 @@ void optimization::OptParameterCreate ()
 
     //OFUN parameters
     // NFUN parameters
-    parse_JSON_object(OptParameters, "G0", out);
+    parse_JSON_object(OptParameters, keys::G0[mode], out);
     if (out.size() > 0)
     {
         Opt_G0* myPT = new Opt_G0( out, OptBoundPerc, p );
@@ -89,6 +164,54 @@ void optimization::OptParameterCreate ()
         myOPT = (Opt_G0*)myPT;
     }
     if(myOPT) { optParam.push_back( myOPT ); myOPT = 0; };
+    out.clear(); p=0;
+
+    parse_JSON_object(OptParameters, keys::PAM[mode], out);
+    if (out.size() > 0)
+    {
+        for (unsigned i = 0; i < out.size(); i++)
+        {
+            // PMc
+            parse_JSON_object(out[i], keys::PMc[mode], out2);
+            for (unsigned j = 0; j < out2.size(); j++)
+            {
+                parse_JSON_object(out2[j], keys::IPCs[mode], out3);
+                outPMc.insert(outPMc.end(), out3.begin(), out3.end());
+                out3.clear();
+            }
+            out2.clear();
+
+            // DMc
+            parse_JSON_object(out[i], keys::DMc[mode], out2);
+            for (unsigned j = 0; j < out2.size(); j++)
+            {
+                parse_JSON_object(out2[j], keys::PDCC[mode], out3);
+                outDMc.insert(outDMc.end(), out3.begin(), out3.end());
+                out3.clear();
+            }
+            out2.clear();
+        }
+
+        // PMc
+        if (outPMc.size() > 0)
+        {
+            Opt_PMc* myPT = new Opt_PMc( outPMc, OptBoundPerc, p );
+//            myPT->SetIndex_param(node);
+            myOPT = (Opt_PMc*)myPT;
+        }
+        if(myOPT) { optParam.push_back( myOPT ); myOPT = 0; };
+        out.clear(); p=0;
+
+        // DMc
+        if (outPMc.size() > 0)
+        {
+            Opt_DMc* myPT = new Opt_DMc( outDMc, OptBoundPerc, p );
+//            myPT->SetIndex_param(node);
+            myOPT = (Opt_DMc*)myPT;
+        }
+        if(myOPT) { optParam.push_back( myOPT ); myOPT = 0; };
+        out.clear(); p=0;
+    }
     out.clear();
 
 
@@ -101,7 +224,7 @@ void optimization::OptParameterCreate ()
         myOPT = (Opt_bIC*)myPT;
     }
     if(myOPT) { optNFParam.push_back( myOPT ); myOPT = 0; };
-    out.clear();
+    out.clear(); p=0;
 
     parse_JSON_object(NFunParameters, "TK", out);
     if (out.size() > 0)
@@ -111,7 +234,7 @@ void optimization::OptParameterCreate ()
         myOPT = (Opt_Tk*)myPT;
     }
     if(myOPT) { optNFParam.push_back( myOPT ); myOPT = 0; };
-    out.clear();
+    out.clear(); p=0;
 
     parse_JSON_object(NFunParameters, "P", out);
     if (out.size() > 0)
@@ -121,7 +244,7 @@ void optimization::OptParameterCreate ()
         myOPT = (Opt_P*)myPT;
     }
     if(myOPT) { optNFParam.push_back( myOPT ); myOPT = 0; };
-    out.clear();
+    out.clear(); p=0;
 }
 
 void optimization::GetParameters ()
@@ -420,7 +543,7 @@ void optimization::normalize_params(const vector<double> initguesses , bool Norm
         gpf->flog << "     Lower Bound new ["<<i<<"]= " << OptLoBounds[i] << endl;
     }
 
-    // Normalize constraints vector
+//     Normalize constraints vector
     for(i=0; i<constraint_data_v.size(); i++)
     {
 //        if ((optv[i] != 0) && (fabs(initguesses[i]) > 9e-11))

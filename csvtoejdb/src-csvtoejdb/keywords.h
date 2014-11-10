@@ -3,11 +3,80 @@
 
 #pragma GCC diagnostic ignored "-Wunused-variable"
 
+#include "string"
+#include "vector"
+
 namespace keys
 {
 //                    Keyword                                  (level)			Type            Comment
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------
 //
+
+static const char * MPI[2] = {"NumberOfThreadsForParallelRun","NumMPI"};
+static const char * DBPath[2] = {"DatabasePath","DBPath"};
+static const char * DBColl[2] = {"DataCollection","DBColl"};
+static const char * G3Ksys[2] = {"GEMSInputFilesPath","GEMSFPath"};
+static const char * DSelect[2] = {"DataSelection","DataSelect"};
+static const char * DTarget[2] = {"DataTargetFunction","DataTarget"};
+
+static const char * OptParameters[2] = {"ParametersToOptimize","ParToOpt"};
+static const char * G0[2] = {"GibbsFreeEnergyOfDependentComponents","G0"};
+static const char * PMc[2] = {"InteractionParameters","PMc"};
+static const char * IPCs[2] = {"InteractionParameterCoefficients","IPCs"};
+static const char * PAM[2] = {"ParametersOfActivityModels","PAM"};
+
+static const char * Pndx[2] = {"ParameterIndex","Pndx"};
+
+static const char * DCN_[2] = {"DependentComponentName","DCN"};
+
+
+static const char * DMc[2] = {"ParametersOfDependentComponentsInPhase","DMc"};
+static const char * PDCC[2] = {"ParameterOfDependentComponentCoefficients","PDCC"};
+static const char * OptNFParameters[2] = {"NestedFunctionParametersToOptimize","NFunParToOpt"};
+
+static const char * DatLogK[2] = {"LogKFunctionsOfReactions","DataLogK"};
+static const char * LogK[2] = {"ArrayofUserProvidedLogK","LogK"};
+
+static const char * OptDW[2] = {"OptimizationDoWhat","OptDWhat"};
+static const char * OptEQ[2] = {"OptimizationUseEquilibrium","OptUEqui"};
+static const char * OptUW[2] = {"OptimizationUseDatbaseSetWeight","OptUDWeight"};
+static const char * OptAlg[2] = {"OptimizationAlgorithm","OptAlg"};
+static const char * OptPBP[2] = {"OptimizationParameterBoundsPercentege","OptPBPerc"};
+static const char * OptTRel[2] = {"OptimizationRelativeTolerance","OptTolRel"};
+static const char * OptTAbs[2] = {"OptimizationAbsoluteTolerance","OptTolAbs"};
+static const char * OptMEv[2] = {"OptimizationMaximumEvaluations","OptMaxEval"};
+static const char * OptNormP[2] = {"OptimizationNormalizeParameters","OptNormP"};
+static const char * OptPer[2] = {"OptimizationGradientPerturbator","OptGradPert"};
+static const char * OptTu[2] = {"OptimizationUseTuckey","OptTuckey"};
+static const char * OptTuVal[2] = {"OptimizationTuckeyCvalue","OptTuCval"};
+static const char * StatMC[2] = {"StatisticsUseMonteCarlo","StatMC"};
+static const char * StatMCr[2] = {"StatisticsMonteCarloRuns","StatMCruns"};
+static const char * StatPer[2] = {"StatisticsSensitivitiesPerturbator","StatSensPert"};
+
+//"OptDoWhat" :   0,
+//"OptEquilibrium" :   1,
+//"OptUserWeight" :   0,
+//"OptTuckey" :   0,
+//"OptTuckeyVal" :   6,
+//"OptAlgo" :   "LN_BOBYQA",
+//"OptBoundPerc" :   -1,
+//"OptTolRel" :   1e-06,
+//"OptTolAbs" :   1e-06,
+//"OptMaxEval" :   1000,
+//"OptInitStep" :   0,
+//"OptNormParam" :   1,
+//"OptPerturbator" :   0.0001,
+//"StatMCbool" :   4,
+//"StatMCruns" :   3,
+//"StatPerturbator" :   0.0001
+
+
+
+
+
+
+
+
 // General keywords used for qunatity, error and unit
 static const char *Qnt = "Q";  ///                                                              qunatity
 static const char *Qunit = "unit";  ///                                                        unit
@@ -126,10 +195,10 @@ static const char *url = "url"; ///	                              1		     string
     static const char *_unit = "unit";
 
 // kewords for adjusted parameters marked in the input file
-    static const char *IV = "IV"; ///                                       double              initial value
-    static const char *UB = "UB"; ///                                       double              upper boundary
-    static const char *LB = "LB"; ///                                       double              lower boundary
-    static const char *spec = "spec";
+    static const char *IV[2] = {"InitialValue","IV"}; ///                   double              initial value
+    static const char *UB[2] = {"UpperBound","UB"}; ///                                       double              upper boundary
+    static const char *LB[2] = {"LowerBound","LB"}; ///                                       double              lower boundary
+//    static const char *spec = "spec";
     static const char *DCN = "DCN"; ///                                     string              dependent comp name
     static const char *ICN = "ICN"; ///                                     string              independent comp name
     // Reaction specific
@@ -165,11 +234,12 @@ static const char *Fcoef = "Fcoef";
         static const char *CT = "CT"; ///                                   string              type of component/data to compare
 //            static const char *property = "prop"; ///                           string              keyword for comparing properties with names such as pH, Q, IS, etc.
         static const char *CN = "CN"; ///                                   string              name of data to compare e.g. Al, pH, etc.
-        static const char *EPH = "EPH"; ///                                 string              experiment phase
+        static const char * EPH[2] = {"PhaseName","EPH"};  ///              string              experiment phase
 //        static const char *Eunit = "Unit"; ///                              string              experiment element unit
         static const char *DCP = "DCP"; ///                                 string              dependent comp property
-        static const char *Ptype = "Ptype"; ///
-        static const char *ptype = "ptype";
+        static const char * PType[2] = {"ParameterType","PType"};
+//        static const char *Ptype = "Ptype"; ///
+//        static const char *ptype = "ptype";
         static const char *Tforumla ="Tformula"; ///                        string              name of titrants
         static const char *Telem ="Telem"; ///                              string              name of elements
         static const char *expr ="expr";

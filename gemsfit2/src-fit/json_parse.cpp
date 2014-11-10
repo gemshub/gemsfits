@@ -3,16 +3,19 @@
 #include <jansson.h>
 #include <string>
 #include "keywords.h"
+#include <iomanip>
+#include <iostream>
 
 void parse_JSON_object(string query, const char* key, vector<string> &result)
 {
     json_t *root; json_t *data; json_t *object;
     json_error_t jerror;
-    stringstream ss;
+    std::stringstream ss;
     string sss;
 
     const char * JSON = query.c_str();
     root = json_loads(JSON, 0, &jerror);
+    std::setprecision(15);
 
     if(!root)
     {
@@ -32,6 +35,7 @@ void parse_JSON_object(string query, const char* key, vector<string> &result)
                     }
                     else if (json_is_real(data))
                     {
+                        ss.precision(15);
                         ss << json_real_value(data);
                         sss = ss.str();
                         ss.str("");
@@ -58,6 +62,7 @@ void parse_JSON_object(string query, const char* key, vector<string> &result)
             }
             else if (json_is_real(object))
             {
+                ss.precision(15);
                 ss << json_real_value(object);
                 sss = ss.str();
                 ss.str("");
@@ -110,6 +115,7 @@ void parse_JSON_array_object( string data_, const char *arr , const char *key, v
                     }
                     else if (json_is_real(data))
                     {
+                        ss.precision(15);
                         ss << json_real_value(data);
                         sss = ss.str();
                         ss.str("");
@@ -133,6 +139,7 @@ void parse_JSON_array_object( string data_, const char *arr , const char *key, v
                             }
                             else if (json_is_real(data2))
                             {
+                                ss.precision(15);
                                 ss << json_real_value(data2);
                                 sss = ss.str();
                                 ss.str("");
@@ -161,6 +168,7 @@ void parse_JSON_array_object( string data_, const char *arr , const char *key, v
             }
             else if (json_is_real(object))
             {
+                ss.precision(15);
                 ss << json_real_value(object);
                 sss = ss.str();
                 ss.str("");

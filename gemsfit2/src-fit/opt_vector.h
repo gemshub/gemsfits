@@ -54,6 +54,8 @@ class OptParameter
 
         double OptBoundPerc; /// Bounds percentage read from the configuration file
 
+        int mode;
+
         vector<double> TP_pairs[2];
 
         struct parameter /// base structure for storing parameter information
@@ -360,6 +362,41 @@ class Opt_G0 : public OptParameter
 //    long int Adjust_Lparam(TNode *node, int exp);
 
 //    string Print_param();
+};
+
+
+class Opt_PMc : public OptParameter
+{
+    public:
+
+    /// Constructor
+    Opt_PMc (vector<string> data, double OptBoundPrc, unsigned &p );
+    /// Destructor
+    virtual ~Opt_PMc();
+
+    long int Adjust_param(TNode *node, vector<double> opt);
+
+    long int Adjust_Fparam(TNode *node, int Pndx, double Pval);
+
+    long int Adjust_Sparam(TNode *node );
+
+};
+
+class Opt_DMc : public OptParameter
+{
+    public:
+
+    /// Constructor
+    Opt_DMc (vector<string> data, double OptBoundPrc, unsigned &p );
+    /// Destructor
+    virtual ~Opt_DMc();
+
+    long int Adjust_param(TNode *node, vector<double> opt);
+
+    long int Adjust_Fparam(TNode *node, int Pndx, double Pval);
+
+    long int Adjust_Sparam(TNode *node );
+
 };
 
 

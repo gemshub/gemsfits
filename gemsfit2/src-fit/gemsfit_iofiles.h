@@ -23,7 +23,7 @@
 
 #include <string>
 #include "node.h"
-#include "opt_vector.h"
+//#include "opt_vector.h"
 #include <sys/stat.h>
 #include <ctime>
 
@@ -72,7 +72,8 @@ void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode );
 enum MODES_GEMFIT {
  INIT_  = 0,   ///< GEMSFIT will generate a template input configuration file
  RUN_   = 1,   ///< Run GEMFIT calculation
- HELP_  = 2    ///< Command line help
+ HELP_  = 2,    ///< Command line help
+ INITJ_ = 3
 };
 
 class TGfitPath
@@ -114,12 +115,15 @@ public:
     ofstream fsens;
     ofstream ftmp;
 
+    int KeysNdx;
+
     int sizeTP = 0;
 
     TGfitPath(int argc, char* argv[]);
     ~TGfitPath();
 
     bool isInitMode() const { return (mode == INIT_); }
+    bool isInitJMode() const { return (mode == INITJ_); }
     bool isRunMode() const { return (mode == RUN_); }
     bool isHelpMode() const { return (mode == HELP_); }
 
@@ -201,5 +205,7 @@ public:
 };
 
 extern TGfitPath* gpf;
+
+void bson_print_raw_txt( iostream& os, const char *data, int depth, int datatype );
 
 #endif   // _gemsfit_iofiles_h_

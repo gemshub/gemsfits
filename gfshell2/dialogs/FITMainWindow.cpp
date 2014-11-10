@@ -27,6 +27,8 @@
 #include "HelpWindow.h"
 #include "FitResultsWindow.h"
 #include "f_ejdb.h"
+#include "keywords.h"
+#include <sstream>
 
 //--------------------------------------------------------------------------
 
@@ -63,7 +65,7 @@ void FITMainWindow::getDataFromPreferences()
   SysFITDir =  mainSettings->value("ResourcesFolderPath", "../Resources/").toString().toUtf8().data();
   LocalDocDir =  mainSettings->value("HelpFolderPath", "../Resources/help").toString().toUtf8().data();
   UserDir = mainSettings->value("UserFolderPath", ".").toString().toUtf8().data();
-  useComments = mainSettings->value("PrintComments", false).toBool();
+  KeysLength = mainSettings->value("PrintComments", true).toBool();
 
   QString program = mainSettings->value("Gemsfit2ProgramPath", "gemsfit2").toString();
   fitProcess->setProgram( program );
@@ -576,16 +578,23 @@ void FITMainWindow::changeEditeRecord(const string& tagname, const string& newVa
 
    // delete old path string
    size_t found = valueStr.find( tagname );
+   size_t found3 = valueStr.find(":", found+1);
    if (found != string::npos)
    {
        // change value
-       found += 12;
-       size_t  found1 =  valueStr.find("\"", found );
+//       found += 15;
+       size_t  found1 =  valueStr.find("\"", found3 );
        size_t  found2 =  valueStr.find("\"", found1+1 );
        valueStr.replace( found1+1, found2-found1-1, newValue);
        ui->recordEdit->setText( trUtf8( valueStr.c_str() ));
        contentsChanged = true;
    }
+
+//   valueStr = ui->recordEdit->toPlainText().toUtf8().data();
+//   found = valueStr.find("{");
+
+//   string taskid_projectid = "\"taskid\": \"";
+////   valueStr.
 }
 
 
@@ -598,7 +607,13 @@ bool FITMainWindow::createTaskTemplate()
     // create arguments string
     string newPath = makeSystemFileName( "." );
     QStringList cParameters;
-    cParameters << "-init" << newPath.c_str() << "template.dat";
+
+    stringstream ss;
+    ss << KeysLength;
+    string sss = ss.str();
+    ss.str("");
+
+    cParameters << "-initJ" << sss.c_str() << newPath.c_str() << "template.json";
 
     if( !runProcess( cParameters, fitTaskDir.Dir().c_str()) )
        Error("Run gemsfit -init", "Error started process.");
@@ -606,7 +621,7 @@ bool FITMainWindow::createTaskTemplate()
     int ret = fitProcess->waitForFinished();
 
     // read "template.dat" to bson
-    string path = fitTaskDir.Dir()+ "/template.dat";
+    string path = fitTaskDir.Dir()+ "/template.json";
     TFile  inFile(path, ios::in);
     readTXT( inFile );
 
@@ -616,7 +631,8 @@ bool FITMainWindow::createTaskTemplate()
        ejdbPath  += projectSettings->value("ProjDatabasePath", "/EJDB").toString().toUtf8().data();
        ejdbPath  += "/";
        ejdbPath  += projectSettings->value("ProjDatabaseName", "myprojdb1" ).toString().toUtf8().data();
-       changeEditeRecord( "DataDB", ejdbPath);
+       changeEditeRecord( keys::DBPath[0] , ejdbPath); changeEditeRecord( keys::DBPath[1] , ejdbPath);
+       changeEditeRecord( keys::DBColl[0], rtEJ[ MDF_DATABASE ].GetKeywd()); changeEditeRecord( keys::DBColl[1], rtEJ[ MDF_DATABASE ].GetKeywd());
     }
     return ret;
 }

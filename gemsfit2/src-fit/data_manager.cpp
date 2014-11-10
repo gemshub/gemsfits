@@ -44,6 +44,7 @@
 #include "ejdb.h"
 //#include <sstream>
 #include "json_parse.h"
+#include "fstream"
 
 // Constructor
 Data_Manager::Data_Manager( )
@@ -70,6 +71,51 @@ Data_Manager::~Data_Manager( )
     {
         delete experiments[i];
     }
+}
+
+void Data_Manager::get_db_specs_txt()
+{
+    string fname, str, data;
+    vector<string> out;
+    int mode = gpf->KeysNdx;
+
+    fname = gpf->OptParamFile();
+
+    std::ifstream file(fname.c_str());
+    std::ostringstream tmp;
+    tmp<<file.rdbuf();
+    std::string s = tmp.str();
+//    std::cout<<s<<std::endl;
+
+    parse_JSON_object(s, keys::MPI[mode], out);
+    MPI = atoi(out[0].c_str());
+    out.clear();
+
+    parse_JSON_object(s, keys::DBPath[mode], out);
+    DBname = out[0];
+    out.clear();
+
+    parse_JSON_object(s, keys::DBColl[mode], out);
+    collection = out[0];
+    out.clear();
+
+    parse_JSON_object(s, keys::DSelect[mode], out);
+    DataSelect = out[0];
+    out.clear();
+
+    parse_JSON_object(s, keys::DTarget[mode], out);
+    DataTarget = out[0];
+    out.clear();
+
+    parse_JSON_object(s, keys::G3Ksys[mode], out);
+    gpf->setGEMS3LstFilePath(out[0].c_str());
+    out.clear();
+
+    parse_JSON_object(s, keys::DatLogK[mode], out);
+    DataLogK = out[0];
+    out.clear();
+    cout << "here" << endl;
+
 }
 
 

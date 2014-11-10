@@ -24,6 +24,7 @@
 #include "f_ejdb.h"
 #include "FITMainWindow.h"
 #include "v_user.h"
+#include "keywords.h"
 
 string replace( string str, const char* old_part, const char* new_part)
 {
@@ -387,7 +388,8 @@ string TEJDataBase::RecFromBson( bson *obj )
     pars.printBsonObjectToJson( currentJson, obj->data );
 
     // get gems3k name
-    if( !bson_find_string( obj->data, "SystemFiles", currentGems3kName ) )
+    if( !bson_find_string( obj->data, keys::G3Ksys[0], currentGems3kName ) )
+        if( !bson_find_string( obj->data, keys::G3Ksys[1], currentGems3kName ) )
         currentGems3kName = "";
 
     // Get key of record

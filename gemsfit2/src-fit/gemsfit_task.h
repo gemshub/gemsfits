@@ -119,6 +119,8 @@ public:
 
     double weighted_Tfun_sum_of_residuals;
 
+    int mode;
+
     /// normalize parameters flag
     bool NormParams;
 

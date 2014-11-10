@@ -8,6 +8,14 @@ namespace keys
 //                    Keyword                                  (level)			Type            Comment
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------
 //
+static const char * MPI[2] = {"NumberOfThreadsForParallelRun","NumMPI"};
+static const char * DBPath[2] = {"DatabasePath","DBPath"};
+static const char * DBColl[2] = {"DataCollection","DBColl"};
+static const char * G3Ksys[2] = {"GEMSInputFilesPath","GEMSFPath"};
+static const char * DSelect[2] = {"DataSelection","DataSelect"};
+static const char * DTarget[2] = {"DataTargetFunction","DataTarget"};
+
+
 // General keywords used for qunatity, error and unit
 static const char *Qnt = "Q";  ///                                                              qunatity
 static const char *Qunit = "unit";  ///                                                        unit
