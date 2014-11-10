@@ -1,1 +1,0 @@
-../../gemsfit2-build/gemsfit2 -init ./GEMS/Boehmite_Na-dat.lst ./gfin00_BHMsol.dat

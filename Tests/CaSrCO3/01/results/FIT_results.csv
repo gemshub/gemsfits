@@ -1,9 +1,0 @@
-experiment,,,unit,measured,computed,weighted_lsq,Sens_p0
-xCa0.22,ArgStr,Gex,J/mol,2172,2224.94,16.8819,-0.768281
-xCa0.41,ArgStr,Gex,J/mol,2494,3149.74,316.176,-0.616771
-xCa0.51,ArgStr,Gex,J/mol,3806,3256.55,308.055,-0.602208
-xCa0.75,ArgStr,Gex,J/mol,2165,2442.07,75.2612,-0.728524
-xCa0.9,ArgStr,Gex,J/mol,2614,1165.76,1344.48,-1.05637
-sum of residuals = 1011.94
-parameter PMc : 13030.7
-

@@ -1,7 +1,0 @@
-Write here the description of this test case
-
-...
-
-The previous results are reproduced exactly if the NodeStatusCH = NodT[n]->GEM_run( true ); and what follows
-is commented out from the set nodes function.
-

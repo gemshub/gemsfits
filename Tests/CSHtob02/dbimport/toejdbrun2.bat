@@ -1,1 +1,0 @@
-../../../csvtoejdb-build/csvtoejdb -run -a ../EJDB/cashsolub experiments ./CSHsoluDataChen04.csv > ./jsontrace2.log

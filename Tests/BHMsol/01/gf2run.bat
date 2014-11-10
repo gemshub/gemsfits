@@ -1,1 +1,0 @@
-../../../gemsfit2-build/gemsfit2 -run ./gfin01_BHMsol.dat > ./trace.log
