@@ -1,0 +1,447 @@
+{
+     "NumMPI" :   4,
+     "DBPath" :   "../EJDB/<database name>",
+     "DBColl" :   "<collection name>",
+     "GEMSFPath" :   "../GEMS/TCSH-dat.lst",
+     "DataSelect" :   "",
+     "DataTarget" :   "",
+     "ParToOpt" :   {
+          "G0" :   [
+               {
+                    "DCN" :   "Ca+2",
+                    "PType" :   "S",
+                    "IV" :   -552790.00065054
+               },
+               {
+                    "DCN" :   "CaOH+",
+                    "PType" :   "S",
+                    "IV" :   -717024.00023652
+               },
+               {
+                    "DCN" :   "Ca(HSiO3)+",
+                    "PType" :   "S",
+                    "IV" :   -1574238.0003068
+               },
+               {
+                    "DCN" :   "CaSiO3@",
+                    "PType" :   "S",
+                    "IV" :   -1517556.9007465
+               },
+               {
+                    "DCN" :   "HSiO3-",
+                    "PType" :   "S",
+                    "IV" :   -1014598.010816
+               },
+               {
+                    "DCN" :   "Si4O10-4",
+                    "PType" :   "S",
+                    "IV" :   -3600808.0742771
+               },
+               {
+                    "DCN" :   "SiO2@",
+                    "PType" :   "S",
+                    "IV" :   -833410.67455212
+               },
+               {
+                    "DCN" :   "SiO3-2",
+                    "PType" :   "S",
+                    "IV" :   -938509.58195631
+               },
+               {
+                    "DCN" :   "H2@",
+                    "PType" :   "S",
+                    "IV" :   17729.00010995
+               },
+               {
+                    "DCN" :   "N2@",
+                    "PType" :   "S",
+                    "IV" :   18194.000182443
+               },
+               {
+                    "DCN" :   "O2@",
+                    "PType" :   "S",
+                    "IV" :   16446.000207431
+               },
+               {
+                    "DCN" :   "OH-",
+                    "PType" :   "S",
+                    "IV" :   -157270.00090727
+               },
+               {
+                    "DCN" :   "H+",
+                    "PType" :   "S",
+                    "IV" :   0
+               },
+               {
+                    "DCN" :   "H2O@",
+                    "PType" :   "S",
+                    "IV" :   -237181.38483664
+               },
+               {
+                    "DCN" :   "H2",
+                    "PType" :   "S",
+                    "IV" :   0
+               },
+               {
+                    "DCN" :   "N2",
+                    "PType" :   "S",
+                    "IV" :   0
+               },
+               {
+                    "DCN" :   "O2",
+                    "PType" :   "S",
+                    "IV" :   0
+               },
+               {
+                    "DCN" :   "TCSC",
+                    "PType" :   "S",
+                    "IV" :   -6205140
+               },
+               {
+                    "DCN" :   "TCSv",
+                    "PType" :   "S",
+                    "IV" :   -5321929
+               },
+               {
+                    "DCN" :   "TCvC",
+                    "PType" :   "S",
+                    "IV" :   -5350530
+               },
+               {
+                    "DCN" :   "TCvv",
+                    "PType" :   "S",
+                    "IV" :   -4457513
+               },
+               {
+                    "DCN" :   "THSC",
+                    "PType" :   "S",
+                    "IV" :   -6014850
+               },
+               {
+                    "DCN" :   "THSv",
+                    "PType" :   "S",
+                    "IV" :   -5117840
+               },
+               {
+                    "DCN" :   "THvC",
+                    "PType" :   "S",
+                    "IV" :   -5164240
+               },
+               {
+                    "DCN" :   "THvv",
+                    "PType" :   "S",
+                    "IV" :   -4258820
+               },
+               {
+                    "DCN" :   "Portlandite",
+                    "PType" :   "S",
+                    "IV" :   -897013
+               },
+               {
+                    "DCN" :   "Amor-Sl",
+                    "PType" :   "S",
+                    "IV" :   -850616
+               }
+          ],
+          "PAM" :   [
+               {
+                    "EPH" :   "aq_gen",
+                    "PMc" :   [
+                         {
+                              "IPCs" :   [
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   0.0640000030398369
+                                   },
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   3.72000002861023
+                                   },
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   0
+                                   },
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   0
+                                   }
+                              ]
+                         },
+                         {
+                              "IPCs" :   [
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   0
+                                   },
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   0
+                                   },
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   0
+                                   },
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   0
+                                   }
+                              ]
+                         }
+                    ]
+               },
+               {
+                    "EPH" :   "CSH",
+                    "PMc" :   [
+                         {
+                              "IPCs" :   [
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   9.99999971718069e-10
+                                   },
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   0
+                                   },
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   0
+                                   }
+                              ]
+                         },
+                         {
+                              "IPCs" :   [
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   1.99999994343614e-09
+                                   },
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   0
+                                   },
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   0
+                                   }
+                              ]
+                         },
+                         {
+                              "IPCs" :   [
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   3.00000002617651e-09
+                                   },
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   0
+                                   },
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   0
+                                   }
+                              ]
+                         },
+                         {
+                              "IPCs" :   [
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   3.99999988687227e-09
+                                   },
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   0
+                                   },
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   0
+                                   }
+                              ]
+                         },
+                         {
+                              "IPCs" :   [
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   4.99999996961265e-09
+                                   },
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   0
+                                   },
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   0
+                                   }
+                              ]
+                         },
+                         {
+                              "IPCs" :   [
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   6.00000005235302e-09
+                                   },
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   0
+                                   },
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   0
+                                   }
+                              ]
+                         }
+                    ]
+               }
+          ]
+     },
+     "NFunParToOpt" :   "",
+     "DataLogK" :   "",
+     "LogK" :   "",
+     "OptDWhat" :   0,
+     "OptUEqui" :   1,
+     "OptUDWeight" :   0,
+     "OptAlg" :   "LN_BOBYQA",
+     "OptPBPerc" :   -1,
+     "OptTolRel" :   1e-05,
+     "OptTolAbs" :   1e-05,
+     "OptMaxEval" :   10000,
+     "OptNormP" :   1,
+     "OptGradPert" :   0.0001,
+     "OptTuckey" :   -1,
+     "OptTuCval" :   6,
+     "StatMC" :   0,
+     "StatMCruns" :   100,
+     "StatSensPert" :   0.0001,
+     "DataSyn" :   {
+          "PHNs" :   [
+               {
+                    "NIS" :   "aq_gen",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "gas_gen",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "CSH",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Portlandite",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Silica-amorph",
+                    "Syn" :   ""
+               }
+          ],
+          "DCNs" :   [
+               {
+                    "NIS" :   "Ca+2",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "CaOH+",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Ca(HSiO3)+",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "CaSiO3@",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "HSiO3-",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Si4O10-4",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "SiO2@",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "SiO3-2",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "H2@",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "N2@",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "O2@",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "OH-",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "H+",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "H2O@",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "H2",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "N2",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "O2",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "TCSC",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "TCSv",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "TCvC",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "TCvv",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "THSC",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "THSv",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "THvC",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "THvv",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Portlandite",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Amor-Sl",
+                    "Syn" :   ""
+               }
+          ]
+     }
+}

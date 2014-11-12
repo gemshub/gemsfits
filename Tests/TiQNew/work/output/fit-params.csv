@@ -1,4 +1,0 @@
-ptype,parameter,name,init.value,fittted.value,mc.mean,mc.stdev,confi99,confi95,confi90,CSS.sensitivity,correl.coef.,correl.coef.,correl.coef.,
-F,PMc,,10000,62259.5301947,,,,,,39.6690621866,1,-0.7935,-0.8175,
-F,PMc,,-1,2.00487395193,,,,,,1.96560436553,-0.7935,1,0.3938,
-F,PMc,,1,1.46043617678,,,,,,11.1870382755,-0.8175,0.3938,1,

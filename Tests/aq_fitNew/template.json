@@ -151,23 +151,19 @@
                               "IPCs" :   [
                                    {
                                         "PType" :   "S",
-                                        "IV" :   0.0640000030398369,
-                                        "Pndx" :   0
+                                        "IV" :   0.0640000030398369
                                    },
                                    {
                                         "PType" :   "S",
-                                        "IV" :   3.72000002861023,
-                                        "Pndx" :   1
+                                        "IV" :   3.72000002861023
                                    },
                                    {
                                         "PType" :   "S",
-                                        "IV" :   1,
-                                        "Pndx" :   2
+                                        "IV" :   1
                                    },
                                    {
                                         "PType" :   "S",
-                                        "IV" :   1,
-                                        "Pndx" :   3
+                                        "IV" :   1
                                    }
                               ]
                          },
@@ -175,23 +171,19 @@
                               "IPCs" :   [
                                    {
                                         "PType" :   "S",
-                                        "IV" :   1,
-                                        "Pndx" :   4
+                                        "IV" :   1
                                    },
                                    {
                                         "PType" :   "S",
-                                        "IV" :   0,
-                                        "Pndx" :   5
+                                        "IV" :   0
                                    },
                                    {
                                         "PType" :   "S",
-                                        "IV" :   0,
-                                        "Pndx" :   6
+                                        "IV" :   0
                                    },
                                    {
                                         "PType" :   "S",
-                                        "IV" :   0,
-                                        "Pndx" :   7
+                                        "IV" :   0
                                    }
                               ]
                          }
@@ -216,5 +208,143 @@
      "OptTuCval" :   6,
      "StatMC" :   0,
      "StatMCruns" :   100,
-     "StatSensPert" :   0.0001
+     "StatSensPert" :   0.0001,
+     "DataSyn" :   {
+          "PHNs" :   [
+               {
+                    "NIS" :   "aq_gen",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Boehmite-H",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Corundum",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Gibbsite-H",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Halite",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Sylvite",
+                    "Syn" :   ""
+               }
+          ],
+          "DCNs" :   [
+               {
+                    "NIS" :   "Al(OH)2+",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Al(OH)3@",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Al(OH)4-",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Al+3",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "AlOH+2",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "K+",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "KAlO2@",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "KCl@",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "KOH@",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Na+",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "NaAl(OH)4@",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "NaCl@",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "NaOH@",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Cl-",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "HCl@",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "H2@",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "O2@",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "H2O2@",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "HO2-",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "OH-",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "H+",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "H2O@",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Boehmite-H",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Corundum",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Gibbsite-H",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Halite",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Sylvite",
+                    "Syn" :   ""
+               }
+          ]
+     }
 }
