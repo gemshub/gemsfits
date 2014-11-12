@@ -718,7 +718,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFun
 
         if (objfun.exp_unit == keys::loga)
             computed_value = sys->NodT[i]->Get_aDC( DCndx, false );
-        else computed_value = sys->NodT[i]->Get_aDC( DCndx, false );;
+        else computed_value = sys->NodT[i]->Get_aDC( DCndx, true );
     } else
     { if (DCndx < 0)
          {

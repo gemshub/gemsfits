@@ -95,7 +95,9 @@ private:
     * @author DM
     * @date 01.04.2013
     */
-    void get_logK_TPpairs();
+    void set_logK_TPpairs();
+
+    void set_logK_TPpairs(vector<string> logK);
 
     /**
     * Gets the initial value of (a+b) form c=(a+b) for each experiment where c is a linked paramater to a and b with coeficients 1 and 1. also set initial values and bounds.
@@ -190,7 +192,6 @@ public:
     };
 
     vector<FunctionLogK> FlogK;
-
 
     /// Computed values for Monte Carlo confidence interval generation
     double_v computed_values_v;

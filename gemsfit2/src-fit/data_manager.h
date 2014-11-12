@@ -103,6 +103,8 @@ class Data_Manager : public TNode
         /// JSON object for building the target function
         string DataTarget;
         string DataLogK;
+        vector<string> LogK;
+        string DataSyn;
         double h_datasetlist = false;
 
         int MPI; /// number of paralele threads
@@ -193,6 +195,20 @@ class Data_Manager : public TNode
             vector<samples*> experiments;         /// vector of samples from one experimental dataset
 
 
+            struct DataSynonyms
+            {
+                string GemsName;
+                vector<string> syn;
+            };
+
+            vector<DataSynonyms> SynPHs;
+            vector<DataSynonyms> SynPHPs;
+            vector<DataSynonyms> SynDCs;
+            vector<DataSynonyms> SynDCPs;
+
+            void get_DataSyn ();
+
+            void check_Syn ();
 //        /**
 //        * Writes database connection parameters in the template input file
 //        * @author SD
@@ -226,6 +242,8 @@ class Data_Manager : public TNode
 
         /// EJDB data selection query
         string DataSelect;
+
+        int mode;
 
         /**
         * get database connection parameters

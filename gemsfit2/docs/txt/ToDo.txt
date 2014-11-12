@@ -97,10 +97,11 @@ probably the NLopt doesn't allow such dynamic change in the parameter vector!!
 - check for (input) variable initialization when calling optimization algorithms (esp. global ones)
  to achieve reproducible results for the same task. 
 
-- JSON format input for Parameters to fit in a similar way as for DataSelect and DataTarget (critical)
-- a way to connect the names (synonims) in the database with the names in the GEMS3K system definition
++ JSON format input for Parameters to fit in a similar way as for DataSelect and DataTarget (critical)
++ a way to connect the names (synonims) in the database with the names in the GEMS3K system definition
 	- when reading in from the experimental database all comp, species, etc. names. (critical)
-- Short/vs long (self-explanatory) keywords, e.g. "OFUN|ObjectiveFunction"  (potentially important)
++ Short/vs long (self-explanatory) keywords, e.g. "OFUN|ObjectiveFunction"  (potentially important)
+- The user is now constrined to be consistent with the key length ( either short either long )
 - Improve documentation structure (TOC) and organization of help database, add missing keywords (usability)
 
 - Check cross-compiling of gemsfit2 and gfshell2 with MinGW on linux to produce executable on Windows 7/8

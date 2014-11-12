@@ -39,6 +39,7 @@ using namespace std;
 //#include "optimization.h"
 
 void generateBson (bson &bson_task_file, TNode *node, int mode);
+void make_syn_bson_object (bson &bson_task_file, const char *key, int i, int mode);
 
 //optimization::optimization( int i )
 //{
@@ -131,7 +132,7 @@ cout << "Finished writing the input specification file template" << endl;
 
 void generateBson(bson &bson_task_file,TNode *node, int mode)
 {
-    int Np = 0, Nip = 0, Ncoef = 0, PMCndx = 0, DMCndx = 0, nIC, nDC, nPS, DCndx = -1; long int nDCinPH;
+    int Np = 0, Nip = 0, Ncoef = 0, PMCndx = 0, DMCndx = 0, nIC, nDC, nPS, nPH, DCndx = -1; long int nDCinPH;
     double temp = 0.0;
     stringstream ss; string sss;
     bson_init(&bson_task_file);
@@ -141,6 +142,7 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
     nIC = dCH->nIC;	// nr of independent components
     nDC = dCH->nDC;	// nr of dependent components
     nPS = dCH->nPS;
+    nPH = dCH->nPH;
 
     bson_append_int(&bson_task_file, keys::MPI[mode], omp_get_num_threads() * omp_get_num_procs());
     bson_append_string(&bson_task_file, keys::DBPath[mode], "../EJDB/<database name>");
@@ -325,7 +327,77 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
 
     bson_append_double(&bson_task_file, keys::StatPer[mode], 0.0001);
 
+    bson_append_start_object(&bson_task_file, keys::DataSyn[mode]);
+    {
+        bson_append_start_array(&bson_task_file, keys::PhNames[mode]);
+        {
+            for (unsigned i = 0; i<nPH; i++)
+            {
+                make_syn_bson_object(bson_task_file, node->xCH_to_PH_name(i), i , mode);
+            }
+        }
+        bson_append_finish_array(&bson_task_file);
+
+        bson_append_start_array(&bson_task_file, keys::PhPropNames[mode]);
+        {
+            unsigned i = 0;
+            make_syn_bson_object(bson_task_file, keys::pH, i, mode); i++;
+
+            make_syn_bson_object(bson_task_file, keys::pe, i, mode); i++;
+
+            make_syn_bson_object(bson_task_file, keys::Eh, i, mode); i++;
+
+            make_syn_bson_object(bson_task_file, keys::IS, i, mode); i++;
+
+            make_syn_bson_object(bson_task_file, keys::all, i, mode); i++;
+
+            make_syn_bson_object(bson_task_file, keys::pV, i, mode); i++;
+
+            make_syn_bson_object(bson_task_file, keys::RHO, i, mode); i++;
+
+            make_syn_bson_object(bson_task_file, keys::sArea, i, mode); i++;
+
+            make_syn_bson_object(bson_task_file, keys::Gex, i, mode); i++;
+
+            make_syn_bson_object(bson_task_file, keys::mChainL, i, mode); i++;
+        }
+        bson_append_finish_array(&bson_task_file);
+
+        bson_append_start_array(&bson_task_file, keys::DcNames[mode]);
+        {
+            for (unsigned i = 0; i<nDC; i++)
+            {
+                make_syn_bson_object(bson_task_file, node->xCH_to_DC_name(i), i, mode);
+            }
+        }
+        bson_append_finish_array(&bson_task_file);
+
+        bson_append_start_array(&bson_task_file, keys::DcPropNames[mode]);
+        {
+            unsigned i = 0;
+            make_syn_bson_object(bson_task_file, keys::activity, i, mode); i++;
+
+            make_syn_bson_object(bson_task_file, keys::actcoef, i, mode); i++;
+        }
+    }
+    bson_append_finish_object(&bson_task_file);
+
     bson_finish(&bson_task_file);
+}
+
+void make_syn_bson_object (bson &bson_task_file, const char* key, int i, int mode)
+{
+    stringstream ss; string sss;
+    ss << i;
+    sss = ss.str();
+    ss.str("");
+    //pH
+    bson_append_start_object(&bson_task_file, sss.c_str());
+    {
+        bson_append_string(&bson_task_file, keys::NameSys[mode], key);
+        bson_append_string(&bson_task_file, keys::Syn[mode], "");
+
+    } bson_append_finish_object(&bson_task_file);
 }
 
 

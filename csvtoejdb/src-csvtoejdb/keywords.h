@@ -53,6 +53,14 @@ static const char * StatMC[2] = {"StatisticsUseMonteCarlo","StatMC"};
 static const char * StatMCr[2] = {"StatisticsMonteCarloRuns","StatMCruns"};
 static const char * StatPer[2] = {"StatisticsSensitivitiesPerturbator","StatSensPert"};
 
+static const char * DataSyn[2] = {"DataSynonyms","DataSyn"};
+static const char * PhNames[2] = {"PhaseNames","PHNs"};
+static const char * PhPropNames[2] = {"PhasePropertyNames","PHPNs"};
+static const char * DcNames[2] = {"DependentComponentNames","DCNs"};
+static const char * DcPropNames[2] = {"DependentComponentPropertyNames","DCPNs"};
+static const char * NameSys[2] = {"NameInSystem","NIS"};
+static const char * Syn[2] = {"Synonyms","Syn"};
+
 //"OptDoWhat" :   0,
 //"OptEquilibrium" :   1,
 //"OptUserWeight" :   0,
@@ -234,7 +242,7 @@ static const char *Fcoef = "Fcoef";
         static const char *CT = "CT"; ///                                   string              type of component/data to compare
 //            static const char *property = "prop"; ///                           string              keyword for comparing properties with names such as pH, Q, IS, etc.
         static const char *CN = "CN"; ///                                   string              name of data to compare e.g. Al, pH, etc.
-        static const char * EPH[2] = {"PhaseName","EPH"};  ///              string              experiment phase
+        static const char * EPH[2] = {"SystemPhaseName","EPH"};  ///              string              experiment phase
 //        static const char *Eunit = "Unit"; ///                              string              experiment element unit
         static const char *DCP = "DCP"; ///                                 string              dependent comp property
         static const char * PType[2] = {"ParameterType","PType"};

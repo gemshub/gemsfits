@@ -236,6 +236,48 @@
                     "Syn" :   ""
                }
           ],
+          "PHPNs" :   [
+               {
+                    "NIS" :   "pH",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "pe",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Eh",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "IS",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "alk",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "pV",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "RHO",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "sArea",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Gex",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "mChainL",
+                    "Syn" :   ""
+               }
+          ],
           "DCNs" :   [
                {
                     "NIS" :   "Al(OH)2+",
@@ -343,6 +385,16 @@
                },
                {
                     "NIS" :   "Sylvite",
+                    "Syn" :   ""
+               }
+          ],
+          "DCPNs" :   [
+               {
+                    "NIS" :   "activity",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "@coef",
                     "Syn" :   ""
                }
           ]

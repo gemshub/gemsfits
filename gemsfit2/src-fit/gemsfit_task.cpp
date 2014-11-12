@@ -118,7 +118,8 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     {
         calc_logK_TP ();
     }
-    get_logK_TPpairs ();
+    if (LogK.size() > 0) set_logK_TPpairs (LogK);
+    set_logK_TPpairs ();
 
     for (unsigned e=0; e < Opti->optParam.size(); e++)
     {
@@ -1092,11 +1093,40 @@ void TGfitTask::get_DataTarget ( )
 }
 
 // will go away after implementing way to read logK's from the input file
-void TGfitTask::get_logK_TPpairs()
+void TGfitTask::set_logK_TPpairs()
 {
     for (unsigned i=0; i <Opti->optParam.size(); i++)
     {
         Opti->optParam[i]->Set_logKTP(this->NodT[0], this->TP_pairs );
+    }
+}
+
+void TGfitTask::set_logK_TPpairs(vector<string> logK)
+{
+    int size = 0;
+    int l = 0;
+    for (unsigned e=0; e <Opti->optParam.size(); e++)
+    {
+        if (Opti->optParam[e]->Get_optType() == "G0")
+        size += Opti->optParam[e]->Get_optRPsize();
+    }
+
+    if (logK.size() != size)
+    { cout << "The number of logks is not equal to the number of R parameters * T-P pairs in the system! " << endl; exit(1);}
+
+    for (unsigned e=0; e <Opti->optParam.size(); e++)
+    {
+        if (Opti->optParam[e]->Get_optType() == "G0")
+        {
+            for (unsigned j = 0; j < Opti->optParam[e]->Get_optRPsize(); j++)
+            {
+                for (unsigned k = 0; k < TP_pairs[0].size(); k++)
+                {
+                    Opti->optParam[e]->Set_logKTP(j, atof(logK[l].c_str()) );
+                    l++;
+                }
+            }
+        }
     }
 }
 

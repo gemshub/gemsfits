@@ -49,6 +49,7 @@
 // Constructor
 Data_Manager::Data_Manager( )
 {
+    mode = gpf->KeysNdx;
     // Read parameters for database connection
     gpf->flog << "02. data_manager.cpp(51). Reading database parameter get_db_specs(); " << endl;
     get_db_specs_txt();
@@ -59,6 +60,8 @@ Data_Manager::Data_Manager( )
 
     gpf->flog << "04. data_manager.cpp(58). Getting distinct T and P pairs; " << endl;
     get_distinct_TP();
+
+    get_DataSyn();
 
 }
 
@@ -71,6 +74,247 @@ Data_Manager::~Data_Manager( )
     {
         delete experiments[i];
     }
+}
+
+void Data_Manager::get_DataSyn()
+{
+    vector<string> out, out2;
+    Data_Manager::DataSynonyms ss;
+    parse_JSON_object(DataSyn, keys::PhNames[mode], out);
+    for (unsigned i = 0; i < out.size(); i++)
+    {
+
+        SynPHs.push_back(ss);
+        parse_JSON_object(out[i], keys::NameSys[mode], out2);
+        SynPHs[SynPHs.size()-1].GemsName = out2[0];
+        out2.clear();
+        parse_JSON_object(out[i], keys::Syn[mode], out2);
+        if (out2[0] != "")
+        SynPHs[SynPHs.size()-1].syn = out2;
+        out2.clear();
+
+    }
+    out.clear();
+
+    parse_JSON_object(DataSyn, keys::PhPropNames[mode], out);
+    for (unsigned i = 0; i < out.size(); i++)
+    {
+
+        SynPHPs.push_back(ss);
+        parse_JSON_object(out[i], keys::NameSys[mode], out2);
+        SynPHPs[SynPHPs.size()-1].GemsName = out2[0];
+        out2.clear();
+        parse_JSON_object(out[i], keys::Syn[mode], out2);
+        if (out2[0] != "")
+        SynPHPs[SynPHPs.size()-1].syn = out2;
+        out2.clear();
+
+    }
+    out.clear();
+
+    parse_JSON_object(DataSyn, keys::DcNames[mode], out);
+    for (unsigned i = 0; i < out.size(); i++)
+    {
+        SynDCs.push_back(ss);
+        parse_JSON_object(out[i], keys::NameSys[mode], out2);
+        SynDCs[SynDCs.size()-1].GemsName = out2[0];
+        out2.clear();
+        parse_JSON_object(out[i], keys::Syn[mode], out2);
+        if (out2[0] != "")
+        SynDCs[SynDCs.size()-1].syn = out2;
+        out2.clear();
+    }
+    out.clear();
+
+    parse_JSON_object(DataSyn, keys::DcPropNames[mode], out);
+    for (unsigned i = 0; i < out.size(); i++)
+    {
+        SynDCPs.push_back(ss);
+        parse_JSON_object(out[i], keys::NameSys[mode], out2);
+        SynDCPs[SynDCPs.size()-1].GemsName = out2[0];
+        out2.clear();
+        parse_JSON_object(out[i], keys::Syn[mode], out2);
+        if (out2[0] != "")
+        SynDCPs[SynDCPs.size()-1].syn = out2;
+        out2.clear();
+    }
+    out.clear();
+}
+
+void Data_Manager::check_Syn()
+{
+    // phases
+    for (unsigned p = 0; p < SynPHs.size(); p++)
+    {
+        for (unsigned i = 0; i < experiments.size(); i++)
+        {
+            // L_KC
+            for (unsigned lkc = 0; lkc < experiments[i]->L_KC.size(); lkc++)
+            {
+                bool check = false;
+                for (unsigned s = 0; s < SynPHs[p].syn.size(); s++)
+                {
+                    if ((experiments[i]->L_KC[lkc]->type == keys::phase) && (experiments[i]->L_KC[lkc]->name == SynPHs[p].syn[s]))
+                        check = true;
+                    if (check)
+                    {
+                        experiments[i]->L_KC[lkc]->name = SynPHs[p].GemsName;
+                        check = false; break;
+                    }
+                }
+            }
+
+            // U_KC
+            for (unsigned ukc = 0; ukc < experiments[i]->U_KC.size(); ukc++)
+            {
+                bool check = false;
+                for (unsigned s = 0; s < SynPHs[p].syn.size(); s++)
+                {
+                    if ((experiments[i]->U_KC[ukc]->type == keys::phase) && (experiments[i]->U_KC[ukc]->name == SynPHs[p].syn[s]))
+                        check = true;
+                    if (check)
+                    {
+                        experiments[i]->U_KC[ukc]->name = SynPHs[p].GemsName;
+                        check = false; break;
+                    }
+                }
+            }
+
+            // phase name
+            for (unsigned ep = 0; ep < experiments[i]->expphases.size(); ep++)
+            {
+                bool check = false;
+                for (unsigned s = 0; s < SynPHs[p].syn.size(); s++)
+                {
+                    if ( (experiments[i]->expphases[ep]->phase == SynPHs[p].syn[s]))
+                        check = true;
+                    if (check)
+                    {
+                        experiments[i]->expphases[ep]->phase = SynPHs[p].GemsName;
+                        check = false;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    // DCs
+    for (unsigned d = 0; d < SynDCs.size(); d++)
+    {
+        for (unsigned i = 0; i < experiments.size(); i++)
+        {
+            // L_KC
+            for (unsigned lkc = 0; lkc < experiments[i]->L_KC.size(); lkc++)
+            {
+                bool check = false;
+                for (unsigned s = 0; s < SynDCs[d].syn.size(); s++)
+                {
+                    if ((experiments[i]->L_KC[lkc]->type == keys::DC) && (experiments[i]->L_KC[lkc]->name == SynDCs[d].syn[s]))
+                        check = true;
+                    if (check)
+                    {
+                        experiments[i]->L_KC[lkc]->name = SynDCs[d].GemsName;
+                        check = false; break;
+                    }
+                }
+            }
+
+            // U_KC
+            for (unsigned ukc = 0; ukc < experiments[i]->U_KC.size(); ukc++)
+            {
+                bool check = false;
+                for (unsigned s = 0; s < SynDCs[d].syn.size(); s++)
+                {
+                    if ((experiments[i]->U_KC[ukc]->type == keys::DC) && (experiments[i]->U_KC[ukc]->name == SynDCs[d].syn[s]))
+                        check = true;
+                    if (check)
+                    {
+                        experiments[i]->U_KC[ukc]->name = SynDCs[d].GemsName;
+                        check = false; break;
+                    }
+                }
+            }
+
+            // DC name
+            for (unsigned ep = 0; ep < experiments[i]->expphases.size(); ep++)
+            {
+                for (unsigned dc = 0; dc < experiments[i]->expphases[ep]->phDC.size(); dc++)
+                {
+                    bool check = false;
+                    for (unsigned s = 0; s < SynDCs[d].syn.size(); s++)
+                    {
+                        if ((experiments[i]->expphases[ep]->phDC[dc]->DC == SynDCs[d].syn[s]))
+                            check = true;
+                        if (check)
+                        {
+                            experiments[i]->expphases[ep]->phDC[dc]->DC = SynDCs[d].GemsName;
+                            check = false;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // DC properties
+    for (unsigned d = 0; d < SynDCPs.size(); d++)
+    {
+        for (unsigned i = 0; i < experiments.size(); i++)
+        {
+            // DC prop
+            for (unsigned ep = 0; ep < experiments[i]->expphases.size(); ep++)
+            {
+                for (unsigned dc = 0; dc < experiments[i]->expphases[ep]->phDC.size(); dc++)
+                {
+                    for (unsigned dcp = 0; dcp < experiments[i]->expphases[ep]->phDC[dc]->DCprop.size(); dcp++ )
+                    {
+                        bool check = false;
+                        for (unsigned s = 0; s < SynDCPs[d].syn.size(); s++)
+                        {
+                            if ((experiments[i]->expphases[ep]->phDC[dc]->DCprop[dcp]->property == SynDCPs[d].syn[s]))
+                                check = true;
+                            if (check)
+                            {
+                                experiments[i]->expphases[ep]->phDC[dc]->DCprop[dcp]->property = SynDCPs[d].GemsName;
+                                check = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Phase properties
+    for (unsigned p = 0; p < SynPHPs.size(); p++)
+    {
+        for (unsigned i = 0; i < experiments.size(); i++)
+        {
+            // phase prop
+            for (unsigned ep = 0; ep < experiments[i]->expphases.size(); ep++)
+            {
+                for (unsigned php = 0; php < experiments[i]->expphases[ep]->phprop.size(); php++ )
+                {
+                    bool check = false;
+                    for (unsigned s = 0; s < SynPHPs[p].syn.size(); s++)
+                    {
+                        if ( (experiments[i]->expphases[ep]->phprop[php]->property == SynPHPs[p].syn[s]))
+                            check = true;
+                        if (check)
+                        {
+                            experiments[i]->expphases[ep]->phprop[php]->property = SynPHPs[p].GemsName;
+                            check = false;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 void Data_Manager::get_db_specs_txt()
@@ -107,6 +351,10 @@ void Data_Manager::get_db_specs_txt()
     DataTarget = out[0];
     out.clear();
 
+    parse_JSON_object(s, keys::LogK[mode], out);
+    if (out[0] != "") LogK = out;
+    out.clear();
+
     parse_JSON_object(s, keys::G3Ksys[mode], out);
     gpf->setGEMS3LstFilePath(out[0].c_str());
     out.clear();
@@ -114,7 +362,10 @@ void Data_Manager::get_db_specs_txt()
     parse_JSON_object(s, keys::DatLogK[mode], out);
     DataLogK = out[0];
     out.clear();
-    cout << "here" << endl;
+
+    parse_JSON_object(s, keys::DataSyn[mode], out);
+    DataSyn = out[0];
+    out.clear();
 
 }
 
