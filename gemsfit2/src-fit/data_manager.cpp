@@ -62,7 +62,8 @@ Data_Manager::Data_Manager( )
     get_distinct_TP();
 
     get_DataSyn();
-
+    check_Syn();
+    mode = gpf->KeysNdx;
 }
 
 
@@ -331,7 +332,12 @@ void Data_Manager::get_db_specs_txt()
     std::string s = tmp.str();
 //    std::cout<<s<<std::endl;
 
-    parse_JSON_object(s, keys::MPI[mode], out);
+    parse_JSON_object(s, keys::MPI[0], out);
+    if (out.size() == 0)
+    {
+       parse_JSON_object(s, keys::MPI[1], out);
+    mode = 1; gpf->KeysNdx = 1;
+    }
     MPI = atoi(out[0].c_str());
     out.clear();
 
