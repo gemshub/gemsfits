@@ -21,8 +21,6 @@ Resources/doc/html/img/SaveCurrentRecordIcon24.png -text
 Resources/doc/html/img/SelectDisplayRecordIcon24.png -text
 Resources/doc/html/img/ShowGEMResultsIcon24.png -text
 Resources/doc/html/img/Tuckey.png -text
-Resources/help/.gfshelp/_b.cfs -text
-Resources/help/.gfshelp/deletable -text
 Resources/help/gfshelp.qch -text
 Resources/help/gfshelp.qhc -text
 Tests/1CASHNK/EJDB/cashnkdata -text
