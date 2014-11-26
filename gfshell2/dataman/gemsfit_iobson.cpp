@@ -656,16 +656,16 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
                 // for query
                 if (headline[i]==expdataset)
                 {
-                    if (row[i].empty()) { Error( "Loading csv file", "expdataset column cannot be emppty. Exiting..." );}
+                    if (row[i].empty()) { Error( "Loading csv file", "expdataset column cell cannot be empty. Exiting..." );}
                 }
                 if (headline[i]==expsample)
                 {
-                    if (row[i].empty()) { Error( "Loading csv file", "sample (sample name) column cannot be emppty. Exiting...");}
+                    if (row[i].empty()) { Error( "Loading csv file", "sample (sample name) column cell cannot be empty. Exiting...");}
                 } // end for query
             }
             else if  ((headline[i]==sT) || (headline[i]==sP))
             {
-                if (row[i].empty()) { Error( "Loading csv file", "P or T columns cannot be emppty. Exiting...");}
+                if (row[i].empty()) { Error( "Loading csv file", "Cells of P and/or T columns cannot be empty. Exiting...");}
                 bson_append_double(exp, headline[i].c_str(), atof(row[i].c_str()));
             }
             else if (headline[i]==sV)
