@@ -310,6 +310,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 
 //    for(unsigned i=0; i< optv_.size(); i++ ) // cols
 //    {
+    int npx = 0;
     for (unsigned e =0; e < gfittask->Opti->optParam.size(); e++)
     {
         for (unsigned i=0; i<gfittask->Opti->optParam[e]->Get_optFPsize(); ++i)
@@ -317,15 +318,16 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
             // Print optimized parameter values to file
             fitparam.push_back(new parameters);
 
-            fitparam[i]->Ptype = gfittask->Opti->optParam[e]->Get_optType();
-            fitparam[i]->Pfittype = "F";
+            fitparam[i+npx]->Ptype = gfittask->Opti->optParam[e]->Get_optType();
+            fitparam[i+npx]->Pfittype = "F";
 
-            gfittask->Opti->optParam[e]->Get_Fparam(i, fitparam[i]->Pname,
-                    fitparam[i]->Ival, fitparam[i]->Fval);
-            fitparam[i]->CSS = 0.0;
-            fitparam[i]->mc95 = 0.0;
-            fitparam[i]->mcSTDEV = 0.0;
+            gfittask->Opti->optParam[e]->Get_Fparam(i, fitparam[i+npx]->Pname,
+                    fitparam[i+npx]->Ival, fitparam[i+npx]->Fval);
+            fitparam[i+npx]->CSS = 0.0;
+            fitparam[i+npx]->mc95 = 0.0;
+            fitparam[i+npx]->mcSTDEV = 0.0;
         }
+        npx = fitparam.size();
     }
 
 //    }

@@ -586,6 +586,7 @@ Opt_PMc::Opt_PMc(vector<string> data, double OptBoundPrc, unsigned &p) :
             out.clear();
             optFP.push_back( new Opt_PMc::F_parameter);
             optFP[optFP.size()-1]->Pndx = i;
+            optFP[optFP.size()-1]->Pname = "PMc";
             Pval_to_optF (p, Jdata[i], optFP[optFP.size()-1]);
 
             p++;
@@ -599,6 +600,7 @@ Opt_PMc::Opt_PMc(vector<string> data, double OptBoundPrc, unsigned &p) :
             out.clear();
             optSP.push_back( new Opt_PMc::S_parameter);
             optSP[optSP.size()-1]->Pndx = i;
+            optSP[optSP.size()-1]->Pname = "PMc";
 
             parse_JSON_object(Jdata[i], keys::IV[mode], out);
             if (out.size() !=1) { cout << "Parameter \"S\"-type " << p << " (G0) has no \"spec\" defined! "<< endl; exit(1); }
@@ -665,6 +667,7 @@ Opt_DMc::Opt_DMc(vector<string> data, double OptBoundPrc, unsigned &p) :
             out.clear();
             optFP.push_back( new Opt_DMc::F_parameter);
             optFP[optFP.size()-1]->Pndx = i;
+            optFP[optFP.size()-1]->Pname = "DMc";
             Pval_to_optF (p, Jdata[i], optFP[optFP.size()-1]);
 
             p++;
@@ -678,6 +681,7 @@ Opt_DMc::Opt_DMc(vector<string> data, double OptBoundPrc, unsigned &p) :
             out.clear();
             optSP.push_back( new Opt_DMc::S_parameter);
             optSP[optSP.size()-1]->Pndx = i;
+            optSP[optSP.size()-1]->Pname = "DMc";
 
             parse_JSON_object(Jdata[i], keys::IV[mode], out);
             if (out.size() !=1) { cout << "Parameter \"S\"-type " << p << " (G0) has no \"spec\" defined! "<< endl; exit(1); }
