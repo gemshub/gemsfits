@@ -194,7 +194,7 @@ void OptParameter::Get_IVparam( vd &opt, vd &UB, vd &LB )
      //  F type parameters only
      for (unsigned i = 0; i <optFP.size(); i++)
      {
-         opt.push_back(optFP[i]->IV);
+          opt.push_back(optFP[i]->IV);
           UB.push_back(optFP[i]->UB);
           LB.push_back(optFP[i]->LB);
           optFP[i]->optNdx = opt.size()-1;
@@ -586,7 +586,9 @@ Opt_PMc::Opt_PMc(vector<string> data, double OptBoundPrc, unsigned &p) :
             out.clear();
             optFP.push_back( new Opt_PMc::F_parameter);
             optFP[optFP.size()-1]->Pndx = i;
-            optFP[optFP.size()-1]->Pname = "PMc";
+            parse_JSON_object(Jdata[i], keys::IPCN[mode], out);
+            if (out.size() == 1) optFP[optFP.size()-1]->Pname = out[0];
+            else optFP[optFP.size()-1]->Pname = "PMc";
             Pval_to_optF (p, Jdata[i], optFP[optFP.size()-1]);
 
             p++;
@@ -667,7 +669,8 @@ Opt_DMc::Opt_DMc(vector<string> data, double OptBoundPrc, unsigned &p) :
             out.clear();
             optFP.push_back( new Opt_DMc::F_parameter);
             optFP[optFP.size()-1]->Pndx = i;
-            optFP[optFP.size()-1]->Pname = "DMc";
+            if (out.size() == 1) optFP[optFP.size()-1]->Pname = out[0];
+            else optFP[optFP.size()-1]->Pname = "DMc";
             Pval_to_optF (p, Jdata[i], optFP[optFP.size()-1]);
 
             p++;

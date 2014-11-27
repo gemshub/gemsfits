@@ -326,6 +326,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
             fitparam[i+npx]->CSS = 0.0;
             fitparam[i+npx]->mc95 = 0.0;
             fitparam[i+npx]->mcSTDEV = 0.0;
+            fitparam[i+npx]->mcMEAN = 0.0;
         }
         npx = fitparam.size();
     }
@@ -345,6 +346,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
             fitparam[np+i]->CSS = 0.0;
             fitparam[np+i]->mc95 = 0.0;
             fitparam[np+i]->mcSTDEV = 0.0;
+            fitparam[np+i]->mcMEAN = 0.0;
 
         }
     }
@@ -362,6 +364,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
             fitparam[np+i]->CSS = 0.0;
             fitparam[np+i]->mc95 = 0.0;
             fitparam[np+i]->mcSTDEV = 0.0;
+            fitparam[np+i]->mcMEAN = 0.0;
         }
     }
 

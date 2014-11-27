@@ -28,6 +28,7 @@ static const char * PAM[2] = {"ParametersOfActivityModels","PAM"};
 static const char * Pndx[2] = {"ParameterIndex","Pndx"};
 
 static const char * DCN_[2] = {"DependentComponentName","DCN"};
+static const char * IPCN[2] = {"InteractionParameterCoefficientName","IPCN"};
 
 
 static const char * DMc[2] = {"ParametersOfDependentComponentsInPhase","DMc"};

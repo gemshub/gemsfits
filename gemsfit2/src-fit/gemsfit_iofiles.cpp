@@ -134,7 +134,7 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
 {
     int Np = 0, Nip = 0, Ncoef = 0, PMCndx = 0, DMCndx = 0, nIC, nDC, nPS, nPH, DCndx = -1; long int nDCinPH;
     double temp = 0.0;
-    stringstream ss; string sss;
+    stringstream ss; string sss, ipcn, dcipcn;
     bson_init(&bson_task_file);
 
     DATACH* dCH = node->pCSD();
@@ -192,6 +192,7 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
         bson_append_start_object(&bson_task_file, sss.c_str());
         {
             bson_append_string(&bson_task_file, keys::EPH[mode], node->xCH_to_PH_name(i));
+            ipcn.append(node->xCH_to_PH_name(i)); ipcn.append("[");
 
             // PMc parameters
             if ((LsMod[i+x] > 0))
@@ -202,6 +203,7 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
                     ss << Nip;
                     sss = ss.str();
                     ss.str("");
+                    ipcn.append(sss); ipcn.append("|");
                     bson_append_start_object(&bson_task_file, sss.c_str());
                     {
                         // write IPC
@@ -213,9 +215,11 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
                             ss << Ncoef;
                             sss = ss.str();
                             ss.str("");
+                            ipcn.append(sss); ipcn.append("]");
                             bson_append_start_object(&bson_task_file, sss.c_str());
                             {
                                 node->Get_PMc(temp, PMCndx);
+                                bson_append_string(&bson_task_file, keys::IPCN[mode], ipcn.c_str());
                                 bson_append_string(&bson_task_file, keys::PType[mode], "S");
                                 bson_append_double(&bson_task_file, keys::IV[mode], temp );
 //                                bson_append_int(&bson_task_file, keys::Pndx[mode], PMCndx );
@@ -224,11 +228,13 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
                             bson_append_finish_object(&bson_task_file);
                             Ncoef++;
                             PMCndx++;
+                            ipcn.erase(ipcn.size()-2, ipcn.size());
                         }
                         bson_append_finish_array(&bson_task_file);
                     } // finish IParameters
                     bson_append_finish_object(&bson_task_file);
                     Nip++;
+                    ipcn.erase(ipcn.size()-2, ipcn.size());
                 }
                 bson_append_finish_array(&bson_task_file);
             }
@@ -247,6 +253,8 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
                     bson_append_start_object(&bson_task_file, sss.c_str());
                     {
                         bson_append_string(&bson_task_file, keys::DCN_[mode], node->xCH_to_DC_name(DCndx + k));
+                        dcipcn.append(node->xCH_to_PH_name(i)); dcipcn.append("|");
+                        dcipcn.append(node->xCH_to_DC_name(DCndx + k)); dcipcn.append("[");
 
                         // write IPDCoef
                 //        bson_append_int(&bson_task_file, "IPndx", Nip);
@@ -257,25 +265,29 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
                             ss << Ncoef;
                             sss = ss.str();
                             ss.str("");
+                            dcipcn.append(sss);dcipcn.append("]");
                             bson_append_start_object(&bson_task_file, sss.c_str());
                             {
                                 node->Get_DMc(temp, DMCndx);
+                                bson_append_string(&bson_task_file, keys::IPCN[mode], dcipcn.c_str());
                                 bson_append_string(&bson_task_file, keys::PType[mode], "S");
                                 bson_append_double(&bson_task_file, keys::IV[mode], temp );
 //                                bson_append_int(&bson_task_file, keys::Pndx[mode], DMCndx );
                                 temp=0;
                             } // finish IPDCoef
                             bson_append_finish_object(&bson_task_file);
-
                             Ncoef++;
                             DMCndx++;
+                            dcipcn.erase(dcipcn.size()-2, dcipcn.size());
                         }
                         bson_append_finish_array(&bson_task_file);
+                        dcipcn.clear();
                     }
                     bson_append_finish_object(&bson_task_file);
                 }
                 bson_append_finish_array(&bson_task_file);
             }
+            ipcn.clear();
         } // finish object
         bson_append_finish_object(&bson_task_file);
         Np++;
