@@ -1,4 +1,16 @@
 * text=auto !eol
+Resources/BuildRun_win32/gemsfit2_dlls/libblas.dll -text
+Resources/BuildRun_win32/gemsfit2_dlls/libgcc_s_dw2-1.dll -text
+Resources/BuildRun_win32/gemsfit2_dlls/libgfortran-3.dll -text
+Resources/BuildRun_win32/gemsfit2_dlls/libgomp-1.dll -text
+Resources/BuildRun_win32/gemsfit2_dlls/liblapack.dll -text
+Resources/BuildRun_win32/gemsfit2_dlls/libnlopt-0.dll -text
+Resources/BuildRun_win32/gemsfit2_dlls/libquadmath-0.dll -text
+Resources/BuildRun_win32/gemsfit2_dlls/libstdc++-6.dll -text
+Resources/BuildRun_win32/gemsfit2_dlls/libwinpthread-1.dll -text
+Resources/BuildRun_win32/gemsfit2_dlls/pthreadGC2.dll -text
+Resources/BuildRun_win32/gemsfit2_dlls/tcejdbdll.dll -text
+Resources/BuildRun_win32/gfshell2_dlls/tcejdbdll.dll -text
 Resources/doc/html/DatabaseModeIcon.png -text
 Resources/doc/html/TaskModeIcon.png -text
 Resources/doc/html/bgimg-gray.jpg -text
@@ -73,6 +85,18 @@ gemsfit2-build/test_input/CASH/CASH.csv -text
 gemsfit2-build/test_input/CASH/CASH.xls -text
 gemsfit2-build/test_input/CASH/solcash -text
 gemsfit2-build/test_input/CASH/solcash_experiments -text
+gemsfit2/armadillo_win32/armadillo_icon.png -text
+gemsfit2/armadillo_win32/armadillo_nicta_2010.pdf -text
+gemsfit2/armadillo_win32/examples/lib_win32/libblas.dll -text
+gemsfit2/armadillo_win32/examples/lib_win32/libblas.lib -text
+gemsfit2/armadillo_win32/examples/lib_win32/liblapack.dll -text
+gemsfit2/armadillo_win32/examples/lib_win32/liblapack.lib -text
+gemsfit2/armadillo_win32/examples/lib_win64/blas_win64_MT.dll -text
+gemsfit2/armadillo_win32/examples/lib_win64/blas_win64_MT.lib -text
+gemsfit2/armadillo_win32/examples/lib_win64/lapack_win64_MT.dll -text
+gemsfit2/armadillo_win32/examples/lib_win64/lapack_win64_MT.lib -text
+gemsfit2/armadillo_win32/mex_interface/armaMex_documentation.pdf -text
+gemsfit2/armadillo_win32/rcpp_armadillo_csda_2014.pdf -text
 gemsfit2/docs/html/bgimg-gray.jpg -text
 gemsfit2/docs/html/gemsfit2.png -text
 gemsfit2/docs/xls/excel_example.xls -text
@@ -201,6 +225,8 @@ gemsfit2/muparser/src/muParserToken.h -text
 gemsfit2/muparser/src/muParserTokenReader.cpp -text
 gemsfit2/muparser/src/muParserTokenReader.h -text
 gemsfit2/muparser/src/muparser.pri -text
+gemsfit2/nlopt_win32/libnlopt-0.dll -text
+gemsfit2/nlopt_win32/libnlopt-0.lib -text
 gemsfit2/src-fit/data_manager.cpp -text
 gemsfit2/src-fit/data_manager.h -text
 gemsfit2/src-fit/fit.pri -text
@@ -215,6 +241,12 @@ gemsfit2/tcejdb/doc/logo-ja.png -text
 gemsfit2/tcejdb/doc/logo.png -text
 gemsfit2/tcejdb/doc/tokyoproducts.pdf -text
 gemsfit2/tcejdb/doc/tokyoproducts.ppt -text
+gemsfit2/tcejdb_win32/lib.exe -text
+gemsfit2/tcejdb_win32/lib/tcejdbdll.dll -text
+gemsfit2/tcejdb_win32/lib/tcejdbdll.exp -text
+gemsfit2/tcejdb_win32/lib/tcejdbdll.lib -text
+gemsfit2/tcejdb_win32/link.exe -text
+gemsfit2/tcejdb_win32/mspdb100.dll -text
 gfshell2/Icons/CalculateBCCIcon.png -text
 gfshell2/Icons/CalculateBCCIcon24.png -text
 gfshell2/Icons/CalculateGEMIcon.png -text

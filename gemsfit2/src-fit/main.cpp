@@ -43,9 +43,16 @@
 #include "gemsfit_global_functions.h"
 #include <iomanip>
 
+#ifdef buildWIN32
+#define BOOST_FILESYSTEM_VERSION 3
+#define BOOST_FILESYSTEM_NO_DEPRECATED
+#include <boost_win32/boost/filesystem.hpp>
+#else
 #define BOOST_FILESYSTEM_VERSION 3
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #include <boost/filesystem.hpp>
+#endif
+
 
 
 using namespace std;
@@ -89,7 +96,11 @@ int main( int argc, char *argv[] )
     if( gpf->isRunMode() )
     {
     if ( access( gpf->OutputDirPath().c_str(), 0 ) != 0 )
+#ifdef buildWIN32
+        mkdir(gpf->OutputDirPath().c_str());
+#else
         mkdir(gpf->OutputDirPath().c_str(), 0775);
+#endif
     }
 
 //    if( gpf->isInitMode() ) // Mode GEMSFIT to generate input configuration file

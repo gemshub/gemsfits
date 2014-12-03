@@ -688,7 +688,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFun
         {
         computed_value = sys->NodT[i]->Get_nDC(DCndx); // Retrieves the current mole amount of Dependent Component.
         } else
-        if (objfun.exp_unit == keys::molfrac)
+        if ((objfun.exp_unit == keys::molfrac) || (objfun.exp_unit == keys::molal))
         {
             /// Retrieves concentration of Dependent Component in its phase
             /// in the respective concentration scale. For aqueous species, molality is returned;
@@ -698,7 +698,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFun
             /// \return 0.0, if DC has zero amount.
             computed_value = sys->NodT[i]->Get_cDC(DCndx);// for species in other phases - mole fraction
         } else
-        if (/*sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit*/ objfun.exp_unit == keys::log_molfrac)
+        if ((/*sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit*/ objfun.exp_unit == keys::log_molfrac) || (objfun.exp_unit == keys::logm))
             computed_value = log10(sys->NodT[i]->Get_cDC(DCndx));
         else
         if (/*sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit*/ objfun.exp_unit== keys::ln_molfrac)

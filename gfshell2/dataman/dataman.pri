@@ -5,8 +5,8 @@
     dataman/fmodel.h \
     dataman/qwtplot.h \
     dataman/graph.h \
-#                    $$KEYS_H/keywords.h
-    dataman/keywords.h
+                    $$KEYS_H/keywords.h
+#    dataman/keywords.h
 #                   $$DATAMAN_H/qwtplot.h
 
          SOURCES += $$DATAMAN_CPP/f_ejdb.cpp \

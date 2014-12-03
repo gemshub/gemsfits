@@ -580,7 +580,7 @@ Opt_PMc::Opt_PMc(vector<string> data, double OptBoundPrc, unsigned &p) :
     for (unsigned int i = 0 ; i < Jdata.size() ; i++)
     {
         parse_JSON_object(Jdata[i], keys::PType[mode], out);
-        if (out.size() !=1) { cout << "Parameter " << p << " (G0) has no \"PType\" defined! "<< endl; exit(1); }
+        if (out.size() !=1) { cout << "Parameter " << p << " (PMc) has no \"PType\" defined! "<< endl; exit(1); }
         if (out[0] == "F")
         {
             out.clear();

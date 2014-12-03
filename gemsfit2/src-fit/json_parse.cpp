@@ -64,6 +64,7 @@ void parse_JSON_object(string query, const char* key, vector<string> &result)
             {
                 ss.precision(15);
                 ss << json_real_value(object);
+//                cout << json_real_value(object) << endl;
                 sss = ss.str();
                 ss.str("");
                 result.push_back(sss);

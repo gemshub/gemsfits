@@ -29,7 +29,12 @@
 
 #include <qwt_series_data.h>
 #include  "verror.h"
+#ifdef buildWIN32
+#include <tcejdb/bson.h>
+#else
 #include  "bson.h"
+#endif
+
 //#include  "fmodel.h"
 
 //const int maxPLOT = 20;

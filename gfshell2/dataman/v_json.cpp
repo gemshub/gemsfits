@@ -207,8 +207,10 @@ void bson_print_raw_txt_(FILE *f, const char *data, int depth, int datatype )
                      ts = bson_iterator_timestamp(&i);
                      fprintf(f, "i: %d, t: %d", ts.i, ts.t);
                      break;
+#ifndef buildWIN32
                default:
                       bson_errprintf("can't print type : %d\n", t);
+#endif
         }
     }
     fprintf(f, "\n");

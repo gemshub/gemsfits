@@ -23,7 +23,11 @@
 #include <fstream>
 #include <string>
 using namespace std;
+#ifdef buildWIN32
+#include <tcejdb/ejdb.h>
+#else
 #include "ejdb.h"
+#endif
 
 extern int generateTxtfromBson( string gemsfitfile, bson *obj, bool with_comments );
 extern void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>& row );

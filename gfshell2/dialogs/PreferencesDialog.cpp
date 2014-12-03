@@ -34,7 +34,7 @@ PreferencesDialog::PreferencesDialog(QSettings *aSet,QWidget *parent) :
         ui->helpEdit->setText( settings->value("HelpFolderPath", "../Resources/help").toString() );
         ui->usersEdit->setText( settings->value("UserFolderPath", ".").toString() );
         ui->gemsfit2Edit->setText( settings->value("Gemsfit2ProgramPath", "gemsfit2").toString() );
-        ui->commentsBox->setChecked( settings->value("PrintComments", false).toBool() );
+        ui->commentsBox->setChecked( settings->value("PrintComments", true).toBool() );
         ui->turnoff->setChecked( settings->value("PrintGEMSFITMessages", true).toBool() );
         ui->yamlBox->setChecked( settings->value("ViewinYAMLFormat", false).toBool() );
 

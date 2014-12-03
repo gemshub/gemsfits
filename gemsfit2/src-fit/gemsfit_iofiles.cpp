@@ -33,7 +33,12 @@ using namespace std;
 #include <unistd.h>
 #include <cctype>
 #include <iomanip>
-#include <bson.h>
+#ifdef buildWIN32
+        #include <tcejdb/bson.h>
+#else
+        #include <bson.h>
+#endif
+
 
 //#include "statistics.h"
 //#include "optimization.h"
@@ -943,7 +948,11 @@ TGfitPath::TGfitPath(int c, char *v[]):
             case INIT_:
                 // set up default paths
                 // later these paths and filenames can be read from the task file
-                mkdir(path_init.c_str(), 0775);
+#ifdef buildWIN32
+        mkdir(path_init.c_str());
+#else
+        mkdir(path_init.c_str(), 0775);
+#endif
                 outputDir = path_init + OUTPUT_DIR;
                 fitsens = outputDir+FIT_SENS_FILE;
                 fitFile = outputDir+FIT_CSV_FILE;
@@ -957,7 +966,11 @@ TGfitPath::TGfitPath(int c, char *v[]):
             case INITJ_:
                 // set up default paths
                 // later these paths and filenames can be read from the task file
-                mkdir(path_init.c_str(), 0775);
+#ifdef buildWIN32
+        mkdir(path_init.c_str());
+#else
+        mkdir(path_init.c_str(), 0775);
+#endif
                 outputDir = path_init + OUTPUT_DIR;
                 fitsens = outputDir+FIT_SENS_FILE;
                 fitFile = outputDir+FIT_CSV_FILE;

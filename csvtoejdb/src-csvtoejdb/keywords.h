@@ -62,29 +62,6 @@ static const char * DcPropNames[2] = {"DependentComponentPropertyNames","DCPNs"}
 static const char * NameSys[2] = {"NameInSystem","NIS"};
 static const char * Syn[2] = {"Synonyms","Syn"};
 
-//"OptDoWhat" :   0,
-//"OptEquilibrium" :   1,
-//"OptUserWeight" :   0,
-//"OptTuckey" :   0,
-//"OptTuckeyVal" :   6,
-//"OptAlgo" :   "LN_BOBYQA",
-//"OptBoundPerc" :   -1,
-//"OptTolRel" :   1e-06,
-//"OptTolAbs" :   1e-06,
-//"OptMaxEval" :   1000,
-//"OptInitStep" :   0,
-//"OptNormParam" :   1,
-//"OptPerturbator" :   0.0001,
-//"StatMCbool" :   4,
-//"StatMCruns" :   3,
-//"StatPerturbator" :   0.0001
-
-
-
-
-
-
-
 
 // General keywords used for qunatity, error and unit
 static const char *Qnt = "Q";  ///                                                              qunatity
@@ -286,6 +263,7 @@ static const char *kJ_mol = "kJ/mol"; ///                                   stri
 
 
 static const char *aq = "a"; ///
+
 
 static const double mNaCl = 58.442308;
 static const double mNaOH = 39.997115;

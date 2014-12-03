@@ -1,189 +1,189 @@
 {
-     "NumMPI" :   4,
-     "DBPath" :   "../EJDB/<database name>",
-     "DBColl" :   "<collection name>",
-     "GEMSFPath" :   "../GEMS/bhm-H-gbs-H-dat.lst",
-     "DataSelect" :   "",
-     "DataTarget" :   "",
-     "ParToOpt" :   {
-          "G0" :   [
+     "NumberOfThreadsForParallelRun" :   4,
+     "DatabasePath" :   "../EJDB/<database name>",
+     "DataCollection" :   "<collection name>",
+     "GEMSInputFilesPath" :   "../GEMS/bhm-H-gbs-H-dat.lst",
+     "DataSelection" :   "",
+     "DataTargetFunction" :   "",
+     "ParametersToOptimize" :   {
+          "GibbsFreeEnergyOfDependentComponents" :   [
                {
-                    "DCN" :   "Al(OH)2+",
-                    "PType" :   "S",
-                    "IV" :   -899506.00028008
+                    "DependentComponentName" :   "Al(OH)2+",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   -899506.00028008
                },
                {
-                    "DCN" :   "Al(OH)3@",
-                    "PType" :   "S",
-                    "IV" :   -1101735
+                    "DependentComponentName" :   "Al(OH)3@",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   -1101735
                },
                {
-                    "DCN" :   "Al(OH)4-",
-                    "PType" :   "S",
-                    "IV" :   -1305814.0005473
+                    "DependentComponentName" :   "Al(OH)4-",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   -1305814.0005473
                },
                {
-                    "DCN" :   "Al+3",
-                    "PType" :   "S",
-                    "IV" :   -487478.0014416
+                    "DependentComponentName" :   "Al+3",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   -487478.0014416
                },
                {
-                    "DCN" :   "AlOH+2",
-                    "PType" :   "S",
-                    "IV" :   -696322.0008363
+                    "DependentComponentName" :   "AlOH+2",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   -696322.0008363
                },
                {
-                    "DCN" :   "K+",
-                    "PType" :   "S",
-                    "IV" :   -282462.00010137
+                    "DependentComponentName" :   "K+",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   -282462.00010137
                },
                {
-                    "DCN" :   "KAlO2@",
-                    "PType" :   "S",
-                    "IV" :   -1106169.9999737
+                    "DependentComponentName" :   "KAlO2@",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   -1106169.9999737
                },
                {
-                    "DCN" :   "KCl@",
-                    "PType" :   "S",
-                    "IV" :   -404676.0000878
+                    "DependentComponentName" :   "KCl@",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   -404676.0000878
                },
                {
-                    "DCN" :   "KOH@",
-                    "PType" :   "S",
-                    "IV" :   -434634.00008817
+                    "DependentComponentName" :   "KOH@",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   -434634.00008817
                },
                {
-                    "DCN" :   "Na+",
-                    "PType" :   "S",
-                    "IV" :   -261881.00017392
+                    "DependentComponentName" :   "Na+",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   -261881.00017392
                },
                {
-                    "DCN" :   "NaAl(OH)4@",
-                    "PType" :   "S",
-                    "IV" :   -1567372
+                    "DependentComponentName" :   "NaAl(OH)4@",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   -1567372
                },
                {
-                    "DCN" :   "NaCl@",
-                    "PType" :   "S",
-                    "IV" :   -388903.00004677
+                    "DependentComponentName" :   "NaCl@",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   -388903.00004677
                },
                {
-                    "DCN" :   "NaOH@",
-                    "PType" :   "S",
-                    "IV" :   -414634.00003677
+                    "DependentComponentName" :   "NaOH@",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   -414634.00003677
                },
                {
-                    "DCN" :   "Cl-",
-                    "PType" :   "S",
-                    "IV" :   -131290.00076596
+                    "DependentComponentName" :   "Cl-",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   -131290.00076596
                },
                {
-                    "DCN" :   "HCl@",
-                    "PType" :   "S",
-                    "IV" :   -127240
+                    "DependentComponentName" :   "HCl@",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   -127240
                },
                {
-                    "DCN" :   "H2@",
-                    "PType" :   "S",
-                    "IV" :   17723.00010995
+                    "DependentComponentName" :   "H2@",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   17723.00010995
                },
                {
-                    "DCN" :   "O2@",
-                    "PType" :   "S",
-                    "IV" :   16544.000207431
+                    "DependentComponentName" :   "O2@",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   16544.000207431
                },
                {
-                    "DCN" :   "H2O2@",
-                    "PType" :   "S",
-                    "IV" :   -134013.99990483
+                    "DependentComponentName" :   "H2O2@",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   -134013.99990483
                },
                {
-                    "DCN" :   "HO2-",
-                    "PType" :   "S",
-                    "IV" :   -67321.000812733
+                    "DependentComponentName" :   "HO2-",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   -67321.000812733
                },
                {
-                    "DCN" :   "OH-",
-                    "PType" :   "S",
-                    "IV" :   -157297.00090727
+                    "DependentComponentName" :   "OH-",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   -157297.00090727
                },
                {
-                    "DCN" :   "H+",
-                    "PType" :   "S",
-                    "IV" :   0
+                    "DependentComponentName" :   "H+",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   0
                },
                {
-                    "DCN" :   "H2O@",
-                    "PType" :   "S",
-                    "IV" :   -237181.38483664
+                    "DependentComponentName" :   "H2O@",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   -237181.38483664
                },
                {
-                    "DCN" :   "Boehmite-H",
-                    "PType" :   "S",
-                    "IV" :   -918400
+                    "DependentComponentName" :   "Boehmite-H",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   -918400
                },
                {
-                    "DCN" :   "Corundum",
-                    "PType" :   "S",
-                    "IV" :   -1581808
+                    "DependentComponentName" :   "Corundum",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   -1581808
                },
                {
-                    "DCN" :   "Gibbsite-H",
-                    "PType" :   "S",
-                    "IV" :   -1154900
+                    "DependentComponentName" :   "Gibbsite-H",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   -1154900
                },
                {
-                    "DCN" :   "Halite",
-                    "PType" :   "S",
-                    "IV" :   -384246
+                    "DependentComponentName" :   "Halite",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   -384246
                },
                {
-                    "DCN" :   "Sylvite",
-                    "PType" :   "S",
-                    "IV" :   -408587
+                    "DependentComponentName" :   "Sylvite",
+                    "ParameterType" :   "S",
+                    "InitialValue" :   -408587
                }
           ],
-          "PAM" :   [
+          "ParametersOfActivityModels" :   [
                {
-                    "EPH" :   "aq_gen",
-                    "PMc" :   [
+                    "SystemPhaseName" :   "aq_gen",
+                    "InteractionParameters" :   [
                          {
-                              "IPCs" :   [
+                              "InteractionParameterCoefficients" :   [
                                    {
-                                        "PType" :   "S",
-                                        "IV" :   0.0640000030398369
+                                        "ParameterType" :   "S",
+                                        "InitialValue" :   0.0640000030398369
                                    },
                                    {
-                                        "PType" :   "S",
-                                        "IV" :   3.72000002861023
+                                        "ParameterType" :   "S",
+                                        "InitialValue" :   3.72000002861023
                                    },
                                    {
-                                        "PType" :   "S",
-                                        "IV" :   1
+                                        "ParameterType" :   "S",
+                                        "InitialValue" :   1
                                    },
                                    {
-                                        "PType" :   "S",
-                                        "IV" :   1
+                                        "ParameterType" :   "S",
+                                        "InitialValue" :   1
                                    }
                               ]
                          },
                          {
-                              "IPCs" :   [
+                              "InteractionParameterCoefficients" :   [
                                    {
-                                        "PType" :   "S",
-                                        "IV" :   1
+                                        "ParameterType" :   "S",
+                                        "InitialValue" :   1
                                    },
                                    {
-                                        "PType" :   "S",
-                                        "IV" :   0
+                                        "ParameterType" :   "S",
+                                        "InitialValue" :   0
                                    },
                                    {
-                                        "PType" :   "S",
-                                        "IV" :   0
+                                        "ParameterType" :   "S",
+                                        "InitialValue" :   0
                                    },
                                    {
-                                        "PType" :   "S",
-                                        "IV" :   0
+                                        "ParameterType" :   "S",
+                                        "InitialValue" :   0
                                    }
                               ]
                          }
@@ -191,211 +191,211 @@
                }
           ]
      },
-     "NFunParToOpt" :   "",
-     "DataLogK" :   "",
-     "LogK" :   "",
-     "OptDWhat" :   0,
-     "OptUEqui" :   1,
-     "OptUDWeight" :   0,
-     "OptAlg" :   "LN_BOBYQA",
-     "OptPBPerc" :   -1,
-     "OptTolRel" :   1e-05,
-     "OptTolAbs" :   1e-05,
-     "OptMaxEval" :   10000,
-     "OptNormP" :   1,
-     "OptGradPert" :   0.0001,
-     "OptTuckey" :   -1,
-     "OptTuCval" :   6,
-     "StatMC" :   0,
-     "StatMCruns" :   100,
-     "StatSensPert" :   0.0001,
-     "DataSyn" :   {
-          "PHNs" :   [
+     "NestedFunctionParametersToOptimize" :   "",
+     "LogKFunctionsOfReactions" :   "",
+     "ArrayofUserProvidedLogK" :   "",
+     "OptimizationDoWhat" :   0,
+     "OptimizationUseEquilibrium" :   1,
+     "OptimizationUseDatbaseSetWeight" :   0,
+     "OptimizationAlgorithm" :   "LN_BOBYQA",
+     "OptimizationParameterBoundsPercentege" :   -1,
+     "OptimizationRelativeTolerance" :   1e-05,
+     "OptimizationAbsoluteTolerance" :   1e-05,
+     "OptimizationMaximumEvaluations" :   10000,
+     "OptimizationNormalizeParameters" :   1,
+     "OptimizationGradientPerturbator" :   0.0001,
+     "OptimizationUseTuckey" :   -1,
+     "OptimizationTuckeyCvalue" :   6,
+     "StatisticsUseMonteCarlo" :   0,
+     "StatisticsMonteCarloRuns" :   100,
+     "StatisticsSensitivitiesPerturbator" :   0.0001,
+     "DataSynonyms" :   {
+          "PhaseNames" :   [
                {
-                    "NIS" :   "aq_gen",
-                    "Syn" :   ""
+                    "NameInSystem" :   "aq_gen",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "Boehmite-H",
-                    "Syn" :   ""
+                    "NameInSystem" :   "Boehmite-H",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "Corundum",
-                    "Syn" :   ""
+                    "NameInSystem" :   "Corundum",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "Gibbsite-H",
-                    "Syn" :   ""
+                    "NameInSystem" :   "Gibbsite-H",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "Halite",
-                    "Syn" :   ""
+                    "NameInSystem" :   "Halite",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "Sylvite",
-                    "Syn" :   ""
+                    "NameInSystem" :   "Sylvite",
+                    "Synonyms" :   ""
                }
           ],
-          "PHPNs" :   [
+          "PhasePropertyNames" :   [
                {
-                    "NIS" :   "pH",
-                    "Syn" :   ""
+                    "NameInSystem" :   "pH",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "pe",
-                    "Syn" :   ""
+                    "NameInSystem" :   "pe",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "Eh",
-                    "Syn" :   ""
+                    "NameInSystem" :   "Eh",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "IS",
-                    "Syn" :   ""
+                    "NameInSystem" :   "IS",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "alk",
-                    "Syn" :   ""
+                    "NameInSystem" :   "alk",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "pV",
-                    "Syn" :   ""
+                    "NameInSystem" :   "pV",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "RHO",
-                    "Syn" :   ""
+                    "NameInSystem" :   "RHO",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "sArea",
-                    "Syn" :   ""
+                    "NameInSystem" :   "sArea",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "Gex",
-                    "Syn" :   ""
+                    "NameInSystem" :   "Gex",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "mChainL",
-                    "Syn" :   ""
+                    "NameInSystem" :   "mChainL",
+                    "Synonyms" :   ""
                }
           ],
-          "DCNs" :   [
+          "DependentComponentNames" :   [
                {
-                    "NIS" :   "Al(OH)2+",
-                    "Syn" :   ""
+                    "NameInSystem" :   "Al(OH)2+",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "Al(OH)3@",
-                    "Syn" :   ""
+                    "NameInSystem" :   "Al(OH)3@",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "Al(OH)4-",
-                    "Syn" :   ""
+                    "NameInSystem" :   "Al(OH)4-",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "Al+3",
-                    "Syn" :   ""
+                    "NameInSystem" :   "Al+3",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "AlOH+2",
-                    "Syn" :   ""
+                    "NameInSystem" :   "AlOH+2",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "K+",
-                    "Syn" :   ""
+                    "NameInSystem" :   "K+",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "KAlO2@",
-                    "Syn" :   ""
+                    "NameInSystem" :   "KAlO2@",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "KCl@",
-                    "Syn" :   ""
+                    "NameInSystem" :   "KCl@",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "KOH@",
-                    "Syn" :   ""
+                    "NameInSystem" :   "KOH@",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "Na+",
-                    "Syn" :   ""
+                    "NameInSystem" :   "Na+",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "NaAl(OH)4@",
-                    "Syn" :   ""
+                    "NameInSystem" :   "NaAl(OH)4@",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "NaCl@",
-                    "Syn" :   ""
+                    "NameInSystem" :   "NaCl@",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "NaOH@",
-                    "Syn" :   ""
+                    "NameInSystem" :   "NaOH@",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "Cl-",
-                    "Syn" :   ""
+                    "NameInSystem" :   "Cl-",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "HCl@",
-                    "Syn" :   ""
+                    "NameInSystem" :   "HCl@",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "H2@",
-                    "Syn" :   ""
+                    "NameInSystem" :   "H2@",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "O2@",
-                    "Syn" :   ""
+                    "NameInSystem" :   "O2@",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "H2O2@",
-                    "Syn" :   ""
+                    "NameInSystem" :   "H2O2@",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "HO2-",
-                    "Syn" :   ""
+                    "NameInSystem" :   "HO2-",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "OH-",
-                    "Syn" :   ""
+                    "NameInSystem" :   "OH-",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "H+",
-                    "Syn" :   ""
+                    "NameInSystem" :   "H+",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "H2O@",
-                    "Syn" :   ""
+                    "NameInSystem" :   "H2O@",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "Boehmite-H",
-                    "Syn" :   ""
+                    "NameInSystem" :   "Boehmite-H",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "Corundum",
-                    "Syn" :   ""
+                    "NameInSystem" :   "Corundum",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "Gibbsite-H",
-                    "Syn" :   ""
+                    "NameInSystem" :   "Gibbsite-H",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "Halite",
-                    "Syn" :   ""
+                    "NameInSystem" :   "Halite",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "Sylvite",
-                    "Syn" :   ""
+                    "NameInSystem" :   "Sylvite",
+                    "Synonyms" :   ""
                }
           ],
-          "DCPNs" :   [
+          "DependentComponentPropertyNames" :   [
                {
-                    "NIS" :   "activity",
-                    "Syn" :   ""
+                    "NameInSystem" :   "activity",
+                    "Synonyms" :   ""
                },
                {
-                    "NIS" :   "@coef",
-                    "Syn" :   ""
+                    "NameInSystem" :   "@coef",
+                    "Synonyms" :   ""
                }
           ]
      }

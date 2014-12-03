@@ -41,7 +41,11 @@
 #include "gemsfit_iofiles.h"
 #include "keywords.h"
 //#include <jansson.h>
+#ifdef buildWIN32
+#include <tcejdb/ejdb.h>
+#else
 #include "ejdb.h"
+#endif
 //#include <sstream>
 #include "json_parse.h"
 #include "fstream"
