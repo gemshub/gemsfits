@@ -149,7 +149,7 @@ include($$JAN_CPP/jan.pri)
 
 #TCEJDB
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/tcejdb_win32/lib/ -ltcejdbdll
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/tcejdb_wi32n/lib/ -ltcejdbdll
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/tcejdb_wi32/lib/ -ltcejdbdll
 INCLUDEPATH += $$PWD/tcejdb_win32/include
 DEPENDPATH += $$PWD/tcejdb_win32/include
 
