@@ -115,6 +115,10 @@ gemsfit2/boost_win32/filesystem/build/gcc-mingw-4.8.2/release/link-static/thread
 gemsfit2/boost_win32/filesystem/build/gcc-mingw-4.8.2/release/link-static/threading-multi/unique_path.o -text
 gemsfit2/boost_win32/filesystem/build/gcc-mingw-4.8.2/release/link-static/threading-multi/utf8_codecvt_facet.o -text
 gemsfit2/boost_win32/filesystem/build/gcc-mingw-4.8.2/release/link-static/threading-multi/windows_file_codecvt.o -text
+gemsfit2/boost_win32/system/build/gcc-mingw-4.8.2/debug/link-static/threading-multi/error_code.o -text
+gemsfit2/boost_win32/system/build/gcc-mingw-4.8.2/debug/link-static/threading-multi/libboost_system-mgw48-mt-d-1_57.a -text
+gemsfit2/boost_win32/system/build/gcc-mingw-4.8.2/release/link-static/threading-multi/error_code.o -text
+gemsfit2/boost_win32/system/build/gcc-mingw-4.8.2/release/link-static/threading-multi/libboost_system-mgw48-mt-1_57.a -text
 gemsfit2/docs/html/bgimg-gray.jpg -text
 gemsfit2/docs/html/gemsfit2.png -text
 gemsfit2/docs/xls/excel_example.xls -text
