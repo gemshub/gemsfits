@@ -28,25 +28,25 @@ static const char * Pndx[2] =    {"ParameterIndexInPhase",           "Pndx"};
 static const char * DCN_[2] =    {"DependentComponentName",          "DCN"};
 static const char * IPCN[2] =    {"InteractionParameterCoefficientName","IPCN"};
 
-
 static const char * DMc[2] =     {"ParametersOfDependentComponentsInPhase","DMc"};
 static const char * PDCC[2] = {"ParameterOfDependentComponentCoefficients","PDCC"};
 static const char * OptNFParameters[2] = {"NestedFunctionParametersToOptimize","NFunParToOpt"};
 
-static const char * DatLogK[2] = {"LogKDataForReactions",            "DataLogK"};
-static const char * LogK[2] =    {"ArrayofUserProvidedLogK",         "LogK"};
+static const char * DatLogK[2] = {"LogKFunctionData",                "LogKFun"};
+static const char * LogK[2] =    {"ArrayofUserProvidedLogKValues",   "LogKVal"};
 
+static const char * OptSet[2] =  { "OptimizerSettings",               "OptSet" };
 static const char * MPI[2] =     {"NumberOfMPIThreadsForParallelRun", "NumMPI"};
 // Propose to get rid of "Optimization" "Opt" for the group of keywords below
-static const char * OptDW[2] =   {"DoWhat",                          "DWhat"};  // ??
+static const char * OptDW[2] =   {"WhatOptStatCombinationToDo",      "DoWhat"};
 static const char * OptEQ[2] =   {"UseEquilibriumCalculation",       "UseEqC"};
-static const char * OptUW[2] =   {"UseDatabaseSetWeight",            "UDWeight"};  // ?
+static const char * OptUW[2] =   {"UseWeightsFromExperimentalData",  "UDWts"};
 static const char * OptAlg[2] =  {"OptimizationAlgorithm",           "OptAlg"};
 static const char * OptPBP[2] =  {"ParameterBoundsPercentage",       "PBPerc"};
 static const char * OptTRel[2] = {"ConvergenceToleranceRelative",    "ConTolRel"};
 static const char * OptTAbs[2] = {"ConvergenceToleranceAbsolute",    "ConTolAbs"};
-static const char * OptMEv[2] =  {"MaximumNumberOfOptimizationLoops","MaxLoops"};
-static const char * OptNormP[2]= {"NormalizeAdjustableParameters",   "NormAdP"};  // ?
+static const char * OptMEv[2] =  {"MaximumNumberOptimizationLoops",  "MaxLoops"};
+static const char * OptNormP[2]= {"NormalizeAllParameters",          "NormPar"};
 static const char * OptPer[2] =  {"GradientMethodPerturbatorValue",  "GradPert"};
 static const char * OptTu[2] =   {"UseTuckeyBiweights",              "OptTu"};
 static const char * OptTuVal[2]= {"OptimizationTuckeyCValue",        "OptTuC"};
@@ -54,14 +54,14 @@ static const char * OptTuVal[2]= {"OptimizationTuckeyCValue",        "OptTuC"};
 // Propose to drop "Statistics" "Stat" from the group of keywords below
 static const char * StatMC[2] =  {"UseMonteCarloParameterEvaluation","UseMCPE"};
 static const char * StatMCr[2] = {"NumberOfMonteCarloTrials",        "NumMCT"};
-static const char * StatPer[2] = {"PerturbatorValueForSensitivities","SensPert"};
+static const char * StatPer[2] = {"SensitivitiesPerturbatorValue",   "SensPert"};
 
 static const char * DataSyn[2] = {"DataSynonyms",                    "DataSyn"};
 static const char * PhNames[2] = {"PhaseNames",                      "PHN"};
 static const char * PhPropNames[2] = {"PhasePropertyNames",          "PHPN"};
-static const char * DcNames[2] = {"DependentComponentNames",         "DCNs"}; // see "DCN" above ?
+static const char * DcNames[2] = {"DependentComponentNames",         "DCN"}; // see "DCN" above ?
 static const char * DcPropNames[2] = {"DependentComponentPropertyNames","DCPN"};
-static const char * NameSys[2] = {"NameInSystem",                    "NIS"};  // ?
+static const char * NameSys[2] = {"NameInGEMSystem",                 "NIS"};
 static const char * Syn[2] =     {"Synonyms",                        "Syn"};
 
 
@@ -244,25 +244,25 @@ static const char *inverr3 = "inverr3"; ///                             string  
 static const char *inverr_norm = "inverr_norm"; ///                     string          normalized <Xmeas>/error
 
 // Kaywords for units
-static const char *molal = "molal"; ///                                 string              molality moles/kg
-static const char *loga = "loga"; ///                                   string              log(activity)
-static const char *logm = "log_molal"; ///                              string              log(molality)
-static const char *_loga = "-loga"; ///                                 string              -log(consntration) used for pH
-static const char *gram = "g"; ///                                      string              mass, grams
-static const char *kgram = "kg"; ///                                    string              mass, kg
-static const char *mole = "mole";  ///                                  string              amount, moles
-static const char *m3 = "m3"; ///                                       string              volume, m3
-static const char *cm3 = "cm3"; ///                                     string              volume, cm3
-//static const char *Simolfrac = "simolfrac"; ///                       string              mole ratio to 1 mole of Si
-static const char *molratio = "molratio"; ///                           string              mole ratio
+static const char *molal = "molal"; ///                                 string          molality moles/kg
+static const char *loga = "loga"; ///                                   string          log(activity)
+static const char *logm = "log_molal"; ///                              string          log(molality)
+static const char *_loga = "-loga"; ///                                 string          -log(consntration) used for pH
+static const char *gram = "g"; ///                                      string          mass, grams
+static const char *kgram = "kg"; ///                                    string          mass, kg
+static const char *mole = "mole";  ///                                  string          amount, moles
+static const char *m3 = "m3"; ///                                       string          volume, m3
+static const char *cm3 = "cm3"; ///                                     string          volume, cm3
+//static const char *Simolfrac = "simolfrac"; ///                       string          mole ratio to 1 mole of Si
+static const char *molratio = "molratio"; ///                           string          mole ratio
 static const char *log_molratio = "log_molratio";
-static const char *molfrac = "molfrac"; ///                             string              mole fraction
+static const char *molfrac = "molfrac"; ///                             string          mole fraction
 static const char *log_molfrac = "log_molfrac";
 static const char *ln_molfrac = "ln_molfrac";
-static const char *g_cm3 = "g/cm3"; ///                                 string              density, g/cm3
-static const char *Volts = "Volts"; ///                                 string              Eh, V
-static const char *J_mol = "J/mol"; ///                                 string              energy per mole, J/mol
-static const char *kJ_mol = "kJ/mol"; ///                               string              energy per mole, kJ/mol
+static const char *g_cm3 = "g/cm3"; ///                                 string          density, g/cm3
+static const char *Volts = "Volts"; ///                                 string          Eh, V
+static const char *J_mol = "J/mol"; ///                                 string          energy per mole, J/mol
+static const char *kJ_mol = "kJ/mol"; ///                               string          energy per mole, kJ/mol
 
 
 static const char *aq = "a"; ///

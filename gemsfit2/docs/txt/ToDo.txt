@@ -82,15 +82,16 @@ csvtoejdb documentation:
 + add option of adding weight for different type of data.
 - "dynamic regression run" when some parameters are correlated, with different input file for the different sets of parameters. 1st fits one set with the other fixed, then fits the 2nd with first
 	fixed in a loop (unitl ??)
+- think about a mode in which the sensitivities of the parameters are computed after each fitting step and the program decides which parameter to keep fixed during the optimization...
+        Not possible!!! the NLopt library doesn't allow such dynamic change in the parameter vector!!
 
-+ try yo get rid of class opt_vector and add everything in class optimization
++ try to get rid of class opt_vector and add everything in class optimization
 - arrange the printing functions in one clear place - now in the statistics functions + make the print possible even if the statistics fails.
 - look to simplifiy or generalize all the functions that go trough the OFUN - (residual calculations, MC dataset generation etc.)
 
 + calculate the contribution of each OFUN term to the total OFUN
 - calculate the composite sensitivities for each OFUN term type of observations
-- think about a mode in which the sensitivities of the parameters are computed after each fitting step and the program decides which parameter to keep fixed during the optimization...
-probably the NLopt doesn't allow such dynamic change in the parameter vector!!
+
 
 + bootstrap sampling of residuals / measured values
 + intorduce polynomials of the logK dependence as in ReacDC
@@ -104,9 +105,16 @@ probably the NLopt doesn't allow such dynamic change in the parameter vector!!
 - The user is now constrined to be consistent with the key length ( either short either long )
 - Improve documentation structure (TOC) and organization of help database, add missing keywords (usability)
 
-- Check cross-compiling of gemsfit2 and gfshell2 with MinGW on linux to produce executable on Windows 7/8
+- Check cross-compiling of gemsfit2 and gfshell2 with MinGW on linux to produce executable on Windows 7/8 <-- in progress
 - Check if it is possible (instead) to pack gfshell2 + gemsfit2 and their dependence libraries into a docker container
-- Think how to deploy GEMSFITS package (i.e. prepare the installer) - for future distribution
+- Think how to deploy GEMSFITS package (i.e. prepare the installer) - for future distribution <-- in progress
+
+- To cut gemsfit2 log file when adding it to task results database record (only header and end messages). Critical for DB size (only 2 GB in Windows)
+- To re-arrange template output and task definition input so that the parameters and DC names come phase-by-phase.
+- To create a new section "OptSet" ("OptimizerSettings") in task definition JSON file for Opt* and Stat* keywords
+- To fix documentation html files (to clean up unnecesary files); modify keyword descriptions for "database mode" in gfshell-dbmode.html
+  and those for task mode - in gfshell-taskmode.html and/or in gemsfit-useref.html.
+- To think/model the directory structure for the GEMSFITS installer (linux, windows) incl. test
 
 Future
 - iterative regression

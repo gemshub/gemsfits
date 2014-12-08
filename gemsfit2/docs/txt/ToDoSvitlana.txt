@@ -1,0 +1,6 @@
+Issues for Svitlana (bugs or extension ideas for mid-2015)
+
+- bug: devGFshell branch: windows only: Upon opening a fitting project, GEMS3K files are not opened (error message), seems to be a problem with file path or the CR/LF format
+- gfshell2: DB size issue: To cut gemsfit2 log file when adding it to task results database record (only header and end messages). Critical for win32 (max 2 GB database size).
+- gfshell2: bug: upon scrolling any record in database or task mode or clicking on the editor field (without editing anything), when another record is selected,
+   the "Data record has been changed" appears. This should be fixed - otherwise it is misleading for users and has a risk of data corruption. Could be result of Qt5 update.

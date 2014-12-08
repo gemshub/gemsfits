@@ -1,12 +1,142 @@
+[
 {
-     "NumMPI" :   4,
-     "DBPath" :   "../EJDB/<database name>",
-     "DBColl" :   "<collection name>",
+     "taskid" :   "TCSH-chen04d-CL-nrs-ip-cg1",
+     "projectid" :   "1cashnk",
+     "DBPath" :   "../EJDB/cashnkdata",
+     "DBColl" :   "experiments",
      "GEMSFPath" :   "../GEMS/TCSH-dat.lst",
-     "DataSelect" :   "",
-     "DataTarget" :   "",
-     "ParToOpt" :   {
-          "G0" :   [
+     "DataSelect" :   {
+          "samplelist" :   [
+               {
+                    "SA" :   "4a+",
+                    "DS" :   "CH04D",
+                    "WT" :   1
+               },
+               {
+                    "SA" :   "4b+",
+                    "DS" :   "CH04D",
+                    "WT" :   1
+               },
+               {
+                    "SA" :   "4c+",
+                    "DS" :   "CH04D",
+                    "WT" :   1
+               },
+               {
+                    "SA" :   "4d",
+                    "DS" :   "CH04D",
+                    "WT" :   1
+               },
+               {
+                    "SA" :   "4e",
+                    "DS" :   "CH04D",
+                    "WT" :   1
+               },
+               {
+                    "SA" :   "4f",
+                    "DS" :   "CH04D",
+                    "WT" :   1
+               },
+               {
+                    "SA" :   "4g",
+                    "DS" :   "CH04D",
+                    "WT" :   1
+               },
+               {
+                    "SA" :   "4h",
+                    "DS" :   "CH04D",
+                    "WT" :   1
+               },
+               {
+                    "SA" :   "4i",
+                    "DS" :   "CH04D",
+                    "WT" :   1
+               },
+               {
+                    "SA" :   "4j",
+                    "DS" :   "CH04D",
+                    "WT" :   1
+               },
+               {
+                    "SA" :   "4k",
+                    "DS" :   "CH04D",
+                    "WT" :   1
+               },
+               {
+                    "SA" :   "5a+",
+                    "DS" :   "CH04D",
+                    "WT" :   1
+               },
+               {
+                    "SA" :   "5b+",
+                    "DS" :   "CH04D",
+                    "WT" :   1
+               },
+               {
+                    "SA" :   "6a+",
+                    "DS" :   "CH04D",
+                    "WT" :   1
+               },
+               {
+                    "SA" :   "6b+",
+                    "DS" :   "CH04D",
+                    "WT" :   1
+               },
+               {
+                    "SA" :   "6c+",
+                    "DS" :   "CH04D",
+                    "WT" :   1
+               }
+          ]
+     },
+     "DataTarget" :   {
+          "Target" :   "name",
+          "TT" :   "lsq",
+          "WT" :   "inverr3",
+          "OFUN" :   [
+               {
+                    "EPH" :   "aq_gen",
+                    "CT" :   "IC",
+                    "CN" :   "Ca",
+                    "unit" :   "log_molal",
+                    "WT" :   0.5
+               },
+               {
+                    "EPH" :   "aq_gen",
+                    "CT" :   "IC",
+                    "CN" :   "Si",
+                    "unit" :   "log_molal",
+                    "WT" :   1
+               },
+               {
+                    "EPH" :   "CSH",
+                    "CT" :   "MR",
+                    "CN" :   "Ca/Si",
+                    "unit" :   "molratio",
+                    "WT" :   1
+               },
+               {
+                    "EPH" :   "CSH",
+                    "CT" :   "prop",
+                    "CN" :   "mChainL",
+                    "expr" :   " 3/sum( TCvC, TCvv, THvC, THvv ) -1 ",
+                    "WT" :   1
+               }
+          ],
+          "ADDOUT" :   [
+               {
+                    "SRC" :   "meas",
+                    "EPH" :   "CSH",
+                    "CT" :    "prop",
+                    "CN" :    "Q",
+                    "unit" :  "molal"
+               }
+          ]
+     },
+     "ParToOpt" :  [
+               {
+                    "EPH" :   "aq_gen",
+                     "G0" :   [
                {
                     "DCN" :   "Ca+2",
                     "PType" :   "S",
@@ -76,7 +206,54 @@
                     "DCN" :   "H2O@",
                     "PType" :   "S",
                     "IV" :   -237181.38483664
+               }
+               ],
+                    "PMc" :   [
+                         {
+                              "IPCs" :   [
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   0.0640000030398369
+                                   },
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   3.72000002861023
+                                   },
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   0
+                                   },
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   0
+                                   }
+                              ]
+                         },
+                         {
+                              "IPCs" :   [
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   0
+                                   },
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   0
+                                   },
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   0
+                                   },
+                                   {
+                                        "PType" :   "S",
+                                        "IV" :   0
+                                   }
+                              ]
+                         }
+                    ]
                },
+               {
+               	    "EPH" :   "gas_gen",               
+               	     "G0" :   [
                {
                     "DCN" :   "H2",
                     "PType" :   "S",
@@ -91,31 +268,46 @@
                     "DCN" :   "O2",
                     "PType" :   "S",
                     "IV" :   0
+               }
+               	     ]
                },
                {
+                    "EPH" :   "CSH",
+                    "G0" :   [
+               {
                     "DCN" :   "TCSC",
-                    "PType" :   "S",
-                    "IV" :   -6205140
+                    "PType" :   "F",
+                    "IV" :   -6172720,
+                    "LB" :   -6217720,
+                    "UB" :   -6137720
                },
                {
                     "DCN" :   "TCSv",
-                    "PType" :   "S",
-                    "IV" :   -5321929
+                    "PType" :   "F",
+                    "IV" :   -5335310,
+                    "LB" :   -5370310,
+                    "UB" :   -5290310
                },
                {
                     "DCN" :   "TCvC",
-                    "PType" :   "S",
-                    "IV" :   -5350530
+                    "PType" :   "F",
+                    "IV" :   -5293610,
+                    "LB" :   -5338610,
+                    "UB" :   -5258610
                },
                {
                     "DCN" :   "TCvv",
-                    "PType" :   "S",
-                    "IV" :   -4457513
+                    "PType" :   "F",
+                    "IV" :   -4460400,
+                    "LB" :   -4490400,
+                    "UB" :   -4420400
                },
                {
                     "DCN" :   "THSC",
-                    "PType" :   "S",
-                    "IV" :   -6014850
+                    "PType" :   "F",
+                    "IV" :   -5979840,
+                    "LB" :   -6014840,
+                    "UB" :   -5934840
                },
                {
                     "DCN" :   "THSv",
@@ -124,88 +316,28 @@
                },
                {
                     "DCN" :   "THvC",
-                    "PType" :   "S",
-                    "IV" :   -5164240
+                    "PType" :   "F",
+                    "IV" :   -5102320,
+                    "LB" :   -5147320,
+                    "UB" :   -5067320
                },
                {
                     "DCN" :   "THvv",
-                    "PType" :   "S",
-                    "IV" :   -4258820
-               },
-               {
-                    "DCN" :   "Portlandite",
-                    "PType" :   "S",
-                    "IV" :   -897013
-               },
-               {
-                    "DCN" :   "Amor-Sl",
-                    "PType" :   "S",
-                    "IV" :   -850616
-               }
-          ],
-          "PAM" :   [
-               {
-                    "EPH" :   "aq_gen",
-                    "PMc" :   [
-                         {
-                              "IPCs" :   [
-                                   {
-                                        "IPCN" :   "aq_gen[0|0]",
-                                        "PType" :   "S",
-                                        "IV" :   0.0640000030398369
-                                   },
-                                   {
-                                        "IPCN" :   "aq_gen[0|1]",
-                                        "PType" :   "S",
-                                        "IV" :   3.72000002861023
-                                   },
-                                   {
-                                        "IPCN" :   "aq_gen[0|2]",
-                                        "PType" :   "S",
-                                        "IV" :   0
-                                   },
-                                   {
-                                        "IPCN" :   "aq_gen[0|3]",
-                                        "PType" :   "S",
-                                        "IV" :   0
-                                   }
-                              ]
-                         },
-                         {
-                              "IPCs" :   [
-                                   {
-                                        "IPCN" :   "aq_gen[1|0]",
-                                        "PType" :   "S",
-                                        "IV" :   0
-                                   },
-                                   {
-                                        "IPCN" :   "aq_gen[1|1]",
-                                        "PType" :   "S",
-                                        "IV" :   0
-                                   },
-                                   {
-                                        "IPCN" :   "aq_gen[1|2]",
-                                        "PType" :   "S",
-                                        "IV" :   0
-                                   },
-                                   {
-                                        "IPCN" :   "aq_gen[1|3]",
-                                        "PType" :   "S",
-                                        "IV" :   0
-                                   }
-                              ]
-                         }
-                    ]
-               },
-               {
-                    "EPH" :   "CSH",
+                    "PType" :   "F",
+                    "IV" :   -4261200,
+                    "LB" :   -4306200,
+                    "UB" :   -4226200
+               } 
+               ],                   
                     "PMc" :   [
                          {
                               "IPCs" :   [
                                    {
                                         "IPCN" :   "CSH[0|0]",
-                                        "PType" :   "S",
-                                        "IV" :   9.99999971718069e-10
+                                        "PType" :   "F",
+                                        "IV" :   -10010,
+                                        "LB" :   -30010,
+                                        "UB" :   10010
                                    },
                                    {
                                         "IPCN" :   "CSH[0|1]",
@@ -223,8 +355,10 @@
                               "IPCs" :   [
                                    {
                                         "IPCN" :   "CSH[1|0]",
-                                        "PType" :   "S",
-                                        "IV" :   1.99999994343614e-09
+                                        "PType" :   "F",
+                                        "IV" :   -9170,
+                                        "LB" :   -19170,
+                                        "UB" :   830
                                    },
                                    {
                                         "IPCN" :   "CSH[1|1]",
@@ -242,8 +376,10 @@
                               "IPCs" :   [
                                    {
                                         "IPCN" :   "CSH[2|0]",
-                                        "PType" :   "S",
-                                        "IV" :   3.00000002617651e-09
+                                        "PType" :   "F",
+                                        "IV" :   -9840,
+                                        "LB" :   -19840,
+                                        "UB" :   160
                                    },
                                    {
                                         "IPCN" :   "CSH[2|1]",
@@ -261,8 +397,10 @@
                               "IPCs" :   [
                                    {
                                         "IPCN" :   "CSH[3|0]",
-                                        "PType" :   "S",
-                                        "IV" :   3.99999988687227e-09
+                                        "PType" :   "F",
+                                        "IV" :   -8340,
+                                        "LB" :   -18340,
+                                        "UB" :   1660
                                    },
                                    {
                                         "IPCN" :   "CSH[3|1]",
@@ -280,8 +418,10 @@
                               "IPCs" :   [
                                    {
                                         "IPCN" :   "CSH[4|0]",
-                                        "PType" :   "S",
-                                        "IV" :   4.99999996961265e-09
+                                        "PType" :   "F",
+                                        "IV" :   8060,
+                                        "LB" :   -1940,
+                                        "UB" :   18060
                                    },
                                    {
                                         "IPCN" :   "CSH[4|1]",
@@ -299,8 +439,10 @@
                               "IPCs" :   [
                                    {
                                         "IPCN" :   "CSH[5|0]",
-                                        "PType" :   "S",
-                                        "IV" :   6.00000005235302e-09
+                                        "PType" :   "F",
+                                        "IV" :   -4270,
+                                        "LB" :   -14270,
+                                        "UB" :   5730
                                    },
                                    {
                                         "IPCN" :   "CSH[5|1]",
@@ -316,49 +458,78 @@
                          }
                     ]
                }
-          ]
-     },
-     "NFunParToOpt" :   "",
-     "DataLogK" :   "",
-     "LogK" :   "",
-     "OptDWhat" :   0,
-     "OptUEqui" :   1,
-     "OptUDWeight" :   0,
-     "OptAlg" :   "LN_BOBYQA",
-     "OptPBPerc" :   -1,
-     "OptTolRel" :   1e-05,
-     "OptTolAbs" :   1e-05,
-     "OptMaxEval" :   10000,
-     "OptNormP" :   1,
-     "OptGradPert" :   0.0001,
-     "OptTuckey" :   -1,
-     "OptTuCval" :   6,
-     "StatMC" :   0,
-     "StatMCruns" :   100,
-     "StatSensPert" :   0.0001,
-     "DataSyn" :   {
-          "PHNs" :   [
                {
-                    "NIS" :   "aq_gen",
-                    "Syn" :   ""
+               	"EPH" :   "Portlandite",
+               	"G0" :   
+               {
+                    "DCN" :   "Portlandite",
+                    "PType" :   "S",
+                    "IV" :   -897013   
+               }
                },
+               {	"EPH" :   "Silica-amorph",
+                 	"G0" : 
+                   {
+                    "DCN" :   "Amor-Sl",
+                    "PType" :   "S",
+                    "IV" :   -850616
+                   }
+
+                }
+          ],
+   
+          "NFunParToOpt" :   {
+          "TK" :   [
                {
-                    "NIS" :   "gas_gen",
-                    "Syn" :   ""
-               },
-               {
-                    "NIS" :   "CSH",
-                    "Syn" :   ""
-               },
-               {
-                    "NIS" :   "Portlandite",
-                    "Syn" :   ""
-               },
-               {
-                    "NIS" :   "Silica-amorph",
-                    "Syn" :   ""
+                    "NFndx" :   0,
+                    "PType" :   "F",
+                    "IV" :   573.15,
+                    "UB" :   750,
+                    "LB" :   450
                }
           ],
+          "P" :   [
+               {
+                    "NFndx" :   0,
+                    "PType" :   "F",
+                    "IV" :   3000,
+                    "UB" :   5000,
+                    "LB" :   1000
+               }
+          ]
+     },
+     "LogKFun" :   "",
+     "LogKVal" :   "",
+     "OptSet" : {  
+     	"NumMPI" :   4,
+     	"DoWhat" :   0,
+     	"UseEqC" :   1,
+     	"UDWts" :    1,
+     	"OptAlg" :   "GN_ESCH",
+     	"PBPerc" :   -1,
+     	"ConTolRel" :   1e-05,
+     	"ConTolAbs" :   1e-05,
+     	"MaxLoops" :   20000,
+     	"NormPar" :   1,
+     	"GradPert" :   0.0001,
+     	"SensPert" :   0.0001,
+     	"OptTu" :   -1,
+     	"OptTuC" :   6,
+     	"UseMCPE" :   -1,
+     	"NumMCT" :   100
+     },
+
+     "DataSyn" :   {
+     	   "DCPNs" :   [
+               {
+                    "NIS" :   "activity",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "@coef",
+                    "Syn" :   ""
+               }
+          ], 
           "PHPNs" :   [
                {
                     "NIS" :   "pH",
@@ -379,7 +550,7 @@
                {
                     "NIS" :   "alk",
                     "Syn" :   ""
-               },
+               }, 
                {
                     "NIS" :   "pV",
                     "Syn" :   ""
@@ -395,12 +566,12 @@
                {
                     "NIS" :   "Gex",
                     "Syn" :   ""
-               },
+               }                    
+               ],
+          "PHNs" :   [
                {
-                    "NIS" :   "mChainL",
-                    "Syn" :   ""
-               }
-          ],
+                    "NIS" :   "aq_gen",
+                    "Syn" :   "",
           "DCNs" :   [
                {
                     "NIS" :   "Ca+2",
@@ -457,8 +628,14 @@
                {
                     "NIS" :   "H2O@",
                     "Syn" :   ""
+               } 
+               ]
                },
                {
+                    "NIS" :   "gas_gen",
+                    "Syn" :   "",
+                      "DCNs" :   [
+                                     {
                     "NIS" :   "H2",
                     "Syn" :   ""
                },
@@ -469,7 +646,13 @@
                {
                     "NIS" :   "O2",
                     "Syn" :   ""
+               }
+                      ]
                },
+               {
+                    "NIS" :   "CSH",
+                    "Syn" :   "",
+                       "DCNs" :   [
                {
                     "NIS" :   "TCSC",
                     "Syn" :   ""
@@ -501,25 +684,31 @@
                {
                     "NIS" :   "THvv",
                     "Syn" :   ""
+               }                      
+                     ]        			               
                },
                {
                     "NIS" :   "Portlandite",
+                    "Syn" :   "",
+                       "DCNs" :   [
+              {
+                    "NIS" :   "Portlandite",
                     "Syn" :   ""
+               }
+                    ]
                },
+               {
+                    "NIS" :   "Silica-amorph",
+                    "Syn" :   "",
+                       "DCNs" :   [
                {
                     "NIS" :   "Amor-Sl",
                     "Syn" :   ""
                }
-          ],
-          "DCPNs" :   [
-               {
-                    "NIS" :   "activity",
-                    "Syn" :   ""
-               },
-               {
-                    "NIS" :   "@coef",
-                    "Syn" :   ""
+                       ]
                }
-          ]
+          ],
      }
-}
+ }
+
+]
