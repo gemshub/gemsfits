@@ -83,13 +83,14 @@ Data_Manager::~Data_Manager( )
 
 void Data_Manager::get_DataSyn()
 {
-    vector<string> out, out2;
+    vector<string> out, out2, out3;
     Data_Manager::DataSynonyms ss;
+    Data_Manager::PhSyn sss;
     parse_JSON_object(DataSyn, keys::PhNames[mode], out);
     for (unsigned i = 0; i < out.size(); i++)
     {
 
-        SynPHs.push_back(ss);
+        SynPHs.push_back(sss);
         parse_JSON_object(out[i], keys::NameSys[mode], out2);
         SynPHs[SynPHs.size()-1].GemsName = out2[0];
         out2.clear();
@@ -98,6 +99,19 @@ void Data_Manager::get_DataSyn()
         SynPHs[SynPHs.size()-1].syn = out2;
         out2.clear();
 
+        parse_JSON_object(out[i], keys::DcNames[mode], out3);
+        for (unsigned i = 0; i < out3.size(); i++)
+        {
+            SynPHs[SynPHs.size()-1].SynDCs.push_back(ss);
+            parse_JSON_object(out3[i], keys::NameSys[mode], out2);
+            SynPHs[SynPHs.size()-1].SynDCs[SynPHs[SynPHs.size()-1].SynDCs.size()-1].GemsName = out2[0];
+            out2.clear();
+            parse_JSON_object(out3[i], keys::Syn[mode], out2);
+            if (out2[0] != "")
+            SynPHs[SynPHs.size()-1].SynDCs[SynPHs[SynPHs.size()-1].SynDCs.size()-1].syn = out2;
+            out2.clear();
+        }
+        out3.clear();
     }
     out.clear();
 
@@ -117,19 +131,6 @@ void Data_Manager::get_DataSyn()
     }
     out.clear();
 
-    parse_JSON_object(DataSyn, keys::DcNames[mode], out);
-    for (unsigned i = 0; i < out.size(); i++)
-    {
-        SynDCs.push_back(ss);
-        parse_JSON_object(out[i], keys::NameSys[mode], out2);
-        SynDCs[SynDCs.size()-1].GemsName = out2[0];
-        out2.clear();
-        parse_JSON_object(out[i], keys::Syn[mode], out2);
-        if (out2[0] != "")
-        SynDCs[SynDCs.size()-1].syn = out2;
-        out2.clear();
-    }
-    out.clear();
 
     parse_JSON_object(DataSyn, keys::DcPropNames[mode], out);
     for (unsigned i = 0; i < out.size(); i++)
@@ -201,61 +202,61 @@ void Data_Manager::check_Syn()
                     }
                 }
             }
-        }
-    }
 
-    // DCs
-    for (unsigned d = 0; d < SynDCs.size(); d++)
-    {
-        for (unsigned i = 0; i < experiments.size(); i++)
-        {
-            // L_KC
-            for (unsigned lkc = 0; lkc < experiments[i]->L_KC.size(); lkc++)
+            // DC
+
+            // DCs
+            for (unsigned d = 0; d < SynPHs[p].SynDCs.size(); d++)
             {
-                bool check = false;
-                for (unsigned s = 0; s < SynDCs[d].syn.size(); s++)
+                // DC name
+                for (unsigned ep = 0; ep < experiments[i]->expphases.size(); ep++)
                 {
-                    if ((experiments[i]->L_KC[lkc]->type == keys::DC) && (experiments[i]->L_KC[lkc]->name == SynDCs[d].syn[s]))
-                        check = true;
-                    if (check)
+                    for (unsigned dc = 0; dc < experiments[i]->expphases[ep]->phDC.size(); dc++)
                     {
-                        experiments[i]->L_KC[lkc]->name = SynDCs[d].GemsName;
-                        check = false; break;
+                        bool check = false;
+                        for (unsigned s = 0; s < SynPHs[p].SynDCs[d].syn.size(); s++)
+                        {
+                            if ((experiments[i]->expphases[ep]->phDC[dc]->DC == SynPHs[p].SynDCs[d].syn[s]) && (experiments[i]->expphases[ep]->phase == SynPHs[p].GemsName))
+                                check = true;
+                            if (check)
+                            {
+                                experiments[i]->expphases[ep]->phDC[dc]->DC = SynPHs[p].SynDCs[d].GemsName;
+                                check = false;
+                                break;
+                            }
+                        }
                     }
                 }
-            }
 
-            // U_KC
-            for (unsigned ukc = 0; ukc < experiments[i]->U_KC.size(); ukc++)
-            {
-                bool check = false;
-                for (unsigned s = 0; s < SynDCs[d].syn.size(); s++)
-                {
-                    if ((experiments[i]->U_KC[ukc]->type == keys::DC) && (experiments[i]->U_KC[ukc]->name == SynDCs[d].syn[s]))
-                        check = true;
-                    if (check)
-                    {
-                        experiments[i]->U_KC[ukc]->name = SynDCs[d].GemsName;
-                        check = false; break;
-                    }
-                }
-            }
 
-            // DC name
-            for (unsigned ep = 0; ep < experiments[i]->expphases.size(); ep++)
-            {
-                for (unsigned dc = 0; dc < experiments[i]->expphases[ep]->phDC.size(); dc++)
+                // L_KC
+                for (unsigned lkc = 0; lkc < experiments[i]->L_KC.size(); lkc++)
                 {
                     bool check = false;
-                    for (unsigned s = 0; s < SynDCs[d].syn.size(); s++)
+                    for (unsigned s = 0; s < SynPHs[p].SynDCs[d].syn.size(); s++)
                     {
-                        if ((experiments[i]->expphases[ep]->phDC[dc]->DC == SynDCs[d].syn[s]))
+                        if ((experiments[i]->L_KC[lkc]->type == keys::DC) && (experiments[i]->L_KC[lkc]->name == SynPHs[p].SynDCs[d].syn[s]))
                             check = true;
                         if (check)
                         {
-                            experiments[i]->expphases[ep]->phDC[dc]->DC = SynDCs[d].GemsName;
-                            check = false;
-                            break;
+                            experiments[i]->L_KC[lkc]->name = SynPHs[p].SynDCs[d].GemsName;
+                            check = false; break;
+                        }
+                    }
+                }
+
+                // U_KC
+                for (unsigned ukc = 0; ukc < experiments[i]->U_KC.size(); ukc++)
+                {
+                    bool check = false;
+                    for (unsigned s = 0; s < SynPHs[p].SynDCs[d].syn.size(); s++)
+                    {
+                        if ((experiments[i]->U_KC[ukc]->type == keys::DC) && (experiments[i]->U_KC[ukc]->name == SynPHs[p].SynDCs[d].syn[s]))
+                            check = true;
+                        if (check)
+                        {
+                            experiments[i]->U_KC[ukc]->name = SynPHs[p].SynDCs[d].GemsName;
+                            check = false; break;
                         }
                     }
                 }
@@ -324,8 +325,8 @@ void Data_Manager::check_Syn()
 
 void Data_Manager::get_db_specs_txt()
 {
-    string fname, str, data;
-    vector<string> out;
+    string fname;
+    vector<string> out, out2;
     int mode = gpf->KeysNdx;
 
     fname = gpf->OptParamFile();
@@ -336,16 +337,12 @@ void Data_Manager::get_db_specs_txt()
     std::string s = tmp.str();
 //    std::cout<<s<<std::endl;
 
-    parse_JSON_object(s, keys::MPI[0], out);
+    parse_JSON_object(s, keys::DBPath[0], out);
     if (out.size() == 0)
     {
-       parse_JSON_object(s, keys::MPI[1], out);
-    mode = 1; gpf->KeysNdx = 1;
+        parse_JSON_object(s, keys::DBPath[1], out);
+     mode = 1; gpf->KeysNdx = 1;
     }
-    MPI = atoi(out[0].c_str());
-    out.clear();
-
-    parse_JSON_object(s, keys::DBPath[mode], out);
     DBname = out[0];
     out.clear();
 
@@ -376,6 +373,11 @@ void Data_Manager::get_db_specs_txt()
     parse_JSON_object(s, keys::DataSyn[mode], out);
     DataSyn = out[0];
     out.clear();
+
+    parse_JSON_object(s, keys::OptSet[mode], out);
+    parse_JSON_object(out[0], keys::MPI[mode], out2);
+    MPI = atoi(out2[0].c_str());
+    out2.clear();
 
 }
 

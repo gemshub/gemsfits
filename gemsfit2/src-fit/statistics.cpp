@@ -254,7 +254,7 @@ statistics::~statistics()
 void statistics::get_stat_param()
 {
     string fname, str, data;
-    vector<string> out;
+    vector<string> out, out2;
     int mode = gpf->KeysNdx;
 
     fname = gpf->OptParamFile();
@@ -264,18 +264,19 @@ void statistics::get_stat_param()
     tmp<<file.rdbuf();
     std::string s = tmp.str();
 
-    parse_JSON_object(s, keys::StatMC[mode], out);
-    MCbool = atoi(out[0].c_str());
-    out.clear();
+    parse_JSON_object(s, keys::OptSet[mode], out);
 
-    parse_JSON_object(s, keys::StatMCr[mode], out);
-    num_of_MC_runs = atoi(out[0].c_str());
-    out.clear();
+    parse_JSON_object(out[0], keys::StatMC[mode], out2);
+    MCbool = atoi(out2[0].c_str());
+    out2.clear();
 
-    parse_JSON_object(s, keys::StatPer[mode], out);
-    perturbator = atof(out[0].c_str());
-    out.clear();
+    parse_JSON_object(out[0], keys::StatMCr[mode], out2);
+    num_of_MC_runs = atoi(out2[0].c_str());
+    out2.clear();
 
+    parse_JSON_object(out[0], keys::StatPer[mode], out2);
+    perturbator = atof(out2[0].c_str());
+    out2.clear();
 }
 
 // Perform basic statistical analysis

@@ -205,9 +205,15 @@ class Data_Manager : public TNode
                 vector<string> syn;
             };
 
-            vector<DataSynonyms> SynPHs;
+            struct PhSyn
+            {
+                string GemsName;
+                vector<string> syn;
+                vector<DataSynonyms> SynDCs;
+            };
+
+            vector<PhSyn> SynPHs;
             vector<DataSynonyms> SynPHPs;
-            vector<DataSynonyms> SynDCs;
             vector<DataSynonyms> SynDCPs;
 
             void get_DataSyn ();

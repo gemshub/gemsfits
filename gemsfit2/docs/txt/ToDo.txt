@@ -110,11 +110,20 @@ csvtoejdb documentation:
 - Think how to deploy GEMSFITS package (i.e. prepare the installer) - for future distribution <-- in progress
 
 - To cut gemsfit2 log file when adding it to task results database record (only header and end messages). Critical for DB size (only 2 GB in Windows)
-- To re-arrange template output and task definition input so that the parameters and DC names come phase-by-phase.
-- To create a new section "OptSet" ("OptimizerSettings") in task definition JSON file for Opt* and Stat* keywords
++ To re-arrange template output and task definition input so that the parameters and DC names come phase-by-phase.
++ To create a new section "OptSet" ("OptimizerSettings") in task definition JSON file for Opt* and Stat* keywords
 - To fix documentation html files (to clean up unnecesary files); modify keyword descriptions for "database mode" in gfshell-dbmode.html
   and those for task mode - in gfshell-taskmode.html and/or in gemsfit-useref.html.
 - To think/model the directory structure for the GEMSFITS installer (linux, windows) incl. test
+
+- rework the upper and lower metastability constraints to be inside the phase or DC data structure, now on the same level as phases
+  !!! Important to make appropriate changes in check_Syn() function to add if phhase name and DC name is the same as in experiment.
+- change how upper/lower metastability constraints are read-in and stored in the database i.e. phase.aq_gen.UMC.Q or phase.aq_gen.UMC
+  phase.aq_gen.DC.SiO2@.UMC.Q or phase.aq_gen.DC.SiO2@.UMC 
+
+- there is a problem with reaction constrined G0 parameters if one DC has the same name in two phases. If this is present in the reactants list
+  now gemsfits will take the index of the DC form the first phase it is present. 
+
 
 Future
 - iterative regression

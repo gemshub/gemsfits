@@ -94,7 +94,7 @@ public:
     // configuration data for nlopt instance (get from SS_GEMSFIT_input.dat)
     /// name of the optimization algorithm from NLOPT library
     string OptAlgo;
-    string OptParameters;
+    vector<string> OptParameters;
     string NFunParameters;
     string GEMSsys;
     int mode=-1;

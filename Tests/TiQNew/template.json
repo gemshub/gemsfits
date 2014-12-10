@@ -1,227 +1,307 @@
 {
-     "NumMPI" :   4,
      "DBPath" :   "../EJDB/<database name>",
      "DBColl" :   "<collection name>",
-     "GEMSFPath" :   "../GEMS/TiQ_Aud_Tho_War-dat.lst",
+     "GEMSFPath" :   "../GEMS/InverseTiQ-dat.lst",
      "DataSelect" :   "",
      "DataTarget" :   "",
-     "ParToOpt" :   {
-          "G0" :   [
+     "ParToOpt" :   [
+          {
+               "EPH" :   "aq_gen",
+               "G0" :   [
+                    {
+                         "DCN" :   "HSiO3-",
+                         "PType" :   "S",
+                         "IV" :   -1015879.000816
+                    },
+                    {
+                         "DCN" :   "SiO2@",
+                         "PType" :   "S",
+                         "IV" :   -833411.00006792
+                    },
+                    {
+                         "DCN" :   "Ti(OH)4@",
+                         "PType" :   "S",
+                         "IV" :   -1312408.0109116
+                    },
+                    {
+                         "DCN" :   "H2@",
+                         "PType" :   "S",
+                         "IV" :   17723.00010995
+                    },
+                    {
+                         "DCN" :   "O2@",
+                         "PType" :   "S",
+                         "IV" :   16544.000207431
+                    },
+                    {
+                         "DCN" :   "H2O2@",
+                         "PType" :   "S",
+                         "IV" :   -134013.99990483
+                    },
+                    {
+                         "DCN" :   "HO2-",
+                         "PType" :   "S",
+                         "IV" :   -67321.000812733
+                    },
+                    {
+                         "DCN" :   "OH-",
+                         "PType" :   "S",
+                         "IV" :   -157297.00090727
+                    },
+                    {
+                         "DCN" :   "H+",
+                         "PType" :   "S",
+                         "IV" :   0
+                    },
+                    {
+                         "DCN" :   "H2O@",
+                         "PType" :   "S",
+                         "IV" :   -237181.38483664
+                    }
+               ],
+               "PMc" :   [
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_gen[0|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.0640000030398369
+                              },
+                              {
+                                   "IPCN" :   "aq_gen[0|1]",
+                                   "PType" :   "S",
+                                   "IV" :   3.72000002861023
+                              },
+                              {
+                                   "IPCN" :   "aq_gen[0|2]",
+                                   "PType" :   "S",
+                                   "IV" :   1
+                              },
+                              {
+                                   "IPCN" :   "aq_gen[0|3]",
+                                   "PType" :   "S",
+                                   "IV" :   1
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_gen[1|0]",
+                                   "PType" :   "S",
+                                   "IV" :   1
+                              },
+                              {
+                                   "IPCN" :   "aq_gen[1|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_gen[1|2]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_gen[1|3]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    }
+               ]
+          },
+          {
+               "EPH" :   "QtzRu",
+               "G0" :   [
+                    {
+                         "DCN" :   "Quartz",
+                         "PType" :   "S",
+                         "IV" :   -856432.97934399
+                    },
+                    {
+                         "DCN" :   "Rutile",
+                         "PType" :   "S",
+                         "IV" :   -888945
+                    }
+               ],
+               "PMc" :   [
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "QtzRu[0|0]",
+                                   "PType" :   "S",
+                                   "IV" :   60316
+                              },
+                              {
+                                   "IPCN" :   "QtzRu[0|1]",
+                                   "PType" :   "S",
+                                   "IV" :   -1.159
+                              },
+                              {
+                                   "IPCN" :   "QtzRu[0|2]",
+                                   "PType" :   "S",
+                                   "IV" :   1.78
+                              }
+                         ]
+                    }
+               ]
+          },
+          {
+               "EPH" :   "Rutile",
+               "G0" :   [
+                    {
+                         "DCN" :   "Rutile",
+                         "PType" :   "S",
+                         "IV" :   -888945
+                    }
+               ]
+          }
+     ],
+     "NFunParToOpt" :   "",
+     "LogKFun" :   "",
+     "LogKVal" :   "",
+     "OptSet" :   {
+          "NumMPI" :   4,
+          "DoWhat" :   0,
+          "UseEqC" :   1,
+          "UDWts" :   0,
+          "OptAlg" :   "LN_BOBYQA",
+          "PBPerc" :   -1,
+          "ConTolRel" :   1e-05,
+          "ConTolAbs" :   1e-05,
+          "MaxLoops" :   10000,
+          "NormPar" :   1,
+          "GradPert" :   0.0001,
+          "SensPert" :   0.0001,
+          "OptTu" :   -1,
+          "OptTuC" :   6,
+          "UseMCPE" :   0,
+          "NumMCT" :   100
+     },
+     "DataSyn" :   {
+          "PHN" :   [
                {
-                    "DCN" :   "H2",
-                    "PType" :   "S",
-                    "IV" :   -24
+                    "NIS" :   "aq_gen",
+                    "Syn" :   "",
+                    "DCN" :   [
+                         {
+                              "NIS" :   "HSiO3-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "SiO2@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "Ti(OH)4@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "H2@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "O2@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "H2O2@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "HO2-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "OH-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "H+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "H2O@",
+                              "Syn" :   ""
+                         }
+                    ]
                },
                {
-                    "DCN" :   "H2O",
-                    "PType" :   "S",
-                    "IV" :   -228527
+                    "NIS" :   "QtzRu",
+                    "Syn" :   "",
+                    "DCN" :   [
+                         {
+                              "NIS" :   "Quartz",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "Rutile",
+                              "Syn" :   ""
+                         }
+                    ]
                },
                {
-                    "DCN" :   "O2",
-                    "PType" :   "S",
-                    "IV" :   -16
-               },
-               {
-                    "DCN" :   "Quartz",
-                    "PType" :   "S",
-                    "IV" :   -856432.97934399
-               },
-               {
-                    "DCN" :   "Rutile",
-                    "PType" :   "S",
-                    "IV" :   -888945
-               },
-               {
-                    "DCN" :   "Rutile",
-                    "PType" :   "S",
-                    "IV" :   -888945
+                    "NIS" :   "Rutile",
+                    "Syn" :   "",
+                    "DCN" :   [
+                         {
+                              "NIS" :   "Rutile",
+                              "Syn" :   ""
+                         }
+                    ]
                }
           ],
-          "PAM" :   [
+          "PHPN" :   [
                {
-                    "EPH" :   "fluid_gen",
-                    "PMc" :   [
-                         {
-                              "IPCs" :   [
-                                   {
-                                        "PType" :   "S",
-                                        "IV" :   0,
-                                        "Pndx" :   0
-                                   },
-                                   {
-                                        "PType" :   "S",
-                                        "IV" :   0,
-                                        "Pndx" :   1
-                                   }
-                              ]
-                         }
-                    ],
-                    "DMc" :   [
-                         {
-                              "DCN" :   "H2",
-                              "PDCC" :   [
-                                   {
-                                        "PType" :   "S",
-                                        "IV" :   33.2000007629395,
-                                        "Pndx" :   0
-                                   },
-                                   {
-                                        "PType" :   "S",
-                                        "IV" :   12.9700002670288,
-                                        "Pndx" :   1
-                                   },
-                                   {
-                                        "PType" :   "S",
-                                        "IV" :   -0.219999998807907,
-                                        "Pndx" :   2
-                                   },
-                                   {
-                                        "PType" :   "S",
-                                        "IV" :   0,
-                                        "Pndx" :   3
-                                   },
-                                   {
-                                        "PType" :   "S",
-                                        "IV" :   0,
-                                        "Pndx" :   4
-                                   },
-                                   {
-                                        "PType" :   "S",
-                                        "IV" :   0,
-                                        "Pndx" :   5
-                                   },
-                                   {
-                                        "PType" :   "S",
-                                        "IV" :   0,
-                                        "Pndx" :   6
-                                   }
-                              ]
-                         },
-                         {
-                              "DCN" :   "H2O",
-                              "PDCC" :   [
-                                   {
-                                        "PType" :   "S",
-                                        "IV" :   647.286010742188,
-                                        "Pndx" :   7
-                                   },
-                                   {
-                                        "PType" :   "S",
-                                        "IV" :   220.897994995117,
-                                        "Pndx" :   8
-                                   },
-                                   {
-                                        "PType" :   "S",
-                                        "IV" :   0.343800008296967,
-                                        "Pndx" :   9
-                                   },
-                                   {
-                                        "PType" :   "S",
-                                        "IV" :   -0.0663499981164932,
-                                        "Pndx" :   10
-                                   },
-                                   {
-                                        "PType" :   "S",
-                                        "IV" :   0,
-                                        "Pndx" :   11
-                                   },
-                                   {
-                                        "PType" :   "S",
-                                        "IV" :   0,
-                                        "Pndx" :   12
-                                   },
-                                   {
-                                        "PType" :   "S",
-                                        "IV" :   0,
-                                        "Pndx" :   13
-                                   }
-                              ]
-                         },
-                         {
-                              "DCN" :   "O2",
-                              "PDCC" :   [
-                                   {
-                                        "PType" :   "S",
-                                        "IV" :   154.770004272461,
-                                        "Pndx" :   14
-                                   },
-                                   {
-                                        "PType" :   "S",
-                                        "IV" :   50.9000015258789,
-                                        "Pndx" :   15
-                                   },
-                                   {
-                                        "PType" :   "S",
-                                        "IV" :   0.0212799999862909,
-                                        "Pndx" :   16
-                                   },
-                                   {
-                                        "PType" :   "S",
-                                        "IV" :   0.0151199996471405,
-                                        "Pndx" :   17
-                                   },
-                                   {
-                                        "PType" :   "S",
-                                        "IV" :   0,
-                                        "Pndx" :   18
-                                   },
-                                   {
-                                        "PType" :   "S",
-                                        "IV" :   0,
-                                        "Pndx" :   19
-                                   },
-                                   {
-                                        "PType" :   "S",
-                                        "IV" :   0,
-                                        "Pndx" :   20
-                                   }
-                              ]
-                         }
-                    ]
+                    "NIS" :   "pH",
+                    "Syn" :   ""
                },
                {
-                    "EPH" :   "QtzRu",
-                    "PMc" :   [
-                         {
-                              "IPCs" :   [
-                                   {
-                                        "PType" :   "S",
-                                        "IV" :   59935.30078125,
-                                        "Pndx" :   2
-                                   },
-                                   {
-                                        "PType" :   "S",
-                                        "IV" :   0.00135721999686211,
-                                        "Pndx" :   3
-                                   },
-                                   {
-                                        "PType" :   "S",
-                                        "IV" :   1.50970995426178,
-                                        "Pndx" :   4
-                                   }
-                              ]
-                         }
-                    ]
+                    "NIS" :   "pe",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Eh",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "IS",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "alk",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "pV",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "RHO",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "sArea",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Gex",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "mChainL",
+                    "Syn" :   ""
+               }
+          ],
+          "DCPN" :   [
+               {
+                    "NIS" :   "activity",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "@coef",
+                    "Syn" :   ""
                }
           ]
-     },
-     "NFunParToOpt" :   "",
-     "DataLogK" :   "",
-     "LogK" :   "",
-     "OptDWhat" :   0,
-     "OptUEqui" :   1,
-     "OptUDWeight" :   0,
-     "OptAlg" :   "LN_BOBYQA",
-     "OptPBPerc" :   -1,
-     "OptTolRel" :   1e-05,
-     "OptTolAbs" :   1e-05,
-     "OptMaxEval" :   10000,
-     "OptNormP" :   1,
-     "OptGradPert" :   0.0001,
-     "OptTuckey" :   -1,
-     "OptTuCval" :   6,
-     "StatMC" :   0,
-     "StatMCruns" :   100,
-     "StatSensPert" :   0.0001
+     }
 }

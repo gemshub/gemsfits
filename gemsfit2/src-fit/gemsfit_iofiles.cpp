@@ -40,40 +40,8 @@ using namespace std;
 #endif
 
 
-//#include "statistics.h"
-//#include "optimization.h"
-
 void generateBson (bson &bson_task_file, TNode *node, int mode);
 void make_syn_bson_object (bson &bson_task_file, const char *key, int i, int mode);
-
-//optimization::optimization( int i )
-//{
-//    int ii;
-//    constraint_data = new my_constraint_data;
-//    optimization::define_nlopt_param();
-//    ii=i;
-//}
-
-// Constructor
-//statistics::statistics()
-//{
-//    number_of_measurements = 0;
-//    Weighted_Tfun_sum_of_residuals 		= 0.0;
-//    num_of_runs		= 0;
-//    number_of_parameters   = 0;
-//    Tfun_sum_of_residuals = 0.0;
-//    Abs_sum_of_residuals = 0.0; Weighted_Abs_sum_of_residuals = 0.0;
-//    min_res =0.0; max_res = 0.0; Weighted_min_res = 0.0; Weighted_max_res = 0.0; neg_residuals = 0; pos_residuals = 0;
-//    perturbator = 0.0001;
-////    default_stat_param();
-//}
-
-//// Constructor
-//Data_Manager::Data_Manager( int )
-//{
-//    define_db_specs();
-//}
-
 
 /// Mode GEMSFIT to generate input configuration file
 int generateJConfig()
@@ -137,7 +105,7 @@ cout << "Finished writing the input specification file template" << endl;
 
 void generateBson(bson &bson_task_file,TNode *node, int mode)
 {
-    int Np = 0, Nip = 0, Ncoef = 0, PMCndx = 0, DMCndx = 0, nIC, nDC, nPS, nPH, DCndx = -1; long int nDCinPH;
+    int Np = 0, NG0p = 0, NG0PH = 0, Nip = 0, Ncoef = 0, G0ndx=0, PMCndx = 0, DMCndx = 0, nIC, nDC, nPS, nPH, DCndx = -1; long int nDCinPH;
     double temp = 0.0;
     stringstream ss; string sss, ipcn, dcipcn;
     bson_init(&bson_task_file);
@@ -149,7 +117,6 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
     nPS = dCH->nPS;
     nPH = dCH->nPH;
 
-    bson_append_int(&bson_task_file, keys::MPI[mode], omp_get_num_threads() * omp_get_num_procs());
     bson_append_string(&bson_task_file, keys::DBPath[mode], "../EJDB/<database name>");
     bson_append_string(&bson_task_file, keys::DBColl[mode], "<collection name>");
 
@@ -158,38 +125,39 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
     bson_append_string(&bson_task_file, keys::DSelect[mode], "");
     bson_append_string(&bson_task_file, keys::DTarget[mode], "");
 
-    bson_append_start_object(&bson_task_file, keys::OptParameters[mode]);
+    bson_append_start_array(&bson_task_file, keys::OptParameters[mode]);
 
 
-    // Write G0 parameters
-    bson_append_start_array(&bson_task_file, keys::G0[mode]);
-    for (unsigned i = 0; i < nDC; i++)
-    {
-        ss << Np;
-        sss = ss.str();
-        ss.str("");
-        bson_append_start_object(&bson_task_file, sss.c_str());
-        {
-            bson_append_string(&bson_task_file, keys::DCN_[mode], node->xCH_to_DC_name(i));
-            bson_append_string(&bson_task_file, keys::PType[mode], "S");
-            bson_append_double(&bson_task_file, keys::IV[mode], node->DC_G0(i, 100000, 25 + 273.15, false));
-        }
-        bson_append_finish_object(&bson_task_file);
-        Np++;
-    }
-    bson_append_finish_array(&bson_task_file);
-    Np = 0;
+//    // Write G0 parameters
+//    bson_append_start_array(&bson_task_file, keys::G0[mode]);
+//    for (unsigned i = 0; i < nDC; i++)
+//    {
+//        ss << Np;
+//        sss = ss.str();
+//        ss.str("");
+//        bson_append_start_object(&bson_task_file, sss.c_str());
+//        {
+//            bson_append_string(&bson_task_file, keys::DCN_[mode], node->xCH_to_DC_name(i));
+//            bson_append_string(&bson_task_file, keys::PType[mode], "S");
+//            bson_append_double(&bson_task_file, keys::IV[mode], node->DC_G0(i, 100000, 25 + 273.15, false));
+//        }
+//        bson_append_finish_object(&bson_task_file);
+//        Np++;
+//    }
+//    bson_append_finish_array(&bson_task_file);
+//    Np = 0;
 
     // Write interaction parameters
     long int *LsMod = node->Get_LsMod();
     long int *LsMdc = node->Get_LsMdc();
-    bson_append_start_array(&bson_task_file, keys::PAM[mode]);
+//    bson_append_start_array(&bson_task_file, keys::PAM[mode]);
 
     int x=0;
-    for (unsigned i = 0; i < nPS; i++)
+    for (unsigned i = 0; i < nPH; i++)
     {
-        if ((LsMod[i+x] > 0) || (LsMdc[i+x] > 0))
-        {
+
+        NG0PH = dCH->nDCinPH[i];
+
         Nip = 0;
         ss << Np;
         sss = ss.str();
@@ -199,110 +167,133 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
             bson_append_string(&bson_task_file, keys::EPH[mode], node->xCH_to_PH_name(i));
             ipcn.append(node->xCH_to_PH_name(i)); ipcn.append("[");
 
-            // PMc parameters
-            if ((LsMod[i+x] > 0))
+            // G0
+            bson_append_start_array(&bson_task_file, keys::G0[mode]);
+            for (unsigned g = 0; g < NG0PH; g++)
             {
-                bson_append_start_array(&bson_task_file, keys::PMc[mode]);
-                for (unsigned j = 0; j < LsMod[i+x]; j++)
+                ss << g;
+                sss = ss.str();
+                ss.str("");
+                bson_append_start_object(&bson_task_file, sss.c_str());
                 {
-                    ss << Nip;
-                    sss = ss.str();
-                    ss.str("");
-                    ipcn.append(sss); ipcn.append("|");
-                    bson_append_start_object(&bson_task_file, sss.c_str());
-                    {
-                        // write IPC
-                //        bson_append_int(&bson_task_file, "IPndx", Nip);
-                        bson_append_start_array(&bson_task_file, keys::IPCs[mode]);
-                        Ncoef = 0;
-                        for (unsigned k = 0; k < LsMod[i+x+2]; k++)
-                        {
-                            ss << Ncoef;
-                            sss = ss.str();
-                            ss.str("");
-                            ipcn.append(sss); ipcn.append("]");
-                            bson_append_start_object(&bson_task_file, sss.c_str());
-                            {
-                                node->Get_PMc(temp, PMCndx);
-                                bson_append_string(&bson_task_file, keys::IPCN[mode], ipcn.c_str());
-                                bson_append_string(&bson_task_file, keys::PType[mode], "S");
-                                bson_append_double(&bson_task_file, keys::IV[mode], temp );
-//                                bson_append_int(&bson_task_file, keys::Pndx[mode], PMCndx );
-                                temp=0;
-                            } // finish IPC
-                            bson_append_finish_object(&bson_task_file);
-                            Ncoef++;
-                            PMCndx++;
-                            ipcn.erase(ipcn.size()-2, ipcn.size());
-                        }
-                        bson_append_finish_array(&bson_task_file);
-                    } // finish IParameters
-                    bson_append_finish_object(&bson_task_file);
-                    Nip++;
-                    ipcn.erase(ipcn.size()-2, ipcn.size());
+                    bson_append_string(&bson_task_file, keys::DCN_[mode], node->xCH_to_DC_name(G0ndx));
+                    bson_append_string(&bson_task_file, keys::PType[mode], "S");
+                    bson_append_double(&bson_task_file, keys::IV[mode], node->DC_G0(G0ndx, 100000, 25 + 273.15, false));
                 }
-                bson_append_finish_array(&bson_task_file);
+                bson_append_finish_object(&bson_task_file);
+                NG0p++;
+                G0ndx++;
             }
+            bson_append_finish_array(&bson_task_file);
+            NG0p = 0;
 
-            // DMc parameters
-            if (LsMdc[i+x] > 0)
+
+            if (((LsMod[i+x] > 0) || (LsMdc[i+x] > 0)) && (i < nPS))
             {
-                bson_append_start_array(&bson_task_file, keys::DMc[mode]);
-
-                DCndx = node->PhtoDC_DCH(i, nDCinPH);
-                for (unsigned k = 0; k < nDCinPH; k++)
+                // PMc parameters
+                if ((LsMod[i+x] > 0))
                 {
-                    ss << k;
-                    sss = ss.str();
-                    ss.str("");
-                    bson_append_start_object(&bson_task_file, sss.c_str());
+                    bson_append_start_array(&bson_task_file, keys::PMc[mode]);
+                    for (unsigned j = 0; j < LsMod[i+x]; j++)
                     {
-                        bson_append_string(&bson_task_file, keys::DCN_[mode], node->xCH_to_DC_name(DCndx + k));
-                        dcipcn.append(node->xCH_to_PH_name(i)); dcipcn.append("|");
-                        dcipcn.append(node->xCH_to_DC_name(DCndx + k)); dcipcn.append("[");
-
-                        // write IPDCoef
-                //        bson_append_int(&bson_task_file, "IPndx", Nip);
-                        bson_append_start_array(&bson_task_file, keys::PDCC[mode]);
-                        Ncoef = 0;
-                        for (unsigned j = 0; j < LsMdc[i+x]; j++)
+                        ss << Nip;
+                        sss = ss.str();
+                        ss.str("");
+                        ipcn.append(sss); ipcn.append("|");
+                        bson_append_start_object(&bson_task_file, sss.c_str());
                         {
-                            ss << Ncoef;
-                            sss = ss.str();
-                            ss.str("");
-                            dcipcn.append(sss);dcipcn.append("]");
-                            bson_append_start_object(&bson_task_file, sss.c_str());
+                            // write IPC
+                    //        bson_append_int(&bson_task_file, "IPndx", Nip);
+                            bson_append_start_array(&bson_task_file, keys::IPCs[mode]);
+                            Ncoef = 0;
+                            for (unsigned k = 0; k < LsMod[i+x+2]; k++)
                             {
-                                node->Get_DMc(temp, DMCndx);
-                                bson_append_string(&bson_task_file, keys::IPCN[mode], dcipcn.c_str());
-                                bson_append_string(&bson_task_file, keys::PType[mode], "S");
-                                bson_append_double(&bson_task_file, keys::IV[mode], temp );
-//                                bson_append_int(&bson_task_file, keys::Pndx[mode], DMCndx );
-                                temp=0;
-                            } // finish IPDCoef
-                            bson_append_finish_object(&bson_task_file);
-                            Ncoef++;
-                            DMCndx++;
-                            dcipcn.erase(dcipcn.size()-2, dcipcn.size());
-                        }
-                        bson_append_finish_array(&bson_task_file);
-                        dcipcn.clear();
+                                ss << Ncoef;
+                                sss = ss.str();
+                                ss.str("");
+                                ipcn.append(sss); ipcn.append("]");
+                                bson_append_start_object(&bson_task_file, sss.c_str());
+                                {
+                                    node->Get_PMc(temp, PMCndx);
+                                    bson_append_string(&bson_task_file, keys::IPCN[mode], ipcn.c_str());
+                                    bson_append_string(&bson_task_file, keys::PType[mode], "S");
+                                    bson_append_double(&bson_task_file, keys::IV[mode], temp );
+    //                                bson_append_int(&bson_task_file, keys::Pndx[mode], PMCndx );
+                                    temp=0;
+                                } // finish IPC
+                                bson_append_finish_object(&bson_task_file);
+                                Ncoef++;
+                                PMCndx++;
+                                ipcn.erase(ipcn.size()-2, ipcn.size());
+                            }
+                            bson_append_finish_array(&bson_task_file);
+                        } // finish IParameters
+                        bson_append_finish_object(&bson_task_file);
+                        Nip++;
+                        ipcn.erase(ipcn.size()-2, ipcn.size());
                     }
-                    bson_append_finish_object(&bson_task_file);
+                    bson_append_finish_array(&bson_task_file);
                 }
-                bson_append_finish_array(&bson_task_file);
+
+                // DMc parameters
+                if (LsMdc[i+x] > 0)
+                {
+                    bson_append_start_array(&bson_task_file, keys::DMc[mode]);
+
+                    DCndx = node->PhtoDC_DCH(i, nDCinPH);
+                    for (unsigned k = 0; k < nDCinPH; k++)
+                    {
+                        ss << k;
+                        sss = ss.str();
+                        ss.str("");
+                        bson_append_start_object(&bson_task_file, sss.c_str());
+                        {
+                            bson_append_string(&bson_task_file, keys::DCN_[mode], node->xCH_to_DC_name(DCndx + k));
+                            dcipcn.append(node->xCH_to_PH_name(i)); dcipcn.append("|");
+                            dcipcn.append(node->xCH_to_DC_name(DCndx + k)); dcipcn.append("[");
+
+                            // write IPDCoef
+                    //        bson_append_int(&bson_task_file, "IPndx", Nip);
+                            bson_append_start_array(&bson_task_file, keys::PDCC[mode]);
+                            Ncoef = 0;
+                            for (unsigned j = 0; j < LsMdc[i+x]; j++)
+                            {
+                                ss << Ncoef;
+                                sss = ss.str();
+                                ss.str("");
+                                dcipcn.append(sss);dcipcn.append("]");
+                                bson_append_start_object(&bson_task_file, sss.c_str());
+                                {
+                                    node->Get_DMc(temp, DMCndx);
+                                    bson_append_string(&bson_task_file, keys::IPCN[mode], dcipcn.c_str());
+                                    bson_append_string(&bson_task_file, keys::PType[mode], "S");
+                                    bson_append_double(&bson_task_file, keys::IV[mode], temp );
+    //                                bson_append_int(&bson_task_file, keys::Pndx[mode], DMCndx );
+                                    temp=0;
+                                } // finish IPDCoef
+                                bson_append_finish_object(&bson_task_file);
+                                Ncoef++;
+                                DMCndx++;
+                                dcipcn.erase(dcipcn.size()-2, dcipcn.size());
+                            }
+                            bson_append_finish_array(&bson_task_file);
+                            dcipcn.clear();
+                        }
+                        bson_append_finish_object(&bson_task_file);
+                    }
+                    bson_append_finish_array(&bson_task_file);
+                }
             }
             ipcn.clear();
+            x +=2;
         } // finish object
         bson_append_finish_object(&bson_task_file);
         Np++;
-        }
-        x +=2;
-    } // finish PAM array
-    bson_append_finish_array(&bson_task_file);
+    } // finish Phases array
+//    bson_append_finish_array(&bson_task_file);
 
     // finish Parameters to Optimize
-    bson_append_finish_object(&bson_task_file);
+    bson_append_finish_array(&bson_task_file);
 
 
     // Nested function parameters
@@ -313,36 +304,44 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
     bson_append_string(&bson_task_file, keys::LogK[mode], "");
 
     // Optimization Settings
-    bson_append_int(&bson_task_file, keys::OptDW[mode], 0);
+    bson_append_start_object(&bson_task_file, keys::OptSet[mode]);
+    {
+        bson_append_int(&bson_task_file, keys::MPI[mode], omp_get_num_threads() * omp_get_num_procs());
 
-    bson_append_int(&bson_task_file, keys::OptEQ[mode], 1);
+        bson_append_int(&bson_task_file, keys::OptDW[mode], 0);
 
-    bson_append_int(&bson_task_file, keys::OptUW[mode], 0);
+        bson_append_int(&bson_task_file, keys::OptEQ[mode], 1);
 
-    bson_append_string(&bson_task_file, keys::OptAlg[mode], "LN_BOBYQA");
+        bson_append_int(&bson_task_file, keys::OptUW[mode], 0);
 
-    bson_append_double(&bson_task_file, keys::OptPBP[mode], -1);
+        bson_append_string(&bson_task_file, keys::OptAlg[mode], "LN_BOBYQA");
 
-    bson_append_double(&bson_task_file, keys::OptTRel[mode], 1e-5);
+        bson_append_double(&bson_task_file, keys::OptPBP[mode], -1);
 
-    bson_append_double(&bson_task_file, keys::OptTAbs[mode], 1e-5);
+        bson_append_double(&bson_task_file, keys::OptTRel[mode], 1e-5);
 
-    bson_append_int(&bson_task_file, keys::OptMEv[mode], 10000);
+        bson_append_double(&bson_task_file, keys::OptTAbs[mode], 1e-5);
 
-    bson_append_int(&bson_task_file, keys::OptNormP[mode], 1);
+        bson_append_int(&bson_task_file, keys::OptMEv[mode], 10000);
 
-    bson_append_double(&bson_task_file, keys::OptPer[mode], 0.0001);
+        bson_append_int(&bson_task_file, keys::OptNormP[mode], 1);
 
-    // Statistics Settings
-    bson_append_int(&bson_task_file, keys::OptTu[mode], -1);
+        bson_append_double(&bson_task_file, keys::OptPer[mode], 0.0001);
 
-    bson_append_int(&bson_task_file, keys::OptTuVal[mode], 6);
+         // Statistics Settings
+        bson_append_double(&bson_task_file, keys::StatPer[mode], 0.0001);
 
-    bson_append_int(&bson_task_file, keys::StatMC[mode], 0);
+        bson_append_int(&bson_task_file, keys::OptTu[mode], -1);
 
-    bson_append_int(&bson_task_file, keys::StatMCr[mode], 100);
+        bson_append_int(&bson_task_file, keys::OptTuVal[mode], 6);
 
-    bson_append_double(&bson_task_file, keys::StatPer[mode], 0.0001);
+        bson_append_int(&bson_task_file, keys::StatMC[mode], 0);
+
+        bson_append_int(&bson_task_file, keys::StatMCr[mode], 100);
+
+    } bson_append_finish_object(&bson_task_file);
+
+    G0ndx = 0;
 
     bson_append_start_object(&bson_task_file, keys::DataSyn[mode]);
     {
@@ -351,6 +350,20 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
             for (unsigned i = 0; i<nPH; i++)
             {
                 make_syn_bson_object(bson_task_file, node->xCH_to_PH_name(i), i , mode);
+                // DC
+                NG0PH = dCH->nDCinPH[i];
+                bson_append_start_array(&bson_task_file, keys::DcNames[mode]);
+                {
+                    for (unsigned j = 0; j<NG0PH; j++)
+                    {
+                        make_syn_bson_object(bson_task_file, node->xCH_to_DC_name(G0ndx), j, mode);
+                        bson_append_finish_object(&bson_task_file);
+                        G0ndx++;
+                    }
+                }
+                bson_append_finish_array(&bson_task_file);
+                // finish phase object
+                bson_append_finish_object(&bson_task_file);
             }
         }
         bson_append_finish_array(&bson_task_file);
@@ -358,43 +371,43 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
         bson_append_start_array(&bson_task_file, keys::PhPropNames[mode]);
         {
             unsigned i = 0;
-            make_syn_bson_object(bson_task_file, keys::pH, i, mode); i++;
+            make_syn_bson_object(bson_task_file, keys::pH, i, mode); i++; bson_append_finish_object(&bson_task_file);
 
-            make_syn_bson_object(bson_task_file, keys::pe, i, mode); i++;
+            make_syn_bson_object(bson_task_file, keys::pe, i, mode); i++; bson_append_finish_object(&bson_task_file);
 
-            make_syn_bson_object(bson_task_file, keys::Eh, i, mode); i++;
+            make_syn_bson_object(bson_task_file, keys::Eh, i, mode); i++; bson_append_finish_object(&bson_task_file);
 
-            make_syn_bson_object(bson_task_file, keys::IS, i, mode); i++;
+            make_syn_bson_object(bson_task_file, keys::IS, i, mode); i++; bson_append_finish_object(&bson_task_file);
 
-            make_syn_bson_object(bson_task_file, keys::all, i, mode); i++;
+            make_syn_bson_object(bson_task_file, keys::all, i, mode); i++; bson_append_finish_object(&bson_task_file);
 
-            make_syn_bson_object(bson_task_file, keys::pV, i, mode); i++;
+            make_syn_bson_object(bson_task_file, keys::pV, i, mode); i++; bson_append_finish_object(&bson_task_file);
 
-            make_syn_bson_object(bson_task_file, keys::RHO, i, mode); i++;
+            make_syn_bson_object(bson_task_file, keys::RHO, i, mode); i++; bson_append_finish_object(&bson_task_file);
 
-            make_syn_bson_object(bson_task_file, keys::sArea, i, mode); i++;
+            make_syn_bson_object(bson_task_file, keys::sArea, i, mode); i++; bson_append_finish_object(&bson_task_file);
 
-            make_syn_bson_object(bson_task_file, keys::Gex, i, mode); i++;
+            make_syn_bson_object(bson_task_file, keys::Gex, i, mode); i++; bson_append_finish_object(&bson_task_file);
 
-            make_syn_bson_object(bson_task_file, keys::mChainL, i, mode); i++;
+            make_syn_bson_object(bson_task_file, keys::mChainL, i, mode); i++; bson_append_finish_object(&bson_task_file);
         }
         bson_append_finish_array(&bson_task_file);
 
-        bson_append_start_array(&bson_task_file, keys::DcNames[mode]);
-        {
-            for (unsigned i = 0; i<nDC; i++)
-            {
-                make_syn_bson_object(bson_task_file, node->xCH_to_DC_name(i), i, mode);
-            }
-        }
-        bson_append_finish_array(&bson_task_file);
+//        bson_append_start_array(&bson_task_file, keys::DcNames[mode]);
+//        {
+//            for (unsigned i = 0; i<nDC; i++)
+//            {
+//                make_syn_bson_object(bson_task_file, node->xCH_to_DC_name(i), i, mode);
+//            }
+//        }
+//        bson_append_finish_array(&bson_task_file);
 
         bson_append_start_array(&bson_task_file, keys::DcPropNames[mode]);
         {
             unsigned i = 0;
-            make_syn_bson_object(bson_task_file, keys::activity, i, mode); i++;
+            make_syn_bson_object(bson_task_file, keys::activity, i, mode); i++; bson_append_finish_object(&bson_task_file);
 
-            make_syn_bson_object(bson_task_file, keys::actcoef, i, mode); i++;
+            make_syn_bson_object(bson_task_file, keys::actcoef, i, mode); i++; bson_append_finish_object(&bson_task_file);
         }
     }
     bson_append_finish_object(&bson_task_file);
@@ -414,7 +427,7 @@ void make_syn_bson_object (bson &bson_task_file, const char* key, int i, int mod
         bson_append_string(&bson_task_file, keys::NameSys[mode], key);
         bson_append_string(&bson_task_file, keys::Syn[mode], "");
 
-    } bson_append_finish_object(&bson_task_file);
+    }
 }
 
 
@@ -545,248 +558,6 @@ void bson_print_raw_txt( iostream& osx, const char *data, int depth, int datatyp
     }
     osx << "\n";
 }
-
-
-
-///// Mode GEMSFIT to generate input configuration file
-//int generateConfig()
-//{
-//   string YN;
-//   try
-//   {
-//     // call GEM_init to read GEMS3K input files
-//     TNode* node  = new TNode();
-
-//     // call GEM_init     --> read in input files
-//     if( (node->GEM_init( gpf->GEMS3LstFilePath().c_str() )) == 1 )
-//        {
-//            cout << gpf->GEMS3LstFilePath() << endl;
-//            cout<<" .. ERROR occurred while reading GEMS3K input files !!! ..."<<endl;
-//            return 1;
-//        }
-
-//    bool with_comments = true;
-//    bool brief_mode = false;
-
-//    // Writing to the data
-//    cout << "Start writing the input specification file template"<< endl;
-//    Data_Manager *data_meas = new Data_Manager(1);
-
-//    // Writing Data sources section
-//    data_meas->out_db_specs_txt(with_comments, brief_mode);
-
-//cout << "start writing out_gems_fit_txt()" << endl;
-//    // Writing Parameters to Fit section &
-//    out_gems_fit_txt( node, with_comments, brief_mode );
-
-//cout << "start writing out_nlopt_param_txt()" << endl;
-//    // Create instance of optimization class derived from base class Optimization
-//    optimization opti(1);
-//        // Writing Optimization Methods section
-//    opti.out_nlopt_param_txt(with_comments, brief_mode);
-
-//cout << "start writing out_stat_param_txt()" << endl;
-//    statistics stat;
-//        // Writing statistics section
-//    stat.out_stat_param_txt(with_comments, brief_mode);
-
-//cout << "Finished writing the input specification file template" << endl;
-////    }
-
-//    } catch(TError& err)
-//      {
-//        cout << "Error:" << err.title.c_str() << ":" <<  err.mess.c_str() << endl;
-//        return 1;
-//      }
-//      catch(...)
-//      {
-//        return -1;
-//      }
-//    return 0;
-//}
-
-////extern outField DataCH_static_fields[14];
-//extern outField DataCH_dynamic_fields[30];
-//extern outField MULTI_dynamic_fields[70];
-//extern outField DataBR_fields[f_lga+1/*58*/];
-
-//outField Par_Other_fields[2] =
-//{
-//    { "logK",  0, 0, 1, "\n# logK: Look-up array for logK at T * P * nr reactions. "
-//      "\n#    The list has to be finished with End>"
-//      "\n#    If at least one G0 parameter is marked as \'R\' (reaction-constrained)"
-//      "\n#    and the list below is left commented out, then logK values for all T,P pairs and reactions"
-//      "\n#    will be calculated based on the initial values of all parameters, and this logK array"
-//      "\n#    will be used throughout the fitting process. " },
-//    { "DataLogK",  0, 0, 1, "\n# DataLogK:  "
-//      "\n#      \n" }
-//};
-
-//typedef enum { /// Field index into outField structure
-//    f_logK,
-//    f_DataLogK
-//} Par_Other_FIELDS;
-
-
-//void out_gems_fit_txt( TNode* node, bool _comment, bool brief_mode )
-//{
-//    DATACH* CSD = node->pCSD();
-//    DATABR* CNode = node->pCNode();
-
-//    string fname = gpf->OptParamFile();
-//    fstream ff(fname.c_str(), ios::out|ios::app );
-//    ErrorIf( !ff.good() , fname.c_str(), "OptParamFile text open error");
-
-//    if(_comment )
-//    {
-//        ff << "\n#  GEM input parameters to fit can be marked by preceding them with the F, L, and R letter "
-//              "\n#    in <TKval>, <Pval>, <G0>,  <PMc>, <DMc>, <fDQF>, <bIC> ... data object entries, see below."
-//              "\n#    Values without markup will not be modified by GEMSFIT2 routines, just used in GEM runs.\n"
-//              "\n#  Mark with F the parameter value you want to fit independently of other parameters. "
-//              "\n#    Shorthand option: F<initval> - initial value with default (10%) upper- and lower boundaries."
-//              "\n#    Example:  ... F-833444 ... (<initval> can be modified, if necessary)."
-//              "\n#    Full JSON-style markup syntax for the independently adjusted parameter: as in this example"
-//              "\n#      for fitting G0(298) of SiO2@ "
-//              "\n#      F{ \"IV\" :-833444, \"UB\" : -800000, \"LB\" : -900000 } "
-//              "\n#      where:"
-//              "\n#         \"IV\": initial value; "
-//              "\n#         \"UB\": upper boundary; "
-//              "\n#         \"LB\": lower bundary (in this case, all in J/mol). \n"
-//              "\n#  Mark with R the G0(298) value of a Dependent Component, which depends on G0 of other DCs"
-//              "\n#     via a reaction constraint, by copy-pasting the following template in place of G0(298) value,"
-//              "\n#     and editing it as desired:"
-//              "\n#      R{ \"IV\" : -36819, \"Ref\" : \"SUPCRT92\", \"order\" : \"1\", \"nC\" : 4, \"rDC\" : \"KOH@\","
-//              "\n#      \"RC\" : [ \"K+\", \"H2O@\", \"H+\", \"KOH@\" ], \"Rcoef\" : [ -1, -1, 1, 1 ] }"
-//              "\n#     Here,  \"IV\": initial value; "
-//              "\n#         \"Ref\": bibliographic reference (optional);"
-//              "\n#         \"order\": reaction order | 1, 2, ... |, important for many reaction with common species;"
-//              "\n#         \"nC\": numer of components (species) involved in the reaction;"
-//              "\n#         \"DC\": name of Dependent Component whose properties are constrained with this reaction; "
-//              "\n#         \"RC\": list [ ] of names of all components (species) involved in reaction (comma-separated);"
-//              "\n#         \"Rcoef\": array [ ] of reaction stoichiometry coeficients (comma-separated), "
-//              "\n#           in the same order as in the \"RC\" list. This example describes a reaction: "
-//              "\n#           K+ + H2O@ = H+ + KOH@ in which G0(KOH@) follows variations of G0(K+) induced by the fitting, "
-//              "\n#           such that the logK of this reaction at (T,P) remains constant. \n"
-//              "\n#  Mark with L the bIC (system bulk composition) value of Independent Component, "
-//              "\n#     which depends on bIC of other elements via a titration constraint,"
-//              "\n#     by copy-pasting the following template in place of the bIC value, and editing as desired:"
-//              "\n#      L{ \"LE\" :\"H\", \"IV\" :113.016746705914, \"LEs\" :[\"S\", \"Cl\"], \"Lcoef\" :[2,1]}"
-//              "\n#     In this example: the amount of H is linked to S and Cl by titration with H2SO4 and HCl, "
-//              "\n#         with stoichiometry coeficients of 2 and 1, respectively."
-//              "\n#        \"LE\": linked element "
-//              "\n#        \"IV\": initial value "
-//              "\n#        \"LEs\": the elements linked to "
-//              "\n#        \"Lcoef\": linkage coefficients (stoichiometry coefficients) "
-//              "\n#         Whenever the bIC values of S or Cl are varied as (independent) titration parameters,"
-//              "\n#         the bIC value of H will be adjusted to titrate the system either with H2SO4 or with HCl."
-//              "\n#  Restrictions: You can't fit G0's together with TK and P!"
-//           << endl;
-//    }
-
-//    TPrintArrays  prarCH(30, DataCH_dynamic_fields, ff);
-
-//    if( _comment )
-//        ff << "\n# ICNL: List of Independent Component names (for readability; no need to modify)";
-//    prarCH.writeArrayS(  "ICNL", CSD->ICNL[0], CSD->nIC, MaxICN );
-//    if( _comment )
-//            ff << "\n# DCNL: List of Dependent Component names (for readability; no need to modify)";
-//    prarCH.writeArrayS(  "DCNL", CSD->DCNL[0], CSD->nDC, MaxDCN );
-//    if( _comment )
-//            ff << "\n# PHNL: List of Phase names (for readability; no need to modify)";
-//    prarCH.writeArrayS(  "PHNL", CSD->PHNL[0], CSD->nPH, MaxPHN );
-
-//    vector <double> xG0;
-//    ff << "\n \n# G0: Look-up array for DC Gibbs energy function g(T,P), J/mol at 298.15K and 1 bar \n";
-//    ff << "<G0>" << endl;
-//    for (int i=0; i<CSD->nDC*node->gridTP(); ++i)
-//    {
-//        xG0.push_back(CSD->G0[i]);
-//        ff << CSD->G0[i] << endl;
-//        i += node->gridTP()-1;
-//    }
-
-//    TPrintArrays  par_other(2, Par_Other_fields, ff);
-
-//    string DataLogK = "", logK = "";
-
-//    par_other.writeField(f_DataLogK, DataLogK, _comment, brief_mode );
-//    par_other.writeField(f_logK, logK, _comment, brief_mode );
-
-//    if(_comment )
-//    {
-//        ff << "\n\n#########################################################################" << endl;
-//        ff << "#>>>>>>>>>>>>>>> Input for fitting GEM input parameters >>>>>>>>>>>>>>>>#" << endl;
-//        ff << "#########################################################################" << endl;
-//    }
-//    TPrintArrays  prarIPM( 70, MULTI_dynamic_fields, ff);
-//    MULTI* pmp = node->pMulti()->GetPM();
-
-//    if( pmp->FIs > 0 && pmp->Ls > 0 )
-//    {
-//      if( _comment )
-//         ff << "\n# Initial data for multicomponent phases (fragment of GEMS3K *IMP.dat input file)"
-//               "\n#    (see the DCH file for the dimension nPHs)";
-//      prarIPM.writeArrayF(  f_sMod, pmp->sMod[0], pmp->FIs, 8L, _comment, brief_mode );
-
-//    long int LsModSum;
-//    long int LsIPxSum;
-//    long int LsMdcSum;
-//    long int LsMsnSum;
-//    long int LsSitSum;
-//    node->pMulti()->getLsModsum( LsModSum, LsIPxSum );
-//    node->pMulti()->getLsMdcsum( LsMdcSum, LsMsnSum, LsSitSum );
-
-//     prarIPM.writeArray(  f_LsMod, pmp->LsMod, pmp->FIs*3, 3L, _comment, brief_mode);
-
-//      if(LsIPxSum )
-//      {
-//       if( _comment )
-//          ff << "\n\n# IPxPH: Index lists (in TSolMod convention) for interaction parameters of non-ideal solutions";
-//       prarIPM.writeArray(  "IPxPH", pmp->IPx,  LsIPxSum);
-//      }
-//      if(LsModSum )
-//       {
-//         if( _comment )
-//            ff << "\n\n# PMc: Tables (in TSolMod convention) of interaction parameter coefficients for non-ideal solutions";
-//        prarIPM.writeArray(  "PMc", pmp->PMc,  LsModSum);
-//       }
-
-//       prarIPM.writeArray(  f_LsMdc, pmp->LsMdc, pmp->FIs*3, 3L, _comment, brief_mode);
-//       if(LsMdcSum )
-//       {   if( _comment )
-//              ff << "\n\n# DMc: Tables (in TSolMod convention) of  parameter coefficients for Dependent Components";
-//        prarIPM.writeArray(  "DMc", pmp->DMc,  LsMdcSum);
-//       }
-//       if(LsMsnSum )
-//       {   if( _comment )
-//              ff << "\n\n# MoiSN:  End member moiety / site multiplicity number tables (in TSolMod convention) ";
-//        prarIPM.writeArray(  "MoiSN", pmp->MoiSN,  LsMsnSum);
-//       }
-//    } // sMod
-//    prarIPM.writeArray(  f_fDQF, pmp->fDQF,  pmp->L, -1L, _comment, brief_mode);
-
-
-//    if( _comment )
-//       ff << "\n\n# This part for the system composition data is taken from the *DBR.dat file\n";
-
-//    // from *DBR.dat
-//    TPrintArrays  prar(f_bSP+1/*52*/, DataBR_fields, ff);
-
-//    ff<< "\n# For fitting T and P parameters in thermobarometry application, give the upper and lower values"
-//         "\n#   corresponding to the interpolation range that you selected when exporting GEMS3K input files ";
-
-//    prar.writeField(f_TK, CNode->TK, _comment, brief_mode  );
-//    prar.writeField(f_P, CNode->P, _comment, brief_mode  );
-//    if( _comment )
-//     {   ff << "\n\n## (4) Data for Independent Components";
-//         prar.writeArrayS(  NULL, CSD->ICNL[0], CSD->nIC, MaxICN );
-//     }
-//    prar.writeArray(  f_bIC,  CNode->bIC, CSD->nICb, -1L,_comment, brief_mode );
-
-//    ff.close();
-//}
-
-
 
 //----------------------------------------------------------------
 // TGfitPath  class implementation

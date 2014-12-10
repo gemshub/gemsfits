@@ -296,7 +296,7 @@ Opt_G0::Opt_G0(vector<string> data, double OptBoundPrc, unsigned &p) :
         {
             out.clear();
             optFP.push_back( new Opt_G0::F_parameter);
-            optFP[optFP.size()-1]->Pndx = -1;
+            optFP[optFP.size()-1]->Pndx = p;
             Pval_to_optF (p, Jdata[i], optFP[optFP.size()-1]);
 
             parse_JSON_object(Jdata[i], keys::DCN, out);
@@ -310,7 +310,7 @@ Opt_G0::Opt_G0(vector<string> data, double OptBoundPrc, unsigned &p) :
             parse_JSON_object(Jdata[i], keys::Rndx, out);
             Rndx = atoi(out[0].c_str()); out.clear();
 //            optRP.push_back( new Opt_G0::R_parameter);
-//            optRP[optRP.size()-1]->Pndx = -1;
+            optRP[Rndx]->Pndx = p;
 
             Pval_to_optR (p, Jdata[i], optRP[Rndx]);
 
@@ -324,7 +324,7 @@ Opt_G0::Opt_G0(vector<string> data, double OptBoundPrc, unsigned &p) :
         {
             out.clear();
             optSP.push_back( new Opt_G0::S_parameter);
-            optSP[optSP.size()-1]->Pndx = -1;
+            optSP[optSP.size()-1]->Pndx = p;
 
             parse_JSON_object(Jdata[i], keys::DCN, out);
             if (out.size() !=1) { cout << "Parameter \"S\"-type " << p << " (G0) has no \"DCN\" defined! "<< endl; exit(1); }
@@ -351,27 +351,27 @@ Opt_G0::Opt_G0(vector<string> data, double OptBoundPrc, unsigned &p) :
 long int Opt_G0::SetIndex_param(TNode *node)
 {
     // index for F type parameters
-    for (unsigned i = 0; i <optFP.size(); i++)
-    {
-        optFP[i]->Pndx = node->DC_name_to_xCH(optFP[i]->Pname.c_str());
-        if (optFP[i]->Pndx < 0)
-        { cout << " Unknown DC name: "<<optFP[i]->Pname<< endl; exit(1);}
-    }
+//    for (unsigned i = 0; i <optFP.size(); i++)
+//    {
+//        optFP[i]->Pndx = node->DC_name_to_xCH(optFP[i]->Pname.c_str());
+//        if (optFP[i]->Pndx < 0)
+//        { cout << " Unknown DC name: "<<optFP[i]->Pname<< endl; exit(1);}
+//    }
 
-    // index for S type parameters
-    for (unsigned i = 0; i <optSP.size(); i++)
-    {
-        optSP[i]->Pndx = node->DC_name_to_xCH(optSP[i]->Pname.c_str());
-        if (optSP[i]->Pndx < 0)
-        { cout << " Unknown DC name: "<<optSP[i]->Pname<< endl; exit(1);}
-    }
+//    // index for S type parameters
+//    for (unsigned i = 0; i <optSP.size(); i++)
+//    {
+//        optSP[i]->Pndx = node->DC_name_to_xCH(optSP[i]->Pname.c_str());
+//        if (optSP[i]->Pndx < 0)
+//        { cout << " Unknown DC name: "<<optSP[i]->Pname<< endl; exit(1);}
+//    }
 
     // index for R type parameters
     for (unsigned i = 0; i <optRP.size(); i++)
     {
-        optRP[i]->Pndx = node->DC_name_to_xCH(optRP[i]->Pname.c_str());
-        if (optRP[i]->Pndx < 0)
-        { cout << " Unknown DC name: "<<optRP[i]->Pname<< endl; exit(1);}
+//        optRP[i]->Pndx = node->DC_name_to_xCH(optRP[i]->Pname.c_str());
+//        if (optRP[i]->Pndx < 0)
+//        { cout << " Unknown DC name: "<<optRP[i]->Pname<< endl; exit(1);}
 
         for (unsigned s = 0; s < optRP[i]->rdc_species.size(); s++)
         {
