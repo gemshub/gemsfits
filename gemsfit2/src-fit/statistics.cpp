@@ -61,7 +61,7 @@ statistics::statistics(TGfitTask *gfittask, double Weighted_Tfun_sum_of_residual
     Weighted_Tfun_sum_of_residuals 		= Weighted_Tfun_sum_of_residuals_;
 
     //
-    for (int i=0; i<number_of_measurements; ++i)
+    for (unsigned int i=0; i<number_of_measurements; ++i)
     {
         Tfun_sum_of_residuals += gfittask->Tfun_residuals_v[i];                         // sum residuals of the minimized function without weight
          Abs_sum_of_residuals += fabs(gfittask->residuals_v[i]);                        // sum of the absolute value of residuals
@@ -102,7 +102,7 @@ cout<<" Statistics Constructor: number_of_parameters: "<<number_of_parameters<<e
 
 
     // Compute standard deviation of residuals
-    for (int i=0; i<number_of_measurements; i++)
+    for (unsigned int i=0; i<number_of_measurements; i++)
     {
 Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
         Abs_mean_res += fabs(gfittask->residuals_v[i]);
@@ -121,7 +121,7 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
     Weighted_SD_of_residuals = 0.0;
              SD_of_residuals = 0.0;
 
-    for (int i=0; i<number_of_measurements; i++)
+    for (unsigned int i=0; i<number_of_measurements; i++)
     {
         Weighted_TF_SD_of_residuals += pow((gfittask->Weighted_Tfun_residuals_v[i]-Weighted_TF_mean_res),2);
                 Abs_SD_of_residuals += pow((fabs(gfittask->residuals_v[i])-Abs_mean_res),2);
@@ -283,14 +283,14 @@ void statistics::get_stat_param()
 void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 {
     // Variable declarations
-    int i;
+    unsigned int i;
     double mean = 0.;
     double ResSumSquares = 0., TotalSumSquares = 0.;
 //    double Nom_CC = 0.0, Dnom_CC = 0.0;
-    double Correlation_coef = 0.0;
+//    double Correlation_coef = 0.0;
 //    double Res = 0.;
     double m2 = 0., m3 = 0., m4 = 0.;
-    double sqrtb1, b2, Y, beta2_sqrtb1, W2, delta, alpha, Z_sqrtb1, E_b2, Var_b2, x, sqrt_beta1_b2, A, Z_b2, K2, K2test;
+    double sqrtb1, b2, Y, beta2_sqrtb1, W2, delta, alpha, Z_sqrtb1, E_b2, Var_b2, x, sqrt_beta1_b2, A, Z_b2, K2/*, K2test*/;
     vector<double> percentiles_v;
     vector<double> quantiles_v;
 //    vector<double> abs_residuals_v;
@@ -336,7 +336,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 
     for (unsigned e =0; e < gfittask->Opti->optParam.size(); e++)
     {
-        for (unsigned i=0; i<gfittask->Opti->optParam[e]->Get_optRPsize(); ++i)
+        for ( i=0; i<gfittask->Opti->optParam[e]->Get_optRPsize(); ++i)
         {
             fitparam.push_back(new parameters);
             fitparam[np+i]->Ptype = gfittask->Opti->optParam[e]->Get_optType();
@@ -425,7 +425,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     sort( gfittask->residuals_v.begin(), gfittask->residuals_v.end() );
     sort(weighted_residuals.begin(), weighted_residuals.end());
 
-    int N = (int) gfittask->residuals_v.size();
+    unsigned int N = (int) gfittask->residuals_v.size();
 
     // Compute percentile
     for( i=0; i< N; i++ )
@@ -447,7 +447,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         sum2 += e0(i)*e0(i);
         sum3 += tau(i)*tau(i);
     }
-    Correlation_coef = (sum1*sum1)/(sum2*sum3);
+//    Correlation_coef = (sum1*sum1)/(sum2*sum3);
 
     // Rank-based z-scores
     for( i=0; i< N; i++ )
@@ -485,7 +485,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 
     gpf->fqq << endl;
     bool waswritten = false;
-    for( int j=0; j<  N;  j++ )
+    for( unsigned int j=0; j<  N;  j++ )
     {
         j--;
         gpf->fqq << gfittask->experiments[exp]->sample << ",";
@@ -597,10 +597,10 @@ if( W2 < 1.)  // workaround to suppress nan() and zdiv crash
 
 
     // Create chi-squared distribution object
-    if(W2 != 1){
-    boost::math::chi_squared chi_dist( 2 );
+//    if(W2 != 1){
+//    boost::math::chi_squared chi_dist( 2 );
     // 1 - cumulative distribution function
-    K2test = 1 - boost::math::cdf( chi_dist, K2 );}
+//    K2test = 1 - boost::math::cdf( chi_dist, K2 );}
 
 
     // Write first statistcs to file
@@ -1100,7 +1100,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
     if( gpf->fmc.fail() )
     { cout<<"Fit Monte Carlo fileopen error"<<endl; exit(1); }
 
-    int n_Rparam = 0;
+    unsigned int n_Rparam = 0;
     for (unsigned e = 0; e<gfittask->Opti->optParam.size(); e++)
     {
         n_Rparam += gfittask->Opti->optParam[e]->Get_optRPsize();
@@ -1145,7 +1145,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
                     boost::uniform_int<> interval ( 0 ,  objfun_stat[j]->exp_dataset[d].residuals.size()-1 );
                     boost::variate_generator< RNGType, boost::uniform_int<> >
                                   dice(rng, interval);
-                    for ( int r = 0; r < objfun_stat[j]->exp_dataset[d].residuals.size(); r++ )
+                    for ( unsigned int r = 0; r < objfun_stat[j]->exp_dataset[d].residuals.size(); r++ )
                     {
                         int x  = dice();
                         // the residual will be de-normalized when added to the scatter vector in the MC runs
@@ -1435,7 +1435,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
 void statistics::print_param()
 {
 
-    int nrcor = 0;
+    unsigned int nrcor = 0;
     gpf->fparam.open(gpf->FITparamFile().c_str(), ios::trunc);
     if( gpf->fparam.fail() )
     { cout<<"Fit parameters fileopen error"<<endl; exit(1); }

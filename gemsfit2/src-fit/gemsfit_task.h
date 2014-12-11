@@ -132,7 +132,7 @@ public:
     vector<int> EXPndx, COMPndx, PHndx, PHPndx, PAndx, NEFndx;
     struct vect
     {
-       vector<int> ndx;
+       vector<unsigned int> ndx;
     };
     vector<vect*> vPAndx, vEAndx; // keeps the indexes of the parameters (optPF, optPL, etc) and vector optNFParam when paralelized
 
@@ -173,7 +173,7 @@ public:
             };
             rslts results;
             bool isComputed;
-            double SumWTFun = 0.0;
+            double SumWTFun /*= 0.0*/;
         };
         vector<obj_fun> objfun;
         vector<obj_fun> nestfun;

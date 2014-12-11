@@ -79,6 +79,9 @@ void optimization::get_nlopt_param()
     GEMSsys = gpf->GEMS3LstFilePath();
 
     parse_JSON_object(s, keys::OptParameters[mode], out);
+    if (out.size() == 0) {cout << "Error: No keyword for \""
+                               <<keys::OptParameters[mode]<<"\" found in the task definition"
+                               << endl; exit(1);}
     OptParameters = out;
     out.clear();
 

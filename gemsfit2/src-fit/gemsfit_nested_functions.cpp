@@ -139,7 +139,7 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, 
     double residual = 0.0;
     int P_id = omp_get_thread_num();
     long int NodeStatusCH;
-    bool notP = true, notT=true;
+//    bool notP = true, notT=true;
     int op = 0;
 
     /// error think about a way to store the indexes of the nfun parameters

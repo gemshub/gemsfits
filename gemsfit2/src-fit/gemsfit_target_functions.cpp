@@ -404,7 +404,7 @@ double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::ob
     parser.SetVarFactory(AddVariable, &varStr);
     parser.GetUsedVar();
 
-    for (int d = 0; d < varStr.size(); d++)
+    for (unsigned int d = 0; d < varStr.size(); d++)
     {
         if ((ccPH == *keys::aq) && (PHndx >=0))
         {
@@ -417,7 +417,7 @@ double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::ob
         }
     }
 
-    for (int d = 0; d < varStr.size(); d++)
+    for (unsigned int d = 0; d < varStr.size(); d++)
     {
         parser.DefineVar(varStr[d], &varDbl[d]);
     }
@@ -581,13 +581,13 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
 
         int DCndx = -1;
 
-        for (int d = 0; d < varStr.size(); d++)
+        for (unsigned int d = 0; d < varStr.size(); d++)
         {
             DCndx = sys->NodT[i]->DC_name_to_xCH(varStr[d].c_str());
             varDbl.push_back(sys->NodT[i]->Get_cDC(DCndx));
         }
 
-        for (int d = 0; d < varStr.size(); d++)
+        for (unsigned int d = 0; d < varStr.size(); d++)
         {
             parser.DefineVar(varStr[d], &varDbl[d]);
         }
@@ -596,8 +596,8 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
     } else
     if ((objfun.exp_CN == keys::Gex ) && (PHndx >=0))  // functionality added by DK on 03.01.2014
     {
-            double Gex = 0., gam_dc, x_dc, test =0.;
-            long int jc;
+            double Gex = 0./*, gam_dc, x_dc, test =0.*/;
+//            long int jc;
 
             computed_value = 0.;
             DC0ndx = sys->NodT[i]->PhtoDC_DBR( PHndx, nDCinPH );

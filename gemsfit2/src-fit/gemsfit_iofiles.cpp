@@ -105,15 +105,16 @@ cout << "Finished writing the input specification file template" << endl;
 
 void generateBson(bson &bson_task_file,TNode *node, int mode)
 {
-    int Np = 0, NG0p = 0, NG0PH = 0, Nip = 0, Ncoef = 0, G0ndx=0, PMCndx = 0, DMCndx = 0, nIC, nDC, nPS, nPH, DCndx = -1; long int nDCinPH;
+    unsigned int Np = 0, NG0p = 0, NG0PH = 0, Nip = 0, Ncoef = 0, G0ndx=0, PMCndx = 0, DMCndx = 0, /*nIC,*//* nDC,*/ nPS, nPH; long int nDCinPH;
+    int DCndx = -1;
     double temp = 0.0;
     stringstream ss; string sss, ipcn, dcipcn;
     bson_init(&bson_task_file);
 
     DATACH* dCH = node->pCSD();
 
-    nIC = dCH->nIC;	// nr of independent components
-    nDC = dCH->nDC;	// nr of dependent components
+//    nIC = dCH->nIC;	// nr of independent components
+//    nDC = dCH->nDC;	// nr of dependent components
     nPS = dCH->nPS;
     nPH = dCH->nPH;
 
@@ -126,26 +127,6 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
     bson_append_string(&bson_task_file, keys::DTarget[mode], "");
 
     bson_append_start_array(&bson_task_file, keys::OptParameters[mode]);
-
-
-//    // Write G0 parameters
-//    bson_append_start_array(&bson_task_file, keys::G0[mode]);
-//    for (unsigned i = 0; i < nDC; i++)
-//    {
-//        ss << Np;
-//        sss = ss.str();
-//        ss.str("");
-//        bson_append_start_object(&bson_task_file, sss.c_str());
-//        {
-//            bson_append_string(&bson_task_file, keys::DCN_[mode], node->xCH_to_DC_name(i));
-//            bson_append_string(&bson_task_file, keys::PType[mode], "S");
-//            bson_append_double(&bson_task_file, keys::IV[mode], node->DC_G0(i, 100000, 25 + 273.15, false));
-//        }
-//        bson_append_finish_object(&bson_task_file);
-//        Np++;
-//    }
-//    bson_append_finish_array(&bson_task_file);
-//    Np = 0;
 
     // Write interaction parameters
     long int *LsMod = node->Get_LsMod();

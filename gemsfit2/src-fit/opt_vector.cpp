@@ -208,6 +208,7 @@ long int OptParameter::Get_Fparam(int ndx, int &Fndx, int &Pndx, double &Pval, d
     Pval = optFP[ndx]->opt;
     Ub   = optFP[ndx]->UB;
     Lb   = optFP[ndx]->LB;
+    return 1;
 }
 
 long int OptParameter::Get_Fparam(int ndx, int exp, int &Fndx, int &Pndx, double &Pval, double &Ub, double &Lb)
@@ -217,6 +218,7 @@ long int OptParameter::Get_Fparam(int ndx, int exp, int &Fndx, int &Pndx, double
     Pval = optFP[ndx]->EVv[exp];
     Ub   = optFP[ndx]->UB;
     Lb   = optFP[ndx]->LB;
+    return 1;
 }
 
 double OptParameter::Get_Fparam(int ndx, int exp )
@@ -380,6 +382,7 @@ long int Opt_G0::SetIndex_param(TNode *node)
             { cout << " Unknown DC name: "<<optRP[i]->rdc_species[optRP[i]->rdc_species_ind.size()-1]<< endl; exit(1);}
         }
     }
+    return 1;
 }
 
 long int Opt_G0::Set_logKTP(TNode *node, vector<double> TP_pairs[2] )
@@ -423,12 +426,13 @@ long int Opt_G0::Set_logKTP(TNode *node, vector<double> TP_pairs[2] )
         }
         h_logK = false;
     }
-
+    return 1;
 }
 
 long int Opt_G0::Set_logKTP(int RPndx, double logK  )
 {
     optRP[RPndx]->logK_TPpairs.push_back(logK);
+    return 1;
 }
 
 long int Opt_G0::Adjust_param(TNode *node, vector<double> opt)
@@ -445,7 +449,7 @@ long int Opt_G0::Adjust_param(TNode *node, vector<double> opt)
     {
         Adjust_Rparam( node, *optRP[i] );
     }
-
+ return 1;
 }
 
 long int Opt_G0::Adjust_Fparam(TNode *node, int Pndx, double Pval)
@@ -464,6 +468,7 @@ long int Opt_G0::Adjust_Fparam(TNode *node, int Pndx, double Pval)
         node->Set_DC_G0(species_index, TP_pairs[1][j]*100000, TP_pairs[0][j]+273.15, new_GTP);
     }
     node->Set_DC_G0(species_index, 1e+05, 298.15, Pval);
+    return 1;
 }
 
 long int Opt_G0::Adjust_Sparam(TNode *node)
@@ -472,7 +477,7 @@ long int Opt_G0::Adjust_Sparam(TNode *node)
     {
         Adjust_Fparam(node, optSP[i]->Pndx, optSP[i]->opt);
     }
-
+return 1;
 }
 
 long int Opt_G0::Adjust_Rparam(TNode *node , OptParameter::R_parameter &optR)
@@ -558,6 +563,7 @@ long int Opt_G0::Adjust_Rparam(TNode *node , OptParameter::R_parameter &optR)
 
         }
     }
+    return 1;
 }
 
 
@@ -628,12 +634,13 @@ long int Opt_PMc::Adjust_param(TNode *node, vector<double> opt)
     }
 
     // R param
-
+return 1;
 }
 
 long int Opt_PMc::Adjust_Fparam(TNode *node, int Pndx, double Pval)
 {
     node->Set_PMc(Pval, Pndx);
+    return 1;
 }
 
 long int Opt_PMc::Adjust_Sparam(TNode *node)
@@ -642,7 +649,7 @@ long int Opt_PMc::Adjust_Sparam(TNode *node)
     {
         Adjust_Fparam(node, optSP[i]->Pndx, optSP[i]->opt);
     }
-
+return 1;
 }
 
 
@@ -710,12 +717,13 @@ long int Opt_DMc::Adjust_param(TNode *node, vector<double> opt)
     }
 
     // R param
-
+return 1;
 }
 
 long int Opt_DMc::Adjust_Fparam(TNode *node, int Pndx, double Pval)
 {
     node->Set_DMc(Pval, Pndx);
+    return 1;
 }
 
 long int Opt_DMc::Adjust_Sparam(TNode *node)
@@ -724,7 +732,7 @@ long int Opt_DMc::Adjust_Sparam(TNode *node)
     {
         Adjust_Fparam(node, optSP[i]->Pndx, optSP[i]->opt);
     }
-
+return 1;
 }
 
 
@@ -825,7 +833,7 @@ long int Opt_bIC::SetIndex_param(TNode *node)
             }
         }
     }
-
+return 1;
 }
 
 long int Opt_bIC::SetIVvEVvDelta(TNode *node)
@@ -849,12 +857,13 @@ long int Opt_bIC::SetIVvEVvDelta(TNode *node)
         optFP[i]->IVv.push_back(node->Get_bIC(optFP[i]->Pndx));
         optFP[i]->EVv.push_back(node->Get_bIC(optFP[i]->Pndx));
     }
-
+return 1;
 }
 
 long int Opt_bIC::Adjust_Fparam(TNode *node, int Pndx, double Pval)
 {
     node->Set_bIC(Pndx, Pval );
+    return 1;
 }
 
 long int Opt_bIC::Adjust_Lparam(TNode *node, int exp )
@@ -877,6 +886,7 @@ long int Opt_bIC::Adjust_Lparam(TNode *node, int exp )
             optLP[i]->EVv[exp] = new_param;
         }
     }
+    return 1;
 }
 
 string Opt_bIC::Print_param( )
@@ -953,6 +963,7 @@ long int Opt_Tk::SetIndex_param( )
     {
         optFP[i]->Pndx = -1;
     }
+    return 1;
 }
 
 long int Opt_Tk::SetIVvEVvDelta( TNode *node)
@@ -962,11 +973,13 @@ long int Opt_Tk::SetIVvEVvDelta( TNode *node)
         optFP[i]->IVv.push_back(node->Get_TK( ));
         optFP[i]->EVv.push_back(node->Get_TK());
     }
+    return 1;
 }
 
 long int Opt_Tk::Adjust_Fparam (TNode *node, int Pndx, double Pval)
 {
     node->Set_Tk( Pval );
+    return 1;
 }
 
 string Opt_Tk::Print_param( )
@@ -1034,6 +1047,7 @@ long int Opt_P::SetIndex_param( )
     {
         optFP[i]->Pndx = -1;
     }
+    return 1;
 }
 
 long int Opt_P::SetIVvEVvDelta( TNode *node)
@@ -1043,11 +1057,13 @@ long int Opt_P::SetIVvEVvDelta( TNode *node)
         optFP[i]->IVv.push_back(node->Get_P() / 100000);
         optFP[i]->EVv.push_back(node->Get_P() / 100000);
     }
+    return 1;
 }
 
 long int Opt_P::Adjust_Fparam (TNode *node, int Pndx, double Pval)
 {
     node->Set_P( Pval * 100000 );
+    return 1;
 }
 
 string Opt_P::Print_param( )

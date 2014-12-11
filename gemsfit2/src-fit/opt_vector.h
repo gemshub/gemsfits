@@ -132,7 +132,7 @@ class OptParameter
         virtual ~OptParameter();
 
 
-        virtual long int Set_param(vector<double> opt, unsigned &p)
+        virtual long int Set_param( )
         {
             return 0;
         };
@@ -157,12 +157,12 @@ class OptParameter
             return 0;
         };
 
-        virtual long int Adjust_Sparam(TNode *node )
+        virtual long int Adjust_Sparam(TNode *node)
         {
             return 0;
         };
 
-        virtual long int Adjust_Lparam(TNode *node, int exp )
+        virtual long int Adjust_Lparam(TNode *node, int exp)
         {
             return 0;
         };

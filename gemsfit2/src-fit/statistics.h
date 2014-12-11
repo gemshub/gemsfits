@@ -77,8 +77,8 @@ class statistics
         double R2;
         double min_res, max_res;
         double SumWTFun;
-        int nr_pos_res, nr_neg_res;
-        int nr;
+        unsigned int nr_pos_res, nr_neg_res;
+        unsigned int nr;
         bool isComputed;
 
         struct expdataset
@@ -117,7 +117,7 @@ class statistics
     /// number of parameters of the last regression (length of optimization vector)
     int number_of_parameters;
     /// number of measurements invoilved in the parameter regression
-    int number_of_measurements;
+    unsigned int number_of_measurements;
     /// Number of evaluations points per parameter for sensitivity evaluation
     int sensitivity_points;
     /// number of bars which will be used to generate the Histogram from the Monte Carlo runs (for generation of confidence intervals)
@@ -129,7 +129,7 @@ class statistics
 
     // Number of Monte Carlo evaluations for confidence interval evaluation
     /// Number of Monte Carlo runs for confidence interval evaluation
-    int num_of_MC_runs;
+    unsigned int num_of_MC_runs;
 
     // Computed parameters
     /// standard deviation of residuals

@@ -117,7 +117,7 @@ public:
 
     int KeysNdx;
 
-    int sizeTP = 0;
+    int sizeTP;
 
     TGfitPath(int argc, char* argv[]);
     ~TGfitPath();

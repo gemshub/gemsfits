@@ -313,7 +313,7 @@ void tsolmod_wrap( double &residual, const std::vector<double> &opt, TGfitTask *
 
         TMulti *multi = sys->NodT[i]->pMulti();
 
-        int sizeFIs = multi->get_sizeFIs();
+        unsigned int sizeFIs = multi->get_sizeFIs();
 
         for (unsigned j=0; j<sizeFIs; j++)
         {

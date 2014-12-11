@@ -54,6 +54,7 @@
 Data_Manager::Data_Manager( )
 {
     mode = gpf->KeysNdx;
+    h_datasetlist = false;
     // Read parameters for database connection
     gpf->flog << "02. data_manager.cpp(51). Reading database parameter get_db_specs(); " << endl;
     get_db_specs_txt();
@@ -154,38 +155,6 @@ void Data_Manager::check_Syn()
     {
         for (unsigned i = 0; i < experiments.size(); i++)
         {
-            // L_KC
-//            for (unsigned lkc = 0; lkc < experiments[i]->L_KC.size(); lkc++)
-//            {
-//                bool check = false;
-//                for (unsigned s = 0; s < SynPHs[p].syn.size(); s++)
-//                {
-//                    if ((experiments[i]->L_KC[lkc]->type == keys::phase) && (experiments[i]->L_KC[lkc]->name == SynPHs[p].syn[s]))
-//                        check = true;
-//                    if (check)
-//                    {
-//                        experiments[i]->L_KC[lkc]->name = SynPHs[p].GemsName;
-//                        check = false; break;
-//                    }
-//                }
-//            }
-
-//            // U_KC
-//            for (unsigned ukc = 0; ukc < experiments[i]->U_KC.size(); ukc++)
-//            {
-//                bool check = false;
-//                for (unsigned s = 0; s < SynPHs[p].syn.size(); s++)
-//                {
-//                    if ((experiments[i]->U_KC[ukc]->type == keys::phase) && (experiments[i]->U_KC[ukc]->name == SynPHs[p].syn[s]))
-//                        check = true;
-//                    if (check)
-//                    {
-//                        experiments[i]->U_KC[ukc]->name = SynPHs[p].GemsName;
-//                        check = false; break;
-//                    }
-//                }
-//            }
-
             // phase name
             for (unsigned ep = 0; ep < experiments[i]->expphases.size(); ep++)
             {
@@ -202,8 +171,6 @@ void Data_Manager::check_Syn()
                     }
                 }
             }
-
-            // DC
 
             // DCs
             for (unsigned d = 0; d < SynPHs[p].SynDCs.size(); d++)
@@ -227,39 +194,6 @@ void Data_Manager::check_Syn()
                         }
                     }
                 }
-
-
-                // L_KC
-//                for (unsigned lkc = 0; lkc < experiments[i]->L_KC.size(); lkc++)
-//                {
-//                    bool check = false;
-//                    for (unsigned s = 0; s < SynPHs[p].SynDCs[d].syn.size(); s++)
-//                    {
-//                        if ((experiments[i]->L_KC[lkc]->type == keys::DC) && (experiments[i]->L_KC[lkc]->name == SynPHs[p].SynDCs[d].syn[s]))
-//                            check = true;
-//                        if (check)
-//                        {
-//                            experiments[i]->L_KC[lkc]->name = SynPHs[p].SynDCs[d].GemsName;
-//                            check = false; break;
-//                        }
-//                    }
-//                }
-
-//                // U_KC
-//                for (unsigned ukc = 0; ukc < experiments[i]->U_KC.size(); ukc++)
-//                {
-//                    bool check = false;
-//                    for (unsigned s = 0; s < SynPHs[p].SynDCs[d].syn.size(); s++)
-//                    {
-//                        if ((experiments[i]->U_KC[ukc]->type == keys::DC) && (experiments[i]->U_KC[ukc]->name == SynPHs[p].SynDCs[d].syn[s]))
-//                            check = true;
-//                        if (check)
-//                        {
-//                            experiments[i]->U_KC[ukc]->name = SynPHs[p].SynDCs[d].GemsName;
-//                            check = false; break;
-//                        }
-//                    }
-//                }
             }
         }
     }
@@ -343,18 +277,31 @@ void Data_Manager::get_db_specs_txt()
         parse_JSON_object(s, keys::DBPath[1], out);
      mode = 1; gpf->KeysNdx = 1;
     }
+    if (out.size() == 0) {cout << "Error: No keyword for \""
+                               <<keys::DBPath[0]<<"\" or \""
+                               <<keys::DBPath[1]<<"\" found in the task definition"
+                               << endl; exit(1);}
     DBname = out[0];
     out.clear();
 
     parse_JSON_object(s, keys::DBColl[mode], out);
+    if (out.size() == 0) {cout << "Error: No keyword for \""
+                               <<keys::DBColl[mode]<<"\" found in the task definition"
+                               << endl; exit(1);}
     collection = out[0];
     out.clear();
 
     parse_JSON_object(s, keys::DSelect[mode], out);
+    if (out.size() == 0) {cout << "Error: No keyword for \""
+                               <<keys::DSelect[mode]<<"\" found in the task definition"
+                               << endl; exit(1);}
     DataSelect = out[0];
     out.clear();
 
     parse_JSON_object(s, keys::DTarget[mode], out);
+    if (out.size() == 0) {cout << "Error: No keyword for \""
+                               <<keys::DTarget[mode]<<"\" found in the task definition"
+                               << endl; exit(1);}
     DataTarget = out[0];
     out.clear();
 
@@ -363,6 +310,9 @@ void Data_Manager::get_db_specs_txt()
     out.clear();
 
     parse_JSON_object(s, keys::G3Ksys[mode], out);
+    if (out.size() == 0) {cout << "Error: No keyword for \""
+                               <<keys::G3Ksys[mode]<<"\" found in the task definition"
+                               << endl; exit(1);}
     gpf->setGEMS3LstFilePath(out[0].c_str());
     out.clear();
 
@@ -375,6 +325,9 @@ void Data_Manager::get_db_specs_txt()
     out.clear();
 
     parse_JSON_object(s, keys::OptSet[mode], out);
+    if (out.size() == 0) {cout << "Error: No keyword for \""
+                               <<keys::OptSet[mode]<<"\" found in the task definition"
+                               << endl; exit(1);}
     parse_JSON_object(out[0], keys::MPI[mode], out2);
     MPI = atoi(out2[0].c_str());
     out2.clear();
@@ -385,7 +338,7 @@ void Data_Manager::get_db_specs_txt()
 // Reading data from EJDB database
 void Data_Manager::get_EJDB( )
 {
-    typedef vector<int>     int_v;
+//    typedef vector<int>     int_v;
     typedef vector<double>  double_v;
     typedef vector<string>  string_v;
     json_t *root;
@@ -393,7 +346,7 @@ void Data_Manager::get_EJDB( )
 
     string_v out, out2, usesample, skipsample, usedataset, skipdataset, skippdatasets,skippsamples, usepdatasets, usepsamples, SA, DS ;
     double_v qsT, qsP, WT;
-    int Nsamples = 0 , Ndatasets = 0;
+    unsigned int Nsamples = 0 , Ndatasets = 0;
 
     stringstream ss;
     string sss;

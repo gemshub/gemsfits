@@ -97,7 +97,7 @@ public:
     vector<string> OptParameters;
     string NFunParameters;
     string GEMSsys;
-    int mode=-1;
+    int mode;
     /// number of threads for parallel execution
 //    int OptThreads;
     ///

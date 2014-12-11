@@ -109,7 +109,7 @@ class Data_Manager : public TNode
         string DataLogK;
         vector<string> LogK;
         string DataSyn;
-        double h_datasetlist = false;
+        double h_datasetlist;
 
         int MPI; /// number of paralele threads
 
@@ -133,22 +133,6 @@ class Data_Manager : public TNode
                 string Punit;
                 double sV;                  /// (system) volume of experimental sample
                 string Vunit;
-
-//                struct Uconstraints
-//                {
-//                    string type;
-//                    string name;
-//                    double Qnt;
-//                };
-//                vector<Uconstraints*> U_KC;
-
-//                struct Lconstraints
-//                {
-//                    string type;
-//                    string name;
-//                    double Qnt;
-//                };
-//                vector<Lconstraints*> L_KC;
 
                 // defines bulk composition of chemical system for this experiment 2nd level in EJDB
                 struct components

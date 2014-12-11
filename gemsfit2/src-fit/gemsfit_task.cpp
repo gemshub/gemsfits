@@ -445,14 +445,13 @@ void TGfitTask::setnodes()
 {
     unsigned int n, i, j, k, l;
     // DATACH structure content
-    int nIC, nDC, nPH, ICndx, DCndx, PHndx;
+    unsigned int nIC, nDC, nPH,  DCndx, PHndx;
     long int NodeStatusCH, NodeHandle;
     double P_pa, T_k/*, PMc*/;
     double* new_moles_IC;
     double* xDC_up;
     double* xDC_lo;
     double* Ph_surf;
-    bool salt = false;
     double h2o_kgamount = 0.0;
     char (*DCNL)[16];
 
@@ -538,40 +537,6 @@ void TGfitTask::setnodes()
                 }
             }
         }
-
-//        if (experiments.at(n)->U_KC.size() > 0)
-//        {
-//            for (i=0; i<experiments.at(n)->U_KC.size(); ++i)
-//            {
-//                if (experiments.at(n)->U_KC[i]->type == keys::DC)
-//                {
-//                    DCndx = NodT[n]->DC_name_to_xDB(experiments.at(n)->U_KC[i]->name.c_str());
-//                    if (DCndx < 0)
-//                    {
-//                        cout << "The DC name ("<<experiments.at(n)->U_KC[i]->name.c_str()<<") for the metastability constraint present in the database is different form the one in the exported GEMS3K files! " << endl;
-//                        exit (1);
-//                    }
-//                    xDC_up[DCndx] = experiments.at(n)->U_KC[i]->Qnt;
-//                } // else phase metastability constraints
-//            }
-//        }
-
-//        if (experiments.at(n)->L_KC.size() > 0)
-//        {
-//            for (i=0; i<experiments.at(n)->L_KC.size(); ++i)
-//            {
-//                if (experiments.at(n)->L_KC[i]->type == keys::DC)
-//                {
-//                    DCndx = NodT[n]->DC_name_to_xDB(experiments.at(n)->L_KC[i]->name.c_str());
-//                    if (DCndx < 0)
-//                    {
-//                        cout << "The DC name ("<<experiments.at(n)->U_KC[i]->name.c_str()<<") for the metastability constraint present in the database is different form the one in the exported GEMS3K files! " << endl;
-//                        exit (1);
-//                    }
-//                    xDC_lo[DCndx] = experiments.at(n)->L_KC[i]->Qnt;
-//                } // else phase metastability constraints
-//            }
-//        }
 
         // Surface areas of phases -> kinetics
         for( i=0; i<nPH; i++ )
@@ -956,6 +921,7 @@ void TGfitTask::get_DataTarget ( )
         Tfun->objfun[i].TuWeight = 1;
         Tfun->objfun[i].weight = 1;
         Tfun->objfun[i].isComputed = false;
+        Tfun->objfun[i].SumWTFun = 0.0;
 
         parse_JSON_object(out[i], keys::EPH[mode], out2);
         if (out2.size() == 0) { cout << "Phase name has to be specified in Data Target->OFUN->EPH!"<< endl; exit(1);} // ERROR
@@ -1144,7 +1110,7 @@ void TGfitTask::set_logK_TPpairs()
 
 void TGfitTask::set_logK_TPpairs(vector<string> logK)
 {
-    int size = 0;
+    unsigned int size = 0;
     int l = 0;
     for (unsigned e=0; e <Opti->optParam.size(); e++)
     {
@@ -1205,7 +1171,7 @@ void TGfitTask::set_DH_Helgeson (int n)
         NodT[n]->EpsArrayH2Ow(Ppa, Tk, EpsW);
     }
 
-    for (int j=0; j<experiments[n]->sbcomp.size(); ++j)
+    for (unsigned int j=0; j<experiments[n]->sbcomp.size(); ++j)
     {
         double amount = 0.0;
         if (experiments[n]->sbcomp[j]->comp == "NaCl")
@@ -1265,7 +1231,7 @@ void TGfitTask::set_DH_Helgeson (int n)
     Gf = Gfunction(RhoW[0], Tk-273.15, Ppa / 100000);
 
     TotAmount = 0.0; Wbgama = 0.0; Wao = 0.0;
-    for (int j = 0; j < SaltIndex.size(); j++)
+    for (unsigned int j = 0; j < SaltIndex.size(); j++)
     {
         bgama = 0.0; ao = 0.0;
 
@@ -1308,7 +1274,7 @@ double TGfitTask::BgammaTP(int flag, TNode *node, double Gf, double EpsW)
     // ni: stoichiometric number of moles of ions in one mole of electrolyte
     // rc, ra: radius of cation and anion, respectively at 298 K/1 bar
     // units are cal, kg, K, mol, bar
-    double ni, nc, na, zc, za, rc, ra, a1, a2, a3, a4, a5, c1, c2, omg, bg, bs, bh, rec, rea,
+    double ni, nc, na, zc, za, rc, ra, a1, a2, a3, a4, a5, c1, c2, omg, bg, bs, /*bh,*/ rec, rea,
             omgpt, nbg;
     double eps, eta, bgam;
 
@@ -1353,7 +1319,7 @@ double TGfitTask::BgammaTP(int flag, TNode *node, double Gf, double EpsW)
     }
 
     // calculation part
-    bh = bg + (298.15)*bs;
+//    bh = bg + (298.15)*bs;
     rec = rc + fabs(zc)*(0.94+Gf);
     rea = ra + fabs(za)*Gf;
 
