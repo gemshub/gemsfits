@@ -121,7 +121,7 @@ int main( int argc, char *argv[] )
     TGfitTask* gfittask = new TGfitTask();
 
     // if optimization with statistics, without statistics or >2 only statistics
-    if (gfittask->Opti->OptDoWhat < 2)
+    if (gfittask->Opti->OptDoWhat > 0)
     {
         // ++++++++++ RUN OPTIMIZATION ++++++++++ //
         gfittask->run_optim();
@@ -143,7 +143,7 @@ int main( int argc, char *argv[] )
         // perform basic statistical analysis
         stat.basic_stat( gfittask->Opti->optv, gfittask );
 
-        if( gfittask->Opti->OptDoWhat != 1 )
+        if( gfittask->Opti->OptDoWhat != 2 )
         {
             stat.sensitivity_correlation( gfittask->Opti->optv, gfittask );
         }

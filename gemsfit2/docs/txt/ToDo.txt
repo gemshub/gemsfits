@@ -116,13 +116,13 @@ csvtoejdb documentation:
   and those for task mode - in gfshell-taskmode.html and/or in gemsfit-useref.html.
 - To think/model the directory structure for the GEMSFITS installer (linux, windows) incl. test
 
-- rework the upper and lower metastability constraints to be inside the phase or DC data structure, now on the same level as phases
++ rework the upper and lower metastability constraints to be inside the phase or DC data structure, now on the same level as phases
   !!! Important to make appropriate changes in check_Syn() function to add if phhase name and DC name is the same as in experiment.
-- change how upper/lower metastability constraints are read-in and stored in the database i.e. phase.aq_gen.UMC.Q or phase.aq_gen.UMC
++ change how upper/lower metastability constraints are read-in and stored in the database i.e. phase.aq_gen.UMC.Q or phase.aq_gen.UMC
   phase.aq_gen.DC.SiO2@.UMC.Q or phase.aq_gen.DC.SiO2@.UMC 
 
-- there is a problem with reaction constrined G0 parameters if one DC has the same name in two phases. If this is present in the reactants list
-  now gemsfits will take the index of the DC form the first phase it is present. 
+- there is a problem with reaction constrained G0 parameters if one DC has the same name in two phases. If this DC is present in the reactants list
+  now gemsfits will take the index of the DC from the first phase it is present in. 
 
 
 Future
