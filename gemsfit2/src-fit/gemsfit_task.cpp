@@ -443,9 +443,9 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
 
 void TGfitTask::setnodes()
 {
-    unsigned int n, i, j;
+    unsigned int n, i, j, k, l;
     // DATACH structure content
-    int nIC, nDC, nPH, ICndx, DCndx/*, PHndx*/;
+    int nIC, nDC, nPH, ICndx, DCndx, PHndx;
     long int NodeStatusCH, NodeHandle;
     double P_pa, T_k/*, PMc*/;
     double* new_moles_IC;
@@ -454,6 +454,7 @@ void TGfitTask::setnodes()
     double* Ph_surf;
     bool salt = false;
     double h2o_kgamount = 0.0;
+    char (*DCNL)[16];
 
 
 #ifdef useomp
@@ -486,6 +487,7 @@ void TGfitTask::setnodes()
         nIC = dCH->nIC;	// nr of independent components
         nDC = dCH->nDC;	// nr of dependent components
         nPH = dCH->nPH;
+        DCNL = dCH->DCNL;
         xDC_up = new double[ nDC ];  // memory leaks may be here! (these arrays must be re-created at each n)
         xDC_lo = new double[ nDC ];
         Ph_surf = new double[ nPH ];
@@ -498,39 +500,78 @@ void TGfitTask::setnodes()
             xDC_lo[ i ]  = 0.;
         }
 
-        if (experiments.at(n)->U_KC.size() > 0)
+
+        // Upper DC metastability
+        for (i=0; i<experiments.at(n)->expphases.size(); i++)
         {
-            for (i=0; i<experiments.at(n)->U_KC.size(); ++i)
+            for (j=0; j<experiments.at(n)->expphases[i]->phDC.size(); j++)
             {
-                if (experiments.at(n)->U_KC[i]->type == keys::DC)
+                for (k=0; k<experiments.at(n)->expphases[i]->phDC[j]->DCprop.size(); k++)
                 {
-                    DCndx = NodT[n]->DC_name_to_xDB(experiments.at(n)->U_KC[i]->name.c_str());
-                    if (DCndx < 0)
+                    // Upper DC metastability
+                    if (experiments.at(n)->expphases[i]->phDC[j]->DCprop[k]->property == keys::UMC)
                     {
-                        cout << "The DC name ("<<experiments.at(n)->U_KC[i]->name.c_str()<<") for the metastability constraint present in the database is different form the one in the exported GEMS3K files! " << endl;
-                        exit (1);
+                        PHndx = NodT[n]->Ph_name_to_xCH (experiments.at(n)->expphases[i]->phase.c_str());
+                        DCndx = NodT[n]->Phx_to_DCx (PHndx);
+                        for (l=DCndx; l<nDC; l++)
+                        {
+                            if (DCNL[l] == experiments.at(n)->expphases[i]->phDC[j]->DC)
+                            {
+                                xDC_up[l] = experiments.at(n)->expphases[i]->phDC[j]->DCprop[k]->Qnt;
+                            }
+                        }
                     }
-                    xDC_up[DCndx] = experiments.at(n)->U_KC[i]->Qnt;
-                } // else phase metastability constraints
+
+                    // Lower DC metastability
+                    if (experiments.at(n)->expphases[i]->phDC[j]->DCprop[k]->property == keys::LMC)
+                    {
+                        PHndx = NodT[n]->Ph_name_to_xCH (experiments.at(n)->expphases[i]->phase.c_str());
+                        DCndx = NodT[n]->Phx_to_DCx (PHndx);
+                        for (l=DCndx; l<nDC; l++)
+                        {
+                            if (DCNL[l] == experiments.at(n)->expphases[i]->phDC[j]->DC)
+                            {
+                                xDC_lo[l] = experiments.at(n)->expphases[i]->phDC[j]->DCprop[k]->Qnt;
+                            }
+                        }
+                    }
+                }
             }
         }
 
-        if (experiments.at(n)->L_KC.size() > 0)
-        {
-            for (i=0; i<experiments.at(n)->L_KC.size(); ++i)
-            {
-                if (experiments.at(n)->L_KC[i]->type == keys::DC)
-                {
-                    DCndx = NodT[n]->DC_name_to_xDB(experiments.at(n)->L_KC[i]->name.c_str());
-                    if (DCndx < 0)
-                    {
-                        cout << "The DC name ("<<experiments.at(n)->U_KC[i]->name.c_str()<<") for the metastability constraint present in the database is different form the one in the exported GEMS3K files! " << endl;
-                        exit (1);
-                    }
-                    xDC_lo[DCndx] = experiments.at(n)->L_KC[i]->Qnt;
-                } // else phase metastability constraints
-            }
-        }
+//        if (experiments.at(n)->U_KC.size() > 0)
+//        {
+//            for (i=0; i<experiments.at(n)->U_KC.size(); ++i)
+//            {
+//                if (experiments.at(n)->U_KC[i]->type == keys::DC)
+//                {
+//                    DCndx = NodT[n]->DC_name_to_xDB(experiments.at(n)->U_KC[i]->name.c_str());
+//                    if (DCndx < 0)
+//                    {
+//                        cout << "The DC name ("<<experiments.at(n)->U_KC[i]->name.c_str()<<") for the metastability constraint present in the database is different form the one in the exported GEMS3K files! " << endl;
+//                        exit (1);
+//                    }
+//                    xDC_up[DCndx] = experiments.at(n)->U_KC[i]->Qnt;
+//                } // else phase metastability constraints
+//            }
+//        }
+
+//        if (experiments.at(n)->L_KC.size() > 0)
+//        {
+//            for (i=0; i<experiments.at(n)->L_KC.size(); ++i)
+//            {
+//                if (experiments.at(n)->L_KC[i]->type == keys::DC)
+//                {
+//                    DCndx = NodT[n]->DC_name_to_xDB(experiments.at(n)->L_KC[i]->name.c_str());
+//                    if (DCndx < 0)
+//                    {
+//                        cout << "The DC name ("<<experiments.at(n)->U_KC[i]->name.c_str()<<") for the metastability constraint present in the database is different form the one in the exported GEMS3K files! " << endl;
+//                        exit (1);
+//                    }
+//                    xDC_lo[DCndx] = experiments.at(n)->L_KC[i]->Qnt;
+//                } // else phase metastability constraints
+//            }
+//        }
 
         // Surface areas of phases -> kinetics
         for( i=0; i<nPH; i++ )

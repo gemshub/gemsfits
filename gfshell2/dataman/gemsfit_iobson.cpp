@@ -332,7 +332,10 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
                                     ph_prop   = ph_prop_1.substr((0),(pos_start));
 
                                     // if property present
-                                    if (((ph_prop == Qnt) || (ph_prop == pH) || (ph_prop == pV) ||  (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) ||  (ph_prop == sArea) || (ph_prop == RHO) || (ph_prop == Gex) || (ph_prop == pe) || (ph_prop == oscw) || (ph_prop == mChainL)) && (!row[j].empty()))
+                                    if (((ph_prop == Qnt) || (ph_prop == pH)  || (ph_prop == pV)     ||  (ph_prop == Eh)     ||
+                                         (ph_prop == IS)  || (ph_prop == all) ||  (ph_prop == sArea) || (ph_prop == RHO)     ||
+                                         (ph_prop == Gex) || (ph_prop == pe)  || (ph_prop == oscw)   || (ph_prop == mChainL) ||
+                                         (ph_prop == UMC) || (ph_prop == LMC)) && (!row[j].empty()))
                                     {
                                         h_phprop = true;
                                     }
@@ -371,7 +374,10 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
                                         ph_prop = headline[j].substr((pos_end+f1.length()),(headline[j].size()));
 
                                         // amount of the property of the phase in the experiment
-                                        if (((ph_prop == Qnt) || (ph_prop == pH) || (ph_prop == pV) ||  (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) ||  (ph_prop == sArea) || (ph_prop == RHO) || (ph_prop == Gex) || (ph_prop == pe) || (ph_prop == oscw) || (ph_prop == mChainL)) && (!row[j].empty()))
+                                        if (((ph_prop == Qnt) || (ph_prop == pH)  || (ph_prop == pV)     ||  (ph_prop == Eh)     ||
+                                             (ph_prop == IS)  || (ph_prop == all) ||  (ph_prop == sArea) || (ph_prop == RHO)     ||
+                                             (ph_prop == Gex) || (ph_prop == pe)  || (ph_prop == oscw)   || (ph_prop == mChainL) ||
+                                             (ph_prop == UMC) || (ph_prop == LMC)) && (!row[j].empty()))
                                         {
 //                                            if (((ph_prop == pH) || (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) || (ph_prop == pe) || (ph_prop == oscw)) /*&& (phase_name != aq)*/)
 //                                            {
@@ -445,8 +451,12 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
                                         pos_end   = ph_prop_3.find(f1,pos_end+1);
                                         ph_prop   = ph_prop_3.substr((0),(pos_start));
 
-                                        // qunatity of this comp in the phase
-                                        if (((ph_prop != Qnt) && (ph_prop_1 == Qnt) && (ph_prop_2 == IC) && (ph_prop != pH) && (ph_prop != pV) &&  (ph_prop != Eh) && (ph_prop != IS) && (ph_prop != all) &&  (ph_prop != sArea) && (ph_prop != RHO) && (ph_prop != Gex) && (ph_prop != pe) && (ph_prop != oscw) && (ph_prop != mChainL)) && (strncmp(ph_prop.c_str(),"Dc", 2) != 0) && (!row[j].empty()))
+                                        // qunatity of this IC in the phase
+                                        if (((ph_prop != Qnt)   && (ph_prop_1 == Qnt)    && (ph_prop_2 == IC) && (ph_prop != pH)    &&
+                                             (ph_prop != pV)    && (ph_prop != Eh)       && (ph_prop != IS)   && (ph_prop != all)   &&
+                                             (ph_prop != sArea) && (ph_prop != RHO)      && (ph_prop != Gex)  && (ph_prop != pe)    &&
+                                             (ph_prop != oscw)  && (ph_prop != mChainL)) && (strncmp(ph_prop.c_str(),"DC", 2) != 0) &&
+                                             (ph_prop != UMC)   && (ph_prop != LMC)      && (!row[j].empty()))
                                         {
                                             ss << ic;
                                             sss = ss.str();

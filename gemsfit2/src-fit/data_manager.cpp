@@ -155,36 +155,36 @@ void Data_Manager::check_Syn()
         for (unsigned i = 0; i < experiments.size(); i++)
         {
             // L_KC
-            for (unsigned lkc = 0; lkc < experiments[i]->L_KC.size(); lkc++)
-            {
-                bool check = false;
-                for (unsigned s = 0; s < SynPHs[p].syn.size(); s++)
-                {
-                    if ((experiments[i]->L_KC[lkc]->type == keys::phase) && (experiments[i]->L_KC[lkc]->name == SynPHs[p].syn[s]))
-                        check = true;
-                    if (check)
-                    {
-                        experiments[i]->L_KC[lkc]->name = SynPHs[p].GemsName;
-                        check = false; break;
-                    }
-                }
-            }
+//            for (unsigned lkc = 0; lkc < experiments[i]->L_KC.size(); lkc++)
+//            {
+//                bool check = false;
+//                for (unsigned s = 0; s < SynPHs[p].syn.size(); s++)
+//                {
+//                    if ((experiments[i]->L_KC[lkc]->type == keys::phase) && (experiments[i]->L_KC[lkc]->name == SynPHs[p].syn[s]))
+//                        check = true;
+//                    if (check)
+//                    {
+//                        experiments[i]->L_KC[lkc]->name = SynPHs[p].GemsName;
+//                        check = false; break;
+//                    }
+//                }
+//            }
 
-            // U_KC
-            for (unsigned ukc = 0; ukc < experiments[i]->U_KC.size(); ukc++)
-            {
-                bool check = false;
-                for (unsigned s = 0; s < SynPHs[p].syn.size(); s++)
-                {
-                    if ((experiments[i]->U_KC[ukc]->type == keys::phase) && (experiments[i]->U_KC[ukc]->name == SynPHs[p].syn[s]))
-                        check = true;
-                    if (check)
-                    {
-                        experiments[i]->U_KC[ukc]->name = SynPHs[p].GemsName;
-                        check = false; break;
-                    }
-                }
-            }
+//            // U_KC
+//            for (unsigned ukc = 0; ukc < experiments[i]->U_KC.size(); ukc++)
+//            {
+//                bool check = false;
+//                for (unsigned s = 0; s < SynPHs[p].syn.size(); s++)
+//                {
+//                    if ((experiments[i]->U_KC[ukc]->type == keys::phase) && (experiments[i]->U_KC[ukc]->name == SynPHs[p].syn[s]))
+//                        check = true;
+//                    if (check)
+//                    {
+//                        experiments[i]->U_KC[ukc]->name = SynPHs[p].GemsName;
+//                        check = false; break;
+//                    }
+//                }
+//            }
 
             // phase name
             for (unsigned ep = 0; ep < experiments[i]->expphases.size(); ep++)
@@ -230,36 +230,36 @@ void Data_Manager::check_Syn()
 
 
                 // L_KC
-                for (unsigned lkc = 0; lkc < experiments[i]->L_KC.size(); lkc++)
-                {
-                    bool check = false;
-                    for (unsigned s = 0; s < SynPHs[p].SynDCs[d].syn.size(); s++)
-                    {
-                        if ((experiments[i]->L_KC[lkc]->type == keys::DC) && (experiments[i]->L_KC[lkc]->name == SynPHs[p].SynDCs[d].syn[s]))
-                            check = true;
-                        if (check)
-                        {
-                            experiments[i]->L_KC[lkc]->name = SynPHs[p].SynDCs[d].GemsName;
-                            check = false; break;
-                        }
-                    }
-                }
+//                for (unsigned lkc = 0; lkc < experiments[i]->L_KC.size(); lkc++)
+//                {
+//                    bool check = false;
+//                    for (unsigned s = 0; s < SynPHs[p].SynDCs[d].syn.size(); s++)
+//                    {
+//                        if ((experiments[i]->L_KC[lkc]->type == keys::DC) && (experiments[i]->L_KC[lkc]->name == SynPHs[p].SynDCs[d].syn[s]))
+//                            check = true;
+//                        if (check)
+//                        {
+//                            experiments[i]->L_KC[lkc]->name = SynPHs[p].SynDCs[d].GemsName;
+//                            check = false; break;
+//                        }
+//                    }
+//                }
 
-                // U_KC
-                for (unsigned ukc = 0; ukc < experiments[i]->U_KC.size(); ukc++)
-                {
-                    bool check = false;
-                    for (unsigned s = 0; s < SynPHs[p].SynDCs[d].syn.size(); s++)
-                    {
-                        if ((experiments[i]->U_KC[ukc]->type == keys::DC) && (experiments[i]->U_KC[ukc]->name == SynPHs[p].SynDCs[d].syn[s]))
-                            check = true;
-                        if (check)
-                        {
-                            experiments[i]->U_KC[ukc]->name = SynPHs[p].SynDCs[d].GemsName;
-                            check = false; break;
-                        }
-                    }
-                }
+//                // U_KC
+//                for (unsigned ukc = 0; ukc < experiments[i]->U_KC.size(); ukc++)
+//                {
+//                    bool check = false;
+//                    for (unsigned s = 0; s < SynPHs[p].SynDCs[d].syn.size(); s++)
+//                    {
+//                        if ((experiments[i]->U_KC[ukc]->type == keys::DC) && (experiments[i]->U_KC[ukc]->name == SynPHs[p].SynDCs[d].syn[s]))
+//                            check = true;
+//                        if (check)
+//                        {
+//                            experiments[i]->U_KC[ukc]->name = SynPHs[p].SynDCs[d].GemsName;
+//                            check = false; break;
+//                        }
+//                    }
+//                }
             }
         }
     }
@@ -941,94 +941,94 @@ void Data_Manager::bson_to_Data_Manager(/* FILE *f, */ const char *data, int pos
         } else
 
         // adding Upper metastability constraints
-        if ((key_ == keys::UMC) ) // && (t == BSON_ARRAY))
-        {
-            bson_iterator_subiterator( i, j );
-            while (bson_iterator_next(j) != BSON_EOO )
-            {
+//        if ((key_ == keys::UMC) ) // && (t == BSON_ARRAY))
+//        {
+//            bson_iterator_subiterator( i, j );
+//            while (bson_iterator_next(j) != BSON_EOO )
+//            {
 
-                experiments[pos]->U_KC.push_back( new samples::Uconstraints );
-                sk++; // position of the component in U_SK vector
-//                experiments.at(pos)->U_KC.at(sk)->dcomp = NULL;
-                experiments[pos]->U_KC[sk]->Qnt = 1000000.;
+//                experiments[pos]->U_KC.push_back( new samples::Uconstraints );
+//                sk++; // position of the component in U_SK vector
+////                experiments.at(pos)->U_KC.at(sk)->dcomp = NULL;
+//                experiments[pos]->U_KC[sk]->Qnt = 1000000.;
 
-                bson_iterator_subiterator( j, d );
-                while (bson_iterator_next(d) != BSON_EOO )
-                {
-                    string key_ = bson_iterator_key(d);
+//                bson_iterator_subiterator( j, d );
+//                while (bson_iterator_next(d) != BSON_EOO )
+//                {
+//                    string key_ = bson_iterator_key(d);
 
-                    if ((key_ == keys::DC))
-                    {
-                        experiments[pos]->U_KC[sk]->type = keys::DC;
-                        experiments[pos]->U_KC[sk]->name =  bson_iterator_string(d) ;
+//                    if ((key_ == keys::DC))
+//                    {
+//                        experiments[pos]->U_KC[sk]->type = keys::DC;
+//                        experiments[pos]->U_KC[sk]->name =  bson_iterator_string(d) ;
 
-                    } else
-                    if ((key_ == keys::phase))
-                    {
-                        experiments[pos]->U_KC[sk]->type = keys::phase;
-                        experiments[pos]->U_KC[sk]->name = bson_iterator_string(d) ;
-                    } else
-                    if ((key_ == keys::Qnt))
-                    {
-                        experiments[pos]->U_KC[sk]->Qnt = bson_iterator_double(d) ;
-                    }
-                    /*else
-                    if ((key_ == keys::Qerror))
-                    {
-                        experiments.at(pos)->sbcomp.at(ic)->Qerror = bson_iterator_double(d) ;
-                    } else
-                    if ((key_ == keys::Qunit))
-                    {
-                        experiments.at(pos)->sbcomp.at(ic)->Qunit = bson_iterator_string(d) ;
-                    }*/
-                }
-            }
-        } else
+//                    } else
+//                    if ((key_ == keys::phase))
+//                    {
+//                        experiments[pos]->U_KC[sk]->type = keys::phase;
+//                        experiments[pos]->U_KC[sk]->name = bson_iterator_string(d) ;
+//                    } else
+//                    if ((key_ == keys::Qnt))
+//                    {
+//                        experiments[pos]->U_KC[sk]->Qnt = bson_iterator_double(d) ;
+//                    }
+//                    /*else
+//                    if ((key_ == keys::Qerror))
+//                    {
+//                        experiments.at(pos)->sbcomp.at(ic)->Qerror = bson_iterator_double(d) ;
+//                    } else
+//                    if ((key_ == keys::Qunit))
+//                    {
+//                        experiments.at(pos)->sbcomp.at(ic)->Qunit = bson_iterator_string(d) ;
+//                    }*/
+//                }
+//            }
+//        } else
 
-        // adding Lower metastability constraints
-        if ((key_ == keys::LMC) ) // && (t == BSON_ARRAY))
-        {
-            bson_iterator_subiterator( i, j );
-            while (bson_iterator_next(j) != BSON_EOO )
-            {
+//        // adding Lower metastability constraints
+//        if ((key_ == keys::LMC) ) // && (t == BSON_ARRAY))
+//        {
+//            bson_iterator_subiterator( i, j );
+//            while (bson_iterator_next(j) != BSON_EOO )
+//            {
 
-                experiments[pos]->L_KC.push_back( new samples::Lconstraints );
-                sk++; // position of the component in U_SK vector
-    //            experiments.at(pos)->U_KC.at(sk)->dcomp = NULL;
-                experiments[pos]->L_KC[sk]->Qnt = 0.;
+//                experiments[pos]->L_KC.push_back( new samples::Lconstraints );
+//                sk++; // position of the component in U_SK vector
+//    //            experiments.at(pos)->U_KC.at(sk)->dcomp = NULL;
+//                experiments[pos]->L_KC[sk]->Qnt = 0.;
 
-                bson_iterator_subiterator( j, d );
-                while (bson_iterator_next(d) != BSON_EOO )
-                {
-                    string key_ = bson_iterator_key(d);
+//                bson_iterator_subiterator( j, d );
+//                while (bson_iterator_next(d) != BSON_EOO )
+//                {
+//                    string key_ = bson_iterator_key(d);
 
-                    if ((key_ == keys::DC))
-                    {
-                        experiments[pos]->L_KC[sk]->type = keys::DC;
-                        experiments[pos]->L_KC[sk]->name =  bson_iterator_string(d) ;
+//                    if ((key_ == keys::DC))
+//                    {
+//                        experiments[pos]->L_KC[sk]->type = keys::DC;
+//                        experiments[pos]->L_KC[sk]->name =  bson_iterator_string(d) ;
 
-                    } else
-                    if ((key_ == keys::phase))
-                    {
-                        experiments[pos]->L_KC[sk]->type = keys::phase;
-                        experiments[pos]->L_KC[sk]->name = bson_iterator_string(d) ;
-                    } else
-                    if ((key_ == keys::Qnt))
-                    {
-                        experiments[pos]->U_KC[sk]->Qnt = bson_iterator_double(d) ;
-                    }
-                     /*else
-                        if ((key_ == keys::Qerror))
-                        {
-                            experiments.at(pos)->sbcomp.at(ic)->Qerror = bson_iterator_double(d) ;
-                        } else
-                        if ((key_ == keys::Qunit))
-                        {
-                            experiments.at(pos)->sbcomp.at(ic)->Qunit = bson_iterator_string(d) ;
-                        }*/
-                }
-           }
-        } else
+//                    } else
+//                    if ((key_ == keys::phase))
+//                    {
+//                        experiments[pos]->L_KC[sk]->type = keys::phase;
+//                        experiments[pos]->L_KC[sk]->name = bson_iterator_string(d) ;
+//                    } else
+//                    if ((key_ == keys::Qnt))
+//                    {
+//                        experiments[pos]->U_KC[sk]->Qnt = bson_iterator_double(d) ;
+//                    }
+//                     /*else
+//                        if ((key_ == keys::Qerror))
+//                        {
+//                            experiments.at(pos)->sbcomp.at(ic)->Qerror = bson_iterator_double(d) ;
+//                        } else
+//                        if ((key_ == keys::Qunit))
+//                        {
+//                            experiments.at(pos)->sbcomp.at(ic)->Qunit = bson_iterator_string(d) ;
+//                        }*/
+//                }
+//           }
+//        } else
 
         // adding experimental phases
         if ((key_ == keys::expphases) ) // && (t == BSON_ARRAY))
