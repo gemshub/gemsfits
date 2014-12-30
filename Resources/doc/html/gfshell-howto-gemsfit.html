@@ -13,17 +13,33 @@
     <h3>Contents</h3>
     <h3>&nbsp;&nbsp;&nbsp; Workflow</h3>
     <ol>
-      <li><a href="#GEMS">Create the chemical system in GEM-Selektor and export
-          the GEMS3K files</a></li>
+      <li><a href="#create">Create a new project in gfshell</a></li>
       <li><a href="#prepare">Prepare experimental data and database</a></li>
-      <li><a href="#create">Create new project in gfshell and set the task
-          specification</a></li>
+      <li><a href="file:///home/dmiron/devGEMSFITS/devGFshell/gemsfit/Resources/doc/html/gfshell-howto-gemsfit.html#GEMS">Create
+          the chemical system in GEM-Selektor and export the GEMS3K files</a></li>
+      <li><a href="#create_edit_task">Create and Edit the task specification</a></li>
       <li><a href="#run">Run gesmift2 optimization code</a></li>
       <li><a href="#retrieve">Retrieve the results</a></li>
       <li><a href="#structure">Project folder structure</a></li>
     </ol>
     <hr>
-    <h3><a id="GEMS">1. GEM-Selektor</a></h3>
+    <h3><a id="create">1. Create new project in gfshell</a></h3>
+    The steps needed to create a new project are described in <a href="file:///home/dmiron/devGEMSFITS/devGFshell/gemsfit/Resources/doc/html/gfshell-about.html#create_project">GEMSFITS
+      shell About help</a> section.
+    <hr>
+    <h3><a id="prepare">2. Prepare experimental data</a></h3>
+    <p>The experimental data has to be first prepared into a <a href="howto-database.html">special
+        format spreadsheet</a>. Details can be found in the "<a href="howto-database.html">How
+        to prepare the pre-fotmatted spreadsheet of experiments</a>" The
+      spreadsheet can be saved in CSV format and uploaded in the experimental
+      database using gfshell (graphical user interface). This is shown in the <a
+        href="gfshell-dbmode.html#manage_data">gfshell Database Mode help
+        section</a>.<br>
+      <br>
+      Every time new bulk data is to be added into and existing database this
+      has to go trough the same steps.</p>
+    <hr>
+    <h3><a id="GEMS">3. GEM-Selektor</a></h3>
     <p>GEM-Selektor v3 code package (<a href="http://gems.web.psi.ch/GEMS3">http://gems.web.psi.ch/GEMS3</a>)
       is needed to create the chemical system definition to model the
       experiments. In GEMS3, elements in the system, dependent components,
@@ -49,78 +65,63 @@
     <ul>
       <li> In the "number of P points or pairs", enter the number of unique T
         and P points which you can get from the&nbsp; <a href="gfshell-dbmode.html#distinctTP.csv">..._distinctTP.csv</a>
-        file exported by gfshell at the same time with adding data to the
-        database file.</li>
+        file exported using gfshell.</li>
     </ul>
     <ul>
       <li> At the next step, you have to copy and paste all the P and T points
         also found in the&nbsp; <a href="gfshell-dbmode.html#distinctTP.csv">..._distinctTP.csv</a>
-        file exported by the csvtoejdb tool. How to do this exactly, depends on
-        the operation system and the spreadsheet program that you use. In
-        GEM-Selektor, Ctrl-C copies the previously selected data to clipboard,
-        and Ctrl-V pastes the data (click on the first cell before executing
-        Paste operation).</li>
+        file. How to do this exactly, depends on the operation system and the
+        spreadsheet program that you use. In GEM-Selektor, Ctrl-C copies the
+        previously selected data to clipboard, and Ctrl-V pastes the data (click
+        on the first cell before executing Paste operation).</li>
     </ul>
-    <p>The exported GEMS3K files will be then used to generate the gemsfit2
-      input file template and are also necessary during the parameter fitting.</p>
+    <p>The exported GEMS3K files will be then used to generate the task
+      definition file where necessary options during the parameter fitting will
+      be set.</p>
     <hr>
-    <h3><a id="prepare">2. Prepare experimental data</a></h3>
-    <p>The experimental data has to be first prepared into a <a href="howto-csvtoejdb.html">special
-        format spreadsheet</a>. Details can be found in the "<a href="howto-csvtoejdb.html">How
-        to prepare the pre-fotmatted spreadsheet of experiments</a>" The
-      spreadsheet can be saved in CSV format and uploaded in the experimental
-      database using gfshell (graphical user interface). This is shown in the <a
-        href="gfshell-dbmode.html#1._Manage_bulk_data_importexport:">gfshell
-Database
-        Mode help section</a>.<br>
-      <br>
-      Every time new bulk data is to be added into and existing database this
-      has to go trough the same steps.</p>
-    <hr>
-    <h3><a id="create">3. Create new project in gfshell</a></h3>
-    <p>The steps needed to create a new project are described in <a href="gfshell-about.html#2._How_to_mange_fitting_projects:">GEMSFITS
-        shell About help</a> section.<br>
-      <br>
-      Create a new task specification and set all options required for
-      optimization. Details about creating a and setting the options in the task
-      specification is given in <a href="gfshell-taskmode.html">GEMSFITS
-        shell Task Mode</a> help section.<br>
-      <br>
-      After the task specification is created in most of the fitting cases set
+    <h3><a id="create_edit_task">4. Create and edit the task specification<br>
+      </a></h3>
+    Create a new task specification and set all options required for
+    optimization. Details about creating a and setting the options in the task
+    specification is given in <a href="gfshell-taskmode.html">GEMSFITS shell
+      Task Mode</a> help section.<br>
+    <p> After the task specification is created in most of the fitting cases set
       the values of the following keys (other key values may be left to their
       default values):</p>
-    <p>1.<a style="font-family: Courier New,Courier,monospace;" href="gfshell-taskmode.html#a._DataSelect">"DataSelect"</a>
+    <p>1.<a style="font-family: Courier New,Courier,monospace;" href="gfshell-taskmode.html#dataselect">"DataSelect"</a>
       (what experiments to use from the database)</p>
-    <p>2.<a style="font-family: Courier New,Courier,monospace;" href="gfshell-taskmode.html#b._DataTarget">"DataTarget"</a>
+    <p>2.<a style="font-family: Courier New,Courier,monospace;" href="gfshell-taskmode.html#datatarget">"DataTarget"</a>
       (what calculated values to compare with the measured counterparts +
       weighting)</p>
-    <p>3.Look for the parameter key that you want to fit. This is where you will
-      find the list [...] of parameters. Decide which of the parameters you want
-      to fit <a href="gfshell-taskmode.html#c._Parameter_Markup">and
+    <p>3.Decide which of the parameters you want to fit <a href="gfshell-taskmode.html#ParToOpt">and
         mark them accordingly</a></p>
-    <p>4.Set the desired <a href="gfshell-taskmode.html#d._Optimization_and_Statistics_options">optimization
+    <p>4.Set the desired <a href="gfshell-taskmode.html#OptSet">optimization
         and statistics options</a> or leave default values </p>
     <hr>
-    <h3><a id="run">4. Run gesmift2 optimization code</a></h3>
+    <h3><a id="run">5. Run gesmift2 optimization code</a></h3>
     <p>To run GEMSFITS click Run Gemsfit2 parameter fitting task <img style="width: 21px; height: 24px;"
         alt="Run gemsfit2" title="Run gesmfit2" src="img/CalculateRecordDataIcon24.png">
-      in the gfshell <a href="gfshell-taskmode.html#3._Run_gemsfits">Fitting
-        task mode</a>. </p>
+      in the gfshell <a href="gfshell-taskmode.html#run">Fitting task mode</a>.
+      A *.json file is created representing the task specification file which is
+      read in by gwmsfit2 code and which will execute the optimization. </p>
     <hr>
-    <h3><a id="retrieve">5. Retrieve the results</a></h3>
-    <p>Retrieve the results directly from the /work project sub-folder in the
-      *.csv files, or view them in the results window of the gfshell.</p>
+    <h3><a id="retrieve">6. Retrieve the results</a></h3>
+    <p>Retrieve the results directly from the /work/output project sub-folder in
+      the *.csv files, or view them in the results window of the gfshell.
+      Fitting task /work folder is re-created upon running gemsfit2&nbsp; (<span
+        style="color: red;"></span><span style="font-weight: bold;"><span style="color: red;">the
+          contents will be erased for every run of the fitting program, the
+          results will be lost if not <big><small><a href="file:///home/dmiron/devGEMSFITS/devGFshell/gemsfit/Resources/doc/html/gfshell-taskmode.html#save_results">saved
+                in the database</a></small></big></span></span>)</p>
     <hr>
-    <h3><a id="structure">Project Structure (example from tests projects)</a></h3>
+    <h3><span style="color: #33cc00;"><a id="structure"><span style="color: black;">7.
+            Project Structure (example from tests projects)</span><br>
+        </a></span></h3>
     <p>The project sub-folder are automatically created when making a new
-      porject in gfshell. Fitting task /work folder is created upon running
-      gemsfit2&nbsp; (<span style="color: red;">the contents will be erased for
-        every run of the fitting program, the results will be lost if not <big><small><a
-              href="gfshell-taskmode.html#save_results">saved
-              in the database</a></small></big></span>)<br>
+      project in gfshell. <br>
       <br>
       <span style="font-family: Courier New,Courier,monospace;">/Tests</span><br>
-      <span style="font-family: Courier New,Courier,monospace;">/Tests/CSHQsol&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">/Tests/CSHQsol&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         // </span>this test example<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <span style="font-family: Courier New,Courier,monospace;">cshqsol.pro&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -174,8 +175,8 @@ Database
       <span style="font-family: Courier New,Courier,monospace;">/Tests/CSH/work&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         //</span> Fitting task working directory<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <span style="font-family: Courier New,Courier,monospace;">mix4em_logm_rwip2_b3.dat
-        //</span> GEMSFIT2 input specification file<br>
+      <span style="font-family: Courier New,Courier,monospace;">mix4em_logm_rwip2_b3.json//</span>
+      GEMSFIT2 input specification file<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <span style="font-family: Courier New,Courier,monospace;">ipmlog.txt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         //</span> generated by GEMS3K diagnostics<br>
@@ -200,7 +201,7 @@ Database
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <span style="font-family: Courier New,Courier,monospace;">qq-plot-data.csv&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         //</span> .csv file with data for making the Q-Q normality plot for
-      thesting the residulas distributions<br>
+      testing the residuals distributions<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <span style="font-family: Courier New,Courier,monospace;">sum-statistics.csv&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         //</span> summary statistics information<br>
@@ -208,7 +209,7 @@ Database
       <span style="font-family: Courier New,Courier,monospace;">gemsfit2.log&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         //</span> logging file generated by GEMSFIT2 (diagnostics)<br>
       <br>
-      Edited values in the <span style="font-family: Courier New,Courier,monospace;">Tests/CSHQsol/mix4em_logm_rwip2_b3.dat.dat</span>:<br>
+      Edited values in the <span style="font-family: Courier New,Courier,monospace;">Tests/CSHQsol/mix4em_logm_rwip2_b3.json</span>:<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...&nbsp;&nbsp; <br>
       &nbsp;&nbsp;&nbsp; # DataDB: EJDB database path (please, edit to put the
       actual path)<br>
@@ -228,8 +229,8 @@ Database
       Edit the rest of this file, as described in the <a href="gfshell-taskmode.html">GEMSFITS
         shell Task Mode help</a> manual.</p>
     <hr>
-    <p>Last updated:&nbsp; 15. 05. 2014&nbsp; DM, DK</p>
-    <p>Copyright&nbsp; (c) 2013&nbsp; <a target="_blank" title="http://gems.web.psi.ch/teamhist.html"
+    <p>Last updated:&nbsp; 27.12.2014&nbsp; DM, DK</p>
+    <p>Copyright&nbsp; (c) 2015&nbsp; <a target="_blank" title="http://gems.web.psi.ch/teamhist.html"
         href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a></p>
     <hr>
     <p><br>

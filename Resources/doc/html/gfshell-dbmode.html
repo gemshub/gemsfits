@@ -13,14 +13,12 @@
     <p> The CRUD (Create, Read, Update, Delete) operations can be done directly
       in the database using the EJDB console (http://ejdb.org) or using the
       gfshell GUI menus and the JSON data editor. The latter allows also for
-      exporting the data into JSON (csv and YSON in future releases) format
-      files. YSON is a subset of YAML – a data serialization format
-      (http://yaml.org), even human-friendlier than JSON (http://json.org).</p>
+      exporting the data into JSON or csv.</p>
     <p>In the Database Mode, the experimental records from the project database
       can be viewed in a list and edited in <a title="JSON" href="gemsfit-json.html">JSON
         format</a>. Bulk data can be backed up and restored form <a title="JSON"
         href="gemsfit-json.html">JSON format</a> files or imported and exported
-      <a title="csvtoejdb" href="gemsfit-csvtoejdb.html">from preformatted
+      <a title="csvtoejdb" href="howto-database.html">from preformatted
         spreadsheets</a> files previously saved in csv format. The database
       selection queries can be added and edited in the “Search Query Editor”.
       The record (sample) list resulted by executing the search query can be
@@ -33,32 +31,26 @@
       <li><a href="#crud">CRUD (Create, Read, Update, Delete) on database
           records</a></li>
       <li><a href="#search">Search queries</a></li>
+      <li><a href="#export_datasetlist"><span style="color: #0000ee;"><span style="text-decoration: underline;">Export
+              a search query result to the task specification file</span></span></a></li>
     </ul>
     <hr>
     <h3><a id="manage_data">1. Manage bulk data (import/export)</a></h3>
-    <p> Allows importing large amount of experimental data form <a href="howto-csvtoejdb.html">preformated
+    <p> Allows importing large amount of experimental data form <a href="howto-database.html">preformated
         csv files</a> or from <a href="gemsfit-json.html">JSON</a> files&nbsp;
       (e.g. previously backed-up files). To overwrite existing data activated: <span
         style="text-decoration: underline; font-weight: bold;">D</span><span style="font-weight: bold;">atabase</span><span
         style="font-weight: bold;"> -&gt; Overwrite</span>. Only unique <a style="font-family: Courier New,Courier,monospace;"
         href="gemsfit-useref.html#expdataset">"expdataset"</a>-<a style="font-family: Courier New,Courier,monospace;"
         href="gemsfit-useref.html#sample">"sample"</a> name pairs are allowed.</p>
-    <p> Prepare the <a href="howto-csvtoejdb.html#1._Prepare_your_data_">preformated
-        CSV file (comma separated value)</a>.</p>
+    <p> Prepare the <a href="howto-database.html">preformated CSV file (comma
+        separated value)</a>. (click for more details)</p>
     <p> </p>
-    <p> a. To import data from <a href="howto-csvtoejdb.html#1._Prepare_your_data_">preformated
-        csv files</a>: <span style="font-weight: bold;">Database -&gt; Import
-        data from CSV file... -&gt;</span> Select the path to the file (default
-      <span style="font-weight: bold;">/dbimport</span> sub-folder of the
-      project folder).</p>
-    <p><a name="distinctTP.csv"></a>Anytime when you import data a file
-      terminated in <span style="font-family: Courier New,Courier,monospace;">..._distinctTP.csv</span>
-      is created. This file contains the unique temperature-pressure points of
-      all experiments present in the database. The unique T-P points are needed
-      when exporting the chemical system definition (<span style="font-family: Courier New,Courier,monospace;">GEMS3K</span>)&nbsp;
-      files (to have the complete array of thermodynamic properties at all
-      possible pressure and temperature conditions of the experiments).<br>
-    </p>
+    <p> a. To import data from <a href="howto-database.html">preformated csv
+        files</a>: <span style="font-weight: bold;">Database -&gt; Import data
+        from CSV file... -&gt;</span> Select the path to the file (default <span
+        style="font-weight: bold;">/dbimport</span> sub-folder of the project
+      folder).</p>
     <p>b. To backup the data in JSON format file: <span style="font-weight: bold;">Database
         -&gt; Backup data in JSON file... -&gt;</span> Select which entries to
       backup -&gt; Chose path and file name *.json. These files are compatible
@@ -68,6 +60,12 @@
     <p>c. To restore data from JSON file: <span style="font-weight: bold;">Database
         -&gt; Restore data from JSON file... -&gt;</span> Select the path to the
       file.</p>
+    <p>d. <a name="distinctTP.csv"></a>To export the unique T-P points that are
+      needed when generating the chemical system definition (<span style="font-family: Courier New,Courier,monospace;">GEMS3K</span>)&nbsp;
+      files (to have the complete array of thermodynamic properties at all
+      possible pressure and temperature conditions of the experiments). <span style="font-weight: bold;">Database
+        -&gt; Export TP pairs to CSV file... -&gt;</span> Choose the path where
+      you want the file to be created, write the name with .csv ending.</p>
     <hr>
     <h3><a id="crud">2. CRUD (Create, Read, Update, Delete)</a></h3>
     <p> All records and changes have to be in valid JSON format. This can be
@@ -80,14 +78,14 @@
       Select template file for experiments record. A new record template is
       created using the <span style="font-weight: bold;">Create new by template</span>
       <img style="width: 24px; height: 24px;" alt="Create New by template" title="Create New by template"
-        src="img/NewCreateRecordIcon24.png">. The user has then to <a href="gemsfit-useref.html">edit
-        the record</a> to describe the desired experimental details. To insert
-      the new data click the <span style="font-weight: bold;">Insert new record</span>
+        src="img/NewCreateRecordIcon24.png">. The user has then to edit the
+      record to describe the desired experimental details. To insert the new
+      data click the <span style="font-weight: bold;">Insert new record</span>
       <img style="width: 24px; height: 24px;" alt="Insert new record" title="Insert new record"
         src="img/NewCloneRecordIcon24.png">. </p>
     <p>b. Update exiting records. Make the desired changes (e.g. change the
       amount of components) in valid JSON format. To save the changes click <span
-        style="font-weight: bold;">Update current record</span> <img style="width: 24px; height: 24px;"
+        style="font-weight: bold;">Update current record</span>&nbsp; <img style="width: 24px; height: 24px;"
         alt="Update current record" title="Update current record" src="img/SaveCurrentRecordIcon24.png">.
     </p>
     <p>c. Delete exiting records with <span style="font-weight: bold;">Delete
@@ -236,15 +234,18 @@ EJDB_EXPORT EJQ* ejdbcreatequery(EJDB *jb, bson *qobj, bson *orqobjs, int orqobj
       - matches the values; <span style="font-family: Courier New,Courier,monospace;">'$bt'</span>
       - between two values;<br>
     </p>
-    <p>The result of a a database search can be used in a fitting task by
-      inserting in the <a href="gemsfit-input-file.html#DataSelect"><span style="font-family: Courier New,Courier,monospace;">"DataSelect"</span></a>
-      the <span style="font-family: Courier New,Courier,monospace;"><a href="gemsfit-input-file.html#samplelist">"samplelist"</a></span>.
+    <hr>
+    <h3><a id="export_datasetlist" name="export_datasetlist"></a>4. Export a
+      search query result to the task specification file.</h3>
+    <p>The result of a database search can be used in a fitting task by
+      inserting in the <a href="gfshell-taskmode.html#dataselect"><span style="font-family: Courier New,Courier,monospace;">"DataSelect"</span></a>
+      the <span style="font-family: Courier New,Courier,monospace;"><a href="gfshell-taskmode.html#samplelist">"samplelist"</a></span>.
       This is automatically done by going in the <span style="font-weight: bold;">Fitting
         Task Mode -&gt; select the task where you want to use the queried record
         list -&gt; Record -&gt; Insert record list into task definition. </span></p>
     <hr>
-    <p>Last updated:&nbsp; 15. 05. 2014&nbsp; DM, DK</p>
-    <p>Copyright&nbsp; (c) 2014&nbsp; <a target="_blank" title="http://gems.web.psi.ch/teamhist.html"
+    <p>Last updated:&nbsp; 29. 12. 2014&nbsp; DM, DK</p>
+    <p>Copyright&nbsp; (c) 2015&nbsp; <a target="_blank" title="http://gems.web.psi.ch/teamhist.html"
         href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a></p>
     <hr>
     <p><br>

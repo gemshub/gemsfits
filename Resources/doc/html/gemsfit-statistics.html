@@ -14,52 +14,39 @@
       <li><a href="file:///home/dmiron/devGEMSFITS/devGFshell/gemsfits/Resources/doc/html/gemsfit-statistics.html#Basic_Statistics"
           target="_top">Basic statistics</a></li>
       <li><a href="file:///home/dmiron/devGEMSFITS/devGFshell/gemsfits/Resources/doc/html/gemsfit-statistics.html#Sensitivity">Sensitivity
-          analysis and paramater stitistics</a></li>
+          analysis and parameter statistics<br>
+        </a></li>
       <li>Monte Carlo confidence interval generation</li>
       <li>References</li>
     </ul>
-    <hr>
+    <span style="font-weight: bold;">Under Construction</span> Please refer to<a
+      href="http://www.sciencedirect.com/science/article/pii/S088329271400256X">
+      Miron et al. (2014) GEMSFITS: Code package for optimization of geochemical
+      model parameters and inverse modeling.</a> Statistics section. <br>
+    <ul>
+    </ul>
+    <hr><br>
     <h3>1. <a name="Basic_Statistics"></a>Basic Statistics</h3>
     <br>
     <hr style="width: 100%; height: 2px;">
-    <h3>2. <a name="Sensitivity"></a>Sensitivity analysis and paramater
-      stitistics</h3>
-    <div style="text-align: left;"><span style="font-weight: bold;">A. Composite
-        Scaled Sensitivities: </span><br>
-      <p>See ref. [1] section 4.3.4. If there is no weighting the weight is
-        assumed 1 for all measured values.
-        Larger values indicate parameters for which observations provide more
-        information. A value less than 1 or less than &nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp; (or close to) 1% of the highest value, means thatthe
-        parameter is poorly estimated. These parameters should be fixed
-        during regression. </p>
-      <span style="font-weight: bold;">B. Variance-Covariance matrix:</span><br>
-      <p>
-        See ref. [1] section 7.2. V(b) = s^2([X]trans*[X])^1;&nbsp; [W] -weight
-        matrix is considered as 1 as there is no full weight matrix calculated,
-        based on true experimental error (not provided for all experiments). X -
-        sensitivity matrix. When the chosen weight is other
-        than inverr (1/sigma), inverr3 (1/measured^2) or
-        inverr_norm(w=1/(error/&lt;meas(average)&gt;)^2), the error variance
-        (s^2) is
-        assumed 1. For inverr2, the error variance is calculated
-        asweighted_Tfun_sum_of_residuals/degrees of freedom.</p>
-      <p>
-      </p>
+    <h3>2. <a name="Sensitivity"></a>Sensitivity analysis and parameter
+      statistics</h3>
+    <div style="text-align: left;"><span style="font-weight: bold;"></span><br>
+      <p> </p>
     </div>
     <hr style="width: 100%; height: 2px;">
     <h3>4. References&nbsp;<br>
     </h3>
-    [1] Mary C. Hill, Claire R. Tiedeman (2007) Effective Groundwater
-    Model Calibration: With Analysis of Data, Sensitivities, Predictions,and
+    [1] Mary C. Hill, Claire R. Tiedeman (2007) Effective Groundwater Model
+    Calibration: With Analysis of Data, Sensitivities, Predictions,and
     Uncertainty. 480 pages.<br>
-    [2] Eileen P, Poeter &amp; Marc C. Hill DOCUMENTATION OF UCODE, AComputer
+    [2] Eileen P, Poeter &amp; Marc C. Hill DOCUMENTATION OF UCODE, A Computer
     Code for Universal Inverse Modeling.
     http://inside.mines.edu/~epoeter/583/UCODEmanual_wrir98-4080.pdf<br>
     <p> </p>
     <hr>
-    <p>Last updated:&nbsp; 15. 05. 2014&nbsp; DM, DK</p>
-    <p>Copyright&nbsp; (c) 2014&nbsp; <a target="_blank" title="http://gems.web.psi.ch/teamhist.html"
+    <p>Last updated:&nbsp; 29. 12. 2014&nbsp; DM, DK</p>
+    <p>Copyright&nbsp; (c) 2015&nbsp; <a target="_blank" title="http://gems.web.psi.ch/teamhist.html"
         href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a></p>
     <hr>
     <p><br>
