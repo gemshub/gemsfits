@@ -90,6 +90,10 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
         NodT.push_back( new TNode );
     }
 
+    Opti = new optimization ( );
+    gpf->flog << "10. gemsfit_task.cpp(94). Initializing the Target function structure & get_DatTarget(); " << endl;
+    Tfun = new TargetFunction;
+
     // initialize nodes with the experimental data
     gpf->flog << "06. gemsfit_task.cpp(89). Initializing nodes with the experimental data; " << endl;
     setnodes ( );  // initialization of nodes each for one experimental point (system)
@@ -101,11 +105,11 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
 //    { cout<<"Log fileopen error"<<endl; exit(1); }
     gpf->sizeTP = this->TP_pairs[0].size();
 
-    Opti = new optimization ( );
-    gpf->flog << "10. gemsfit_task.cpp(94). Initializing the Target function structure & get_DatTarget(); " << endl;
-    Tfun = new TargetFunction;
+//    Opti = new optimization ( );
+//    gpf->flog << "10. gemsfit_task.cpp(94). Initializing the Target function structure & get_DatTarget(); " << endl;
+//    Tfun = new TargetFunction;
 
-//    set_fixed_parameters();
+//    set_fixed_parameters(); //- moved to setnodes();
 
     get_DataTarget ( );
     for (unsigned int i=0; i < experiments.size(); i++)
@@ -128,7 +132,6 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
 
     get_Lparams_delta (); // change
 
-    set_fixed_parameters();
 
     // check for errors and inconsitencies of input options and parameters
     gfit_error ( );
@@ -469,6 +472,8 @@ void TGfitTask::setnodes()
         }
     }
 
+    // set fixed parameters
+    set_fixed_parameters();
 
 //    cout << NodT[0]->Get_bIC(0) << endl;
 //    cout << NodT[0]->Get_bIC(1) << endl;
@@ -499,7 +504,6 @@ void TGfitTask::setnodes()
             xDC_lo[ i ]  = 0.;
         }
 
-
         // Upper DC metastability
         for (i=0; i<experiments.at(n)->expphases.size(); i++)
         {
@@ -512,6 +516,7 @@ void TGfitTask::setnodes()
                     {
                         PHndx = NodT[n]->Ph_name_to_xCH (experiments.at(n)->expphases[i]->phase.c_str());
                         DCndx = NodT[n]->Phx_to_DCx (PHndx);
+//                        cout << experiments.at(n)->expphases[i]->phDC[j]->DCprop[k]->property << endl;
                         for (l=DCndx; l<nDC; l++)
                         {
                             if (DCNL[l] == experiments.at(n)->expphases[i]->phDC[j]->DC)
@@ -823,7 +828,7 @@ cout << "Node: " << NodeHandle+1 << " Sample: " << experiments[n]->sample <<"  N
         // mixed salt
         string sMod;
         NodT[n]->Get_sMod(0, sMod);
-        if (sMod.compare(0,1,"H") == 0)
+        if (((sMod.compare(0,1,"H")) == 0) && (maxsalt > 0 ))
         {
             set_DH_Helgeson(n);
 
