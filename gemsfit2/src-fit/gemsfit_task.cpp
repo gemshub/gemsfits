@@ -94,6 +94,11 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     gpf->flog << "10. gemsfit_task.cpp(94). Initializing the Target function structure & get_DatTarget(); " << endl;
     Tfun = new TargetFunction;
 
+    for (unsigned e=0; e < Opti->optParam.size(); e++)
+    {
+        Opti->optParam[e]->Set_TPpairs(this->TP_pairs);
+    }
+
     // initialize nodes with the experimental data
     gpf->flog << "06. gemsfit_task.cpp(89). Initializing nodes with the experimental data; " << endl;
     setnodes ( );  // initialization of nodes each for one experimental point (system)
@@ -125,10 +130,10 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     if (LogK.size() > 0) set_logK_TPpairs (LogK);
     set_logK_TPpairs ();
 
-    for (unsigned e=0; e < Opti->optParam.size(); e++)
-    {
-        Opti->optParam[e]->Set_TPpairs(this->TP_pairs);
-    }
+//    for (unsigned e=0; e < Opti->optParam.size(); e++)
+//    {
+//        Opti->optParam[e]->Set_TPpairs(this->TP_pairs);
+//    }
 
     get_Lparams_delta (); // change
 
