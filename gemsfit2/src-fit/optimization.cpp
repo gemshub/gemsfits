@@ -241,7 +241,7 @@ void optimization::OptParameterCreate ()
     // NFUN parameters
     if (NFunParameters != "")
     {
-        parse_JSON_object(NFunParameters, "bIC", out);
+        parse_JSON_object(NFunParameters, keys::bIC[mode], out);
         if (out.size() > 0)
         {
             Opt_bIC* myPT = new Opt_bIC( out, OptBoundPerc, p );
@@ -251,7 +251,7 @@ void optimization::OptParameterCreate ()
         if(myOPT) { optNFParam.push_back( myOPT ); myOPT = 0; };
         out.clear(); p=0;
 
-        parse_JSON_object(NFunParameters, "TK", out);
+        parse_JSON_object(NFunParameters, keys::TK[mode], out);
         if (out.size() > 0)
         {
             Opt_Tk* myPT = new Opt_Tk( out, OptBoundPerc, p );
@@ -261,7 +261,7 @@ void optimization::OptParameterCreate ()
         if(myOPT) { optNFParam.push_back( myOPT ); myOPT = 0; };
         out.clear(); p=0;
 
-        parse_JSON_object(NFunParameters, "P", out);
+        parse_JSON_object(NFunParameters, keys::Pb[mode], out);
         if (out.size() > 0)
         {
             Opt_P* myPT = new Opt_P( out, OptBoundPerc, p );

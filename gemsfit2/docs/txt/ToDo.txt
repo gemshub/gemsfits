@@ -124,6 +124,13 @@ csvtoejdb documentation:
 - there is a problem with reaction constrained G0 parameters if one DC has the same name in two phases. If this DC is present in the reactants list
   now gemsfits will take the index of the DC from the first phase it is present in. 
 
+- problem with composition of the system given in molal - H2O amount is needed - constrained to a known water/ H2O nameing.
+- check mole vs mol
+- see if adding samplelist from the database to the task configuration file works with the new keys. 
+- maybe think about adding any kind of property following the name of phase or DC (for DC it is like this) - check is the names is
+  pahse.prop then proeprty else if a second "." is found no property. 
+
+- make  "LogKFun" array
 
 Future
 - iterative regression

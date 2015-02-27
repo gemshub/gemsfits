@@ -157,7 +157,7 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
                 ss.str("");
                 bson_append_start_object(&bson_task_file, sss.c_str());
                 {
-                    bson_append_string(&bson_task_file, keys::DCN_[mode], node->xCH_to_DC_name(G0ndx));
+                    bson_append_string(&bson_task_file, keys::DCN[mode], node->xCH_to_DC_name(G0ndx));
                     bson_append_string(&bson_task_file, keys::PType[mode], "S");
                     bson_append_double(&bson_task_file, keys::IV[mode], node->DC_G0(G0ndx, 100000, 25 + 273.15, false));
                 }
@@ -229,7 +229,7 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
                         ss.str("");
                         bson_append_start_object(&bson_task_file, sss.c_str());
                         {
-                            bson_append_string(&bson_task_file, keys::DCN_[mode], node->xCH_to_DC_name(DCndx + k));
+                            bson_append_string(&bson_task_file, keys::DCN[mode], node->xCH_to_DC_name(DCndx + k));
                             dcipcn.append(node->xCH_to_PH_name(i)); dcipcn.append("|");
                             dcipcn.append(node->xCH_to_DC_name(DCndx + k)); dcipcn.append("[");
 
@@ -293,7 +293,7 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
 
         bson_append_int(&bson_task_file, keys::OptEQ[mode], 1);
 
-        bson_append_int(&bson_task_file, keys::OptUW[mode], 0);
+        bson_append_int(&bson_task_file, keys::OptUW[mode], -1);
 
         bson_append_string(&bson_task_file, keys::OptAlg[mode], "LN_BOBYQA");
 
@@ -316,7 +316,7 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
 
         bson_append_int(&bson_task_file, keys::OptTuVal[mode], 6);
 
-        bson_append_int(&bson_task_file, keys::StatMC[mode], 0);
+        bson_append_int(&bson_task_file, keys::StatMC[mode], -1);
 
         bson_append_int(&bson_task_file, keys::StatMCr[mode], 100);
 

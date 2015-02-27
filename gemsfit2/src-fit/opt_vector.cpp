@@ -108,14 +108,14 @@ void OptParameter::Pval_to_optL (int p, string data, L_parameter *opt)
 //    opt->Pname = out3.at(0);
 //    out3.clear();
 
-    parse_JSON_object(data, keys::LEs, out3);
+    parse_JSON_object(data, keys::LICs[mode], out3);
     for (unsigned int i = 0 ; i < out3.size() ; i++)
     {
         opt->L_param.push_back( out3.at(i) );
     }
     out3.clear();
 
-    parse_JSON_object(data, keys::Lcoef, out3);
+    parse_JSON_object(data, keys::LCoef[mode], out3);
     if (out3.size() != opt->L_param.size())
     {
         cout << "ERROR: Number of linked parameters is not equal with the number of link coeficients for parameter "<< p  << endl;
@@ -301,7 +301,7 @@ Opt_G0::Opt_G0(vector<string> data, double OptBoundPrc, unsigned &p) :
             optFP[optFP.size()-1]->Pndx = p;
             Pval_to_optF (p, Jdata[i], optFP[optFP.size()-1]);
 
-            parse_JSON_object(Jdata[i], keys::DCN, out);
+            parse_JSON_object(Jdata[i], keys::DCN[mode], out);
             if (out.size() !=1) { cout << "Parameter \"F\"-type " << p << " (G0) has no \"DCN\" defined! "<< endl; exit(1); }
             optFP[optFP.size()-1]->Pname = out[0];
             p++;
@@ -316,7 +316,7 @@ Opt_G0::Opt_G0(vector<string> data, double OptBoundPrc, unsigned &p) :
 
             Pval_to_optR (p, Jdata[i], optRP[Rndx]);
 
-            parse_JSON_object(Jdata[i], keys::DCN, out);
+            parse_JSON_object(Jdata[i], keys::DCN[mode], out);
             if (out.size() !=1) { cout << "Parameter \"F\"-type " << p << " (G0) has no \"DCN\" defined! "<< endl; exit(1); }
             optRP[Rndx]->Pname = out[0];
 //            h_optR = true;
@@ -328,7 +328,7 @@ Opt_G0::Opt_G0(vector<string> data, double OptBoundPrc, unsigned &p) :
             optSP.push_back( new Opt_G0::S_parameter);
             optSP[optSP.size()-1]->Pndx = p;
 
-            parse_JSON_object(Jdata[i], keys::DCN, out);
+            parse_JSON_object(Jdata[i], keys::DCN[mode], out);
             if (out.size() !=1) { cout << "Parameter \"S\"-type " << p << " (G0) has no \"DCN\" defined! "<< endl; exit(1); }
             optSP[optSP.size()-1]->Pname = out[0];
             out.clear();
@@ -758,14 +758,14 @@ Opt_bIC::Opt_bIC(vector<string> data, double OptBoundPrc, unsigned &p) :
             optFP.push_back( new Opt_bIC::F_parameter);
             optFP[optFP.size()-1]->Pndx = -1;
 
-            parse_JSON_object(Jdata[i], keys::NFndx, out);
+            parse_JSON_object(Jdata[i], keys::NFndx[mode], out);
             if (out.size() !=1) { cout << "Parameter \"F\"-type " << p << " (bIC) has no \"NFndx\" defined! "<< endl; exit(1); }
             optFP[optFP.size()-1]->Fndx = atoi(out[0].c_str());
             out.clear();
 
             Pval_to_optF (p, Jdata[i], optFP[optFP.size()-1]);
 
-            parse_JSON_object(Jdata[i], keys::ICN, out);
+            parse_JSON_object(Jdata[i], keys::ICN[mode], out);
             if (out.size() !=1) { cout << "Parameter \"F\"-type " << p << " (bIC) has no \"ICN\" defined! "<< endl; exit(1); }
             optFP[optFP.size()-1]->Pname = out[0];
             p++;
@@ -777,7 +777,7 @@ Opt_bIC::Opt_bIC(vector<string> data, double OptBoundPrc, unsigned &p) :
             optLP[optLP.size()-1]->Pndx = -1;
             Pval_to_optL (p, Jdata[i], optLP[optLP.size()-1]);
 
-            parse_JSON_object(Jdata[i], keys::ICN, out);
+            parse_JSON_object(Jdata[i], keys::ICN[mode], out);
             if (out.size() !=1) { cout << "Parameter \"L\"-type " << p << " (bIC) has no \"ICN\" defined! "<< endl; exit(1); }
             optLP[optLP.size()-1]->Pname = out[0];
             p++;
@@ -934,7 +934,7 @@ Opt_Tk::Opt_Tk(vector<string> data, double OptBoundPrc, unsigned &p) :
             out.clear();
             optFP.push_back( new Opt_Tk::F_parameter);
 
-            parse_JSON_object(Jdata[i], keys::NFndx, out);
+            parse_JSON_object(Jdata[i], keys::NFndx[mode], out);
             if (out.size() !=1) { cout << "Parameter \"F\"-type " << p << " (TK) has no \"NFndx\" defined! "<< endl; exit(1); }
             optFP[optFP.size()-1]->Fndx = atoi(out[0].c_str());
             out.clear();
@@ -1018,7 +1018,7 @@ Opt_P::Opt_P(vector<string> data, double OptBoundPrc, unsigned &p) :
             out.clear();
             optFP.push_back( new Opt_P::F_parameter);
 
-            parse_JSON_object(Jdata[i], keys::NFndx, out);
+            parse_JSON_object(Jdata[i], keys::NFndx[mode], out);
             if (out.size() !=1) { cout << "Parameter \"F\"-type " << p << " (P) has no \"NFndx\" defined! "<< endl; exit(1); }
             optFP[optFP.size()-1]->Fndx = atoi(out[0].c_str());
             out.clear();

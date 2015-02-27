@@ -369,7 +369,7 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
 }
 
 
-// calculates the residual of IC as molar fraction
+// calculates the residual of IC as molar ratio
 double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::obj_fun &objfun, TGfitTask *sys)
 {
     const char *elem_name, *phase_name;
@@ -488,8 +488,14 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
     } else //Get aqueous phase Eh
     if ((objfun.exp_CN == keys::Eh) && (ccPH == *keys::aq) && (PHndx >=0))
     {
-        // Default
-        computed_value = sys->NodT[i]->Get_Eh();
+        if (objfun.exp_unit == keys::Volts)
+        {
+            computed_value = sys->NodT[i]->Get_Eh();
+        } else
+        {// Default
+            computed_value = sys->NodT[i]->Get_Eh();
+            objfun.exp_unit == keys::Volts;
+        }
     } else // Get phase amount
     if ((objfun.exp_CN == keys::Qnt) && (PHndx >=0))
     {
@@ -553,8 +559,19 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
     } else
     if ((objfun.exp_CN == keys::IS) && (ccPH == *keys::aq) && (PHndx >=0))
     {
-        // Default
-        computed_value = sys->NodT[i]->Get_IC();
+        if (objfun.exp_unit == keys::molal)
+        {
+            computed_value = sys->NodT[i]->Get_IC();
+        } else
+        if (objfun.exp_unit == keys::logm)
+        {
+            computed_value = log10(sys->NodT[i]->Get_IC());
+        } else
+        {
+            // Default
+            computed_value = sys->NodT[i]->Get_IC();
+            objfun.exp_unit = keys::molal;
+        }
 
     } else
     if ((objfun.exp_CN == keys::oscw) && (ccPH == *keys::aq) && (PHndx >=0))
