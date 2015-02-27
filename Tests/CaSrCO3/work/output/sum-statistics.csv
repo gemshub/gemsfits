@@ -1,0 +1,25 @@
+Statistics-Parameter,Value
+Number-of-measurements,5
+Number-of-parameters,1
+Number-of-runs-needed-for-regression,0
+Degrees-of-freedom,4
+Value-of-the-minimized-function-sum,2051.19
+Sum-of-absolute-values-of-residuals,2980.35
+Standard-deviation-of-residuals,820.064
+Average-residual,0.0808659
+Maximum-residual,0.924242
+Minimum-residual,-0.481724
+Number-of-positive-residuals,2
+Number-of-negative-residuals,3
+Coefficient-of-determination-R^2,-0.583873
+, ,
+OFUN-prop-Gex,
+minimized-function-sum-(1e+02%-of-total),2.1e+03
+Standard-deviation-of-residuals,7.3e+02
+Average-residual,2e+02
+Maximum-residual,1.4e+03
+Minimum-residual,-6.6e+02
+Number-of-positive-residuals,2
+Number-of-negative-residuals,3
+Coefficient-of-determination-R^2,-0.58
+, ,

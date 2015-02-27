@@ -1,0 +1,25 @@
+Statistics-Parameter,Value
+Number-of-measurements,264
+Number-of-parameters,39
+Number-of-runs-needed-for-regression,462
+Degrees-of-freedom,225
+Value-of-the-minimized-function-sum,0.0116264
+Sum-of-absolute-values-of-residuals,1.05777
+Standard-deviation-of-residuals,0.00779077
+Average-residual,-0.00149325
+Maximum-residual,0.0177475
+Minimum-residual,-0.0254635
+Number-of-positive-residuals,27
+Number-of-negative-residuals,237
+Coefficient-of-determination-R^2,0.988608
+, ,
+OFUN-prop-RHO,
+minimized-function-sum-(1.2e+02%-of-total),0.014
+Standard-deviation-of-residuals,0.0072
+Average-residual,-0.0015
+Maximum-residual,0.018
+Minimum-residual,-0.025
+Number-of-positive-residuals,27
+Number-of-negative-residuals,237
+Coefficient-of-determination-R^2,0.99
+, ,

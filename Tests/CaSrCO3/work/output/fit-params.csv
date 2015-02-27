@@ -1,0 +1,2 @@
+ptype,parameter,name,init.value,fittted.value,mc.mean,mc.stdev,confi99,confi95,confi90,CSS.sensitivity,correl.coef.ArgStr[0|0],
+F,PMc,ArgStr[0|0],10000,13027.0157458,,,,,,209.462698222,1,

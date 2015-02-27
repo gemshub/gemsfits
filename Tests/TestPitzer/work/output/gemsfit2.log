@@ -1,0 +1,799 @@
+01. main.cpp(108). Creating new TGfitTask
+02. data_manager.cpp(51). Reading database parameter get_db_specs(); 
+03. data_manager.cpp(55). Getting data form the EJDB database; 
+05. data_manager.cpp(365). Adding the data returned by the selection query into the data structure; 
+04. data_manager.cpp(58). Getting distinct T and P pairs; 
+09. optimization.cpp(48). Reading NLopt optimization settings from the input file; 
+10. gemsfit_task.cpp(94). Initializing the Target function structure & get_DatTarget(); 
+06. gemsfit_task.cpp(89). Initializing nodes with the experimental data; 
+07. gemsfit_task.cpp(92). Initializing optimization structure; 
+11. gemsfit_task.cpp(152). Initializing optimization init_optim(); 
+ ... initializing optimization object in build_optim() ... 
+ ... performing parameter normalization ... 
+     Init guess [0] = 0.0745618
+     Upper Bound old [0]= 0.082018
+     Upper Bound new [0]= 1.1
+     Init guess [1] = -470.789
+     Upper Bound old [1]= -423.71
+     Upper Bound new [1]= -0.9
+     Init guess [2] = -1.85114
+     Upper Bound old [2]= -1.66603
+     Upper Bound new [2]= -0.9
+     Init guess [3] = 0.00165565
+     Upper Bound old [3]= 0.00182121
+     Upper Bound new [3]= 1.1
+     Init guess [4] = 0.275241
+     Upper Bound old [4]= 0.302765
+     Upper Bound new [4]= 1.1
+     Init guess [5] = -521.118
+     Upper Bound old [5]= -469.006
+     Upper Bound new [5]= -0.9
+     Init guess [6] = -2.88036
+     Upper Bound old [6]= -2.59232
+     Upper Bound new [6]= -0.9
+     Init guess [7] = 0.00471463
+     Upper Bound old [7]= 0.00518609
+     Upper Bound new [7]= 1.1
+     Init guess [8] = 0.00153693
+     Upper Bound old [8]= 0.00169062
+     Upper Bound new [8]= 1.1
+     Init guess [9] = 48.0726
+     Upper Bound old [9]= 52.8799
+     Upper Bound new [9]= 1.1
+     Init guess [10] = 0.17468
+     Upper Bound old [10]= 0.192148
+     Upper Bound new [10]= 1.1
+     Init guess [11] = -0.000156269
+     Upper Bound old [11]= -0.000140642
+     Upper Bound new [11]= -0.9
+     Init guess [12] = 0.0883444
+     Upper Bound old [12]= 0.0971788
+     Upper Bound new [12]= 1.1
+     Init guess [13] = -1197.85
+     Upper Bound old [13]= -1078.06
+     Upper Bound new [13]= -0.9
+     Init guess [14] = -6.10983
+     Upper Bound old [14]= -5.49885
+     Upper Bound new [14]= -0.9
+     Init guess [15] = 0.00743325
+     Upper Bound old [15]= 0.00817658
+     Upper Bound new [15]= 1.1
+     Init guess [16] = 0.244421
+     Upper Bound old [16]= 0.268863
+     Upper Bound new [16]= 1.1
+     Init guess [17] = 1627.03
+     Upper Bound old [17]= 1789.73
+     Upper Bound new [17]= 1.1
+     Init guess [18] = 9.4825
+     Upper Bound old [18]= 10.4308
+     Upper Bound new [18]= 1.1
+     Init guess [19] = -0.0115789
+     Upper Bound old [19]= -0.010421
+     Upper Bound new [19]= -0.9
+     Init guess [20] = 0.00399944
+     Upper Bound old [20]= 0.00439938
+     Upper Bound new [20]= 1.1
+     Init guess [21] = 88.2476
+     Upper Bound old [21]= 97.0724
+     Upper Bound new [21]= 1.1
+     Init guess [22] = 0.406876
+     Upper Bound old [22]= 0.447564
+     Upper Bound new [22]= 1.1
+     Init guess [23] = -0.000475667
+     Upper Bound old [23]= -0.0004281
+     Upper Bound new [23]= -0.9
+     Init guess [24] = -0.05
+     Upper Bound old [24]= -0.045
+     Upper Bound new [24]= -0.9
+     Init guess [25] = 0.036
+     Upper Bound old [25]= 0.0396
+     Upper Bound new [25]= 1.1
+     Init guess [26] = 0.177001
+     Upper Bound old [26]= 0.194701
+     Upper Bound new [26]= 1.1
+     Init guess [27] = -33.4777
+     Upper Bound old [27]= -30.1299
+     Upper Bound new [27]= -0.9
+     Init guess [28] = -0.262215
+     Upper Bound old [28]= -0.235993
+     Upper Bound new [28]= -0.9
+     Init guess [29] = 0.000125778
+     Upper Bound old [29]= 0.000138356
+     Upper Bound new [29]= 1.1
+     Init guess [30] = 0.292922
+     Upper Bound old [30]= 0.322214
+     Upper Bound new [30]= 1.1
+     Init guess [31] = 3402.47
+     Upper Bound old [31]= 3742.72
+     Upper Bound new [31]= 1.1
+     Init guess [32] = 19.7936
+     Upper Bound old [32]= 21.773
+     Upper Bound new [32]= 1.1
+     Init guess [33] = -0.0279388
+     Upper Bound old [33]= -0.0251449
+     Upper Bound new [33]= -0.9
+     Init guess [34] = 0.000362
+     Upper Bound old [34]= 0.0003982
+     Upper Bound new [34]= 1.1
+     Init guess [35] = -2.91038e-11
+     Upper Bound old [35]= -2.61934e-11
+     Upper Bound new [35]= -0.9
+     Init guess [36] = -3.036e-05
+     Upper Bound old [36]= -2.7324e-05
+     Upper Bound new [36]= -0.9
+     Init guess [37] = -0.00601
+     Upper Bound old [37]= -0.005409
+     Upper Bound new [37]= -0.9
+     Init guess [38] = -9.93
+     Upper Bound old [38]= -8.937
+     Upper Bound new [38]= -0.9
+     Init guess [0] = 0.0745618
+     Lower Bound old [0]= 0.0671056
+     Lower Bound new [0]= 0.9
+     Init guess [1] = -470.789
+     Lower Bound old [1]= -517.868
+     Lower Bound new [1]= -1.1
+     Init guess [2] = -1.85114
+     Lower Bound old [2]= -2.03625
+     Lower Bound new [2]= -1.1
+     Init guess [3] = 0.00165565
+     Lower Bound old [3]= 0.00149008
+     Lower Bound new [3]= 0.9
+     Init guess [4] = 0.275241
+     Lower Bound old [4]= 0.247717
+     Lower Bound new [4]= 0.9
+     Init guess [5] = -521.118
+     Lower Bound old [5]= -573.23
+     Lower Bound new [5]= -1.1
+     Init guess [6] = -2.88036
+     Lower Bound old [6]= -3.1684
+     Lower Bound new [6]= -1.1
+     Init guess [7] = 0.00471463
+     Lower Bound old [7]= 0.00424317
+     Lower Bound new [7]= 0.9
+     Init guess [8] = 0.00153693
+     Lower Bound old [8]= 0.00138324
+     Lower Bound new [8]= 0.9
+     Init guess [9] = 48.0726
+     Lower Bound old [9]= 43.2653
+     Lower Bound new [9]= 0.9
+     Init guess [10] = 0.17468
+     Lower Bound old [10]= 0.157212
+     Lower Bound new [10]= 0.9
+     Init guess [11] = -0.000156269
+     Lower Bound old [11]= -0.000171896
+     Lower Bound new [11]= -1.1
+     Init guess [12] = 0.0883444
+     Lower Bound old [12]= 0.07951
+     Lower Bound new [12]= 0.9
+     Init guess [13] = -1197.85
+     Lower Bound old [13]= -1317.63
+     Lower Bound new [13]= -1.1
+     Init guess [14] = -6.10983
+     Lower Bound old [14]= -6.72081
+     Lower Bound new [14]= -1.1
+     Init guess [15] = 0.00743325
+     Lower Bound old [15]= 0.00668993
+     Lower Bound new [15]= 0.9
+     Init guess [16] = 0.244421
+     Lower Bound old [16]= 0.219979
+     Lower Bound new [16]= 0.9
+     Init guess [17] = 1627.03
+     Lower Bound old [17]= 1464.33
+     Lower Bound new [17]= 0.9
+     Init guess [18] = 9.4825
+     Lower Bound old [18]= 8.53425
+     Lower Bound new [18]= 0.9
+     Init guess [19] = -0.0115789
+     Lower Bound old [19]= -0.0127368
+     Lower Bound new [19]= -1.1
+     Init guess [20] = 0.00399944
+     Lower Bound old [20]= 0.0035995
+     Lower Bound new [20]= 0.9
+     Init guess [21] = 88.2476
+     Lower Bound old [21]= 79.4228
+     Lower Bound new [21]= 0.9
+     Init guess [22] = 0.406876
+     Lower Bound old [22]= 0.366188
+     Lower Bound new [22]= 0.9
+     Init guess [23] = -0.000475667
+     Lower Bound old [23]= -0.000523234
+     Lower Bound new [23]= -1.1
+     Init guess [24] = -0.05
+     Lower Bound old [24]= -0.055
+     Lower Bound new [24]= -1.1
+     Init guess [25] = 0.036
+     Lower Bound old [25]= 0.0324
+     Lower Bound new [25]= 0.9
+     Init guess [26] = 0.177001
+     Lower Bound old [26]= 0.159301
+     Lower Bound new [26]= 0.9
+     Init guess [27] = -33.4777
+     Lower Bound old [27]= -36.8255
+     Lower Bound new [27]= -1.1
+     Init guess [28] = -0.262215
+     Lower Bound old [28]= -0.288436
+     Lower Bound new [28]= -1.1
+     Init guess [29] = 0.000125778
+     Lower Bound old [29]= 0.0001132
+     Lower Bound new [29]= 0.9
+     Init guess [30] = 0.292922
+     Lower Bound old [30]= 0.26363
+     Lower Bound new [30]= 0.9
+     Init guess [31] = 3402.47
+     Lower Bound old [31]= 3062.22
+     Lower Bound new [31]= 0.9
+     Init guess [32] = 19.7936
+     Lower Bound old [32]= 17.8142
+     Lower Bound new [32]= 0.9
+     Init guess [33] = -0.0279388
+     Lower Bound old [33]= -0.0307327
+     Lower Bound new [33]= -1.1
+     Init guess [34] = 0.000362
+     Lower Bound old [34]= 0.0003258
+     Lower Bound new [34]= 0.9
+     Init guess [35] = -2.91038e-11
+     Lower Bound old [35]= -3.20142e-11
+     Lower Bound new [35]= -1.1
+     Init guess [36] = -3.036e-05
+     Lower Bound old [36]= -3.3396e-05
+     Lower Bound new [36]= -1.1
+     Init guess [37] = -0.00601
+     Lower Bound old [37]= -0.006611
+     Lower Bound new [37]= -1.1
+     Init guess [38] = -9.93
+     Lower Bound old [38]= -10.923
+     Lower Bound new [38]= -1.1
+... assigning bounds and tolerance for optimization...
+
+12. in gemsfit_task.cpp(287). Setting target (objective) function to minimize.
+13. gemsfit_task.cpp(308). Performing optimization.
+~ m.count.= 1 sum.res.= 0.0919961991088198
+~ m.count.= 2 sum.res.= 0.0919961989955398
+~ m.count.= 3 sum.res.= 0.0919961996907967
+~ m.count.= 4 sum.res.= 0.0919961983061633
+~ m.count.= 5 sum.res.= 0.0919961988520901
+~ m.count.= 6 sum.res.= 0.0919961994885066
+~ m.count.= 7 sum.res.= 0.0919961984858337
+~ m.count.= 8 sum.res.= 0.0919962003131957
+~ m.count.= 9 sum.res.= 0.0919961997955963
+~ m.count.= 10 sum.res.= 0.0919961990337489
+~ m.count.= 11 sum.res.= 0.0919962010914795
+~ m.count.= 12 sum.res.= 0.0919961966844434
+~ m.count.= 13 sum.res.= 0.0919961983323733
+~ m.count.= 14 sum.res.= 0.0919961976557236
+~ m.count.= 15 sum.res.= 0.0919962185745618
+~ m.count.= 16 sum.res.= 0.091996174970765
+~ m.count.= 17 sum.res.= 0.0919961874358142
+~ m.count.= 18 sum.res.= 0.0919961986954191
+~ m.count.= 19 sum.res.= 0.0919962014992227
+~ m.count.= 20 sum.res.= 0.0919961944839619
+~ m.count.= 21 sum.res.= 0.091996197087613
+~ m.count.= 22 sum.res.= 0.0919961989487195
+~ m.count.= 23 sum.res.= 0.0919962022195473
+~ m.count.= 24 sum.res.= 0.0919961944203098
+~ m.count.= 25 sum.res.= 0.0919961971374147
+~ m.count.= 26 sum.res.= 0.0919961982814124
+~ m.count.= 27 sum.res.= 0.0919961985109242
+~ m.count.= 28 sum.res.= 0.0919961962393234
+~ m.count.= 29 sum.res.= 0.0919961995805754
+~ m.count.= 30 sum.res.= 0.0919961978194073
+~ m.count.= 31 sum.res.= 0.0919961988907526
+~ m.count.= 32 sum.res.= 0.0919961986126646
+~ m.count.= 33 sum.res.= 0.0919962042077515
+~ m.count.= 34 sum.res.= 0.0919961897969351
+~ m.count.= 35 sum.res.= 0.091996194335618
+~ m.count.= 36 sum.res.= 0.0919961990949864
+~ m.count.= 37 sum.res.= 0.0919961991089782
+~ m.count.= 38 sum.res.= 0.091996198981577
+~ m.count.= 39 sum.res.= 0.0919961988679267
+~ m.count.= 40 sum.res.= 0.0919961994487435
+~ m.count.= 41 sum.res.= 0.0919961992145331
+~ m.count.= 42 sum.res.= 0.0919961985167008
+~ m.count.= 43 sum.res.= 0.0919961999124977
+~ m.count.= 44 sum.res.= 0.0919961993503891
+~ m.count.= 45 sum.res.= 0.0919961987236814
+~ m.count.= 46 sum.res.= 0.091996199731294
+~ m.count.= 47 sum.res.= 0.091996197917237
+~ m.count.= 48 sum.res.= 0.0919961984203448
+~ m.count.= 49 sum.res.= 0.0919961991785904
+~ m.count.= 50 sum.res.= 0.0919961971826805
+~ m.count.= 51 sum.res.= 0.0919962016233002
+~ m.count.= 52 sum.res.= 0.0919961998857665
+~ m.count.= 53 sum.res.= 0.0649474959393752
+~ m.count.= 54 sum.res.= 0.0649474794856144
+~ m.count.= 55 sum.res.= 0.0649475330419239
+~ m.count.= 56 sum.res.= 0.0649475087445546
+~ m.count.= 57 sum.res.= 0.0649474948797646
+~ m.count.= 58 sum.res.= 0.0649474921443542
+~ m.count.= 59 sum.res.= 0.0649474994041504
+~ m.count.= 60 sum.res.= 0.0649474965385088
+~ m.count.= 61 sum.res.= 0.0649474946294494
+~ m.count.= 62 sum.res.= 0.0649474914965652
+~ m.count.= 63 sum.res.= 0.0649474995362292
+~ m.count.= 64 sum.res.= 0.0649474964948824
+~ m.count.= 65 sum.res.= 0.0649474952968468
+~ m.count.= 66 sum.res.= 0.0649474950622075
+~ m.count.= 67 sum.res.= 0.0384880964454856
+~ m.count.= 68 sum.res.= 0.0384880929813634
+~ m.count.= 69 sum.res.= 0.0384880947624863
+~ m.count.= 70 sum.res.= 0.0384880936750754
+~ m.count.= 71 sum.res.= 0.0384880939541793
+~ m.count.= 72 sum.res.= 0.0384880886888738
+~ m.count.= 73 sum.res.= 0.0384881041562295
+~ m.count.= 74 sum.res.= 0.0384880985685691
+~ m.count.= 75 sum.res.= 0.0384880934751942
+~ m.count.= 76 sum.res.= 0.0384880934596958
+~ m.count.= 77 sum.res.= 0.0384880935883079
+~ m.count.= 78 sum.res.= 0.0384880937015404
+~ m.count.= 79 sum.res.= 0.0384880931188807
+~ m.count.= 80 sum.res.= 0.0384880927595205
+~ m.count.= 81 sum.res.= 0.0384880852429288
+~ m.count.= 82 sum.res.= 0.0384880844047445
+~ m.count.= 83 sum.res.= 0.0384880854454485
+~ m.count.= 84 sum.res.= 0.0384880839556046
+~ m.count.= 85 sum.res.= 0.0384880844013784
+~ m.count.= 86 sum.res.= 0.0384880835032651
+~ m.count.= 87 sum.res.= 0.038488083457989
+~ m.count.= 88 sum.res.= 0.0384880830065092
+~ m.count.= 89 sum.res.= 0.0384880827322986
+~ m.count.= 90 sum.res.= 0.0384880822737288
+~ m.count.= 91 sum.res.= 0.0384880817667252
+~ m.count.= 92 sum.res.= 0.0384880822530344
+~ m.count.= 93 sum.res.= 0.0384880816262976
+~ m.count.= 94 sum.res.= 0.038488082104144
+~ m.count.= 95 sum.res.= 0.0384880819598869
+~ m.count.= 96 sum.res.= 0.038488082211296
+~ m.count.= 97 sum.res.= 0.0384880821291523
+~ m.count.= 98 sum.res.= 0.0384880824726288
+~ m.count.= 99 sum.res.= 0.0384880813865352
+~ m.count.= 100 sum.res.= 0.038488081250071
+~ m.count.= 101 sum.res.= 0.0384880806689046
+~ m.count.= 102 sum.res.= 0.0384880800238399
+~ m.count.= 103 sum.res.= 0.0384880790829373
+~ m.count.= 104 sum.res.= 0.0384880786431076
+~ m.count.= 105 sum.res.= 0.0384880781457126
+~ m.count.= 106 sum.res.= 0.0384880797702575
+~ m.count.= 107 sum.res.= 0.0384880777060318
+~ m.count.= 108 sum.res.= 0.0384880787429217
+~ m.count.= 109 sum.res.= 0.0384880772567966
+~ m.count.= 110 sum.res.= 0.0384880777928419
+~ m.count.= 111 sum.res.= 0.0384880774002831
+~ m.count.= 112 sum.res.= 0.0384880778783886
+~ m.count.= 113 sum.res.= 0.0384880766239428
+~ m.count.= 114 sum.res.= 0.0384880772720027
+~ m.count.= 115 sum.res.= 0.0384880752608887
+~ m.count.= 116 sum.res.= 0.0384880760919884
+~ m.count.= 117 sum.res.= 0.03848807551145
+~ m.count.= 118 sum.res.= 0.0384880760921381
+~ m.count.= 119 sum.res.= 0.0384880743836862
+~ m.count.= 120 sum.res.= 0.0384880751520149
+~ m.count.= 121 sum.res.= 0.0384880742527272
+~ m.count.= 122 sum.res.= 0.038488074990844
+~ m.count.= 123 sum.res.= 0.0384880743440937
+~ m.count.= 124 sum.res.= 0.0384880750114111
+~ m.count.= 125 sum.res.= 0.0384880736237695
+~ m.count.= 126 sum.res.= 0.0384880742771027
+~ m.count.= 127 sum.res.= 0.0384880728828593
+~ m.count.= 128 sum.res.= 0.0384880736929157
+~ m.count.= 129 sum.res.= 0.0384880727853015
+~ m.count.= 130 sum.res.= 0.0384880735714101
+~ m.count.= 131 sum.res.= 0.0384880728193338
+~ m.count.= 132 sum.res.= 0.0384880735081422
+~ m.count.= 133 sum.res.= 0.0384880729875606
+~ m.count.= 134 sum.res.= 0.0384880735645267
+~ m.count.= 135 sum.res.= 0.0384880733600777
+~ m.count.= 136 sum.res.= 0.0384880735597561
+~ m.count.= 137 sum.res.= 0.0384880736421617
+~ m.count.= 138 sum.res.= 0.0384880735578021
+~ m.count.= 139 sum.res.= 0.0384880726147275
+~ m.count.= 140 sum.res.= 0.0384880733950074
+~ m.count.= 141 sum.res.= 0.0384880724425973
+~ m.count.= 142 sum.res.= 0.038488073218802
+~ m.count.= 143 sum.res.= 0.0384880722009285
+~ m.count.= 144 sum.res.= 0.0384880729750182
+~ m.count.= 145 sum.res.= 0.0384880722078294
+~ m.count.= 146 sum.res.= 0.0384880730345812
+~ m.count.= 147 sum.res.= 0.0384880723532898
+~ m.count.= 148 sum.res.= 0.0384880729786444
+~ m.count.= 149 sum.res.= 0.0384880722855371
+~ m.count.= 150 sum.res.= 0.0384880728822841
+~ m.count.= 151 sum.res.= 0.038488072981441
+~ m.count.= 152 sum.res.= 0.0384880715966842
+~ m.count.= 153 sum.res.= 0.0384880715316821
+~ m.count.= 154 sum.res.= 0.0384880707585467
+~ m.count.= 155 sum.res.= 0.0384880712692821
+~ m.count.= 156 sum.res.= 0.0384880714910429
+~ m.count.= 157 sum.res.= 0.0384880708457256
+~ m.count.= 158 sum.res.= 0.0384880710647548
+~ m.count.= 159 sum.res.= 0.0384880699584575
+~ m.count.= 160 sum.res.= 0.0384880707377099
+~ m.count.= 161 sum.res.= 0.0384880696472034
+~ m.count.= 162 sum.res.= 0.0384880703642882
+~ m.count.= 163 sum.res.= 0.0384880699559678
+~ m.count.= 164 sum.res.= 0.0384880704713963
+~ m.count.= 165 sum.res.= 0.0384880695713989
+~ m.count.= 166 sum.res.= 0.0384880703940051
+~ m.count.= 167 sum.res.= 0.0384880695876225
+~ m.count.= 168 sum.res.= 0.0384880704913721
+~ m.count.= 169 sum.res.= 0.0384880693298289
+~ m.count.= 170 sum.res.= 0.0384880687616544
+~ m.count.= 171 sum.res.= 0.0384880685609608
+~ m.count.= 172 sum.res.= 0.0384880694176573
+~ m.count.= 173 sum.res.= 0.0384880686887698
+~ m.count.= 174 sum.res.= 0.0384880693698077
+~ m.count.= 175 sum.res.= 0.0384880695882102
+~ m.count.= 176 sum.res.= 0.0384880693890406
+~ m.count.= 177 sum.res.= 0.0384880686528065
+~ m.count.= 178 sum.res.= 0.0384880694242333
+~ m.count.= 179 sum.res.= 0.0384880690301819
+~ m.count.= 180 sum.res.= 0.0384880673332334
+~ m.count.= 181 sum.res.= 0.0384880672084051
+~ m.count.= 182 sum.res.= 0.0384880680689642
+~ m.count.= 183 sum.res.= 0.0384880667084387
+~ m.count.= 184 sum.res.= 0.0384880665298051
+~ m.count.= 185 sum.res.= 0.0384880664014506
+~ m.count.= 186 sum.res.= 0.0384880656130335
+~ m.count.= 187 sum.res.= 0.0384880653935131
+~ m.count.= 188 sum.res.= 0.0384880655584022
+~ m.count.= 189 sum.res.= 0.0384880641551414
+~ m.count.= 190 sum.res.= 0.0384880651177002
+~ m.count.= 191 sum.res.= 0.0384880638963012
+~ m.count.= 192 sum.res.= 0.0384880638541292
+~ m.count.= 193 sum.res.= 0.0384880634799031
+~ m.count.= 194 sum.res.= 0.0384880628866363
+~ m.count.= 195 sum.res.= 0.0384880624516838
+~ m.count.= 196 sum.res.= 0.0384880633745971
+~ m.count.= 197 sum.res.= 0.0384880627108788
+~ m.count.= 198 sum.res.= 0.0384880633106001
+~ m.count.= 199 sum.res.= 0.038488062570091
+~ m.count.= 200 sum.res.= 0.0384880624289712
+~ m.count.= 201 sum.res.= 0.0384880621892536
+~ m.count.= 202 sum.res.= 0.0384880619111079
+~ m.count.= 203 sum.res.= 0.038488061900332
+~ m.count.= 204 sum.res.= 0.0384880627838894
+~ m.count.= 205 sum.res.= 0.0384880620264652
+~ m.count.= 206 sum.res.= 0.0384880628345993
+~ m.count.= 207 sum.res.= 0.0384880616664723
+~ m.count.= 208 sum.res.= 0.0384880617016323
+~ m.count.= 209 sum.res.= 0.0384880613989902
+~ m.count.= 210 sum.res.= 0.0384880612528301
+~ m.count.= 211 sum.res.= 0.0384880607006408
+~ m.count.= 212 sum.res.= 0.038488060386045
+~ m.count.= 213 sum.res.= 0.0384880602358997
+~ m.count.= 214 sum.res.= 0.0384880611297033
+~ m.count.= 215 sum.res.= 0.0384880603901825
+~ m.count.= 216 sum.res.= 0.0384880605778544
+~ m.count.= 217 sum.res.= 0.0384880600879417
+~ m.count.= 218 sum.res.= 0.0384880598646083
+~ m.count.= 219 sum.res.= 0.0384880593157994
+~ m.count.= 220 sum.res.= 0.0384880596065734
+~ m.count.= 221 sum.res.= 0.0384880592476657
+~ m.count.= 222 sum.res.= 0.0384880587469919
+~ m.count.= 223 sum.res.= 0.0384880586318772
+~ m.count.= 224 sum.res.= 0.0384880583459578
+~ m.count.= 225 sum.res.= 0.038488056467386
+~ m.count.= 226 sum.res.= 0.038488053023129
+~ m.count.= 227 sum.res.= 0.0384880473638685
+~ m.count.= 228 sum.res.= 0.0384880403464585
+~ m.count.= 229 sum.res.= 0.038488036060304
+~ m.count.= 230 sum.res.= 0.0361136013205226
+~ m.count.= 231 sum.res.= 0.0146100599538926
+~ m.count.= 232 sum.res.= 0.0116264458736944
+~ m.count.= 233 sum.res.= 0.0116921828221954
+~ m.count.= 234 sum.res.= 0.0119051399763953
+~ m.count.= 235 sum.res.= 0.0126249412806927
+~ m.count.= 236 sum.res.= 0.0127223623426534
+~ m.count.= 237 sum.res.= 0.0123176300515428
+~ m.count.= 238 sum.res.= 0.0129963909381889
+~ m.count.= 239 sum.res.= 0.0128044187397624
+~ m.count.= 240 sum.res.= 0.0133697832580756
+~ m.count.= 241 sum.res.= 0.0133622857671392
+~ m.count.= 242 sum.res.= 0.0133073545266514
+~ m.count.= 243 sum.res.= 0.0133752635399005
+~ m.count.= 244 sum.res.= 0.0134554781400917
+~ m.count.= 245 sum.res.= 0.0134165996921592
+~ m.count.= 246 sum.res.= 0.0134056424119922
+~ m.count.= 247 sum.res.= 0.0135058631475601
+~ m.count.= 248 sum.res.= 0.0136157320810188
+~ m.count.= 249 sum.res.= 0.0135925735085918
+~ m.count.= 250 sum.res.= 0.0138408070598609
+~ m.count.= 251 sum.res.= 0.0138484156722321
+~ m.count.= 252 sum.res.= 0.0139571812988187
+~ m.count.= 253 sum.res.= 0.0139688956331864
+~ m.count.= 254 sum.res.= 0.0139688330965851
+~ m.count.= 255 sum.res.= 0.0139791337929782
+~ m.count.= 256 sum.res.= 0.0140799980971359
+~ m.count.= 257 sum.res.= 0.0140548506373462
+~ m.count.= 258 sum.res.= 0.0140505462069213
+~ m.count.= 259 sum.res.= 0.0140756508558797
+~ m.count.= 260 sum.res.= 0.0140788175760632
+~ m.count.= 261 sum.res.= 0.0140948290380678
+~ m.count.= 262 sum.res.= 0.0141042637559443
+~ m.count.= 263 sum.res.= 0.0141055734672759
+~ m.count.= 264 sum.res.= 0.0140936023048561
+~ m.count.= 265 sum.res.= 0.0141216250521763
+~ m.count.= 266 sum.res.= 0.0141002924685942
+~ m.count.= 267 sum.res.= 0.0140900542403637
+~ m.count.= 268 sum.res.= 0.0141069619797478
+~ m.count.= 269 sum.res.= 0.0141032362589824
+~ m.count.= 270 sum.res.= 0.0140870542576335
+~ m.count.= 271 sum.res.= 0.014106512864124
+~ m.count.= 272 sum.res.= 0.0140957066330287
+~ m.count.= 273 sum.res.= 0.0140618619207239
+~ m.count.= 274 sum.res.= 0.0140347045540214
+~ m.count.= 275 sum.res.= 0.0140449592334645
+~ m.count.= 276 sum.res.= 0.0140550111820717
+~ m.count.= 277 sum.res.= 0.0140405402927148
+~ m.count.= 278 sum.res.= 0.0140504388429604
+~ m.count.= 279 sum.res.= 0.0140671222640574
+~ m.count.= 280 sum.res.= 0.0140622125307493
+~ m.count.= 281 sum.res.= 0.0140635794892946
+~ m.count.= 282 sum.res.= 0.0140719813845948
+~ m.count.= 283 sum.res.= 0.0141229438213469
+~ m.count.= 284 sum.res.= 0.0141252729596297
+~ m.count.= 285 sum.res.= 0.0141179056369359
+~ m.count.= 286 sum.res.= 0.0141115508594208
+~ m.count.= 287 sum.res.= 0.0140950757376457
+~ m.count.= 288 sum.res.= 0.0140783192134155
+~ m.count.= 289 sum.res.= 0.0141098172016298
+~ m.count.= 290 sum.res.= 0.0141135123628354
+~ m.count.= 291 sum.res.= 0.0141388545462409
+~ m.count.= 292 sum.res.= 0.014142576693078
+~ m.count.= 293 sum.res.= 0.0141607927395674
+~ m.count.= 294 sum.res.= 0.0141022420493577
+~ m.count.= 295 sum.res.= 0.0141338964269695
+~ m.count.= 296 sum.res.= 0.0141084138548876
+~ m.count.= 297 sum.res.= 0.0141319360660308
+~ m.count.= 298 sum.res.= 0.014108724684066
+~ m.count.= 299 sum.res.= 0.0141163874789158
+~ m.count.= 300 sum.res.= 0.0141204162389871
+~ m.count.= 301 sum.res.= 0.0141099338589622
+~ m.count.= 302 sum.res.= 0.0141096106546154
+~ m.count.= 303 sum.res.= 0.0141106221135182
+~ m.count.= 304 sum.res.= 0.0141189425142497
+~ m.count.= 305 sum.res.= 0.0141494207847507
+~ m.count.= 306 sum.res.= 0.0141767313441612
+~ m.count.= 307 sum.res.= 0.0141279547483651
+~ m.count.= 308 sum.res.= 0.0140972268129002
+~ m.count.= 309 sum.res.= 0.01412083626159
+~ m.count.= 310 sum.res.= 0.0140934160481373
+~ m.count.= 311 sum.res.= 0.0140976117396074
+~ m.count.= 312 sum.res.= 0.014097760924497
+~ m.count.= 313 sum.res.= 0.0141548943429789
+~ m.count.= 314 sum.res.= 0.0141376853576566
+~ m.count.= 315 sum.res.= 0.0142331394533204
+~ m.count.= 316 sum.res.= 0.0142334819542936
+~ m.count.= 317 sum.res.= 0.0142124566840837
+~ m.count.= 318 sum.res.= 0.0142296115700081
+~ m.count.= 319 sum.res.= 0.0142241965650486
+~ m.count.= 320 sum.res.= 0.0142132391635267
+~ m.count.= 321 sum.res.= 0.0142270356177971
+~ m.count.= 322 sum.res.= 0.0142305380545692
+~ m.count.= 323 sum.res.= 0.0142295147061413
+~ m.count.= 324 sum.res.= 0.0142296960342026
+~ m.count.= 325 sum.res.= 0.0142290005564156
+~ m.count.= 326 sum.res.= 0.0142363520053915
+~ m.count.= 327 sum.res.= 0.0142343914763757
+~ m.count.= 328 sum.res.= 0.0142334662944587
+~ m.count.= 329 sum.res.= 0.014235800257104
+~ m.count.= 330 sum.res.= 0.0142362529209347
+~ m.count.= 331 sum.res.= 0.0142359691818413
+~ m.count.= 332 sum.res.= 0.0142353098843347
+~ m.count.= 333 sum.res.= 0.0142408947192478
+~ m.count.= 334 sum.res.= 0.0142447017134654
+~ m.count.= 335 sum.res.= 0.0142417918791402
+~ m.count.= 336 sum.res.= 0.0142397804975074
+~ m.count.= 337 sum.res.= 0.0142426377123346
+~ m.count.= 338 sum.res.= 0.0142428757652723
+~ m.count.= 339 sum.res.= 0.0142434282342539
+~ m.count.= 340 sum.res.= 0.0142471489612388
+~ m.count.= 341 sum.res.= 0.0142419307036752
+~ m.count.= 342 sum.res.= 0.0142390434774879
+~ m.count.= 343 sum.res.= 0.0142383418643405
+~ m.count.= 344 sum.res.= 0.0142449448472809
+~ m.count.= 345 sum.res.= 0.0142446803825744
+~ m.count.= 346 sum.res.= 0.0142417521842901
+~ m.count.= 347 sum.res.= 0.0142426840162381
+~ m.count.= 348 sum.res.= 0.0142413004849242
+~ m.count.= 349 sum.res.= 0.0142436874376148
+~ m.count.= 350 sum.res.= 0.014241458999628
+~ m.count.= 351 sum.res.= 0.0142441428187074
+~ m.count.= 352 sum.res.= 0.014245983370939
+~ m.count.= 353 sum.res.= 0.0142446478665142
+~ m.count.= 354 sum.res.= 0.0142410422672289
+~ m.count.= 355 sum.res.= 0.0142399582729968
+~ m.count.= 356 sum.res.= 0.014244883368182
+~ m.count.= 357 sum.res.= 0.0142471389771979
+~ m.count.= 358 sum.res.= 0.0142465376186836
+~ m.count.= 359 sum.res.= 0.0142441936808102
+~ m.count.= 360 sum.res.= 0.0142455462044272
+~ m.count.= 361 sum.res.= 0.0142455741829539
+~ m.count.= 362 sum.res.= 0.0142428107263673
+~ m.count.= 363 sum.res.= 0.0142436956037536
+~ m.count.= 364 sum.res.= 0.0142425222247326
+~ m.count.= 365 sum.res.= 0.0142407619007081
+~ m.count.= 366 sum.res.= 0.0142428875024089
+~ m.count.= 367 sum.res.= 0.0142448206200456
+~ m.count.= 368 sum.res.= 0.0142449681500647
+~ m.count.= 369 sum.res.= 0.01424635109593
+~ m.count.= 370 sum.res.= 0.0142472346634404
+~ m.count.= 371 sum.res.= 0.0142476929927135
+~ m.count.= 372 sum.res.= 0.0142478514401287
+~ m.count.= 373 sum.res.= 0.0142478607402101
+~ m.count.= 374 sum.res.= 0.0142478590913375
+~ m.count.= 375 sum.res.= 0.0142474612172996
+~ m.count.= 376 sum.res.= 0.0142477523413674
+~ m.count.= 377 sum.res.= 0.0142472796126374
+~ m.count.= 378 sum.res.= 0.0142470599727223
+~ m.count.= 379 sum.res.= 0.014247813814798
+~ m.count.= 380 sum.res.= 0.0142477055958779
+~ m.count.= 381 sum.res.= 0.0142474326913196
+~ m.count.= 382 sum.res.= 0.0142475048521575
+~ m.count.= 383 sum.res.= 0.0142474215648627
+~ m.count.= 384 sum.res.= 0.0142475784028248
+~ m.count.= 385 sum.res.= 0.0142474350022061
+~ m.count.= 386 sum.res.= 0.0142477762629788
+~ m.count.= 387 sum.res.= 0.0142479182138743
+~ m.count.= 388 sum.res.= 0.0142476547226476
+~ m.count.= 389 sum.res.= 0.0142474590577683
+~ m.count.= 390 sum.res.= 0.0142474683828873
+~ m.count.= 391 sum.res.= 0.0142482016535338
+~ m.count.= 392 sum.res.= 0.0142476631606502
+~ m.count.= 393 sum.res.= 0.0142477959630258
+~ m.count.= 394 sum.res.= 0.0142484788657246
+~ m.count.= 395 sum.res.= 0.014249106019057
+~ m.count.= 396 sum.res.= 0.0142491452013655
+~ m.count.= 397 sum.res.= 0.0142488622067706
+~ m.count.= 398 sum.res.= 0.0142491642938432
+~ m.count.= 399 sum.res.= 0.014248820993493
+~ m.count.= 400 sum.res.= 0.0142487473564031
+~ m.count.= 401 sum.res.= 0.0142487917252047
+~ m.count.= 402 sum.res.= 0.0142488088635073
+~ m.count.= 403 sum.res.= 0.0142490143426345
+~ m.count.= 404 sum.res.= 0.0142486766999424
+~ m.count.= 405 sum.res.= 0.0142484420412657
+~ m.count.= 406 sum.res.= 0.0142488037592121
+~ m.count.= 407 sum.res.= 0.0142489427090025
+~ m.count.= 408 sum.res.= 0.0142488767004418
+~ m.count.= 409 sum.res.= 0.0142488652436648
+~ m.count.= 410 sum.res.= 0.0142490220376128
+~ m.count.= 411 sum.res.= 0.0142490351672803
+~ m.count.= 412 sum.res.= 0.0142490315322716
+~ m.count.= 413 sum.res.= 0.0142490606801348
+~ m.count.= 414 sum.res.= 0.0142490492553122
+~ m.count.= 415 sum.res.= 0.0142491519520737
+~ m.count.= 416 sum.res.= 0.0142494461084434
+~ m.count.= 417 sum.res.= 0.0142494557814224
+~ m.count.= 418 sum.res.= 0.0142494440576418
+~ m.count.= 419 sum.res.= 0.0142494045579104
+~ m.count.= 420 sum.res.= 0.0142494446301934
+~ m.count.= 421 sum.res.= 0.0142494671684933
+~ m.count.= 422 sum.res.= 0.0142494127023275
+~ m.count.= 423 sum.res.= 0.0142493416787647
+~ m.count.= 424 sum.res.= 0.0142494191786417
+~ m.count.= 425 sum.res.= 0.0142494066941768
+~ m.count.= 426 sum.res.= 0.0142494043688507
+~ m.count.= 427 sum.res.= 0.0142453330536709
+~ m.count.= 428 sum.res.= 0.0142453906318952
+~ m.count.= 429 sum.res.= 0.0142453379021617
+~ m.count.= 430 sum.res.= 0.0142452909138172
+~ m.count.= 431 sum.res.= 0.01424527049855
+~ m.count.= 432 sum.res.= 0.0142452576248527
+~ m.count.= 433 sum.res.= 0.0142452677714598
+~ m.count.= 434 sum.res.= 0.0142452759837093
+~ m.count.= 435 sum.res.= 0.0142452164270903
+~ m.count.= 436 sum.res.= 0.0142452316508533
+~ m.count.= 437 sum.res.= 0.0142452244671707
+~ m.count.= 438 sum.res.= 0.0142452543805205
+~ m.count.= 439 sum.res.= 0.0142452442178952
+~ m.count.= 440 sum.res.= 0.0142452300614114
+~ m.count.= 441 sum.res.= 0.0142452433280523
+~ m.count.= 442 sum.res.= 0.0142452772955019
+~ m.count.= 443 sum.res.= 0.0142453099777592
+~ m.count.= 444 sum.res.= 0.0142452502834227
+~ m.count.= 445 sum.res.= 0.0142452592431241
+~ m.count.= 446 sum.res.= 0.0142452797616379
+~ m.count.= 447 sum.res.= 0.0142452655859538
+~ m.count.= 448 sum.res.= 0.0142452636331877
+~ m.count.= 449 sum.res.= 0.0142452899519476
+~ m.count.= 450 sum.res.= 0.0142452927447689
+~ m.count.= 451 sum.res.= 0.0142452978037286
+~ m.count.= 452 sum.res.= 0.0142452923969731
+~ m.count.= 453 sum.res.= 0.0142452583772195
+~ m.count.= 454 sum.res.= 0.0142453257600454
+~ m.count.= 455 sum.res.= 0.0142453217723657
+~ m.count.= 456 sum.res.= 0.0142453407815119
+~ m.count.= 457 sum.res.= 0.0142453093282816
+~ m.count.= 458 sum.res.= 0.0142452984338773
+~ m.count.= 459 sum.res.= 0.0142452995823689
+~ m.count.= 460 sum.res.= 0.0142453007281996
+~ m.count.= 461 sum.res.= 0.0142452588520588
+optv[0] = 0.9143152925142
+size of optv = 39
+14. gemsfit_task.cpp(317). Finished optimization; 
+~ m.count.= 462 sum.res.= 0.0142452941953144
+found minimum at <<f( 0.9143152925142 -1.1 -0.9 0.94513917582874 0.970145765600694 -0.9 -0.944527083997707 0.9 0.938557279554907 0.954411348640225 1.1 -0.9 1.1 -1.1 -0.962584522992931 1.1 1.1 0.962606648115031 1.1 -0.918197544138241 0.9 0.9 1.1 -1.07823695602273 -0.921122057151429 1.1 1.09032961378632 -1.1 -0.9 1.01544491027502 0.9 0.901025441358406 1.1 -1.1 1.1 -1.1 -0.9 -1.1 -0.96318946875096 ) = 0.0116264458736944
+ after 462 evaluations.
+
+15. Back in main.cpp(122). Performing statistics ...
+~ m.count.= 463 sum.res.= 0.0142443222392667
+~ m.count.= 464 sum.res.= 0.0142462613790589
+~ m.count.= 465 sum.res.= 0.0142459367771547
+~ m.count.= 466 sum.res.= 0.0142485235761533
+~ m.count.= 467 sum.res.= 0.0142466203406647
+~ m.count.= 468 sum.res.= 0.0142466681792592
+~ m.count.= 469 sum.res.= 0.0142476884925891
+~ m.count.= 470 sum.res.= 0.0142482707946115
+~ m.count.= 471 sum.res.= 0.014247022468117
+~ m.count.= 472 sum.res.= 0.0142473154353941
+~ m.count.= 473 sum.res.= 0.0142467574836462
+~ m.count.= 474 sum.res.= 0.0142464010855183
+~ m.count.= 475 sum.res.= 0.0142455727874541
+~ m.count.= 476 sum.res.= 0.014245799287405
+~ m.count.= 477 sum.res.= 0.014246020172108
+~ m.count.= 478 sum.res.= 0.0142458452183139
+~ m.count.= 479 sum.res.= 0.0142458711654035
+~ m.count.= 480 sum.res.= 0.0142459589372089
+~ m.count.= 481 sum.res.= 0.0142466165523501
+~ m.count.= 482 sum.res.= 0.0142464064156927
+~ m.count.= 483 sum.res.= 0.0142466661512217
+~ m.count.= 484 sum.res.= 0.014246760661079
+~ m.count.= 485 sum.res.= 0.0142461054252363
+~ m.count.= 486 sum.res.= 0.0142463108040628
+~ m.count.= 487 sum.res.= 0.0142464472896166
+~ m.count.= 488 sum.res.= 0.0142463311640267
+~ m.count.= 489 sum.res.= 0.0142462808823233
+~ m.count.= 490 sum.res.= 0.0142461036496936
+~ m.count.= 491 sum.res.= 0.0142460940281677
+~ m.count.= 492 sum.res.= 0.014246093681709
+~ m.count.= 493 sum.res.= 0.0142460824991407
+~ m.count.= 494 sum.res.= 0.0142460506308327
+~ m.count.= 495 sum.res.= 0.0142460584816712
+~ m.count.= 496 sum.res.= 0.014245977400371
+~ m.count.= 497 sum.res.= 0.0142459760259026
+~ m.count.= 498 sum.res.= 0.0142459730375552
+~ m.count.= 499 sum.res.= 0.014245985642705
+~ m.count.= 500 sum.res.= 0.0142459399636891
+~ m.count.= 501 sum.res.= 0.014246112350564
+~ m.count.= 502 sum.res.= 0.0142461042004931
+~ m.count.= 503 sum.res.= 0.0142460995511601
+~ m.count.= 504 sum.res.= 0.0146944625151159
+~ m.count.= 505 sum.res.= 0.0146944647936445
+~ m.count.= 506 sum.res.= 0.01469446136716
+~ m.count.= 507 sum.res.= 0.0146944655581727
+~ m.count.= 508 sum.res.= 0.0146944724832243
+~ m.count.= 509 sum.res.= 0.0146944765897503
+~ m.count.= 510 sum.res.= 0.0146944742412452
+~ m.count.= 511 sum.res.= 0.0146944736921973
+~ m.count.= 512 sum.res.= 0.0146944703278792
+~ m.count.= 513 sum.res.= 0.0146944608157594
+~ m.count.= 514 sum.res.= 0.014694466893262
+~ m.count.= 515 sum.res.= 0.0146944674673468
+~ m.count.= 516 sum.res.= 0.0146944579851687
+~ m.count.= 517 sum.res.= 0.014694468819231
+~ m.count.= 518 sum.res.= 0.0146944618213836
+~ m.count.= 519 sum.res.= 0.0146944576893057
+~ m.count.= 520 sum.res.= 0.0146944708948358
+~ m.count.= 521 sum.res.= 0.0146944665926007
+~ m.count.= 522 sum.res.= 0.0146944717423502
+~ m.count.= 523 sum.res.= 0.0146944699513003
+~ m.count.= 524 sum.res.= 0.0146944731950456
+~ m.count.= 525 sum.res.= 0.014694464352949
+~ m.count.= 526 sum.res.= 0.0146944709517067
+~ m.count.= 527 sum.res.= 0.0146944640450928
+~ m.count.= 528 sum.res.= 0.0146944616092383
+~ m.count.= 529 sum.res.= 0.0146944748584865
+~ m.count.= 530 sum.res.= 0.0146944686542117
+~ m.count.= 531 sum.res.= 0.0146944630444417
+~ m.count.= 532 sum.res.= 0.0146944714564976
+~ m.count.= 533 sum.res.= 0.0146944667306991
+~ m.count.= 534 sum.res.= 0.0146944677359757
+~ m.count.= 535 sum.res.= 0.0146942757190922
+~ m.count.= 536 sum.res.= 0.0146942681994967
+~ m.count.= 537 sum.res.= 0.0146942758308244
+~ m.count.= 538 sum.res.= 0.0146942678184328
+~ m.count.= 539 sum.res.= 0.0146942774659894
+~ m.count.= 540 sum.res.= 0.0146942793349358
+~ m.count.= 541 sum.res.= 0.0146942715776495
+16. main.cpp(152): finished in 2891.435657 seconds. GEMSFITS: End. Bye!

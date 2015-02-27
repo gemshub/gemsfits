@@ -1,0 +1,14 @@
+sample,phase,name,unit,measured,computed,residual,TCelsius,Pbar
+Tiefengletscher,QtzRu,Rutile,molfrac,2.2757e-06,2.2757e-06,2.19921e-13,308.389,1788.31
+Gauli,QtzRu,Rutile,molfrac,1.884e-06,1.88461e-06,-6.09612e-10,301.334,1860.13
+Cavagnoli,QtzRu,Rutile,molfrac,6.5186e-06,6.51855e-06,4.57137e-11,375.62,2723.96
+Faido,QtzRu,Rutile,molfrac,6.8e-06,6.79978e-06,2.18297e-10,373.202,2460.11
+004/2,QtzRu,Rutile,molfrac,2.38641e-07,2.38668e-07,-2.67571e-11,246.34,3454.54
+004/34_,QtzRu,Rutile,molfrac,6.02882e-07,6.02941e-07,-5.87876e-11,266.736,2581.61
+004/34,QtzRu,Rutile,molfrac,6.53123e-07,6.53117e-07,6.13759e-12,271.701,2714.83
+123b,QtzRu,Rutile,molfrac,6.78243e-07,6.78223e-07,1.92905e-11,282.167,3318.52
+005,QtzRu,Rutile,molfrac,3.76802e-07,3.76807e-07,-4.85744e-12,250.855,2660.53
+148j,QtzRu,Rutile,molfrac,9.04323e-07,9.04317e-07,6.56787e-12,289.075,3027.63
+Bundner,QtzRu,Rutile,molfrac,1.2591e-06,1.25912e-06,-1.94375e-11,301.598,2960.53
+Bundner_hi,QtzRu,Rutile,molfrac,1.46006e-06,1.46005e-06,7.74725e-12,304.386,2739.83
+Bundner_low,QtzRu,Rutile,molfrac,1.05814e-06,1.05814e-06,-6.4141e-13,296.651,3106.37
