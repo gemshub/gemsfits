@@ -20,7 +20,7 @@ to C:\Qt5\5.3\mingw482_32\bin and C:\Qt5\Tools\mingw482_32\bin directories
 qcollectiongenerator.exe, qhelpconverter.exe and qhelpgenerator.exe 
 from C:\Qt5\5.3\mingw482_32\bin to C:\GEMSFISTDEPLOY\Gfshell2-app folder.   
 
-4. Using QtCreator (Qt 5.3 MinGW 4.8.3 32bit), build the actual release 
+4. Using QtCreator (Qt 5.3 MinGW 4.8.2 32bit), build the actual release 
 variant of gemsfits.exe (Gfshell2) using the *_win.pro Qt project file. 
 Find gemsfits.exe in the Gfhell2 build folder and copy it into the 
 C:\GEMSFITSDEPLOY\Gfshell2-app folder.    
@@ -37,7 +37,7 @@ Docs\BuildRun_win32\gfshell2_dlls to the C:\GEMSFITSDEPLOY\Gfshell2-app folder.
 
 6. To test that Gfshell2 GUI runs cd to Gfshell2-app and run gemsfits.exe.
 
-7. Using QtCreator (Qt 5.3 MinGW 4.8.3 32bit), build the actual release 
+7. Using QtCreator (Qt 5.3 MinGW 4.8.2 32bit), build the actual release 
 variant of gemsfit2.exe (gemsfit2) using the *_win.pro Qt project file (See
 BuildRun_win32.txt). Find gemsfit2.exe in the gemsfit2 build folder and copy it 
 into the C:\GEMSFITSDEPLOY\gemsfit2-app folder.
