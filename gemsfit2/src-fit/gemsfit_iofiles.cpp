@@ -122,6 +122,9 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
     bson_append_string(&bson_task_file, keys::DBColl[mode], "<collection name>");
 
     string path = "." + gpf->GEMS3LstFilePath();
+#ifdef buildWIN32
+    std::replace( path.begin(), path.end(), '\\', '/');
+#endif
     bson_append_string(&bson_task_file, keys::G3Ksys[mode], path.c_str() );
     bson_append_string(&bson_task_file, keys::DSelect[mode], "");
     bson_append_string(&bson_task_file, keys::DTarget[mode], "");

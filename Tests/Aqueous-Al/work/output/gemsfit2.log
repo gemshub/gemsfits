@@ -125,4 +125,4 @@ found minimum at <<f( -1.00181090253424 -1.00416752647288 -1.00094037359462 -0.9
 ~ m.count.= 72 sum.res.= 1.11035955327721
 ~ m.count.= 73 sum.res.= 1.11072831635996
 ~ m.count.= 74 sum.res.= 1.11041774899634
-16. main.cpp(152): finished in 128.231315 seconds. GEMSFITS: End. Bye!
+16. main.cpp(152): finished in 110.972825 seconds. GEMSFITS: End. Bye!

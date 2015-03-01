@@ -84,7 +84,7 @@ class FITMainWindow : public QMainWindow
     void RecDelete( const char* key );
     void changeEditeRecord(const string& tagname, const string& newValue);
     bool runProcess( const QStringList& cParameters, const QString& workDir );
-    void selectGEMS( const string& fname );
+    void selectGEMS(const string& fname_ );
     string makeSystemFileName(const string& path );
     bool createTaskTemplate();
     void readTXT( TFile& inFile );

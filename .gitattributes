@@ -1,4 +1,9 @@
 * text=auto !eol
+Resources/BuildRun_win32/Armadillo_Win.pdf -text
+Resources/BuildRun_win32/Build_Boost_Win.pdf -text
+Resources/BuildRun_win32/LAPACK_Win.pdf -text
+Resources/BuildRun_win32/OpenMP_Win.pdf -text
+Resources/BuildRun_win32/Tcejdb_Win.pdf -text
 Resources/BuildRun_win32/gemsfit2_dlls/libblas.dll -text
 Resources/BuildRun_win32/gemsfit2_dlls/libgcc_s_dw2-1.dll -text
 Resources/BuildRun_win32/gemsfit2_dlls/libgfortran-3.dll -text

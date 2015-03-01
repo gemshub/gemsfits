@@ -613,6 +613,10 @@ bool FITMainWindow::createTaskTemplate()
     string sss = ss.str();
     ss.str("");
 
+#ifdef buildWIN32
+    std::replace( newPath.begin(), newPath.end(), '/', '\\');
+#endif
+
     cParameters << "-initJ" << sss.c_str() << newPath.c_str() << "template.json";
 
     if( !runProcess( cParameters, fitTaskDir.Dir().c_str()) )

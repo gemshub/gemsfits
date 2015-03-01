@@ -1,0 +1,37 @@
+MinGW 4.8 Qt 5.2.1 IMPORTANT use 32 bit libraries and the same compiler version for all libraries
+
+Jannson library added to the project tree.
+TCEJDB removed from project tree. Included as static library using QT
+
+Added to project file
+DEFINES += HAVE_STDINT_H <-- solves compiler issues for jannson
+
+TCEJDB
+
+Tcejdb_win.pdf
+
+NLopt
+
+Download NLopt, run Qt 5.2.1 for Desktop (MinGW 4.8). Go C:\Qt\5.3\mingw482_32\bin copy here the *.def and *.dll
+files provided in NLopt packedge and execute dlltool --input-def libnlopt-0.def --dllname libnlopt-0.dll --output-lib libnlopt-0.lib
+Copy the new dll file in the nlopt directory of the code tree (nlopt_win32) and include NLopt lib as dynamic
+
+Boost
+
+http://cpp-qt-mac-win.blogspot.ch/2011/10/qt-boost-for-beginners-step-by-step.html
+see file Build_Boost_Win.pdf
+
+Armadillo
+
+http://choorucode.com/2013/11/15/how-to-use-armadillo-on-windows/
+Armadillo_Win.pdf
+http://icl.cs.utk.edu/lapack-for-windows/lapack/
+LAPACK_Win.pdf
+
+When adding libaries with QT delete the debug-type libraries that qt adds automatically
+
+to run parallel:
+
+https://www.barbato.us/2011/02/07/openmp-qtcreator-windows-when-mingw-compiler/
+OpenMP_Win.pdf
+copy to system 32 and add the flags to the pro file

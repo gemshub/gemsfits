@@ -6,5 +6,5 @@ GEMSFITSAPP=" GEMSFITS v.0.1 r.450 "
 ProjDatabaseName=bhm
 ProjDatabasePath=/EJDB
 ProjFileName=Boehmite-solubility
-ProjFolderPath=/home/dmiron/polybox/Tests/Aqueous-Al
+ProjFolderPath=/home/dmiron/devGEMSFITS/devGFshell/gemsfit/Tests/Aqueous-Al
 TaskCasesDataColl=tasks

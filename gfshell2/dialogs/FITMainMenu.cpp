@@ -179,16 +179,22 @@ void FITMainWindow::CmTaskMode()
 }
 
 /// Select new GEMS3K files list and setup windows
-void FITMainWindow::selectGEMS( const string& fname )
+void FITMainWindow::selectGEMS( const string& fname_ )
 {
        // Creates TNode structure instance accessible trough the "node" pointer
        aNode.reset( new TNode() );
+       string fname = fname_;
+#ifdef buildWIN32
+    std::replace( fname.begin(), fname.end(), '/', '\\');
+#endif
+
 
        // (1) Initialization of GEMS3K internal data by reading  files
        if( node()->GEM_init( fname.c_str() ) )
        {
-           Error( gemsLstFile.Name(), "GEMS3K Init() error: \n"
-                   "Some GEMS3K input files are corrupt or cannot be found.");
+           Error( fname, "GEMS3K Init() error: \n"
+                   "Some GEMS3K input files are corrupt or cannot be found. \n"
+                  );
        }
        // setup icomp table
        setTableIComp();

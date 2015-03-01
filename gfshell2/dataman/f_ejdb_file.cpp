@@ -104,6 +104,9 @@ bool TAbstractFile::ChooseFileOpen(QWidget* par, string& path_,
     QString fn = QFileDialog::getOpenFileName(  par, title,
           path.c_str(), filt, 0,
           QFileDialog::DontConfirmOverwrite );
+#ifdef buildWIN32
+    std::replace( fn.begin(), fn.end(), '/', '\\');
+#endif
    if ( !fn.isEmpty() )
     {
         mode = ios::in;

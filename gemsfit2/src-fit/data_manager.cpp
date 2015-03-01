@@ -313,6 +313,9 @@ void Data_Manager::get_db_specs_txt()
     if (out.size() == 0) {cout << "Error: No keyword for \""
                                <<keys::G3Ksys[mode]<<"\" found in the task definition"
                                << endl; exit(1);}
+#ifdef buildWIN32
+    std::replace( out[0].begin(), out[0].end(), '/', '\\');
+#endif
     gpf->setGEMS3LstFilePath(out[0].c_str());
     out.clear();
 
