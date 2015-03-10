@@ -333,7 +333,7 @@ string FITMainWindow::getRecordKey( int row )
 {
     string currentKey ="";
 
-    if( row >= keyTable->rowCount())
+    if( row <0 || row >= keyTable->rowCount())
         return "";
 
     for(int jj=0; jj<keyTable->columnCount(); jj++)

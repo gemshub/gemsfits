@@ -141,7 +141,8 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     setActions();
     connect(ui->splV, SIGNAL(splitterMoved( int , int  )), this, SLOT(moveToolBar( int , int  )));
     connect( keyTable, SIGNAL(cellClicked ( int , int  ) ), this, SLOT(openRecordKey( int, int )));
-    connect( ui->recordEdit, SIGNAL(textChanged()),  this, SLOT(recEdited()));
+    //connect( ui->recordEdit, SIGNAL(textChanged()),  this, SLOT(recEdited()));
+    connect( ui->recordEdit, SIGNAL(undoAvailable(bool)),  this, SLOT(recEdited(bool)));
     connect( ui->filterEdit, SIGNAL( editingFinished ()), this, SLOT(changeKeyList()) );
 
     // setup process

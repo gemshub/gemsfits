@@ -105,6 +105,11 @@ private slots:
     {
         contentsChanged = true;
     }
+    void recEdited(bool edited )
+    {
+       if(edited)
+        contentsChanged = true;
+    }
 
 public slots:
      void openRecordKey(  int row, int column  );
