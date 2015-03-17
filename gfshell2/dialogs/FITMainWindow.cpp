@@ -378,6 +378,8 @@ void FITMainWindow::loadNewProject()
     gemsLstFile.ChangePath( gemsname );
     gemsLstFile.ChangeName("");
 
+    // empty status
+    setStatusText( "" );
     // update key list, editor, filter
     resetMainWindow();
 }
@@ -385,7 +387,7 @@ void FITMainWindow::loadNewProject()
 /// Set up data for Main window
 void FITMainWindow::resetMainWindow()
 {
-    // set up filter
+     // set up filter
     ui->filterEdit->setText("*");
 
     // update key list
@@ -406,6 +408,8 @@ void FITMainWindow::resetMainWindow()
       {
         // loadTemplate( currentModule );
         CmCreate();
+        if( !projectSettings )
+          addLinetoStatus(  "Please, open or create a project first." );
     }
 
     // reset  ui->queryEdit

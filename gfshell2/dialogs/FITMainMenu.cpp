@@ -140,6 +140,8 @@ void FITMainWindow::CmDBMode()
    ui->actionExport_TP_pairs_to_CSV_file->setEnabled(true);
    ui->menu_Calc->setEnabled(false);
 
+   // empty status
+   setStatusText( "" );
    // update key list, editor, filter
    resetMainWindow();
 
@@ -173,6 +175,8 @@ void FITMainWindow::CmTaskMode()
    ui->action_Show_Results->setEnabled(!lastCalcRecordKey.empty());
    ui->menu_Calc->setEnabled(true);
 
+   // empty status
+   setStatusText( "" );
    // update key list, editor, filter
    resetMainWindow();
 
