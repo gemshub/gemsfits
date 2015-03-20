@@ -333,10 +333,10 @@ void TGfitTask::set_weights ()
     {
         for (unsigned j = 0; j < aTfun[i].objfun.size(); j++)
         {
-            if (Opti->OptUserWeight)
+            if (Opti->OptUserWeight > 0)
                 aTfun[i].objfun[j].weight = aTfun[i].objfun[j].weight * experiments[i]->weight;
             else
-                if ((h_datasetlist))
+                if ((h_datasetlist > 0))
                     aTfun[i].objfun[j].weight = aTfun[i].objfun[j].weight * experiments[i]->weight;
                     else
                         aTfun[i].objfun[j].weight = aTfun[i].objfun[j].weight;
@@ -354,7 +354,7 @@ void TGfitTask::set_weights ()
     {
         for (unsigned j = 0; j < aTfun[i].nestfun.size(); j++)
         {
-            if (Opti->OptUserWeight)
+            if (Opti->OptUserWeight > 0)
                 aTfun[i].nestfun[j].weight = aTfun[i].nestfun[j].weight * experiments[i]->weight;
             else
                 aTfun[i].nestfun[j].weight = aTfun[i].nestfun[j].weight;
