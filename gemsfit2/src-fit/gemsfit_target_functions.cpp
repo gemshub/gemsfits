@@ -462,10 +462,10 @@ double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::ob
 double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj_fun &objfun, TGfitTask *sys)
 {
     const char *phase_name;
-    long int PHndx, DC0ndx, nDCinPH;
+    long int PHndx, DC0ndx, nDCinPH, DCndx;
     double computed_value = 0.0, measured_value= 0.0;
     double Tfun_residual = 0.0, Weighted_Tfun_residual, weight_ = 1.0;
-    double ln_gama[40];
+    double ln_gama[40], log_gama;
     char ccPH;
 //    DATACH* dCH = sys->NodT[i]->pCSD();
 
@@ -483,6 +483,21 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
             // Default
             computed_value = sys->NodT[i]->Get_pH();
             objfun.exp_unit = keys::_loga;
+        }
+
+    } else
+    // Get aqueous phase pHm
+    if ((objfun.exp_CN == keys::pHm)  && (ccPH == *keys::aq) && (PHndx >=0))
+    {
+        DCndx = sys->NodT[i]->DC_name_to_xCH("H+"); // think about a way to find H+ name in gems and not hard code it!!!!
+        log_gama = log10(sys->NodT[i]->Get_gDC(DCndx));
+        if (objfun.exp_unit == keys::_logm)
+        {
+            computed_value = sys->NodT[i]->Get_pH() + log_gama;
+        } else {
+            // Default
+            computed_value = sys->NodT[i]->Get_pH() + log_gama;
+            objfun.exp_unit = keys::_logm;
         }
 
     } else //Get aqueous phase Eh

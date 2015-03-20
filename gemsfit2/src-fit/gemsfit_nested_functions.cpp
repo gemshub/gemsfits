@@ -67,7 +67,7 @@ void nestedfun (TGfitTask *sys)
                         sys->Opti->optNFParam[e]->Get_Fparam(p, i, Fndx, Pndx, Pval, Ub, Lb);
                         if (Fndx == j) // checks if the nested function parameters point to the curent NFUN with the Fndx
                         {
-                            if ((sys->Tfun->nestfun[sys->NEFndx[P_id]].exp_CN == "pH") && (sys->Tfun->nestfun[j].Telem.size() > 0))
+                            if (((sys->Tfun->nestfun[sys->NEFndx[P_id]].exp_CN == "pH") || (sys->Tfun->nestfun[sys->NEFndx[P_id]].exp_CN == "pHm") )&& (sys->Tfun->nestfun[j].Telem.size() > 0))
                             {
                                 if (isTitration(sys, i, j, Pndx))
                                 {
@@ -223,20 +223,48 @@ bool isTitration (TGfitTask *sys, int i, int j, int p)
 {
 //    int P_id = omp_get_thread_num();
         // check titrant in experiment
-    for (unsigned int t=0; t<sys->Tfun->nestfun[j].Tformula.size(); t++)
+    double residual = 0.0;
+    int P_id = omp_get_thread_num();
+
+//    for (unsigned int t=0; t<sys->Tfun->nestfun[j].Tformula.size(); t++)
+//    {
+//        for (unsigned int c=0; c<sys->experiments[i]->sbcomp.size(); c++)
+//        {
+//            if (sys->experiments[i]->sbcomp[c]->comp == sys->Tfun->nestfun[j].Tformula[t])
+//            {
+//                int Endx = sys->NodT[i]->IC_name_to_xDB(sys->Tfun->nestfun[j].Telem[t].c_str());
+//                if (Endx == p)
+//                {
+//                    return true;
+//                } else return false;
+//            }
+//        }
+//    }
+
+    int count = 0;
+    residual = sys->get_residual (sys->EXPndx[P_id], sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]], count);
+
+    if (residual < 0.0)
     {
-        for (unsigned int c=0; c<sys->experiments[i]->sbcomp.size(); c++)
+        int Endx = sys->NodT[i]->IC_name_to_xDB(sys->Tfun->nestfun[j].Telem[0].c_str());
+        if (Endx == p)
         {
-            if (sys->experiments[i]->sbcomp[c]->comp == sys->Tfun->nestfun[j].Tformula[t])
-            {
-                int Endx = sys->NodT[i]->IC_name_to_xDB(sys->Tfun->nestfun[j].Telem[t].c_str());
-                if (Endx == p)
-                {
-                    return true;
-                } else return false;
-            }
-        }
+            return true;
+        } else return false;
     }
+
+    if (residual > 0.0)
+    {
+        int Endx = sys->NodT[i]->IC_name_to_xDB(sys->Tfun->nestfun[j].Telem[1].c_str());
+        if (Endx == p)
+        {
+            return true;
+        } else return false;
+    }
+
+
+
+
 }
 
 
