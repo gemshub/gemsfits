@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=windows-1252" http-equiv="content-type">
+    <title>GEMSFITS HowTo Database</title>
+  </head>
+  <body style="               background-image: url(bgimg-gray.jpg);">
+    <h1> <img style="width: 48px; height: 48px;" title="GEMSFITS" alt="GEMSFITS"
+        src="gemsfit2.png"> GEMSFITS Code for GEM Input Parameter Optimization</h1>
+    <h2>How to prepare the pre-formatted experimental data spreadsheets for
+      database import using GEMSFITS</h2>
+    <hr>
+    <p> To import large sets of experimental data at once a pre-formatted
+      spreadsheet has to be prepared, exported as CSV (Comma Separated Value)
+      and imported to the database using the gfshell.</p>
+    <h3>Contents</h3>
+    <ul>
+      <li><a href="#1._Prepare_your_data_">Prepare your data</a></li>
+      <ul>
+        <li><a href="#EXPERDESCR">Experiments description</a></li>
+        <li><a href="#SYSCOMPOS">System composition</a></li>
+        <li><a href="#RESULTS">Results</a></li>
+      </ul>
+      <li><a href="#Export_excel_file">Export excel file&nbsp; </a><br>
+      </li>
+    </ul>
+    <hr>
+    <h3><a name="1._Prepare_your_data_"></a>1. Prepare your data</h3>
+    <p>Prepare your experimental data in a pre-formatted excel file. See
+      /xls/excel_example.xls, /xls/CASHNK_solubility_example.xls (for CASHMK
+      systems), or /xls/Boehmite_solubility_example.xls as a template.&nbsp; The
+      naming scheme of spreadsheet columns is done in such a way that it is user
+      friendly, it can describe a various suite of geochemical experiments, and,
+      very important, it can be easily adapted to new data types. </p>
+    <p>Column names and their order in the excel table should follow the
+      patterns described in the tables below, grouped in three sections: <a href="#EXPERDESCR">EXPERIMENTS
+        DESCRIPTION</a>; <a href="#SYSCOMPOS">SYSTEM COMPOSITION</a>; <a href="#RESULTS">RESULTS</a>.
+    </p>
+    <span style="font-weight: bold;">Column name rules and conventions:<br>
+    </span><br>
+    <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+      <tbody>
+        <tr>
+          <td style="vertical-align: top;">Keyword<br>
+          </td>
+          <td style="vertical-align: top;">Description<br>
+          </td>
+          <td style="vertical-align: top;">Examples<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;"><a
+                href="gemsfit-useref.html#phase">phase</a>.</span></td>
+          <td style="vertical-align: top;">should be followed by the phase name
+            (from GEMS3K .DCH file)<br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">aq_gen</span></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;"><a
+                href="gemsfit-useref.html#comp">comp</a>.</span></td>
+          <td style="vertical-align: top;">should be followed by a <a href="#SALT_FORMULAE">formula</a>
+            or Dependent Component name<br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">SiO2</span></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;"><a
+                href="gemsfit-useref.html#DC">DC</a>.</span></td>
+          <td style="vertical-align: top;"> should be followed by a Dependent
+            Component name (as in GEMS3K)</td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">SiO2@</span></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;"><a
+                href="gemsfit-useref.html#IC">IC</a>.</span></td>
+          <td style="vertical-align: top;">should be followed by the independent
+            component element notation </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">Al</span></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;"><a
+                href="gemsfit-useref.html#MF">MR</a>. </span></td>
+          <td style="vertical-align: top;">should be followed by the molar ratio
+            formula </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">(Na+K)/(Na+K+Ca)<br>
+              Na/(Na+K)<br>
+            </span> </td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Column names that hold experimental results (quantities or amounts)
+      should be finished with .Q . For instance:<br>
+      <span style="font-family: Courier New,Courier,monospace;"><span style="font-weight: bold;">phase</span>.C-S-H-3T-2.<span
+          style="font-weight: bold;">Q</span></span> - for phase amount<br>
+      <span style="font-family: Courier New,Courier,monospace;"><span style="font-weight: bold;">phase</span>.aq_gen.<span
+          style="font-weight: bold;">IC</span>.Si.<span style="font-weight: bold;">Q</span></span>
+      - for element amount<br>
+      <span style="font-family: Courier New,Courier,monospace;"><span style="font-weight: bold;">phase</span>.aq_gen.<span
+          style="font-weight: bold;">DC</span>.SiO2-.<span style="font-weight: bold;">Q</span></span>
+      - for dependent component (species) amount <br>
+      <span style="font-family: Courier New,Courier,monospace;"><span style="font-weight: bold;">phase</span>.aq_gen.<span
+          style="font-weight: bold;">MR</span>.</span><span style="font-family: Courier New,Courier,monospace;">(Na+K)/(Na+K+Ca)</span>
+      - ratio of moles of elements in the phase; for aqueous phase the same as
+      molal (concentration) ratio.</p>
+    <hr>
+    <p>not read - the object is skipped (not taken into the memory of the
+      program).<span style="font-weight: bold;"><br>
+      </span></p>
+    <p><span style="font-weight: bold;">IMPORTANT:</span><br>
+      Each sample (row) must have a unique combination of <span style="font-family: Courier New,Courier,monospace;">"sample</span>"
+      and <span style="font-family: Courier New,Courier,monospace;">"expdataset"</span>
+      names. If column <span style="font-family: Courier New,Courier,monospace;">"error"
+        </span>is present, the column <span style="font-family: Courier New,Courier,monospace;">"unit"</span>
+      should be after the column <span style="font-family: Courier New,Courier,monospace;">"error"</span>
+      that should come after the column containing the respective property
+      value, e.g. <span style="font-family: Courier New,Courier,monospace;">phase.aq_gen.pH
+        | error | unit | ... </span>Names of phases, dependent components,
+      independent components (elements) should be the same as in the GEMS3K DCH
+      I/O file for this GEMSFIT2 task.</p>
+    <p><a name="EXPERDESCR"></a><big style="font-weight: bold;">EXPERIMENTS
+        DESCRIPTION</big><br>
+    </p>
+    <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+      <tbody>
+        <tr>
+          <td style="vertical-align: top;">Keyword</td>
+          <td style="vertical-align: top;">Description<br>
+          </td>
+          <td style="vertical-align: top;">Optional column<br>
+          </td>
+          <td>unit</td>
+          <td style="vertical-align: top;">if empty / default value<br>
+          </td>
+          <td style="vertical-align: top;">Examples<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;">id<br>
+            </span> </td>
+          <td style="vertical-align: top;">numbering the experiments<br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td>-</td>
+          <td style="vertical-align: top;">not read<br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">1,
+              2, 3<br>
+            </span> </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;"><a
+                href="gemsfit-useref.html#sample">sample</a><br>
+            </span> </td>
+          <td style="vertical-align: top;">sample name<br>
+          </td>
+          <td style="vertical-align: top;">no<br>
+          </td>
+          <td>-</td>
+          <td style="vertical-align: top;">cannot be empty<br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">A_01<br>
+            </span> </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;"><a
+                href="gemsfit-useref.html#expdataset">expdataset</a><br>
+            </span> </td>
+          <td style="vertical-align: top;">experiments set name<br>
+          </td>
+          <td style="vertical-align: top;">no<br>
+          </td>
+          <td>-</td>
+          <td style="vertical-align: top;">cannot be empty<br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">Anderson_etal1967<br>
+            </span> </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;">comment<br>
+            </span> </td>
+          <td style="vertical-align: top;">comments to experiments<br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td>-</td>
+          <td style="vertical-align: top;">not read in GEMSFITS<br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><br>
+            </span> </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;">type<br>
+            </span> </td>
+          <td style="vertical-align: top;">type of experiment<br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td>-</td>
+          <td style="vertical-align: top;">not read in GEMSFITS<br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><br>
+            </span> </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;"><a
+                href="gemsfit-useref.html#sT">sT</a><br>
+            </span> </td>
+          <td style="vertical-align: top;">temperature of the experiment <br>
+          </td>
+          <td style="vertical-align: top;">no<br>
+          </td>
+          <td>ºC</td>
+          <td style="vertical-align: top;">cannot be empty (unit assumed ºC, no
+            unit column needed) </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">25<br>
+            </span> </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;"><a
+                href="gemsfit-useref.html#sP">sP</a><br>
+            </span> </td>
+          <td style="vertical-align: top;">pressure of the experiment<br>
+          </td>
+          <td style="vertical-align: top;">no<br>
+          </td>
+          <td>bar</td>
+          <td style="vertical-align: top;">cannot be empty (unit assumed bar, no
+            unit column needed)<br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">1<br>
+            </span> </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;"><a
+                href="gemsfit-useref.html#sV">sV</a><br>
+            </span> </td>
+          <td style="vertical-align: top;">volume of the experiment<br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td>cm3</td>
+          <td style="vertical-align: top;">not read in GEMSFITS / ( internally
+            in GEMS)<br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><br>
+            </span> </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><span
+                style="font-weight: bold;">weight</span><small><br>
+              </small></span></td>
+          <td style="vertical-align: top;">weight set by user for each
+            experiment<br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td>-</td>
+          <td style="vertical-align: top;"> only used in GEMSFITS if<span style="font-family: Courier New,Courier,monospace;">&nbsp;</span>
+            <a href="gfshell-taskmode.html#UDWts"><span style="font-family: Courier New,Courier,monospace;">"UseWeightsFromExperimentalData"</span></a>
+            is set to 1</td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><small><br>
+              </small></span></td>
+        </tr>
+      </tbody>
+    </table>
+    <hr style="width: 100%; height: 2px;">
+    <p><a name="SYSCOMPOS"></a><big style="font-weight: bold;">SYSTEM
+        COMPOSITION</big></p>
+    <p> </p>
+    <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+      <tbody>
+        <tr>
+          <td style="vertical-align: top;">Keyword<br>
+          </td>
+          <td style="vertical-align: top;">Description<br>
+          </td>
+          <td style="vertical-align: top;">optional<br>
+          </td>
+          <td style="vertical-align: top;">if empty / default value<br>
+          </td>
+          <td style="vertical-align: top;">Examples<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;"><a
+                href="gemsfit-useref.html#comp">comp</a>.&lt;formula&gt;<br>
+            </span> </td>
+          <td style="vertical-align: top;">composition of the sample system,
+            expressed as oxide formula in one or several columns </td>
+          <td style="vertical-align: top;">no<br>
+          </td>
+          <td style="vertical-align: top;">not read<br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">comp.SiO2,
+              comp.NaCl, comp.Si<br>
+            </span> </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;">unit<br>
+            </span> </td>
+          <td style="vertical-align: top;">unit (g or <span style="color: red;">molal)</span><br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td style="vertical-align: top;">not read / g<br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">g,
+              molal<br>
+            </span> </td>
+        </tr>
+      </tbody>
+    </table>
+    <hr style="width: 100%; height: 2px;">
+    <p><a name="RESULTS"></a><big style="font-weight: bold;">RESULTS</big></p>
+    <param><span style="font-weight: bold;">RESULTS - phase properties</span>
+    <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+      <tbody>
+        <tr>
+          <td style="vertical-align: top; width: 225.017px;">Keyword<br>
+          </td>
+          <td style="vertical-align: top; width: 659.317px;">Description<br>
+          </td>
+          <td style="vertical-align: top; width: 89.317px;">optional<br>
+          </td>
+          <td style="width: 157px;">unit</td>
+          <td style="vertical-align: top; width: 132px;">if empty / default
+            value<br>
+          </td>
+          <td style="vertical-align: top;">Examples<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><span
+                style="font-weight: bold;"><a href="gemsfit-useref.html#phase">phase</a>.&lt;pname&gt;.&lt;pprop&gt;<br>
+              </span></span> </td>
+          <td style="vertical-align: top;">&lt;pname&gt; should correspond to
+            the name of this phase in GEMS3K DCH file, &lt;pprop&gt; is one of
+            the keywords designating a bulk phase property </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td>-</td>
+          <td style="vertical-align: top;"><br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">phase.aq_gen.pH;
+              phase.C-S-H-3T-2.Q </span></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><span
+                style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp; .<a href="gemsfit-useref.html#Q">Q</a></span></span>
+          </td>
+          <td style="vertical-align: top;">phase amount<br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td>g (gram); kg (kilogram); mole;</td>
+          <td style="vertical-align: top;">not read / unit mole</td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><small><br>
+              </small></span></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><span
+                style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp; .pV<br>
+              </span></span> </td>
+          <td style="vertical-align: top;">phase volume<br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td>cm3; m3</td>
+          <td style="vertical-align: top;">not read / unit cm3 </td>
+          <td style="vertical-align: top;"><small><br>
+            </small></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><span
+                style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp; .RHO<br>
+              </span></span> </td>
+          <td style="vertical-align: top;">phase density<br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td>g_cm3 (g/cm3)</td>
+          <td style="vertical-align: top;">not read / unit g/cm3 </td>
+          <td style="vertical-align: top;"><small><br>
+            </small></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><span
+                style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp; .pH<br>
+              </span></span> </td>
+          <td style="vertical-align: top;">aqueous phase only<br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td>-loga</td>
+          <td style="vertical-align: top;">not read / unit -loga </td>
+          <td style="vertical-align: top;"><small><br>
+            </small></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; text-align: center;"><span style="font-family: Courier New,Courier,monospace;"><span
+                style="font-weight: bold;">.pe<small><br>
+                </small></span></span></td>
+          <td style="vertical-align: top;">aqueous phase only<br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td>-loga</td>
+          <td style="vertical-align: top;">not read / unit -loga</td>
+          <td style="vertical-align: top;"><small><br>
+            </small></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><span
+                style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp; .Eh<br>
+              </span></span> </td>
+          <td style="vertical-align: top;">aqueous phase only<br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td>V (volt)</td>
+          <td style="vertical-align: top;">not read / unit V<br>
+          </td>
+          <td style="vertical-align: top;"><small><br>
+            </small></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><span
+                style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp; .IS<br>
+              </span></span> </td>
+          <td style="vertical-align: top;">effective ionic strength, aqueous
+            phase only<br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td>molal</td>
+          <td style="vertical-align: top;">not read / unit molal<br>
+          </td>
+          <td style="vertical-align: top;"><small><br>
+            </small></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><span
+                style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp; .alk<br>
+              </span></span> </td>
+          <td style="vertical-align: top;">alkalinity, aqueous only (NOT YET
+            IMPLEMENTED)<br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td><br>
+          </td>
+          <td style="vertical-align: top;">not read /<br>
+          </td>
+          <td style="vertical-align: top;"><small><br>
+            </small></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; text-align: center;"><span style="font-family: Courier New,Courier,monospace;"><span
+                style="font-weight: bold;">.oscw</span></span></td>
+          <td style="vertical-align: top;">osmotic coefficient of water (aqueous
+            only) (NOT YET IMPLEMENTED)<br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td><br>
+          </td>
+          <td style="vertical-align: top;">not read /<br>
+          </td>
+          <td style="vertical-align: top;"><small><br>
+            </small></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><span
+                style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp; .sArea<br>
+              </span></span> </td>
+          <td style="vertical-align: top;">phase surface area (NOT YET
+            IMPLEMENTED)<br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td><br>
+          </td>
+          <td style="vertical-align: top;">not read /<br>
+          </td>
+          <td style="vertical-align: top;"><small><br>
+            </small></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><span
+                style="font-weight: bold;"><a href="gemsfit-useref.html#error">error</a><br>
+              </span></span> </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td><br>
+          </td>
+          <td style="vertical-align: top;">not read <br>
+          </td>
+          <td style="vertical-align: top;"><small><br>
+            </small></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><span
+                style="font-weight: bold;"><a href="gemsfit-useref.html#unit">unit</a><br>
+              </span></span> </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td><br>
+          </td>
+          <td style="vertical-align: top;">not read (see above)<br>
+          </td>
+          <td style="vertical-align: top;"><small><br>
+            </small></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; text-align: center;"><span style="font-family: Courier New,Courier,monospace;"><span
+                style="font-weight: bold;">.Gex<small><br>
+                </small></span></span></td>
+          <td style="vertical-align: top;">Excess Gibbs energy of the
+            non-aqueous solution phase<br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td>J_mol (J/mol)</td>
+          <td style="vertical-align: top;">not read / unit J/mol<br>
+          </td>
+          <td style="vertical-align: top;"><small><br>
+            </small></td>
+        </tr>
+        <tr>
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family: Courier New,Courier,monospace; font-weight: bold;">.mChainL</span></td>
+          <td>Specific property. Mean Chain Lenght for cement based materials.
+            To use it in GEMSFITS one has to setup a special formula/expression
+            in <span style="font-family: Courier New,Courier,monospace;">"DataTarget"</span>
+            -&gt; <a href="gfshell-taskmode.html#expr_eg"><span style="font-family: Courier New,Courier,monospace;">"OFUN"</span></a>
+            for calculating it.</td>
+          <td>yes</td>
+          <td><br>
+          </td>
+          <td>not read</td>
+          <td><br>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p> </p>
+    <p> </p>
+    <hr style="width: 100%; height: 2px;">
+    <p style="height: 24px;"><span style="font-weight: bold;">RESULTS - phase
+        composition</span></p>
+    <p> </p>
+    <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+      <tbody>
+        <tr>
+          <td style="vertical-align: top; width: 283.017px;">Keyword<br>
+          </td>
+          <td style="vertical-align: top; width: 440.783px;">Description<br>
+          </td>
+          <td style="vertical-align: top; width: 70.7833px;">optional<br>
+          </td>
+          <td style="width: 147.433px;">unit<br>
+          </td>
+          <td style="vertical-align: top; width: 55px;">if empty / default value<br>
+          </td>
+          <td style="vertical-align: top; width: 259px;">Examples<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;"><a
+                href="gemsfit-useref.html#phase"> phase</a>.&lt;pname&gt;.<a href="gemsfit-useref.html#IC">IC</a>.&lt;ename&gt;.<a
+                href="gemsfit-useref.html#Q">Q</a></span></td>
+          <td style="vertical-align: top;">Experimental concentration of
+            independent component IC element &lt;ename&gt; in thephase
+            &lt;pname&gt;, pname should correspond to the name of this phase in
+            GEMS3K DCH file, ename is name (symbol) of element(Independent
+            Component) as in GEMS3K.</td>
+          <td style="vertical-align: top;">yes / at least one entry needed<br>
+          </td>
+          <td>molal (mol/Kg H2O); log_molal; molfrac (mol fraction for solids)</td>
+          <td style="vertical-align: top;"><small><br>
+            </small></td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">phase.aq_gen.IC.Si.Q
+              </span></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;"><a
+                href="gemsfit-useref.html#error">error</a><br>
+            </span> </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td><br>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><br>
+            </span> </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;"><a
+                href="gemsfit-useref.html#unit">unit<br>
+              </a></span></td>
+          <td style="vertical-align: top;"><br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td><br>
+          </td>
+          <td style="vertical-align: top;"><a href="gemsfit-useref.html#molal">molal</a>
+            (for aqueous); <a href="gemsfit-useref.html#molfrac">molfrac</a>
+            (for solids)<br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><br>
+            </span> </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;"><a
+                href="gemsfit-useref.html#phase"> phase</a>.&lt;pname&gt;.<a href="gemsfit-useref.html#MF">MR</a>.&lt;formula&gt;
+              <br> </span> </td>
+          <td style="vertical-align: top;">Experimental reported molar ratio MR
+            of elements in a phase&lt;pname&gt; pname should correspond to the
+            name of this phase in GEMS3K DCH file, formula as in the following
+            example: (Na+K)/(Na+K+Ca) or Na/(Na+K), etc.</td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td><br>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">phase.Plagioclase.MR.Na/(Na+Ca)<br>
+            </span> </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;"><a
+                href="gemsfit-useref.html#error">error</a><br>
+            </span> </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td><br>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><br>
+            </span> </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;"><a
+                href="gemsfit-useref.html#phase"> phase</a>.&lt;pname&gt;.<a href="gemsfit-useref.html#DC">DC</a>.&lt;dname&gt;.</span></td>
+          <td style="vertical-align: top;">Experimental property of dependent
+            component DC, &lt;dname&gt; in the phase&lt;pname&gt;. pname should
+            correspond to the name of this phase in GEMS3K DCH file, dname is
+            the formula of species(Dependent Component) belonging to this phase.
+            The following properties can be used after &lt;dname&gt;. </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td><br>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><br>
+            </span> </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
+              <a href="gemsfit-useref.html#Q">Q</a><br>
+            </span> </td>
+          <td style="vertical-align: top;">concentration<br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td>molfrac (mol fraction)</td>
+          <td style="vertical-align: top;"><br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">phase.aq_gen.DC.SiO2@.Q</span></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
+              @coef<br>
+            </span> </td>
+          <td style="vertical-align: top;">activity coefficient<br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td>molal</td>
+          <td style="vertical-align: top;"><br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">phase.aq_gen.DC.SiO2@.@coef</span></td>
+        </tr>
+        <tr>
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family: Courier New,Courier,monospace; font-weight: bold;">UMC</span></td>
+          <td>upper metastability constraint for dependent component
+            &lt;dname&gt; from phase &lt;pname&gt;</td>
+          <td>yes</td>
+          <td><br>
+          </td>
+          <td>1e+6</td>
+          <td><span style="font-family: Courier New,Courier,monospace;">phase.aq_gen.DC.SiO2@.UMC</span></td>
+        </tr>
+        <tr>
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-weight: bold; font-family: Courier New,Courier,monospace;">LMC</span></td>
+          <td>upper metastability constraint for dependent component
+            &lt;dname&gt; from phase &lt;pname&gt;</td>
+          <td>yes</td>
+          <td><br>
+          </td>
+          <td>0</td>
+          <td><span style="font-family: Courier New,Courier,monospace;">phase.Feldspar.DC.Albite.LMC</span></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;"><a
+                href="gemsfit-useref.html#error">error</a><br>
+            </span> </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td><br>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><br>
+            </span> </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;"><a
+                href="gemsfit-useref.html#unit">unit</a><br>
+            </span> </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td><br>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><br>
+            </span> </td>
+        </tr>
+      </tbody>
+    </table>
+    <p> </p>
+    <p> </p>
+    <hr>
+    <h3><a name="SALT_FORMULAE"></a>Syntax of chemical formulae for compositions
+      (modified, from GEM-Selektor documentation)</h3>
+    <p>Chemical formulae define any stoichiometry in terns of independent
+      components (usually chemical elements), automatically parsed in the
+      GEMSFIT2 code for calculation of bulk compositions of experimental
+      systems. The formula parser works with a simple and convenient <a href="#FORMULASYNTAX">formula
+        syntax</a>, very close to the conventional chemical notation.&nbsp; <br>
+      <br>
+      Formula is a string of text, maximum 60 characters long. Symbols of
+      independent components from the currently loaded GEMS3K input files are
+      assumed. Each symbol begins with an upper-case Latin letter, followed by
+      zero to four lower-case Latin letters or _ (underscore) characters. If a
+      symbol of independent component is not found in .dch file list, an error
+      message will be generated.<br>
+      <br>
+      Explicit valence of independent component can be specified within vertical
+      bars || immediately after the symbol, e.g. H2S|-2|(hydrogen sulfide). Note
+      that this option is not usable in GEMSFIT2 calculations, no charge balance
+      (or imbalance) is checked. Any explicit charge (e.g. @, +, -, +2, ...) at
+      the end of formula is ignored.<br>
+      IC symbols with stoichiometry coefficients can be grouped in brackets ()
+      or braces [] followed by a common stoichiometry coefficient, e.g. like in
+      Th(OH)4. Up to 3 levels of brackets can be nested into each other. The
+      stoichiometry coefficient after brackets will be applied to each of IC
+      symbols inside. For instance, Eu2(CO3)3 will be interpreted as Eu2C3O9.
+      Stoichiometry coefficients (except charge) must be positive, but not
+      necessarily integer (decimal point notation is allowed, e.g. 2.67).
+      Absence of the formula stoichiometry coefficient after the symbol or the
+      right bracket means that this coefficient equals 1.</p>
+    <h4><a name="FORMULASYNTAX"></a><span style="font-weight: bold;">Chemical
+        formula syntax (simplified):</span></h4>
+    <p><br>
+      <span style="font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;
+        &lt;formula&gt; ::= &lt;fterm&gt; | &lt;fterm&gt; &lt;charge&gt;<br>
+        &nbsp;&nbsp;&nbsp; &lt;fterm&gt;&nbsp;&nbsp; ::= &lt;icterm&gt; |
+        &lt;icterm&gt;&lt;charge&gt;<br>
+        &nbsp;&nbsp;&nbsp; &lt;icterm&gt;&nbsp; ::= &lt;elem&gt; | &lt;elem&gt;
+        &lt;elem_st_coef&gt;<br>
+        &nbsp;&nbsp;&nbsp; &lt;elem&gt;&nbsp;&nbsp;&nbsp; ::= (&lt;fterm&gt;) |
+        [&lt;fterm&gt;] |<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &lt;isotope_mass&gt;&lt;icsymb&gt;&lt;valence&gt; |<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &lt;isotope_mass&gt;&lt;icsymb&gt; |<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &lt;icsymb&gt;&lt;valence&gt; | &lt;icsymb&gt;<br>
+        &nbsp;&nbsp;&nbsp; &lt;charge&gt;&nbsp; ::= +&lt;integer&gt; |
+        -&lt;integer&gt; | + | - | @<br>
+        &nbsp;&nbsp;&nbsp; &lt;elem_st_coef&gt; ::= &lt;real&gt;<br>
+        &nbsp;&nbsp;&nbsp; &lt;icsymb&gt;&nbsp; ::= &lt;Capital_letter&gt; |
+        &lt;icsymb&gt;&lt;lcase_letter&gt;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        | &lt;icsymb&gt;_<br>
+        &nbsp;&nbsp;&nbsp; &lt;valence&gt; ::= |-&lt;integer&gt;| |
+        |+&lt;integer&gt;| | |&lt;integer&gt;|<br>
+        &nbsp;&nbsp;&nbsp; &lt;isotope_mass&gt; ::= /&lt;integer&gt;/<br>
+        &nbsp;&nbsp;&nbsp; &lt;integer&gt; ::= &lt;num&gt;<br>
+        &nbsp;&nbsp;&nbsp; &lt;num&gt;&nbsp;&nbsp;&nbsp;&nbsp; ::= &lt;digit&gt;
+        | &lt;num&gt;&lt;digit&gt;<br>
+        &nbsp;&nbsp;&nbsp; &lt;digit&gt;&nbsp;&nbsp; ::= 0 |&nbsp; 1 |&nbsp; 2
+        |&nbsp; 3 |&nbsp; 4 |&nbsp; 5 |&nbsp; 6 |&nbsp; 7 |&nbsp; 8 |&nbsp; 9<br>
+        &nbsp;&nbsp;&nbsp; &lt;real&gt;&nbsp;&nbsp;&nbsp; ::=
+        &lt;num&gt;.&lt;num&gt; | &lt;num&gt;. | .&lt;num&gt; | &lt;num&gt;</span><br>
+      <br>
+      In the<span style="font-family: Courier New,Courier,monospace;">
+        &lt;elem&gt;</span> term, up to three levels of nesting is allowed. The
+      vertical bar <span style="font-family: Courier New,Courier,monospace;">"|"</span>
+      means <span style="font-family: Courier New,Courier,monospace;">"or"</span>,
+      i.e. one selection from several possible values or terms. <br>
+      The terms <span style="font-family: Courier New,Courier,monospace;">&lt;valence&gt;</span>
+      and <span style="font-family: Courier New,Courier,monospace;">&lt;charge&gt;</span>
+      are allowed, but ignored in this version of the GEMSFIT2 code. </p>
+    <hr>
+    <h3><a name="Export_excel_file"></a>2. Export excel file to csv format file</h3>
+    <p>Export your Excel table into the comma-separated format ',' csv file.
+      Check that the cell values are saved in full, e.g. as 0.1234567 and not as
+      0.123 (as visible). Make sure that the row delimiter is '\n' ('\xOA') as
+      in linux and not '\xOD' as in Mac OS X (re-export csv file in Linux, if
+      necessary).</p>
+    <br>
+    <hr>
+    <h3><a name="Return_codes_and_error_messages"></a>Return codes and error
+      messages</h3>
+    <p>.....<br>
+      <br>
+      ..... </p>
+    <p><br>
+    </p>
+    <hr>
+    <p>Last updated:&nbsp; 29. 12. 2014&nbsp; DM, DK</p>
+    <p>Copyright&nbsp; (c) 2015&nbsp; <a target="_blank" title="http://gems.web.psi.ch/teamhist.html"
+        href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a></p>
+    <hr>
+    <p><br>
+    </p>
+  </body>
+</html>
