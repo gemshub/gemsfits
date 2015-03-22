@@ -195,5 +195,6 @@ double Tfunction (double computed_value, double measured_value, string type, TGf
 
 double* AddVariable(const char *a_szName, void *pUserData);
 
+string formula_DCname_parser (string expr, vector<string> &exprO, vector<string> &exprP );
 
 #endif // GEMSFIT_TARGET_FUNCTIONS_H

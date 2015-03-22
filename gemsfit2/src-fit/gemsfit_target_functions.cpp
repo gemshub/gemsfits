@@ -314,7 +314,7 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
         {
             // Default
             computed_value = IC_in_PH[ICndx]; // phase bulk composition in moles (mol)
-            objfun.exp_unit = keys::mole;
+            objfun.exp_unit = keys::mol;
         } else
         { if (PHndx < 0)
              {
@@ -521,13 +521,13 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
             if (objfun.exp_unit == keys::kgram)
                 computed_value = sys->NodT[i]->Ph_Mass(PHndx);
         else
-                if (objfun.exp_unit == keys::mole)
+                if (objfun.exp_unit == keys::mol)
                     computed_value = sys->NodT[i]->Ph_Mole(PHndx);
         else
                 {
                     // Default
                     computed_value = sys->NodT[i]->Ph_Mole(PHndx);
-                    objfun.exp_unit = keys::mole;
+                    objfun.exp_unit = keys::mol;
                 }
 
     } else // Get phase volume
@@ -594,7 +594,7 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
     //  computed_value = ;
         // ++++++++++ !!!!! NOT IMPLEMENTED !!!! +++++
     } else
-    if ((objfun.exp_CN == keys::mChainL) && (PHndx >=0))
+    if (((objfun.exp_CN == keys::mChainL) || (objfun.exp_CN == keys::Rd)) && (PHndx >=0))
     {
         vector<double> varDbl;
 
@@ -603,6 +603,10 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
             cout << "An expression \"expr\" is needed to calculate the Chain Length. " << endl;
             exit(1);
         }
+
+        // re-name DC names
+        vector<string> exprO, exprP;
+        objfun.expr = formula_DCname_parser(objfun.expr, exprO, exprP);
 
         mu::Parser parser;
         parser.SetExpr(objfun.expr);
@@ -615,7 +619,13 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
 
         for (unsigned int d = 0; d < varStr.size(); d++)
         {
-            DCndx = sys->NodT[i]->DC_name_to_xCH(varStr[d].c_str());
+            for ( unsigned int ex = 0; ex < exprO.size(); ex++)
+            {
+                if (varStr[d].c_str() == exprP[ex]) { DCndx = sys->NodT[i]->DC_name_to_xCH(varStr[d].c_str()); }
+            }
+
+            if (DCndx < 0)
+            { cout << "ERROR: Dependent component: " << varStr[d].c_str() << " not present in GEMS system! "; exit(1);}
             varDbl.push_back(sys->NodT[i]->Get_cDC(DCndx));
         }
 
@@ -716,7 +726,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFun
 
     if ((objfun.exp_DCP == keys::Qnt) && (DCndx >=0))
     {
-        if (objfun.exp_unit == keys::mole)
+        if (objfun.exp_unit == keys::mol)
         {
         computed_value = sys->NodT[i]->Get_nDC(DCndx); // Retrieves the current mole amount of Dependent Component.
         } else
@@ -909,4 +919,55 @@ double* AddVariable(const char *a_szName, void *pUserData)
     throw mu::ParserError("Variable buffer overflow.");
   else
     return &afValBuf[iVal];
+}
+
+
+string formula_DCname_parser(string expr, vector<string> &exprO, vector<string> &exprP )
+{
+    string expr_temp, DCname;
+    char op[19]= "/+-*^?<>=#!$%&|~'_", opr[19]="abcdefghijklmnopqr";
+
+    expr_temp = expr;
+
+    std::size_t found = expr.find("{"), found_ = expr.find("}"), found_op;
+    while (found!=std::string::npos)
+    {
+        expr.erase(found, 1);
+        expr.erase(found_-1,1);
+
+        DCname = expr.substr(found, found_-found-1);
+        exprO.push_back(DCname);
+
+        // replaces the found operators with letters
+        for (int i=0; i< sizeof(op); i++)
+        {
+            found_op = DCname.find(op[i]);
+            while (found_op!=std::string::npos)
+            {
+                string r(1, opr[i]);
+                DCname.replace(found_op, 1, r);
+                found_op = DCname.find(op[i], found_op+1);
+            }
+        }
+        // adds the parsed DC name to the vector
+        exprP.push_back(DCname);
+        found = expr.find("{", found);
+        found_ = expr.find("}", found_);
+        if( ((found_==std::string::npos) && (found!=std::string::npos)) || ((found_!=std::string::npos) && (found==std::string::npos)) )
+        {
+            cout << "ERROR: Missing { or } from the \"expr\""; exit(1);
+        }
+    }
+
+    for (int i = 0; i < exprO.size(); i++)
+    {
+        found = expr.find(exprO[i]);
+        while ((found!=std::string::npos) && (exprO[i] != exprP[i]))
+        {
+            expr.replace(found, exprO[i].size(), exprP[i]);
+            found = expr.find(exprO[i]);
+        }
+    }
+
+    return expr;
 }

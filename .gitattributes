@@ -78,6 +78,10 @@ Tests/Ti-in-Quartz/EJDB/TiQ_normal_experiments -text
 Tests/Ti-in-Quartz/EJDB/TiQ_normal_fits -text
 Tests/Ti-in-Quartz/EJDB/TiQ_normal_tasks -text
 Tests/Ti-in-Quartz/dbimport/Thomas&Wark.xlsx -text
+Tests/pHedge/EJDB/EuonIllite -text
+Tests/pHedge/EJDB/EuonIllite_experiments -text
+Tests/pHedge/EJDB/EuonIllite_tasks -text
+Tests/pHedge/dbimport/Eu_on_illite.xlsx -text
 Tests/soldata.backup -text
 Tests/test.backup -text
 csvtoejdb-build/CASH/CASH.csv -text

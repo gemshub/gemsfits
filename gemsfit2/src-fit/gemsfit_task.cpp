@@ -722,6 +722,9 @@ void TGfitTask::setnodes()
                 auto_ptr<double> A( new double[nIC]);
                 auto_ptr<char> SB1( new char[nIC*IC_RKLEN]);
 
+                if ((experiments[n]->sbcomp[j]->Qunit != keys::mol) && (experiments[n]->sbcomp[j]->Qunit != keys::molal) && (experiments[n]->sbcomp[j]->Qunit != keys::gram))
+                   {cout << "ERROR: Unknown unit " << experiments[n]->sbcomp[j]->Qunit <<" for "<< experiments[n]->sbcomp[j]->comp <<" experiment " << experiments[n]->sample << endl; exit(1);}
+
                 // Set up SB1 - copy of ICNL
                 for( i=0; i<nIC; i++ )
                 {
@@ -743,6 +746,7 @@ void TGfitTask::setnodes()
                         njDC = experiments[n]->sbcomp[j]->Qnt * h2o_kgamount;
                     }
                 else
+//                    if (experiments[n]->sbcomp[j]->Qunit == keys::mol)
                         njDC = experiments[n]->sbcomp[j]->Qnt;
                 DCm = 0.;  // zero off molar mass of the formula
                 for(i=0; i<nIC; i++)

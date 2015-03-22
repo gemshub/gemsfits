@@ -40,10 +40,10 @@
 void nestedfun (TGfitTask *sys)
 {
     // loop over the nested functions
-    #ifdef useomp
-        omp_set_num_threads(sys->MPI);
-        #pragma omp parallel for
-    #endif
+//    #ifdef useomp
+//        omp_set_num_threads(sys->MPI);
+//        #pragma omp parallel for
+//    #endif
     for  (unsigned int i = 0; i<sys->experiments.size(); i++)
     {
         vector <double> x, UB, LB;

@@ -1,549 +1,557 @@
 {
-     "DatabasePath" :   "../EJDB/<database name>",
-     "DataCollection" :   "<collection name>",
-     "GEMSInputFilesPath" :   "../GEMS/TCSH-dat.lst",
-     "DataSelection" :   "",
-     "DataTargetFunction" :   "",
-     "ParametersToOptimize" :   [
+     "DBPath" :   "../EJDB/<database name>",
+     "DBColl" :   "<collection name>",
+     "GEMSFPath" :   "../GEMS/TCSH-dat.lst",
+     "DataSelect" :   "",
+     "DataTarget" :   "",
+     "ParToOpt" :   [
           {
-               "SystemPhaseName" :   "aq_gen",
-               "GibbsEnergyOfDependentComponents" :   [
+               "EPH" :   "aq_gen",
+               "G0" :   [
                     {
-                         "DependentComponentName" :   "Ca+2",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   -552790.00065054
+                         "DCN" :   "Ca+2",
+                         "PType" :   "S",
+                         "IV" :   -552790.00065054
                     },
                     {
-                         "DependentComponentName" :   "CaOH+",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   -717024.00023652
+                         "DCN" :   "CaOH+",
+                         "PType" :   "S",
+                         "IV" :   -717024.00023652
                     },
                     {
-                         "DependentComponentName" :   "Ca(HSiO3)+",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   -1574238.0003068
+                         "DCN" :   "Ca(HSiO3)+",
+                         "PType" :   "S",
+                         "IV" :   -1574238.0003068
                     },
                     {
-                         "DependentComponentName" :   "CaSiO3@",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   -1517556.9007465
+                         "DCN" :   "CaSiO3@",
+                         "PType" :   "S",
+                         "IV" :   -1517556.9007465
                     },
                     {
-                         "DependentComponentName" :   "HSiO3-",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   -1014598.010816
+                         "DCN" :   "HSiO3-",
+                         "PType" :   "S",
+                         "IV" :   -1014598.010816
                     },
                     {
-                         "DependentComponentName" :   "Si4O10-4",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   -3600808.0742771
+                         "DCN" :   "Si4O10-4",
+                         "PType" :   "S",
+                         "IV" :   -3600808.0742771
                     },
                     {
-                         "DependentComponentName" :   "SiO2@",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   -833410.67455212
+                         "DCN" :   "SiO2@",
+                         "PType" :   "S",
+                         "IV" :   -833410.67455212
                     },
                     {
-                         "DependentComponentName" :   "SiO3-2",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   -938509.58195631
+                         "DCN" :   "SiO3-2",
+                         "PType" :   "S",
+                         "IV" :   -938509.58195631
                     },
                     {
-                         "DependentComponentName" :   "H2@",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   17729.00010995
+                         "DCN" :   "H2@",
+                         "PType" :   "S",
+                         "IV" :   17729.00010995
                     },
                     {
-                         "DependentComponentName" :   "N2@",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   18194.000182443
+                         "DCN" :   "N2@",
+                         "PType" :   "S",
+                         "IV" :   18194.000182443
                     },
                     {
-                         "DependentComponentName" :   "O2@",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   16446.000207431
+                         "DCN" :   "O2@",
+                         "PType" :   "S",
+                         "IV" :   16446.000207431
                     },
                     {
-                         "DependentComponentName" :   "OH-",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   -157270.00090727
+                         "DCN" :   "OH-",
+                         "PType" :   "S",
+                         "IV" :   -157270.00090727
                     },
                     {
-                         "DependentComponentName" :   "H+",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   0
+                         "DCN" :   "H+",
+                         "PType" :   "S",
+                         "IV" :   0
                     },
                     {
-                         "DependentComponentName" :   "H2O@",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   -237181.38483664
+                         "DCN" :   "H2O@",
+                         "PType" :   "S",
+                         "IV" :   -237181.38483664
                     }
                ],
-               "InteractionParametersInPhase" :   [
+               "PMc" :   [
                     {
-                         "InteractionParameterCoefficients" :   [
+                         "IPCs" :   [
                               {
-                                   "InteractionParameterCoefficientName" :   "aq_gen[0|0]",
-                                   "ParameterType" :   "S",
-                                   "InitialValue" :   0.0640000030398369
+                                   "IPCN" :   "aq_gen[0|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.0640000030398369
                               },
                               {
-                                   "InteractionParameterCoefficientName" :   "aq_gen[0|1]",
-                                   "ParameterType" :   "S",
-                                   "InitialValue" :   3.72000002861023
+                                   "IPCN" :   "aq_gen[0|1]",
+                                   "PType" :   "S",
+                                   "IV" :   3.72000002861023
                               },
                               {
-                                   "InteractionParameterCoefficientName" :   "aq_gen[0|2]",
-                                   "ParameterType" :   "S",
-                                   "InitialValue" :   0
+                                   "IPCN" :   "aq_gen[0|2]",
+                                   "PType" :   "S",
+                                   "IV" :   0
                               },
                               {
-                                   "InteractionParameterCoefficientName" :   "aq_gen[0|3]",
-                                   "ParameterType" :   "S",
-                                   "InitialValue" :   0
+                                   "IPCN" :   "aq_gen[0|3]",
+                                   "PType" :   "S",
+                                   "IV" :   0
                               }
                          ]
                     },
                     {
-                         "InteractionParameterCoefficients" :   [
+                         "IPCs" :   [
                               {
-                                   "InteractionParameterCoefficientName" :   "aq_gen[1|0]",
-                                   "ParameterType" :   "S",
-                                   "InitialValue" :   0
+                                   "IPCN" :   "aq_gen[1|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
                               },
                               {
-                                   "InteractionParameterCoefficientName" :   "aq_gen[1|1]",
-                                   "ParameterType" :   "S",
-                                   "InitialValue" :   0
+                                   "IPCN" :   "aq_gen[1|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
                               },
                               {
-                                   "InteractionParameterCoefficientName" :   "aq_gen[1|2]",
-                                   "ParameterType" :   "S",
-                                   "InitialValue" :   0
+                                   "IPCN" :   "aq_gen[1|2]",
+                                   "PType" :   "S",
+                                   "IV" :   0
                               },
                               {
-                                   "InteractionParameterCoefficientName" :   "aq_gen[1|3]",
-                                   "ParameterType" :   "S",
-                                   "InitialValue" :   0
+                                   "IPCN" :   "aq_gen[1|3]",
+                                   "PType" :   "S",
+                                   "IV" :   0
                               }
                          ]
                     }
                ]
           },
           {
-               "SystemPhaseName" :   "gas_gen",
-               "GibbsEnergyOfDependentComponents" :   [
+               "EPH" :   "gas_gen",
+               "G0" :   [
                     {
-                         "DependentComponentName" :   "H2",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   0
+                         "DCN" :   "H2",
+                         "PType" :   "S",
+                         "IV" :   0
                     },
                     {
-                         "DependentComponentName" :   "N2",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   0
+                         "DCN" :   "N2",
+                         "PType" :   "S",
+                         "IV" :   0
                     },
                     {
-                         "DependentComponentName" :   "O2",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   0
+                         "DCN" :   "O2",
+                         "PType" :   "S",
+                         "IV" :   0
                     }
                ]
           },
           {
-               "SystemPhaseName" :   "CSH",
-               "GibbsEnergyOfDependentComponents" :   [
+               "EPH" :   "CSH",
+               "G0" :   [
                     {
-                         "DependentComponentName" :   "TCSC",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   -6205140
+                         "DCN" :   "TCSC",
+                         "PType" :   "S",
+                         "IV" :   -6205140
                     },
                     {
-                         "DependentComponentName" :   "TCSv",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   -5321929
+                         "DCN" :   "TCSv",
+                         "PType" :   "S",
+                         "IV" :   -5321929
                     },
                     {
-                         "DependentComponentName" :   "TCvC",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   -5350530
+                         "DCN" :   "TCvC",
+                         "PType" :   "S",
+                         "IV" :   -5350530
                     },
                     {
-                         "DependentComponentName" :   "TCvv",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   -4457513
+                         "DCN" :   "TCvv",
+                         "PType" :   "S",
+                         "IV" :   -4457513
                     },
                     {
-                         "DependentComponentName" :   "THSC",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   -6014850
+                         "DCN" :   "THSC",
+                         "PType" :   "S",
+                         "IV" :   -6014850
                     },
                     {
-                         "DependentComponentName" :   "THSv",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   -5117840
+                         "DCN" :   "THSv",
+                         "PType" :   "S",
+                         "IV" :   -5117840
                     },
                     {
-                         "DependentComponentName" :   "THvC",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   -5164240
+                         "DCN" :   "THvC",
+                         "PType" :   "S",
+                         "IV" :   -5164240
                     },
                     {
-                         "DependentComponentName" :   "THvv",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   -4258820
+                         "DCN" :   "THvv",
+                         "PType" :   "S",
+                         "IV" :   -4258820
                     }
                ],
-               "InteractionParametersInPhase" :   [
+               "PMc" :   [
                     {
-                         "InteractionParameterCoefficients" :   [
+                         "IPCs" :   [
                               {
-                                   "InteractionParameterCoefficientName" :   "CSH[0|0]",
-                                   "ParameterType" :   "S",
-                                   "InitialValue" :   9.99999971718069e-10
+                                   "IPCN" :   "CSH[0|0]",
+                                   "PType" :   "S",
+                                   "IV" :   9.99999971718069e-10
                               },
                               {
-                                   "InteractionParameterCoefficientName" :   "CSH[0|1]",
-                                   "ParameterType" :   "S",
-                                   "InitialValue" :   0
+                                   "IPCN" :   "CSH[0|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
                               },
                               {
-                                   "InteractionParameterCoefficientName" :   "CSH[0|2]",
-                                   "ParameterType" :   "S",
-                                   "InitialValue" :   0
+                                   "IPCN" :   "CSH[0|2]",
+                                   "PType" :   "S",
+                                   "IV" :   0
                               }
                          ]
                     },
                     {
-                         "InteractionParameterCoefficients" :   [
+                         "IPCs" :   [
                               {
-                                   "InteractionParameterCoefficientName" :   "CSH[1|0]",
-                                   "ParameterType" :   "S",
-                                   "InitialValue" :   1.99999994343614e-09
+                                   "IPCN" :   "CSH[1|0]",
+                                   "PType" :   "S",
+                                   "IV" :   1.99999994343614e-09
                               },
                               {
-                                   "InteractionParameterCoefficientName" :   "CSH[1|1]",
-                                   "ParameterType" :   "S",
-                                   "InitialValue" :   0
+                                   "IPCN" :   "CSH[1|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
                               },
                               {
-                                   "InteractionParameterCoefficientName" :   "CSH[1|2]",
-                                   "ParameterType" :   "S",
-                                   "InitialValue" :   0
+                                   "IPCN" :   "CSH[1|2]",
+                                   "PType" :   "S",
+                                   "IV" :   0
                               }
                          ]
                     },
                     {
-                         "InteractionParameterCoefficients" :   [
+                         "IPCs" :   [
                               {
-                                   "InteractionParameterCoefficientName" :   "CSH[2|0]",
-                                   "ParameterType" :   "S",
-                                   "InitialValue" :   3.00000002617651e-09
+                                   "IPCN" :   "CSH[2|0]",
+                                   "PType" :   "S",
+                                   "IV" :   3.00000002617651e-09
                               },
                               {
-                                   "InteractionParameterCoefficientName" :   "CSH[2|1]",
-                                   "ParameterType" :   "S",
-                                   "InitialValue" :   0
+                                   "IPCN" :   "CSH[2|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
                               },
                               {
-                                   "InteractionParameterCoefficientName" :   "CSH[2|2]",
-                                   "ParameterType" :   "S",
-                                   "InitialValue" :   0
+                                   "IPCN" :   "CSH[2|2]",
+                                   "PType" :   "S",
+                                   "IV" :   0
                               }
                          ]
                     },
                     {
-                         "InteractionParameterCoefficients" :   [
+                         "IPCs" :   [
                               {
-                                   "InteractionParameterCoefficientName" :   "CSH[3|0]",
-                                   "ParameterType" :   "S",
-                                   "InitialValue" :   3.99999988687227e-09
+                                   "IPCN" :   "CSH[3|0]",
+                                   "PType" :   "S",
+                                   "IV" :   3.99999988687227e-09
                               },
                               {
-                                   "InteractionParameterCoefficientName" :   "CSH[3|1]",
-                                   "ParameterType" :   "S",
-                                   "InitialValue" :   0
+                                   "IPCN" :   "CSH[3|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
                               },
                               {
-                                   "InteractionParameterCoefficientName" :   "CSH[3|2]",
-                                   "ParameterType" :   "S",
-                                   "InitialValue" :   0
+                                   "IPCN" :   "CSH[3|2]",
+                                   "PType" :   "S",
+                                   "IV" :   0
                               }
                          ]
                     },
                     {
-                         "InteractionParameterCoefficients" :   [
+                         "IPCs" :   [
                               {
-                                   "InteractionParameterCoefficientName" :   "CSH[4|0]",
-                                   "ParameterType" :   "S",
-                                   "InitialValue" :   4.99999996961265e-09
+                                   "IPCN" :   "CSH[4|0]",
+                                   "PType" :   "S",
+                                   "IV" :   4.99999996961265e-09
                               },
                               {
-                                   "InteractionParameterCoefficientName" :   "CSH[4|1]",
-                                   "ParameterType" :   "S",
-                                   "InitialValue" :   0
+                                   "IPCN" :   "CSH[4|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
                               },
                               {
-                                   "InteractionParameterCoefficientName" :   "CSH[4|2]",
-                                   "ParameterType" :   "S",
-                                   "InitialValue" :   0
+                                   "IPCN" :   "CSH[4|2]",
+                                   "PType" :   "S",
+                                   "IV" :   0
                               }
                          ]
                     },
                     {
-                         "InteractionParameterCoefficients" :   [
+                         "IPCs" :   [
                               {
-                                   "InteractionParameterCoefficientName" :   "CSH[5|0]",
-                                   "ParameterType" :   "S",
-                                   "InitialValue" :   6.00000005235302e-09
+                                   "IPCN" :   "CSH[5|0]",
+                                   "PType" :   "S",
+                                   "IV" :   6.00000005235302e-09
                               },
                               {
-                                   "InteractionParameterCoefficientName" :   "CSH[5|1]",
-                                   "ParameterType" :   "S",
-                                   "InitialValue" :   0
+                                   "IPCN" :   "CSH[5|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
                               },
                               {
-                                   "InteractionParameterCoefficientName" :   "CSH[5|2]",
-                                   "ParameterType" :   "S",
-                                   "InitialValue" :   0
+                                   "IPCN" :   "CSH[5|2]",
+                                   "PType" :   "S",
+                                   "IV" :   0
                               }
                          ]
                     }
                ]
           },
           {
-               "SystemPhaseName" :   "Portlandite",
-               "GibbsEnergyOfDependentComponents" :   [
+               "EPH" :   "Portlandite",
+               "G0" :   [
                     {
-                         "DependentComponentName" :   "Portlandite",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   -897013
+                         "DCN" :   "Portlandite",
+                         "PType" :   "S",
+                         "IV" :   -897013
                     }
                ]
           },
           {
-               "SystemPhaseName" :   "Silica-amorph",
-               "GibbsEnergyOfDependentComponents" :   [
+               "EPH" :   "Silica-amorph",
+               "G0" :   [
                     {
-                         "DependentComponentName" :   "Amor-Sl",
-                         "ParameterType" :   "S",
-                         "InitialValue" :   -850616
+                         "DCN" :   "Amor-Sl",
+                         "PType" :   "S",
+                         "IV" :   -850616
                     }
                ]
           }
      ],
-     "NestedFunctionParametersToOptimize" :   "",
-     "LogKFunctionData" :   "",
-     "ArrayofUserProvidedLogKValues" :   "",
-     "OptimizerSettings" :   {
-          "NumberOfMPIThreadsForParallelRun" :   4,
-          "WhatOptStatCombinationToDo" :   1,
-          "UseEquilibriumCalculation" :   1,
-          "UseWeightsFromExperimentalData" :   0,
-          "OptimizationAlgorithm" :   "LN_BOBYQA",
-          "ParameterBoundsPercentage" :   -1,
-          "ConvergenceToleranceRelative" :   1e-05,
-          "ConvergenceToleranceAbsolute" :   1e-05,
-          "MaximumNumberOptimizationLoops" :   10000,
-          "NormalizeAllParameters" :   1,
-          "GradientMethodPerturbatorValue" :   0.0001,
-          "SensitivitiesPerturbatorValue" :   0.0001,
-          "UseTuckeyBiweights" :   -1,
-          "OptimizationTuckeyCValue" :   6,
-          "UseMonteCarloParameterEvaluation" :   0,
-          "NumberOfMonteCarloTrials" :   100
+     "NFunParToOpt" :   "",
+     "LogKFun" :   "",
+     "LogKVal" :   "",
+     "OptSet" :   {
+          "NumMPI" :   4,
+          "DoWhat" :   1,
+          "UseEqC" :   1,
+          "UDWts" :   -1,
+          "OptAlg" :   "LN_BOBYQA",
+          "PBPerc" :   -1,
+          "ConTolRel" :   1e-05,
+          "ConTolAbs" :   1e-05,
+          "MaxLoops" :   10000,
+          "NormPar" :   1,
+          "GradPert" :   0.0001,
+          "SensPert" :   0.0001,
+          "OptTu" :   -1,
+          "OptTuC" :   6,
+          "UseMCPE" :   -1,
+          "NumMCT" :   100
      },
-     "DataSynonyms" :   {
-          "PhaseNames" :   [
+     "DataSyn" :   {
+          "PHN" :   [
                {
-                    "NameInGEMSystem" :   "aq_gen",
-                    "Synonyms" :   "",
-                    "DependentComponentNames" :   [
+                    "NIS" :   "aq_gen",
+                    "Syn" :   "",
+                    "DCN" :   [
                          {
-                              "NameInGEMSystem" :   "Ca+2",
-                              "Synonyms" :   ""
+                              "NIS" :   "Ca+2",
+                              "Syn" :   ""
                          },
                          {
-                              "NameInGEMSystem" :   "CaOH+",
-                              "Synonyms" :   ""
+                              "NIS" :   "CaOH+",
+                              "Syn" :   ""
                          },
                          {
-                              "NameInGEMSystem" :   "Ca(HSiO3)+",
-                              "Synonyms" :   ""
+                              "NIS" :   "Ca(HSiO3)+",
+                              "Syn" :   ""
                          },
                          {
-                              "NameInGEMSystem" :   "CaSiO3@",
-                              "Synonyms" :   ""
+                              "NIS" :   "CaSiO3@",
+                              "Syn" :   ""
                          },
                          {
-                              "NameInGEMSystem" :   "HSiO3-",
-                              "Synonyms" :   ""
+                              "NIS" :   "HSiO3-",
+                              "Syn" :   ""
                          },
                          {
-                              "NameInGEMSystem" :   "Si4O10-4",
-                              "Synonyms" :   ""
+                              "NIS" :   "Si4O10-4",
+                              "Syn" :   ""
                          },
                          {
-                              "NameInGEMSystem" :   "SiO2@",
-                              "Synonyms" :   ""
+                              "NIS" :   "SiO2@",
+                              "Syn" :   ""
                          },
                          {
-                              "NameInGEMSystem" :   "SiO3-2",
-                              "Synonyms" :   ""
+                              "NIS" :   "SiO3-2",
+                              "Syn" :   ""
                          },
                          {
-                              "NameInGEMSystem" :   "H2@",
-                              "Synonyms" :   ""
+                              "NIS" :   "H2@",
+                              "Syn" :   ""
                          },
                          {
-                              "NameInGEMSystem" :   "N2@",
-                              "Synonyms" :   ""
+                              "NIS" :   "N2@",
+                              "Syn" :   ""
                          },
                          {
-                              "NameInGEMSystem" :   "O2@",
-                              "Synonyms" :   ""
+                              "NIS" :   "O2@",
+                              "Syn" :   ""
                          },
                          {
-                              "NameInGEMSystem" :   "OH-",
-                              "Synonyms" :   ""
+                              "NIS" :   "OH-",
+                              "Syn" :   ""
                          },
                          {
-                              "NameInGEMSystem" :   "H+",
-                              "Synonyms" :   ""
+                              "NIS" :   "H+",
+                              "Syn" :   ""
                          },
                          {
-                              "NameInGEMSystem" :   "H2O@",
-                              "Synonyms" :   ""
+                              "NIS" :   "H2O@",
+                              "Syn" :   ""
                          }
                     ]
                },
                {
-                    "NameInGEMSystem" :   "gas_gen",
-                    "Synonyms" :   "",
-                    "DependentComponentNames" :   [
+                    "NIS" :   "gas_gen",
+                    "Syn" :   "",
+                    "DCN" :   [
                          {
-                              "NameInGEMSystem" :   "H2",
-                              "Synonyms" :   ""
+                              "NIS" :   "H2",
+                              "Syn" :   ""
                          },
                          {
-                              "NameInGEMSystem" :   "N2",
-                              "Synonyms" :   ""
+                              "NIS" :   "N2",
+                              "Syn" :   ""
                          },
                          {
-                              "NameInGEMSystem" :   "O2",
-                              "Synonyms" :   ""
+                              "NIS" :   "O2",
+                              "Syn" :   ""
                          }
                     ]
                },
                {
-                    "NameInGEMSystem" :   "CSH",
-                    "Synonyms" :   "",
-                    "DependentComponentNames" :   [
+                    "NIS" :   "CSH",
+                    "Syn" :   "",
+                    "DCN" :   [
                          {
-                              "NameInGEMSystem" :   "TCSC",
-                              "Synonyms" :   ""
+                              "NIS" :   "TCSC",
+                              "Syn" :   ""
                          },
                          {
-                              "NameInGEMSystem" :   "TCSv",
-                              "Synonyms" :   ""
+                              "NIS" :   "TCSv",
+                              "Syn" :   ""
                          },
                          {
-                              "NameInGEMSystem" :   "TCvC",
-                              "Synonyms" :   ""
+                              "NIS" :   "TCvC",
+                              "Syn" :   ""
                          },
                          {
-                              "NameInGEMSystem" :   "TCvv",
-                              "Synonyms" :   ""
+                              "NIS" :   "TCvv",
+                              "Syn" :   ""
                          },
                          {
-                              "NameInGEMSystem" :   "THSC",
-                              "Synonyms" :   ""
+                              "NIS" :   "THSC",
+                              "Syn" :   ""
                          },
                          {
-                              "NameInGEMSystem" :   "THSv",
-                              "Synonyms" :   ""
+                              "NIS" :   "THSv",
+                              "Syn" :   ""
                          },
                          {
-                              "NameInGEMSystem" :   "THvC",
-                              "Synonyms" :   ""
+                              "NIS" :   "THvC",
+                              "Syn" :   ""
                          },
                          {
-                              "NameInGEMSystem" :   "THvv",
-                              "Synonyms" :   ""
+                              "NIS" :   "THvv",
+                              "Syn" :   ""
                          }
                     ]
                },
                {
-                    "NameInGEMSystem" :   "Portlandite",
-                    "Synonyms" :   "",
-                    "DependentComponentNames" :   [
+                    "NIS" :   "Portlandite",
+                    "Syn" :   "",
+                    "DCN" :   [
                          {
-                              "NameInGEMSystem" :   "Portlandite",
-                              "Synonyms" :   ""
+                              "NIS" :   "Portlandite",
+                              "Syn" :   ""
                          }
                     ]
                },
                {
-                    "NameInGEMSystem" :   "Silica-amorph",
-                    "Synonyms" :   "",
-                    "DependentComponentNames" :   [
+                    "NIS" :   "Silica-amorph",
+                    "Syn" :   "",
+                    "DCN" :   [
                          {
-                              "NameInGEMSystem" :   "Amor-Sl",
-                              "Synonyms" :   ""
+                              "NIS" :   "Amor-Sl",
+                              "Syn" :   ""
                          }
                     ]
                }
           ],
-          "PhasePropertyNames" :   [
+          "PHPN" :   [
                {
-                    "NameInGEMSystem" :   "pH",
-                    "Synonyms" :   ""
+                    "NIS" :   "pH",
+                    "Syn" :   ""
                },
                {
-                    "NameInGEMSystem" :   "pe",
-                    "Synonyms" :   ""
+                    "NIS" :   "pHm",
+                    "Syn" :   ""
                },
                {
-                    "NameInGEMSystem" :   "Eh",
-                    "Synonyms" :   ""
+                    "NIS" :   "pe",
+                    "Syn" :   ""
                },
                {
-                    "NameInGEMSystem" :   "IS",
-                    "Synonyms" :   ""
+                    "NIS" :   "Eh",
+                    "Syn" :   ""
                },
                {
-                    "NameInGEMSystem" :   "alk",
-                    "Synonyms" :   ""
+                    "NIS" :   "IS",
+                    "Syn" :   ""
                },
                {
-                    "NameInGEMSystem" :   "pV",
-                    "Synonyms" :   ""
+                    "NIS" :   "alk",
+                    "Syn" :   ""
                },
                {
-                    "NameInGEMSystem" :   "RHO",
-                    "Synonyms" :   ""
+                    "NIS" :   "pV",
+                    "Syn" :   ""
                },
                {
-                    "NameInGEMSystem" :   "sArea",
-                    "Synonyms" :   ""
+                    "NIS" :   "RHO",
+                    "Syn" :   ""
                },
                {
-                    "NameInGEMSystem" :   "Gex",
-                    "Synonyms" :   ""
+                    "NIS" :   "sArea",
+                    "Syn" :   ""
                },
                {
-                    "NameInGEMSystem" :   "mChainL",
-                    "Synonyms" :   ""
+                    "NIS" :   "Gex",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "mChainL",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Rd",
+                    "Syn" :   ""
                }
           ],
-          "DependentComponentPropertyNames" :   [
+          "DCPN" :   [
                {
-                    "NameInGEMSystem" :   "activity",
-                    "Synonyms" :   ""
+                    "NIS" :   "activity",
+                    "Syn" :   ""
                },
                {
-                    "NameInGEMSystem" :   "@coef",
-                    "Synonyms" :   ""
+                    "NIS" :   "@coef",
+                    "Syn" :   ""
                }
           ]
      }

@@ -146,6 +146,7 @@ static const char *expphases        = "expphases"; //	               1    array	
         static const char *UMC      = "UMC"; //                         1    array          array of Upper metastability constraints
         static const char *LMC      = "LMC"; //                         1    array          array of Lower metastability constraints
         static const char *mChainL  = "mChainL"; //
+        static const char *Rd       = "Rd";
 
 // general keywords for error and unit present in the header of the input csv file
 static const char *_error           = "error";
@@ -200,7 +201,7 @@ static const char *_logm            = "-logm"; //                           stri
 static const char *_loga            = "-loga"; //                            string          -log(activity) used for pH
 static const char *gram             = "g"; //                                string          mass, grams
 static const char *kgram            = "kg"; //                               string          mass, kg
-static const char *mole             = "mole"; //                             string          amount, moles
+static const char *mol             = "mol"; //                             string          amount, moles
 static const char *m3               = "m3"; //                               string          volume, m3
 static const char *cm3              = "cm3"; //                              string          volume, cm3
 static const char *molratio         = "molratio"; //                         string          mole ratio

@@ -1,0 +1,503 @@
+{
+     "DBPath" :   "../EJDB/<database name>",
+     "DBColl" :   "<collection name>",
+     "GEMSFPath" :   "../GEMS/EuOnIllite-TestEuO1-dat.lst",
+     "DataSelect" :   "",
+     "DataTarget" :   "",
+     "ParToOpt" :   [
+          {
+               "EPH" :   "aq_gen",
+               "G0" :   [
+                    {
+                         "DCN" :   "Eu+2",
+                         "PType" :   "S",
+                         "IV" :   -540672.00057495
+                    },
+                    {
+                         "DCN" :   "Eu(OH)+2",
+                         "PType" :   "S",
+                         "IV" :   -770548.10062156
+                    },
+                    {
+                         "DCN" :   "Eu+3",
+                         "PType" :   "S",
+                         "IV" :   -574463.00121844
+                    },
+                    {
+                         "DCN" :   "EuO+",
+                         "PType" :   "S",
+                         "IV" :   -725454.60022737
+                    },
+                    {
+                         "DCN" :   "EuO2-",
+                         "PType" :   "S",
+                         "IV" :   -842198.00060099
+                    },
+                    {
+                         "DCN" :   "EuO2H@",
+                         "PType" :   "S",
+                         "IV" :   -899278.29984218
+                    },
+                    {
+                         "DCN" :   "=iSsO-",
+                         "PType" :   "S",
+                         "IV" :   -201793.13940821
+                    },
+                    {
+                         "DCN" :   "=iSsOEu(OH)2@",
+                         "PType" :   "S",
+                         "IV" :   -1212949.062004
+                    },
+                    {
+                         "DCN" :   "=iSsOEu+2",
+                         "PType" :   "S",
+                         "IV" :   -822491.27985877
+                    },
+                    {
+                         "DCN" :   "=iSsOEuOH+",
+                         "PType" :   "S",
+                         "IV" :   -1022572.0066577
+                    },
+                    {
+                         "DCN" :   "=iSsOH2+",
+                         "PType" :   "S",
+                         "IV" :   -260015.16812374
+                    },
+                    {
+                         "DCN" :   "=iSsOH@",
+                         "PType" :   "S",
+                         "IV" :   -237183
+                    },
+                    {
+                         "DCN" :   "=iSvO-",
+                         "PType" :   "S",
+                         "IV" :   -201793.13940821
+                    },
+                    {
+                         "DCN" :   "=iSvOEu+2",
+                         "PType" :   "S",
+                         "IV" :   -808791.97898453
+                    },
+                    {
+                         "DCN" :   "=iSvOH2+",
+                         "PType" :   "S",
+                         "IV" :   -260015.16812374
+                    },
+                    {
+                         "DCN" :   "=iSvOH@",
+                         "PType" :   "S",
+                         "IV" :   -237183
+                    },
+                    {
+                         "DCN" :   "=iSwO-",
+                         "PType" :   "S",
+                         "IV" :   -177248.55867519
+                    },
+                    {
+                         "DCN" :   "=iSwOH2+",
+                         "PType" :   "S",
+                         "IV" :   -285701.35726294
+                    },
+                    {
+                         "DCN" :   "=iSwOH@",
+                         "PType" :   "S",
+                         "IV" :   -237183
+                    },
+                    {
+                         "DCN" :   "ClaiEu@",
+                         "PType" :   "S",
+                         "IV" :   158520
+                    },
+                    {
+                         "DCN" :   "ClaiNa@",
+                         "PType" :   "S",
+                         "IV" :   0
+                    },
+                    {
+                         "DCN" :   "Na+",
+                         "PType" :   "S",
+                         "IV" :   -261881.00017392
+                    },
+                    {
+                         "DCN" :   "NaOH@",
+                         "PType" :   "S",
+                         "IV" :   -418123.99998422
+                    },
+                    {
+                         "DCN" :   "ClO4-",
+                         "PType" :   "S",
+                         "IV" :   -8535.3605102398
+                    },
+                    {
+                         "DCN" :   "H2@",
+                         "PType" :   "S",
+                         "IV" :   17729.00010995
+                    },
+                    {
+                         "DCN" :   "N2@",
+                         "PType" :   "S",
+                         "IV" :   18194.000182443
+                    },
+                    {
+                         "DCN" :   "O2@",
+                         "PType" :   "S",
+                         "IV" :   16446.000207431
+                    },
+                    {
+                         "DCN" :   "OH-",
+                         "PType" :   "S",
+                         "IV" :   -157270.00090727
+                    },
+                    {
+                         "DCN" :   "H+",
+                         "PType" :   "S",
+                         "IV" :   0
+                    },
+                    {
+                         "DCN" :   "H2O@",
+                         "PType" :   "S",
+                         "IV" :   -237181.38483664
+                    }
+               ],
+               "PMc" :   [
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_gen[0|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_gen[0|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_gen[0|2]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_gen[0|3]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_gen[1|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_gen[1|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_gen[1|2]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_gen[1|3]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    }
+               ]
+          },
+          {
+               "EPH" :   "gas_gen",
+               "G0" :   [
+                    {
+                         "DCN" :   "H2",
+                         "PType" :   "S",
+                         "IV" :   0
+                    },
+                    {
+                         "DCN" :   "N2",
+                         "PType" :   "S",
+                         "IV" :   0
+                    },
+                    {
+                         "DCN" :   "O2",
+                         "PType" :   "S",
+                         "IV" :   0
+                    }
+               ]
+          },
+          {
+               "EPH" :   "Eu(OH)3am",
+               "G0" :   [
+                    {
+                         "DCN" :   "Eu(OH)3(am)",
+                         "PType" :   "S",
+                         "IV" :   -1185551
+                    }
+               ]
+          },
+          {
+               "EPH" :   "Eu(OH)3cr",
+               "G0" :   [
+                    {
+                         "DCN" :   "Eu(OH)3(cr)",
+                         "PType" :   "S",
+                         "IV" :   -1200962
+                    }
+               ]
+          }
+     ],
+     "NFunParToOpt" :   "",
+     "LogKFun" :   "",
+     "LogKVal" :   "",
+     "OptSet" :   {
+          "NumMPI" :   4,
+          "DoWhat" :   1,
+          "UseEqC" :   1,
+          "UDWts" :   -1,
+          "OptAlg" :   "LN_BOBYQA",
+          "PBPerc" :   -1,
+          "ConTolRel" :   1e-05,
+          "ConTolAbs" :   1e-05,
+          "MaxLoops" :   10000,
+          "NormPar" :   1,
+          "GradPert" :   0.0001,
+          "SensPert" :   0.0001,
+          "OptTu" :   -1,
+          "OptTuC" :   6,
+          "UseMCPE" :   -1,
+          "NumMCT" :   100
+     },
+     "DataSyn" :   {
+          "PHN" :   [
+               {
+                    "NIS" :   "aq_gen",
+                    "Syn" :   "",
+                    "DCN" :   [
+                         {
+                              "NIS" :   "Eu+2",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "Eu(OH)+2",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "Eu+3",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "EuO+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "EuO2-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "EuO2H@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSsO-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSsOEu(OH)2@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSsOEu+2",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSsOEuOH+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSsOH2+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSsOH@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSvO-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSvOEu+2",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSvOH2+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSvOH@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSwO-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSwOH2+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSwOH@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "ClaiEu@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "ClaiNa@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "Na+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "NaOH@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "ClO4-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "H2@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "N2@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "O2@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "OH-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "H+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "H2O@",
+                              "Syn" :   ""
+                         }
+                    ]
+               },
+               {
+                    "NIS" :   "gas_gen",
+                    "Syn" :   "",
+                    "DCN" :   [
+                         {
+                              "NIS" :   "H2",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "N2",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "O2",
+                              "Syn" :   ""
+                         }
+                    ]
+               },
+               {
+                    "NIS" :   "Eu(OH)3am",
+                    "Syn" :   "",
+                    "DCN" :   [
+                         {
+                              "NIS" :   "Eu(OH)3(am)",
+                              "Syn" :   ""
+                         }
+                    ]
+               },
+               {
+                    "NIS" :   "Eu(OH)3cr",
+                    "Syn" :   "",
+                    "DCN" :   [
+                         {
+                              "NIS" :   "Eu(OH)3(cr)",
+                              "Syn" :   ""
+                         }
+                    ]
+               }
+          ],
+          "PHPN" :   [
+               {
+                    "NIS" :   "pH",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "pHm",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "pe",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Eh",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "IS",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "alk",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "pV",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "RHO",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "sArea",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Gex",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "mChainL",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Rd",
+                    "Syn" :   ""
+               }
+          ],
+          "DCPN" :   [
+               {
+                    "NIS" :   "activity",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "@coef",
+                    "Syn" :   ""
+               }
+          ]
+     }
+}
