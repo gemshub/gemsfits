@@ -188,6 +188,7 @@ static const char *ADDOUT           = "ADDOUT"; //
 static const char *lsq              = "lsq"; //                              string          least square function (measured-computed)^2
 static const char *lsq_norm         = "lsq_norm"; //                         string          normalized to experimental average, least square
 static const char *abs_dif          = "abs_dif";//                           string          form nested optimization use abs_dif
+static const char *dif              = "dif";//
 static const char *inverr           = "inverr"; //                           string          inverse weight as 1/error
 static const char *inverr2          = "inverr2"; //                          string          inverse weight as 1/error^2
 static const char *inverr3          = "inverr3"; //                          string          inverse weight as 1/measured^2

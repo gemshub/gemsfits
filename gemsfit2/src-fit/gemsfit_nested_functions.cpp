@@ -40,10 +40,10 @@
 void nestedfun (TGfitTask *sys)
 {
     // loop over the nested functions
-//    #ifdef useomp
-//        omp_set_num_threads(sys->MPI);
-//        #pragma omp parallel for
-//    #endif
+    #ifdef useomp
+        omp_set_num_threads(sys->MPI);
+        #pragma omp parallel for
+    #endif
     for  (unsigned int i = 0; i<sys->experiments.size(); i++)
     {
         vector <double> x, UB, LB;
@@ -69,6 +69,29 @@ void nestedfun (TGfitTask *sys)
                         {
                             if (((sys->Tfun->nestfun[sys->NEFndx[P_id]].exp_CN == "pH") || (sys->Tfun->nestfun[sys->NEFndx[P_id]].exp_CN == "pHm") )&& (sys->Tfun->nestfun[j].Telem.size() > 0))
                             {
+                                for (unsigned int bi=0; bi<sizeof(sys->bICv[sys->EXPndx[P_id]]); bi++)
+                                {
+                                    sys->NodT[i]->Set_bIC( bi, sys->bICv[i][bi] );
+                                }
+                                // RUN GEMS3K to rested the bulk composition to initial values
+                                sys->experiments[sys->EXPndx[P_id]]->sT = sys->NodT[sys->EXPndx[P_id]]->Get_TK() - 273.15;
+                                if (sys->experiments[sys->EXPndx[P_id]]->sP > 0)
+                                sys->experiments[sys->EXPndx[P_id]]->sP = sys->NodT[sys->EXPndx[P_id]]->Get_P() / 100000;
+
+                                //    cout << sys->NodT[sys->EXPndx[P_id]]->Get_P() / 100000 << endl;
+                                // claculate equilibrium
+                                sys->NodT[sys->EXPndx[P_id]]->Set_TK(273.15 + sys->experiments[sys->EXPndx[P_id]]->sT);
+                                sys->NodT[sys->EXPndx[P_id]]->Set_P(100000 * sys->experiments[sys->EXPndx[P_id]]->sP);
+
+                                vector<DATABR*> dBR;
+                                dBR.push_back(sys->NodT[sys->EXPndx[P_id]]->pCNode());
+
+                                // Asking GEM to run with automatic initial approximation
+                                dBR.at(0)->NodeStatusCH = NEED_GEM_AIA;
+
+                                // RUN GEMS3K
+                                sys->NodT[sys->EXPndx[P_id]]->GEM_run( false );
+
                                 if (isTitration(sys, i, j, Pndx))
                                 {
                                     x.push_back(Pval);
@@ -98,10 +121,17 @@ void nestedfun (TGfitTask *sys)
 
                 opt.set_min_objective(nestminfunc, sys);
 
-                opt.set_xtol_rel(1e-6);
-                opt.set_xtol_abs(1e-6);
+                opt.set_xtol_rel(1e-10);
+                opt.set_xtol_abs(1e-10);
 
                 opt.set_maxeval( 1000 );
+
+//                vector<double> inistep( x.size(), 0. );
+//                for( int xx=0; xx<(int) x.size(); xx++ )
+//                {
+//                    inistep[xx] = x[xx] * 0.0001;
+//                }
+//                opt.set_initial_step( inistep );
 
 //                cout << "before: "<<sys->NodT[i]->Get_IC() << endl;
                 if (x.size() == 0 )
@@ -242,8 +272,22 @@ bool isTitration (TGfitTask *sys, int i, int j, int p)
 //    }
 
     int count = 0;
-    residual = sys->get_residual (sys->EXPndx[P_id], sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]], count);
 
+//    if (sys->EXPndx[P_id] == 2)
+//    {
+//        int xEndx = sys->NodT[i]->IC_name_to_xDB(sys->Tfun->nestfun[j].Telem[0].c_str());
+//        if (xEndx == p)
+//        {
+//           cout << "here" << endl;
+//           cout << sys->NodT[i]->Get_bIC(xEndx);
+//        }
+//    }
+
+    sys->aTfun[sys->EXPndx[P_id]].type = "dif";
+    residual = sys->get_residual (sys->EXPndx[P_id], sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]], count);
+    sys->aTfun[sys->EXPndx[P_id]].type = "abs_dif";
+
+    //Base
     if (residual < 0.0)
     {
         int Endx = sys->NodT[i]->IC_name_to_xDB(sys->Tfun->nestfun[j].Telem[0].c_str());
@@ -253,6 +297,7 @@ bool isTitration (TGfitTask *sys, int i, int j, int p)
         } else return false;
     }
 
+    // acid
     if (residual > 0.0)
     {
         int Endx = sys->NodT[i]->IC_name_to_xDB(sys->Tfun->nestfun[j].Telem[1].c_str());
@@ -262,9 +307,7 @@ bool isTitration (TGfitTask *sys, int i, int j, int p)
         } else return false;
     }
 
-
-
-
+    return false;
 }
 
 

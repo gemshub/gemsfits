@@ -186,7 +186,16 @@ void TGfitTask::run_optim()
 //    titration(this);
     gpf->flog << "11. gemsfit_task.cpp(152). Initializing optimization init_optim(); " << endl;
     if (Tfun->objfun.size() > 0)
-    init_optim (Opti->optv, weighted_Tfun_sum_of_residuals);
+    {
+//        if (Opti->h_optNF) // if nested function
+//        {
+//            string old = Tfun->type;               // storing the old type of target function
+//            Tfun->type = "abs_dif";                // seeting the target function to simple abslute difference
+//            nestedfun(this);                             // optimizing the nested functions
+//            Tfun->type = old;
+//        }
+        init_optim (Opti->optv, weighted_Tfun_sum_of_residuals);
+    }
     else
     {
         if (Opti->h_optNF) // if nested function
@@ -501,6 +510,7 @@ void TGfitTask::setnodes()
         xDC_lo = new double[ nDC ];
         Ph_surf = new double[ nPH ];
         new_moles_IC = new double[ nIC ]; // vector for holding the moles of independent components for each experiment
+        bICv.push_back( new double[ nIC ] );
 
         // lower and upper bounds for concentration of DC
         for( i=0; i<nDC; i++ )
@@ -809,6 +819,10 @@ void TGfitTask::setnodes()
         // variant (8c) of GEM_from_MT()
         NodT[n]->GEM_from_MT( NodeHandle, NEED_GEM_AIA, T_k, P_pa, new_moles_IC, xDC_up, xDC_lo );  // bugfix DK 09.01.2014
 
+        for (unsigned int bi=0; bi < sizeof(new_moles_IC); bi++)
+        {
+            bICv[n][bi] = new_moles_IC[bi] ;
+        }
 //            cout << NodT[0]->Get_bIC(0) << endl;
 //            cout << NodT[0]->Get_bIC(1) << endl;
 //            cout << NodT[0]->Get_bIC(2) << endl;

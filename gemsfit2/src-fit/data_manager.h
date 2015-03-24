@@ -103,6 +103,7 @@ class Data_Manager : public TNode
         typedef vector<bool>    bool_v;
 
         vector<TNode*> NodT;
+        vector<double*> bICv;
 
         /// JSON object for building the target function
         string DataTarget;

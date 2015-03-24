@@ -79,7 +79,8 @@ Data_Manager::~Data_Manager( )
     for (unsigned int i=0; i<experiments.size(); ++i)
     {
         delete experiments[i];
-    }
+        delete bICv[i];
+    }  
 }
 
 void Data_Manager::get_DataSyn()

@@ -606,34 +606,52 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
 
         // re-name DC names
         vector<string> exprO, exprP;
-        objfun.expr = formula_DCname_parser(objfun.expr, exprO, exprP);
+        string expr =  objfun.expr;
+        expr = formula_DCname_parser(objfun.expr, exprO, exprP);
 
-        mu::Parser parser;
-        parser.SetExpr(objfun.expr);
+//        cout << objfun.expr << endl;
 
-        vector<string> varStr;
-        parser.SetVarFactory(AddVariable, &varStr);
-        parser.GetUsedVar();
-
-        int DCndx = -1;
-
-        for (unsigned int d = 0; d < varStr.size(); d++)
+        try
         {
-            for ( unsigned int ex = 0; ex < exprO.size(); ex++)
+            mu::Parser parser;
+            parser.SetExpr(expr);
+
+            vector<string> varStr;
+            parser.SetVarFactory(AddVariable, &varStr);
+            parser.GetUsedVar();
+
+            int DCndx = -1;
+
+            for (unsigned int d = 0; d < varStr.size(); d++)
             {
-                if (varStr[d].c_str() == exprP[ex]) { DCndx = sys->NodT[i]->DC_name_to_xCH(varStr[d].c_str()); }
+                for ( unsigned int ex = 0; ex < exprO.size(); ex++)
+                {
+                    if (varStr[d].c_str() == exprP[ex]) { DCndx = sys->NodT[i]->DC_name_to_xCH(exprO[ex].c_str()); }
+                }
+
+                if (DCndx < 0)
+                { cout << "ERROR: Dependent component: " << varStr[d].c_str() << " not present in GEMS system! "; exit(1);}
+                varDbl.push_back(sys->NodT[i]->Get_cDC(DCndx));
             }
 
-            if (DCndx < 0)
-            { cout << "ERROR: Dependent component: " << varStr[d].c_str() << " not present in GEMS system! "; exit(1);}
-            varDbl.push_back(sys->NodT[i]->Get_cDC(DCndx));
+            for (unsigned int d = 0; d < varStr.size(); d++)
+            {
+                parser.DefineVar(varStr[d], &varDbl[d]);
+            }
+            computed_value = parser.Eval();
+         }
+         catch(mu::Parser::exception_type &e)
+            {
+              cout << "muParser ERROR for sample " << sys->experiments[i]->sample << "\n";
+              cout << "Message:  " << e.GetMsg() << "\n";
+              cout << "Formula:  " << e.GetExpr() << "\n";
+              cout << "Token:    " << e.GetToken() << "\n";
+              if (e.GetPos()!=std::string::npos)
+              cout << "Position: " << e.GetPos() << "\n";
+              cout << "Errc:     " << e.GetCode() << " http://muparser.beltoforion.de/mup_error_handling.html#idErrors " <<"\n";
+//            computed_value = rand() % 100 + 1;
         }
 
-        for (unsigned int d = 0; d < varStr.size(); d++)
-        {
-            parser.DefineVar(varStr[d], &varDbl[d]);
-        }
-        computed_value = parser.Eval();
 
     } else
     if ((objfun.exp_CN == keys::Gex ) && (PHndx >=0))  // functionality added by DK on 03.01.2014
@@ -689,8 +707,10 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
 
         // check Target function type and calculate the Tfun_residual
         weight_ = weight_phprop(i, p, pp, objfun, sys->Tfun->weight, sys)  * objfun.TuWeight * objfun.weight;
-        Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun);
-        Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun)*weight_;
+//        Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun);
+//        Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun)*weight_;
+        Tfun_residual = Tfunction(computed_value, measured_value, sys->aTfun[i].type, objfun);
+        Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->aTfun[i].type, objfun)*weight_;
     }
     else
     {
@@ -808,6 +828,10 @@ double Tfunction (double computed_value, double measured_value, string type, TGf
     {
        Tf = fabs(computed_value - measured_value);
     } else
+    if (type == keys::dif)
+    {
+       Tf = computed_value - measured_value;
+    } else
     {
       // other type of Target functions
     }
@@ -907,7 +931,7 @@ double weight_phdcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFunction:
 
 double* AddVariable(const char *a_szName, void *pUserData)
 {
-   double afValBuf[100];
+   double afValBuf[500];
    int iVal = -1;
 
   vector<string> *test = reinterpret_cast<vector<string> *>(pUserData);
@@ -915,7 +939,7 @@ double* AddVariable(const char *a_szName, void *pUserData)
   test->push_back(a_szName);
   afValBuf[iVal] = 0;
 
-  if (iVal>=99)
+  if (iVal>=499)
     throw mu::ParserError("Variable buffer overflow.");
   else
     return &afValBuf[iVal];
@@ -925,7 +949,7 @@ double* AddVariable(const char *a_szName, void *pUserData)
 string formula_DCname_parser(string expr, vector<string> &exprO, vector<string> &exprP )
 {
     string expr_temp, DCname;
-    char op[19]= "/+-*^?<>=#!$%&|~'_", opr[19]="abcdefghijklmnopqr";
+    char op[22]= "/+-*^?<>=#!$%&|~'_()@", opr[22]="abcdefghijklmnopqrstu";
 
     expr_temp = expr;
 
