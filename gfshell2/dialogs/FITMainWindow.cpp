@@ -664,9 +664,9 @@ void FITMainWindow::runFinished(int exitCode, QProcess::ExitStatus exitStatus)
     ui->actionCancel_gemsfit2_run->setEnabled(false);
 
     if( exitStatus==0 && exitCode==0 )
-        addLinetoStatus( "gemsfit2 calculation o.k." );
+        addLinetoStatus( "Finished gemsfit2 task calculation o.k." );
     else
-        addLinetoStatus( "Error in gemsfit2 run." );
+        addLinetoStatus( "Error in gemsfit2 task calculation..." );
 }
 
 /// Make list of Experiments keys using query

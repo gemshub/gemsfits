@@ -734,13 +734,13 @@ void FITMainWindow::CmRunTest()
         cParameters << "-run" << sss.c_str() << fpath.c_str();
 
         if( !runProcess( cParameters, workDir) )
-           Error("Run gemsfit -run", "Error started process.");
+           Error("Run gemsfit -run", "Could not start a gemsfit2 process...");
 
         ui->action_Run_test->setEnabled(false);
         ui->action_Show_Results->setEnabled(false);
         ui->actionCancel_gemsfit2_run->setEnabled(true);
 
-        setStatusText( "Start  run femsfit task" );
+        setStatusText( "Started a gemsfit2 task process..." );
     }
     catch( TError& err )
     {
