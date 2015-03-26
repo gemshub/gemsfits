@@ -13,7 +13,7 @@
     <MessageBegin Show="True">Install/Update GEMSFITS v1.0 2015 package (Windows)?</MessageBegin>
     <MessageCancel Show="True">Are you sure you want to cancel Installing/Updating GEMSFITS v1.0 2015?</MessageCancel>
     <MessageFinish Show="True">Success! Fitting projects can be found in the '\Tests\' subfolder.</MessageFinish>
-    <TitleText>GEMSFITS v1.0 2015 r.562.1021</TitleText>
+    <TitleText>GEMSFITS v1.0 2015 r.577.1031</TitleText>
     <ExtractPathText>Use default, or type/select another location. If the folder does not exist, it will be created.</ExtractPathText>
     <ExtractCancelText>Abort</ExtractCancelText>
     <ExtractDialogText>Installing/Updating GEMSFITS v1.0 2015 (Windows)</ExtractDialogText>
@@ -21,7 +21,7 @@
     <ExtractShowIcon>False</ExtractShowIcon>
     <ProgressPercent>1</ProgressPercent>
     <ProgressShowIcon>False</ProgressShowIcon>
-    <Icon>C:\GEMSFITS\GEMSFITSv1\Resources\gemsfits.ico</Icon>
+    <Icon>C:\Developer\7-Zip SFX Maker\Resources\gemsfits.ico</Icon>
   </General>
   <Tasks>
     <Item Enabled="True">Shortcut="Du,{%%T\\Gfshell2-app\\gemsfits.exe},{},{},{GEMSFITS Package},{GEMSFITS v1.0},{%%T\Gfshell2-app},{%%T\Resources\gemsfits.ico},{}"</Item>
@@ -30,13 +30,13 @@
   <VersionString>
     <Item Name="Comments" Value="GEMSFITS package for geochemical models parameter optimization" Enabled="True" />
     <Item Name="CompanyName" Value="Paul Scherrer Institut | ETH Zurich" Enabled="True" />
-    <Item Name="FileDescription" Value="GEMSFITS v1.0 2015 r.562, includes GEMS3K r.1021" Enabled="True" />
-    <Item Name="FileVersion" Value=" rev. 562.1021 " Enabled="True" />
+    <Item Name="FileDescription" Value="GEMSFITS v1.0 2015 r.577, includes GEMS3K r.1031" Enabled="False" />
+    <Item Name="FileVersion" Value=" rev. 577.1031 " Enabled="True" />
     <Item Name="InternalName" Value="gemsfits.exe" Enabled="True" />
     <Item Name="LegalCopyright" Value="Copyright © 2014-2015 GEMS Development Team" Enabled="True" />
     <Item Name="LegalTrademarks" Value="PSI; IGP ETHZ; Univ.Helsinki" Enabled="True" />
     <Item Name="OriginalFilename" Value="gemsfits.exe" Enabled="True" />
-    <Item Name="PrivateBuild" Value="March 1, 2015 DM" Enabled="True" />
+    <Item Name="PrivateBuild" Value="March 26, 2015 DM" Enabled="True" />
     <Item Name="ProductName" Value="GEMSFITS" Enabled="True" />
     <Item Name="ProductVersion" Value="1. 0. 0." Enabled="True" />
     <Item Name="SpecialBuild" Value="Pre-release candidate for geochemical community" Enabled="True" />

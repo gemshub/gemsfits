@@ -6,67 +6,73 @@ which is an augmented "windeployqt.exe" binary by lkc, taken from
 https://github.com/lkc/windeployqt.
 
 1. Make sure that the Qt5 SDK is installed as C:\Qt or in similar folder.
-We assume that the Qt library is located in C:\Qt5\5.3\mingw482_32\bin
-and Qt Tools are located in C:\Qt5\Tools\mingw482_32\bin (or similar, 
+We assume that the Qt library is located in C:\Qt\5.3\mingw482_32\bin
+and Qt Tools are located in C:\Qt\Tools\mingw482_32\bin (or similar, 
 depending on the current Qt version, MinGW version and their locations).  
 
-2. Create a GEMSFITSDEPLOY folder with subfloders Gfshell2-app and 
-gemsfit2-app. Copy here the Resources and Tests floders as well.
-
-3. In the C:\GEMSFITSDEPLOY\Gfshell2-app folder, copzy and then edit the
-"runwindeployqt.bat" file to make sure that it contains the correct paths 
-to C:\Qt5\5.3\mingw482_32\bin and C:\Qt5\Tools\mingw482_32\bin directories
-(modify to actual ones, if necessary). Copy (or refresh) the files 
-qcollectiongenerator.exe, qhelpconverter.exe and qhelpgenerator.exe 
-from C:\Qt5\5.3\mingw482_32\bin to C:\GEMSFISTDEPLOY\Gfshell2-app folder.   
+2. Create a C:\GEMSFITSDEPLOY folder with subfloders \gfshell2-app and 
+\gemsfit2-app. Copy the \Resources and \Tests folders into C:\GEMSFITSDEPLOY
+folder, as well as "GEMSFITS.lnk" file. 
+ 
+3. Into the C:\GEMSFITSDEPLOY\gfshell2-app folder, copy files "runwindeployqt.bat" 
+and ""windeployqt.exe", and then edit the "runwindeployqt.bat" file to make sure 
+that it contains the correct paths to C:\Qt\5.3\mingw482_32\bin and 
+to C:\Qt\Tools\mingw482_32\bin folders (modify to actual ones, if necessary). 
+Copy (or refresh) the files "qcollectiongenerator.exe", "qhelpconverter.exe" 
+and "qhelpgenerator.exe" from C:\Qt\5.3\mingw482_32\bin to 
+C:\GEMSFITSDEPLOY\gfshell2-app folder.   
 
 4. Using QtCreator (Qt 5.3 MinGW 4.8.2 32bit), build the actual release 
-variant of gemsfits.exe (Gfshell2) using the *_win.pro Qt project file. 
-Find gemsfits.exe in the Gfhell2 build folder and copy it into the 
-C:\GEMSFITSDEPLOY\Gfshell2-app folder.    
+variant of gemsfits.exe (gfshell2) using the *_win.pro Qt project file. 
+Find gemsfits.exe in the \gfhell2-build folder and copy it into the 
+C:\GEMSFITSDEPLOY\gfshell2-app folder.    
 
-5. In command-line prompt window (terminal), cd to 
-C:\GEMSFITSDEPLOY\Gfshell2-app and run the command:
+5. In a command-line prompt window (terminal), cd to 
+C:\GEMSFITSDEPLOY\gfshell2-app and run the command:
 
 	>runwindeployqt.bat gemsfits.exe
 
 This will find and copy all Qt dependence files (Qt libraries, plugins, runtime 
-MinGW libraries, locale files, etc.) into C:\GEMSFITSDEPLOY\Gfshell2-app folder.
-Copy the rest of the dependecies, .dll files, found in 
-Docs\BuildRun_win32\gfshell2_dlls to the C:\GEMSFITSDEPLOY\Gfshell2-app folder.
+MinGW libraries, locale files, etc.) into C:\GEMSFITSDEPLOY\gfshell2-app folder.
+Copy the rest of the dependencies, .dll files, found in 
+\Docs\BuildRun_win32\gfshell2_dlls to C:\GEMSFITSDEPLOY\gfshell2-app folder.
 
-6. To test that Gfshell2 GUI runs cd to Gfshell2-app and run gemsfits.exe.
+6. To test that Gfshell2 GUI runs, cd to \gfshell2-app and run gemsfits.exe.
 
 7. Using QtCreator (Qt 5.3 MinGW 4.8.2 32bit), build the actual release 
-variant of gemsfit2.exe (gemsfit2) using the *_win.pro Qt project file (See
-BuildRun_win32.txt). Find gemsfit2.exe in the gemsfit2 build folder and copy it 
-into the C:\GEMSFITSDEPLOY\gemsfit2-app folder.
+variant of gemsfit2.exe (gemsfit2) using the *_win.pro Qt project file (see
+BuildRun_win32.txt). Find gemsfit2.exe in the \gemsfit2-build folder and copy 
+it into C:\GEMSFITSDEPLOY\gemsfit2-app folder.
 
 8. Copy all the *.dll files of the dependent libraries from 
-Docs\BuildRun_win32\gemsfit2_dlls to C:\GEMSFITSDEPLOY\gemsfits2-app
+\Docs\BuildRun_win32\gemsfit2_dlls to C:\GEMSFITSDEPLOY\gemsfits2-app
 
-9. To test that gemsfits2.exe works correctly first start Gfshell, open a test
-project, check if the path to the gemsfits2.exe is correctly defined in the 
-preferences and start a fitting task.
+9. To test that gemsfit2.exe works correctly, first start gemsfits.exe, 
+open a test project, check if the path to the gemsfits2.exe is correctly 
+defined in the "Help" "Preferences...", and start a fitting task. You can 
+either browse to the absolute path, or (preferable) enter a relative path:
+"../gemsfit2-app/gemsfit2".  
 
 7. To create a new GEMSFITS installer file for Windows 7 or Windows 8:
 
 If not yet done, download and install 7-zip v.9.20 (http://www.7-zip.org/). 
 Start it and select the C:\GEMSFITSDEPLOY folder. Add it contents (i.e. 
-Gfshell2-app folder and a few files) recursively to the 
+\gfshell2-app, \gemsfit2-app folders and a few files) recursively to the 
 archive (to be created e.g. in C:\TEMP folder) "C:\TEMP\GEMSFITSDEPLOY.7z". 
 
 If not yet done, download and install 7zip-sfx-maker v.3.3 utility from
 http://sourceforge.net/projects/sfx-maker/ . Also download ResourceHacker 
 v.3.6 from http://www.angusj.com/resourcehacker/; install it into 
 "C:\Program Files (x86)\7-Zip SFX Maker\Resource Hacker" folder. 
+Once you have to copy the GEMSFITS.ico file into the \Resources folder of the
+folder where the 7zip-sfx-maker program is installed.  
 
-Start the 7zip-sfx-maker as an administrator and click on "Load Settings..." 
+Start the 7zip-sfx-maker as administrator and click on "Load Settings..." 
 button. Select the file 
 .\Docs\DeployWindows\Self-extractor-GEMSFITS-settings.xml 
 Then, using "+" button or "Files" "Add 7z file...", select the 
 file "C:\TEMP\GEMSFITSDEPLOY.7z" prepared previously. Click through tabs 
-"Dialogs", "Tasks", "Metadata" and edit what is necessary, e.g. revision
+"Dialogs", "Icon", "Tasks", "Metadata" and edit what is necessary, e.g. revision
 and version numbers, date of production, etc. When done, click on "Save 
 settings..." button to save settings to the file
  .\Docs\win-build-release\Self-extractor-GEMSFITS-settings.xml
@@ -79,6 +85,11 @@ C:\TEMP\GEMSFITSDEPLOY.sfx.exe. Rename it according to the following pattern:
 where put the same actual revision numbers for GEMSFITS (rev1) and 
 GEMS3K (rev2) parts, as used in "Self-extractor-GEMSFITS-settings.xml" 
 file. The self-extracting installer can now be distributed. 
+
+Note that before updating/re-installing GEMSFITS to the same location, 
+the user will have to backup all your project subfolders in the "Tests" 
+folder because they will be overwritten with those in the installer having 
+identical names. 
 
 
 
