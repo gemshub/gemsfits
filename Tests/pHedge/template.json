@@ -1,7 +1,7 @@
 {
      "DBPath" :   "../EJDB/<database name>",
      "DBColl" :   "<collection name>",
-     "GEMSFPath" :   "../GEMS/EuOnIllite-TestEuO1-dat.lst",
+     "GEMSFPath" :   "../GEMS/EuOnIlliteAir-TestEuO1C-dat.lst",
      "DataSelect" :   "",
      "DataTarget" :   "",
      "ParToOpt" :   [
@@ -9,9 +9,29 @@
                "EPH" :   "aq_gen",
                "G0" :   [
                     {
+                         "DCN" :   "Eu(CO3)3-3",
+                         "PType" :   "S",
+                         "IV" :   -2244029.630464
+                    },
+                    {
+                         "DCN" :   "Eu(CO3)4-5",
+                         "PType" :   "S",
+                         "IV" :   -2772307.9590114
+                    },
+                    {
                          "DCN" :   "Eu+2",
                          "PType" :   "S",
                          "IV" :   -540672.00057495
+                    },
+                    {
+                         "DCN" :   "Eu(CO3)+",
+                         "PType" :   "S",
+                         "IV" :   -1148679.9706558
+                    },
+                    {
+                         "DCN" :   "Eu(CO3)2-",
+                         "PType" :   "S",
+                         "IV" :   -1699494.0009711
                     },
                     {
                          "DCN" :   "Eu(OH)+2",
@@ -44,6 +64,11 @@
                          "IV" :   -201793.13940821
                     },
                     {
+                         "DCN" :   "=iSsOEu(CO3)2-2",
+                         "PType" :   "S",
+                         "IV" :   -1940455.3
+                    },
+                    {
                          "DCN" :   "=iSsOEu(OH)2@",
                          "PType" :   "S",
                          "IV" :   -1212949.062004
@@ -54,9 +79,19 @@
                          "IV" :   -822491.27985877
                     },
                     {
+                         "DCN" :   "=iSsOEuCO3@",
+                         "PType" :   "S",
+                         "IV" :   -1397773.3
+                    },
+                    {
                          "DCN" :   "=iSsOEuOH+",
                          "PType" :   "S",
                          "IV" :   -1022572.0066577
+                    },
+                    {
+                         "DCN" :   "=iSsOEuOHCO3-",
+                         "PType" :   "S",
+                         "IV" :   -1580554.01
                     },
                     {
                          "DCN" :   "=iSsOH2+",
@@ -77,6 +112,11 @@
                          "DCN" :   "=iSvOEu+2",
                          "PType" :   "S",
                          "IV" :   -808791.97898453
+                    },
+                    {
+                         "DCN" :   "=iSvOEuCO3@",
+                         "PType" :   "S",
+                         "IV" :   -1336773.9789845
                     },
                     {
                          "DCN" :   "=iSvOH2+",
@@ -106,12 +146,22 @@
                     {
                          "DCN" :   "ClaiEu@",
                          "PType" :   "S",
-                         "IV" :   158520
+                         "IV" :   160484
                     },
                     {
                          "DCN" :   "ClaiNa@",
                          "PType" :   "S",
                          "IV" :   0
+                    },
+                    {
+                         "DCN" :   "Na(CO3)-",
+                         "PType" :   "S",
+                         "IV" :   -797112.0009401
+                    },
+                    {
+                         "DCN" :   "Na(HCO3)@",
+                         "PType" :   "S",
+                         "IV" :   -847393.99998001
                     },
                     {
                          "DCN" :   "Na+",
@@ -122,6 +172,26 @@
                          "DCN" :   "NaOH@",
                          "PType" :   "S",
                          "IV" :   -418123.99998422
+                    },
+                    {
+                         "DCN" :   "CO2@",
+                         "PType" :   "S",
+                         "IV" :   -386014.99998948
+                    },
+                    {
+                         "DCN" :   "CO3-2",
+                         "PType" :   "S",
+                         "IV" :   -527982.00178413
+                    },
+                    {
+                         "DCN" :   "HCO3-",
+                         "PType" :   "S",
+                         "IV" :   -586940.00066985
+                    },
+                    {
+                         "DCN" :   "CH4@",
+                         "PType" :   "S",
+                         "IV" :   -34353.999832761
                     },
                     {
                          "DCN" :   "ClO4-",
@@ -214,6 +284,16 @@
                "EPH" :   "gas_gen",
                "G0" :   [
                     {
+                         "DCN" :   "CO2",
+                         "PType" :   "S",
+                         "IV" :   -394393
+                    },
+                    {
+                         "DCN" :   "CH4",
+                         "PType" :   "S",
+                         "IV" :   -50659
+                    },
+                    {
                          "DCN" :   "H2",
                          "PType" :   "S",
                          "IV" :   0
@@ -227,6 +307,36 @@
                          "DCN" :   "O2",
                          "PType" :   "S",
                          "IV" :   0
+                    }
+               ]
+          },
+          {
+               "EPH" :   "Graphite",
+               "G0" :   [
+                    {
+                         "DCN" :   "Gr",
+                         "PType" :   "S",
+                         "IV" :   0
+                    }
+               ]
+          },
+          {
+               "EPH" :   "Eu-carbonate",
+               "G0" :   [
+                    {
+                         "DCN" :   "Eu2(CO3)3",
+                         "PType" :   "S",
+                         "IV" :   -2932653
+                    }
+               ]
+          },
+          {
+               "EPH" :   "Eu-OH-carbonate",
+               "G0" :   [
+                    {
+                         "DCN" :   "EuCO3OH(cr)",
+                         "PType" :   "S",
+                         "IV" :   -1383580
                     }
                ]
           },
@@ -279,7 +389,23 @@
                     "Syn" :   "",
                     "DCN" :   [
                          {
+                              "NIS" :   "Eu(CO3)3-3",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "Eu(CO3)4-5",
+                              "Syn" :   ""
+                         },
+                         {
                               "NIS" :   "Eu+2",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "Eu(CO3)+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "Eu(CO3)2-",
                               "Syn" :   ""
                          },
                          {
@@ -307,6 +433,10 @@
                               "Syn" :   ""
                          },
                          {
+                              "NIS" :   "=iSsOEu(CO3)2-2",
+                              "Syn" :   ""
+                         },
+                         {
                               "NIS" :   "=iSsOEu(OH)2@",
                               "Syn" :   ""
                          },
@@ -315,7 +445,15 @@
                               "Syn" :   ""
                          },
                          {
+                              "NIS" :   "=iSsOEuCO3@",
+                              "Syn" :   ""
+                         },
+                         {
                               "NIS" :   "=iSsOEuOH+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSsOEuOHCO3-",
                               "Syn" :   ""
                          },
                          {
@@ -332,6 +470,10 @@
                          },
                          {
                               "NIS" :   "=iSvOEu+2",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSvOEuCO3@",
                               "Syn" :   ""
                          },
                          {
@@ -363,11 +505,35 @@
                               "Syn" :   ""
                          },
                          {
+                              "NIS" :   "Na(CO3)-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "Na(HCO3)@",
+                              "Syn" :   ""
+                         },
+                         {
                               "NIS" :   "Na+",
                               "Syn" :   ""
                          },
                          {
                               "NIS" :   "NaOH@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "CO2@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "CO3-2",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "HCO3-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "CH4@",
                               "Syn" :   ""
                          },
                          {
@@ -405,6 +571,14 @@
                     "Syn" :   "",
                     "DCN" :   [
                          {
+                              "NIS" :   "CO2",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "CH4",
+                              "Syn" :   ""
+                         },
+                         {
                               "NIS" :   "H2",
                               "Syn" :   ""
                          },
@@ -414,6 +588,36 @@
                          },
                          {
                               "NIS" :   "O2",
+                              "Syn" :   ""
+                         }
+                    ]
+               },
+               {
+                    "NIS" :   "Graphite",
+                    "Syn" :   "",
+                    "DCN" :   [
+                         {
+                              "NIS" :   "Gr",
+                              "Syn" :   ""
+                         }
+                    ]
+               },
+               {
+                    "NIS" :   "Eu-carbonate",
+                    "Syn" :   "",
+                    "DCN" :   [
+                         {
+                              "NIS" :   "Eu2(CO3)3",
+                              "Syn" :   ""
+                         }
+                    ]
+               },
+               {
+                    "NIS" :   "Eu-OH-carbonate",
+                    "Syn" :   "",
+                    "DCN" :   [
+                         {
+                              "NIS" :   "EuCO3OH(cr)",
                               "Syn" :   ""
                          }
                     ]
