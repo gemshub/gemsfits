@@ -113,6 +113,8 @@ private:
 
     /// Printing Flag: if this flag is set to one, the result of the optimization will be printed to file (via optimization.cpp)
     string resultsfile;
+
+    void nestedpH();
 public:
 
     optimization *Opti; ///< pointer to optimization
@@ -160,6 +162,7 @@ public:
             vector<string> Tformula;
             string expr;
             vector<string> Telem;
+            vector<int> Helem;
             double TuWeight;
             double weight;
             struct rslts

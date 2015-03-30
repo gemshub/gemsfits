@@ -187,13 +187,11 @@ void TGfitTask::run_optim()
     gpf->flog << "11. gemsfit_task.cpp(152). Initializing optimization init_optim(); " << endl;
     if (Tfun->objfun.size() > 0)
     {
-//        if (Opti->h_optNF) // if nested function
-//        {
-//            string old = Tfun->type;               // storing the old type of target function
-//            Tfun->type = "abs_dif";                // seeting the target function to simple abslute difference
-//            nestedfun(this);                             // optimizing the nested functions
-//            Tfun->type = old;
-//        }
+        if (Opti->h_optNF) // if nested function
+        {
+            // CHECK NESTED pH
+            nestedpH ();
+        }
         init_optim (Opti->optv, weighted_Tfun_sum_of_residuals);
     }
     else
@@ -1520,6 +1518,36 @@ double TGfitTask::calc_logK_dRHOw(vector<double> A, double Tk, double P )
 
     return logK;
 
+}
+
+
+void TGfitTask::nestedpH()
+{
+   double res;
+   int countx;
+   for  (unsigned int i = 0; i<experiments.size(); i++)
+   {
+       for (unsigned int j = 0; j<Tfun->nestfun.size(); j++)
+       {
+           aTfun[i].nestfun[j].Helem.push_back(-1); aTfun[i].nestfun[j].Helem.push_back(-1);
+           if (((Tfun->nestfun[j].exp_CN == "pH") || (Tfun->nestfun[j].exp_CN == "pHm") )&& (Tfun->nestfun[j].Telem.size() > 0))
+           {
+               aTfun[i].type = "dif";
+               res = get_residual (i, aTfun[i].nestfun[j], countx);
+               aTfun[i].type = "abs_dif";
+
+               if (res < 0.0)
+               {
+                   aTfun[i].nestfun[j].Helem[0] = 1;
+               } else
+
+               if (res > 0.0)
+               {
+                   aTfun[i].nestfun[j].Helem[1] = 1;
+               } else aTfun[i].nestfun[j].Helem[1] = 1;
+           }
+       }
+   }
 }
 
 
