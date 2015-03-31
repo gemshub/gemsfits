@@ -121,8 +121,9 @@ void nestedfun (TGfitTask *sys)
 
                 opt.set_min_objective(nestminfunc, sys);
 
-                opt.set_xtol_rel(1e-10);
-                opt.set_xtol_abs(1e-10);
+//                opt.set_xtol_rel(1e-10);
+//                opt.set_xtol_abs(1e-10);
+                opt.set_stopval(0.00001);
 
                 opt.set_maxeval( 1000 );
 
