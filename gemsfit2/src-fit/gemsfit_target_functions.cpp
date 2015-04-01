@@ -462,10 +462,10 @@ double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::ob
 double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj_fun &objfun, TGfitTask *sys)
 {
     const char *phase_name;
-    long int PHndx, DC0ndx, nDCinPH, DCndx;
+    long int PHndx, DC0ndx, nDCinPH, DCndx, DCndx2;
     double computed_value = 0.0, measured_value= 0.0;
     double Tfun_residual = 0.0, Weighted_Tfun_residual, weight_ = 1.0;
-    double ln_gama[40], log_gama;
+    double ln_gama[40], log_gama, HCl_;
     char ccPH;
 //    DATACH* dCH = sys->NodT[i]->pCSD();
 
@@ -490,13 +490,21 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
     if ((objfun.exp_CN == keys::pHm)  && (ccPH == *keys::aq) && (PHndx >=0))
     {
         DCndx = sys->NodT[i]->DC_name_to_xCH("H+"); // think about a way to find H+ name in gems and not hard code it!!!!
+        DCndx2 = sys->NodT[i]->DC_name_to_xCH("HCl@");
         log_gama = log10(sys->NodT[i]->Get_gDC(DCndx));
+        HCl_ = sys->NodT[i]->Get_cDC(DCndx2);
         if (objfun.exp_unit == keys::_logm)
         {
             computed_value = sys->NodT[i]->Get_pH() + log_gama;
+            computed_value = pow(10,-computed_value);
+            computed_value = computed_value + HCl_;
+            computed_value = -log10(computed_value);
         } else {
             // Default
             computed_value = sys->NodT[i]->Get_pH() + log_gama;
+            computed_value = pow(10,-computed_value);
+            computed_value = computed_value + HCl_;
+            computed_value = -log10(computed_value);
             objfun.exp_unit = keys::_logm;
         }
 

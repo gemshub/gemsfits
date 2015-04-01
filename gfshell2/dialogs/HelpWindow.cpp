@@ -44,8 +44,8 @@ using namespace std;
 #include "HelpWindow.h"
 #include "FITMainWindow.h"
 
-const char *FIT_HOWHELP_HTML = "gemsfit-techinfo.html#HOWHELP";
-const char *FIT_ABOUT_HTML = "gemsfit-about.html#PAGE_ABOUT";
+const char *FIT_HOWHELP_HTML = "gemsfit-techinfo.html";
+const char *FIT_ABOUT_HTML = "gemsfits-about.html";
 
 const char *_FIT_version_stamp = " GEMSFITS v.0.1 r.578 ";
 extern const char *_GEMIPM_version_stamp;
@@ -554,14 +554,14 @@ const char *DBM = "DBM";
 const char *NUMSET = "NUMSET";
 
 // html files
-const char *GF_INDEX_HTML = "gemsfit-index";
-const char *GF_PREFS_HTML = "gemsfit-prefs";
+const char *GF_INDEX_HTML = "gemsfits-index";
+const char *GF_PREFS_HTML = "gemsfits-prefs";
 
-const char *GF_EXPDB_HTML = "howto-csvtoejdb";
-const char *GF_TASKDB_HTML= "gemsfit-input-file";
-const char *GF_ABOUT_HTML = "gemsfit-about";
-const char *GF_AUTHORS_HTML = "gemsfit-about.html#AUTHORS";
-const char *GF_LICENSE_HTML = "gemsfit-about.html#LICENSE";
+const char *GF_EXPDB_HTML = "gfshell-dbmode";
+const char *GF_TASKDB_HTML= "gfshell-taskmode";
+const char *GF_ABOUT_HTML = "gemsfits-about";
+const char *GF_AUTHORS_HTML = "gemsfits-team.html";
+const char *GF_LICENSE_HTML = "gemsfits-terms-of-use.html";
 
 
 //-------- End of file HelpWindow.cpp ----------------------------

@@ -12,7 +12,7 @@
     	</section>
    	<section title="GEMSFITS Users Reference / JSON keywords" ref="gemsfit-useref.html">
 		<section title="About JSON" ref="gemsfit-json.html"></section>
-		<section title="How to prepare the experimental spreadsheet" ref="howto-csvtoejdb.html"></section>
+		<section title="How to prepare the experimental spreadsheet" ref="howto-database.html"></section>
 		<section title="About the output statistics" ref="gemsfit-statistics.html"></section>
 		<section title="How to build GEMSFITS (gemsfit2, gfshell2)" ref="gemsfit-techinfo.html"></section>
    	</section>

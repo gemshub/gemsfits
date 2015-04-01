@@ -28,6 +28,10 @@
         <file>gemsfit-statistics.html</file>
         <file>gemsfit-techinfo.html</file>
         <file>gemsfit-useref.html</file>
+        <file>gemsfits-about.html</file>
+        <file>gemsfits-litref.html</file>
+        <file>gemsfits-team.html</file>
+        <file>gemsfits-terms-of-use.html</file>
         <file>gfshell-about.html</file>
         <file>gfshell-dbmode.html</file>
         <file>gfshell-howto-gemsfit.html</file>
@@ -35,28 +39,156 @@
         <file>gfshell-taskmode.html</file>
         <file>howto-database.html</file>
         <file>index.html</file>
-        <file>img/CalculateBCCIcon24.png</file>
-        <file>img/CalculateRecordDataIcon24.png</file>
+        <file>Anderson_Crear.png</file>
+        <file>CalculateBCCIcon24.png</file>
+        <file>CalculateRecordDataIcon24.png</file>
         <file>DatabaseModeIcon.png</file>
-        <file>img/DeleteCurrentRecordIcon24.png</file>
-        <file>img/DualThModuleIcon24.png</file>
-        <file>img/FitSpaceModuleIcon24.png</file>
-        <file>img/NewCloneRecordIcon24.png</file>
-        <file>img/NewCreateRecordIcon24.png</file>
-        <file>img/ProjectSetup.png</file>
-        <file>img/RTparmModuleIcon24.png</file>
-        <file>img/Results_window.png</file>
-        <file>img/SaveCurrentRecordIcon24.png</file>
-        <file>img/SelectDisplayRecordIcon24.png</file>
-        <file>img/ShowGEMResultsIcon24.png</file>
+        <file>DeleteCurrentRecordIcon24.png</file>
+        <file>DualThModuleIcon24.png</file>
+        <file>FitSpaceModuleIcon24.png</file>
+        <file>Marshall_Franck.png</file>
+        <file>NewCloneRecordIcon24.png</file>
+        <file>NewCreateRecordIcon24.png</file>
+        <file>P-corr.png</file>
+        <file>P_corr_logK.png</file>
+        <file>PreferencesIcon24.png</file>
+        <file>ProjectSetup.png</file>
+        <file>RTparmModuleIcon24.png</file>
+        <file>Results_window.png</file>
+        <file>Rho_logK.png</file>
+        <file>SaveCurrentRecordIcon24.png</file>
+        <file>SelectDisplayRecordIcon24.png</file>
+        <file>ShowGEMResultsIcon24.png</file>
+        <file>T_logK.png</file>
         <file>TaskModeIcon.png</file>
-        <file>img/Tuckey.png</file>
+        <file>Tuckey.png</file>
         <file>gemsfit2.png</file>
         <file>gfshell2.png</file>
-	<file>img/T_logK.png</file>
-	<file>img/P_corr_logK.png</file>
-	<file>img/Rho_logK.png</file>
-	<file>img/plot.png</file>
+        <file>plot.png</file>
       </files>
+    <keywords>
+        <keyword name="-loga" ref="gemsfit-useref.html#-loga"/>
+        <keyword name="1._Prepare_your_data_" ref="howto-database.html#1._Prepare_your_data_"/>
+        <keyword name="ADDOUT" ref="gemsfit-useref.html#ADDOUT"/>
+        <keyword name="Basic_Statistics" ref="gemsfit-statistics.html#Basic_Statistics"/>
+        <keyword name="CN" ref="gemsfit-useref.html#CN"/>
+        <keyword name="COLLAB_PRESENT" ref="gemsfits-team.html#COLLAB_PRESENT"/>
+        <keyword name="CREDITS" ref="gemsfits-team.html#CREDITS"/>
+        <keyword name="CT" ref="gemsfit-useref.html#CT"/>
+        <keyword name="DC" ref="gemsfit-useref.html#DC"/>
+        <keyword name="DCP" ref="gemsfit-useref.html#DCP"/>
+        <keyword name="DCprop" ref="gemsfit-useref.html#DCprop"/>
+        <keyword name="DISCLAIMER" ref="gemsfits-terms-of-use.html#DISCLAIMER"/>
+        <keyword name="DataSyn" ref="gfshell-taskmode.html#DataSyn"/>
+        <keyword name="DataTarget" ref="gemsfit-useref.html#DataTarget"/>
+        <keyword name="EPH" ref="gemsfit-useref.html#EPH"/>
+        <keyword name="EXPERDESCR" ref="howto-database.html#EXPERDESCR"/>
+        <keyword name="Eh" ref="gemsfit-useref.html#Eh"/>
+        <keyword name="Export_excel_file" ref="howto-database.html#Export_excel_file"/>
+        <keyword name="FORMULASYNTAX" ref="howto-database.html#FORMULASYNTAX"/>
+        <keyword name="General_keywords" ref="gemsfit-useref.html#General_keywords"/>
+        <keyword name="IC" ref="gemsfit-useref.html#IC"/>
+        <keyword name="IS" ref="gemsfit-useref.html#IS"/>
+        <keyword name="IV" ref="gemsfit-useref.html#IV"/>
+        <keyword name="Keyword_variable_name_in_C_source" ref="gemsfit-useref.html#Keyword_variable_name_in_C_source"/>
+        <keyword name="LB" ref="gemsfit-useref.html#LB"/>
+        <keyword name="LE" ref="gemsfit-useref.html#LE"/>
+        <keyword name="LEs" ref="gemsfit-useref.html#LEs"/>
+        <keyword name="LMC" ref="gemsfit-useref.html#LMC"/>
+        <keyword name="Lcoef" ref="gemsfit-useref.html#Lcoef"/>
+        <keyword name="LogKVal" ref="gfshell-taskmode.html#LogKVal"/>
+        <keyword name="MF" ref="gemsfit-useref.html#MF"/>
+        <keyword name="NFUN" ref="gemsfit-useref.html#NFUN"/>
+        <keyword name="NFunParToOpt" ref="gfshell-taskmode.html#NFunParToOpt"/>
+        <keyword name="NonOptSet" ref="gfshell-taskmode.html#NonOptSet"/>
+        <keyword name="OFUN" ref="gemsfit-useref.html#OFUN"/>
+        <keyword name="Otype" ref="gemsfit-useref.html#Otype"/>
+        <keyword name="PBPerc" ref="gfshell-taskmode.html#PBPerc"/>
+        <keyword name="Ptype" ref="gemsfit-useref.html#Ptype"/>
+        <keyword name="Q" ref="gemsfit-useref.html#Q"/>
+        <keyword name="RC" ref="gemsfit-useref.html#RC"/>
+        <keyword name="RESULTS" ref="howto-database.html#RESULTS"/>
+        <keyword name="RHO" ref="gemsfit-useref.html#RHO"/>
+        <keyword name="Rcoef" ref="gemsfit-useref.html#Rcoef"/>
+        <keyword name="Ref" ref="gemsfit-useref.html#Ref"/>
+        <keyword name="Return_codes_and_error_messages" ref="howto-database.html#Return_codes_and_error_messages"/>
+        <keyword name="SALT_FORMULAE" ref="howto-database.html#SALT_FORMULAE"/>
+        <keyword name="SYSCOMPOS" ref="howto-database.html#SYSCOMPOS"/>
+        <keyword name="Sensitivity" ref="gemsfit-statistics.html#Sensitivity"/>
+        <keyword name="System_composition" ref="gemsfit-useref.html#System_composition"/>
+        <keyword name="TT" ref="gemsfit-useref.html#TT"/>
+        <keyword name="Target" ref="gemsfit-useref.html#Target"/>
+        <keyword name="Tuckey" ref="gfshell-taskmode.html#Tuckey"/>
+        <keyword name="UB" ref="gemsfit-useref.html#UB"/>
+        <keyword name="UDWts" ref="gfshell-taskmode.html#UDWts"/>
+        <keyword name="UMC" ref="gemsfit-useref.html#UMC"/>
+        <keyword name="Units" ref="gemsfit-useref.html#Units"/>
+        <keyword name="WT" ref="gfshell-taskmode.html#WT"/>
+        <keyword name="WT" ref="gemsfit-useref.html#WT"/>
+        <keyword name="WT_" ref="gemsfit-useref.html#WT_"/>
+        <keyword name="abs_dif" ref="gemsfit-useref.html#abs_dif"/>
+        <keyword name="addout" ref="gfshell-taskmode.html#addout"/>
+        <keyword name="all" ref="gemsfit-useref.html#all"/>
+        <keyword name="bic_eg" ref="gfshell-taskmode.html#bic_eg"/>
+        <keyword name="build_ubuntu14" ref="gemsfit-techinfo.html#build_ubuntu14"/>
+        <keyword name="cm3" ref="gemsfit-useref.html#cm3"/>
+        <keyword name="comp" ref="gemsfit-useref.html#comp"/>
+        <keyword name="datasetlist" ref="gfshell-taskmode.html#datasetlist"/>
+        <keyword name="distinctTP.csv" ref="gfshell-dbmode.html#distinctTP.csv"/>
+        <keyword name="error" ref="gemsfit-useref.html#error"/>
+        <keyword name="expdataset" ref="gemsfit-useref.html#expdataset"/>
+        <keyword name="export_datasetlist" ref="gfshell-dbmode.html#export_datasetlist"/>
+        <keyword name="expphases" ref="gemsfit-useref.html#expphases"/>
+        <keyword name="expr_eg" ref="gfshell-taskmode.html#expr_eg"/>
+        <keyword name="ftype" ref="gfshell-taskmode.html#ftype"/>
+        <keyword name="g_cm3" ref="gemsfit-useref.html#g_cm3"/>
+        <keyword name="gram" ref="gemsfit-useref.html#gram"/>
+        <keyword name="inverr" ref="gemsfit-useref.html#inverr"/>
+        <keyword name="inverr2" ref="gemsfit-useref.html#inverr2"/>
+        <keyword name="inverr3" ref="gemsfit-useref.html#inverr3"/>
+        <keyword name="inverr_norm" ref="gemsfit-useref.html#inverr_norm"/>
+        <keyword name="kgram" ref="gemsfit-useref.html#kgram"/>
+        <keyword name="logm" ref="gemsfit-useref.html#logm"/>
+        <keyword name="lsq" ref="gemsfit-useref.html#lsq"/>
+        <keyword name="lsq_norm" ref="gemsfit-useref.html#lsq_norm"/>
+        <keyword name="m3" ref="gemsfit-useref.html#m3"/>
+        <keyword name="molal" ref="gemsfit-useref.html#molal"/>
+        <keyword name="molfrac" ref="gemsfit-useref.html#molfrac"/>
+        <keyword name="molfrac2" ref="gemsfit-useref.html#molfrac2"/>
+        <keyword name="nC" ref="gemsfit-useref.html#nC"/>
+        <keyword name="order" ref="gemsfit-useref.html#order"/>
+        <keyword name="pH" ref="gemsfit-useref.html#pH"/>
+        <keyword name="pV" ref="gemsfit-useref.html#pV"/>
+        <keyword name="parameter_marking" ref="gemsfit-useref.html#parameter_marking"/>
+        <keyword name="phDC" ref="gemsfit-useref.html#phDC"/>
+        <keyword name="phIC" ref="gemsfit-useref.html#phIC"/>
+        <keyword name="phMF" ref="gemsfit-useref.html#phMF"/>
+        <keyword name="phase" ref="gemsfit-useref.html#phase"/>
+        <keyword name="phprop" ref="gemsfit-useref.html#phprop"/>
+        <keyword name="pmc" ref="gfshell-taskmode.html#pmc"/>
+        <keyword name="property" ref="gemsfit-useref.html#property"/>
+        <keyword name="rndx" ref="gfshell-taskmode.html#rndx"/>
+        <keyword name="rtype" ref="gfshell-taskmode.html#rtype"/>
+        <keyword name="sArea" ref="gemsfit-useref.html#sArea"/>
+        <keyword name="sP" ref="gemsfit-useref.html#sP"/>
+        <keyword name="sT" ref="gemsfit-useref.html#sT"/>
+        <keyword name="sV" ref="gemsfit-useref.html#sV"/>
+        <keyword name="sample" ref="gemsfit-useref.html#sample"/>
+        <keyword name="samplelist" ref="gemsfit-useref.html#samplelist"/>
+        <keyword name="save_results" ref="gfshell-taskmode.html#save_results"/>
+        <keyword name="sbcomp" ref="gemsfit-useref.html#sbcomp"/>
+        <keyword name="search" ref="gfshell-dbmode.html#search"/>
+        <keyword name="skipdataset" ref="gemsfit-useref.html#skipdataset"/>
+        <keyword name="skippairs" ref="gemsfit-useref.html#skippairs"/>
+        <keyword name="skipsamples" ref="gemsfit-useref.html#skipsamples"/>
+        <keyword name="stype" ref="gfshell-taskmode.html#stype"/>
+        <keyword name="target_function_and_weights" ref="gemsfit-useref.html#target_function_and_weights"/>
+        <keyword name="tk_eg" ref="gfshell-taskmode.html#tk_eg"/>
+        <keyword name="unit" ref="gemsfit-useref.html#unit"/>
+        <keyword name="usedataset" ref="gemsfit-useref.html#usedataset"/>
+        <keyword name="usepairs" ref="gemsfit-useref.html#usepairs"/>
+        <keyword name="usesamples" ref="gemsfit-useref.html#usesamples"/>
+        <keyword name="volts" ref="gemsfit-useref.html#volts"/>
+    </keywords>
     </filterSection>
    </QtHelpProject>

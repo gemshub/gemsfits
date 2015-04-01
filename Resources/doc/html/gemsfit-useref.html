@@ -4,7 +4,7 @@
     <meta content="text/html; charset=windows-1252" http-equiv="content-type">
     <title>GEMSFITS Users reference</title>
   </head>
-  <body style="       background-image: url(bgimg-gray.jpg);">
+  <body style="        background-image: url(bgimg-gray.jpg);">
     <h1> <img style="width: 48px; height: 48px;" title="GEMSFITS" alt="GEMSFITS"
         src="gemsfit2.png"> GEMSFITS Code for GEM Input Parameter Optimization</h1>
     <h2>Users Reference - keywords used in the data management and fitting
@@ -787,6 +787,27 @@
             </span></td>
         </tr>
         <tr>
+          <td style="text-align: center;"><span style="font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              Rd<br>
+            </span></td>
+          <td><span style="font-family: Courier New,Courier,monospace;"><span style="font-weight: bold;">Rd</span><br>
+            </span></td>
+          <td><span style="font-family: Courier New,Courier,monospace;"><br>
+            </span></td>
+          <td><span style="font-family: Courier New,Courier,monospace;">--<br>
+            </span></td>
+          <td><span style="font-family: Courier New,Courier,monospace;">partitioning
+              coefficient described by an expression ("expr") and used in
+              pH-edge fitting tasks <br>
+            </span></td>
+          <td>
+            <p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span
+                style="font-family: Courier New,Courier,monospace;">log(sum({=iSsOEu+2},
+                {=iSsOEuOH+}, {=iSsOEu(OH)2@}, {ClaiEu@})) + 3 - log(sum({Eu+3},
+                {Eu(OH)+2}, {EuO+}, {EuO2H@}))</span></p>
+          </td>
+        </tr>
+        <tr>
           <td><span style="font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               expr<br>
             </span></td>
@@ -798,8 +819,8 @@
             </span></td>
           <td><span style="font-family: Courier New,Courier,monospace;">mathematical
               expression for calculating a certain phase property</span></td>
-          <td><span style="font-family: Courier New,Courier,monospace;">3/sum(end_memeber1,
-              end_mmber2,...)-1</span></td>
+          <td><span style="font-family: Courier New,Courier,monospace;">3/sum({end_memeber1},
+              {end_mmber2},...)-1</span></td>
         </tr>
         <tr>
           <td style="vertical-align: top;"><a name="parameter_marking"></a><a href="gfshell-taskmode.html#ParToOpt"><span
@@ -1337,8 +1358,8 @@
           <td><span style="font-family: Courier New,Courier,monospace;">LogK<br>
             </span></td>
           <td>
-            <p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><!--StartFragment--><span
-                style="font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;">LogKVal</span></span><!--EndFragment--></p>
+            <p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span
+                style="font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;">LogKVal</span></span></p>
           </td>
           <td><span style="font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;">ArrayofUser<br>
                 ProvidedLogKValues<br>

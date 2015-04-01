@@ -817,10 +817,10 @@ void TGfitTask::setnodes()
         // variant (8c) of GEM_from_MT()
         NodT[n]->GEM_from_MT( NodeHandle, NEED_GEM_AIA, T_k, P_pa, new_moles_IC, xDC_up, xDC_lo );  // bugfix DK 09.01.2014
 
-        for (unsigned int bi=0; bi < sizeof(new_moles_IC); bi++)
-        {
-            bICv[n][bi] = new_moles_IC[bi] ;
-        }
+//        for (unsigned int bi=0; bi < sizeof(new_moles_IC); bi++)
+//        {
+//            bICv[n][bi] = new_moles_IC[bi] ;
+//        }
 //            cout << NodT[0]->Get_bIC(0) << endl;
 //            cout << NodT[0]->Get_bIC(1) << endl;
 //            cout << NodT[0]->Get_bIC(2) << endl;
