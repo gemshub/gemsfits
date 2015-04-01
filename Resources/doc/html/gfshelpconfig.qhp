@@ -39,32 +39,34 @@
         <file>gfshell-taskmode.html</file>
         <file>howto-database.html</file>
         <file>index.html</file>
-        <file>Anderson_Crear.png</file>
-        <file>CalculateBCCIcon24.png</file>
-        <file>CalculateRecordDataIcon24.png</file>
         <file>DatabaseModeIcon.png</file>
-        <file>DeleteCurrentRecordIcon24.png</file>
         <file>DualThModuleIcon24.png</file>
-        <file>FitSpaceModuleIcon24.png</file>
-        <file>Marshall_Franck.png</file>
         <file>NewCloneRecordIcon24.png</file>
-        <file>NewCreateRecordIcon24.png</file>
-        <file>P-corr.png</file>
-        <file>P_corr_logK.png</file>
-        <file>PreferencesIcon24.png</file>
-        <file>ProjectSetup.png</file>
-        <file>RTparmModuleIcon24.png</file>
-        <file>Results_window.png</file>
-        <file>Rho_logK.png</file>
-        <file>SaveCurrentRecordIcon24.png</file>
-        <file>SelectDisplayRecordIcon24.png</file>
-        <file>ShowGEMResultsIcon24.png</file>
-        <file>T_logK.png</file>
         <file>TaskModeIcon.png</file>
         <file>Tuckey.png</file>
         <file>gemsfit2.png</file>
         <file>gfshell2.png</file>
-        <file>plot.png</file>
+        <file>img/Anderson_Crear.png</file>
+        <file>img/CalculateBCCIcon24.png</file>
+        <file>img/CalculateRecordDataIcon24.png</file>
+        <file>img/DeleteCurrentRecordIcon24.png</file>
+        <file>img/DualThModuleIcon24.png</file>
+        <file>img/FitSpaceModuleIcon24.png</file>
+        <file>img/Marshall_Franck.png</file>
+        <file>img/NewCloneRecordIcon24.png</file>
+        <file>img/NewCreateRecordIcon24.png</file>
+        <file>img/P-corr.png</file>
+        <file>img/P_corr_logK.png</file>
+        <file>img/PreferencesIcon24.png</file>
+        <file>img/ProjectSetup.png</file>
+        <file>img/RTparmModuleIcon24.png</file>
+        <file>img/Results_window.png</file>
+        <file>img/Rho_logK.png</file>
+        <file>img/SaveCurrentRecordIcon24.png</file>
+        <file>img/SelectDisplayRecordIcon24.png</file>
+        <file>img/ShowGEMResultsIcon24.png</file>
+        <file>img/T_logK.png</file>
+        <file>img/plot.png</file>
       </files>
     <keywords>
         <keyword name="-loga" ref="gemsfit-useref.html#-loga"/>

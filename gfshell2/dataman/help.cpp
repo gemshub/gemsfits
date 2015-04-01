@@ -114,7 +114,7 @@ void HelpConfigurator::addImgToList( QString ref )
       rref = ref.mid(indx);
       value = rref.section("\"",1,1);
 // cout << "+ " << value.toUtf8().data() << endl;
-      file_name = value.section("/", -1);
+      file_name = value.section("/img/", -1);
 // cout << "- " << file_name.toUtf8().data() << endl;
       images.append(file_name);
     }
