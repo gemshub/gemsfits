@@ -34,8 +34,9 @@ C:\GEMSFITSDEPLOY\gemsfits-app and run the command:
 
 This will find and copy all Qt dependence files (Qt libraries, plugins, runtime 
 MinGW libraries, locale files, etc.) into C:\GEMSFITSDEPLOY\gemsfits-app folder.
-Copy the rest of the dependencies, .dll files, found in 
-\Docs\BuildRun_win32\gfshell2_dlls to C:\GEMSFITSDEPLOY\gfshell2-app folder.
+Copy all the rest of the dependencies, *.dll files (for both gfschell2.exe and 
+gemsfit2.exe programs), from \Docs\BuildRun_win32\gemsfits_dlls to 
+C:\GEMSFITSDEPLOY\gemsfits-app folder.
 
 6. To test that Gfshell2 GUI runs, cd to \gemsfits-app and run gemsfits.exe.
 
@@ -43,9 +44,6 @@ Copy the rest of the dependencies, .dll files, found in
 variant of gemsfit2.exe (gemsfit2) using the *_win.pro Qt project file (see
 BuildRun_win32.txt). Find gemsfit2.exe in the \gemsfit2-build folder and copy 
 it into C:\GEMSFITSDEPLOY\gemsfits-app folder.
-
-8. Copy all the *.dll files of the dependent libraries from 
-\Docs\BuildRun_win32\gemsfit2_dlls to C:\GEMSFITSDEPLOY\gemsfits-app
 
 9. To test that gemsfit2.exe works correctly, first start gemsfits.exe, 
 open a test project, check if the path to the gemsfits2.exe is correctly 
@@ -68,8 +66,7 @@ Once you have to copy the GEMSFITS.ico file into the \Resources folder of the
 folder where the 7zip-sfx-maker program is installed.  
 
 Start the 7zip-sfx-maker as administrator and click on "Load Settings..." 
-button. Select the file 
-.\Docs\DeployWindows\Self-extractor-GEMSFITS-settings.xml 
+button. Select the file .\Docs\DeployWindows\Self-extractor-GEMSFITS-settings.xml 
 Then, using "+" button or "Files" "Add 7z file...", select the 
 file "C:\TEMP\GEMSFITSDEPLOY.7z" prepared previously. Click through tabs 
 "Dialogs", "Icon", "Tasks", "Metadata" and edit what is necessary, e.g. revision
