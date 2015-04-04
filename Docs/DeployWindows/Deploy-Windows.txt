@@ -11,8 +11,7 @@ and Qt Tools are located in C:\Qt\Tools\mingw482_32\bin (or similar,
 depending on the current Qt version, MinGW version and their locations).  
 
 2. Create a C:\GEMSFITSDEPLOY folder with subfloder \gemsfits-app. 
-Copy the \Resources and \Tests folders into C:\GEMSFITSDEPLOY folder, 
-as well as "GEMSFITS.lnk" file. 
+Copy the \Resources and \Tests folders into C:\GEMSFITSDEPLOY folder. 
  
 3. Into the C:\GEMSFITSDEPLOY\gemsfits-app folder, copy files "runwindeployqt.bat" 
 and "windeployqt.exe", and then edit the "runwindeployqt.bat" file to make sure 
