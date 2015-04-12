@@ -24,8 +24,52 @@
     </ol>
     <hr>
     <h3><a id="create">1. Create new project in gfshell</a></h3>
-    The steps needed to create a new project are described in <a href="file:///home/dmiron/devGEMSFITS/devGFshell/gemsfit/Resources/doc/html/gfshell-about.html#create_project">GEMSFITS
-      shell About help</a> section.
+    <p style="height: 41px;">To create a new project from the menu click: <span
+        style="font-weight: bold;">Project -&gt; New Project</span>. A Project
+      setup window opens.</p>
+    <table style="width: 1696px; height: 537px;" border="0">
+      <tbody>
+        <tr>
+          <td><img title="Project Setup" alt="Project Setup" src="file:///home/dmiron/devGEMSFITS/devGFshell/gemsfit/Resources/doc/html/img/ProjectSetup.png"
+              align="left"></td>
+          <td>
+            <p><br>
+              <span style="font-weight: bold;"></span></p>
+            <p><span style="font-weight: bold;"><br>
+              </span></p>
+            <p><span style="font-weight: bold;">Project folder path</span> -
+              select the folder where the project will be stored. In this folder
+              dbimport, GEMS, and EJDB sub-folders will be automatically
+              created.</p>
+            <p><span style="font-weight: bold;">Project name</span> - give name
+              of the project (avoid spaces). A *.pro file with the project name
+              will be created</p>
+            <p><span style="font-weight: bold;">Database path</span> -&nbsp;
+              sub-folder in the project folder where the database related files
+              will be stored. Default <span style="font-weight: bold;">/EJDB</span>,
+              no change required.</p>
+            <p><span style="font-weight: bold;">Database file name</span> - name
+              of the database. The database with the desired name will be
+              created and stored in the sub-folders specified above.</p>
+            <p><span style="font-weight: bold;">Experimental samples database
+                collection name</span> - collection name where the experiments
+              will be stored. Default <span style="font-weight: bold;">experiments</span>,
+              no change required.</p>
+            <p><span style="font-weight: bold;">Fitting tasks database
+                collection name</span> - collection name where the tasks will be
+              stored. Default <span style="font-weight: bold;">tasks</span>, no
+              change required.</p>
+            <p><span style="font-weight: bold;">Results database collection name</span>
+              - collection name where the results will be stored. Default <span
+                style="font-weight: bold;">fits</span>, no change required.</p>
+            <p><span style="font-weight: bold;">GEMS3K input file set path</span>
+              - sub-folder in the project folder where the GEMS3K files are
+              stored. Default <span style="font-weight: bold;">/GEMS</span>, no
+              change required.</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
     <hr>
     <h3><a id="prepare">2. Prepare experimental data</a></h3>
     <p>The experimental data has to be first prepared into a <a href="howto-database.html">special
@@ -36,8 +80,8 @@
         href="gfshell-dbmode.html#manage_data">gfshell Database Mode help
         section</a>.<br>
       <br>
-      Every time new bulk data is to be added into and existing database this
-      has to go trough the same steps.</p>
+      Every time new bulk data needs to be added into the database this has to
+      go trough the same steps.</p>
     <hr>
     <h3><a id="GEMS">3. GEM-Selektor</a></h3>
     <p>GEM-Selektor v3 code package (<a href="http://gems.web.psi.ch/GEMS3">http://gems.web.psi.ch/GEMS3</a>)
@@ -127,9 +171,10 @@
       <span style="font-family: Courier New,Courier,monospace;">cshqsol.pro&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         //</span> GEMSFITS project file<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <span style="font-family: Courier New,Courier,monospace;">template.dat&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        //</span> Template file generated gfshell from selected GEMS3K files and
-      used to generate new task specification
+      <span style="font-family: Courier New,Courier,monospace;">template.json
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //</span>
+      Template file generated gfshell from selected GEMS3K files and used to
+      generate new task specification
       templates&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <br><span style="font-family: Courier New,Courier,monospace;">/Tests/CSHQsol/GEMS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         //</span> GEM-Selektor project with GEMS3K files<br>
