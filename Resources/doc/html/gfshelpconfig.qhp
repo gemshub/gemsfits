@@ -42,6 +42,7 @@
         <file>DatabaseModeIcon.png</file>
         <file>DualThModuleIcon24.png</file>
         <file>NewCloneRecordIcon24.png</file>
+        <file>ProjectSetup.png</file>
         <file>TaskModeIcon.png</file>
         <file>Tuckey.png</file>
         <file>gemsfit2.png</file>
@@ -58,7 +59,6 @@
         <file>img/P-corr.png</file>
         <file>img/P_corr_logK.png</file>
         <file>img/PreferencesIcon24.png</file>
-        <file>img/ProjectSetup.png</file>
         <file>img/RTparmModuleIcon24.png</file>
         <file>img/Results_window.png</file>
         <file>img/Rho_logK.png</file>

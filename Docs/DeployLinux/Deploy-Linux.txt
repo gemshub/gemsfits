@@ -1,7 +1,7 @@
 HOW TO PRODUCE AN INSTALLATION PACKAGE OF Qt5-based GEMSFITS FOR LINUX
-(Ubuntu 14.04 LTS)
+(Ubuntu 12.04 or 14.04 LTS)
 
-This deployment process is based on the "gemsdeployqtapp.sh" script,
+This deployment process is based on the "gemsfit2deployqtapp.sh" script,
 which is an augmented and extended "deployqtapp.sh" script from
 https://github.com/goblincoding/qtscripts by goblincoding, see also
 http://goblincoding.com/2013/11/07/deploying-qt-5-applications-on-ubuntu-12-04/  
@@ -10,7 +10,7 @@ http://goblincoding.com/2013/11/07/deploying-qt-5-applications-on-ubuntu-12-04/
 your home directory; we assume that the Qt library is located as 
 "/home/you/Qt/5.4/src" and "/home/you/Qt/5.4/gcc_64" (or gcc_32).
 
-2. Create a /GEMSFITSDEPLOY folder with subfloder /gemsfits-app. 
+2. Create a /GEMSFITSDEPLOY folder with subfolder /gemsfits-app. 
 Copy the /Resources and /Tests folders into /GEMSFITSDEPLOY folder. Copy
 the files  gemsfits.png, Readme.Run.Linux.txt, and rungemsfits.sh from
 /Docs/DeployLinux to /GEMSFITSDEPLOY/gemsfits-app
@@ -25,9 +25,9 @@ to /GEMSFITSDEPLOY/gemsfits-app
 
 @for other Linux without Qt libaries loaded by the GUI ??
 4.0 Copy the file gfshell2deployqtapp.sh from /Docs/DeployLinux into 
-the floder where gfshell2 is built (i.e. gemsfit/gfshell2-build)
+the folder where gfshell2 is built (i.e. gemsfit/gfshell2-build)
 
-4.1 Open a Linux terminal, cd to the bluid folder
+4.1 Open a Linux terminal, cd to the build folder
 "/home/you/DevGEMSFITS/devGFshell/gemsfit/gfshell2-build", and execute 
 the script "gfshell2deployqtapp.sh":
    $ ./gfshell2deployqtapp.sh gemsfits
@@ -39,20 +39,20 @@ if the script is not executable first run:
 variant of gemsfit2 using the *.pro Qt project file.
 
 6. Copy the files gemsfit2deployqtapp.sh and rungemsfit2.sh from 
-/Docs/DeployLinux into the floder where gemsfit2 is built 
+/Docs/DeployLinux into the folder where gemsfit2 is built 
 (i.e. gemsfit/gemsfit2-build)
 
-7. Open a Linux terminal, cd to the bluid folder
+7. Open a Linux terminal, cd to the build folder
 "/home/you/DevGEMSFITS/devGFshell/gemsfit/gemsfit2-build", and execute 
 the script "gemsfit2deployqtapp.sh":
    $ ./gemsfit2deployqtapp.sh gemsfit2
-if the script is not executable first run:
+if the script is not executable then first change it to executable mode:
    $ chmod u+x ./gemsfit2deployqtapp.sh.
 
 8. Extract the gemsfits-app.tgz into /GEMSFITSDEPLOY/ folder
 
 9. Make an archive from the contents of GEMSFITSDEPLOY/ folder.
-Rename the file acrodingly:
+Rename the file accordingly:
 GEMSFITS.1-<rev1>.<rev2>-Linux64.zip
 
 Test on a Linux system without any of the dependencies installed.

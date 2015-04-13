@@ -181,7 +181,8 @@ echo "Copied executable "$qtqcollectiongenerator" to "$tardir
 qtqhelpgenerator=$HOME/Qt/5.4/gcc_64/bin/qhelpgenerator
 cp $qtqhelpgenerator $tardir
 echo "Copied executable "$qtqhelpgenerator" to "$tardir
-
+qtconf=$tardir/qt.conf
+echo "[Paths]" >> $qtconf
 
 # Create a README
 echo "Creating README..."
