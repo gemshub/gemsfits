@@ -15,6 +15,7 @@ Docs/BuildRun_win32/gemsfits_dlls/libstdc++-6.dll -text
 Docs/BuildRun_win32/gemsfits_dlls/libwinpthread-1.dll -text
 Docs/BuildRun_win32/gemsfits_dlls/pthreadGC2.dll -text
 Docs/BuildRun_win32/gemsfits_dlls/tcejdbdll.dll -text
+Docs/DeployLinux/GEMSFITS.1-592.1036-linux-x86-64.tgz -text
 Docs/DeployLinux/gemsfits.png -text
 Docs/DeployWindows/gemsfits.ico -text
 Docs/DeployWindows/windeployqt.exe -text

@@ -1,7 +1,3 @@
-To run gemsfits in Ubuntu 14.04 LTS go to Ubuntu software center
-search for libqt5help5 and install the library. Search for libqt5clucene5
-if it is not installed on your system install it.
-
 To start gemsfits run rungemsfit.sh script. if the script is not 
 executable, open a terminal, cd to that directory, and run 
    	$ chmod u+x ./rungemsfits.sh.
@@ -21,6 +17,7 @@ identical names.
 To run gemsfit2 code outside the GUI directly using the terminal. Currently
 works only by having the contents of the fititng project on the same level 
 as gemsfit2 executable. 
+
 Make rungesmfit2.sh executable:
 	$ chmod u+x ./rungemsfit2.sh.
 

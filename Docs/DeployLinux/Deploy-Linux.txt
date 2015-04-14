@@ -8,7 +8,7 @@ http://goblincoding.com/2013/11/07/deploying-qt-5-applications-on-ubuntu-12-04/
 
 1. Make sure that Qt5 SDK is installed with source code as /Qt in 
 your home directory; we assume that the Qt library is located as 
-"/home/you/Qt/5.4/src" and "/home/you/Qt/5.4/gcc_64" (or gcc_32).
+"/home/you/Qt/5.2.1/src" and "/home/you/Qt/5.2.1/gcc_64" (or gcc_32).
 
 2. Create a /GEMSFITSDEPLOY folder with subfolder /gemsfits-app. 
 Copy the /Resources and /Tests folders into /GEMSFITSDEPLOY folder. Copy
@@ -16,26 +16,23 @@ the files  gemsfits.png, Readme.Run.Linux.txt, and rungemsfits.sh from
 /Docs/DeployLinux to /GEMSFITSDEPLOY/gemsfits-app
 
 @@ gfshell2 @@ 
-3. Using QtCreator (Qt 5.4 64bit), build the actual release 
+3. Using QtCreator (Qt 5.2.1 64bit), build the actual release 
 variant of gemsfits (gfshell2) using the *.pro Qt project file.
 
-@for Ubuntu 14.04 LTS
-4. Copy the executable file "gemsfits" from the build folder to 
-to /GEMSFITSDEPLOY/gemsfits-app
-
-@for other Linux without Qt libaries loaded by the GUI ??
-4.0 Copy the file gfshell2deployqtapp.sh from /Docs/DeployLinux into 
+4. Copy the file gfshell2deployqtapp.sh from /Docs/DeployLinux into 
 the folder where gfshell2 is built (i.e. gemsfit/gfshell2-build)
 
-4.1 Open a Linux terminal, cd to the build folder
+5. Open a Linux terminal, cd to the build folder
 "/home/you/DevGEMSFITS/devGFshell/gemsfit/gfshell2-build", and execute 
 the script "gfshell2deployqtapp.sh":
    $ ./gfshell2deployqtapp.sh gemsfits
 if the script is not executable first run:
    $ chmod u+x ./gfshell2deployqtapp.sh.
 
+6. Extract the gemsfits-app.tgz archive into /GEMSFITSDEPLOY/ folder
+
 @@ gemsfit2 @@ 
-5. Using QtCreator (Qt 5.4 64bit), build the actual release 
+5. Using QtCreator (Qt 5.2.1 64bit), build the actual release 
 variant of gemsfit2 using the *.pro Qt project file.
 
 6. Copy the files gemsfit2deployqtapp.sh and rungemsfit2.sh from 
@@ -49,15 +46,15 @@ the script "gemsfit2deployqtapp.sh":
 if the script is not executable then first change it to executable mode:
    $ chmod u+x ./gemsfit2deployqtapp.sh.
 
-8. Extract the gemsfits-app.tgz into /GEMSFITSDEPLOY/ folder
+8. Extract the gemsfits-app.tgz archive into /GEMSFITSDEPLOY/ folder
 
 9. Make an installer archive from the contents of GEMSFITSDEPLOY/ folder:
 
    $ cd ~
-   $ tar cvzf GEMSFITS.1-<rev1>.<rev2>-linux-x86-64.tgz ./GEMSFITSDEPLOY
+   $ tar cvzf GEMSFITS.1-<rev1>.<rev2>-linux-x86-64.tgz GEMSFITSDEPLOY
 
 for instance: 
-   $ tar cvzf GEMSFITS.1-592.1036-linux-x86-64.tgz ./GEMSFITSDEPLOY
+   $ tar cvzf GEMSFITS.1-592.1036-linux-x86-64.tgz GEMSFITSDEPLOY
 
 Test on a Linux system without any of the dependencies installed.
 See Readme.Run.Linux.txt
