@@ -51,9 +51,14 @@ if the script is not executable then first change it to executable mode:
 
 8. Extract the gemsfits-app.tgz into /GEMSFITSDEPLOY/ folder
 
-9. Make an archive from the contents of GEMSFITSDEPLOY/ folder.
-Rename the file accordingly:
-GEMSFITS.1-<rev1>.<rev2>-Linux64.zip
+9. Make an installer archive from the contents of GEMSFITSDEPLOY/ folder:
+
+   $ cd ~
+   $ tar cvzf GEMSFITS.1-<rev1>.<rev2>-linux-x86-64.tgz ./GEMSFITSDEPLOY
+
+for instance: 
+   $ tar cvzf GEMSFITS.1-592.1036-linux-x86-64.tgz ./GEMSFITSDEPLOY
 
 Test on a Linux system without any of the dependencies installed.
 See Readme.Run.Linux.txt
+
