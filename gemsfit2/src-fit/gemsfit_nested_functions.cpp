@@ -140,7 +140,14 @@ void nestedfun (TGfitTask *sys)
                     cout << "Error setting the NFUN parameters! " << endl; exit(1);
                 }
 
+                try
+                {
                 nlopt::result result = opt.optimize(x, minf);
+                }
+                catch (nlopt::roundoff_limited &rf )
+                                        {
+//                                            cout << "Error in NESTED "<< endl;
+                                        }
 
 //                double xx = minf;
 
