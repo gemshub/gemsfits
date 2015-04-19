@@ -675,7 +675,8 @@ cout << DBname.c_str() << endl;
         {
             // for selecting pairs of datasets-samples
             if (Nsamples > 0)
-
+            {
+                this->h_datasetlist = true;
             if (DS.size() > 0)
             {
                 if (!DS[0].empty())
@@ -703,6 +704,7 @@ cout << DBname.c_str() << endl;
                     bson_append_finish_array(&bq2);
                 }
             }
+        }
         }
 
         // finish creading bson query object
