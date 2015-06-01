@@ -68,7 +68,9 @@ CONFIG(debug, debug|release): LIBS += -L$$EJDB_LIB_PATH/debug/src/ -lejdb
 EJDB_BSON_H = $$EJDB_PATH/src/bson
 EJDB_EJDB_H = $$EJDB_PATH/src/ejdb
 EJDB_TCUTIL_H = $$EJDB_PATH/src/tcutil
-EJDB_GENERATED_H = $$EJDB_LIB_PATH/debug/src/generated
+#EJDB_GENERATED_H = $$EJDB_LIB_PATH/debug/src/generated
+CONFIG(release, debug|release): EJDB_GENERATED_H = $$EJDB_LIB_PATH/release/src/generated
+CONFIG(debug, debug|release): EJDB_GENERATED_H = $$EJDB_LIB_PATH/debug/src/generated
 
 DEPENDPATH   += $$QWT6_H
 DEPENDPATH   += $$DATAMAN_H
