@@ -6,5 +6,5 @@ GEMSFITSAPP=" GEMSFITS v.0.1 r.450 "
 ProjDatabaseName=EuonIllite
 ProjDatabasePath=/EJDB
 ProjFileName=pHedge
-ProjFolderPath=/home/dmiron/devGEMSFITS/devGFshell/gemsfit/Tests/pHedge
+ProjFolderPath=/home/svd/devFEMSFIT/devGFshell/GFS/Tests/pHedge
 TaskCasesDataColl=tasks

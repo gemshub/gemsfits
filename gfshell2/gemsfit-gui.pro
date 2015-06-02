@@ -51,7 +51,6 @@ QWT6_H       =  $$QWT6_CPP
 DATAMAN_H    =  $$DATAMAN_CPP
 DIALOGS_H    =  $$DIALOGS_CPP
 GEMS3K_H     =  $$GEMS3K_CPP
-PLATFORM_H     =  $$PLATFORM_CPP
 KEYS_H       =   $$KEYS_CPP
 
 EJDB_PATH = ../../standalone/EJDB
@@ -63,8 +62,6 @@ unix{
    EJDB_LIB_PATH =  $$EJDB_PATH/build
 }
 
-CONFIG(release, debug|release): LIBS += -L$$EJDB_LIB_PATH/release/src/ -lejdb
-CONFIG(debug, debug|release): LIBS += -L$$EJDB_LIB_PATH/debug/src/ -lejdb
 EJDB_BSON_H = $$EJDB_PATH/src/bson
 EJDB_EJDB_H = $$EJDB_PATH/src/ejdb
 EJDB_TCUTIL_H = $$EJDB_PATH/src/tcutil
@@ -76,14 +73,12 @@ DEPENDPATH   += $$QWT6_H
 DEPENDPATH   += $$DATAMAN_H
 DEPENDPATH   += $$DIALOGS_H
 DEPENDPATH   += $$GEMS3K_H
-DEPENDPATH   += $$PLATFORM_H
 DEPENDPATH   += $$KEYS_H
 
 INCLUDEPATH   += $$QWT6_H
 INCLUDEPATH   += $$DATAMAN_H
 INCLUDEPATH   += $$DIALOGS_H
 INCLUDEPATH   += $$GEMS3K_H
-INCLUDEPATH   += $$PLATFORM_H
 INCLUDEPATH   += $$KEYS_H
 INCLUDEPATH   += $$EJDB_BSON_H
 INCLUDEPATH   += $$EJDB_EJDB_H
@@ -102,4 +97,5 @@ include($$QWT6_CPP/qwt.pri)
 include($$DATAMAN_CPP/dataman.pri)
 include($$EJDB_PATH/ejdb.pri)
 
-
+CONFIG(release, debug|release): LIBS += -L$$EJDB_LIB_PATH/release/src/ -lejdb
+CONFIG(debug, debug|release): LIBS += -L$$EJDB_LIB_PATH/debug/src/ -lejdb
