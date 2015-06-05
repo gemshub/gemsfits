@@ -943,7 +943,10 @@ void FITMainWindow::CmRestoreCSV()
          //get header
         QStringList cells = allrows[0].split(',', QString::KeepEmptyParts);
         for( ii=0; ii< cells.count(); ii++ )
-           headline.push_back( cells[ii].toUtf8().data() );
+        {
+            const char* cellstr = cells[ii].remove('\"').toUtf8().data();
+            headline.push_back( cellstr );
+        }
 
         for( jj=1; jj< allrows.count(); jj++ )
         {
@@ -953,7 +956,7 @@ void FITMainWindow::CmRestoreCSV()
               continue;
           row.clear();
           for( ii=0; ii< cells.count(); ii++ )
-              row.push_back( cells[ii].toUtf8().data() );
+              row.push_back( cells[ii].remove('\"').toUtf8().data() );
 
           // convert row to bson
           csvToBson( &exp, headline, row );
@@ -962,6 +965,7 @@ void FITMainWindow::CmRestoreCSV()
           ParserJson pars;
           string bsonVal;
           pars.printBsonObjectToJson( bsonVal, exp.data );
+          // cout << bsonVal.c_str() << endl;
 
           //save results to EJDB
           rtEJ[ currentMode ].SetJson( bsonVal );
