@@ -171,7 +171,7 @@ void TEJDBKey::SetFldKey( int i, const char *key )
     rkFld[i] = sp;
 }
 
-/// Setted pattern of record key
+/// Check if pattern in record key
 bool TEJDBKey::isPattern()
 {
   bool OneRec =  true;
@@ -238,7 +238,7 @@ bool TEJDBKey::compareTemplate( const IndexEntry& elm )
 }
 
 //-------------------------------------------------------------
-// TEJDataBase - This class contened the structure of EJDB Data Base
+// TEJDataBase - This class contains the structure of EJDB Data Base
 //-------------------------------------------------------------
 
 
