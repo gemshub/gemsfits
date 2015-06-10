@@ -899,8 +899,8 @@ void FITMainWindow::CmRestoreJSON()
          }
         }
 
-        changeKeyList();
-        contentsChanged = false;
+    //    changeKeyList();
+    //    contentsChanged = false;
         setStatusText( "Records imported from json txt-file" );
     }
     catch( TError& err )
@@ -908,6 +908,10 @@ void FITMainWindow::CmRestoreJSON()
         setStatusText( err.title );
         addLinetoStatus( err.mess );
     }
+
+    changeKeyList();
+    contentsChanged = false;
+
 }
 
 /// Import Data Records experements from csv-file
@@ -977,8 +981,8 @@ void FITMainWindow::CmRestoreCSV()
          bson_destroy( &exp );
         }
 
-        changeKeyList();
-        contentsChanged = false;
+//        changeKeyList();
+//        contentsChanged = false;
         setStatusText( "Records imported from csv-file" );
     }
     catch( TError& err )
@@ -986,6 +990,9 @@ void FITMainWindow::CmRestoreCSV()
         setStatusText( err.title );
         addLinetoStatus( err.mess );
     }
+    changeKeyList();
+    contentsChanged = false;
+
 }
 
 /// Export Data Records from task configuration txt-file
@@ -1128,13 +1135,14 @@ void FITMainWindow::CmDeleteList()
         for(int i=0; i<aKey.size(); i++ )
             RecDelete( aKey[i].c_str() );
         rtEJ[currentMode].SetKey( ALLKEY );
-        changeKeyList();
+//        changeKeyList();
     }
     catch( TError& err )
     {
         setStatusText( err.title );
         addLinetoStatus( err.mess );
     }
+    changeKeyList();
 }
 
 // write TP paris file
