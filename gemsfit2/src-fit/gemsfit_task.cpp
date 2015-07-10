@@ -525,6 +525,7 @@ void TGfitTask::setnodes()
                 for (k=0; k<experiments.at(n)->expphases[i]->phDC[j]->DCprop.size(); k++)
                 {
                     // Upper DC metastability
+//                    cout << experiments.at(n)->expphases[i]->phDC[j]->DCprop[k]->property << endl;
                     if (experiments.at(n)->expphases[i]->phDC[j]->DCprop[k]->property == keys::UMC)
                     {
                         PHndx = NodT[n]->Ph_name_to_xCH (experiments.at(n)->expphases[i]->phase.c_str());
@@ -534,6 +535,7 @@ void TGfitTask::setnodes()
                         {
                             if (DCNL[l] == experiments.at(n)->expphases[i]->phDC[j]->DC)
                             {
+//                                cout<< DCNL[l] << endl;
                                 xDC_up[l] = experiments.at(n)->expphases[i]->phDC[j]->DCprop[k]->Qnt;
                             }
                         }
@@ -847,30 +849,30 @@ cout << "Node: " << NodeHandle+1 << " Sample: " << experiments[n]->sample <<"  N
         }
 
         // mixed salt
-        string sMod;
-        NodT[n]->Get_sMod(0, sMod);
-        if (((sMod.compare(0,1,"H")) == 0) && (maxsalt > 0 ))
-        {
-            set_DH_Helgeson(n);
+//        string sMod;
+//        NodT[n]->Get_sMod(0, sMod);
+//        if (((sMod.compare(0,1,"H")) == 0) && (maxsalt > 0 ))
+//        {
+//            set_DH_Helgeson(n);
 
-            NodT[n]->GEM_from_MT( NodeHandle, NEED_GEM_AIA, T_k, P_pa, new_moles_IC, xDC_up, xDC_lo );
-            NodeStatusCH = NodT[n]->GEM_run( true );
+//            NodT[n]->GEM_from_MT( NodeHandle, NEED_GEM_AIA, T_k, P_pa, new_moles_IC, xDC_up, xDC_lo );
+//            NodeStatusCH = NodT[n]->GEM_run( true );
 
-            if( ( NodeStatusCH == ERR_GEM_AIA || NodeStatusCH == ERR_GEM_SIA ||
-                           NodeStatusCH ==  T_ERROR_GEM ) )
-            {
-                 cout << "Error: GEM calculation results are not retrieved upon initializing experimental system (node) "
-                      << NodeHandle << endl;
-            }
-            else
-            {
-               if( ( NodeStatusCH == BAD_GEM_AIA || NodeStatusCH == BAD_GEM_SIA  ) )
-               {
-                  cout << "Insufficient quality of GEM solution, but GEM results are retrieved upon initializing experimental system (node) "
-                  << NodeHandle << endl;
-               }
-            }
-        }
+//            if( ( NodeStatusCH == ERR_GEM_AIA || NodeStatusCH == ERR_GEM_SIA ||
+//                           NodeStatusCH ==  T_ERROR_GEM ) )
+//            {
+//                 cout << "Error: GEM calculation results are not retrieved upon initializing experimental system (node) "
+//                      << NodeHandle << endl;
+//            }
+//            else
+//            {
+//               if( ( NodeStatusCH == BAD_GEM_AIA || NodeStatusCH == BAD_GEM_SIA  ) )
+//               {
+//                  cout << "Insufficient quality of GEM solution, but GEM results are retrieved upon initializing experimental system (node) "
+//                  << NodeHandle << endl;
+//               }
+//            }
+//        }
 
         delete[] new_moles_IC;
         delete[] xDC_up;

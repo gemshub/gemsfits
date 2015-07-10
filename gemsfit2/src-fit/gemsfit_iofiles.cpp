@@ -129,6 +129,44 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
     bson_append_string(&bson_task_file, keys::DSelect[mode], "");
     bson_append_string(&bson_task_file, keys::DTarget[mode], "");
 
+    // Optimization Settings
+    bson_append_start_object(&bson_task_file, keys::OptSet[mode]);
+    {
+        bson_append_int(&bson_task_file, keys::MPI[mode], omp_get_num_threads() * omp_get_num_procs());
+
+        bson_append_int(&bson_task_file, keys::OptDW[mode], 1);
+
+        bson_append_int(&bson_task_file, keys::OptEQ[mode], 1);
+
+        bson_append_int(&bson_task_file, keys::OptUW[mode], -1);
+
+        bson_append_string(&bson_task_file, keys::OptAlg[mode], "LN_BOBYQA");
+
+        bson_append_double(&bson_task_file, keys::OptPBP[mode], -1);
+
+        bson_append_double(&bson_task_file, keys::OptTRel[mode], 1e-5);
+
+        bson_append_double(&bson_task_file, keys::OptTAbs[mode], 1e-5);
+
+        bson_append_int(&bson_task_file, keys::OptMEv[mode], 10000);
+
+        bson_append_int(&bson_task_file, keys::OptNormP[mode], 1);
+
+        bson_append_double(&bson_task_file, keys::OptPer[mode], 0.0001);
+
+         // Statistics Settings
+        bson_append_double(&bson_task_file, keys::StatPer[mode], 0.0001);
+
+        bson_append_int(&bson_task_file, keys::OptTu[mode], -1);
+
+        bson_append_int(&bson_task_file, keys::OptTuVal[mode], 6);
+
+        bson_append_int(&bson_task_file, keys::StatMC[mode], -1);
+
+        bson_append_int(&bson_task_file, keys::StatMCr[mode], 100);
+
+    } bson_append_finish_object(&bson_task_file);
+
     bson_append_start_array(&bson_task_file, keys::OptParameters[mode]);
 
     // Write interaction parameters
@@ -287,43 +325,43 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
 
     bson_append_string(&bson_task_file, keys::LogK[mode], "");
 
-    // Optimization Settings
-    bson_append_start_object(&bson_task_file, keys::OptSet[mode]);
-    {
-        bson_append_int(&bson_task_file, keys::MPI[mode], omp_get_num_threads() * omp_get_num_procs());
+//    // Optimization Settings
+//    bson_append_start_object(&bson_task_file, keys::OptSet[mode]);
+//    {
+//        bson_append_int(&bson_task_file, keys::MPI[mode], omp_get_num_threads() * omp_get_num_procs());
 
-        bson_append_int(&bson_task_file, keys::OptDW[mode], 1);
+//        bson_append_int(&bson_task_file, keys::OptDW[mode], 1);
 
-        bson_append_int(&bson_task_file, keys::OptEQ[mode], 1);
+//        bson_append_int(&bson_task_file, keys::OptEQ[mode], 1);
 
-        bson_append_int(&bson_task_file, keys::OptUW[mode], -1);
+//        bson_append_int(&bson_task_file, keys::OptUW[mode], -1);
 
-        bson_append_string(&bson_task_file, keys::OptAlg[mode], "LN_BOBYQA");
+//        bson_append_string(&bson_task_file, keys::OptAlg[mode], "LN_BOBYQA");
 
-        bson_append_double(&bson_task_file, keys::OptPBP[mode], -1);
+//        bson_append_double(&bson_task_file, keys::OptPBP[mode], -1);
 
-        bson_append_double(&bson_task_file, keys::OptTRel[mode], 1e-5);
+//        bson_append_double(&bson_task_file, keys::OptTRel[mode], 1e-5);
 
-        bson_append_double(&bson_task_file, keys::OptTAbs[mode], 1e-5);
+//        bson_append_double(&bson_task_file, keys::OptTAbs[mode], 1e-5);
 
-        bson_append_int(&bson_task_file, keys::OptMEv[mode], 10000);
+//        bson_append_int(&bson_task_file, keys::OptMEv[mode], 10000);
 
-        bson_append_int(&bson_task_file, keys::OptNormP[mode], 1);
+//        bson_append_int(&bson_task_file, keys::OptNormP[mode], 1);
 
-        bson_append_double(&bson_task_file, keys::OptPer[mode], 0.0001);
+//        bson_append_double(&bson_task_file, keys::OptPer[mode], 0.0001);
 
-         // Statistics Settings
-        bson_append_double(&bson_task_file, keys::StatPer[mode], 0.0001);
+//         // Statistics Settings
+//        bson_append_double(&bson_task_file, keys::StatPer[mode], 0.0001);
 
-        bson_append_int(&bson_task_file, keys::OptTu[mode], -1);
+//        bson_append_int(&bson_task_file, keys::OptTu[mode], -1);
 
-        bson_append_int(&bson_task_file, keys::OptTuVal[mode], 6);
+//        bson_append_int(&bson_task_file, keys::OptTuVal[mode], 6);
 
-        bson_append_int(&bson_task_file, keys::StatMC[mode], -1);
+//        bson_append_int(&bson_task_file, keys::StatMC[mode], -1);
 
-        bson_append_int(&bson_task_file, keys::StatMCr[mode], 100);
+//        bson_append_int(&bson_task_file, keys::StatMCr[mode], 100);
 
-    } bson_append_finish_object(&bson_task_file);
+//    } bson_append_finish_object(&bson_task_file);
 
     G0ndx = 0;
 

@@ -49,6 +49,7 @@ double Equil_objective_function_callback( const std::vector<double> &opt, std::v
     double sum_of_squared_residuals_allsys = 0.0;
     double sum_of_squared_residuals_sys = 0.0;
 
+
     // Rescale optimization to unconvert normalization of parameters
     if( sys->NormParams )
     {
@@ -123,6 +124,11 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 //    sys->print->print_clear();
 
 //adjust parameters
+//    cout << " befores set params " << endl;
+#ifdef useomp
+    omp_set_num_threads(sys->MPI);
+    #pragma omp parallel for /*schedule(dynamic)*/
+#endif
     for (unsigned i=0; i<sys->NodT.size(); ++i)
     {
         for (unsigned e=0; e < sys->Opti->optParam.size(); e++)
@@ -148,9 +154,10 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         }
     }
 
+
 #ifdef useomp
     omp_set_num_threads(sys->MPI);
-    #pragma omp parallel for
+    #pragma omp parallel for schedule(dynamic)
 #endif
     // +++ Calculating equilibrium with GEMS3K +++ //
     for (unsigned int i=0; i<sys->NodT.size(); ++i)
@@ -216,7 +223,9 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         set_Tuckey_weight_global(sys);
     }
 
+
     residuals_sys = sys->get_sum_of_residuals( );
+
 
 //    residuals_sys = test_residual;
 
