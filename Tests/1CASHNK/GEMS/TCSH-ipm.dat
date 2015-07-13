@@ -151,7 +151,7 @@
 
 # IPxPH: Index lists (in TSolMod convention) for interaction parameters of non-ideal solutions
 <IPxPH>
-0 5 5 0 0 5 0 0 1 1 1 4 1 1 4 4 2 2 2 3 2 2 3 3 
+0 0 5 5 0 0 0 5 1 1 1 4 1 1 4 4 2 2 2 3 2 2 3 3 
 
 # PMc: Tables (in TSolMod convention) of interaction parameter coefficients  for non-ideal solutions
 <PMc>
