@@ -1,7 +1,7 @@
 {
      "DBPath" :   "../EJDB/<database name>",
      "DBColl" :   "<collection name>",
-     "GEMSFPath" :   "../GEMS/TCSH-dat.lst",
+     "GEMSFPath" :   "../GEMS/TCSHs-dat.lst",
      "DataSelect" :   "",
      "DataTarget" :   "",
      "ParToOpt" :   [
@@ -156,42 +156,42 @@
                     {
                          "DCN" :   "TCSC",
                          "PType" :   "S",
-                         "IV" :   -6205140
+                         "IV" :   -6226434
                     },
                     {
                          "DCN" :   "TCSv",
                          "PType" :   "S",
-                         "IV" :   -5321929
+                         "IV" :   -5328874
                     },
                     {
                          "DCN" :   "TCvC",
                          "PType" :   "S",
-                         "IV" :   -5350530
+                         "IV" :   -5337660
                     },
                     {
                          "DCN" :   "TCvv",
                          "PType" :   "S",
-                         "IV" :   -4457513
+                         "IV" :   -4456727
                     },
                     {
                          "DCN" :   "THSC",
                          "PType" :   "S",
-                         "IV" :   -6014850
+                         "IV" :   -6042510
                     },
                     {
                          "DCN" :   "THSv",
                          "PType" :   "S",
-                         "IV" :   -5117840
+                         "IV" :   -5124650
                     },
                     {
                          "DCN" :   "THvC",
                          "PType" :   "S",
-                         "IV" :   -5164240
+                         "IV" :   -5155167
                     },
                     {
                          "DCN" :   "THvv",
                          "PType" :   "S",
-                         "IV" :   -4258820
+                         "IV" :   -4265310
                     }
                ],
                "PMc" :   [
@@ -200,7 +200,7 @@
                               {
                                    "IPCN" :   "CSH[0|0]",
                                    "PType" :   "S",
-                                   "IV" :   9.99999971718069e-10
+                                   "IV" :   -12400
                               },
                               {
                                    "IPCN" :   "CSH[0|1]",
@@ -219,7 +219,7 @@
                               {
                                    "IPCN" :   "CSH[1|0]",
                                    "PType" :   "S",
-                                   "IV" :   1.99999994343614e-09
+                                   "IV" :   -10800
                               },
                               {
                                    "IPCN" :   "CSH[1|1]",
@@ -238,7 +238,7 @@
                               {
                                    "IPCN" :   "CSH[2|0]",
                                    "PType" :   "S",
-                                   "IV" :   3.00000002617651e-09
+                                   "IV" :   -20200
                               },
                               {
                                    "IPCN" :   "CSH[2|1]",
@@ -247,63 +247,6 @@
                               },
                               {
                                    "IPCN" :   "CSH[2|2]",
-                                   "PType" :   "S",
-                                   "IV" :   0
-                              }
-                         ]
-                    },
-                    {
-                         "IPCs" :   [
-                              {
-                                   "IPCN" :   "CSH[3|0]",
-                                   "PType" :   "S",
-                                   "IV" :   3.99999988687227e-09
-                              },
-                              {
-                                   "IPCN" :   "CSH[3|1]",
-                                   "PType" :   "S",
-                                   "IV" :   0
-                              },
-                              {
-                                   "IPCN" :   "CSH[3|2]",
-                                   "PType" :   "S",
-                                   "IV" :   0
-                              }
-                         ]
-                    },
-                    {
-                         "IPCs" :   [
-                              {
-                                   "IPCN" :   "CSH[4|0]",
-                                   "PType" :   "S",
-                                   "IV" :   4.99999996961265e-09
-                              },
-                              {
-                                   "IPCN" :   "CSH[4|1]",
-                                   "PType" :   "S",
-                                   "IV" :   0
-                              },
-                              {
-                                   "IPCN" :   "CSH[4|2]",
-                                   "PType" :   "S",
-                                   "IV" :   0
-                              }
-                         ]
-                    },
-                    {
-                         "IPCs" :   [
-                              {
-                                   "IPCN" :   "CSH[5|0]",
-                                   "PType" :   "S",
-                                   "IV" :   6.00000005235302e-09
-                              },
-                              {
-                                   "IPCN" :   "CSH[5|1]",
-                                   "PType" :   "S",
-                                   "IV" :   0
-                              },
-                              {
-                                   "IPCN" :   "CSH[5|2]",
                                    "PType" :   "S",
                                    "IV" :   0
                               }
@@ -327,7 +270,7 @@
                     {
                          "DCN" :   "Amor-Sl",
                          "PType" :   "S",
-                         "IV" :   -850616
+                         "IV" :   -848903
                     }
                ]
           }
