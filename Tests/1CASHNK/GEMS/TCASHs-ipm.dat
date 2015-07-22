@@ -1,5 +1,5 @@
 #  GEMS3K v.3.3 r.1060 (rc) 
-# File: /home/kulik/DevGEMS/TCASHs-ipm.dat
+# File: /home/kulik/DevGEMSFITS/devGFshell/GFS/Tests/1CASHNK/GEMS/TCASHs-ipm.dat
 # Comments can be marked with # $ ; as the first character in the line
 # IPM text input file for the internal GEM IPM-3 kernel data
 # (should be read after the DCH file and before DBR files)
@@ -252,7 +252,7 @@
 ## (5) Data arrays which are provided neither in DCH nor in DBR files
 # B: Full total bulk composition (vector b), moles [nIC] (will be partially re-written from DBR files)
 <B>
-0.01 1.00000002413381 113.046746705914 2 59.5403733770907 1 0 
+0.1 1.00000002413381 113.316746705914 2 59.8103733770907 1 0 
 
 # Initial data for DCs - see DATACH file for dimensions nDC, nDCs
 # Pparc: Partial pressures or fugacities of pure Dependent Components [nDC] (reserved)
