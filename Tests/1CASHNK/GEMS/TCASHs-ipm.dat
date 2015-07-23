@@ -45,7 +45,7 @@
 <pa_EPS>  1e-10
 
 # DK: Tolerance for the Dikin's criterion of IPM convergence { 1e-6 } 
-<pa_DK>  3e-06
+<pa_DK>  1e-05
 
 # DS: Cutoff minimum amount of stable phase in GEM IPM primal solution, moles { 1e-20 }
 <pa_DS>  1e-20
@@ -53,7 +53,7 @@
 # DF: Tolerance DF of the stability criterion for a lost phase to be inserted to mass balance { 0.01 } 
 <pa_DF>  0.01
 # DFM: Tolerance for stability criterion for a phase to be eliminated from mass balance { 0.01 } 
-<pa_DFM>  0.001
+<pa_DFM>  0.01
 
 # DP: Maximal number of iterations in MassBalanceRefinement MBR() procedure { 130 }
 <pa_DP>  130
@@ -65,13 +65,13 @@
 <pa_PD>  2
 
 # PRD: Disable (0) or activate (-4 or less- max.dec.exp.for DC amount correction) SpeciationCleanup() { -5 }
-<pa_PRD>  -4
+<pa_PRD>  -5
 
 # AG: Smoothing parameter 1 for non-ideal primal chemical potential increments (-1 to +1) { 1.0 }
 <pa_AG>  1
 
 # DGC: Smoothing parameter 2- exponent in smoothing function (-1 to +1) { 0 or 0.001 for adsorption }
-<pa_DGC>  -0.0007
+<pa_DGC>  -0.001
 
 # PSM: Level of diagnostic messages { 0- disabled (no ipmlog file); 1- default; 2-including warnings }
 <pa_PSM>  1
@@ -119,7 +119,7 @@
 <pa_DT>  0
 
 # GAS: Threshold for primal-dual chemical potential difference used in SpeciationCleanup() { 0.001 }
-<pa_GAS>  0.0001
+<pa_GAS>  0.001
 # Total number of moles used in internal re-scaling of the system (disabled if < 1e-4) { 1000 }
 <pa_DG>  1000
 # DNS: Standard surface number density, nm-2 for calculating activity of surface species { 12.05 }
