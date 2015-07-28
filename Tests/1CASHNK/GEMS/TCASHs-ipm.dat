@@ -5,7 +5,7 @@
 # (should be read after the DCH file and before DBR files)
 
 # ID key of the initial chemical system definition
-<ID_key> "CASHNK    G  CSHA10      0    0       1       25      0   "
+<ID_key> "CASHNK    G  CSHA095H    0    0       1       25      0   "
 
 ## (1) Flags that affect memory allocation
 # PE: Flag for using electroneutrality condition in GEM IPM calculations (1 or 0)
@@ -45,7 +45,7 @@
 <pa_EPS>  1e-10
 
 # DK: Tolerance for the Dikin's criterion of IPM convergence { 1e-6 } 
-<pa_DK>  1e-05
+<pa_DK>  1e-06
 
 # DS: Cutoff minimum amount of stable phase in GEM IPM primal solution, moles { 1e-20 }
 <pa_DS>  1e-20
@@ -65,13 +65,13 @@
 <pa_PD>  2
 
 # PRD: Disable (0) or activate (-4 or less- max.dec.exp.for DC amount correction) SpeciationCleanup() { -5 }
-<pa_PRD>  -5
+<pa_PRD>  0
 
 # AG: Smoothing parameter 1 for non-ideal primal chemical potential increments (-1 to +1) { 1.0 }
 <pa_AG>  1
 
 # DGC: Smoothing parameter 2- exponent in smoothing function (-1 to +1) { 0 or 0.001 for adsorption }
-<pa_DGC>  -0.001
+<pa_DGC>  -0.006
 
 # PSM: Level of diagnostic messages { 0- disabled (no ipmlog file); 1- default; 2-including warnings }
 <pa_PSM>  1
@@ -155,7 +155,7 @@
 
 # PMc: Tables (in TSolMod convention) of interaction parameter coefficients  for non-ideal solutions
 <PMc>
-0.0640000030398369 3.72000002861023 0 0 0 0 0 0 -2290 0 0 -10770 0 0 -19280 0 0 3 0 0 4 0 0 5 0 0 6 0 0 7 0 0 8 0 0 
+0.0640000030398369 3.72000002861023 0 0 0 0 0 0 -2290 0 0 -10770 0 0 -19280 0 0 -3310 0 0 -23170 0 0 3880 0 0 810 0 0 -6510 0 0 530 0 0 
 
 # LsMdc: Dimensions of TSolMod <DMc> and <MoiSN> arrays [nPS*3]: In each row (for phase):
 # [0] number of parameters per component; [1] 0; [2] 0. For multi-site (sublattice) models: 
@@ -252,7 +252,7 @@
 ## (5) Data arrays which are provided neither in DCH nor in DBR files
 # B: Full total bulk composition (vector b), moles [nIC] (will be partially re-written from DBR files)
 <B>
-0.1 1.00000002413381 113.316746705914 2 59.8103733770907 1 0 
+0.000164002 0.040452 27.7541866644116 0.2 14.0049913352058 0.0426 0 
 
 # Initial data for DCs - see DATACH file for dimensions nDC, nDCs
 # Pparc: Partial pressures or fugacities of pure Dependent Components [nDC] (reserved)
@@ -267,8 +267,8 @@
 
 # lnGmf: Natural logarithms of DC activity coefficients used at Simplex LP approximation only [nDC]
 <lnGmf>
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 6.90775527898214 0 0 6.90775527898214 0 0 6.90775527898214 0 6.90775527898214 6.90775527898214 0 6.90775527898214 6.90775527898214 6.90775527898214 6.90775527898214 6.90775527898214 
-6.90775527898214 6.90775527898214 0 6.90775527898214 6.90775527898214 6.90775527898214 6.90775527898214 6.90775527898214 0 6.90775527898214 6.90775527898214 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 6.90775527898214 0 6.90775527898214 6.90775527898214 6.90775527898214 6.90775527898214 6.90775527898214 6.90775527898214 6.90775527898214 0 6.90775527898214 6.90775527898214 
+0 6.90775527898214 6.90775527898214 0 6.90775527898214 0 6.90775527898214 6.90775527898214 0 6.90775527898214 6.90775527898214 0 0 0 0 0 0 
 
 # (6) Metastability constraints on DC amounts from above (DUL) and below (DLL)
 # RLC: Code of metastability constraints for DCs {L U B (default)} [nDC]
