@@ -334,7 +334,8 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
                                     // if property present
                                     if (((ph_prop == Qnt) || (ph_prop == pH)  || (ph_prop == pHm)   || (ph_prop == pV)        || (ph_prop == Eh)     ||
                                          (ph_prop == IS)  || (ph_prop == all) || (ph_prop == sArea) || (ph_prop == RHO)       ||
-                                         (ph_prop == Gex) || (ph_prop == pe)  || (ph_prop == oscw)  || (ph_prop == mChainL)   || (ph_prop == Rd) ||
+                                         (ph_prop == Gex) || (ph_prop == pe)  || (ph_prop == oscw)  || (ph_prop == mChainL)   || (ph_prop == Rd)     ||
+                                         (ph_prop == frAlIV)   ||  (ph_prop == frAlV)   ||  (ph_prop == frAlVI)   ||
                                          (ph_prop == UMC) || (ph_prop == LMC)) && (!row[j].empty()))
                                     {
                                         h_phprop = true;
@@ -377,6 +378,7 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
                                         if (((ph_prop == Qnt) || (ph_prop == pH)  || (ph_prop == pHm)    || (ph_prop == pV)      || (ph_prop == Eh)     ||
                                              (ph_prop == IS)  || (ph_prop == all) || (ph_prop == sArea)  || (ph_prop == RHO)     ||
                                              (ph_prop == Gex) || (ph_prop == pe)  || (ph_prop == oscw)   || (ph_prop == mChainL) || (ph_prop == Rd) ||
+                                             (ph_prop == frAlIV)   ||  (ph_prop == frAlV)   ||  (ph_prop == frAlVI)   ||
                                              (ph_prop == UMC) || (ph_prop == LMC)) && (!row[j].empty()))
                                         {
 //                                            if (((ph_prop == pH) || (ph_prop == Eh) || (ph_prop == IS) || (ph_prop == all) || (ph_prop == pe) || (ph_prop == oscw)) /*&& (phase_name != aq)*/)
@@ -451,10 +453,11 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
                                         pos_end   = ph_prop_3.find(f1,pos_end+1);
                                         ph_prop   = ph_prop_3.substr((0),(pos_start));
 
-                                        // qunatity of this IC in the phase
+                                        // quantity of this IC in the phase
                                         if (((ph_prop != Qnt)   && (ph_prop_1 == Qnt)    && (ph_prop_2 == IC) && (ph_prop != pH)    && (ph_prop != pHm)    &&
                                              (ph_prop != pV)    && (ph_prop != Eh)       && (ph_prop != IS)   && (ph_prop != all)   &&
-                                             (ph_prop != sArea) && (ph_prop != RHO)      && (ph_prop != Gex)  && (ph_prop != pe)    && (ph_prop != Rd)    &&
+                                             (ph_prop != sArea) && (ph_prop != RHO)      && (ph_prop != Gex)  && (ph_prop != pe)    && (ph_prop != Rd) &&
+                                             (ph_prop != frAlIV)   &&  (ph_prop != frAlV)   &&  (ph_prop != frAlVI)   &&
                                              (ph_prop != oscw)  && (ph_prop != mChainL)) && (strncmp(ph_prop.c_str(),"DC", 2) != 0) &&
                                              (ph_prop != UMC)   && (ph_prop != LMC)      && (!row[j].empty()))
                                         {
@@ -468,7 +471,7 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
 //                                            cout << strtod(row[j].c_str(), NULL) << endl;
 //                                            cout << atof(row[j].c_str()) << endl;
 
-                                            // checking if there are errors and units included in the CSV and adding tem in the database
+                                            // checking if there are errors and units included in the CSV and adding them in the database
                                             if (j+1 < headline.size())
                                             {
                                                 if ((headline[j+1]==Qerror))

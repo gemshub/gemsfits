@@ -602,13 +602,15 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
     //  computed_value = ;
         // ++++++++++ !!!!! NOT IMPLEMENTED !!!! +++++
     } else
-    if (((objfun.exp_CN == keys::mChainL) || (objfun.exp_CN == keys::Rd)) && (PHndx >=0))
+    if (((objfun.exp_CN == keys::mChainL) ||  (objfun.exp_CN == keys::frAlIV) ||
+         (objfun.exp_CN == keys::frAlV) || (objfun.exp_CN == keys::frAlVI) ||
+         (objfun.exp_CN == keys::Rd)) && (PHndx >=0))
     {
         vector<double> varDbl;
 
         if (objfun.expr == "NULL")
         {
-            cout << "An expression \"expr\" is needed to calculate the Chain Length. " << endl;
+            cout << "An expression \"expr\" is needed to calculate the phase property. " << endl;
             exit(1);
         }
 
