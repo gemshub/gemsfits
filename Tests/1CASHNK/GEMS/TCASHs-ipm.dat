@@ -71,7 +71,7 @@
 <pa_AG>  1
 
 # DGC: Smoothing parameter 2- exponent in smoothing function (-1 to +1) { 0 or 0.001 for adsorption }
-<pa_DGC>  -0.001
+<pa_DGC>  -0.006
 
 # PSM: Level of diagnostic messages { 0- disabled (no ipmlog file); 1- default; 2-including warnings }
 <pa_PSM>  1
