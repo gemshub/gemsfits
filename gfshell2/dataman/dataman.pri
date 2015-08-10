@@ -5,7 +5,8 @@
     dataman/fmodel.h \
     dataman/qwtplot.h \
     dataman/graph.h \
-                    $$KEYS_H/keywords.h
+                    $$KEYS_H/keywords.h \
+    $$PWD/v_yaml.h
 #    dataman/keywords.h
 #                   $$DATAMAN_H/qwtplot.h
 
@@ -19,6 +20,7 @@
     dataman/gemsfit_iobson.cpp \
     dataman/fmodel.cpp \
     dataman/qwtplot.cpp \
-    dataman/graph.cpp
+    dataman/graph.cpp \
+    $$PWD/v_yaml.cpp
 
 

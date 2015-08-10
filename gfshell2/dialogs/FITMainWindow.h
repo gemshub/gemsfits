@@ -64,7 +64,7 @@ class FITMainWindow : public QMainWindow
     QFont	axisLabelFont; // used in graphics
 
     string lastCalcRecordKey;  ///< Last calculated record key
-    auto_ptr<TNode> aNode;
+    shared_ptr<TNode> aNode;
     TNode* node() const
     {
       return aNode.get();
@@ -152,8 +152,8 @@ public slots:
        void CmRestoreCSV();
        void CmBackupTXT();
        void CmRestoreTXT();
-       void CmBackupYAML(){}
-       void CmRestoreYAML(){}
+       void CmBackupYAML();
+       void CmRestoreYAML();
        void CmDeleteList();
        void CmTPpairsCSV();
      //Calc

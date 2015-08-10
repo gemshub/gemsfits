@@ -1,0 +1,70 @@
+//-------------------------------------------------------------------
+// $Id: v_yaml.h  $
+//
+// Declaration of ParserYAML class
+//
+// Copyright (C) 2015  S.V.Dmytriyeva
+// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+//    yaml-cpp (https://code.google.com/p/yaml-cpp/)
+//
+// This file is part of the GEMSFITS GUI, which uses the
+// Qt v.5 cross-platform App & UI framework (http://qt-project.org)
+// under LGPL v.2.1 (http://www.gnu.org/licenses/lgpl-2.1.html)
+//
+// This file may be distributed under the terms of LGPL v.3 license
+//
+// See http://gems.web.psi.ch/GEMSFIT for more information
+// E-mail gems2.support@psi.ch
+//-------------------------------------------------------------------
+
+#ifndef V_YAML_H
+#define V_YAML_H
+
+#include <fstream>
+#include <string>
+#include <vector>
+using namespace std;
+
+#include "ejdb.h"
+#include "yaml-cpp/yaml.h"
+
+class ParserYAML
+{
+    string yamlstr;
+
+    void parseArray( const YAML::Node& doc, bson* brec );
+    void parseScalar(const char* key, const YAML::Node& doc, bson* brec );
+
+public:
+
+    ParserYAML() {}
+
+    virtual ~ParserYAML() {}
+
+    void bson_emitter( YAML::Emitter& out, const char *data, int datatype );
+    void parseObject( const YAML::Node& doc, bson* brec );
+
+    /// Print bson structure to YAML string
+    void printBsonObjectToYAML( string& resStr, const char *b);
+
+    /// Print bson structure to YAML format file
+    void printBsonObjectToYAML(fstream& fout, const char *b);
+
+    /// Read one YAML object from text file and parse to bson structure
+    void parseYAMLToBson( fstream& fin, bson *brec );
+
+    /// Set up internal jsontext before parsing
+    //void  setJsonText( const string& json );
+
+};
+
+#include <iostream>
+template <typename T>
+bool is( T& x, const std::string& s)
+{
+    std::istringstream iss(s);
+    char c;
+    return iss >> x && !iss.ignore();
+}
+
+#endif // V_YAML_H

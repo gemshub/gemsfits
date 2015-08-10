@@ -23,7 +23,7 @@
 #include <fstream>
 #include <vector>
 #ifndef __APPLE__
-#include <auto_ptr.h>   // deprecated
+#include <memory>   // deprecated
 #endif
 
 #include "verror.h"

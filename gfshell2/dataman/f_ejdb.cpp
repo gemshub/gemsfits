@@ -24,7 +24,7 @@
 #include "f_ejdb.h"
 #include "FITMainWindow.h"
 #include "v_user.h"
-//#include "keywords.h"
+#include "v_yaml.h"
 #include "keywords.h"
 
 string replace( string str, const char* old_part, const char* new_part)
@@ -388,6 +388,11 @@ string TEJDataBase::RecFromBson( bson *obj )
     ParserJson pars;
     pars.printBsonObjectToJson( currentJson, obj->data );
 
+    // record to YAML string
+    ParserYAML pars2;
+    pars2.printBsonObjectToYAML( currentYAML, obj->data );
+
+
     // get gems3k name
     if( !bson_find_string( obj->data, keys::G3Ksys[0], currentGems3kName ) )
         if( !bson_find_string( obj->data, keys::G3Ksys[1], currentGems3kName ) )
@@ -436,10 +441,20 @@ const string& TEJDataBase::GetJson()
 
 
 // Set json format string to curent record
-void TEJDataBase::SetJson( const string& sjson)
+void TEJDataBase::SetJson( const string& sjson, bool is_json )
 {
     currentJson = sjson;
 }
+
+
+// Return curent record in yaml format string
+const string& TEJDataBase::GetYAML()
+{
+     return currentYAML;
+}
+
+
+
 
 // Set json format string to curent record
 void TEJDataBase::SetQueryJson( const string& qrjson)

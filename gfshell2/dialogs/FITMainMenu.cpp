@@ -914,6 +914,106 @@ void FITMainWindow::CmRestoreJSON()
 
 }
 
+/// Export Data Records to YAML txt-file
+void FITMainWindow::CmBackupYAML()
+{
+    try
+    {
+       if( !MessageToSave() )
+           return;
+
+       // get current filter
+       string keyFilter = ui->filterEdit->text().toUtf8().data();
+       if( keyFilter.empty() )
+           keyFilter = ALLKEY;
+
+       // select record list to unload
+       vector<string> aKey = vfMultiKeys( this, "Please, mark records to be unloaded to YAML",
+              currentMode, keyFilter.c_str() );
+        if( aKey.size() <1 )
+               return;
+
+       // open file to unloading
+        string fname;
+        TFile  outFile("", ios::out );
+        if( !outFile.ChooseFileSave( this, fname, "Please, give a file name for unloading records","*.yaml" ))
+             return;
+        outFile.Open();
+
+        for(int i=0; i<aKey.size(); i++ )
+        {
+          rtEJ[ currentMode ].Get( aKey[i].c_str() );
+          string valDB =rtEJ[ currentMode ].GetYAML();
+          outFile.ff << valDB;
+          if( i<aKey.size()-1)
+               outFile.ff <<  "\n---";
+          outFile.ff <<  "\n";
+        }
+
+        outFile.Close();
+
+        changeKeyList();
+        contentsChanged = false;
+        setStatusText( "Records exported to YAML txt-file" );
+    }
+    catch( TError& err )
+    {
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
+    }
+}
+
+/// Import Data Records from YAML txt-file
+void FITMainWindow::CmRestoreYAML()
+{
+    try
+    {
+        if( !MessageToSave() )
+          return;
+
+        // open file to unloading
+         string fname;
+         TFile  inFile("", ios::in);
+         if( !inFile.ChooseFileOpen( this, fname, "Please, select file with unloaded records","*.yaml" ))
+              return;
+         inFile.Open();
+
+
+        // read bson records array from file
+        ParserJson parserJson;
+        char b;
+        string objStr;
+
+        while( !inFile.ff.eof() )
+        {
+          inFile.ff.get(b);
+          if( b == jsBeginObject )
+          {
+            objStr =  parserJson.readObjectText(inFile.ff);
+            objStr = "{" + objStr;
+            rtEJ[ currentMode ].SetJson( objStr );
+            if( ui->actionOverwrite->isChecked() )
+               rtEJ[ currentMode ].SaveRecord(0);
+            else
+               rtEJ[ currentMode ].InsertRecord();
+         }
+        }
+
+    //    changeKeyList();
+    //    contentsChanged = false;
+        setStatusText( "Records imported from yaml txt-file" );
+    }
+    catch( TError& err )
+    {
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
+    }
+
+    changeKeyList();
+    contentsChanged = false;
+
+}
+
 /// Import Data Records experements from csv-file
 void FITMainWindow::CmRestoreCSV()
 {

@@ -21,6 +21,7 @@
 #define __v_json_h_
 
 #include <fstream>
+#include <vector>
 #include <string>
 using namespace std;
 #ifdef buildWIN32

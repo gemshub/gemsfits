@@ -13,6 +13,7 @@ DEFINES         += USEBSON
 CONFIG -= warn_on
 CONFIG += warn_off
 CONFIG += thread
+CONFIG += c++11
 QT += network
 QT += sql
 QT += xml
@@ -39,6 +40,7 @@ else {
  QMAKE_CFLAGS += -std=gnu99
 }
 
+
 RESOURCES      = ./fgui.qrc
 
 QWT6_CPP       =  ./QWT
@@ -54,6 +56,7 @@ GEMS3K_H     =  $$GEMS3K_CPP
 KEYS_H       =   $$KEYS_CPP
 
 EJDB_PATH = ../../standalone/EJDB
+YAML_PATH = $$PWD/YAML
 
 win32{
    EJDB_LIB_PATH =  $$EJDB_PATH/build-win32
@@ -61,6 +64,9 @@ win32{
 unix{
    EJDB_LIB_PATH =  $$EJDB_PATH/build
 }
+
+YAML_LIB_PATH =  $$YAML_PATH/build
+YAML_H =  $$YAML_PATH/include
 
 EJDB_BSON_H = $$EJDB_PATH/src/bson
 EJDB_EJDB_H = $$EJDB_PATH/src/ejdb
@@ -84,7 +90,7 @@ INCLUDEPATH   += $$EJDB_BSON_H
 INCLUDEPATH   += $$EJDB_EJDB_H
 INCLUDEPATH   += $$EJDB_GENERATED_H
 INCLUDEPATH   += $$EJDB_TCUTIL_H
-
+INCLUDEPATH   += $$YAML_H
 
 MOC_DIR = tmp
 UI_DIR        = $$MOC_DIR
@@ -97,5 +103,9 @@ include($$QWT6_CPP/qwt.pri)
 include($$DATAMAN_CPP/dataman.pri)
 include($$EJDB_PATH/ejdb.pri)
 
+CONFIG(release, debug|release): LIBS += -L$$YAML_LIB_PATH/release/ -lyaml-cpp
+CONFIG(debug, debug|release): LIBS += -L$$YAML_LIB_PATH/debug/ -lyaml-cpp
+
 CONFIG(release, debug|release): LIBS += -L$$EJDB_LIB_PATH/release/src/ -lejdb
 CONFIG(debug, debug|release): LIBS += -L$$EJDB_LIB_PATH/debug/src/ -lejdb
+

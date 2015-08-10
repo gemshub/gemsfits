@@ -1,4 +1,4 @@
-//-------------------------------------------------------------------
+                                                                                                                          //-------------------------------------------------------------------
 // $Id: f_ejdb.h 333 2014-03-13 13:23:32Z gemsfits $
 //
 // Declaration of TEJDBKey, TEJDataBase and EJDataBaseList classes
@@ -159,6 +159,7 @@ class TEJDataBase
     time_t crt;
     //bson currentRecord;    ///< last read/save record
     string currentJson;     ///< last read/save record json
+    string currentYAML;     ///< last read/save record YAML
     string currentGems3kName; ///< last read gems3k files name (<SystemFiles>) in record
     string currentSearchJson;     ///< last query for select record json
 
@@ -250,7 +251,9 @@ protected:
     /// Return curent record in json format string
     const string& GetJson();
     /// Set json format string to curent record
-    void SetJson( const string& sjson);
+                                                                              void SetJson( const string& sjson, bool is_json = true);
+    /// Return curent record in YAML format string
+    const string& GetYAML();
     /// Return curent gems3k files name
     const string& GetGems3kName()
     {
