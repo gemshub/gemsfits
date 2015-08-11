@@ -338,9 +338,20 @@ void TEJDataBase::putKeyToBson( bson *obj )
 // Save current record to bson structure
 void TEJDataBase::RecToBson( bson *obj, time_t crtt, const char *pkey )
 {
-    ParserJson pars;
-    pars.setJsonText( currentJson.substr( currentJson.find_first_of('{')+1 ) );
-    pars.parseObject(  obj );
+    if( !currentJson.empty() )
+    { ParserJson pars;
+      pars.setJsonText( currentJson.substr( currentJson.find_first_of('{')+1 ) );
+      pars.parseObject(  obj );
+    }
+      else // yaml
+      {
+        //cout << "!!!!" << endl;
+        //cout << currentYAML.c_str() << endl;
+        YAML::Node doc = YAML::Load( currentYAML );
+        ParserYAML parsyaml;
+        parsyaml.parseObject( doc, obj );
+      }
+
     // added Modify time
     // bson_append_time_t( obj , "mtime", crtt );
 
@@ -392,7 +403,6 @@ string TEJDataBase::RecFromBson( bson *obj )
     ParserYAML pars2;
     pars2.printBsonObjectToYAML( currentYAML, obj->data );
 
-
     // get gems3k name
     if( !bson_find_string( obj->data, keys::G3Ksys[0], currentGems3kName ) )
         if( !bson_find_string( obj->data, keys::G3Ksys[1], currentGems3kName ) )
@@ -443,7 +453,15 @@ const string& TEJDataBase::GetJson()
 // Set json format string to curent record
 void TEJDataBase::SetJson( const string& sjson, bool is_json )
 {
-    currentJson = sjson;
+    if( is_json )
+    { currentJson = sjson;
+      currentYAML = "";
+    }
+    else
+    { currentYAML = sjson;
+      currentJson = "";
+    }
+
 }
 
 

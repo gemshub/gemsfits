@@ -25,7 +25,7 @@
 #include "PreferencesDialog.h"
 #include "DBKeyDialog.h"
 #include "f_ejdb.h"
-//#include "keywords.h"
+#include "v_yaml.h"
 #include "keywords.h"
 #include "sstream"
 
@@ -947,7 +947,7 @@ void FITMainWindow::CmBackupYAML()
           outFile.ff << valDB;
           if( i<aKey.size()-1)
                outFile.ff <<  "\n---";
-          outFile.ff <<  "\n";
+          //outFile.ff <<  "\n";
         }
 
         outFile.Close();
@@ -978,29 +978,40 @@ void FITMainWindow::CmRestoreYAML()
               return;
          inFile.Open();
 
+        vector<YAML::Node > docs;
+        //ParserYAML yaml;
+        //bson obj;
 
         // read bson records array from file
-        ParserJson parserJson;
-        char b;
-        string objStr;
+        try{
+              docs = YAML::LoadAll( inFile.ff );
+              for(int ii=0; ii < docs.size(); ii++ )
+              {
+                  // convert Tag to bson
+                  //bson_init(&obj);
+                  //yaml.parseObject( docs[ii], &obj );
+                  //bson_finish(&obj);
 
-        while( !inFile.ff.eof() )
-        {
-          inFile.ff.get(b);
-          if( b == jsBeginObject )
-          {
-            objStr =  parserJson.readObjectText(inFile.ff);
-            objStr = "{" + objStr;
-            rtEJ[ currentMode ].SetJson( objStr );
-            if( ui->actionOverwrite->isChecked() )
-               rtEJ[ currentMode ].SaveRecord(0);
-            else
-               rtEJ[ currentMode ].InsertRecord();
-         }
-        }
+                  //string bsonVal;
+                  //yaml.printBsonObjectToYAML(bsonVal, obj.data);
+                  //cout << bsonVal << "\n---" << endl;
 
-    //    changeKeyList();
-    //    contentsChanged = false;
+                  stringstream buf;
+                  buf << docs[ii];
+                  rtEJ[ currentMode ].SetJson( buf.str() /*bsonVal*/, false );
+                  if( ui->actionOverwrite->isChecked() )
+                     rtEJ[ currentMode ].SaveRecord(0);
+                  else
+                     rtEJ[ currentMode ].InsertRecord();
+
+                  //bson_destroy( &obj );
+                 }
+           }
+           catch(YAML::Exception& e) {
+               cout << "parseYAMLToBson " << e.what() << endl;
+               Error( "parseYAMLToBson",  e.what() );
+           }
+
         setStatusText( "Records imported from yaml txt-file" );
     }
     catch( TError& err )
