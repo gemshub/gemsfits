@@ -233,9 +233,8 @@ void ParserYAML::parseArray( const Node& doc, bson* brec )
     }
 }
 
-void ParserYAML::parseScalar(const char* key, const Node& doc, bson* brec )
+void addScalar(const char* key, const string& value, bson* brec )
 {
-    string value = doc.as<std::string>();
     int ival = 0;
     double dval=0.;
 
@@ -259,3 +258,124 @@ void ParserYAML::parseScalar(const char* key, const Node& doc, bson* brec )
          else
             bson_append_string( brec, key, value.c_str() );
 }
+
+void ParserYAML::parseScalar(const char* key, const Node& doc, bson* brec )
+{
+    string value = doc.as<std::string>();
+    addScalar( key, value, brec );
+}
+
+
+// BsonHandler------------------------------------------------
+
+string BsonHandler::to_string()
+{
+  string yamlstr;
+  ParserYAML pars;
+  pars.printBsonObjectToYAML( yamlstr, m_bson->data);
+  return yamlstr;
+}
+
+//struct Mark;
+
+BsonHandler::BsonHandler(bson* bobj) : m_bson(bobj) {}
+
+void BsonHandler::OnDocumentStart(const Mark&) {}
+
+void BsonHandler::OnDocumentEnd() {}
+
+void BsonHandler::OnNull(const Mark&, anchor_t anchor)
+{
+  assert(m_stateStack.top().state == WaitingForValue );
+  bson_append_null( m_bson, m_stateStack.top().key.c_str() );
+  BeginNode();
+}
+
+void BsonHandler::OnAlias(const Mark&, anchor_t anchor) {}
+
+void BsonHandler::OnScalar(const Mark&, const std::string& tag,
+                              anchor_t anchor, const std::string& value)
+{
+   switch (m_stateStack.top().state)
+   {
+     case WaitingForSequenceEntry:
+        { string key = std::to_string(m_stateStack.top().ndx++);
+          addScalar( key.c_str(), value, m_bson );
+          break;
+        }
+     case WaitingForKey:
+        m_stateStack.top().key = value;
+        m_stateStack.top().state = WaitingForValue;
+        break;
+     case WaitingForValue:
+        string key =  m_stateStack.top().key;
+        addScalar( key.c_str(), value, m_bson );
+        m_stateStack.top().key = "";
+        m_stateStack.top().state = WaitingForKey;
+        break;
+    }
+}
+
+void BsonHandler::OnSequenceStart(const Mark&, const std::string& tag,
+            anchor_t anchor, EmitterStyle::value style)
+{
+  if (!m_stateStack.empty())
+  {
+     string key;
+     if( m_stateStack.top().state == WaitingForSequenceEntry )
+        key = std::to_string(m_stateStack.top().ndx++);
+     else
+        key =  m_stateStack.top().key;
+     bson_append_start_array( m_bson, key.c_str() );
+  }
+  BeginNode();
+  m_stateStack.push(State(WaitingForSequenceEntry));
+}
+
+void BsonHandler::OnSequenceEnd()
+{
+  bson_append_finish_array(m_bson);
+  assert(m_stateStack.top().state == WaitingForSequenceEntry );
+  m_stateStack.pop();
+}
+
+void BsonHandler::OnMapStart(const Mark&, const std::string& tag,
+                                anchor_t anchor, EmitterStyle::value style)
+{
+  if (!m_stateStack.empty() )
+  {
+    string key;
+    if( m_stateStack.top().state == WaitingForSequenceEntry )
+      key = std::to_string(m_stateStack.top().ndx++);
+    else
+      key =  m_stateStack.top().key;
+    bson_append_start_object( m_bson, key.c_str() );
+  }
+  BeginNode();
+  m_stateStack.push(State(WaitingForKey));
+}
+
+void BsonHandler::OnMapEnd() {
+  bson_append_finish_object(m_bson);
+  //assert(m_stateStack.top().state == WaitingForKey);
+  m_stateStack.pop();
+}
+
+void BsonHandler::BeginNode()
+{
+  if (m_stateStack.empty())
+    return;
+
+  switch (m_stateStack.top().state) {
+    case WaitingForKey:
+      m_stateStack.top().state = WaitingForValue;
+      break;
+    case WaitingForValue:
+      m_stateStack.top().state = WaitingForKey;
+      break;
+    default:
+      break;
+  }
+}
+
+

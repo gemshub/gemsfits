@@ -28,6 +28,8 @@
 #include "v_yaml.h"
 #include "keywords.h"
 #include "sstream"
+#include "nodebuilder.h"
+#include "yaml-cpp/emitfromevents.h"
 
 // -----------------------------------------------------------
 // Actions and commands
@@ -978,34 +980,24 @@ void FITMainWindow::CmRestoreYAML()
               return;
          inFile.Open();
 
-        vector<YAML::Node > docs;
-        //ParserYAML yaml;
-        //bson obj;
-
         // read bson records array from file
         try{
-              docs = YAML::LoadAll( inFile.ff );
-              for(int ii=0; ii < docs.size(); ii++ )
-              {
-                  // convert Tag to bson
-                  //bson_init(&obj);
-                  //yaml.parseObject( docs[ii], &obj );
-                  //bson_finish(&obj);
-
-                  //string bsonVal;
-                  //yaml.printBsonObjectToYAML(bsonVal, obj.data);
-                  //cout << bsonVal << "\n---" << endl;
-
-                  stringstream buf;
-                  buf << docs[ii];
-                  rtEJ[ currentMode ].SetJson( buf.str() /*bsonVal*/, false );
-                  if( ui->actionOverwrite->isChecked() )
-                     rtEJ[ currentMode ].SaveRecord(0);
-                  else
-                     rtEJ[ currentMode ].InsertRecord();
-
-                  //bson_destroy( &obj );
-                 }
+            YAML::Parser parser(inFile.ff);
+            while (1)
+            {
+              //YAML::NodeBuilder builder;
+              YAML::Emitter emt;
+              YAML::EmitFromEvents builder(emt);
+              if (!parser.HandleNextDocument(builder))
+                break;
+              string bsonVal = emt.c_str();
+              //cout << bsonVal.c_str() << "\n---" << endl;
+              rtEJ[ currentMode ].SetJson( bsonVal, false );
+              if( ui->actionOverwrite->isChecked() )
+                 rtEJ[ currentMode ].SaveRecord(0);
+              else
+                 rtEJ[ currentMode ].InsertRecord();
+            }
            }
            catch(YAML::Exception& e) {
                cout << "parseYAMLToBson " << e.what() << endl;

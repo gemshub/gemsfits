@@ -26,6 +26,7 @@
 #include "v_user.h"
 #include "v_yaml.h"
 #include "keywords.h"
+#include "yaml-cpp/emitfromevents.h"
 
 string replace( string str, const char* old_part, const char* new_part)
 {
@@ -345,12 +346,18 @@ void TEJDataBase::RecToBson( bson *obj, time_t crtt, const char *pkey )
     }
       else // yaml
       {
-        //cout << "!!!!" << endl;
-        //cout << currentYAML.c_str() << endl;
-        YAML::Node doc = YAML::Load( currentYAML );
-        ParserYAML parsyaml;
-        parsyaml.parseObject( doc, obj );
-      }
+       try{
+           stringstream stream(currentYAML);
+           YAML::Parser parser(stream);
+           BsonHandler builder(obj);
+           parser.HandleNextDocument(builder);
+           //cout << builder.to_string() << endl;
+         }
+         catch(YAML::Exception& e) {
+            cout << "parseYAMLToBson " << e.what() << endl;
+            Error( "parseYAMLToBson",  e.what() );
+         }
+       }
 
     // added Modify time
     // bson_append_time_t( obj , "mtime", crtt );

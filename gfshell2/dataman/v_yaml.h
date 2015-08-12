@@ -23,10 +23,12 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <stack>
 using namespace std;
 
 #include "ejdb.h"
 #include "yaml-cpp/yaml.h"
+#include "yaml-cpp/eventhandler.h"
 
 class ParserYAML
 {
@@ -56,6 +58,54 @@ public:
     /// Set up internal jsontext before parsing
     //void  setJsonText( const string& json );
 
+};
+
+class BsonHandler: public YAML::EventHandler
+{
+
+ public:
+
+  string to_string();
+
+  BsonHandler(bson* bobj);
+
+  virtual void OnDocumentStart(const YAML::Mark& mark);
+  virtual void OnDocumentEnd();
+
+  virtual void OnNull(const YAML::Mark& mark, YAML::anchor_t anchor);
+  virtual void OnAlias(const YAML::Mark& mark, YAML::anchor_t anchor);
+  virtual void OnScalar(const YAML::Mark& mark, const std::string& tag,
+                        YAML::anchor_t anchor, const std::string& value);
+
+  virtual void OnSequenceStart(const YAML::Mark& mark, const std::string& tag,
+                               YAML::anchor_t anchor, YAML::EmitterStyle::value style);
+  virtual void OnSequenceEnd();
+
+  virtual void OnMapStart(const YAML::Mark& mark, const std::string& tag,
+                          YAML::anchor_t anchor, YAML::EmitterStyle::value style);
+  virtual void OnMapEnd();
+
+ private:
+
+  void BeginNode();
+  void EmitProps(const std::string& tag, YAML::anchor_t anchor);
+
+ private:
+  bson* m_bson;
+
+  enum   STATE_ { WaitingForSequenceEntry, WaitingForKey, WaitingForValue, };
+
+  struct State {
+    string key;
+    int    ndx;
+    STATE_ state;
+
+    State( STATE_ st):
+        key(""),ndx(0),state(st)
+    {}
+  };
+
+  std::stack<State> m_stateStack;
 };
 
 #include <iostream>
