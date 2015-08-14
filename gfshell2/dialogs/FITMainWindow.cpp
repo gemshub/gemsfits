@@ -67,6 +67,7 @@ void FITMainWindow::getDataFromPreferences()
   LocalDocDir =  mainSettings->value("HelpFolderPath", "../Resources/help").toString().toUtf8().data();
   UserDir = mainSettings->value("UserFolderPath", ".").toString().toUtf8().data();
   KeysLength = mainSettings->value("PrintComments", true).toBool();
+  JsonDataShow = !mainSettings->value("ViewinYAMLFormat", true).toBool();
 
   QString program = mainSettings->value("Gemsfit2ProgramPath", "gemsfit2").toString();
   fitProcess->setProgram( program );
@@ -525,7 +526,7 @@ int FITMainWindow::defineModuleKeysList( int nRT )
 /// Save record structure to Data Base
 void FITMainWindow::RecSave( const string& recBsonText, const char* key )
 {
-    rtEJ[ currentMode ].SetJson( recBsonText );
+    rtEJ[ currentMode ].SetJson( recBsonText, JsonDataShow );
     rtEJ[ currentMode ].SaveRecord( key );
     //defineModuleKeysList( currentMode ); //?? need change key list if new record
     contentsChanged = false;
@@ -577,7 +578,7 @@ string FITMainWindow::makeSystemFileName( const string& path  )
 }
 
 /// Change <SystemFiles> or <DataDB> data in edit record
-void FITMainWindow::changeEditeRecord(const string& tagname, const string& newValue)
+void FITMainWindow::changeEditeRecord(const string& tagname, const string& newValue, bool is_json )
 {
    // get value string
    string valueStr = ui->recordEdit->toPlainText().toUtf8().data();
@@ -589,9 +590,18 @@ void FITMainWindow::changeEditeRecord(const string& tagname, const string& newVa
    {
        // change value
 //       found += 15;
-       size_t  found1 =  valueStr.find("\"", found3 );
-       size_t  found2 =  valueStr.find("\"", found1+1 );
-       valueStr.replace( found1+1, found2-found1-1, newValue);
+       size_t  found1;
+       size_t  found2;
+       if( is_json )
+       { found1 =  valueStr.find("\"", found3 );
+         found2 =  valueStr.find("\"", found1+1 );
+         valueStr.replace( found1+1, found2-found1-1, newValue);
+       }
+       else
+       { found1 =  valueStr.find_first_not_of(" ", found3+1 );
+         found2 =  valueStr.find("\n", found1 );
+         valueStr.replace( found1, found2-found1, newValue);
+       }
        ui->recordEdit->setText( trUtf8( valueStr.c_str() ));
        contentsChanged = true;
    }
@@ -641,8 +651,10 @@ bool FITMainWindow::createTaskTemplate()
        ejdbPath  += projectSettings->value("ProjDatabasePath", "/EJDB").toString().toUtf8().data();
        ejdbPath  += "/";
        ejdbPath  += projectSettings->value("ProjDatabaseName", "myprojdb1" ).toString().toUtf8().data();
-       changeEditeRecord( keys::DBPath[0] , ejdbPath); changeEditeRecord( keys::DBPath[1] , ejdbPath);
-       changeEditeRecord( keys::DBColl[0], rtEJ[ MDF_DATABASE ].GetKeywd()); changeEditeRecord( keys::DBColl[1], rtEJ[ MDF_DATABASE ].GetKeywd());
+       changeEditeRecord( keys::DBPath[0] , ejdbPath, true);
+       changeEditeRecord( keys::DBPath[1] , ejdbPath, true );
+       changeEditeRecord( keys::DBColl[0], rtEJ[ MDF_DATABASE ].GetKeywd(), true);
+       changeEditeRecord( keys::DBColl[1], rtEJ[ MDF_DATABASE ].GetKeywd(), true);
     }
     return ret;
 }

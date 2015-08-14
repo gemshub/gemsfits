@@ -23,7 +23,54 @@
 #include "v_yaml.h"
 using namespace YAML;
 
-void ParserYAML::printBsonObjectToYAML(fstream& fout, const char *b)
+void addScalar(const char* key, const string& value, bson* brec )
+{
+    int ival = 0;
+    double dval=0.;
+
+    if( value == "~" )
+       bson_append_null(brec, key  );
+    else
+     if( value == "null" )
+         bson_append_null(brec, key );
+     else
+      if( value == "true" )
+        bson_append_bool(brec, key, true );
+      else
+       if( value == "false" )
+            bson_append_bool(brec, key, false );
+       else
+        if( is<int>( ival, value.c_str()) )
+           bson_append_int( brec, key, ival );
+        else
+         if( is<double>( dval, value.c_str()))
+              bson_append_double( brec, key, dval );
+         else
+            bson_append_string( brec, key, value.c_str() );
+}
+
+string Json2YAML( const string& jsonData )
+{
+  string YamlData;
+  bson bobj;
+
+  //json to bson
+  bson_init( &bobj );
+  ParserJson pars;
+  pars.setJsonText( jsonData.substr( jsonData.find_first_of('{')+1 ) );
+  pars.parseObject( &bobj );
+  bson_finish( &bobj );
+
+  // bson  to YAML string
+  ParserYAML::printBsonObjectToYAML( YamlData, bobj.data );
+  bson_destroy(&bobj);
+
+  return YamlData;
+}
+
+namespace ParserYAML{
+
+void printBsonObjectToYAML(fstream& fout, const char *b)
 {
     Emitter out;
     out << BeginMap;
@@ -32,7 +79,7 @@ void ParserYAML::printBsonObjectToYAML(fstream& fout, const char *b)
     fout << out.c_str();
 }
 
-void ParserYAML::printBsonObjectToYAML(string& fout, const char *b)
+void printBsonObjectToYAML(string& fout, const char *b)
 {
     Emitter out;
     out << BeginMap;
@@ -42,7 +89,7 @@ void ParserYAML::printBsonObjectToYAML(string& fout, const char *b)
 }
 
 /// Read one YAML object from text file and parse to bson structure
-void ParserYAML::parseYAMLToBson( fstream& fin, bson *brec )
+void parseYAMLToBson( fstream& fin, bson *brec )
 {
     Node doc;
 
@@ -60,7 +107,23 @@ void ParserYAML::parseYAMLToBson( fstream& fin, bson *brec )
     }
 }
 
-void ParserYAML::bson_emitter( Emitter& out, const char *data, int datatype )
+/// Parse one YAML object from string to bson structure
+void parseYAMLToBson( const string& currentYAML, bson *obj )
+{
+ try{
+     stringstream stream(currentYAML);
+     YAML::Parser parser(stream);
+     BsonHandler builder(obj);
+     parser.HandleNextDocument(builder);
+     //cout << builder.to_string() << endl;
+   }
+   catch(YAML::Exception& e) {
+      cout << "parseYAMLToBson " << e.what() << endl;
+      Error( "parseYAMLToBson",  e.what() );
+   }
+ }
+
+void bson_emitter( Emitter& out, const char *data, int datatype )
 {
     bson_iterator i;
     const char *key;
@@ -164,7 +227,7 @@ void ParserYAML::bson_emitter( Emitter& out, const char *data, int datatype )
     }
 }
 
-void ParserYAML::parseObject( const Node& doc, bson* brec )
+void parseObject( const Node& doc, bson* brec )
 {
     string key;
     int type;
@@ -198,7 +261,7 @@ void ParserYAML::parseObject( const Node& doc, bson* brec )
    }
 }
 
-void ParserYAML::parseArray( const Node& doc, bson* brec )
+void parseArray( const Node& doc, bson* brec )
 {
     int ii = 0;
     string key;
@@ -233,46 +296,20 @@ void ParserYAML::parseArray( const Node& doc, bson* brec )
     }
 }
 
-void addScalar(const char* key, const string& value, bson* brec )
-{
-    int ival = 0;
-    double dval=0.;
-
-    if( value == "~" )
-       bson_append_null(brec, key  );
-    else
-     if( value == "null" )
-         bson_append_null(brec, key );
-     else
-      if( value == "true" )
-        bson_append_bool(brec, key, true );
-      else
-       if( value == "false" )
-            bson_append_bool(brec, key, false );
-       else
-        if( is<int>( ival, value.c_str()) )
-           bson_append_int( brec, key, ival );
-        else
-         if( is<double>( dval, value.c_str()))
-              bson_append_double( brec, key, dval );
-         else
-            bson_append_string( brec, key, value.c_str() );
-}
-
-void ParserYAML::parseScalar(const char* key, const Node& doc, bson* brec )
+void parseScalar(const char* key, const Node& doc, bson* brec )
 {
     string value = doc.as<std::string>();
     addScalar( key, value, brec );
 }
 
+};
 
 // BsonHandler------------------------------------------------
 
 string BsonHandler::to_string()
 {
   string yamlstr;
-  ParserYAML pars;
-  pars.printBsonObjectToYAML( yamlstr, m_bson->data);
+  ParserYAML::printBsonObjectToYAML( yamlstr, m_bson->data);
   return yamlstr;
 }
 
@@ -334,9 +371,10 @@ void BsonHandler::OnSequenceStart(const Mark&, const std::string& tag,
 
 void BsonHandler::OnSequenceEnd()
 {
-  bson_append_finish_array(m_bson);
   assert(m_stateStack.top().state == WaitingForSequenceEntry );
   m_stateStack.pop();
+  if (!m_stateStack.empty())
+   bson_append_finish_array(m_bson);
 }
 
 void BsonHandler::OnMapStart(const Mark&, const std::string& tag,
@@ -356,9 +394,10 @@ void BsonHandler::OnMapStart(const Mark&, const std::string& tag,
 }
 
 void BsonHandler::OnMapEnd() {
+ m_stateStack.pop();
+ if (!m_stateStack.empty() )
   bson_append_finish_object(m_bson);
   //assert(m_stateStack.top().state == WaitingForKey);
-  m_stateStack.pop();
 }
 
 void BsonHandler::BeginNode()

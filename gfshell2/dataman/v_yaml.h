@@ -30,21 +30,13 @@ using namespace std;
 #include "yaml-cpp/yaml.h"
 #include "yaml-cpp/eventhandler.h"
 
-class ParserYAML
+namespace ParserYAML
 {
-    string yamlstr;
-
     void parseArray( const YAML::Node& doc, bson* brec );
     void parseScalar(const char* key, const YAML::Node& doc, bson* brec );
-
-public:
-
-    ParserYAML() {}
-
-    virtual ~ParserYAML() {}
+    void parseObject( const YAML::Node& doc, bson* brec );
 
     void bson_emitter( YAML::Emitter& out, const char *data, int datatype );
-    void parseObject( const YAML::Node& doc, bson* brec );
 
     /// Print bson structure to YAML string
     void printBsonObjectToYAML( string& resStr, const char *b);
@@ -55,10 +47,11 @@ public:
     /// Read one YAML object from text file and parse to bson structure
     void parseYAMLToBson( fstream& fin, bson *brec );
 
-    /// Set up internal jsontext before parsing
-    //void  setJsonText( const string& json );
+    /// Parse one YAML object from string to bson structure
+    void parseYAMLToBson( const string& currentYAML, bson *obj );
 
 };
+
 
 class BsonHandler: public YAML::EventHandler
 {
@@ -107,6 +100,8 @@ class BsonHandler: public YAML::EventHandler
 
   std::stack<State> m_stateStack;
 };
+
+string Json2YAML( const string& jsonData );
 
 #include <iostream>
 template <typename T>

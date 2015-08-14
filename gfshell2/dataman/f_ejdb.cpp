@@ -346,18 +346,8 @@ void TEJDataBase::RecToBson( bson *obj, time_t crtt, const char *pkey )
     }
       else // yaml
       {
-       try{
-           stringstream stream(currentYAML);
-           YAML::Parser parser(stream);
-           BsonHandler builder(obj);
-           parser.HandleNextDocument(builder);
-           //cout << builder.to_string() << endl;
-         }
-         catch(YAML::Exception& e) {
-            cout << "parseYAMLToBson " << e.what() << endl;
-            Error( "parseYAMLToBson",  e.what() );
-         }
-       }
+        ParserYAML::parseYAMLToBson( currentYAML, obj );
+      }
 
     // added Modify time
     // bson_append_time_t( obj , "mtime", crtt );
@@ -407,8 +397,7 @@ string TEJDataBase::RecFromBson( bson *obj )
     pars.printBsonObjectToJson( currentJson, obj->data );
 
     // record to YAML string
-    ParserYAML pars2;
-    pars2.printBsonObjectToYAML( currentYAML, obj->data );
+    ParserYAML::printBsonObjectToYAML( currentYAML, obj->data );
 
     // get gems3k name
     if( !bson_find_string( obj->data, keys::G3Ksys[0], currentGems3kName ) )
@@ -421,7 +410,7 @@ string TEJDataBase::RecFromBson( bson *obj )
 }
 
 // Test text is good bson structure
-void TEJDataBase::TestBson( const string& recjson )
+void TEJDataBase::TestBsonJson( const string& recjson )
 {
     ParserJson pars;
     pars.setJsonText( recjson.substr( recjson.find_first_of('{')+1 ) );
@@ -433,6 +422,15 @@ void TEJDataBase::TestBson( const string& recjson )
     bson_destroy( &obj );
 }
 
+// Test text is good yaml(bson) structure
+void TEJDataBase::TestBsonYAML( const string& recjson )
+{
+    bson obj;
+    bson_init( &obj );
+    ParserYAML::parseYAMLToBson( recjson, &obj );
+    bson_finish( &obj );
+    bson_destroy( &obj );
+}
 
 //Seach record index with key pkey.
 bool TEJDataBase::Find( const char *pkey )

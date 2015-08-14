@@ -54,7 +54,9 @@ class FITMainWindow : public QMainWindow
     string SysFITDir;   ///< Path to resources directory
     string LocalDocDir; ///< Path to help directory
     string UserDir;     ///< Path to User directory
+
     bool KeysLength;   ///< Write TXT files with comments
+    bool JsonDataShow;   ///< Write edited data in Json format
     QString ExpTemplate; ///< Current template for experiments record
     QString SrchTemplate; ///< Current template for experiments search
 
@@ -82,7 +84,7 @@ class FITMainWindow : public QMainWindow
     bool MessageToSave();
     void RecSave( const string& recBsonText, const char* key=0 );
     void RecDelete( const char* key );
-    void changeEditeRecord(const string& tagname, const string& newValue);
+    void changeEditeRecord(const string& tagname, const string& newValue, bool is_json );
     bool runProcess( const QStringList& cParameters, const QString& workDir );
     void selectGEMS(const string& fname_ );
     string makeSystemFileName(const string& path );

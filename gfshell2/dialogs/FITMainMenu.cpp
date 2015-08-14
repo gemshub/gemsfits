@@ -230,7 +230,8 @@ void FITMainWindow::CmSelectGEMS( const string& fname_ )
 
        // make new path string
        string newPath = makeSystemFileName("..");
-       changeEditeRecord( keys::G3Ksys[0] ,newPath); changeEditeRecord( keys::G3Ksys[1] ,newPath);
+       changeEditeRecord( keys::G3Ksys[0] ,newPath, JsonDataShow);
+       changeEditeRecord( keys::G3Ksys[1] ,newPath, JsonDataShow);
 //       changeEditeRecord( "SystemFiles", newPath);
 
        setStatusText( "GEMS3K input file set is selected" );
@@ -378,7 +379,12 @@ void FITMainWindow::CmShow( const string& reckey )
        }
        else  str = string(reckey);
       rtEJ[ currentMode ].Get( str.c_str() );
-      string valDB =rtEJ[ currentMode ].GetJson();
+      string valDB;
+      if( JsonDataShow )
+        valDB =rtEJ[ currentMode ].GetJson();
+      else
+        valDB =rtEJ[ currentMode ].GetYAML();
+
       ui->recordEdit->setText( trUtf8(valDB.c_str()));
       contentsChanged = false;
 
@@ -429,8 +435,14 @@ void FITMainWindow::CmUpdateTest()
   try
     {
       string recBson = ui->recordEdit->toPlainText().toUtf8().data();
-      rtEJ[ currentMode ].TestBson( recBson );
-      setStatusText( "Text in the editor is in valid JSON format" );
+
+      if( JsonDataShow )
+      { rtEJ[ currentMode ].TestBsonJson( recBson );
+        setStatusText( "Text in the editor is in valid JSON format" );
+      }
+      else { rtEJ[ currentMode ].TestBsonYAML( recBson );
+             setStatusText( "Text in the editor is in valid YAML format" );
+           }
     }
     catch( TError& err )
          {
@@ -462,7 +474,7 @@ void FITMainWindow::CmInsert()
     try
     {
         string recBsonText = ui->recordEdit->toPlainText().toUtf8().data();
-        rtEJ[ currentMode ].SetJson( recBsonText );
+        rtEJ[ currentMode ].SetJson( recBsonText,  JsonDataShow );
         rtEJ[ currentMode ].InsertRecord();
         changeKeyList(); // need change key list insert new record
         contentsChanged = false;
@@ -506,6 +518,13 @@ void FITMainWindow::CmCreate()
           createTaskTemplate();
         else
           ui->recordEdit->setText( ExpTemplate );
+
+        if( !JsonDataShow )
+        {    string valDB = ui->recordEdit->toPlainText().toUtf8().data();
+             valDB = Json2YAML( valDB );
+             ui->recordEdit->setText( trUtf8(valDB.c_str()));
+         }
+
         contentsChanged = false;
     }
     catch( TError& err )
@@ -521,7 +540,7 @@ void FITMainWindow::CmCreate()
 */
 
 
-/// Create new record
+/// filtered records
 void FITMainWindow::CmSearch()
 {
     try
@@ -638,9 +657,13 @@ void FITMainWindow::CmInsertSearch()
             ParserJson pars;
 
             string recBsonText = ui->recordEdit->toPlainText().toUtf8().data();
-            pars.setJsonText( recBsonText.substr( recBsonText.find_first_of('{')+1 ) );
+
             bson_init( &bsrec );
-            pars.parseObject(  &bsrec );
+            if( JsonDataShow )
+            { pars.setJsonText( recBsonText.substr( recBsonText.find_first_of('{')+1 ) );
+              pars.parseObject(  &bsrec );
+            } else
+                ParserYAML::parseYAMLToBson( recBsonText, &bsrec );
             bson_finish( &bsrec );
 
             pars.setJsonText( samplelist  );
@@ -652,8 +675,10 @@ void FITMainWindow::CmInsertSearch()
             bson_merge( &bsrec,&inprec, true, &out );
             bson_finish( &out );
 
-            pars.printBsonObjectToJson( recBsonText, out.data );
-
+            if( JsonDataShow )
+              pars.printBsonObjectToJson( recBsonText, out.data );
+            else
+              ParserYAML::printBsonObjectToYAML( recBsonText, out.data );
             //show result
             ui->recordEdit->setText( trUtf8(recBsonText.c_str()));
 
@@ -696,10 +721,14 @@ void FITMainWindow::CmRunTest()
        // Load curent record to bson structure
        bson bsrec;
        string recBsonText = ui->recordEdit->toPlainText().toUtf8().data();
-       ParserJson pars;
-       pars.setJsonText( recBsonText.substr( recBsonText.find_first_of('{')+1 ) );
+
        bson_init( &bsrec );
-       pars.parseObject(  &bsrec );
+       if( JsonDataShow )
+       { ParserJson pars;
+         pars.setJsonText( recBsonText.substr( recBsonText.find_first_of('{')+1 ) );
+         pars.parseObject(  &bsrec );
+       } else
+           ParserYAML::parseYAMLToBson( recBsonText, &bsrec );
        bson_finish( &bsrec );
 
        //test current key
@@ -719,6 +748,8 @@ void FITMainWindow::CmRunTest()
 
         // save txt data
         fstream ff(fname.c_str(), ios::out );
+        if( !JsonDataShow ) // for run we need json format file
+          ParserYAML::printBsonObjectToYAML(recBsonText, bsrec.data );
         ff << recBsonText;
         ff.close();
 //        generateTxtfromBson( fname, &bsrec, useComments );
@@ -730,7 +761,6 @@ void FITMainWindow::CmRunTest()
         ss << KeysLength;
         string sss = ss.str();
         ss.str("");
-
 
         QStringList cParameters;
         cParameters << "-run" << sss.c_str() << fpath.c_str();
@@ -757,7 +787,6 @@ void FITMainWindow::CmCancelGemsfit()
 {
     try
     {
-
         fitProcess->kill();
         //ui->action_Run_test->setEnabled(false);
         //ui->action_Show_Results->setEnabled(false);
@@ -893,7 +922,7 @@ void FITMainWindow::CmRestoreJSON()
           {
             objStr =  parserJson.readObjectText(inFile.ff);
             objStr = "{" + objStr;
-            rtEJ[ currentMode ].SetJson( objStr );
+            rtEJ[ currentMode ].SetJson( objStr, true );
             if( ui->actionOverwrite->isChecked() )
                rtEJ[ currentMode ].SaveRecord(0);
             else
@@ -1075,7 +1104,7 @@ void FITMainWindow::CmRestoreCSV()
           // cout << bsonVal.c_str() << endl;
 
           //save results to EJDB
-          rtEJ[ currentMode ].SetJson( bsonVal );
+          rtEJ[ currentMode ].SetJson( bsonVal, true );
           if( ui->actionOverwrite->isChecked() )
              rtEJ[ currentMode ].SaveRecord(0);
           else
@@ -1114,10 +1143,14 @@ void FITMainWindow::CmBackupTXT()
        // Load curent record to bson structure
        bson bsrec;
        string recBsonText = ui->recordEdit->toPlainText().toUtf8().data();
-       ParserJson pars;
-       pars.setJsonText( recBsonText.substr( recBsonText.find_first_of('{')+1 ) );
+
        bson_init( &bsrec );
-       pars.parseObject(  &bsrec );
+       if( JsonDataShow )
+       { ParserJson pars;
+         pars.setJsonText( recBsonText.substr( recBsonText.find_first_of('{')+1 ) );
+         pars.parseObject(  &bsrec );
+       } else
+           ParserYAML::parseYAMLToBson( recBsonText, &bsrec );
        bson_finish( &bsrec );
 
        // open file to unloading
@@ -1128,6 +1161,8 @@ void FITMainWindow::CmBackupTXT()
 
         // save txt data
         fstream ff(fname.c_str(), ios::out );
+        if( !JsonDataShow ) // for run we need json format file
+          ParserYAML::printBsonObjectToYAML(recBsonText, bsrec.data );
         ff << recBsonText;
         ff.close();
 //        generateTxtfromBson( fname, &bsrec, useComments );
@@ -1162,6 +1197,12 @@ void FITMainWindow::CmRestoreTXT()
               return;
 
         readTXT( inFile );
+        if( !JsonDataShow )
+        {    string valDB = ui->recordEdit->toPlainText().toUtf8().data();
+             valDB = Json2YAML( valDB );
+             ui->recordEdit->setText( trUtf8(valDB.c_str()));
+         }
+
         changeKeyList();
         contentsChanged = true;
         setStatusText( "Records imported from json txt-file" );
@@ -1362,13 +1403,19 @@ void FITMainWindow::CmTPpairsCSV()
 void FITMainWindow::CmSettingth()
 {
   try
-  {  // define new project
+  {
+     if( !MessageToSave() )
+            return;
+
+    // define new preferences
      PreferencesDialog dlg(mainSettings);
       if( !dlg.exec() )
           return;
 
     //get data from settings
     getDataFromPreferences();
+    // update key list, editor, filter
+    resetMainWindow();
   }
     catch( TError& err )
     {

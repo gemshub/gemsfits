@@ -244,8 +244,10 @@ protected:
     void RecToBson( bson *obj, time_t crtt, const char *pkey = 0 );
     /// Load data from bson structure (return readed record key)
     string RecFromBson( bson *obj );
-    /// Test text is good bson structure
-    void TestBson( const string& recjson );
+    /// Test text is good json(bson) structure
+    void TestBsonJson( const string& recjson );
+    /// Test text is good yaml(bson) structure
+    void TestBsonYAML( const string& recjson );
 
 
     /// Return curent record in json format string
