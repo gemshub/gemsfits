@@ -749,7 +749,10 @@ void FITMainWindow::CmRunTest()
         // save txt data
         fstream ff(fname.c_str(), ios::out );
         if( !JsonDataShow ) // for run we need json format file
-          ParserYAML::printBsonObjectToYAML(recBsonText, bsrec.data );
+        {
+            ParserJson pars;
+            pars.printBsonObjectToJson( recBsonText, bsrec.data );
+        }
         ff << recBsonText;
         ff.close();
 //        generateTxtfromBson( fname, &bsrec, useComments );
@@ -864,7 +867,11 @@ void FITMainWindow::CmBackupJSON()
                return;
 
        // open file to unloading
-        string fname;
+        string fname =  projectSettings->value("ProjFileName", "undefined").toString().toUtf8().data();
+               fname += ".";
+               fname += rtEJ[ currentMode ].GetKeywd();
+               fname += ".json";
+
         TFile  outFile("", ios::out );
         if( !outFile.ChooseFileSave( this, fname, "Please, give a file name for unloading records","*.json" ))
              return;
@@ -965,7 +972,10 @@ void FITMainWindow::CmBackupYAML()
                return;
 
        // open file to unloading
-        string fname;
+        string fname =  projectSettings->value("ProjFileName", "undefined").toString().toUtf8().data();
+               fname += ".";
+               fname += rtEJ[ currentMode ].GetKeywd();
+               fname += ".yaml";
         TFile  outFile("", ios::out );
         if( !outFile.ChooseFileSave( this, fname, "Please, give a file name for unloading records","*.yaml" ))
              return;
@@ -1162,7 +1172,10 @@ void FITMainWindow::CmBackupTXT()
         // save txt data
         fstream ff(fname.c_str(), ios::out );
         if( !JsonDataShow ) // for run we need json format file
-          ParserYAML::printBsonObjectToYAML(recBsonText, bsrec.data );
+        {
+            ParserJson pars;
+            pars.printBsonObjectToJson( recBsonText, bsrec.data );
+        }
         ff << recBsonText;
         ff.close();
 //        generateTxtfromBson( fname, &bsrec, useComments );

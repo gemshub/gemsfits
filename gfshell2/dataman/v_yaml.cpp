@@ -85,7 +85,8 @@ void printBsonObjectToYAML(string& fout, const char *b)
     out << BeginMap;
     bson_emitter( out, b, BSON_OBJECT);
     out << EndMap;
-    fout = out.c_str();
+    fout = string( out.c_str());
+ //   cout << fout;
 }
 
 /// Read one YAML object from text file and parse to bson structure

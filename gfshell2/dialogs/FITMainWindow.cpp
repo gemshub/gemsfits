@@ -139,6 +139,7 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     ui->splV->setStretchFactor(1, 3);
     ui->splV->setStretchFactor(2, 2);
 
+    //MyHighlighter *highlighter = new MyHighlighter( ui->recordEdit->document() );
     // set up menu
     setActions();
     connect(ui->splV, SIGNAL(splitterMoved( int , int  )), this, SLOT(moveToolBar( int , int  )));
