@@ -1206,7 +1206,7 @@ void FITMainWindow::CmRestoreTXT()
         // open file to unloading
          string fname;
          TFile  inFile("", ios::in);
-         if( !inFile.ChooseFileOpen( this, fname, "Please, select file with GEMSFIT2 specificatins file","*.dat" ))
+         if( !inFile.ChooseFileOpen( this, fname, "Please, select file with GEMSFIT2 specificatins file","*.json" ))
               return;
 
         readTXT( inFile );

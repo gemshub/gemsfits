@@ -386,7 +386,7 @@
      <x>0</x>
      <y>0</y>
      <width>931</width>
-     <height>20</height>
+     <height>31</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuTask">
@@ -689,12 +689,12 @@
   </action>
   <action name="actionBackup_to_YAML">
    <property name="text">
-    <string>Export data to &amp;YAML file (tbd)...</string>
+    <string>Export data to &amp;YAML file ...</string>
    </property>
   </action>
   <action name="actionRestore_from_YAML">
    <property name="text">
-    <string>Import data from Y&amp;AML file (tbd)...</string>
+    <string>Import data from Y&amp;AML file ...</string>
    </property>
   </action>
   <action name="action_Run_test">
