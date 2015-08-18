@@ -111,7 +111,7 @@
       <item row="0" column="0" colspan="2">
        <widget class="QCheckBox" name="commentsBox">
         <property name="text">
-         <string>Use short JSON key-names in the Task Configuration file</string>
+         <string>Use short JSON keywords in the Task Configuration file</string>
         </property>
        </widget>
       </item>
@@ -125,7 +125,7 @@
       <item row="2" column="0" colspan="2">
        <widget class="QCheckBox" name="yamlBox">
         <property name="text">
-         <string>View record data in &amp;YAML Format (tbd)</string>
+         <string>View or edit record data in &amp;YAML format</string>
         </property>
        </widget>
       </item>

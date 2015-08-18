@@ -1,48 +1,31 @@
 {
      "DBPath" :   "../EJDB/<database name>",
      "DBColl" :   "<collection name>",
-     "GEMSFPath" :   "../GEMS/TCASHs-dat.lst",
+     "GEMSFPath" :   "../GEMS/TCSHNs-dat.lst",
      "DataSelect" :   "",
      "DataTarget" :   "",
+     "OptSet" :   {
+          "NumMPI" :   4,
+          "DoWhat" :   1,
+          "UseEqC" :   1,
+          "UDWts" :   -1,
+          "OptAlg" :   "LN_BOBYQA",
+          "PBPerc" :   -1,
+          "ConTolRel" :   1e-05,
+          "ConTolAbs" :   1e-05,
+          "MaxLoops" :   10000,
+          "NormPar" :   1,
+          "GradPert" :   0.0001,
+          "SensPert" :   0.0001,
+          "OptTu" :   -1,
+          "OptTuC" :   6,
+          "UseMCPE" :   -1,
+          "NumMCT" :   100
+     },
      "ParToOpt" :   [
           {
                "EPH" :   "aq_gen",
                "G0" :   [
-                    {
-                         "DCN" :   "Al+3",
-                         "PType" :   "S",
-                         "IV" :   -483708.00144829
-                    },
-                    {
-                         "DCN" :   "AlO+",
-                         "PType" :   "S",
-                         "IV" :   -660420.00050345
-                    },
-                    {
-                         "DCN" :   "AlO2-",
-                         "PType" :   "S",
-                         "IV" :   -827479.00091632
-                    },
-                    {
-                         "DCN" :   "AlO2H@",
-                         "PType" :   "S",
-                         "IV" :   -864276.99998422
-                    },
-                    {
-                         "DCN" :   "AlOH+2",
-                         "PType" :   "S",
-                         "IV" :   -692595.00090732
-                    },
-                    {
-                         "DCN" :   "AlHSiO3+2",
-                         "PType" :   "S",
-                         "IV" :   -1540545.5210289
-                    },
-                    {
-                         "DCN" :   "AlSiO5-3",
-                         "PType" :   "S",
-                         "IV" :   -1769014.1696806
-                    },
                     {
                          "DCN" :   "Ca+2",
                          "PType" :   "S",
@@ -62,6 +45,16 @@
                          "DCN" :   "CaSiO3@",
                          "PType" :   "S",
                          "IV" :   -1517556.9007465
+                    },
+                    {
+                         "DCN" :   "Na+",
+                         "PType" :   "S",
+                         "IV" :   -261881.00017392
+                    },
+                    {
+                         "DCN" :   "NaOH@",
+                         "PType" :   "S",
+                         "IV" :   -418123.99998422
                     },
                     {
                          "DCN" :   "HSiO3-",
@@ -186,7 +179,7 @@
                ]
           },
           {
-               "EPH" :   "CASH",
+               "EPH" :   "CSHN",
                "G0" :   [
                     {
                          "DCN" :   "TCSC",
@@ -229,116 +222,41 @@
                          "IV" :   -4264860
                     },
                     {
-                         "DCN" :   "TAAA",
+                         "DCN" :   "TNSC",
                          "PType" :   "S",
-                         "IV" :   -6771450
+                         "IV" :   -6426740
                     },
                     {
-                         "DCN" :   "TAAC",
+                         "DCN" :   "TNSv",
                          "PType" :   "S",
-                         "IV" :   -6754660
+                         "IV" :   -5529720
                     },
                     {
-                         "DCN" :   "TAAv",
+                         "DCN" :   "TNvC",
                          "PType" :   "S",
-                         "IV" :   -5117840
+                         "IV" :   -5570940
                     },
                     {
-                         "DCN" :   "TASA",
+                         "DCN" :   "TNvv",
                          "PType" :   "S",
-                         "IV" :   -6708260
-                    },
-                    {
-                         "DCN" :   "TASC",
-                         "PType" :   "S",
-                         "IV" :   -6691470
-                    },
-                    {
-                         "DCN" :   "TASv",
-                         "PType" :   "S",
-                         "IV" :   -5795460
-                    },
-                    {
-                         "DCN" :   "TAvA",
-                         "PType" :   "S",
-                         "IV" :   -5857650
-                    },
-                    {
-                         "DCN" :   "TAvC",
-                         "PType" :   "S",
-                         "IV" :   -5818060
-                    },
-                    {
-                         "DCN" :   "TAvv",
-                         "PType" :   "S",
-                         "IV" :   -4943844
-                    },
-                    {
-                         "DCN" :   "TCAA",
-                         "PType" :   "S",
-                         "IV" :   -6285120
-                    },
-                    {
-                         "DCN" :   "TCAC",
-                         "PType" :   "S",
-                         "IV" :   -6268330
-                    },
-                    {
-                         "DCN" :   "TCAv",
-                         "PType" :   "S",
-                         "IV" :   -5371320
-                    },
-                    {
-                         "DCN" :   "TCSA",
-                         "PType" :   "S",
-                         "IV" :   -6221930
-                    },
-                    {
-                         "DCN" :   "TCvA",
-                         "PType" :   "S",
-                         "IV" :   -5403420
-                    },
-                    {
-                         "DCN" :   "THAA",
-                         "PType" :   "S",
-                         "IV" :   -5181030
-                    },
-                    {
-                         "DCN" :   "THAC",
-                         "PType" :   "S",
-                         "IV" :   -6005960
-                    },
-                    {
-                         "DCN" :   "THAv",
-                         "PType" :   "S",
-                         "IV" :   -5195950
-                    },
-                    {
-                         "DCN" :   "THSA",
-                         "PType" :   "S",
-                         "IV" :   -6031640
-                    },
-                    {
-                         "DCN" :   "THvA",
-                         "PType" :   "S",
-                         "IV" :   -5158930
+                         "IV" :   -4673930
                     }
                ],
                "PMc" :   [
                     {
                          "IPCs" :   [
                               {
-                                   "IPCN" :   "CASH[0|0]",
+                                   "IPCN" :   "CSHN[0|0]",
                                    "PType" :   "S",
                                    "IV" :   -2290
                               },
                               {
-                                   "IPCN" :   "CASH[0|1]",
+                                   "IPCN" :   "CSHN[0|1]",
                                    "PType" :   "S",
                                    "IV" :   0
                               },
                               {
-                                   "IPCN" :   "CASH[0|2]",
+                                   "IPCN" :   "CSHN[0|2]",
                                    "PType" :   "S",
                                    "IV" :   0
                               }
@@ -347,36 +265,17 @@
                     {
                          "IPCs" :   [
                               {
-                                   "IPCN" :   "CASH[1|0]",
+                                   "IPCN" :   "CSHN[1|0]",
                                    "PType" :   "S",
-                                   "IV" :   -10770
+                                   "IV" :   -10772
                               },
                               {
-                                   "IPCN" :   "CASH[1|1]",
+                                   "IPCN" :   "CSHN[1|1]",
                                    "PType" :   "S",
                                    "IV" :   0
                               },
                               {
-                                   "IPCN" :   "CASH[1|2]",
-                                   "PType" :   "S",
-                                   "IV" :   0
-                              }
-                         ]
-                    },
-                    {
-                         "IPCs" :   [
-                              {
-                                   "IPCN" :   "CASH[2|0]",
-                                   "PType" :   "S",
-                                   "IV" :   -19280
-                              },
-                              {
-                                   "IPCN" :   "CASH[2|1]",
-                                   "PType" :   "S",
-                                   "IV" :   0
-                              },
-                              {
-                                   "IPCN" :   "CASH[2|2]",
+                                   "IPCN" :   "CSHN[1|2]",
                                    "PType" :   "S",
                                    "IV" :   0
                               }
@@ -385,17 +284,36 @@
                     {
                          "IPCs" :   [
                               {
-                                   "IPCN" :   "CASH[3|0]",
+                                   "IPCN" :   "CSHN[2|0]",
+                                   "PType" :   "S",
+                                   "IV" :   -19284
+                              },
+                              {
+                                   "IPCN" :   "CSHN[2|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "CSHN[2|2]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "CSHN[3|0]",
                                    "PType" :   "S",
                                    "IV" :   3
                               },
                               {
-                                   "IPCN" :   "CASH[3|1]",
+                                   "IPCN" :   "CSHN[3|1]",
                                    "PType" :   "S",
                                    "IV" :   0
                               },
                               {
-                                   "IPCN" :   "CASH[3|2]",
+                                   "IPCN" :   "CSHN[3|2]",
                                    "PType" :   "S",
                                    "IV" :   0
                               }
@@ -404,137 +322,21 @@
                     {
                          "IPCs" :   [
                               {
-                                   "IPCN" :   "CASH[4|0]",
+                                   "IPCN" :   "CSHN[4|0]",
                                    "PType" :   "S",
                                    "IV" :   4
                               },
                               {
-                                   "IPCN" :   "CASH[4|1]",
+                                   "IPCN" :   "CSHN[4|1]",
                                    "PType" :   "S",
                                    "IV" :   0
                               },
                               {
-                                   "IPCN" :   "CASH[4|2]",
+                                   "IPCN" :   "CSHN[4|2]",
                                    "PType" :   "S",
                                    "IV" :   0
                               }
                          ]
-                    },
-                    {
-                         "IPCs" :   [
-                              {
-                                   "IPCN" :   "CASH[5|0]",
-                                   "PType" :   "S",
-                                   "IV" :   5
-                              },
-                              {
-                                   "IPCN" :   "CASH[5|1]",
-                                   "PType" :   "S",
-                                   "IV" :   0
-                              },
-                              {
-                                   "IPCN" :   "CASH[5|2]",
-                                   "PType" :   "S",
-                                   "IV" :   0
-                              }
-                         ]
-                    },
-                    {
-                         "IPCs" :   [
-                              {
-                                   "IPCN" :   "CASH[6|0]",
-                                   "PType" :   "S",
-                                   "IV" :   6
-                              },
-                              {
-                                   "IPCN" :   "CASH[6|1]",
-                                   "PType" :   "S",
-                                   "IV" :   0
-                              },
-                              {
-                                   "IPCN" :   "CASH[6|2]",
-                                   "PType" :   "S",
-                                   "IV" :   0
-                              }
-                         ]
-                    },
-                    {
-                         "IPCs" :   [
-                              {
-                                   "IPCN" :   "CASH[7|0]",
-                                   "PType" :   "S",
-                                   "IV" :   7
-                              },
-                              {
-                                   "IPCN" :   "CASH[7|1]",
-                                   "PType" :   "S",
-                                   "IV" :   0
-                              },
-                              {
-                                   "IPCN" :   "CASH[7|2]",
-                                   "PType" :   "S",
-                                   "IV" :   0
-                              }
-                         ]
-                    },
-                    {
-                         "IPCs" :   [
-                              {
-                                   "IPCN" :   "CASH[8|0]",
-                                   "PType" :   "S",
-                                   "IV" :   8
-                              },
-                              {
-                                   "IPCN" :   "CASH[8|1]",
-                                   "PType" :   "S",
-                                   "IV" :   0
-                              },
-                              {
-                                   "IPCN" :   "CASH[8|2]",
-                                   "PType" :   "S",
-                                   "IV" :   0
-                              }
-                         ]
-                    }
-               ]
-          },
-          {
-               "EPH" :   "Gibbsite",
-               "G0" :   [
-                    {
-                         "DCN" :   "Gbs",
-                         "PType" :   "S",
-                         "IV" :   -1150986
-                    }
-               ]
-          },
-          {
-               "EPH" :   "HG",
-               "G0" :   [
-                    {
-                         "DCN" :   "C3AH6",
-                         "PType" :   "S",
-                         "IV" :   -5008154.9
-                    }
-               ]
-          },
-          {
-               "EPH" :   "HGSi",
-               "G0" :   [
-                    {
-                         "DCN" :   "C3AS0.84H4.32",
-                         "PType" :   "S",
-                         "IV" :   -5365232.8
-                    }
-               ]
-          },
-          {
-               "EPH" :   "Straetlingite",
-               "G0" :   [
-                    {
-                         "DCN" :   "straetlingite",
-                         "PType" :   "S",
-                         "IV" :   -5705147.8
                     }
                ]
           },
@@ -562,58 +364,12 @@
      "NFunParToOpt" :   "",
      "LogKFun" :   "",
      "LogKVal" :   "",
-     "OptSet" :   {
-          "NumMPI" :   4,
-          "DoWhat" :   1,
-          "UseEqC" :   1,
-          "UDWts" :   -1,
-          "OptAlg" :   "LN_BOBYQA",
-          "PBPerc" :   -1,
-          "ConTolRel" :   1e-05,
-          "ConTolAbs" :   1e-05,
-          "MaxLoops" :   10000,
-          "NormPar" :   1,
-          "GradPert" :   0.0001,
-          "SensPert" :   0.0001,
-          "OptTu" :   -1,
-          "OptTuC" :   6,
-          "UseMCPE" :   -1,
-          "NumMCT" :   100
-     },
      "DataSyn" :   {
           "PHN" :   [
                {
                     "NIS" :   "aq_gen",
                     "Syn" :   "",
                     "DCN" :   [
-                         {
-                              "NIS" :   "Al+3",
-                              "Syn" :   ""
-                         },
-                         {
-                              "NIS" :   "AlO+",
-                              "Syn" :   ""
-                         },
-                         {
-                              "NIS" :   "AlO2-",
-                              "Syn" :   ""
-                         },
-                         {
-                              "NIS" :   "AlO2H@",
-                              "Syn" :   ""
-                         },
-                         {
-                              "NIS" :   "AlOH+2",
-                              "Syn" :   ""
-                         },
-                         {
-                              "NIS" :   "AlHSiO3+2",
-                              "Syn" :   ""
-                         },
-                         {
-                              "NIS" :   "AlSiO5-3",
-                              "Syn" :   ""
-                         },
                          {
                               "NIS" :   "Ca+2",
                               "Syn" :   ""
@@ -628,6 +384,14 @@
                          },
                          {
                               "NIS" :   "CaSiO3@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "Na+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "NaOH@",
                               "Syn" :   ""
                          },
                          {
@@ -691,7 +455,7 @@
                     ]
                },
                {
-                    "NIS" :   "CASH",
+                    "NIS" :   "CSHN",
                     "Syn" :   "",
                     "DCN" :   [
                          {
@@ -727,119 +491,19 @@
                               "Syn" :   ""
                          },
                          {
-                              "NIS" :   "TAAA",
+                              "NIS" :   "TNSC",
                               "Syn" :   ""
                          },
                          {
-                              "NIS" :   "TAAC",
+                              "NIS" :   "TNSv",
                               "Syn" :   ""
                          },
                          {
-                              "NIS" :   "TAAv",
+                              "NIS" :   "TNvC",
                               "Syn" :   ""
                          },
                          {
-                              "NIS" :   "TASA",
-                              "Syn" :   ""
-                         },
-                         {
-                              "NIS" :   "TASC",
-                              "Syn" :   ""
-                         },
-                         {
-                              "NIS" :   "TASv",
-                              "Syn" :   ""
-                         },
-                         {
-                              "NIS" :   "TAvA",
-                              "Syn" :   ""
-                         },
-                         {
-                              "NIS" :   "TAvC",
-                              "Syn" :   ""
-                         },
-                         {
-                              "NIS" :   "TAvv",
-                              "Syn" :   ""
-                         },
-                         {
-                              "NIS" :   "TCAA",
-                              "Syn" :   ""
-                         },
-                         {
-                              "NIS" :   "TCAC",
-                              "Syn" :   ""
-                         },
-                         {
-                              "NIS" :   "TCAv",
-                              "Syn" :   ""
-                         },
-                         {
-                              "NIS" :   "TCSA",
-                              "Syn" :   ""
-                         },
-                         {
-                              "NIS" :   "TCvA",
-                              "Syn" :   ""
-                         },
-                         {
-                              "NIS" :   "THAA",
-                              "Syn" :   ""
-                         },
-                         {
-                              "NIS" :   "THAC",
-                              "Syn" :   ""
-                         },
-                         {
-                              "NIS" :   "THAv",
-                              "Syn" :   ""
-                         },
-                         {
-                              "NIS" :   "THSA",
-                              "Syn" :   ""
-                         },
-                         {
-                              "NIS" :   "THvA",
-                              "Syn" :   ""
-                         }
-                    ]
-               },
-               {
-                    "NIS" :   "Gibbsite",
-                    "Syn" :   "",
-                    "DCN" :   [
-                         {
-                              "NIS" :   "Gbs",
-                              "Syn" :   ""
-                         }
-                    ]
-               },
-               {
-                    "NIS" :   "HG",
-                    "Syn" :   "",
-                    "DCN" :   [
-                         {
-                              "NIS" :   "C3AH6",
-                              "Syn" :   ""
-                         }
-                    ]
-               },
-               {
-                    "NIS" :   "HGSi",
-                    "Syn" :   "",
-                    "DCN" :   [
-                         {
-                              "NIS" :   "C3AS0.84H4.32",
-                              "Syn" :   ""
-                         }
-                    ]
-               },
-               {
-                    "NIS" :   "Straetlingite",
-                    "Syn" :   "",
-                    "DCN" :   [
-                         {
-                              "NIS" :   "straetlingite",
+                              "NIS" :   "TNvv",
                               "Syn" :   ""
                          }
                     ]
@@ -908,6 +572,18 @@
                },
                {
                     "NIS" :   "mChainL",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "frAlIV",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "frAlV",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "frAlVI",
                     "Syn" :   ""
                },
                {

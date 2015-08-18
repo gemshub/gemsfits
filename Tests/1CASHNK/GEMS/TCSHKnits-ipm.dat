@@ -5,7 +5,7 @@
 # (should be read after the DCH file and before DBR files)
 
 # ID key of the initial chemical system definition
-<ID_key> "CASHNK    G  CSHN10nit   0    0       1       25      0   "
+<ID_key> "CASHNK    G  CSHK10nit   0    0       1       25      0   "
 
 ## (1) Flags that affect memory allocation
 # PE: Flag for using electroneutrality condition in GEM IPM calculations (1 or 0)
@@ -228,7 +228,7 @@
 ## (5) Data arrays which are provided neither in DCH nor in DBR files
 # B: Full total bulk composition (vector b), moles [nIC] (will be partially re-written from DBR files)
 <B>
-1.00000002413381 113.116746705914 0.1 0.2 2 59.9103733770907 1 0 
+1.00000002413381 113.216746705914 0.1 0.1 2 59.9103733770907 1 0 
 
 # Initial data for DCs - see DATACH file for dimensions nDC, nDCs
 # Pparc: Partial pressures or fugacities of pure Dependent Components [nDC] (reserved)
@@ -283,14 +283,14 @@
 
 # mui: IC indices in parent RMULTS IC list (not used in standalone GEMS3K)
 <mui>
-1 3 5 6 7 8 10 12 
+1 3 4 5 7 8 10 12 
 
 # muk: Phase indices in parent RMULTS Phase list (not used in standalone GEMS3K)
 <muk>
-0 1 8 16 21 
+0 1 7 16 21 
 
 # muj: DC indices in parent RMULTS DC list (not used in standalone GEMS3K)
 <muj>
-8 9 10 11 16 17 18 19 20 21 27 28 29 30 31 32 41 42 43 44 45 46 212 213 214 215 216 217 218 219 220 221 222 223 246 251 
+8 9 10 11 13 14 18 19 20 21 27 28 29 30 31 32 41 42 43 44 45 46 200 201 202 203 204 205 206 207 208 209 210 211 246 251 
 
 # End of file
