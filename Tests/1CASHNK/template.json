@@ -1,7 +1,7 @@
 {
      "DBPath" :   "../EJDB/<database name>",
      "DBColl" :   "<collection name>",
-     "GEMSFPath" :   "../GEMS/TCSHNs-dat.lst",
+     "GEMSFPath" :   "../GEMS/TCSHKnits-dat.lst",
      "DataSelect" :   "",
      "DataTarget" :   "",
      "OptSet" :   {
@@ -47,14 +47,14 @@
                          "IV" :   -1517556.9007465
                     },
                     {
-                         "DCN" :   "Na+",
+                         "DCN" :   "K+",
                          "PType" :   "S",
-                         "IV" :   -261881.00017392
+                         "IV" :   -282462.00010137
                     },
                     {
-                         "DCN" :   "NaOH@",
+                         "DCN" :   "KOH@",
                          "PType" :   "S",
-                         "IV" :   -418123.99998422
+                         "IV" :   -437106.9999737
                     },
                     {
                          "DCN" :   "HSiO3-",
@@ -80,6 +80,21 @@
                          "DCN" :   "H2@",
                          "PType" :   "S",
                          "IV" :   17729.00010995
+                    },
+                    {
+                         "DCN" :   "NO3-",
+                         "PType" :   "S",
+                         "IV" :   -110905.00057747
+                    },
+                    {
+                         "DCN" :   "NH3@",
+                         "PType" :   "S",
+                         "IV" :   -26669.999973696
+                    },
+                    {
+                         "DCN" :   "NH4+",
+                         "PType" :   "S",
+                         "IV" :   -79395.000079017
                     },
                     {
                          "DCN" :   "N2@",
@@ -179,7 +194,7 @@
                ]
           },
           {
-               "EPH" :   "CSHN",
+               "EPH" :   "CSHK",
                "G0" :   [
                     {
                          "DCN" :   "TCSC",
@@ -222,41 +237,41 @@
                          "IV" :   -4264860
                     },
                     {
-                         "DCN" :   "TNSC",
+                         "DCN" :   "TKSC",
                          "PType" :   "S",
-                         "IV" :   -6426740
+                         "IV" :   -6474700
                     },
                     {
-                         "DCN" :   "TNSv",
+                         "DCN" :   "TKSv",
                          "PType" :   "S",
-                         "IV" :   -5529720
+                         "IV" :   -5577690
                     },
                     {
-                         "DCN" :   "TNvC",
+                         "DCN" :   "TKvC",
                          "PType" :   "S",
-                         "IV" :   -5570940
+                         "IV" :   -5628910
                     },
                     {
-                         "DCN" :   "TNvv",
+                         "DCN" :   "TKvv",
                          "PType" :   "S",
-                         "IV" :   -4673930
+                         "IV" :   -4711900
                     }
                ],
                "PMc" :   [
                     {
                          "IPCs" :   [
                               {
-                                   "IPCN" :   "CSHN[0|0]",
+                                   "IPCN" :   "CSHK[0|0]",
                                    "PType" :   "S",
                                    "IV" :   -2290
                               },
                               {
-                                   "IPCN" :   "CSHN[0|1]",
+                                   "IPCN" :   "CSHK[0|1]",
                                    "PType" :   "S",
                                    "IV" :   0
                               },
                               {
-                                   "IPCN" :   "CSHN[0|2]",
+                                   "IPCN" :   "CSHK[0|2]",
                                    "PType" :   "S",
                                    "IV" :   0
                               }
@@ -265,17 +280,17 @@
                     {
                          "IPCs" :   [
                               {
-                                   "IPCN" :   "CSHN[1|0]",
+                                   "IPCN" :   "CSHK[1|0]",
                                    "PType" :   "S",
                                    "IV" :   -10772
                               },
                               {
-                                   "IPCN" :   "CSHN[1|1]",
+                                   "IPCN" :   "CSHK[1|1]",
                                    "PType" :   "S",
                                    "IV" :   0
                               },
                               {
-                                   "IPCN" :   "CSHN[1|2]",
+                                   "IPCN" :   "CSHK[1|2]",
                                    "PType" :   "S",
                                    "IV" :   0
                               }
@@ -284,17 +299,17 @@
                     {
                          "IPCs" :   [
                               {
-                                   "IPCN" :   "CSHN[2|0]",
+                                   "IPCN" :   "CSHK[2|0]",
                                    "PType" :   "S",
                                    "IV" :   -19284
                               },
                               {
-                                   "IPCN" :   "CSHN[2|1]",
+                                   "IPCN" :   "CSHK[2|1]",
                                    "PType" :   "S",
                                    "IV" :   0
                               },
                               {
-                                   "IPCN" :   "CSHN[2|2]",
+                                   "IPCN" :   "CSHK[2|2]",
                                    "PType" :   "S",
                                    "IV" :   0
                               }
@@ -303,17 +318,17 @@
                     {
                          "IPCs" :   [
                               {
-                                   "IPCN" :   "CSHN[3|0]",
+                                   "IPCN" :   "CSHK[3|0]",
                                    "PType" :   "S",
                                    "IV" :   3
                               },
                               {
-                                   "IPCN" :   "CSHN[3|1]",
+                                   "IPCN" :   "CSHK[3|1]",
                                    "PType" :   "S",
                                    "IV" :   0
                               },
                               {
-                                   "IPCN" :   "CSHN[3|2]",
+                                   "IPCN" :   "CSHK[3|2]",
                                    "PType" :   "S",
                                    "IV" :   0
                               }
@@ -322,17 +337,17 @@
                     {
                          "IPCs" :   [
                               {
-                                   "IPCN" :   "CSHN[4|0]",
+                                   "IPCN" :   "CSHK[4|0]",
                                    "PType" :   "S",
                                    "IV" :   4
                               },
                               {
-                                   "IPCN" :   "CSHN[4|1]",
+                                   "IPCN" :   "CSHK[4|1]",
                                    "PType" :   "S",
                                    "IV" :   0
                               },
                               {
-                                   "IPCN" :   "CSHN[4|2]",
+                                   "IPCN" :   "CSHK[4|2]",
                                    "PType" :   "S",
                                    "IV" :   0
                               }
@@ -387,11 +402,11 @@
                               "Syn" :   ""
                          },
                          {
-                              "NIS" :   "Na+",
+                              "NIS" :   "K+",
                               "Syn" :   ""
                          },
                          {
-                              "NIS" :   "NaOH@",
+                              "NIS" :   "KOH@",
                               "Syn" :   ""
                          },
                          {
@@ -412,6 +427,18 @@
                          },
                          {
                               "NIS" :   "H2@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "NO3-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "NH3@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "NH4+",
                               "Syn" :   ""
                          },
                          {
@@ -455,7 +482,7 @@
                     ]
                },
                {
-                    "NIS" :   "CSHN",
+                    "NIS" :   "CSHK",
                     "Syn" :   "",
                     "DCN" :   [
                          {
@@ -491,19 +518,19 @@
                               "Syn" :   ""
                          },
                          {
-                              "NIS" :   "TNSC",
+                              "NIS" :   "TKSC",
                               "Syn" :   ""
                          },
                          {
-                              "NIS" :   "TNSv",
+                              "NIS" :   "TKSv",
                               "Syn" :   ""
                          },
                          {
-                              "NIS" :   "TNvC",
+                              "NIS" :   "TKvC",
                               "Syn" :   ""
                          },
                          {
-                              "NIS" :   "TNvv",
+                              "NIS" :   "TKvv",
                               "Syn" :   ""
                          }
                     ]
