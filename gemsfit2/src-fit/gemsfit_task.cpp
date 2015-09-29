@@ -340,7 +340,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
         cout<<"initial guess vector and bounds vector must have same number of elements !! "<<endl;
         cout<<"optv.size() = "<<Opti->optv.size()<<" <-> OptUbBounds.size() = "<<Opti->OptUpBounds.size()<<endl;
         cout<<" .... exiting now .... "<<endl;
-            cout<<endl;
+//            cout<<endl;
         exit(1);
     }
     for( i=0; i<Opti->OptLoBounds.size(); i++ )
@@ -351,7 +351,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
             cout<<"Initial guess value is not within given bounds!!"<<endl;
             cout<<"optv["<<i<<"] = "<<Opti->optv[i]<<" | OptLoBounds["<<i<<"] = "<<Opti->OptLoBounds[i]<<" | OptUpBounds["<<i<<"] = "<<Opti->OptUpBounds[i]<<endl;
             cout<<" .... exiting now .... "<<endl;
-                cout<<endl;
+//                cout<<endl;
             exit(1);
         }
     }

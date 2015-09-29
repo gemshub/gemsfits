@@ -286,6 +286,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     unsigned int i;
     double mean = 0.;
     double ResSumSquares = 0., TotalSumSquares = 0.;
+    bool noqq = false;
 //    double Nom_CC = 0.0, Dnom_CC = 0.0;
 //    double Correlation_coef = 0.0;
 //    double Res = 0.;
@@ -420,6 +421,8 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     error_variance = Weighted_Tfun_sum_of_residuals/degrees_of_freedom;
 
     // Generate object containing normally distributed data with mean = 0 and standard deviation = SD_of_residuals
+    if (gfittask->residuals_v.size() > 1)
+    {
     boost::math::normal dist(  0., SD_of_residuals );
 
     sort( gfittask->residuals_v.begin(), gfittask->residuals_v.end() );
@@ -459,6 +462,8 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     {
         if (objfun_stat[j]->isComputed)
         {
+            try
+            {
             boost::math::normal distobj(  0., objfun_stat[j]->stdev_res );
             for (i = 0; i < objfun_stat[j]->nr; i++)
             {
@@ -467,6 +472,11 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
             }
             // sorting residuals
             sort( objfun_stat[j]->orderd_res.begin(), objfun_stat[j]->orderd_res.end() );
+            }
+            catch (boost::exception const&  ex  )
+                                    {
+                                            noqq = true;
+                                    }
         }
     }
 
@@ -474,6 +484,8 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     // Generate Q-Q Plot (Quantile-Quantile Plot)
     int exp = 0;
 
+    if (!noqq)
+    {
     gpf->fqq << "sample,";
     for (unsigned k = 0; k<gfittask->Tfun->objfun.size(); k++)
     {
@@ -515,7 +527,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         gpf->fqq << endl;
     }
     gpf->fqq.close();
-
+}
 
 //    gpf->fqq << endl;
 //    bool waswritten = false;
@@ -594,7 +606,7 @@ if( W2 < 1.)  // workaround to suppress nan() and zdiv crash
 
     // K square
     K2 = Z_sqrtb1*Z_sqrtb1 + Z_b2*Z_b2;
-
+}
 
     // Create chi-squared distribution object
 //    if(W2 != 1){

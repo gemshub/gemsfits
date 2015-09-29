@@ -48,6 +48,7 @@ void nestedfun (TGfitTask *sys)
     {
         vector <double> x, UB, LB;
         int Pndx = -1, Fndx = -1; double Pval = 0.0, Ub = 0.0, Lb = 0.0;
+        int bounds = 0;
 
         for (unsigned int j = 0; j<sys->Tfun->nestfun.size(); j++)
         {
@@ -99,6 +100,7 @@ void nestedfun (TGfitTask *sys)
                                     LB.push_back(Lb);
                                     sys->vPAndx[P_id]->ndx.push_back(p);
                                     sys->vEAndx[P_id]->ndx.push_back(e);
+                                    bounds = 1;
                                 }
                             } else
                             {
@@ -121,11 +123,14 @@ void nestedfun (TGfitTask *sys)
 
                 opt.set_min_objective(nestminfunc, sys);
 
-//                opt.set_xtol_rel(1e-10);
-//                opt.set_xtol_abs(1e-10);
+                if (bounds == 0)
+                {
+                opt.set_xtol_rel(1e-10);
+                opt.set_xtol_abs(1e-10);}
+                if (bounds == 1)
+                {
                 opt.set_stopval(0.0001);
-
-                opt.set_maxeval( 1000 );
+                opt.set_maxeval( 1000 );}
 
 //                vector<double> inistep( x.size(), 0. );
 //                for( int xx=0; xx<(int) x.size(); xx++ )
