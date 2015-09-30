@@ -639,6 +639,7 @@ void TGfitTask::set_fixed_parameters()
     {
         for (unsigned e = 0; e <Opti->optParam.size(); e++)
         {
+            if ((mLook > 0) && ( Opti->optParam[e]->Get_optType() == "G0" ))
             Opti->optParam[e]->Adjust_Sparam(NodT[n]);
         }
     }

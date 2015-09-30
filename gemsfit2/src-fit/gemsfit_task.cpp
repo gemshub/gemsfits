@@ -484,7 +484,13 @@ void TGfitTask::setnodes()
         }
     }
 
+    DATACH* dCH_ = NodT[0]->pCSD();
+
+    mLook = dCH_->mLook;
+
     // set fixed parameters
+    if( mLook == 0)
+    { cout << "G0 interpolation is active, G0 values cannot be set in GEMSFITS!" << endl;}
     set_fixed_parameters();
 
 //    cout << NodT[0]->Get_bIC(0) << endl;
@@ -499,6 +505,8 @@ void TGfitTask::setnodes()
         // data with GEMS3K (already filled out by reading the DBR input file)
 //        DATABR* dBR = NodT[n]->pCNode();
         DATACH* dCH = NodT[n]->pCSD();
+
+//        mLook = dCH->mLook;
 
         nIC = dCH->nIC;	// nr of independent components
         nDC = dCH->nDC;	// nr of dependent components

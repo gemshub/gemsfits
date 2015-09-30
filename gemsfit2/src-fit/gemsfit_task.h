@@ -125,6 +125,8 @@ public:
 
     int mode;
 
+    int mLook;
+
     /// normalize parameters flag
     bool NormParams;
 
