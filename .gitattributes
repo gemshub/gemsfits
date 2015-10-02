@@ -532,3 +532,5 @@ gfshell2/Icons/gems512.png -text
 gfshell2/Icons/icons_files_gems3mdi.doc -text
 gfshell2/Icons/icons_files_gems3mdi.odt -text
 gfshell2/Icons/icons_files_gems3mdi_2012_GG.doc -text
+gfshell2/YAML/build-win32/debug/libyaml-cpp.a -text
+gfshell2/YAML/build-win32/release/libyaml-cpp.a -text
