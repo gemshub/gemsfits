@@ -78,6 +78,7 @@ function(add_sources)
 endfunction(add_sources)
 
 set(header_directory "include/yaml-cpp/")
+set(header_directory "include/boost/")
 
 file(GLOB sources "src/[a-zA-Z]*.cpp")
 file(GLOB_RECURSE public_headers "include/yaml-cpp/[a-zA-Z]*.h")
@@ -113,8 +114,8 @@ endif()
 include_directories(${YAML_CPP_SOURCE_DIR}/src)
 include_directories(${YAML_CPP_SOURCE_DIR}/include)
 
-find_package(Boost REQUIRED)
-include_directories(${Boost_INCLUDE_DIRS})
+#find_package(Boost REQUIRED)
+#include_directories(${Boost_INCLUDE_DIRS})
 
 
 ###

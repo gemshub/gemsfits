@@ -21,6 +21,7 @@
 #define V_YAML_H
 
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <vector>
 #include <stack>
@@ -81,7 +82,7 @@ class BsonHandler: public YAML::EventHandler
  private:
 
   void BeginNode();
-  void EmitProps(const std::string& tag, YAML::anchor_t anchor);
+  //void EmitProps(const std::string& tag, YAML::anchor_t anchor);
 
  private:
   bson* m_bson;
@@ -101,7 +102,66 @@ class BsonHandler: public YAML::EventHandler
   std::stack<State> m_stateStack;
 };
 
+class JsonHandler: public YAML::EventHandler
+{
+
+ void addHead(const string& key );
+ void addScalar(const string&  key, const string& value );
+ void shift()
+ {
+   for(int temp = 0; temp < m_depth; temp++)
+        m_os << "     ";
+ }
+
+ public:
+
+  string to_string();
+
+  JsonHandler(stringstream& os_);
+
+  virtual void OnDocumentStart(const YAML::Mark& mark);
+  virtual void OnDocumentEnd();
+
+  virtual void OnNull(const YAML::Mark& mark, YAML::anchor_t anchor);
+  virtual void OnAlias(const YAML::Mark& mark, YAML::anchor_t anchor);
+  virtual void OnScalar(const YAML::Mark& mark, const std::string& tag,
+                        YAML::anchor_t anchor, const std::string& value);
+
+  virtual void OnSequenceStart(const YAML::Mark& mark, const std::string& tag,
+                               YAML::anchor_t anchor, YAML::EmitterStyle::value style);
+  virtual void OnSequenceEnd();
+
+  virtual void OnMapStart(const YAML::Mark& mark, const std::string& tag,
+                          YAML::anchor_t anchor, YAML::EmitterStyle::value style);
+  virtual void OnMapEnd();
+
+ private:
+
+  void BeginNode();
+  //void EmitProps(const std::string& tag, YAML::anchor_t anchor);
+
+ private:
+  stringstream& m_os;
+  int m_depth =0;
+  bool m_first= true;
+
+  enum   STATE_ { WaitingForSequenceEntry, WaitingForKey, WaitingForValue, };
+
+  struct State {
+    string key;
+    int    ndx;
+    STATE_ state;
+
+    State( STATE_ st):
+        key(""),ndx(0),state(st)
+    {}
+  };
+
+  std::stack<State> m_stateStack;
+};
+
 string Json2YAML( const string& jsonData );
+string parseYAMLToJson( const string& currentYAML );
 
 #include <iostream>
 template <typename T>

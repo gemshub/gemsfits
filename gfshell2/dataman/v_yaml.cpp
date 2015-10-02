@@ -68,6 +68,25 @@ string Json2YAML( const string& jsonData )
   return YamlData;
 }
 
+/// Parse one YAML object from string to bson structure
+string parseYAMLToJson( const string& currentYAML )
+{
+  stringstream jsonstriam;
+
+ try{
+     stringstream stream(currentYAML);
+     YAML::Parser parser(stream);
+     JsonHandler builder(jsonstriam);
+     parser.HandleNextDocument(builder);
+     //cout << builder.to_string() << endl;
+   }
+   catch(YAML::Exception& e) {
+      cout << "parseYAMLToBson " << e.what() << endl;
+      Error( "parseYAMLToBson",  e.what() );
+   }
+  return jsonstriam.str();
+ }
+
 namespace ParserYAML{
 
 void printBsonObjectToYAML(fstream& fout, const char *b)
@@ -418,4 +437,149 @@ void BsonHandler::BeginNode()
   }
 }
 
+// JsonHandler------------------------------------------------
 
+string JsonHandler::to_string()
+{
+  return m_os.str();
+}
+
+JsonHandler::JsonHandler(stringstream& os_) : m_os(os_) {}
+
+void JsonHandler::OnDocumentStart(const Mark&) {}
+
+void JsonHandler::OnDocumentEnd() {}
+
+void JsonHandler::OnNull(const Mark&, anchor_t anchor)
+{
+  assert(m_stateStack.top().state == WaitingForValue );
+  addScalar(m_stateStack.top().key.c_str(), "null" );
+  BeginNode();
+}
+
+void JsonHandler::OnAlias(const Mark&, anchor_t anchor) {}
+
+void JsonHandler::OnScalar(const Mark&, const std::string& tag,
+                              anchor_t anchor, const std::string& value)
+{
+   switch (m_stateStack.top().state)
+   {
+     case WaitingForSequenceEntry:
+        { m_stateStack.top().ndx++;
+          addScalar( "", value );
+          break;
+        }
+     case WaitingForKey:
+        m_stateStack.top().key = value;
+        m_stateStack.top().state = WaitingForValue;
+        break;
+     case WaitingForValue:
+        string key =  m_stateStack.top().key;
+        addScalar( key.c_str(), value );
+        m_stateStack.top().key = "";
+        m_stateStack.top().state = WaitingForKey;
+        break;
+    }
+}
+
+void JsonHandler::OnSequenceStart(const Mark&, const std::string& tag,
+            anchor_t anchor, EmitterStyle::value style)
+{
+  string key="";
+  if (!m_stateStack.empty())
+  {
+     if( m_stateStack.top().state == WaitingForSequenceEntry )
+        m_stateStack.top().ndx++;
+     else
+        key =  m_stateStack.top().key;
+  }
+  addHead( key );
+  m_os << "[\n";
+  m_depth++;
+  m_first = true;
+  BeginNode();
+  m_stateStack.push(State(WaitingForSequenceEntry));
+}
+
+void JsonHandler::OnSequenceEnd()
+{
+  assert(m_stateStack.top().state == WaitingForSequenceEntry );
+  m_stateStack.pop();
+  m_depth--;
+  m_os << "\n";
+  shift();
+  m_os << "]";
+}
+
+void JsonHandler::OnMapStart(const Mark&, const std::string& tag,
+                                anchor_t anchor, EmitterStyle::value style)
+{
+  string key="";
+  if (!m_stateStack.empty() )
+  {
+    if( m_stateStack.top().state == WaitingForSequenceEntry )
+      m_stateStack.top().ndx++;
+    else
+      key =  m_stateStack.top().key;
+  }
+  addHead( key );
+  m_os << "{\n";
+  m_depth++;
+  m_first = true;
+  BeginNode();
+  m_stateStack.push(State(WaitingForKey));
+}
+
+void JsonHandler::OnMapEnd() {
+ m_stateStack.pop();
+ m_depth--;
+ m_os << "\n";
+ shift();
+ m_os << "}";
+}
+
+void JsonHandler::BeginNode()
+{
+  if (m_stateStack.empty())
+    return;
+
+  switch (m_stateStack.top().state) {
+    case WaitingForKey:
+      m_stateStack.top().state = WaitingForValue;
+      break;
+    case WaitingForValue:
+      m_stateStack.top().state = WaitingForKey;
+      break;
+    default:
+      break;
+  }
+}
+
+void JsonHandler::addHead(const string& key )
+{
+    if(!m_first )
+     m_os <<  ",\n";
+    else
+     m_first = false;
+
+    shift();
+
+    if( !key.empty())
+      m_os << "\"" << key << "\" :   ";
+}
+
+void JsonHandler::addScalar(const string&  key, const string& value )
+{
+    int ival = 0;
+    double dval=0.;
+
+    addHead( key );
+
+    if( value == "null" || value == "true" ||  value == "false" )
+           m_os << value;
+       else
+        if( is<int>( ival, value.c_str()) || is<double>( dval, value.c_str()))
+              m_os << value.c_str();
+         else
+            m_os << "\"" << value.c_str() << "\"";
+}

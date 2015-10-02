@@ -877,18 +877,32 @@ void FITMainWindow::CmBackupJSON()
              return;
         outFile.Open();
 
+        TFile  outFiletest("", ios::out );
+        if( !outFiletest.ChooseFileSave( this, fname, "Please, give a file name for unloading records","*.json" ))
+             return;
+        outFiletest.Open();
+
         outFile.ff << "[\n";
+        outFiletest.ff << "[\n";
         for(int i=0; i<aKey.size(); i++ )
         {
           rtEJ[ currentMode ].Get( aKey[i].c_str() );
           string valDB =rtEJ[ currentMode ].GetJson();
           outFile.ff << valDB;
+          outFiletest.ff << parseYAMLToJson(rtEJ[ currentMode ].GetYAML());
           if( i<aKey.size()-1)
-               outFile.ff <<  ",";
-          outFile.ff <<  "\n";
+          {
+              outFile.ff <<  ",";
+              outFiletest.ff <<  ",";
+          }
+              outFile.ff <<  "\n";
+              outFiletest.ff <<  "\n";
         }
         outFile.ff << "]";
         outFile.Close();
+
+        outFiletest.ff << "]";
+        outFiletest.Close();
 
         changeKeyList();
         contentsChanged = false;
