@@ -21,7 +21,7 @@
 #include "verror.h"
 #include "v_json.h"
 #include "v_yaml.h"
-using namespace YAML;
+//using namespace YAML;
 
 void addScalar(const char* key, const string& value, bson* brec )
 {
@@ -91,19 +91,19 @@ namespace ParserYAML{
 
 void printBsonObjectToYAML(fstream& fout, const char *b)
 {
-    Emitter out;
-    out << BeginMap;
+    YAML::Emitter out;
+    out << YAML::BeginMap;
     bson_emitter( out, b, BSON_OBJECT);
-    out << EndMap;
+    out << YAML::EndMap;
     fout << out.c_str();
 }
 
 void printBsonObjectToYAML(string& fout, const char *b)
 {
-    Emitter out;
-    out << BeginMap;
+    YAML::Emitter out;
+    out << YAML::BeginMap;
     bson_emitter( out, b, BSON_OBJECT);
-    out << EndMap;
+    out << YAML::EndMap;
     fout = string( out.c_str());
  //   cout << fout;
 }
@@ -111,10 +111,10 @@ void printBsonObjectToYAML(string& fout, const char *b)
 /// Read one YAML object from text file and parse to bson structure
 void parseYAMLToBson( fstream& fin, bson *brec )
 {
-    Node doc;
+    YAML::Node doc;
 
     try{
-        doc = Load( fin );
+        doc = YAML::Load( fin );
         // test output
         //Emitter out;
         //out << doc;
@@ -143,7 +143,7 @@ void parseYAMLToBson( const string& currentYAML, bson *obj )
    }
  }
 
-void bson_emitter( Emitter& out, const char *data, int datatype )
+void bson_emitter( YAML::Emitter& out, const char *data, int datatype )
 {
     bson_iterator i;
     const char *key;
@@ -163,8 +163,8 @@ void bson_emitter( Emitter& out, const char *data, int datatype )
        switch( datatype )
        {
         case BSON_OBJECT:
-           out << Key << key;
-           out << Value;
+           out << YAML::Key << key;
+           out << YAML::Value;
            break;
         default:
            break;
@@ -174,7 +174,7 @@ void bson_emitter( Emitter& out, const char *data, int datatype )
         {
           // impotant datatypes
           case BSON_NULL:
-              out << _Null();
+              out << YAML::_Null();
               break;
           case BSON_BOOL:
                out <<  (bson_iterator_bool(&i) ? "true" : "false");
@@ -198,14 +198,14 @@ void bson_emitter( Emitter& out, const char *data, int datatype )
 
           // main constructions
           case BSON_OBJECT:
-             out << BeginMap;
+             out << YAML::BeginMap;
              bson_emitter( out, bson_iterator_value(&i), BSON_OBJECT);
-             out << EndMap;
+             out << YAML::EndMap;
              break;
           case BSON_ARRAY:
-              out << BeginSeq;
+              out << YAML::BeginSeq;
               bson_emitter(out, bson_iterator_value(&i), BSON_ARRAY );
-              out << EndSeq;
+              out << YAML::EndSeq;
              break;
 
            // not used in GEMS data types
@@ -247,76 +247,76 @@ void bson_emitter( Emitter& out, const char *data, int datatype )
     }
 }
 
-void parseObject( const Node& doc, bson* brec )
+void parseObject( const YAML::Node& doc, bson* brec )
 {
     string key;
     int type;
 
-    for (const_iterator it = doc.begin(); it != doc.end(); ++it)
+    for (YAML::const_iterator it = doc.begin(); it != doc.end(); ++it)
     {
       key = it->first.as<string>();
       type = it->second.Type();
 
       switch( type )
       {
-        case NodeType::Null:
+        case YAML::NodeType::Null:
           bson_append_null(brec, key.c_str() );
           break;
-        case NodeType::Scalar:
+        case YAML::NodeType::Scalar:
           parseScalar( key.c_str(), it->second, brec );
           break;
-        case NodeType::Sequence:
+        case YAML::NodeType::Sequence:
           bson_append_start_array( brec, key.c_str() );
           parseArray( it->second, brec );
           bson_append_finish_array(brec);
           break;
-        case NodeType::Map:
+        case YAML::NodeType::Map:
           bson_append_start_object( brec, key.c_str() );
           parseObject( it->second, brec );
           bson_append_finish_object(brec);
           break;
-        case NodeType::Undefined:
+        case YAML::NodeType::Undefined:
           Error( "ParserYAML02: ", "Undefined value type.");
       }
    }
 }
 
-void parseArray( const Node& doc, bson* brec )
+void parseArray( const YAML::Node& doc, bson* brec )
 {
     int ii = 0;
     string key;
     int type;
 
-    for (const_iterator it = doc.begin(); it != doc.end(); ++it, ++ii)
+    for (YAML::const_iterator it = doc.begin(); it != doc.end(); ++it, ++ii)
     {
         key = to_string(ii);
         type = it->Type();
 
         switch( type )
         {
-          case NodeType::Null:
+          case YAML::NodeType::Null:
             bson_append_null(brec, key.c_str() );
             break;
-          case NodeType::Scalar:
+          case YAML::NodeType::Scalar:
             parseScalar( key.c_str(), *it, brec );
             break;
-          case NodeType::Sequence:
+          case YAML::NodeType::Sequence:
             bson_append_start_array( brec, key.c_str() );
             parseArray( *it, brec );
             bson_append_finish_array(brec);
             break;
-          case NodeType::Map:
+          case YAML::NodeType::Map:
             bson_append_start_object( brec, key.c_str() );
             parseObject( *it, brec );
             bson_append_finish_object(brec);
             break;
-          case NodeType::Undefined:
+          case YAML::NodeType::Undefined:
             Error( "ParserYAML02: ", "Undefined value type.");
         }
     }
 }
 
-void parseScalar(const char* key, const Node& doc, bson* brec )
+void parseScalar(const char* key, const YAML::Node& doc, bson* brec )
 {
     string value = doc.as<std::string>();
     addScalar( key, value, brec );
@@ -337,21 +337,21 @@ string BsonHandler::to_string()
 
 BsonHandler::BsonHandler(bson* bobj) : m_bson(bobj) {}
 
-void BsonHandler::OnDocumentStart(const Mark&) {}
+void BsonHandler::OnDocumentStart(const YAML::Mark&) {}
 
 void BsonHandler::OnDocumentEnd() {}
 
-void BsonHandler::OnNull(const Mark&, anchor_t anchor)
+void BsonHandler::OnNull(const YAML::Mark&, YAML::anchor_t anchor)
 {
   assert(m_stateStack.top().state == WaitingForValue );
   bson_append_null( m_bson, m_stateStack.top().key.c_str() );
   BeginNode();
 }
 
-void BsonHandler::OnAlias(const Mark&, anchor_t anchor) {}
+void BsonHandler::OnAlias(const YAML::Mark&, YAML::anchor_t anchor) {}
 
-void BsonHandler::OnScalar(const Mark&, const std::string& tag,
-                              anchor_t anchor, const std::string& value)
+void BsonHandler::OnScalar(const YAML::Mark&, const std::string& tag,
+                              YAML::anchor_t anchor, const std::string& value)
 {
    switch (m_stateStack.top().state)
    {
@@ -373,8 +373,8 @@ void BsonHandler::OnScalar(const Mark&, const std::string& tag,
     }
 }
 
-void BsonHandler::OnSequenceStart(const Mark&, const std::string& tag,
-            anchor_t anchor, EmitterStyle::value style)
+void BsonHandler::OnSequenceStart(const YAML::Mark&, const std::string& tag,
+            YAML::anchor_t anchor, YAML::EmitterStyle::value style)
 {
   if (!m_stateStack.empty())
   {
@@ -397,8 +397,8 @@ void BsonHandler::OnSequenceEnd()
    bson_append_finish_array(m_bson);
 }
 
-void BsonHandler::OnMapStart(const Mark&, const std::string& tag,
-                                anchor_t anchor, EmitterStyle::value style)
+void BsonHandler::OnMapStart(const YAML::Mark&, const std::string& tag,
+                                YAML::anchor_t anchor, YAML::EmitterStyle::value style)
 {
   if (!m_stateStack.empty() )
   {
@@ -446,21 +446,21 @@ string JsonHandler::to_string()
 
 JsonHandler::JsonHandler(stringstream& os_) : m_os(os_) {}
 
-void JsonHandler::OnDocumentStart(const Mark&) {}
+void JsonHandler::OnDocumentStart(const YAML::Mark&) {}
 
 void JsonHandler::OnDocumentEnd() {}
 
-void JsonHandler::OnNull(const Mark&, anchor_t anchor)
+void JsonHandler::OnNull(const YAML::Mark&, YAML::anchor_t anchor)
 {
   assert(m_stateStack.top().state == WaitingForValue );
   addScalar(m_stateStack.top().key.c_str(), "null" );
   BeginNode();
 }
 
-void JsonHandler::OnAlias(const Mark&, anchor_t anchor) {}
+void JsonHandler::OnAlias(const YAML::Mark&, YAML::anchor_t anchor) {}
 
-void JsonHandler::OnScalar(const Mark&, const std::string& tag,
-                              anchor_t anchor, const std::string& value)
+void JsonHandler::OnScalar(const YAML::Mark&, const std::string& tag,
+                              YAML::anchor_t anchor, const std::string& value)
 {
    switch (m_stateStack.top().state)
    {
@@ -482,8 +482,8 @@ void JsonHandler::OnScalar(const Mark&, const std::string& tag,
     }
 }
 
-void JsonHandler::OnSequenceStart(const Mark&, const std::string& tag,
-            anchor_t anchor, EmitterStyle::value style)
+void JsonHandler::OnSequenceStart(const YAML::Mark&, const std::string& tag,
+            YAML::anchor_t anchor, YAML::EmitterStyle::value style)
 {
   string key="";
   if (!m_stateStack.empty())
@@ -511,8 +511,8 @@ void JsonHandler::OnSequenceEnd()
   m_os << "]";
 }
 
-void JsonHandler::OnMapStart(const Mark&, const std::string& tag,
-                                anchor_t anchor, EmitterStyle::value style)
+void JsonHandler::OnMapStart(const YAML::Mark&, const std::string& tag,
+                                YAML::anchor_t anchor, YAML::EmitterStyle::value style)
 {
   string key="";
   if (!m_stateStack.empty() )

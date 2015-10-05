@@ -24,11 +24,11 @@
 
 #include "f_ejdb_file.h"
 #include "v_user.h"
-#ifdef buildWIN32
-#include <tcejdb/ejdb.h>
-#else
+//#ifdef buildWIN32
+//#include <tcejdb/ejdb.h>
+//#else
 #include "ejdb.h"
-#endif
+//#endif
 
 //----------------------------------------------------------
 // TAbstractFile
