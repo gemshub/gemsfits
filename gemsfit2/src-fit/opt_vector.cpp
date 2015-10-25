@@ -215,8 +215,8 @@ long int OptParameter::Get_Fparam(int ndx, int exp, int &Fndx, int &Pndx, double
 {
     Fndx = optFP[ndx]->Fndx;
     Pndx = optFP[ndx]->Pndx;
-//    Pval = optFP[ndx]->EVv[exp];
-    Pval = optFP[ndx]->IVv[exp];
+    Pval = optFP[ndx]->EVv[exp];
+//    Pval = optFP[ndx]->IVv[exp];
     Ub   = optFP[ndx]->UB;
     Lb   = optFP[ndx]->LB;
     return 1;

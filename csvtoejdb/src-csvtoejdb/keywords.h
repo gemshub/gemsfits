@@ -127,6 +127,7 @@ static const char *expphases        = "expphases"; //	               1    array	
         static const char *DCprop   = "DCprop"; //                     3    array           array of dependent components properties (Qnt, etc.)
               static const char *actcoef = "@coef"; //     	        ->4	    string		    name of peorperty - activity coef
               static const char *activity ="activity";
+              static const char *PpG      ="PpG"; //                        string          dependent component in gas phase partial pressure
                         // with Qerror and Qunit
         // Phase properties
     static const char *phprop       = "phprop"; //                      2    array		    known bulk properties of the phase
@@ -201,11 +202,11 @@ static const char *inverr_norm      = "inverr_norm"; //                      str
 static const char *molal            = "molal"; //                            string          molality moles/kg
 static const char *loga             = "loga"; //                             string          log(activity)
 static const char *logm             = "log_molal"; //                        string          log(molality)
-static const char *_logm            = "-logm"; //                           string          -log(molality)
+static const char *_logm            = "-logm"; //                            string          -log(molality)
 static const char *_loga            = "-loga"; //                            string          -log(activity) used for pH
 static const char *gram             = "g"; //                                string          mass, grams
 static const char *kgram            = "kg"; //                               string          mass, kg
-static const char *mol             = "mol"; //                             string          amount, moles
+static const char *mol              = "mol"; //                              string          amount, moles
 static const char *m3               = "m3"; //                               string          volume, m3
 static const char *cm3              = "cm3"; //                              string          volume, cm3
 static const char *molratio         = "molratio"; //                         string          mole ratio
@@ -217,6 +218,7 @@ static const char *g_cm3            = "g/cm3"; //                            str
 static const char *Volts            = "Volts"; //                            string          Eh, V
 static const char *J_mol            = "J/mol"; //                            string          energy per mole, J/mol
 static const char *kJ_mol           = "kJ/mol"; //                           string          energy per mole, kJ/mol
+static const char *bar              = "bar"; //                              string          bar = 10^5 Pa
 
 static const char *aq = "a"; ///
 

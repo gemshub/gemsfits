@@ -104,6 +104,7 @@ void nestedfun (TGfitTask *sys)
                                 }
                             } else
                             {
+                                if (sys->Tfun->nestfun[sys->NEFndx[P_id]].exp_DCP == "PpG" )  bounds = 1;
                                 x.push_back(Pval);
                                 UB.push_back(Ub);
                                 LB.push_back(Lb);
@@ -148,6 +149,8 @@ void nestedfun (TGfitTask *sys)
                 try
                 {
                 nlopt::result result = opt.optimize(x, minf);
+//                cout << "Nested: " << i << " " << sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]].count << endl;
+                sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]].count = 0;
                 }
                 catch (nlopt::roundoff_limited &rf )
                                         {
@@ -257,6 +260,7 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, 
 
     // calculate residual
     int count = 0;
+    sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]].count++;
     residual = sys->get_residual (sys->EXPndx[P_id], sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]], count);
 
     return residual;

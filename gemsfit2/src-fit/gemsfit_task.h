@@ -179,6 +179,7 @@ public:
             rslts results;
             bool isComputed;
             double SumWTFun /*= 0.0*/;
+            unsigned int count = 0;
         };
         vector<obj_fun> objfun;
         vector<obj_fun> nestfun;
