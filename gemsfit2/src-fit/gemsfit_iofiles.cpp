@@ -126,8 +126,6 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
     std::replace( path.begin(), path.end(), '\\', '/');
 #endif
     bson_append_string(&bson_task_file, keys::G3Ksys[mode], path.c_str() );
-    bson_append_string(&bson_task_file, keys::DSelect[mode], "");
-    bson_append_string(&bson_task_file, keys::DTarget[mode], "");
 
     // Optimization Settings
     bson_append_start_object(&bson_task_file, keys::OptSet[mode]);
@@ -166,6 +164,12 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
         bson_append_int(&bson_task_file, keys::StatMCr[mode], 100);
 
     } bson_append_finish_object(&bson_task_file);
+
+    bson_append_string(&bson_task_file, keys::DSelect[mode], "");
+    bson_append_string(&bson_task_file, keys::DTarget[mode], "");
+
+    // Nested function parameters
+    bson_append_string(&bson_task_file, keys::OptNFParameters[mode], "");
 
     bson_append_start_array(&bson_task_file, keys::OptParameters[mode]);
 
@@ -316,10 +320,6 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
 
     // finish Parameters to Optimize
     bson_append_finish_array(&bson_task_file);
-
-
-    // Nested function parameters
-    bson_append_string(&bson_task_file, keys::OptNFParameters[mode], "");
 
     bson_append_string(&bson_task_file, keys::DatLogK[mode], "");
 

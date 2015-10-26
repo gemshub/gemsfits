@@ -857,7 +857,7 @@ void Data_Manager::bson_to_Data_Manager(/* FILE *f, */ const char *data, int pos
         if (key_ == keys::Weight)
         {
             // adding weight
-            if (!h_datasetlist)
+//            if (!h_datasetlist)
             experiments[pos]->weight = bson_iterator_double(i);
         } else
 
