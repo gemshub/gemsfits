@@ -62,9 +62,12 @@ CONFIG( mpi, serial|mpi ) {
         message( "Configuring for OPEN_MPI build ..." )
         QMAKE_CC	= mpicc
         QMAKE_CXX	= mpic++
-        QMAKE_CFLAGS += $$system(mpicc --showme:compile) -fopenmp
-        QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions $$system(mpic++ --showme:compile) -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions -fopenmp
-        LIBS +=  $$system(mpic++ --showme:link) -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp -ljansson -lejdb
+        #QMAKE_CFLAGS += $$system(mpicc --showme:compile) -fopenmp
+        QMAKE_CFLAGS += $$system(mpicc --showme:compile)
+        #QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions $$system(mpic++ --showme:compile) -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions -fopenmp
+        QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions $$system(mpic++ --showme:compile) -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions
+        #LIBS +=  $$system(mpic++ --showme:link) -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp -ljansson -lejdb
+        LIBS +=  $$system(mpic++ --showme:link) -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz -liomp5 -ljansson -lejdb
 }
 
 #contains( CONFIG, serial ) {
@@ -72,14 +75,24 @@ CONFIG( serial, serial|mpi ) {
         message( "Configuring for serial build ..." )
         QMAKE_CC	= gcc
         QMAKE_CXX	= g++
-        QMAKE_CFLAGS += -fopenmp
-        QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions -fopenmp
-        LIBS += -lnlopt -lm -lboost_filesystem  -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp -ljansson -lejdb
+        #QMAKE_CFLAGS += -fopenmp
+        #QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions -fopenmp
+        QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions
+        #LIBS += -lnlopt -lm -lboost_filesystem  -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp -ljansson -lejdb
+        LIBS += -lnlopt -lm -lboost_filesystem  -lboost_system -llapack -lblas -larmadillo -lpthread -lz -liomp5 -ljansson -lejdb
 }
 
 !macx-clang {
   QMAKE_CXXFLAGS += -std=gnu99
   QMAKE_CFLAGS += -std=gnu99
+}else{
+  INCLUDEPATH   += "/usr/local/include"
+  INCLUDEPATH   += "/usr/local/Cellar/libiomp/20150701/include/libiomp"
+  LIBPATH += "/usr/local/lib/"
+  LIBPATH +=  "/usr/local/Cellar//libiomp/20150701/lib"
+
+#  INCLUDEPATH   += /usr/local/Cellar/jansson/2.7
+#  INCLUDEPATH   +=  /usr/local/Cellar/gcc/5.2.0
 }
 
 FIT_CPP      =  ./src-fit
