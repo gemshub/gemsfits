@@ -34,6 +34,7 @@ macx-g++ {
 
 macx-clang {
   DEFINES += __APPLE__
+  INCLUDEPATH   += "/usr/local/include"
 }
 else {
  QMAKE_CXXFLAGS += -std=gnu99
@@ -62,6 +63,9 @@ win32{
    EJDB_LIB_PATH =  $$EJDB_PATH/build-win32
 }
 unix{
+   EJDB_LIB_PATH =  $$EJDB_PATH/build
+}
+app{
    EJDB_LIB_PATH =  $$EJDB_PATH/build
 }
 
