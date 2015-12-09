@@ -1,4 +1,6 @@
-MinGW 4.8 Qt 5.2.1 IMPORTANT use 32 bit libraries and the same compiler version for all libraries
+MinGW 4.8 Qt 5.2.1 IMPORTANT use 32 bit libraries and the same compiler version for all (most) libraries
+The other dll libaries are taken from C:\Qt\Qt5.5.0\5.5\mingw492_32\bin  - numbers in the path depend on the version
+
 
 Jannson library added to the project tree.
 TCEJDB removed from project tree. Included as static library using QT
@@ -35,3 +37,5 @@ to run parallel:
 https://www.barbato.us/2011/02/07/openmp-qtcreator-windows-when-mingw-compiler/
 OpenMP_Win.pdf
 copy to system 32 and add the flags to the pro file
+
+

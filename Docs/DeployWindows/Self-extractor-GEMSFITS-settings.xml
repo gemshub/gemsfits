@@ -11,9 +11,9 @@
     <PromptShowSFXIcon>True</PromptShowSFXIcon>
     <Overwrite>All</Overwrite>
     <MessageBegin Show="True">Install/Update GEMSFITS v1.0 2015 package (Windows)?</MessageBegin>
-    <MessageCancel Show="True">Are you sure you want to cancel Installing/Updating GEMSFITS v1.0 2015?</MessageCancel>
+    <MessageCancel Show="True">Are you sure you want to cancel Installing/Updating GEMSFITS v2.0 2015?</MessageCancel>
     <MessageFinish Show="True">Success! Fitting projects can be found in the '\Tests\' subfolder.</MessageFinish>
-    <TitleText>GEMSFITS v1.0 2015 r.596.1036</TitleText>
+    <TitleText>GEMSFITS v1.0 2015 r.662.1094</TitleText>
     <ExtractPathText>Use default, or type/select another location. If the folder does not exist, it will be created.</ExtractPathText>
     <ExtractCancelText>Abort</ExtractCancelText>
     <ExtractDialogText>Installing/Updating GEMSFITS v1.0 2015 (Windows)</ExtractDialogText>
@@ -30,8 +30,8 @@
   <VersionString>
     <Item Name="Comments" Value="GEMSFITS: parameter optimization for geochemical models" Enabled="True" />
     <Item Name="CompanyName" Value="Paul Scherrer Institut | ETH Zurich" Enabled="True" />
-    <Item Name="FileDescription" Value="GEMSFITS v1.0 2015 r.596, includes GEMS3K r.1036" Enabled="False" />
-    <Item Name="FileVersion" Value=" rev. 596.1036 " Enabled="True" />
+    <Item Name="FileDescription" Value="GEMSFITS v1.0 2015 r.662, includes GEMS3K r.1094" Enabled="False" />
+    <Item Name="FileVersion" Value=" rev. 662.1094 " Enabled="True" />
     <Item Name="InternalName" Value="gemsfits.exe" Enabled="True" />
     <Item Name="LegalCopyright" Value="Copyright © 2014-2015 GEMS Development Team" Enabled="True" />
     <Item Name="LegalTrademarks" Value="PSI; IGP ETHZ; Univ.Helsinki" Enabled="True" />

@@ -101,6 +101,8 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     double test_residual = 0.0;
     int count;
 
+//    cout << "in global" << endl;
+
     // Temporary storage vectors
     master_counter++;
 
@@ -135,6 +137,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         {
             sys->Opti->optParam[e]->Adjust_param(sys->NodT[i], opt);
         }
+//        cout<<"adjusting parameters for: "<< i+1 <<" sample "<< sys->experiments[i]->sample << endl;
     }
 
     /// NESTED FUNCTION
@@ -154,7 +157,6 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         }
     }
 
-
 #ifdef useomp
     omp_set_num_threads(sys->MPI);
     #pragma omp parallel for schedule(dynamic)
@@ -166,7 +168,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         dBR.push_back(sys->NodT[i]->pCNode());
         long int NodeStatusCH;
 
-            // Set the P in the node->CNode-P as in the experiments to avoind problem due to Psat notation as 0
+            // Set the P in the node->CNode-P as in the experiments to avoid problem due to Psat notation as 0
         for (unsigned int e=0; e<sys->experiments.size(); ++e)
         {
             sys->NodT[e]->Set_TK(273.15 + sys->experiments[e]->sT);
@@ -175,6 +177,8 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 
         // Asking GEM to run with automatic initial approximation
         dBR.at(0)->NodeStatusCH = NEED_GEM_AIA;
+
+//         cout<<"Before run node: "<< i+1 <<" sample "<< sys->experiments[i]->sample << endl;
 
         // RUN GEMS3K
         NodeStatusCH = sys->NodT[i]->GEM_run( false );

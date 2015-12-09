@@ -797,6 +797,9 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFun
 
         if (objfun.exp_unit == keys::bar)
              computed_value = sys->NodT[i]->DC_c( DCndx ) / 100000;
+        else
+            // default bar
+            computed_value = sys->NodT[i]->DC_c( DCndx ) / 100000;
 //         else computed_value = sys->NodT[i]->DC_c( DCndx, true );
     } else
     { if (DCndx < 0)

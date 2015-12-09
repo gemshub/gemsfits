@@ -109,6 +109,8 @@ void OptParameter::Pval_to_optL (int p, string data, L_parameter *opt)
 //    out3.clear();
 
     parse_JSON_object(data, keys::LICs[mode], out3);
+    if (out3.size() == 0)
+    { cout << "ERROR: No linked independent component name defined! " << endl; exit(1);}
     for (unsigned int i = 0 ; i < out3.size() ; i++)
     {
         opt->L_param.push_back( out3.at(i) );
@@ -882,7 +884,7 @@ long int Opt_bIC::Adjust_Lparam(TNode *node, int exp )
         param_change =  delta_ - optLP[i]->delta[exp];                                                // param_change = (a*newA + b*newB) - (inita*A + initb*B);
         if (param_change != 0)
         {
-            new_param = /*sys->NodT[exp]->Get_bIC(LP_index)*/optLP[i]->IVv[exp] + param_change;        // C = initC + param_change;
+            new_param = /*node->Get_bIC(LP_index)*/optLP[i]->IVv[exp] + param_change;        // C = initC + param_change;
             node->Set_bIC(LP_index, new_param);
             optLP[i]->EVv[exp] = new_param;
         }

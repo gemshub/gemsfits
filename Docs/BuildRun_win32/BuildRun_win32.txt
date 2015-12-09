@@ -1,7 +1,7 @@
 Build gfshell2 and gemsfit2 on Qt 5.3.2 for Windows.
 
 1. To be able to build gemsfit2 code for parallel processing copy the file 
-pthreadGC2.dll from the gemsfit2_dlls foldder into your Windows\System32\ 
+pthreadGC2.dll from the gemsfit2_dlls/OMP foldder into your Windows\System32\ 
 folder. By doing this there should be no warnings on the lines where "#pragma 
 omp parallel for" is present in the code. If a warning is present the program 
 will build OK, but the parallelization option will not work.

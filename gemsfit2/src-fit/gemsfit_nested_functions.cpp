@@ -126,7 +126,7 @@ void nestedfun (TGfitTask *sys)
 
                 if (bounds == 0)
                 {
-                opt.set_xtol_rel(1e-10);
+                opt.set_xtol_rel(1e-10); // take out these settings into the NFUN of the task file
                 opt.set_xtol_abs(1e-10);}
                 if (bounds == 1)
                 {
@@ -140,7 +140,7 @@ void nestedfun (TGfitTask *sys)
 //                }
 //                opt.set_initial_step( inistep );
 
-//                cout << "before: "<<sys->NodT[i]->Get_IC() << endl;
+//                cout << "before: "<< sys->experiments[sys->EXPndx[P_id]]->sample << endl;
                 if (x.size() == 0 )
                 {
                     cout << "Error setting the NFUN parameters! " << endl; exit(1);
@@ -173,7 +173,7 @@ void nestedfun (TGfitTask *sys)
                 x.clear(); UB.clear(); LB.clear(); sys->PAndx.clear(); sys->vPAndx[P_id]->ndx.clear();
                 sys->vEAndx[P_id]->ndx.clear();
 
-//                cout << "after: "<<sys->NodT[i]->Get_IC() << endl;
+//                cout << "after: "<<i << endl;
             }
         }
     }

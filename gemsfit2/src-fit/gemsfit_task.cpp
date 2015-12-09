@@ -189,7 +189,7 @@ void TGfitTask::run_optim()
     {
         if (Opti->h_optNF) // if nested function
         {
-            // CHECK NESTED pH
+            // CHECK NESTED pH to use acid or base
             nestedpH ();
         }
         init_optim (Opti->optv, weighted_Tfun_sum_of_residuals);
@@ -640,7 +640,23 @@ void TGfitTask::setnodes()
                     majorsalt = experiments[n]->sbcomp[j]->comp;
                     maxsalt = experiments[n]->sbcomp[j]->Qnt;
                 }
-            } /*else // default NaCl
+            } else
+            if (experiments[n]->sbcomp[j]->comp == "CaCl2")
+            {
+                if (experiments[n]->sbcomp[j]->Qnt > maxsalt)
+                {
+                    majorsalt = experiments[n]->sbcomp[j]->comp;
+                    maxsalt = experiments[n]->sbcomp[j]->Qnt;
+                }
+            }else
+            if (experiments[n]->sbcomp[j]->comp == "MgCl2")
+            {
+                if (experiments[n]->sbcomp[j]->Qnt > maxsalt)
+                {
+                    majorsalt = experiments[n]->sbcomp[j]->comp;
+                    maxsalt = experiments[n]->sbcomp[j]->Qnt;
+                }
+            }/*else // default NaCl
             {
                 if (experiments[n]->sbcomp[j]->Qnt > maxsalt)
                 {
@@ -680,6 +696,18 @@ void TGfitTask::setnodes()
                 NodT[n]->Set_PMc(0.123, 0 );
                 NodT[n]->Set_PMc(3.67, 1 );
                 NodT[n]->Set_PMc(4, 4 );
+            } else
+            if (majorsalt == "CaCl2")
+            {
+                NodT[n]->Set_PMc(0.077, 0 );
+                NodT[n]->Set_PMc(4.32, 1 );
+                NodT[n]->Set_PMc(0, 4 );
+            } else
+            if (majorsalt == "MgCl2")
+            {
+                NodT[n]->Set_PMc(0.106, 0 );
+                NodT[n]->Set_PMc(4.11, 1 );
+                NodT[n]->Set_PMc(0, 4 );
             } else // default NaCl
             {
                 NodT[n]->Set_PMc(0.064, 0 );

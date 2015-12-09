@@ -4,6 +4,7 @@ Docs/BuildRun_win32/Build_Boost_Win.pdf -text
 Docs/BuildRun_win32/LAPACK_Win.pdf -text
 Docs/BuildRun_win32/OpenMP_Win.pdf -text
 Docs/BuildRun_win32/Tcejdb_Win.pdf -text
+Docs/BuildRun_win32/gemsfits_dlls/OMP/pthreadGC2.dll -text
 Docs/BuildRun_win32/gemsfits_dlls/libblas.dll -text
 Docs/BuildRun_win32/gemsfits_dlls/libgcc_s_dw2-1.dll -text
 Docs/BuildRun_win32/gemsfits_dlls/libgfortran-3.dll -text
@@ -13,7 +14,6 @@ Docs/BuildRun_win32/gemsfits_dlls/libnlopt-0.dll -text
 Docs/BuildRun_win32/gemsfits_dlls/libquadmath-0.dll -text
 Docs/BuildRun_win32/gemsfits_dlls/libstdc++-6.dll -text
 Docs/BuildRun_win32/gemsfits_dlls/libwinpthread-1.dll -text
-Docs/BuildRun_win32/gemsfits_dlls/pthreadGC2.dll -text
 Docs/BuildRun_win32/gemsfits_dlls/tcejdbdll.dll -text
 Docs/DeployLinux/GEMSFITS.1-592.1036-linux-x86-64.tgz -text
 Docs/DeployLinux/gemsfits.png -text
