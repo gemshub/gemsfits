@@ -1,4 +1,4 @@
-Build gfshell2 and gemsfit2 on Qt 5.3.2 for Windows.
+Build gfshell2 and gemsfit2 on Qt 5.3.2 / 5.5.1 for Windows.
 
 1. To be able to build gemsfit2 code for parallel processing copy the file 
 pthreadGC2.dll from the gemsfit2_dlls/OMP foldder into your Windows\System32\ 
@@ -11,11 +11,13 @@ will build OK, but the parallelization option will not work.
 
 Running gemsfit2 from gfshell2 or gemsfit2 from gfshell2 outside Qt-Creator.
 
-1. Copy the *.dll files from their respective folders to the place were the 
-executable files of the programs were compiled. For example copy all the dll 
-files from the gemsfit2_dlls to gemsfit2_build folder of the Qt project. 
-Otherwise gemsfit2 code will not run when accessed by the gf2shell. 
+1. Copy the *.dll files from their respective folders (depending on the Qt 
+version used) to the place were the executable files of the programs were 
+compiled. For example copy all the dll files from the gemsfit2_dlls to 
+gemsfit2_build folder of the Qt project. Otherwise gemsfit2 code will not 
+run when accessed by the gf2shell. 
 
 This will also allow running gfshell2 and gemsfit2 outside the Qt environment, 
 just by executing the exe files from Windows Explorer or Command Promt.
+
 
