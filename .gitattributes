@@ -4,6 +4,7 @@ Docs/BuildRun_win32/Build_Boost_Win.pdf -text
 Docs/BuildRun_win32/LAPACK_Win.pdf -text
 Docs/BuildRun_win32/OpenMP_Win.pdf -text
 Docs/BuildRun_win32/Tcejdb_Win.pdf -text
+Docs/BuildRun_win32/gemsfits_dlls/OMP/pthreadGC2.dll -text
 Docs/BuildRun_win32/gemsfits_dlls/dlls_Qt5.3.2/libblas.dll -text
 Docs/BuildRun_win32/gemsfits_dlls/dlls_Qt5.3.2/libgcc_s_dw2-1.dll -text
 Docs/BuildRun_win32/gemsfits_dlls/dlls_Qt5.3.2/libgfortran-3.dll -text
