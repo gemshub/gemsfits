@@ -40,6 +40,10 @@ gemsfit2-build/stat_test
 gemsfit2-build/test_input/SOL
 gemsfit2-build/test_input/old
 gfshell2/gemsfit-gui.pro.user
+gfshell2-build/Makefile
+gfshell2-build/gemsfits
+gfshell2-build/gemsfits.ini
+gfshell2-build/qrc_fgui.cpp
 gfshell2-build/obj/*
 gfshell2-build/tmp/*
 Tests/1CASHNK/work/*
