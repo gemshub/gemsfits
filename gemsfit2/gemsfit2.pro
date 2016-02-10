@@ -85,6 +85,7 @@ CONFIG( serial, serial|mpi ) {
 !macx-clang {
   QMAKE_CXXFLAGS += -std=gnu99
   QMAKE_CFLAGS += -std=gnu99
+  INCLUDEPATH   += "/usr/local/include/ejdb"
 }else{
   INCLUDEPATH   += "/usr/local/include"
   INCLUDEPATH   += "/usr/local/Cellar/libiomp/20150701/include/libiomp"
@@ -105,21 +106,21 @@ GEMS3K_H     =   $$GEMS3K_CPP
 KEYS_H       =   $$KEYS_CPP
 MUP_H        =   $$MUP_CPP
 
-EJDB_PATH = ../../standalone/EJDB
+#EJDB_PATH = ../../standalone/EJDB
 
-win32{
-   EJDB_LIB_PATH =  $$EJDB_PATH/build-win32
-}
-unix{
-   EJDB_LIB_PATH =  $$EJDB_PATH/build
-}
+#win32{
+#   EJDB_LIB_PATH =  $$EJDB_PATH/build-win32
+#}
+#unix{
+#   EJDB_LIB_PATH =  $$EJDB_PATH/build
+#}
 
-EJDB_BSON_H = $$EJDB_PATH/src/bson
-EJDB_EJDB_H = $$EJDB_PATH/src/ejdb
-EJDB_TCUTIL_H = $$EJDB_PATH/src/tcutil
+#EJDB_BSON_H = $$EJDB_PATH/src/bson
+#EJDB_EJDB_H = $$EJDB_PATH/src/ejdb
+#EJDB_TCUTIL_H = $$EJDB_PATH/src/tcutil
 #EJDB_GENERATED_H = $$EJDB_LIB_PATH/debug/src/generated
-CONFIG(release, debug|release): EJDB_GENERATED_H = $$EJDB_LIB_PATH/release/src/generated
-CONFIG(debug, debug|release): EJDB_GENERATED_H = $$EJDB_LIB_PATH/debug/src/generated
+#CONFIG(release, debug|release): EJDB_GENERATED_H = $$EJDB_LIB_PATH/release/src/generated
+#CONFIG(debug, debug|release): EJDB_GENERATED_H = $$EJDB_LIB_PATH/debug/src/generated
 
 
 DEPENDPATH   += $$FIT_H
@@ -131,10 +132,11 @@ INCLUDEPATH  += $$FIT_H
 INCLUDEPATH  += $$GEMS3K_H   
 INCLUDEPATH  += $$KEYS_H
 INCLUDEPATH  += $$MUP_H
-INCLUDEPATH   += $$EJDB_BSON_H
-INCLUDEPATH   += $$EJDB_EJDB_H
-INCLUDEPATH   += $$EJDB_GENERATED_H
-INCLUDEPATH   += $$EJDB_TCUTIL_H
+
+#INCLUDEPATH   += $$EJDB_BSON_H
+#INCLUDEPATH   += $$EJDB_EJDB_H
+#INCLUDEPATH   += $$EJDB_GENERATED_H
+#INCLUDEPATH   += $$EJDB_TCUTIL_H
 
 OBJECTS_DIR       = obj
 
@@ -142,7 +144,7 @@ include($$FIT_CPP/fit.pri)
 include($$GEMS3K_CPP/gems3k.pri)
 include($$MUP_CPP/muparser.pri)
 #include($$EJDB_CPP/tcejdb.pri)
-include($$EJDB_PATH/ejdb.pri)
+#include($$EJDB_PATH/ejdb.pri)
 
-CONFIG(release, debug|release): LIBS += -L$$EJDB_LIB_PATH/release/src/ -lejdb
-CONFIG(debug, debug|release): LIBS += -L$$EJDB_LIB_PATH/debug/src/ -lejdb
+#CONFIG(release, debug|release): LIBS += -L$$EJDB_LIB_PATH/release/src/ -lejdb
+#CONFIG(debug, debug|release): LIBS += -L$$EJDB_LIB_PATH/debug/src/ -lejdb
