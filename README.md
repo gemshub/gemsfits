@@ -26,7 +26,11 @@ Alternatively on Mac OS X or linux, open a terminal, cd ~/gitGEMSFIT/gemsfits an
 ~~~
 git clone https://bitbucket.org/gems4/gemsfits.git .
 ~~~
-Switch the GEMSFITS code repository to a git branch master using the git client; or in the terminal, cd to ~/gitGEMSFIT/gemsfits and run the commands
+Check that the active branch is master: in terminal, cd to ~/gitGEMSFIT/gemsfits and run a command 
+~~~
+git branch 
+~~~
+which should return "* master". If not, run the commands
 ~~~
 git checkout -b master --track origin/master
 git pull origin master
