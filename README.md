@@ -16,14 +16,23 @@ Learn more and contact us on [GEMSFITS web page](http://gems.web.psi.ch/GEMSFITS
 
 ## How to download GEMSFITS source code? ##
 
-In your home directory, make a folder named e.g. ~/gitGEMSFIT with subfolders ~/gitGEMSFIT/gfshell and ~/gitGEMSFIT/standalone.
+In your home directory, make a folder named e.g. ~/gitGEMSFIT with two subfolders ~/gitGEMSFIT/gemsfits and ~/gitGEMSFIT/standalone.
 
-Change into ~/gitGEMSFIT/gfshell folder and clone this repository from https://bitbucket.org/gems4/gemsfits.git using a preinstalled free git client SourceTree or SmartGit (the best way on Windows). 
+### Clone the GEMSFITS repository ###
 
-Alternatively on Mac OS X or linux, open a terminal, cd ~/gitGEMSFIT/gfshell and type in the command line (do not forget a period at the end):
+Change into ~/gitGEMSFIT/gemsfits folder and clone this repository from https://bitbucket.org/gems4/gemsfits.git using a preinstalled free git client SourceTree or SmartGit (the best way on Windows). 
+
+Alternatively on Mac OS X or linux, open a terminal, cd ~/gitGEMSFIT/gemsfits and type in the command line (do not forget a period at the end):
 ~~~
-git clone https://bitbucket.org/gems4/gemsfits.git . 
+git clone https://bitbucket.org/gems4/gemsfits.git .
 ~~~
+Switch the GEMSFITS code repository to a git branch master using the git client; or in the terminal, cd to ~/gitGEMSFIT/gemsfits and run the commands
+~~~
+git checkout -b master --track origin/master
+git pull origin master
+~~~
+
+### Clone the GEMS3K repository ###
 
 Change into ~/gitGEMSFIT/standalone folder and clone the GEMS3K repository from https://bitbucket.org/gems4/gems3k.git using the git client.
 
@@ -32,7 +41,7 @@ Alternatively on Mac OS X or linux terminal cd ~/gitGEMSFIT/standalone and run a
 git clone https://bitbucket.org/gems4/gems3k.git . 
 ~~~
 
-Switch the GEMS3K code repository to git branch branches/devEJDB using the git client, or in terminal, run the commands
+Switch the GEMS3K code repository to a git branch branches/devEJDB using the git client, or in terminal, run the commands
 ~~~
 git checkout -b branches/devEJDB --track origin/branches/devEJDB
 git pull origin branches/devEJDB
@@ -51,11 +60,11 @@ Make sure that you have the complete Qt5 toolkit (with QtCreator) installed eith
 
 ### Build the gemsfit2 code ###
 
-In QtCreator, open a project  ~/gitGEMSFIT/gfshell/gemsfit2/gemsfit2.pro and configure it to build release (or debug) into ~/gitGEMSFIT/gfshell/gemsfit2-build folder. Then run qmake and build the gemsfit2 executable code. 
+In QtCreator, open a project  ~/gitGEMSFIT/gfshell/gemsfit2/gemsfit2.pro and configure it to build release (or debug) into ~/gitGEMSFIT/gemsfits/gemsfit2-build folder. Then run qmake and build the gemsfit2 executable code. 
 
 ### Build and run the gemsfits code ###
 
-In QtCreator, open a project  ~/gitGEMSFIT/gfshell/gfshell2/gemsfit-gui.pro and configure it to build release (or debug) into ~/gitGEMSFIT/gfshell/gfshell-build folder. Then run qmake and build the gemsfits executable code.
+In QtCreator, open a project  ~/gitGEMSFIT/gemsfits/gfshell2/gemsfit-gui.pro and configure it to build release (or debug) into ~/gitGEMSFIT/gemsfits/gfshell-build folder. Then run qmake and build the gemsfits executable code.
 
 Launch the gemsfits code (without command-line parameters) from QtCreator and open its help window to learn how to use it. The gemsfit2 code will be called from within the gemsfits GUI code when necessary.
 
