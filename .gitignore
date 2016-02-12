@@ -48,4 +48,6 @@ gfshell2-build/obj/*
 gfshell2-build/tmp/*
 Tests/1CASHNK/work/*
 Resources/help/.gfshelp/*
+gfshell2-build/ipmlog.txt
 gfshell-build/*
+

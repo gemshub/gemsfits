@@ -386,7 +386,7 @@ void TGfitTask:: print_global_results ()
     int prec = 12;
     setprecision(prec);
     scientific(gpf->fres);
-    gpf->fres.setf(ios::fixed);
+//    gpf->fres.setf(ios::fixed);
 
     vector<string> header;
     header.push_back(keys::expsample);
