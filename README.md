@@ -75,7 +75,12 @@ make
 sudo make install
 ~~~
 
-Make sure that you have the complete Qt5 toolkit (with QtCreator) installed either in the system or locally after downloading from [qt.io](http://www.qt.io/download/) site.
+Make sure that you have the complete Qt5 toolkit (with QtCreator) installed either in the system or locally after downloading from [qt.io](http://www.qt.io/download/) site. 
+
+On latest versions of Linux, Qt5 is available for installation in the system. For example on Ubuntu 15.10 it can be installed using a command:
+~~~
+sudo apt-get install qt5-default
+~~~ 
 
 ### Build the gemsfit2 code ###
 
