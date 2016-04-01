@@ -82,6 +82,11 @@ On latest versions of Linux, Qt5 is available for installation in the system. Fo
 sudo apt-get install qt5-default
 ~~~ 
 
+If error "Unknown module(s) in QT: help" appears use the following command:
+~~~
+sudo apt-get install qttools5-dev
+~~~
+
 ### Build the gemsfit2 code ###
 
 In QtCreator, open a project  ~/gitGEMSFIT/gemsfits/gemsfit2/gemsfit2.pro and configure it to build release (or debug) into ~/gitGEMSFIT/gemsfits/gemsfit2-build folder. Then run qmake and build the gemsfit2 executable code. 
