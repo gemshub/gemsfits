@@ -491,7 +491,16 @@ void TGfitTask::setnodes()
     // set fixed parameters
     if( mLook == 0)
     { cout << "G0 interpolation is active, G0 values cannot be set in GEMSFITS!" << endl;}
-    set_fixed_parameters();
+    try
+    {
+        set_fixed_parameters();
+    }
+    catch (TError & e)
+    {
+        cout << e.title << e.mess << endl;
+        exit(1);
+    }
+
 
 //    cout << NodT[0]->Get_bIC(0) << endl;
 //    cout << NodT[0]->Get_bIC(1) << endl;

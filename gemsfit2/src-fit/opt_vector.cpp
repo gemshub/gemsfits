@@ -174,7 +174,7 @@ void OptParameter::Pval_to_optR (int p, string data, R_parameter *opt)
     parse_JSON_object(data, keys::Rcoef, out3);
     if (out3.size() != opt->rdc_species.size())
     {
-        cout << "ERROR: Number of reaction components is not equal with the number of reaction coeficients; R-type parameter: "<< p+1 << endl;
+        cout << "ERROR: Number of reaction components is not equal with the number of reaction coeficients; R-type parameter: "<< opt->Pname << endl;
         exit(1);
     }
     for (unsigned int i = 0 ; i < out3.size() ; i++)
@@ -317,11 +317,13 @@ Opt_G0::Opt_G0(vector<string> data, double OptBoundPrc, unsigned &p) :
 //            optRP.push_back( new Opt_G0::R_parameter);
             optRP[Rndx]->Pndx = p;
 
-            Pval_to_optR (p, Jdata[i], optRP[Rndx]);
-
             parse_JSON_object(Jdata[i], keys::DCN[mode], out);
             if (out.size() !=1) { cout << "Parameter \"F\"-type " << p << " (G0) has no \"DCN\" defined! "<< endl; exit(1); }
+            if (optRP[Rndx]->Pname != "") { cout << "The index: "<<Rndx<< " was already defined for R-parameter: "<< optRP[Rndx]->Pname << endl; exit(1); }
             optRP[Rndx]->Pname = out[0];
+
+            Pval_to_optR (p, Jdata[i], optRP[Rndx]);
+
 //            h_optR = true;
             p++;
         }
@@ -382,7 +384,7 @@ long int Opt_G0::SetIndex_param(TNode *node)
         {
             optRP[i]->rdc_species_ind.push_back(node->DC_name_to_xCH(optRP[i]->rdc_species[s].c_str()));
             if (optRP[i]->rdc_species_ind[optRP[i]->rdc_species_ind.size()-1] < 0)
-            { cout << " Unknown DC name: "<<optRP[i]->rdc_species[optRP[i]->rdc_species_ind.size()-1]<< endl; exit(1);}
+            { cout << " Unknown DC name: "<<optRP[i]->rdc_species[optRP[i]->rdc_species_ind.size()-1]<< " in reaction (Rndx): " << i << endl; exit(1);}
         }
     }
     return 1;
@@ -463,6 +465,7 @@ long int Opt_G0::Adjust_Fparam(TNode *node, int Pndx, double Pval)
     int species_index = Pndx;
 
     delta_G0old_G0new = fabs(node->DC_G0(species_index, 1e+05, 298.15, false)) - fabs(new_G0);
+
     // going trough all TP pairs
     for (unsigned int j=0; j<TP_pairs[0].size(); ++j)
     {
