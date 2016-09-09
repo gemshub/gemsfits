@@ -513,7 +513,7 @@ void TGfitTask:: print_nested_results ()
 
     gpf->fnfres << endl;
     setprecision(12);
-    scientific(gpf->fnfres);
+//    scientific(gpf->fnfres);
 
     gpf->fnfres.setf(ios::fixed);
 
