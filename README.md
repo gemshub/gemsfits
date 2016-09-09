@@ -73,6 +73,7 @@ cd build
 cmake -DCMAKE_BUILD_TYPE=Release ../
 make
 sudo make install
+sudo ldconfig
 ~~~
 
 Make sure that you have the complete Qt5 toolkit (with QtCreator) installed either in the system or locally after downloading from [qt.io](http://www.qt.io/download/) site. 

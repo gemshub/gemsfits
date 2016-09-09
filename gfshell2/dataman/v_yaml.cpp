@@ -16,7 +16,7 @@
 // See http://gems.web.psi.ch/GEMSFIT for more information
 // E-mail gems2.support@psi.ch
 //-------------------------------------------------------------------
-
+#include <cassert>
 #include <iomanip>
 #include "verror.h"
 #include "v_json.h"
