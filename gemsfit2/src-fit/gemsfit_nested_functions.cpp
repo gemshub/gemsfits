@@ -52,7 +52,13 @@ void nestedfun (TGfitTask *sys)
 
         for (unsigned int j = 0; j<sys->Tfun->nestfun.size(); j++)
         {
-//            string param_type = sys->Tfun->nestfun[j].Ptype;
+            string compare_type = sys->Tfun->nestfun[j].exp_DCP;
+            if (compare_type == "activity")
+            {
+                sys->NodT[i]->Set_TK(273.15 + sys->experiments[i]->sT);
+                sys->NodT[i]->Set_P(100000 * sys->experiments[i]->sP);
+            }
+
             int P_id = omp_get_thread_num();
             int count = 0;
             double test_residual = sys->get_residual (i, sys->aTfun[i].nestfun[j], count);
@@ -152,10 +158,16 @@ void nestedfun (TGfitTask *sys)
 //                cout << "Nested: " << i << " " << sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]].count << endl;
                 sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]].count = 0;
                 }
+                catch (std::invalid_argument &fs)
+                {
+                    cout << fs.what() << endl;
+                    cout << "NFUN: sample "<< sys->experiments[i]->sample << endl;
+                    cout << "see: http://ab-initio.mit.edu/wiki/index.php/NLopt_C-plus-plus_Reference#Return_values "<< endl;
+                }
                 catch (nlopt::roundoff_limited &rf )
-                                        {
-//                                            cout << "Error in NESTED "<< endl;
-                                        }
+                {
+//                    cout << rf.what() << endl;
+                }
 
 //                double xx = minf;
 
@@ -261,6 +273,14 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, 
     // calculate residual
     int count = 0;
     sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]].count++;
+
+    string compare_type = sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]].exp_DCP;
+    if (compare_type == "activity")
+    {
+        sys->NodT[sys->EXPndx[P_id]]->Set_TK(273.15 + sys->experiments[sys->EXPndx[P_id]]->sT);
+        sys->NodT[sys->EXPndx[P_id]]->Set_P(100000 * sys->experiments[sys->EXPndx[P_id]]->sP);
+    }
+
     residual = sys->get_residual (sys->EXPndx[P_id], sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]], count);
 
     return residual;
