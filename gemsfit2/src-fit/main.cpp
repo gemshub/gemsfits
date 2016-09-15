@@ -65,7 +65,7 @@ int countit = 0;
 int generateConfig(); // Mode GEMSFIT to generate input configuration file
 int generateJConfig();
 
-struct timeval start, end;
+struct timeval start, end_;
 
 
 
@@ -157,10 +157,10 @@ int main( int argc, char *argv[] )
 
     delete gfittask;
 
-    gettimeofday(&end, NULL);
+    gettimeofday(&end_, NULL);
 
-    double delta = ((end.tv_sec  - start.tv_sec) * 1000000u +
-             end.tv_usec - start.tv_usec) / 1.e6;
+    double delta = ((end_.tv_sec  - start.tv_sec) * 1000000u +
+             end_.tv_usec - start.tv_usec) / 1.e6;
     gpf->flog <<"16. main.cpp(152): finished in ";
     gpf->flog << delta << " seconds. GEMSFITS: End. Bye!" << endl;
     cout << delta << " seconds." << endl;
