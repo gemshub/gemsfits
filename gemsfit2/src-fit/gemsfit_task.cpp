@@ -893,6 +893,10 @@ cout << "Node: " << NodeHandle+1 << " Sample: " << experiments[n]->sample <<"  N
            }
         }
 
+        // set back the T and P (for the case when P = 0 is Psat
+        NodT[n]->Set_TK(273.15 + experiments[n]->sT);
+        NodT[n]->Set_P(100000 * experiments[n]->sP);
+
         // mixed salt
 //        string sMod;
 //        NodT[n]->Get_sMod(0, sMod);

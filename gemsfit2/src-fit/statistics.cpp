@@ -423,12 +423,12 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     // Generate object containing normally distributed data with mean = 0 and standard deviation = SD_of_residuals
     if (gfittask->residuals_v.size() > 1)
     {
-    boost::math::normal dist(  0., SD_of_residuals );
+        unsigned int N = (int) gfittask->residuals_v.size();
+        try {
+            boost::math::normal dist(  0., SD_of_residuals );
 
     sort( gfittask->residuals_v.begin(), gfittask->residuals_v.end() );
     sort(weighted_residuals.begin(), weighted_residuals.end());
-
-    unsigned int N = (int) gfittask->residuals_v.size();
 
     // Compute percentile
     for( i=0; i< N; i++ )
@@ -455,6 +455,13 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     // Rank-based z-scores
     for( i=0; i< N; i++ )
         quantiles_v.push_back( boost::math::quantile( dist, percentiles_v[i] ) );
+
+        }
+        catch(const std::exception& e)
+        {
+           std::cout <<
+              "\n""Message from thrown exception was:\n   " << e.what() << std::endl;
+        }
 
     // Generate Q-Q Plot (Quantile-Quantile Plot) for each term of the objfun
 
