@@ -16,20 +16,41 @@ the files  gemsfits.png, Readme.Run.Linux.txt, and rungemsfits.sh from
 /Docs/DeployLinux to /GEMSFITSDEPLOY/gemsfits-app
 
 @@ gfshell2 @@ 
-3. Using QtCreator (Qt 5.2.1 64bit), build the actual release 
-variant of gemsfits (gfshell2) using the *.pro Qt project file.
+3.a Using QtCreator (Qt 5.5.1 64bit Ubuntu 16.04 system 
+    /usr/lib/x86_64-linux-gnu/qt5), build the actual release variant of 
+    gemsfits (gfshell2) using the *.pro Qt project file and Qt 5.5.1 64bit Kit
+    from system path /usr/lib/x86_64-linux-gnu/qt5.
 
-4. Copy the file gfshell2deployqtapp.sh from /Docs/DeployLinux into 
-the folder where gfshell2 is built (i.e. gemsfit/gfshell2-build)
+4.a Copy the file gfshell2deployQtsystem5.1.1.sh from /Docs/DeployLinux into 
+    the folder where gfshell2 is built (i.e. gemsfit/gfshell2-build)
 
-5. Open a Linux terminal, cd to the build folder
-"/home/you/DevGEMSFITS/devGFshell/gemsfit/gfshell2-build", and execute 
-the script "gfshell2deployqtapp.sh":
-   $ ./gfshell2deployqtapp.sh gemsfits
-if the script is not executable first run:
-   $ chmod u+x ./gfshell2deployqtapp.sh.
+5.a Open a Linux terminal, cd to the build folder
+    "/home/you/gitGEMSFITS/devGFshell/gemsfit/gfshell2-build", and execute 
+    the script "gfshell2deployQtsystem5.1.1.sh":
+   	$ ./gfshell2deployQtsystem5.1.1.sh gemsfits
+    if the script is not executable first run:
+   	$ chmod u+x ./gfshell2deployQtsystem5.1.1.sh
 
-6. Extract the gemsfits-app.tgz archive into /GEMSFITSDEPLOY/ folder
+6.a Extract the gemsfits-app.tgz archive into /GEMSFITSDEPLOY/ folder
+
+OR
+
+@@ gfshell2 @@ 
+3.b Using QtCreator (Qt 5.7 64bit intalled in home directory), build the 
+    actual release variant of gemsfits (gfshell2) using the *.pro Qt project 
+    file and Qt 5.7 64bit Kit from home/Qt/5.7.
+
+4.b Copy the file gfshell2deployQt5.7.sh from /Docs/DeployLinux into 
+    the folder where gfshell2 is built (i.e. gemsfit/gfshell2-build)
+
+5.b Open a Linux terminal, cd to the build folder
+    "/home/you/gitGEMSFITS/devGFshell/gemsfit/gfshell2-build", and execute 
+    the script "gfshell2deployQt5.7.sh":
+   	$ ./gfshell2deployQtsystem5.1.1.sh gemsfits
+    if the script is not executable first run:
+   	$ chmod u+x ./gfshell2deployQtsystem5.1.1.sh
+
+6.b Extract the gemsfits-app.tgz archive into /GEMSFITSDEPLOY/ folder
 
 @@ gemsfit2 @@ 
 5. Using QtCreator (Qt 5.2.1 64bit), build the actual release 
