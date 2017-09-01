@@ -208,6 +208,17 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 
             test_residual += sys->get_residual(i, sys->aTfun[i].objfun[j], count);
         }
+
+        for (unsigned j = 0; j< sys->Tfun->addout.size(); ++j)
+        {
+            // Set the P in the node->CNode-P as in the experiments to avoid problem due to Psat notation as 0
+            string compare_type = sys->aTfun[i].addout[j].exp_DCP;
+            if (compare_type == "activity")
+            {
+                 sys->NodT[i]->Set_TK(273.15 + sys->experiments[i]->sT);
+                 sys->NodT[i]->Set_P(100000 * sys->experiments[i]->sP);
+            }
+        }
     }
 
     if (sys->Opti->OptTuckey == 1)
