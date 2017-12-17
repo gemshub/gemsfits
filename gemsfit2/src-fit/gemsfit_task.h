@@ -167,6 +167,8 @@ public:
             vector<int> Helem;
             double TuWeight;
             double weight;
+            double sT = -1.0;
+            double sP = -1.0;
             struct rslts
             {
                 double measured_value;

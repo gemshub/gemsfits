@@ -504,7 +504,7 @@ void TGfitTask:: print_nested_results ()
     if( gpf->fnfres.fail() )
     { cout<<"Nested Results fileopen error"<<endl; exit(1); }
 
-    gpf->fnfres << "sample,phase,name,unit,measured,computed,residual";
+    gpf->fnfres << "sample,phase,name,unit,sT,sP,measured,computed,residual";
 
     for (unsigned i = 0; i<Opti->optNFParam.size(); i++)
     {
@@ -523,8 +523,14 @@ void TGfitTask:: print_nested_results ()
         {
             if (aTfun[i].nestfun[j].isComputed)
             {
-                gpf->fnfres << experiments[i]->sample <<","<< aTfun[i].nestfun[j].exp_phase <<","<< aTfun[i].nestfun[j].exp_CN <<","<< aTfun[i].nestfun[j].exp_unit <<","<<
-                             aTfun[i].nestfun[j].results.measured_value <<","<< aTfun[i].nestfun[j].results.computed_value << ","<< aTfun[i].nestfun[j].results.residual;
+                gpf->fnfres << experiments[i]->sample <<"," << aTfun[i].nestfun[j].exp_phase <<","<< aTfun[i].nestfun[j].exp_CN <<","<< aTfun[i].nestfun[j].exp_unit <<",";
+
+                if (aTfun[i].nestfun[j].sT > -1 && aTfun[i].nestfun[j].sP > -1)
+                    gpf->fnfres << aTfun[i].nestfun[j].sT << "," << aTfun[i].nestfun[j].sP <<",";
+                else
+                    gpf->fnfres << experiments[i]->sT << "," << experiments[i]->sP <<",";
+
+                gpf->fnfres << aTfun[i].nestfun[j].results.measured_value <<","<< aTfun[i].nestfun[j].results.computed_value << ","<< aTfun[i].nestfun[j].results.residual;
 
                 for (unsigned o = 0; o<Opti->optNFParam.size(); o++)
                 {

@@ -234,15 +234,25 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, 
     sys->Opti->optNFParam[sys->vEAndx[P_id]->ndx[e]]->Adjust_Lparam(sys->NodT[sys->EXPndx[P_id]], sys->EXPndx[P_id] );
     }
 
-
     sys->experiments[sys->EXPndx[P_id]]->sT = sys->NodT[sys->EXPndx[P_id]]->Get_TK() - 273.15;
     if (sys->experiments[sys->EXPndx[P_id]]->sP > 0)
     sys->experiments[sys->EXPndx[P_id]]->sP = sys->NodT[sys->EXPndx[P_id]]->Get_P() / 100000;
 
 //    cout << sys->NodT[sys->EXPndx[P_id]]->Get_P() / 100000 << endl;
     // claculate equilibrium
-    sys->NodT[sys->EXPndx[P_id]]->Set_TK(273.15 + sys->experiments[sys->EXPndx[P_id]]->sT);
-    sys->NodT[sys->EXPndx[P_id]]->Set_P(100000 * sys->experiments[sys->EXPndx[P_id]]->sP);
+    double sT = sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]].sT;
+    double sP = sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]].sP;
+    if (sT > -1 && sP > -1)
+    {
+        sys->NodT[sys->EXPndx[P_id]]->Set_TK(273.15 + sT);
+        sys->NodT[sys->EXPndx[P_id]]->Set_P(100000 * sP);
+    }
+        else
+    {
+        sys->NodT[sys->EXPndx[P_id]]->Set_TK(273.15 + sys->experiments[sys->EXPndx[P_id]]->sT);
+        sys->NodT[sys->EXPndx[P_id]]->Set_P(100000 * sys->experiments[sys->EXPndx[P_id]]->sP);
+    }
+
 
     vector<DATABR*> dBR;
     dBR.push_back(sys->NodT[sys->EXPndx[P_id]]->pCNode());
@@ -275,11 +285,11 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, 
     sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]].count++;
 
     string compare_type = sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]].exp_DCP;
-    if (compare_type == "activity")
-    {
+//    if (compare_type == "activity")
+//    {
         sys->NodT[sys->EXPndx[P_id]]->Set_TK(273.15 + sys->experiments[sys->EXPndx[P_id]]->sT);
         sys->NodT[sys->EXPndx[P_id]]->Set_P(100000 * sys->experiments[sys->EXPndx[P_id]]->sP);
-    }
+//    }
 
     residual = sys->get_residual (sys->EXPndx[P_id], sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]], count);
 

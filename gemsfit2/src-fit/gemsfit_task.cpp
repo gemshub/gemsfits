@@ -1102,6 +1102,15 @@ void TGfitTask::get_DataTarget ( )
         Tfun->nestfun[i].Tformula = out2;
         out2.clear();
 
+        parse_JSON_object(out[i], keys::sT, out2);
+        if (out2.size() > 0)
+            Tfun->nestfun[i].sT = atof(out2[0].c_str());
+        out2.clear();
+
+        parse_JSON_object(out[i], keys::sP, out2);
+        if (out2.size() > 0)
+            Tfun->nestfun[i].sP = atof(out2[0].c_str());
+        out2.clear();
 //        parse_JSON_object(out[i], keys::PType[mode], out2);
 //        if (out2.size() == 0) { cout << "Data Target->NFUN->Ptype has to be speficied!"<< endl; exit(1);} // ERROR
 //        Tfun->nestfun[i].Ptype = out2[0];
