@@ -157,20 +157,35 @@ double TGfitTask::get_sum_of_residuals( )
     // think about pararelizing it
     double residual = 0.0, ofun_residual;
     int count = 0;
+    vector<double> residuals; residuals.resize(this->experiments.size());
+    vector<double> ofun_residuals; ofun_residuals.resize(this->experiments.size());
 
     // Loop trough target function
     for (unsigned int j=0; j<Tfun->objfun.size(); ++j)
     {
     // Loop trough all experiments
-        ofun_residual =0.0;
+        ofun_residual =0.0;   
+        std::fill(ofun_residuals.begin(), ofun_residuals.end(), 0.0);
+
+            omp_set_num_threads(this->MPI);
+            #pragma omp parallel for schedule(dynamic)
         for (unsigned int i=0; i<this->experiments.size(); ++i)
         {
             double res = get_residual(i, aTfun[i].objfun[j],count);
-            ofun_residual = ofun_residual + res;
-            residual = residual + res;
+            residuals[i] = residuals[i] + res;
+            ofun_residuals[i] = ofun_residuals[i] + res;
+//            ofun_residual = ofun_residual + res;
+//            residual = residual + res;
         }
+
+        for(std::vector<double>::iterator it = ofun_residuals.begin(); it != ofun_residuals.end(); ++it)
+            ofun_residual += *it;
         Tfun->objfun[j].SumWTFun = ofun_residual;
     }
+
+    for(std::vector<double>::iterator it = residuals.begin(); it != residuals.end(); ++it)
+        residual += *it;
+
     return residual;
 }
 
