@@ -1151,6 +1151,32 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
     double* scatter_all 	  = new double[ number_of_measurements * num_of_MC_runs ];
 
     int count = 0;
+
+    if ((MCbool == 5)|| (MCbool == 6))
+    {
+        for (i = 0; i < num_of_MC_runs; i++)
+        {
+            for (j = 0; j<gfittask->Tfun->objfun.size(); j++)
+            {
+                for (unsigned d = 0; d < objfun_stat[j]->exp_dataset.size(); d++)
+                {
+                    for ( unsigned int r = 0; r < objfun_stat[j]->exp_dataset[d].residuals.size(); r++ )
+                    {
+                        // mersenne twister generator
+                        typedef boost::mt19937 RNGType;
+                        RNGType rng(j+1);
+                        boost::normal_distribution<> rdist(0, fabs(objfun_stat[j]->exp_dataset[d].residuals[r]));
+                        boost::variate_generator< RNGType, boost::normal_distribution<> > get_rand(rng, rdist);
+
+                        objfun_stat[j]->exp_dataset[d].scatter[r] = get_rand();;
+                        count ++;
+                    }
+                    // add to the scatter
+                    objfun_stat[j]->scatter.insert( objfun_stat[j]->scatter.end(), objfun_stat[j]->exp_dataset[d].scatter.begin(), objfun_stat[j]->exp_dataset[d].scatter.end() );
+                }
+            }
+        }
+    }
     if ((MCbool == 3) || (MCbool == 4)) // bootstrap sampling
     {
         for (i = 0; i < num_of_MC_runs; i++)
@@ -1232,17 +1258,23 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
             }
         }
 
-        if ((MCbool == 1) || (MCbool == 3))// the new simulated values are from scatter + computed values
+        if ((MCbool == 1) || (MCbool == 3) || (MCbool == 5))// the new simulated values are from scatter + computed values
             for (i=0; i<number_of_measurements; i++)
             {
-                MC_computed_v[i] = (scatter_v[i]*gfittask->measured_values_v[i]) + gfittask->computed_values_v[i];
+                if (MCbool == 5)
+                    MC_computed_v[i] = scatter_v[i] + gfittask->computed_values_v[i];
+                    else
+                    MC_computed_v[i] = (scatter_v[i]*gfittask->measured_values_v[i]) + gfittask->computed_values_v[i];
             }
         else
-            if ((MCbool == 2) || (MCbool == 4))  // the new simulated values are from scatter + measured values
+            if ((MCbool == 2) || (MCbool == 4) || (MCbool == 6))  // the new simulated values are from scatter + measured values
             {
                 for (i=0; i<number_of_measurements; i++)
                 {
-                    MC_computed_v[i] = (scatter_v[i]*gfittask->measured_values_v[i]) + gfittask->measured_values_v[i];
+                    if (MCbool == 6)
+                        MC_computed_v[i] = scatter_v[i] + gfittask->measured_values_v[i];
+                        else
+                        MC_computed_v[i] = (scatter_v[i]*gfittask->measured_values_v[i]) + gfittask->measured_values_v[i];
                 }
             }
 
