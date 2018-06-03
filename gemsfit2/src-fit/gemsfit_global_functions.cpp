@@ -159,7 +159,11 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 
 #ifdef useomp
     omp_set_num_threads(sys->MPI);
+#ifdef buildWIN32
+    #pragma omp parallel for schedule(static)
+#else
     #pragma omp parallel for schedule(dynamic)
+#endif
 #endif
     // +++ Calculating equilibrium with GEMS3K +++ //
     for (unsigned int i=0; i<sys->NodT.size(); ++i)
