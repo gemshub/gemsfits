@@ -649,13 +649,15 @@ void TGfitTask::get_addout_meas(int exp, TGfitTask::TargetFunction::obj_fun &obj
 
 void TGfitTask::set_fixed_parameters()
 {
-
-    for (unsigned n=0; n<NodT.size(); n++  )
+    if (mLook == 0)
     {
-        for (unsigned e = 0; e <Opti->optParam.size(); e++)
-        {
-            if ((mLook > 0) && ( Opti->optParam[e]->Get_optType() == "G0" ))
-            Opti->optParam[e]->Adjust_Sparam(NodT[n]);
-        }
+        for (unsigned n=0; n<NodT.size(); n++  )
+            for (unsigned e = 0; e <Opti->optParam.size(); e++)
+                if ( Opti->optParam[e]->Get_optType() != "G0" )
+                    Opti->optParam[e]->Adjust_Sparam(NodT[n]);
     }
+    else
+        for (unsigned n=0; n<NodT.size(); n++  )
+            for (unsigned e = 0; e <Opti->optParam.size(); e++)
+                Opti->optParam[e]->Adjust_Sparam(NodT[n]);
 }

@@ -1164,7 +1164,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
                     {
                         // mersenne twister generator
                         typedef boost::mt19937 RNGType;
-                        RNGType rng(j+1);
+                        RNGType rng(i+j+d+r+1);
                         boost::normal_distribution<> rdist(0, fabs(objfun_stat[j]->exp_dataset[d].residuals[r]));
                         boost::variate_generator< RNGType, boost::normal_distribution<> > get_rand(rng, rdist);
 
