@@ -82,11 +82,13 @@ CONFIG( serial, serial|mpi ) {
 }
 
 !win32 {
+  PLATFORM_CPP       =  ./tcejdb/nix
 }
 else {
+  PLATFORM_CPP       =  ./tcejdb_win32/win32
   DEFINES           += buildWIN32
   DEFINES           += HAVE_STDINT_H
-  QMAKE_CXXFLAGS    += -fopenmp
+  QMAKE_CXXFLAGS    += -D__USE_MINGW_ANSI_STDIO=1 -frounding-math -fopenmp
   QMAKE_LFLAGS      *= -fopenmp
 }
 
@@ -102,13 +104,16 @@ QMAKE_LFLAGS *= -fopenmp
 
 FIT_CPP      =  ./src-fit
 GEMS3K_CPP   =  ../../standalone/GEMS3K
+#EJDB_CPP     =  ./tcejdb
 KEYS_CPP     =  ../csvtoejdb/src-csvtoejdb
 MUP_CPP      =  ./muparser/src
 JAN_CPP        =  ./jan_win32/src
 
 FIT_H        =   $$FIT_CPP
 GEMS3K_H     =   $$GEMS3K_CPP
+#EJDB_H       =   $$EJDB_CPP
 KEYS_H       =   $$KEYS_CPP
+PLATFORM_H   =   $$PLATFORM_CPP
 MUP_H        =   $$MUP_CPP
 JAN_H          =  $$JAN_CPP
 
@@ -131,13 +136,17 @@ CONFIG(debug, debug|release): EJDB_GENERATED_H = $$EJDB_LIB_PATH/debug/src/gener
 
 DEPENDPATH   += $$FIT_H
 DEPENDPATH   += $$GEMS3K_H
+#DEPENDPATH   += $$EJDB_H
 DEPENDPATH   += $$KEYS_H
+DEPENDPATH   += $$PLATFORM_H
 DEPENDPATH   += $$MUP_H
 DEPENDPATH     += $$JAN_H
 
 INCLUDEPATH  += $$FIT_H
 INCLUDEPATH  += $$GEMS3K_H   
+#INCLUDEPATH  += $$EJDB_H
 INCLUDEPATH  += $$KEYS_H
+INCLUDEPATH  += $$PLATFORM_H
 INCLUDEPATH  += $$MUP_H
 INCLUDEPATH    += $$JAN_H
 INCLUDEPATH   += $$EJDB_BSON_H
@@ -152,17 +161,16 @@ OBJECTS_DIR       = obj
 
 include($$FIT_CPP/fit.pri)
 include($$GEMS3K_CPP/gems3k.pri)
+#include($$EJDB_CPP/tcejdb.pri)
 include($$MUP_CPP/muparser.pri)
 include($$JAN_CPP/jan.pri)
 include($$EJDB_PATH/ejdb.pri)
 
 #TCEJDB
-CONFIG(release, debug|release): LIBS += -L$$EJDB_LIB_PATH/release/src/ -lejdb
-CONFIG(debug, debug|release): LIBS += -L$$EJDB_LIB_PATH/debug/src/ -lejdb
-#win32:CONFIG(release, debug|release): LIBS += -L$$PWD/tcejdb_win32/lib/ -ltcejdbdll
-#else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/tcejdb_wi32/lib/ -ltcejdbdll
-#INCLUDEPATH += $$PWD/tcejdb_win32/include
-#DEPENDPATH += $$PWD/tcejdb_win32/include
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/tcejdb_win32/lib/ -ltcejdbdll
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/tcejdb_win32/lib/ -ltcejdbdll
+INCLUDEPATH += $$PWD/tcejdb_win32/include
+DEPENDPATH += $$PWD/tcejdb_win32/include
 
 #NLOPT
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/nlopt_win32/ -llibnlopt-0

@@ -167,8 +167,14 @@ double TGfitTask::get_sum_of_residuals( )
         ofun_residual =0.0;   
         std::fill(ofun_residuals.begin(), ofun_residuals.end(), 0.0);
 
-            omp_set_num_threads(this->MPI);
-            #pragma omp parallel for schedule(dynamic)
+#ifdef useomp
+    omp_set_num_threads(this->MPI);
+#ifdef buildWIN32
+    #pragma omp parallel for schedule(static)
+#else
+    #pragma omp parallel for schedule(dynamic)
+#endif
+#endif
         for (unsigned int i=0; i<this->experiments.size(); ++i)
         {
             double res = get_residual(i, aTfun[i].objfun[j],count);
