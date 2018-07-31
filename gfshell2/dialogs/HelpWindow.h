@@ -22,6 +22,7 @@
 
 #include <QMainWindow>
 #include <QTextBrowser>
+#include <QtWidgets>
 #include "ui_HelpWindow4.h"
 
 QT_BEGIN_NAMESPACE
