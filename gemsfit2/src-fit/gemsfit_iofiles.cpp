@@ -127,6 +127,8 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
 #endif
     bson_append_string(&bson_task_file, keys::G3Ksys[mode], path.c_str() );
 
+    bson_append_string(&bson_task_file, "comment", std::string("Instead of current text, write here a short comment for the fitting task.").c_str() );
+
     // Optimization Settings
     bson_append_start_object(&bson_task_file, keys::OptSet[mode]);
     {
@@ -415,11 +417,11 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
 
             make_syn_bson_object(bson_task_file, keys::mChainL, i, mode); i++; bson_append_finish_object(&bson_task_file);
 
-             make_syn_bson_object(bson_task_file, keys::frAlIV, i, mode); i++; bson_append_finish_object(&bson_task_file);
+            make_syn_bson_object(bson_task_file, keys::frAlIV, i, mode); i++; bson_append_finish_object(&bson_task_file);
 
-              make_syn_bson_object(bson_task_file, keys::frAlV, i, mode); i++; bson_append_finish_object(&bson_task_file);
+            make_syn_bson_object(bson_task_file, keys::frAlV, i, mode); i++; bson_append_finish_object(&bson_task_file);
 
-               make_syn_bson_object(bson_task_file, keys::frAlVI, i, mode); i++; bson_append_finish_object(&bson_task_file);
+            make_syn_bson_object(bson_task_file, keys::frAlVI, i, mode); i++; bson_append_finish_object(&bson_task_file);
 
             make_syn_bson_object(bson_task_file, keys::Rd, i, mode); i++; bson_append_finish_object(&bson_task_file);
         }
@@ -441,6 +443,7 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
 
             make_syn_bson_object(bson_task_file, keys::actcoef, i, mode); i++; bson_append_finish_object(&bson_task_file);
         }
+        bson_append_finish_array(&bson_task_file);
     }
     bson_append_finish_object(&bson_task_file);
 
