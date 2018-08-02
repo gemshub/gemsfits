@@ -142,7 +142,7 @@ void FITMainWindow::CmDBMode()
    ui->actionFits_View_Mode->setEnabled(false);
    ui->action_Delete_multiple_data->setEnabled(true);
    ui->actionExport_TP_pairs_to_CSV_file->setEnabled(true);
-   ui->menu_Calc->setEnabled(false);
+//   ui->menu_Calculate->setEnabled(false);
 
    // empty status
    setStatusText( "" );
@@ -177,7 +177,7 @@ void FITMainWindow::CmTaskMode()
    ui->actionFits_View_Mode->setEnabled(true);
 //   ui->action_Show_Results->setEnabled(true);  // temporary
    ui->action_Show_Results->setEnabled(!lastCalcRecordKey.empty());
-   ui->menu_Calc->setEnabled(true);
+//   ui->menu_Calculate->setEnabled(true);
 
    // empty status
    setStatusText( "" );

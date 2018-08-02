@@ -157,20 +157,41 @@ double TGfitTask::get_sum_of_residuals( )
     // think about pararelizing it
     double residual = 0.0, ofun_residual;
     int count = 0;
+    vector<double> residuals; residuals.resize(this->experiments.size());
+    vector<double> ofun_residuals; ofun_residuals.resize(this->experiments.size());
 
     // Loop trough target function
     for (unsigned int j=0; j<Tfun->objfun.size(); ++j)
     {
     // Loop trough all experiments
-        ofun_residual =0.0;
+        ofun_residual =0.0;   
+        std::fill(ofun_residuals.begin(), ofun_residuals.end(), 0.0);
+
+#ifdef useomp
+    omp_set_num_threads(this->MPI);
+#ifdef buildWIN32
+    #pragma omp parallel for schedule(static)
+#else
+    #pragma omp parallel for schedule(dynamic)
+#endif
+#endif
         for (unsigned int i=0; i<this->experiments.size(); ++i)
         {
             double res = get_residual(i, aTfun[i].objfun[j],count);
-            ofun_residual = ofun_residual + res;
-            residual = residual + res;
+            residuals[i] = residuals[i] + res;
+            ofun_residuals[i] = ofun_residuals[i] + res;
+//            ofun_residual = ofun_residual + res;
+//            residual = residual + res;
         }
+
+        for(std::vector<double>::iterator it = ofun_residuals.begin(); it != ofun_residuals.end(); ++it)
+            ofun_residual += *it;
         Tfun->objfun[j].SumWTFun = ofun_residual;
     }
+
+    for(std::vector<double>::iterator it = residuals.begin(); it != residuals.end(); ++it)
+        residual += *it;
+
     return residual;
 }
 
@@ -513,9 +534,9 @@ void TGfitTask:: print_nested_results ()
 
     gpf->fnfres << endl;
     setprecision(12);
-//    scientific(gpf->fnfres);
+    scientific(gpf->fnfres);
 
-    gpf->fnfres.setf(ios::fixed);
+//    gpf->fnfres.setf(ios::fixed);
 
     for (unsigned  i=0; i<aTfun.size(); i++)
     {
@@ -640,13 +661,15 @@ void TGfitTask::get_addout_meas(int exp, TGfitTask::TargetFunction::obj_fun &obj
 
 void TGfitTask::set_fixed_parameters()
 {
-
-    for (unsigned n=0; n<NodT.size(); n++  )
+    if (mLook == 0)
     {
-        for (unsigned e = 0; e <Opti->optParam.size(); e++)
-        {
-            if ((mLook > 0) && ( Opti->optParam[e]->Get_optType() == "G0" ))
-            Opti->optParam[e]->Adjust_Sparam(NodT[n]);
-        }
+        for (unsigned n=0; n<NodT.size(); n++  )
+            for (unsigned e = 0; e <Opti->optParam.size(); e++)
+                if ( Opti->optParam[e]->Get_optType() != "G0" )
+                    Opti->optParam[e]->Adjust_Sparam(NodT[n]);
     }
+    else
+        for (unsigned n=0; n<NodT.size(); n++  )
+            for (unsigned e = 0; e <Opti->optParam.size(); e++)
+                Opti->optParam[e]->Adjust_Sparam(NodT[n]);
 }

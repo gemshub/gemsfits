@@ -397,34 +397,47 @@ double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::ob
 
     vector<double> varDbl;
 
-    mu::Parser parser;
-    parser.SetExpr(objfun.exp_CN);
+    try {
+        mu::Parser parser;
+        parser.SetExpr(objfun.exp_CN);
 
-    vector<string> varStr;
-    parser.SetVarFactory(AddVariable, &varStr);
-    parser.GetUsedVar();
+        vector<string> varStr;
+        parser.SetVarFactory(AddVariable, &varStr);
+        parser.GetUsedVar();
 
-    for (unsigned int d = 0; d < varStr.size(); d++)
-    {
-        if ((ccPH == *keys::aq) && (PHndx >=0))
+        for (unsigned int d = 0; d < varStr.size(); d++)
         {
-        ICndx = sys->NodT[i]->IC_name_to_xDB(varStr[d].c_str());
-        varDbl.push_back(sys->NodT[i]->Get_mIC(ICndx));
-        } else
-        {
+            if ((ccPH == *keys::aq) && (PHndx >=0))
+            {
             ICndx = sys->NodT[i]->IC_name_to_xDB(varStr[d].c_str());
-            varDbl.push_back(IC_in_PH[ICndx]);
+            varDbl.push_back(sys->NodT[i]->Get_mIC(ICndx));
+            } else
+            {
+                ICndx = sys->NodT[i]->IC_name_to_xDB(varStr[d].c_str());
+                varDbl.push_back(IC_in_PH[ICndx]);
+            }
         }
-    }
 
-    for (unsigned int d = 0; d < varStr.size(); d++)
-    {
-        parser.DefineVar(varStr[d], &varDbl[d]);
-    }
-    computed_value = parser.Eval();
+        for (unsigned int d = 0; d < varStr.size(); d++)
+        {
+            parser.DefineVar(varStr[d], &varDbl[d]);
+        }
+        computed_value = parser.Eval();
 
-    parser.ClearConst();
-    parser.ClearVar();
+        parser.ClearConst();
+        parser.ClearVar();
+    }
+    catch(mu::Parser::exception_type &e)
+       {
+         cout << "muParser ERROR for sample " << sys->experiments[i]->sample << "\n";
+         cout << "Message:  " << e.GetMsg() << "\n";
+         cout << "Formula:  " << e.GetExpr() << "\n";
+         cout << "Token:    " << e.GetToken() << "\n";
+         if (e.GetPos()!=std::string::npos)
+         cout << "Position: " << e.GetPos() << "\n";
+         cout << "Errc:     " << e.GetCode() << " http://muparser.beltoforion.de/mup_error_handling.html#idErrors " <<"\n";
+//            computed_value = rand() % 100 + 1;
+   }
 
 
 //    computed_value = computed_nom / computed_denom;

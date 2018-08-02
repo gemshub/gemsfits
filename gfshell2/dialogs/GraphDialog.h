@@ -25,6 +25,7 @@
 #include <QTableWidget>
 #include <QTableWidgetItem>
 #include <QItemDelegate>
+#include <QtWidgets>
 
 #include "ui_GraphDialog4.h"
 #include  "qwtplot.h"
