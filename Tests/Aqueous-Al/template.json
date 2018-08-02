@@ -2,8 +2,28 @@
      "DBPath" :   "../EJDB/<database name>",
      "DBColl" :   "<collection name>",
      "GEMSFPath" :   "../GEMS/bhm-H-gbs-H-dat.lst",
+     "comment" :   "Instead of current text, write here a short comment for the fitting task.",
+     "OptSet" :   {
+          "NumMPI" :   16,
+          "DoWhat" :   1,
+          "UseEqC" :   1,
+          "UDWts" :   -1,
+          "OptAlg" :   "LN_BOBYQA",
+          "PBPerc" :   -1,
+          "ConTolRel" :   1e-05,
+          "ConTolAbs" :   1e-05,
+          "MaxLoops" :   10000,
+          "NormPar" :   1,
+          "GradPert" :   0.0001,
+          "SensPert" :   0.0001,
+          "OptTu" :   -1,
+          "OptTuC" :   6,
+          "UseMCPE" :   -1,
+          "NumMCT" :   100
+     },
      "DataSelect" :   "",
      "DataTarget" :   "",
+     "NFunParToOpt" :   "",
      "ParToOpt" :   [
           {
                "EPH" :   "aq_gen",
@@ -221,27 +241,8 @@
                ]
           }
      ],
-     "NFunParToOpt" :   "",
      "LogKFun" :   "",
      "LogKVal" :   "",
-     "OptSet" :   {
-          "NumMPI" :   4,
-          "DoWhat" :   1,
-          "UseEqC" :   1,
-          "UDWts" :   -1,
-          "OptAlg" :   "LN_BOBYQA",
-          "PBPerc" :   -1,
-          "ConTolRel" :   1e-05,
-          "ConTolAbs" :   1e-05,
-          "MaxLoops" :   10000,
-          "NormPar" :   1,
-          "GradPert" :   0.0001,
-          "SensPert" :   0.0001,
-          "OptTu" :   -1,
-          "OptTuC" :   6,
-          "UseMCPE" :   -1,
-          "NumMCT" :   100
-     },
      "DataSyn" :   {
           "PHN" :   [
                {
@@ -395,6 +396,10 @@
                     "Syn" :   ""
                },
                {
+                    "NIS" :   "pHm",
+                    "Syn" :   ""
+               },
+               {
                     "NIS" :   "pe",
                     "Syn" :   ""
                },
@@ -428,6 +433,22 @@
                },
                {
                     "NIS" :   "mChainL",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "frAlIV",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "frAlV",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "frAlVI",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Rd",
                     "Syn" :   ""
                }
           ],
