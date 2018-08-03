@@ -1,5 +1,5 @@
 HOW TO PRODUCE AN INSTALLATION PACKAGE OF Qt5-based GEMSFITS FOR Win32 MinGW 4.8 
-(Windows XP, 7 or 8; admininstrator rights for your account are needed)
+(Windows XP, 7 or 10; admininstrator rights for your account are needed)
 
 This deployment process is based on the "windeployqt.exe" utility,
 which is an augmented "windeployqt.exe" binary by lkc, taken from
