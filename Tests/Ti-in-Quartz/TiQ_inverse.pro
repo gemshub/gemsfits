@@ -6,5 +6,5 @@ GEMSFITSAPP=" GEMSFITS v.0.1 r.450 "
 ProjDatabaseName=TiQ_inverse
 ProjDatabasePath=/EJDB
 ProjFileName=TiQ_inverse
-ProjFolderPath=/home/dmiron/SWITCHdrive/GEMSFITS/GFIT-Tut/Goldschmidt2018/Ti-in-Quartz
+ProjFolderPath=C:/Users/GeorgeDan/switchdrive/GEMSFITS/GFIT-Tut/Goldschmidt2018/Ti-in-Quartz
 TaskCasesDataColl=tasks
