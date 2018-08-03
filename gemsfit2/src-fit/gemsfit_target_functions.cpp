@@ -617,7 +617,7 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
     } else
     if (((objfun.exp_CN == keys::mChainL) ||  (objfun.exp_CN == keys::frAlIV) ||
          (objfun.exp_CN == keys::frAlV) || (objfun.exp_CN == keys::frAlVI) ||
-         (objfun.exp_CN == keys::Rd)) && (PHndx >=0))
+         (objfun.exp_CN == keys::Rd)) || (objfun.exp_CN == keys::activityRatio) && (PHndx >=0))
     {
         vector<double> varDbl;
 
@@ -654,7 +654,13 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
 
                 if (DCndx < 0)
                 { cout << "ERROR: Dependent component: " << varStr[d].c_str() << " not present in GEMS system! "; exit(1);}
-                varDbl.push_back(sys->NodT[i]->Get_cDC(DCndx));
+
+                if (objfun.exp_CN == keys::activityRatio)
+                {
+                    varDbl.push_back(sys->NodT[i]->Get_aDC( DCndx, true ));
+                }
+                else
+                    varDbl.push_back(sys->NodT[i]->Get_cDC(DCndx));
             }
 
             for (unsigned int d = 0; d < varStr.size(); d++)
@@ -662,19 +668,23 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
                 parser.DefineVar(varStr[d], &varDbl[d]);
             }
             computed_value = parser.Eval();
-         }
-         catch(mu::Parser::exception_type &e)
-            {
-              cout << "muParser ERROR for sample " << sys->experiments[i]->sample << "\n";
-              cout << "Message:  " << e.GetMsg() << "\n";
-              cout << "Formula:  " << e.GetExpr() << "\n";
-              cout << "Token:    " << e.GetToken() << "\n";
-              if (e.GetPos()!=std::string::npos)
-              cout << "Position: " << e.GetPos() << "\n";
-              cout << "Errc:     " << e.GetCode() << " http://muparser.beltoforion.de/mup_error_handling.html#idErrors " <<"\n";
-//            computed_value = rand() % 100 + 1;
+        }
+        catch(mu::Parser::exception_type &e)
+        {
+            cout << "muParser ERROR for sample " << sys->experiments[i]->sample << "\n";
+            cout << "Message:  " << e.GetMsg() << "\n";
+            cout << "Formula:  " << e.GetExpr() << "\n";
+            cout << "Token:    " << e.GetToken() << "\n";
+            if (e.GetPos()!=std::string::npos)
+                cout << "Position: " << e.GetPos() << "\n";
+            cout << "Errc:     " << e.GetCode() << " http://muparser.beltoforion.de/mup_error_handling.html#idErrors " <<"\n";
+            //            computed_value = rand() % 100 + 1;
         }
 
+        if ((objfun.exp_unit == keys::loga) && (objfun.exp_CN == keys::activityRatio))
+        {
+            computed_value = log10(computed_value);
+        }
 
     } else
     if ((objfun.exp_CN == keys::Gex ) && (PHndx >=0))  // functionality added by DK on 03.01.2014

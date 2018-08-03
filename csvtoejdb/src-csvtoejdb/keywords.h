@@ -151,6 +151,7 @@ static const char *frAlIV  = "frAlIV";  //  fraction of Al(IV) relative to total
 static const char *frAlV  = "frAlV";    //  fraction of Al(V) relative to total Al in CASH phases
 static const char *frAlVI  = "frAlVI"; //  fraction of Al(VI) relative to total Al in CASH phases
         static const char *Rd       = "Rd";
+        static const char *activityRatio = "activityRatio";
 
 // general keywords for error and unit present in the header of the input csv file
 static const char *_error           = "error";

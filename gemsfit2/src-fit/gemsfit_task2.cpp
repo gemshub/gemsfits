@@ -451,7 +451,14 @@ void TGfitTask:: print_global_results ()
     for (unsigned i = 0; i < Tfun->addout.size(); i++)
     {
         string temp ="";
-        temp += Tfun->addout[i].exp_phase + "." + Tfun->addout[i].exp_CN;
+        temp += Tfun->addout[i].exp_phase;
+        if (Tfun->addout[i].exp_DCP != "NULL")
+            temp += "." + Tfun->addout[i].exp_DCP;
+        temp += "." + Tfun->addout[i].exp_CN;
+
+        if (Tfun->addout[i].expr != "NULL")
+            temp += "." + Tfun->addout[i].expr;
+
         if (Tfun->addout[i].Otype == keys::calc)
         header.push_back(temp + "." + keys::calc);
         if (Tfun->addout[i].Otype == keys::meas)

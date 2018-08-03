@@ -1131,6 +1131,7 @@ void TGfitTask::get_DataTarget ( )
         Tfun->addout[i].exp_unit = "NULL";
         Tfun->addout[i].exp_DCP = "NULL";
         Tfun->addout[i].Otype = "NULL";
+        Tfun->addout[i].expr = "NULL";
         Tfun->addout[i].weight = 1;
         Tfun->addout[i].TuWeight = 1;
         Tfun->addout[i].isComputed = false;
@@ -1174,6 +1175,11 @@ void TGfitTask::get_DataTarget ( )
         parse_JSON_object(out[i], keys::Tforumla, out2);
         if (out2.size() > 0)
         Tfun->addout[i].Tformula = out2;
+        out2.clear();
+
+        parse_JSON_object(out[i], keys::expr, out2);
+        if (out2.size() > 0)
+        Tfun->addout[i].expr = out2[0];
         out2.clear();
 
         parse_JSON_object(out[i], keys::SRC, out2);
