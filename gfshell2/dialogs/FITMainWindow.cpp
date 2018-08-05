@@ -643,6 +643,15 @@ bool FITMainWindow::createTaskTemplate()
 
     // read "template.dat" to bson
     string path = fitTaskDir.Dir()+ "/template.json";
+
+    ifstream my_file(path.c_str());
+    if (!my_file.good())
+    {
+        std::ofstream outfile (path.c_str());
+        outfile << "{}" << std::endl;
+        outfile.close();
+    }
+
     TFile  inFile(path, ios::in);
     readTXT( inFile );
 
