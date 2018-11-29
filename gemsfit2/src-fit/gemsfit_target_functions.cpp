@@ -581,6 +581,16 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
             objfun.exp_unit = keys::g_cm3;
         }
     } else
+    if ((objfun.exp_CN == keys::SI) /*&& (ccPH == *keys::aq)*/ && (PHndx >=0))  // Saturation index
+    {
+        double T = sys->NodT[i]->Get_TK();
+        double P = sys->NodT[i]->Get_P();
+        sys->NodT[i]->Set_TK(sys->experiments[i]->sT+273.15);
+        sys->NodT[i]->Set_P(sys->experiments[i]->sP*1e5);
+        computed_value = sys->NodT[i]->Ph_SatInd(PHndx);
+        sys->NodT[i]->Set_TK(T);
+        sys->NodT[i]->Set_P(P);
+    } else
     if ((objfun.exp_CN == keys::pe) && (ccPH == *keys::aq) && (PHndx >=0))
     {
         if (objfun.exp_unit == keys::_loga)

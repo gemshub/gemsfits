@@ -136,6 +136,7 @@ static const char *expphases        = "expphases"; //	               1    array	
         static const char *pHm      = "pHm"; //  	                    ->3  float		    name of property - pH (for aqueous phase only)
         static const char *Eh       = "Eh"; //                          ->3	 float		    name of property - Eh (for aqueous phase only)
         static const char *IS       = "IS"; //                          ->3	 float 		    name of property - Ionic strength (molal)
+        static const char *SI       = "SI"; //                          ->3	 float 		    name of property - Phase saturation index
         static const char *all      = "alk"; //                         ->3	 float		    name of property - Alkalinity (aqueous phase only)
         static const char *pV       = "pV"; //                          ->3	 float		    name of property - volume of phase
         static const char *sArea    = "sArea"; //                       ->3  float		    name of property - specific surface area of the phase

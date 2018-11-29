@@ -38,8 +38,6 @@ macx-clang {
   INCLUDEPATH   += "/usr/local/include"
 }
 else {
- QMAKE_CXXFLAGS += -std=gnu99
- QMAKE_CFLAGS += -std=gnu99
 }
 
 

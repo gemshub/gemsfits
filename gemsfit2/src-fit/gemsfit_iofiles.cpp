@@ -405,6 +405,8 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
 
             make_syn_bson_object(bson_task_file, keys::IS, i, mode); i++; bson_append_finish_object(&bson_task_file);
 
+            make_syn_bson_object(bson_task_file, keys::SI, i, mode); i++; bson_append_finish_object(&bson_task_file);
+
             make_syn_bson_object(bson_task_file, keys::all, i, mode); i++; bson_append_finish_object(&bson_task_file);
 
             make_syn_bson_object(bson_task_file, keys::pV, i, mode); i++; bson_append_finish_object(&bson_task_file);

@@ -53,28 +53,20 @@
 #include <boost/filesystem.hpp>
 #endif
 
-
-
 using namespace std;
-
 namespace bfs=boost::filesystem;
-
-int countit = 0;
-
 
 int generateConfig(); // Mode GEMSFIT to generate input configuration file
 int generateJConfig();
-
-struct timeval start, end_;
-
-
 
 // ---- // ---- // ---- // MAIN FUNCTION FOR GEMSFIT PROGRAM // ---- // ---- // ---- //
  
 int main( int argc, char *argv[] )
 {
+    int countit = 0;
+    struct timeval start, end_;
     // benchmark code
-    gettimeofday(&start, NULL);
+    gettimeofday(&start, nullptr);
 
     gpf = new TGfitPath(argc, argv);
 
@@ -157,7 +149,7 @@ int main( int argc, char *argv[] )
 
     delete gfittask;
 
-    gettimeofday(&end_, NULL);
+    gettimeofday(&end_, nullptr);
 
     double delta = ((end_.tv_sec  - start.tv_sec) * 1000000u +
              end_.tv_usec - start.tv_usec) / 1.e6;

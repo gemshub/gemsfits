@@ -37,8 +37,8 @@ VERSION         = 2.0.0
 DEFINES         += IPMGEMPLUGIN
 DEFINES         += useomp
 DEFINES         += _MYNOZLIB
+CONFIG          += c++11
 
-QMAKE_LFLAGS  +=
 
 CONFIG -= qt
 CONFIG += warn_on
@@ -83,8 +83,6 @@ CONFIG( serial, serial|mpi ) {
 }
 
 !macx-clang {
-  QMAKE_CXXFLAGS += -std=gnu99
-  QMAKE_CFLAGS += -std=gnu99
   INCLUDEPATH   += "/usr/local/include/ejdb"
 }else{
   INCLUDEPATH   += "/usr/local/include"
