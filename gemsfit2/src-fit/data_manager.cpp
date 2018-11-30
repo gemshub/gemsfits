@@ -730,7 +730,11 @@ cout << DBname.c_str() << endl;
 
 #ifdef useomp
     omp_set_num_threads(this->MPI);
-    #pragma omp parallel for
+#ifdef buildWIN32
+    #pragma omp parallel for schedule(static)
+#else
+    #pragma omp parallel for schedule(dynamic)
+#endif
 #endif
          for (int i = 0; i < TCLISTNUM(res); ++i) {
              void *bsdata = TCLISTVALPTR(res, i);

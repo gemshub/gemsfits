@@ -129,7 +129,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 //    cout << " befores set params " << endl;
 #ifdef useomp
     omp_set_num_threads(sys->MPI);
-    #pragma omp parallel for /*schedule(dynamic)*/
+    #pragma omp parallel for schedule(static) /*schedule(dynamic)*/
 #endif
     for (unsigned i=0; i<sys->NodT.size(); ++i)
     {

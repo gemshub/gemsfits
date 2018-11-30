@@ -473,7 +473,7 @@ void TGfitTask::setnodes()
 
 #ifdef useomp
     omp_set_num_threads(this->MPI);
-    #pragma omp parallel for
+    #pragma omp parallel for schedule(static)
 #endif
     for (n=0; n<NodT.size(); ++n)
     {
@@ -717,12 +717,12 @@ void TGfitTask::setnodes()
                 NodT[n]->Set_PMc(0.106, 0 );
                 NodT[n]->Set_PMc(4.11, 1 );
                 NodT[n]->Set_PMc(0, 4 );
-            } else // default NaCl
+            } /*else // default NaCl
             {
                 NodT[n]->Set_PMc(0.064, 0 );
                 NodT[n]->Set_PMc(3.72, 1 );
                 NodT[n]->Set_PMc(1, 4 );
-            }
+            }*/
             }
         }
 
@@ -872,31 +872,6 @@ void TGfitTask::setnodes()
 //            cout << NodT[0]->Get_bIC(1) << endl;
 //            cout << NodT[0]->Get_bIC(2) << endl;
 //            cout << NodT[0]->Get_bIC(3) << endl;
-
-
-        // Calling GEMIPM calculation
-        NodeStatusCH = NodT[n]->GEM_run( true );
-cout << "Node: " << NodeHandle+1 << " Sample: " << experiments[n]->sample <<"  NodeStatusCH: " << NodeStatusCH << endl;
-
-        if( ( NodeStatusCH == ERR_GEM_AIA || NodeStatusCH == ERR_GEM_SIA ||
-                       NodeStatusCH ==  T_ERROR_GEM ) )
-        {
-             cout << "Error: GEM calculation results are not retrieved upon initializing experimental system (node) "
-                  << NodeHandle << endl;
-        }
-        else
-        {
-           if( ( NodeStatusCH == BAD_GEM_AIA || NodeStatusCH == BAD_GEM_SIA  ) )
-           {
-              cout << "Insufficient quality of GEM solution, but GEM results are retrieved upon initializing experimental system (node) "
-              << NodeHandle << endl;
-           }
-        }
-
-        // set back the T and P (for the case when P = 0 is Psat
-        NodT[n]->Set_TK(273.15 + experiments[n]->sT);
-        NodT[n]->Set_P(100000 * experiments[n]->sP);
-
         // mixed salt
 //        string sMod;
 //        NodT[n]->Get_sMod(0, sMod);
@@ -928,6 +903,41 @@ cout << "Node: " << NodeHandle+1 << " Sample: " << experiments[n]->sample <<"  N
         delete[] xDC_lo;
         delete[] Ph_surf;
     }  // for n
+
+#ifdef useomp
+    omp_set_num_threads(this->MPI);
+#ifdef buildWIN32
+    #pragma omp parallel for schedule(static)
+#else
+    #pragma omp parallel for schedule(dynamic)
+#endif
+#endif
+    for (uint n = 0; n<NodT.size(); ++n)
+    {
+        NodeHandle = n;
+        // Calling GEMIPM calculation
+        NodeStatusCH = NodT[n]->GEM_run( true );
+        cout << "Node: " << NodeHandle+1 << " Sample: " << experiments[n]->sample <<"  NodeStatusCH: " << NodeStatusCH << endl;
+
+        if( ( NodeStatusCH == ERR_GEM_AIA || NodeStatusCH == ERR_GEM_SIA ||
+                       NodeStatusCH ==  T_ERROR_GEM ) )
+        {
+             cout << "Error: GEM calculation results are not retrieved upon initializing experimental system (node) "
+                  << NodeHandle << endl;
+        }
+        else
+        {
+           if( ( NodeStatusCH == BAD_GEM_AIA || NodeStatusCH == BAD_GEM_SIA  ) )
+           {
+              cout << "Insufficient quality of GEM solution, but GEM results are retrieved upon initializing experimental system (node) "
+              << NodeHandle << endl;
+           }
+        }
+
+        // set back the T and P (for the case when P = 0 is Psat
+        NodT[n]->Set_TK(273.15 + experiments[n]->sT);
+        NodT[n]->Set_P(100000 * experiments[n]->sP);
+    }
 
 }
 

@@ -132,7 +132,7 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
     // Optimization Settings
     bson_append_start_object(&bson_task_file, keys::OptSet[mode]);
     {
-        bson_append_int(&bson_task_file, keys::MPI[mode], omp_get_num_threads() * omp_get_num_procs());
+        bson_append_int(&bson_task_file, keys::MPI[mode], (omp_get_num_threads() * omp_get_num_procs()-1));
 
         bson_append_int(&bson_task_file, keys::OptDW[mode], 1);
 

@@ -779,7 +779,8 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
                 SensitivityMatrix(k,i) 	 			  = ( computed_up[k] - computed_lo[k] ) / ( optv_[i]*delta*2 );
                 sens.push_back(SensitivityMatrix(k,i));
 
-                OnePercentScaledSensitivities(k,i) = (SensitivityMatrix(k,i)) * optv_[i] / 100;
+                // OnePercentScaledSensitivities(k,i) = (SensitivityMatrix(k,i)) * (fabs(optv_[i]) / 100); // DM 24.09.2018
+                OnePercentScaledSensitivities(k,i) = (SensitivityMatrix(k,i)) * (fabs(optv_[i]) / 100) * (100*sqrt(gfittask->weights[k]));
 
 /*                if (gfittask->Tfun->weight == keys::inverr) // the weight matrix is added (weighting with 1/error)
                 {
@@ -790,7 +791,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
                         DimensionlessScaledSensitivities(k,i) = SensitivityMatrix(k,i) * fabs( optv_[i] ) * sqrt(gfittask->weights[k]);
                     }
                     else */ DimensionlessScaledSensitivities(k,i) = SensitivityMatrix(k,i) * fabs( optv_[i] ) * sqrt(gfittask->weights[k]);
-                CompositeScaledSensitivities(i)      += sqrt( DimensionlessScaledSensitivities(k,i)*DimensionlessScaledSensitivities(k,i)/len_meas );
+                CompositeScaledSensitivities(i)      += sqrt( (DimensionlessScaledSensitivities(k,i)*DimensionlessScaledSensitivities(k,i))/len_meas );
             }
 //            gfittask->print->sensitivity.push_back(sens);
         }
@@ -909,14 +910,16 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
 
         // Compute Fisher matrix (is a proxy for the Hessian matrix)
         arma::mat FisherMatrix = SensitivityMatrix_T * WeightMatrix * SensitivityMatrix;
-        if ((gfittask->Tfun->weight == "inverr2") /*|| (gfittask->Tfun->weight == "inverr1")*/ )
-        {
-            FisherMatrix = SensitivityMatrix_T * sqrt(WeightMatrix) * SensitivityMatrix;
-        }
-        if ((gfittask->Tfun->weight == keys::inverr3) || (gfittask->Tfun->weight == keys::inverr) || (gfittask->Tfun->weight == keys::inverr_norm))
-        {
-            FisherMatrix = SensitivityMatrix_T * SensitivityMatrix;
-        }
+
+
+//        if ((gfittask->Tfun->weight == "inverr2") /*|| (gfittask->Tfun->weight == "inverr1")*/ )
+//        {
+//            FisherMatrix = SensitivityMatrix_T * sqrt(WeightMatrix) * SensitivityMatrix;
+//        }
+//        if ((gfittask->Tfun->weight == keys::inverr3) || (gfittask->Tfun->weight == keys::inverr) || (gfittask->Tfun->weight == keys::inverr_norm))
+//        {
+//            FisherMatrix = SensitivityMatrix_T * SensitivityMatrix;
+//        }
 //        FisherMatrix.print("Fisher Matrix:");
 
         // Compute variance-covariance matrix
@@ -970,7 +973,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
             for( k=i; k< optv_.size(); k++ )
             {
                 // 			 			 Covar(i,k)          / sqrt( Var(k,k)            * Var(i,i)            )
-                CorellationMatrix(i,k) = VarCovarMatrix(i,k) / sqrt( VarCovarMatrix(k,k) * VarCovarMatrix(i,i) );
+                CorellationMatrix(i,k) = VarCovarMatrix(i,k) / (sqrt( VarCovarMatrix(k,k)) * sqrt(VarCovarMatrix(i,i)));
                 CorellationMatrix(k,i) = CorellationMatrix(i,k);
             }
             ParameterStandardDeviation(i) = sqrt(VarCovarMatrix(i,i));
