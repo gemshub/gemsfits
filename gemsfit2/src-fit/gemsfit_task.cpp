@@ -801,7 +801,7 @@ void TGfitTask::setnodes()
                         njDC = experiments[n]->sbcomp[j]->Qnt * h2o_kgamount;
                     }
                 else
-//                    if (experiments[n]->sbcomp[j]->Qunit == keys::mol)
+//                    if (experiments[n]->sbcomp[j]->Qunit == keys::mol) //default
                         njDC = experiments[n]->sbcomp[j]->Qnt;
                 DCm = 0.;  // zero off molar mass of the formula
                 for(i=0; i<nIC; i++)

@@ -625,7 +625,7 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
     //  computed_value = ;
         // ++++++++++ !!!!! NOT IMPLEMENTED !!!! +++++
     } else
-    if (((objfun.exp_CN == keys::mChainL) ||  (objfun.exp_CN == keys::frAlIV) ||
+    if (((objfun.exp_CN == keys::mChainL) ||  (objfun.exp_CN == keys::frAlIV) || (objfun.exp_CN == keys::expr) ||
          (objfun.exp_CN == keys::frAlV) || (objfun.exp_CN == keys::frAlVI) ||
          (objfun.exp_CN == keys::Rd)) || (objfun.exp_CN == keys::activityRatio) && (PHndx >=0))
     {
@@ -670,7 +670,16 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
                     varDbl.push_back(sys->NodT[i]->Get_aDC( DCndx, true ));
                 }
                 else
-                    varDbl.push_back(sys->NodT[i]->Get_cDC(DCndx));
+                if (objfun.exp_unit == keys::mol)
+                {
+                     varDbl.push_back(sys->NodT[i]->Get_nDC(DCndx));
+                }
+                if (objfun.exp_unit == keys::molfrac)
+                {
+                     varDbl.push_back(sys->NodT[i]->Get_cDC(DCndx));
+                }
+                else
+                    varDbl.push_back(sys->NodT[i]->Get_cDC(DCndx)); // default mol fraction
             }
 
             for (unsigned int d = 0; d < varStr.size(); d++)
@@ -791,7 +800,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFun
     {
         if (objfun.exp_unit == keys::mol)
         {
-        computed_value = sys->NodT[i]->Get_nDC(DCndx); // Retrieves the current mole amount of Dependent Component.
+            computed_value = sys->NodT[i]->Get_nDC(DCndx); // Retrieves the current mole amount of Dependent Component.
         } else
         if ((objfun.exp_unit == keys::molfrac) || (objfun.exp_unit == keys::molal))
         {
