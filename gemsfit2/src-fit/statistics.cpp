@@ -727,15 +727,15 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
         std::vector<double> computed_up;
         std::vector<double> computed_lo;
         std::vector<double> opt_scan;
-        std::vector<double> ssr_param;
-        std::vector<double> opt_scan_v;
+//        std::vector<double> ssr_param;
+//        std::vector<double> opt_scan_v;
 
         int prec = 12;
 
         opt_scan.resize( optv_.size() );
-        ssr_param.resize( sensitivity_points );
-        opt_scan_v.resize( sensitivity_points );
-        std::vector< std::vector< double> > array_ssr;
+//        ssr_param.resize( sensitivity_points );
+//        opt_scan_v.resize( sensitivity_points );
+//        std::vector< std::vector< double> > array_ssr;
 
         len_meas = (int) gfittask->Weighted_Tfun_residuals_v.size();
 

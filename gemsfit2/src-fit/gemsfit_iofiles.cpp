@@ -56,7 +56,7 @@ int generateJConfig()
         {
             cout << gpf->GEMS3LstFilePath() << endl;
             cout<<" .. ERROR occurred while reading GEMS3K input files !!! ..."<<endl;
-            return 1;
+            //return 1;
         }
 
     bool with_comments = true;

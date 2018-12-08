@@ -673,7 +673,7 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
                 if (objfun.exp_unit == keys::mol)
                 {
                      varDbl.push_back(sys->NodT[i]->Get_nDC(DCndx));
-                }
+                } else
                 if (objfun.exp_unit == keys::molfrac)
                 {
                      varDbl.push_back(sys->NodT[i]->Get_cDC(DCndx));
@@ -840,8 +840,8 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFun
         if (objfun.exp_unit == keys::bar)
              computed_value = sys->NodT[i]->DC_c( DCndx ) / 100000;
         else
-            // default bar
-            computed_value = sys->NodT[i]->DC_c( DCndx ) / 100000;
+            // default log10bar
+            computed_value = log10(sys->NodT[i]->DC_c( DCndx ) / 100000);
 //         else computed_value = sys->NodT[i]->DC_c( DCndx, true );
     } else
     { if (DCndx < 0)
@@ -1011,7 +1011,7 @@ double* AddVariable(const char *a_szName, void *pUserData)
 string formula_DCname_parser(string expr, vector<string> &exprO, vector<string> &exprP )
 {
     string expr_temp, DCname;
-    char op[22]= "/+-*^?<>=#!$%&|~'_()@", opr[22]="abcdefghijklmnopqrstu";
+    char op[23]= "/+-*^?<>=#!$%&|~'_()@.", opr[23]="abcdefghijklmnopqrstuv";
 
     expr_temp = expr;
 

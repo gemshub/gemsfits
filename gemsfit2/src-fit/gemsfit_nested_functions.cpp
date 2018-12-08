@@ -126,6 +126,14 @@ void nestedfun (TGfitTask *sys)
                 }
 
                 nlopt::opt opt(nlopt::LN_BOBYQA, x.size());
+                if (sys->Tfun->nestfun[sys->NEFndx[P_id]].exp_DCP == "PpG")
+                {
+                    nlopt::opt opt2(nlopt::GN_DIRECT_L, x.size());
+                    opt=opt2;
+                    opt.set_stopval(0.01);
+                    opt.set_maxeval( 100 );
+                    bounds=3;
+                }
 
                 double minf=0;
 
@@ -170,7 +178,7 @@ void nestedfun (TGfitTask *sys)
                 }
                 catch (nlopt::roundoff_limited &rf )
                 {
-//                    cout << rf.what() << endl;
+                    cout << rf.what() << endl;
                 }
 
 //                double xx = minf;

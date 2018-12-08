@@ -189,6 +189,7 @@ void FITMainWindow::CmTaskMode()
 /// Select new GEMS3K files list and setup windows
 void FITMainWindow::selectGEMS( const string& fname_ )
 {
+    try {
        // Creates TNode structure instance accessible trough the "node" pointer
        aNode.reset( new TNode() );
        string fname = fname_;
@@ -211,6 +212,12 @@ void FITMainWindow::selectGEMS( const string& fname_ )
        setListPhase();
 
        pLineGEMS->setText( trUtf8( gemsLstFile.Name().c_str() ) );
+    }
+    catch( TError& err )
+    {
+       setStatusText( err.title );
+       addLinetoStatus( err.mess );
+    }
 }
 
 /// Select new GEMS3K files list and setup windows

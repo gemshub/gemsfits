@@ -119,7 +119,7 @@ class statistics
     /// number of measurements invoilved in the parameter regression
     unsigned int number_of_measurements;
     /// Number of evaluations points per parameter for sensitivity evaluation
-    int sensitivity_points;
+//    int sensitivity_points;
     /// number of bars which will be used to generate the Histogram from the Monte Carlo runs (for generation of confidence intervals)
     int MC_number_of_bars;
     /// number of runs that will be performed during the sensitivity analysis
