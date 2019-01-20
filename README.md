@@ -51,10 +51,9 @@ Alternatively on Mac OS X or linux terminal cd ~/gitGEMSFIT/standalone and run a
 git clone https://bitbucket.org/gems4/gems3k.git . 
 ~~~
 
-Switch the GEMS3K code repository to a git branch branches/devEJDB using the git client, or in terminal, run the commands
+Switch the GEMS3K code repository to a git branch branches/dev-gemsfits using the git client, or in terminal, run the commands
 ~~~
-git checkout -b branches/devEJDB --track origin/branches/devEJDB
-git pull origin branches/devEJDB
+git checkout dev-gemsfits
 ~~~
 
 ## How to build GEMSFITS on linux? ##
@@ -62,11 +61,15 @@ git pull origin branches/devEJDB
 Make sure that you have the following packages installed (on debian-type linuxes such as Kubuntu 15.10) by running in the terminal:
 ~~~
 $ sudo apt-get update
-$ sudo apt-get install libarmadillo-dev libnlopt-dev libjansson-dev libboost-all-dev libiomp5 libyaml-cpp-dev
+$ sudo apt-get install libarmadillo-dev libnlopt-dev libjansson-dev libboost-all-dev libiomp5 
 ~~~
 or install equivalent packages, if you have another linux desktop.
 
-In the terminal, change into ~/gitGEMSFIT/standalone/EJDB to build and install the EJDB library using the following commands:
+Install EJDB and YAML-CPP libraries from source:
+
+http://ejdb.org/doc/install/building.html 
+https://github.com/jbeder/yaml-cpp/releases
+
 ~~~
 mkdir build
 cd build
