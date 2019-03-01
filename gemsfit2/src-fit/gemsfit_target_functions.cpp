@@ -279,7 +279,7 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
 double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_fun &objfun, TGfitTask *sys)
 {
     const char *elem_name, *phase_name;
-    int ICndx, PHndx, nIC;
+    int ICndx, HCndx, PHndx, nIC;
     double computed_value, measured_value;
     double Tfun_residual = 0.0, Weighted_Tfun_residual = 0.0, weight_ = 1.0;
     DATACH* dCH = sys->NodT[i]->pCSD();
@@ -312,9 +312,24 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
     } else // other than aqueous phase
         if ((ccPH != *keys::aq) && (PHndx >=0) && (ICndx >=0))
         {
-            // Default
             computed_value = IC_in_PH[ICndx]; // phase bulk composition in moles (mol)
-            objfun.exp_unit = keys::mol;
+            if (objfun.exp_unit == keys::molkg )
+            {
+                computed_value = computed_value / sys->NodT[i]->Ph_Mass(PHndx);
+            }
+            if (objfun.exp_unit == keys::molkg_dry )
+            {
+                HCndx = sys->NodT[i]->IC_name_to_xDB("H");
+                double H_amount = IC_in_PH[HCndx];
+                double H2O_mass = H_amount/2*18.02/1000; // in kg
+                computed_value = computed_value / (sys->NodT[i]->Ph_Mass(PHndx)-H2O_mass);
+            }
+            else
+
+            {
+                // Default
+                objfun.exp_unit = keys::mol;
+            }
         } else
         { if (PHndx < 0)
              {
