@@ -61,22 +61,20 @@ git checkout dev-gemsfits
 Make sure that you have the following packages installed (on debian-type linuxes such as Kubuntu 15.10) by running in the terminal:
 ~~~
 $ sudo apt-get update
-$ sudo apt-get install libarmadillo-dev libnlopt-dev libjansson-dev libboost-all-dev libiomp5 
+$ sudo apt-get install libarmadillo-dev libnlopt-dev libjansson-dev libboost-all-dev libiomp5 libyaml-cpp-dev
 ~~~
 or install equivalent packages, if you have another linux desktop.
 
-Install EJDB and YAML-CPP libraries from source:
-
-http://ejdb.org/doc/install/building.html 
-https://github.com/jbeder/yaml-cpp/releases
+Install EJDB library from source (see http://ejdb.org/doc/install/building.html): 
 
 ~~~
+git clone https://github.com/Softmotions/ejdb.git
+cd ejdb
 mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Release ../
 make
 sudo make install
-sudo ldconfig
 ~~~
 
 Make sure that you have the complete Qt5 toolkit (with QtCreator) installed either in the system or locally after downloading from [qt.io](http://www.qt.io/download/) site. 
