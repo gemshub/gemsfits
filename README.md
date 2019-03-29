@@ -24,6 +24,15 @@ If you find GEMSFITS useful for your research applications, please cite the foll
 
 In your home directory, make a folder named e.g. ~/gitGEMSFIT with two subfolders ~/gitGEMSFIT/gemsfits and ~/gitGEMSFIT/standalone.
 
+## Prepare building tools
+
+* Make sure you have g++, cmake and git installed. If not, install them (on Ubuntu Linux):
+
+```
+#!bash
+sudo apt-get install g++ cmake git
+```
+
 ### Clone the GEMSFITS repository ###
 
 Change into ~/gitGEMSFIT/gemsfits folder and clone this repository from https://bitbucket.org/gems4/gemsfits.git using a preinstalled free git client SourceTree or SmartGit (the best way on Windows). 
