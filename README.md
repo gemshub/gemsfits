@@ -70,9 +70,22 @@ git checkout dev-gemsfits
 Make sure that you have the following packages installed (on debian-type linuxes such as Kubuntu 15.10) by running in the terminal:
 ~~~
 $ sudo apt-get update
-$ sudo apt-get install libarmadillo-dev libnlopt-dev libjansson-dev libboost-all-dev libiomp5
+$ sudo apt-get install libarmadillo-dev libjansson-dev libboost-all-dev libiomp5
 ~~~
 or install equivalent packages, if you have another linux desktop.
+
+Download and install NLopt library from source:
+
+download [NLopt v2.5.0](https://github.com/stevengj/nlopt/archive/v2.5.0.tar.gz), extract the archive
+
+~~~
+cd nlopt-2.5.0
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+~~~
 
 Install EJDB library from source - see [instructions in ](http://ejdb.org/doc/install/building.html): 
 
