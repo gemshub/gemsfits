@@ -110,6 +110,12 @@ make
 sudo make install
 ~~~
 
+If building from source fails (problems in Ubuntu 18.10) try the following command: 
+
+~~~
+sudo apt-get install libyaml-cpp-dev
+~~~
+
 Make sure that you have the complete Qt5 toolkit (with QtCreator) installed either in the system or locally after downloading from [qt.io](http://www.qt.io/download/) site. 
 
 On latest versions of Linux, Qt5 is available for installation in the system. For example on Ubuntu 15.10 it can be installed using a command:
@@ -120,6 +126,11 @@ sudo apt-get install qt5-default qtcreator
 If error "Unknown module(s) in QT:" "help" or "svg" appears, try the following command:
 ~~~
 sudo apt-get install qttools5-dev libqt5svg5-dev
+~~~
+
+If you are using QT installed in your home folder and you encounter an error about missing gl.h, try the folowing command, then resume building with QT:
+~~~
+sudo apt-get install build-essential libgl1-mesa-dev
 ~~~
 
 ### Build the gemsfit2 code ###
