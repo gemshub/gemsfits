@@ -55,7 +55,7 @@ class TPlotLine
     int green;
     int blue;
 
-    char name[16];
+    char name[101];
 
 public:
 
@@ -66,8 +66,8 @@ public:
         ndxX = 0;
         setChanges( aPointType, aPointSize, aPutLine, QColor(aRed, aGreen, aBlue) );
         if( aName )
-          memcpy( name, aName, 15);
-        name[15] = '\0';
+          memcpy( name, aName, 100);
+        name[100] = '\0';
     }
 
     TPlotLine( int ii, int maxII, const char *aName = 0,
@@ -79,22 +79,22 @@ public:
         aColor.setHsv( 360/maxII*ii, 200, 200);
         setChanges( aPointType, aPointSize, aPutLine, aColor );
         if( aName )
-          memcpy( name, aName, 15);
-        name[15] = '\0';
+          memcpy( name, aName, 100);
+        name[100] = '\0';
     }
 
     TPlotLine(const TPlotLine& plt ):
             type(plt.type), sizes(plt.sizes), ndxX(plt.ndxX),
             red(plt.red),   green(plt.green), blue(plt.blue)
     {
-        memcpy( name, plt.name, 15);
+        memcpy( name, plt.name, 100);
     }
 
     const TPlotLine& operator=( const TPlotLine& p)
     {
         type = p.type, sizes = p.sizes, ndxX=p.ndxX,
         red = p.red,   green = p.green, blue=p.blue;
-        memcpy( name, p.name, 15);
+        memcpy( name, p.name, 100);
         return *this;
     }
 
@@ -134,13 +134,13 @@ public:
 
     void setName( const char *aName )
     {
-        memcpy( name, aName, 15);
-        name[15] = '\0';
+        memcpy( name, aName, 100);
+        name[100] = '\0';
     }
 
     string getName()
     {
-        return string(name, 0, 15);
+        return string(name, 0, 100);
     }
 
     int getIndex() const

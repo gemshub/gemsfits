@@ -56,7 +56,7 @@ void TPlotLine::fromBsonObject( const char *obj )
         Error( "E016BSon: ", "Undefined gbl.");
     string valStr;
     bson_find_string( obj, "gnm", valStr );
-    memcpy( name, valStr.c_str(), 15);
+    memcpy( name, valStr.c_str(), 100);
 }
 
 //---------------------------------------------------------------------------
