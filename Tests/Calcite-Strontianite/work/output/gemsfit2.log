@@ -1,0 +1,43 @@
+01. main.cpp(108). Creating new TGfitTask
+02. data_manager.cpp(51). Reading database parameter get_db_specs(); 
+03. data_manager.cpp(55). Getting data form the EJDB database; 
+05. data_manager.cpp(365). Adding the data returned by the selection query into the data structure; 
+04. data_manager.cpp(58). Getting distinct T and P pairs; 
+09. optimization.cpp(48). Reading NLopt optimization settings from the input file; 
+10. gemsfit_task.cpp(94). Initializing the Target function structure & get_DatTarget(); 
+06. gemsfit_task.cpp(89). Initializing nodes with the experimental data; 
+07. gemsfit_task.cpp(92). Initializing optimization structure; 
+11. gemsfit_task.cpp(152). Initializing optimization init_optim(); 
+ ... initializing optimization object in build_optim() ... 
+ ... performing parameter normalization ... 
+     Init guess [0] = 6000
+     Upper Bound old [0]= 11000
+     Upper Bound new [0]= 1.83333
+     Init guess [0] = 6000
+     Lower Bound old [0]= 3000
+     Lower Bound new [0]= 0.5
+... assigning bounds and tolerance for optimization...
+
+12. in gemsfit_task.cpp(287). Setting target (objective) function to minimize.
+13. gemsfit_task.cpp(308). Performing optimization.
+~ m.count.= 1 sum.res.= 4558.05078420933
+~ m.count.= 2 sum.res.= 3543.50848826277
+~ m.count.= 3 sum.res.= 8700.96439032507
+~ m.count.= 4 sum.res.= 3495.40418732365
+~ m.count.= 5 sum.res.= 3495.56747753032
+~ m.count.= 6 sum.res.= 3495.55339420099
+~ m.count.= 7 sum.res.= 3495.40410745643
+~ m.count.= 8 sum.res.= 3495.40414576319
+~ m.count.= 9 sum.res.= 3495.40409943379
+optv[0] = 1.2748463472221
+size of optv = 1
+14. gemsfit_task.cpp(317). Finished optimization; 
+~ m.count.= 10 sum.res.= 3495.40409943379
+found minimum at <<f( 1.2748463472221 ) = 3495.40409943379
+ after 10 evaluations.
+
+15. Back in main.cpp(122). Performing statistics ...
+~ m.count.= 11 sum.res.= 3495.40433906341
+~ m.count.= 12 sum.res.= 3495.40432503874
+~ m.count.= 13 sum.res.= 3495.40409943379
+16. main.cpp(152): finished in 0.150844 seconds. GEMSFITS: End. Bye!

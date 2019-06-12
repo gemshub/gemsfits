@@ -1,8 +1,8 @@
 
 TEMPLATE	= app
-#LANGUAGE        = C++
+LANGUAGE        = C++
 TARGET		= gemsfits
-#VERSION         = 1.0.0
+VERSION         = 1.0.0
 
 DEFINES         += Use_mt_mode
 #DEFINES         += NODEARRAYLEVEL
