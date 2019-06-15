@@ -87,10 +87,11 @@ make
 sudo make install
 ~~~
 
-Install EJDB library from source - see [instructions in ](http://ejdb.org/doc/install/building.html): 
+Install EJDB library from source : 
 
 ~~~
 git clone https://github.com/Softmotions/ejdb.git
+git checkout v1.2.12 
 cd ejdb
 mkdir build
 cd build
