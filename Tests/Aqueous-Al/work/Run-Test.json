@@ -6,7 +6,7 @@
      "GEMSFPath" :   "../GEMS/bhm-H-gbs-H-dat.lst",
      "comment" :   "optimizing G0 at 25 C of Al hydrous species against solubility experiments as a function of pH (Benezeth et al., 2001). Using the nested function NFUN to fix the ph of the experiments to the reported values by adding the necessary amounts of NaOH or HCl. G0 of AlOH+2 is constrained by reaction, haing the logK values cacluated using the equation described in LogKFun bellow.",
      "OptSet" :   {
-          "NumMPI" :   12,
+          "NumMPI" :   4,
           "DoWhat" :   1,
           "UseEqC" :   1,
           "UDWts" :   0,
