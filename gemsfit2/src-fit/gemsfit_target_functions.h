@@ -193,7 +193,11 @@ double weight_phdcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFunction:
 */
 double Tfunction (double computed_value, double measured_value, string type, TGfitTask::TargetFunction::obj_fun objfun);
 
+#if defined(_UNICODE)
+double* AddVariable(const wchar_t *a_szName, void *pUserData);
+#else
 double* AddVariable(const char *a_szName, void *pUserData);
+#endif
 
 string formula_DCname_parser (string expr, vector<string> &exprO, vector<string> &exprP );
 

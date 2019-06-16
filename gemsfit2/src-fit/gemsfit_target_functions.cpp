@@ -36,24 +36,40 @@
 #include "gemsfit_target_functions.h"
 #include "keywords.h"
 #include <boost/lexical_cast.hpp>
+#include <boost/locale.hpp>
 
 #if defined(_UNICODE)
 #include <locale>
 #include <codecvt>
-wstring s2ws(const std::string& str)
-{
-    using convert_typeX = std::codecvt_utf8<wchar_t>;
-    std::wstring_convert<convert_typeX, wchar_t> converterX;
-
-    return converterX.from_bytes(str);
-}
 
 string ws2s(const std::wstring& wstr)
 {
-    using convert_typeX = std::codecvt_utf8<wchar_t>;
-    std::wstring_convert<convert_typeX, wchar_t> converterX;
+//    using convert_typeX = std::codecvt_utf8<wchar_t>;
+//    std::wstring_convert<convert_typeX, wchar_t> converterX;
 
-    return converterX.to_bytes(wstr);
+    string s = boost::locale::conv::utf_to_utf<char>(wstr);
+
+//    return converterX.to_bytes(wstr);
+    return s;
+}
+
+wstring s2ws(const std::string& str)
+{
+//    cout << str << endl << "AAAA" << endl;
+//    using convert_typeX = std::codecvt_utf8<wchar_t>;
+//    std::wstring_convert<convert_typeX, wchar_t> converterX;
+
+//    wstring wstr = converterX.from_bytes(str);
+
+    wstring ws = boost::locale::conv::utf_to_utf<wchar_t>(str);
+
+//    cout << ws2s(ws)<< endl << "BBBB" << endl;
+
+    return ws;
+
+//    wstring wstr (str.begin(), str.end());
+
+//    return wstr;
 }
 #else
 
@@ -86,10 +102,6 @@ double* AddVariable(const char *a_szName, void *pUserData)
   else
     return &afValBuf[iVal];
 }
-
-
-
-
 
 /// Unit check FUNCTIONS
 void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
@@ -725,17 +737,19 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
         string expr =  objfun.expr;
         expr = formula_DCname_parser(objfun.expr, exprO, exprP);
 
-//        cout << objfun.expr << endl;
+//        cout << expr << endl;
 
         try
         {
             mu::Parser parser;
 #if defined(_UNICODE)
             parser.SetExpr(s2ws(expr));
+            vector<wstring> varStr;
 #else
             parser.SetExpr(expr);
-#endif
             vector<string> varStr;
+#endif
+
             parser.SetVarFactory(AddVariable, &varStr);
             parser.GetUsedVar();
 
@@ -745,7 +759,12 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
             {
                 for ( unsigned int ex = 0; ex < exprO.size(); ex++)
                 {
-                    if (varStr[d].c_str() == exprP[ex]) { DCndx = sys->NodT[i]->DC_name_to_xCH(exprO[ex].c_str()); }
+#if defined(_UNICODE)
+                if (ws2s(varStr[d]) == exprP[ex])
+#else
+                if (varStr[d] == exprP[ex])
+#endif
+                    { DCndx = sys->NodT[i]->DC_name_to_xCH(exprO[ex].c_str()); }
                 }
 
                 if (DCndx < 0)
@@ -771,7 +790,7 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
             for (unsigned int d = 0; d < varStr.size(); d++)
             {
 #if defined(_UNICODE)
-                parser.DefineVar(s2ws(varStr[d]), &varDbl[d]);
+                parser.DefineVar(varStr[d], &varDbl[d]);
 #else
                 parser.DefineVar(varStr[d], &varDbl[d]);
 #endif
