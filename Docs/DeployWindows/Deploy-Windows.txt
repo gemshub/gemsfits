@@ -17,7 +17,7 @@ Copy the \Resources and \Tests folders into C:\GEMSFITSDEPLOY folder.
 and "windeployqt.exe", and then edit the "runwindeployqt.bat" file to make sure 
 that it contains the correct paths to C:\Qt\5.3\mingw482_32\bin and 
 to C:\Qt\Tools\mingw482_32\bin folders (modify to actual ones, if necessary). 
-Copy (or refresh) the files "qcollectiongenerator.exe", "qhelpconverter.exe" 
+Copy (or refresh) the files "windeployqt.exe", "qcollectiongenerator.exe", "qhelpconverter.exe" 
 and "qhelpgenerator.exe" from C:\Qt\5.3\mingw482_32\bin to 
 C:\GEMSFITSDEPLOY\gemsfits-app folder.   
 
@@ -60,7 +60,9 @@ created e.g. in C:\TEMP folder) "C:\TEMP\GEMSFITSDEPLOY.7z".
 If not yet done, download and install 7zip-sfx-maker v.3.3 utility from
 http://sourceforge.net/projects/sfx-maker/ . Also download ResourceHacker 
 v.3.6 from http://www.angusj.com/resourcehacker/; install it into 
-"C:\Program Files (x86)\7-Zip SFX Maker\Resource Hacker" folder. 
+"C:\Program Files (x86)\7-Zip SFX Maker\Resource Hacker" folder. 7-Zip SFX Maker 
+is looking for ResHacker.exe but the newest/actual Tool its named ResourceHacker.exe
+Place it in \Resources and rename it to ResHacker.exe and it will work.
 Once you have to copy the GEMSFITS.ico file into the \Resources folder of the
 folder where the 7zip-sfx-maker program is installed.  
 

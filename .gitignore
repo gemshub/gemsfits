@@ -52,5 +52,13 @@ gfshell2-build/ipmlog.txt
 gfshell-build/*
 gemsfit2-build/.qmake.stash
 gfshell2-build/.qmake.stash
+build*
 
+gemsfit2/gemsfit2-win32-64.pro.user
+gfshell2/gemsfit-win32-64-gui.pro.user
+gemsfit2/gemsfit2-win.pro.user
+gfshell2/gemsfit-win-gui.pro.user
+
+.vscode/
+GEMSFITSDEPLOY/
 

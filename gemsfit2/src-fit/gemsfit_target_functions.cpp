@@ -37,6 +37,59 @@
 #include "keywords.h"
 #include <boost/lexical_cast.hpp>
 
+#if defined(_UNICODE)
+#include <locale>
+#include <codecvt>
+wstring s2ws(const std::string& str)
+{
+    using convert_typeX = std::codecvt_utf8<wchar_t>;
+    std::wstring_convert<convert_typeX, wchar_t> converterX;
+
+    return converterX.from_bytes(str);
+}
+
+string ws2s(const std::wstring& wstr)
+{
+    using convert_typeX = std::codecvt_utf8<wchar_t>;
+    std::wstring_convert<convert_typeX, wchar_t> converterX;
+
+    return converterX.to_bytes(wstr);
+}
+#else
+
+#endif
+
+
+#if defined(_UNICODE)
+double* AddVariable(const wchar_t *a_szName, void *pUserData)
+#else
+double* AddVariable(const char *a_szName, void *pUserData)
+#endif
+{
+   double afValBuf[500];
+   int iVal = -1;
+#if defined(_UNICODE)
+  vector<wstring> *test = reinterpret_cast<vector<wstring> *>(pUserData);
+#else
+  vector<string> *test = reinterpret_cast<vector<string> *>(pUserData);
+#endif
+  iVal++;
+  test->push_back(a_szName);
+  afValBuf[iVal] = 0;
+
+  if (iVal>=499)
+#if defined(_UNICODE)
+    throw mu::ParserError(L"Variable buffer overflow.");
+#else
+    throw mu::ParserError("Variable buffer overflow.");
+#endif
+  else
+    return &afValBuf[iVal];
+}
+
+
+
+
 
 /// Unit check FUNCTIONS
 void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
@@ -414,21 +467,30 @@ double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::ob
 
     try {
         mu::Parser parser;
+#if defined(_UNICODE)
+        wstring exp_CN;
+        exp_CN.assign(objfun.exp_CN.begin(), objfun.exp_CN.end());
+        parser.SetExpr(exp_CN);
+        vector<wstring> varStr;
+#else
         parser.SetExpr(objfun.exp_CN);
-
         vector<string> varStr;
+#endif
         parser.SetVarFactory(AddVariable, &varStr);
         parser.GetUsedVar();
 
         for (unsigned int d = 0; d < varStr.size(); d++)
         {
+#if defined(_UNICODE)
+            ICndx = sys->NodT[i]->IC_name_to_xDB(ws2s(varStr[d]).c_str());
+#else
+            ICndx = sys->NodT[i]->IC_name_to_xDB(varStr[d].c_str());
+#endif
             if ((ccPH == *keys::aq) && (PHndx >=0))
             {
-            ICndx = sys->NodT[i]->IC_name_to_xDB(varStr[d].c_str());
-            varDbl.push_back(sys->NodT[i]->Get_mIC(ICndx));
+                varDbl.push_back(sys->NodT[i]->Get_mIC(ICndx));
             } else
             {
-                ICndx = sys->NodT[i]->IC_name_to_xDB(varStr[d].c_str());
                 varDbl.push_back(IC_in_PH[ICndx]);
             }
         }
@@ -445,9 +507,15 @@ double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::ob
     catch(mu::Parser::exception_type &e)
        {
          cout << "muParser ERROR for sample " << sys->experiments[i]->sample << "\n";
+#if defined(_UNICODE)
+         cout << "Message:  " << ws2s(e.GetMsg()) << "\n";
+         cout << "Formula:  " << ws2s(e.GetExpr()) << "\n";
+         cout << "Token:    " << ws2s(e.GetToken()) << "\n";
+#else
          cout << "Message:  " << e.GetMsg() << "\n";
          cout << "Formula:  " << e.GetExpr() << "\n";
          cout << "Token:    " << e.GetToken() << "\n";
+#endif
          if (e.GetPos()!=std::string::npos)
          cout << "Position: " << e.GetPos() << "\n";
          cout << "Errc:     " << e.GetCode() << " http://muparser.beltoforion.de/mup_error_handling.html#idErrors " <<"\n";
@@ -662,8 +730,11 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
         try
         {
             mu::Parser parser;
+#if defined(_UNICODE)
+            parser.SetExpr(s2ws(expr));
+#else
             parser.SetExpr(expr);
-
+#endif
             vector<string> varStr;
             parser.SetVarFactory(AddVariable, &varStr);
             parser.GetUsedVar();
@@ -699,16 +770,26 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
 
             for (unsigned int d = 0; d < varStr.size(); d++)
             {
+#if defined(_UNICODE)
+                parser.DefineVar(s2ws(varStr[d]), &varDbl[d]);
+#else
                 parser.DefineVar(varStr[d], &varDbl[d]);
+#endif
             }
             computed_value = parser.Eval();
         }
         catch(mu::Parser::exception_type &e)
         {
             cout << "muParser ERROR for sample " << sys->experiments[i]->sample << "\n";
-            cout << "Message:  " << e.GetMsg() << "\n";
-            cout << "Formula:  " << e.GetExpr() << "\n";
-            cout << "Token:    " << e.GetToken() << "\n";
+#if defined(_UNICODE)
+         cout << "Message:  " << ws2s(e.GetMsg()) << "\n";
+         cout << "Formula:  " << ws2s(e.GetExpr()) << "\n";
+         cout << "Token:    " << ws2s(e.GetToken()) << "\n";
+#else
+         cout << "Message:  " << e.GetMsg() << "\n";
+         cout << "Formula:  " << e.GetExpr() << "\n";
+         cout << "Token:    " << e.GetToken() << "\n";
+#endif
             if (e.GetPos()!=std::string::npos)
                 cout << "Position: " << e.GetPos() << "\n";
             cout << "Errc:     " << e.GetCode() << " http://muparser.beltoforion.de/mup_error_handling.html#idErrors " <<"\n";
@@ -1005,23 +1086,6 @@ double weight_phdcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFunction:
     } else
         return 1;
 }
-
-double* AddVariable(const char *a_szName, void *pUserData)
-{
-   double afValBuf[500];
-   int iVal = -1;
-
-  vector<string> *test = reinterpret_cast<vector<string> *>(pUserData);
-  iVal++;
-  test->push_back(a_szName);
-  afValBuf[iVal] = 0;
-
-  if (iVal>=499)
-    throw mu::ParserError("Variable buffer overflow.");
-  else
-    return &afValBuf[iVal];
-}
-
 
 string formula_DCname_parser(string expr, vector<string> &exprO, vector<string> &exprP )
 {
