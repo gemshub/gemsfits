@@ -1,0 +1,11 @@
+prefix=/usr/local
+exec_prefix=${prefix}/bin
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: ejdb
+Description: Embedded JSON database library (EJDB)
+URL: http://ejdb.org
+Version: 1.2.12
+Libs: -L${libdir} -lejdb
+Cflags: -I${includedir}
