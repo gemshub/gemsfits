@@ -106,7 +106,7 @@ GraphDialog::GraphDialog( GraphData *data, QWidget *parent ):
     tbLegend->setColumnWidth(1, 30 );
     tbLegend->horizontalHeader()->setStretchLastSection( true);
     //tbLegend->setColumnWidth(1, wdF( ftString, 15, eNo ) );
-    tbLegend->setMaximumWidth( 80+170 /*wdF( ftString, 15, eNo )*/ );
+    tbLegend->setMaximumWidth( 80+270 /*wdF( ftString, 15, eNo )*/ );
     tbLegend->verticalHeader()->setVisible(false);
     tbLegend->horizontalHeader()->setVisible(false);
 
@@ -499,7 +499,7 @@ QWidget *LabelDelegate::createEditor(QWidget *parent,
        QLineEdit *editor =  new QLineEdit( parent);
        if( isIsoline )
            editor->setValidator( new QDoubleValidator() );
-       editor->setMaxLength( 15 );
+       editor->setMaxLength( 100 );
        return editor;
        //return QItemDelegate::createEditor( parent, option,  index );
     }

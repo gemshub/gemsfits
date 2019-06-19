@@ -281,7 +281,7 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, 
 
     if( NodeStatusCH == OK_GEM_AIA || NodeStatusCH == OK_GEM_SIA  )
     {
-//            sys->NodT[i]->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
+//            sys->NodT[i]->GEM_priqnt_ipm( "GEMS3K_log.out" );   // possible debugging printout
     }
     else
     {
