@@ -258,7 +258,8 @@ void TGfitTask::add_MC_scatter( vector<double> scatter)
                         {
                             if ((this->experiments[i]->expphases[p]->phIC[e]->comp == this->Tfun->objfun[j].exp_CN) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j].exp_phase ))
                             {
-                                this->experiments[i]->expphases[p]->phIC[e]->Qnt = scatter[count];
+                                if (this->experiments[i]->weight < 50.0)
+                                    this->experiments[i]->expphases[p]->phIC[e]->Qnt = scatter[count];
 
                                 ++count;
                             }
@@ -271,7 +272,8 @@ void TGfitTask::add_MC_scatter( vector<double> scatter)
                             {
                                 if ((this->experiments[i]->expphases[p]->phMR[f]->comp == this->Tfun->objfun[j].exp_CN) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j].exp_phase ))
                                 {
-                                    this->experiments[i]->expphases[p]->phMR[f]->Qnt = scatter[count];
+                                    if (this->experiments[i]->weight < 50.0)
+                                        this->experiments[i]->expphases[p]->phMR[f]->Qnt = scatter[count];
 
                                     ++count;
                                 }
@@ -285,7 +287,8 @@ void TGfitTask::add_MC_scatter( vector<double> scatter)
                         {
                             if ((this->experiments[i]->expphases[p]->phprop[pp]->property == Tfun->objfun[j].exp_CN) && (this->experiments[i]->expphases[p]->phase == this->Tfun->objfun[j].exp_phase ))
                             {
-                                this->experiments[i]->expphases[p]->phprop[pp]->Qnt = scatter[count];
+                                if (this->experiments[i]->weight < 50.0)
+                                    this->experiments[i]->expphases[p]->phprop[pp]->Qnt = scatter[count];
 
                                 ++count;
                             }
@@ -303,7 +306,8 @@ void TGfitTask::add_MC_scatter( vector<double> scatter)
                                     {
                                         if (this->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->property == Tfun->objfun[j].exp_DCP)
                                         {
-                                            this->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt = scatter[count];
+                                            if (this->experiments[i]->weight < 50.0)
+                                                this->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt = scatter[count];
 
                                             ++count;
                                         }
@@ -452,12 +456,14 @@ void TGfitTask:: print_global_results ()
     {
         string temp ="";
         temp += Tfun->addout[i].exp_phase;
-        if (Tfun->addout[i].exp_DCP != "NULL")
+        if ((Tfun->addout[i].exp_DCP != "NULL") && (Tfun->addout[i].expr == "NULL"))
             temp += "." + Tfun->addout[i].exp_DCP;
         temp += "." + Tfun->addout[i].exp_CN;
 
         if (Tfun->addout[i].expr != "NULL")
-            temp += "." + Tfun->addout[i].expr;
+            if (Tfun->addout[i].exp_DCP != "NULL")
+                temp += "." + Tfun->addout[i].exp_DCP;
+//            temp += "." + Tfun->addout[i].expr;
 
         if (Tfun->addout[i].Otype == keys::calc)
         header.push_back(temp + "." + keys::calc);

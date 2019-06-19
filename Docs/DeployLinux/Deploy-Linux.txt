@@ -52,6 +52,12 @@ OR
 
 6.b Extract the gemsfits-app.tgz archive into /GEMSFITSDEPLOY/ folder
 
+To link dependencies of platforms/libqxcb.so to the libs folder.
+If you don't have patchelf installed execute: 
+	$ sudo apt-get install patchelf
+7.b Go to /GEMSFITSDEPLOY/gemsfits-app/ and execute:
+	$ patchelf --set-rpath '$ORIGIN/../libs' platforms/libqxcb.so 
+
 @@ gemsfit2 @@ 
 5. Using QtCreator (Qt 5.2.1 64bit), build the actual release 
 variant of gemsfit2 using the *.pro Qt project file.

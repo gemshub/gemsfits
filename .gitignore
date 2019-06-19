@@ -28,10 +28,10 @@ csvtoejdb-build/densNaCl
 csvtoejdb-build/obj
 csvtoejdb-build/old_qtz_sol.xls
 csvtoejdb-build/test.json
-csvtoejdb/src-csvtoejdb/csvtoejdb.pro.user
+csvtoejdb/src-csvtoejdb/csvtoejdb.pro.user*
 csvtoejdb/src-csvtoejdb/csvtoejdb.pro.user.0000000
 csvtoejdb/src-csvtoejdb/csvtoejdb.pro.user.b878567.2.7pre1
-gemsfit2/gemsfit2.pro.user
+gemsfit2/gemsfit2.pro.user*
 gemsfit2-build/Makefile
 gemsfit2-build/gemsfit2
 gemsfit2-build/obj/*
@@ -54,10 +54,10 @@ gemsfit2-build/.qmake.stash
 gfshell2-build/.qmake.stash
 build*
 
-gemsfit2/gemsfit2-win32-64.pro.user
-gfshell2/gemsfit-win32-64-gui.pro.user
-gemsfit2/gemsfit2-win.pro.user
-gfshell2/gemsfit-win-gui.pro.user
+gemsfit2/gemsfit2-win32-64.pro.user*
+gfshell2/gemsfit-win32-64-gui.pro.user*
+gemsfit2/gemsfit2-win.pro.user*
+gfshell2/gemsfit-win-gui.pro.user*
 
 .vscode/
 GEMSFITSDEPLOY/
