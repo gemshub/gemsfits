@@ -46,6 +46,7 @@ static const char *LogK[2]          = {"ArrayofUserProvidedLogKValues",   "LogKV
 
 static const char *OptSet[2]        = {"OptimizerSettings",               "OptSet" };
 static const char *MPI[2]           = {"NumberOfMPIThreadsForParallelRun", "NumMPI"};
+static const char *SIA[2]           = {"GemsSmartInitialApproximation", "GemsSIA"};
 // Propose to get rid of "Optimization" "Opt" for the group of keywords below
 static const char *OptDW[2]         = {"WhatOptStatCombinationToDo",      "DoWhat"};
 static const char *OptEQ[2]         = {"UseEquilibriumCalculation",       "UseEqC"};

@@ -100,6 +100,11 @@ void optimization::get_nlopt_param()
     OptEquilibrium = atoi(out2[0].c_str());
     out2.clear();
 
+    parse_JSON_object(out[0], keys::SIA[mode], out2);
+    if (out2.size()>0)
+        OptGemsSIA = atoi(out2[0].c_str());
+    out2.clear();
+
     parse_JSON_object(out[0], keys::OptUW[mode], out2);
     OptUserWeight = atoi(out2[0].c_str());
     out2.clear();
