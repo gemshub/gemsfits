@@ -278,7 +278,7 @@ OptParameter::~OptParameter()
 Opt_G0::Opt_G0(vector<string> data, double OptBoundPrc, unsigned &p) :
     OptParameter (data, OptBoundPrc )
 {
-    vector<string> out;
+    vector<string> out,out2;
     Ptype = "G0";
     int Rndx = -1;
 
@@ -297,6 +297,11 @@ Opt_G0::Opt_G0(vector<string> data, double OptBoundPrc, unsigned &p) :
     {
         parse_JSON_object(Jdata[i], keys::PType[mode], out);
         if (out.size() !=1) { cout << "Parameter " << p << " (G0) has no \"ptype\" defined! "<< endl; exit(1); }
+
+        if (out[0] != "S" && out[0] != "F" && out[0] != "R" && out[0] != "L") {
+            parse_JSON_object(Jdata[i], keys::DCN[mode], out2);
+            cout << "Parameter " << out2[0] << " (G0) has unknown type " << out[0] << " defined! "<<endl; exit(1); }
+
         if (out[0] == "F")
         {
             out.clear();
@@ -587,12 +592,17 @@ Opt_G0::~Opt_G0()
 Opt_PMc::Opt_PMc(vector<string> data, double OptBoundPrc, unsigned &p) :
     OptParameter (data, OptBoundPrc )
 {
-    vector<string> out;
+    vector<string> out, out2;
     Ptype = "PMc";
     for (unsigned int i = 0 ; i < Jdata.size() ; i++)
     {
         parse_JSON_object(Jdata[i], keys::PType[mode], out);
         if (out.size() !=1) { cout << "Parameter " << p << " (PMc) has no \"PType\" defined! "<< endl; exit(1); }
+
+        if (out[0] != "S" && out[0] != "F" /*&& out[0] != "R"*/ && out[0] != "L") {
+            parse_JSON_object(Jdata[i], keys::IPCN[mode], out2);
+            cout << "Parameter " << out2[0] << " (IP) has unknown type " << out[0] << " defined! "<<endl; exit(1); }
+
         if (out[0] == "F")
         {
             out.clear();
@@ -671,12 +681,17 @@ Opt_PMc::~Opt_PMc()
 Opt_DMc::Opt_DMc(vector<string> data, double OptBoundPrc, unsigned &p) :
     OptParameter (data, OptBoundPrc )
 {
-    vector<string> out;
+    vector<string> out, out2;
     Ptype = "DMc";
     for (unsigned int i = 0 ; i < Jdata.size() ; i++)
     {
         parse_JSON_object(Jdata[i], keys::PType[mode], out);
         if (out.size() !=1) { cout << "Parameter " << p << " (G0) has no \"PType\" defined! "<< endl; exit(1); }
+
+        if (out[0] != "S" && out[0] != "F" /*&& out[0] != "R"*/ && out[0] != "L") {
+            parse_JSON_object(Jdata[i], keys::IPCN[mode], out2);
+            cout << "Parameter " << out2[0] << " (IP) has unknown type " << out[0] << " defined! "<<endl; exit(1); }
+
         if (out[0] == "F")
         {
             out.clear();
@@ -752,12 +767,17 @@ Opt_DMc::~Opt_DMc()
 Opt_bIC::Opt_bIC(vector<string> data, double OptBoundPrc, unsigned &p) :
     OptParameter (data, OptBoundPrc )
 {
-    vector<string> out;
+    vector<string> out, out2;
     Ptype = "bIC";
     for (unsigned int i = 0 ; i < Jdata.size() ; i++)
     {
         parse_JSON_object(Jdata[i], keys::PType[mode], out);
         if (out.size() !=1) { cout << "Parameter " << p << " (bIC) has no \"ptype\" defined! "<< endl; exit(1); }
+
+        if (/*out[0] != "S" &&*/ out[0] != "F" /*&& out[0] != "R"*/ && out[0] != "L") {
+            parse_JSON_object(Jdata[i], keys::ICN[mode], out2);
+            cout << "Parameter " << out2[0] << " (bIC) has unknown type " << out[0] << " defined! "<<endl; exit(1); }
+
         if (out[0] == "F")
         {
             out.clear();
@@ -935,6 +955,10 @@ Opt_Tk::Opt_Tk(vector<string> data, double OptBoundPrc, unsigned &p) :
     {
         parse_JSON_object(Jdata[i], keys::PType[mode], out);
         if (out.size() !=1) { cout << "Parameter " << p << " (TK) has no \"ptype\" defined! "<< endl; exit(1); }
+
+        if (/*out[0] != "S" &&*/ out[0] != "F" /*&& out[0] != "R"*/ && out[0] != "L") {
+            cout << "Parameter (TK) has unknown type " << out[0] << " defined! "<<endl; exit(1); }
+
         if (out[0] == "F")
         {
             out.clear();
@@ -1019,6 +1043,10 @@ Opt_P::Opt_P(vector<string> data, double OptBoundPrc, unsigned &p) :
     {
         parse_JSON_object(Jdata[i], keys::PType[mode], out);
         if (out.size() !=1) { cout << "Parameter " << p << " (P) has no \"ptype\" defined! "<< endl; exit(1); }
+
+        if (/*out[0] != "S" &&*/ out[0] != "F" /*&& out[0] != "R"*/ && out[0] != "L") {
+            cout << "Parameter (Pbar) has unknown type " << out[0] << " defined! "<<endl; exit(1); }
+
         if (out[0] == "F")
         {
             out.clear();
