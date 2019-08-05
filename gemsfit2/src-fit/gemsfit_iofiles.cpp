@@ -138,6 +138,8 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
 
         bson_append_int(&bson_task_file, keys::OptEQ[mode], 1);
 
+        bson_append_int(&bson_task_file, keys::SIA[mode], -1);
+
         bson_append_int(&bson_task_file, keys::OptUW[mode], -1);
 
         bson_append_string(&bson_task_file, keys::OptAlg[mode], "LN_BOBYQA");

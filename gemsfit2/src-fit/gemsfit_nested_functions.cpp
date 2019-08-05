@@ -272,12 +272,16 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, 
     // Asking GEM to run with automatic initial approximation
     dBR.at(0)->NodeStatusCH = NEED_GEM_AIA;
 
+    // Asking GEM to run with smart initial approximation
+    if (sys->Opti->OptGemsSIA == 1)
+        dBR.at(0)->NodeStatusCH = NEED_GEM_SIA;
+
     // RUN GEMS3K
     NodeStatusCH = sys->NodT[sys->EXPndx[P_id]]->GEM_run( false );
 
     if( NodeStatusCH == OK_GEM_AIA || NodeStatusCH == OK_GEM_SIA  )
     {
-//            sys->NodT[i]->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
+//            sys->NodT[i]->GEM_priqnt_ipm( "GEMS3K_log.out" );   // possible debugging printout
     }
     else
     {

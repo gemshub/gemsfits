@@ -132,6 +132,11 @@ csvtoejdb documentation:
 
 - make  "LogKFun" array
 
+BUGS
+- crash if no template file found at first round 
+- pHedge tutorial project not reading the GEMS3K files in linux
+- crash with option OptDoWhat 0 
+
 Future
 - iterative regression
 - 2-3 step regrestion: 1 - using global algoritm; 2 - using local algorithm.
