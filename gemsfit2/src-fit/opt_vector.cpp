@@ -469,16 +469,24 @@ long int Opt_G0::Adjust_Fparam(TNode *node, int Pndx, double Pval)
     double delta_G0old_G0new;
     int species_index = Pndx;
 
-    delta_G0old_G0new = fabs(node->DC_G0(species_index, 1e+05, 298.15, false)) - fabs(new_G0);
-
-    // going trough all TP pairs
-    for (unsigned int j=0; j<TP_pairs[0].size(); ++j)
+    try
     {
-        new_GTP = delta_G0old_G0new + node->DC_G0(species_index, TP_pairs[1][j]*100000, TP_pairs[0][j]+273.15, false);
-        // Set the new G0 in GEMS
-        node->Set_DC_G0(species_index, TP_pairs[1][j]*100000, TP_pairs[0][j]+273.15, new_GTP);
+        delta_G0old_G0new = fabs(node->DC_G0(species_index, 1e+05, 298.15, false)) - fabs(new_G0);
+
+        // going trough all TP pairs
+        for (unsigned int j=0; j<TP_pairs[0].size(); ++j)
+        {
+            new_GTP = delta_G0old_G0new + node->DC_G0(species_index, TP_pairs[1][j]*100000, TP_pairs[0][j]+273.15, false);
+            // Set the new G0 in GEMS
+            node->Set_DC_G0(species_index, TP_pairs[1][j]*100000, TP_pairs[0][j]+273.15, new_GTP);
+        }
+        node->Set_DC_G0(species_index, 1e+05, 298.15, Pval);
+
+    } catch(TError& err)
+    {
+        cout << "Error:" << err.title.c_str() << ":" <<  err.mess.c_str() << endl;
+        return 1;
     }
-    node->Set_DC_G0(species_index, 1e+05, 298.15, Pval);
     return 1;
 }
 
