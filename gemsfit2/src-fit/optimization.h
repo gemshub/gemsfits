@@ -111,6 +111,7 @@ public:
     int OptTuckeyVal;
     int OptTitration;
     int OptUserWeight;
+    int OptMixedSumOfResiduals = -1;
     double OptInitStep;
     bool OptNormParam;
     double OptBoundPerc;

@@ -257,7 +257,37 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 
 
     residuals_sys = sys->get_sum_of_residuals( );
+    double Weighted_Abs_sum_of_residuals = 0.0;
 
+    for (unsigned j = 0; j < sys->Tfun->objfun.size(); j++)
+    {
+        for (unsigned int i = 0; i < sys->aTfun.size(); i++)
+        {
+            if (sys->aTfun[i].objfun[j].isComputed)
+            {
+                sys->computed_values_v.push_back(sys->aTfun[i].objfun[j].results.computed_value );
+                sys->measured_values_v.push_back(sys->aTfun[i].objfun[j].results.measured_value );
+                sys->residuals_v.push_back(sys->aTfun[i].objfun[j].results.residual );
+                sys->weights.push_back(sys->aTfun[i].objfun[j].results.weight );
+                sys->Tfun_residuals_v.push_back(sys->aTfun[i].objfun[j].results.Tfun_residual );
+                sys->Weighted_Tfun_residuals_v.push_back(sys->aTfun[i].objfun[j].results.WTfun_residual );
+                Weighted_Abs_sum_of_residuals = fabs(sys->aTfun[i].objfun[j].results.residual)*sys->aTfun[i].objfun[j].results.weight;
+            }
+        }
+    }
+
+    if (master_counter == 1)
+    {
+        sys->_init_residuals_sys = residuals_sys;
+        sys->_init_Weighted_Abs_sum_of_residuals = Weighted_Abs_sum_of_residuals;
+    }
+
+    if (sys->Opti->OptMixedSumOfResiduals)
+    {
+        double norm_residuals_sys = residuals_sys/sys->_init_residuals_sys;
+        double norm_Weighted_Abs_sum_of_residuals = Weighted_Abs_sum_of_residuals/sys->_init_Weighted_Abs_sum_of_residuals;
+        residuals_sys = norm_residuals_sys+norm_Weighted_Abs_sum_of_residuals;
+    }
 
 //    residuals_sys = test_residual;
 
@@ -274,21 +304,6 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     gpf->flog << "~ m.count.= " << master_counter << " sum.res.= " << setprecision(15) << residuals_sys << endl;
     cout << "~ m.count.= " << master_counter << " sum.res.= " << setprecision(15) << residuals_sys << endl;
 
-    for (unsigned j = 0; j < sys->Tfun->objfun.size(); j++)
-    {
-        for (unsigned int i = 0; i < sys->aTfun.size(); i++)
-        {
-            if (sys->aTfun[i].objfun[j].isComputed)
-            {
-                sys->computed_values_v.push_back(sys->aTfun[i].objfun[j].results.computed_value );
-                sys->measured_values_v.push_back(sys->aTfun[i].objfun[j].results.measured_value );
-                sys->residuals_v.push_back(sys->aTfun[i].objfun[j].results.residual );
-                sys->weights.push_back(sys->aTfun[i].objfun[j].results.weight );
-                sys->Tfun_residuals_v.push_back(sys->aTfun[i].objfun[j].results.Tfun_residual );
-                sys->Weighted_Tfun_residuals_v.push_back(sys->aTfun[i].objfun[j].results.WTfun_residual );
-            }
-        }
-    }
 }
 
 

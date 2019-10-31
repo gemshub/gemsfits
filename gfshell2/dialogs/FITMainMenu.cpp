@@ -897,7 +897,8 @@ void FITMainWindow::CmBackupJSON()
           rtEJ[ currentMode ].Get( aKey[i].c_str() );
           string valDB =rtEJ[ currentMode ].GetJson();
           outFile.ff << valDB;
-          outFiletest.ff << parseYAMLToJson(rtEJ[ currentMode ].GetYAML());
+//          valDB = parseYAMLToJson(rtEJ[ currentMode ].GetYAML()); // DM 25.10.19 Yaml convert makes from "121" string to 121 number!!!
+          outFiletest.ff << valDB;
           if( i<aKey.size()-1)
           {
               outFile.ff <<  ",";

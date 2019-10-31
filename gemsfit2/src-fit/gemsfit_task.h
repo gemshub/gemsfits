@@ -123,6 +123,9 @@ public:
 
     double weighted_Tfun_sum_of_residuals;
 
+    double _init_residuals_sys = 0.0;
+    double _init_Weighted_Abs_sum_of_residuals = 0.0;
+
     int mode;
 
     int mLook;
