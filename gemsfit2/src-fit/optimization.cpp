@@ -157,14 +157,23 @@ void optimization::OptParameterCreate ()
     // call GEM_init to read GEMS3K input files
     TNode* node  = new TNode();
 
+    try
+    {
+        // call GEM_init     --> read in input files
+        if( (node->GEM_init( GEMSsys.c_str() )) == 1 )
+        {
+            cout << GEMSsys << endl;
+            cout<<" .. ERROR occurred while reading GEMS3K input files !!! ..."<<endl;
+            exit(1);
+        }
+    }
+    catch(TError& err)
+    {
+        if( !GEMSsys.empty() )
+            cout << "GEMS3K input : file " << GEMSsys << endl;
+        cout << err.title.c_str() << "  : " << err.mess.c_str() << endl;
+    }
 
-    // call GEM_init     --> read in input files
-    if( (node->GEM_init( GEMSsys.c_str() )) == 1 )
-       {
-           cout << GEMSsys << endl;
-           cout<<" .. ERROR occurred while reading GEMS3K input files !!! ..."<<endl;
-           exit(1);
-       }
 
     //OFUN parameters
     // NFUN parameters
