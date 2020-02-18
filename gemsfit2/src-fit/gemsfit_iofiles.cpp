@@ -103,6 +103,21 @@ cout << "Finished writing the input specification file template" << endl;
     return 0;
 }
 
+int NumDigits(int x)
+{
+    x = abs(x);
+    return (x < 10 ? 1 :
+        (x < 100 ? 2 :
+        (x < 1000 ? 3 :
+        (x < 10000 ? 4 :
+        (x < 100000 ? 5 :
+        (x < 1000000 ? 6 :
+        (x < 10000000 ? 7 :
+        (x < 100000000 ? 8 :
+        (x < 1000000000 ? 9 :
+        10)))))))));
+}
+
 void generateBson(bson &bson_task_file,TNode *node, int mode)
 {
     unsigned int Np = 0, NG0p = 0, NG0PH = 0, Nip = 0, Ncoef = 0, G0ndx=0, PMCndx = 0, DMCndx = 0, /*nIC,*//* nDC,*/ nPS, nPH; long int nDCinPH;
@@ -141,6 +156,8 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
         bson_append_int(&bson_task_file, keys::SIA[mode], -1);
 
         bson_append_int(&bson_task_file, keys::OptUW[mode], -1);
+
+        bson_append_int(&bson_task_file, keys::OptMixedResiduals[mode], -1);
 
         bson_append_string(&bson_task_file, keys::OptAlg[mode], "LN_BOBYQA");
 
@@ -252,15 +269,15 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
                                     temp=0;
                                 } // finish IPC
                                 bson_append_finish_object(&bson_task_file);
-                                Ncoef++;
                                 PMCndx++;
-                                ipcn.erase(ipcn.size()-2, ipcn.size());
+                                ipcn.erase(ipcn.size()-(1+NumDigits(Ncoef)), ipcn.size());
+                                Ncoef++;
                             }
                             bson_append_finish_array(&bson_task_file);
                         } // finish IParameters
                         bson_append_finish_object(&bson_task_file);
+                        ipcn.erase(ipcn.size()-(1+NumDigits(Nip)), ipcn.size());
                         Nip++;
-                        ipcn.erase(ipcn.size()-2, ipcn.size());
                     }
                     bson_append_finish_array(&bson_task_file);
                 }

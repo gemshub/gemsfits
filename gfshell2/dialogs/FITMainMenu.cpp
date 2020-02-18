@@ -780,7 +780,7 @@ void FITMainWindow::CmRunTest()
            Error("Run gemsfit -run", "Could not start a gemsfit2 process...");
 
         ui->action_Run_test->setEnabled(false);
-        ui->action_Show_Results->setEnabled(false);
+        //ui->action_Show_Results->setEnabled(false);
         ui->actionCancel_gemsfit2_run->setEnabled(true);
 
         setStatusText( "Started a gemsfit2 task process..." );

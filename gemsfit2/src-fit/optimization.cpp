@@ -109,6 +109,11 @@ void optimization::get_nlopt_param()
     OptUserWeight = atoi(out2[0].c_str());
     out2.clear();
 
+    parse_JSON_object(out[0], keys::OptMixedResiduals[mode], out2);
+    if (out2.size()>0)
+        OptMixedSumOfResiduals = atoi(out2[0].c_str());
+    out2.clear();
+
     parse_JSON_object(out[0], keys::OptTu[mode], out2);
     OptTuckey = atoi(out2[0].c_str());
     out2.clear();

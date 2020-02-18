@@ -51,6 +51,7 @@ static const char *SIA[2]           = {"GemsSmartInitialApproximation", "GemsSIA
 static const char *OptDW[2]         = {"WhatOptStatCombinationToDo",      "DoWhat"};
 static const char *OptEQ[2]         = {"UseEquilibriumCalculation",       "UseEqC"};
 static const char *OptUW[2]         = {"UseWeightsFromExperimentalData",  "UDWts"};
+static const char *OptMixedResiduals[2]         = {"UseMixedResiduals",  "UMixedResiduals"};
 static const char *OptAlg[2]        = {"OptimizationAlgorithm",           "OptAlg"};
 static const char *OptPBP[2]        = {"ParameterBoundsPercentage",       "PBPerc"};
 static const char *OptTRel[2]       = {"ConvergenceToleranceRelative",    "ConTolRel"};
