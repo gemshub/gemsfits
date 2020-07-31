@@ -372,7 +372,7 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
         {
             // Default
             computed_value = sys->NodT[i]->Get_mIC(ICndx); // in mol/Kg
-            objfun.exp_unit == keys::molal;
+            objfun.exp_unit = keys::molal;
         }
     } else // other than aqueous phase
         if ((ccPH != *keys::aq) && (PHndx >=0) && (ICndx >=0))
