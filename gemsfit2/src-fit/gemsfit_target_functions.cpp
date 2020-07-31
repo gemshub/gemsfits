@@ -784,7 +784,38 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
                      varDbl.push_back(sys->NodT[i]->Get_cDC(DCndx));
                 }
                 else
-                    varDbl.push_back(sys->NodT[i]->Get_cDC(DCndx)); // default mol fraction
+                {
+                    double value = sys->NodT[i]->Get_cDC(DCndx); // default mol fraction
+                    if (objfun.exp_CN == keys::Rd)
+                    {
+                        long int xph = sys->NodT[i]->DCtoPh_DBR( DCndx);
+                        long int DCxCH = sys->NodT[i]->DC_xDB_to_xCH(DCndx);
+                        DATACH* dCH_ = sys->NodT[0]->pCSD();
+
+                        switch(dCH_->ccDC[DCxCH])
+                            {
+                             case DC_SCP_CONDEN:
+                             case DC_AQ_SOLVENT:
+                             case DC_AQ_SOLVCOM:
+                             case DC_SOL_IDEAL:
+                             case DC_SOL_MINOR:
+                             case DC_SOL_MAJOR:
+                             case DC_SOL_MINDEP:
+                             case DC_SOL_MAJDEP:
+                             case DC_SCM_SPECIES:
+
+                             case DC_PEL_CARRIER:
+                             case DC_SUR_MINAL:
+                             case DC_SUR_CARRIER: // mol/kg
+                                        value = sys->NodT[i]->Get_nDC(DCndx)/sys->NodT[i]->Ph_Mass(xph);
+                                              break;
+                              default:
+                                  break; // error in DC class code
+                              }
+                    }
+
+                    varDbl.push_back(value); // default mol fraction
+                }
             }
 
             for (unsigned int d = 0; d < varStr.size(); d++)
