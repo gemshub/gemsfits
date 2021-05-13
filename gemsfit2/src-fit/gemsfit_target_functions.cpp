@@ -378,16 +378,20 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
         if ((ccPH != *keys::aq) && (PHndx >=0) && (ICndx >=0))
         {
             computed_value = IC_in_PH[ICndx]; // phase bulk composition in moles (mol)
-            if (objfun.exp_unit == keys::molkg )
+            if (objfun.exp_unit == keys::molkg || objfun.exp_unit == keys::logmolkg)
             {
                 computed_value = computed_value / sys->NodT[i]->Ph_Mass(PHndx);
+                if (objfun.exp_unit == keys::logmolkg)
+                    computed_value = std::log10(computed_value);
             }
-            if (objfun.exp_unit == keys::molkg_dry )
+            if (objfun.exp_unit == keys::molkg_dry || objfun.exp_unit == keys::logmolkg_dry)
             {
                 HCndx = sys->NodT[i]->IC_name_to_xDB("H");
                 double H_amount = IC_in_PH[HCndx];
                 double H2O_mass = H_amount/2*18.02/1000; // in kg
                 computed_value = computed_value / (sys->NodT[i]->Ph_Mass(PHndx)-H2O_mass);
+                if (objfun.exp_unit == keys::logmolkg_dry)
+                    computed_value = std::log10(computed_value);
             }
             else
 
@@ -580,6 +584,13 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
     phase_name = objfun.exp_phase.c_str();
     PHndx = sys->NodT[i]->Ph_name_to_xDB(phase_name);
     ccPH = sys->NodT[i]->xCH_to_ccPH(PHndx);
+
+    double* IC_in_PH;
+    DATACH* dCH_ = sys->NodT[0]->pCSD();
+    int nIC = dCH_->nIC;	// nr of independent components
+    IC_in_PH = new double[ nIC ];
+    sys->NodT[i]->Ph_BC(PHndx, IC_in_PH);
+    int HCndx = sys->NodT[i]->IC_name_to_xDB("H");
 // gpf->fout << "i=" << i << " p=" << p << " pp=" << pp << " j=" << j << " : ";
     // Get aqueous phase pH
     if ((objfun.exp_CN == keys::pH)  && (ccPH == *keys::aq) && (PHndx >=0))
@@ -790,7 +801,6 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
                     {
                         //long int xph = sys->NodT[i]->DCtoPh_DBR( DCndx);
                         long int DCxCH = sys->NodT[i]->DC_xDB_to_xCH(DCndx);
-                        DATACH* dCH_ = sys->NodT[0]->pCSD();
 
                         switch(dCH_->ccDC[DCxCH])
                             {
@@ -807,6 +817,12 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
                              case DC_SUR_MINAL:
                              case DC_SUR_CARRIER: // mol/kg
                                         value = sys->NodT[i]->Get_nDC(DCndx)/sys->NodT[i]->Ph_Mass(PHndx);
+                                        if (objfun.exp_unit == keys::Lkg_dry )
+                                        {
+                                            double H_amount = IC_in_PH[HCndx];
+                                            double H2O_mass = H_amount/2*18.02/1000; // in kg
+                                            value = sys->NodT[i]->Get_nDC(DCndx)/(sys->NodT[i]->Ph_Mass(PHndx)-H2O_mass);
+                                        }
                                               break;
                               default:
                                   break; // error in DC class code
@@ -816,7 +832,6 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
                             value = sys->NodT[i]->Get_nDC(DCndx)/(sys->NodT[i]->Ph_Volume(PHndx)*1000);
                         }
                     }
-
                     varDbl.push_back(value); // default mol fraction
                 }
             }
@@ -923,9 +938,9 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
     if (PHndx >=0)
     objfun.isComputed = true;
 
-
     sys->set_results( objfun, computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
 
+    delete[] IC_in_PH;
 
     return Weighted_Tfun_residual;
 }
