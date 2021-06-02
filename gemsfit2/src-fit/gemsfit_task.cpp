@@ -1241,15 +1241,18 @@ void TGfitTask::set_logK_TPpairs(vector<string> logK)
 
 void TGfitTask::get_Lparams_delta()
 {
-
     for (unsigned int e=0; e < experiments.size(); e++ )
     {
        for (unsigned i=0; i< Opti->optNFParam.size(); i++)
        {
            Opti->optNFParam[i]->SetIVvEVvDelta(NodT[e]);
        }
-    }
 
+       for (unsigned i=0; i< Opti->optParam.size(); i++)
+       {
+           Opti->optParam[i]->SetIVvEVvDelta(NodT[e]);
+       }
+    }
 }
 
 void TGfitTask::set_DH_Helgeson (int n)

@@ -476,7 +476,7 @@ void TGfitTask::print_param()
 
     // print param
     gpf->fparam << "ptype,parameter," << "name,"	<< "init.value,"
-                   << "fittted.value," << "mc.mean," << "mc.stdev," << "confi99,confi95,confi90," << "CSS.sensitivity,";
+                   << "fittted.value," << "mc.mean," << "mc.stdev," << "confi99gauss,confi95gauss,confi90gauss," << "CSS.sensitivity,";
 
     for (unsigned i= 0; i<fitparam.size(); i++)
     {

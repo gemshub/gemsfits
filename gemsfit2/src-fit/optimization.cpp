@@ -89,6 +89,10 @@ void optimization::get_nlopt_param()
     NFunParameters = out[0];
     out.clear();
 
+    parse_JSON_object(s, keys::AddOptParameters[mode], out);
+    AddOptParameters = out[0];
+    out.clear();
+
     // Optimization settings and statistics
     parse_JSON_object(s, keys::OptSet[mode], out);
 
@@ -279,6 +283,21 @@ void optimization::OptParameterCreate ()
             myOPT = (Opt_P*)myPT;
         }
         if(myOPT) { optNFParam.push_back( myOPT ); myOPT = 0; };
+        out.clear(); p=0;
+    }
+    out.clear();
+
+    // Additional parameters
+    if (AddOptParameters != "")
+    {
+        parse_JSON_object(AddOptParameters, keys::bIC[mode], out);
+        if (out.size() > 0)
+        {
+            Opt_bIC* myPT = new Opt_bIC( out, OptBoundPerc, p, false );
+            myPT->SetIndex_param(node);
+            myOPT = (Opt_bIC*)myPT;
+        }
+        if(myOPT) { optParam.push_back( myOPT ); myOPT = 0; };
         out.clear(); p=0;
     }
 }

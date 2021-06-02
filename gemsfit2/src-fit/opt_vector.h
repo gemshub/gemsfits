@@ -276,13 +276,15 @@ class Opt_bIC : public OptParameter
     public:
 
     /// Constructor
-    Opt_bIC (vector<string> data, double OptBoundPrc, unsigned &p );
+    Opt_bIC (vector<string> data, double OptBoundPrc, unsigned &p, bool isNFun=true );
     /// Destructor
     virtual ~Opt_bIC();
 
     long int SetIndex_param(TNode *node);
 
     long int SetIVvEVvDelta(TNode *node);
+
+    long int Adjust_param(TNode *node, vector<double> opt);
 
     long int Adjust_Fparam(TNode *node, int Pndx, double Pval);
 

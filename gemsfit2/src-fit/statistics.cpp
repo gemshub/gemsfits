@@ -1564,6 +1564,14 @@ void statistics::print_param()
             }
         }
 
+        if (fitparam[i]->Pfittype == "L")
+        {
+            for ( unsigned j=0; j < (nrcor ); j++)
+            {
+                gpf->fparam << "0,";
+            }
+        }
+
 
     gpf->fparam << endl;
     }

@@ -100,8 +100,9 @@ void OptParameter::Pval_to_optL (int p, string data, L_parameter *opt)
 //    if (out2.size() !=1) { cout << "ERROR: Parameter \"L\"-type " << p << " has no \"spec\" defined! "<< endl; exit(1); }
 
     parse_JSON_object(data, keys::IV[mode], out3);
-    opt->IV = atof(out3.at(0).c_str());
-    opt->opt = atof(out3.at(0).c_str());
+    if (out3.size())
+    {opt->IV = atof(out3.at(0).c_str());
+        opt->opt = atof(out3.at(0).c_str());}
     out3.clear();
 
 //    parse_JSON_object(out, keys::ICN, out3);
@@ -772,7 +773,7 @@ Opt_DMc::~Opt_DMc()
 }
 
 // ++++++ bIC ++++++ //
-Opt_bIC::Opt_bIC(vector<string> data, double OptBoundPrc, unsigned &p) :
+Opt_bIC::Opt_bIC(vector<string> data, double OptBoundPrc, unsigned &p, bool isNFun) :
     OptParameter (data, OptBoundPrc )
 {
     vector<string> out, out2;
@@ -786,6 +787,11 @@ Opt_bIC::Opt_bIC(vector<string> data, double OptBoundPrc, unsigned &p) :
             parse_JSON_object(Jdata[i], keys::ICN[mode], out2);
             cout << "Parameter " << out2[0] << " (bIC) has unknown type " << out[0] << " defined! "<<endl; exit(1); }
 
+        out2.clear();
+        if (!isNFun && out[0] != "F") {
+            parse_JSON_object(Jdata[i], keys::ICN[mode], out2);
+            cout << "Parameter " << out2[0] << " (bIC) has not available type " << out[0] << " defined! "<<endl; exit(1); }
+
         if (out[0] == "F")
         {
             out.clear();
@@ -793,14 +799,14 @@ Opt_bIC::Opt_bIC(vector<string> data, double OptBoundPrc, unsigned &p) :
             optFP[optFP.size()-1]->Pndx = -1;
 
             parse_JSON_object(Jdata[i], keys::NFndx[mode], out);
-            if (out.size() !=1) { cout << "Parameter \"F\"-type " << p << " (bIC) has no \"NFndx\" defined! "<< endl; exit(1); }
+            if (out.size() !=1 && isNFun) { cout << "Parameter \"F\"-type " << p << " (bIC) has no \"NFndx\" defined! "<< endl; exit(1); }
             optFP[optFP.size()-1]->Fndx = atoi(out[0].c_str());
             out.clear();
 
             Pval_to_optF (p, Jdata[i], optFP[optFP.size()-1]);
 
             parse_JSON_object(Jdata[i], keys::ICN[mode], out);
-            if (out.size() !=1) { cout << "Parameter \"F\"-type " << p << " (bIC) has no \"ICN\" defined! "<< endl; exit(1); }
+            if (out.size() !=1 && isNFun) { cout << "Parameter \"F\"-type " << p << " (bIC) has no \"ICN\" defined! "<< endl; exit(1); }
             optFP[optFP.size()-1]->Pname = out[0];
             p++;
         }
@@ -884,6 +890,7 @@ long int Opt_bIC::SetIVvEVvDelta(TNode *node)
         optLP[i]->delta.push_back(delta);
         optLP[i]->IVv.push_back(node->Get_bIC(optLP[i]->Pndx));
         optLP[i]->EVv.push_back(node->Get_bIC(optLP[i]->Pndx));
+        //optLP[i]->IV = node->Get_bIC(optLP[i]->Pndx);
     }
 
     for (unsigned i = 0; i <optFP.size(); i++)
@@ -918,9 +925,27 @@ long int Opt_bIC::Adjust_Lparam(TNode *node, int exp )
             new_param = /*node->Get_bIC(LP_index)*/optLP[i]->IVv[exp] + param_change;        // C = initC + param_change;
             node->Set_bIC(LP_index, new_param);
             optLP[i]->EVv[exp] = new_param;
+            //optLP[i]->opt =  new_param;
         }
     }
     return 1;
+}
+
+long int Opt_bIC::Adjust_param(TNode *node, vector<double> opt)
+{
+    // F param
+    for (unsigned i = 0; i< optFP.size(); i++)
+    {
+        optFP[i]->opt =  opt[optFP[i]->optNdx];
+        Adjust_Fparam(node, optFP[i]->Pndx, opt[optFP[i]->optNdx]);
+    }
+
+    // L param
+    for (unsigned i = 0; i< optLP.size(); i++)
+    {
+        Adjust_Lparam( node, opt[optLP[i]->optNdx] );
+    }
+ return 1;
 }
 
 string Opt_bIC::Print_param( )
