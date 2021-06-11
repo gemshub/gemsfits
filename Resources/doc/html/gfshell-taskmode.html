@@ -4,7 +4,7 @@
     <meta content="text/html; charset=windows-1252" http-equiv="content-type">
     <title>gfshell Fitting Task Mode</title>
   </head>
-  <body style="                                                   background-image: url(bgimg-gray.jpg);">
+  <body >
     <h1> <img style="width: 48px; height: 48px;" title="GEMSFITS" alt="GEMSFITS"
         src="gemsfit2.png"> GEMSFITS Code for GEM Input Parameter Optimization</h1>
     <h2>gfshell Fitting Task Mode</h2>
@@ -23,6 +23,8 @@
             - </span>what parameters to freely optimize, constrain or set</li>
         <li><a href="#NFunParToOpt">NestedFunctionParametersToOptimize</a> -
           setup the parameters to be optimized using nested functionality</li>
+        <li><a href="#AddParToOpt">AdditionalParametersToOptimize</a> -
+            setup additional parameters to be added in the global optimization</li>
         <li><a href="#LogKFun">LogKFunctionsOfReactions</a> - Functions to
           calculate the logK of reaction dependent parameters</li>
         <li><a href="#LogKVal">ArrayofUserProvidedLogKValues</a> - list of user
@@ -718,29 +720,29 @@
         </span>(stored in the database in <span style="font-family: Courier New,Courier,monospace;">"mChainL"
         </span>column) is calculated in GEMSFITS&nbsp;</p>
     <p><span style="font-weight: bold;">SUMMARY DESCRIPTION</span></p>
-    <p><span style="font-family: Courier New,Courier,monospace;">TT</span> –
-      type of function used to calculate the residuals (e.g.“<span style="font-family: Courier New,Courier,monospace;">lsq</span>”
+    <p><span style="font-family: Courier New,Courier,monospace;">TT</span> ï¿½
+      type of function used to calculate the residuals (e.g.ï¿½<span style="font-family: Courier New,Courier,monospace;">lsq</span>ï¿½
       least squares); <span style="font-family: Courier New,Courier,monospace;">WT</span>
-      – type of weight;</p>
+      ï¿½ type of weight;</p>
     <p><a href="#OFUN"><span style="font-family: Courier New,Courier,monospace;">OFUN</span></a>
-      –array of objective function terms, describing the type of data to
+      ï¿½array of objective function terms, describing the type of data to
       compare; <span style="font-family: Courier New,Courier,monospace;">EPH</span>
-      – from which phase (name); <span style="font-family: Courier New,Courier,monospace;">CT</span>
-      – what data from the phase (e.g. <span style="font-family: Courier New,Courier,monospace;">IC</span>
-      – independent component/element; <span style="font-family: Courier New,Courier,monospace;">prop</span>
-      – property; <span style="font-family: Courier New,Courier,monospace;">DC</span>
+      ï¿½ from which phase (name); <span style="font-family: Courier New,Courier,monospace;">CT</span>
+      ï¿½ what data from the phase (e.g. <span style="font-family: Courier New,Courier,monospace;">IC</span>
+      ï¿½ independent component/element; <span style="font-family: Courier New,Courier,monospace;">prop</span>
+      ï¿½ property; <span style="font-family: Courier New,Courier,monospace;">DC</span>
       - dependent component); <span style="font-family: Courier New,Courier,monospace;">CN</span>
-      – name/formula of the property to compare; <span style="font-family: Courier New,Courier,monospace;">unit</span>
-      – the unit in which the property will be used throughout the fitting
+      ï¿½ name/formula of the property to compare; <span style="font-family: Courier New,Courier,monospace;">unit</span>
+      ï¿½ the unit in which the property will be used throughout the fitting
       process (internal conversion when possible, if not specified the unit
       defined in the database will be used, or the default unit if this is not
       defined as well).</p>
     <p><a href="#NFUN"><span style="font-family: Courier New,Courier,monospace;">NFUN</span></a>
-      –array of nested function terms describing what property should be used
+      ï¿½array of nested function terms describing what property should be used
       for fitting parameters related to each experimental sample; optional
       pairs: <span style="font-family: Courier New,Courier,monospace;">Tformula</span>
-      – the acid and base titrants formula (specific for titration problems); <span
-        style="font-family: Courier New,Courier,monospace;">Telem</span> – <span
+      ï¿½ the acid and base titrants formula (specific for titration problems); <span
+        style="font-family: Courier New,Courier,monospace;">Telem</span> ï¿½ <span
         style="font-family: Courier New,Courier,monospace;">bIC</span> free
       fitted elements that are part of the titrants composition in the same
       order as <span style="font-family: Courier New,Courier,monospace;">Tformula</span>;<span
@@ -758,9 +760,9 @@
         &nbsp;&nbsp;&nbsp; }],<btr><br>
           ... </btr></span></p>
     <p><a href="#addout"><span style="font-family: Courier New,Courier,monospace;">ADDOUT</span></a>
-      – array of additional output terms (written in the fit output csv file and
+      ï¿½ array of additional output terms (written in the fit output csv file and
       viewable in the Fit for Sample tab in the gfshell Fit Results View Mode);
-      <span style="font-family: Courier New,Courier,monospace;">SCR</span> –
+      <span style="font-family: Courier New,Courier,monospace;">SCR</span> ï¿½
       type of additional output data, can be&nbsp;<span style="font-family: Courier New,Courier,monospace;"><span
           style="font-family: Courier New,Courier,monospace;">"calc"</span></span>
       from GEMS3K output or <span style="font-family: Courier New,Courier,monospace;">"meas"</span>
@@ -853,7 +855,7 @@
             If <span style="font-family: Courier New,Courier,monospace;">"UB"</span>
             and <span style="font-family: Courier New,Courier,monospace;">"LB"</span>
             are not defined the <a href="#PBPerc"><span style="font-family: Courier New,Courier,monospace;">"PBPerc"</span></a>
-            value is used, and if this is also not defined a default ±10 % value
+            value is used, and if this is also not defined a default ï¿½10 % value
             is used.<br>
             <br>
             <span style="font-weight: bold;">When the fitting mode is set to R
@@ -1102,7 +1104,7 @@
       and the <span style="font-family: Courier New,Courier,monospace;">"UB"</span>
       and <span style="font-family: Courier New,Courier,monospace;">"LB"</span>
       entries were added. If the upper and lower bounds are not specified a
-      default value of ±10 % will be used.<br>
+      default value of ï¿½10 % will be used.<br>
     </p>
     <p><span style="font-weight: bold;"><a id="rtype" name="rtype"></a>An
         example for reaction constrained G0(298) :<br>
@@ -1515,7 +1517,109 @@
     <br>
     <hr>
     <p><span style="font-weight: bold;"></span></p>
-    <h3 style="height: 29px;"><a id="LogKFun">f. "LogKFun"&nbsp; /
+
+    <h3><span style="font-weight: bold;"><a id="AddParToOpt" name="AddParToOpt"></a>f.
+      "AddParToOpt" / "AddtionalParametersToOptimize"</span></h3>
+  <h3><span style="font-weight: bold;"></span></h3>
+  <p>Here is where additional parameters can be setup for the global optimization. Currently supported "bIC",
+    independent components.  </p>
+  <table style="width: 100%" border="1">
+    <tbody>
+      <tr>
+        <td><span style="font-weight: bold;">Short-key</span></td>
+        <td><span style="font-weight: bold;">Long-key</span></td>
+        <td><span style="font-weight: bold;">Description</span></td>
+        <td><span style="font-weight: bold;">Fitting mode</span></td>
+      </tr>
+      <tr>
+        <td><span style="font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;">"bIC"
+              </span></span></td>
+        <td><span style="font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;">"BulkIndependentComponent"</span></span></td>
+        <td>list [ ] of terms { } representing the independent components /
+          elements form the system composition that will be optimized <br>
+          <span style="font-weight: bold;">F - optimized parameters (<a href="#bic_eg2">Example</a>)</span><br>
+          <table style="width: 100%" border="1">
+            <tbody>
+              <tr>
+                <td><span style="font-family: Courier New,Courier,monospace;">"ICN"</span></td>
+                <td><span style="font-family: Courier New,Courier,monospace;">"UpperBound"</span></td>
+                <td> <br>
+                </td>
+              </tr>
+              <tr>
+                <td><span style="font-family: Courier New,Courier,monospace;">"PType"</span></td>
+                <td><span style="font-family: Courier New,Courier,monospace;">"ParameterType"</span></td>
+                <td>F or "" for no effect</td>
+              </tr>
+              <tr>
+              </tr>
+              <tr>
+                <td><span style="font-family: Courier New,Courier,monospace;">"IV"</span></td>
+                <td><span style="font-family: Courier New,Courier,monospace;">"initialValue"</span></td>
+                <td><br>
+                </td>
+              </tr>
+              <tr>
+                <td><span style="font-family: Courier New,Courier,monospace;">"UB"</span></td>
+                <td><span style="font-family: Courier New,Courier,monospace;">"UpperBound"</span></td>
+                <td><br>
+                </td>
+              </tr>
+              <tr>
+                <td><span style="font-family: Courier New,Courier,monospace;">"LB"</span></td>
+                <td><span style="font-family: Courier New,Courier,monospace;">"LowerBound"</span></td>
+                <td><br>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+        <td>"F" - free<br>
+          "" - no effect</td>
+      </tr>
+
+    </tbody>
+  </table>
+  <p><span style="font-weight: bold;"><a id="bic_eg2" name="bic_eg2"></a>Example
+      of bIC nested function optimized parameters:</span></p>
+  <p><span style="font-family: Courier New,Courier,monospace;">"AddParToOpt":
+      {<br>
+      &nbsp;&nbsp;&nbsp; "bIC": [<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      "ICN": "Clai",<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      "PType": "F",<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "IV":
+      0.001592786,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "UB":
+      0.002592786,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "LB":
+      0.000592786<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "ICN": "Essi",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        "PType": "F",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "IV":
+        3.49e-06,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "UB":
+        3.49e-05,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "LB":
+        3.49e-07<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+        <br>
+
+      &nbsp;&nbsp;&nbsp; ]<br>
+      }, ...</span></p>
+  <p>#In this example the input Clai and Essi site capacities are adjusted </p>
+  <br>
+  <hr>
+  <p><span style="font-weight: bold;"></span></p>
+
+
+    <h3 style="height: 29px;"><a id="LogKFun">g. "LogKFun"&nbsp; /
         "LogKFunctionsOfReactions"<br>
       </a></h3>
     <p>Contains the analytical formula type and the parameters for calculating
@@ -1559,7 +1663,7 @@
                     unknown/unnecessary parameters should be assigned 0 value;
                     it can simplify into the modified-density model of Andreson
                     et al. (1991) with c, d, e, and g set as 0.<br>
-                    <img title="Marshall and Franck 1981" alt="MF81" src="img/Marshall_Franck.png"><img
+                    <img
                       title="rho_logK" alt="rho_logK" src="img/Rho_logK.png"><br>
                     <span style="font-family: Courier New,Courier,monospace; font-weight: bold;">"logK_dT"</span>
                     - as implemented in temperature corrections of standard
@@ -1567,11 +1671,11 @@
                     and reactions using data in ReacDC records of GEM-Selektor (
                     see Resources/doc/pdf/T-corrections-Reac.pdf in the
                     GEM-Selektor installation folder).<br>
-                    <img title="AC93" alt="AC93" src="img/Anderson_Crear.png"><img
+                    <img
                       title="T_logK" alt="T_logK" src="img/T_logK.png"><br>
                     for the pressure correction the constant volume
                     approximation is used:<br>
-                    <img title="P-corr" alt="P-corr" src="img/P-corr.png"><img title="P_corr_logK"
+                    <img title="P_corr_logK"
                       alt="P_corr_logK" src="img/P_corr_logK.png"><br>
                   </td>
                 </tr>
@@ -1637,7 +1741,7 @@
     components involved in the reaction.<br>
     <hr>
     <hr>
-    <h3><a id="LogKVal" name="LogKVal"></a>g. "LogKVal" /
+    <h3><a id="LogKVal" name="LogKVal"></a>h. "LogKVal" /
       "ArrayofUserProvidedLogKValues"</h3>
     <p>Here is the option to provide the list [ ] of logK values for the
       reaction dependent parameters for all the unique temperature and pressure
@@ -1649,7 +1753,7 @@
         R1T1P2, ..., R1T1Pn, ..., R1TnPn, ..., RnTnPn ]</span> R - reaction, T -
       temperature, P - pressure.</p>
     <hr>
-    <h3 style="height: 28px;"><a id="OptSet">h. "OptSet" / "OptimizerSettings" <br>
+    <h3 style="height: 28px;"><a id="OptSet">i. "OptSet" / "OptimizerSettings" <br>
       </a></h3>
     <p>The user can select various optimization and statistics options by
       assigning the appropriate values to the following task specification <a href="gemsfit-json.html">JSON</a>
@@ -1708,14 +1812,38 @@
           </td>
         </tr>
         <tr>
+          <td>
+            <p style="margin: 0px; text-indent: 0px;"><span style="font-family: Courier New,Courier,monospace;">"GemsSIA"</span></p>
+          </td>
+          <td><span style="font-family: Courier New,Courier,monospace;">"GemsSmartInitialApproximation"</span></td>
+          <td style="vertical-align: top;">(-1) use GEMS automatic initial approximation to calculate equilibrium of all experiments<br>
+            ( 1) use GEMS smart initial approximation to calculate equilibrium of all experiments<br>
+          </td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
           <td><span style="font-family: Courier New,Courier,monospace;"><a id="UDWts"
                 name="UDWts"></a>"UDWts"</span></td>
-          <td><span style="font-family: Courier New,Courier,monospace;">"UseWeightsFromExperimentalData"
+          <td><span style="font-family: Courier New,Courier,monospace;">"UuseMixedResiduals"
               </span></td>
-          <td>(-1) don't use (if present) the weight provided in the "weight"
+          <td> (-1) don't use (if present) the weight provided in the "weight"
             column of the experimental database;<br>
             ( 1) use (if present) the weight provided in the "weight" column of
             the experimental database;<br>
+          </td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;"><a id="UDWts"
+                name="UDWts"></a>"UMixedResiduals"</span></td>
+          <td><span style="font-family: Courier New,Courier,monospace;">"UseWeightsFromExperimentalData"
+              </span></td>
+          <td>(-1) deactivated, use least square residuals only<br>
+            ( 1) minimized function F = normalized least square residuas + normalized absolute residuals  <br>
+            ( 2) minimized function F = normalized absolute residuals <br>
+            ( 3) minimized function F = least square residuas + absolute residuals <br>
           </td>
           <td><br>
           </td>
@@ -1867,7 +1995,15 @@ Biweight
             dataset and objfun type<br>
             ( 4) Perform Monte Carlo runs. Residual bootstrap sampling. The
             synthetic data-set is created as in ( 3) but using the experimental
-            measured values.</td>
+            measured values.
+            <br>
+            ( 5) Perform Monte Carlo runs. The synthetic data-set is created by 
+            adding a scatter to the calculated value, radomly extracted from a normal distribution
+            with sigma = abs(measured-simulated).
+            <br>
+            ( 6) Perform Monte Carlo runs. The synthetic data-set is created by 
+            adding a scatter to the measured value, radomly extracted from a normal distribution
+            with sigma = abs(measured-simulated).</td>
           <td style="vertical-align: top;"><br>
           </td>
         </tr>
@@ -1885,7 +2021,7 @@ Biweight
     </table>
     <br>
     <hr>
-    <h3> <a id="DataSyn" name="DataSyn"></a>i. "DataSyn" / "DataSynonyms" </h3>
+    <h3> <a id="DataSyn" name="DataSyn"></a>j. "DataSyn" / "DataSynonyms" </h3>
     Handles different synonyms of names / terms present in the database and the
     chemical system definition (GEMS3K system files). The default list is
     generated based on the selected GEMS3K system files and the properties that
