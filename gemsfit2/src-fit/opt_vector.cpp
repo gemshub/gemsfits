@@ -783,12 +783,12 @@ Opt_bIC::Opt_bIC(vector<string> data, double OptBoundPrc, unsigned &p, bool isNF
         parse_JSON_object(Jdata[i], keys::PType[mode], out);
         if (out.size() !=1) { cout << "Parameter " << p << " (bIC) has no \"ptype\" defined! "<< endl; exit(1); }
 
-        if (/*out[0] != "S" &&*/ out[0] != "F" /*&& out[0] != "R"*/ && out[0] != "L") {
+        if (/*out[0] != "S" &&*/ out[0] != "F" /*&& out[0] != "R"*/ && out[0] != "L" && out[0] != "") {
             parse_JSON_object(Jdata[i], keys::ICN[mode], out2);
             cout << "Parameter " << out2[0] << " (bIC) has unknown type " << out[0] << " defined! "<<endl; exit(1); }
 
         out2.clear();
-        if (!isNFun && out[0] != "F") {
+        if (!isNFun && out[0] != "F" && out[0] != "") {
             parse_JSON_object(Jdata[i], keys::ICN[mode], out2);
             cout << "Parameter " << out2[0] << " (bIC) has not available type " << out[0] << " defined! "<<endl; exit(1); }
 
