@@ -923,7 +923,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
 //        FisherMatrix.print("Fisher Matrix:");
 
         // Compute variance-covariance matrix
-        arma::mat VarCovarMatrix = error_variance * arma::inv( FisherMatrix, false );
+        arma::mat VarCovarMatrix = error_variance * arma::inv( FisherMatrix);
 ///*        if (gfittask->Tfun->weight == "inverr2")
 //        {
 //            VarCovarMatrix = error_variance * arma::inv( FisherMatrix, false );
