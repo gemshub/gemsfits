@@ -1163,6 +1163,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
             {
                 for (unsigned d = 0; d < objfun_stat[j]->exp_dataset.size(); d++)
                 {
+                    if ((MCbool != 8))
                     for ( unsigned int r = 0; r < objfun_stat[j]->exp_dataset[d].residuals.size(); r++ )
                     {
                         // mersenne twister generator
@@ -1174,6 +1175,25 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
                         objfun_stat[j]->exp_dataset[d].scatter[r] = get_rand();;
                         count ++;
                     }
+                    else
+                        for ( unsigned int r = 0; r < objfun_stat[j]->exp_dataset[d].residuals.size(); r++ )
+                        {
+                            double fivp = fabs(gfittask->measured_values_v[i])*0.05;
+                            double fifp = fabs(gfittask->measured_values_v[i])*0.15;
+                            double sigma = fabs(objfun_stat[j]->exp_dataset[d].residuals[r]);
+                            if (sigma< fivp)
+                                sigma = fivp;
+                            if (sigma> fifp)
+                                sigma = fifp;
+                            // mersenne twister generator
+                            typedef boost::mt19937 RNGType;
+                            RNGType rng(i+j+d+r+1);
+                            boost::normal_distribution<> rdist(0, sigma);
+                            boost::variate_generator< RNGType, boost::normal_distribution<> > get_rand(rng, rdist);
+
+                            objfun_stat[j]->exp_dataset[d].scatter[r] = get_rand();;
+                            count ++;
+                        }
                     // add to the scatter
                     objfun_stat[j]->scatter.insert( objfun_stat[j]->scatter.end(), objfun_stat[j]->exp_dataset[d].scatter.begin(), objfun_stat[j]->exp_dataset[d].scatter.end() );
                 }
@@ -1274,20 +1294,9 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
             {
                 for (i=0; i<number_of_measurements; i++)
                 {
-                    if (MCbool == 6)
+                    if (MCbool == 6 || MCbool == 8)
                         MC_computed_v[i] = scatter_v[i] + gfittask->measured_values_v[i];
                         else
-                    if (MCbool == 8)
-                    {
-                        double fivp = gfittask->measured_values_v[i]*0.05;
-                        double fifp = gfittask->measured_values_v[i]*0.15;
-                        MC_computed_v[i] = scatter_v[i] + gfittask->measured_values_v[i];
-                        if (scatter_v[i]< fivp)
-                            MC_computed_v[i] = fivp + gfittask->measured_values_v[i];
-                        if (scatter_v[i]> fifp)
-                            MC_computed_v[i] = fifp + gfittask->measured_values_v[i];
-
-                    } else
                         MC_computed_v[i] = (scatter_v[i]*gfittask->measured_values_v[i]) + gfittask->measured_values_v[i];
                 }
             }
