@@ -26,6 +26,7 @@
 #include "DBKeyDialog.h"
 #include "f_ejdb.h"
 #include "v_yaml.h"
+#include "v_service.h"
 #include "keywords.h"
 #include "sstream"
 

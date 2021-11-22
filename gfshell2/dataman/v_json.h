@@ -26,6 +26,9 @@
 using namespace std;
 #include "ejdb.h"
 
+extern const char* S_EMPTY;
+extern const char* S_ANY;
+
 extern int generateTxtfromBson( string gemsfitfile, bson *obj, bool with_comments );
 extern void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>& row );
 

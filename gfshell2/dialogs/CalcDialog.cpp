@@ -32,7 +32,7 @@ const double IPNC_DBL_MAX_EXP = 85.195648;
 const double IPNC_DBL_MIN_EXP = -85.195648;
 
 #include "CalcDialog.h"
-#include "v_user.h"
+#include "v_detail.h"
 
 CalcDialog::CalcDialog(QWidget* parent ):
         QDialog( parent )

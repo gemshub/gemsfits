@@ -41,13 +41,13 @@ const int VF3_2 = 7;
 const int VF3_3 = 2;
 
 // returns VF3_1, VF3_2 or VF3_3
-int vfQuestion3(QWidget* par, const string& title, const string& mess,
-                const string& s1, const string& s2,  const string& s3="&Cancel",
+int vfQuestion3(QWidget* par, const std::string& title, const std::string& mess,
+                const std::string& s1, const std::string& s2,  const std::string& s3="&Cancel",
                 bool i_mov = false);
 
-bool vfQuestion(QWidget* par, const string& title, const string& mess);
+bool vfQuestion(QWidget* par, const std::string& title, const std::string& mess);
 
-vector<string> vfMultiKeys(QWidget* par, const char* caption,
+std::vector<std::string> vfMultiKeys(QWidget* par, const char* caption,
                             int iRt, const char* key );
 
 bool removeDirectoryEntry( QDir dir );
@@ -58,7 +58,7 @@ void removeComments( QString& valCsv );
 // Mode enums
 enum { MDF_DATABASE=0, MDF_TASK=1, MDF_FITS=2 };
 
-typedef ios::openmode FileStatus;
+typedef std::ios::openmode FileStatus;
 
 
 /// Base class for file manipulation
@@ -67,12 +67,12 @@ class TAbstractFile
 protected:
 
     FileStatus mode;
-    string Keywd;
+    std::string Keywd;
     bool  isopened;    // true, if file is opened
-    string dir;
-    string name;
-    string ext;
-    string Path;
+    std::string dir;
+    std::string name;
+    std::string ext;
+    std::string Path;
 
     virtual void makeKeyword();
     //virtual void write( fstream& );
@@ -81,16 +81,16 @@ protected:
 public:
 
     //  TFile();
-    TAbstractFile(const string& fName,
-          const string& fExt, const string& fDir, FileStatus mode = ios::in );
-    TAbstractFile( const string& path, FileStatus mode = ios::in );
+    TAbstractFile(const std::string& fName,
+          const std::string& fExt, const std::string& fDir, FileStatus mode = std::ios::in );
+    TAbstractFile( const std::string& path, FileStatus mode = std::ios::in );
     //TFile(fstream& fcfg);
     virtual ~TAbstractFile() {}
 
     //void toCFG(fstream& fcfg);
 
     //--- Selectors
-    const string& GetKeywd() const
+    const std::string& GetKeywd() const
     {
         return Keywd;
     }
@@ -98,19 +98,19 @@ public:
     {
         return isopened;
     }
-    const string& Name() const
+    const std::string& Name() const
     {
         return name;
     }
-    const string& Ext() const
+    const std::string& Ext() const
     {
         return ext;
     }
-    const string& Dir() const
+    const std::string& Dir() const
     {
         return dir;
     }
-    const string& GetPath() const
+    const std::string& GetPath() const
     {
         return Path;
     }
@@ -130,19 +130,19 @@ public:
     virtual void Open() = 0;
     virtual void Close() = 0;
 
-    bool ChooseFileOpen( QWidget* par, string& path_,
+    bool ChooseFileOpen( QWidget* par, std::string& path_,
               const char* title, const char *filter );
-    bool ChooseFileSave( QWidget* par, string& path_,
+    bool ChooseFileSave( QWidget* par, std::string& path_,
            const char* title, const char *filter);
-    virtual void ChangePath( const string& path );
-    virtual void ChangeName( const string& name );
+    virtual void ChangePath( const std::string& path );
+    virtual void ChangeName( const std::string& name );
 };
 
 
 /// Class for EJDB file manipulation
 class TEJDB: public TAbstractFile
 {
-    string version; ///< Version of EJDB
+    std::string version; ///< Version of EJDB
     int numEJDB;    ///< Number of usage EJDB database
 
 protected:
@@ -152,10 +152,10 @@ protected:
 public:
     EJDB *ejDB ;
 
-    TEJDB( const string& path );
+    TEJDB( const std::string& path );
     virtual ~TEJDB();
 
-    const string& Version() const
+    const std::string& Version() const
     {
         return version;
     }
@@ -176,9 +176,9 @@ class TFile: public TAbstractFile
 protected:
 
 public:
-    fstream ff;
+    std::fstream ff;
 
-    TFile( const string& path, FileStatus mode = ios::in|ios::out );
+    TFile( const std::string& path, FileStatus mode = std::ios::in|std::ios::out );
     virtual ~TFile();
 
     //--- Manipulation

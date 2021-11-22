@@ -28,7 +28,6 @@
 //
 
 #include "gemsfit_task.h"
-#include "io_arrays.h"
 #include "gdatastream.h"
 #include "gemsfit_iofiles.h"
 #include "keywords.h"

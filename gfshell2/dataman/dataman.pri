@@ -2,6 +2,7 @@
                     $$DATAMAN_H/f_ejdb_file.h \
                     $$DATAMAN_H/v_json.h \
                     $$DATAMAN_H/help.h \
+    $$PWD/v_user.h \
     dataman/fmodel.h \
     dataman/qwtplot.h \
     dataman/graph.h \

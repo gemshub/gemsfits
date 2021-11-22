@@ -23,11 +23,10 @@ using namespace std;
 #include <cstdlib>
 
 #include "gemsfit_iofiles.h"
-#include "v_user.h"
-#include "io_arrays.h"
 //#include "data_manager.h"
 #include "json_parse.h"
 #include "keywords.h"
+#include "v_service.h"
 #include <omp.h>
 #include <sstream>
 #include <unistd.h>
