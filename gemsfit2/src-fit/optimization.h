@@ -95,6 +95,7 @@ public:
     /// name of the optimization algorithm from NLOPT library
     string OptAlgo;
     vector<string> OptParameters;
+    string AddOptParameters;
     string NFunParameters;
     string GEMSsys;
     int mode;
@@ -111,6 +112,7 @@ public:
     int OptTuckeyVal;
     int OptTitration;
     int OptUserWeight;
+    int OptMixedSumOfResiduals = -1;
     double OptInitStep;
     bool OptNormParam;
     double OptBoundPerc;

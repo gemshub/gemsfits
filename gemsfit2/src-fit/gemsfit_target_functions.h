@@ -39,7 +39,6 @@
 #include <vector>
 #include <iostream>
 #include "gemsfit_task.h"
-#include <muParser.h>
 
 
 /**

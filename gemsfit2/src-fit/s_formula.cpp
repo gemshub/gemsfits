@@ -20,8 +20,9 @@
 //#include <cstdio>
 #include <cmath>
 #include <stdio.h>
+#include <string.h>
+#include <iostream>
 
-#include "v_user.h"
 #include "s_formula.h"
 #ifndef IPMGEMPLUGIN
 #include "m_icomp.h"
@@ -675,6 +676,16 @@ int TFormula::Fmwtz( double &Z, double &mW, double &eS, short *lAn, double &Nj )
     return aCn.size();
 }
 #endif
+
+template <class T>
+inline
+void fillValue( T* arr, T value, int size )
+{
+  if( !arr )
+    return;
+  for(int ii=0; ii<size; ii++)
+    arr[ii] = value;
+}
 
 // Get a row of stoichiometry matrix (Sml) from the unpacked formula,
 // ICsym - list of IC names, ICval is the vector of IC default valences

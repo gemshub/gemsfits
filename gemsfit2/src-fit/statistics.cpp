@@ -427,65 +427,65 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         try {
             boost::math::normal dist(  0., SD_of_residuals );
 
-    sort( gfittask->residuals_v.begin(), gfittask->residuals_v.end() );
-    sort(weighted_residuals.begin(), weighted_residuals.end());
+            sort( gfittask->residuals_v.begin(), gfittask->residuals_v.end() );
+            sort(weighted_residuals.begin(), weighted_residuals.end());
 
-    // Compute percentile
-    for( i=0; i< N; i++ )
-        percentiles_v.push_back( (i+1-0.5)/N );
+            // Compute percentile
+            for( i=0; i< N; i++ )
+                percentiles_v.push_back( (i+1-0.5)/N );
 
-    // Compute Correlation coeficient
-    arma::vec e0 = arma::zeros<arma::vec>( N, 1 );
-    arma::vec tau = arma::zeros<arma::vec>( N, 1 );
-    for( i=0; i< N; i++ )
-    {
-        e0(i) = weighted_residuals[i]-Weighted_mean_res;
-        tau(i) = percentiles_v[i];
-    }
+            // Compute Correlation coeficient
+            arma::vec e0 = arma::zeros<arma::vec>( N, 1 );
+            arma::vec tau = arma::zeros<arma::vec>( N, 1 );
+            for( i=0; i< N; i++ )
+            {
+                e0(i) = weighted_residuals[i]-Weighted_mean_res;
+                tau(i) = percentiles_v[i];
+            }
 
-    double sum1=0.0, sum2=0.0, sum3=0.0;
-    for (i=0; i<N; i++)
-    {
-        sum1 += e0(i)*tau(i);
-        sum2 += e0(i)*e0(i);
-        sum3 += tau(i)*tau(i);
-    }
-//    Correlation_coef = (sum1*sum1)/(sum2*sum3);
+            double sum1=0.0, sum2=0.0, sum3=0.0;
+            for (i=0; i<N; i++)
+            {
+                sum1 += e0(i)*tau(i);
+                sum2 += e0(i)*e0(i);
+                sum3 += tau(i)*tau(i);
+            }
+            //    Correlation_coef = (sum1*sum1)/(sum2*sum3);
 
-    // Rank-based z-scores
-    for( i=0; i< N; i++ )
-        quantiles_v.push_back( boost::math::quantile( dist, percentiles_v[i] ) );
+            // Rank-based z-scores
+            for( i=0; i< N; i++ )
+                quantiles_v.push_back( boost::math::quantile( dist, percentiles_v[i] ) );
 
         }
         catch(const std::exception& e)
         {
-           std::cout <<
-              "\n""Message from thrown exception was:\n   " << e.what() << std::endl;
+            std::cout <<
+                         "\n""Message from thrown exception was:\n   " << e.what() << std::endl;
         }
 
-    // Generate Q-Q Plot (Quantile-Quantile Plot) for each term of the objfun
+        // Generate Q-Q Plot (Quantile-Quantile Plot) for each term of the objfun
 
-    for (unsigned j = 0; j < objfun_stat.size(); j++)
-    {
-        if (objfun_stat[j]->isComputed)
+        for (unsigned j = 0; j < objfun_stat.size(); j++)
         {
-            try
+            if (objfun_stat[j]->isComputed)
             {
-            boost::math::normal distobj(  0., objfun_stat[j]->stdev_res );
-            for (i = 0; i < objfun_stat[j]->nr; i++)
-            {
-                objfun_stat[j]->percentiles.push_back( (i+1-0.5)/ objfun_stat[j]->nr );
-                objfun_stat[j]->quantiles.push_back( boost::math::quantile( distobj, objfun_stat[j]->percentiles[i] ));
+                try
+                {
+                    boost::math::normal distobj(  0., objfun_stat[j]->stdev_res );
+                    for (i = 0; i < objfun_stat[j]->nr; i++)
+                    {
+                        objfun_stat[j]->percentiles.push_back( (i+1-0.5)/ objfun_stat[j]->nr );
+                        objfun_stat[j]->quantiles.push_back( boost::math::quantile( distobj, objfun_stat[j]->percentiles[i] ));
+                    }
+                    // sorting residuals
+                    sort( objfun_stat[j]->orderd_res.begin(), objfun_stat[j]->orderd_res.end() );
+                }
+                catch (boost::exception const&  ex  )
+                {
+                    noqq = true;
+                }
             }
-            // sorting residuals
-            sort( objfun_stat[j]->orderd_res.begin(), objfun_stat[j]->orderd_res.end() );
-            }
-            catch (boost::exception const&  ex  )
-                                    {
-                                            noqq = true;
-                                    }
         }
-    }
 
 
     // Generate Q-Q Plot (Quantile-Quantile Plot)
@@ -1155,7 +1155,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
 
     int count = 0;
 
-    if ((MCbool == 5)|| (MCbool == 6))
+    if ((MCbool == 5) || (MCbool == 6) || (MCbool == 8))
     {
         for (i = 0; i < num_of_MC_runs; i++)
         {
@@ -1163,6 +1163,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
             {
                 for (unsigned d = 0; d < objfun_stat[j]->exp_dataset.size(); d++)
                 {
+                    if ((MCbool != 8))
                     for ( unsigned int r = 0; r < objfun_stat[j]->exp_dataset[d].residuals.size(); r++ )
                     {
                         // mersenne twister generator
@@ -1174,6 +1175,25 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
                         objfun_stat[j]->exp_dataset[d].scatter[r] = get_rand();;
                         count ++;
                     }
+                    else
+                        for ( unsigned int r = 0; r < objfun_stat[j]->exp_dataset[d].residuals.size(); r++ )
+                        {
+                            double fivp = fabs(gfittask->measured_values_v[i])*0.05;
+                            double fifp = fabs(gfittask->measured_values_v[i])*0.15;
+                            double sigma = fabs(objfun_stat[j]->exp_dataset[d].residuals[r]);
+                            if (sigma< fivp)
+                                sigma = fivp;
+                            if (sigma> fifp)
+                                sigma = fifp;
+                            // mersenne twister generator
+                            typedef boost::mt19937 RNGType;
+                            RNGType rng(i+j+d+r+1);
+                            boost::normal_distribution<> rdist(0, sigma);
+                            boost::variate_generator< RNGType, boost::normal_distribution<> > get_rand(rng, rdist);
+
+                            objfun_stat[j]->exp_dataset[d].scatter[r] = get_rand();;
+                            count ++;
+                        }
                     // add to the scatter
                     objfun_stat[j]->scatter.insert( objfun_stat[j]->scatter.end(), objfun_stat[j]->exp_dataset[d].scatter.begin(), objfun_stat[j]->exp_dataset[d].scatter.end() );
                 }
@@ -1270,11 +1290,11 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
                     MC_computed_v[i] = (scatter_v[i]*gfittask->measured_values_v[i]) + gfittask->computed_values_v[i];
             }
         else
-            if ((MCbool == 2) || (MCbool == 4) || (MCbool == 6))  // the new simulated values are from scatter + measured values
+            if ((MCbool == 2) || (MCbool == 4) || (MCbool == 6) || (MCbool == 8))  // the new simulated values are from scatter + measured values
             {
                 for (i=0; i<number_of_measurements; i++)
                 {
-                    if (MCbool == 6)
+                    if (MCbool == 6 || MCbool == 8)
                         MC_computed_v[i] = scatter_v[i] + gfittask->measured_values_v[i];
                         else
                         MC_computed_v[i] = (scatter_v[i]*gfittask->measured_values_v[i]) + gfittask->measured_values_v[i];
@@ -1557,6 +1577,14 @@ void statistics::print_param()
         }
 
         if (fitparam[i]->Pfittype == "R")
+        {
+            for ( unsigned j=0; j < (nrcor ); j++)
+            {
+                gpf->fparam << "0,";
+            }
+        }
+
+        if (fitparam[i]->Pfittype == "L")
         {
             for ( unsigned j=0; j < (nrcor ); j++)
             {

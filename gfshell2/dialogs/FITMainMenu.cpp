@@ -26,6 +26,7 @@
 #include "DBKeyDialog.h"
 #include "f_ejdb.h"
 #include "v_yaml.h"
+#include "v_service.h"
 #include "keywords.h"
 #include "sstream"
 
@@ -780,7 +781,7 @@ void FITMainWindow::CmRunTest()
            Error("Run gemsfit -run", "Could not start a gemsfit2 process...");
 
         ui->action_Run_test->setEnabled(false);
-        ui->action_Show_Results->setEnabled(false);
+        //ui->action_Show_Results->setEnabled(false);
         ui->actionCancel_gemsfit2_run->setEnabled(true);
 
         setStatusText( "Started a gemsfit2 task process..." );
@@ -897,7 +898,8 @@ void FITMainWindow::CmBackupJSON()
           rtEJ[ currentMode ].Get( aKey[i].c_str() );
           string valDB =rtEJ[ currentMode ].GetJson();
           outFile.ff << valDB;
-          outFiletest.ff << parseYAMLToJson(rtEJ[ currentMode ].GetYAML());
+//          valDB = parseYAMLToJson(rtEJ[ currentMode ].GetYAML()); // DM 25.10.19 Yaml convert makes from "121" string to 121 number!!!
+          outFiletest.ff << valDB;
           if( i<aKey.size()-1)
           {
               outFile.ff <<  ",";

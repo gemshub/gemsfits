@@ -4,7 +4,7 @@
 // Declaration of miscellaneous utility functions and classes
 //
 // Copyright (C) 1996-2001 A.Rysin, S.Dmytriyeva
-// Uses  string class (C) A.Rysin 1999
+// Uses  std::string class (C) A.Rysin 1999
 //
 // This file is part of the GEM-Selektor GUI library which uses the
 // Qt v.4 cross-platform App & UI framework (http://qt.nokia.com)
@@ -23,7 +23,9 @@
 #include <iomanip>
 #include <iostream>
 #include <cmath>
-#include "v_user.h"
+#include "v_service.h"
+#include "verror.h"
+#include "string.h"
 
 const char* ALLKEY="*";
 const char* S_EMPTY	=    "`";
@@ -59,8 +61,8 @@ void NormFloatRound(float *aArr, int size, int digits)
 }
 
 
-istream&
-u_getline(istream& is, string& str, char delim)
+std::istream&
+u_getline(std::istream& is, std::string& str, char delim)
 {
     char ch;
     is.get(ch);
@@ -75,7 +77,7 @@ u_getline(istream& is, string& str, char delim)
 
 
 // The gcvt() function converts number to a minimal length NULL terminated
-// ASCII string and stores the result in buf.  It produces ndigit signifi‐
+// ASCII std::string and stores the result in buf.  It produces ndigit signifi‐
 // cant digits in either printf(3) F format or E format.
 void Gcvt(double number, size_t ndigit, char *buf)
 {
@@ -93,17 +95,17 @@ void Gcvt(double number, size_t ndigit, char *buf)
 const int bGRAN = 20;
 
 // Shows information on current record
-string timeToStr( time_t time )
+std::string timeToStr( time_t time )
 {
     struct tm *time_s;
     tzset();
     time_s = localtime(&time);
     char str[100];
     strftime(str, 20, "%d/%m/%Y, %H:%M", time_s);
-    return string(str);
+    return std::string(str);
 }
 
-string curDate()
+std::string curDate()
 {
     struct tm *time_now;
     time_t secs_now;
@@ -121,7 +123,7 @@ string curDate()
     return tstr;
 }
 
-string curDateSmol(char ch )
+std::string curDateSmol(char ch )
 {
     struct tm *time_now;
     time_t secs_now;
@@ -132,7 +134,7 @@ string curDateSmol(char ch )
 
     char tstr[100];
 
-    string frm = "%d" + string(1,ch)+ "%m" + string(1,ch) + "%y";
+    std::string frm = "%d" + std::string(1,ch)+ "%m" + std::string(1,ch) + "%y";
     strftime(tstr, 9, frm.c_str(),
              // "%d/%m/%y",
              time_now);
@@ -140,7 +142,7 @@ string curDateSmol(char ch )
     return tstr;
 }
 
-string curTime()
+std::string curTime()
 {
     struct tm *time_now;
     time_t secs_now;
@@ -158,7 +160,7 @@ string curTime()
 }
 
 
-void StripLine(string& line)
+void StripLine(std::string& line)
 {
    strip( line );
 }
@@ -208,23 +210,23 @@ char chLowUp(char ch)
 //        n
 
 void
-  ChangeforTempl( string& data_str,  const string& from_templ1,
-                  const string& to_templ1, uint len_ )
+  ChangeforTempl( std::string& data_str,  const std::string& from_templ1,
+                  const std::string& to_templ1, uint len_ )
 {
     if( data_str.empty() )
         return;
 
 
-    string  from_templ = from_templ1;
-    string  to_templ = to_templ1;
+    std::string  from_templ = from_templ1;
+    std::string  to_templ = to_templ1;
     bool inv_case = false;
     size_t ii;
     strip(data_str);
-    string old_str = data_str;
+    std::string old_str = data_str;
 
     if( from_templ== "*" ) // all key
     {
-      if( to_templ.find("invcase") != string::npos )
+      if( to_templ.find("invcase") != std::string::npos )
       {
           if( to_templ == "invcase" )
             for( ii=0; ii<data_str.length(); ii++)
@@ -235,11 +237,11 @@ void
         if( to_templ[0] == '*' )
         {
          if( data_str.length() >= len_ )
-          data_str = string( data_str, 0, len_-1 );
-         data_str += string(to_templ, 1);
+          data_str = std::string( data_str, 0, len_-1 );
+         data_str += std::string(to_templ, 1);
         }
         else
-          if(to_templ.find("*") != string::npos) // no all case
+          if(to_templ.find("*") != std::string::npos) // no all case
             goto PART;
           else
             data_str = to_templ;
@@ -258,9 +260,9 @@ void
 
     PART:
     // Changed first n symbols
-    if( string( to_templ, 0, 7) == "invcase" )
+    if( std::string( to_templ, 0, 7) == "invcase" )
     {  inv_case = true;
-       to_templ = string( to_templ, 7 );
+       to_templ = std::string( to_templ, 7 );
     }
 
     ii=0;
@@ -281,18 +283,18 @@ void
        Error( from_templ, "Error (1): Invalid character in template ");
      ii++;
    }
-   data_str = string( data_str, k );
+   data_str = std::string( data_str, k );
    pos_to = to_templ.find( "*" );
-   data_str = string( to_templ, 0, pos_to) + data_str;
-   if( pos_to  == string::npos )
+   data_str = std::string( to_templ, 0, pos_to) + data_str;
+   if( pos_to  == std::string::npos )
     to_templ = "";
    else
-    to_templ = string( to_templ, pos_to+1);
+    to_templ = std::string( to_templ, pos_to+1);
    pos_to = from_templ.find( "*" );
-   if( pos_to  == string::npos )
+   if( pos_to  == std::string::npos )
     from_templ = "";
    else
-    from_templ = string( from_templ, pos_to+1);
+    from_templ = std::string( from_templ, pos_to+1);
 
    // Changed last n symbols
    inv_case = false;
@@ -321,7 +323,7 @@ void
      ik--;
      jj--;
    }
-   data_str = string( data_str, 0, k );
+   data_str = std::string( data_str, 0, k );
    data_str += to_templ;
    data_str.substr(0, len_);
    if( data_str == old_str )

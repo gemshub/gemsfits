@@ -30,9 +30,9 @@ class DBKeyDialog : public QDialog, public Ui::KeyDialogData
     Q_OBJECT
 
     bool multi;
-    string keyFilter;
+    std::string keyFilter;
     int iRT;
-    vector<string> old_sel;
+    std::vector<std::string> old_sel;
 
     void SetList();
 
@@ -47,14 +47,14 @@ public:
 
     DBKeyDialog(QWidget* win, int irt, const char* key = "*",
               const char* caption = 0, bool filter=true);
-    DBKeyDialog(QWidget* win, int irt, const vector<string>& sel,
+    DBKeyDialog(QWidget* win, int irt, const std::vector<std::string>& sel,
               const char* key = "*", const char* caption = 0 );
 
     virtual ~DBKeyDialog();
 
 
-    vector<string> allSelectedKeys();
-    string getKey();
+    std::vector<std::string> allSelectedKeys();
+    std::string getKey();
 };
 
 //------------------------------------------------------------
@@ -77,13 +77,13 @@ protected slots:
     void setKeyLine();
 
 protected:
-    string SetKeyString();
+    std::string SetKeyString();
 
 public:
     DBKeyFilter(QWidget* win, int iRt, const char* keyFilter,
               const char* caption, bool allowTemplates=true );
 
-    string getFilter();
+    std::string getFilter();
 };
 
 

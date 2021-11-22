@@ -23,11 +23,10 @@ using namespace std;
 #include <cstdlib>
 
 #include "gemsfit_iofiles.h"
-#include "v_user.h"
-#include "io_arrays.h"
 //#include "data_manager.h"
 #include "json_parse.h"
 #include "keywords.h"
+#include "v_service.h"
 #include <omp.h>
 #include <sstream>
 #include <unistd.h>
@@ -103,9 +102,24 @@ cout << "Finished writing the input specification file template" << endl;
     return 0;
 }
 
+int NumDigits(int x)
+{
+    x = abs(x);
+    return (x < 10 ? 1 :
+        (x < 100 ? 2 :
+        (x < 1000 ? 3 :
+        (x < 10000 ? 4 :
+        (x < 100000 ? 5 :
+        (x < 1000000 ? 6 :
+        (x < 10000000 ? 7 :
+        (x < 100000000 ? 8 :
+        (x < 1000000000 ? 9 :
+        10)))))))));
+}
+
 void generateBson(bson &bson_task_file,TNode *node, int mode)
 {
-    unsigned int Np = 0, NG0p = 0, NG0PH = 0, Nip = 0, Ncoef = 0, G0ndx=0, PMCndx = 0, DMCndx = 0, /*nIC,*//* nDC,*/ nPS, nPH; long int nDCinPH;
+    unsigned int Np = 0, NG0p = 0, NG0PH = 0, Nip = 0, Ncoef = 0, G0ndx=0, ICndx=0, PMCndx = 0, DMCndx = 0, nIC,/* nDC,*/ nPS, nPH; long int nDCinPH;
     int DCndx = -1;
     double temp = 0.0;
     stringstream ss; string sss, ipcn, dcipcn;
@@ -113,7 +127,7 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
 
     DATACH* dCH = node->pCSD();
 
-//    nIC = dCH->nIC;	// nr of independent components
+    nIC = dCH->nIC;	// nr of independent components
 //    nDC = dCH->nDC;	// nr of dependent components
     nPS = dCH->nPS;
     nPH = dCH->nPH;
@@ -141,6 +155,8 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
         bson_append_int(&bson_task_file, keys::SIA[mode], -1);
 
         bson_append_int(&bson_task_file, keys::OptUW[mode], -1);
+
+        bson_append_int(&bson_task_file, keys::OptMixedResiduals[mode], -1);
 
         bson_append_string(&bson_task_file, keys::OptAlg[mode], "LN_BOBYQA");
 
@@ -174,6 +190,27 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
 
     // Nested function parameters
     bson_append_string(&bson_task_file, keys::OptNFParameters[mode], "");
+    // start additional params
+    bson_append_start_object(&bson_task_file, keys::AddOptParameters[mode]);
+    bson_append_start_array(&bson_task_file, keys::bIC[mode]);
+//    for (unsigned i = 0; i < nIC; i++)
+//    {
+//        ss << i;
+//        sss = ss.str();
+//        ss.str("");
+//        bson_append_start_object(&bson_task_file, sss.c_str());
+//        {
+//            bson_append_string(&bson_task_file, keys::ICN[mode], node->xCH_to_IC_name(ICndx));
+//            bson_append_string(&bson_task_file, keys::PType[mode], "S");
+//            bson_append_double(&bson_task_file, keys::IV[mode], node->Get_bIC(ICndx));
+//        }
+//        bson_append_finish_object(&bson_task_file);
+//        ICndx++;
+//    }
+
+    bson_append_finish_array(&bson_task_file);
+    bson_append_finish_object(&bson_task_file);
+    // finish additional params
 
     bson_append_start_array(&bson_task_file, keys::OptParameters[mode]);
 
@@ -252,15 +289,15 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
                                     temp=0;
                                 } // finish IPC
                                 bson_append_finish_object(&bson_task_file);
-                                Ncoef++;
                                 PMCndx++;
-                                ipcn.erase(ipcn.size()-2, ipcn.size());
+                                ipcn.erase(ipcn.size()-(1+NumDigits(Ncoef)), ipcn.size());
+                                Ncoef++;
                             }
                             bson_append_finish_array(&bson_task_file);
                         } // finish IParameters
                         bson_append_finish_object(&bson_task_file);
+                        ipcn.erase(ipcn.size()-(1+NumDigits(Nip)), ipcn.size());
                         Nip++;
-                        ipcn.erase(ipcn.size()-2, ipcn.size());
                     }
                     bson_append_finish_array(&bson_task_file);
                 }

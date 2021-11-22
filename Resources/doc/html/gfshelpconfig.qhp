@@ -47,16 +47,13 @@
         <file>Tuckey.png</file>
         <file>gemsfit2.png</file>
         <file>gfshell2.png</file>
-        <file>img/Anderson_Crear.png</file>
         <file>img/CalculateBCCIcon24.png</file>
         <file>img/CalculateRecordDataIcon24.png</file>
         <file>img/DeleteCurrentRecordIcon24.png</file>
         <file>img/DualThModuleIcon24.png</file>
         <file>img/FitSpaceModuleIcon24.png</file>
-        <file>img/Marshall_Franck.png</file>
         <file>img/NewCloneRecordIcon24.png</file>
         <file>img/NewCreateRecordIcon24.png</file>
-        <file>img/P-corr.png</file>
         <file>img/P_corr_logK.png</file>
         <file>img/PreferencesIcon24.png</file>
         <file>img/RTparmModuleIcon24.png</file>
@@ -102,6 +99,7 @@
         <keyword name="MF" ref="gemsfit-useref.html#MF"/>
         <keyword name="NFUN" ref="gemsfit-useref.html#NFUN"/>
         <keyword name="NFunParToOpt" ref="gfshell-taskmode.html#NFunParToOpt"/>
+        <keyword name="AddParToOpt" ref="gfshell-taskmode.html#AddParToOpt"/>
         <keyword name="NonOptSet" ref="gfshell-taskmode.html#NonOptSet"/>
         <keyword name="OFUN" ref="gemsfit-useref.html#OFUN"/>
         <keyword name="Otype" ref="gemsfit-useref.html#Otype"/>
@@ -132,6 +130,7 @@
         <keyword name="addout" ref="gfshell-taskmode.html#addout"/>
         <keyword name="all" ref="gemsfit-useref.html#all"/>
         <keyword name="bic_eg" ref="gfshell-taskmode.html#bic_eg"/>
+        <keyword name="bic_eg2" ref="gfshell-taskmode.html#bic_eg2"/>
         <keyword name="build_ubuntu14" ref="gemsfit-techinfo.html#build_ubuntu14"/>
         <keyword name="cm3" ref="gemsfit-useref.html#cm3"/>
         <keyword name="comp" ref="gemsfit-useref.html#comp"/>

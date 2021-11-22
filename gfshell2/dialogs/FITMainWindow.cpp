@@ -27,6 +27,7 @@
 #include "HelpWindow.h"
 #include "FitResultsWindow.h"
 #include "f_ejdb.h"
+#include "v_service.h"
 //#include "keywords.h"
 #include "keywords.h"
 #include <sstream>

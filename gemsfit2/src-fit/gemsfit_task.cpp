@@ -28,7 +28,6 @@
 //
 
 #include "gemsfit_task.h"
-#include "io_arrays.h"
 #include "gdatastream.h"
 #include "gemsfit_iofiles.h"
 #include "keywords.h"
@@ -42,7 +41,6 @@
 #include "s_formula.h"
 #include <memory>
 #include "json_parse.h"
-
 
 #ifndef __unix
 #include <io.h>
@@ -916,21 +914,21 @@ void TGfitTask::setnodes()
     {
         NodeHandle = n;
         // Calling GEMIPM calculation
-        NodeStatusCH = NodT[n]->GEM_run( true );
-        cout << "Node: " << NodeHandle+1 << " Sample: " << experiments[n]->sample <<"  NodeStatusCH: " << NodeStatusCH << endl;
+        long int NodeStatusCH2 = NodT[n]->GEM_run( true );
+        cout << "Node: " << n+1 << " Sample: " << experiments[n]->sample <<"  NodeStatusCH: " << NodeStatusCH2 << endl;
 
-        if( ( NodeStatusCH == ERR_GEM_AIA || NodeStatusCH == ERR_GEM_SIA ||
-                       NodeStatusCH ==  T_ERROR_GEM ) )
+        if( ( NodeStatusCH2 == ERR_GEM_AIA || NodeStatusCH2 == ERR_GEM_SIA ||
+                       NodeStatusCH2 ==  T_ERROR_GEM ) )
         {
              cout << "Error: GEM calculation results are not retrieved upon initializing experimental system (node) "
-                  << NodeHandle << endl;
+                  << n << endl;
         }
         else
         {
-           if( ( NodeStatusCH == BAD_GEM_AIA || NodeStatusCH == BAD_GEM_SIA  ) )
+           if( ( NodeStatusCH2 == BAD_GEM_AIA || NodeStatusCH2 == BAD_GEM_SIA  ) )
            {
               cout << "Insufficient quality of GEM solution, but GEM results are retrieved upon initializing experimental system (node) "
-              << NodeHandle << endl;
+              << n << endl;
            }
         }
 
@@ -1241,15 +1239,18 @@ void TGfitTask::set_logK_TPpairs(vector<string> logK)
 
 void TGfitTask::get_Lparams_delta()
 {
-
     for (unsigned int e=0; e < experiments.size(); e++ )
     {
        for (unsigned i=0; i< Opti->optNFParam.size(); i++)
        {
            Opti->optNFParam[i]->SetIVvEVvDelta(NodT[e]);
        }
-    }
 
+       for (unsigned i=0; i< Opti->optParam.size(); i++)
+       {
+           Opti->optParam[i]->SetIVvEVvDelta(NodT[e]);
+       }
+    }
 }
 
 void TGfitTask::set_DH_Helgeson (int n)
