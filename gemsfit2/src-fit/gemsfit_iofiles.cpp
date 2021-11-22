@@ -30,7 +30,15 @@ using namespace std;
 #include "keywords.h"
 #include <omp.h>
 #include <sstream>
+#ifdef __unix
 #include <unistd.h>
+#include <sys/time.h>
+#else
+#include <io.h>
+#ifdef _MSC_VER
+#include <direct.h>
+#endif
+#endif
 #include <cctype>
 #include <iomanip>
 #ifdef buildWIN32
@@ -627,7 +635,12 @@ TGfitPath::TGfitPath(int c, char *v[]):
 
     char cur_dir[300];
         // let's try to find resources by path of the executable
+    #ifdef __unix
     getcwd(cur_dir, 300);
+    #else
+    _getcwd(cur_dir, 300);
+    #endif
+
     cout << cur_dir << endl;
     for (int ii = 1; ii < argc; ii++)
      cout << ii << " arg " << argv[ii] << endl;
