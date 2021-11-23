@@ -22,9 +22,6 @@
      Init guess [3] = -487478
      Upper Bound old [3]= -477478
      Upper Bound new [3]= -0.979486
-     Init guess [4] = -1.10617e+06
-     Upper Bound old [4]= -1.09617e+06
-     Upper Bound new [4]= -0.99096
      Init guess [0] = -899506
      Lower Bound old [0]= -909506
      Lower Bound new [0]= -1.01112
@@ -37,79 +34,63 @@
      Init guess [3] = -487478
      Lower Bound old [3]= -497478
      Lower Bound new [3]= -1.02051
-     Init guess [4] = -1.10617e+06
-     Lower Bound old [4]= -1.11617e+06
-     Lower Bound new [4]= -1.00904
 ... assigning bounds and tolerance for optimization...
 
 12. in gemsfit_task.cpp(287). Setting target (objective) function to minimize.
 13. gemsfit_task.cpp(308). Performing optimization.
-~ m.count.= 1 sum.res.= 5.5915123252653
-~ m.count.= 2 sum.res.= 6.88110376895154
-~ m.count.= 3 sum.res.= 6.62582976729095
-~ m.count.= 4 sum.res.= 30.2098089549079
-~ m.count.= 5 sum.res.= 9.14795909295846
-~ m.count.= 6 sum.res.= 5.59213957937006
-~ m.count.= 7 sum.res.= 5.89937906647886
-~ m.count.= 8 sum.res.= 4.00869591933837
-~ m.count.= 9 sum.res.= 12.3601491717813
-~ m.count.= 10 sum.res.= 32.8554530012484
-~ m.count.= 11 sum.res.= 5.5912851672091
-~ m.count.= 12 sum.res.= 4.4165554452788
-~ m.count.= 13 sum.res.= 1.48146969862112
-~ m.count.= 14 sum.res.= 1.57185385169152
-~ m.count.= 15 sum.res.= 1.70439889705586
-~ m.count.= 16 sum.res.= 1.53316153283476
-~ m.count.= 17 sum.res.= 1.70209692400434
-~ m.count.= 18 sum.res.= 1.33749194177965
-~ m.count.= 19 sum.res.= 1.1964274555659
-~ m.count.= 20 sum.res.= 1.27122859973006
-~ m.count.= 21 sum.res.= 1.25624432232927
-~ m.count.= 22 sum.res.= 1.17922598548163
-~ m.count.= 23 sum.res.= 1.17103293870261
-~ m.count.= 24 sum.res.= 1.16906260492213
-~ m.count.= 25 sum.res.= 1.30730668404429
-~ m.count.= 26 sum.res.= 1.12357248808493
-~ m.count.= 27 sum.res.= 1.13096791653295
-~ m.count.= 28 sum.res.= 1.13417419667629
-~ m.count.= 29 sum.res.= 1.12445322759136
-~ m.count.= 30 sum.res.= 1.15857455543278
-~ m.count.= 31 sum.res.= 1.11927241327129
-~ m.count.= 32 sum.res.= 1.12073879566258
-~ m.count.= 33 sum.res.= 1.17958932745282
-~ m.count.= 34 sum.res.= 1.15722395722797
-~ m.count.= 35 sum.res.= 1.11598778122483
-~ m.count.= 36 sum.res.= 1.11714370591076
-~ m.count.= 37 sum.res.= 1.1167894235067
-~ m.count.= 38 sum.res.= 1.11714232485211
-~ m.count.= 39 sum.res.= 1.12227267759583
-~ m.count.= 40 sum.res.= 1.11675655498501
-~ m.count.= 41 sum.res.= 1.11639225661998
-~ m.count.= 42 sum.res.= 1.11737741356056
-~ m.count.= 43 sum.res.= 1.11720087684523
-~ m.count.= 44 sum.res.= 1.1167781460397
-~ m.count.= 45 sum.res.= 1.11645238376411
-~ m.count.= 46 sum.res.= 1.11709244658735
-~ m.count.= 47 sum.res.= 1.11656868963924
-~ m.count.= 48 sum.res.= 1.11676929832865
-~ m.count.= 49 sum.res.= 1.11614091706698
-optv[0] = -1.00160124937473
-size of optv = 5
+~ m.count.= 1 sum.res.= 6.23903769222747
+~ m.count.= 2 sum.res.= 8.09379743528993
+~ m.count.= 3 sum.res.= 6.76184701442179
+~ m.count.= 4 sum.res.= 27.3711642913925
+~ m.count.= 5 sum.res.= 10.0510386397395
+~ m.count.= 6 sum.res.= 5.95509055384759
+~ m.count.= 7 sum.res.= 4.72741661139324
+~ m.count.= 8 sum.res.= 11.8157286896487
+~ m.count.= 9 sum.res.= 32.0696543033469
+~ m.count.= 10 sum.res.= 1.64648283913491
+~ m.count.= 11 sum.res.= 1.73037058322658
+~ m.count.= 12 sum.res.= 1.93281727487056
+~ m.count.= 13 sum.res.= 2.53194156470628
+~ m.count.= 14 sum.res.= 1.25791889410204
+~ m.count.= 15 sum.res.= 1.15802770738913
+~ m.count.= 16 sum.res.= 1.29597227882707
+~ m.count.= 17 sum.res.= 1.13638516333794
+~ m.count.= 18 sum.res.= 1.13298816829043
+~ m.count.= 19 sum.res.= 1.19369576566843
+~ m.count.= 20 sum.res.= 1.2078431020528
+~ m.count.= 21 sum.res.= 1.13299458040768
+~ m.count.= 22 sum.res.= 1.12373831034734
+~ m.count.= 23 sum.res.= 1.12384119783087
+~ m.count.= 24 sum.res.= 1.12559062265561
+~ m.count.= 25 sum.res.= 1.12476298060594
+~ m.count.= 26 sum.res.= 1.12306052921936
+~ m.count.= 27 sum.res.= 1.12187457605967
+~ m.count.= 28 sum.res.= 1.12135081138585
+~ m.count.= 29 sum.res.= 1.12098673577687
+~ m.count.= 30 sum.res.= 1.12125735468684
+~ m.count.= 31 sum.res.= 1.12164493551412
+~ m.count.= 32 sum.res.= 1.12155005602584
+~ m.count.= 33 sum.res.= 1.12174407214401
+~ m.count.= 34 sum.res.= 1.12123816185911
+~ m.count.= 35 sum.res.= 1.1213279854512
+~ m.count.= 36 sum.res.= 1.12165075160022
+~ m.count.= 37 sum.res.= 1.12137341343563
+~ m.count.= 38 sum.res.= 1.12137855951854
+optv[0] = -1.00180113035038
+size of optv = 4
 14. gemsfit_task.cpp(317). Finished optimization; 
-~ m.count.= 50 sum.res.= 1.11690685270628
-found minimum at <<f( -1.00160124937473 -1.00427472441738 -1.00090042382008 -0.995831351704334 -1.00061942209451 ) = 1.11598778122483
- after 50 evaluations.
+~ m.count.= 39 sum.res.= 1.12131440156123
+found minimum at <<f( -1.00180113035038 -1.00671545491571 -1.0009365856513 -0.995703265664157 ) = 1.12098673577687
+ after 39 evaluations.
 
 15. Back in main.cpp(122). Performing statistics ...
-~ m.count.= 51 sum.res.= 1.11681314585289
-~ m.count.= 52 sum.res.= 1.11794150694356
-~ m.count.= 53 sum.res.= 1.11781541199281
-~ m.count.= 54 sum.res.= 1.11789918642564
-~ m.count.= 55 sum.res.= 1.12753591011424
-~ m.count.= 56 sum.res.= 1.12718378636746
-~ m.count.= 57 sum.res.= 1.11967158146253
-~ m.count.= 58 sum.res.= 1.1164085874173
-~ m.count.= 59 sum.res.= 1.1166060026507
-~ m.count.= 60 sum.res.= 1.1169120399831
-~ m.count.= 61 sum.res.= 1.11663877473707
-16. main.cpp(152): finished in 21.586163 seconds. GEMSFITS: End. Bye!
+~ m.count.= 40 sum.res.= 1.12210959009126
+~ m.count.= 41 sum.res.= 1.12110018171814
+~ m.count.= 42 sum.res.= 1.12330427324447
+~ m.count.= 43 sum.res.= 1.12137240405825
+~ m.count.= 44 sum.res.= 1.13374169073365
+~ m.count.= 45 sum.res.= 1.12888812347519
+~ m.count.= 46 sum.res.= 1.12271108841514
+~ m.count.= 47 sum.res.= 1.12284022607713
+~ m.count.= 48 sum.res.= 1.1214897650877
+16. main.cpp(152): finished in 11.117658 seconds. GEMSFITS: End. Bye!

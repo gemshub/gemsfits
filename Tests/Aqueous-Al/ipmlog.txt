@@ -1,0 +1,6 @@
+GEMS3K input : file ./GEMS/bhm-dat.lst
+check_TP: :  Temperature 383.15 and pressure 143241 out of range
+
+GEMS3K input : file ./GEMS/bhm-dat.lst
+check_TP: :  Temperature 383.15 and pressure 0 out of range
+
