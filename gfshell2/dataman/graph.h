@@ -5,7 +5,7 @@
 // (Plotting system description)
 //
 // Copyright (C) 2013  S.Dmytriyeva
-// Uses  string class (C) A.Rysin 1999
+// Uses  std::string class (C) A.Rysin 1999
 //
 // This file is part of the GEM-Selektor GUI library which uses the
 // Qt v.4 cross-platform App & UI framework (http://qt.nokia.com)
@@ -138,9 +138,9 @@ public:
         name[100] = '\0';
     }
 
-    string getName()
+    std::string getName()
     {
-        return string(name, 0, 100);
+        return std::string(name, 0, 100);
     }
 
     int getIndex() const
@@ -172,9 +172,9 @@ class TPlot
 {
     QSortFilterProxyModel *pModel;
 
-    vector<string> ynames; ///< Ordinate names
-    vector<int> xcolms;  ///< Abscissa columns list
-    vector<int> ycolms;  ///< Ordinate columns list
+    std::vector<std::string> ynames; ///< Ordinate names
+    std::vector<int> xcolms;  ///< Abscissa columns list
+    std::vector<int> ycolms;  ///< Ordinate columns list
 ///  int nObjX; // index of Abscissa in TObjList aObj
 ///  int nObjY; // index of Ordinate in TObjList aObj
 
@@ -182,19 +182,19 @@ class TPlot
     int dX;   // number of point in one line
     int nAbs; //number of different Abscissa lines
     int dY1;  // number of lines (Ordinate)
- ///   bool foString;
+ ///   bool fostd::string;
     int first;
 
 public:
 
-    TPlot( QSortFilterProxyModel *aModel, int lines, const vector<int>& xval,
-           const vector<int>& yval, const vector<string>& ynames );
+    TPlot( QSortFilterProxyModel *aModel, int lines, const std::vector<int>& xval,
+           const std::vector<int>& yval, const std::vector<std::string>& ynames );
     TPlot( const TPlot& plt, int aFirst );
     ~TPlot();
 
 ///    int getObjX() const { return nObjX; }
 ///    int getObjY() const { return nObjY; }
-///    bool getfoString() const { return foString; }
+///    bool getfostd::string() const { return fostd::string; }
 
     /// Get number of points for one curve
     int getdX() const
@@ -222,8 +222,8 @@ public:
     int getYColumnNumber( int ndx )
     {  return ycolms[ndx];  }
 
-    /// Return string with Ordinate name and line index
-    const string& getName( int ii);
+    /// Return std::string with Ordinate name and line index
+    const std::string& getName( int ii);
 
     /// Get one line to paint (ndxX - column in Abscissa table)
     int getPointLine( int line, QVector<QPointF>& points, int ndxX );
@@ -243,14 +243,14 @@ public:
 /// Description include the curves (TPlotLine, TPlot) settings, the grid settings, the isoline structure settings
 struct GraphData
 {
-    string title;
+    std::string title;
     int graphType;      /// GRAPHTYPES ( 0-line by line, 1- cumulative, 2 - isolines )
 
     // define grid of plot
     int axisTypeX;
     int axisTypeY;
-    string xName;
-    string yName;
+    std::string xName;
+    std::string yName;
     double region[4];
     double part[4];
 
@@ -259,17 +259,17 @@ struct GraphData
     int b_color[3]; // red, green, blue
 
     // define curves
-    vector<TPlot> plots;     /// objects to demo
-    vector<TPlotLine> lines; /// descriptions of all lines
+    std::vector<TPlot> plots;     /// objects to demo
+    std::vector<TPlotLine> lines; /// descriptions of all lines
 
     // data to isoline plots
-    vector<QColor> scale;    // scale colors for isolines
+    std::vector<QColor> scale;    // scale colors for isolines
 
  public:
 
-    GraphData( const vector<TPlot>& aPlots, const char * title,
+    GraphData( const std::vector<TPlot>& aPlots, const char * title,
             const char *aXName, const char *aYname,
-//            const vector<string>& line_names,
+//            const std::vector<std::string>& line_names,
             int agraphType = LINES_POINTS );
 
     //GraphData( const GraphData& data );
@@ -277,7 +277,7 @@ struct GraphData
     ~GraphData();
 
     /// Change plot lines selection
-    void setNewPlot( const vector<TPlot>& aPlots );
+    void setNewPlot( const std::vector<TPlot>& aPlots );
 
     int getSize( int line ) const
     { return lines[line].getSize();   }
@@ -299,7 +299,7 @@ struct GraphData
     void setIndex(int line, int index  )
     {   lines[line].setIndex(index);   }
 
-    string getName( int line )
+    std::string getName( int line )
     {   return lines[line].getName();   }
 
     void setName( int line, const char *aName )

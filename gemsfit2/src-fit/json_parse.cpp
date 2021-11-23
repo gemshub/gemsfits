@@ -154,7 +154,10 @@ void parse_JSON_array_object( string data_, const char *arr , const char *key, v
                                 result.push_back(sss);
                             }
                         }
-                        if ((arr == keys::usepair) || (arr == keys::skippair))
+                        string arr_ = arr;
+                        string key_use= keys::usepair;
+                        string key_skip= keys::skippair;
+                        if ((arr_ == key_use) || (arr_ == key_skip))
                         {result.push_back("");}
                     }
                 }

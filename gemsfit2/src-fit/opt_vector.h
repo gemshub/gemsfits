@@ -67,6 +67,8 @@ class OptParameter
             string Pname; /// parameter name (DCName, ICname, etc.)
             vd IVv; /// vector of initial values for each node/experiment - used in nested optimization
             vd EVv; /// vector of end values for each node/experiment - used in nested optimization
+            string expr;
+            string unit;
         };
 
         struct F_parameter : parameter /// structure storing F-type parameter iformation
@@ -276,7 +278,7 @@ class Opt_bIC : public OptParameter
     public:
 
     /// Constructor
-    Opt_bIC (vector<string> data, double OptBoundPrc, unsigned &p );
+    Opt_bIC (vector<string> data, double OptBoundPrc, unsigned &p, bool isNFun=true );
     /// Destructor
     virtual ~Opt_bIC();
 
@@ -284,7 +286,11 @@ class Opt_bIC : public OptParameter
 
     long int SetIVvEVvDelta(TNode *node);
 
+    long int Adjust_param(TNode *node, vector<double> opt);
+
     long int Adjust_Fparam(TNode *node, int Pndx, double Pval);
+
+    long int Adjust_Fparam(TNode *node, int Pndx, double Pval, string expr);
 
     long int Adjust_Lparam(TNode *node, int exp);
 

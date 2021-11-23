@@ -39,6 +39,7 @@
 #include "gemsfit_target_functions.h"
 #include "gemsfit_nested_functions.h"
 #include "gemsfit_task.h"
+#include "statistics.h"
 #include <iomanip>
 
 double Equil_objective_function_callback( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data )
@@ -257,22 +258,8 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 
 
     residuals_sys = sys->get_sum_of_residuals( );
-
-
-//    residuals_sys = test_residual;
-
-    // debug for when using global algorithm
-    if (master_counter%1000 == 0)
-    {
-        cout << master_counter << " iterations, continuing..." << endl;
-        cout << "sum of residuals: "<<residuals_sys<< endl;
-        for (unsigned int i = 0; i<opt.size(); ++i)
-        {
-            cout<<"parameter "<<i<<" : "<<opt[i]<<endl;
-        }
-    }
-    gpf->flog << "~ m.count.= " << master_counter << " sum.res.= " << setprecision(15) << residuals_sys << endl;
-    cout << "~ m.count.= " << master_counter << " sum.res.= " << setprecision(15) << residuals_sys << endl;
+    double Weighted_Abs_sum_of_residuals = 0.0;
+    double squared_residuals = residuals_sys;
 
     for (unsigned j = 0; j < sys->Tfun->objfun.size(); j++)
     {
@@ -286,9 +273,56 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
                 sys->weights.push_back(sys->aTfun[i].objfun[j].results.weight );
                 sys->Tfun_residuals_v.push_back(sys->aTfun[i].objfun[j].results.Tfun_residual );
                 sys->Weighted_Tfun_residuals_v.push_back(sys->aTfun[i].objfun[j].results.WTfun_residual );
+                Weighted_Abs_sum_of_residuals += fabs(sys->aTfun[i].objfun[j].results.residual);
             }
         }
     }
+
+    if (master_counter == 1)
+    {
+        sys->_init_residuals_sys = residuals_sys;
+        sys->_init_Weighted_Abs_sum_of_residuals = Weighted_Abs_sum_of_residuals;
+    }
+
+    if (sys->Opti->OptMixedSumOfResiduals>=0)
+    {
+        double norm_residuals_sys = residuals_sys/sys->_init_residuals_sys;
+        double norm_Weighted_Abs_sum_of_residuals = Weighted_Abs_sum_of_residuals/sys->_init_Weighted_Abs_sum_of_residuals;
+        if (sys->Opti->OptMixedSumOfResiduals==1)
+            residuals_sys = norm_residuals_sys+norm_Weighted_Abs_sum_of_residuals;
+        if (sys->Opti->OptMixedSumOfResiduals==2)
+            residuals_sys = Weighted_Abs_sum_of_residuals;
+        if (sys->Opti->OptMixedSumOfResiduals==3)
+            residuals_sys = residuals_sys+Weighted_Abs_sum_of_residuals;
+
+    }
+
+//    residuals_sys = test_residual;
+
+    // debug for when using global algorithm
+    if ((master_counter%1000 == 0) || (master_counter<(opt.size()*2)))
+    {
+        cout << master_counter << " iterations, continuing..." << endl;
+        cout << "sum of residuals: "<<residuals_sys<< endl;
+        for (unsigned int i = 0; i<opt.size(); ++i)
+        {
+            cout<<"parameter "<<i<<" : "<<opt[i]<<endl;
+        }
+    }
+
+    if (sys->Opti->OptMixedSumOfResiduals>=0)
+    {
+        gpf->flog << "~ m.count.= " << master_counter << " sum.res.= " << setprecision(15) << residuals_sys << " sum.lsres.= "<< squared_residuals << " sum.absres.= "<< Weighted_Abs_sum_of_residuals<< endl;
+        cout << "~ m.count.= " << master_counter << " sum.res.= " << setprecision(15) << residuals_sys << " sum.lsres.= "<< squared_residuals << " sum.absres.= "<< Weighted_Abs_sum_of_residuals<< endl;
+    } else
+    {
+        gpf->flog << "~ m.count.= " << master_counter << " sum.res.= " << setprecision(15) << residuals_sys << endl;
+        cout << "~ m.count.= " << master_counter << " sum.res.= " << setprecision(15) << residuals_sys << endl;
+    }
+
+//    sys->print_global_results();
+    sys->print_param();
+
 }
 
 

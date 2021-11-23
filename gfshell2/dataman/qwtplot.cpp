@@ -36,7 +36,7 @@
 #include <qwt_picker_machine.h>
 
 #include "qwtplot.h"
-#include "v_user.h"
+#include "v_service.h"
 //#include "visor.h"
 #include "FITMainWindow.h"
 //#include "v_object.h"

@@ -23,7 +23,6 @@
 using namespace std;
 
 #include "node.h"
-#include "io_arrays.h"
 #include "keywords.h"
 #include "v_json.h"
 

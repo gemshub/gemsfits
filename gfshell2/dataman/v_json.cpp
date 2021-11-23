@@ -20,9 +20,15 @@
 #include <sstream>
 #include <cstring>
 #include <iomanip>
-
-#include "v_user.h"
+#include "v_service.h"
 #include "f_ejdb.h"
+
+#define SHORT_EMPTY 	   -32768
+#define SHORT_ANY   	    32767
+#define USHORT_EMPTY         0
+#define USHORT_ANY           65535
+#define DOUBLE_EMPTY         2.2250738585072014e-308
+#define DOUBLE_ANY           1.7976931348623157e+308
 
 bool bson_find_string( const char *obj, const char *name, string& str )
 {

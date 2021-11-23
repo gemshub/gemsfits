@@ -69,17 +69,22 @@ git checkout dev-gemsfits
 
 Make sure that you have the following packages installed (on debian-type linuxes such as Kubuntu 15.10) by running in the terminal:
 ~~~
-$ sudo apt-get update
-$ sudo apt-get install libarmadillo-dev libjansson-dev libboost-all-dev libiomp5
+sudo apt-get update
+sudo apt-get install libarmadillo-dev libjansson-dev libboost-all-dev libiomp5
 ~~~
 or install equivalent packages, if you have another linux desktop.
 
+Ubuntu > 20 
+~~~
+sudo apt install libomp-11-dev
+~~~
+
 Download and install NLopt library from source:
 
-download [NLopt v2.5.0](https://github.com/stevengj/nlopt/archive/v2.5.0.tar.gz), extract the archive
+download [NLopt v2.7.0](https://github.com/stevengj/nlopt/archive/v2.7.0.tar.gz), extract the archive
 
 ~~~
-cd nlopt-2.5.0
+cd nlopt-2.7.0
 mkdir build
 cd build
 cmake ..
@@ -100,10 +105,10 @@ make
 sudo make install
 ~~~
 
-Download, unzip and install yaml-cpp library from source - [download here](https://github.com/jbeder/yaml-cpp/releases/tag/yaml-cpp-0.5.3):
+Download, unzip and install yaml-cpp library from source - [download here](https://github.com/jbeder/yaml-cpp/releases/tag/yaml-cpp-0.6.3):
 
 ~~~
-cd yaml-cpp-yaml-cpp-0.5.3
+cd yaml-cpp-yaml-cpp-0.6.3
 mkdir build
 cd build
 cmake ..
@@ -111,13 +116,23 @@ make
 sudo make install
 ~~~
 
-If building from source fails (problems in Ubuntu 18.10) try the following command: 
+If building from source fails (problems in Ubuntu) try the following command: 
 
 ~~~
 sudo apt-get install libyaml-cpp-dev
 ~~~
 
 Make sure that you have the complete Qt5 toolkit (with QtCreator) installed either in the system or locally after downloading from [qt.io](http://www.qt.io/download/) site. 
+
+Qt5 should be installed in the local user folder: home/<user>/Qt/5. ...
+
+If you are using QT installed in your home folder and you encounter an error about missing gl.h, try the folowing command, then resume building with QT:
+~~~
+sudo apt-get install build-essential libgl1-mesa-dev libxcb-xinerama0
+
+~~~
+
+Optional
 
 On latest versions of Linux, Qt5 is available for installation in the system. For example on Ubuntu 15.10 it can be installed using a command:
 ~~~
@@ -127,11 +142,6 @@ sudo apt-get install qt5-default qtcreator
 If error "Unknown module(s) in QT:" "help" or "svg" appears, try the following command:
 ~~~
 sudo apt-get install qttools5-dev libqt5svg5-dev
-~~~
-
-If you are using QT installed in your home folder and you encounter an error about missing gl.h, try the folowing command, then resume building with QT:
-~~~
-sudo apt-get install build-essential libgl1-mesa-dev
 ~~~
 
 ### Build the gemsfit2 code ###
