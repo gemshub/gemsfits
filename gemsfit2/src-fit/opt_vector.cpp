@@ -32,6 +32,11 @@
 #include <sstream>
 #include <muParser.h>
 
+#if defined(_UNICODE)
+#include "muparserfix.h"
+#else
+#endif
+
 
 OptParameter::OptParameter(vector<string> data, double OptBoundPrc)
 {
@@ -959,7 +964,11 @@ long int Opt_bIC::Adjust_Fparam(TNode *node, int Pndx, double Pval, string expr)
             if (varStr[d] == "phM"+exprP[ex])
 #endif
             {
+#if defined(_UNICODE)
+                std::size_t found = varStr[d].find(s2ws("phM"));
+#else
                 std::size_t found = varStr[d].find("phM");
+#endif
                 if (found!=std::string::npos)
                 {
                      PHndx = node->Ph_name_to_xDB(exprO[ex].c_str());

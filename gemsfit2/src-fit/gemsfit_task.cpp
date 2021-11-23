@@ -910,7 +910,7 @@ void TGfitTask::setnodes()
     #pragma omp parallel for schedule(dynamic)
 #endif
 #endif
-    for (uint n = 0; n<NodT.size(); ++n)
+    for (unsigned int n = 0; n<NodT.size(); ++n)
     {
         NodeHandle = n;
         // Calling GEMIPM calculation

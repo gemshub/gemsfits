@@ -34,8 +34,32 @@
 #include <ctime>
 #include <fstream>
 
+#ifdef __unix
 #include <unistd.h>
 #include <sys/time.h>
+#else
+#ifdef __MINGW32__
+#include <sys/time.h>
+#endif
+#ifdef _MSC_VER
+#include <io.h>
+#include <time.h>
+#include <chrono>
+#include <Windows.h>
+#include <direct.h>
+
+int gettimeofday(struct timeval* tp, struct timezone* tzp) {
+  namespace sc = std::chrono;
+  sc::system_clock::duration d = sc::system_clock::now().time_since_epoch();
+  sc::seconds s = sc::duration_cast<sc::seconds>(d);
+  tp->tv_sec = s.count();
+  tp->tv_usec = sc::duration_cast<sc::microseconds>(d - s).count();
+
+  return 0;
+}
+#endif
+#endif
+
 
 #include "gemsfit_iofiles.h"
 #include "gemsfit_task.h"

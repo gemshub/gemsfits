@@ -1,26 +1,28 @@
 {
-     "taskid" :   "Run-Test",
+     "taskid" :   "002Run-Test-fit",
      "projectid" :   "Boehmite-solubility",
      "DBPath" :   "../EJDB/bhm",
      "DBColl" :   "experiments",
-     "GEMSFPath" :   "../GEMS/bhm-H-gbs-H-dat.lst",
-     "comment" :   "optimizing G0 at 25 C of Al hydrous species against solubility experiments as a function of pH (Benezeth et al., 2001). Using the nested function NFUN to fix the ph of the experiments to the reported values by adding the necessary amounts of NaOH or HCl. G0 of AlOH+2 is constrained by reaction, haing the logK values cacluated using the equation described in LogKFun bellow.",
+     "GEMSFPath" :   "../GEMS/bhm-dat.lst",
+     "comment" :   "optimizing G0 at 25 C of Al hydrous species against solubility experiments as a function of pH (Benezeth et al., 2001). Using the nested function NFUN to fix the pH of the experiments to the reported values by adding the necessary amounts of NaOH or HCl. G0 of AlOH+2 is constrained by reaction, haing the logK values cacluated using the equation described in LogKFun bellow.",
      "OptSet" :   {
-          "NumMPI" :   4,
+          "NumMPI" :   5,
           "DoWhat" :   1,
           "UseEqC" :   1,
-          "UDWts" :   0,
+          "GemsSIA" :   -1,
+          "UDWts" :   -1,
+          "UMixedResiduals" :   -1,
           "OptAlg" :   "LN_BOBYQA",
           "PBPerc" :   -1,
           "ConTolRel" :   1e-05,
           "ConTolAbs" :   1e-05,
-          "MaxLoops" :   10000,
+          "MaxLoops" :   1000,
           "NormPar" :   1,
           "GradPert" :   0.0001,
           "SensPert" :   0.0001,
           "OptTu" :   -1,
           "OptTuC" :   6,
-          "UseMCPE" :   0,
+          "UseMCPE" :   -1,
           "NumMCT" :   100
      },
      "DataSelect" :   {
@@ -73,7 +75,19 @@
                },
                {
                     "SRC" :   "calc",
-                    "EPH" :   "Boehmite-H",
+                    "EPH" :   "Boehmite",
+                    "CT" :   "prop",
+                    "CN" :   "Q"
+               },
+               {
+                    "SRC" :   "calc",
+                    "EPH" :   "Corundum",
+                    "CT" :   "prop",
+                    "CN" :   "Q"
+               },
+               {
+                    "SRC" :   "calc",
+                    "EPH" :   "Gibbsite",
                     "CT" :   "prop",
                     "CN" :   "Q"
                },
@@ -83,6 +97,70 @@
                     "CT" :   "prop",
                     "CN" :   "pH"
                }
+          ]
+     },
+     "NFunParToOpt" :   {
+          "bIC" :   [
+               {
+                    "ICN" :   "Cl",
+                    "PType" :   "F",
+                    "NFndx" :   0,
+                    "IV" :   0.0109558194127147,
+                    "UB" :   4,
+                    "LB" :   1e-05
+               },
+               {
+                    "NFndx" :   0,
+                    "ICN" :   "H",
+                    "PType" :   "L",
+                    "IV" :   44.5761406330092,
+                    "LICs" :   [
+                         "Na",
+                         "Cl"
+                    ],
+                    "LCoef" :   [
+                         1,
+                         1
+                    ]
+               },
+               {
+                    "NFndx" :   0,
+                    "ICN" :   "Na",
+                    "PType" :   "F",
+                    "IV" :   0.00821315904404505,
+                    "UB" :   4,
+                    "LB" :   1e-05
+               },
+               {
+                    "NFndx" :   0,
+                    "ICN" :   "O",
+                    "PType" :   "L",
+                    "IV" :   22.5367479506933,
+                    "LICs" :   "Na",
+                    "LCoef" :   1
+               }
+          ]
+     },
+     "LogKFun" :   {
+          "FunList" :   [
+               {
+                    "FType" :   "logK_dRHOw",
+                    "FCoef" :   [
+                         4.7648,
+                         -2895.4,
+                         0,
+                         0,
+                         0,
+                         0,
+                         0
+                    ],
+                    "Rndx" :   0
+               }
+          ]
+     },
+     "AddParToOpt" :   {
+          "bIC" :   [
+
           ]
      },
      "ParToOpt" :   [
@@ -136,59 +214,24 @@
                          ]
                     },
                     {
-                         "DCN" :   "K+",
-                         "PType" :   "S",
-                         "IV" :   -282462.00010137
-                    },
-                    {
-                         "DCN" :   "KAlO2@",
-                         "PType" :   "F",
-                         "IV" :   -1106170,
-                         "UB" :   -1096170,
-                         "LB" :   -1116170
-                    },
-                    {
-                         "DCN" :   "KCl@",
-                         "PType" :   "S",
-                         "IV" :   -404676.0000878
-                    },
-                    {
-                         "DCN" :   "KOH@",
-                         "PType" :   "S",
-                         "IV" :   -434634.00008817
-                    },
-                    {
                          "DCN" :   "Na+",
                          "PType" :   "S",
-                         "IV" :   -261881.00017392
+                         "IV" :   -256142.00017392
                     },
                     {
                          "DCN" :   "NaAl(OH)4@",
-                         "PType" :   "R",
-                         "IV" :   -1567370,
-                         "Ref" :   "Diak",
-                         "Rndx" :   1,
-                         "nC" :   3,
-                         "RC" :   [
-                              "Na+",
-                              "Al(OH)4-",
-                              "NaAl(OH)4@"
-                         ],
-                         "RCoef" :   [
-                              -1,
-                              -1,
-                              1
-                         ]
+                         "PType" :   "S",
+                         "IV" :   -1562083
                     },
                     {
                          "DCN" :   "NaCl@",
                          "PType" :   "S",
-                         "IV" :   -388903.00004677
+                         "IV" :   -383064.00004677
                     },
                     {
                          "DCN" :   "NaOH@",
                          "PType" :   "S",
-                         "IV" :   -414634.00003677
+                         "IV" :   -411567.00006255
                     },
                     {
                          "DCN" :   "Cl-",
@@ -203,22 +246,12 @@
                     {
                          "DCN" :   "H2@",
                          "PType" :   "S",
-                         "IV" :   17723.00010995
+                         "IV" :   17710.995103043
                     },
                     {
                          "DCN" :   "O2@",
                          "PType" :   "S",
-                         "IV" :   16544.000207431
-                    },
-                    {
-                         "DCN" :   "H2O2@",
-                         "PType" :   "S",
-                         "IV" :   -134013.99990483
-                    },
-                    {
-                         "DCN" :   "HO2-",
-                         "PType" :   "S",
-                         "IV" :   -67321.000812733
+                         "IV" :   16549.993070826
                     },
                     {
                          "DCN" :   "OH-",
@@ -288,16 +321,6 @@
                ]
           },
           {
-               "EPH" :   "Boehmite-H",
-               "G0" :   [
-                    {
-                         "DCN" :   "Boehmite-H",
-                         "PType" :   "S",
-                         "IV" :   -918400
-                    }
-               ]
-          },
-          {
                "EPH" :   "Corundum",
                "G0" :   [
                     {
@@ -308,95 +331,26 @@
                ]
           },
           {
-               "EPH" :   "Gibbsite-H",
+               "EPH" :   "Boehmite",
                "G0" :   [
                     {
-                         "DCN" :   "Gibbsite-H",
+                         "DCN" :   "Boehmite",
+                         "PType" :   "S",
+                         "IV" :   -918400
+                    }
+               ]
+          },
+          {
+               "EPH" :   "Gibbsite",
+               "G0" :   [
+                    {
+                         "DCN" :   "Gibbsite",
                          "PType" :   "S",
                          "IV" :   -1154900
                     }
                ]
-          },
-          {
-               "EPH" :   "Halite",
-               "G0" :   [
-                    {
-                         "DCN" :   "Halite",
-                         "PType" :   "S",
-                         "IV" :   -384246
-                    }
-               ]
-          },
-          {
-               "EPH" :   "Sylvite",
-               "G0" :   [
-                    {
-                         "DCN" :   "Sylvite",
-                         "PType" :   "S",
-                         "IV" :   -408587
-                    }
-               ]
           }
      ],
-     "NFunParToOpt" :   {
-          "bIC" :   [
-               {
-                    "ICN" :   "Cl",
-                    "PType" :   "F",
-                    "NFndx" :   0,
-                    "IV" :   0.0109558194127147,
-                    "UB" :   4,
-                    "LB" :   1e-05
-               },
-               {
-                    "NFndx" :   0,
-                    "ICN" :   "H",
-                    "PType" :   "L",
-                    "IV" :   44.5761406330092,
-                    "LICs" :   [
-                         "Na",
-                         "Cl"
-                    ],
-                    "LCoef" :   [
-                         1,
-                         1
-                    ]
-               },
-               {
-                    "NFndx" :   0,
-                    "ICN" :   "Na",
-                    "PType" :   "F",
-                    "IV" :   0.00821315904404505,
-                    "UB" :   4,
-                    "LB" :   1e-05
-               },
-               {
-                    "NFndx" :   0,
-                    "ICN" :   "O",
-                    "PType" :   "L",
-                    "IV" :   22.5367479506933,
-                    "LICs" :   "Na",
-                    "LCoef" :   1
-               }
-          ]
-     },
-     "LogKFun" :   {
-          "FunList" :   [
-               {
-                    "FType" :   "logK_dRHOw",
-                    "FCoef" :   [
-                         4.7648,
-                         -2895.4,
-                         0,
-                         0,
-                         0,
-                         0,
-                         0
-                    ],
-                    "Rndx" :   0
-               }
-          ]
-     },
      "LogKVal" :   "",
      "DataSyn" :   {
           "PHN" :   [
@@ -422,22 +376,6 @@
                          },
                          {
                               "NIS" :   "AlOH+2",
-                              "Syn" :   ""
-                         },
-                         {
-                              "NIS" :   "K+",
-                              "Syn" :   ""
-                         },
-                         {
-                              "NIS" :   "KAlO2@",
-                              "Syn" :   ""
-                         },
-                         {
-                              "NIS" :   "KCl@",
-                              "Syn" :   ""
-                         },
-                         {
-                              "NIS" :   "KOH@",
                               "Syn" :   ""
                          },
                          {
@@ -473,14 +411,6 @@
                               "Syn" :   ""
                          },
                          {
-                              "NIS" :   "H2O2@",
-                              "Syn" :   ""
-                         },
-                         {
-                              "NIS" :   "HO2-",
-                              "Syn" :   ""
-                         },
-                         {
                               "NIS" :   "OH-",
                               "Syn" :   ""
                          },
@@ -490,16 +420,6 @@
                          },
                          {
                               "NIS" :   "H2O@",
-                              "Syn" :   ""
-                         }
-                    ]
-               },
-               {
-                    "NIS" :   "Boehmite-H",
-                    "Syn" :   "",
-                    "DCN" :   [
-                         {
-                              "NIS" :   "Boehmite-H",
                               "Syn" :   ""
                          }
                     ]
@@ -515,32 +435,22 @@
                     ]
                },
                {
-                    "NIS" :   "Gibbsite-H",
-                    "Syn" :   "",
+                    "NIS" :   "Boehmite",
+                    "Syn" :   "Boehmite-H",
                     "DCN" :   [
                          {
-                              "NIS" :   "Gibbsite-H",
-                              "Syn" :   ""
+                              "NIS" :   "Boehmite",
+                              "Syn" :   "Boehmite-H"
                          }
                     ]
                },
                {
-                    "NIS" :   "Halite",
-                    "Syn" :   "",
+                    "NIS" :   "Gibbsite",
+                    "Syn" :   "Gibbsite-H",
                     "DCN" :   [
                          {
-                              "NIS" :   "Halite",
-                              "Syn" :   ""
-                         }
-                    ]
-               },
-               {
-                    "NIS" :   "Sylvite",
-                    "Syn" :   "",
-                    "DCN" :   [
-                         {
-                              "NIS" :   "Sylvite",
-                              "Syn" :   ""
+                              "NIS" :   "Gibbsite",
+                              "Syn" :   "Gibbsite-H"
                          }
                     ]
                }
@@ -548,6 +458,10 @@
           "PHPN" :   [
                {
                     "NIS" :   "pH",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "pHm",
                     "Syn" :   ""
                },
                {
@@ -560,6 +474,10 @@
                },
                {
                     "NIS" :   "IS",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "SI",
                     "Syn" :   ""
                },
                {
@@ -584,6 +502,30 @@
                },
                {
                     "NIS" :   "mChainL",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "expr",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "activityRatio",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "frAlIV",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "frAlV",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "frAlVI",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Rd",
                     "Syn" :   ""
                }
           ],

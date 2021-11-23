@@ -4,10 +4,12 @@
      "GEMSFPath" :   "../GEMS/bhm-H-gbs-H-dat.lst",
      "comment" :   "Instead of current text, write here a short comment for the fitting task.",
      "OptSet" :   {
-          "NumMPI" :   16,
+          "NumMPI" :   7,
           "DoWhat" :   1,
           "UseEqC" :   1,
+          "GemsSIA" :   -1,
           "UDWts" :   -1,
+          "UMixedResiduals" :   -1,
           "OptAlg" :   "LN_BOBYQA",
           "PBPerc" :   -1,
           "ConTolRel" :   1e-05,
@@ -24,6 +26,11 @@
      "DataSelect" :   "",
      "DataTarget" :   "",
      "NFunParToOpt" :   "",
+     "AddParToOpt" :   {
+          "bIC" :   [
+
+          ]
+     },
      "ParToOpt" :   [
           {
                "EPH" :   "aq_gen",
@@ -412,6 +419,10 @@
                     "Syn" :   ""
                },
                {
+                    "NIS" :   "SI",
+                    "Syn" :   ""
+               },
+               {
                     "NIS" :   "alk",
                     "Syn" :   ""
                },
@@ -433,6 +444,14 @@
                },
                {
                     "NIS" :   "mChainL",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "expr",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "activityRatio",
                     "Syn" :   ""
                },
                {

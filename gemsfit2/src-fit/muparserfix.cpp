@@ -6,19 +6,20 @@
 #if defined(_UNICODE)
 #include <locale>
 #include <codecvt>
+#include <boost/locale.hpp>
 
-string ws2s(const std::wstring& wstr)
+std::string ws2s(const std::wstring& wstr)
 {
 //    using convert_typeX = std::codecvt_utf8<wchar_t>;
 //    std::wstring_convert<convert_typeX, wchar_t> converterX;
 
-    string s = boost::locale::conv::utf_to_utf<char>(wstr);
+    std::string s = boost::locale::conv::utf_to_utf<char>(wstr);
 
 //    return converterX.to_bytes(wstr);
     return s;
 }
 
-wstring s2ws(const std::string& str)
+std::wstring s2ws(const std::string& str)
 {
 //    cout << str << endl << "AAAA" << endl;
 //    using convert_typeX = std::codecvt_utf8<wchar_t>;
@@ -26,7 +27,7 @@ wstring s2ws(const std::string& str)
 
 //    wstring wstr = converterX.from_bytes(str);
 
-    wstring ws = boost::locale::conv::utf_to_utf<wchar_t>(str);
+    std::wstring ws = boost::locale::conv::utf_to_utf<wchar_t>(str);
 
 //    cout << ws2s(ws)<< endl << "BBBB" << endl;
 
@@ -50,7 +51,7 @@ double* AddVariable(const char *a_szName, void *pUserData)
    double afValBuf[500];
    int iVal = -1;
 #if defined(_UNICODE)
-  vector<wstring> *test = reinterpret_cast<vector<wstring> *>(pUserData);
+  std::vector<std::wstring> *test = reinterpret_cast<std::vector<std::wstring> *>(pUserData);
 #else
   std::vector<std::string> *test = reinterpret_cast<std::vector<std::string> *>(pUserData);
 #endif
