@@ -6,9 +6,9 @@
 #include <codecvt>
 #include <string>
 
-string ws2s(const std::wstring& wstr);
+std::string ws2s(const std::wstring& wstr);
 
-wstring s2ws(const std::string& str);
+std::wstring s2ws(const std::string& str);
 #else
 #endif
 

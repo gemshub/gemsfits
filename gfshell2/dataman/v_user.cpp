@@ -211,7 +211,7 @@ char chLowUp(char ch)
 
 void
   ChangeforTempl( std::string& data_str,  const std::string& from_templ1,
-                  const std::string& to_templ1, uint len_ )
+                  const std::string& to_templ1, unsigned int len_ )
 {
     if( data_str.empty() )
         return;

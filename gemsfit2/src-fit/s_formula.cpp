@@ -362,7 +362,7 @@ void Formuan::scanIsotope( string& isotop, string& cur)
 // <icsymb>    ::= <Capital_letter> \ <icsymb><lcase_letter> \ <icsymb>_
 void Formuan::scanICsymb( string& icName, string& cur)
 {
-    uint i=1;
+    unsigned int i=1;
 
     xblanc( cur );
     if( cur.empty() )
@@ -574,7 +574,7 @@ void TFormula::fixup_ics( char* ICs )
 // test all IComps in DB, before unpacking the formula
 void TFormula::TestIC( const char* key, int N, char *ICsym )
 {
-    uint i;
+    unsigned int i;
     int jj=-1;
     char ICS[IC_RKLEN+10];
 
