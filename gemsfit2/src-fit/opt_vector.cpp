@@ -1097,7 +1097,7 @@ Opt_Tk::Opt_Tk(vector<string> data, double OptBoundPrc, unsigned &p) :
         parse_JSON_object(Jdata[i], keys::PType[mode], out);
         if (out.size() !=1) { cout << "Parameter " << p << " (TK) has no \"ptype\" defined! "<< endl; exit(1); }
 
-        if (/*out[0] != "S" &&*/ out[0] != "F" /*&& out[0] != "R"*/ && out[0] != "L") {
+        if (out[0] != "S" && out[0] != "F" /*&& out[0] != "R"*/ && out[0] != "L") {
             cout << "Parameter (TK) has unknown type " << out[0] << " defined! "<<endl; exit(1); }
 
         if (out[0] == "F")
