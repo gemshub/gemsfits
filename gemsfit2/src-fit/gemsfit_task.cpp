@@ -724,6 +724,8 @@ void TGfitTask::setnodes()
             }
         }
 
+
+
 // ....................................................................
 // NodT[n]->  This is written using TNode functions on 05.01.2014 by DK
         // Set amounts of dependent components (GEMS3K: DBR indexing)

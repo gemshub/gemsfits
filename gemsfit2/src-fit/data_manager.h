@@ -159,6 +159,16 @@ class Data_Manager : public TNode
                     };
                     vector<prop*> phprop;
 
+                    struct actmod
+                    {
+                        double b_gamma;                /// b_gamma value at 1 bar 298 K
+                        string b_gammaT;                    /// b_gamma function of T (Constant, 1 NaCl, 2 KCl, 3 NaOH, 4 KOH)
+                        double a0;                  /// a0
+                        int gammaN;                   /// gamma neutral species 0 set as 1, 1 calculated as b_bamma*IS
+                        int gammaW;                 /// gamma water 0 set as 1, 1 calculated from osmotic coefficient
+                    };
+                    vector<actmod*> phactmod;
+
                     // composition of the phases in elements
                     vector<components*> phIC;
 

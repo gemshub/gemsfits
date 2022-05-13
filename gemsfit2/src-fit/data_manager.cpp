@@ -820,7 +820,7 @@ cout << DBname.c_str() << endl;
 void Data_Manager::bson_to_Data_Manager(/* FILE *f, */ const char *data, int pos)
 {
     bson_iterator i[1], j[1], k[1], k2[1], d[1], d2[1], d3[1]; // 1st, 2nd, 3rd, 2-1, 3-1 level
-    int ip = -1, ic = -1, sk = -1, ipc, ipp, ips, ipdcp, ipm;
+    int ip = -1, ic = -1, sk = -1, ipc, ipp, ips, ipdcp, ipm, ipam;
 
     bson_iterator_from_buffer(i, data); // getting primary iterator
     while ( bson_iterator_next(i) != BSON_EOO )
@@ -1005,6 +1005,7 @@ void Data_Manager::bson_to_Data_Manager(/* FILE *f, */ const char *data, int pos
                 ipc = -1; // phases components - reset to -1 for every new phase
                 ipm = -1; // molar fractions
                 ipp = -1; // phases properties
+                ipam= -1; // phase act model
                 ips = -1; // phases dcomps
                 experiments[pos]->expphases[ip]->idphase = 0;
 
@@ -1179,6 +1180,55 @@ void Data_Manager::bson_to_Data_Manager(/* FILE *f, */ const char *data, int pos
                             }
                         }
 //cout << endl;
+                    } else
+
+                    // adding phase activity_model
+                    if ((key_ == keys::activity_model) ) // && (t == BSON_ARRAY))
+                        {
+                            bson_iterator_subiterator( d, k );
+                            while ( bson_iterator_next(k) != BSON_EOO )
+                            {
+                                experiments[pos]->expphases[ip]->phactmod.push_back( new samples::phases::actmod );
+                                ipam++; // position of the component in phactmod vector
+
+                                bson_iterator_subiterator( k, d2 );
+                                while (bson_iterator_next(d2) != BSON_EOO )
+                                {
+                                    string key_ = bson_iterator_key(d2);
+    //cout << " " << key_.c_str();
+                                    if ((key_ == keys::b_gamma))
+                                    {
+                                        double qw = bson_iterator_double(d2) ;
+                                        experiments[pos]->expphases[ip]->phactmod[ipam]->b_gamma = qw;
+    //cout << ": " << qw;
+                                    } else
+                                    if ((key_ == keys::b_gammaT))
+                                    {
+                                        string qw = bson_iterator_string(d2) ;
+                                        experiments[pos]->expphases[ip]->phactmod[ipam]->b_gammaT = qw ;
+    //cout << ": " << qw;
+                                    } else
+                                    if ((key_ == keys::a0))
+                                    {
+                                        double qw = bson_iterator_double(d2) ;
+                                        experiments[pos]->expphases[ip]->phactmod[ipam]->a0 = qw ;
+    //cout << ": " << unit;
+                                    } else
+                                    if ((key_ == keys::gammaN))
+                                    {
+                                        int qw = bson_iterator_int(d2) ;
+                                        experiments[pos]->expphases[ip]->phactmod[ipam]->gammaN = qw ;
+        //cout << ": " << qw;
+                                    } else
+                                    if ((key_ == keys::gammaW))
+                                    {
+                                        int qw = bson_iterator_int(d2) ;
+                                        experiments[pos]->expphases[ip]->phactmod[ipam]->gammaW = qw ;
+            //cout << ": " << qw;
+                                    }
+                                }
+                            }
+    //cout << endl;
                     } else
 
                     // adding phase dcomps
