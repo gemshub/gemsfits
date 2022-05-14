@@ -454,9 +454,42 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
       }
 }
 
+bool iequals(const string& a, const string& b)
+{
+    unsigned int sz = a.size();
+    if (b.size() != sz)
+        return false;
+    for (unsigned int i = 0; i < sz; ++i)
+        if (tolower(a[i]) != tolower(b[i]))
+            return false;
+    return true;
+}
+
+int get_b_gammaT(const string& s)
+{
+    int b_gammaT = -1;
+
+    if (iequals(s, "Constant"))
+        b_gammaT = 0;
+    else
+    if (iequals(s, "NaCl"))
+        b_gammaT = 1;
+    else
+    if (iequals(s, "KCl"))
+        b_gammaT = 2;
+    else
+    if (iequals(s, "NaOH"))
+        b_gammaT = 3;
+    else
+    if (iequals(s, "KOH"))
+        b_gammaT = 4;
+
+    return b_gammaT;
+}
+
 void TGfitTask::setnodes()
 {
-    unsigned int n, i, j, k, l;
+    unsigned int n, i, j, k, l, p;
     // DATACH structure content
     unsigned int nIC, nDC, nPH,  DCndx, PHndx;
     long int NodeStatusCH, NodeHandle;
@@ -481,6 +514,13 @@ void TGfitTask::setnodes()
             cout<<" .. ERROR occurred while reading input files !!! ..."<<endl;
         }
     }
+
+    if (NodT.size() ==0)
+    {
+        cout<<" .. ERROR No experiments read from the database. See \"DataSelect\" ..."<<endl;
+        exit(1);
+    }
+
 
     DATACH* dCH_ = NodT[0]->pCSD();
 
@@ -672,14 +712,38 @@ void TGfitTask::setnodes()
                 }
             }*/
 
+
             string sMod;
             NodT[n]->Get_sMod(0, sMod);
 
+            bool isSetActMod = false;
+
             // check if we are dealing with HKF TSolMod !!!!
+            //ndx 0: b_gamma; 1: a0; 2: gammma neutral species; 3: gamma H2O; 4: b_gammaT
             // ................ //
             // major salts interation parameters
             if (sMod.compare(0,1,"H") == 0)
             {
+            for (p = 0; p <experiments[n]->expphases.size(); p++)
+            {
+                if (experiments[n]->expphases[p]->phactmod.isActMod)
+                {
+                    isSetActMod = true;
+                    // setting activity model paramters
+                    if (experiments[n]->expphases[p]->phactmod.b_gamma !=-1.0)
+                        NodT[n]->Set_PMc(experiments[n]->expphases[p]->phactmod.b_gamma, 0 );
+                    if (experiments[n]->expphases[p]->phactmod.a0 !=-1.0)
+                        NodT[n]->Set_PMc(experiments[n]->expphases[p]->phactmod.a0, 1 );
+                    if (experiments[n]->expphases[p]->phactmod.gammaN !=-1.0)
+                        NodT[n]->Set_PMc(experiments[n]->expphases[p]->phactmod.gammaN, 2 );
+                    if (experiments[n]->expphases[p]->phactmod.gammaW !=-1.0)
+                        NodT[n]->Set_PMc(experiments[n]->expphases[p]->phactmod.gammaW, 3 );
+                    if (experiments[n]->expphases[p]->phactmod.b_gammaT !="")
+                        NodT[n]->Set_PMc(get_b_gammaT(experiments[n]->expphases[p]->phactmod.b_gammaT), 4 );
+                }
+            }
+
+            if (!isSetActMod)
             if (majorsalt == "NaCl")
             {
                 NodT[n]->Set_PMc(0.064, 0 );
@@ -700,9 +764,9 @@ void TGfitTask::setnodes()
             } else
             if (majorsalt == "KOH")
             {
-                NodT[n]->Set_PMc(0.123, 0 );
-                NodT[n]->Set_PMc(3.67, 1 );
-                NodT[n]->Set_PMc(4, 4 );
+                NodT[n]->Set_PMc(0.123, 0 ); // b_gamma
+                NodT[n]->Set_PMc(3.67, 1 ); // a0
+                NodT[n]->Set_PMc(4, 4 ); // T function
             } else
             if (majorsalt == "CaCl2")
             {

@@ -1185,49 +1185,38 @@ void Data_Manager::bson_to_Data_Manager(/* FILE *f, */ const char *data, int pos
                     // adding phase activity_model
                     if ((key_ == keys::activity_model) ) // && (t == BSON_ARRAY))
                         {
-                            bson_iterator_subiterator( d, k );
-                            while ( bson_iterator_next(k) != BSON_EOO )
-                            {
-                                experiments[pos]->expphases[ip]->phactmod.push_back( new samples::phases::actmod );
-                                ipam++; // position of the component in phactmod vector
-
+                                experiments[pos]->expphases[ip]->phactmod.isActMod = true;
                                 bson_iterator_subiterator( k, d2 );
                                 while (bson_iterator_next(d2) != BSON_EOO )
                                 {
                                     string key_ = bson_iterator_key(d2);
-    //cout << " " << key_.c_str();
                                     if ((key_ == keys::b_gamma))
                                     {
                                         double qw = bson_iterator_double(d2) ;
-                                        experiments[pos]->expphases[ip]->phactmod[ipam]->b_gamma = qw;
-    //cout << ": " << qw;
+                                        experiments[pos]->expphases[ip]->phactmod.b_gamma = qw;
                                     } else
                                     if ((key_ == keys::b_gammaT))
                                     {
                                         string qw = bson_iterator_string(d2) ;
-                                        experiments[pos]->expphases[ip]->phactmod[ipam]->b_gammaT = qw ;
-    //cout << ": " << qw;
+                                        experiments[pos]->expphases[ip]->phactmod.b_gammaT = qw ;
                                     } else
                                     if ((key_ == keys::a0))
                                     {
                                         double qw = bson_iterator_double(d2) ;
-                                        experiments[pos]->expphases[ip]->phactmod[ipam]->a0 = qw ;
-    //cout << ": " << unit;
+                                        experiments[pos]->expphases[ip]->phactmod.a0 = qw ;
                                     } else
                                     if ((key_ == keys::gammaN))
                                     {
                                         int qw = bson_iterator_int(d2) ;
-                                        experiments[pos]->expphases[ip]->phactmod[ipam]->gammaN = qw ;
-        //cout << ": " << qw;
+                                        experiments[pos]->expphases[ip]->phactmod.gammaN = qw ;
                                     } else
                                     if ((key_ == keys::gammaW))
                                     {
                                         int qw = bson_iterator_int(d2) ;
-                                        experiments[pos]->expphases[ip]->phactmod[ipam]->gammaW = qw ;
-            //cout << ": " << qw;
+                                        experiments[pos]->expphases[ip]->phactmod.gammaW = qw ;
                                     }
                                 }
-                            }
+//                            }
     //cout << endl;
                     } else
 
