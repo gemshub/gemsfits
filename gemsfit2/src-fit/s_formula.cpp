@@ -20,8 +20,9 @@
 //#include <cstdio>
 #include <cmath>
 #include <stdio.h>
+#include <string.h>
+#include <iostream>
 
-#include "v_user.h"
 #include "s_formula.h"
 #ifndef IPMGEMPLUGIN
 #include "m_icomp.h"
@@ -361,7 +362,7 @@ void Formuan::scanIsotope( string& isotop, string& cur)
 // <icsymb>    ::= <Capital_letter> \ <icsymb><lcase_letter> \ <icsymb>_
 void Formuan::scanICsymb( string& icName, string& cur)
 {
-    uint i=1;
+    unsigned int i=1;
 
     xblanc( cur );
     if( cur.empty() )
@@ -573,7 +574,7 @@ void TFormula::fixup_ics( char* ICs )
 // test all IComps in DB, before unpacking the formula
 void TFormula::TestIC( const char* key, int N, char *ICsym )
 {
-    uint i;
+    unsigned int i;
     int jj=-1;
     char ICS[IC_RKLEN+10];
 
@@ -675,6 +676,16 @@ int TFormula::Fmwtz( double &Z, double &mW, double &eS, short *lAn, double &Nj )
     return aCn.size();
 }
 #endif
+
+template <class T>
+inline
+void fillValue( T* arr, T value, int size )
+{
+  if( !arr )
+    return;
+  for(int ii=0; ii<size; ii++)
+    arr[ii] = value;
+}
 
 // Get a row of stoichiometry matrix (Sml) from the unpacked formula,
 // ICsym - list of IC names, ICval is the vector of IC default valences

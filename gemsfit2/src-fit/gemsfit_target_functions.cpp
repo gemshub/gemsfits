@@ -37,71 +37,8 @@
 #include "keywords.h"
 #include <boost/lexical_cast.hpp>
 #include <boost/locale.hpp>
-
-#if defined(_UNICODE)
-#include <locale>
-#include <codecvt>
-
-string ws2s(const std::wstring& wstr)
-{
-//    using convert_typeX = std::codecvt_utf8<wchar_t>;
-//    std::wstring_convert<convert_typeX, wchar_t> converterX;
-
-    string s = boost::locale::conv::utf_to_utf<char>(wstr);
-
-//    return converterX.to_bytes(wstr);
-    return s;
-}
-
-wstring s2ws(const std::string& str)
-{
-//    cout << str << endl << "AAAA" << endl;
-//    using convert_typeX = std::codecvt_utf8<wchar_t>;
-//    std::wstring_convert<convert_typeX, wchar_t> converterX;
-
-//    wstring wstr = converterX.from_bytes(str);
-
-    wstring ws = boost::locale::conv::utf_to_utf<wchar_t>(str);
-
-//    cout << ws2s(ws)<< endl << "BBBB" << endl;
-
-    return ws;
-
-//    wstring wstr (str.begin(), str.end());
-
-//    return wstr;
-}
-#else
-
-#endif
-
-
-#if defined(_UNICODE)
-double* AddVariable(const wchar_t *a_szName, void *pUserData)
-#else
-double* AddVariable(const char *a_szName, void *pUserData)
-#endif
-{
-   double afValBuf[500];
-   int iVal = -1;
-#if defined(_UNICODE)
-  vector<wstring> *test = reinterpret_cast<vector<wstring> *>(pUserData);
-#else
-  vector<string> *test = reinterpret_cast<vector<string> *>(pUserData);
-#endif
-  iVal++;
-  test->push_back(a_szName);
-  afValBuf[iVal] = 0;
-
-  if (iVal>=499)
-#if defined(_UNICODE)
-    throw mu::ParserError(L"Variable buffer overflow.");
-#else
-    throw mu::ParserError("Variable buffer overflow.");
-#endif
-  else
-    return &afValBuf[iVal];
-}
+#include <muParser.h>
+#include "muparserfix.h"
 
 /// Unit check FUNCTIONS
 void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
@@ -372,22 +309,26 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
         {
             // Default
             computed_value = sys->NodT[i]->Get_mIC(ICndx); // in mol/Kg
-            objfun.exp_unit == keys::molal;
+            objfun.exp_unit = keys::molal;
         }
     } else // other than aqueous phase
         if ((ccPH != *keys::aq) && (PHndx >=0) && (ICndx >=0))
         {
             computed_value = IC_in_PH[ICndx]; // phase bulk composition in moles (mol)
-            if (objfun.exp_unit == keys::molkg )
+            if (objfun.exp_unit == keys::molkg || objfun.exp_unit == keys::logmolkg)
             {
                 computed_value = computed_value / sys->NodT[i]->Ph_Mass(PHndx);
+                if (objfun.exp_unit == keys::logmolkg)
+                    computed_value = std::log10(computed_value);
             }
-            if (objfun.exp_unit == keys::molkg_dry )
+            if (objfun.exp_unit == keys::molkg_dry || objfun.exp_unit == keys::logmolkg_dry)
             {
                 HCndx = sys->NodT[i]->IC_name_to_xDB("H");
                 double H_amount = IC_in_PH[HCndx];
                 double H2O_mass = H_amount/2*18.02/1000; // in kg
                 computed_value = computed_value / (sys->NodT[i]->Ph_Mass(PHndx)-H2O_mass);
+                if (objfun.exp_unit == keys::logmolkg_dry)
+                    computed_value = std::log10(computed_value);
             }
             else
 
@@ -580,6 +521,13 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
     phase_name = objfun.exp_phase.c_str();
     PHndx = sys->NodT[i]->Ph_name_to_xDB(phase_name);
     ccPH = sys->NodT[i]->xCH_to_ccPH(PHndx);
+
+    double* IC_in_PH;
+    DATACH* dCH_ = sys->NodT[0]->pCSD();
+    int nIC = dCH_->nIC;	// nr of independent components
+    IC_in_PH = new double[ nIC ];
+    sys->NodT[i]->Ph_BC(PHndx, IC_in_PH);
+    int HCndx = sys->NodT[i]->IC_name_to_xDB("H");
 // gpf->fout << "i=" << i << " p=" << p << " pp=" << pp << " j=" << j << " : ";
     // Get aqueous phase pH
     if ((objfun.exp_CN == keys::pH)  && (ccPH == *keys::aq) && (PHndx >=0))
@@ -784,7 +732,45 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
                      varDbl.push_back(sys->NodT[i]->Get_cDC(DCndx));
                 }
                 else
-                    varDbl.push_back(sys->NodT[i]->Get_cDC(DCndx)); // default mol fraction
+                {
+                    double value = sys->NodT[i]->Get_cDC(DCndx); // default mol fraction
+                    if (objfun.exp_CN == keys::Rd)
+                    {
+                        //long int xph = sys->NodT[i]->DCtoPh_DBR( DCndx);
+                        long int DCxCH = sys->NodT[i]->DC_xDB_to_xCH(DCndx);
+
+                        switch(dCH_->ccDC[DCxCH])
+                            {
+                             case DC_SCP_CONDEN:
+                             case DC_AQ_SOLVENT:
+                             case DC_AQ_SOLVCOM:
+                             case DC_SOL_IDEAL:
+                             case DC_SOL_MINOR:
+                             case DC_SOL_MAJOR:
+                             case DC_SOL_MINDEP:
+                             case DC_SOL_MAJDEP:
+                             case DC_SCM_SPECIES:
+                             case DC_PEL_CARRIER:
+                             case DC_SUR_MINAL:
+                             case DC_SUR_CARRIER: // mol/kg
+                                        value = sys->NodT[i]->Get_nDC(DCndx)/sys->NodT[i]->Ph_Mass(PHndx);
+                                        if (objfun.exp_unit == keys::Lkg_dry )
+                                        {
+                                            double H_amount = IC_in_PH[HCndx];
+                                            double H2O_mass = H_amount/2*18.02/1000; // in kg
+                                            value = sys->NodT[i]->Get_nDC(DCndx)/(sys->NodT[i]->Ph_Mass(PHndx)-H2O_mass);
+                                        }
+                                              break;
+                              default:
+                                  break; // error in DC class code
+                              }
+                        if (PHndx == 0) // aq phase
+                        {
+                            value = sys->NodT[i]->Get_nDC(DCndx)/(sys->NodT[i]->Ph_Volume(PHndx)*1000);
+                        }
+                    }
+                    varDbl.push_back(value); // default mol fraction
+                }
             }
 
             for (unsigned int d = 0; d < varStr.size(); d++)
@@ -889,9 +875,9 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
     if (PHndx >=0)
     objfun.isComputed = true;
 
-
     sys->set_results( objfun, computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
 
+    delete[] IC_in_PH;
 
     return Weighted_Tfun_residual;
 }
@@ -1109,7 +1095,7 @@ double weight_phdcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFunction:
 string formula_DCname_parser(string expr, vector<string> &exprO, vector<string> &exprP )
 {
     string expr_temp, DCname;
-    char op[23]= "/+-*^?<>=#!$%&|~'_()@.", opr[23]="abcdefghijklmnopqrstuv";
+    char op[25]= "/+-*^?<>=#!$%&|~'_()@.", opr[25]="abcdefghijklmnopqrstuv";
 
     expr_temp = expr;
 

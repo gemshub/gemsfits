@@ -46,6 +46,23 @@ protected:
 
     long int anNodes;  ///< Number of allocated nodes (samples)
 
+    struct parameters /// structure holding the target function information
+    {
+        string Ptype;
+        string Pfittype;
+        string Pname;
+        double Ival;
+        double Fval;
+        double CSS;
+        double mc95;
+        double mcSTDEV;
+        double mcMEAN;
+        vector<double> mcconfi;
+        vector<double> correl;
+    };
+
+    vector<parameters*> fitparam;
+
 private:
 
     // initialize optimization
@@ -90,6 +107,8 @@ private:
     */
     void  setnodes( );
 
+    void set_print_param();
+
     /**
     * Gets the value of the Log of the equilibrium constant for the marked reactions in the input file based on the G0 values in the used database
     * @author DM
@@ -122,6 +141,9 @@ public:
     void test();
 
     double weighted_Tfun_sum_of_residuals;
+
+    double _init_residuals_sys = 0.0;
+    double _init_Weighted_Abs_sum_of_residuals = 0.0;
 
     int mode;
 
@@ -305,6 +327,11 @@ public:
     * @date 20.01.2014
     */
    void set_weights ();
+
+   /**
+    * @brief print_param prints current parameter values to output file
+    */
+   void print_param();
 
    /**
     * @brief print_global_results prints the results of the global fitting to fit-results.csv

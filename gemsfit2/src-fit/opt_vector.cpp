@@ -28,7 +28,14 @@
 #include "gemsfit_global_variables.h"
 #include "keywords.h"
 #include "json_parse.h"
+#include "gemsfit_target_functions.h"
 #include <sstream>
+#include <muParser.h>
+
+#if defined(_UNICODE)
+#include "muparserfix.h"
+#else
+#endif
 
 
 OptParameter::OptParameter(vector<string> data, double OptBoundPrc)
@@ -100,8 +107,9 @@ void OptParameter::Pval_to_optL (int p, string data, L_parameter *opt)
 //    if (out2.size() !=1) { cout << "ERROR: Parameter \"L\"-type " << p << " has no \"spec\" defined! "<< endl; exit(1); }
 
     parse_JSON_object(data, keys::IV[mode], out3);
-    opt->IV = atof(out3.at(0).c_str());
-    opt->opt = atof(out3.at(0).c_str());
+    if (out3.size())
+    {opt->IV = atof(out3.at(0).c_str());
+        opt->opt = atof(out3.at(0).c_str());}
     out3.clear();
 
 //    parse_JSON_object(out, keys::ICN, out3);
@@ -772,7 +780,7 @@ Opt_DMc::~Opt_DMc()
 }
 
 // ++++++ bIC ++++++ //
-Opt_bIC::Opt_bIC(vector<string> data, double OptBoundPrc, unsigned &p) :
+Opt_bIC::Opt_bIC(vector<string> data, double OptBoundPrc, unsigned &p, bool isNFun) :
     OptParameter (data, OptBoundPrc )
 {
     vector<string> out, out2;
@@ -782,9 +790,14 @@ Opt_bIC::Opt_bIC(vector<string> data, double OptBoundPrc, unsigned &p) :
         parse_JSON_object(Jdata[i], keys::PType[mode], out);
         if (out.size() !=1) { cout << "Parameter " << p << " (bIC) has no \"ptype\" defined! "<< endl; exit(1); }
 
-        if (/*out[0] != "S" &&*/ out[0] != "F" /*&& out[0] != "R"*/ && out[0] != "L") {
+        if (/*out[0] != "S" &&*/ out[0] != "F" /*&& out[0] != "R"*/ && out[0] != "L" && out[0] != "") {
             parse_JSON_object(Jdata[i], keys::ICN[mode], out2);
             cout << "Parameter " << out2[0] << " (bIC) has unknown type " << out[0] << " defined! "<<endl; exit(1); }
+
+        out2.clear();
+        if (!isNFun && out[0] != "F" && out[0] != "") {
+            parse_JSON_object(Jdata[i], keys::ICN[mode], out2);
+            cout << "Parameter " << out2[0] << " (bIC) has not available type " << out[0] << " defined! "<<endl; exit(1); }
 
         if (out[0] == "F")
         {
@@ -792,15 +805,21 @@ Opt_bIC::Opt_bIC(vector<string> data, double OptBoundPrc, unsigned &p) :
             optFP.push_back( new Opt_bIC::F_parameter);
             optFP[optFP.size()-1]->Pndx = -1;
 
+            parse_JSON_object(Jdata[i], keys::expr, out);
+            if (out.size() ==1 )
+                optFP[optFP.size()-1]->expr = out[0];
+            else optFP[optFP.size()-1]->expr = "";
+            out.clear();
+
             parse_JSON_object(Jdata[i], keys::NFndx[mode], out);
-            if (out.size() !=1) { cout << "Parameter \"F\"-type " << p << " (bIC) has no \"NFndx\" defined! "<< endl; exit(1); }
+            if (out.size() !=1 && isNFun) { cout << "Parameter \"F\"-type " << p << " (bIC) has no \"NFndx\" defined! "<< endl; exit(1); }
             optFP[optFP.size()-1]->Fndx = atoi(out[0].c_str());
             out.clear();
 
             Pval_to_optF (p, Jdata[i], optFP[optFP.size()-1]);
 
             parse_JSON_object(Jdata[i], keys::ICN[mode], out);
-            if (out.size() !=1) { cout << "Parameter \"F\"-type " << p << " (bIC) has no \"ICN\" defined! "<< endl; exit(1); }
+            if (out.size() !=1 && isNFun) { cout << "Parameter \"F\"-type " << p << " (bIC) has no \"ICN\" defined! "<< endl; exit(1); }
             optFP[optFP.size()-1]->Pname = out[0];
             p++;
         }
@@ -884,6 +903,7 @@ long int Opt_bIC::SetIVvEVvDelta(TNode *node)
         optLP[i]->delta.push_back(delta);
         optLP[i]->IVv.push_back(node->Get_bIC(optLP[i]->Pndx));
         optLP[i]->EVv.push_back(node->Get_bIC(optLP[i]->Pndx));
+        //optLP[i]->IV = node->Get_bIC(optLP[i]->Pndx);
     }
 
     for (unsigned i = 0; i <optFP.size(); i++)
@@ -896,6 +916,98 @@ return 1;
 
 long int Opt_bIC::Adjust_Fparam(TNode *node, int Pndx, double Pval)
 {
+    node->Set_bIC(Pndx, Pval );
+    return 1;
+}
+
+long int Opt_bIC::Adjust_Fparam(TNode *node, int Pndx, double Pval, string expr)
+{
+    vector<string> exprO, exprP;
+    vector<double> varDbl;
+    int PHndx;
+
+    expr = formula_DCname_parser(expr, exprO, exprP);
+
+    try
+    {
+        mu::Parser parser;
+#if defined(_UNICODE)
+        parser.SetExpr(s2ws(expr));
+        vector<wstring> varStr;
+#else
+        parser.SetExpr(expr);
+        vector<string> varStr;
+#endif
+
+        parser.SetVarFactory(AddVariable, &varStr);
+        parser.GetUsedVar();
+
+        int DCndx = -1;
+
+        for (unsigned int d = 0; d < varStr.size(); d++)
+        {
+#if defined(_UNICODE)
+            if (ws2s(varStr[d]) == "value")
+#else
+            if (varStr[d] == "value")
+#endif
+            {
+                varDbl.push_back(Pval);
+            }
+
+            for ( unsigned int ex = 0; ex < exprO.size(); ex++)
+            {
+
+#if defined(_UNICODE)
+            if (ws2s(varStr[d]) == "phM"+exprP[ex])
+#else
+            if (varStr[d] == "phM"+exprP[ex])
+#endif
+            {
+#if defined(_UNICODE)
+                std::size_t found = varStr[d].find(s2ws("phM"));
+#else
+                std::size_t found = varStr[d].find("phM");
+#endif
+                if (found!=std::string::npos)
+                {
+                     PHndx = node->Ph_name_to_xDB(exprO[ex].c_str());
+                     if (PHndx < 0)
+                     { cout << "ERROR: Phase: " << varStr[d].c_str() << " not present in GEMS system! (bIC expression)"; exit(1);}
+                     varDbl.push_back(node->Ph_Mass(PHndx)*1000);
+                }
+            }
+            }
+        }
+
+        for (unsigned int d = 0; d < varStr.size(); d++)
+        {
+#if defined(_UNICODE)
+            parser.DefineVar(varStr[d], &varDbl[d]);
+#else
+            parser.DefineVar(varStr[d], &varDbl[d]);
+#endif
+        }
+        Pval = parser.Eval();
+    }
+    catch(mu::Parser::exception_type &e)
+    {
+//        cout << "muParser ERROR for sample " << sys->experiments[i]->sample << "\n";
+#if defined(_UNICODE)
+     cout << "Message:  " << ws2s(e.GetMsg()) << "\n";
+     cout << "Formula:  " << ws2s(e.GetExpr()) << "\n";
+     cout << "Token:    " << ws2s(e.GetToken()) << "\n";
+#else
+     cout << "Message:  " << e.GetMsg() << "\n";
+     cout << "Formula:  " << e.GetExpr() << "\n";
+     cout << "Token:    " << e.GetToken() << "\n";
+#endif
+        if (e.GetPos()!=std::string::npos)
+            cout << "Position: " << e.GetPos() << "\n";
+        cout << "Errc:     " << e.GetCode() << " http://muparser.beltoforion.de/mup_error_handling.html#idErrors " <<"\n";
+        //            computed_value = rand() % 100 + 1;
+    }
+    // first calc val, then set param
     node->Set_bIC(Pndx, Pval );
     return 1;
 }
@@ -918,9 +1030,30 @@ long int Opt_bIC::Adjust_Lparam(TNode *node, int exp )
             new_param = /*node->Get_bIC(LP_index)*/optLP[i]->IVv[exp] + param_change;        // C = initC + param_change;
             node->Set_bIC(LP_index, new_param);
             optLP[i]->EVv[exp] = new_param;
+            //optLP[i]->opt =  new_param;
         }
     }
     return 1;
+}
+
+long int Opt_bIC::Adjust_param(TNode *node, vector<double> opt)
+{
+    // F param
+    for (unsigned i = 0; i< optFP.size(); i++)
+    {
+        optFP[i]->opt =  opt[optFP[i]->optNdx];
+        if (optFP[i]->expr == "")
+            Adjust_Fparam(node, optFP[i]->Pndx, opt[optFP[i]->optNdx]);
+        else
+            Adjust_Fparam(node, optFP[i]->Pndx, opt[optFP[i]->optNdx], optFP[i]->expr);
+    }
+
+    // L param
+    for (unsigned i = 0; i< optLP.size(); i++)
+    {
+        Adjust_Lparam( node, opt[optLP[i]->optNdx] );
+    }
+ return 1;
 }
 
 string Opt_bIC::Print_param( )
@@ -964,7 +1097,7 @@ Opt_Tk::Opt_Tk(vector<string> data, double OptBoundPrc, unsigned &p) :
         parse_JSON_object(Jdata[i], keys::PType[mode], out);
         if (out.size() !=1) { cout << "Parameter " << p << " (TK) has no \"ptype\" defined! "<< endl; exit(1); }
 
-        if (/*out[0] != "S" &&*/ out[0] != "F" /*&& out[0] != "R"*/ && out[0] != "L") {
+        if (out[0] != "S" && out[0] != "F" /*&& out[0] != "R"*/ && out[0] != "L") {
             cout << "Parameter (TK) has unknown type " << out[0] << " defined! "<<endl; exit(1); }
 
         if (out[0] == "F")

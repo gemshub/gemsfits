@@ -28,7 +28,6 @@
 //
 
 #include "gemsfit_task.h"
-#include "io_arrays.h"
 #include "gdatastream.h"
 #include "gemsfit_iofiles.h"
 #include "keywords.h"
@@ -397,6 +396,159 @@ void TGfitTask::set_results ( TGfitTask::TargetFunction::obj_fun &objfun, double
     objfun.results.weight = weight;
     objfun.results.Tfun_residual = Tfun_residual;
     objfun.results.WTfun_residual = Weighted_Tfun_residual;
+}
+
+void TGfitTask::set_print_param()
+{
+    int np = Opti->optv.size();
+    fitparam.clear();
+
+//    for(unsigned i=0; i< optv_.size(); i++ ) // cols
+//    {
+    int npx = 0;
+    for (unsigned e =0; e < Opti->optParam.size(); e++)
+    {
+        for (unsigned i=0; i<Opti->optParam[e]->Get_optFPsize(); ++i)
+        {
+            // Print optimized parameter values to file
+            fitparam.push_back(new parameters);
+
+            fitparam[i+npx]->Ptype = Opti->optParam[e]->Get_optType();
+            fitparam[i+npx]->Pfittype = "F";
+
+            Opti->optParam[e]->Get_Fparam(i, fitparam[i+npx]->Pname,
+                    fitparam[i+npx]->Ival, fitparam[i+npx]->Fval);
+            fitparam[i+npx]->CSS = 0.0;
+            fitparam[i+npx]->mc95 = 0.0;
+            fitparam[i+npx]->mcSTDEV = 0.0;
+            fitparam[i+npx]->mcMEAN = 0.0;
+        }
+        npx = fitparam.size();
+    }
+
+//    }
+
+    for (unsigned e =0; e < Opti->optParam.size(); e++)
+    {
+        for (unsigned i=0; i<Opti->optParam[e]->Get_optRPsize(); ++i)
+        {
+            fitparam.push_back(new parameters);
+            fitparam[np+i]->Ptype = Opti->optParam[e]->Get_optType();
+            fitparam[np+i]->Pfittype = "R";
+
+            Opti->optParam[e]->Get_Rparam(i, fitparam[np+i]->Pname,
+                    fitparam[np+i]->Ival, fitparam[np+i]->Fval);
+            fitparam[np+i]->CSS = 0.0;
+            fitparam[np+i]->mc95 = 0.0;
+            fitparam[np+i]->mcSTDEV = 0.0;
+            fitparam[np+i]->mcMEAN = 0.0;
+
+        }
+    }
+    np = fitparam.size();
+    for (unsigned e =0; e < Opti->optParam.size(); e++)
+    {
+        for (unsigned i=0; i<Opti->optParam[e]->Get_optLPsize(); ++i)
+        {
+            fitparam.push_back(new parameters);
+            fitparam[np+i]->Ptype = Opti->optParam[e]->Get_optType();
+            fitparam[np+i]->Pfittype = "L";
+
+            Opti->optParam[e]->Get_Lparam(i, fitparam[np+i]->Pname,
+                    fitparam[np+i]->Ival, fitparam[np+i]->Fval);
+            fitparam[np+i]->CSS = 0.0;
+            fitparam[np+i]->mc95 = 0.0;
+            fitparam[np+i]->mcSTDEV = 0.0;
+            fitparam[np+i]->mcMEAN = 0.0;
+        }
+    }
+
+}
+
+void TGfitTask::print_param()
+{
+    set_print_param();
+    unsigned int nrcor = 0;
+    gpf->fparam.open(gpf->FITparamFile().c_str(), ios::trunc);
+    if( gpf->fparam.fail() )
+    { cout<<"Fit parameters fileopen error"<<endl; exit(1); }
+
+    // print param
+    gpf->fparam << "ptype,parameter," << "name,"	<< "init.value,"
+                   << "fittted.value," << "mc.mean," << "mc.stdev," << "confi99gauss,confi95gauss,confi90gauss," << "CSS.sensitivity,";
+
+    for (unsigned i= 0; i<fitparam.size(); i++)
+    {
+        if (fitparam[i]->Pfittype == "F")
+        {
+            gpf->fparam << "correl.coef." << fitparam[i]->Pname  <<",";
+            nrcor++;
+        }
+    }
+
+    gpf->fparam << endl;
+
+    for (unsigned i= 0; i<fitparam.size(); i++)
+    {
+        gpf->fparam << fitparam[i]->Pfittype;
+        gpf->fparam << "," << fitparam[i]->Ptype;
+        gpf->fparam << "," << fitparam[i]->Pname << ",";
+
+
+        gpf->fparam << setprecision(12) << fitparam[i]->Ival << ",";
+        gpf->fparam << setprecision(12) <<fitparam[i]->Fval << ",";
+
+        if (fitparam[i]->mcSTDEV != 0)
+        {
+           gpf->fparam << fitparam[i]->mcMEAN << ",";
+           gpf->fparam << fitparam[i]->mcSTDEV << ",";
+           for (unsigned j=0; j < fitparam[i]->mcconfi.size(); j++)
+           {
+               gpf->fparam << fitparam[i]->mcconfi[j] << ",";
+           }
+//           gpf->fparam << fitparam[i]->mc95 << ",";
+        }
+
+        else
+            gpf->fparam << ",,,,,";
+        if (fitparam[i]->CSS != 0)
+        gpf->fparam << fitparam[i]->CSS << ",";
+        else
+            gpf->fparam << "0,";
+
+        for ( unsigned j=0; j < fitparam[i]->correl.size(); j++)
+        {
+           if (fitparam[i]->Pfittype == "F")
+           {
+               if (fitparam[i]->correl[j] !=0)
+               {
+                   gpf->fparam << setprecision(4)<< fitparam[i]->correl[j] << ",";
+               } else
+                   gpf->fparam << "0,";
+           } else
+               gpf->fparam << "0,";
+        }
+
+        if ((fitparam[i]->Pfittype == "F") && (fitparam[i]->correl.size() == 0))
+        for ( unsigned j=0; j < (nrcor ); j++)
+        {
+            gpf->fparam << "0,";
+        }
+
+        if (fitparam[i]->Pfittype == "R")
+        {
+            for ( unsigned j=0; j < (nrcor ); j++)
+            {
+                gpf->fparam << "0,";
+            }
+        }
+
+
+    gpf->fparam << endl;
+    }
+
+gpf->fparam.close();
+
 }
 
 void TGfitTask:: print_global_results ()

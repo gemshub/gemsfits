@@ -8,7 +8,8 @@
 #include "fmodel.h"
 #include "CalcDialog.h"
 #include "GraphDialog.h"
-#include "v_user.h"
+#include "v_service.h"
+#include "v_detail.h"
 
 
 void removeComments( QString& valCsv )

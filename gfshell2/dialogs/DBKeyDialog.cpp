@@ -23,6 +23,7 @@
 #include "DBKeyDialog.h"
 #include "FITMainWindow.h"
 #include "f_ejdb.h"
+#include "v_service.h"
 
 //------------------------------------------------------------------
 // service functions

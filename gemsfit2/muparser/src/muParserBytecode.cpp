@@ -37,6 +37,12 @@
 #include "muParserStack.h"
 #include "muParserTemplateMagic.h"
 
+#ifdef _MSC_VER
+#include <algorithm>
+#undef min
+#undef max
+#endif
+
 
 namespace mu
 {
@@ -101,7 +107,7 @@ namespace mu
   void ParserByteCode::AddVar(value_type *a_pVar)
   {
     ++m_iStackPos;
-    m_iMaxStackSize = std::max(m_iMaxStackSize, (size_t)m_iStackPos);
+    m_iMaxStackSize = (std::max)(m_iMaxStackSize, (size_t)m_iStackPos);
 
     // optimization does not apply
     SToken tok;

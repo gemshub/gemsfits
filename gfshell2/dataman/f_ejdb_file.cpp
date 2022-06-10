@@ -18,11 +18,13 @@
 //-------------------------------------------------------------------
 
 #include <unistd.h>
+#include <iostream>
 #include <QFile>
 #include <QFileInfo>
 #include <QFileDialog>
 
 #include "f_ejdb_file.h"
+#include "v_service.h"
 #include "v_user.h"
 //#ifdef buildWIN32
 //#include <tcejdb/ejdb.h>
@@ -34,8 +36,8 @@
 // TAbstractFile
 //----------------------------------------------------------
 
-TAbstractFile::TAbstractFile(const string& fName, const string& fExt,
-                             const string& fDir, FileStatus aMode ):
+TAbstractFile::TAbstractFile(const std::string& fName, const std::string& fExt,
+                             const std::string& fDir, FileStatus aMode ):
     mode(aMode), isopened( false )
 {
     dir = fDir;
@@ -46,7 +48,7 @@ TAbstractFile::TAbstractFile(const string& fName, const string& fExt,
     makeKeyword();
 }
 
-TAbstractFile::TAbstractFile( const string& path, FileStatus aMode ):
+TAbstractFile::TAbstractFile( const std::string& path, FileStatus aMode ):
     mode(aMode), isopened( false ), Path(path)
 {
     if( path.empty() )
@@ -81,14 +83,14 @@ bool TAbstractFile::Exist()
     else  return true;
 }
 
-bool TAbstractFile::ChooseFileOpen(QWidget* par, string& path_,
+bool TAbstractFile::ChooseFileOpen(QWidget* par, std::string& path_,
           const char* title, const char *filter )
 {
     if( Test() )
       Close();
 
-    string path;
-    if( path_.find('/') == string::npos )
+    std::string path;
+    if( path_.find('/') == std::string::npos )
     {
            path  = dir; // userFITDir(); ???
            path += path_;
@@ -109,7 +111,7 @@ bool TAbstractFile::ChooseFileOpen(QWidget* par, string& path_,
 #endif
    if ( !fn.isEmpty() )
     {
-        mode = ios::in;
+        mode = std::ios::in;
         path_ = Path = fn.toUtf8().data();
         u_splitpath(Path, dir, name, ext);
         return true;
@@ -122,14 +124,14 @@ bool TAbstractFile::ChooseFileOpen(QWidget* par, string& path_,
 
 }
 
-bool TAbstractFile::ChooseFileSave(QWidget* par, string& path_,
+bool TAbstractFile::ChooseFileSave(QWidget* par, std::string& path_,
        const char* title, const char *filter)
 {
     if( Test() )
       Close();
 
-    string path;
-     if( path_.find('/') == string::npos )
+    std::string path;
+     if( path_.find('/') == std::string::npos )
       {      path  = dir;  // userFitDir();
              path += path_;
       }
@@ -152,7 +154,7 @@ bool TAbstractFile::ChooseFileSave(QWidget* par, string& path_,
 
     if ( !fn.isEmpty() )
     {
-        mode = ios::out;
+        mode = std::ios::out;
         path_ = Path = fn.toUtf8().data();
         u_splitpath(Path, dir, name, ext);
         return true;
@@ -164,7 +166,7 @@ bool TAbstractFile::ChooseFileSave(QWidget* par, string& path_,
     }
 }
 
-void TAbstractFile::ChangePath( const string& path )
+void TAbstractFile::ChangePath( const std::string& path )
 {
     if( Test() )
         Close();
@@ -181,7 +183,7 @@ void TAbstractFile::ChangePath( const string& path )
     }
 }
 
-void TAbstractFile::ChangeName( const string& newname )
+void TAbstractFile::ChangeName( const std::string& newname )
 {
     if( Test() )
         Close();
@@ -199,7 +201,7 @@ void TAbstractFile::ChangeName( const string& newname )
 TEJDB EJDBFile("");
 
 /// Configurations from file path
-TEJDB::TEJDB( const string& path ):
+TEJDB::TEJDB( const std::string& path ):
    TAbstractFile( path ), numEJDB(0),  ejDB(0)
 {
      makeKeyword();
@@ -215,21 +217,21 @@ TEJDB::~TEJDB()
 /// Make keyword of DB internal file
 void TEJDB::makeKeyword()
 {
-    string key;
+    std::string key;
     if( name.empty() )
         return;
 
-    string fname = name;
+    std::string fname = name;
 
-    key = string(fname, 0, 2);
+    key = std::string(fname, 0, 2);
     size_t npos = 0;
     size_t npos2 = fname.find("_", npos);
-    while( npos2 != string::npos )
+    while( npos2 != std::string::npos )
     {   npos = npos2+1;
-        key += string(fname, npos, 2);
+        key += std::string(fname, npos, 2);
         npos2 = fname.find("_", npos);
     }
-    key += string(fname, npos+2);
+    key += std::string(fname, npos+2);
 
     Keywd = key;
 }
@@ -250,7 +252,7 @@ void TEJDB::Open()
       if (!ejdbopen(ejDB, Path.c_str(), JBOWRITER | JBOCREAT ))
       {
         ejdbdel(ejDB);
-        cout << "EJDB open error" << endl;
+        std::cout << "EJDB open error" << std::endl;
         ejDB = 0;
         isopened = false;
         Error( Path, "EJDB open error");
@@ -282,10 +284,10 @@ void TEJDB::Create()
     Open();
     Close();
     // make changelog.txt file
-    string clfile = dir + "/Changelog.txt";
-    fstream ff( clfile.c_str(), ios::out);
-    ff << "File " << name.c_str() << " created on " << curDate().c_str() << " " << curTime().c_str() << endl;
-    ff << "<Version> = v0.1" << endl;
+    std::string clfile = dir + "/Changelog.txt";
+    std::fstream ff( clfile.c_str(), std::ios::out);
+    ff << "File " << name.c_str() << " created on " << curDate().c_str() << " " << curTime().c_str() << std::endl;
+    ff << "<Version> = v0.1" << std::endl;
 }
 
 
@@ -293,9 +295,9 @@ void TEJDB::Create()
 void TEJDB::readVersion( )
 {
     // open changelog.txt file
-    string clfile = dir + "/Changelog.txt";
-    fstream ff( clfile.c_str(), ios::in);
-    string fbuf;
+    std::string clfile = dir + "/Changelog.txt";
+    std::fstream ff( clfile.c_str(), std::ios::in);
+    std::string fbuf;
     size_t pos;
     version = "not versioned";
 
@@ -303,10 +305,10 @@ void TEJDB::readVersion( )
     {
       getline ( ff ,fbuf);
       pos = fbuf.find("<Version>");
-      if( pos != string::npos )
+      if( pos != std::string::npos )
       {
          pos = fbuf.find("=", pos+1);
-         if( pos != string::npos )
+         if( pos != std::string::npos )
          {
            version = fbuf.substr(pos+1);
            strip( version);
@@ -321,7 +323,7 @@ void TEJDB::readVersion( )
 //-------------------------------------------------------------
 
 /// Configurations from file path
-TFile::TFile( const string& path, FileStatus aMode ):
+TFile::TFile( const std::string& path, FileStatus aMode ):
     TAbstractFile(path, aMode)
 { }
 
