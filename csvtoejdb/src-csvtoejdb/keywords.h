@@ -72,9 +72,11 @@ static const char *DataSyn[2]       = {"DataSynonyms",                    "DataS
 static const char *PhNames[2]       = {"PhaseNames",                      "PHN"};
 static const char *PhPropNames[2]   = {"PhasePropertyNames",          "PHPN"};
 static const char *DcNames[2]       = {"DependentComponentNames",         "DCN"}; // see "DCN" above ?
+static const char *IPName[2]        = {"InteractionParameterName",         "IPName"}; // see "DCN" above ?
 static const char *DcPropNames[2]   = {"DependentComponentPropertyNames","DCPN"};
 static const char *NameSys[2]       = {"NameInGEMSystem",                 "NIS"};
 static const char *Syn[2]           = {"Synonyms",                        "Syn"};
+static const char *Info[2]           = {"Information",                        "Info"};
 
 
 // General keywords used for quantity, error and unit
