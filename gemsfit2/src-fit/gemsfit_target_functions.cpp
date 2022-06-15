@@ -663,11 +663,6 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
         }
 
     } else
-    if ((objfun.exp_CN == keys::oscw) && (ccPH == *keys::aq) && (PHndx >=0))
-    {
-    //  computed_value = ;
-        // ++++++++++ !!!!! NOT IMPLEMENTED !!!! +++++
-    } else
     if (((objfun.exp_CN == keys::mChainL) ||  (objfun.exp_CN == keys::frAlIV) || (objfun.exp_CN == keys::expr) ||
          (objfun.exp_CN == keys::frAlV) || (objfun.exp_CN == keys::frAlVI) ||
          (objfun.exp_CN == keys::Rd)) || (objfun.exp_CN == keys::activityRatio) && (PHndx >=0))
@@ -841,6 +836,26 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
                                                // so far Gex only in J/mol
     }
     else
+    if ((objfun.exp_CN == keys::oscw) && (ccPH == *keys::aq) && (PHndx >=0))
+    {
+      computed_value = 0.0;
+      double sumSolutes=0.0; // concentration of solutes (molality)
+
+      DC0ndx = sys->NodT[i]->PhtoDC_DBR( PHndx, nDCinPH ); // first substance in phase
+      if( nDCinPH > 1 )
+      {
+         for (int g=0; g<nDCinPH-1; g++)  // all solutes (excluding H2O)
+         {
+             sumSolutes += sys->NodT[i]->Get_cDC( g+DC0ndx );
+         }
+         // Default
+         double aw =sys->NodT[i]->Get_aDC(nDCinPH-1);
+         double Lna = std::log(aw); // last component in aq phase is water
+         // Lna =(-18.01528/1000.)*OC*OCmol;
+         computed_value = Lna/((-18.01528/1000.)*sumSolutes);
+         //objfun.exp_unit = keys::molal; // on molality scale
+      }
+    } else
     { if (PHndx < 0)
          {
              cout << "Error: "<< phase_name <<" is not present in the GEMS3K CSD files "; exit(1);

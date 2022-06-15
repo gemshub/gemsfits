@@ -441,26 +441,55 @@
             </small></td>
         </tr>
         <tr>
-          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><span
-                style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp; .alk<br>
-              </span></span> </td>
-          <td style="vertical-align: top;">alkalinity, aqueous only (NOT YET
-            IMPLEMENTED)<br>
+          <td style="vertical-align: top; text-align: center;"><span style="font-family: Courier New,Courier,monospace;"><span
+                style="font-weight: bold;">.oscw</span></span></td>
+          <td style="vertical-align: top;">osmotic coefficient of water (aqueous
+            only)<br>
           </td>
           <td style="vertical-align: top;">yes<br>
           </td>
           <td><br>
           </td>
-          <td style="vertical-align: top;">not read /<br>
+          <td style="vertical-align: top;">not read / unit-less<br>
           </td>
           <td style="vertical-align: top;"><small><br>
             </small></td>
         </tr>
         <tr>
           <td style="vertical-align: top; text-align: center;"><span style="font-family: Courier New,Courier,monospace;"><span
-                style="font-weight: bold;">.oscw</span></span></td>
-          <td style="vertical-align: top;">osmotic coefficient of water (aqueous
-            only) (NOT YET IMPLEMENTED)<br>
+                style="font-weight: bold;">.Gex<small><br>
+                </small></span></span></td>
+          <td style="vertical-align: top;">Excess Gibbs energy of the
+            non-aqueous solution phase<br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td>J_mol (J/mol)</td>
+          <td style="vertical-align: top;">not read / unit J/mol<br>
+          </td>
+          <td style="vertical-align: top;"><small><br>
+            </small></td>
+        </tr>
+        <tr>
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family: Courier New,Courier,monospace; font-weight: bold;">.mChainL</span></td>
+          <td>Specific property. Mean Chain Lenght for cement based materials.
+            To use it in GEMSFITS one has to setup a special formula/expression
+            in <span style="font-family: Courier New,Courier,monospace;">"DataTarget"</span>
+            -&gt; <a href="gfshell-taskmode.html#expr_eg"><span style="font-family: Courier New,Courier,monospace;">"OFUN"</span></a>
+            for calculating it.</td>
+          <td>yes</td>
+          <td><br>
+          </td>
+          <td>not read</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><span
+                style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp; .alk<br>
+              </span></span> </td>
+          <td style="vertical-align: top;">alkalinity, aqueous only (NOT YET
+            IMPLEMENTED)<br>
           </td>
           <td style="vertical-align: top;">yes<br>
           </td>
@@ -516,35 +545,6 @@
           </td>
           <td style="vertical-align: top;"><small><br>
             </small></td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top; text-align: center;"><span style="font-family: Courier New,Courier,monospace;"><span
-                style="font-weight: bold;">.Gex<small><br>
-                </small></span></span></td>
-          <td style="vertical-align: top;">Excess Gibbs energy of the
-            non-aqueous solution phase<br>
-          </td>
-          <td style="vertical-align: top;">yes<br>
-          </td>
-          <td>J_mol (J/mol)</td>
-          <td style="vertical-align: top;">not read / unit J/mol<br>
-          </td>
-          <td style="vertical-align: top;"><small><br>
-            </small></td>
-        </tr>
-        <tr>
-          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family: Courier New,Courier,monospace; font-weight: bold;">.mChainL</span></td>
-          <td>Specific property. Mean Chain Lenght for cement based materials.
-            To use it in GEMSFITS one has to setup a special formula/expression
-            in <span style="font-family: Courier New,Courier,monospace;">"DataTarget"</span>
-            -&gt; <a href="gfshell-taskmode.html#expr_eg"><span style="font-family: Courier New,Courier,monospace;">"OFUN"</span></a>
-            for calculating it.</td>
-          <td>yes</td>
-          <td><br>
-          </td>
-          <td>not read</td>
-          <td><br>
-          </td>
         </tr>
       </tbody>
     </table>
