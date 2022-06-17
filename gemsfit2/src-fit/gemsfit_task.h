@@ -193,6 +193,7 @@ public:
             double sP = -1.0;
             struct rslts
             {
+                double input_value=-1.0;
                 double measured_value;
                 double computed_value;
                 double residual;
@@ -278,6 +279,13 @@ public:
     * @param objfun objfun object
     */
    void get_addout_meas(int exp, TGfitTask::TargetFunction::obj_fun &objfun);
+
+   /**
+    * @brief get_addout_input Gets addout input comp form experiments read from the database
+    * @param exp index of experiment
+    * @param objfun objfun object
+    */
+   void get_addout_input(int exp, TGfitTask::TargetFunction::obj_fun &objfun);
 
    /**
    * Adds the Monte Carlo Scatter to the measured values

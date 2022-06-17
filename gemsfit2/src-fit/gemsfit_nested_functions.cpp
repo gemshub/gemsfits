@@ -178,6 +178,7 @@ void nestedfun (TGfitTask *sys)
                 }
                 catch (nlopt::roundoff_limited &rf )
                 {
+                    cout << "NFUN: sample "<< sys->experiments[i]->sample << endl;
                     cout << rf.what() << endl;
                 }
 

@@ -206,10 +206,13 @@ static const char *inverr3          = "inverr3"; //                          str
 static const char *inverr_norm      = "inverr_norm"; //                      string          normalized <Xmeas>/error
 
 // Kaywords for units
-static const char *molal            = "molal"; //                            string          molality moles/kg
+static const char *molal            = "molal"; //                            string          molality moles/kg water
+static const char *molar            = "molar"; //                            string          molality moles/L solution
 static const char *loga             = "loga"; //                             string          log(activity)
 static const char *logm             = "log_molal"; //                        string          log(molality)
+static const char *logM             = "log_molar"; //                        string          log(molarity)
 static const char *_logm            = "-logm"; //                            string          -log(molality)
+static const char *_logM            = "-logM"; //                            string          -log(molarity)
 static const char *_loga            = "-loga"; //                            string          -log(activity) used for pH
 static const char *gram             = "g"; //                                string          mass, grams
 static const char *kgram            = "kg"; //                               string          mass, kg

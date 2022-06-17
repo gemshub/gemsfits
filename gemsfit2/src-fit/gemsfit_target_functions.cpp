@@ -40,6 +40,20 @@
 #include <muParser.h>
 #include "muparserfix.h"
 
+void to_log10(double &Qnt, double &Qerror)
+{
+    double error_perc = Qerror * 100 / Qnt;
+    Qnt = log10(Qnt);
+    Qerror = fabs(Qnt * error_perc / 100);
+}
+
+void from_log10(double &Qnt, double &Qerror)
+{
+    double error_perc = Qerror * 100 / Qnt;
+    Qnt = pow(10,Qnt);
+    Qerror = fabs(Qnt * error_perc / 100);
+}
+
 /// Unit check FUNCTIONS
 void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
 {
@@ -50,9 +64,7 @@ void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
             // molal to log(molal)
             if (sys->experiments[i]->expphases[p]->phIC[e]->Qunit == keys::molal)
             {
-                double error_perc = sys->experiments[i]->expphases[p]->phIC[e]->Qerror * 100 / sys->experiments[i]->expphases[p]->phIC[e]->Qnt;
-                sys->experiments[i]->expphases[p]->phIC[e]->Qnt = log10(sys->experiments[i]->expphases[p]->phIC[e]->Qnt);
-                sys->experiments[i]->expphases[p]->phIC[e]->Qerror = fabs(sys->experiments[i]->expphases[p]->phIC[e]->Qnt * error_perc / 100);
+                to_log10(sys->experiments[i]->expphases[p]->phIC[e]->Qnt,sys->experiments[i]->expphases[p]->phIC[e]->Qerror);
                 sys->experiments[i]->expphases[p]->phIC[e]->Qunit = keys::logm;
             }
             else
@@ -60,7 +72,49 @@ void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
                 cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
                 exit(1);
             }
-        }
+        }  else
+        if (unit == keys::molal)
+        {
+            // log(molal) to molal
+            if (sys->experiments[i]->expphases[p]->phIC[e]->Qunit == keys::logm)
+            {
+                from_log10(sys->experiments[i]->expphases[p]->phIC[e]->Qnt,sys->experiments[i]->expphases[p]->phIC[e]->Qerror);
+                sys->experiments[i]->expphases[p]->phIC[e]->Qunit = keys::molal;
+            }
+            else
+            {
+                cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+                exit(1);
+            }
+        } else
+            if (unit == keys::logM)
+            {
+                // molar to log(molar)
+                if (sys->experiments[i]->expphases[p]->phIC[e]->Qunit == keys::molal)
+                {
+                    to_log10(sys->experiments[i]->expphases[p]->phIC[e]->Qnt,sys->experiments[i]->expphases[p]->phIC[e]->Qerror);
+                    sys->experiments[i]->expphases[p]->phIC[e]->Qunit = keys::logM;
+                }
+                else
+                {
+                    cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+                    exit(1);
+                }
+            }  else
+            if (unit == keys::molar)
+            {
+                // log(molal) to molal
+                if (sys->experiments[i]->expphases[p]->phIC[e]->Qunit == keys::logM)
+                {
+                    from_log10(sys->experiments[i]->expphases[p]->phIC[e]->Qnt,sys->experiments[i]->expphases[p]->phIC[e]->Qerror);
+                    sys->experiments[i]->expphases[p]->phIC[e]->Qunit = keys::molar;
+                }
+                else
+                {
+                    cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+                    exit(1);
+                }
+            }
     }
     else
     {
@@ -183,7 +237,7 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
         } else
             if (unit == keys::molal)
             {
-                // -log to molal
+                // -loga to molal
                 if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit == keys::_loga)
                 {
                     double error_perc = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror * 100 / sys->experiments[i]->expphases[p]->phprop[pp]->Qnt;
@@ -304,13 +358,28 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
         if (objfun.exp_unit == keys::logm)
         {
             double molal_= sys->NodT[i]->Get_mIC(ICndx);
-        computed_value = log10(molal_);
-        } else
-        {
-            // Default
-            computed_value = sys->NodT[i]->Get_mIC(ICndx); // in mol/Kg
-            objfun.exp_unit = keys::molal;
+            computed_value = log10(molal_);
         }
+        else
+            if (objfun.exp_unit == keys::logM)
+            {
+//                double molar_= sys->NodT[i]->g /Ph_Volume m3;
+//                computed_value = log10(molal_);
+                cout << "Error: log_molar unit not yet implemented"<< endl; exit(1);
+            }
+            else
+                if (objfun.exp_unit == keys::molar)
+                {
+//                    double molar_= sys->NodT[i]->Get_mIC(ICndx);
+//                    computed_value = log10(molal_);
+                      cout << "Error: molar unit not yet implemented"<< endl; exit(1);
+                }
+                else
+                {
+                    // Default
+                    computed_value = sys->NodT[i]->Get_mIC(ICndx); // in mol/Kg water
+                    objfun.exp_unit = keys::molal;
+                }
     } else // other than aqueous phase
         if ((ccPH != *keys::aq) && (PHndx >=0) && (ICndx >=0))
         {

@@ -1,0 +1,170 @@
+# Copy "DataTarget" section or other sub-sections { } to your project and change acordingly
+      "DataTarget" :   {
+          "Target" :   "name",
+          "TT" :   "lsq",
+          "WT" :   "1",
+          "OFUN" :   [
+               {
+                    "EPH" :   "aq",
+                    "CT" :   "IC",
+                    "CN" :   "Ca",
+                    "unit" :   "log_molal"
+               }
+          ],
+          "NFUN" :   [
+
+          ],
+          "ADDOUT" :   [
+
+          ]
+     },
+##########################################################################################
+# OFUN elements
+##########################################################################################
+# compare measured and calculated aqeous concentration (mol/kgw) of given element
+               {
+                    "EPH" :   "aq",
+                    "CT" :   "IC",
+                    "CN" :   "Ca",
+                    "unit" :   "log_molal"
+               },
+# compare measured and calculated pH
+               {
+                    "EPH" :   "aq_gen",
+                    "CT" :   "prop",
+                    "CN" :   "pH",
+                    "unit" :   " -loga",
+                    "WT" :   1
+               },
+# compare measured and calculated molar ratio MR e.g. Ca/Si in C-S-H
+               {
+                    "EPH" :   "CSH",
+                    "CT" :   "MR",
+                    "CN" :   "Ca/Si",
+                    "unit" :   "molratio",
+                    "WT" :   1
+               },             
+# compare measured and calculated phase property computed using a mathematical expression 
+# mChainL (mean silicate chain length)
+        {
+            "EPH": "CSH",
+            "CT": "prop",
+            "CN": "mChainL",
+            "expr": " 3/sum( TCvC, TCvv, THvC, THvv ) -1 ",
+            "WT": 3
+        },
+# Rd (distribution coefficient)
+               {
+                    "EPH" :   "IlliteX",
+                    "CT" :   "prop",
+                    "CN" :   "Rd",
+                    "expr" :   "log10({=iSsOUO2OH@}+{=iSsOUO2+}+{=iSsOUO2(OH)2-}+{=iSsOUO2(OH)3-2}+{=iSvOUO2+}+{=iSvOUO2OH@}+{=iSvOUO2(OH)2-}) - log10({UO2+2}+{UO2Cl+}+{UO2Cl2(aq)}+{UO2OH+}+{UO2(OH)2(aq)}+{UO2(OH)3-}+{UO2(OH)4-2}+{(UO2)2(OH)2+2}+{(UO2)2OH+3}+{(UO2)3(OH)4+2}+{(UO2)3(OH)5+}+{(UO2)3(OH)7-}+{(UO2)4(OH)7+})",
+                    "WT" :   1
+               },
+
+##########################################################################################
+# ADDOUT elements
+##########################################################################################
+
+# write calculated phase property  (e.g. "CN": IS, pH, oscw, Eh, pV (volume), RHO (density), Gex (excess Gibss energy)) to results table
+               {
+                    "SRC" :   "calc",
+                    "EPH" :   "aq",
+                    "CT" :   "prop",
+                    "CN" :   "IS"
+               },
+# write amount of phase in equilibirum to results table
+               {
+                    "SRC" :   "calc",
+                    "EPH" :   "Portlandite",
+                    "CT" :   "prop",
+                    "CN" :   "Q"
+               },
+# write amount of input compoment of experiments e.g. comp.NaOH
+               {
+                    "CT" :   "comp",
+                    "CN" :   "NaOH"
+               },
+# write amount of species in a phase
+               {
+                    "SRC" :   "calc",
+                    "EPH" :   "IllEdS",
+                    "CT" :   "DC",
+                    "CN" :   "=iSvOUO2(OH)2-",
+                    "DCP" :   "Q",
+                    "unit" :   "mol"
+               },
+# write activity of species in a phase
+               {
+                    "SRC" :   "calc",
+                    "EPH" :   "aq_gen",
+                    "CT" :   "DC",
+                    "CN" :   "Cl-",
+                    "DCP" :   "activity"
+               },
+               
+##########################################################################################
+# NFUN elements
+##########################################################################################
+
+# Nested function to fix the pH of each experiment to the measured value by acid/base titration
+
+               {
+                    "EPH" :   "aq_gen",
+                    "CT" :   "prop",
+                    "CN" :   "pH",
+                    "Tformula" :   [
+                         "NaOH",
+                         "HCl"
+                    ],
+                    "Telem" :   [
+                         "Na",
+                         "Cl"
+                    ],
+                    "unit" :   "-loga"
+               }
+               
+# above nested function needs:
+     "NFunParToOpt" :   {
+          "bIC" :   [
+               {
+                    "ICN" :   "Cl",
+                    "PType" :   "F",
+                    "NFndx" :   0,
+                    "IV" :   0.0109558194127147,
+                    "UB" :   4,
+                    "LB" :   1e-05
+               },
+               {
+                    "NFndx" :   0,
+                    "ICN" :   "H",
+                    "PType" :   "L",
+                    "IV" :   44.5761406330092,
+                    "LICs" :   [
+                         "Na",
+                         "Cl"
+                    ],
+                    "LCoef" :   [
+                         1,
+                         1
+                    ]
+               },
+               {
+                    "NFndx" :   0,
+                    "ICN" :   "Na",
+                    "PType" :   "F",
+                    "IV" :   0.00821315904404505,
+                    "UB" :   4,
+                    "LB" :   1e-05
+               },
+               {
+                    "NFndx" :   0,
+                    "ICN" :   "O",
+                    "PType" :   "L",
+                    "IV" :   22.5367479506933,
+                    "LICs" :   "Na",
+                    "LCoef" :   1
+               }
+          ]
+     },
+
