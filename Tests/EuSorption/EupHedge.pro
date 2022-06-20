@@ -6,5 +6,5 @@ GEMSFITSAPP=" GEMSFITS v.0.1 r.596 "
 ProjDatabaseName=EupHedge
 ProjDatabasePath=/EJDB
 ProjFileName=EupHedge
-ProjFolderPath=/home/dmiron/gitGEMSFITS/gemsfits/Tests/EuSorption
+ProjFolderPath=/home/dmiron/git/bucket/gemsfits/gemsfits/Tests/EuSorption
 TaskCasesDataColl=tasks
