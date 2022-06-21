@@ -126,7 +126,8 @@ double TGfitTask::get_residual(int exp, TGfitTask::TargetFunction::obj_fun &objf
                 }
         }
     }
-
+    if (residual == std::numeric_limits<double>::infinity() || residual == -std::numeric_limits<double>::infinity())
+        residual = 777777;
     return residual;
 }
 
@@ -579,18 +580,22 @@ void TGfitTask:: print_global_results ()
         {
             if (Tfun->addout[j].Otype == keys::meas)
                 // before get_residual function was used
-            get_addout_meas(i, aTfun[i].addout[j] );
+                get_addout_meas(i, aTfun[i].addout[j] );
+            if (Tfun->addout[j].Otype == keys::calc)
+                get_addout_calc(i, aTfun[i].addout[j] );
+            if (Tfun->addout[j].exp_CT == keys::comp)
+                get_addout_input(i, aTfun[i].addout[j] );
         }
     }
 
-    for (unsigned int i = 0; i <aTfun.size(); i++)
-    {
-        for (unsigned j = 0; j <Tfun->addout.size(); j++)
-        {
-            if (Tfun->addout[j].Otype == keys::calc)
-            get_addout_calc(i, aTfun[i].addout[j] );
-        }
-    }
+//    for (unsigned int i = 0; i <aTfun.size(); i++)
+//    {
+//        for (unsigned j = 0; j <Tfun->addout.size(); j++)
+//        {
+//            if (Tfun->addout[j].Otype == keys::calc)
+//            get_addout_calc(i, aTfun[i].addout[j] );
+//        }
+//    }
 
 
     for (unsigned i = 0; i < Tfun->objfun.size(); i++)
@@ -607,10 +612,13 @@ void TGfitTask:: print_global_results ()
     for (unsigned i = 0; i < Tfun->addout.size(); i++)
     {
         string temp ="";
+        if (Tfun->addout[i].exp_phase != "NULL")
+        {
         temp += Tfun->addout[i].exp_phase;
         if ((Tfun->addout[i].exp_DCP != "NULL") && (Tfun->addout[i].expr == "NULL"))
             temp += "." + Tfun->addout[i].exp_DCP;
         temp += "." + Tfun->addout[i].exp_CN;
+        }
 
         if (Tfun->addout[i].expr != "NULL")
             if (Tfun->addout[i].exp_DCP != "NULL")
@@ -621,6 +629,13 @@ void TGfitTask:: print_global_results ()
         header.push_back(temp + "." + keys::calc);
         if (Tfun->addout[i].Otype == keys::meas)
         header.push_back(temp + "." + keys::meas);
+
+        if (Tfun->addout[i].exp_phase == "NULL" && Tfun->addout[i].exp_CT == keys::comp)
+        {
+            temp += keys::comp;
+            temp += "." + Tfun->addout[i].exp_CN;
+            header.push_back(temp);
+        }
 
     }
 
@@ -652,6 +667,8 @@ void TGfitTask:: print_global_results ()
 
         for (unsigned j=0; j < Tfun->addout.size(); j++)
         {
+            if (aTfun[i].addout[j].exp_CT == keys::comp && aTfun[i].addout[j].results.input_value != -1.0)
+                gpf->fres << setprecision(prec) << aTfun[i].addout[j].results.input_value <<",";
             if (aTfun[i].addout[j].isComputed)
             {
                 if (aTfun[i].addout[j].Otype == keys::calc)
@@ -740,6 +757,18 @@ void TGfitTask:: print_nested_results ()
         }
     }
     gpf->fnfres.close();
+}
+
+void TGfitTask::get_addout_input(int exp, TGfitTask::TargetFunction::obj_fun &objfun )
+{
+    for (unsigned int c=0; c<this->experiments[exp]->sbcomp.size(); c++)
+    {
+        if (objfun.exp_CN == this->experiments[exp]->sbcomp[c]->comp)
+        {
+            if (objfun.exp_unit == "NULL") objfun.exp_unit = this->experiments[exp]->sbcomp[c]->Qunit;
+            objfun.results.input_value = this->experiments[exp]->sbcomp[c]->Qnt;
+        }
+    }
 }
 
 

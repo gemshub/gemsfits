@@ -125,6 +125,93 @@ int NumDigits(int x)
         10)))))))));
 }
 
+enum eTableType
+{
+    bet0_ = -10, bet1_ = -11, bet2_ = -12, Cphi_ = -20, Lam_ = -30, Lam1_ = -31, Lam2_ = -32,
+    Theta_ = -40,  Theta1_ = -41, Psi_ = -50, Psi1_ = -51, Zeta_ = -60
+};
+
+std::string getPitzerIPName(TNode *node, std::vector<long int> aIPx, long int MaxOrd, int iIP)
+{
+    string name="";
+    switch( aIPx[iIP * MaxOrd + 3] )  // type of table
+    {
+        case bet0_:
+        name += "beta0_";
+        goto binary;
+            break;
+        case bet1_:
+        name += "beta1_";
+        goto binary;
+            break;
+
+        case bet2_:
+        name += "beta2_";
+        goto binary;
+            break;
+        case Cphi_:
+        name += "cphi_";
+        goto binary;
+            break;
+
+        case Lam_:
+        name += "lambda_";
+        goto binary;
+            break;
+
+        case Lam1_:
+        name += "lambda_";
+        goto binary;
+            break;
+
+        case Lam2_:
+        name += "lambda_";
+        goto binary;
+            break;
+
+        case Theta_:
+        name += "theta_";
+        goto binary;
+            break;
+
+        case Theta1_:
+        name += "theta_";
+        goto binary;
+            break;
+
+        case Psi_:
+        name += "psi_";
+        goto ternary;
+            break;
+
+        case Psi1_:
+        name += "psi_";
+        goto ternary;
+            break;
+
+        case Zeta_:
+        name += "zeta_";
+        goto ternary;
+            break;
+        default:
+            break;
+    }
+
+    binary:
+    name += node->xCH_to_DC_name(aIPx[iIP * MaxOrd + 0]);
+    name += "_";
+    name += node->xCH_to_DC_name(aIPx[iIP * MaxOrd + 1]);
+    return name;
+    ternary:
+    name += node->xCH_to_DC_name(aIPx[iIP * MaxOrd + 0]);
+    name += "_";
+    name += node->xCH_to_DC_name(aIPx[iIP * MaxOrd + 1]);
+    name += "_";
+    name += node->xCH_to_DC_name(aIPx[iIP * MaxOrd + 2]);
+    return name;
+
+}
+
 void generateBson(bson &bson_task_file,TNode *node, int mode)
 {
     unsigned int Np = 0, NG0p = 0, NG0PH = 0, Nip = 0, Ncoef = 0, G0ndx=0, ICndx=0, PMCndx = 0, DMCndx = 0, nIC,/* nDC,*/ nPS, nPH; long int nDCinPH;
@@ -193,8 +280,35 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
 
     } bson_append_finish_object(&bson_task_file);
 
-    bson_append_string(&bson_task_file, keys::DSelect[mode], "");
-    bson_append_string(&bson_task_file, keys::DTarget[mode], "");
+    // DataSelect
+    bson_append_start_object(&bson_task_file, keys::DSelect[mode]);
+    //bson_append_string(&bson_task_file, keys::Info[mode], "What data to use in the fit? For example, provide a list of expdatasets in usedatasets.");
+    bson_append_start_array(&bson_task_file, keys::usedatasets);
+    bson_append_finish_array(&bson_task_file);
+    bson_append_start_array(&bson_task_file, keys::skipsamples);
+    bson_append_finish_array(&bson_task_file);
+    bson_append_start_array(&bson_task_file, keys::sT);
+    bson_append_finish_array(&bson_task_file);
+    bson_append_start_array(&bson_task_file, keys::sP);
+    bson_append_finish_array(&bson_task_file);
+    bson_append_finish_object(&bson_task_file);
+
+    // DataTarget
+    bson_append_start_object(&bson_task_file, keys::DTarget[mode]);
+    //bson_append_string(&bson_task_file, keys::Info[mode], "What data to compare. In OFUN provide a list of properties to use in the fit. Use ADDOUT for additional aoutput in the results table. NFUN is used to adjust properties of each sample nested withn the golobal fit.");
+    bson_append_string(&bson_task_file, keys::Target, "lsqFit");
+    bson_append_string(&bson_task_file, keys::TT, "lsq");
+    bson_append_string(&bson_task_file, keys::WT, "inverr3");
+    bson_append_start_array(&bson_task_file, keys::OFUN);
+    bson_append_finish_array(&bson_task_file);
+    bson_append_start_array(&bson_task_file, keys::NFUN);
+    bson_append_finish_array(&bson_task_file);
+    bson_append_start_array(&bson_task_file, keys::ADDOUT);
+    bson_append_finish_array(&bson_task_file);
+    bson_append_finish_object(&bson_task_file);
+
+    //bson_append_string(&bson_task_file, keys::DSelect[mode], "{\"info\":\"What data to use in the fit? For example, provide a list of expdatasets in usedatasets.\",\"usedatasets\":[\"[FRE/VOI2004]-150\"],\"skipsamples\":[],\"sT\":[],\"sP\":[]}");
+    //bson_append_string(&bson_task_file, keys::DTarget[mode], "{\"info\":\"\",\"Target\":\"name\",\"TT\":\"lsq\",\"WT\":\"inverr3\",\"OFUN\":[],\"ADDOUT\":[],\"NFUN\":[]}");
 
     // Nested function parameters
     bson_append_string(&bson_task_file, keys::OptNFParameters[mode], "");
@@ -219,6 +333,10 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
     bson_append_finish_array(&bson_task_file);
     bson_append_finish_object(&bson_task_file);
     // finish additional params
+
+    string info = keys::OptParameters[mode];
+    string info_ = "info@"+info;
+    //bson_append_string(&bson_task_file, info_.c_str(), "G0: Standard Gibbs energy at 25 C 1 bar; PMc: Non-ideal phase interaction parameters. DMC: parameters of multi-site (sublattice) model. To fit change parameter type from S (set) to F (fit). Adjust the UB upper and LB lower bound accordingly");
 
     bson_append_start_array(&bson_task_file, keys::OptParameters[mode]);
 
@@ -251,9 +369,13 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
                 ss.str("");
                 bson_append_start_object(&bson_task_file, sss.c_str());
                 {
+                    temp = node->DC_G0(G0ndx, 100000, 25 + 273.15, false);
                     bson_append_string(&bson_task_file, keys::DCN[mode], node->xCH_to_DC_name(G0ndx));
                     bson_append_string(&bson_task_file, keys::PType[mode], "S");
-                    bson_append_double(&bson_task_file, keys::IV[mode], node->DC_G0(G0ndx, 100000, 25 + 273.15, false));
+                    bson_append_double(&bson_task_file, keys::IV[mode], temp );
+                    bson_append_double(&bson_task_file, keys::UB[mode], temp );
+                    bson_append_double(&bson_task_file, keys::LB[mode], temp );
+                    temp = 0.0;
                 }
                 bson_append_finish_object(&bson_task_file);
                 NG0p++;
@@ -265,6 +387,10 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
 
             if (((LsMod[i+x] > 0) || (LsMdc[i+x] > 0)) && (i < nPS))
             {
+        	long int ip_IPx=0; long int ip_IPc=0; long int ip_DCc=0;
+        	std::vector<long int> aIPx;
+        	node->Get_IPc_IPx_DCc_indices(ip_IPx,ip_IPc, ip_DCc, i );
+        	node->Get_aIPx(aIPx,ip_IPx, i);
                 // PMc parameters
                 if ((LsMod[i+x] > 0))
                 {
@@ -277,6 +403,14 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
                         ipcn.append(sss); ipcn.append("|");
                         bson_append_start_object(&bson_task_file, sss.c_str());
                         {
+                            // Get name of IP
+                            string sMod;
+                            node->Get_sMod(i, sMod);
+                            if (sMod.compare(0,1,"Z")==0)
+                            {
+                                string IPName = getPitzerIPName(node, aIPx,LsMod[(i)*3+1], Nip);
+                                bson_append_string(&bson_task_file, keys::IPName[mode], IPName.c_str());
+                            }
                             // write IPC
                     //        bson_append_int(&bson_task_file, "IPndx", Nip);
                             bson_append_start_array(&bson_task_file, keys::IPCs[mode]);
@@ -293,6 +427,8 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
                                     bson_append_string(&bson_task_file, keys::IPCN[mode], ipcn.c_str());
                                     bson_append_string(&bson_task_file, keys::PType[mode], "S");
                                     bson_append_double(&bson_task_file, keys::IV[mode], temp );
+                                    bson_append_double(&bson_task_file, keys::UB[mode], temp );
+                                    bson_append_double(&bson_task_file, keys::LB[mode], temp );
     //                                bson_append_int(&bson_task_file, keys::Pndx[mode], PMCndx );
                                     temp=0;
                                 } // finish IPC
@@ -343,6 +479,8 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
                                     bson_append_string(&bson_task_file, keys::IPCN[mode], dcipcn.c_str());
                                     bson_append_string(&bson_task_file, keys::PType[mode], "S");
                                     bson_append_double(&bson_task_file, keys::IV[mode], temp );
+                                    bson_append_double(&bson_task_file, keys::UB[mode], temp );
+                                    bson_append_double(&bson_task_file, keys::LB[mode], temp );
     //                                bson_append_int(&bson_task_file, keys::Pndx[mode], DMCndx );
                                     temp=0;
                                 } // finish IPDCoef

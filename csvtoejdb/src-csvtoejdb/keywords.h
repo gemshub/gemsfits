@@ -72,9 +72,11 @@ static const char *DataSyn[2]       = {"DataSynonyms",                    "DataS
 static const char *PhNames[2]       = {"PhaseNames",                      "PHN"};
 static const char *PhPropNames[2]   = {"PhasePropertyNames",          "PHPN"};
 static const char *DcNames[2]       = {"DependentComponentNames",         "DCN"}; // see "DCN" above ?
+static const char *IPName[2]        = {"InteractionParameterName",         "IPName"}; // see "DCN" above ?
 static const char *DcPropNames[2]   = {"DependentComponentPropertyNames","DCPN"};
 static const char *NameSys[2]       = {"NameInGEMSystem",                 "NIS"};
 static const char *Syn[2]           = {"Synonyms",                        "Syn"};
+static const char *Info[2]           = {"Information",                        "Info"};
 
 
 // General keywords used for quantity, error and unit
@@ -204,10 +206,13 @@ static const char *inverr3          = "inverr3"; //                          str
 static const char *inverr_norm      = "inverr_norm"; //                      string          normalized <Xmeas>/error
 
 // Kaywords for units
-static const char *molal            = "molal"; //                            string          molality moles/kg
+static const char *molal            = "molal"; //                            string          molality moles/kg water
+static const char *molar            = "molar"; //                            string          molality moles/L solution
 static const char *loga             = "loga"; //                             string          log(activity)
 static const char *logm             = "log_molal"; //                        string          log(molality)
+static const char *logM             = "log_molar"; //                        string          log(molarity)
 static const char *_logm            = "-logm"; //                            string          -log(molality)
+static const char *_logM            = "-logM"; //                            string          -log(molarity)
 static const char *_loga            = "-loga"; //                            string          -log(activity) used for pH
 static const char *gram             = "g"; //                                string          mass, grams
 static const char *kgram            = "kg"; //                               string          mass, kg

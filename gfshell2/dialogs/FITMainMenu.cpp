@@ -1464,7 +1464,7 @@ void FITMainWindow::CmSettingth()
 void FITMainWindow::CmHelp()
 {
     if( currentMode == MDF_DATABASE )
-       OpenHelp( GF_EXPDB_HTML );
+       OpenHelp( GF_SABOUT_HTML );
     else
        OpenHelp( GF_TASKDB_HTML );
 }
