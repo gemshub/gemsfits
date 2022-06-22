@@ -1114,7 +1114,7 @@ void FITMainWindow::CmRestoreCSV()
         QStringList cells = allrows[0].split(',', QString::KeepEmptyParts);
         for( ii=0; ii< cells.count(); ii++ )
         {
-            const char* cellstr = cells[ii].remove('\"').toUtf8().data();
+            auto cellstr = cells[ii].remove('\"').toStdString();
             headline.push_back( cellstr );
         }
 
@@ -1126,7 +1126,7 @@ void FITMainWindow::CmRestoreCSV()
               continue;
           row.clear();
           for( ii=0; ii< cells.count(); ii++ )
-              row.push_back( cells[ii].remove('\"').toUtf8().data() );
+              row.push_back( cells[ii].remove('\"').toStdString() );
 
           // convert row to bson
           csvToBson( &exp, headline, row );
