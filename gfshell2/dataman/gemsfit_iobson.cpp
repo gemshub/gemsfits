@@ -36,11 +36,11 @@ int cut_csv_header (string input, string delimiter, vector<string> &output);
 // input an integer output a const char
 const char *int_to_c_str(int in);
 // adds Qunit and Qerror to BSON object
-bool add_unit_and_error(bson * exp, vector<string> headline, vector<string> row , unsigned &position);
+bool add_unit_and_error(bson * exp, vector<string> headline, vector<string> row , unsigned int &position);
 // checks if the string is the name of a possilbe phase property
 bool it_is_phase_property (string ph_prop);
 
-bool add_unit_and_error (bson * exp, vector<string> headline, vector<string> row, unsigned &position )
+bool add_unit_and_error (bson * exp, vector<string> headline, vector<string> row, unsigned int &position )
 {
     if ((headline[position+1]==Qerror))
     {
@@ -55,6 +55,7 @@ bool add_unit_and_error (bson * exp, vector<string> headline, vector<string> row
         ++position;
         bson_append_string(exp, Qunit, row[position].c_str());
     }
+    return true;
 }
 
 int cut_csv_header (string input, string delimiter, vector<string> &output)
@@ -179,6 +180,7 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
         }
     }
     //++ END array sbcomp ++//
+
     bson_append_finish_array(exp);
     ic=0;
 
