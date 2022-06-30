@@ -70,13 +70,13 @@ git checkout dev-gemsfits
 Make sure that you have the following packages installed (on debian-type linuxes such as Kubuntu 15.10) by running in the terminal:
 ~~~
 sudo apt-get update
-sudo apt-get install libarmadillo-dev libjansson-dev libboost-all-dev libiomp5
+sudo apt-get install libarmadillo-dev libjansson-dev libboost-all-dev libomp5
 ~~~
 or install equivalent packages, if you have another linux desktop.
 
 Ubuntu > 20 
 ~~~
-sudo apt install libomp-11-dev
+sudo apt install libarmadillo-dev libjansson-dev libboost-all-dev libomp-11-dev
 ~~~
 
 Download and install NLopt library from source:
