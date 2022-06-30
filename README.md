@@ -144,15 +144,14 @@ In QtCreator, open a project  ~/gitGEMSFIT/gemsfits/gemsfit2/gemsfit2.pro and co
 
 ### Build and run the gemsfits code ###
 
+If you are using QT installed in your home folder you will probably encounter an error about missing gl.h when building with QT. To avoid this do:
+~~~
+sudo apt-get install build-essential libgl1-mesa-dev libxcb-xinerama0
+~~~
+
 In QtCreator, open a project  ~/gitGEMSFIT/gemsfits/gfshell2/gemsfit-gui.pro and configure it to build release (or debug) into ~/gitGEMSFIT/gemsfits/gfshell-build folder. Then run qmake and build the gemsfits executable code.
 
 Launch the gemsfits code (without command-line parameters) from QtCreator and open its help window to learn how to use it. The gemsfit2 code will be called from within the gemsfits GUI code when necessary.
-
-If you are using QT installed in your home folder and you encounter an error about missing gl.h, try the folowing command, then resume building with QT:
-~~~
-sudo apt-get install build-essential libgl1-mesa-dev libxcb-xinerama0
-
-~~~
 
 ## TBD ###
 
