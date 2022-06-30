@@ -96,8 +96,8 @@ Install EJDB library from source :
 
 ~~~
 git clone https://github.com/Softmotions/ejdb.git
-git checkout v1.2.12 
 cd ejdb
+git checkout v1.2.12 
 mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Release ../
