@@ -638,7 +638,7 @@ bool FITMainWindow::createTaskTemplate()
     cParameters << "-initJ" << sss.c_str() << newPath.c_str() << "template.json";
 
     if( !runProcess( cParameters, fitTaskDir.Dir().c_str()) )
-       Error("Run gemsfit -init", "Error started process.");
+       Error("Run gemsfit -init", "Error starting gemsfit2 process. Check help->Preferences and set the correct path to gemsfit2 code.");
 
     int ret = fitProcess->waitForFinished();
 
