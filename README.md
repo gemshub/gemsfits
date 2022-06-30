@@ -122,15 +122,9 @@ If building from source fails (problems in Ubuntu) try the following command:
 sudo apt-get install libyaml-cpp-dev
 ~~~
 
-Make sure that you have the complete Qt5 toolkit (with QtCreator) installed either in the system or locally after downloading from [qt.io](http://www.qt.io/download/) site. 
+Make sure that you have the complete Qt5 toolkit (with QtCreator) installed either in the system or locally after downloading from [qt.io](http://www.qt.io/download/) site. Select Qt Cumstom installation, then expand Qt and version 5.15.2 where you need to select "Desktop gcc 64 bit", "QT Charts" and "Qt WebEngine".
 
 Qt5 should be installed in the local user folder: home/<user>/Qt/5. ...
-
-If you are using QT installed in your home folder and you encounter an error about missing gl.h, try the folowing command, then resume building with QT:
-~~~
-sudo apt-get install build-essential libgl1-mesa-dev libxcb-xinerama0
-
-~~~
 
 Optional
 
@@ -153,6 +147,12 @@ In QtCreator, open a project  ~/gitGEMSFIT/gemsfits/gemsfit2/gemsfit2.pro and co
 In QtCreator, open a project  ~/gitGEMSFIT/gemsfits/gfshell2/gemsfit-gui.pro and configure it to build release (or debug) into ~/gitGEMSFIT/gemsfits/gfshell-build folder. Then run qmake and build the gemsfits executable code.
 
 Launch the gemsfits code (without command-line parameters) from QtCreator and open its help window to learn how to use it. The gemsfit2 code will be called from within the gemsfits GUI code when necessary.
+
+If you are using QT installed in your home folder and you encounter an error about missing gl.h, try the folowing command, then resume building with QT:
+~~~
+sudo apt-get install build-essential libgl1-mesa-dev libxcb-xinerama0
+
+~~~
 
 ## TBD ###
 
