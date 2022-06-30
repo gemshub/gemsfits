@@ -907,8 +907,8 @@ TGfitPath::TGfitPath(int c, char *v[]):
         if( optParamFile.empty() )
         {
             optParamFile = optParamFilePath;
-            optParamFile += "00/gfin00_";
-            dir = "00/";
+            optParamFile += "work/gfin00_";
+            dir = "work/";
             int pos = 0;
             string input_file = gems3LstFilePath, new_input;
             do
