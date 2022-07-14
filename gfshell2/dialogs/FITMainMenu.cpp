@@ -1114,7 +1114,8 @@ void FITMainWindow::CmRestoreCSV()
         QStringList cells = allrows[0].split(',', QString::KeepEmptyParts);
         for( ii=0; ii< cells.count(); ii++ )
         {
-            auto cellstr = cells[ii].remove('\"').toStdString();
+            auto cell_ = cells[ii].remove('\"');
+            auto cellstr = cell_.remove('\r').toStdString();
             headline.push_back( cellstr );
         }
 
@@ -1126,9 +1127,24 @@ void FITMainWindow::CmRestoreCSV()
               continue;
           row.clear();
           for( ii=0; ii< cells.count(); ii++ )
-              row.push_back( cells[ii].remove('\"').toStdString() );
+          {
+              auto cell_ = cells[ii].remove('\"');
+              auto cellstr = cell_.remove('\r').toStdString();
+              row.push_back( cellstr );
+          }
 
+          if (row.size()>0)
+          {
+              size_t found = row[0].find("STOP");
+              if (found != string::npos)
+              {
+                  bson_destroy( &exp );
+                  break;
+              }
+          }
           // convert row to bson
+          std::string message = "Saving record " + std::to_string(jj);
+          setStatusText(  message );
           csvToBson( &exp, headline, row );
 
           // convert bson to json string

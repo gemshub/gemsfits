@@ -20,3 +20,4 @@ id,sample,expdataset,comment,type,sT,sP,sV,comp.H2O@,error,unit,comp.Arg,error,u
 32,xCa0.967,C96Gex,exclude?,,25,1,,1000,,g,0.967,,mole,0.033,,mole,0.002,,mole,0.008,,g,0.002,,g,-360,820,J/mol
 33,xCa0.986,C96Gex,exclude?,,25,1,,1000,,g,0.986,,mole,0.014,,mole,0.002,,mole,0.008,,g,0.002,,g,-180,320,J/mol
 34,xCa1.0,C96Gex,assumed,,25,1,,1000,,g,0.999999,,mole,0.000001,,mole,0.002,,mole,0.008,,g,0.002,,g,0.001,0.001,J/mol
+STOP,,,,,,,,,,,,,,,,,,,,,,,,,,,,

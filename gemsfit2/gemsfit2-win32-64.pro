@@ -32,7 +32,7 @@
 TEMPLATE	= app
 #LANGUAGE        = C++
 TARGET		= gemsfit2
-VERSION         = 2.0.0
+VERSION         = 2.2.1
 CONFIG          += c++17
 
 DEFINES         += IPMGEMPLUGIN
@@ -49,7 +49,7 @@ CONFIG += console
 
 CONFIG( release,  debug|release ) {
         message( "Configuring for release build ..." )
-        QMAKE_CFLAGS_RELEASE = -g -pedantic
+        QMAKE_CFLAGS_RELEASE = -g -pedantic -O3
         QMAKE_CXXFLAGS_RELEASE = -g -pedantic
 }
 
@@ -86,13 +86,13 @@ CONFIG( serial, serial|mpi ) {
 else {
   DEFINES           += buildWIN32
   DEFINES           += HAVE_STDINT_H
-  QMAKE_CXXFLAGS    += -D__USE_MINGW_ANSI_STDIO=1 -frounding-math -fopenmp
-  QMAKE_LFLAGS      *= -fopenmp
+  QMAKE_CXXFLAGS    += -D__USE_MINGW_ANSI_STDIO=1 -frounding-math -fopenmp -O3
+  QMAKE_LFLAGS      *= -fopenmp -O3
 }
 
 win32 {
-QMAKE_CXXFLAGS += -fopenmp
-QMAKE_LFLAGS *= -fopenmp
+QMAKE_CXXFLAGS += -fopenmp -O3
+QMAKE_LFLAGS += -fopenmp -O3
 }
 
 FIT_CPP      =  ./src-fit

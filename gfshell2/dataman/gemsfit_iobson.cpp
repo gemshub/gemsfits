@@ -20,6 +20,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <sstream>
+#include <algorithm>
 using namespace std;
 
 #include "node.h"
@@ -42,18 +43,29 @@ bool it_is_phase_property (string ph_prop);
 
 bool add_unit_and_error (bson * exp, vector<string> headline, vector<string> row, unsigned int &position )
 {
+    if (position+1< headline.size())
     if ((headline[position+1]==Qerror))
     {
         ++position;
-        if ((!row[position].empty()))
-        {
         bson_append_double(exp, Qerror, atof(row[position].c_str()));
+        if (position+1< headline.size())
+        if ((headline[position+1]==Qunit) && (!row[position+1].empty()))
+        {
+            ++position;
+            bson_append_string(exp, Qunit, row[position].c_str());
         }
-    }
+    } else
+    if (position+1< headline.size())
     if ((headline[position+1]==Qunit) && (!row[position+1].empty()))
     {
         ++position;
         bson_append_string(exp, Qunit, row[position].c_str());
+        if (position+1< headline.size())
+        if ((headline[position+1]==Qerror)&& (!row[position+1].empty()))
+        {
+            ++position;
+            bson_append_double(exp, Qerror, atof(row[position].c_str()));
+        }
     }
     return true;
 }
@@ -93,6 +105,17 @@ bool it_is_phase_property (string ph_prop)
          (ph_prop == pe)    || (ph_prop == oscw)   || (ph_prop == mChainL) || (ph_prop == Rd)  || (ph_prop == frAlIV) || (ph_prop == expr)  ||
          (ph_prop == frAlV) || (ph_prop == frAlVI) || (ph_prop == UMC)     || (ph_prop == LMC))) return true;
     else return false;
+}
+
+bool iequals(const string& a, const string& b)
+{
+    unsigned int sz = a.size();
+    if (b.size() != sz)
+        return false;
+    for (unsigned int i = 0; i < sz; ++i)
+        if (tolower(a[i]) != tolower(b[i]))
+            return false;
+    return true;
 }
 
 void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>& row )
