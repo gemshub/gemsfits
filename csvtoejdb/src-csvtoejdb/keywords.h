@@ -153,6 +153,7 @@ static const char *expphases        = "expphases"; //	               1    array	
         static const char *UMC      = "UMC"; //                         1    array          array of Upper metastability constraints
         static const char *LMC      = "LMC"; //                         1    array          array of Lower metastability constraints
         static const char *mChainL  = "mChainL"; //  Mean silicate chain length in CSH phases
+        static const char *netH_OH  = "netH_OH"; // consumed H+ and OH- upon titration (unit default mol/kg)
 static const char *frAlIV  = "frAlIV";  //  fraction of Al(IV) relative to total Al in CASH phases
 static const char *frAlV  = "frAlV";    //  fraction of Al(V) relative to total Al in CASH phases
 static const char *frAlVI  = "frAlVI"; //  fraction of Al(VI) relative to total Al in CASH phases

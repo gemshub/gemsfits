@@ -733,7 +733,7 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
 
     } else
     if (((objfun.exp_CN == keys::mChainL) ||  (objfun.exp_CN == keys::frAlIV) || (objfun.exp_CN == keys::expr) ||
-         (objfun.exp_CN == keys::frAlV) || (objfun.exp_CN == keys::frAlVI) ||
+         (objfun.exp_CN == keys::frAlV) || (objfun.exp_CN == keys::frAlVI) || (objfun.exp_CN == keys::netH_OH) ||
          (objfun.exp_CN == keys::Rd)) || (objfun.exp_CN == keys::activityRatio) && (PHndx >=0))
     {
         vector<double> varDbl;
@@ -798,10 +798,20 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
                 else
                 {
                     double value = sys->NodT[i]->Get_cDC(DCndx); // default mol fraction
-                    if (objfun.exp_CN == keys::Rd)
+                    if (objfun.exp_CN == keys::Rd || (objfun.exp_CN == keys::netH_OH))
                     {
                         //long int xph = sys->NodT[i]->DCtoPh_DBR( DCndx);
                         long int DCxCH = sys->NodT[i]->DC_xDB_to_xCH(DCndx);
+
+                        if ((objfun.exp_CN == keys::netH_OH))
+                        {
+
+//                            if (objfun.exp_unit != keys::molkg || objfun.exp_unit != keys::logmolkg)
+//                            {
+//                                cout << "ERROR: Unit for netH-OH: " << objfun.exp_unit << " not implemented! Please use mol/kg or log(mol/kg) "; exit(1);
+//                            }
+
+                        }
 
                         switch(dCH_->ccDC[DCxCH])
                             {
