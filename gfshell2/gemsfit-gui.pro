@@ -19,6 +19,9 @@ QT += sql
 QT += xml
 QT += svg
 
+QMAKE_CXXFLAGS += -O3
+QMAKE_LFLAGS += -O3
+
 lessThan( QT_MAJOR_VERSION, 5 ): CONFIG += help
 greaterThan( QT_MAJOR_VERSION, 4 ): QT += widgets printsupport help concurrent
 
