@@ -125,6 +125,14 @@ double TGfitTask::get_residual(int exp, TGfitTask::TargetFunction::obj_fun &objf
                     }
                 }
         }
+    } else
+    if ((objfun.exp_CT !="NULL") && (this->experiments[exp]->props.size() > 0))
+    {
+        for (unsigned int p=0; p<this->experiments[exp]->props.size(); p++)
+        {
+            residual =  residual_properties (exp, p, objfun, this);
+            count++;
+        }
     }
     if (residual == std::numeric_limits<double>::infinity() || residual == -std::numeric_limits<double>::infinity())
         residual = 777777;

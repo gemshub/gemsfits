@@ -145,6 +145,16 @@ class Data_Manager : public TNode
                 };
                 vector<components*> sbcomp;
 
+                // defines properties for this experiment 2nd level in EJDB
+                struct properties
+                {
+                    string prop;         /// proparty name
+                    double Qnt;         ///  value
+                    double Qerror;       /// error (uncertainty) of quantity in the same units
+                    string Qunit;        /// units of measurement of quantity
+                };
+                vector<properties*> props;
+
                 struct phases                         /// data for phases characterised (measured) in this experiment 2nd level in EJDB
                 {
                     int idphase;
@@ -200,6 +210,7 @@ class Data_Manager : public TNode
             vector<PhSyn> SynPHs;
             vector<DataSynonyms> SynPHPs;
             vector<DataSynonyms> SynDCPs;
+            vector<DataSynonyms> SynProps;
 
             void get_DataSyn ();
 

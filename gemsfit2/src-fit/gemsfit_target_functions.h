@@ -86,6 +86,18 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
 
 /**
 * Returns the residual from comparing the calculated with the measured
+* elemental composition a phase
+* @param i      position in the experiments vector (which experiment)
+* @param p      position of property
+* @param sys    pointer to data object that holds the data of the current TGfitTask struct
+* @author DM
+* @date 09.09.2022
+*/
+double residual_properties (int i, int p, TGfitTask::TargetFunction::obj_fun &objfun, TGfitTask *sys);
+
+
+/**
+* Returns the residual from comparing the calculated with the measured
 * element mole ratio in a phase
 * @param i      position in the experiments vector (which experiment)
 * @param p      position in the expphases vector (which phase)
@@ -180,6 +192,8 @@ double weight_phprop (int i, int p, int pp, TGfitTask::TargetFunction::obj_fun &
 * @date 13.06.2013
 */
 double weight_phdcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFunction::obj_fun &objfun, string type, TGfitTask *sys);
+
+double weight_prop (int i, int p, TGfitTask::TargetFunction::obj_fun &objfun, string type, TGfitTask *sys);
 
 /**
 * Returns the target function value (computed - measured)

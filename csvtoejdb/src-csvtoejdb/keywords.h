@@ -71,6 +71,7 @@ static const char *StatPer[2]       = {"SensitivitiesPerturbatorValue",   "SensP
 static const char *DataSyn[2]       = {"DataSynonyms",                    "DataSyn"};
 static const char *PhNames[2]       = {"PhaseNames",                      "PHN"};
 static const char *PhPropNames[2]   = {"PhasePropertyNames",          "PHPN"};
+static const char *PropertyNames[2]   = {"PropertyNames",          "PropNames"};
 static const char *DcNames[2]       = {"DependentComponentNames",         "DCN"}; // see "DCN" above ?
 static const char *IPName[2]        = {"InteractionParameterName",         "IPName"}; // see "DCN" above ?
 static const char *DcPropNames[2]   = {"DependentComponentPropertyNames","DCPN"};
@@ -116,6 +117,8 @@ static const char *Vunit            = "Vunit"; //	                   1    string
     // Describes bulk composition of the system
 static const char *sbcomp           = "sbcomp"; //     		           1    array		    defines bulk composition of chemical system for this experiment
     static const char *comp         = "comp"; //                       2    string		    formula defining PCO stoichiometry (GEM formula syntax)
+
+static const char *props           = "properties"; //     		       1    array		    properties of chemical system for this experiment
 
 
     // Describes system phases

@@ -330,6 +330,115 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
     }
 }
 
+double residual_properties(int i, int p, TGfitTask::TargetFunction::obj_fun &objfun, TGfitTask *sys)
+{
+    int DCndx;
+    double computed_value, measured_value;
+    double Tfun_residual = 0.0, Weighted_Tfun_residual = 0.0, weight_ = 1.0;
+
+    vector<double> varDbl;
+
+    if (objfun.expr == "NULL")
+    {
+        cout << "An expression \"expr\" is needed to calculate the phase property. " << endl;
+        exit(1);
+    }
+
+    // re-name DC names
+    vector<string> exprO, exprP;
+    string expr =  objfun.expr;
+    expr = formula_DCname_parser(objfun.expr, exprO, exprP);
+
+    //        cout << expr << endl;
+
+    try
+    {
+        mu::Parser parser;
+#if defined(_UNICODE)
+        parser.SetExpr(s2ws(expr));
+        vector<wstring> varStr;
+#else
+        parser.SetExpr(expr);
+        vector<string> varStr;
+#endif
+
+        parser.SetVarFactory(AddVariable, &varStr);
+        parser.GetUsedVar();
+
+        DCndx = -1;
+
+        for (unsigned int d = 0; d < varStr.size(); d++)
+        {
+            for ( unsigned int ex = 0; ex < exprO.size(); ex++)
+            {
+#if defined(_UNICODE)
+                if (ws2s(varStr[d]) == exprP[ex])
+#else
+                if (varStr[d] == exprP[ex])
+#endif
+                { DCndx = sys->NodT[i]->DC_name_to_xCH(exprO[ex].c_str()); }
+            }
+
+            if (DCndx < 0)
+            { cout << "ERROR: Dependent component: " << varStr[d].c_str() << " not present in GEMS system! "; exit(1);}
+
+
+            //if (objfun.exp_CN == keys::molfrac)
+            varDbl.push_back(sys->NodT[i]->Get_cDC(DCndx));
+        }
+
+        for (unsigned int d = 0; d < varStr.size(); d++)
+        {
+#if defined(_UNICODE)
+            parser.DefineVar(varStr[d], &varDbl[d]);
+#else
+            parser.DefineVar(varStr[d], &varDbl[d]);
+#endif
+        }
+        computed_value = parser.Eval();
+    }
+    catch(mu::Parser::exception_type &e)
+    {
+        cout << "muParser ERROR for sample " << sys->experiments[i]->sample << "\n";
+#if defined(_UNICODE)
+        cout << "Message:  " << ws2s(e.GetMsg()) << "\n";
+        cout << "Formula:  " << ws2s(e.GetExpr()) << "\n";
+        cout << "Token:    " << ws2s(e.GetToken()) << "\n";
+#else
+        cout << "Message:  " << e.GetMsg() << "\n";
+        cout << "Formula:  " << e.GetExpr() << "\n";
+        cout << "Token:    " << e.GetToken() << "\n";
+#endif
+        if (e.GetPos()!=std::string::npos)
+            cout << "Position: " << e.GetPos() << "\n";
+        cout << "Errc:     " << e.GetCode() << " http://muparser.beltoforion.de/mup_error_handling.html#idErrors " <<"\n";
+        //            computed_value = rand() % 100 + 1;
+    }
+
+    if ((p >= 0))
+    {
+        measured_value = sys->experiments[i]->props[p]->Qnt;
+
+        // check Target function type and calculate the Tfun_residual
+        weight_ = weight_prop(i, p, objfun, sys->Tfun->weight, sys) * objfun.TuWeight * objfun.weight;
+        Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun);
+        Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun)*weight_;
+    } else
+    {
+        measured_value = 0.0;
+        weight_ = 1;
+        Tfun_residual = 0.0;
+        Weighted_Tfun_residual = 0.0;
+    }
+
+    if ((DCndx >=0))
+        objfun.isComputed = true;
+
+    sys->set_results(objfun, computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
+
+    return Weighted_Tfun_residual;
+}
+
 /// Target functions, Tfun_residual calculations
 // Calculates the residual of phase independent components (element composition)
 double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_fun &objfun, TGfitTask *sys)
@@ -1163,6 +1272,29 @@ double weight_phprop (int i, int p, int pp, TGfitTask::TargetFunction::obj_fun &
     } else
         return 1;
 }
+
+double weight_prop (int i, int p, TGfitTask::TargetFunction::obj_fun &objfun, string type, TGfitTask *sys)
+{
+    if (type == keys::inverr)
+    {
+        return 1/(sys->experiments[i]->props[p]->Qerror);
+    } else
+
+    if (type == keys::inverr2)
+    {
+        return 1/(pow(sys->experiments[i]->props[p]->Qerror,2));
+    } else
+    if (type == keys::inverr3)
+    {
+        return 1/(pow(sys->experiments[i]->props[p]->Qnt,2));
+    } else
+    if (type == keys::inverr_norm)
+    {
+        return 1/(pow((sys->experiments[i]->props[p]->Qerror/objfun.meas_average),2));
+    } else
+        return 1;
+}
+
 
 double weight_phdcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFunction::obj_fun &objfun, string type, TGfitTask *sys)
 {

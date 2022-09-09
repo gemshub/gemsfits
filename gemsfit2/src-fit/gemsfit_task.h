@@ -203,6 +203,7 @@ public:
             };
             rslts results;
             bool isComputed;
+            bool isProp = false;
             double SumWTFun /*= 0.0*/;
             unsigned int count = 0;
         };
