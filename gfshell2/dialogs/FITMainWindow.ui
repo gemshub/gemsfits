@@ -465,6 +465,9 @@
     <addaction name="separator"/>
     <addaction name="action_Case_sensetiv"/>
     <addaction name="action_Whole_words"/>
+    <addaction name="separator"/>
+    <addaction name="actionZoom_In"/>
+    <addaction name="actionZoom_Out"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -892,6 +895,22 @@
    </property>
    <property name="text">
     <string>&amp;Whole Word</string>
+   </property>
+  </action>
+  <action name="actionZoom_In">
+   <property name="text">
+    <string>Zoom &amp;In</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl++</string>
+   </property>
+  </action>
+  <action name="actionZoom_Out">
+   <property name="text">
+    <string>Zoom &amp;Out</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+-</string>
    </property>
   </action>
  </widget>

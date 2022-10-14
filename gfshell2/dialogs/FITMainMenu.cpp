@@ -98,6 +98,8 @@ void FITMainWindow::setActions()
     connect( ui->action_Find, SIGNAL( triggered()), this, SLOT(actionFind()));
     connect( ui->actionFind_Next, SIGNAL( triggered()), this, SLOT(actionFindNext()));
     connect( ui->actionFind_Previous, SIGNAL( triggered()), this, SLOT(actionFindPrevious()));
+    connect( ui->actionZoom_In, SIGNAL( triggered()), this, SLOT(actionZoomIn()));
+    connect( ui->actionZoom_Out, SIGNAL( triggered()), this, SLOT(actionZoomOut()));
 
    pLineTask = new QLineEdit( ui->toolBarTask );
    pLineTask->setEnabled( true );
@@ -1466,37 +1468,47 @@ void FITMainWindow::CmTPpairsCSV()
 
 void FITMainWindow::actionFindNext()
 {
-  if( !findLine )
-   return;
+    if( !findLine )
+        return;
 
-  QTextDocument::FindFlags flg = 0;
-  if(ui->action_Case_sensetiv->isChecked() )
-       flg |=QTextDocument::FindCaseSensitively;
+    QTextDocument::FindFlags flg = 0;
+    if(ui->action_Case_sensetiv->isChecked() )
+        flg |=QTextDocument::FindCaseSensitively;
 
-  if(ui->action_Whole_words->isChecked() )
-       flg |=QTextDocument::FindWholeWords;
+    if(ui->action_Whole_words->isChecked() )
+        flg |=QTextDocument::FindWholeWords;
 
-  ui->recordEdit->find( findLine->text(), flg );
+    ui->recordEdit->find( findLine->text(), flg );
 }
 
 void FITMainWindow::actionFindPrevious()
 {
-  if( !findLine )
-   return;
+    if( !findLine )
+        return;
 
-  QTextDocument::FindFlags flg = QTextDocument::FindBackward;
-  if(ui->action_Case_sensetiv->isChecked() )
-       flg |=QTextDocument::FindCaseSensitively;
+    QTextDocument::FindFlags flg = QTextDocument::FindBackward;
+    if(ui->action_Case_sensetiv->isChecked() )
+        flg |=QTextDocument::FindCaseSensitively;
 
-  if(ui->action_Whole_words->isChecked() )
-       flg |=QTextDocument::FindWholeWords;
+    if(ui->action_Whole_words->isChecked() )
+        flg |=QTextDocument::FindWholeWords;
 
-  ui->recordEdit->find( findLine->text(), flg );
+    ui->recordEdit->find( findLine->text(), flg );
 }
 
 void FITMainWindow::actionFind()
 {
-      actionFindNext();
+    actionFindNext();
+}
+
+void FITMainWindow::actionZoomIn()
+{
+    ui->recordEdit->zoomIn(2);
+}
+
+void FITMainWindow::actionZoomOut()
+{
+    ui->recordEdit->zoomOut(2);
 }
 
 //-------------------------------------------------------------------------------------

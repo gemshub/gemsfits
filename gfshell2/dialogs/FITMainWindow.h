@@ -167,6 +167,8 @@ public slots:
        void actionFind();
        void actionFindNext();
        void actionFindPrevious();
+       void actionZoomIn();
+       void actionZoomOut();
 
 public:
     explicit FITMainWindow(int c, char** v, QWidget *parent = 0);
