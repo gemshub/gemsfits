@@ -158,11 +158,15 @@ public slots:
        void CmRestoreYAML();
        void CmDeleteList();
        void CmTPpairsCSV();
-     //Calc
+       //Calc
        void CmRunTest();
        void CmShowCalcResults();
        void CmShowFitResults();
        void CmCancelGemsfit();
+       //Find
+       void actionFind();
+       void actionFindNext();
+       void actionFindPrevious();
 
 public:
     explicit FITMainWindow(int c, char** v, QWidget *parent = 0);
@@ -197,7 +201,7 @@ private:
     QLineEdit* pLineGEMS;  ///< Current CSD GEMS3K file lst name
     TKeyTable* keyTable;   ///< Curent collection EJDB keys list
     QProcess*  fitProcess;
-
+    QLineEdit *findLine = nullptr;
 
     void setTableIComp();
     void setListPhase();
