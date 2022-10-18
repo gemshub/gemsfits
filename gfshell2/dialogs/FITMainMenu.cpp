@@ -119,9 +119,12 @@ void FITMainWindow::setActions()
 
    QLabel *label_2 = new QLabel(ui->toolBarMenu);
    label_2->setText(trUtf8("Find:"));
+   label_2->setToolTip("Find in text");
+
    ui->toolBarMenu->addWidget( label_2 );
 
    findLine = new QLineEdit(ui->toolBarMenu);
+   findLine->setToolTip("Enter text to find");
    findLine->setEnabled( true );
    findLine->setFocusPolicy( Qt::ClickFocus );
    ui->toolBarMenu->addWidget( findLine );

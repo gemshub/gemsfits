@@ -102,7 +102,14 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QLineEdit" name="filterEdit"/>
+             <widget class="QLineEdit" name="filterEdit">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -131,7 +138,11 @@
              </widget>
             </item>
             <item>
-             <widget class="QTextEdit" name="queryEdit"/>
+             <widget class="QTextEdit" name="queryEdit">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -518,8 +529,14 @@
    </attribute>
   </widget>
   <widget class="QToolBar" name="toolBarMenu">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="windowTitle">
     <string>toolBar_3</string>
+   </property>
+   <property name="toolTip">
+    <string/>
    </property>
    <property name="movable">
     <bool>false</bool>
@@ -625,7 +642,7 @@
     <string>Execute &amp;search query</string>
    </property>
    <property name="toolTip">
-    <string>Find</string>
+    <string>Filter records</string>
    </property>
   </action>
   <action name="action_Update">
@@ -639,6 +656,9 @@
    <property name="toolTip">
     <string>Update current record</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
   </action>
   <action name="action_Insert">
    <property name="icon">
@@ -651,6 +671,9 @@
    <property name="toolTip">
     <string>Insert new record</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
   </action>
   <action name="actionDelete">
    <property name="icon">
@@ -662,6 +685,9 @@
    </property>
    <property name="toolTip">
     <string>Delete current record</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
    </property>
   </action>
   <action name="actionUpdate_Test">
@@ -721,6 +747,9 @@
    <property name="text">
     <string>&amp;Run gemsfit2 parameter fitting task</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+G</string>
+   </property>
   </action>
   <action name="action_Show_Results">
    <property name="icon">
@@ -729,6 +758,9 @@
    </property>
    <property name="text">
     <string>&amp;View parameter fitting task results... </string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
    </property>
   </action>
   <action name="action_Preferences">
@@ -747,6 +779,9 @@
    </property>
    <property name="text">
     <string>Help - About GEMSFITS</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+H</string>
    </property>
   </action>
   <action name="actionAbout">
@@ -812,6 +847,9 @@
    <property name="text">
     <string>Fit results &amp;View Mode</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+R, Ctrl+R</string>
+   </property>
   </action>
   <action name="actionSave_Results_to_Database">
    <property name="icon">
@@ -841,6 +879,9 @@
    <property name="text">
     <string>Cancel gemsfit2 run</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+X, Ctrl+X</string>
+   </property>
   </action>
   <action name="actionInsert_search_results_into_task_definition">
    <property name="text">
@@ -855,6 +896,12 @@
   <action name="action_Find">
    <property name="text">
     <string>&amp;Find...</string>
+   </property>
+   <property name="toolTip">
+    <string>Find in Text</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
    </property>
   </action>
   <action name="actionFind_Next">
