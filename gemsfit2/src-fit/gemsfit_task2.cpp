@@ -130,8 +130,11 @@ double TGfitTask::get_residual(int exp, TGfitTask::TargetFunction::obj_fun &objf
     {
         for (unsigned int p=0; p<this->experiments[exp]->props.size(); p++)
         {
-            residual =  residual_properties (exp, p, objfun, this);
-            count++;
+            if (this->experiments[exp]->props[p]->prop == objfun.exp_CN)
+            {
+                residual =  residual_properties (exp, p, objfun, this);
+                count++;
+            }
         }
     }
     if (residual == std::numeric_limits<double>::infinity() || residual == -std::numeric_limits<double>::infinity())

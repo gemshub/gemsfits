@@ -50,6 +50,7 @@ static const char *MPI[2]           = {"NumberOfMPIThreadsForParallelRun", "NumM
 static const char *SIA[2]           = {"GemsSmartInitialApproximation", "GemsSIA"};
 // Propose to get rid of "Optimization" "Opt" for the group of keywords below
 static const char *OptDW[2]         = {"WhatOptStatCombinationToDo",      "DoWhat"};
+static const char *OptPrcParamDigits[2]         = {"PrecentForParameterDigits",      "PrcParamDigits"};
 static const char *OptEQ[2]         = {"UseEquilibriumCalculation",       "UseEqC"};
 static const char *OptUW[2]         = {"UseWeightsFromExperimentalData",  "UDWts"};
 static const char *OptMixedResiduals[2]         = {"UseMixedResiduals",  "UMixedResiduals"};

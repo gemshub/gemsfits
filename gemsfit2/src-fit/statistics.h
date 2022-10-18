@@ -53,6 +53,7 @@ class statistics
         string Pname;
         double Ival;
         double Fval;
+        double Roundval = 0.0;
         double CSS;
         double mc95;
         double mcSTDEV;
@@ -75,6 +76,8 @@ class statistics
         double mean_meas;
         double norm_mean_res;
         double R2;
+        double MSE;
+        double RMSE;
         double min_res, max_res;
         double SumWTFun;
         unsigned int nr_pos_res, nr_neg_res;

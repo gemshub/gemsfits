@@ -220,6 +220,8 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
     // 2nd level - properties logQ, logK,... of chemical system for the current experiment
     // array properties
     //++ START array prop ++//
+    if (h_prop)
+    {
     bson_append_start_array(exp, props);
     for (unsigned int i=0; i<headline.size(); ++i)
     {
@@ -242,6 +244,7 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
     //++ END array props  ++//
     bson_append_finish_array(exp);
     ic=0;
+    }
 
     // 2nd level - data for phases charactrised/measured in this experiment
     //++ START array expphases ++//

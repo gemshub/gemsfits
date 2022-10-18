@@ -100,6 +100,10 @@ void optimization::get_nlopt_param()
     OptDoWhat = atoi(out2[0].c_str());
     out2.clear();
 
+    parse_JSON_object(out[0], keys::OptPrcParamDigits[mode], out2);
+    OptPrcParamDigits = atoi(out2[0].c_str());
+    out2.clear();
+
     parse_JSON_object(out[0], keys::OptEQ[mode], out2);
     OptEquilibrium = atoi(out2[0].c_str());
     out2.clear();
