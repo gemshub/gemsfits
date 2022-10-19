@@ -94,7 +94,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFiles">
@@ -172,7 +172,6 @@
    </attribute>
    <addaction name="actionOpen_File"/>
    <addaction name="separator"/>
-   <addaction name="action_Find"/>
    <addaction name="action_Insert"/>
    <addaction name="actionUpdate"/>
    <addaction name="actionDelete"/>
@@ -316,15 +315,6 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Del</string>
-   </property>
-  </action>
-  <action name="action_Find">
-   <property name="icon">
-    <iconset resource="../fgui.qrc">
-     <normaloff>:/menu/Icons/SelectDisplayRecordIcon.png</normaloff>:/menu/Icons/SelectDisplayRecordIcon.png</iconset>
-   </property>
-   <property name="text">
-    <string>&amp;Find...</string>
    </property>
   </action>
   <action name="actionCalculator">
