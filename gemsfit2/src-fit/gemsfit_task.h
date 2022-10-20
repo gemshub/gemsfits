@@ -196,6 +196,7 @@ public:
                 double input_value=-1.0;
                 double measured_value;
                 double computed_value;
+                double error_value = 0.0;
                 double residual;
                 double weight;
                 double Tfun_residual;
@@ -229,6 +230,7 @@ public:
     double_v computed_values_v;
     /// Measurement values for Monte Carlo confidence interval generation
     double_v measured_values_v;
+    //double_v measured_values_e; // errors
 
     /// Computed residuals
     double_v residuals_v; // measured - calculated residuals
@@ -328,7 +330,7 @@ public:
    * @param weight value of the weight
    * @date 01.07.2013
    */
-   void set_results ( TGfitTask::TargetFunction::obj_fun &objfun, double computed, double measured, double Weighted_Tfun_residual, double Tfun_residual, double weight );
+   void set_results (TGfitTask::TargetFunction::obj_fun &objfun, double computed, double measured, double error, double Weighted_Tfun_residual, double Tfun_residual, double weight );
 
    /**
     * @brief set_weights sets the weights for each sample form the database and for each objfun (if present), default weight is 1

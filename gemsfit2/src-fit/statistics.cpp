@@ -198,6 +198,7 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
               if (dataset == gfittask->experiments[i]->expdataset)
               {
                   objfun_stat[j]->exp_dataset[dscount].measured_value.push_back(gfittask->aTfun[i].objfun[j].results.measured_value);
+                  objfun_stat[j]->exp_dataset[dscount].measured_error.push_back(gfittask->aTfun[i].objfun[j].results.error_value);
                   objfun_stat[j]->exp_dataset[dscount].residuals.push_back(gfittask->aTfun[i].objfun[j].results.residual);
 
                   objfun_stat[j]->exp_dataset[dscount].norm_residuals.push_back(
@@ -210,6 +211,7 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
                   objfun_stat[j]->exp_dataset[dscount].name = gfittask->experiments[i]->expdataset;
                   dataset = gfittask->experiments[i]->expdataset;
                   objfun_stat[j]->exp_dataset[dscount].measured_value.push_back(gfittask->aTfun[i].objfun[j].results.measured_value);
+                  objfun_stat[j]->exp_dataset[dscount].measured_error.push_back(gfittask->aTfun[i].objfun[j].results.error_value);
                   objfun_stat[j]->exp_dataset[dscount].residuals.push_back(gfittask->aTfun[i].objfun[j].results.residual);
 
                   objfun_stat[j]->exp_dataset[dscount].norm_residuals.push_back(
@@ -1109,7 +1111,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
 
     int count = 0;
 
-    if ((MCbool == 5) || (MCbool == 6) || (MCbool == 8))
+    if ((MCbool == 5) || (MCbool == 6) || (MCbool == 8) || (MCbool == 10))
     {
         for (i = 0; i < num_of_MC_runs; i++)
         {
@@ -1118,18 +1120,34 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
                 for (unsigned d = 0; d < objfun_stat[j]->exp_dataset.size(); d++)
                 {
                     if ((MCbool != 8))
-                    for ( unsigned int r = 0; r < objfun_stat[j]->exp_dataset[d].residuals.size(); r++ )
                     {
-                        // mersenne twister generator
-                        typedef boost::mt19937 RNGType;
-                        RNGType rng(i+j+d+r+1);
-                        boost::normal_distribution<> rdist(0, fabs(objfun_stat[j]->exp_dataset[d].residuals[r]));
-                        boost::variate_generator< RNGType, boost::normal_distribution<> > get_rand(rng, rdist);
+                        if (MCbool != 9)
+                        for ( unsigned int r = 0; r < objfun_stat[j]->exp_dataset[d].residuals.size(); r++ )
+                        {
+                            // mersenne twister generator
+                            typedef boost::mt19937 RNGType;
+                            RNGType rng(i+j+d+r+1);
+                            boost::normal_distribution<> rdist(0, fabs(objfun_stat[j]->exp_dataset[d].residuals[r]));
+                            boost::variate_generator< RNGType, boost::normal_distribution<> > get_rand(rng, rdist);
 
-                        objfun_stat[j]->exp_dataset[d].scatter[r] = get_rand();;
-                        count ++;
+                            objfun_stat[j]->exp_dataset[d].scatter[r] = get_rand();;
+                            count ++;
+                        } else
+                            for ( unsigned int r = 0; r < objfun_stat[j]->exp_dataset[d].measured_error.size(); r++ )
+                            {
+                                double sigma = fabs(objfun_stat[j]->exp_dataset[d].measured_error[r]);
+                                // mersenne twister generator
+                                typedef boost::mt19937 RNGType;
+                                RNGType rng(i+j+d+r+1);
+                                boost::normal_distribution<> rdist(0, sigma);
+                                boost::variate_generator< RNGType, boost::normal_distribution<> > get_rand(rng, rdist);
+
+                                objfun_stat[j]->exp_dataset[d].scatter[r] = get_rand();;
+                                count ++;
+                            }
                     }
                     else
+                    {
                         for ( unsigned int r = 0; r < objfun_stat[j]->exp_dataset[d].residuals.size(); r++ )
                         {
                             double fivp = fabs(gfittask->measured_values_v[i])*0.05;
@@ -1148,6 +1166,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
                             objfun_stat[j]->exp_dataset[d].scatter[r] = get_rand();;
                             count ++;
                         }
+                    }
                     // add to the scatter
                     objfun_stat[j]->scatter.insert( objfun_stat[j]->scatter.end(), objfun_stat[j]->exp_dataset[d].scatter.begin(), objfun_stat[j]->exp_dataset[d].scatter.end() );
                 }
@@ -1244,11 +1263,11 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
                     MC_computed_v[i] = (scatter_v[i]*gfittask->measured_values_v[i]) + gfittask->computed_values_v[i];
             }
         else
-            if ((MCbool == 2) || (MCbool == 4) || (MCbool == 6) || (MCbool == 8))  // the new simulated values are from scatter + measured values
+            if ((MCbool == 2) || (MCbool == 4) || (MCbool == 6) || (MCbool == 8) || (MCbool == 10))  // the new simulated values are from scatter + measured values
             {
                 for (i=0; i<number_of_measurements; i++)
                 {
-                    if (MCbool == 6 || MCbool == 8)
+                    if (MCbool == 6 || MCbool == 8 || MCbool == 10)
                         MC_computed_v[i] = scatter_v[i] + gfittask->measured_values_v[i];
                         else
                         MC_computed_v[i] = (scatter_v[i]*gfittask->measured_values_v[i]) + gfittask->measured_values_v[i];

@@ -91,6 +91,7 @@ class statistics
             vector<double> residuals;
             vector<double> norm_residuals;
             vector<double> measured_value;
+            vector<double> measured_error;
         };
         vector<expdataset> exp_dataset;
     };

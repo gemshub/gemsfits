@@ -333,7 +333,7 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
 double residual_properties(int i, int p, TGfitTask::TargetFunction::obj_fun &objfun, TGfitTask *sys)
 {
     int DCndx;
-    double computed_value, measured_value;
+    double computed_value, measured_value, error_value;
     double Tfun_residual = 0.0, Weighted_Tfun_residual = 0.0, weight_ = 1.0;
 
     vector<double> varDbl;
@@ -418,7 +418,7 @@ double residual_properties(int i, int p, TGfitTask::TargetFunction::obj_fun &obj
     if ((p >= 0))
     {
         measured_value = sys->experiments[i]->props[p]->Qnt;
-
+        error_value = sys->experiments[i]->props[p]->Qerror;
         // check Target function type and calculate the Tfun_residual
         weight_ = weight_prop(i, p, objfun, sys->Tfun->weight, sys) * objfun.TuWeight * objfun.weight;
         Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun);
@@ -426,6 +426,7 @@ double residual_properties(int i, int p, TGfitTask::TargetFunction::obj_fun &obj
     } else
     {
         measured_value = 0.0;
+        error_value = 0.0;
         weight_ = 1;
         Tfun_residual = 0.0;
         Weighted_Tfun_residual = 0.0;
@@ -434,7 +435,7 @@ double residual_properties(int i, int p, TGfitTask::TargetFunction::obj_fun &obj
     if ((DCndx >=0))
         objfun.isComputed = true;
 
-    sys->set_results(objfun, computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
+    sys->set_results(objfun, computed_value, measured_value, error_value, Weighted_Tfun_residual, Tfun_residual, weight_);
 
     return Weighted_Tfun_residual;
 }
@@ -445,7 +446,7 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
 {
     const char *elem_name, *phase_name;
     int ICndx, HCndx, PHndx, nIC;
-    double computed_value, measured_value;
+    double computed_value, measured_value, error_value;
     double Tfun_residual = 0.0, Weighted_Tfun_residual = 0.0, weight_ = 1.0;
     DATACH* dCH = sys->NodT[i]->pCSD();
     double* IC_in_PH;
@@ -530,12 +531,13 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
     if ((p >= 0) && (e >= 0))
     {
         measured_value = sys->experiments[i]->expphases[p]->phIC[e]->Qnt;
+        error_value = sys->experiments[i]->expphases[p]->phIC[e]->Qerror;
 
         // Error handeling due to possible nonphisical parameters
 
         if ((computed_value < sys->LimitOfDetection) && (computed_value > 0))
         {
-    //        cout << measured_value <<" / " <<computed_value<<" = " << measured_value / computed_value << endl;
+            //        cout << measured_value <<" / " <<computed_value<<" = " << measured_value / computed_value << endl;
             computed_value = rand() % 100 + 1;
         }
 
@@ -551,6 +553,7 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
     } else
     {
         measured_value = 0.0;
+        error_value = 0.0;
         weight_ = 1;
         Tfun_residual = 0.0;
         Weighted_Tfun_residual = 0.0;
@@ -561,7 +564,7 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
 
     delete[] IC_in_PH;
 
-    sys->set_results(objfun, computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
+    sys->set_results(objfun, computed_value, measured_value, error_value, Weighted_Tfun_residual, Tfun_residual, weight_);
 
 
     return Weighted_Tfun_residual;
@@ -573,7 +576,7 @@ double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::ob
 {
     const char *elem_name, *phase_name;
     int ICndx, PHndx, nIC;
-    double computed_value = 0.0, measured_value = 0.0, computed_nom = 0.0, computed_denom = 0.0;
+    double computed_value = 0.0, measured_value = 0.0, error_value=0.0, computed_nom = 0.0, computed_denom = 0.0;
     double Tfun_residual = 0.0, Weighted_Tfun_residual = 0.0, weight_ = 1.0;
     DATACH* dCH = sys->NodT[i]->pCSD();
     double* IC_in_PH;
@@ -663,6 +666,7 @@ double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::ob
     if ((p >= 0) && (f >= 0))
     {
         measured_value = sys->experiments[i]->expphases[p]->phMR[f]->Qnt;
+        error_value = sys->experiments[i]->expphases[p]->phMR[f]->Qerror;
         // check Target function type and calculate the Tfun_residual
         weight_ = weight_MR(i, p, f, objfun, sys->Tfun->weight, sys) * objfun.TuWeight * objfun.weight;
         Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun);
@@ -680,7 +684,7 @@ double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::ob
 
     delete[] IC_in_PH;
 
-    sys->set_results( objfun, computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
+    sys->set_results( objfun, computed_value, measured_value, error_value, Weighted_Tfun_residual, Tfun_residual, weight_);
 
     return Weighted_Tfun_residual;
 }
@@ -690,7 +694,7 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
 {
     const char *phase_name;
     long int PHndx, DC0ndx, nDCinPH, DCndx, DCndx2;
-    double computed_value = 0.0, measured_value= 0.0;
+    double computed_value = 0.0, measured_value= 0.0, error_value=0.0;
     double Tfun_residual = 0.0, Weighted_Tfun_residual, weight_ = 1.0;
     double ln_gama[40], log_gama, HCl_;
     char ccPH;
@@ -1053,6 +1057,7 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
     if ((p >= 0) && (pp >= 0))
     {
         measured_value = sys->experiments[i]->expphases[p]->phprop[pp]->Qnt;
+        error_value = sys->experiments[i]->expphases[p]->phprop[pp]->Qerror;
 
         // Error handling due to possible non-physical parameters
         if ((computed_value < sys->LimitOfDetection) && (computed_value > 0))
@@ -1078,7 +1083,7 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
     if (PHndx >=0)
     objfun.isComputed = true;
 
-    sys->set_results( objfun, computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
+    sys->set_results( objfun, computed_value, measured_value, error_value, Weighted_Tfun_residual, Tfun_residual, weight_);
 
     delete[] IC_in_PH;
 
@@ -1091,7 +1096,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFun
 {
     const char/* *phase_name,*/ *dcomp_name;
     int /* PHndx,*/ DCndx;
-    double computed_value, measured_value;
+    double computed_value, measured_value, error_value;
     double Tfun_residual = 0.0, Weighted_Tfun_residual, weight_ = 1.0;
 //    DATACH* dCH = sys->NodT[i]->pCSD();
 
@@ -1157,6 +1162,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFun
     if ((p >= 0) && (dc >= 0) && (dcp >= 0))
     {
     measured_value = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt;
+    error_value = sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror;
 
     // check Target function type and calculate the Tfun_residual
     weight_ = weight_phdcomp(i, p, dc, dcp, objfun, sys->Tfun->weight, sys) * objfun.TuWeight * objfun.weight;
@@ -1165,6 +1171,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFun
     } else
     {
         measured_value = 0.0;
+        error_value = 0.0;
         weight_ = 1;
         Tfun_residual = 0.0;
         Weighted_Tfun_residual = 0.0;
@@ -1173,7 +1180,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFun
     if (DCndx >=0)
     objfun.isComputed = true;
 
-    sys->set_results( objfun, computed_value, measured_value, Weighted_Tfun_residual, Tfun_residual, weight_);
+    sys->set_results( objfun, computed_value, measured_value, error_value, Weighted_Tfun_residual, Tfun_residual, weight_);
 
 
     return Weighted_Tfun_residual;
