@@ -28,7 +28,6 @@
 #include <iostream>
 using namespace std;
 
-#include "ejdb.h"
 #include "yaml-cpp/yaml.h"
 #include "yaml-cpp/eventhandler.h"
 
