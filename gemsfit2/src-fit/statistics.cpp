@@ -1121,7 +1121,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
                 {
                     if ((MCbool != 8))
                     {
-                        if (MCbool != 9)
+                        if (MCbool != 10)
                         for ( unsigned int r = 0; r < objfun_stat[j]->exp_dataset[d].residuals.size(); r++ )
                         {
                             // mersenne twister generator
