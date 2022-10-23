@@ -35,9 +35,11 @@
     <p>Column names and their order in the excel table should follow the
       patterns described in the tables below, grouped in three sections: <a href="#EXPERDESCR">EXPERIMENTS
         DESCRIPTION</a>; <a href="#SYSCOMPOS">SYSTEM COMPOSITION</a>; <a href="#RESULTS">RESULTS</a>.
-    </p>
+    </p> <br>
     <span style="font-weight: bold;">Column name rules and conventions:<br>
-    </span><br>
+      
+    </span>
+    <p> Add "STOP" on the first column of the last row in the import data file to make sure GEMSFITS does not try to read in empty rows.</p>
     <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
       <tbody>
         <tr>
@@ -746,7 +748,6 @@
         </tr>
       </tbody>
     </table>
-    <p> </p>
     <p> </p>
     <hr>
     <h3><a name="SALT_FORMULAE"></a>Syntax of chemical formulae for compositions
