@@ -59,7 +59,8 @@ statistics::statistics(TGfitTask *gfittask, double Weighted_Tfun_sum_of_residual
 
     // this is the minimized value during oprimization
     Weighted_Tfun_sum_of_residuals 		= Weighted_Tfun_sum_of_residuals_;
-
+    if (Weighted_Tfun_sum_of_residuals == 0.0)
+        Weighted_Tfun_sum_of_residuals = gfittask->_init_residuals_sys;
     //
     for (unsigned int i=0; i<number_of_measurements; ++i)
     {
@@ -145,6 +146,8 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
       objfun_stat[j]->mean_meas = 0.0;
       objfun_stat[j]->norm_stdev_res = 0.0;
       objfun_stat[j]->norm_mean_res = 0.0;
+      objfun_stat[j]->MSE = 0.0;
+      objfun_stat[j]->RMSE = 0.0;
       objfun_stat[j]->R2 = 0.0;
       objfun_stat[j]->nr = 0;
       objfun_stat[j]->isComputed = false;
@@ -165,6 +168,7 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
               objfun_stat[j]->mean_meas += gfittask->aTfun[i].objfun[j].results.measured_value;
               objfun_stat[j]->orderd_res.push_back (gfittask->aTfun[i].objfun[j].results.residual) ;
               objfun_stat[j]->SumWTFun += gfittask->aTfun[i].objfun[j].results.WTfun_residual;
+              objfun_stat[j]->MSE += pow(gfittask->aTfun[i].objfun[j].results.measured_value-gfittask->aTfun[i].objfun[j].results.computed_value,2);
 
               if (min_res > gfittask->aTfun[i].objfun[j].results.residual) min_res = gfittask->aTfun[i].objfun[j].results.residual;
               if (max_res < gfittask->aTfun[i].objfun[j].results.residual) max_res = gfittask->aTfun[i].objfun[j].results.residual;
@@ -178,6 +182,7 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
       objfun_stat[j]->norm_mean_res = objfun_stat[j]->norm_mean_res / objfun_stat[j]->nr;
       objfun_stat[j]->mean_res = objfun_stat[j]->mean_res / objfun_stat[j]->nr;
       objfun_stat[j]->mean_meas = objfun_stat[j]->mean_meas / objfun_stat[j]->nr;
+      objfun_stat[j]->MSE = objfun_stat[j]->MSE / objfun_stat[j]->nr;
 
       objfun_stat[j]->min_res = min_res;
       objfun_stat[j]->max_res = max_res;
@@ -193,6 +198,7 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
               if (dataset == gfittask->experiments[i]->expdataset)
               {
                   objfun_stat[j]->exp_dataset[dscount].measured_value.push_back(gfittask->aTfun[i].objfun[j].results.measured_value);
+                  objfun_stat[j]->exp_dataset[dscount].measured_error.push_back(gfittask->aTfun[i].objfun[j].results.error_value);
                   objfun_stat[j]->exp_dataset[dscount].residuals.push_back(gfittask->aTfun[i].objfun[j].results.residual);
 
                   objfun_stat[j]->exp_dataset[dscount].norm_residuals.push_back(
@@ -205,6 +211,7 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
                   objfun_stat[j]->exp_dataset[dscount].name = gfittask->experiments[i]->expdataset;
                   dataset = gfittask->experiments[i]->expdataset;
                   objfun_stat[j]->exp_dataset[dscount].measured_value.push_back(gfittask->aTfun[i].objfun[j].results.measured_value);
+                  objfun_stat[j]->exp_dataset[dscount].measured_error.push_back(gfittask->aTfun[i].objfun[j].results.error_value);
                   objfun_stat[j]->exp_dataset[dscount].residuals.push_back(gfittask->aTfun[i].objfun[j].results.residual);
 
                   objfun_stat[j]->exp_dataset[dscount].norm_residuals.push_back(
@@ -704,6 +711,8 @@ if( W2 < 1.)  // workaround to suppress nan() and zdiv crash
             gpf->fstat << "OFUN-"<< gfittask->Tfun->objfun[o].exp_CT << "-"<< gfittask->Tfun->objfun[o].exp_CN << ","<<endl;
             gpf->fstat << "minimized-function-sum-("<<setprecision(2) << objfun_stat[o]->SumWTFun*100/Weighted_Tfun_sum_of_residuals<<"%-of-total)," << objfun_stat[o]->SumWTFun 	<<endl;
             gpf->fstat << "Standard-deviation-of-residuals," << objfun_stat[o]->stdev_res 		<< endl;
+            gpf->fstat << "Mean-squared-error," << objfun_stat[o]->MSE 		<< endl;
+            gpf->fstat << "Root-mean-squared-error," << sqrt(objfun_stat[o]->MSE)		<< endl;
             gpf->fstat << "Average-residual," << objfun_stat[o]->mean_res 		<< endl;
             gpf->fstat << "Maximum-residual," << objfun_stat[o]->max_res 		<< endl;
             gpf->fstat << "Minimum-residual," << objfun_stat[o]->min_res 		<< endl;
@@ -715,6 +724,15 @@ if( W2 < 1.)  // workaround to suppress nan() and zdiv crash
         }
 
         gpf->fqq.close();
+}
+
+double round_to_digits(double value, int digits)
+{
+    if (value == 0.0) // otherwise it will return 'nan' due to the log10() of zero
+        return 0.0;
+
+    double factor = pow(10.0, digits - ceil(log10(fabs(value))));
+    return round(value * factor) / factor;
 }
 
 
@@ -981,79 +999,6 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
             Parameter_t_Statistic(i) 	  = 1. / CoefficientOfVariation(i);
         }
 
-        // Print Parameter Standard Deviations to file
-//        gpf->fstat << " Parameter Standard Deviation/Error: "<<endl;
-//        for( i=0; i< optv_.size(); i++ )
-//        {
-//            gpf->fstat <<"			parameter "<< i;
-//                     if (gfittask->Opti->Ptype[i] == "G0") gpf->fstat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]);
-//                     else gpf->fstat << "  " << gfittask->Opti->Ptype[i];
-//                 gpf->fstat <<" :	   " << ParameterStandardDeviation(i)/sqrt(degrees_of_freedom) << endl;
-//        }
-//        gpf->fstat << endl;
-
-
-//        double T, w;
-//        int DegreesOfFreedom = number_of_measurements - number_of_parameters;
-//        double alpha[] = { 0.5, 0.25, 0.1, 0.05, 0.01 };
-//        boost::math::students_t dist( DegreesOfFreedom );
-//        for( j=0; j< optv_.size(); j++ )
-//        {
-//            gpf->fstat <<"			parameter "<< j;
-//                     if (gfittask->Opti->Ptype[j] == "G0") gpf->fstat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[j]);
-//                     else gpf->fstat << "  " << gfittask->Opti->Ptype[j];
-//            gpf->fstat << " :	           ";
-//            gpf->fstat << endl;
-//            gpf->fstat <<    "___________________________________________________________________" << endl;
-//            gpf->fstat <<    "Confidence       T           Interval          Lower          Upper" << endl;
-//            gpf->fstat <<    " Value (%)     Value          Width            Limit          Limit" << endl;
-//            gpf->fstat <<    "___________________________________________________________________" << endl;
-
-//            for( i = 0; i < int (sizeof(alpha)/sizeof(alpha[0])); ++i)
-//            {
-//                // Confidence value:
-//                gpf->fstat << fixed << setprecision(3) << setw(10) << right << 100 * (1-alpha[i]);
-//                // calculate T:
-//                T = boost::math::quantile(boost::math::complement(dist, alpha[i] / 2));
-//                // Print T:
-//                gpf->fstat << fixed << setprecision(3) << setw(10) << right << T;
-//                // Calculate width of interval (one sided):
-//                w = T * ParameterStandardDeviation(j) / sqrt(double( number_of_measurements ));
-//                // Print width:
-//                if(w < 0.01)
-//                    gpf->fstat << scientific << setprecision(3) << setw(17) << right << w;
-//                else
-//                    gpf->fstat << fixed << setprecision(3) << setw(17) << right << w;
-//                // Print Limits:
-//                gpf->fstat << fixed << setprecision(5) << setw(15) << right << optv_[j] - w;
-//                gpf->fstat << fixed << setprecision(5) << setw(15) << right << optv_[j] + w << endl;
-//            }
-//            gpf->fstat << endl;
-
-//        }
-
-//        // Print Parameter Standard Deviations to file
-//        gpf->fstat << " Coefficient of Variation: "<<endl;
-//        for( i=0; i< optv_.size(); i++ )
-//        {
-//            gpf->fstat <<"			parameter "<< i;
-//                     if (gfittask->Opti->Ptype[i] == "G0") gpf->fstat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]);
-//                     else gpf->fstat << "  " << gfittask->Opti->Ptype[i];
-//            gpf->fstat <<" :	           " << CoefficientOfVariation(i) << endl;
-//        }
-//        gpf->fstat << endl;
-
-//        // Print Parameter Standard Deviations to file
-//        gpf->fstat << " Parameter t-statistic: "<<endl;
-//        for( i=0; i< optv_.size(); i++ )
-//        {
-//            gpf->fstat <<"			parameter "<< i;
-//                     if (gfittask->Opti->Ptype[i] == "G0") gpf->fstat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]);
-//                     else gpf->fstat << "  " << gfittask->Opti->Ptype[i];
-//            gpf->fstat <<" :	           " << Parameter_t_Statistic(i) << endl;
-//        }
-//        gpf->fstat << endl;
-
 
 //        // Print Correlation matrix to file
 
@@ -1065,39 +1010,50 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
             }
         }
 
-//        gpf->fstat << " Correlation matrix: "<<endl;
-//        for(unsigned i=0; i<  optv_.size(); i++ )
-//        {
-//            if( i== 0 )
-//            {
-//                gpf->fstat <<"                                          ";
-//                if (gfittask->Opti->Ptype[i] == "G0") gpf->fstat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]);
-//                else gpf->fstat << "  " << gfittask->Opti->Ptype[i];
-//            }
-//            else
-//            {
-//                gpf->fstat <<"                  ";
-//                if (gfittask->Opti->Ptype[i] == "G0") gpf->fstat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]);
-//                else gpf->fstat << "  " << gfittask->Opti->Ptype[i];
-//            }
-//        }
-//        gpf->fstat << endl;
-//        for( i=0; i< optv_.size(); i++ )
-//        {
-//            gpf->fstat <<"            parameter "<< i;
-//            if (gfittask->Opti->Ptype[i] == "G0") gpf->fstat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]);
-//            else gpf->fstat << "  " << gfittask->Opti->Ptype[i];
-//            gpf->fstat<<" : ";
-//            for( j=0; j< optv_.size(); j++ )
-//            {
-//                if( j==0 )
-//                    gpf->fstat <<" " <<CorellationMatrix(i,j);
-//                else
-//                    gpf->fstat <<" " <<CorellationMatrix(i,j);
-//            }
-//            gpf->fstat << endl;
-//        }
-//        gpf->fstat << endl;
+
+        /// significant digits
+        if (gfittask->Opti->OptPrcParamDigits>0.0 && gfittask->Opti->OptDoWhat == 0)
+        {
+            auto rounded_v = optv_;
+            //Weighted_Tfun_sum_of_residuals
+            double sum_residuals = gfittask->_init_residuals_sys;
+        for( i=0; i< optv_.size(); i++ )
+        {
+            double diff_prec = 0.0;
+//            int j = 1;
+            int x = 2;
+
+            do
+            {
+                opt_scan = optv_;
+                double param = optv_[i];
+
+                opt_scan[i] = round_to_digits(param, x);
+                //double round_val = round( opt_scan[i] * (10*j) );
+                //opt_scan[i] = round_val / (10*j);
+
+                if (gfittask->Opti->OptEquilibrium)
+                gems3k_wrap( residual_sys, opt_scan, gfittask );
+                else tsolmod_wrap(residual_sys, opt_scan, gfittask);
+
+                diff_prec = fabs((sum_residuals-residual_sys)/sum_residuals*100);
+                j= 10*j;
+                x++;
+                std::cout << "parameter " << opt_scan[i] << " roundoff % error " << diff_prec << std::endl;
+            } while (diff_prec>gfittask->Opti->OptPrcParamDigits);
+            fitparam[i]->Roundval = opt_scan[i];
+            rounded_v[i] = opt_scan[i];
+           // gfittask->fitparam
+        }
+
+        if (gfittask->Opti->OptEquilibrium)
+        gems3k_wrap( residual_sys, rounded_v, gfittask );
+        else tsolmod_wrap(residual_sys, rounded_v, gfittask);
+
+        double diff_prec2 = fabs((sum_residuals-residual_sys)/sum_residuals*100);
+        std::cout << "Total roundoff % error " << diff_prec2 << std::endl;
+
+        }
 
         gpf->fstat.close();
 
@@ -1155,7 +1111,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
 
     int count = 0;
 
-    if ((MCbool == 5) || (MCbool == 6) || (MCbool == 8))
+    if ((MCbool == 5) || (MCbool == 6) || (MCbool == 8) || (MCbool == 10))
     {
         for (i = 0; i < num_of_MC_runs; i++)
         {
@@ -1164,18 +1120,34 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
                 for (unsigned d = 0; d < objfun_stat[j]->exp_dataset.size(); d++)
                 {
                     if ((MCbool != 8))
-                    for ( unsigned int r = 0; r < objfun_stat[j]->exp_dataset[d].residuals.size(); r++ )
                     {
-                        // mersenne twister generator
-                        typedef boost::mt19937 RNGType;
-                        RNGType rng(i+j+d+r+1);
-                        boost::normal_distribution<> rdist(0, fabs(objfun_stat[j]->exp_dataset[d].residuals[r]));
-                        boost::variate_generator< RNGType, boost::normal_distribution<> > get_rand(rng, rdist);
+                        if (MCbool != 10)
+                        for ( unsigned int r = 0; r < objfun_stat[j]->exp_dataset[d].residuals.size(); r++ )
+                        {
+                            // mersenne twister generator
+                            typedef boost::mt19937 RNGType;
+                            RNGType rng(i+j+d+r+1);
+                            boost::normal_distribution<> rdist(0, fabs(objfun_stat[j]->exp_dataset[d].residuals[r]));
+                            boost::variate_generator< RNGType, boost::normal_distribution<> > get_rand(rng, rdist);
 
-                        objfun_stat[j]->exp_dataset[d].scatter[r] = get_rand();;
-                        count ++;
+                            objfun_stat[j]->exp_dataset[d].scatter[r] = get_rand();;
+                            count ++;
+                        } else
+                            for ( unsigned int r = 0; r < objfun_stat[j]->exp_dataset[d].measured_error.size(); r++ )
+                            {
+                                double sigma = fabs(objfun_stat[j]->exp_dataset[d].measured_error[r]);
+                                // mersenne twister generator
+                                typedef boost::mt19937 RNGType;
+                                RNGType rng(i+j+d+r+1);
+                                boost::normal_distribution<> rdist(0, sigma);
+                                boost::variate_generator< RNGType, boost::normal_distribution<> > get_rand(rng, rdist);
+
+                                objfun_stat[j]->exp_dataset[d].scatter[r] = get_rand();;
+                                count ++;
+                            }
                     }
                     else
+                    {
                         for ( unsigned int r = 0; r < objfun_stat[j]->exp_dataset[d].residuals.size(); r++ )
                         {
                             double fivp = fabs(gfittask->measured_values_v[i])*0.05;
@@ -1194,6 +1166,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
                             objfun_stat[j]->exp_dataset[d].scatter[r] = get_rand();;
                             count ++;
                         }
+                    }
                     // add to the scatter
                     objfun_stat[j]->scatter.insert( objfun_stat[j]->scatter.end(), objfun_stat[j]->exp_dataset[d].scatter.begin(), objfun_stat[j]->exp_dataset[d].scatter.end() );
                 }
@@ -1290,11 +1263,11 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
                     MC_computed_v[i] = (scatter_v[i]*gfittask->measured_values_v[i]) + gfittask->computed_values_v[i];
             }
         else
-            if ((MCbool == 2) || (MCbool == 4) || (MCbool == 6) || (MCbool == 8))  // the new simulated values are from scatter + measured values
+            if ((MCbool == 2) || (MCbool == 4) || (MCbool == 6) || (MCbool == 8) || (MCbool == 10))  // the new simulated values are from scatter + measured values
             {
                 for (i=0; i<number_of_measurements; i++)
                 {
-                    if (MCbool == 6 || MCbool == 8)
+                    if (MCbool == 6 || MCbool == 8 || MCbool == 10)
                         MC_computed_v[i] = scatter_v[i] + gfittask->measured_values_v[i];
                         else
                         MC_computed_v[i] = (scatter_v[i]*gfittask->measured_values_v[i]) + gfittask->measured_values_v[i];
@@ -1537,7 +1510,10 @@ void statistics::print_param()
 
 
         gpf->fparam << setprecision(12) << fitparam[i]->Ival << ",";
-        gpf->fparam << setprecision(12) <<fitparam[i]->Fval << ",";
+        if (fitparam[i]->Roundval != 0.0)
+            gpf->fparam << setprecision(12) <<fitparam[i]->Roundval << ",";
+        else
+            gpf->fparam << setprecision(12) <<fitparam[i]->Fval << ",";
 
         if (fitparam[i]->mcSTDEV != 0)
         {

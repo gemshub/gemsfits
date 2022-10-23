@@ -32,13 +32,16 @@
 TEMPLATE	= app
 #LANGUAGE        = C++
 TARGET		= gemsfit2
-VERSION         = 2.0.0
+VERSION         = 2.3.0
+# GEMS3K commit 66761a7
 
 DEFINES         += IPMGEMPLUGIN
 DEFINES         += useomp
 DEFINES         += _MYNOZLIB
 CONFIG          += c++11
 
+QMAKE_CXXFLAGS += -O3
+QMAKE_LFLAGS += -O3
 
 CONFIG -= qt
 CONFIG += warn_on
@@ -47,14 +50,14 @@ CONFIG += serial release
 
 CONFIG( release,  debug|release ) {
         message( "Configuring for release build ..." )
-        QMAKE_CFLAGS_RELEASE = -g -pedantic
-        QMAKE_CXXFLAGS_RELEASE = -g -pedantic
+        QMAKE_CFLAGS_RELEASE = -g -pedantic -fopenmp
+        QMAKE_CXXFLAGS_RELEASE = -g -pedantic -fopenmp
 }
 
 CONFIG( debug,  debug|release ) {
         DEFINES += GEMSFIT_DEBUG
-        QMAKE_CFLAGS_DEBUG = -g
-        QMAKE_CXXFLAGS_DEBUG = -g
+        QMAKE_CFLAGS_DEBUG = -g -fopenmp
+        QMAKE_CXXFLAGS_DEBUG = -g -fopenmp
         message( "Configuring for debug build ..." )
 }
 

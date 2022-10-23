@@ -125,6 +125,17 @@ double TGfitTask::get_residual(int exp, TGfitTask::TargetFunction::obj_fun &objf
                     }
                 }
         }
+    } else
+    if ((objfun.exp_CT !="NULL") && (this->experiments[exp]->props.size() > 0))
+    {
+        for (unsigned int p=0; p<this->experiments[exp]->props.size(); p++)
+        {
+            if (this->experiments[exp]->props[p]->prop == objfun.exp_CN)
+            {
+                residual =  residual_properties (exp, p, objfun, this);
+                count++;
+            }
+        }
     }
     if (residual == std::numeric_limits<double>::infinity() || residual == -std::numeric_limits<double>::infinity())
         residual = 777777;
@@ -389,10 +400,11 @@ void TGfitTask::set_weights ()
 }
 
 
-void TGfitTask::set_results ( TGfitTask::TargetFunction::obj_fun &objfun, double computed, double measured, double Weighted_Tfun_residual, double Tfun_residual, double weight )
+void TGfitTask::set_results ( TGfitTask::TargetFunction::obj_fun &objfun, double computed, double measured, double error, double Weighted_Tfun_residual, double Tfun_residual, double weight )
 {
     objfun.results.computed_value = computed;
     objfun.results.measured_value = measured;
+    objfun.results.error_value = error;
     objfun.results.residual = measured - computed;
     objfun.results.weight = weight;
     objfun.results.Tfun_residual = Tfun_residual;
@@ -791,6 +803,7 @@ void TGfitTask::get_addout_meas(int exp, TGfitTask::TargetFunction::obj_fun &obj
                         // check for unit
                         if (objfun.exp_unit == "NULL") objfun.exp_unit = this->experiments[exp]->expphases[p]->phIC[e]->Qunit;
                         objfun.results.measured_value = this->experiments[exp]->expphases[p]->phIC[e]->Qnt;
+                        objfun.results.error_value = this->experiments[exp]->expphases[p]->phIC[e]->Qerror;
                         objfun.isComputed = true;
                         ///
                     }
@@ -805,6 +818,7 @@ void TGfitTask::get_addout_meas(int exp, TGfitTask::TargetFunction::obj_fun &obj
                         {
 
                             objfun.results.measured_value = this->experiments[exp]->expphases[p]->phMR[f]->Qnt;
+                            objfun.results.error_value = this->experiments[exp]->expphases[p]->phMR[f]->Qerror;
                             objfun.isComputed = true;
                             ///
 
@@ -821,6 +835,7 @@ void TGfitTask::get_addout_meas(int exp, TGfitTask::TargetFunction::obj_fun &obj
                         // check for unit
                         if (objfun.exp_unit == "NULL") objfun.exp_unit = this->experiments[exp]->expphases[p]->phprop[pp]->Qunit;
                         objfun.results.measured_value = this->experiments[exp]->expphases[p]->phprop[pp]->Qnt;
+                        objfun.results.error_value = this->experiments[exp]->expphases[p]->phprop[pp]->Qerror;
                         objfun.isComputed = true;
                         ///
                     }
@@ -841,6 +856,7 @@ void TGfitTask::get_addout_meas(int exp, TGfitTask::TargetFunction::obj_fun &obj
                                     // check for unit
                                     if (objfun.exp_unit == "NULL") objfun.exp_unit = this->experiments[exp]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit;
                                     objfun.results.measured_value = this->experiments[exp]->expphases[p]->phDC[dc]->DCprop[dcp]->Qnt;
+                                    objfun.results.error_value = this->experiments[exp]->expphases[p]->phDC[dc]->DCprop[dcp]->Qerror;
                                     objfun.isComputed = true;
                                     ///
                                 }

@@ -245,6 +245,8 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
 
         bson_append_int(&bson_task_file, keys::OptDW[mode], 1);
 
+        bson_append_int(&bson_task_file, keys::OptPrcParamDigits[mode], -1);
+
         bson_append_int(&bson_task_file, keys::OptEQ[mode], 1);
 
         bson_append_int(&bson_task_file, keys::SIA[mode], -1);

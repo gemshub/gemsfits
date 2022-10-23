@@ -14,7 +14,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>GEMSFITS: Optimization of GEM Input Parameters</string>
+   <string>GEMSFITS v1.3.0: Optimization of GEM Input Parameters</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../fgui.qrc">

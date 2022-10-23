@@ -86,3 +86,12 @@ for instance:
 Test on a Linux system without any of the dependencies installed.
 See Readme.Run.Linux.txt
 
+
+# Generate Help
+https://doc.qt.io/qt-6/qthelp-framework.html
+
+/home/dmiron/Qt/5.15.2/gcc_64/bin/qhelpgenerator gfshelpconfig.qhp -o gfshelp.qch
+
+copy to build/Resources/help and test + generate help collection from preferences
+copy the new files to Resources/help to be commited to git.
+
