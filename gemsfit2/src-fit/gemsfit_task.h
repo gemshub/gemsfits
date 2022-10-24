@@ -133,8 +133,9 @@ private:
     /// Printing Flag: if this flag is set to one, the result of the optimization will be printed to file (via optimization.cpp)
     string resultsfile;
 
-    void nestedpH();
 public:
+
+    void nestedpH();
 
     optimization *Opti; ///< pointer to optimization
 

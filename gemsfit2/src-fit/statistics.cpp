@@ -1012,11 +1012,11 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
 
 
         /// significant digits
-        if (gfittask->Opti->OptPrcParamDigits>0.0 && gfittask->Opti->OptDoWhat == 0)
+        if (gfittask->Opti->OptPrcParamDigits>0.0)
         {
             auto rounded_v = optv_;
             //Weighted_Tfun_sum_of_residuals
-            double sum_residuals = gfittask->_init_residuals_sys;
+            double sum_residuals = residual_sys;
         for( i=0; i< optv_.size(); i++ )
         {
             double diff_prec = 0.0;
