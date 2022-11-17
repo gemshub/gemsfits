@@ -1021,7 +1021,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
         {
             double diff_prec = 0.0;
 //            int j = 1;
-            int x = 2;
+            int x = 1;
 
             do
             {

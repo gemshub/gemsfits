@@ -33,6 +33,7 @@
 #define OPT_VECTOR_H
 
 #include <vector>
+#include <map>
 #include <string>
 #include "node.h"
 
@@ -49,6 +50,8 @@ class OptParameter
         typedef vector<vector<int> > vvi; // 2D vector of integer
 
         string Ptype; /// stores the type of parameter (G0, bIC, DMc, PMc, TK, P, etc.)
+
+        std::map<std::string, int> Pindexes;
 
         vector<string> Jdata; /// JSON string containing the parameter information read from the configuration file
 
@@ -385,6 +388,9 @@ class Opt_PMc : public OptParameter
     long int Adjust_Fparam(TNode *node, int Pndx, double Pval);
 
     long int Adjust_Sparam(TNode *node );
+
+    long int Adjust_Lparam(TNode *node);
+
 
 };
 

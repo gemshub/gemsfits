@@ -40,8 +40,8 @@ DEFINES         += useomp
 DEFINES         += _MYNOZLIB
 CONFIG          += c++11
 
-QMAKE_CXXFLAGS += -O3
-QMAKE_LFLAGS += -O3
+#QMAKE_CXXFLAGS += -O3
+#QMAKE_LFLAGS += -O3
 
 CONFIG -= qt
 CONFIG += warn_on
