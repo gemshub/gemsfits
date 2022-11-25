@@ -4,8 +4,8 @@
                     $$DATAMAN_H/help.h \
     $$PWD/v_user.h \
     dataman/fmodel.h \
-    dataman/qwtplot.h \
-    dataman/graph.h \
+    #dataman/qwtplot.h \
+    #dataman/graph.h \
                     $$KEYS_H/keywords.h \
     $$PWD/v_yaml.h
 #    dataman/keywords.h
@@ -20,8 +20,8 @@
     dataman/v_user.cpp \
     dataman/gemsfit_iobson.cpp \
     dataman/fmodel.cpp \
-    dataman/qwtplot.cpp \
-    dataman/graph.cpp \
+    #dataman/qwtplot.cpp \
+    #dataman/graph.cpp \
     $$PWD/v_yaml.cpp
 
 

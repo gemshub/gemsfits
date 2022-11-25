@@ -22,9 +22,11 @@ using namespace std;
 #endif
 
 #include "f_ejdb.h"
-#include "graph.h"
+#include "charts/graph_data.h"
 
+namespace jsonui17 {
 class GraphDialog;
+}
 
 #ifdef __APPLE__
 const char  splitRow = '\r';
@@ -91,8 +93,9 @@ class TMatrixModel: public QAbstractTableModel
 
     QVector<int> xcolms;  ///< Abscissa columns list
     QVector<int> ycolms;  ///< Ordinate columns list
-    struct GraphData* grdata;    /// last definition of graphic
-    GraphDialog *graph_dlg;
+
+    jsonui17::ChartData* grdata;    /// last definition of graphic
+    jsonui17::GraphDialog *graph_dlg;
 
     QString ValToString( double val, int digits ) const;
     double ValFromString( const QVariant& strval  );
@@ -125,7 +128,7 @@ public:
      {   return numberStringColumns; }
 
      string getName()
-     {   return string(fname.toUtf8().data()); }
+     {   return fname.toStdString(); }
 
      void ToggleX( int ncolmn );
      void ToggleY( int ncolmn );
@@ -133,7 +136,7 @@ public:
      // get graph info
      void showGraphData( QSortFilterProxyModel *pmodel, const string& title );
      void CloseGraph();
-     GraphData *getGraphData()
+     const jsonui17::ChartData *getGraphData()
      {
          return grdata;
      }

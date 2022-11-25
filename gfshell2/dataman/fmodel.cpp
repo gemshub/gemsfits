@@ -1,13 +1,15 @@
 
 #include <iostream>
 #include <QMenu>
+#include <QHeaderView>
 #include <QKeyEvent>
 #include <QClipboard>
 #include <QSortFilterProxyModel>
+#include <QPainter>
 
 #include "fmodel.h"
 #include "CalcDialog.h"
-#include "GraphDialog.h"
+#include "charts/GraphDialog.h"
 #include "v_service.h"
 #include "v_detail.h"
 
@@ -257,7 +259,7 @@ void TMatrixModel::matrixFromCsvFile( const QString& dir )
     }
     else
       {
-        cout << "error open file " << fpath.toUtf8().data() << endl;
+        cout << "error open file " << fpath.toStdString() << endl;
         //return;
       }
 
@@ -295,8 +297,8 @@ void TMatrixModel::matrixToBson(  bson *obj )
     char buf[100];
 
     // get string to output
-    string name = fname.toUtf8().data();
-    string valCsv = matrixToCsvString().toUtf8().data();
+    string name = fname.toStdString();
+    string valCsv = matrixToCsvString().toStdString();
     int iRet = bson_append_string( obj, name.c_str(), valCsv.c_str() );
     ErrorIf( iRet == BSON_ERROR, name, "Error append string"+name );
 
@@ -333,7 +335,7 @@ void TMatrixModel::matrixFromBson( QSortFilterProxyModel *pmodel, const char *bs
 {
     // get string from obj
     string valCsv;
-    string name = fname.toUtf8().data();
+    string name = fname.toStdString();
     if( !bson_find_string( bsdata, name.c_str(), valCsv ) )
         valCsv = "";
     //set up data
@@ -413,9 +415,9 @@ void TMatrixModel::setGraphData( QSortFilterProxyModel *pmodel,  const string& t
 
     foreach (const int &value, ycolms)
     {   yval.push_back( value);
-        ynames.push_back( colHeads[value].toUtf8().data() );
+        ynames.push_back( colHeads[value].toStdString() );
     }
-
+/* SD ?????
     vector<TPlot> plt;
     plt.push_back( TPlot( pmodel, lines, xval, yval, ynames ));
     title += "."+ getName();
@@ -425,6 +427,7 @@ void TMatrixModel::setGraphData( QSortFilterProxyModel *pmodel,  const string& t
          grdata = new GraphData( plt, title.c_str(), "x", "y" );
     else
          grdata->setNewPlot( plt );
+*/
 }
 
 
@@ -435,7 +438,7 @@ void TMatrixModel::showGraphData( QSortFilterProxyModel *pmodel,  const string& 
 
    if( graph_dlg )
      delete  graph_dlg;
-   graph_dlg = new GraphDialog( grdata, 0 );
+   graph_dlg = new jsonui17::GraphDialog( grdata, 0 );
    graph_dlg->show();
 }
 

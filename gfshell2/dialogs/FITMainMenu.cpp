@@ -374,7 +374,7 @@ string FITMainWindow::getRecordKey( int row )
 
     for(int jj=0; jj<keyTable->columnCount(); jj++)
     {
-        currentKey += keyTable->item( row, jj)->text().toUtf8().data();
+        currentKey += keyTable->item( row, jj)->text().toStdString();
         strip(currentKey);
         currentKey +=":";
      }
@@ -462,7 +462,7 @@ void FITMainWindow::CmUpdateTest()
 {
   try
     {
-      string recBson = ui->recordEdit->toPlainText().toUtf8().data();
+      string recBson = ui->recordEdit->toPlainText().toStdString();
 
       if( JsonDataShow )
       { rtEJ[ currentMode ].TestBsonJson( recBson );
@@ -484,7 +484,7 @@ void FITMainWindow::CmUpdate()
 {
     try
     {
-       string recBson = ui->recordEdit->toPlainText().toUtf8().data();
+       string recBson = ui->recordEdit->toPlainText().toStdString();
        RecSave( recBson, rtEJ[ currentMode ].PackKey() );
        setStatusText( "Record saved" );
     }
@@ -501,7 +501,7 @@ void FITMainWindow::CmInsert()
 {
     try
     {
-        string recBsonText = ui->recordEdit->toPlainText().toUtf8().data();
+        string recBsonText = ui->recordEdit->toPlainText().toStdString();
         rtEJ[ currentMode ].SetJson( recBsonText,  JsonDataShow );
         rtEJ[ currentMode ].InsertRecord();
         changeKeyList(); // need change key list insert new record
@@ -548,7 +548,7 @@ void FITMainWindow::CmCreate()
           ui->recordEdit->setText( ExpTemplate );
 
         if( !JsonDataShow )
-        {    string valDB = ui->recordEdit->toPlainText().toUtf8().data();
+        {    string valDB = ui->recordEdit->toPlainText().toStdString();
              valDB = Json2YAML( valDB );
              ui->recordEdit->setText( trUtf8(valDB.c_str()));
          }
@@ -575,7 +575,7 @@ void FITMainWindow::CmSearch()
     {
         QString valQuery = ui->queryEdit->toPlainText();
         removeComments( valQuery );
-        string filterText = valQuery.toUtf8().data();
+        string filterText = valQuery.toStdString();
 
         if( currentMode == MDF_DATABASE )
         {
@@ -684,7 +684,7 @@ void FITMainWindow::CmInsertSearch()
             // Load curent record to bson structure
             ParserJson pars;
 
-            string recBsonText = ui->recordEdit->toPlainText().toUtf8().data();
+            string recBsonText = ui->recordEdit->toPlainText().toStdString();
 
             bson_init( &bsrec );
             if( JsonDataShow )
@@ -748,7 +748,7 @@ void FITMainWindow::CmRunTest()
 
        // Load curent record to bson structure
        bson bsrec;
-       string recBsonText = ui->recordEdit->toPlainText().toUtf8().data();
+       string recBsonText = ui->recordEdit->toPlainText().toStdString();
 
        bson_init( &bsrec );
        if( JsonDataShow )
@@ -884,7 +884,7 @@ void FITMainWindow::CmBackupJSON()
            return;
 
        // get current filter
-       string keyFilter = ui->filterEdit->text().toUtf8().data();
+       string keyFilter = ui->filterEdit->text().toStdString();
        if( keyFilter.empty() )
            keyFilter = ALLKEY;
 
@@ -895,7 +895,7 @@ void FITMainWindow::CmBackupJSON()
                return;
 
        // open file to unloading
-        string fname =  projectSettings->value("ProjFileName", "undefined").toString().toUtf8().data();
+        string fname =  projectSettings->value("ProjFileName", "undefined").toString().toStdString();
                fname += ".";
                fname += rtEJ[ currentMode ].GetKeywd();
                fname += ".json";
@@ -1004,7 +1004,7 @@ void FITMainWindow::CmBackupYAML()
            return;
 
        // get current filter
-       string keyFilter = ui->filterEdit->text().toUtf8().data();
+       string keyFilter = ui->filterEdit->text().toStdString();
        if( keyFilter.empty() )
            keyFilter = ALLKEY;
 
@@ -1015,7 +1015,7 @@ void FITMainWindow::CmBackupYAML()
                return;
 
        // open file to unloading
-        string fname =  projectSettings->value("ProjFileName", "undefined").toString().toUtf8().data();
+        string fname =  projectSettings->value("ProjFileName", "undefined").toString().toStdString();
                fname += ".";
                fname += rtEJ[ currentMode ].GetKeywd();
                fname += ".yaml";
@@ -1207,11 +1207,11 @@ void FITMainWindow::CmBackupTXT()
        string projDir = fitTaskDir.Dir();
        QString dir = QFileDialog::getExistingDirectory(this, "Select Directory",
         projDir.c_str(),  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
-       projDir = dir.toUtf8().data();
+       projDir = dir.toStdString();
 
        // Load curent record to bson structure
        bson bsrec;
-       string recBsonText = ui->recordEdit->toPlainText().toUtf8().data();
+       string recBsonText = ui->recordEdit->toPlainText().toStdString();
 
        bson_init( &bsrec );
        if( JsonDataShow )
@@ -1270,9 +1270,9 @@ void FITMainWindow::CmRestoreTXT()
 
         readTXT( inFile );
         if( !JsonDataShow )
-        {    string valDB = ui->recordEdit->toPlainText().toUtf8().data();
+        {    string valDB = ui->recordEdit->toPlainText().toStdString();
              valDB = Json2YAML( valDB );
-             ui->recordEdit->setText( trUtf8(valDB.c_str()));
+             ui->recordEdit->setText( valDB.c_str());
          }
 
         changeKeyList();
@@ -1325,7 +1325,7 @@ void FITMainWindow::readTXT( TFile& inFile )
          str2 += str;
 
          //show result
-        ui->recordEdit->setText( trUtf8(str2.c_str()));
+        ui->recordEdit->setText( str2.c_str());
 //        bson_destroy( &bsrec);
 }
 
@@ -1338,7 +1338,7 @@ void FITMainWindow::CmDeleteList()
             return;
 
         // get current filter
-        string keyFilter = ui->filterEdit->text().toUtf8().data();
+        string keyFilter = ui->filterEdit->text().toStdString();
         if( keyFilter.empty() )
             keyFilter = ALLKEY;
 

@@ -141,7 +141,7 @@ HelpWindow::HelpWindow( QWidget* parent):
     }
     else
      {
-      //cout << collectionFile.toUtf8().data() << endl;
+      //cout << collectionFile.toStdString() << endl;
 
       // Contents part
       wContents = hEngine->contentWidget();
@@ -413,7 +413,7 @@ void HelpWindow::showDocumentation(const char* file, const char* item1)
         path_str = QUrl(path.c_str());
     }
 
-   cout << "showDocumentation " << path_str.toString().toUtf8().data() << endl;
+   cout << "showDocumentation " << path_str.toString().toStdString() << endl;
    loadResource(  QUrl(path_str) );
 }
 

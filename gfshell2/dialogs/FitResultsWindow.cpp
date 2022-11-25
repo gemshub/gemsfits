@@ -23,6 +23,7 @@
 #include <QCloseEvent>
 #include <QSortFilterProxyModel>
 #include <QPrintDialog>
+#include <QPainter>
 
 #include "FitResultsWindow.h"
 #include "FITMainWindow.h"
@@ -142,14 +143,14 @@ void FitResultsWindow::closeEvent(QCloseEvent* ev)
 
 void FitResultsWindow::ShowResults( const string& key )
 {
-   pLineTask->setText( trUtf8( key.c_str() ));
+   pLineTask->setText( key.c_str() );
    readBsonRecord();
    show();
 }
 
 void FitResultsWindow::ShowResults( const string& key, const QString& dir )
 {
-   pLineTask->setText( trUtf8( key.c_str() ));
+   pLineTask->setText( key.c_str());
    readBsonRecord();
    CmOpenFile( dir );
    show();
@@ -250,7 +251,7 @@ void FitResultsWindow::editFiledsFromFile( const QString& dir )
 //    }
 //    else
 //      {
-//        cout << "error open file " << fpath.toUtf8().data() << endl;
+//        cout << "error open file " << fpath.toStdString() << endl;
 //      }
 //    ui->textStatistic->setText(valCsv);
 
@@ -265,7 +266,7 @@ void FitResultsWindow::editFiledsFromFile( const QString& dir )
     }
     else
       {
-        cout << "error open file " << fpath.toUtf8().data() << endl;
+        cout << "error open file " << fpath.toStdString() << endl;
       }
     ui->textEdit->setText(valCsv);
 
@@ -296,7 +297,7 @@ void FitResultsWindow::editFiledsToFile( const QString& dir )
 void FitResultsWindow::CmSaveBsonRecord()
 {
     bson bsrec;
-    string key = pLineTask->text().toUtf8().data();
+    string key = pLineTask->text().toStdString();
 
   try
   {
@@ -319,13 +320,13 @@ void FitResultsWindow::CmSaveBsonRecord()
 
     // added text bufers to bson record
     // write file  FIT_STATISTIC
-//    string valCsv = ui->textStatistic->toPlainText().toUtf8().data();
-//    string name = fFitStatistic.toUtf8().data();
+//    string valCsv = ui->textStatistic->toPlainText().toStdString();
+//    string name = fFitStatistic.toStdString();
 //    int iRet = bson_append_string( &bsrec, name.c_str(), valCsv.c_str() );
 //    ErrorIf( iRet == BSON_ERROR, name, "Error append string"+name );
     // write file  FIT_LOGFILE
-    string valCsv = ui->textEdit->toPlainText().toUtf8().data();
-    string name = fFitLogfile.toUtf8().data();
+    string valCsv = ui->textEdit->toPlainText().toStdString();
+    string name = fFitLogfile.toStdString();
     int iRet = bson_append_string( &bsrec, name.c_str(), valCsv.c_str() );
     ErrorIf( iRet == BSON_ERROR, name, "Error append string"+name );
 
@@ -355,7 +356,7 @@ void FitResultsWindow::CmSaveBsonRecord()
 void FitResultsWindow::readBsonRecord()
 {
     bson bsrec;
-    string key = pLineTask->text().toUtf8().data();
+    string key = pLineTask->text().toStdString();
 
   try
   {
@@ -389,14 +390,14 @@ void FitResultsWindow::readBsonRecord()
 
        // added text bufers to bson record
        // write file  FIT_STATISTIC
-//       string name = fFitStatistic.toUtf8().data();
+//       string name = fFitStatistic.toStdString();
        string valCsv;
 //       if( !bson_find_string( bsrec.data, name.c_str(), valCsv ) )
 //           valCsv = "";
 //       ui->textStatistic->setText(valCsv.c_str());
 
        // write file  FIT_LOGFILE
-       string name = fFitLogfile.toUtf8().data();
+       string name = fFitLogfile.toStdString();
        if( !bson_find_string( bsrec.data, name.c_str(), valCsv ) )
             valCsv = "";
        ui->textEdit->setText(valCsv.c_str());
@@ -451,7 +452,7 @@ void FitResultsWindow::CmDeleteRecord()
 {
     try
     {
-        string key = pLineTask->text().toUtf8().data();
+        string key = pLineTask->text().toStdString();
         if( !rtEJ[ MDF_FITS ].Find(key.c_str()) )
            return;
 
@@ -474,7 +475,7 @@ void FitResultsWindow::CmPlotTable()
           return;
 
         string title = "Task ";
-               title  += pLineTask->text().toUtf8().data();
+               title  += pLineTask->text().toStdString();
         QSortFilterProxyModel *pmodel = (QSortFilterProxyModel *)tableCurrent->model();
         ((TMatrixModel *)pmodel->sourceModel())->showGraphData(pmodel, title );
 
@@ -624,7 +625,7 @@ void FitResultsWindow::CmFindFromPlot()
 
      QSortFilterProxyModel *pmodel = (QSortFilterProxyModel *)tableCurrent->model();
      TMatrixModel *matrmodel = (TMatrixModel *)pmodel->sourceModel();
-     GraphData *grdata = matrmodel->getGraphData();
+     auto* grdata = matrmodel->getGraphData();
      //if( !grdata )
      //  return;
 

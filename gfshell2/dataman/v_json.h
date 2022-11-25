@@ -125,4 +125,35 @@ bool bson_find_value( const char *obj, const char *name, T& value )
    return true;
 }
 
+/// Get value from bson structure by name
+template <class T>
+void bson_find_value_def( const char *obj, const char *name, T& value, const T& defval )
+{
+    bson_iterator it;
+    bson_type type;
+    type =  bson_find_from_buffer(&it, obj, name );
+
+    switch( type )
+    {
+      // impotant datatypes
+      case BSON_BOOL:
+           value = bson_iterator_bool(&it);
+           break;
+      case BSON_INT:
+           value = bson_iterator_int(&it);
+           break;
+      case BSON_LONG:
+           value =  bson_iterator_long(&it);
+           break;
+      case BSON_DOUBLE:
+           value = bson_iterator_double(&it);
+           break;
+     case BSON_NULL:
+        // return false;
+     default: // error
+         // bson_errprintf("can't print type : %d\n", type);
+         value = defval;
+   }
+}
+
 #endif	// __v_json_h_

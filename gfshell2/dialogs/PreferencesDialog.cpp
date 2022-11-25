@@ -173,8 +173,8 @@ void PreferencesDialog::CmGenerateHelp()
             << docPath + QLatin1String("gfshelp.qhc");
                         ;
        pFitImp->helpProcess->start(app, args);
-       cout << app.toUtf8().data() << endl;
-       cout << args[2].toUtf8().data() << endl;
+       cout << app.toStdString() << endl;
+       cout << args[2].toStdString() << endl;
 
        if (!pFitImp->helpProcess->waitForStarted())
        {

@@ -258,7 +258,7 @@ string DBKeyDialog::getKey()
     if( sel != -1 )
     {
         /// !!!! ((TCModule*)aMod[iRt])->setFilter(keyFilter.c_str());
-        string res = pList->item(sel)->text().toUtf8().data();
+        string res = pList->item(sel)->text().toStdString();
         return res;
     }
     return string();
@@ -305,7 +305,7 @@ vector<string> DBKeyDialog::allSelectedKeys()
     for( int ii=0; ii<pList->count(); ii++ )
         if( pList->item(ii)->isSelected() )
         {
-         string s = pList->item(ii)->text().toUtf8().data();;
+         string s = pList->item(ii)->text().toStdString();
          arr.push_back(s);
         }
     return arr;
@@ -424,7 +424,7 @@ string DBKeyFilter::SetKeyString()
     string Key = "";
     for( int ii=0; ii<aEdit.count(); ii++ )
     {
-        string s = aEdit[ii]->text().toUtf8().data();
+        string s = aEdit[ii]->text().toStdString();
         Key += s;
         strip(Key);
         Key += ":";

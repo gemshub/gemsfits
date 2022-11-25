@@ -64,9 +64,9 @@ void FITMainWindow::getDataFromPreferences()
   if( !mainSettings)
    return;
 
-  SysFITDir =  mainSettings->value("ResourcesFolderPath", "../Resources/").toString().toUtf8().data();
-  LocalDocDir =  mainSettings->value("HelpFolderPath", "../Resources/help").toString().toUtf8().data();
-  UserDir = mainSettings->value("UserFolderPath", ".").toString().toUtf8().data();
+  SysFITDir =  mainSettings->value("ResourcesFolderPath", "../Resources/").toString().toStdString();
+  LocalDocDir =  mainSettings->value("HelpFolderPath", "../Resources/help").toString().toStdString();
+  UserDir = mainSettings->value("UserFolderPath", ".").toString().toStdString();
   KeysLength = mainSettings->value("PrintComments", true).toBool();
   JsonDataShow = !mainSettings->value("ViewinYAMLFormat", true).toBool();
 
@@ -225,7 +225,7 @@ cout << "OpenHelp: " << file << endl;
        {
           QString res = item1;
           res += QString("_%1").arg(page);
-          string txt = res.toUtf8().data();
+          string txt = res.toStdString();
           HelpWindow::pDia->showDocumentation( file, txt.c_str() );
         }
         else
@@ -340,20 +340,20 @@ void FITMainWindow::openEJDB()
     closeEJDB();
 
     // set up new ejdb file
-    string ejdbPath  = projectSettings->value("ProjFolderPath", ".").toString().toUtf8().data();
-    ejdbPath  += projectSettings->value("ProjDatabasePath", "/EJDB").toString().toUtf8().data();
+    string ejdbPath  = projectSettings->value("ProjFolderPath", ".").toString().toStdString();
+    ejdbPath  += projectSettings->value("ProjDatabasePath", "/EJDB").toString().toStdString();
     ejdbPath  += "/";
-    ejdbPath  += projectSettings->value("ProjDatabaseName", "myprojdb1" ).toString().toUtf8().data();
+    ejdbPath  += projectSettings->value("ProjDatabaseName", "myprojdb1" ).toString().toStdString();
     EJDBFile.ChangePath(ejdbPath);
 
     // change collections names
-    string samlescolName = projectSettings->value("ExpSamplesDataColl", "experiments").toString().toUtf8().data();
+    string samlescolName = projectSettings->value("ExpSamplesDataColl", "experiments").toString().toStdString();
     rtEJ[MDF_DATABASE].SetKeywd(samlescolName);
     rtEJ[MDF_DATABASE].Open();
-    string testcolName = projectSettings->value("TaskCasesDataColl", "tests").toString().toUtf8().data();
+    string testcolName = projectSettings->value("TaskCasesDataColl", "tests").toString().toStdString();
     rtEJ[MDF_TASK].SetKeywd(testcolName);
     rtEJ[MDF_TASK].Open();
-    testcolName = projectSettings->value("FitsCasesDataColl", "fits").toString().toUtf8().data();
+    testcolName = projectSettings->value("FitsCasesDataColl", "fits").toString().toStdString();
     rtEJ[MDF_FITS].SetKeywd(testcolName);
     rtEJ[MDF_FITS].Open();
 }
@@ -376,8 +376,8 @@ void FITMainWindow::loadNewProject()
 
     pLineTask->setText( projectSettings->value("ProjFileName", "undefined").toString());
     // change gemsLstFile information
-    string gemsname  = projectSettings->value("ProjFolderPath", ".").toString().toUtf8().data();
-    gemsname  += projectSettings->value("GEMS3KFilesPath", "/GEMS").toString().toUtf8().data();
+    string gemsname  = projectSettings->value("ProjFolderPath", ".").toString().toStdString();
+    gemsname  += projectSettings->value("GEMS3KFilesPath", "/GEMS").toString().toStdString();
     gemsname += "/undef.lst";
     gemsLstFile.ChangePath( gemsname );
     gemsLstFile.ChangeName("");
@@ -466,7 +466,7 @@ int FITMainWindow::defineModuleKeysList( int nRT )
   keyTable->setColumnCount( rtEJ[nRT].KeyNumFlds());
 
   // get list or record keys
-  string keyFilter = ui->filterEdit->text().toUtf8().data();
+  string keyFilter = ui->filterEdit->text().toStdString();
   if( keyFilter.empty() )
       keyFilter = ALLKEY;
   vector<string> keyList;
@@ -561,7 +561,7 @@ bool FITMainWindow::MessageToSave()
 
         if( res == VF3_1 )
         {
-            string recBson = ui->recordEdit->toPlainText().toUtf8().data();
+            string recBson = ui->recordEdit->toPlainText().toStdString();
             RecSave( recBson, key_str.c_str() );
          }
     }
@@ -574,7 +574,7 @@ string FITMainWindow::makeSystemFileName( const string& path  )
 {
    string name = path;
    if(projectSettings )
-          name += projectSettings->value("GEMS3KFilesPath", "/GEMS").toString().toUtf8().data();
+          name += projectSettings->value("GEMS3KFilesPath", "/GEMS").toString().toStdString();
    name += "/" + gemsLstFile.Name() + "." + gemsLstFile.Ext();
    return name;
 }
@@ -583,7 +583,7 @@ string FITMainWindow::makeSystemFileName( const string& path  )
 void FITMainWindow::changeEditeRecord(const string& tagname, const string& newValue, bool is_json )
 {
    // get value string
-   string valueStr = ui->recordEdit->toPlainText().toUtf8().data();
+   string valueStr = ui->recordEdit->toPlainText().toStdString();
 
    // delete old path string
    size_t found = valueStr.find( tagname );
@@ -608,7 +608,7 @@ void FITMainWindow::changeEditeRecord(const string& tagname, const string& newVa
        contentsChanged = true;
    }
 
-//   valueStr = ui->recordEdit->toPlainText().toUtf8().data();
+//   valueStr = ui->recordEdit->toPlainText().toStdString();
 //   found = valueStr.find("{");
 
 //   string taskid_projectid = "\"taskid\": \"";
@@ -659,9 +659,9 @@ bool FITMainWindow::createTaskTemplate()
     // set up EJDB path
     if( projectSettings )
      { string ejdbPath  = "..";
-       ejdbPath  += projectSettings->value("ProjDatabasePath", "/EJDB").toString().toUtf8().data();
+       ejdbPath  += projectSettings->value("ProjDatabasePath", "/EJDB").toString().toStdString();
        ejdbPath  += "/";
-       ejdbPath  += projectSettings->value("ProjDatabaseName", "myprojdb1" ).toString().toUtf8().data();
+       ejdbPath  += projectSettings->value("ProjDatabaseName", "myprojdb1" ).toString().toStdString();
        changeEditeRecord( keys::DBPath[0] , ejdbPath, true);
        changeEditeRecord( keys::DBPath[1] , ejdbPath, true );
        changeEditeRecord( keys::DBColl[0], rtEJ[ MDF_DATABASE ].GetKeywd(), true);

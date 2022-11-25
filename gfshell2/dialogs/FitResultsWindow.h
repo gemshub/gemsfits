@@ -22,7 +22,6 @@
 
 #include <QMainWindow>
 #include "fmodel.h"
-#include "GraphDialog.h"
 
 
 namespace Ui {
