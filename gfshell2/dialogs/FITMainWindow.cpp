@@ -290,20 +290,20 @@ void FITMainWindow::setListPhase()
    {
      valStr = string( dCH->PHNL[ii], 0,MaxPHN );
      QTreeWidgetItem *phase = new QTreeWidgetItem(ui->listPhases);
-     phase->setText(0, trUtf8(valStr.c_str()));
+     phase->setText(0, valStr.c_str());
 
      for( j=0; j<dCH->nDCinPH[ii]; j++, jj++ )
      {
          valStr = string( dCH->DCNL[jj], 0, MaxDCN );
          QTreeWidgetItem *dcomp = new QTreeWidgetItem(phase);
-         dcomp->setText(0, trUtf8(valStr.c_str()));
+         dcomp->setText(0, valStr.c_str());
      }
    }
 }
 
 void FITMainWindow::setStatusText( const string& text )
 {
-  QString vals = trUtf8(text.c_str()) + "\n";
+  QString vals = QString(text.c_str()) + "\n";
   ui->statusEdit->setPlainText( vals );
 }
 
@@ -312,7 +312,7 @@ void FITMainWindow::addLinetoStatus( const string& line )
     //QString vals = ui->statusEdit->toPlainText();
     //vals += trUtf8(line.c_str()) + "\n";
     //ui->statusEdit->setPlainText( vals );
-    ui->statusEdit->append( trUtf8( line.c_str()) + "\n" );
+    ui->statusEdit->append( QString( line.c_str()) + "\n" );
 }
 
 void FITMainWindow::showProcessMesage( )
@@ -364,9 +364,9 @@ void FITMainWindow::loadNewProject()
     // clear old GEMS3K list windows
     ui->tableIComp->clear();
     ui->listPhases->clear();
-    pLineGEMS->setText( trUtf8( "" ) );
+    pLineGEMS->setText("");
     // clear all queries
-    ui->queryEdit->setText(trUtf8( "" ) );
+    ui->queryEdit->setText("");
     rtEJ[MDF_DATABASE].SetQueryJson("");
     rtEJ[MDF_TASK].SetQueryJson("");
     rtEJ[MDF_FITS].SetQueryJson("");
@@ -417,7 +417,7 @@ void FITMainWindow::resetMainWindow()
     }
 
     // reset  ui->queryEdit
-    ui->queryEdit->setText( trUtf8( rtEJ[currentMode].GetLastQuery().c_str()));
+    ui->queryEdit->setText(rtEJ[currentMode].GetLastQuery().c_str());
     if(  !rtEJ[currentMode].GetLastQuery().empty() )
     {
       ui->action_Insert->setEnabled(false);
@@ -481,7 +481,7 @@ int FITMainWindow::defineModuleKeysList( int nRT )
 
   // set up table sizes
   QFontMetrics fm(keyTable->fontMetrics());
-  int charWidth = fm.width("5");
+  int charWidth = fm.horizontalAdvance("5");
   int charHeight = fm.height();
 
   for( ii=0; ii<nKeys; ii++ )
@@ -604,7 +604,7 @@ void FITMainWindow::changeEditeRecord(const string& tagname, const string& newVa
          found2 =  valueStr.find("\n", found1 );
          valueStr.replace( found1, found2-found1, newValue);
        }
-       ui->recordEdit->setText( trUtf8( valueStr.c_str() ));
+       ui->recordEdit->setText(valueStr.c_str());
        contentsChanged = true;
    }
 

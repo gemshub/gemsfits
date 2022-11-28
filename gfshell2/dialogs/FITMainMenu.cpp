@@ -118,7 +118,7 @@ void FITMainWindow::setActions()
    ui->toolBarGems->addWidget( pLineGEMS ); // setStretchableWidget( pLine );
 
    QLabel *label_2 = new QLabel(ui->toolBarMenu);
-   label_2->setText(trUtf8("Find:"));
+   label_2->setText("Find:");
    label_2->setToolTip("Find in text");
 
    ui->toolBarMenu->addWidget( label_2 );
@@ -231,7 +231,7 @@ void FITMainWindow::selectGEMS( const string& fname_ )
        // setup phase list
        setListPhase();
 
-       pLineGEMS->setText( trUtf8( gemsLstFile.Name().c_str() ) );
+       pLineGEMS->setText(gemsLstFile.Name().c_str());
     }
     catch( TError& err )
     {
@@ -413,7 +413,7 @@ void FITMainWindow::CmShow( const string& reckey )
       else
         valDB =rtEJ[ currentMode ].GetYAML();
 
-      ui->recordEdit->setText( trUtf8(valDB.c_str()));
+      ui->recordEdit->setText(valDB.c_str());
       contentsChanged = false;
 
       // load gems3k list
@@ -550,7 +550,7 @@ void FITMainWindow::CmCreate()
         if( !JsonDataShow )
         {    string valDB = ui->recordEdit->toPlainText().toStdString();
              valDB = Json2YAML( valDB );
-             ui->recordEdit->setText( trUtf8(valDB.c_str()));
+             ui->recordEdit->setText(valDB.c_str());
          }
 
         contentsChanged = false;
@@ -708,7 +708,7 @@ void FITMainWindow::CmInsertSearch()
             else
               ParserYAML::printBsonObjectToYAML( recBsonText, out.data );
             //show result
-            ui->recordEdit->setText( trUtf8(recBsonText.c_str()));
+            ui->recordEdit->setText(recBsonText.c_str());
 
             bson_destroy( &bsrec);
             bson_destroy( &inprec);
@@ -738,7 +738,7 @@ void FITMainWindow::CmRunTest()
        //    return;
 
        // create work directory
-       QString workDir = trUtf8(fitTaskDir.Dir().c_str()) + "/work";
+       QString workDir = QString(fitTaskDir.Dir().c_str()) + "/work";
        QDir dir(workDir);
        if( !dir.mkpath(workDir ) )
         Error( fitTaskDir.Dir(), "Error creating work directory");
@@ -842,7 +842,7 @@ void FITMainWindow::CmShowCalcResults()
        //    return;
 
        // path to work directory
-       QString workDir = trUtf8(fitTaskDir.Dir().c_str()) + "/work/output";
+       QString workDir = QString(fitTaskDir.Dir().c_str()) + "/work/output";
        OpenResults( lastCalcRecordKey, workDir );
     }
     catch( TError& err )
@@ -1123,14 +1123,22 @@ void FITMainWindow::CmRestoreCSV()
         tmpStriam.close();
 
         // split csv data
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
         const QStringList allrows = valCsv.split('\n', QString::KeepEmptyParts);
+#else
+        const QStringList allrows = valCsv.split('\n', Qt::KeepEmptyParts);
+#endif
         int ii, jj;
         vector<string> headline;
         vector<string> row;
         bson exp;
 
          //get header
-        QStringList cells = allrows[0].split(',', QString::KeepEmptyParts);
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
+         QStringList cells = allrows[0].split(',', QString::KeepEmptyParts);
+#else
+         QStringList cells = allrows[0].split(',', Qt::KeepEmptyParts);
+#endif
         for( ii=0; ii< cells.count(); ii++ )
         {
             auto cell_ = cells[ii].remove('\"');
@@ -1141,7 +1149,11 @@ void FITMainWindow::CmRestoreCSV()
         for( jj=1; jj< allrows.count(); jj++ )
         {
           // get row
-          cells = allrows[jj].split(',', QString::KeepEmptyParts);
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
+            cells = allrows[jj].split(',', QString::KeepEmptyParts);
+#else
+            cells = allrows[jj].split(',', Qt::KeepEmptyParts);
+#endif
           if( cells.count() < headline.size() )
               continue;
           row.clear();
@@ -1474,7 +1486,7 @@ void FITMainWindow::actionFindNext()
     if( !findLine )
         return;
 
-    QTextDocument::FindFlags flg = 0;
+    QTextDocument::FindFlags flg;
     if(ui->action_Case_sensetiv->isChecked() )
         flg |=QTextDocument::FindCaseSensitively;
 

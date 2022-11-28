@@ -5,10 +5,7 @@ HEADERS += $$DIALOGS_H/FITMainWindow.h \
            $$DIALOGS_H/PreferencesDialog.h \
            $$DIALOGS_H/CalcDialog.h \
            $$DIALOGS_H/FitResultsWindow.h \
-           #$$DIALOGS_H/LegendDialog.h \
-           #$$DIALOGS_H/GraphDialog.h \
-    #dialogs/SymbolDialog.h \
-    dialogs/DialogFindFromPlot.h
+           $$DIALOGS_H/DialogFindFromPlot.h
 
 SOURCES += $$DIALOGS_CPP/FITMainWindow.cpp \
            $$DIALOGS_CPP/HelpWindow.cpp \
@@ -18,10 +15,7 @@ SOURCES += $$DIALOGS_CPP/FITMainWindow.cpp \
            $$DIALOGS_CPP/PreferencesDialog.cpp \
            $$DIALOGS_CPP/CalcDialog.cpp \
            $$DIALOGS_CPP/FitResultsWindow.cpp \
-           #$$DIALOGS_CPP/LegendDialog.cpp \
-           #$$DIALOGS_CPP/GraphDialog.cpp \
-    #dialogs/SymbolDialog.cpp \
-    dialogs/DialogFindFromPlot.cpp
+           $$DIALOGS_CPP/DialogFindFromPlot.cpp
 
 
 FORMS += $$DIALOGS_CPP/HelpWindow4.ui \
@@ -31,8 +25,5 @@ FORMS += $$DIALOGS_CPP/HelpWindow4.ui \
          $$DIALOGS_CPP/PreferencesDialog.ui \
          $$DIALOGS_CPP/CalcDialog4.ui \
          $$DIALOGS_CPP/FitResultsWindow.ui \
-         #$$DIALOGS_CPP/LegendDialog4.ui \
-         #$$DIALOGS_CPP/GraphDialog4.ui \
-    #dialogs/SymbolDialog4.ui \
-    dialogs/DialogFindFromPlot.ui
+         $$DIALOGS_CPP/DialogFindFromPlot.ui
 

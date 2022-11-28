@@ -181,7 +181,7 @@ DBKeyDialog::DBKeyDialog(QWidget* win, int irt, const char* key,
     pButton2->hide();
     if( !filter )
       pFilterButton->hide();
-    QObject::connect( bHelp, SIGNAL( clicked() ), this, SLOT( CmHelp() ) );
+    set_connect();
     pList->setFocus();
 }
 
@@ -208,13 +208,22 @@ DBKeyDialog::DBKeyDialog(QWidget* win, int irt,
         keyFilter = key;
 
     SetList();
-    QObject::connect( bHelp, SIGNAL( clicked() ), this, SLOT( CmHelp() ) );
+    set_connect();
     pList->setFocus();
 }
 
-
 DBKeyDialog::~DBKeyDialog()
 {}
+
+void DBKeyDialog::set_connect()
+{
+    QObject::connect( bHelp, SIGNAL( clicked() ), this, SLOT( CmHelp() ) );
+    QObject::connect(PushButton1, &QPushButton::clicked, this, qOverload<>(&QDialog::accept));
+    QObject::connect(PushButton3, &QPushButton::clicked, this, qOverload<>(&QDialog::reject));
+    QObject::connect(pFilterButton, &QPushButton::clicked, this, qOverload<>(&DBKeyDialog::CmFilter));
+    QObject::connect(pButton2, &QPushButton::clicked, this, qOverload<>(&DBKeyDialog::CmSelectAll));
+    QObject::connect(pButton3, &QPushButton::clicked, this, qOverload<>(&DBKeyDialog::CmClearAll));
+}
 
 void DBKeyDialog::CmHelp()
 {

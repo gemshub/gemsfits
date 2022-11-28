@@ -19,7 +19,8 @@
 
 
 #include <QtCore>
-#if QT_VERSION >= 0x050000
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+#include <QtHelp/QHelpLink>
 #include <QtWidgets>
 #include <QtPrintSupport/QPrintDialog>
 #include <QtPrintSupport/QPrinter>
@@ -58,7 +59,7 @@ HelpWindow::HelpWindow( QWidget* parent):
    setupUi(this);
    string titl = _FIT_version_stamp;
                   titl+= " : Help Viewer ";
-                 setWindowTitle( trUtf8(titl.c_str()) );
+                 setWindowTitle(titl.c_str());
 
     pDia = this;
 
@@ -120,7 +121,7 @@ HelpWindow::HelpWindow( QWidget* parent):
 
 #ifndef GEMS_RELEASE  
     QLabel *label_2 = new QLabel(toolAddress);
-    label_2->setText(trUtf8("Address:"));
+    label_2->setText("Address:");
     toolAddress->addWidget( label_2 );
 
     adressLine = new QLineEdit( toolAddress );
@@ -218,7 +219,7 @@ void HelpWindow::setActions()
                 this, SLOT(showFind()));
 
     QLabel *label_2 = new QLabel(toolFind);
-    label_2->setText(trUtf8("Find:"));
+    label_2->setText("Find:");
     toolFind->addWidget( label_2 );
 
     findLine = new QLineEdit( toolFind );
@@ -246,17 +247,17 @@ void HelpWindow::helpVersion()
     QMessageBox::information(this,
 #ifdef __unix
 #ifdef __APPLE__
-           trUtf8("Title"), trUtf8("GEMSFITS1.0 (MacOS X >10.6 64 clang)\n\n")+
+           QString("Title"), QString("GEMSFITS1.0 (MacOS X >10.6 64 clang)\n\n")+
 #else
-           trUtf8("GEMSFITS (Linux 32/64 Qt5)"),
+           QString("GEMSFITS (Linux 32/64 Qt5)"),
 #endif
 #else
-           trUtf8("GEMSFITS (Windows MinGW Qt5"),
+           QString("GEMSFITS (Windows MinGW Qt5"),
 #endif
-           trUtf8("\nThis is GEMSFITS coupled code\n\n")+
-           trUtf8( _FIT_version_stamp ) + trUtf8(  "\n\nusing " )+
-           trUtf8( _GEMIPM_version_stamp ) +
-           trUtf8( "\n\n\nFor GEMS R&D community\n\n"
+           QString("\nThis is GEMSFITS coupled code\n\n")+
+           QString( _FIT_version_stamp ) + QString(  "\n\nusing " )+
+           QString( _GEMIPM_version_stamp ) +
+           QString( "\n\n\nFor GEMS R&D community\n\n"
                   "(c) 2014-2022, GEMS Development Team\n\n"
                   "          PSI-UH-ETHZ" ) );
 }
@@ -279,7 +280,7 @@ void HelpWindow::helpPrint()
   QPrintDialog dlg(  &printer, this );
   dlg.setWindowTitle(tr("Print GEMS3 Help Page"));
   if (wBrowser->textCursor().hasSelection() )
-      dlg.addEnabledOption(QAbstractPrintDialog::PrintSelection);
+      dlg.setOption(QAbstractPrintDialog::PrintSelection);
   if( dlg.exec() )
     wBrowser->print( &printer ) ;
 }
@@ -300,8 +301,13 @@ void HelpWindow::showFind()
 {
     if( hEngine )
     {
-       QStringList query = hEngine->searchEngine()->queryWidget()->query().value(0).wordList;
-       findLine->setText(query.value(0));
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+        auto query = hEngine->searchEngine()->queryWidget()->searchInput();
+        findLine->setText(query);
+#else
+        QStringList query = hEngine->searchEngine()->queryWidget()->query().value(0).wordList;
+        findLine->setText(query.value(0));
+#endif
     }
 }
 
@@ -331,7 +337,7 @@ void HelpWindow::actionFind()
   if( !findLine )
   {
       QLabel *label_2 = new QLabel(toolFind);
-      label_2->setText(trUtf8("Find for:"));
+      label_2->setText("Find for:");
       toolFind->addWidget( label_2 );
 
       findLine = new QLineEdit( toolFind );
@@ -353,7 +359,7 @@ void HelpWindow::actionFindNext()
   if( !findLine )
    return;
 
-  QTextDocument::FindFlags flg = 0;
+  QTextDocument::FindFlags flg;
   if(action_Case_sensetiv->isChecked() )
        flg |=QTextDocument::FindCaseSensitively;
 
@@ -425,8 +431,26 @@ void HelpWindow::showDocumentation(const char* file, const char* item1)
 QUrl HelpWindow::showHelpForKeyword(const QString &keyword)
 {
     if (!hEngine)
-      return QUrl();
+        return QUrl();
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+    // finding full name, not subString
+    //QMap<QString, QUrl> links = hEngine->indexModel()->linksForKeyword( keyword );
+    auto links = hEngine->documentsForKeyword(keyword);
+    if (links.count())
+        return links.constBegin()->url;
+
+    QString kwInternal = keyword;
+    int ndx = kwInternal.lastIndexOf('_');
+    if(ndx > -1)
+    {
+      kwInternal= kwInternal.remove(QRegularExpression("_[0-9]{1,3}")/*ndx*/);
+        // links = hEngine->indexModel()->linksForKeyword( kwInternal );
+        links = hEngine->documentsForKeyword( kwInternal );
+        if (links.count())
+            return links.constBegin()->url;
+    }
+#else
     // finding full name, not subString
     QMap<QString, QUrl> links = hEngine->indexModel()->linksForKeyword( keyword );
     if (links.count())
@@ -436,10 +460,13 @@ QUrl HelpWindow::showHelpForKeyword(const QString &keyword)
     int ndx = kwInternal.lastIndexOf('_');
     if(ndx > -1)
     {    kwInternal= kwInternal.remove(QRegExp("_[0-9]{1,3}")/*ndx*/);
-         links = hEngine->indexModel()->linksForKeyword( kwInternal );
-            if (links.count())
-              return links.constBegin().value();
+        links = hEngine->indexModel()->linksForKeyword( kwInternal );
+        if (links.count())
+            return links.constBegin().value();
     }
+
+#endif
+
 
     //for old keywd list
     //    "objectlabel[indexN][indexM]", if sizeN >1 and sizeM > 1

@@ -22,8 +22,14 @@
 #include <QFileDialog>
 #include <QCloseEvent>
 #include <QSortFilterProxyModel>
-#include <QPrintDialog>
 #include <QPainter>
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+#include <QtPrintSupport/QPrintDialog>
+#include <QtPrintSupport/QPrinter>
+#else
+#include <QPrintDialog>
+#include <QPrinter>
+#endif
 
 #include "FitResultsWindow.h"
 #include "FITMainWindow.h"
@@ -502,16 +508,16 @@ void FitResultsWindow::CmPrintTable()
         if (dlg->exec() != QDialog::Accepted)
              return;
 
-        if( QPrinter::Landscape != printer.orientation() )
-            printer.setOrientation(QPrinter::Landscape);
+        if( QPageLayout::Landscape != printer.pageLayout().orientation() )
+            printer.setPageOrientation(QPageLayout::Landscape);
 
         QPainter painter;
         painter.begin(&printer);
-        double xscale = printer.pageRect().width()/double(tableCurrent->width());
-        double yscale = printer.pageRect().height()/double(tableCurrent->height());
+        double xscale = printer.pageRect(QPrinter::DevicePixel).width()/double(tableCurrent->width());
+        double yscale = printer.pageRect(QPrinter::DevicePixel).height()/double(tableCurrent->height());
         double scale = qMin(xscale, yscale);
-        painter.translate(printer.paperRect().x() + printer.pageRect().width()/2,
-                          printer.paperRect().y() + printer.pageRect().height()/2);
+        painter.translate(printer.paperRect(QPrinter::DevicePixel).x() + printer.pageRect(QPrinter::DevicePixel).width()/2,
+                          printer.paperRect(QPrinter::DevicePixel).y() + printer.pageRect(QPrinter::DevicePixel).height()/2);
         painter.scale(scale, scale);
         painter.translate(-tableCurrent->width()/2, -tableCurrent->height()/2);
 

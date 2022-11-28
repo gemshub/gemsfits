@@ -6,6 +6,8 @@
 #include <QClipboard>
 #include <QSortFilterProxyModel>
 #include <QPainter>
+#include <QFile>
+#include <QVectorIterator>
 
 #include "fmodel.h"
 #include "CalcDialog.h"
@@ -16,16 +18,16 @@
 
 void removeComments( QString& valCsv )
 {
-    int foundStart = valCsv.indexOf('#');
+    auto foundStart = valCsv.indexOf('#');
     int foundEnd;
     while( foundStart >= 0 )
     {
       foundEnd = valCsv.indexOf('\n');
       if( foundEnd > 0 )
-        valCsv.remove( foundStart, foundEnd-foundStart+1 );
+        valCsv.remove(foundStart, foundEnd-foundStart+1 );
       else
         {
-           valCsv.remove( foundStart);
+           valCsv.remove(foundStart, valCsv.count()-foundStart);
            break;
         }
       foundStart = valCsv.indexOf('#', foundStart );
@@ -175,18 +177,26 @@ void TMatrixModel::matrixFromCsvString( const QString& valueCsv )
   matrix.clear();
 
   if(!valueCsv.isEmpty())
-  { //
-    const QStringList rows = valueCsv.split('\n', QString::KeepEmptyParts);
+  {
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
+      const QStringList rows = valueCsv.split('\n', QString::KeepEmptyParts);
+      QStringList cells = rows[0].split(',', QString::KeepEmptyParts);
+#else
+      const QStringList rows = valueCsv.split('\n', Qt::KeepEmptyParts);
+      QStringList cells = rows[0].split(',', Qt::KeepEmptyParts);
+#endif
 
-    // get header
-    QStringList cells = rows[0].split(',', QString::KeepEmptyParts);
     for( ii=0; ii< cells.count(); ii++ )
        colHeads.push_back( cells[ii] );
 
     // get values
     for( jj=1, nlines=0;  jj<rows.count(); jj++ )
     {
-     cells = rows[jj].split(',', QString::KeepEmptyParts);
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
+      cells = rows[jj].split(',', QString::KeepEmptyParts);
+#else
+      cells = rows[jj].split(',', Qt::KeepEmptyParts);
+#endif
      if(cells.count() < colHeads.size() )
         continue;
      QVector<QVariant> vec;
@@ -339,7 +349,7 @@ void TMatrixModel::matrixFromBson( QSortFilterProxyModel *pmodel, const char *bs
     if( !bson_find_string( bsdata, name.c_str(), valCsv ) )
         valCsv = "";
     //set up data
-    matrixFromCsvString( trUtf8(valCsv.c_str()) );
+    matrixFromCsvString(valCsv.c_str());
 
     // load graphic part
     string label= "graph_"+name;
@@ -532,61 +542,6 @@ TMatrixTable::TMatrixTable( QWidget * parent ):
     //          QItemSelectionModel::SelectCurrent );
     //no_menu_in = true;
   }
-
- void TMatrixTable::printTable(QPainter* painter, const QRect& area)
- {
-     const int rows = model()->rowCount();
-     const int cols = model()->columnCount();
-
-     // calculate the total width/height table would need without scaling
-     double totalWidth = 0.0;
-     for (int c = 0; c < cols; ++c)
-     {
-         totalWidth += columnWidth(c);
-     }
-     double totalHeight = 0.0;
-     for (int r = 0; r < rows; ++r)
-     {
-         totalHeight += rowHeight(r);
-     }
-
-     // calculate proper scale factors
-     const double scaleX = area.width() / totalWidth;
-     const double scaleY = area.height() / totalHeight;
-     painter->scale(scaleX, scaleY);
-
-     // paint cells
-     for (int r = 0; r < rows; ++r)
-     {
-         for (int c = 0; c <cols; ++c)
-         {
-             QModelIndex idx = model()->index(r, c);
-             QStyleOptionViewItem option = viewOptions();
-             option.rect = visualRect(idx);
-             itemDelegate()->paint(painter, option, idx);
-         }
-     }
- }
-
- /*
- // printer usage
- QPainter painter(&printer);
- tableView->print(&painter, printer.pageRect());
-
- // test on pixmap
- QPixmap pixmap(320, 240);
- QPainter painter(&pixmap);
- tableView->print(&painter, pixmap.rect());
- pixmap.save("table.png", "PNG");
-
-
-
- QStyleOptionViewItem TMatrixTable::viewOptions() const
- {
-    QStyleOptionViewItem option = QAbstractItemView::viewOptions();
-    return option;
- }
-*/
 
  void TMatrixTable::slotPopupContextMenu(const QPoint &pos)
  {
@@ -883,7 +838,11 @@ void TMatrixTable::CmCalc()
   	    return;
   	
      QModelIndex wIndex;
-     const QStringList rows = str.split(splitrow, QString::KeepEmptyParts);
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
+      const QStringList rows = str.split(splitrow, QString::KeepEmptyParts);
+#else
+      const QStringList rows = str.split(splitrow, Qt::KeepEmptyParts);
+#endif
 
      int ii, jj;
      int rowNum = sel.N1;
@@ -893,8 +852,11 @@ void TMatrixTable::CmCalc()
   	{
   	    //if( rows[it].isEmpty() ) sd 29/10/2008 
   		// continue;
-
-  	    const QStringList cells = rows[it].split('\t', QString::KeepEmptyParts);
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
+      const QStringList cells = rows[it].split('\t', QString::KeepEmptyParts);
+#else
+       const QStringList cells = rows[it].split('\t', Qt::KeepEmptyParts);
+#endif
   	    int cellNum = sel.M1;
   	    const int mLimit = (transpose) ? (sel.M1 + sel.N2-sel.N1) : sel.M2;
   	    for( int cellIt = 0;  cellIt < cells.count() && cellNum <= mLimit; cellIt++, cellNum++) 

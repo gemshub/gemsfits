@@ -193,7 +193,6 @@ class TMatrixTable: public QTableView
 
  public:
     TMatrixTable( QWidget * parent = 0 );
-    void printTable(QPainter* painter, const QRect& area);
 
 };
 

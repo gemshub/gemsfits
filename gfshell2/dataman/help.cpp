@@ -95,7 +95,7 @@ void HelpConfigurator::addNameToList( QString ref, QString file_name )
       names.append(ref);
       key =ref.section("\"",1,1);
       value = file_name +"#"+key;
-      links.insertMulti(key,QUrl(value));
+      links.insert(key, QUrl(value));
 // cout << value.toStdString()<<endl;
     }
     else
@@ -137,16 +137,16 @@ int HelpConfigurator::readDir(const char *dir)
         return 0;
     }
 
-    thisDir .setFilter(QDir::Files);
+    thisDir.setFilter(QDir::Files);
     QStringList filters;
     filters << "*.html";
     thisDir.setNameFilters(filters);
 
-    QFileInfoList files = thisDir.entryInfoList();
-    if (files.empty())
+    QFileInfoList files1 = thisDir.entryInfoList();
+    if (files1.empty())
         return 0;
 
-    QListIterator<QFileInfo> it(files);
+    QListIterator<QFileInfo> it(files1);
     QFileInfo f;
     while ( it.hasNext() )
     {
@@ -172,7 +172,7 @@ int HelpConfigurator::writeFile(const char *file)
         QString str = QString(file) + " Fileopen error";
         Error( "HelpConfigurator", str.toStdString());
 #endif
-         return 0;
+        return 0;
     }
 
     // Write head
@@ -193,6 +193,7 @@ int HelpConfigurator::writeFile(const char *file)
     return 1;
 }
 
+
 void HelpConfigurator::writeFiles( fstream& f_out)
 {
     f_out << "      <files>" << endl;
@@ -208,6 +209,7 @@ void HelpConfigurator::writeFiles( fstream& f_out)
     }
     f_out << "      </files>" << endl;
 }
+
 
 void HelpConfigurator::writeKeywords( fstream& f_out)
 {
@@ -250,7 +252,7 @@ void HelpConfigurator::writeContent( fstream& f_out)
         contentfile += " Fileopen error";
         Error( "HelpConfigurator", contentfile.toStdString());
 #endif
-         return;
+        return;
     }
 
     while( !f_in.eof() )
@@ -272,15 +274,16 @@ int HelpConfigurator::showObjectForKeyword(const QString &keyword)
     int nO = -1;
 
     // finding full name, not subString
-    nO = aObj.Find(keyword.toUtf8().data());
+    nO = aObj.Find(keyword.toLatin1().data());
     if( nO < 0 )
     {
        QString kwInternal = keyword;
-       int ndx = kwInternal.lastIndexOf('_');  // finding only keyword
-       if(ndx > -1)
-       {    kwInternal= kwInternal.remove(QRegExp("_[0-9]{1,3}")/*ndx*/);
-            nO = aObj.Find(kwInternal.toUtf8().data());
-       }
+        int ndx = kwInternal.lastIndexOf('_');  // finding only keyword
+        if(ndx > -1)
+        {
+            kwInternal= kwInternal.remove(QRegularExpression("_[0-9]{1,3}")/*ndx*/);
+            nO = aObj.Find(kwInternal.toLatin1().data());
+        }
     }
 
     return nO;

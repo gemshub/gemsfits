@@ -2,26 +2,20 @@
                     $$DATAMAN_H/f_ejdb_file.h \
                     $$DATAMAN_H/v_json.h \
                     $$DATAMAN_H/help.h \
-    $$PWD/v_user.h \
-    dataman/fmodel.h \
-    #dataman/qwtplot.h \
-    #dataman/graph.h \
+                    $$DATAMAN_H/v_user.h \
+                    $$DATAMAN_H/fmodel.h \
                     $$KEYS_H/keywords.h \
-    $$PWD/v_yaml.h
-#    dataman/keywords.h
-#                   $$DATAMAN_H/qwtplot.h
+                    $$DATAMAN_H/v_yaml.h
+
 
          SOURCES += $$DATAMAN_CPP/f_ejdb.cpp \
                     $$DATAMAN_CPP/f_ejdb_file.cpp \
                     $$DATAMAN_CPP/v_json.cpp \
                     $$DATAMAN_CPP/help.cpp \
-#                    $$DATAMAN_CPP/qwtplot.cpp \
                     $$DATAMAN_CPP/main.cpp \
-    dataman/v_user.cpp \
-    dataman/gemsfit_iobson.cpp \
-    dataman/fmodel.cpp \
-    #dataman/qwtplot.cpp \
-    #dataman/graph.cpp \
-    $$PWD/v_yaml.cpp
+                    $$DATAMAN_CPP/v_user.cpp \
+                    $$DATAMAN_CPP/gemsfit_iobson.cpp \
+                    $$DATAMAN_CPP/fmodel.cpp \
+                    $$DATAMAN_CPP/v_yaml.cpp
 
 
