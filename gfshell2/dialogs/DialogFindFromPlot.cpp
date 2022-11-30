@@ -50,8 +50,8 @@ void DialogFindFromPlot::getData( int *xyndx, double *reg )
 
 void DialogFindFromPlot::ChangeIndex(int index)
 {
-   int xc, yc;
-   /// SD ? grdata->getXYColumns( index, xc, yc );
+   int xc=-1, yc=0;
+   grdata->getXYColumns( index, xc, yc );
    ui->xNum->setValue(xc);
    ui->yNum->setValue(yc);
 }

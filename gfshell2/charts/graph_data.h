@@ -336,6 +336,19 @@ public:
     void toJsonObject(QJsonObject& json) const;
     void fromJsonObject(const QJsonObject& json);
 
+    void getXYColumns( int line, int& xcol, int& ycol ) const
+    {
+        if( line >= linesNumber() )
+            return;
+        size_t modelline=0;
+        auto nplot =  getPlot( line, &modelline );
+        if( nplot < 0 )
+            return;
+        xcol = modelsdata[nplot]->getXColumn(xcol);
+        ycol = modelsdata[nplot]->getYColumn(line - modelline);
+    }
+
+
 protected:
 
     int graphType;      ///< GRAPHTYPES ( 0-line by line, 1- cumulative, 2 - isolines )
