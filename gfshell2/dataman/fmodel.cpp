@@ -53,8 +53,7 @@ bool TSortFilterProxyModel::lessThan(const QModelIndex &left,
 //  class TMatrixModel
 
 TMatrixModel::TMatrixModel( const QString& afname, int aNumCol, QObject * parent ):
-    QAbstractTableModel(parent), fname(afname), numberStringColumns(aNumCol),
-    grdata(0), graph_dlg(0)
+    QAbstractTableModel(parent), fname(afname), numberStringColumns(aNumCol)
 {
 }
 
@@ -141,9 +140,9 @@ QVariant TMatrixModel::headerData( int section, Qt::Orientation orientation, int
          if( orientation == Qt::Horizontal )
          {
             QString valh = colHeads.at(section);
-            if( xcolms.contains( section ))
+            if(std::find(xColumns.begin(), xColumns.end(), section) != xColumns.end())
                 valh += "(x)";
-            if( ycolms.contains( section ))
+            if(std::find(yColumns.begin(), yColumns.end(), section) != yColumns.end())
                 valh += "(y)";
             return valh;
          }
@@ -168,9 +167,8 @@ Qt::ItemFlags TMatrixModel::flags( const QModelIndex & index ) const
 // internal part
 void TMatrixModel::matrixFromCsvString( const QString& valueCsv )
 {
-#if QT_VERSION >= 0x050000
+
     beginResetModel();
-#endif
    int ii, jj, nlines;
   // clear old data
   colHeads.clear();
@@ -209,13 +207,34 @@ void TMatrixModel::matrixFromCsvString( const QString& valueCsv )
      nlines++;
     }
    }
-#if QT_VERSION >= 0x050000
-    endResetModel();
-#else
-    reset();
-#endif
 
+    endResetModel();
 }
+
+void TMatrixModel::toggle_X(int ncolmn)
+{
+    auto it = std::find( xColumns.begin(), xColumns.end(), ncolmn );
+    if ( it != xColumns.end() )
+        xColumns.erase( it );
+    else
+        xColumns.push_back( ncolmn );
+
+    if( chart_data )
+        chart_models[0]->setXColumns( xColumns );
+}
+
+void TMatrixModel::toggle_Y(int ncolmn)
+{
+    auto it = std::find( yColumns.begin(), yColumns.end(), ncolmn );
+    if ( it != yColumns.end() )
+        yColumns.erase( it );
+    else
+        yColumns.push_back( ncolmn );
+
+    if( chart_data )
+        chart_models[0]->setYColumns( yColumns, true );
+}
+
 
 QString TMatrixModel::matrixToCsvString( )
 {
@@ -313,28 +332,28 @@ void TMatrixModel::matrixToBson(  bson *obj )
     ErrorIf( iRet == BSON_ERROR, name, "Error append string"+name );
 
     // added graphic part
-    if( grdata )
+    if( chart_data )
     {
       string label= "graph_"+name;
       bson_append_start_object( obj, label.c_str());
       //
       bson_append_start_array(obj, "xcolms");
-      for( ii=0; ii<xcolms.size(); ii++)
+      for( ii=0; ii<xColumns.size(); ii++)
       {
           sprintf(buf, "%d", ii);
-          bson_append_double( obj, buf, xcolms[ii] );
+          bson_append_int( obj, buf, xColumns[ii] );
       }
       bson_append_finish_array(obj);
 
       bson_append_start_array(obj, "ycolms");
-      for( ii=0; ii<ycolms.size(); ii++)
+      for( ii=0; ii<yColumns.size(); ii++)
       {
           sprintf(buf, "%d", ii);
-          bson_append_double( obj, buf, ycolms[ii] );
+          bson_append_int( obj, buf, yColumns[ii] );
       }
       bson_append_finish_array(obj);
 
-      grdata->toBsonObject(obj);
+      chart_data->toBsonObject(obj);
       bson_append_finish_object( obj );
     }
 
@@ -357,53 +376,26 @@ void TMatrixModel::matrixFromBson( QSortFilterProxyModel *pmodel, const char *bs
     bson_type type;
     type =  bson_find_from_buffer(&it, bsdata, label.c_str() );
     if( type != BSON_OBJECT )
-    {  //if(grdata)
-       //  delete grdata;
-       // grdata = 0;
+    {
         return; // no graphic
     }
     const char *objbson = bson_iterator_value(&it);
 
-    xcolms.clear();
+    xColumns.clear();
     const char *arr  = bson_find_array(  objbson, "xcolms" );
     bson_iterator iter;
     bson_iterator_from_buffer(&iter, arr );
     while (bson_iterator_next(&iter))
-        xcolms.push_back( bson_iterator_int(&iter));
-    ycolms.clear();
+        xColumns.push_back( bson_iterator_int(&iter));
+    yColumns.clear();
     arr  = bson_find_array(  objbson, "ycolms" );
     bson_iterator_from_buffer(&iter, arr );
     while (bson_iterator_next(&iter))
-        ycolms.push_back( bson_iterator_int(&iter));
+        yColumns.push_back( bson_iterator_int(&iter));
 
     setGraphData( pmodel,  "" );
-    //if( !grdata )
-    //{   vector<TPlot> plt;
-    //    grdata = new GraphData( plt, "", "x", "y" );
-    //}
-    grdata->fromBsonObject(objbson);
-}
-
-void TMatrixModel::ToggleX( int ncolmn )
-{
-    int ii = xcolms.indexOf( ncolmn );
-    if( ii != -1 )
-       xcolms.remove( ii );
-    else
-       xcolms.append( ncolmn );
-
-    // Update headers
-}
-
-void TMatrixModel::ToggleY( int ncolmn )
-{
-    int ii = ycolms.indexOf( ncolmn );
-    if( ii != -1 )
-       ycolms.remove( ii );
-    else
-       ycolms.append( ncolmn );
-
-    // Update headers
+    if( chart_data )
+        chart_data->fromBsonObject(objbson);
 }
 
 void TMatrixModel::CloseGraph()
@@ -412,34 +404,16 @@ void TMatrixModel::CloseGraph()
       graph_dlg->close();
 }
 
-void TMatrixModel::setGraphData( QSortFilterProxyModel *pmodel,  const string& title_ )
+void TMatrixModel::setGraphData( QSortFilterProxyModel *pmodel,  const string& title )
 {
-    string title = title_;
-    vector<int> xval;
-    vector<int> yval;
-    vector<string> ynames;
-    int lines = matrix.size();
-
-    foreach (const int &value, xcolms)
-       xval.push_back( value);
-
-    foreach (const int &value, ycolms)
-    {   yval.push_back( value);
-        ynames.push_back( colHeads[value].toStdString() );
+    if(!chart_data)
+    {
+        chart_models.push_back( std::shared_ptr<jsonui17::ChartDataModel>( new jsonui17::ChartDataModel( this )) );
+        chart_models[0]->setXColumns( xColumns );
+        chart_models[0]->setYColumns( yColumns, true );
+        chart_data = std::make_shared<jsonui17::ChartData>( chart_models, title, "x", "y" );
     }
-/* SD ?????
-    vector<TPlot> plt;
-    plt.push_back( TPlot( pmodel, lines, xval, yval, ynames ));
-    title += "."+ getName();
-
-   // Set up GraphDialog
-    if( !grdata )
-         grdata = new GraphData( plt, title.c_str(), "x", "y" );
-    else
-         grdata->setNewPlot( plt );
-*/
 }
-
 
 void TMatrixModel::showGraphData( QSortFilterProxyModel *pmodel,  const string& title )
 {
@@ -448,7 +422,7 @@ void TMatrixModel::showGraphData( QSortFilterProxyModel *pmodel,  const string& 
 
    if( graph_dlg )
      delete  graph_dlg;
-   graph_dlg = new jsonui17::GraphDialog( grdata, 0 );
+   graph_dlg = new jsonui17::GraphDialog( chart_data.get(), 0 );
    graph_dlg->show();
 }
 
@@ -464,7 +438,7 @@ int TMatrixModel::findRow( int *xynd, double *reg )
    if( xynd[1] < colHeads.size() && xynd[1] >= 0 )
      yfcol.push_back( xynd[1] );
    else
-     yfcol = ycolms; // ally
+     yfcol = QVector<int>(yColumns.begin(), yColumns.end()); // ally
 
    ndx = 0;
    QVectorIterator<QVector<QVariant> > line(matrix);
@@ -687,7 +661,7 @@ void TMatrixTable::ToggleX()
     //    TMatrixModel* model =(TMatrixModel *)index.model();
     TMatrixModel* model =(TMatrixModel *)sortmodel->sourceModel();
 
-    model->ToggleX( index.column() );
+    model->toggle_X(index.column());
     horizontalHeader()->update();
 }
 
@@ -695,11 +669,10 @@ void TMatrixTable::ToggleX()
 void TMatrixTable::ToggleY()
 {
     QModelIndex index = currentIndex();
-    //TMatrixModel* model =(TMatrixModel *)index.model();
     QSortFilterProxyModel *sortmodel = (QSortFilterProxyModel *)index.model();
     TMatrixModel* model =(TMatrixModel *)sortmodel->sourceModel();
 
-    model->ToggleY( index.column() );
+    model->toggle_Y(index.column());
     horizontalHeader()->update();
 }
 

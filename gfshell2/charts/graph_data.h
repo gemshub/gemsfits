@@ -222,7 +222,7 @@ public:
         for( int jj=0; jj<nLinN; jj++, nLines++ )
         {
             if( nLines >= defined_lines )
-                linesdata.push_back( SeriesLineData( jj, nLinN, aPlot->getName(nLinN)  ) );
+                linesdata.push_back( SeriesLineData( jj, nLinN, aPlot->getName(jj)  ) );
         }
         connect( modelsdata.back().get(), &ChartDataModel::changedXSelections,
                  this,  &ChartData::updateXSelections );

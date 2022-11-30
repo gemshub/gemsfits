@@ -45,28 +45,28 @@ struct Selection {
     int M2;
 
     Selection(int n1, int n2, int m1, int m2 ):
-     N1(n1), N2(n2), M1(m1), M2(m2)
-     {}
+        N1(n1), N2(n2), M1(m1), M2(m2)
+    {}
 
     Selection(const Selection& sel):
-     N1(sel.N1), N2(sel.N2), M1(sel.M1), M2(sel.M2)
-     {}
+        N1(sel.N1), N2(sel.N2), M1(sel.M1), M2(sel.M2)
+    {}
 
 };
 
 class TSortFilterProxyModel : public QSortFilterProxyModel
- {
-     Q_OBJECT
+{
+    Q_OBJECT
 
- public:
-     TSortFilterProxyModel(QObject *parent = 0):
-         QSortFilterProxyModel(parent)
-     { }
+public:
+    TSortFilterProxyModel(QObject *parent = 0):
+        QSortFilterProxyModel(parent)
+    { }
 
- protected:
-     bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
+protected:
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
 
- };
+};
 
 
 //===========================================
@@ -84,63 +84,69 @@ class TSortFilterProxyModel : public QSortFilterProxyModel
 
 class TMatrixModel: public QAbstractTableModel
 {
-	Q_OBJECT
-	
+    Q_OBJECT
+
     QString fname;
     int numberStringColumns;
     QVector< QString > colHeads;
     QVector< QVector<QVariant> > matrix;
 
-    QVector<int> xcolms;  ///< Abscissa columns list
-    QVector<int> ycolms;  ///< Ordinate columns list
+    // graph charts information
 
-    jsonui17::ChartData* grdata;    /// last definition of graphic
-    jsonui17::GraphDialog *graph_dlg;
+    /// Abscissa columns list
+    std::vector<int> xColumns;
+    /// Ordinate columns list
+    std::vector<int> yColumns;
+    /// Descriptions of model extracting graph data
+    std::vector<std::shared_ptr<jsonui17::ChartDataModel>> chart_models;
+    /// Description of 2D plotting widget
+    std::shared_ptr<jsonui17::ChartData> chart_data;
+    jsonui17::GraphDialog *graph_dlg = nullptr;
 
     QString ValToString( double val, int digits ) const;
     double ValFromString( const QVariant& strval  );
     void setGraphData( QSortFilterProxyModel *pmodel, const string& title );
 
-
 public:
-	  
-     TMatrixModel( const QString& fname, int aNumCol, QObject * parent = 0 );
-     ~TMatrixModel()
-     {
-       if( graph_dlg )
-         delete graph_dlg;
-     }
 
-	 int rowCount ( const QModelIndex & parent ) const;	
-	 int columnCount ( const QModelIndex & parent  ) const;
-	 QVariant data ( const QModelIndex & index, int role ) const;
-	 bool setData ( const QModelIndex & index, const QVariant & value, int role );
-     QVariant headerData ( int section, Qt::Orientation orientation, int role ) const;
-     Qt::ItemFlags flags( const QModelIndex & index ) const;
+    TMatrixModel( const QString& fname, int aNumCol, QObject * parent = 0 );
+    ~TMatrixModel()
+    {
+        if( graph_dlg )
+            delete graph_dlg;
+    }
 
-     void matrixFromCsvFile( const QString& dir );
-     void matrixToCsvFile( const QString& dir );
-     void matrixFromCsvString( const QString& valueCsv );
-     QString matrixToCsvString( );
-     void matrixToBson(  bson *obj );
-     void matrixFromBson( QSortFilterProxyModel *pmodel,  const char *bsdata );
-     int getNumberStringColumns() const
-     {   return numberStringColumns; }
+    const jsonui17::ChartData *getGraphData()
+    {
+        return chart_data.get();
+    }
 
-     string getName()
-     {   return fname.toStdString(); }
+    int rowCount ( const QModelIndex & parent ) const;
+    int columnCount ( const QModelIndex & parent  ) const;
+    QVariant data ( const QModelIndex & index, int role ) const;
+    bool setData ( const QModelIndex & index, const QVariant & value, int role );
+    QVariant headerData ( int section, Qt::Orientation orientation, int role ) const;
+    Qt::ItemFlags flags( const QModelIndex & index ) const;
 
-     void ToggleX( int ncolmn );
-     void ToggleY( int ncolmn );
+    void matrixFromCsvFile( const QString& dir );
+    void matrixToCsvFile( const QString& dir );
+    void matrixFromCsvString( const QString& valueCsv );
+    QString matrixToCsvString( );
+    void matrixToBson(  bson *obj );
+    void matrixFromBson( QSortFilterProxyModel *pmodel,  const char *bsdata );
+    int getNumberStringColumns() const
+    {   return numberStringColumns; }
 
-     // get graph info
-     void showGraphData( QSortFilterProxyModel *pmodel, const string& title );
-     void CloseGraph();
-     const jsonui17::ChartData *getGraphData()
-     {
-         return grdata;
-     }
-     int findRow( int *xyndx, double *reg );
+    string getName()
+    {   return fname.toStdString(); }
+
+    void toggle_X(int ncolmn);
+    void toggle_Y(int ncolmn);
+
+    // get graph info
+    void showGraphData( QSortFilterProxyModel *pmodel, const string& title );
+    void CloseGraph();
+    int findRow( int *xyndx, double *reg );
 
 };
 
@@ -155,30 +161,28 @@ public:
 
 class TMatrixTable: public QTableView
 {
-        Q_OBJECT
+    Q_OBJECT
 
-        bool vScroll;
-        bool hScroll;
+    bool vScroll;
+    bool hScroll;
 
-        void focusOutEvent( QFocusEvent * event );
-        void focusInEvent( QFocusEvent * event );
-        void keyPressEvent(QKeyEvent* e);
+    void focusOutEvent( QFocusEvent * event );
+    void focusInEvent( QFocusEvent * event );
+    void keyPressEvent(QKeyEvent* e);
 
-        QList<QAction*> itemActions( const QModelIndex & current);
+    QList<QAction*> itemActions( const QModelIndex & current);
 
-        Selection getSelectionRange( bool paste_ = false );
-        QString createString( Selection& sel );
-        QString createHeader();
-        void pasteIntoArea( Selection& sel, bool transpose);
-        void  setFromString(char splitrow, const QString& str,
-                Selection sel, bool transpose);
-//        QStyleOptionViewItem viewOptions() const;
+    Selection getSelectionRange( bool paste_ = false );
+    QString createString( Selection& sel );
+    QString createHeader();
+    void pasteIntoArea( Selection& sel, bool transpose);
+    void  setFromString(char splitrow, const QString& str,
+                        Selection sel, bool transpose);
 
- protected slots:
-//    void currentChanged( const QModelIndex& current, const QModelIndex& previous );
+protected slots:
     void slotPopupContextMenu(const QPoint& pos);
 
- public slots:
+public slots:
     void CmCalc();
     void SelectColumn();
     void SelectAll();
@@ -191,8 +195,9 @@ class TMatrixTable: public QTableView
     void ToggleY();
 
 
- public:
+public:
     TMatrixTable( QWidget * parent = 0 );
+    ~TMatrixTable() {}
 
 };
 
@@ -205,19 +210,19 @@ class TMatrixTable: public QTableView
 
 class TMatrixDelegate: public QItemDelegate
 {
-	Q_OBJECT
+    Q_OBJECT
 
     int numberStringColumns;
 
- public:
-	
-   TMatrixDelegate( int nStringColumn, QObject * parent = 0 );
-   QWidget *createEditor(QWidget *parent,
-                         const QStyleOptionViewItem &option,
-                         const QModelIndex &index) const;
+public:
+
+    TMatrixDelegate( int nStringColumn, QObject * parent = 0 );
+    QWidget *createEditor(QWidget *parent,
+                          const QStyleOptionViewItem &option,
+                          const QModelIndex &index) const;
     void setEditorData(QWidget *editor, const QModelIndex &index) const;
     void setModelData(QWidget *editor, QAbstractItemModel *model,
-	                      const QModelIndex &index) const;
+                      const QModelIndex &index) const;
 
 };
 
@@ -229,10 +234,10 @@ class TMatrixDelegate: public QItemDelegate
 
 /*!
   \class TCellInput
-  \brief elemetary cell - Line Input 
+  \brief elemetary cell - Line Input
 */
 class TCellInput:
-            public QLineEdit
+        public QLineEdit
 {
     Q_OBJECT
 
@@ -240,7 +245,7 @@ class TCellInput:
     bool edited;
 
 protected:
-   // void keyPressEvent(QKeyEvent*);
+    // void keyPressEvent(QKeyEvent*);
 
 protected slots:
     void setCh() { edited=true; }
