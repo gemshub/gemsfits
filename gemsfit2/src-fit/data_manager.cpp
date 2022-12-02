@@ -40,7 +40,7 @@
 #include "data_manager.h"
 #include "gemsfit_iofiles.h"
 #include "keywords.h"
-//#include <jansson.h>
+#include <jansson.h>
 #ifdef buildWIN32
 #include <tcejdb/ejdb.h>
 #else

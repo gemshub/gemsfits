@@ -7,7 +7,6 @@
 #include <QColor>
 #include <QJsonObject>
 #include "chart_model.h"
-#include  "bson.h"
 
 namespace jsonui17 {
 

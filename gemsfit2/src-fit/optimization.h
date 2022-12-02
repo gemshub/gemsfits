@@ -39,7 +39,7 @@
 #include <fstream>
 #include <iostream>
 #include "gemsfit_iofiles.h"
-#include <jansson.h>
+//#include <jansson.h>
 #include <sstream>
 #include "opt_vector.h"
 using namespace std;
