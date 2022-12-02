@@ -378,7 +378,9 @@ namespace mu
       switch(a_Callback.GetCode())
       {
       case cmOPRT_POSTFIX: Error(ecINVALID_POSTFIX_IDENT, -1, a_sName);
+                           break;
       case cmOPRT_INFIX:   Error(ecINVALID_INFIX_IDENT, -1, a_sName);
+                           break;
       default:             Error(ecINVALID_NAME, -1, a_sName);
       }
     }
@@ -838,7 +840,67 @@ namespace mu
 
     switch(funTok.GetCode())
     {
-    case  cmFUNC_STR:  
+    case mu::cmLE:
+        break;
+    case mu::cmGE:
+        break;
+    case mu::cmNEQ:
+        break;
+    case mu::cmEQ:
+        break;
+    case mu::cmLT:
+        break;
+    case mu::cmGT:
+        break;
+    case mu::cmADD:
+        break;
+    case mu::cmSUB:
+        break;
+    case mu::cmMUL:
+        break;
+    case mu::cmDIV:
+        break;
+    case mu::cmPOW:
+        break;
+    case mu::cmLAND:
+        break;
+    case mu::cmLOR:
+        break;
+    case mu::cmASSIGN:
+        break;
+    case mu::cmBO:
+        break;
+    case mu::cmBC:
+        break;
+    case mu::cmIF:
+        break;
+    case mu::cmELSE:
+        break;
+    case mu::cmENDIF:
+        break;
+    case mu::cmARG_SEP:
+        break;
+    case mu::cmVAR:
+        break;
+    case mu::cmVAL:
+        break;
+    case mu::cmVARPOW2:
+        break;
+    case mu::cmVARPOW3:
+        break;
+    case mu::cmVARPOW4:
+        break;
+    case mu::cmVARMUL:
+        break;
+    case mu::cmPOW2:
+        break;
+    case mu::cmSTRING:
+        break;
+    case mu::cmEND:
+        break;
+    case mu::cmUNKNOWN:
+        break;
+    case  cmFUNC_STR:
           stArg.push_back(a_stVal.pop());
           
           if ( stArg.back().GetType()==tpSTR && funTok.GetType()!=tpSTR )

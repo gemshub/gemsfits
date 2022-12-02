@@ -693,10 +693,10 @@ void fillValue( T* arr, T value, int size )
 //
 void TFormula::Stm_line( int N, double *Sml, char *ICsym, short *ICval )
 {
-    int i;
-    int ii, jj=-1;
+    uint i, ii;
+    int jj=-1;
     char ICS[IC_RKLEN+1];
-    char *icsp = ICS;
+    //char *icsp = ICS;
 
     fillValue( Sml, 0., N);
     for( i=0; i<aCn.size(); i++ )

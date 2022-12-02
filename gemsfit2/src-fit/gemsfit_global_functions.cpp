@@ -146,13 +146,13 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     {
         string old = sys->Tfun->type;               // storing the old type of target function
         sys->Tfun->type = "abs_dif";                // seeting the target function to simple abslute difference
-        for (int i = 0; i < sys->NodT.size(); i++)
+        for (uint i = 0; i < sys->NodT.size(); i++)
         {
             sys->aTfun[i].type = "abs_dif";
         }
         nestedfun(sys);                             // optimizing the nested functions
         sys->Tfun->type = old;
-        for (int i = 0; i < sys->NodT.size(); i++)
+        for (uint i = 0; i < sys->NodT.size(); i++)
         {
             sys->aTfun[i].type = old;
         }

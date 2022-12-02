@@ -282,7 +282,7 @@ void optimization::OptParameterCreate ()
         if (out.size() > 0)
         {
             Opt_Tk* myPT = new Opt_Tk( out, OptBoundPerc, p );
-            myPT->SetIndex_param( );
+            myPT->SetIndex_param(node);
             myOPT = (Opt_Tk*)myPT;
         }
         if(myOPT) { optNFParam.push_back( myOPT ); myOPT = 0; };
@@ -292,7 +292,7 @@ void optimization::OptParameterCreate ()
         if (out.size() > 0)
         {
             Opt_P* myPT = new Opt_P( out, OptBoundPerc, p );
-            myPT->SetIndex_param( );
+            myPT->SetIndex_param(node);
             myOPT = (Opt_P*)myPT;
         }
         if(myOPT) { optNFParam.push_back( myOPT ); myOPT = 0; };

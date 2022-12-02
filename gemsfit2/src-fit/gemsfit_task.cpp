@@ -772,8 +772,8 @@ void TGfitTask::setnodes()
                 // This is not a name of DC used in DBR file. The GEMS formula parser is used
                 //  (implemented by SD on 4.03.2014)
                 TFormula aFo;
-                auto_ptr<double> A( new double[nIC]);
-                auto_ptr<char> SB1( new char[nIC*IC_RKLEN]);
+                shared_ptr<double> A( new double[nIC]);
+                shared_ptr<char> SB1( new char[nIC*IC_RKLEN]);
 
                 if ((experiments[n]->sbcomp[j]->Qunit != keys::mol) && (experiments[n]->sbcomp[j]->Qunit != keys::molal) && (experiments[n]->sbcomp[j]->Qunit != keys::gram))
                    {cout << "ERROR: Unknown unit " << experiments[n]->sbcomp[j]->Qunit <<" for "<< experiments[n]->sbcomp[j]->comp <<" experiment " << experiments[n]->sample << endl; exit(1);}

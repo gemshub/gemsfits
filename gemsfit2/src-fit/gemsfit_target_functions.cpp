@@ -333,7 +333,7 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
 double residual_properties(int i, int p, TGfitTask::TargetFunction::obj_fun &objfun, TGfitTask *sys)
 {
     int DCndx;
-    double computed_value, measured_value, error_value;
+    double computed_value = 0.0, measured_value, error_value;
     double Tfun_residual = 0.0, Weighted_Tfun_residual = 0.0, weight_ = 1.0;
 
     vector<double> varDbl;
@@ -423,7 +423,8 @@ double residual_properties(int i, int p, TGfitTask::TargetFunction::obj_fun &obj
         weight_ = weight_prop(i, p, objfun, sys->Tfun->weight, sys) * objfun.TuWeight * objfun.weight;
         Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun);
         Weighted_Tfun_residual = Tfunction(computed_value, measured_value, sys->Tfun->type, objfun)*weight_;
-    } else
+    }
+    else
     {
         measured_value = 0.0;
         error_value = 0.0;
@@ -473,16 +474,16 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
         else
             if (objfun.exp_unit == keys::logM)
             {
-//                double molar_= sys->NodT[i]->g /Ph_Volume m3;
-//                computed_value = log10(molal_);
+                //                double molar_= sys->NodT[i]->g /Ph_Volume m3;
+                //                computed_value = log10(molal_);
                 cout << "Error: log_molar unit not yet implemented"<< endl; exit(1);
             }
             else
                 if (objfun.exp_unit == keys::molar)
                 {
-//                    double molar_= sys->NodT[i]->Get_mIC(ICndx);
-//                    computed_value = log10(molal_);
-                      cout << "Error: molar unit not yet implemented"<< endl; exit(1);
+                    //                    double molar_= sys->NodT[i]->Get_mIC(ICndx);
+                    //                    computed_value = log10(molal_);
+                    cout << "Error: molar unit not yet implemented"<< endl; exit(1);
                 }
                 else
                 {
@@ -515,16 +516,22 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
                 // Default
                 objfun.exp_unit = keys::mol;
             }
-        } else
-        { if (PHndx < 0)
-             {
-                 cout << "Error: "<< phase_name <<" is not present in the GEMS3K CSD files "; exit(1);
-             } else
-          if (ICndx < 0)
-             {
-                 cout << "Error: "<< elem_name <<" is not present in the " <<phase_name; exit(1);
-             } else
-               cout << "Error in target functions line 481 "; exit(1);
+        }
+        else
+        {
+            if (PHndx < 0)
+            {
+                cout << "Error: "<< phase_name <<" is not present in the GEMS3K CSD files "; exit(1);
+            }
+            else
+                if (ICndx < 0)
+                {
+                    cout << "Error: "<< elem_name <<" is not present in the " <<phase_name; exit(1);
+                }
+                else
+                {
+                    cout << "Error in target functions line 481 "; exit(1);
+                }
         }
 
 
@@ -560,7 +567,7 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
     }
 
     if ((PHndx >=0) && (ICndx >=0))
-    objfun.isComputed = true;
+        objfun.isComputed = true;
 
     delete[] IC_in_PH;
 
@@ -639,25 +646,25 @@ double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::ob
         parser.ClearVar();
     }
     catch(mu::Parser::exception_type &e)
-       {
-         cout << "muParser ERROR for sample " << sys->experiments[i]->sample << "\n";
+    {
+        cout << "muParser ERROR for sample " << sys->experiments[i]->sample << "\n";
 #if defined(_UNICODE)
-         cout << "Message:  " << ws2s(e.GetMsg()) << "\n";
-         cout << "Formula:  " << ws2s(e.GetExpr()) << "\n";
-         cout << "Token:    " << ws2s(e.GetToken()) << "\n";
+        cout << "Message:  " << ws2s(e.GetMsg()) << "\n";
+        cout << "Formula:  " << ws2s(e.GetExpr()) << "\n";
+        cout << "Token:    " << ws2s(e.GetToken()) << "\n";
 #else
-         cout << "Message:  " << e.GetMsg() << "\n";
-         cout << "Formula:  " << e.GetExpr() << "\n";
-         cout << "Token:    " << e.GetToken() << "\n";
+        cout << "Message:  " << e.GetMsg() << "\n";
+        cout << "Formula:  " << e.GetExpr() << "\n";
+        cout << "Token:    " << e.GetToken() << "\n";
 #endif
-         if (e.GetPos()!=std::string::npos)
-         cout << "Position: " << e.GetPos() << "\n";
-         cout << "Errc:     " << e.GetCode() << " http://muparser.beltoforion.de/mup_error_handling.html#idErrors " <<"\n";
-//            computed_value = rand() % 100 + 1;
-   }
+        if (e.GetPos()!=std::string::npos)
+            cout << "Position: " << e.GetPos() << "\n";
+        cout << "Errc:     " << e.GetCode() << " http://muparser.beltoforion.de/mup_error_handling.html#idErrors " <<"\n";
+        //            computed_value = rand() % 100 + 1;
+    }
 
 
-//    computed_value = computed_nom / computed_denom;
+    //    computed_value = computed_nom / computed_denom;
     if (objfun.exp_unit == keys::log_molratio)
     {
         computed_value = log10(computed_value);
@@ -680,7 +687,7 @@ double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::ob
         Weighted_Tfun_residual = 0.0;
     }
     if (PHndx >=0)
-    objfun.isComputed = true;
+        objfun.isComputed = true;
 
     delete[] IC_in_PH;
 
@@ -755,7 +762,7 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
         } else
         {// Default
             computed_value = sys->NodT[i]->Get_Eh();
-            objfun.exp_unit == keys::Volts;
+            objfun.exp_unit = keys::Volts;
         }
     } else // Get phase amount
     if ((objfun.exp_CN == keys::Qnt) && (PHndx >=0))
@@ -825,7 +832,7 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
         {
             // Default
             computed_value = sys->NodT[i]->Get_pe();
-            objfun.exp_unit == keys::_loga;
+            objfun.exp_unit = keys::_loga;
         }
     } else
     if ((objfun.exp_CN == keys::IS) && (ccPH == *keys::aq) && (PHndx >=0))
@@ -845,9 +852,9 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
         }
 
     } else
-    if (((objfun.exp_CN == keys::mChainL) ||  (objfun.exp_CN == keys::frAlIV) || (objfun.exp_CN == keys::expr) ||
+    if ( (((objfun.exp_CN == keys::mChainL) ||  (objfun.exp_CN == keys::frAlIV) || (objfun.exp_CN == keys::expr) ||
          (objfun.exp_CN == keys::frAlV) || (objfun.exp_CN == keys::frAlVI) || (objfun.exp_CN == keys::netH_OH) ||
-         (objfun.exp_CN == keys::Rd)) || (objfun.exp_CN == keys::activityRatio) && (PHndx >=0))
+         (objfun.exp_CN == keys::Rd)) || (objfun.exp_CN == keys::activityRatio) ) && (PHndx >=0))
     {
         vector<double> varDbl;
 
@@ -1342,7 +1349,7 @@ string formula_DCname_parser(string expr, vector<string> &exprO, vector<string> 
         exprO.push_back(DCname);
 
         // replaces the found operators with letters
-        for (int i=0; i< sizeof(op); i++)
+        for (uint i=0; i< sizeof(op); i++)
         {
             found_op = DCname.find(op[i]);
             while (found_op!=std::string::npos)
@@ -1362,7 +1369,7 @@ string formula_DCname_parser(string expr, vector<string> &exprO, vector<string> 
         }
     }
 
-    for (int i = 0; i < exprO.size(); i++)
+    for (uint i = 0; i < exprO.size(); i++)
     {
         found = expr.find(exprO[i]);
         while ((found!=std::string::npos) && (exprO[i] != exprP[i]))

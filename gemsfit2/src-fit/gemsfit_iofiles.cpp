@@ -214,7 +214,7 @@ std::string getPitzerIPName(TNode *node, std::vector<long int> aIPx, long int Ma
 
 void generateBson(bson &bson_task_file,TNode *node, int mode)
 {
-    unsigned int Np = 0, NG0p = 0, NG0PH = 0, Nip = 0, Ncoef = 0, G0ndx=0, ICndx=0, PMCndx = 0, DMCndx = 0, nIC,/* nDC,*/ nPS, nPH; long int nDCinPH;
+    unsigned int Np = 0, NG0p = 0, NG0PH = 0, Nip = 0, Ncoef = 0, G0ndx=0, ICndx=0, PMCndx = 0, DMCndx = 0,/* nIC, nDC,*/ nPS, nPH; long int nDCinPH;
     int DCndx = -1;
     double temp = 0.0;
     stringstream ss; string sss, ipcn, dcipcn;
@@ -222,7 +222,7 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
 
     DATACH* dCH = node->pCSD();
 
-    nIC = dCH->nIC;	// nr of independent components
+//    nIC = dCH->nIC;	// nr of independent components
 //    nDC = dCH->nDC;	// nr of dependent components
     nPS = dCH->nPS;
     nPH = dCH->nPH;
@@ -1026,12 +1026,12 @@ cout << "gems3LstFilePath = " << gems3LstFilePath << endl;
 TGfitPath::~TGfitPath()
 {}
 
-void TGfitPath::deleteOutputDir(const char *dir)
+void TGfitPath::deleteOutputDir(const char */*dir*/)
 {
 }
 
 
-void TGfitPath::makeOutputDir(const char *dir)
+void TGfitPath::makeOutputDir(const char */*dir*/)
 {
 }
 

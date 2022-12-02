@@ -600,8 +600,8 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     Y             = sqrtb1 * sqrt( ((N+1.)*(N+3.))/(6*(N-2.)) );
     beta2_sqrtb1  = ( 36*(N*N + 2*N - 5)*(N - 7.)  ) / ( (N - 2.)*(N + 5.)*(N + 7.)*(N + 9.) );
     W2            = -1. + sqrt(2 * (beta2_sqrtb1 + 2.) );
-if( W2 < 1.)  // workaround to suppress nan() and zdiv crash
-    W2 = 1.001;
+    if( W2 < 1.)  // workaround to suppress nan() and zdiv crash
+         W2 = 1.001;
     delta         = 1. / sqrt( log( sqrt(W2) ) ) ;
     alpha         = sqrt( 2. / (W2 - 1) );
     Z_sqrtb1      = delta * log( Y / alpha + sqrt( pow( (Y/alpha), 2 ) + 1 ) );

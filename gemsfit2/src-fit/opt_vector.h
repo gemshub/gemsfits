@@ -139,37 +139,37 @@ class OptParameter
             return 0;
         };
 
-        virtual long int Set_logKTP(TNode *node, vector<double> TP_pairs[2] )
+        virtual long int Set_logKTP(TNode */*node*/, vector<double> /*TP_pairs*/[2] )
         {
             return 0;
         };
 
-        virtual long int Set_logKTP(int RPndx, double logK  )
+        virtual long int Set_logKTP(int /*RPndx*/, double /*logK*/  )
         {
             return 0;
         };
 
-        virtual long int Adjust_param(TNode *node, vector<double> opt)
+        virtual long int Adjust_param(TNode */*node*/, vector<double> /*opt*/)
         {
             return 0;
         };
 
-        virtual long int Adjust_Fparam(TNode *node, int Pndx, double Pval)
+        virtual long int Adjust_Fparam(TNode */*node*/, int /*Pndx*/, double /*Pval*/)
         {
             return 0;
         };
 
-        virtual long int Adjust_Sparam(TNode *node)
+        virtual long int Adjust_Sparam(TNode */*node*/)
         {
             return 0;
         };
 
-        virtual long int Adjust_Lparam(TNode *node, int exp)
+        virtual long int Adjust_Lparam(TNode */*node*/, int /*exp*/)
         {
             return 0;
         };
 
-        virtual long int SetIndex_param(TNode node)
+        virtual long int SetIndex_param(TNode */*node*/)
         {
             return 0;
         };
@@ -179,7 +179,7 @@ class OptParameter
             return 0;
         };
 
-        virtual long int SetIVvEVvDelta(TNode *node)
+        virtual long int SetIVvEVvDelta(TNode */*node*/)
         {
             return 0;
         };
@@ -306,7 +306,7 @@ class Opt_Tk : public OptParameter
     /// Destructor
     virtual ~Opt_Tk();
 
-    long int SetIndex_param();
+    long int SetIndex_param(TNode *node);
 
     long int SetIVvEVvDelta(TNode *node);
 
@@ -326,7 +326,7 @@ class Opt_P : public OptParameter
     /// Destructor
     virtual ~Opt_P();
 
-    long int SetIndex_param();
+    long int SetIndex_param(TNode *node);
 
     long int SetIVvEVvDelta(TNode *node);
 

@@ -166,7 +166,7 @@ void nestedfun (TGfitTask *sys)
 
                 try
                 {
-                nlopt::result result = opt.optimize(x, minf);
+                /*nlopt::result result =*/ opt.optimize(x, minf);
 //                cout << "Nested: " << i << " " << sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]].count << endl;
                 sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]].count = 0;
                 }
@@ -204,7 +204,7 @@ void nestedfun (TGfitTask *sys)
     }
 }
 
-double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data )
+double nestminfunc ( const std::vector<double> &opt, std::vector<double> &/*grad*/, void *obj_func_data )
 {
     TGfitTask *sys = reinterpret_cast<TGfitTask*>(obj_func_data);
     double residual = 0.0;
@@ -317,7 +317,7 @@ bool isTitration (TGfitTask *sys, int i, int j, int p)
 {
 //    int P_id = omp_get_thread_num();
         // check titrant in experiment
-    double residual = 0.0;
+    //double residual = 0.0;
     int P_id = omp_get_thread_num();
 
 //    for (unsigned int t=0; t<sys->Tfun->nestfun[j].Tformula.size(); t++)

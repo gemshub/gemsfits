@@ -1127,7 +1127,7 @@ Opt_Tk::Opt_Tk(vector<string> data, double OptBoundPrc, unsigned &p) :
 
 }
 
-long int Opt_Tk::SetIndex_param( )
+long int Opt_Tk::SetIndex_param(TNode */*node*/)
 {
     // index for F type parameters
     for (unsigned i = 0; i <optFP.size(); i++)
@@ -1147,7 +1147,7 @@ long int Opt_Tk::SetIVvEVvDelta( TNode *node)
     return 1;
 }
 
-long int Opt_Tk::Adjust_Fparam (TNode *node, int Pndx, double Pval)
+long int Opt_Tk::Adjust_Fparam (TNode *node, int /*Pndx*/, double Pval)
 {
     node->Set_Tk( Pval );
     return 1;
@@ -1215,7 +1215,7 @@ Opt_P::Opt_P(vector<string> data, double OptBoundPrc, unsigned &p) :
 
 }
 
-long int Opt_P::SetIndex_param( )
+long int Opt_P::SetIndex_param(TNode */*node*/)
 {
     // index for F type parameters
     for (unsigned i = 0; i <optFP.size(); i++)
@@ -1235,7 +1235,7 @@ long int Opt_P::SetIVvEVvDelta( TNode *node)
     return 1;
 }
 
-long int Opt_P::Adjust_Fparam (TNode *node, int Pndx, double Pval)
+long int Opt_P::Adjust_Fparam (TNode *node, int /*Pndx*/, double Pval)
 {
     node->Set_P( Pval * 100000 );
     return 1;

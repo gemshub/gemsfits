@@ -53,9 +53,7 @@ git clone https://github.com/stevengj/nlopt.git
 cd nlopt
 
 echo "Configuring..."
-REM cmake -G%COMPILER_VER_NAME% -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-fPIC -DCMAKE_INSTALL_PREFIX=%LOCALINSTALL% .. -S . -B build
-cmake -G%COMPILER_VER_NAME%  -DCMAKE_INSTALL_PREFIX=%LOCALINSTALL% .. -S . -B build
-echo "Building..."
+cmake -G%COMPILER_VER_NAME%  -DBUILD_SHARED_LIBS=OFF -DNLOPT_PYTHON=OFF -DNLOPT_OCTAVE=OFF -DNLOPT_MATLAB=OFF -DNLOPT_GUILE=OFF -DNLOPT_SWIG=OFF  -DCMAKE_INSTALL_PREFIX=%LOCALINSTALL% .. -S . -B buildecho "Building..."
 cmake --build build  --config Release --target install
 cd ..
 
@@ -70,7 +68,7 @@ git clone https://github.com/Softmotions/ejdb.git -b  v1.2.12
 cd ejdb
 
 echo "Configuring..."
-cmake -G%COMPILER_VER_NAME%  -DCMAKE_INSTALL_PREFIX=%LOCALINSTALL% .. -S . -B build
+cmake -G%COMPILER_VER_NAME%  -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../win64-tc.cmake -DENABLE_HTTP=OFF -DCMAKE_INSTALL_PREFIX=%LOCALINSTALL% .. -S . -B build
 echo "Building..."
 cmake --build build  --config Release --target install
 cd ..
