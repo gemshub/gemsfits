@@ -329,7 +329,6 @@ void TMatrixModel::matrixToCsvFile( const QString& dir )
 void TMatrixModel::matrixToBson(  bson *obj )
 {
     size_t ii;
-    char buf[100];
 
     // get string to output
     string name = fname.toStdString();
@@ -346,16 +345,14 @@ void TMatrixModel::matrixToBson(  bson *obj )
       bson_append_start_array(obj, "xcolms");
       for( ii=0; ii<xColumns.size(); ii++)
       {
-          sprintf(buf, "%ld", ii);
-          bson_append_int( obj, buf, xColumns[ii] );
+          bson_append_int( obj, std::to_string(ii).c_str(), xColumns[ii] );
       }
       bson_append_finish_array(obj);
 
       bson_append_start_array(obj, "ycolms");
       for( ii=0; ii<yColumns.size(); ii++)
       {
-          sprintf(buf, "%ld", ii);
-          bson_append_int( obj, buf, yColumns[ii] );
+          bson_append_int( obj, std::to_string(ii).c_str(), yColumns[ii] );
       }
       bson_append_finish_array(obj);
 
