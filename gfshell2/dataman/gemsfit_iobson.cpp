@@ -35,7 +35,7 @@ using namespace keys;
 // cuts the csv header into strings from phase.aq_gen.IC.Al.Q to output = [pahse, aq_gen, IC, Al, Q]
 int cut_csv_header (string input, string delimiter, vector<string> &output);
 // input an integer output a const char
-const char *int_to_c_str(int in);
+std::string int_to_c_str(int in);
 // adds Qunit and Qerror to BSON object
 bool add_unit_and_error(bson * exp, vector<string> headline, vector<string> row , unsigned int &position);
 // checks if the string is the name of a possilbe phase property
@@ -45,33 +45,34 @@ bool add_unit_and_error (bson * exp, vector<string> headline, vector<string> row
 {
     double error = 0.0;
     if (position+1< headline.size())
-    if ((headline[position+1]==Qerror))
-    {
-        ++position;
-        error = atof(row[position].c_str());
-        if (error > 0)
-            bson_append_double(exp, Qerror, atof(row[position].c_str()));
-        if (position+1< headline.size())
-        if ((headline[position+1]==Qunit) && (!row[position+1].empty()))
-        {
-            ++position;
-            bson_append_string(exp, Qunit, row[position].c_str());
-        }
-    } else
-    if (position+1< headline.size())
-    if ((headline[position+1]==Qunit) && (!row[position+1].empty()))
-    {
-        ++position;
-        bson_append_string(exp, Qunit, row[position].c_str());
-        if (position+1< headline.size())
-        if ((headline[position+1]==Qerror)&& (!row[position+1].empty()))
+        if ((headline[position+1]==Qerror))
         {
             ++position;
             error = atof(row[position].c_str());
             if (error > 0)
                 bson_append_double(exp, Qerror, atof(row[position].c_str()));
+            if (position+1< headline.size())
+                if ((headline[position+1]==Qunit) && (!row[position+1].empty()))
+                {
+                    ++position;
+                    bson_append_string(exp, Qunit, row[position].c_str());
+                }
         }
-    }
+        else
+            if (position+1< headline.size())
+                if ((headline[position+1]==Qunit) && (!row[position+1].empty()))
+                {
+                    ++position;
+                    bson_append_string(exp, Qunit, row[position].c_str());
+                    if (position+1< headline.size())
+                        if ((headline[position+1]==Qerror)&& (!row[position+1].empty()))
+                        {
+                            ++position;
+                            error = atof(row[position].c_str());
+                            if (error > 0)
+                                bson_append_double(exp, Qerror, atof(row[position].c_str()));
+                        }
+                }
     return true;
 }
 
@@ -95,12 +96,11 @@ int cut_csv_header (string input, string delimiter, vector<string> &output)
     return output.size();
 }
 
-const char * int_to_c_str (int in)
+std::string  int_to_c_str (int in)
 {
-    string sss; stringstream ss;
+    stringstream ss;
     ss << in;
-    sss = ss.str();
-    return sss.c_str();
+    return ss.str();
 }
 
 bool it_is_phase_property (string ph_prop)
@@ -200,7 +200,7 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
         cut_csv_header(headline[i], header_delimiter, header_vector);
         if ((header_vector[ndx_comp] == comp) && (!row[i].empty()))
         {
-            bson_append_start_object(exp, int_to_c_str(ic));
+            bson_append_start_object(exp, int_to_c_str(ic).c_str());
             ic++;
             bson_append_string(exp, comp, header_vector[ndx_component_name].c_str());
             bson_append_double(exp, Qnt, atof(row[i].c_str()));
@@ -228,7 +228,7 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
         cut_csv_header(headline[i], header_delimiter, header_vector);
         if ((header_vector[ndx_props] == property) && (!row[i].empty()))
         {
-            bson_append_start_object(exp, int_to_c_str(ic));
+            bson_append_start_object(exp, int_to_c_str(ic).c_str());
             ic++;
             bson_append_string(exp, property, header_vector[ndx_prop_name].c_str());
             bson_append_double(exp, Qnt, atof(row[i].c_str()));
@@ -271,7 +271,7 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
             if (!phase_already_added) // START if not phase_already_added. Every phase is scaned only once troughout out the headline.
             // The program goes trough this if only at the first enocunter of the phase name and scans the document for recuring of the phase.
             {
-                bson_append_start_object(exp, int_to_c_str(phc));                   // START phase object
+                bson_append_start_object(exp, int_to_c_str(phc).c_str());                   // START phase object
                 phc++;                                                              // phases counter increased by 1
                 bson_append_string(exp, phase, phase_name.c_str());
                 phases.push_back(phase_name);                    // vector that keeps already present phases
@@ -317,7 +317,7 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
                         if ((header_vector[ndx_phase] == phase) && (header_vector[ndx_phase_name] == phase_name) &&
                             (it_is_phase_property(header_vector[ndx_phase_property])) && (!row[j].empty()))
                         {
-                            bson_append_start_object(exp, int_to_c_str(ic)); // START property object
+                            bson_append_start_object(exp, int_to_c_str(ic).c_str()); // START property object
                             ic++;                                            // increase the number of phases properties with one
                             bson_append_string(exp, property, header_vector[ndx_phase_property].c_str());
                             bson_append_double(exp, Qnt, atof(row[j].c_str()));
@@ -348,7 +348,7 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
                             (header_vector[ndx_phase_name] == phase_name) && (header_vector[ndx_IC] == IC ))
                         {
                             // quantity of this IC in the phase
-                            bson_append_start_object(exp, int_to_c_str(ic)); // START phase element object
+                            bson_append_start_object(exp, int_to_c_str(ic).c_str()); // START phase element object
                             ic++;
                             bson_append_string(exp, IC, header_vector[ndx_IC_name].c_str());
                             bson_append_double(exp, Qnt, strtod(row[j].c_str(), NULL));
@@ -378,7 +378,7 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
                         if ((header_vector[ndx_phase] == phase) && (!row[j].empty()) &&
                             (header_vector[ndx_phase_name] == phase_name) && (header_vector[ndx_MR] == MR ))
                         {
-                            bson_append_start_object(exp, int_to_c_str(mf)); // START phase element object
+                            bson_append_start_object(exp, int_to_c_str(mf).c_str()); // START phase element object
                             mf++;
                             bson_append_string(exp, MR, header_vector[ndx_MR_formula].c_str());
                             bson_append_double(exp, Qnt, atof(row[j].c_str()));
@@ -424,7 +424,7 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
                             if (!dcomp_already_added)
                             {
                                 //++ START species object
-                                bson_append_start_object(exp, int_to_c_str(dcc));
+                                bson_append_start_object(exp, int_to_c_str(dcc).c_str());
                                 dcc++;
                                 bson_append_string(exp, DC, dcomp_name.c_str());
                                 dcomps.push_back(dcomp_name);
@@ -438,7 +438,7 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
                                     if ((header_vector[ndx_DC_name] == dcomp_name) && (header_vector[ndx_phase] == phase) &&
                                         (header_vector[ndx_phase_name] == phase_name) && (header_vector[ndx_DC] == DC ) && (!row[k].empty()))
                                     {
-                                        bson_append_start_object(exp, int_to_c_str(ic)); // START property object
+                                        bson_append_start_object(exp, int_to_c_str(ic).c_str()); // START property object
                                         ic++;
                                         bson_append_string(exp, property, header_vector[ndx_DC_prop_name].c_str());
                                         bson_append_double(exp, Qnt, atof(row[k].c_str())); // quantity of the property

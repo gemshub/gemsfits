@@ -12,7 +12,9 @@ class DialogFindFromPlot : public QDialog
 {
     Q_OBJECT
 
+    Ui::DialogFindFromPlot *ui;
     const jsonui17::ChartData* grdata;
+
 public slots:
     void ChangeIndex(int index);
 
@@ -22,8 +24,6 @@ public:
 
     void getData( int *xyndx, double *reg );
 
-private:
-    Ui::DialogFindFromPlot *ui;
 };
 
 #endif // DIALOGFINDFROMPLOT_H

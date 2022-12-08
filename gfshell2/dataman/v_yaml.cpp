@@ -149,7 +149,7 @@ void bson_emitter( YAML::Emitter& out, const char *data, int datatype )
 {
     bson_iterator i;
     const char *key;
-    bson_timestamp_t ts;
+    //bson_timestamp_t ts;
 
     bson_iterator_from_buffer(&i, data);
     while (bson_iterator_next(&i))
@@ -343,17 +343,17 @@ void BsonHandler::OnDocumentStart(const YAML::Mark&) {}
 
 void BsonHandler::OnDocumentEnd() {}
 
-void BsonHandler::OnNull(const YAML::Mark&, YAML::anchor_t anchor)
+void BsonHandler::OnNull(const YAML::Mark&, YAML::anchor_t /*anchor*/)
 {
   assert(m_stateStack.top().state == WaitingForValue );
   bson_append_null( m_bson, m_stateStack.top().key.c_str() );
   BeginNode();
 }
 
-void BsonHandler::OnAlias(const YAML::Mark&, YAML::anchor_t anchor) {}
+void BsonHandler::OnAlias(const YAML::Mark&, YAML::anchor_t /*anchor*/) {}
 
-void BsonHandler::OnScalar(const YAML::Mark&, const std::string& tag,
-                              YAML::anchor_t anchor, const std::string& value)
+void BsonHandler::OnScalar(const YAML::Mark&, const std::string& /*tag*/,
+                              YAML::anchor_t /*anchor*/, const std::string& value)
 {
    switch (m_stateStack.top().state)
    {
@@ -375,8 +375,8 @@ void BsonHandler::OnScalar(const YAML::Mark&, const std::string& tag,
     }
 }
 
-void BsonHandler::OnSequenceStart(const YAML::Mark&, const std::string& tag,
-            YAML::anchor_t anchor, YAML::EmitterStyle::value style)
+void BsonHandler::OnSequenceStart(const YAML::Mark&, const std::string& /*tag*/,
+            YAML::anchor_t /*anchor*/, YAML::EmitterStyle::value /*style*/)
 {
   if (!m_stateStack.empty())
   {
@@ -399,8 +399,8 @@ void BsonHandler::OnSequenceEnd()
    bson_append_finish_array(m_bson);
 }
 
-void BsonHandler::OnMapStart(const YAML::Mark&, const std::string& tag,
-                                YAML::anchor_t anchor, YAML::EmitterStyle::value style)
+void BsonHandler::OnMapStart(const YAML::Mark&, const std::string& /*tag*/,
+                                YAML::anchor_t /*anchor*/, YAML::EmitterStyle::value /*style*/)
 {
   if (!m_stateStack.empty() )
   {
@@ -452,17 +452,17 @@ void JsonHandler::OnDocumentStart(const YAML::Mark&) {}
 
 void JsonHandler::OnDocumentEnd() {}
 
-void JsonHandler::OnNull(const YAML::Mark&, YAML::anchor_t anchor)
+void JsonHandler::OnNull(const YAML::Mark&, YAML::anchor_t /*anchor*/)
 {
   assert(m_stateStack.top().state == WaitingForValue );
   addScalar(m_stateStack.top().key.c_str(), "null" );
   BeginNode();
 }
 
-void JsonHandler::OnAlias(const YAML::Mark&, YAML::anchor_t anchor) {}
+void JsonHandler::OnAlias(const YAML::Mark&, YAML::anchor_t /*anchor*/) {}
 
-void JsonHandler::OnScalar(const YAML::Mark&, const std::string& tag,
-                              YAML::anchor_t anchor, const std::string& value)
+void JsonHandler::OnScalar(const YAML::Mark&, const std::string& /*tag*/,
+                              YAML::anchor_t /*anchor*/, const std::string& value)
 {
    switch (m_stateStack.top().state)
    {
@@ -484,8 +484,8 @@ void JsonHandler::OnScalar(const YAML::Mark&, const std::string& tag,
     }
 }
 
-void JsonHandler::OnSequenceStart(const YAML::Mark&, const std::string& tag,
-            YAML::anchor_t anchor, YAML::EmitterStyle::value style)
+void JsonHandler::OnSequenceStart(const YAML::Mark&, const std::string& /*tag*/,
+            YAML::anchor_t /*anchor*/, YAML::EmitterStyle::value /*style*/)
 {
   string key="";
   if (!m_stateStack.empty())
@@ -513,8 +513,8 @@ void JsonHandler::OnSequenceEnd()
   m_os << "]";
 }
 
-void JsonHandler::OnMapStart(const YAML::Mark&, const std::string& tag,
-                                YAML::anchor_t anchor, YAML::EmitterStyle::value style)
+void JsonHandler::OnMapStart(const YAML::Mark&, const std::string& /*tag*/,
+                                YAML::anchor_t /*anchor*/, YAML::EmitterStyle::value /*style*/)
 {
   string key="";
   if (!m_stateStack.empty() )

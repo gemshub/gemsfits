@@ -52,7 +52,7 @@ void TKeyTable::keyPressEvent(QKeyEvent* e)
 
 FITMainWindow* pFitImp;
 
-void FITMainWindow::setDefValues(int c, char** v)
+void FITMainWindow::setDefValues(int /*c*/, char** /*v*/)
 {
    // load main programm settingth
    mainSettings = new QSettings("gemsfits.ini", QSettings::IniFormat);
@@ -102,9 +102,9 @@ void FITMainWindow::getDataFromPreferences()
 FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     QMainWindow(parent),
     ui(new Ui::FITMainWindow),
-    currentMode (MDF_TASK), gemsLstFile(""), fitTaskDir(""),
-    aNode(0), contentsChanged(false), projectSettings(0),
-    mainSettings(0), helpProcess(0)
+    currentMode(MDF_TASK), gemsLstFile(""), fitTaskDir(""),
+    aNode(0), contentsChanged(false), helpProcess(0),
+    projectSettings(0),  mainSettings(0)
 {
     ui->setupUi(this);
     axisLabelFont = QFont("Courier New", 14);
@@ -169,7 +169,7 @@ FITMainWindow::~FITMainWindow()
     delete ui;
 }
 
-void FITMainWindow::closeEvent(QCloseEvent* e)
+void FITMainWindow::closeEvent(QCloseEvent* /*e*/)
 {
     //if( pVisor->CanClose() )
     {
@@ -328,7 +328,7 @@ void FITMainWindow::showProcessMesage( )
 
 void FITMainWindow::closeEJDB()
 {
-  for( int ii; ii<rtEJ.size(); ii++ )
+  for(size_t ii=0; ii<rtEJ.size(); ii++ )
      rtEJ[ii].Close();
   EJDBFile.Close();
 }

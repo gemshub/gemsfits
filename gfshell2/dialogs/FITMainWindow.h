@@ -49,6 +49,8 @@ class FITMainWindow : public QMainWindow
 {
     Q_OBJECT
 
+    Ui::FITMainWindow *ui;
+
     int currentMode;    ///< DataBase or Task mode
 
     string SysFITDir;   ///< Path to resources directory
@@ -194,7 +196,6 @@ public:
     void OpenResults(  const string& key, const QString& dir = "");
 
 private:
-    Ui::FITMainWindow *ui;
     QSettings *projectSettings; ///< Properties for current project
     QSettings *mainSettings; ///< Properties for gemsfit-gui program
 

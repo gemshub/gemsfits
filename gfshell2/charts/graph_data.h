@@ -335,7 +335,7 @@ public:
     void toJsonObject(QJsonObject& json) const;
     void fromJsonObject(const QJsonObject& json);
 
-    void getXYColumns( int line, int& xcol, int& ycol ) const
+    void getXYColumns( size_t line, int& xcol, int& ycol ) const
     {
         if( line >= linesNumber() )
             return;

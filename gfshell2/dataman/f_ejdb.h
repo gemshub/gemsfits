@@ -26,7 +26,7 @@
 #include "f_ejdb_file.h"
 #include "v_json.h"
 
-class EJCOLL;
+struct EJCOLL;
 
 extern const char* ALLKEY;
 
@@ -46,8 +46,8 @@ enum RecStatus {   // states of keys record Data Base
 /// Element in sequence of record keys
 class IndexEntry
 {
-   vector<string> keyFlds;      /// Record key fields
    mutable string bson_oid;             /// oid of record (bson indexes)
+   vector<string> keyFlds;      /// Record key fields
    //mutable int nFile;                   /// Index in db files list
 
  public:
@@ -319,7 +319,7 @@ class EJDataBaseList:
     void Init();
 
     //--- Selectors
-    TEJDataBase& operator[](int) ;
+    TEJDataBase& operator[](size_t) ;
     int Find(const char* keywd);
 };
 

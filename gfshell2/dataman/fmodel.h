@@ -110,11 +110,7 @@ class TMatrixModel: public QAbstractTableModel
 public:
 
     TMatrixModel( const QString& fname, int aNumCol, QObject * parent = 0 );
-    ~TMatrixModel()
-    {
-        if( graph_dlg )
-            delete graph_dlg;
-    }
+    ~TMatrixModel();
 
     const jsonui17::ChartData *getGraphData()
     {

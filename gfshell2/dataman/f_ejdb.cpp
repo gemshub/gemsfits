@@ -61,7 +61,7 @@ string replace_all( string str, const char* old_part, const char* new_part)
 
 bool operator <( const IndexEntry& iEl,  const IndexEntry& iEr)
 {
-    for( int ii=0; ii<iEl.keyFlds.size(); ii++ )
+    for( size_t ii=0; ii<iEl.keyFlds.size(); ii++ )
     {
         if(iEl.keyFlds[ii] == iEr.keyFlds[ii])
           continue;
@@ -72,7 +72,7 @@ bool operator <( const IndexEntry& iEl,  const IndexEntry& iEr)
 
 bool operator >( const IndexEntry& iEl,  const IndexEntry& iEr)
 {
-    for( int ii=0; ii<iEl.keyFlds.size(); ii++ )
+    for( size_t ii=0; ii<iEl.keyFlds.size(); ii++ )
     {
         if(iEl.keyFlds[ii] == iEr.keyFlds[ii])
           continue;
@@ -98,7 +98,7 @@ bool operator !=( const IndexEntry& iEl,  const IndexEntry& iEr)
 /// Default configuration
 TEJDBKey::TEJDBKey( const vector<string>& nameKeyFlds )
 {
-    for( int ii=0; ii<nameKeyFlds.size(); ii++)
+    for( size_t ii=0; ii<nameKeyFlds.size(); ii++)
     {   rkFldName.push_back( nameKeyFlds[ii] );
         rkFld.push_back( "*" );
     }
@@ -200,7 +200,8 @@ bool TEJDBKey::isAll()
 
 bool TEJDBKey::compareTemplate( const IndexEntry& elm )
 {
-  int i, j, rklen;
+  size_t i, rklen;
+  int j;
   string kpart, kelm;
 
   for( j=0; j<KeyNumFlds(); j++)
@@ -337,7 +338,7 @@ void TEJDataBase::putKeyToBson( bson *obj )
 }
 
 // Save current record to bson structure
-void TEJDataBase::RecToBson( bson *obj, time_t crtt, const char *pkey )
+void TEJDataBase::RecToBson( bson *obj, time_t /*crtt*/, const char *pkey )
 {
     if( !currentJson.empty() )
     { ParserJson pars;
@@ -626,7 +627,7 @@ void TEJDataBase::InsertRecord()
           bson_destroy(&bsrec);
         }
 
-    cout << "Add record " << retSave << " oid " << bytes[25] << endl;
+    cout << "Add record " << retSave << " oid " << bytes << endl;
 
     // Set up internal data
     status = ONEF_;
@@ -749,7 +750,7 @@ RecStatus TEJDataBase::Rtest( const char *key, int mode )
 }
 
 int TEJDataBase::GetKeyList( const char *keypat,
-        vector<string>& aKeyList, bool retUnpackform )
+        vector<string>& aKeyList, bool /*retUnpackform*/ )
 {
     // Set key template
     TEJDBKey wkey(key);
@@ -819,6 +820,7 @@ void TEJDataBase::MakeKey( unsigned char nRTwrk, string& pkey, ... )
             break;
         case K_ACT:  // get field from  PRIE request
             rts = nRTwrk;
+            [[fallthrough]];
         default:     // get field from enathe chain key
             nkf = va_arg( Marker, int );
             if( !*rtEJ[rts].FldKey( nkf ))
@@ -920,7 +922,7 @@ void TEJDataBase::Close()
 
 int EJDataBaseList::Find(const char* s)
 {
-    for( int ii=0; ii<size(); ii++ )
+    for( size_t ii=0; ii<size(); ii++ )
         if( at(ii).GetKeywd() == s  )
             return ii;
     return -1;
@@ -947,7 +949,7 @@ void EJDataBaseList::Init()
 
 
 TEJDataBase&
-EJDataBaseList::operator[](int ii)
+EJDataBaseList::operator[](size_t ii)
 {
     ErrorIf( ii > size(),
              "DataBaseList","Invalid chain index.");

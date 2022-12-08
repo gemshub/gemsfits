@@ -435,7 +435,7 @@ void FitResultsWindow::CmBackupJSON()
         outFile.Open();
 
         outFile.ff << "[\n";
-        for(int i=0; i<aKey.size(); i++ )
+        for(size_t i=0; i<aKey.size(); i++ )
         {
           rtEJ[ MDF_FITS ].Get( aKey[i].c_str() );
           string valDB =rtEJ[ MDF_FITS ].GetJson();

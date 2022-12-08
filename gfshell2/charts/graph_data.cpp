@@ -276,10 +276,9 @@ void ChartData::toBsonObject( bson *obj ) const
 
      // define curves
      bson_append_start_array(obj, "lines");
-          for(int ii=0; ii<linesdata.size(); ii++)
+          for(size_t ii=0; ii<linesdata.size(); ii++)
           {
-              sprintf(buf, "%d", ii);
-              bson_append_start_object( obj, buf);
+              bson_append_start_object( obj, std::to_string(ii).c_str());
               linesdata[ii].toBsonObject( obj );
               bson_append_finish_object( obj );
           }
@@ -287,10 +286,9 @@ void ChartData::toBsonObject( bson *obj ) const
 
       // data to isoline plots
       bson_append_start_array(obj, "scale");
-           for(int ii=0; ii<modelsdata.size(); ii++)
+           for(size_t ii=0; ii<modelsdata.size(); ii++)
            {
-               sprintf(buf, "%d", ii);
-               bson_append_start_object( obj, buf);
+               bson_append_start_object( obj, std::to_string(ii).c_str());
                modelsdata[ii]->toBsonObject( obj );
                bson_append_finish_object( obj );
            }
@@ -300,8 +298,6 @@ void ChartData::toBsonObject( bson *obj ) const
 void ChartData::fromBsonObject( const char *obj )
 {
     size_t ii;
-    char buf[100];
-
     std::vector<double> reg_part;
     std::vector<int> b_col_vec;
 
@@ -325,24 +321,21 @@ void ChartData::fromBsonObject( const char *obj )
     auto arr  = bson_find_array(  obj, "region" );
     for( ii=0; ii<4; ii++)
     {
-        sprintf(buf, "%d", ii);
-        if(!bson_find_value( arr,  buf, region[ii] ) )
+        if(!bson_find_value( arr, std::to_string(ii).c_str(), region[ii] ) )
             region[ii] = 0;
     }
 
     arr  = bson_find_array(  obj, "part" );
     for( ii=0; ii<4; ii++)
     {
-        sprintf(buf, "%d", ii);
-        if(!bson_find_value( arr,  buf, part[ii] ) )
+        if(!bson_find_value( arr,  std::to_string(ii).c_str(), part[ii] ) )
             part[ii] = 0;
     }
 
     arr  = bson_find_array(  obj, "b_color" );
     for( ii=0; ii<3; ii++)
     {
-        sprintf(buf, "%d", ii);
-        if(!bson_find_value( arr,  buf, b_color[ii] ) )
+        if(!bson_find_value( arr, std::to_string(ii).c_str(), b_color[ii] ) )
             b_color[ii] = 255;
     }
 

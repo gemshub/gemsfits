@@ -27,7 +27,7 @@ void removeComments( QString& valCsv )
         valCsv.remove(foundStart, foundEnd-foundStart+1 );
       else
         {
-           valCsv.remove(foundStart, valCsv.count()-foundStart);
+           valCsv.remove(foundStart, valCsv.size()-foundStart);
            break;
         }
       foundStart = valCsv.indexOf('#', foundStart );
@@ -57,9 +57,15 @@ TMatrixModel::TMatrixModel( const QString& afname, int aNumCol, QObject * parent
 {
 }
 
+TMatrixModel::~TMatrixModel()
+{
+    if( graph_dlg )
+        delete graph_dlg;
+}
+
 int TMatrixModel::rowCount( const QModelIndex & /*parent*/ ) const
 {
-     return matrix.size();
+    return matrix.size();
 }	
 
 
@@ -322,7 +328,7 @@ void TMatrixModel::matrixToCsvFile( const QString& dir )
 /// write model to bson structure
 void TMatrixModel::matrixToBson(  bson *obj )
 {
-    int ii;
+    size_t ii;
     char buf[100];
 
     // get string to output
@@ -340,7 +346,7 @@ void TMatrixModel::matrixToBson(  bson *obj )
       bson_append_start_array(obj, "xcolms");
       for( ii=0; ii<xColumns.size(); ii++)
       {
-          sprintf(buf, "%d", ii);
+          sprintf(buf, "%ld", ii);
           bson_append_int( obj, buf, xColumns[ii] );
       }
       bson_append_finish_array(obj);
@@ -348,7 +354,7 @@ void TMatrixModel::matrixToBson(  bson *obj )
       bson_append_start_array(obj, "ycolms");
       for( ii=0; ii<yColumns.size(); ii++)
       {
-          sprintf(buf, "%d", ii);
+          sprintf(buf, "%ld", ii);
           bson_append_int( obj, buf, yColumns[ii] );
       }
       bson_append_finish_array(obj);
@@ -404,7 +410,7 @@ void TMatrixModel::CloseGraph()
       graph_dlg->close();
 }
 
-void TMatrixModel::setGraphData( QSortFilterProxyModel *pmodel,  const string& title )
+void TMatrixModel::setGraphData( QSortFilterProxyModel */*pmodel*/,  const string& title )
 {
     if(!chart_data)
     {
@@ -428,38 +434,40 @@ void TMatrixModel::showGraphData( QSortFilterProxyModel *pmodel,  const string& 
 
 int TMatrixModel::findRow( int *xynd, double *reg )
 {
-   int ndx;
-   QVector<int> xfcol;
-   QVector<int> yfcol;
+    int ndx;
+    QVector<int> xfcol;
+    QVector<int> yfcol;
 
-   if( xynd[0] < colHeads.size() && xynd[0] >= 0 )
-     xfcol.push_back( xynd[0] );
+    if( xynd[0] < colHeads.size() && xynd[0] >= 0 )
+        xfcol.push_back( xynd[0] );
 
-   if( xynd[1] < colHeads.size() && xynd[1] >= 0 )
-     yfcol.push_back( xynd[1] );
-   else
-     yfcol = QVector<int>(yColumns.begin(), yColumns.end()); // ally
+    if( xynd[1] < colHeads.size() && xynd[1] >= 0 )
+        yfcol.push_back( xynd[1] );
+    else {
+        for(const auto& val:yColumns )  // ally
+            yfcol.push_back( val );
+    }
 
-   ndx = 0;
-   QVectorIterator<QVector<QVariant> > line(matrix);
-   while (line.hasNext())
-   {
-       QVector<QVariant> valC(line.next());
-       foreach (const int &valuey, yfcol)
-       {
-           if( reg[2] <= valC[valuey].toDouble() && valC[valuey].toDouble() <= reg[3] )
-           {  if( xfcol.count() < 1 &&  ( reg[0] <= ndx && ndx <= reg[1] ) )
-                  return ndx;
-              foreach (const int &valuex, xfcol)
-              {
-                if( reg[0] <= valC[valuex].toDouble() && valC[valuex].toDouble() <= reg[1] )
+    ndx = 0;
+    QVectorIterator<QVector<QVariant> > line(matrix);
+    while (line.hasNext())
+    {
+        QVector<QVariant> valC(line.next());
+        foreach (const int &valuey, yfcol)
+        {
+            if( reg[2] <= valC[valuey].toDouble() && valC[valuey].toDouble() <= reg[3] )
+            {  if( xfcol.count() < 1 &&  ( reg[0] <= ndx && ndx <= reg[1] ) )
                     return ndx;
-             }
-           }
-       }
-       ndx++;
-   }
-   return -1;
+                foreach (const int &valuex, xfcol)
+                {
+                    if( reg[0] <= valC[valuex].toDouble() && valC[valuex].toDouble() <= reg[1] )
+                        return ndx;
+                }
+            }
+        }
+        ndx++;
+    }
+    return -1;
 }
 
 
@@ -498,8 +506,8 @@ TMatrixTable::TMatrixTable( QWidget * parent ):
 }
 
  
- static bool no_menu_out = true;
- static bool no_menu_in = true;
+ //static bool no_menu_out = true;
+ //static bool no_menu_in = true;
  void TMatrixTable::focusOutEvent( QFocusEvent * event )
  {
      //   if( no_menu_out )

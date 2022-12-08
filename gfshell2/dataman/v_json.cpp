@@ -149,7 +149,7 @@ void bson_print_raw_txt_(FILE *f, const char *data, int depth, int datatype )
                fprintf(f, "%d", bson_iterator_int(&i));
                break;
           case BSON_LONG:
-               fprintf(f, "%lld", (uint64_t) bson_iterator_long(&i));
+               fprintf(f, "%ld", (uint64_t) bson_iterator_long(&i));
                break;
           case BSON_DOUBLE:
                fprintf(f, "%.10lg", bson_iterator_double(&i));
@@ -474,9 +474,9 @@ void ParserJson::bson_print_raw_txt( iostream& os, const char *data, int depth, 
     bson_iterator i;
     const char *key;
     int temp;
-    bson_timestamp_t ts;
-    char oidhex[25];
-    bson scope;
+    //bson_timestamp_t ts;
+    //char oidhex[25];
+    //bson scope;
     bool first = true;
 
     bson_iterator_from_buffer(&i, data);

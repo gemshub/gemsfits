@@ -182,22 +182,19 @@ void ChartDataModel::fromJsonNode( const jsonio17::JsonBase& object )
 
 void ChartDataModel::toBsonObject( bson *obj ) const
 {
-    int ii;
-    char buf[100];
+    size_t ii;
 
     bson_append_start_array(obj, "gxclms");
     for( ii=0; ii<xcolumns.size(); ii++)
     {
-        sprintf(buf, "%d", ii);
-        bson_append_int( obj, buf, xcolumns[ii] );
+        bson_append_int( obj, std::to_string(ii).c_str(), xcolumns[ii] );
     }
     bson_append_finish_array(obj);
 
     bson_append_start_array(obj, "gyclms");
     for( ii=0; ii<ycolumns.size(); ii++)
     {
-        sprintf(buf, "%d", ii);
-        bson_append_int( obj, buf, ycolumns[ii] );
+        bson_append_int( obj, std::to_string(ii).c_str(), ycolumns[ii] );
     }
     bson_append_finish_array(obj);
 }

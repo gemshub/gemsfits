@@ -55,7 +55,7 @@ int vfQuestion3(QWidget* par, const string& title, const string& mess, const str
   QString titl, spac, messag;
   titl = title.c_str(); spac = "\n\n"; messag = mess.c_str();
 
-   QMessageBox qm(
+   QMessageBox qm( QMessageBox::Question,
 #ifdef __unix
 #ifdef __APPLE__
          "Title", titl.append(spac+=messag),
@@ -64,32 +64,29 @@ int vfQuestion3(QWidget* par, const string& title, const string& mess, const str
 #endif
 #else
           titl, messag,
-#endif
-           QMessageBox::Question,
-           QMessageBox::Yes | QMessageBox::Default,
-           (s3.empty()) ? (QMessageBox::No | QMessageBox::Escape) : QMessageBox::No,
-           (s3.empty()) ? QMessageBox::NoButton : (QMessageBox::Cancel | QMessageBox::Escape),
-           par);
+#endif           
+           QMessageBox::NoButton, par);
 
-    qm.setButtonText(QMessageBox::Yes, s1.c_str());
-    qm.setButtonText(QMessageBox::No, s2.c_str());
+    QAbstractButton *yesButton = qm.addButton(s1.c_str(), QMessageBox::YesRole);
+    QAbstractButton *noButton = qm.addButton(s2.c_str(), QMessageBox::NoRole);
+    QAbstractButton *cancelButton = nullptr;
     if( !s3.empty() )
-       qm.setButtonText(QMessageBox::Cancel, s3.c_str());
+       cancelButton = qm.addButton(s3.c_str(), QMessageBox::RejectRole);
     if( i_mov )
         qm.move(posx, posy);
-    int res = qm.exec();
+    qm.exec();
     if( i_mov )
     {
         posx = qm.x();
         posy = qm.y();
     }
-    switch( res )
-    {
-    case QMessageBox::Yes :
+    if (qm.clickedButton() == yesButton) {
         return VF3_1;
-    case QMessageBox::No :
+    }
+    else if (qm.clickedButton() == noButton) {
         return VF3_2;
-    case QMessageBox::Cancel :
+    }
+    else if (qm.clickedButton() == cancelButton) {
         return VF3_3;
     }
     return VF3_3;
@@ -110,8 +107,8 @@ bool vfQuestion(QWidget* par, const string& title, const string& mess)
 #else
          titl, messag,
 #endif
-         "&Yes", "&No") == 0);
-    return rest;
+         QMessageBox::Yes | QMessageBox::No));
+    return rest==QMessageBox::Yes;
 }
 
 vector<string> vfMultiKeys(QWidget* par, const char* caption,
@@ -143,21 +140,16 @@ DBKeyDialog::DBKeyDialog(QWidget* win, int irt, const char* key,
 	 
     old_sel.clear();
     //pList->setFont( pVisorImp->getCellFont() );
-    QObject::connect(pList, SIGNAL(itemDoubleClicked ( QListWidgetItem *) ), this, SLOT(accept()));
+    QObject::connect(pList, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(accept()));
     setWindowTitle( caption );
     vector<string> keyList;
 
-    bool yesFilter = false;
-
-    ErrorIf(!key, "DBKeyDialog", "Record Key is null");
-
-    if( strpbrk(key, "*?") == 0 )
+    if(!key)
+        Error( "DBKeyDialog", "Record Key is null");
+    else if( strpbrk(key, "*?") == 0 )
         keyFilter = "*";
     else
-    {
         keyFilter = key;
-        yesFilter = true;
-    }
 
     string s = "Please, select one record key. Filter: ";
     s +=  keyFilter;
@@ -194,15 +186,16 @@ DBKeyDialog::DBKeyDialog(QWidget* win, int irt,
 	setupUi(this);
 
     old_sel.clear();
-    for(int ii=0; ii<sel.size(); ii++)
+    for(size_t ii=0; ii<sel.size(); ii++)
           old_sel.push_back( sel[ii] );
 
     //pList->setFont( pVisorImp->getCellFont() );
     pList->setSelectionMode(QAbstractItemView::MultiSelection);
     setWindowTitle( caption );
 
-    ErrorIf(!key, "KeyDialog", "pkey is null");
-    if( strpbrk(key, "*?") == 0 )
+    if(!key)
+       Error("KeyDialog", "pkey is null");
+    else if( strpbrk(key, "*?") == 0 )
         keyFilter = "*";
     else
         keyFilter = key;
@@ -245,7 +238,7 @@ void DBKeyDialog::SetList()
        pList->addItem(keyList[ii].c_str());
 
     if( multi )
-    {  for(int jj=0; jj<old_sel.size(); jj++)
+    {  for(size_t jj=0; jj<old_sel.size(); jj++)
           for( int ii=0; ii<n; ii++ )
           {
             // comparing parts before '*' for overwrite dcomp, reacdc ....
@@ -348,7 +341,7 @@ DBKeyFilter::DBKeyFilter(QWidget* win, int irt, const char* key,
         pEdit->setToolTip( str );
         pEdit->setMaxLength( 100 );
         pEdit->setText( dbKey.FldKey(ii) );
-        connect( pEdit, SIGNAL(editingFinished ()), this, SLOT(setKeyLine()) );
+        connect( pEdit, SIGNAL(editingFinished()), this, SLOT(setKeyLine()) );
 
         editBox->addWidget( pEdit, ii, 0, Qt::AlignRight);
         pLabel = new QLabel( str, this);

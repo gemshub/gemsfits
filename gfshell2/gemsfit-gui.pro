@@ -11,8 +11,8 @@ DEFINES         += _MYNOZLIB
 DEFINES         += USEBSON
 DEFINES         += NO_JSONIO
 
-CONFIG -= warn_on
-CONFIG += warn_off
+#CONFIG -= warn_on
+#CONFIG += warn_off
 CONFIG += thread
 CONFIG += c++17
 

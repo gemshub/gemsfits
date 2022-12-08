@@ -31,6 +31,7 @@ class ProjectSettingsDialog : public QDialog
 {
     Q_OBJECT
 
+    Ui::ProjectSettingsDialog *ui;
     QSettings *settings;
 
 public slots:
@@ -49,8 +50,7 @@ public:
       return settings;
     }
 
-private:
-    Ui::ProjectSettingsDialog *ui;
+
 };
 
 #endif // PROJECTSETTINGSDIALOG_H

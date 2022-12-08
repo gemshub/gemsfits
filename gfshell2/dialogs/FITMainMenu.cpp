@@ -912,7 +912,7 @@ void FITMainWindow::CmBackupJSON()
 
         outFile.ff << "[\n";
         outFiletest.ff << "[\n";
-        for(int i=0; i<aKey.size(); i++ )
+        for(size_t i=0; i<aKey.size(); i++ )
         {
           rtEJ[ currentMode ].Get( aKey[i].c_str() );
           string valDB =rtEJ[ currentMode ].GetJson();
@@ -1024,7 +1024,7 @@ void FITMainWindow::CmBackupYAML()
              return;
         outFile.Open();
 
-        for(int i=0; i<aKey.size(); i++ )
+        for(size_t i=0; i<aKey.size(); i++ )
         {
           rtEJ[ currentMode ].Get( aKey[i].c_str() );
           string valDB =rtEJ[ currentMode ].GetYAML();
@@ -1360,7 +1360,7 @@ void FITMainWindow::CmDeleteList()
         if( aKey.size() <1 )
                 return;
 
-        for(int i=0; i<aKey.size(); i++ )
+        for(size_t i=0; i<aKey.size(); i++ )
             RecDelete( aKey[i].c_str() );
         rtEJ[currentMode].SetKey( ALLKEY );
 //        changeKeyList();
@@ -1436,10 +1436,10 @@ void FITMainWindow::CmTPpairsCSV()
    bson_destroy(&bq);
 
    // get distinct TP                                                          //D.2 getting the distinct T and P pairs
-   for (int i=0; i<TP[0].size(); i++)
+   for (size_t i=0; i<TP[0].size(); i++)
    {
        // check if TP pair is presnt more than once in the TP vector
-       for (int j=0; j<TP[0].size(); j++)
+       for (size_t j=0; j<TP[0].size(); j++)
        {
            if ((TP[0][i] == TP[0][j]) && (TP[1][i] == TP[1][j]) && (i != j))
            {
@@ -1447,7 +1447,7 @@ void FITMainWindow::CmTPpairsCSV()
            }
        }
        // check if TP pair was added to the unique TP pairs container
-       for (int j=0; j<TP_pairs[0].size(); ++j)
+       for (size_t j=0; j<TP_pairs[0].size(); ++j)
        {
            if ((TP[0][i] == TP_pairs[0][j]) && (TP[1][i] == TP_pairs[1][j]))
            {
@@ -1470,7 +1470,7 @@ void FITMainWindow::CmTPpairsCSV()
         return;
    outFile.Open();
 
-   for (int i=0; i<TP_pairs[1].size(); ++i)
+   for (size_t i=0; i<TP_pairs[1].size(); ++i)
    {
        outFile.ff <<TP_pairs[1][i]<<";"<<TP_pairs[0][i]<<endl;
    }

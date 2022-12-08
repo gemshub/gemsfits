@@ -695,7 +695,11 @@ void PlotChartView::dropEvent( QDropEvent* event )
     if (event->mimeData()->hasFormat("text/plain"))
     {
         QString text_ = event->mimeData()->text();
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+        auto posF =  event->position();
+#else
         auto posF =  event->posF();
+#endif
         pdata->addLabel( posF, text_ );
     }
 }

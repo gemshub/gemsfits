@@ -557,7 +557,11 @@ SearchWidget::~SearchWidget()
 
 void SearchWidget::search() const
 {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+    auto query = srchEngine->queryWidget()->searchInput();
+#else
     QList<QHelpSearchQuery> query = srchEngine->queryWidget()->query();
+#endif
     srchEngine->search(query);
 }
 

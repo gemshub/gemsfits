@@ -25,7 +25,7 @@ DialogFindFromPlot::DialogFindFromPlot(const jsonui17::ChartData* data, QWidget 
      ui->ymaxVal->setMinimum( data->region[2]);
      ui->ymaxVal->setValue( data->part[3]);
 
-    for(int ii=0; ii<data->linesNumber(); ii++ )
+    for(size_t ii=0; ii<data->linesNumber(); ii++ )
      ui->namesBox->addItem( data->lineData(ii).getName().c_str());
 
     ChangeIndex(0);
