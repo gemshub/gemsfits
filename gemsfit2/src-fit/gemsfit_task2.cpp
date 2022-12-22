@@ -617,6 +617,7 @@ void TGfitTask:: print_global_results ()
         header.push_back(temp + "." + keys::meas);
         header.push_back(temp + "." + keys::calc);
         header.push_back("residual");
+        header.push_back("%residual");
         header.push_back("weight");
 //        header.push_back("residual."+ Tfun->type);
     }
@@ -671,6 +672,7 @@ void TGfitTask:: print_global_results ()
                 gpf->fres << setprecision(prec) << aTfun[i].objfun[j].results.measured_value <<","<<
                              setprecision(prec) << aTfun[i].objfun[j].results.computed_value << ","<<
                              setprecision(prec) << aTfun[i].objfun[j].results.residual<<","/*<< aTfun[i].objfun[j].results.WTfun_residual << ","*/ <<
+                             setprecision(prec) << (100*aTfun[i].objfun[j].results.residual/aTfun[i].objfun[j].results.measured_value)<<","<<
                              setprecision(prec) << aTfun[i].objfun[j].results.weight <<",";
             } else
                 gpf->fres << ","<< ","<<","<< ",";
@@ -719,7 +721,7 @@ void TGfitTask:: print_nested_results ()
     if( gpf->fnfres.fail() )
     { cout<<"Nested Results fileopen error"<<endl; exit(1); }
 
-    gpf->fnfres << "sample,phase,name,unit,sT,sP,measured,computed,residual";
+    gpf->fnfres << "sample,phase,name,unit,sT,sP,measured,computed,residual,%residual";
 
     for (unsigned i = 0; i<Opti->optNFParam.size(); i++)
     {
@@ -745,7 +747,7 @@ void TGfitTask:: print_nested_results ()
                 else
                     gpf->fnfres << experiments[i]->sT << "," << experiments[i]->sP <<",";
 
-                gpf->fnfres << aTfun[i].nestfun[j].results.measured_value <<","<< aTfun[i].nestfun[j].results.computed_value << ","<< aTfun[i].nestfun[j].results.residual;
+                gpf->fnfres << aTfun[i].nestfun[j].results.measured_value <<","<< aTfun[i].nestfun[j].results.computed_value << ","<< aTfun[i].nestfun[j].results.residual << "," << (100*aTfun[i].nestfun[j].results.residual/aTfun[i].nestfun[j].results.measured_value);
 
                 for (unsigned o = 0; o<Opti->optNFParam.size(); o++)
                 {
