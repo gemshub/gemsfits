@@ -2,7 +2,6 @@
 #define _tmodel_h
 
 #include <vector>
-using namespace std;
 
 #include <QAbstractTableModel>
 #include <QItemDelegate>
@@ -36,7 +35,7 @@ const char  splitRow = '\n';
 const char  splitCol = '\t';
 #endif
 
-//const string emptiness("---");
+//const std::string emptiness("---");
 
 struct Selection {
     int N1;
@@ -77,7 +76,7 @@ protected:
   \ class TMatrixModel
   \ class for represents the data set and is responsible for fetchin
   \ the data is neaded for viewing and for writing back any changes.
-  \ Reading/writing data from/to vector classes
+  \ Reading/writing data from/to std::vector classes
   
 */
 
@@ -105,7 +104,7 @@ class TMatrixModel: public QAbstractTableModel
 
     QString ValToString( double val, int digits ) const;
     double ValFromString( const QVariant& strval  );
-    void setGraphData( QSortFilterProxyModel *pmodel, const string& title );
+    void setGraphData( QSortFilterProxyModel *pmodel, const std::string& title );
 
 public:
 
@@ -133,14 +132,14 @@ public:
     int getNumberStringColumns() const
     {   return numberStringColumns; }
 
-    string getName()
+    std::string getName()
     {   return fname.toStdString(); }
 
     void toggle_X(int ncolmn);
     void toggle_Y(int ncolmn);
 
     // get graph info
-    void showGraphData( QSortFilterProxyModel *pmodel, const string& title );
+    void showGraphData( QSortFilterProxyModel *pmodel, const std::string& title );
     void CloseGraph();
     int findRow( int *xyndx, double *reg );
 

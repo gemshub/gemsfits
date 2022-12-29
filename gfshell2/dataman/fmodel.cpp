@@ -294,7 +294,7 @@ void TMatrixModel::matrixFromCsvFile( const QString& dir )
     }
     else
       {
-        cout << "error open file " << fpath.toStdString() << endl;
+        std::cout << "error open file " << fpath.toStdString() << std::endl;
         //return;
       }
 
@@ -311,7 +311,7 @@ void TMatrixModel::matrixFromCsvFile( const QString& dir )
 
 void TMatrixModel::matrixToCsvFile( const QString& dir )
 {
-    // get string to output
+    // get std::string to output
     QString valCsv = matrixToCsvString( );
 
     // write file
@@ -330,16 +330,16 @@ void TMatrixModel::matrixToBson(  bson *obj )
 {
     size_t ii;
 
-    // get string to output
-    string name = fname.toStdString();
-    string valCsv = matrixToCsvString().toStdString();
+    // get std::string to output
+    std::string name = fname.toStdString();
+    std::string valCsv = matrixToCsvString().toStdString();
     int iRet = bson_append_string( obj, name.c_str(), valCsv.c_str() );
     ErrorIf( iRet == BSON_ERROR, name, "Error append string"+name );
 
     // added graphic part
     if( chart_data )
     {
-      string label= "graph_"+name;
+      std::string label= "graph_"+name;
       bson_append_start_object( obj, label.c_str());
       //
       bson_append_start_array(obj, "xcolms");
@@ -365,16 +365,16 @@ void TMatrixModel::matrixToBson(  bson *obj )
 /// read model from bson structure
 void TMatrixModel::matrixFromBson( QSortFilterProxyModel *pmodel, const char *bsdata )
 {
-    // get string from obj
-    string valCsv;
-    string name = fname.toStdString();
+    // get std::string from obj
+    std::string valCsv;
+    std::string name = fname.toStdString();
     if( !bson_find_string( bsdata, name.c_str(), valCsv ) )
         valCsv = "";
     //set up data
     matrixFromCsvString(valCsv.c_str());
 
     // load graphic part
-    string label= "graph_"+name;
+    std::string label= "graph_"+name;
     bson_iterator it;
     bson_type type;
     type =  bson_find_from_buffer(&it, bsdata, label.c_str() );
@@ -407,7 +407,7 @@ void TMatrixModel::CloseGraph()
       graph_dlg->close();
 }
 
-void TMatrixModel::setGraphData( QSortFilterProxyModel */*pmodel*/,  const string& title )
+void TMatrixModel::setGraphData( QSortFilterProxyModel */*pmodel*/,  const std::string& title )
 {
     if(!chart_data)
     {
@@ -418,7 +418,7 @@ void TMatrixModel::setGraphData( QSortFilterProxyModel */*pmodel*/,  const strin
     }
 }
 
-void TMatrixModel::showGraphData( QSortFilterProxyModel *pmodel,  const string& title )
+void TMatrixModel::showGraphData( QSortFilterProxyModel *pmodel,  const std::string& title )
 {
    // Set up GraphDialog
    setGraphData( pmodel,  title );
@@ -839,7 +839,7 @@ void TMatrixTable::CmCalc()
   	    const int mLimit = (transpose) ? (sel.M1 + sel.N2-sel.N1) : sel.M2;
   	    for( int cellIt = 0;  cellIt < cells.count() && cellNum <= mLimit; cellIt++, cellNum++) 
   	    {
-          string value = (const char*)cells[ cellIt ].toLatin1().data();
+          std::string value = (const char*)cells[ cellIt ].toLatin1().data();
           strip( value );
           //if( value.empty() /*|| value == emptiness*/ )
           //    value = "";//"---";
@@ -894,8 +894,8 @@ void TMatrixTable::CmCalc()
   	     }
          if( largerN || largerM )
          {
-           cout <<  "Object paste" <<
-            "Pasting contents has larger dimensions then the object!" << endl;
+           std::cout <<  "Object paste" <<
+            "Pasting contents has larger dimensions then the object!" << std::endl;
          }
          undoString = createString( sel );
       

@@ -98,7 +98,7 @@ void ProjectSettingsDialog::CmEJDBDir()
     QString projDir = ui->projDir->text();
 //    QString dir = QFileDialog::getExistingDirectory(this, "Select EJDB Directory",
 //     projDir,  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
-    string fname = ui->projDir->text().toStdString();
+    std::string fname = ui->projDir->text().toStdString();
     //Select files
     TFile file("");
     if( !file.ChooseFileSave( this, fname, "Select EJDB Directory", "" ))

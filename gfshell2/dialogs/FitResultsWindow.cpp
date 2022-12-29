@@ -147,14 +147,14 @@ void FitResultsWindow::closeEvent(QCloseEvent* ev)
        ev->accept();
 }
 
-void FitResultsWindow::ShowResults( const string& key )
+void FitResultsWindow::ShowResults( const std::string& key )
 {
    pLineTask->setText( key.c_str() );
    readBsonRecord();
    show();
 }
 
-void FitResultsWindow::ShowResults( const string& key, const QString& dir )
+void FitResultsWindow::ShowResults( const std::string& key, const QString& dir )
 {
    pLineTask->setText( key.c_str());
    readBsonRecord();
@@ -272,7 +272,7 @@ void FitResultsWindow::editFiledsFromFile( const QString& dir )
     }
     else
       {
-        cout << "error open file " << fpath.toStdString() << endl;
+        std::cout << "error open file " << fpath.toStdString() << std::endl;
       }
     ui->textEdit->setText(valCsv);
 
@@ -303,7 +303,7 @@ void FitResultsWindow::editFiledsToFile( const QString& dir )
 void FitResultsWindow::CmSaveBsonRecord()
 {
     bson bsrec;
-    string key = pLineTask->text().toStdString();
+    std::string key = pLineTask->text().toStdString();
 
   try
   {
@@ -326,21 +326,21 @@ void FitResultsWindow::CmSaveBsonRecord()
 
     // added text bufers to bson record
     // write file  FIT_STATISTIC
-//    string valCsv = ui->textStatistic->toPlainText().toStdString();
-//    string name = fFitStatistic.toStdString();
-//    int iRet = bson_append_string( &bsrec, name.c_str(), valCsv.c_str() );
-//    ErrorIf( iRet == BSON_ERROR, name, "Error append string"+name );
+//    std::string valCsv = ui->textStatistic->toPlainText().toStdString();
+//    std::string name = fFitStatistic.toStdString();
+//    int iRet = bson_append_std::string( &bsrec, name.c_str(), valCsv.c_str() );
+//    ErrorIf( iRet == BSON_ERROR, name, "Error append std::string"+name );
     // write file  FIT_LOGFILE
-    string valCsv = ui->textEdit->toPlainText().toStdString();
-    string name = fFitLogfile.toStdString();
+    std::string valCsv = ui->textEdit->toPlainText().toStdString();
+    std::string name = fFitLogfile.toStdString();
     int iRet = bson_append_string( &bsrec, name.c_str(), valCsv.c_str() );
     ErrorIf( iRet == BSON_ERROR, name, "Error append string"+name );
 
     bson_finish( &bsrec );
 
-    //set bson to string
+    //set bson to std::string
     ParserJson pars;
-    string recBsonText;
+    std::string recBsonText;
     pars.printBsonObjectToJson( recBsonText, bsrec.data );
     bson_destroy( &bsrec);
 
@@ -354,7 +354,7 @@ void FitResultsWindow::CmSaveBsonRecord()
    }
     catch( TError& err )
     {
-      cout << err.title << err.mess << endl;
+      std::cout << err.title << err.mess << std::endl;
     }
 }
 
@@ -362,7 +362,7 @@ void FitResultsWindow::CmSaveBsonRecord()
 void FitResultsWindow::readBsonRecord()
 {
     bson bsrec;
-    string key = pLineTask->text().toStdString();
+    std::string key = pLineTask->text().toStdString();
 
   try
   {
@@ -375,7 +375,7 @@ void FitResultsWindow::readBsonRecord()
     if( rtEJ[ MDF_FITS ].Find( key.c_str() ))
     {  //read record
         rtEJ[ MDF_FITS ].Get( key.c_str() );
-        string valDB =rtEJ[ MDF_FITS ].GetJson();
+        std::string valDB =rtEJ[ MDF_FITS ].GetJson();
 
         //get bson bsrec;
         ParserJson pars;
@@ -396,14 +396,14 @@ void FitResultsWindow::readBsonRecord()
 
        // added text bufers to bson record
        // write file  FIT_STATISTIC
-//       string name = fFitStatistic.toStdString();
-       string valCsv;
-//       if( !bson_find_string( bsrec.data, name.c_str(), valCsv ) )
+//       std::string name = fFitStatistic.toStdString();
+       std::string valCsv;
+//       if( !bson_find_std::string( bsrec.data, name.c_str(), valCsv ) )
 //           valCsv = "";
 //       ui->textStatistic->setText(valCsv.c_str());
 
        // write file  FIT_LOGFILE
-       string name = fFitLogfile.toStdString();
+       std::string name = fFitLogfile.toStdString();
        if( !bson_find_string( bsrec.data, name.c_str(), valCsv ) )
             valCsv = "";
        ui->textEdit->setText(valCsv.c_str());
@@ -412,7 +412,7 @@ void FitResultsWindow::readBsonRecord()
    }
     catch( TError& err )
     {
-      cout << err.title << err.mess << endl;
+      std::cout << err.title << err.mess << std::endl;
     }
 }
 
@@ -422,14 +422,14 @@ void FitResultsWindow::CmBackupJSON()
     try
     {
        // select record list to unload
-       vector<string> aKey = vfMultiKeys( this, "Please, mark records to be unloaded to JSON",
+       std::vector<std::string> aKey = vfMultiKeys( this, "Please, mark records to be unloaded to JSON",
               MDF_FITS, "*" );
         if( aKey.size() <1 )
                return;
 
        // open file to unloading
-        string fname;
-        TFile  outFile("", ios::out );
+        std::string fname;
+        TFile  outFile("", std::ios::out );
         if( !outFile.ChooseFileSave( this, fname, "Please, give a file name for unloading records","*.json" ))
              return;
         outFile.Open();
@@ -438,7 +438,7 @@ void FitResultsWindow::CmBackupJSON()
         for(size_t i=0; i<aKey.size(); i++ )
         {
           rtEJ[ MDF_FITS ].Get( aKey[i].c_str() );
-          string valDB =rtEJ[ MDF_FITS ].GetJson();
+          std::string valDB =rtEJ[ MDF_FITS ].GetJson();
           outFile.ff << valDB;
           if( i<aKey.size()-1)
                outFile.ff <<  ",";
@@ -449,7 +449,7 @@ void FitResultsWindow::CmBackupJSON()
     }
     catch( TError& err )
     {
-        cout << err.title << err.mess << endl;
+        std::cout << err.title << err.mess << std::endl;
     }
 }
 
@@ -458,7 +458,7 @@ void FitResultsWindow::CmDeleteRecord()
 {
     try
     {
-        string key = pLineTask->text().toStdString();
+        std::string key = pLineTask->text().toStdString();
         if( !rtEJ[ MDF_FITS ].Find(key.c_str()) )
            return;
 
@@ -468,7 +468,7 @@ void FitResultsWindow::CmDeleteRecord()
     }
     catch( TError& err )
     {
-        cout << err.title << err.mess << endl;
+        std::cout << err.title << err.mess << std::endl;
     }
 }
 
@@ -480,7 +480,7 @@ void FitResultsWindow::CmPlotTable()
         if( !tableCurrent )
           return;
 
-        string title = "Task ";
+        std::string title = "Task ";
                title  += pLineTask->text().toStdString();
         QSortFilterProxyModel *pmodel = (QSortFilterProxyModel *)tableCurrent->model();
         ((TMatrixModel *)pmodel->sourceModel())->showGraphData(pmodel, title );
@@ -489,7 +489,7 @@ void FitResultsWindow::CmPlotTable()
     }
     catch( TError& err )
     {
-        cout << err.title << err.mess << endl;
+        std::cout << err.title << err.mess << std::endl;
     }
 }
 
@@ -530,7 +530,7 @@ void FitResultsWindow::CmPrintTable()
     }
     catch( TError& err )
     {
-        cout << err.title << err.mess << endl;
+        std::cout << err.title << err.mess << std::endl;
     }
 }
 
@@ -656,7 +656,7 @@ void FitResultsWindow::CmFindFromPlot()
   }
     catch( TError& err )
     {
-    cout << err.title << err.mess << endl;
+    std::cout << err.title << err.mess << std::endl;
     }
 }
 

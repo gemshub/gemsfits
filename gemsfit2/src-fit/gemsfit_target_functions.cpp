@@ -55,7 +55,7 @@ void from_log10(double &Qnt, double &Qerror)
 }
 
 /// Unit check FUNCTIONS
-void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
+void check_unit(int i, int p, int e, std::string unit, TGfitTask *sys )
 {
     if (sys->experiments[i]->expphases[p]->phIC[e]->Qunit != unit)
     {
@@ -69,7 +69,7 @@ void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
             }
             else
             {
-                cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+                std::cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< std::endl;
                 exit(1);
             }
         }  else
@@ -83,7 +83,7 @@ void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
             }
             else
             {
-                cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+                std::cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< std::endl;
                 exit(1);
             }
         } else
@@ -97,7 +97,7 @@ void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
                 }
                 else
                 {
-                    cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+                    std::cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< std::endl;
                     exit(1);
                 }
             }  else
@@ -111,7 +111,7 @@ void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
                 }
                 else
                 {
-                    cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+                    std::cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< std::endl;
                     exit(1);
                 }
             }
@@ -120,13 +120,13 @@ void check_unit(int i, int p, int e, string unit, TGfitTask *sys )
     {
         if (sys->experiments[i]->expphases[p]->phIC[e]->Qunit != unit)
         {
-            cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+            std::cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< std::endl;
             exit(1);
         }
     }
 }
 
-void check_MR_unit(int i, int p, int f, string unit, TGfitTask *sys )
+void check_MR_unit(int i, int p, int f, std::string unit, TGfitTask *sys )
 {
     if (sys->experiments[i]->expphases[p]->phMR[f]->Qunit != unit)
     {
@@ -142,7 +142,7 @@ void check_MR_unit(int i, int p, int f, string unit, TGfitTask *sys )
             }
             else
             {
-                cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+                std::cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< std::endl;
                 exit(1);
             }
         }
@@ -151,7 +151,7 @@ void check_MR_unit(int i, int p, int f, string unit, TGfitTask *sys )
     {
         if (sys->experiments[i]->expphases[p]->phMR[f]->Qunit != unit)
         {
-            cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+            std::cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< std::endl;
             exit(1);
         }
     }
@@ -159,7 +159,7 @@ void check_MR_unit(int i, int p, int f, string unit, TGfitTask *sys )
 }
 
 
-void check_unit_dcomp(int i, int p, int dc, int dcp, string unit, TGfitTask *sys )
+void check_unit_dcomp(int i, int p, int dc, int dcp, std::string unit, TGfitTask *sys )
 {
     if (sys->experiments[i]->expphases[p]->phDC[dc]->DCprop[dcp]->Qunit != unit)
     {
@@ -183,7 +183,7 @@ void check_unit_dcomp(int i, int p, int dc, int dcp, string unit, TGfitTask *sys
             }
             else
             {
-                cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+                std::cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< std::endl;
                 exit(1);
             }
 
@@ -208,14 +208,14 @@ void check_unit_dcomp(int i, int p, int dc, int dcp, string unit, TGfitTask *sys
             }
             else
             {
-                cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+                std::cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< std::endl;
                 exit(1);
             }
         }
     }
 }
 
-void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
+void check_prop_unit(int i, int p, int pp, std::string unit, TGfitTask *sys )
 {
     if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit != unit)
     {
@@ -231,7 +231,7 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
             }
             else
             {
-                cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+                std::cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< std::endl;
                 exit(1);
             }
         } else
@@ -247,7 +247,7 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
                 }
                 else
                 {
-                    cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+                    std::cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< std::endl;
                     exit(1);
                 }
             } else
@@ -264,7 +264,7 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
                     }
                     else
                     {
-                        cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+                        std::cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< std::endl;
                         exit(1);
                     }
                 } else
@@ -281,7 +281,7 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
                         }
                         else
                         {
-                            cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+                            std::cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< std::endl;
                             exit(1);
                         }
                     } else
@@ -298,7 +298,7 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
                             }
                             else
                             {
-                                cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+                                std::cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< std::endl;
                                 exit(1);
                             }
                         } else
@@ -315,7 +315,7 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
                                 }
                                 else
                                 {
-                                    cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+                                    std::cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< std::endl;
                                     exit(1);
                                 }
                             }
@@ -324,7 +324,7 @@ void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys )
     {
         if (sys->experiments[i]->expphases[p]->phprop[pp]->Qunit != unit)
         {
-            cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< endl;
+            std::cout << "Unit for experiment: "<< i <<" from "<< sys->experiments[i]->expdataset << " is not implemented"<< std::endl;
             exit(1);
         }
     }
@@ -336,27 +336,27 @@ double residual_properties(int i, int p, TGfitTask::TargetFunction::obj_fun &obj
     double computed_value = 0.0, measured_value, error_value;
     double Tfun_residual = 0.0, Weighted_Tfun_residual = 0.0, weight_ = 1.0;
 
-    vector<double> varDbl;
+    std::vector<double> varDbl;
 
     if (objfun.expr == "NULL")
     {
-        cout << "An expression \"expr\" is needed to calculate the phase property. " << endl;
+        std::cout << "An expression \"expr\" is needed to calculate the phase property. " << std::endl;
         exit(1);
     }
 
     // re-name DC names
-    vector<string> exprO, exprP;
-    string expr =  objfun.expr;
+    std::vector<std::string> exprO, exprP;
+    std::string expr =  objfun.expr;
     expr = formula_DCname_parser(objfun.expr, exprO, exprP);
 
-    //        cout << expr << endl;
+    //        cout << expr << std::endl;
 
     try
     {
         mu::Parser parser;
 #if defined(_UNICODE)
         parser.SetExpr(s2ws(expr));
-        vector<wstring> varStr;
+        std::vector<std::wstring> varStr;
 #else
         parser.SetExpr(expr);
         vector<string> varStr;
@@ -380,7 +380,7 @@ double residual_properties(int i, int p, TGfitTask::TargetFunction::obj_fun &obj
             }
 
             if (DCndx < 0)
-            { cout << "ERROR: Dependent component: " << varStr[d].c_str() << " not present in GEMS system! "; exit(1);}
+            { std::cout << "ERROR: Dependent component: " << varStr[d].c_str() << " not present in GEMS system! "; exit(1);}
 
 
             //if (objfun.exp_CN == keys::molfrac)
@@ -399,19 +399,19 @@ double residual_properties(int i, int p, TGfitTask::TargetFunction::obj_fun &obj
     }
     catch(mu::Parser::exception_type &e)
     {
-        cout << "muParser ERROR for sample " << sys->experiments[i]->sample << "\n";
+        std::cout << "muParser ERROR for sample " << sys->experiments[i]->sample << "\n";
 #if defined(_UNICODE)
-        cout << "Message:  " << ws2s(e.GetMsg()) << "\n";
-        cout << "Formula:  " << ws2s(e.GetExpr()) << "\n";
-        cout << "Token:    " << ws2s(e.GetToken()) << "\n";
+        std::cout << "Message:  " << ws2s(e.GetMsg()) << "\n";
+        std::cout << "Formula:  " << ws2s(e.GetExpr()) << "\n";
+        std::cout << "Token:    " << ws2s(e.GetToken()) << "\n";
 #else
-        cout << "Message:  " << e.GetMsg() << "\n";
-        cout << "Formula:  " << e.GetExpr() << "\n";
-        cout << "Token:    " << e.GetToken() << "\n";
+        std::cout << "Message:  " << e.GetMsg() << "\n";
+        std::cout << "Formula:  " << e.GetExpr() << "\n";
+        std::cout << "Token:    " << e.GetToken() << "\n";
 #endif
         if (e.GetPos()!=std::string::npos)
-            cout << "Position: " << e.GetPos() << "\n";
-        cout << "Errc:     " << e.GetCode() << " http://muparser.beltoforion.de/mup_error_handling.html#idErrors " <<"\n";
+            std::cout << "Position: " << e.GetPos() << "\n";
+        std::cout << "Errc:     " << e.GetCode() << " http://muparser.beltoforion.de/mup_error_handling.html#idErrors " <<"\n";
         //            computed_value = rand() % 100 + 1;
     }
 
@@ -476,14 +476,14 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
             {
                 //                double molar_= sys->NodT[i]->g /Ph_Volume m3;
                 //                computed_value = log10(molal_);
-                cout << "Error: log_molar unit not yet implemented"<< endl; exit(1);
+                std::cout << "Error: log_molar unit not yet implemented"<< std::endl; exit(1);
             }
             else
                 if (objfun.exp_unit == keys::molar)
                 {
                     //                    double molar_= sys->NodT[i]->Get_mIC(ICndx);
                     //                    computed_value = log10(molal_);
-                    cout << "Error: molar unit not yet implemented"<< endl; exit(1);
+                    std::cout << "Error: molar unit not yet implemented"<< std::endl; exit(1);
                 }
                 else
                 {
@@ -521,16 +521,16 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
         {
             if (PHndx < 0)
             {
-                cout << "Error: "<< phase_name <<" is not present in the GEMS3K CSD files "; exit(1);
+                std::cout << "Error: "<< phase_name <<" is not present in the GEMS3K CSD files "; exit(1);
             }
             else
                 if (ICndx < 0)
                 {
-                    cout << "Error: "<< elem_name <<" is not present in the " <<phase_name; exit(1);
+                    std::cout << "Error: "<< elem_name <<" is not present in the " <<phase_name; exit(1);
                 }
                 else
                 {
-                    cout << "Error in target functions line 481 "; exit(1);
+                    std::cout << "Error in target functions line 481 "; exit(1);
                 }
         }
 
@@ -544,7 +544,7 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
 
         if ((computed_value < sys->LimitOfDetection) && (computed_value > 0))
         {
-            //        cout << measured_value <<" / " <<computed_value<<" = " << measured_value / computed_value << endl;
+            //        std::cout << measured_value <<" / " <<computed_value<<" = " << measured_value / computed_value << std::endl;
             computed_value = rand() % 100 + 1;
         }
 
@@ -587,7 +587,7 @@ double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::ob
     double Tfun_residual = 0.0, Weighted_Tfun_residual = 0.0, weight_ = 1.0;
     DATACH* dCH = sys->NodT[i]->pCSD();
     double* IC_in_PH;
-    vector<string> nom, denom;
+    std::vector<std::string> nom, denom;
     char ccPH;
 
 
@@ -601,18 +601,18 @@ double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::ob
 
     if (PHndx < 0)
     {
-        cout << "Error: "<< phase_name <<" is not present in the GEMS3K CSD files "; exit(1);
+        std::cout << "Error: "<< phase_name <<" is not present in the GEMS3K CSD files "; exit(1);
     }
 
-    vector<double> varDbl;
+    std::vector<double> varDbl;
 
     try {
         mu::Parser parser;
 #if defined(_UNICODE)
-        wstring exp_CN;
+        std::wstring exp_CN;
         exp_CN.assign(objfun.exp_CN.begin(), objfun.exp_CN.end());
         parser.SetExpr(exp_CN);
-        vector<wstring> varStr;
+        std::vector<std::wstring> varStr;
 #else
         parser.SetExpr(objfun.exp_CN);
         vector<string> varStr;
@@ -647,19 +647,19 @@ double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::ob
     }
     catch(mu::Parser::exception_type &e)
     {
-        cout << "muParser ERROR for sample " << sys->experiments[i]->sample << "\n";
+        std::cout << "muParser ERROR for sample " << sys->experiments[i]->sample << "\n";
 #if defined(_UNICODE)
-        cout << "Message:  " << ws2s(e.GetMsg()) << "\n";
-        cout << "Formula:  " << ws2s(e.GetExpr()) << "\n";
-        cout << "Token:    " << ws2s(e.GetToken()) << "\n";
+        std::cout << "Message:  " << ws2s(e.GetMsg()) << "\n";
+        std::cout << "Formula:  " << ws2s(e.GetExpr()) << "\n";
+        std::cout << "Token:    " << ws2s(e.GetToken()) << "\n";
 #else
-        cout << "Message:  " << e.GetMsg() << "\n";
-        cout << "Formula:  " << e.GetExpr() << "\n";
-        cout << "Token:    " << e.GetToken() << "\n";
+        std::cout << "Message:  " << e.GetMsg() << "\n";
+        std::cout << "Formula:  " << e.GetExpr() << "\n";
+        std::cout << "Token:    " << e.GetToken() << "\n";
 #endif
         if (e.GetPos()!=std::string::npos)
-            cout << "Position: " << e.GetPos() << "\n";
-        cout << "Errc:     " << e.GetCode() << " http://muparser.beltoforion.de/mup_error_handling.html#idErrors " <<"\n";
+            std::cout << "Position: " << e.GetPos() << "\n";
+        std::cout << "Errc:     " << e.GetCode() << " http://muparser.beltoforion.de/mup_error_handling.html#idErrors " <<"\n";
         //            computed_value = rand() % 100 + 1;
     }
 
@@ -856,27 +856,27 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
          (objfun.exp_CN == keys::frAlV) || (objfun.exp_CN == keys::frAlVI) || (objfun.exp_CN == keys::netH_OH) ||
          (objfun.exp_CN == keys::Rd)) || (objfun.exp_CN == keys::activityRatio) ) && (PHndx >=0))
     {
-        vector<double> varDbl;
+        std::vector<double> varDbl;
 
         if (objfun.expr == "NULL")
         {
-            cout << "An expression \"expr\" is needed to calculate the phase property. " << endl;
+            std::cout << "An expression \"expr\" is needed to calculate the phase property. " << std::endl;
             exit(1);
         }
 
         // re-name DC names
-        vector<string> exprO, exprP;
-        string expr =  objfun.expr;
+        std::vector<std::string> exprO, exprP;
+        std::string expr =  objfun.expr;
         expr = formula_DCname_parser(objfun.expr, exprO, exprP);
 
-//        cout << expr << endl;
+//        cout << expr << std::endl;
 
         try
         {
             mu::Parser parser;
 #if defined(_UNICODE)
             parser.SetExpr(s2ws(expr));
-            vector<wstring> varStr;
+            std::vector<std::wstring> varStr;
 #else
             parser.SetExpr(expr);
             vector<string> varStr;
@@ -900,7 +900,7 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
                 }
 
                 if (DCndx < 0)
-                { cout << "ERROR: Dependent component: " << varStr[d].c_str() << " not present in GEMS system! "; exit(1);}
+                { std::cout << "ERROR: Dependent component: " << varStr[d].c_str() << " not present in GEMS system! "; exit(1);}
 
                 if (objfun.exp_CN == keys::activityRatio)
                 {
@@ -979,19 +979,19 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
         }
         catch(mu::Parser::exception_type &e)
         {
-            cout << "muParser ERROR for sample " << sys->experiments[i]->sample << "\n";
+            std::cout << "muParser ERROR for sample " << sys->experiments[i]->sample << "\n";
 #if defined(_UNICODE)
-         cout << "Message:  " << ws2s(e.GetMsg()) << "\n";
-         cout << "Formula:  " << ws2s(e.GetExpr()) << "\n";
-         cout << "Token:    " << ws2s(e.GetToken()) << "\n";
+         std::cout << "Message:  " << ws2s(e.GetMsg()) << "\n";
+         std::cout << "Formula:  " << ws2s(e.GetExpr()) << "\n";
+         std::cout << "Token:    " << ws2s(e.GetToken()) << "\n";
 #else
-         cout << "Message:  " << e.GetMsg() << "\n";
-         cout << "Formula:  " << e.GetExpr() << "\n";
-         cout << "Token:    " << e.GetToken() << "\n";
+         std::cout << "Message:  " << e.GetMsg() << "\n";
+         std::cout << "Formula:  " << e.GetExpr() << "\n";
+         std::cout << "Token:    " << e.GetToken() << "\n";
 #endif
             if (e.GetPos()!=std::string::npos)
-                cout << "Position: " << e.GetPos() << "\n";
-            cout << "Errc:     " << e.GetCode() << " http://muparser.beltoforion.de/mup_error_handling.html#idErrors " <<"\n";
+                std::cout << "Position: " << e.GetPos() << "\n";
+            std::cout << "Errc:     " << e.GetCode() << " http://muparser.beltoforion.de/mup_error_handling.html#idErrors " <<"\n";
             //            computed_value = rand() % 100 + 1;
         }
 
@@ -1057,8 +1057,8 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
     } else
     { if (PHndx < 0)
          {
-             cout << "Error: "<< phase_name <<" is not present in the GEMS3K CSD files "; exit(1);
-         } else cout << "Error in target functions line 857 "; exit(1);
+             std::cout << "Error: "<< phase_name <<" is not present in the GEMS3K CSD files "; exit(1);
+         } else std::cout << "Error in target functions line 857 "; exit(1);
     }
 
     if ((p >= 0) && (pp >= 0))
@@ -1069,7 +1069,7 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
         // Error handling due to possible non-physical parameters
         if ((computed_value < sys->LimitOfDetection) && (computed_value > 0))
         {
-    //        cout << measured_value <<" / " <<computed_value<<" = " << measured_value / computed_value << endl;
+    //        std::cout << measured_value <<" / " <<computed_value<<" = " << measured_value / computed_value << std::endl;
             computed_value = rand() % 100 + 1;
         }
 
@@ -1162,8 +1162,8 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFun
     } else
     { if (DCndx < 0)
          {
-             cout << "Error: "<< dcomp_name <<" is not present in the GEMS3K CSD files "; exit(1);
-         } else cout << "Error in target functions line 869 "; exit(1);
+             std::cout << "Error: "<< dcomp_name <<" is not present in the GEMS3K CSD files "; exit(1);
+         } else std::cout << "Error in target functions line 869 "; exit(1);
     }
 
     if ((p >= 0) && (dc >= 0) && (dcp >= 0))
@@ -1193,7 +1193,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFun
     return Weighted_Tfun_residual;
 }
 
-double Tfunction (double computed_value, double measured_value, string type, TGfitTask::TargetFunction::obj_fun objfun)
+double Tfunction (double computed_value, double measured_value, std::string type, TGfitTask::TargetFunction::obj_fun objfun)
 {
     double Tf = 0.0;
     if (type == keys::lsq)
@@ -1219,7 +1219,7 @@ double Tfunction (double computed_value, double measured_value, string type, TGf
     return Tf;
 }
 
-double weight (int i, int p, int e, TGfitTask::TargetFunction::obj_fun &objfun, string type, TGfitTask *sys)
+double weight (int i, int p, int e, TGfitTask::TargetFunction::obj_fun &objfun, std::string type, TGfitTask *sys)
 {
     if (type == keys::inverr)
     {
@@ -1242,7 +1242,7 @@ double weight (int i, int p, int e, TGfitTask::TargetFunction::obj_fun &objfun, 
         return 1;
 }
 
-double weight_MR (int i, int p, int f, TGfitTask::TargetFunction::obj_fun &objfun, string type, TGfitTask *sys)
+double weight_MR (int i, int p, int f, TGfitTask::TargetFunction::obj_fun &objfun, std::string type, TGfitTask *sys)
 {
     if (type == keys::inverr)
     {
@@ -1265,7 +1265,7 @@ double weight_MR (int i, int p, int f, TGfitTask::TargetFunction::obj_fun &objfu
         return 1;
 }
 
-double weight_phprop (int i, int p, int pp, TGfitTask::TargetFunction::obj_fun &objfun, string type, TGfitTask *sys)
+double weight_phprop (int i, int p, int pp, TGfitTask::TargetFunction::obj_fun &objfun, std::string type, TGfitTask *sys)
 {
     if (type == keys::inverr)
     {
@@ -1287,7 +1287,7 @@ double weight_phprop (int i, int p, int pp, TGfitTask::TargetFunction::obj_fun &
         return 1;
 }
 
-double weight_prop (int i, int p, TGfitTask::TargetFunction::obj_fun &objfun, string type, TGfitTask *sys)
+double weight_prop (int i, int p, TGfitTask::TargetFunction::obj_fun &objfun, std::string type, TGfitTask *sys)
 {
     if (type == keys::inverr)
     {
@@ -1310,7 +1310,7 @@ double weight_prop (int i, int p, TGfitTask::TargetFunction::obj_fun &objfun, st
 }
 
 
-double weight_phdcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFunction::obj_fun &objfun, string type, TGfitTask *sys)
+double weight_phdcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFunction::obj_fun &objfun, std::string type, TGfitTask *sys)
 {
     if (type == keys::inverr)
     {
@@ -1332,9 +1332,9 @@ double weight_phdcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFunction:
         return 1;
 }
 
-string formula_DCname_parser(string expr, vector<string> &exprO, vector<string> &exprP )
+std::string formula_DCname_parser(std::string expr, std::vector<std::string> &exprO, std::vector<std::string> &exprP )
 {
-    string expr_temp, DCname;
+    std::string expr_temp, DCname;
     char op[25]= "/+-*^?<>=#!$%&|~'_()@.", opr[25]="abcdefghijklmnopqrstuv";
 
     expr_temp = expr;
@@ -1349,12 +1349,12 @@ string formula_DCname_parser(string expr, vector<string> &exprO, vector<string> 
         exprO.push_back(DCname);
 
         // replaces the found operators with letters
-        for (uint i=0; i< sizeof(op); i++)
+        for (unsigned int i=0; i< sizeof(op); i++)
         {
             found_op = DCname.find(op[i]);
             while (found_op!=std::string::npos)
             {
-                string r(1, opr[i]);
+                std::string r(1, opr[i]);
                 DCname.replace(found_op, 1, r);
                 found_op = DCname.find(op[i], found_op+1);
             }
@@ -1365,11 +1365,11 @@ string formula_DCname_parser(string expr, vector<string> &exprO, vector<string> 
         found_ = expr.find("}", found_);
         if( ((found_==std::string::npos) && (found!=std::string::npos)) || ((found_!=std::string::npos) && (found==std::string::npos)) )
         {
-            cout << "ERROR: Missing { or } from the \"expr\""; exit(1);
+            std::cout << "ERROR: Missing { or } from the \"expr\""; exit(1);
         }
     }
 
-    for (uint i = 0; i < exprO.size(); i++)
+    for (unsigned int i = 0; i < exprO.size(); i++)
     {
         found = expr.find(exprO[i]);
         while ((found!=std::string::npos) && (exprO[i] != exprP[i]))

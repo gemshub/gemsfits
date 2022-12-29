@@ -53,9 +53,9 @@ class FITMainWindow : public QMainWindow
 
     int currentMode;    ///< DataBase or Task mode
 
-    string SysFITDir;   ///< Path to resources directory
-    string LocalDocDir; ///< Path to help directory
-    string UserDir;     ///< Path to User directory
+    std::string SysFITDir;   ///< Path to resources directory
+    std::string LocalDocDir; ///< Path to help directory
+    std::string UserDir;     ///< Path to User directory
 
     bool KeysLength;   ///< Write TXT files with comments
     bool JsonDataShow;   ///< Write edited data in Json format
@@ -67,8 +67,8 @@ class FITMainWindow : public QMainWindow
 
     QFont	axisLabelFont; // used in graphics
 
-    string lastCalcRecordKey;  ///< Last calculated record key
-    shared_ptr<TNode> aNode;
+    std::string lastCalcRecordKey;  ///< Last calculated record key
+    std::shared_ptr<TNode> aNode;
     TNode* node() const
     {
       return aNode.get();
@@ -84,16 +84,16 @@ class FITMainWindow : public QMainWindow
     void loadNewProject();
     void resetMainWindow();
     bool MessageToSave();
-    void RecSave( const string& recBsonText, const char* key=0 );
+    void RecSave( const std::string& recBsonText, const char* key=0 );
     void RecDelete( const char* key );
-    void changeEditeRecord(const string& tagname, const string& newValue, bool is_json );
+    void changeEditeRecord(const std::string& tagname, const std::string& newValue, bool is_json );
     bool runProcess( const QStringList& cParameters, const QString& workDir );
-    void selectGEMS(const string& fname_ );
-    string makeSystemFileName(const string& path );
+    void selectGEMS(const std::string& fname_ );
+    std::string makeSystemFileName(const std::string& path );
     bool createTaskTemplate();
     void readTXT( TFile& inFile );
-    string getRecordKey( int row );
-    void defineModuleKeysList( string& samplelist );
+    std::string getRecordKey( int row );
+    void defineModuleKeysList( std::string& samplelist );
 
 
     void closeEvent( QCloseEvent* );
@@ -123,8 +123,8 @@ public slots:
        void CmTaskMode();
        void CmConfigProject();
        void CmNewProject();
-       void CmSelectProject( const string& fname_="" );
-       void CmSelectGEMS( const string& fname_="" );
+       void CmSelectProject( const std::string& fname_="" );
+       void CmSelectGEMS( const std::string& fname_="" );
     // Help
        void CmHelp();
        void CmHelpAbout();
@@ -133,7 +133,7 @@ public slots:
        //void CmHelp2();
        void CmSettingth();
    // Record
-       void CmShow( const string& reckey="" );
+       void CmShow( const std::string& reckey="" );
        void CmCreate();
        void CmUpdate();
        void CmInsert();
@@ -176,13 +176,13 @@ public:
     explicit FITMainWindow(int c, char** v, QWidget *parent = 0);
     ~FITMainWindow();
 
-       const string& sysDir() const {
+       const std::string& sysDir() const {
          return SysFITDir;
        }
-       const string& userDir() const {
+       const std::string& userDir() const {
          return UserDir;
        }
-       const string& docDir() const {
+       const std::string& docDir() const {
          return LocalDocDir;
        }
        const QFont& getAxisLabelFont() const
@@ -193,7 +193,7 @@ public:
     QProcess*  helpProcess;
     void GetHelp();
     void OpenHelp(const char* file, const char* item=0, int page =-1);
-    void OpenResults(  const string& key, const QString& dir = "");
+    void OpenResults(  const std::string& key, const QString& dir = "");
 
 private:
     QSettings *projectSettings; ///< Properties for current project
@@ -208,8 +208,8 @@ private:
 
     void setTableIComp();
     void setListPhase();
-    void setStatusText( const string& text );
-    void addLinetoStatus( const string& line );
+    void setStatusText( const std::string& text );
+    void addLinetoStatus( const std::string& line );
     int defineModuleKeysList( int nRT );
 
 };

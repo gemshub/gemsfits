@@ -28,7 +28,7 @@
 //------------------------------------------------------------------
 // service functions
 
-void messageCritical(QWidget* par, const string& title, const string& mess )
+void messageCritical(QWidget* par, const std::string& title, const std::string& mess )
 {
     QString titl, spac, messag;
     titl = title.c_str(); spac = "\n\n"; messag = mess.c_str();
@@ -49,8 +49,8 @@ void messageCritical(QWidget* par, const string& title, const string& mess )
 
 static int posx=0, posy=0;
 // returns VF3_1, VF3_2 or VF3_3
-int vfQuestion3(QWidget* par, const string& title, const string& mess, const string& s1,
-            const string& s2,  const string& s3, bool i_mov )
+int vfQuestion3(QWidget* par, const std::string& title, const std::string& mess, const std::string& s1,
+            const std::string& s2,  const std::string& s3, bool i_mov )
 {
   QString titl, spac, messag;
   titl = title.c_str(); spac = "\n\n"; messag = mess.c_str();
@@ -92,7 +92,7 @@ int vfQuestion3(QWidget* par, const string& title, const string& mess, const str
     return VF3_3;
 }
 
-bool vfQuestion(QWidget* par, const string& title, const string& mess)
+bool vfQuestion(QWidget* par, const std::string& title, const std::string& mess)
 {
   QString titl, spac, messag;
   titl = title.c_str(); spac = "\n\n"; messag = mess.c_str();
@@ -111,17 +111,17 @@ bool vfQuestion(QWidget* par, const string& title, const string& mess)
     return rest==QMessageBox::Yes;
 }
 
-vector<string> vfMultiKeys(QWidget* par, const char* caption,
+std::vector<std::string> vfMultiKeys(QWidget* par, const char* caption,
                             int iRt, const char* key )
 {
-    vector<string> sel;
+    std::vector<std::string> sel;
     DBKeyDialog dbk(par, iRt, sel, key, caption);
     dbk.exec();
     return dbk.allSelectedKeys();
 }
 
-vector<string> vfMultiKeysSet(QWidget* par, const char* caption,
-                    int iRt, const char* key, vector<string>& sel )
+std::vector<std::string> vfMultiKeysSet(QWidget* par, const char* caption,
+                    int iRt, const char* key, std::vector<std::string>& sel )
 {
     DBKeyDialog dbk(par, iRt, sel, key, caption);
     dbk.exec();
@@ -142,7 +142,7 @@ DBKeyDialog::DBKeyDialog(QWidget* win, int irt, const char* key,
     //pList->setFont( pVisorImp->getCellFont() );
     QObject::connect(pList, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(accept()));
     setWindowTitle( caption );
-    vector<string> keyList;
+    std::vector<std::string> keyList;
 
     if(!key)
         Error( "DBKeyDialog", "Record Key is null");
@@ -151,11 +151,11 @@ DBKeyDialog::DBKeyDialog(QWidget* win, int irt, const char* key,
     else
         keyFilter = key;
 
-    string s = "Please, select one record key. Filter: ";
+    std::string s = "Please, select one record key. Filter: ";
     s +=  keyFilter;
     pLabel->setText(s.c_str());
 
-    s  = string(rtEJ[irt].PackKey());
+    s  = std::string(rtEJ[irt].PackKey());
     int n = rtEJ[irt].GetKeyList( keyFilter.c_str(), keyList);
     int sel = 0;
 
@@ -178,7 +178,7 @@ DBKeyDialog::DBKeyDialog(QWidget* win, int irt, const char* key,
 }
 
 DBKeyDialog::DBKeyDialog(QWidget* win, int irt,
-                     const vector<string>& sel,
+                     const std::vector<std::string>& sel,
                      const char* key, const char* caption):
         QDialog( win),
         multi(true), iRT(irt)
@@ -226,9 +226,9 @@ void DBKeyDialog::CmHelp()
 
 void DBKeyDialog::SetList()
 {
-    vector<string> keyList;
+    std::vector<std::string> keyList;
 
-    string s = "Please, mark one or more record keys. Filter: ";
+    std::string s = "Please, mark one or more record keys. Filter: ";
     s +=  keyFilter;
     pLabel->setText(s.c_str());
 
@@ -243,8 +243,8 @@ void DBKeyDialog::SetList()
           {
             // comparing parts before '*' for overwrite dcomp, reacdc ....
             size_t pos = old_sel[jj].find('*');
-            string str(old_sel[jj], 0, pos);
-            if( keyList[ii].find(str) != string::npos )
+            std::string str(old_sel[jj], 0, pos);
+            if( keyList[ii].find(str) != std::string::npos )
             {
               pList->item(ii)->setSelected( true);
               break;
@@ -254,22 +254,22 @@ void DBKeyDialog::SetList()
  }
 
 
-string DBKeyDialog::getKey()
+std::string DBKeyDialog::getKey()
 {
     int sel = pList->currentRow();
     if( sel != -1 )
     {
         /// !!!! ((TCModule*)aMod[iRt])->setFilter(keyFilter.c_str());
-        string res = pList->item(sel)->text().toStdString();
+        std::string res = pList->item(sel)->text().toStdString();
         return res;
     }
-    return string();
+    return std::string();
 }
 
 
 void DBKeyDialog::CmFilter()
 {
-    string str_name = "Template for ";
+    std::string str_name = "Template for ";
             str_name +=  rtEJ[iRT].GetKeywd();
             str_name += " record key";
     DBKeyFilter dbFilter(this, iRT, keyFilter.c_str(), str_name.c_str() );
@@ -297,9 +297,9 @@ void DBKeyDialog::CmClearAll()
 
 /// returns selection array
 ///    array is empty if nothing is selected
-vector<string> DBKeyDialog::allSelectedKeys()
+std::vector<std::string> DBKeyDialog::allSelectedKeys()
 {
-    vector<string> arr;
+    std::vector<std::string> arr;
 
     if( !result() )
         return arr;
@@ -307,7 +307,7 @@ vector<string> DBKeyDialog::allSelectedKeys()
     for( int ii=0; ii<pList->count(); ii++ )
         if( pList->item(ii)->isSelected() )
         {
-         string s = pList->item(ii)->text().toStdString();
+         std::string s = pList->item(ii)->text().toStdString();
          arr.push_back(s);
         }
     return arr;
@@ -405,15 +405,15 @@ DBKeyFilter::DBKeyFilter(QWidget* win, int irt, const char* key,
 
 void DBKeyFilter::CmHelp()
 {
-   string dbName =  DBM;
+   std::string dbName =  DBM;
    dbName +="_";
-   dbName += string(rtEJ[iRT].GetKeywd());
+   dbName += std::string(rtEJ[iRT].GetKeywd());
    // pFitImp->OpenHelp(  GEMS_REKEY_HTML, dbName.c_str() );
 }
 
 void DBKeyFilter::CmOk()
 {
-    if( allowTemplates || SetKeyString().find_first_of("*?") == string::npos )
+    if( allowTemplates || SetKeyString().find_first_of("*?") == std::string::npos )
     {
         accept();
         return;
@@ -421,12 +421,12 @@ void DBKeyFilter::CmOk()
     messageCritical(this, "Key error", "No templates allowed!");
 }
 
-string DBKeyFilter::SetKeyString()
+std::string DBKeyFilter::SetKeyString()
 {
-    string Key = "";
+    std::string Key = "";
     for( int ii=0; ii<aEdit.count(); ii++ )
     {
-        string s = aEdit[ii]->text().toStdString();
+        std::string s = aEdit[ii]->text().toStdString();
         Key += s;
         strip(Key);
         Key += ":";
@@ -460,7 +460,7 @@ void DBKeyFilter::EvGetList()
     setKeyLine();
 }
 
-string DBKeyFilter::getFilter()
+std::string DBKeyFilter::getFilter()
 {
     return SetKeyString();
 }

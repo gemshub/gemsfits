@@ -1,7 +1,7 @@
 /// \file optimization.h
 /// Contains declaration of optimization class used in GEMSFIT for
 /// storing configuration parameters for optimization algorithm as well as
-/// the vector of optimized parameters
+/// the std::vector of optimized parameters
 //
 /// \class optimization optimization.h
 /// The optimization class, retrieves and stores configuration parameters
@@ -42,7 +42,7 @@
 //#include <jansson.h>
 #include <sstream>
 #include "opt_vector.h"
-using namespace std;
+//using namespace std;
 
 
 class optimization
@@ -57,7 +57,7 @@ private:
         double Constraints;
     } my_constraint_data;
     my_constraint_data* constraint_data;
-    vector<my_constraint_data> constraint_data_v;
+    std::vector<my_constraint_data> constraint_data_v;
 
 
     // Populate nlopt instance
@@ -68,15 +68,15 @@ private:
 
 public:
 
-    typedef vector<double> vd;        // vector of double
-    typedef vector<vector<double> > vvd;  // 2D vector of double
-    typedef vector<string> vs;        // vector of string
-    typedef vector<int> vi;           // vecotr of integer
-    typedef vector<vector<int> > vvi; // 2D vector of integer
+    typedef std::vector<double> vd;        // std::vector of double
+    typedef std::vector<std::vector<double> > vvd;  // 2D std::vector of double
+    typedef std::vector<std::string> vs;        // std::vector of std::string
+    typedef std::vector<int> vi;           // vecotr of integer
+    typedef std::vector<std::vector<int> > vvi; // 2D std::vector of integer
 
 
-    // opt vector
-    vector<double> optv, optv_0, optv0;
+    // opt std::vector
+    std::vector<double> optv, optv_0, optv0;
 
     // Constructor
     optimization( );
@@ -93,11 +93,11 @@ public:
 
     // configuration data for nlopt instance (get from SS_GEMSFIT_input.dat)
     /// name of the optimization algorithm from NLOPT library
-    string OptAlgo;
-    vector<string> OptParameters;
-    string AddOptParameters;
-    string NFunParameters;
-    string GEMSsys;
+    std::string OptAlgo;
+    std::vector<std::string> OptParameters;
+    std::string AddOptParameters;
+    std::string NFunParameters;
+    std::string GEMSsys;
     int mode;
     /// number of threads for parallel execution
 //    int OptThreads;
@@ -119,11 +119,11 @@ public:
     double OptBoundPerc;
     double OptPerturbator;
 
-    vector<double> OptUpBounds, UB;
-    vector<double> OptLoBounds, LB;
+    std::vector<double> OptUpBounds, UB;
+    std::vector<double> OptLoBounds, LB;
 
-    /// Normalize init vector, bounds and constraints
-    void normalize_params( const vector<double> initguesses, bool NormBounds );
+    /// Normalize init std::vector, bounds and constraints
+    void normalize_params( const std::vector<double> initguesses, bool NormBounds );
 
     /// NLopt return codes
     void print_return_message( const int result );
@@ -134,8 +134,8 @@ public:
 
 
     long int sizeOPs;     ///
-    vector<OptParameter*> optParam; ///
-    vector<OptParameter*> optNFParam;
+    std::vector<OptParameter*> optParam; ///
+    std::vector<OptParameter*> optNFParam;
 
     void OptParameterCreate ();
 

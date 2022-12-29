@@ -27,7 +27,7 @@
 #include <sys/stat.h>
 #include <ctime>
 
-using namespace std;
+//using namespace std;
 
 
 
@@ -84,36 +84,36 @@ class TGfitPath
 
     int mode;  /// Mode of gemsfit running (-init, -run, ... )
 
-    string optParamFilePath;      /// from command line
-    string gems3LstFilePath;      ///  Full path from command line
-    string gems3RecipeFilePath;      ///  Full path from command line
+    std::string optParamFilePath;      /// from command line
+    std::string gems3LstFilePath;      ///  Full path from command line
+    std::string gems3RecipeFilePath;      ///  Full path from command line
 
-    string inputDir;
-    string outputDir;
+    std::string inputDir;
+    std::string outputDir;
 
-    string optParamFile;
-    string fitFile;
-    string fitnfun;
-    string fitqq;
-    string fitparam;
-    string fitsens;
-    string fitmc;
-    string fitStatistics;
-    string fitLogFile;
+    std::string optParamFile;
+    std::string fitFile;
+    std::string fitnfun;
+    std::string fitqq;
+    std::string fitparam;
+    std::string fitsens;
+    std::string fitmc;
+    std::string fitStatistics;
+    std::string fitLogFile;
 
   //   void defaultCFG();
  //   void fromWinCFG();
 public:
 
-    ofstream flog;  // GEMSFIT logfile
-    ofstream fres;  // GEMSFIT results file logging all test runs
-    ofstream fnfres;
-    ofstream fparam;
-    ofstream fqq;
-    ofstream fmc;
-    ofstream fstat;
-    ofstream fsens;
-    ofstream ftmp;
+    std::ofstream flog;  // GEMSFIT logfile
+    std::ofstream fres;  // GEMSFIT results file logging all test runs
+    std::ofstream fnfres;
+    std::ofstream fparam;
+    std::ofstream fqq;
+    std::ofstream fmc;
+    std::ofstream fstat;
+    std::ofstream fsens;
+    std::ofstream ftmp;
 
     int KeysNdx;
 
@@ -127,19 +127,19 @@ public:
     bool isRunMode() const { return (mode == RUN_); }
     bool isHelpMode() const { return (mode == HELP_); }
 
-    string InputDirPath() const {
+    std::string InputDirPath() const {
         return inputDir;
     }
 
-    string OutputDirPath() const {
+    std::string OutputDirPath() const {
         return outputDir;
     }
 
-//    string ResultDir() const {
+//    std::string ResultDir() const {
 //        return resultDir;
 //    }
 
-    string GEMS3LstFilePath() const {
+    std::string GEMS3LstFilePath() const {
         return gems3LstFilePath;
     }
 
@@ -147,7 +147,7 @@ public:
         gems3LstFilePath = name;
     }
 
-    string GEMS3RecipeFilePath() const {
+    std::string GEMS3RecipeFilePath() const {
         return gems3RecipeFilePath;
     }
 
@@ -155,7 +155,7 @@ public:
         gems3RecipeFilePath = name;
     }
 
-    string OptParamFile() const {
+    std::string OptParamFile() const {
         return optParamFile;
     }
     
@@ -164,35 +164,35 @@ public:
         optParamFile +=name;
     }
 
-    string FITFile() const {
+    std::string FITFile() const {
         return fitFile;
     }
 
-    string FITnfunFile() const {
+    std::string FITnfunFile() const {
         return fitnfun;
     }
     
-    string FITStatisticsFile() {
+    std::string FITStatisticsFile() {
         return fitStatistics;
     }
 
-    string FITqqFile() {
+    std::string FITqqFile() {
         return fitqq;
     }
 
-    string FITsensFile() {
+    std::string FITsensFile() {
         return fitsens;
     }
 
-    string FITparamFile() {
+    std::string FITparamFile() {
         return fitparam;
     }
 
-    string FITmcFile() {
+    std::string FITmcFile() {
         return fitmc;
     }
     
-    string FITLogFile() const {
+    std::string FITLogFile() const {
         return fitLogFile;
     }
     
@@ -206,6 +206,6 @@ public:
 
 extern TGfitPath* gpf;
 
-void bson_print_raw_txt( iostream& os, const char *data, int depth, int datatype );
+void bson_print_raw_txt( std::iostream& os, const char *data, int depth, int datatype );
 
 #endif   // _gemsfit_iofiles_h_

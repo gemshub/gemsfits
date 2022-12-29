@@ -23,14 +23,13 @@
 #include <fstream>
 #include <vector>
 #include <string>
-using namespace std;
 #include "ejdb.h"
 
 extern const char* S_EMPTY;
 extern const char* S_ANY;
 
-extern int generateTxtfromBson( string gemsfitfile, bson *obj, bool with_comments );
-extern void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>& row );
+extern int generateTxtfromBson( std::string gemsfitfile, bson *obj, bool with_comments );
+extern void csvToBson( bson *exp, const  std::vector<std::string>& headline, const std::vector<std::string>& row );
 
 extern void print_bson_to_json(FILE *f, const bson *b);
 /// Print bson object to text file
@@ -47,20 +46,20 @@ enum {
     jsQuote = '\"'      //0x22
 };
 
-/// Class for read/write bson structure from/to text file or string
+/// Class for read/write bson structure from/to text file or std::string
 class ParserJson
 {
 protected:
 
-  string jsontext;
+  std::string jsontext;
   const char *curjson;
   const char *end;
 
   bool xblanc();
-  void getString( string& str );
+  void getString( std::string& str );
   void getNumber( double& value, int& type );
   void parseValue( const char *name, bson *brec );
-  void bson_print_raw_txt( iostream& os, const char *data, int depth, int datatype );
+  void bson_print_raw_txt( std::iostream& os, const char *data, int depth, int datatype );
 
 
  public:
@@ -70,22 +69,22 @@ protected:
   virtual ~ParserJson()
     {}
 
-  /// Parse internal jsontext string to bson structure (without first {)
+  /// Parse internal jsontext std::string to bson structure (without first {)
   void parseObject( bson *brec );
   void parseArray( bson *brec );
 
-  /// Print bson structure to JSON string
-  void printBsonObjectToJson( string& resStr, const char *b);
+  /// Print bson structure to JSON std::string
+  void printBsonObjectToJson( std::string& resStr, const char *b);
 
   /// Read one json object from text file
-  string readObjectText( fstream& fin );
+  std::string readObjectText( std::fstream& fin );
   /// Set up internal jsontext before parsing
-  void  setJsonText( const string& json );
+  void  setJsonText( const std::string& json );
 
 };
 
-/// Get string from bson structure by name
-bool bson_find_string( const char *obj, const char *name, string& str );
+/// Get std::string from bson structure by name
+bool bson_find_string( const char *obj, const char *name, std::string& str );
 /// Get array from bson structure by name
 const char* bson_find_array( const char *obj, const char *name );
 /// Get object from bson structure by name

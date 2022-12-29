@@ -62,7 +62,7 @@
 #include "omp.h"
 //#endif
 
-using namespace std;
+//using namespace std;
 
 
 // The Data_Manager class retrieves and stores optimization-specific data from the GEMSFIT input file
@@ -73,7 +73,7 @@ class Data_Manager : public TNode
         /**
         * Constructor for the Data_Manager class.
         * Function reads parameters for database connection from the input file,
-        * creates a vector of pointers to instances of the measurement data struct object (samples),
+        * creates a std::vector of pointers to instances of the measurement data struct object (samples),
         * then it retrieves measurement data from EJDB local databse files.
         *
         * @author DM
@@ -97,19 +97,19 @@ class Data_Manager : public TNode
         */
         virtual ~Data_Manager( );
 
-        typedef vector<int>     int_v;
-        typedef vector<double>  double_v;
-        typedef vector<string>  string_v;
-        typedef vector<bool>    bool_v;
+        typedef std::vector<int>     int_v;
+        typedef std::vector<double>  double_v;
+        typedef std::vector<std::string>  string_v;
+        typedef std::vector<bool>    bool_v;
 
-        vector<TNode*> NodT;
-        vector<double*> bICv;
+        std::vector<TNode*> NodT;
+        std::vector<double*> bICv;
 
         /// JSON object for building the target function
-        string DataTarget;
-        string DataLogK;
-        vector<string> LogK;
-        string DataSyn;
+        std::string DataTarget;
+        std::string DataLogK;
+        std::vector<std::string> LogK;
+        std::string DataSyn;
         double h_datasetlist;
 
         int MPI; /// number of paralele threads
@@ -124,93 +124,93 @@ class Data_Manager : public TNode
             struct samples                  /// data for experimental samples
             {
                 int idsample;
-                string sample;              /// ID/name of this experimental sample
-                string expdataset;          /// ID/name of set of experimental data
-                string Type;                /// mineral assemblage
+                std::string sample;              /// ID/name of this experimental sample
+                std::string expdataset;          /// ID/name of set of experimental data
+                std::string Type;                /// mineral assemblage
                 double weight;
                 double sT;                  /// temperature of experimental sample
-                string Tunit;
+                std::string Tunit;
                 double sP;                  /// pressure of experimental sample
-                string Punit;
+                std::string Punit;
                 double sV;                  /// (system) volume of experimental sample
-                string Vunit;
+                std::string Vunit;
 
                 // defines bulk composition of chemical system for this experiment 2nd level in EJDB
                 struct components
                 {
-                    string comp;         /// formula defining PCO stoichiometry (GEM formula syntax)
+                    std::string comp;         /// formula defining PCO stoichiometry (GEM formula syntax)
                     double Qnt;         /// quantity (to be added to system bulk composition)
                     double Qerror;       /// error (uncertainty) of quantity in the same units
-                    string Qunit;        /// units of measurement of quantity { 'g' or 'mol' (default) or … }
+                    std::string Qunit;        /// units of measurement of quantity { 'g' or 'mol' (default) or … }
                 };
-                vector<components*> sbcomp;
+                std::vector<components*> sbcomp;
 
                 // defines properties for this experiment 2nd level in EJDB
                 struct properties
                 {
-                    string prop;         /// proparty name
+                    std::string prop;         /// proparty name
                     double Qnt;         ///  value
                     double Qerror;       /// error (uncertainty) of quantity in the same units
-                    string Qunit;        /// units of measurement of quantity
+                    std::string Qunit;        /// units of measurement of quantity
                 };
-                vector<properties*> props;
+                std::vector<properties*> props;
 
                 struct phases                         /// data for phases characterised (measured) in this experiment 2nd level in EJDB
                 {
                     int idphase;
-                    string phase;                     /// phase ID (name)
+                    std::string phase;                     /// phase ID (name)
                     // measured properties of a phase 3rd level in EJDB
                     struct prop
                     {
-                        string property;                /// known bulk properties of the phase / property of phase (pH, amount, volume, sarea, etc.)
+                        std::string property;                /// known bulk properties of the phase / property of phase (pH, amount, volume, sarea, etc.)
                         double Qnt;                    /// value
                         double Qerror;                  /// error
-                        string Qunit;                   /// units
+                        std::string Qunit;                   /// units
                     };
-                    vector<prop*> phprop;
+                    std::vector<prop*> phprop;
 
                     // composition of the phases in elements
-                    vector<components*> phIC;
+                    std::vector<components*> phIC;
 
-                    vector<components*> phMR;
+                    std::vector<components*> phMR;
 
                     // dcomps (end member, phase component) 3rd level in EJDB
                     struct dcomps
                     {
-                        string DC;               /// name of chemical dcomps (end member, phase component)
+                        std::string DC;               /// name of chemical dcomps (end member, phase component)
                         struct dcprop
                         {
-                            string property;
+                            std::string property;
                             double Qnt;                 /// measured quantity/concentration of phase dcomps
                             double Qerror;               /// error
-                            string Qunit;                /// units
+                            std::string Qunit;                /// units
                         };
-                        vector<dcprop*> DCprop; /// vector of dependent components porperties
+                        std::vector<dcprop*> DCprop; /// std::vector of dependent components porperties
                     };
-                    vector<dcomps*> phDC;       /// vector of dependent components in a phase
+                    std::vector<dcomps*> phDC;       /// std::vector of dependent components in a phase
                 };
-                vector<phases*> expphases;      /// vector of phases measured in one experiment
+                std::vector<phases*> expphases;      /// std::vector of phases measured in one experiment
             };
-            vector<samples*> experiments;         /// vector of samples from one experimental dataset
+            std::vector<samples*> experiments;         /// std::vector of samples from one experimental dataset
 
 
             struct DataSynonyms
             {
-                string GemsName;
-                vector<string> syn;
+                std::string GemsName;
+                std::vector<std::string> syn;
             };
 
             struct PhSyn
             {
-                string GemsName;
-                vector<string> syn;
-                vector<DataSynonyms> SynDCs;
+                std::string GemsName;
+                std::vector<std::string> syn;
+                std::vector<DataSynonyms> SynDCs;
             };
 
-            vector<PhSyn> SynPHs;
-            vector<DataSynonyms> SynPHPs;
-            vector<DataSynonyms> SynDCPs;
-            vector<DataSynonyms> SynProps;
+            std::vector<PhSyn> SynPHs;
+            std::vector<DataSynonyms> SynPHPs;
+            std::vector<DataSynonyms> SynDCPs;
+            std::vector<DataSynonyms> SynProps;
 
             void get_DataSyn ();
 
@@ -228,26 +228,26 @@ class Data_Manager : public TNode
         int datasource;
 
         /// name of CSV file containing measurement data
-        string CSVfile;
+        std::string CSVfile;
 
         // Database connection parameters
         /// PostgreSQL/EJDB database: database name (path)
-        string DBname;
+        std::string DBname;
 
         /// PostgreSQL/EJDB database: table/colection name with solubility experiments
-        string collection;
+        std::string collection;
 
         /// PostgreSQL database: username
-        string username;
+        std::string username;
 
         /// PostgreSQL database: password
-        string passwd;
+        std::string passwd;
 
         /// PostgreSQL database: URL of psql server
-        string psql_server;
+        std::string psql_server;
 
         /// EJDB data selection query
-        string DataSelect;
+        std::string DataSelect;
 
         int mode;
 
@@ -272,7 +272,7 @@ class Data_Manager : public TNode
         * @author DM
         * @param *f
         * @param *data BSON object
-        * @param pos position of the BSON object in the vector experiments
+        * @param pos position of the BSON object in the std::vector experiments
         * @date 19.04.2013
         */
         void bson_to_Data_Manager(const char *data, int pos);

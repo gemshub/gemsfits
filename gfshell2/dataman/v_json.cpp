@@ -30,7 +30,7 @@
 #define DOUBLE_EMPTY         2.2250738585072014e-308
 #define DOUBLE_ANY           1.7976931348623157e+308
 
-bool bson_find_string( const char *obj, const char *name, string& str )
+bool bson_find_string( const char *obj, const char *name, std::string& str )
 {
     bson_iterator it;
     bson_type type;
@@ -79,7 +79,7 @@ time_t bson_find_time_t( const char *obj, const char *name )
     switch( type )
     {
     case BSON_STRING:
-         { string stime = bson_iterator_string(&it);
+         { std::string stime = bson_iterator_string(&it);
            ctm =  tcstrmktime(stime.c_str());
          }
          break;
@@ -235,7 +235,7 @@ void print_bson_object_to_json(FILE *f, const bson *b)
 
 
 // Read one Json Object from text file to string
-string  ParserJson::readObjectText( fstream& ff )
+std::string  ParserJson::readObjectText( std::fstream& ff )
 {
   jsontext = "";
   //jsontext += jsBeginObject;
@@ -258,7 +258,7 @@ string  ParserJson::readObjectText( fstream& ff )
 }
 
 // Load Json text
-void  ParserJson::setJsonText( const string& json )
+void  ParserJson::setJsonText( const std::string& json )
 {
   jsontext = json;
   curjson = jsontext.c_str();
@@ -272,13 +272,13 @@ bool ParserJson::xblanc()
 }
 
 // Get "<string>" data
-void ParserJson::getString( string& str )
+void ParserJson::getString( std::string& str )
 {
     //curjson++;
     const char * posQuote = strchr( curjson, jsQuote );
     ErrorIf( !posQuote ,"E01JSon: ",
              "Missing \" - end of string constant.");
-    str = string(curjson, 0, posQuote-curjson);
+    str = std::string(curjson, 0, posQuote-curjson);
     curjson = ++posQuote;
     ErrorIf( curjson >= end ,"E02JSon: ",
              "Termination by String.");
@@ -365,7 +365,7 @@ void ParserJson::parseValue( const char *name, bson *brec )
         Error( "E05JSon: ", "Illegal Value.");
     case jsQuote:
        {
-        string str = "";
+        std::string str = "";
         type = BSON_STRING;
         getString( str );
         bson_append_string( brec, name, str.c_str() );
@@ -438,7 +438,7 @@ void ParserJson::parseArray( bson *brec )
 //  object = { "<key1>" : <value1>, ... , "<keyN>" : <valueN> }
 void ParserJson::parseObject( bson *brec )
 {
-    string name;
+    std::string name;
 
     while( *curjson != jsEndObject )
     {
@@ -469,7 +469,7 @@ void ParserJson::parseObject( bson *brec )
     curjson++;
 }
 
-void ParserJson::bson_print_raw_txt( iostream& os, const char *data, int depth, int datatype )
+void ParserJson::bson_print_raw_txt( std::iostream& os, const char *data, int depth, int datatype )
 {
     bson_iterator i;
     const char *key;
@@ -527,7 +527,7 @@ void ParserJson::bson_print_raw_txt( iostream& os, const char *data, int depth, 
                os << bson_iterator_long(&i);
                break;
           case BSON_DOUBLE:
-               os << setprecision(15) << bson_iterator_double(&i);
+               os << std::setprecision(15) << bson_iterator_double(&i);
                break;
           case BSON_STRING:
                os << "\"" << bson_iterator_string(&i) << "\"";
@@ -591,9 +591,9 @@ void ParserJson::bson_print_raw_txt( iostream& os, const char *data, int depth, 
     os << "\n";
 }
 
-void ParserJson::printBsonObjectToJson( string& resStr, const char *b)
+void ParserJson::printBsonObjectToJson( std::string& resStr, const char *b)
 {
-    stringstream os;
+    std::stringstream os;
     os << "{\n";
     bson_print_raw_txt( os, b, 0, BSON_OBJECT);
     os << "}";

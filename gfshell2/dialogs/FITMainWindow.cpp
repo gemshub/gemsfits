@@ -220,12 +220,12 @@ void FITMainWindow::OpenHelp(const char* file, const char* item1, int page )
 {
     if( HelpWindow::pDia )
     {
-cout << "OpenHelp: " << file << endl;
+std::cout << "OpenHelp: " << file << std::endl;
         if( item1 && page>=0 )
        {
           QString res = item1;
           res += QString("_%1").arg(page);
-          string txt = res.toStdString();
+          std::string txt = res.toStdString();
           HelpWindow::pDia->showDocumentation( file, txt.c_str() );
         }
         else
@@ -237,7 +237,7 @@ cout << "OpenHelp: " << file << endl;
    // old help assistantClient->showDocumentation( file, item);
 }
 
-void FITMainWindow::OpenResults( const string& key, const QString& dir )
+void FITMainWindow::OpenResults( const std::string& key, const QString& dir )
 {
     if( !FitResultsWindow::pDia )
     {
@@ -261,7 +261,7 @@ void  FITMainWindow::moveToolBar( int , int )
 
 void FITMainWindow::setTableIComp()
 {
-   string valStr;
+   std::string valStr;
    QTableWidgetItem *item;
 
    DATACH  *dCH =  node()->pCSD();
@@ -272,7 +272,7 @@ void FITMainWindow::setTableIComp()
 
    for( int ii = 0; ii<dCH->nIC; ii++ )
    {
-     valStr = string( dCH->ICNL[ii], 0,MaxICN );
+     valStr = std::string( dCH->ICNL[ii], 0,MaxICN );
      item = new QTableWidgetItem(tr("%1").arg( valStr.c_str()));
      ui->tableIComp->setItem(ii/5, ii%5, item );
    }
@@ -281,33 +281,33 @@ void FITMainWindow::setTableIComp()
 void FITMainWindow::setListPhase()
 {
    int ii, jj,j;
-   string valStr;
+   std::string valStr;
 
    DATACH  *dCH =  node()->pCSD();
    ui->listPhases->clear();
 
    for( ii = 0, jj=0; ii<dCH->nPH; ii++ )
    {
-     valStr = string( dCH->PHNL[ii], 0,MaxPHN );
+     valStr = std::string( dCH->PHNL[ii], 0,MaxPHN );
      QTreeWidgetItem *phase = new QTreeWidgetItem(ui->listPhases);
      phase->setText(0, valStr.c_str());
 
      for( j=0; j<dCH->nDCinPH[ii]; j++, jj++ )
      {
-         valStr = string( dCH->DCNL[jj], 0, MaxDCN );
+         valStr = std::string( dCH->DCNL[jj], 0, MaxDCN );
          QTreeWidgetItem *dcomp = new QTreeWidgetItem(phase);
          dcomp->setText(0, valStr.c_str());
      }
    }
 }
 
-void FITMainWindow::setStatusText( const string& text )
+void FITMainWindow::setStatusText( const std::string& text )
 {
   QString vals = QString(text.c_str()) + "\n";
   ui->statusEdit->setPlainText( vals );
 }
 
-void FITMainWindow::addLinetoStatus( const string& line )
+void FITMainWindow::addLinetoStatus( const std::string& line )
 {
     //QString vals = ui->statusEdit->toPlainText();
     //vals += trUtf8(line.c_str()) + "\n";
@@ -340,17 +340,17 @@ void FITMainWindow::openEJDB()
     closeEJDB();
 
     // set up new ejdb file
-    string ejdbPath  = projectSettings->value("ProjFolderPath", ".").toString().toStdString();
+    std::string ejdbPath  = projectSettings->value("ProjFolderPath", ".").toString().toStdString();
     ejdbPath  += projectSettings->value("ProjDatabasePath", "/EJDB").toString().toStdString();
     ejdbPath  += "/";
     ejdbPath  += projectSettings->value("ProjDatabaseName", "myprojdb1" ).toString().toStdString();
     EJDBFile.ChangePath(ejdbPath);
 
     // change collections names
-    string samlescolName = projectSettings->value("ExpSamplesDataColl", "experiments").toString().toStdString();
+    std::string samlescolName = projectSettings->value("ExpSamplesDataColl", "experiments").toString().toStdString();
     rtEJ[MDF_DATABASE].SetKeywd(samlescolName);
     rtEJ[MDF_DATABASE].Open();
-    string testcolName = projectSettings->value("TaskCasesDataColl", "tests").toString().toStdString();
+    std::string testcolName = projectSettings->value("TaskCasesDataColl", "tests").toString().toStdString();
     rtEJ[MDF_TASK].SetKeywd(testcolName);
     rtEJ[MDF_TASK].Open();
     testcolName = projectSettings->value("FitsCasesDataColl", "fits").toString().toStdString();
@@ -376,7 +376,7 @@ void FITMainWindow::loadNewProject()
 
     pLineTask->setText( projectSettings->value("ProjFileName", "undefined").toString());
     // change gemsLstFile information
-    string gemsname  = projectSettings->value("ProjFolderPath", ".").toString().toStdString();
+    std::string gemsname  = projectSettings->value("ProjFolderPath", ".").toString().toStdString();
     gemsname  += projectSettings->value("GEMS3KFilesPath", "/GEMS").toString().toStdString();
     gemsname += "/undef.lst";
     gemsLstFile.ChangePath( gemsname );
@@ -452,9 +452,9 @@ int FITMainWindow::defineModuleKeysList( int nRT )
 {
   int ii, jj, kk, ln;
   int curInd = -1;
-  string keyfld;
+  std::string keyfld;
   QTableWidgetItem *item, *curItem=0;
-  string oldKey = rtEJ[nRT].PackKey();
+  std::string oldKey = rtEJ[nRT].PackKey();
   //settedCureentKeyIntotbKeys = false;
 
   if( currentMode != nRT)
@@ -466,10 +466,10 @@ int FITMainWindow::defineModuleKeysList( int nRT )
   keyTable->setColumnCount( rtEJ[nRT].KeyNumFlds());
 
   // get list or record keys
-  string keyFilter = ui->filterEdit->text().toStdString();
+  std::string keyFilter = ui->filterEdit->text().toStdString();
   if( keyFilter.empty() )
       keyFilter = ALLKEY;
-  vector<string> keyList;
+  std::vector<std::string> keyList;
   int nKeys = rtEJ[nRT].GetKeyList( keyFilter.c_str(), keyList);
 
   //vector<int> colSizes;
@@ -490,7 +490,7 @@ int FITMainWindow::defineModuleKeysList( int nRT )
       for(jj=0, kk=0; jj<rtEJ[nRT].KeyNumFlds(); jj++)
       {
           ln = keyList[ii].find_first_of(':', kk);
-          keyfld = string(keyList[ii], kk, ln-kk);
+          keyfld = std::string(keyList[ii], kk, ln-kk);
           strip(keyfld);
           //colsz = keyfld.length()+1;
           //if( colsz > colSizes[jj])
@@ -526,7 +526,7 @@ int FITMainWindow::defineModuleKeysList( int nRT )
 
 
 /// Save record structure to Data Base
-void FITMainWindow::RecSave( const string& recBsonText, const char* key )
+void FITMainWindow::RecSave( const std::string& recBsonText, const char* key )
 {
     rtEJ[ currentMode ].SetJson( recBsonText, JsonDataShow );
     rtEJ[ currentMode ].SaveRecord( key );
@@ -546,8 +546,8 @@ void FITMainWindow::RecDelete( const char* key )
 /// Returns true if user pressed 'save' or 'discard' and false on 'cancel'
 bool FITMainWindow::MessageToSave()
 {
-    string key_str = rtEJ[ currentMode ].PackKey();
-    if( contentsChanged && key_str.find_first_of("*?") == string::npos )
+    std::string key_str = rtEJ[ currentMode ].PackKey();
+    if( contentsChanged && key_str.find_first_of("*?") == std::string::npos )
     {
         int res = vfQuestion3(window(), key_str.c_str(),
                        "Data record has been changed!",
@@ -561,7 +561,7 @@ bool FITMainWindow::MessageToSave()
 
         if( res == VF3_1 )
         {
-            string recBson = ui->recordEdit->toPlainText().toStdString();
+            std::string recBson = ui->recordEdit->toPlainText().toStdString();
             RecSave( recBson, key_str.c_str() );
          }
     }
@@ -570,9 +570,9 @@ bool FITMainWindow::MessageToSave()
 }
 
 /// Change <SystemFiles> data in edit record
-string FITMainWindow::makeSystemFileName( const string& path  )
+std::string FITMainWindow::makeSystemFileName( const std::string& path  )
 {
-   string name = path;
+   std::string name = path;
    if(projectSettings )
           name += projectSettings->value("GEMS3KFilesPath", "/GEMS").toString().toStdString();
    name += "/" + gemsLstFile.Name() + "." + gemsLstFile.Ext();
@@ -580,15 +580,15 @@ string FITMainWindow::makeSystemFileName( const string& path  )
 }
 
 /// Change <SystemFiles> or <DataDB> data in edit record
-void FITMainWindow::changeEditeRecord(const string& tagname, const string& newValue, bool is_json )
+void FITMainWindow::changeEditeRecord(const std::string& tagname, const std::string& newValue, bool is_json )
 {
-   // get value string
-   string valueStr = ui->recordEdit->toPlainText().toStdString();
+   // get value std::string
+   std::string valueStr = ui->recordEdit->toPlainText().toStdString();
 
-   // delete old path string
+   // delete old path std::string
    size_t found = valueStr.find( tagname );
    size_t found3 = valueStr.find(":", found+1);
-   if (found != string::npos)
+   if (found != std::string::npos)
    {
        // change value
 //       found += 15;
@@ -611,7 +611,7 @@ void FITMainWindow::changeEditeRecord(const string& tagname, const string& newVa
 //   valueStr = ui->recordEdit->toPlainText().toStdString();
 //   found = valueStr.find("{");
 
-//   string taskid_projectid = "\"taskid\": \"";
+//   std::string taskid_projectid = "\"taskid\": \"";
 ////   valueStr.
 }
 
@@ -622,13 +622,13 @@ bool FITMainWindow::createTaskTemplate()
     if( gemsLstFile.Name().empty() )
        Error("Create task template", "Undefined System File name.");
 
-    // create arguments string
-    string newPath = makeSystemFileName( "." );
+    // create arguments std::string
+    std::string newPath = makeSystemFileName( "." );
     QStringList cParameters;
 
-    stringstream ss;
+    std::stringstream ss;
     ss << KeysLength;
-    string sss = ss.str();
+    std::string sss = ss.str();
     ss.str("");
 
 #ifdef buildWIN32
@@ -643,9 +643,9 @@ bool FITMainWindow::createTaskTemplate()
     int ret = fitProcess->waitForFinished();
 
     // read "template.dat" to bson
-    string path = fitTaskDir.Dir()+ "/template.json";
+    std::string path = fitTaskDir.Dir()+ "/template.json";
 
-    ifstream my_file(path.c_str());
+    std::ifstream my_file(path.c_str());
     if (!my_file.good())
     {
         std::ofstream outfile (path.c_str());
@@ -653,12 +653,12 @@ bool FITMainWindow::createTaskTemplate()
         outfile.close();
     }
 
-    TFile  inFile(path, ios::in);
+    TFile  inFile(path, std::ios::in);
     readTXT( inFile );
 
     // set up EJDB path
     if( projectSettings )
-     { string ejdbPath  = "..";
+     { std::string ejdbPath  = "..";
        ejdbPath  += projectSettings->value("ProjDatabasePath", "/EJDB").toString().toStdString();
        ejdbPath  += "/";
        ejdbPath  += projectSettings->value("ProjDatabaseName", "myprojdb1" ).toString().toStdString();
@@ -693,14 +693,14 @@ void FITMainWindow::runFinished(int exitCode, QProcess::ExitStatus exitStatus)
 }
 
 /// Make list of Experiments keys using query
-void FITMainWindow::defineModuleKeysList( string& samplelist )
+void FITMainWindow::defineModuleKeysList( std::string& samplelist )
 {
   int ii, kk, ln;
-  string keyfld;
+  std::string keyfld;
 
   // get list or record keys
-  string keyFilter = ALLKEY;
-  vector<string> keyList;
+  std::string keyFilter = ALLKEY;
+  std::vector<std::string> keyList;
   int nKeys = rtEJ[ MDF_DATABASE ].GetKeyList( keyFilter.c_str(), keyList);
 
   samplelist = " \"DataSelect\": {\n    \"samplelist\": [\n";
@@ -709,12 +709,12 @@ void FITMainWindow::defineModuleKeysList( string& samplelist )
       samplelist += "{ \"SA\": \"";
       kk=0;
       ln = keyList[ii].find_first_of(':', kk);
-      keyfld = string(keyList[ii], kk, ln-kk);
+      keyfld = std::string(keyList[ii], kk, ln-kk);
       strip(keyfld);
       kk = ln+1;
       samplelist += keyfld + "\", \"DS\": \"";
       ln = keyList[ii].find_first_of(':', kk);
-      keyfld = string(keyList[ii], kk, ln-kk);
+      keyfld = std::string(keyList[ii], kk, ln-kk);
       strip(keyfld);
       samplelist += keyfld;
       samplelist += "\", \"WT\": 1 }";

@@ -25,7 +25,7 @@
 #include "v_detail.h"
 //using namespace YAML;
 
-void addScalar(const char* key, const string& value, bson* brec )
+void addScalar(const char* key, const std::string& value, bson* brec )
 {
     int ival = 0;
     double dval=0.;
@@ -51,9 +51,9 @@ void addScalar(const char* key, const string& value, bson* brec )
             bson_append_string( brec, key, value.c_str() );
 }
 
-string Json2YAML( const string& jsonData )
+std::string Json2YAML( const std::string& jsonData )
 {
-  string YamlData;
+  std::string YamlData;
   bson bobj;
 
   //json to bson
@@ -71,19 +71,19 @@ string Json2YAML( const string& jsonData )
 }
 
 /// Parse one YAML object from string to bson structure
-string parseYAMLToJson( const string& currentYAML )
+std::string parseYAMLToJson( const std::string& currentYAML )
 {
-  stringstream jsonstriam;
+  std::stringstream jsonstriam;
 
  try{
-     stringstream stream(currentYAML);
+     std::stringstream stream(currentYAML);
      YAML::Parser parser(stream);
      JsonHandler builder(jsonstriam);
      parser.HandleNextDocument(builder);
      //cout << builder.to_string() << endl;
    }
    catch(YAML::Exception& e) {
-      cout << "parseYAMLToBson " << e.what() << endl;
+      std::cout << "parseYAMLToBson " << e.what() << std::endl;
       Error( "parseYAMLToBson",  e.what() );
    }
   return jsonstriam.str();
@@ -91,7 +91,7 @@ string parseYAMLToJson( const string& currentYAML )
 
 namespace ParserYAML{
 
-void printBsonObjectToYAML(fstream& fout, const char *b)
+void printBsonObjectToYAML(std::fstream& fout, const char *b)
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
@@ -100,18 +100,18 @@ void printBsonObjectToYAML(fstream& fout, const char *b)
     fout << out.c_str();
 }
 
-void printBsonObjectToYAML(string& fout, const char *b)
+void printBsonObjectToYAML(std::string& fout, const char *b)
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
     bson_emitter( out, b, BSON_OBJECT);
     out << YAML::EndMap;
-    fout = string( out.c_str());
+    fout = std::string( out.c_str());
  //   cout << fout;
 }
 
 /// Read one YAML object from text file and parse to bson structure
-void parseYAMLToBson( fstream& fin, bson *brec )
+void parseYAMLToBson( std::fstream& fin, bson *brec )
 {
     YAML::Node doc;
 
@@ -124,23 +124,23 @@ void parseYAMLToBson( fstream& fin, bson *brec )
         parseObject( doc, brec );
     }
     catch(YAML::Exception& e) {
-      cout << "parseYAMLToBson " << e.what() << endl;
+      std::cout << "parseYAMLToBson " << e.what() << std::endl;
         Error( "parseYAMLToBson",  e.what() );
     }
 }
 
 /// Parse one YAML object from string to bson structure
-void parseYAMLToBson( const string& currentYAML, bson *obj )
+void parseYAMLToBson( const std::string& currentYAML, bson *obj )
 {
  try{
-     stringstream stream(currentYAML);
+     std::stringstream stream(currentYAML);
      YAML::Parser parser(stream);
      BsonHandler builder(obj);
      parser.HandleNextDocument(builder);
      //cout << builder.to_string() << endl;
    }
    catch(YAML::Exception& e) {
-      cout << "parseYAMLToBson " << e.what() << endl;
+      std::cout << "parseYAMLToBson " << e.what() << std::endl;
       Error( "parseYAMLToBson",  e.what() );
    }
  }
@@ -251,12 +251,12 @@ void bson_emitter( YAML::Emitter& out, const char *data, int datatype )
 
 void parseObject( const YAML::Node& doc, bson* brec )
 {
-    string key;
+    std::string key;
     int type;
 
     for (YAML::const_iterator it = doc.begin(); it != doc.end(); ++it)
     {
-      key = it->first.as<string>();
+      key = it->first.as<std::string>();
       type = it->second.Type();
 
       switch( type )
@@ -286,12 +286,12 @@ void parseObject( const YAML::Node& doc, bson* brec )
 void parseArray( const YAML::Node& doc, bson* brec )
 {
     int ii = 0;
-    string key;
+    std::string key;
     int type;
 
     for (YAML::const_iterator it = doc.begin(); it != doc.end(); ++it, ++ii)
     {
-        key = to_string(ii);
+        key = std::to_string(ii);
         type = it->Type();
 
         switch( type )
@@ -320,7 +320,7 @@ void parseArray( const YAML::Node& doc, bson* brec )
 
 void parseScalar(const char* key, const YAML::Node& doc, bson* brec )
 {
-    string value = doc.as<std::string>();
+    std::string value = doc.as<std::string>();
     addScalar( key, value, brec );
 }
 
@@ -328,9 +328,9 @@ void parseScalar(const char* key, const YAML::Node& doc, bson* brec )
 
 // BsonHandler------------------------------------------------
 
-string BsonHandler::to_string()
+std::string BsonHandler::to_string()
 {
-  string yamlstr;
+  std::string yamlstr;
   ParserYAML::printBsonObjectToYAML( yamlstr, m_bson->data);
   return yamlstr;
 }
@@ -358,7 +358,7 @@ void BsonHandler::OnScalar(const YAML::Mark&, const std::string& /*tag*/,
    switch (m_stateStack.top().state)
    {
      case WaitingForSequenceEntry:
-        { string key = std::to_string(m_stateStack.top().ndx++);
+        { std::string key = std::to_string(m_stateStack.top().ndx++);
           addScalar( key.c_str(), value, m_bson );
           break;
         }
@@ -367,7 +367,7 @@ void BsonHandler::OnScalar(const YAML::Mark&, const std::string& /*tag*/,
         m_stateStack.top().state = WaitingForValue;
         break;
      case WaitingForValue:
-        string key =  m_stateStack.top().key;
+        std::string key =  m_stateStack.top().key;
         addScalar( key.c_str(), value, m_bson );
         m_stateStack.top().key = "";
         m_stateStack.top().state = WaitingForKey;
@@ -380,7 +380,7 @@ void BsonHandler::OnSequenceStart(const YAML::Mark&, const std::string& /*tag*/,
 {
   if (!m_stateStack.empty())
   {
-     string key;
+     std::string key;
      if( m_stateStack.top().state == WaitingForSequenceEntry )
         key = std::to_string(m_stateStack.top().ndx++);
      else
@@ -404,7 +404,7 @@ void BsonHandler::OnMapStart(const YAML::Mark&, const std::string& /*tag*/,
 {
   if (!m_stateStack.empty() )
   {
-    string key;
+    std::string key;
     if( m_stateStack.top().state == WaitingForSequenceEntry )
       key = std::to_string(m_stateStack.top().ndx++);
     else
@@ -441,12 +441,12 @@ void BsonHandler::BeginNode()
 
 // JsonHandler------------------------------------------------
 
-string JsonHandler::to_string()
+std::string JsonHandler::to_string()
 {
   return m_os.str();
 }
 
-JsonHandler::JsonHandler(stringstream& os_) : m_os(os_) {}
+JsonHandler::JsonHandler(std::stringstream& os_) : m_os(os_) {}
 
 void JsonHandler::OnDocumentStart(const YAML::Mark&) {}
 
@@ -476,7 +476,7 @@ void JsonHandler::OnScalar(const YAML::Mark&, const std::string& /*tag*/,
         m_stateStack.top().state = WaitingForValue;
         break;
      case WaitingForValue:
-        string key =  m_stateStack.top().key;
+        std::string key =  m_stateStack.top().key;
         addScalar( key.c_str(), value );
         m_stateStack.top().key = "";
         m_stateStack.top().state = WaitingForKey;
@@ -487,7 +487,7 @@ void JsonHandler::OnScalar(const YAML::Mark&, const std::string& /*tag*/,
 void JsonHandler::OnSequenceStart(const YAML::Mark&, const std::string& /*tag*/,
             YAML::anchor_t /*anchor*/, YAML::EmitterStyle::value /*style*/)
 {
-  string key="";
+  std::string key="";
   if (!m_stateStack.empty())
   {
      if( m_stateStack.top().state == WaitingForSequenceEntry )
@@ -516,7 +516,7 @@ void JsonHandler::OnSequenceEnd()
 void JsonHandler::OnMapStart(const YAML::Mark&, const std::string& /*tag*/,
                                 YAML::anchor_t /*anchor*/, YAML::EmitterStyle::value /*style*/)
 {
-  string key="";
+  std::string key="";
   if (!m_stateStack.empty() )
   {
     if( m_stateStack.top().state == WaitingForSequenceEntry )
@@ -557,7 +557,7 @@ void JsonHandler::BeginNode()
   }
 }
 
-void JsonHandler::addHead(const string& key )
+void JsonHandler::addHead(const std::string& key )
 {
     if(!m_first )
      m_os <<  ",\n";
@@ -570,7 +570,7 @@ void JsonHandler::addHead(const string& key )
       m_os << "\"" << key << "\" :   ";
 }
 
-void JsonHandler::addScalar(const string&  key, const string& value )
+void JsonHandler::addScalar(const std::string&  key, const std::string& value )
 {
     int ival = 0;
     double dval=0.;

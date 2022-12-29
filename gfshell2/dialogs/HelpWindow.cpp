@@ -32,7 +32,6 @@
 
 #include  <iostream>
 #include <string>
-using namespace std;
 
 #include <QtHelp/QHelpEngine>
 #include <QtHelp/QHelpContentWidget>
@@ -57,7 +56,7 @@ HelpWindow::HelpWindow( QWidget* parent):
         QMainWindow( parent )
 {
    setupUi(this);
-   string titl = _FIT_version_stamp;
+   std::string titl = _FIT_version_stamp;
                   titl+= " : Help Viewer ";
                  setWindowTitle(titl.c_str());
 
@@ -397,7 +396,7 @@ void HelpWindow::showDocumentation(const char* file, const char* item1)
    if (!hEngine)
        return;
 
-    string path = "qthelp://gemsfits/help/";
+    std::string path = "qthelp://gemsfits/help/";
     QUrl path_str;
 
     if( !file/*item1*/ )
@@ -409,7 +408,7 @@ void HelpWindow::showDocumentation(const char* file, const char* item1)
         path += file;
         // adding ".html" if needed
         if( path.rfind( "#" ) == path.npos )
-        {   if( string(path, path.length()-5, 5) != ".html" )
+        {   if( std::string(path, path.length()-5, 5) != ".html" )
               path += ".html";
             if( item1  )
             {  path += "#";
@@ -419,7 +418,7 @@ void HelpWindow::showDocumentation(const char* file, const char* item1)
         path_str = QUrl(path.c_str());
     }
 
-   cout << "showDocumentation " << path_str.toString().toStdString() << endl;
+   std::cout << "showDocumentation " << path_str.toString().toStdString() << std::endl;
    loadResource(  QUrl(path_str) );
 }
 

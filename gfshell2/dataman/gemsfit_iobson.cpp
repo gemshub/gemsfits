@@ -21,7 +21,6 @@
 #include <cstdlib>
 #include <sstream>
 #include <algorithm>
-using namespace std;
 
 #include "node.h"
 #include "keywords.h"
@@ -33,15 +32,15 @@ using namespace std;
 using namespace keys;
 
 // cuts the csv header into strings from phase.aq_gen.IC.Al.Q to output = [pahse, aq_gen, IC, Al, Q]
-int cut_csv_header (string input, string delimiter, vector<string> &output);
+int cut_csv_header (std::string input, std::string delimiter, std::vector<std::string> &output);
 // input an integer output a const char
 std::string int_to_c_str(int in);
 // adds Qunit and Qerror to BSON object
-bool add_unit_and_error(bson * exp, vector<string> headline, vector<string> row , unsigned int &position);
-// checks if the string is the name of a possilbe phase property
-bool it_is_phase_property (string ph_prop);
+bool add_unit_and_error(bson * exp, std::vector<std::string> headline, std::vector<std::string> row , unsigned int &position);
+// checks if the std::string is the name of a possilbe phase property
+bool it_is_phase_property (std::string ph_prop);
 
-bool add_unit_and_error (bson * exp, vector<string> headline, vector<string> row, unsigned int &position )
+bool add_unit_and_error (bson * exp, std::vector<std::string> headline, std::vector<std::string> row, unsigned int &position )
 {
     double error = 0.0;
     if (position+1< headline.size())
@@ -76,10 +75,10 @@ bool add_unit_and_error (bson * exp, vector<string> headline, vector<string> row
     return true;
 }
 
-int cut_csv_header (string input, string delimiter, vector<string> &output)
+int cut_csv_header (std::string input, std::string delimiter, std::vector<std::string> &output)
 {
     int pos_delimiter = 0;
-    string cut_string;
+    std::string cut_string;
 
     output.clear();
     while (pos_delimiter >= 0)
@@ -98,12 +97,12 @@ int cut_csv_header (string input, string delimiter, vector<string> &output)
 
 std::string  int_to_c_str (int in)
 {
-    stringstream ss;
+    std::stringstream ss;
     ss << in;
     return ss.str();
 }
 
-bool it_is_phase_property (string ph_prop)
+bool it_is_phase_property (std::string ph_prop)
 {
     if (((ph_prop == Qnt)   || (ph_prop == pH)     || (ph_prop == pHm)     || (ph_prop == pV)  || (ph_prop == Eh)     ||
          (ph_prop == IS)    || (ph_prop == all)    || (ph_prop == sArea)   || (ph_prop == RHO) || (ph_prop == Gex)    || (ph_prop == SI)    ||
@@ -112,7 +111,7 @@ bool it_is_phase_property (string ph_prop)
     else return false;
 }
 
-bool iequals(const string& a, const string& b)
+bool iequals(const std::string& a, const std::string& b)
 {
     unsigned int sz = a.size();
     if (b.size() != sz)
@@ -123,21 +122,21 @@ bool iequals(const string& a, const string& b)
     return true;
 }
 
-void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>& row )
+void csvToBson( bson *exp, const  std::vector<std::string>& headline, const std::vector<std::string>& row )
 {
     int ic = 0,      // counts the number of system comp (recipe entries), independent components per pahse, phase properties per pahse, and dependent components properties per dependent component
         phc = 0,     // counts the number of phases per system/experiment
         dcc = 0,     // counts the number of dependent components per phase
         mf = 0;      // counts the number of molar fraction entries per system/exmperiment
-    // the following consts define where are the keys / names expected to be in the string vector resulted form cutting each column header
+    // the following consts define where are the keys / names expected to be in the std::string std::vector resulted form cutting each column header
     const unsigned ndx_comp = 0, ndx_props = 0, ndx_phase = 0, ndx_component_name = 1, ndx_prop_name =1, ndx_phase_name = 1, ndx_phase_property = 2, ndx_IC = 2,
                    ndx_MR = 2, ndx_DC = 2, ndx_IC_name = 3, ndx_MR_formula = 3, ndx_DC_name = 3, ndx_DC_prop_name = 4;
-    string phase_name, header_delimiter = ".";
-    vector<string> phases, dcomps, header_vector; // keeps the already read phases and dcomps
+    std::string phase_name, header_delimiter = ".";
+    std::vector<std::string> phases, dcomps, header_vector; // keeps the already read phases and dcomps
     bool h_phprop = false, phase_already_added = false, h_phIC = false, dcomp_already_added = false, h_phMR = false, h_phDC = false; // handle that is true if we have the entry in the CSV file
     bool h_phase = false, h_prop=false;
     // getting the data from CSV line by line and processing it into BSON
-    // the csv header of each column is cut into strings which are separated by the delimiter ".". Based on this string and their value the BSON oject is constructed.
+    // the csv header of each column is cut into strings which are separated by the delimiter ".". Based on this std::string and their value the BSON oject is constructed.
     bson_init(exp);
 
     //first level objects: sample, expdataset, sT, sP.
@@ -274,7 +273,7 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
                 bson_append_start_object(exp, int_to_c_str(phc).c_str());                   // START phase object
                 phc++;                                                              // phases counter increased by 1
                 bson_append_string(exp, phase, phase_name.c_str());
-                phases.push_back(phase_name);                    // vector that keeps already present phases
+                phases.push_back(phase_name);                    // std::vector that keeps already present phases
                 ic = 0;
 
                 // going through the header to read the entries related to the phase with phase_name
@@ -399,7 +398,7 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
                 //++ START array phspecies ++//
                 if (h_phDC) // check if there is species data in the CSV header
                 {
-                    string dcomp_name;
+                    std::string dcomp_name;
                     bson_append_start_array(exp, phDC);
                     for (unsigned int j=0; j<headline.size(); ++j)
                     {
