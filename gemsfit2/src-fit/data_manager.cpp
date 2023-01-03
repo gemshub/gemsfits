@@ -133,6 +133,21 @@ void Data_Manager::get_DataSyn()
     }
     out.clear();
 
+    parse_JSON_object(DataSyn, keys::PropertyNames[mode], out);
+    for (unsigned i = 0; i < out.size(); i++)
+    {
+
+        SynProps.push_back(ss);
+        parse_JSON_object(out[i], keys::NameSys[mode], out2);
+        SynProps[SynProps.size()-1].GemsName = out2[0];
+        out2.clear();
+        parse_JSON_object(out[i], keys::Syn[mode], out2);
+        if (out2[0] != "")
+        SynProps[SynProps.size()-1].syn = out2;
+        out2.clear();
+    }
+    out.clear();
+
 
     parse_JSON_object(DataSyn, keys::DcPropNames[mode], out);
     for (unsigned i = 0; i < out.size(); i++)
@@ -902,6 +917,44 @@ void Data_Manager::bson_to_Data_Manager(/* FILE *f, */ const char *data, int pos
                 }
             }
         } else
+            // adding experiment properties
+            if ((key_ == keys::props) ) // && (t == BSON_ARRAY))
+            {
+                ic = -1;
+                bson_iterator_subiterator( i, j );
+                while (bson_iterator_next(j) != BSON_EOO )
+                {
+                    experiments[pos]->props.push_back( new samples::properties );
+                    ic++; // position of the component in sbcomp vector
+                    experiments[pos]->props[ic]->Qnt = 0.;
+                    experiments[pos]->props[ic]->Qerror = 0.;
+                    experiments[pos]->props[ic]->Qunit = "NULL"; // default
+
+                    bson_iterator_subiterator( j, d );
+
+                    while (bson_iterator_next(d) != BSON_EOO )
+                    {
+                        string key_ = bson_iterator_key(d);
+
+                        if ((key_ == keys::property))
+                        {
+                            experiments[pos]->props[ic]->prop =  bson_iterator_string(d) ;
+                        } else
+                        if ((key_ == keys::Qnt))
+                        {
+                            experiments[pos]->props[ic]->Qnt = bson_iterator_double(d) ;
+                        } else
+                        if ((key_ == keys::Qerror))
+                        {
+                            experiments[pos]->props[ic]->Qerror = bson_iterator_double(d) ;
+                        } else
+                        if ((key_ == keys::Qunit))
+                        {
+                            experiments[pos]->props[ic]->Qunit = bson_iterator_string(d) ;
+                        }
+                    }
+                }
+            } else
 
         // adding Upper metastability constraints
 //        if ((key_ == keys::UMC) ) // && (t == BSON_ARRAY))

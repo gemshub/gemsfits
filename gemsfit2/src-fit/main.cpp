@@ -144,6 +144,11 @@ int main( int argc, char *argv[] )
     } else
     {
         vector<double> grad;
+        if (gfittask->Opti->h_optNF) // if nested function
+        {
+            // CHECK NESTED pH to use acid or base
+            gfittask->nestedpH ();
+        }
         Equil_objective_function_callback(gfittask->Opti->optv, grad, gfittask);
     }
 

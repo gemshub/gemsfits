@@ -1,0 +1,628 @@
+{
+     "DBPath" :   "../EJDB/<database name>",
+     "DBColl" :   "<collection name>",
+     "GEMSFPath" :   "../GEMS/NaCl_Pitzer-dat.lst",
+     "DataSelect" :   "",
+     "DataTarget" :   "",
+     "ParToOpt" :   [
+          {
+               "EPH" :   "Pitzer_NaCl",
+               "G0" :   [
+                    {
+                         "DCN" :   "Na+",
+                         "PType" :   "S",
+                         "IV" :   -261881.00017392
+                    },
+                    {
+                         "DCN" :   "Cl-",
+                         "PType" :   "S",
+                         "IV" :   -131290.00076596
+                    },
+                    {
+                         "DCN" :   "OH-",
+                         "PType" :   "S",
+                         "IV" :   -157297.00090727
+                    },
+                    {
+                         "DCN" :   "H+",
+                         "PType" :   "S",
+                         "IV" :   0
+                    },
+                    {
+                         "DCN" :   "H2O@",
+                         "PType" :   "S",
+                         "IV" :   -237181.38483664
+                    }
+               ],
+               "PMc" :   [
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[0|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.0745617970824242
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[0|1]",
+                                   "PType" :   "S",
+                                   "IV" :   -470.789001464844
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[0|2]",
+                                   "PType" :   "S",
+                                   "IV" :   -1.85114002227783
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[0|3]",
+                                   "PType" :   "S",
+                                   "IV" :   0.00165564997587353
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[0|4]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[1|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.275240987539291
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[1|1]",
+                                   "PType" :   "S",
+                                   "IV" :   -521.117980957031
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[1|2]",
+                                   "PType" :   "S",
+                                   "IV" :   -2.88035988807678
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[1|3]",
+                                   "PType" :   "S",
+                                   "IV" :   0.00471463007852435
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[1|4]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[2|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[2|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[2|2]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[2|3]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[2|4]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[3|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.00153692997992039
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[3|1]",
+                                   "PType" :   "S",
+                                   "IV" :   48.0726013183594
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[3|2]",
+                                   "PType" :   "S",
+                                   "IV" :   0.17467999458313
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[3|3]",
+                                   "PType" :   "S",
+                                   "IV" :   -0.000156269001308829
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[3|4]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[4|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.0883444026112556
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[4|1]",
+                                   "PType" :   "S",
+                                   "IV" :   -1197.84997558594
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[4|2]",
+                                   "PType" :   "S",
+                                   "IV" :   -6.10982990264893
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[4|3]",
+                                   "PType" :   "S",
+                                   "IV" :   0.0074332500807941
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[4|4]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[5|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.244421005249023
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[5|1]",
+                                   "PType" :   "S",
+                                   "IV" :   1627.03002929688
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[5|2]",
+                                   "PType" :   "S",
+                                   "IV" :   9.48250007629395
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[5|3]",
+                                   "PType" :   "S",
+                                   "IV" :   -0.011578899808228
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[5|4]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[6|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[6|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[6|2]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[6|3]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[6|4]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[7|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.00399943999946117
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[7|1]",
+                                   "PType" :   "S",
+                                   "IV" :   88.2475967407227
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[7|2]",
+                                   "PType" :   "S",
+                                   "IV" :   0.406875997781754
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[7|3]",
+                                   "PType" :   "S",
+                                   "IV" :   -0.000475667009595782
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[7|4]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[8|0]",
+                                   "PType" :   "S",
+                                   "IV" :   -0.0500000007450581
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[8|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[8|2]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[8|3]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[8|4]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[9|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.0359999984502792
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[9|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[9|2]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[9|3]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[9|4]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[10|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.177000999450684
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[10|1]",
+                                   "PType" :   "S",
+                                   "IV" :   -33.4776992797852
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[10|2]",
+                                   "PType" :   "S",
+                                   "IV" :   -0.262214988470078
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[10|3]",
+                                   "PType" :   "S",
+                                   "IV" :   0.000125777994981036
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[10|4]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[111|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.292921990156174
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[111|1]",
+                                   "PType" :   "S",
+                                   "IV" :   3402.46997070312
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[111|2]",
+                                   "PType" :   "S",
+                                   "IV" :   19.7936000823975
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[111|3]",
+                                   "PType" :   "S",
+                                   "IV" :   -0.0279387999325991
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[111|4]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[1112|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[1112|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[1112|2]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[1112|3]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[1112|4]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[11113|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.000361999991582707
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[11113|1]",
+                                   "PType" :   "S",
+                                   "IV" :   -2.91037992317111e-11
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[11113|2]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[11113|3]",
+                                   "PType" :   "S",
+                                   "IV" :   -3.03600008919602e-05
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[11113|4]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[111114|0]",
+                                   "PType" :   "S",
+                                   "IV" :   -0.006010000128299
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[111114|1]",
+                                   "PType" :   "S",
+                                   "IV" :   -9.93000030517578
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[111114|2]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[111114|3]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "Pitzer_NaCl[111114|4]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    }
+               ]
+          },
+          {
+               "EPH" :   "gas_gen",
+               "G0" :   [
+                    {
+                         "DCN" :   "H2",
+                         "PType" :   "S",
+                         "IV" :   0
+                    },
+                    {
+                         "DCN" :   "O2",
+                         "PType" :   "S",
+                         "IV" :   0
+                    }
+               ]
+          },
+          {
+               "EPH" :   "Halite",
+               "G0" :   [
+                    {
+                         "DCN" :   "Halite",
+                         "PType" :   "S",
+                         "IV" :   -384246
+                    }
+               ]
+          }
+     ],
+     "NFunParToOpt" :   "",
+     "LogKFun" :   "",
+     "LogKVal" :   "",
+     "OptSet" :   {
+          "NumMPI" :   4,
+          "DoWhat" :   1,
+          "UseEqC" :   1,
+          "UDWts" :   -1,
+          "OptAlg" :   "LN_BOBYQA",
+          "PBPerc" :   -1,
+          "ConTolRel" :   1e-05,
+          "ConTolAbs" :   1e-05,
+          "MaxLoops" :   10000,
+          "NormPar" :   1,
+          "GradPert" :   0.0001,
+          "SensPert" :   0.0001,
+          "OptTu" :   -1,
+          "OptTuC" :   6,
+          "UseMCPE" :   -1,
+          "NumMCT" :   100
+     },
+     "DataSyn" :   {
+          "PHN" :   [
+               {
+                    "NIS" :   "Pitzer_NaCl",
+                    "Syn" :   "",
+                    "DCN" :   [
+                         {
+                              "NIS" :   "Na+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "Cl-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "OH-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "H+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "H2O@",
+                              "Syn" :   ""
+                         }
+                    ]
+               },
+               {
+                    "NIS" :   "gas_gen",
+                    "Syn" :   "",
+                    "DCN" :   [
+                         {
+                              "NIS" :   "H2",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "O2",
+                              "Syn" :   ""
+                         }
+                    ]
+               },
+               {
+                    "NIS" :   "Halite",
+                    "Syn" :   "",
+                    "DCN" :   [
+                         {
+                              "NIS" :   "Halite",
+                              "Syn" :   ""
+                         }
+                    ]
+               }
+          ],
+          "PHPN" :   [
+               {
+                    "NIS" :   "pH",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "pe",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Eh",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "IS",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "alk",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "pV",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "RHO",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "sArea",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Gex",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "mChainL",
+                    "Syn" :   ""
+               }
+          ],
+          "DCPN" :   [
+               {
+                    "NIS" :   "activity",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "@coef",
+                    "Syn" :   ""
+               }
+          ]
+     }
+}

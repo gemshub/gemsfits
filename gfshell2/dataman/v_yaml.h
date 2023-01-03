@@ -25,9 +25,9 @@
 #include <string>
 #include <vector>
 #include <stack>
+#include <iostream>
 using namespace std;
 
-#include "ejdb.h"
 #include "yaml-cpp/yaml.h"
 #include "yaml-cpp/eventhandler.h"
 
@@ -163,13 +163,13 @@ class JsonHandler: public YAML::EventHandler
 string Json2YAML( const string& jsonData );
 string parseYAMLToJson( const string& currentYAML );
 
-#include <iostream>
-template <typename T>
-bool is( T& x, const std::string& s)
-{
-    std::istringstream iss(s);
-    char c;
-    return iss >> x && !iss.ignore();
-}
+//#include <iostream>
+//template <typename T>
+//bool is( T& x, const std::string& s)
+//{
+//    std::istringstream iss(s);
+//    char c;
+//    return iss >> x && !iss.ignore();
+//}
 
 #endif // V_YAML_H

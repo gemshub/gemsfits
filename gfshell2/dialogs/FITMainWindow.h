@@ -158,11 +158,17 @@ public slots:
        void CmRestoreYAML();
        void CmDeleteList();
        void CmTPpairsCSV();
-     //Calc
+       //Calc
        void CmRunTest();
        void CmShowCalcResults();
        void CmShowFitResults();
        void CmCancelGemsfit();
+       //Find
+       void actionFind();
+       void actionFindNext();
+       void actionFindPrevious();
+       void actionZoomIn();
+       void actionZoomOut();
 
 public:
     explicit FITMainWindow(int c, char** v, QWidget *parent = 0);
@@ -197,7 +203,7 @@ private:
     QLineEdit* pLineGEMS;  ///< Current CSD GEMS3K file lst name
     TKeyTable* keyTable;   ///< Curent collection EJDB keys list
     QProcess*  fitProcess;
-
+    QLineEdit *findLine = nullptr;
 
     void setTableIComp();
     void setListPhase();
@@ -211,6 +217,7 @@ extern FITMainWindow* pFitImp;
 
 extern const char *GF_INDEX_HTML; // = "gemsfit-index";
 extern const char *GF_PREFS_HTML; // = "gemsfit-prefs";
+extern const char *GF_SABOUT_HTML; // = "gfshell-about";
 extern const char *GF_EXPDB_HTML; // = "howto-csvtoejdb";
 extern const char *GF_TASKDB_HTML; //= "gemsfit-input-file";
 extern const char *GF_ABOUT_HTML; // = "gemsfit-about";

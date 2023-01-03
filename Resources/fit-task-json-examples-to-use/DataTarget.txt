@@ -1,0 +1,130 @@
+# Copy "DataTarget" section or other sub-sections { } to your project and change acordingly
+      "DataTarget" :   {
+          "Target" :   "name",
+          "TT" :   "lsq",
+          "WT" :   "1",
+          "OFUN" :   [
+               {
+                    "EPH" :   "aq",
+                    "CT" :   "IC",
+                    "CN" :   "Ca",
+                    "unit" :   "log_molal"
+               }
+          ],
+          "NFUN" :   [
+
+          ],
+          "ADDOUT" :   [
+
+          ]
+     },
+##########################################################################################
+# OFUN elements
+##########################################################################################
+# compare measured and calculated aqeous concentration (mol/kgw) of given element
+               {
+                    "EPH" :   "aq",
+                    "CT" :   "IC",
+                    "CN" :   "Ca",
+                    "unit" :   "log_molal"
+               },
+# compare measured and calculated pH
+               {
+                    "EPH" :   "aq_gen",
+                    "CT" :   "prop",
+                    "CN" :   "pH",
+                    "unit" :   " -loga",
+                    "WT" :   1
+               },
+# compare measured and calculated molar ratio MR e.g. Ca/Si in C-S-H
+               {
+                    "EPH" :   "CSH",
+                    "CT" :   "MR",
+                    "CN" :   "Ca/Si",
+                    "unit" :   "molratio",
+                    "WT" :   1
+               },             
+# compare measured and calculated phase property computed using a mathematical expression 
+# mChainL (mean silicate chain length)
+        {
+            "EPH": "CSH",
+            "CT": "prop",
+            "CN": "mChainL",
+            "expr": " 3/sum( TCvC, TCvv, THvC, THvv ) -1 ",
+            "WT": 3
+        },
+# Rd (distribution coefficient)
+               {
+                    "EPH" :   "IlliteX",
+                    "CT" :   "prop",
+                    "CN" :   "Rd",
+                    "expr" :   "log10({=iSsOUO2OH@}+{=iSsOUO2+}+{=iSsOUO2(OH)2-}+{=iSsOUO2(OH)3-2}+{=iSvOUO2+}+{=iSvOUO2OH@}+{=iSvOUO2(OH)2-}) - log10({UO2+2}+{UO2Cl+}+{UO2Cl2(aq)}+{UO2OH+}+{UO2(OH)2(aq)}+{UO2(OH)3-}+{UO2(OH)4-2}+{(UO2)2(OH)2+2}+{(UO2)2OH+3}+{(UO2)3(OH)4+2}+{(UO2)3(OH)5+}+{(UO2)3(OH)7-}+{(UO2)4(OH)7+})",
+                    "WT" :   1
+               },
+               
+# net H+ or OH- consumed by the protolysis reactions, in this example for MontX phase
+
+               {
+                    "EPH" :   "MontX",
+                    "CT" :   "prop",
+                    "CN" :   "netH_OH",
+                    "expr" :   "({=SsOH2+}-{=SsO-}-{=SvO-}+{=SvOH2+}-{=SwO-}+{=SwOH2+})",
+                    "unit" :   "mol/kg",
+                    "WT" :   1
+               }
+# reaction constants (concentration based, not corrected for activity) SiO2(OH)2<2-> + 2H2O = Si(OH)4<0> +2*OH<->, Si(OH)4<0> = SiO2(OH)2<2-> + 2H+s
+
+               {
+                    "CT" :   "prop",
+                    "CN" :   "logQ_B21",
+                    "expr" :   "log10({SiO2(OH)2<2->})-log10({Si(OH)4<0>}*{OH<->}*{OH<->})",
+                    "WT" :   0
+               },
+               {
+                    "CT" :   "prop",
+                    "CN" :   "logQ_K21",
+                    "expr" :   "0-(log10({SiO2(OH)2<2->}*{H<+>}*{H<+>})-log10({Si(OH)4<0>}))",
+                    "WT" :   1
+               },
+
+##########################################################################################
+# ADDOUT elements
+##########################################################################################
+
+# write calculated phase property  (e.g. "CN": IS, pH, oscw, Eh, pV (volume), RHO (density), Gex (excess Gibss energy)) to results table
+               {
+                    "SRC" :   "calc",
+                    "EPH" :   "aq",
+                    "CT" :   "prop",
+                    "CN" :   "IS"
+               },
+# write amount of phase in equilibirum to results table
+               {
+                    "SRC" :   "calc",
+                    "EPH" :   "Portlandite",
+                    "CT" :   "prop",
+                    "CN" :   "Q"
+               },
+# write amount of input compoment of experiments e.g. comp.NaOH
+               {
+                    "CT" :   "comp",
+                    "CN" :   "NaOH"
+               },
+# write amount of species in a phase
+               {
+                    "SRC" :   "calc",
+                    "EPH" :   "IllEdS",
+                    "CT" :   "DC",
+                    "CN" :   "=iSvOUO2(OH)2-",
+                    "DCP" :   "Q",
+                    "unit" :   "mol"
+               },
+# write activity of species in a phase
+               {
+                    "SRC" :   "calc",
+                    "EPH" :   "aq_gen",
+                    "CT" :   "DC",
+                    "CN" :   "Cl-",
+                    "DCP" :   "activity"
+               },
+

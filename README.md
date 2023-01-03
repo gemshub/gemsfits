@@ -70,13 +70,13 @@ git checkout dev-gemsfits
 Make sure that you have the following packages installed (on debian-type linuxes such as Kubuntu 15.10) by running in the terminal:
 ~~~
 sudo apt-get update
-sudo apt-get install libarmadillo-dev libjansson-dev libboost-all-dev libiomp5
+sudo apt-get install libarmadillo-dev libjansson-dev libboost-all-dev libomp5
 ~~~
 or install equivalent packages, if you have another linux desktop.
 
 Ubuntu > 20 
 ~~~
-sudo apt install libomp-11-dev
+sudo apt install libarmadillo-dev libjansson-dev libboost-all-dev libomp-11-dev
 ~~~
 
 Download and install NLopt library from source:
@@ -96,8 +96,8 @@ Install EJDB library from source :
 
 ~~~
 git clone https://github.com/Softmotions/ejdb.git
-git checkout v1.2.12 
 cd ejdb
+git checkout v1.2.12 
 mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Release ../
@@ -122,15 +122,9 @@ If building from source fails (problems in Ubuntu) try the following command:
 sudo apt-get install libyaml-cpp-dev
 ~~~
 
-Make sure that you have the complete Qt5 toolkit (with QtCreator) installed either in the system or locally after downloading from [qt.io](http://www.qt.io/download/) site. 
+Make sure that you have the complete Qt5 toolkit (with QtCreator) installed either in the system or locally after downloading from [qt.io](http://www.qt.io/download/) site. Select Qt Cumstom installation, then expand Qt and version 5.15.2 where you need to select "Desktop gcc 64 bit", "QT Charts" and "Qt WebEngine".
 
 Qt5 should be installed in the local user folder: home/<user>/Qt/5. ...
-
-If you are using QT installed in your home folder and you encounter an error about missing gl.h, try the folowing command, then resume building with QT:
-~~~
-sudo apt-get install build-essential libgl1-mesa-dev libxcb-xinerama0
-
-~~~
 
 Optional
 
@@ -149,6 +143,11 @@ sudo apt-get install qttools5-dev libqt5svg5-dev
 In QtCreator, open a project  ~/gitGEMSFIT/gemsfits/gemsfit2/gemsfit2.pro and configure it to build release (or debug) into ~/gitGEMSFIT/gemsfits/gemsfit2-build folder. Then run qmake and build the gemsfit2 executable code. 
 
 ### Build and run the gemsfits code ###
+
+If you are using QT installed in your home folder you will probably encounter an error about missing gl.h when building with QT. To avoid this do:
+~~~
+sudo apt-get install build-essential libgl1-mesa-dev libxcb-xinerama0
+~~~
 
 In QtCreator, open a project  ~/gitGEMSFIT/gemsfits/gfshell2/gemsfit-gui.pro and configure it to build release (or debug) into ~/gitGEMSFIT/gemsfits/gfshell-build folder. Then run qmake and build the gemsfits executable code.
 

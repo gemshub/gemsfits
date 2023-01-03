@@ -2,7 +2,7 @@
 TEMPLATE	= app
 LANGUAGE        = C++
 TARGET		= gemsfits
-VERSION         = 1.0.0
+VERSION         = 1.3.0
 
 DEFINES         += Use_mt_mode
 #DEFINES         += NODEARRAYLEVEL
@@ -18,6 +18,9 @@ QT += network
 QT += sql
 QT += xml
 QT += svg
+
+QMAKE_CXXFLAGS += -O3
+QMAKE_LFLAGS += -O3
 
 lessThan( QT_MAJOR_VERSION, 5 ): CONFIG += help
 greaterThan( QT_MAJOR_VERSION, 4 ): QT += widgets printsupport help concurrent

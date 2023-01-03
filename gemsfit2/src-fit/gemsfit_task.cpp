@@ -396,7 +396,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
 //    //===== For testing the objective function without oprimization =====//
 //    weighted_Tfun_sum_of_residuals = Equil_objective_function_callback(Opti->optv, grad, this);
     if (optv_.size() == 0)
-    { cout << "No Parameter was marked for optimization! Check that there are parameter with PType : F! "<< endl; exit (1);}
+    { cout << "No Parameter was marked for optimization! Check that there are parameters with PType : F! "<< endl; exit (1);}
 
     nlopt::result result = NLopti.optimize( Opti->optv, weighted_Tfun_sum_of_residuals );
     gpf->flog << "optv[0] = "<<Opti->optv[0]<<endl;
@@ -1074,14 +1074,14 @@ void TGfitTask::get_DataTarget ( )
         Tfun->objfun[i].isComputed = false;
         Tfun->objfun[i].SumWTFun = 0.0;
 
-        parse_JSON_object(out[i], keys::EPH[mode], out2);
-        if (out2.size() == 0) { cout << "Phase name has to be specified in Data Target->OFUN->EPH!"<< endl; exit(1);} // ERROR
-        Tfun->objfun[i].exp_phase = out2[0];
-        out2.clear();
-
         parse_JSON_object(out[i], keys::CT, out2);
         if (out2.size() == 0) { cout << "Type of compared property has to be specified in Data Target->OFUN->CT!"<< endl; exit(1);} // ERROR
         Tfun->objfun[i].exp_CT = out2[0];
+        out2.clear();
+
+        parse_JSON_object(out[i], keys::EPH[mode], out2);
+        if (out2.size() == 0 && Tfun->objfun[i].exp_CT != keys::property) { cout << "Phase name has to be specified in Data Target->OFUN->EPH!"<< endl; exit(1);} // ERROR
+        Tfun->objfun[i].exp_phase = out2[0];
         out2.clear();
 
         parse_JSON_object(out[i], keys::DCP, out2);
@@ -1210,14 +1210,17 @@ void TGfitTask::get_DataTarget ( )
         Tfun->addout[i].TuWeight = 1;
         Tfun->addout[i].isComputed = false;
 
-        parse_JSON_object(out[i], keys::EPH[mode], out2);
-        if (out2.size() == 0) { cout << "Phase name has to be specified in Data Target->NFUN->EPH!"<< endl; exit(1);} // ERROR
-        Tfun->addout[i].exp_phase = out2[0];
-        out2.clear();
-
         parse_JSON_object(out[i], keys::CT, out2);
         if (out2.size() == 0) { cout << "Type of compared property has to be specified in Data Target->NFUN->CT!"<< endl; exit(1);} // ERROR
         Tfun->addout[i].exp_CT = out2[0];
+        out2.clear();
+
+        parse_JSON_object(out[i], keys::EPH[mode], out2);
+        if (out2.size() == 0) {
+            if (Tfun->addout[i].exp_CT != keys::comp)
+            {cout << "Phase name has to be specified in Data Target->NFUN->EPH!"<< endl; exit(1);}} // ERROR
+        if (out2.size() > 0)
+            Tfun->addout[i].exp_phase = out2[0];
         out2.clear();
 
         parse_JSON_object(out[i], keys::DCP, out2);
@@ -1257,7 +1260,9 @@ void TGfitTask::get_DataTarget ( )
         out2.clear();
 
         parse_JSON_object(out[i], keys::SRC, out2);
-        if (out2.size() == 0) { cout << "Data Target->ADDOUT->SRC has to be speficied!"<< endl; exit(1);} // ERROR
+        if (out2.size() == 0) {
+            if (Tfun->addout[i].exp_CT != keys::comp)
+            {cout << "Data Target->ADDOUT->SRC has to be speficied!"<< endl; exit(1);}} // ERROR
         Tfun->addout[i].Otype = out2[0];
         out2.clear();
     }

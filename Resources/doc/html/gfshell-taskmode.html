@@ -8,6 +8,10 @@
     <h1> <img style="width: 48px; height: 48px;" title="GEMSFITS" alt="GEMSFITS"
         src="gemsfit2.png"> GEMSFITS Code for GEM Input Parameter Optimization</h1>
     <h2>gfshell Fitting Task Mode</h2>
+    Examples of JSON code fragments that can be used to customize and setup the fitting task can be found in Resources/fit-task-json-examples-to-use/ folder. Copy / Paste and change them accordingly.
+    <br><br>
+    Because JSON has a strict convention it is often the case that when editing the task some typos, missing symbols might be introduced.
+    To check if the Task is a valid JSON us CTRL+A and CTRL+C to select and copy the text and paste it to <a href="https://jsonlint.com/">https://jsonlint.com/</a>, do the fixes paste it back to the GEMSFITS task text editor field and save. 
     <hr>
     <h3>Contents</h3>
     <ul>
@@ -15,23 +19,23 @@
         fitting task specification template</li>
       <li><a href="#taskeditor">Edit the task specification</a></li>
       <ul>
-        <li><a href="#dataselect">DataSelection</a> - which experimental data to
+        <li><a href="#OptSet">OptimizerSettings</a> - "OptSet" - Optimization and
+          statistics related settings</li>
+        <li><a href="#dataselect">DataSelection</a> - "DataSelect" - which experimental data to
           select</li>
-        <li><a href="#datatarget">DataTargetFunction</a> - what data to compare
+        <li><a href="#datatarget">DataTargetFunction</a> - "DataTarget" - what data to compare
           and how to calculate the sum of the minimized value</li>
         <li><span style="text-decoration: underline;"><a href="#ParToOpt">ParametersToOptimize</a>
             - </span>what parameters to freely optimize, constrain or set</li>
-        <li><a href="#NFunParToOpt">NestedFunctionParametersToOptimize</a> -
+        <li><a href="#NFunParToOpt">NestedFunctionParametersToOptimize</a> - "NFunParToOpt" -
           setup the parameters to be optimized using nested functionality</li>
-        <li><a href="#AddParToOpt">AdditionalParametersToOptimize</a> -
+        <li><a href="#AddParToOpt">AdditionalParametersToOptimize</a> - "AddParToOpt" - 
             setup additional parameters to be added in the global optimization</li>
-        <li><a href="#LogKFun">LogKFunctionsOfReactions</a> - Functions to
+        <li><a href="#LogKFun">LogKFunctionsOfReactions</a> - "LogKFun" - Functions to
           calculate the logK of reaction dependent parameters</li>
-        <li><a href="#LogKVal">ArrayofUserProvidedLogKValues</a> - list of user
+        <li><a href="#LogKVal">ArrayofUserProvidedLogKValues</a> - "LogKVal" - list of user
           provided logK values for the reaction dependent parameters</li>
-        <li><a href="#OptSet">OptimizerSettings</a> - Optimization and
-          statistics related settings</li>
-        <li><a href="#DataSyn">DataSynonyms</a> - List of term synonyms between
+        <li><a href="#DataSyn">DataSynonyms</a> - "DataSyn" - List of term synonyms between
           the defined chemical system and naming in the database</li>
       </ul>
       <li><a href="#weighting">Weighting</a> - weighting options </li>
@@ -66,7 +70,7 @@
     created.<br>
     To insert the task specification as a record in the project database click <span
       style="font-weight: bold;">Insert new record&nbsp;</span> <img style="width: 24px; height: 24px;"
-      alt="Insert record" title="Insert record" src="file:///home/dmiron/devGEMSFITS/devGFshell/gemsfit/Resources/doc/html/img/NewCloneRecordIcon24.png">.
+      alt="Insert record" title="Insert record" src="img/NewCloneRecordIcon24.png">.
     The new task specification should appear in the task list with the given "<span
       style="font-family: Courier New,Courier,monospace;">taskid</span>" (name
     of task - default <span style="font-family: Courier New,Courier,monospace;">"template"</span>)
@@ -74,7 +78,7 @@
     (name of current project).<br>
     If GEMSFITS is already in <span style="font-weight: bold;">Fitting Task
       Mode&nbsp;</span> <img style="width: 24px; height: 24px;" alt="Fitting Task Mode"
-      title="Fitting Task Mode" src="file:///home/dmiron/devGEMSFITS/devGFshell/gemsfit/Resources/doc/html/img/DualThModuleIcon24.png">
+      title="Fitting Task Mode" src="img/DualThModuleIcon24.png">
     and the GEMS3K system files are selected, to create new specification tasks,
     use the <span style="font-weight: bold;">Create new by template button</span>
     <img style="width: 24px; height: 24px;" alt="Create new by template" title="Create new by template"
@@ -171,7 +175,7 @@
             system file; is set automatically when creating the templatefile;
             can be change is the files are present elsewhere than the default
             location; it is not recommended to use other GEMS3K files for
-            parameter otpimisation than the ones used for generating the task
+            parameter optimization than the ones used for generating the task
             specification. <br>
           </td>
         </tr>
@@ -179,7 +183,7 @@
     </table>
     <br>
     <hr>
-    <h3><a id="dataselect">b. </a>"DataSelection" / "DataSelect"</h3>
+    <h3><a id="dataselect">b. </a>"DataSelection" / "DataSelect" (more example blocks that ca be reused in Resources/fit-task-json-examples-to-use)</h3>
     <p><span style="font-family: Courier New,Courier,monospace;">"DataSelect"</span>
       can have as value a query in <a href="gemsfit-json.html">JSON</a> object
       format, used by the gemsfit2 code for extracting the desired experimental
@@ -350,7 +354,7 @@
         }</span></p>
     <hr>
     <h3 style="height: 26px;"><a id="datatarget">c. "DataTargetFunction" /
-        "DataTarget" <br>
+        "DataTarget" (more example blocks that ca be reused in Resources/fit-task-json-examples-to-use)<br>
       </a></h3>
     <p>Data Target section contains a <a href="gemsfit-json.html">JSON</a>-format
       object used to describe which GEM output data to compare with what
@@ -465,7 +469,7 @@
                 <tr>
                   <td><span style="font-family: Courier New,Courier,monospace;">"CT"</span></td>
                   <td><span style="font-weight: bold;">(necessary)</span> for
-                    the type of data from the above pahse to compare; Possible
+                    the type of data from the above phase to compare; Possible
                     values:</td>
                 </tr>
                 <tr>
@@ -502,7 +506,7 @@
                     is <span style="font-family: Courier New,Courier,monospace; font-style: italic;">"IC"</span>,
                     or <span style="font-family: Courier New,Courier,monospace; font-style: italic;">"pH"</span>
                     if <span style="font-family: Courier New,Courier,monospace;">"CT"</span>
-                    is <span style="font-family: Courier New,Courier,monospace; font-style: italic;">"prop"</span>,
+                    is <span style="font-family: Courier New,Courier,monospace; font-style: italic;">"prop"</span> (other phase properties <a href="gemsfit-useref.html#phase">here</a>),
                     or <span style="font-family: Courier New,Courier,monospace; font-style: italic;">"K/(Na+K)"</span>
                     if <span style="font-family: Courier New,Courier,monospace;">"CT"</span>
                     is <span style="font-family: Courier New,Courier,monospace; font-style: italic;">"MR"</span></td>
@@ -559,7 +563,7 @@
                       style="font-family: Courier New,Courier,monospace;">"CT":
                       "prop"</span>, <span style="font-family: Courier New,Courier,monospace;">"CN":
                       "mChainL", "expr" : "3/sum({end_memeber1},
-                      {end_mmber2},...)-1"</span>. Endmembers have to be written
+                      {end_mmber2},...)-1"</span>. End members have to be written
                     in between { }. More details on the possible expressions: <a
                       target="_blank" title="http://muparser.beltoforion.de/mup_features.html#idDef2"
                       href="http://muparser.beltoforion.de/mup_features.html#idDef2">http://muparser.beltoforion.de/mup_features.html#idDef2</a><a
@@ -604,7 +608,8 @@
             for additional output in the results file. The options are the same
             as for <span style="font-family: Courier New,Courier,monospace;">OFUN</span>
             with an additional <span style="font-family: Courier New,Courier,monospace;">"SRC"</span>
-            key </td>
+            key for specifying if the output should be a measured or a calculated value. The composition from the input recipe
+            can also be specified in ADDOUT.  </td>
         </tr>
         <tr>
           <td><br>
@@ -616,12 +621,19 @@
                   <td><span style="font-family: Courier New,Courier,monospace;">"SRC"</span></td>
                   <td>whose value can be: <br>
                     <span style="font-family: Courier New,Courier,monospace; font-style: italic;">"calc"</span>
-                    if the aditional output is not present in the database but
+                    if the additional output is not present in the database but
                     can be retrieved trough GEMS calculation<br>
                     <span style="font-family: Courier New,Courier,monospace; font-style: italic;">"meas"</span>
                     if the additional output is present in the database but was
                     not used in the <span style="font-family: Courier New,Courier,monospace;">OFUN</span><br>
                   </td>
+                </tr>
+                <tr>
+                  <td><span style="font-family: Courier New,Courier,monospace;">experimental input composition</span></td>
+                  <td>if "CT": "comp", "CT" can be any formula used in the input of the experiments. For example, if in the
+                    table with experiments we have column name "comp.NaCl" we can output its values in the results table
+                    using {"CT": "comp", "CN": "NaCl"} <br>
+                  </td> 
                 </tr>
               </tbody>
             </table>
@@ -712,7 +724,13 @@
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "expr":
       " 3/sum( TCvC, TCvv, THvC, THvv ) -1 ",<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "WT": 3<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "CT":
+        "comp",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "CN":
+        "NaCl"<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
       &nbsp;&nbsp;&nbsp; ]<br>
       },<br>
       ...</span>
@@ -720,31 +738,31 @@
         </span>(stored in the database in <span style="font-family: Courier New,Courier,monospace;">"mChainL"
         </span>column) is calculated in GEMSFITS&nbsp;</p>
     <p><span style="font-weight: bold;">SUMMARY DESCRIPTION</span></p>
-    <p><span style="font-family: Courier New,Courier,monospace;">TT</span> �
-      type of function used to calculate the residuals (e.g.�<span style="font-family: Courier New,Courier,monospace;">lsq</span>�
+    <p><span style="font-family: Courier New,Courier,monospace;">TT</span>  - 
+      type of function used to calculate the residuals (e.g. - <span style="font-family: Courier New,Courier,monospace;">lsq</span> - 
       least squares); <span style="font-family: Courier New,Courier,monospace;">WT</span>
-      � type of weight;</p>
+       -  type of weight;</p>
     <p><a href="#OFUN"><span style="font-family: Courier New,Courier,monospace;">OFUN</span></a>
-      �array of objective function terms, describing the type of data to
+       - array of objective function terms, describing the type of data to
       compare; <span style="font-family: Courier New,Courier,monospace;">EPH</span>
-      � from which phase (name); <span style="font-family: Courier New,Courier,monospace;">CT</span>
-      � what data from the phase (e.g. <span style="font-family: Courier New,Courier,monospace;">IC</span>
-      � independent component/element; <span style="font-family: Courier New,Courier,monospace;">prop</span>
-      � property; <span style="font-family: Courier New,Courier,monospace;">DC</span>
+       -  from which phase (name); <span style="font-family: Courier New,Courier,monospace;">CT</span>
+       -  what data from the phase (e.g. <span style="font-family: Courier New,Courier,monospace;">IC</span>
+       -  independent component/element; <span style="font-family: Courier New,Courier,monospace;">prop</span>
+       -  property; <span style="font-family: Courier New,Courier,monospace;">DC</span>
       - dependent component); <span style="font-family: Courier New,Courier,monospace;">CN</span>
-      � name/formula of the property to compare; <span style="font-family: Courier New,Courier,monospace;">unit</span>
-      � the unit in which the property will be used throughout the fitting
+       -  name/formula of the property to compare; <span style="font-family: Courier New,Courier,monospace;">unit</span>
+       -  the unit in which the property will be used throughout the fitting
       process (internal conversion when possible, if not specified the unit
       defined in the database will be used, or the default unit if this is not
       defined as well).</p>
     <p><a href="#NFUN"><span style="font-family: Courier New,Courier,monospace;">NFUN</span></a>
-      �array of nested function terms describing what property should be used
+       - array of nested function terms describing what property should be used
       for fitting parameters related to each experimental sample; optional
       pairs: <span style="font-family: Courier New,Courier,monospace;">Tformula</span>
-      � the acid and base titrants formula (specific for titration problems); <span
-        style="font-family: Courier New,Courier,monospace;">Telem</span> � <span
+       -  the acid and base titrant formula (specific for titration problems); <span
+        style="font-family: Courier New,Courier,monospace;">Telem</span>  -  <span
         style="font-family: Courier New,Courier,monospace;">bIC</span> free
-      fitted elements that are part of the titrants composition in the same
+      fitted elements that are part of the titrant composition in the same
       order as <span style="font-family: Courier New,Courier,monospace;">Tformula</span>;<span
         style="font-family: Courier New,Courier,monospace;"></span></p>
     <p><span style="font-family: Courier New,Courier,monospace;">"NFUN"
@@ -760,16 +778,16 @@
         &nbsp;&nbsp;&nbsp; }],<btr><br>
           ... </btr></span></p>
     <p><a href="#addout"><span style="font-family: Courier New,Courier,monospace;">ADDOUT</span></a>
-      � array of additional output terms (written in the fit output csv file and
+       -  array of additional output terms (written in the fit output csv file and
       viewable in the Fit for Sample tab in the gfshell Fit Results View Mode);
-      <span style="font-family: Courier New,Courier,monospace;">SCR</span> �
+      <span style="font-family: Courier New,Courier,monospace;">SCR</span>  - 
       type of additional output data, can be&nbsp;<span style="font-family: Courier New,Courier,monospace;"><span
           style="font-family: Courier New,Courier,monospace;">"calc"</span></span>
       from GEMS3K output or <span style="font-family: Courier New,Courier,monospace;">"meas"</span>
       from the database.</p>
     <hr>
     <h3 style="height: 26px;"><a id="ParToOpt">&nbsp;d. "ParametersToOptimize" /
-        "ParToOpt"<br>
+        "ParToOpt" (more example blocks that ca be reused in Resources/fit-task-json-examples-to-use)<br>
       </a></h3>
     <p>The <a href="gemsfit-json.html">JSON</a> object value of this key is
       automatically created when generating a new task specification template
@@ -855,7 +873,7 @@
             If <span style="font-family: Courier New,Courier,monospace;">"UB"</span>
             and <span style="font-family: Courier New,Courier,monospace;">"LB"</span>
             are not defined the <a href="#PBPerc"><span style="font-family: Courier New,Courier,monospace;">"PBPerc"</span></a>
-            value is used, and if this is also not defined a default �10 % value
+            value is used, and if this is also not defined a default  - 10 % value
             is used.<br>
             <br>
             <span style="font-weight: bold;">When the fitting mode is set to R
@@ -1104,7 +1122,7 @@
       and the <span style="font-family: Courier New,Courier,monospace;">"UB"</span>
       and <span style="font-family: Courier New,Courier,monospace;">"LB"</span>
       entries were added. If the upper and lower bounds are not specified a
-      default value of �10 % will be used.<br>
+      default value of  - 10 % will be used.<br>
     </p>
     <p><span style="font-weight: bold;"><a id="rtype" name="rtype"></a>An
         example for reaction constrained G0(298) :<br>
@@ -1202,7 +1220,7 @@
     <p><span style="font-weight: bold;"></span></p>
     <hr>
     <h3><span style="font-weight: bold;"><a id="NFunParToOpt" name="NFunParToOpt"></a>e.
-        "NFunParToOpt" / "NestedFunctionParametersToOptimize"</span></h3>
+        "NFunParToOpt" / "NestedFunctionParametersToOptimize" (more example blocks that ca be reused in Resources/fit-task-json-examples-to-use)</span></h3>
     <h3><span style="font-weight: bold;"></span></h3>
     <p>Here is where the parameters that are to be optimized using a nested
       function have to be inserted by the user (in <a href="gemsfit-json.html">JSON
@@ -1777,7 +1795,7 @@
           <td><span style="font-family: Courier New,Courier,monospace;">"NumberOfMPIThreadsForParallelRun"</span></td>
           <td>(1 - n) Determines the number of threads for parallelization.
             Running on parallel processing threads. The number of possible
-            threads dependnst on the PC hardware.</td>
+            threads depends on the PC hardware.</td>
           <td><br>
           </td>
         </tr>
@@ -1791,6 +1809,17 @@
             (1) perform optimization and statistics;<br>
             (2) only optimization with basic Statistics (no correlation
             coefficients calculated); </td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;"><a id="UDWts"
+                name="UDWts"></a>"PrcParamDigits"</span></td>
+          <td><span style="font-family: Courier New,Courier,monospace;">"PrecentForParameterDigits"
+              </span></td>
+          <td> (-1) disabled;<br>
+            ( 1) or any number, is the percent in allowed change of the sum or objective function to round each parameter (independently) to its significant digits. E.g. -1101740	to -1102000<br>
+          </td>
           <td><br>
           </td>
         </tr>
@@ -1825,7 +1854,7 @@
         <tr>
           <td><span style="font-family: Courier New,Courier,monospace;"><a id="UDWts"
                 name="UDWts"></a>"UDWts"</span></td>
-          <td><span style="font-family: Courier New,Courier,monospace;">"UuseMixedResiduals"
+          <td><span style="font-family: Courier New,Courier,monospace;">"UseWeightsFromExperimentalData"
               </span></td>
           <td> (-1) don't use (if present) the weight provided in the "weight"
             column of the experimental database;<br>
@@ -1838,12 +1867,12 @@
         <tr>
           <td><span style="font-family: Courier New,Courier,monospace;"><a id="UDWts"
                 name="UDWts"></a>"UMixedResiduals"</span></td>
-          <td><span style="font-family: Courier New,Courier,monospace;">"UseWeightsFromExperimentalData"
+          <td><span style="font-family: Courier New,Courier,monospace;">"UseMixedResiduals"
               </span></td>
           <td>(-1) deactivated, use least square residuals only<br>
             ( 1) minimized function F = normalized least square residuas + normalized absolute residuals  <br>
             ( 2) minimized function F = normalized absolute residuals <br>
-            ( 3) minimized function F = least square residuas + absolute residuals <br>
+            ( 3) minimized function F = least square residuals + absolute residuals <br>
           </td>
           <td><br>
           </td>
@@ -1905,7 +1934,7 @@
               <br></span></td>
           <td><span style="font-family: Courier New,Courier,monospace;">"MaximumNumberOptimizationLoops"</span></td>
           <td>stopping criterion; STOP when the number of function evaluations
-            exceeds OptMaxEval; use 1 for evaulating the results with the
+            exceeds OptMaxEval; use 1 for evaluating the results with the
             initial parameter values;</td>
           <td><br>
           </td>
@@ -1916,7 +1945,7 @@
           <td><span style="font-family: Courier New,Courier,monospace;">"NormalizeAllParameters"</span></td>
           <td>( 1) Default, normalize bounds/constraints/fitting parameters with
             initial guess vector;<br>
-            (-1) Use non-nomralized values;</td>
+            (-1) Use non-normalized values;</td>
           <td><br>
           </td>
         </tr>
@@ -1936,8 +1965,8 @@
               </span></td>
           <td>used for calculating sensitivities by central diference;
             delta/difference (d) used to to calculate the
-            d(calcualted_value)/d(parameter_value);<br>
-            adjust the value so that the clculated values are sensitive to&nbsp;
+            d(calculated_value)/d(parameter_value);<br>
+            adjust the value so that the calculated values are sensitive to&nbsp;
             the change of the parameters with&nbsp; the StatPerturbator value; </td>
           <td><br>
           </td>
@@ -1967,7 +1996,7 @@ Biweight
           <td> <span style="font-family: Courier New,Courier,monospace;">"OptTuC"</span></td>
           <td><span style="font-family: Courier New,Courier,monospace;">"OptimizationTuckeyCValue"
               <br></span> </td>
-          <td style="vertical-align: top;">mutiplier value used to calculate C <a
+          <td style="vertical-align: top;">multiplier value used to calculate C <a
               href="gfshell-taskmode.html#Tuckey">(outlier cutoff value)</a>;
             default 6;<br>
           </td>
@@ -1983,11 +2012,11 @@ Biweight
           <td style="vertical-align: top;">(-1) No Monte Carlo runs<br>
             ( 1) Perform Monte Carlo runs. The synthetic data-set is created
             using the model calculated values and adding a random scatter value
-            from a scatter arry that has the same average and standard deviation
+            from a scatter array that has the same average and standard deviation
             as the residuals (normalized) specific to each objfun term<br>
             ( 2) Perform Monte Carlo runs. The synthetic data-set is created as
             in ( 1) but using the experimental measured values. Use this options
-            when the residuals are not normal distributed, or the model dosn't
+            when the residuals are not normal distributed, or the model doesn't
             accurately represent the measured data for all conditions (P, T, pH)<br>
             ( 3) Perform Monte Carlo runs. Residual bootstrap sampling. The
             synthetic data-set is created using the model calculated values and
@@ -1998,12 +2027,26 @@ Biweight
             measured values.
             <br>
             ( 5) Perform Monte Carlo runs. The synthetic data-set is created by 
-            adding a scatter to the calculated value, radomly extracted from a normal distribution
+            adding a scatter to the calculated value, randomly extracted from a normal distribution
             with sigma = abs(measured-simulated).
             <br>
             ( 6) Perform Monte Carlo runs. The synthetic data-set is created by 
-            adding a scatter to the measured value, radomly extracted from a normal distribution
-            with sigma = abs(measured-simulated).</td>
+            adding a scatter to the measured value, randomly extracted from a normal distribution
+            with sigma = abs(measured-simulated).
+            <br>
+            ( 7) Perform Monte Carlo runs. The synthetic data-set is created by 
+            adding a scatter to the calculated value, randomly extracted from a normal distribution
+            with sigma = abs(measured*0.05) < abs(measured-simulated) > abs(measured*0.15).
+            <br>
+            ( 8) Perform Monte Carlo runs. The synthetic data-set is created by 
+            adding a scatter to the measured value, randomly extracted from a normal distribution
+            with sigma = abs(measured*0.05) < abs(measured-simulated) > abs(measured*0.15).
+            <br>
+            (10) Perform Monte Carlo runs. The synthetic data-set is created by 
+            adding a scatter to the measured value, randomly extracted from a normal distribution
+            with sigma = abs(measure error).
+            <br>
+            </td>
           <td style="vertical-align: top;"><br>
           </td>
         </tr>
@@ -2034,7 +2077,7 @@ Biweight
     chemical system. For example a phase can have different names in different
     experiments stored in the database. It is important to tell GEMSFITS what
     are the names of this phase in the experiments (synonyms) and which is the
-    name of the pahse in the chemical system (defined in the GEMS3K system
+    name of the phase in the chemical system (defined in the GEMS3K system
     files). <br>
     <br>
     <table style="width: 100%;" border="1">
@@ -2116,7 +2159,7 @@ Biweight
       }, ...</span><br>
     <br>
     #The object above will make sure that all the synonyms for the aqueous phase
-    encountered in the selected experiments form the database will be recognised
+    encountered in the selected experiments form the database will be recognized
     as "aq_gen" - the name in the chemical system definition. <br>
     <hr>
     <h3><a id="weighting">3. Weighting:</a></h3>
@@ -2126,9 +2169,9 @@ Biweight
       /&nbsp; <span style="font-family: Courier New,Courier,monospace;">"UDWts"</span>
       from <span style="font-family: Courier New,Courier,monospace;">"OptSet"</span>
       / <span style="font-family: Courier New,Courier,monospace;">"OptimizerSettings"</span>
-      in the task specifiaction is set to 1.<br>
+      in the task specification is set to 1.<br>
       <br>
-      2. Weights can be provided for each experiment using the <a href="file:///home/dmiron/devGEMSFITS/devGFshell/gemsfit/Resources/doc/html/gfshell-taskmode.html#samplelist"><span
+      2. Weights can be provided for each experiment using the <a href="gfshell-taskmode.html#samplelist"><span
           style="font-family: Courier New,Courier,monospace;">"samplelist"</span>
         method in the <span style="font-family: Courier New,Courier,monospace;">"DataSelect</span></a><span
         style="font-family: Courier New,Courier,monospace;">"</span> as <span style="font-family: Courier New,Courier,monospace;">"WT":
@@ -2137,22 +2180,22 @@ Biweight
       3. A general weighing function applied the whole selected data can be
       provided in the <span style="font-family: Courier New,Courier,monospace;">"DataTarget"</span>
       as <span style="font-family: Courier New,Courier,monospace;">"WT": value</span><a
-        href="file:///home/dmiron/devGEMSFITS/devGFshell/gemsfit/Resources/doc/html/gfshell-taskmode.html#WT">
+        href="gfshell-taskmode.html#WT">
         described above</a>.<br>
       <br>
       4. Each objective function term (type of data to compare) can have a
       separate weight as a value provided in the <span style="font-family: Courier New,Courier,monospace;">"WT"</span>
-      <a href="file:///home/dmiron/devGEMSFITS/devGFshell/gemsfit/Resources/doc/html/gfshell-taskmode.html#DTE3">of
+      <a href="gfshell-taskmode.html#DTE3">of
         each respective <span style="font-family: Courier New,Courier,monospace;">OFUN</span></a>.<br>
       <br>
       5. <a name="Tuckey"></a>Tuckey biweight is a relative weighting method
-      for dealing with outliers which get a weight of 0 if thier residual is
+      for dealing with outliers which get a weight of 0 if their residual is
       &gt; than C=6*(median of residuals) or a relative weight depending on the
       distance from C.&nbsp; The weight can be applied for all data, by setting<span
         style="font-family: Courier New,Courier,monospace;">, </span>or a C is
       calculated for each objective function separately, by setting. The weights
       are calculated as follows:<br>
-      <img style="width: 109px; height: 51px;" alt="Tuckey" title="Tuckey" src="file:///home/dmiron/devGEMSFITS/devGFshell/gemsfit/Resources/doc/html/img/Tuckey.png"><br>
+      <img style="width: 109px; height: 51px;" alt="Tuckey" title="Tuckey" src="Tuckey.png"><br>
       wi - weight; Ri - residual; C cutoff value</p>
     <p>!!! If more than one weight option is set, all individual weights are
       multiplied in one weight per calculated residual !!!</p>
@@ -2187,8 +2230,8 @@ Biweight
         style="color: black;">.</span></a><br>
     <br>
     <hr>
-    <p>Last updated:&nbsp; 12. 04. 2015&nbsp; DM, DK</p>
-    <p>Copyright&nbsp; (c) 2015&nbsp; <a target="_blank" title="http://gems.web.psi.ch/teamhist.html"
+    <p>Last updated:&nbsp; 23. 10. 2022&nbsp; DM, DK</p>
+    <p>Copyright&nbsp; (c) 2015-2022&nbsp; <a target="_blank" title="http://gems.web.psi.ch/teamhist.html"
         href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a></p>
     <hr>
     <p><br>

@@ -100,6 +100,10 @@ void optimization::get_nlopt_param()
     OptDoWhat = atoi(out2[0].c_str());
     out2.clear();
 
+    parse_JSON_object(out[0], keys::OptPrcParamDigits[mode], out2);
+    OptPrcParamDigits = atoi(out2[0].c_str());
+    out2.clear();
+
     parse_JSON_object(out[0], keys::OptEQ[mode], out2);
     OptEquilibrium = atoi(out2[0].c_str());
     out2.clear();
@@ -166,14 +170,23 @@ void optimization::OptParameterCreate ()
     // call GEM_init to read GEMS3K input files
     TNode* node  = new TNode();
 
+    try
+    {
+        // call GEM_init     --> read in input files
+        if( (node->GEM_init( GEMSsys.c_str() )) == 1 )
+        {
+            cout << GEMSsys << endl;
+            cout<<" .. ERROR occurred while reading GEMS3K input files !!! ..."<<endl;
+            exit(1);
+        }
+    }
+    catch(TError& err)
+    {
+        if( !GEMSsys.empty() )
+            cout << "GEMS3K input : file " << GEMSsys << endl;
+        cout << err.title.c_str() << "  : " << err.mess.c_str() << endl;
+    }
 
-    // call GEM_init     --> read in input files
-    if( (node->GEM_init( GEMSsys.c_str() )) == 1 )
-       {
-           cout << GEMSsys << endl;
-           cout<<" .. ERROR occurred while reading GEMS3K input files !!! ..."<<endl;
-           exit(1);
-       }
 
     //OFUN parameters
     // NFUN parameters

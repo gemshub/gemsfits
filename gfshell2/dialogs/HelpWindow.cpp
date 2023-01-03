@@ -47,7 +47,7 @@ using namespace std;
 const char *FIT_HOWHELP_HTML = "gemsfit-techinfo.html";
 const char *FIT_ABOUT_HTML = "gemsfits-about.html";
 
-const char *_FIT_version_stamp = " GEMSFITS v.0.1 r.596 ";
+const char *_FIT_version_stamp = "GEMSFITS v1.3.0";
 extern const char *_GEMIPM_version_stamp;
 
 HelpWindow* HelpWindow::pDia = 0;
@@ -248,16 +248,16 @@ void HelpWindow::helpVersion()
 #ifdef __APPLE__
            trUtf8("Title"), trUtf8("GEMSFITS1.0 (MacOS X >10.6 64 clang)\n\n")+
 #else
-           trUtf8("GEMSFITS1.0 (Linux 32/64 gcc4.6 Qt5.3)"),
+           trUtf8("GEMSFITS (Linux 32/64 Qt5)"),
 #endif
 #else
-           trUtf8("GEMSFITS1.0 (Windows 7 MinGW 32 gcc4.8"),
+           trUtf8("GEMSFITS (Windows MinGW Qt5"),
 #endif
            trUtf8("\nThis is GEMSFITS coupled code\n\n")+
            trUtf8( _FIT_version_stamp ) + trUtf8(  "\n\nusing " )+
            trUtf8( _GEMIPM_version_stamp ) +
            trUtf8( "\n\n\nFor GEMS R&D community\n\n"
-                  "(c) 2015, GEMS Development Team\n\n"
+                  "(c) 2014-2022, GEMS Development Team\n\n"
                   "          PSI-UH-ETHZ" ) );
 }
 
@@ -556,7 +556,7 @@ const char *NUMSET = "NUMSET";
 // html files
 const char *GF_INDEX_HTML = "gemsfits-index";
 const char *GF_PREFS_HTML = "gemsfits-prefs";
-
+const char *GF_SABOUT_HTML = "gfshell-about";
 const char *GF_EXPDB_HTML = "gfshell-dbmode";
 const char *GF_TASKDB_HTML= "gfshell-taskmode";
 const char *GF_ABOUT_HTML = "gemsfits-about";

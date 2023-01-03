@@ -35,9 +35,11 @@
     <p>Column names and their order in the excel table should follow the
       patterns described in the tables below, grouped in three sections: <a href="#EXPERDESCR">EXPERIMENTS
         DESCRIPTION</a>; <a href="#SYSCOMPOS">SYSTEM COMPOSITION</a>; <a href="#RESULTS">RESULTS</a>.
-    </p>
+    </p> <br>
     <span style="font-weight: bold;">Column name rules and conventions:<br>
-    </span><br>
+      
+    </span>
+    <p> Add "STOP" on the first column of the last row in the import data file to make sure GEMSFITS does not try to read in empty rows.</p>
     <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
       <tbody>
         <tr>
@@ -211,8 +213,8 @@
           </td>
           <td style="vertical-align: top;">no<br>
           </td>
-          <td>ºC</td>
-          <td style="vertical-align: top;">cannot be empty (unit assumed ºC, no
+          <td>C</td>
+          <td style="vertical-align: top;">cannot be empty (unit assumed C, no
             unit column needed) </td>
           <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">25<br>
             </span> </td>
@@ -441,26 +443,55 @@
             </small></td>
         </tr>
         <tr>
-          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><span
-                style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp; .alk<br>
-              </span></span> </td>
-          <td style="vertical-align: top;">alkalinity, aqueous only (NOT YET
-            IMPLEMENTED)<br>
+          <td style="vertical-align: top; text-align: center;"><span style="font-family: Courier New,Courier,monospace;"><span
+                style="font-weight: bold;">.oscw</span></span></td>
+          <td style="vertical-align: top;">osmotic coefficient of water (aqueous
+            only)<br>
           </td>
           <td style="vertical-align: top;">yes<br>
           </td>
           <td><br>
           </td>
-          <td style="vertical-align: top;">not read /<br>
+          <td style="vertical-align: top;">not read / unit-less<br>
           </td>
           <td style="vertical-align: top;"><small><br>
             </small></td>
         </tr>
         <tr>
           <td style="vertical-align: top; text-align: center;"><span style="font-family: Courier New,Courier,monospace;"><span
-                style="font-weight: bold;">.oscw</span></span></td>
-          <td style="vertical-align: top;">osmotic coefficient of water (aqueous
-            only) (NOT YET IMPLEMENTED)<br>
+                style="font-weight: bold;">.Gex<small><br>
+                </small></span></span></td>
+          <td style="vertical-align: top;">Excess Gibbs energy of the
+            non-aqueous solution phase<br>
+          </td>
+          <td style="vertical-align: top;">yes<br>
+          </td>
+          <td>J_mol (J/mol)</td>
+          <td style="vertical-align: top;">not read / unit J/mol<br>
+          </td>
+          <td style="vertical-align: top;"><small><br>
+            </small></td>
+        </tr>
+        <tr>
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family: Courier New,Courier,monospace; font-weight: bold;">.mChainL</span></td>
+          <td>Specific property. Mean Chain Lenght for cement based materials.
+            To use it in GEMSFITS one has to setup a special formula/expression
+            in <span style="font-family: Courier New,Courier,monospace;">"DataTarget"</span>
+            -&gt; <a href="gfshell-taskmode.html#expr_eg"><span style="font-family: Courier New,Courier,monospace;">"OFUN"</span></a>
+            for calculating it.</td>
+          <td>yes</td>
+          <td><br>
+          </td>
+          <td>not read</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><span
+                style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp; .alk<br>
+              </span></span> </td>
+          <td style="vertical-align: top;">alkalinity, aqueous only (NOT YET
+            IMPLEMENTED)<br>
           </td>
           <td style="vertical-align: top;">yes<br>
           </td>
@@ -516,35 +547,6 @@
           </td>
           <td style="vertical-align: top;"><small><br>
             </small></td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top; text-align: center;"><span style="font-family: Courier New,Courier,monospace;"><span
-                style="font-weight: bold;">.Gex<small><br>
-                </small></span></span></td>
-          <td style="vertical-align: top;">Excess Gibbs energy of the
-            non-aqueous solution phase<br>
-          </td>
-          <td style="vertical-align: top;">yes<br>
-          </td>
-          <td>J_mol (J/mol)</td>
-          <td style="vertical-align: top;">not read / unit J/mol<br>
-          </td>
-          <td style="vertical-align: top;"><small><br>
-            </small></td>
-        </tr>
-        <tr>
-          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family: Courier New,Courier,monospace; font-weight: bold;">.mChainL</span></td>
-          <td>Specific property. Mean Chain Lenght for cement based materials.
-            To use it in GEMSFITS one has to setup a special formula/expression
-            in <span style="font-family: Courier New,Courier,monospace;">"DataTarget"</span>
-            -&gt; <a href="gfshell-taskmode.html#expr_eg"><span style="font-family: Courier New,Courier,monospace;">"OFUN"</span></a>
-            for calculating it.</td>
-          <td>yes</td>
-          <td><br>
-          </td>
-          <td>not read</td>
-          <td><br>
-          </td>
         </tr>
       </tbody>
     </table>
@@ -747,7 +749,6 @@
       </tbody>
     </table>
     <p> </p>
-    <p> </p>
     <hr>
     <h3><a name="SALT_FORMULAE"></a>Syntax of chemical formulae for compositions
       (modified, from GEM-Selektor documentation)</h3>
@@ -838,8 +839,8 @@
     <p><br>
     </p>
     <hr>
-    <p>Last updated:&nbsp; 29. 12. 2014&nbsp; DM, DK</p>
-    <p>Copyright&nbsp; (c) 2015&nbsp; <a target="_blank" title="http://gems.web.psi.ch/teamhist.html"
+    <p>Last updated:&nbsp; 15. 06. 2022&nbsp; DM, DK</p>
+    <p>Copyright&nbsp; (c) 2015-2022&nbsp; <a target="_blank" title="http://gems.web.psi.ch/teamhist.html"
         href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a></p>
     <hr>
     <p><br>

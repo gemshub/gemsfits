@@ -50,6 +50,7 @@ static const char *MPI[2]           = {"NumberOfMPIThreadsForParallelRun", "NumM
 static const char *SIA[2]           = {"GemsSmartInitialApproximation", "GemsSIA"};
 // Propose to get rid of "Optimization" "Opt" for the group of keywords below
 static const char *OptDW[2]         = {"WhatOptStatCombinationToDo",      "DoWhat"};
+static const char *OptPrcParamDigits[2]         = {"PrecentForParameterDigits",      "PrcParamDigits"};
 static const char *OptEQ[2]         = {"UseEquilibriumCalculation",       "UseEqC"};
 static const char *OptUW[2]         = {"UseWeightsFromExperimentalData",  "UDWts"};
 static const char *OptMixedResiduals[2]         = {"UseMixedResiduals",  "UMixedResiduals"};
@@ -71,10 +72,13 @@ static const char *StatPer[2]       = {"SensitivitiesPerturbatorValue",   "SensP
 static const char *DataSyn[2]       = {"DataSynonyms",                    "DataSyn"};
 static const char *PhNames[2]       = {"PhaseNames",                      "PHN"};
 static const char *PhPropNames[2]   = {"PhasePropertyNames",          "PHPN"};
+static const char *PropertyNames[2]   = {"PropertyNames",          "PropNames"};
 static const char *DcNames[2]       = {"DependentComponentNames",         "DCN"}; // see "DCN" above ?
+static const char *IPName[2]        = {"InteractionParameterName",         "IPName"}; // see "DCN" above ?
 static const char *DcPropNames[2]   = {"DependentComponentPropertyNames","DCPN"};
 static const char *NameSys[2]       = {"NameInGEMSystem",                 "NIS"};
 static const char *Syn[2]           = {"Synonyms",                        "Syn"};
+static const char *Info[2]           = {"Information",                        "Info"};
 
 
 // General keywords used for quantity, error and unit
@@ -115,6 +119,8 @@ static const char *Vunit            = "Vunit"; //	                   1    string
 static const char *sbcomp           = "sbcomp"; //     		           1    array		    defines bulk composition of chemical system for this experiment
     static const char *comp         = "comp"; //                       2    string		    formula defining PCO stoichiometry (GEM formula syntax)
 
+static const char *props           = "properties"; //     		       1    array		    properties of chemical system for this experiment
+
 
     // Describes system phases
 static const char *expphases        = "expphases"; //	               1    array		    data for phases characterised (measured) in this experiment
@@ -151,6 +157,7 @@ static const char *expphases        = "expphases"; //	               1    array	
         static const char *UMC      = "UMC"; //                         1    array          array of Upper metastability constraints
         static const char *LMC      = "LMC"; //                         1    array          array of Lower metastability constraints
         static const char *mChainL  = "mChainL"; //  Mean silicate chain length in CSH phases
+        static const char *netH_OH  = "netH_OH"; // consumed H+ and OH- upon titration (unit default mol/kg)
 static const char *frAlIV  = "frAlIV";  //  fraction of Al(IV) relative to total Al in CASH phases
 static const char *frAlV  = "frAlV";    //  fraction of Al(V) relative to total Al in CASH phases
 static const char *frAlVI  = "frAlVI"; //  fraction of Al(VI) relative to total Al in CASH phases
@@ -212,10 +219,13 @@ static const char *inverr3          = "inverr3"; //                          str
 static const char *inverr_norm      = "inverr_norm"; //                      string          normalized <Xmeas>/error
 
 // Kaywords for units
-static const char *molal            = "molal"; //                            string          molality moles/kg
+static const char *molal            = "molal"; //                            string          molality moles/kg water
+static const char *molar            = "molar"; //                            string          molality moles/L solution
 static const char *loga             = "loga"; //                             string          log(activity)
 static const char *logm             = "log_molal"; //                        string          log(molality)
+static const char *logM             = "log_molar"; //                        string          log(molarity)
 static const char *_logm            = "-logm"; //                            string          -log(molality)
+static const char *_logM            = "-logM"; //                            string          -log(molarity)
 static const char *_loga            = "-loga"; //                            string          -log(activity) used for pH
 static const char *gram             = "g"; //                                string          mass, grams
 static const char *kgram            = "kg"; //                               string          mass, kg

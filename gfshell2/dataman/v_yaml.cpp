@@ -21,6 +21,8 @@
 #include "verror.h"
 #include "v_json.h"
 #include "v_yaml.h"
+
+#include "v_detail.h"
 //using namespace YAML;
 
 void addScalar(const char* key, const string& value, bson* brec )

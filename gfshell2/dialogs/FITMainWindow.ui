@@ -9,12 +9,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>931</width>
+    <width>1113</width>
     <height>670</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>GEMSFITS: Optimization of GEM Input Parameters</string>
+   <string>GEMSFITS v1.3.0: Optimization of GEM Input Parameters</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../fgui.qrc">
@@ -102,7 +102,14 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QLineEdit" name="filterEdit"/>
+             <widget class="QLineEdit" name="filterEdit">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -131,7 +138,11 @@
              </widget>
             </item>
             <item>
-             <widget class="QTextEdit" name="queryEdit"/>
+             <widget class="QTextEdit" name="queryEdit">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -302,17 +313,17 @@
               <attribute name="horizontalHeaderVisible">
                <bool>false</bool>
               </attribute>
-              <attribute name="horizontalHeaderDefaultSectionSize">
-               <number>40</number>
-              </attribute>
               <attribute name="horizontalHeaderMinimumSectionSize">
                <number>10</number>
+              </attribute>
+              <attribute name="horizontalHeaderDefaultSectionSize">
+               <number>40</number>
               </attribute>
               <attribute name="verticalHeaderVisible">
                <bool>false</bool>
               </attribute>
               <attribute name="verticalHeaderDefaultSectionSize">
-               <number>20</number>
+               <number>21</number>
               </attribute>
               <row/>
               <row/>
@@ -385,8 +396,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>931</width>
-     <height>31</height>
+     <width>1113</width>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuTask">
@@ -419,7 +430,7 @@
     <addaction name="actionDelete"/>
     <addaction name="separator"/>
     <addaction name="actionReset_Search"/>
-    <addaction name="action_Find"/>
+    <addaction name="action_Find_query"/>
     <addaction name="actionSave_Search"/>
     <addaction name="actionLoad_Search"/>
     <addaction name="separator"/>
@@ -455,6 +466,24 @@
     <addaction name="action_Show_Results"/>
     <addaction name="actionCancel_gemsfit2_run"/>
    </widget>
+   <widget class="QMenu" name="menuFin_d">
+    <property name="title">
+     <string>Fin&amp;d</string>
+    </property>
+    <addaction name="action_Find"/>
+    <addaction name="actionFind_Next"/>
+    <addaction name="actionFind_Previous"/>
+    <addaction name="separator"/>
+    <addaction name="action_Case_sensetiv"/>
+    <addaction name="action_Whole_words"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>&amp;View</string>
+    </property>
+    <addaction name="actionZoom_In"/>
+    <addaction name="actionZoom_Out"/>
+   </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
      <string>&amp;Help</string>
@@ -471,6 +500,8 @@
    <addaction name="menuRecord"/>
    <addaction name="menuRecod_List"/>
    <addaction name="menu_Calc"/>
+   <addaction name="menuFin_d"/>
+   <addaction name="menuView"/>
    <addaction name="menu_Help"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -503,8 +534,14 @@
    </attribute>
   </widget>
   <widget class="QToolBar" name="toolBarMenu">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="windowTitle">
     <string>toolBar_3</string>
+   </property>
+   <property name="toolTip">
+    <string/>
    </property>
    <property name="movable">
     <bool>false</bool>
@@ -517,7 +554,7 @@
    </attribute>
    <addaction name="actionPrevious"/>
    <addaction name="actionNext"/>
-   <addaction name="action_Find"/>
+   <addaction name="action_Find_query"/>
    <addaction name="separator"/>
    <addaction name="actionCreate_New"/>
    <addaction name="actionUpdate_Test"/>
@@ -529,6 +566,7 @@
    <addaction name="action_Show_Results"/>
    <addaction name="separator"/>
    <addaction name="actionHelp"/>
+   <addaction name="separator"/>
   </widget>
   <widget class="QToolBar" name="toolBarGems">
    <property name="windowTitle">
@@ -600,7 +638,7 @@
     <string>Create New by template</string>
    </property>
   </action>
-  <action name="action_Find">
+  <action name="action_Find_query">
    <property name="icon">
     <iconset resource="../fgui.qrc">
      <normaloff>:/menu/Icons/SelectDisplayRecordIcon.png</normaloff>:/menu/Icons/SelectDisplayRecordIcon.png</iconset>
@@ -609,7 +647,7 @@
     <string>Execute &amp;search query</string>
    </property>
    <property name="toolTip">
-    <string>Find</string>
+    <string>Filter records</string>
    </property>
   </action>
   <action name="action_Update">
@@ -623,6 +661,9 @@
    <property name="toolTip">
     <string>Update current record</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
   </action>
   <action name="action_Insert">
    <property name="icon">
@@ -635,6 +676,9 @@
    <property name="toolTip">
     <string>Insert new record</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
   </action>
   <action name="actionDelete">
    <property name="icon">
@@ -646,6 +690,9 @@
    </property>
    <property name="toolTip">
     <string>Delete current record</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
    </property>
   </action>
   <action name="actionUpdate_Test">
@@ -705,6 +752,9 @@
    <property name="text">
     <string>&amp;Run gemsfit2 parameter fitting task</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+G</string>
+   </property>
   </action>
   <action name="action_Show_Results">
    <property name="icon">
@@ -713,6 +763,9 @@
    </property>
    <property name="text">
     <string>&amp;View parameter fitting task results... </string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
    </property>
   </action>
   <action name="action_Preferences">
@@ -731,6 +784,9 @@
    </property>
    <property name="text">
     <string>Help - About GEMSFITS</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+H</string>
    </property>
   </action>
   <action name="actionAbout">
@@ -796,6 +852,9 @@
    <property name="text">
     <string>Fit results &amp;View Mode</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+R, Ctrl+R</string>
+   </property>
   </action>
   <action name="actionSave_Results_to_Database">
    <property name="icon">
@@ -825,6 +884,9 @@
    <property name="text">
     <string>Cancel gemsfit2 run</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+X, Ctrl+X</string>
+   </property>
   </action>
   <action name="actionInsert_search_results_into_task_definition">
    <property name="text">
@@ -834,6 +896,73 @@
   <action name="actionExport_TP_pairs_to_CSV_file">
    <property name="text">
     <string>Export TP pairs to CSV file...</string>
+   </property>
+  </action>
+  <action name="action_Find">
+   <property name="text">
+    <string>&amp;Find...</string>
+   </property>
+   <property name="toolTip">
+    <string>Find in Text</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
+   </property>
+  </action>
+  <action name="actionFind_Next">
+   <property name="icon">
+    <iconset resource="../fgui.qrc">
+     <normaloff>:/menu/Icons/SearchForwardIcon.png</normaloff>:/menu/Icons/SearchForwardIcon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Find &amp;Next</string>
+   </property>
+   <property name="shortcut">
+    <string>F3</string>
+   </property>
+  </action>
+  <action name="actionFind_Previous">
+   <property name="icon">
+    <iconset resource="../fgui.qrc">
+     <normaloff>:/menu/Icons/SearchBackwardIcon.png</normaloff>:/menu/Icons/SearchBackwardIcon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Find &amp;Previous</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+F3</string>
+   </property>
+  </action>
+  <action name="action_Case_sensetiv">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Case Sensitive </string>
+   </property>
+  </action>
+  <action name="action_Whole_words">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Whole Word</string>
+   </property>
+  </action>
+  <action name="actionZoom_In">
+   <property name="text">
+    <string>Zoom &amp;In</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl++</string>
+   </property>
+  </action>
+  <action name="actionZoom_Out">
+   <property name="text">
+    <string>Zoom &amp;Out</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+-</string>
    </property>
   </action>
  </widget>

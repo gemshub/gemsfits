@@ -20,6 +20,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <sstream>
+#include <algorithm>
 using namespace std;
 
 #include "node.h"
@@ -36,25 +37,42 @@ int cut_csv_header (string input, string delimiter, vector<string> &output);
 // input an integer output a const char
 const char *int_to_c_str(int in);
 // adds Qunit and Qerror to BSON object
-bool add_unit_and_error(bson * exp, vector<string> headline, vector<string> row , unsigned &position);
+bool add_unit_and_error(bson * exp, vector<string> headline, vector<string> row , unsigned int &position);
 // checks if the string is the name of a possilbe phase property
 bool it_is_phase_property (string ph_prop);
 
-bool add_unit_and_error (bson * exp, vector<string> headline, vector<string> row, unsigned &position )
+bool add_unit_and_error (bson * exp, vector<string> headline, vector<string> row, unsigned int &position )
 {
+    double error = 0.0;
+    if (position+1< headline.size())
     if ((headline[position+1]==Qerror))
     {
         ++position;
-        if ((!row[position].empty()))
+        error = atof(row[position].c_str());
+        if (error > 0)
+            bson_append_double(exp, Qerror, atof(row[position].c_str()));
+        if (position+1< headline.size())
+        if ((headline[position+1]==Qunit) && (!row[position+1].empty()))
         {
-        bson_append_double(exp, Qerror, atof(row[position].c_str()));
+            ++position;
+            bson_append_string(exp, Qunit, row[position].c_str());
         }
-    }
+    } else
+    if (position+1< headline.size())
     if ((headline[position+1]==Qunit) && (!row[position+1].empty()))
     {
         ++position;
         bson_append_string(exp, Qunit, row[position].c_str());
+        if (position+1< headline.size())
+        if ((headline[position+1]==Qerror)&& (!row[position+1].empty()))
+        {
+            ++position;
+            error = atof(row[position].c_str());
+            if (error > 0)
+                bson_append_double(exp, Qerror, atof(row[position].c_str()));
+        }
     }
+    return true;
 }
 
 int cut_csv_header (string input, string delimiter, vector<string> &output)
@@ -90,8 +108,19 @@ bool it_is_phase_property (string ph_prop)
     if (((ph_prop == Qnt)   || (ph_prop == pH)     || (ph_prop == pHm)     || (ph_prop == pV)  || (ph_prop == Eh)     ||
          (ph_prop == IS)    || (ph_prop == all)    || (ph_prop == sArea)   || (ph_prop == RHO) || (ph_prop == Gex)    || (ph_prop == SI)    ||
          (ph_prop == pe)    || (ph_prop == oscw)   || (ph_prop == mChainL) || (ph_prop == Rd)  || (ph_prop == frAlIV) || (ph_prop == expr)  ||
-         (ph_prop == frAlV) || (ph_prop == frAlVI) || (ph_prop == UMC)     || (ph_prop == LMC))) return true;
+         (ph_prop == frAlV) || (ph_prop == frAlVI) || (ph_prop == UMC)     || (ph_prop == LMC) || (ph_prop == netH_OH))) return true;
     else return false;
+}
+
+bool iequals(const string& a, const string& b)
+{
+    unsigned int sz = a.size();
+    if (b.size() != sz)
+        return false;
+    for (unsigned int i = 0; i < sz; ++i)
+        if (tolower(a[i]) != tolower(b[i]))
+            return false;
+    return true;
 }
 
 void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>& row )
@@ -101,12 +130,14 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
         dcc = 0,     // counts the number of dependent components per phase
         mf = 0;      // counts the number of molar fraction entries per system/exmperiment
     // the following consts define where are the keys / names expected to be in the string vector resulted form cutting each column header
-    const unsigned ndx_comp = 0, ndx_phase = 0, ndx_component_name = 1, ndx_phase_name = 1, ndx_phase_property = 2, ndx_IC = 2, ndx_activity_model = 2, ndx_actmod_param = 3,
+
+    const unsigned ndx_comp = 0, ndx_props = 0, ndx_phase = 0, ndx_component_name = 1, ndx_prop_name =1, ndx_phase_name = 1, ndx_phase_property = 2, ndx_IC = 2, ndx_activity_model = 2, ndx_actmod_param = 3,
                    ndx_MR = 2, ndx_DC = 2, ndx_IC_name = 3, ndx_MR_formula = 3, ndx_DC_name = 3, ndx_DC_prop_name = 4;
     string phase_name, header_delimiter = ".";
     vector<string> phases, dcomps, header_vector; // keeps the already read phases and dcomps
     bool h_phprop = false, h_phactmod=false, phase_already_added = false, h_phIC = false, dcomp_already_added = false, h_phMR = false, h_phDC = false; // handle that is true if we have the entry in the CSV file
-
+    bool h_phase = false, h_prop=false;
+    
     // getting the data from CSV line by line and processing it into BSON
     // the csv header of each column is cut into strings which are separated by the delimiter ".". Based on this string and their value the BSON oject is constructed.
     bson_init(exp);
@@ -115,6 +146,12 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
     for (unsigned int i=0; i<headline.size(); ++i)
     {
         cut_csv_header(headline[i], header_delimiter, header_vector);
+        std::size_t found = headline[i].find(phase);
+        if (found!=std::string::npos)
+            h_phase = true;
+        found = headline[i].find(property);
+        if (found == 0 )
+            h_prop = true;
 
         if ((headline[i]==expsample) || (headline[i]==expdataset) || (headline[i]==Tunit) ||
             (headline[i]==Punit)|| (headline[i]==Vunit) || (headline[i]==type) || (headline[i]==comment))
@@ -182,8 +219,39 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
     bson_append_finish_array(exp);
     ic=0;
 
+    // 2nd level - properties logQ, logK,... of chemical system for the current experiment
+    // array properties
+    //++ START array prop ++//
+    if (h_prop)
+    {
+    bson_append_start_array(exp, props);
+    for (unsigned int i=0; i<headline.size(); ++i)
+    {
+        cut_csv_header(headline[i], header_delimiter, header_vector);
+        if ((header_vector[ndx_props] == property) && (!row[i].empty()))
+        {
+            bson_append_start_object(exp, int_to_c_str(ic));
+            ic++;
+            bson_append_string(exp, property, header_vector[ndx_prop_name].c_str());
+            bson_append_double(exp, Qnt, atof(row[i].c_str()));
+
+            // checking if there are errors and units included in the CSV and adding them in the database
+            if (i+1 < headline.size())
+            {
+                add_unit_and_error(exp, headline, row, i);
+            }
+            bson_append_finish_object(exp);
+        }
+    }
+    //++ END array props  ++//
+    bson_append_finish_array(exp);
+    ic=0;
+    }
+
     // 2nd level - data for phases charactrised/measured in this experiment
     //++ START array expphases ++//
+    if (h_phase)
+    {
     bson_append_start_array(exp, expphases); // going trough the headline and searching for "phase" keyword
     for (unsigned int i=0; i<headline.size(); ++i)
     {
@@ -441,6 +509,7 @@ void csvToBson( bson *exp, const  vector<string>& headline, const vector<string>
             } // END if phase_already_added
         } // END check for key phase in the headline
     } phases.clear();
+    }
     //++ END array expphases ++//
     bson_append_finish_array(exp);
     bson_finish(exp);

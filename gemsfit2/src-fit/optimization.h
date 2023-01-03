@@ -106,6 +106,7 @@ public:
     double OptTolAbs;
     int OptMaxEval;
     int OptDoWhat;
+    int OptPrcParamDigits;
     int OptEquilibrium;
     int OptGemsSIA = -1;
     int OptTuckey;

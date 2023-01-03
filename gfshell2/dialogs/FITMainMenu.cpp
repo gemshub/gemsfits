@@ -69,7 +69,7 @@ void FITMainWindow::setActions()
     connect( ui->actionPrevious, SIGNAL( triggered()), this, SLOT(CmPrevious()));
     connect( ui->actionUpdate_Test, SIGNAL( triggered()), this, SLOT(CmUpdateTest()));
 
-    connect( ui->action_Find, SIGNAL( triggered()), this, SLOT(CmSearch()));
+    connect( ui->action_Find_query, SIGNAL( triggered()), this, SLOT(CmSearch()));
     connect( ui->actionReset_Search, SIGNAL( triggered()), this, SLOT(CmResetSearch()));
     connect( ui->actionSave_Search, SIGNAL( triggered()), this, SLOT(CmSaveSearch()));
     connect( ui->actionLoad_Search, SIGNAL( triggered()), this, SLOT(CmLoadSearch()));
@@ -94,7 +94,12 @@ void FITMainWindow::setActions()
     connect( ui->action_Show_Results, SIGNAL( triggered()), this, SLOT(CmShowCalcResults()));
     connect( ui->actionFits_View_Mode, SIGNAL( triggered()), this, SLOT(CmShowFitResults()));
     connect( ui->actionCancel_gemsfit2_run, SIGNAL( triggered()), this, SLOT(CmCancelGemsfit()));
-
+  // Find
+    connect( ui->action_Find, SIGNAL( triggered()), this, SLOT(actionFind()));
+    connect( ui->actionFind_Next, SIGNAL( triggered()), this, SLOT(actionFindNext()));
+    connect( ui->actionFind_Previous, SIGNAL( triggered()), this, SLOT(actionFindPrevious()));
+    connect( ui->actionZoom_In, SIGNAL( triggered()), this, SLOT(actionZoomIn()));
+    connect( ui->actionZoom_Out, SIGNAL( triggered()), this, SLOT(actionZoomOut()));
 
    pLineTask = new QLineEdit( ui->toolBarTask );
    pLineTask->setEnabled( true );
@@ -111,6 +116,20 @@ void FITMainWindow::setActions()
    pLineGEMS->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
    ui->toolBarGems->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
    ui->toolBarGems->addWidget( pLineGEMS ); // setStretchableWidget( pLine );
+
+   QLabel *label_2 = new QLabel(ui->toolBarMenu);
+   label_2->setText(trUtf8("Find:"));
+   label_2->setToolTip("Find in text");
+
+   ui->toolBarMenu->addWidget( label_2 );
+
+   findLine = new QLineEdit(ui->toolBarMenu);
+   findLine->setToolTip("Enter text to find");
+   findLine->setEnabled( true );
+   findLine->setFocusPolicy( Qt::ClickFocus );
+   ui->toolBarMenu->addWidget( findLine );
+   ui->toolBarMenu->addAction(ui->actionFind_Previous);
+   ui->toolBarMenu->addAction(ui->actionFind_Next);
 
 }
 
@@ -1114,7 +1133,8 @@ void FITMainWindow::CmRestoreCSV()
         QStringList cells = allrows[0].split(',', QString::KeepEmptyParts);
         for( ii=0; ii< cells.count(); ii++ )
         {
-            const char* cellstr = cells[ii].remove('\"').toUtf8().data();
+            auto cell_ = cells[ii].remove('\"');
+            auto cellstr = cell_.remove('\r').toStdString();
             headline.push_back( cellstr );
         }
 
@@ -1126,9 +1146,24 @@ void FITMainWindow::CmRestoreCSV()
               continue;
           row.clear();
           for( ii=0; ii< cells.count(); ii++ )
-              row.push_back( cells[ii].remove('\"').toUtf8().data() );
+          {
+              auto cell_ = cells[ii].remove('\"');
+              auto cellstr = cell_.remove('\r').toStdString();
+              row.push_back( cellstr );
+          }
 
+          if (row.size()>0)
+          {
+              size_t found = row[0].find("STOP");
+              if (found != string::npos)
+              {
+                  bson_destroy( &exp );
+                  break;
+              }
+          }
           // convert row to bson
+          std::string message = "Saving record " + std::to_string(jj);
+          setStatusText(  message );
           csvToBson( &exp, headline, row );
 
           // convert bson to json string
@@ -1434,6 +1469,51 @@ void FITMainWindow::CmTPpairsCSV()
 
 }
 
+void FITMainWindow::actionFindNext()
+{
+    if( !findLine )
+        return;
+
+    QTextDocument::FindFlags flg = 0;
+    if(ui->action_Case_sensetiv->isChecked() )
+        flg |=QTextDocument::FindCaseSensitively;
+
+    if(ui->action_Whole_words->isChecked() )
+        flg |=QTextDocument::FindWholeWords;
+
+    ui->recordEdit->find( findLine->text(), flg );
+}
+
+void FITMainWindow::actionFindPrevious()
+{
+    if( !findLine )
+        return;
+
+    QTextDocument::FindFlags flg = QTextDocument::FindBackward;
+    if(ui->action_Case_sensetiv->isChecked() )
+        flg |=QTextDocument::FindCaseSensitively;
+
+    if(ui->action_Whole_words->isChecked() )
+        flg |=QTextDocument::FindWholeWords;
+
+    ui->recordEdit->find( findLine->text(), flg );
+}
+
+void FITMainWindow::actionFind()
+{
+    actionFindNext();
+}
+
+void FITMainWindow::actionZoomIn()
+{
+    ui->recordEdit->zoomIn(2);
+}
+
+void FITMainWindow::actionZoomOut()
+{
+    ui->recordEdit->zoomOut(2);
+}
+
 //-------------------------------------------------------------------------------------
 // Help menu
 
@@ -1464,7 +1544,7 @@ void FITMainWindow::CmSettingth()
 void FITMainWindow::CmHelp()
 {
     if( currentMode == MDF_DATABASE )
-       OpenHelp( GF_EXPDB_HTML );
+       OpenHelp( GF_SABOUT_HTML );
     else
        OpenHelp( GF_TASKDB_HTML );
 }
