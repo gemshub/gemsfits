@@ -23,6 +23,7 @@
 #include <QCloseEvent>
 #include <QSortFilterProxyModel>
 #include <QPainter>
+#include <QMessageBox>
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
 #include <QtPrintSupport/QPrintDialog>
 #include <QtPrintSupport/QPrinter>
@@ -489,6 +490,7 @@ void FitResultsWindow::CmPlotTable()
     }
     catch( TError& err )
     {
+        QMessageBox::critical( this, err.title.c_str(), err.mess.c_str() );
         std::cout << err.title << err.mess << std::endl;
     }
 }
@@ -622,41 +624,41 @@ void FitResultsWindow::ToggleY()
 
 void FitResultsWindow::CmFindFromPlot()
 {
-  try
-  {
-
-     TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
-     if( !tableCurrent )
-        return;
-
-     QSortFilterProxyModel *pmodel = (QSortFilterProxyModel *)tableCurrent->model();
-     TMatrixModel *matrmodel = (TMatrixModel *)pmodel->sourceModel();
-     auto* grdata = matrmodel->getGraphData();
-     if( !grdata )
-       return;
-
-     // define new project
-     DialogFindFromPlot dlg( grdata, this);
-      if( !dlg.exec() )
-          return;
-
-    //find data from dlg
-    int xyndx[2];
-    double reg[4];
-    dlg.getData( xyndx, reg );
-
-    //search by data
-    int frstrow = matrmodel->findRow( xyndx, reg);
-    if( frstrow >= 0 )
+    try
     {
-      QModelIndex ind = pmodel->mapFromSource(matrmodel->index(frstrow, 0));
-      tableCurrent->selectRow(ind.row());
-    }
 
-  }
+        TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+        if( !tableCurrent )
+            return;
+
+        QSortFilterProxyModel *pmodel = (QSortFilterProxyModel *)tableCurrent->model();
+        TMatrixModel *matrmodel = (TMatrixModel *)pmodel->sourceModel();
+        auto* grdata = matrmodel->getGraphData();
+        if( !grdata )
+            return;
+
+        // define new project
+        DialogFindFromPlot dlg( grdata, this);
+        if( !dlg.exec() )
+            return;
+
+        //find data from dlg
+        int xyndx[2];
+        double reg[4];
+        dlg.getData( xyndx, reg );
+
+        //search by data
+        int frstrow = matrmodel->findRow( xyndx, reg);
+        if( frstrow >= 0 )
+        {
+            QModelIndex ind = pmodel->mapFromSource(matrmodel->index(frstrow, 0));
+            tableCurrent->selectRow(ind.row());
+        }
+
+    }
     catch( TError& err )
     {
-    std::cout << err.title << err.mess << std::endl;
+        std::cout << err.title << err.mess << std::endl;
     }
 }
 

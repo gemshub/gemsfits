@@ -220,8 +220,11 @@ public:
         int nLinN = aPlot->getSeriesNumber();
         for( int jj=0; jj<nLinN; jj++, nLines++ )
         {
-            if( nLines >= defined_lines )
+            if( nLines >= defined_lines ) {
                 linesdata.push_back( SeriesLineData( jj, nLinN, aPlot->getName(jj)  ) );
+                if( aPlot->getAbscissaNumber() >= 1 )
+                    linesdata[nLines].setXColumn(0);
+            }
         }
         connect( modelsdata.back().get(), &ChartDataModel::changedXSelections,
                  this,  &ChartData::updateXSelections );

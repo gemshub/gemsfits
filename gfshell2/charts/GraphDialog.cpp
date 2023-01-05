@@ -127,6 +127,7 @@ GraphDialog::GraphDialog( ChartData *adata, QWidget *parent, const char *title )
     QObject::connect( bCustomize, &QPushButton::clicked, this, &GraphDialog::CmLegend);
     QObject::connect( bPrint, &QPushButton::clicked, this, &GraphDialog::CmPrint);
     QObject::connect( bSaveImage, &QPushButton::clicked, this, &GraphDialog::CmSaveImage);
+    QObject::connect( plot, SIGNAL(savetoFile()), this, SLOT(CmSaveImage()));
 
     QObject::connect( plot, &PlotChartView::fragmentChanged, this, &GraphDialog::updateFragment);
 

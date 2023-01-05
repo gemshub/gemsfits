@@ -2,12 +2,8 @@
 #include <QJsonArray>
 #include <QVector>
 #include "v_json.h"
+#include "verror.h"
 #include "charts/graph_data.h"
-#ifdef NO_JSONIO
-#include "from_jsonio.h"
-#else
-#include "jsonio17/jsonbase.h"
-#endif
 
 namespace jsonui17 {
 
@@ -469,9 +465,13 @@ void ChartData::updateXSelections()
         for( size_t jj=0; jj<nLinN; jj++, nLines++ )
         {
             if( nLines >= defined_lines )
-                jsonio17::JSONIO_THROW( "ChartData", 10, "error into graph data.."  );
+                Error( "ChartData", "error into graph data.."  );
             if( linesdata[nLines].getXColumn() >= numxColms )
-                linesdata[nLines].setXColumn( -1 );
+                linesdata[nLines].setXColumn(-1);
+            if( linesdata[nLines].getXColumn() == -1 && numxColms>=1 ) {
+                linesdata[nLines].setXColumn(0);
+            }
+
         }
     }
 }
@@ -486,11 +486,13 @@ void ChartData::updateYSelections( bool updateNames )
         auto nLinN =  modelsdata[ii]->getSeriesNumber();
         for( size_t jj=0; jj<nLinN; jj++, nLines++ )
         {
-            if( nLines >= defined_lines )
+            if( nLines >= defined_lines ) {
                 linesdata.push_back( SeriesLineData( jj, nLinN, modelsdata[ii]->getName(nLines)  ) );
-            else
-                if( updateNames )
-                    linesdata[nLines].setName( modelsdata[ii]->getName(nLines) );
+                if( modelsdata[ii]->getAbscissaNumber() >= 1 )
+                    linesdata[nLines].setXColumn(0);
+            }
+            if( updateNames )
+                linesdata[nLines].setName( modelsdata[ii]->getName(nLines) );
         }
     }
     linesdata.resize(nLines);

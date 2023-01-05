@@ -1,7 +1,12 @@
 
+#include <QApplication>
+#include <QClipboard>
+#include <QBuffer>
 #include <QMimeData>
+#include <QPdfWriter>
 #include <QDragEnterEvent>
 #include <QDrag>
+#include <QMenu>
 #include <QtCharts/QAreaSeries>
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QSplineSeries>
@@ -17,14 +22,9 @@
 #include <QtSvg/QSvgGenerator>
 #include <QPixmap>
 
+#include "v_detail.h"
 #include "charts/graph_data.h"
 #include "charts/chart_view.h"
-#ifdef NO_JSONIO
-#include "from_jsonio.h"
-#else
-#include "jsonio17/service.h"
-#include "jsonio17/exceptions.h"
-#endif
 
 namespace jsonui17 {
 
@@ -340,8 +340,8 @@ void PlotChartViewPrivate::updateMinMax()
 
     if( isFragment )
     {
-        if( !jsonio17::essentiallyEqual( gr_data->part[0], gr_data->part[1]) &&
-                !jsonio17::essentiallyEqual( gr_data->part[2], gr_data->part[3]) )
+        if( !essentiallyEqual( gr_data->part[0], gr_data->part[1]) &&
+                !essentiallyEqual( gr_data->part[2], gr_data->part[3]) )
         {
             axisY->setRange(gr_data->part[2], gr_data->part[3]);
             axisX->setRange(gr_data->part[0], gr_data->part[1]);
@@ -349,8 +349,8 @@ void PlotChartViewPrivate::updateMinMax()
     }
     else
     {
-        if( !jsonio17::essentiallyEqual(gr_data->region[0],gr_data->region[1]) &&
-                !jsonio17::essentiallyEqual(gr_data->region[2], gr_data->region[3]) )
+        if( !essentiallyEqual(gr_data->region[0],gr_data->region[1]) &&
+                !essentiallyEqual(gr_data->region[2], gr_data->region[3]) )
         {
             axisX->setRange(gr_data->region[0], gr_data->region[1]);
             axisY->setRange(gr_data->region[2], gr_data->region[3]);
@@ -433,12 +433,12 @@ void PlotChartViewPrivate::attachAxis()
 
 void PlotChartViewPrivate::makeGrid()
 {
-    if(  jsonio17::essentiallyEqual( gr_data->region[0], gr_data->region[1]) ||
-         jsonio17::essentiallyEqual( gr_data->region[2], gr_data->region[3]) )
+    if(  essentiallyEqual( gr_data->region[0], gr_data->region[1]) ||
+         essentiallyEqual( gr_data->region[2], gr_data->region[3]) )
     {
         // default
         if( gr_data->linesNumber() == 0 )
-            jsonio17::JSONIO_THROW( "ChartData", 11, " empty ordinate list."  );
+            Error( "ChartData", " empty ordinate list."  );
         chart->createDefaultAxes();
         auto axises = chart->axes(Qt::Horizontal);
         if( axises.size() > 0 )
@@ -600,7 +600,7 @@ QScatterSeries* PlotChartViewPrivate::newScatterLabel(
     series->setMarkerSize(size);
     series->setBrush( textImage( gr_data->axisFont, label ));
 
-    auto pointV = chart->mapToValue(pointF );
+    auto pointV = chart->mapToValue( QPointF(pointF.x()+size/2, pointF.y()) );
     series->append(pointV);
     return series;
 }
@@ -610,7 +610,7 @@ QScatterSeries* PlotChartViewPrivate::newScatterLabel(
 
 
 PlotChartView::PlotChartView( ChartData *graphdata, QWidget *parent) :
-    QChartView( new QChart(), parent ),
+    QChartView(new QChart(), parent),
     pdata( new PlotChartViewPrivate( graphdata, this, chart() ) )
 {
     setRubberBand(QChartView::RectangleRubberBand);
@@ -695,10 +695,10 @@ void PlotChartView::dropEvent( QDropEvent* event )
     if (event->mimeData()->hasFormat("text/plain"))
     {
         QString text_ = event->mimeData()->text();
-#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
-        auto posF =  event->position();
-#else
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
         auto posF =  event->posF();
+#else
+        auto posF =  event->position();
 #endif
         pdata->addLabel( posF, text_ );
     }
@@ -711,6 +711,7 @@ void PlotChartView::mouseReleaseEvent(QMouseEvent *event)
         /*QPointF fp = chart()->mapToValue(event->pos());
         QString label = QString("%1:%2").arg( fp.x()).arg( fp.y());
         pdata->addPoint( event->pos(), label);*/
+        slotPopupMenu(event->pos());
         event->accept();
         return;
     }
@@ -736,7 +737,95 @@ void PlotChartView::mouseReleaseEvent(QMouseEvent *event)
     QChartView::mouseReleaseEvent(event);
 }
 
+void PlotChartView::slotPopupMenu(const QPoint &pos)
+{
+    std::shared_ptr<QMenu> menu( new QMenu(this) );
+    QAction* act;
 
+    act =  new QAction("Copy image to clipboard", this);
+    act->setStatusTip("Copy plot as bitmap");
+    connect(act, SIGNAL(triggered()), this, SLOT(copyPlotBitmap()));
+    menu->addAction(act);
+
+//    act =  new QAction("Copy plot as pdf", this);
+//    act->setStatusTip("Copy plot as pdf");
+//    connect(act, SIGNAL(triggered()), this, SLOT(copyPlotPdf()));
+//    menu->addAction(act);
+
+    act =  new QAction("Save image to file ...", this);
+    act->setStatusTip("Save image to file ...");
+    connect(act, SIGNAL(triggered()), this, SIGNAL(savetoFile()));
+    menu->addAction(act);
+
+    menu->exec( viewport()->mapToGlobal(pos) );
+}
+
+void PlotChartView::copyPlotBitmap()
+{
+    QPixmap picture = grab();
+    QApplication::clipboard()->setPixmap(picture, QClipboard::Clipboard);
+}
+
+void PlotChartView::copyPlotPdf()
+{
+    // https://uk.wikipedia.org/wiki/MIME_%D1%82%D0%B8%D0%BF
+    // https://developer.mozilla.org/ru/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
+#ifndef QT_NO_PRINTER
+    QStringList formats;
+    formats << "application/pdf" << "application/com.adobe.pdf";
+
+    QByteArray byteArray("");
+    QBuffer buffer(&byteArray);
+    buffer.open(QIODevice::WriteOnly);
+    QPdfWriter writer(&buffer);
+    writer.setPageSize( QPageSize(QPageSize::A4) );
+    QPainter p( &writer );
+    render( &p );
+    p.end();
+    QMimeData* d = new QMimeData();
+    //d->setData("application/pdf",buffer.buffer());
+    d->setData("application/com.adobe.pdf",buffer.buffer());
+   QApplication::clipboard()->setMimeData(d,QClipboard::Clipboard);
+#endif
+
+    //#ifndef QWT_NO_SVG
+    //    QByteArray byteArray("");
+    //    QBuffer b(&byteArray);
+    //    b.open(QIODevice::ReadWrite);
+    //    QSvgGenerator generator;
+    //    generator.setOutputDevice(&b);
+    //    //generator.setFileName( "test.svg" );
+    //    generator.setSize( size() );
+    //    generator.setViewBox( rect() );
+    //    QPainter painter(&generator);
+    //    render(&painter);
+    //    painter.end();
+    //    QMimeData * d = new QMimeData();
+    //    d->setData("image/svg+xml", b.data());
+    //    std::c out <<  d->data("image/svg+xml").data()  << std::endl;
+    //    QApplication::clipboard()->setMimeData( d );
+    //#endif
+}
+
+
+/*!
+  Render graphical representation of the chart's series and axes to a file
+
+  Supported formats are:
+
+  - pdf\n
+    Portable Document Format PDF
+  - ps\n
+    Postcript
+  - svg\n
+    Scalable Vector Graphics SVG
+  - all image formats supported by Qt\n
+    see QImageWriter::supportedImageFormats()
+
+  \param document title
+  \param fileName Path of the file, where the document will be stored
+
+*/
 void PlotChartView::renderDocument( const QString &title, const QString &fileName )
 {
     const QString fmt = QFileInfo( fileName ).suffix().toLower();

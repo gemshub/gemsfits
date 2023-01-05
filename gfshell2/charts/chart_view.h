@@ -27,10 +27,11 @@ public slots:
 
 signals:
     void fragmentChanged(QRectF  rect);
+    void savetoFile();
 
 public:
 
-    explicit PlotChartView( ChartData *graphdata, QWidget *parent = nullptr );
+    explicit PlotChartView( ChartData *graphdata, QWidget *parent = nullptr);
     ~PlotChartView();
 
     /**
@@ -65,6 +66,11 @@ protected:
     void dragMoveEvent(QDragMoveEvent *event);
     void dropEvent(QDropEvent* event);
     void mouseReleaseEvent(QMouseEvent *event);
+
+protected slots:
+    void slotPopupMenu(const QPoint &pos);
+    void copyPlotBitmap();
+    void copyPlotPdf();
 
 };
 
