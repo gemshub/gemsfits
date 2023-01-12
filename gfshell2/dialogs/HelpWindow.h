@@ -3,8 +3,8 @@
 //
 // Declaration of HelpBrowser, HelpWindow and  SearchWidget classes
 //
-// Copyright (C) 2012-2014  S.V.Dmytriyeva
-// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+// Copyright (C) 2012-2023  S.V.Dmytriyeva
+// Uses EJDB (https://ejdb.org),
 //    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
 // This file is part of the GEMSFITS GUI, which uses the
@@ -66,14 +66,17 @@ private slots:
     void search() const;
     void searchingStarted();
     void searchingFinished(int hits);
-
 };
 
+namespace Ui {
+class HelpWindowData;
+}
 
-class HelpWindow : public QMainWindow, public Ui::HelpWindowData
+class HelpWindow : public QMainWindow
 {
     Q_OBJECT
 
+    Ui::HelpWindowData *ui;
     QHelpEngine *hEngine;
     QHelpContentWidget *wContents;
     QHelpIndexWidget *wIndex;
@@ -94,19 +97,16 @@ class HelpWindow : public QMainWindow, public Ui::HelpWindowData
 public:
     static HelpWindow* pDia;
 
-    HelpWindow( QWidget* parent = NULL );
+    HelpWindow(QWidget* parent = NULL);
     virtual ~HelpWindow();
 
     void showDocumentation(const char* file, const char* item1);
 
 protected:
-
     QUrl showHelpForKeyword(const QString &id);
-
     void setActions();
 
 protected slots:
-    virtual void languageChange();
     void loadResource( const QUrl &name );
     void filterIndices(const QString &filter);
     void showAddres(const QUrl &name);

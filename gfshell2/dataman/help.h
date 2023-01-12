@@ -3,8 +3,8 @@
 //
 // Declaration of HelpConfigurator class
 //
-// Copyright (C) 2010-2014  S.V.Dmytriyeva
-// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+// Copyright (C) 2010-2023  S.V.Dmytriyeva
+// Uses EJDB (https://ejdb.org),
 //    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
 // This file is part of the GEMSFITS GUI, which uses the
@@ -17,51 +17,49 @@
 // E-mail gems2.support@psi.ch
 //-----------------------------------------------------------------
 
-#ifndef __help_h
-#define __help_h
+#pragma once
 
 #include <QMultiMap>
 #include <QString>
 #include <QStringList>
 #include <QUrl>
-#include <QDir>
 
 class HelpConfigurator
 {
-  QString path;
-  QMultiMap<QString, QUrl> links;
-  QStringList images;
-  QStringList files;
+    QString path;
+    QMultiMap<QString, QUrl> links;
+    QStringList images;
+    QStringList files;
 
-  void getHrefs( QString file, QString file_name);
-  void u_getline(std::istream& is, QString& str, QString end );
-  void addNameToList( QString ref, QString file_name );
-  void addImgToList(  QString ref );
-  void addFileToList(  QString file )
-  {
-      files.append(file);
-  }
+    void getHrefs(QString file, QString file_name);
+    void u_getline(std::istream& is, QString& str, QString end);
+    void addNameToList(QString ref, QString file_name);
+    void addImgToList(QString ref);
+    void addFileToList(QString file)
+    {
+        files.append(file);
+    }
 
-  void writeFiles( std::fstream& f_out);
-  void writeKeywords( std::fstream& f_out);
-  void writeContent( std::fstream& f_out);
+    void writeFiles( std::fstream& f_out);
+    void writeKeywords( std::fstream& f_out);
+    void writeContent( std::fstream& f_out);
 
 #ifndef IPMGEMPLUGIN
-  int showObjectForKeyword(const QString &keyword);
+    int showObjectForKeyword(const QString &keyword);
 #endif
 
 public:
-  HelpConfigurator(){}
+    HelpConfigurator(){}
 
-  int readDir(const char *dir);
-  int writeFile(const char *file);
+    int readDir(const char *dir);
+    int writeFile(const char *file);
 
 protected:
-// only for test
- QStringList hrefs;
- QStringList names;
- QStringList others;
+    // only for test
+    QStringList hrefs;
+    QStringList names;
+    QStringList others;
 
 };
 
-#endif  //__help_h
+

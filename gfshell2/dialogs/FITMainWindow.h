@@ -4,7 +4,7 @@
 // Declaration of GEMSFITS GUI Main Window
 //
 // Copyright (C) 2014  S.V.Dmytriyeva, D.A.Kulik
-// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+// Uses EJDB (https://ejdb.org),
 //    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
 // This file is part of the GEMSFITS GUI, which uses the
@@ -25,7 +25,6 @@
 #include <QLineEdit>
 #include <QTableWidget>
 #include <QProcess>
-#include "verror.h"
 #include "f_ejdb_file.h"
 #include "node.h"
 
@@ -35,14 +34,14 @@ class FITMainWindow;
 
 class TKeyTable: public QTableWidget
 {
-        Q_OBJECT
+    Q_OBJECT
 
-       void keyPressEvent(QKeyEvent* e);
+    void keyPressEvent(QKeyEvent* e);
 
-  public:
-       TKeyTable( QWidget * parent  ):
-           QTableWidget(parent)
-       {}
+public:
+    TKeyTable(QWidget * parent):
+        QTableWidget(parent)
+    {}
 };
 
 class FITMainWindow : public QMainWindow
@@ -71,7 +70,7 @@ class FITMainWindow : public QMainWindow
     std::shared_ptr<TNode> aNode;
     TNode* node() const
     {
-      return aNode.get();
+        return aNode.get();
     }
     //TNode *node;
     bool contentsChanged; ///< Current record changed
@@ -84,116 +83,116 @@ class FITMainWindow : public QMainWindow
     void loadNewProject();
     void resetMainWindow();
     bool MessageToSave();
-    void RecSave( const std::string& recBsonText, const char* key=0 );
-    void RecDelete( const char* key );
-    void changeEditeRecord(const std::string& tagname, const std::string& newValue, bool is_json );
-    bool runProcess( const QStringList& cParameters, const QString& workDir );
-    void selectGEMS(const std::string& fname_ );
-    std::string makeSystemFileName(const std::string& path );
+    void RecSave(const std::string& recBsonText, const char* key=0);
+    void RecDelete(const char* key);
+    void changeEditeRecord(const std::string& tagname, const std::string& newValue, bool is_json);
+    bool runProcess(const QStringList& cParameters, const QString& workDir);
+    void selectGEMS(const std::string& fname_);
+    std::string makeSystemFileName(const std::string& path);
     bool createTaskTemplate();
-    void readTXT( TFile& inFile );
-    std::string getRecordKey( int row );
-    void defineModuleKeysList( std::string& samplelist );
+    void readTXT(TFile& inFile);
+    std::string getRecordKey(int row);
+    void defineModuleKeysList( std::string& samplelist);
 
 
-    void closeEvent( QCloseEvent* );
-    void resizeEvent( QResizeEvent * event );
-    void showEvent( QShowEvent * event );
+    void closeEvent(QCloseEvent*);
+    void resizeEvent(QResizeEvent* event);
+    void showEvent(QShowEvent* event);
 
 private slots:
-    void moveToolBar( int pos, int index );
-    void showProcessMesage( );
+    void moveToolBar(int pos, int index);
+    void showProcessMesage();
     void runFinished(int exitCode, QProcess::ExitStatus exitStatus);
     void changeKeyList();
     void recEdited()
     {
         contentsChanged = true;
     }
-    void recEdited(bool edited )
+    void recEdited(bool edited)
     {
-       if(edited)
-        contentsChanged = true;
+        if(edited)
+            contentsChanged = true;
     }
 
 public slots:
-     void openRecordKey(  int row, int column  );
+    void openRecordKey(int row, int column);
 
     // Tasks
-       void CmDBMode();
-       void CmTaskMode();
-       void CmConfigProject();
-       void CmNewProject();
-       void CmSelectProject( const std::string& fname_="" );
-       void CmSelectGEMS( const std::string& fname_="" );
+    void CmDBMode();
+    void CmTaskMode();
+    void CmConfigProject();
+    void CmNewProject();
+    void CmSelectProject(const std::string& fname_="");
+    void CmSelectGEMS(const std::string& fname_="");
     // Help
-       void CmHelp();
-       void CmHelpAbout();
-       void CmHelpAuthors();
-       void CmHelpLicense();
-       //void CmHelp2();
-       void CmSettingth();
-   // Record
-       void CmShow( const std::string& reckey="" );
-       void CmCreate();
-       void CmUpdate();
-       void CmInsert();
-       void CmDelete();
-       void CmNext();
-       void CmPrevious();
-       //void CmFilter();
-       void CmUpdateTest();
+    void CmHelp();
+    void CmHelpAbout();
+    void CmHelpAuthors();
+    void CmHelpLicense();
+    //void CmHelp2();
+    void CmSettingth();
+    // Record
+    void CmShow(const std::string& reckey="");
+    void CmCreate();
+    void CmUpdate();
+    void CmInsert();
+    void CmDelete();
+    void CmNext();
+    void CmPrevious();
+    //void CmFilter();
+    void CmUpdateTest();
 
-       void CmSearch();
-       void CmResetSearch();
-       void CmSaveSearch();
-       void CmLoadSearch();
-       void CmInsertSearch();
+    void CmSearch();
+    void CmResetSearch();
+    void CmSaveSearch();
+    void CmLoadSearch();
+    void CmInsertSearch();
 
-       // Record list
-       void CmBackupJSON();
-       void CmRestoreJSON();
-       void CmBackupCSV(){}
-       void CmRestoreCSV();
-       void CmBackupTXT();
-       void CmRestoreTXT();
-       void CmBackupYAML();
-       void CmRestoreYAML();
-       void CmDeleteList();
-       void CmTPpairsCSV();
-       //Calc
-       void CmRunTest();
-       void CmShowCalcResults();
-       void CmShowFitResults();
-       void CmCancelGemsfit();
-       //Find
-       void actionFind();
-       void actionFindNext();
-       void actionFindPrevious();
-       void actionZoomIn();
-       void actionZoomOut();
+    // Record list
+    void CmBackupJSON();
+    void CmRestoreJSON();
+    void CmBackupCSV(){}
+    void CmRestoreCSV();
+    void CmBackupTXT();
+    void CmRestoreTXT();
+    void CmBackupYAML();
+    void CmRestoreYAML();
+    void CmDeleteList();
+    void CmTPpairsCSV();
+    //Calc
+    void CmRunTest();
+    void CmShowCalcResults();
+    void CmShowFitResults();
+    void CmCancelGemsfit();
+    //Find
+    void actionFind();
+    void actionFindNext();
+    void actionFindPrevious();
+    void actionZoomIn();
+    void actionZoomOut();
 
 public:
     explicit FITMainWindow(int c, char** v, QWidget *parent = 0);
     ~FITMainWindow();
 
-       const std::string& sysDir() const {
-         return SysFITDir;
-       }
-       const std::string& userDir() const {
-         return UserDir;
-       }
-       const std::string& docDir() const {
-         return LocalDocDir;
-       }
-       const QFont& getAxisLabelFont() const
-           {  return axisLabelFont; }
-       void setAxisLabelFont(const QFont& newAxisLabelFont)
-           {  axisLabelFont = newAxisLabelFont;  }
+    const std::string& sysDir() const {
+        return SysFITDir;
+    }
+    const std::string& userDir() const {
+        return UserDir;
+    }
+    const std::string& docDir() const {
+        return LocalDocDir;
+    }
+    const QFont& getAxisLabelFont() const
+    {  return axisLabelFont; }
+    void setAxisLabelFont(const QFont& newAxisLabelFont)
+    {  axisLabelFont = newAxisLabelFont;  }
 
     QProcess*  helpProcess;
     void GetHelp();
     void OpenHelp(const char* file, const char* item=0, int page =-1);
-    void OpenResults(  const std::string& key, const QString& dir = "");
+    void OpenResults(const std::string& key, const QString& dir = "");
 
 private:
     QSettings *projectSettings; ///< Properties for current project

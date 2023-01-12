@@ -3,9 +3,7 @@
 #include "charts/chart_model.h"
 #include "charts/graph_data.h"
 #include "v_json.h"
-#ifndef NO_JSONIO
-#include "jsonio17/jsonbase.h"
-#endif
+
 
 namespace jsonui17 {
 
@@ -158,28 +156,6 @@ void ChartDataModel::modelColumnsRemoved(QModelIndex m_parent, int start, int en
 
 // ------------------------ work with selection
 
-#ifndef NO_JSONIO
-
-// Writes data to bson
-void ChartDataModel::toJsonNode( jsonio17::JsonBase& object ) const
-{
-    object.clear();
-    object.set_value_via_path("gxclms", xcolumns);
-    object.set_value_via_path("gyclms", ycolumns);
-}
-
-// Reads data from bson
-void ChartDataModel::fromJsonNode( const jsonio17::JsonBase& object )
-{
-    std::vector<int> columns;
-    object.get_value_via_path( "gxclms", columns, {-1} );
-    setXColumns( columns );
-    object.get_value_via_path( "gyclms", columns, {} );
-    setYColumns( columns, false );
-}
-
-#else
-
 void ChartDataModel::toBsonObject( bson *obj ) const
 {
     size_t ii;
@@ -230,7 +206,6 @@ void ChartDataModel::fromBsonObject( const char *obj )
 
 }
 
-#endif
 
 void ChartDataModel::toJsonObject(QJsonObject& json) const
 {

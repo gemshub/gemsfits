@@ -9,7 +9,6 @@ DEFINES         += Use_mt_mode
 DEFINES         += IPMGEMPLUGIN
 DEFINES         += _MYNOZLIB
 DEFINES         += USEBSON
-DEFINES         += NO_JSONIO
 
 #CONFIG -= warn_on
 #CONFIG += warn_off

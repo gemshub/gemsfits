@@ -3,8 +3,8 @@
 //
 // Implementation of TAbstractFile, TEJDB and TFile classes
 //
-// Copyright (C) 2014  S.V.Dmytriyeva
-// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+// Copyright (C) 2014-2023  S.V.Dmytriyeva
+// Uses EJDB (https://ejdb.org),
 //    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
 // This file is part of the GEMSFITS GUI, which uses the
@@ -22,15 +22,10 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QFileDialog>
+#include <ejdb.h>
 
 #include "f_ejdb_file.h"
 #include "v_service.h"
-#include "v_user.h"
-//#ifdef buildWIN32
-//#include <tcejdb/ejdb.h>
-//#else
-#include "ejdb.h"
-//#endif
 
 //----------------------------------------------------------
 // TAbstractFile
@@ -52,11 +47,10 @@ TAbstractFile::TAbstractFile( const std::string& path, FileStatus aMode ):
     mode(aMode), isopened( false ), Path(path)
 {
     if( path.empty() )
-      return;
+        return;
     u_splitpath(Path, dir, name, ext);
     makeKeyword();
 }
-
 
 // For all files is name
 void TAbstractFile::makeKeyword()
@@ -84,16 +78,16 @@ bool TAbstractFile::Exist()
 }
 
 bool TAbstractFile::ChooseFileOpen(QWidget* par, std::string& path_,
-          const char* title, const char *filter )
+                                   const char* title, const char *filter )
 {
     if( Test() )
-      Close();
+        Close();
 
     std::string path;
     if( path_.find('/') == std::string::npos )
     {
-           path  = dir; // userFITDir(); ???
-           path += path_;
+        path  = dir; // userFITDir(); ???
+        path += path_;
     }
     else   path = path_;
 
@@ -104,12 +98,12 @@ bool TAbstractFile::ChooseFileOpen(QWidget* par, std::string& path_,
         filt = "All files (*)";
 
     QString fn = QFileDialog::getOpenFileName(  par, title,
-          path.c_str(), filt, 0,
-          QFileDialog::DontConfirmOverwrite );
+                                                path.c_str(), filt, 0,
+                                                QFileDialog::DontConfirmOverwrite );
 #ifdef buildWIN32
     std::replace( fn.begin(), fn.end(), '/', '\\');
 #endif
-   if ( !fn.isEmpty() )
+    if ( !fn.isEmpty() )
     {
         mode = std::ios::in;
         path_ = Path = fn.toStdString();
@@ -125,17 +119,17 @@ bool TAbstractFile::ChooseFileOpen(QWidget* par, std::string& path_,
 }
 
 bool TAbstractFile::ChooseFileSave(QWidget* par, std::string& path_,
-       const char* title, const char *filter)
+                                   const char* title, const char *filter)
 {
     if( Test() )
-      Close();
+        Close();
 
     std::string path;
-     if( path_.find('/') == std::string::npos )
-      {      path  = dir;  // userFitDir();
-             path += path_;
-      }
-     else   path = path_;
+    if( path_.find('/') == std::string::npos )
+    {      path  = dir;  // userFitDir();
+        path += path_;
+    }
+    else   path = path_;
 
     replace(path.begin(), path.end(),'\\', '/');
 
@@ -149,8 +143,8 @@ bool TAbstractFile::ChooseFileSave(QWidget* par, std::string& path_,
 
     QString selectedFilter;
     QString fn = QFileDialog::getSaveFileName( par, title,
-         path.c_str(), filt.join( ";;" ), &selectedFilter,
-         QFileDialog::DontConfirmOverwrite);
+                                               path.c_str(), filt.join( ";;" ), &selectedFilter,
+                                               QFileDialog::DontConfirmOverwrite);
 
     if ( !fn.isEmpty() )
     {
@@ -174,12 +168,12 @@ void TAbstractFile::ChangePath( const std::string& path )
     Path = path;
     if( path.empty() )
     {
-      dir = name = ext = "";
+        dir = name = ext = "";
     }
     else
     {
-      u_splitpath(Path, dir, name, ext);
-      makeKeyword();
+        u_splitpath(Path, dir, name, ext);
+        makeKeyword();
     }
 }
 
@@ -198,13 +192,24 @@ void TAbstractFile::ChangeName( const std::string& newname )
 // TEJDB, files that contain EJDB records
 //-------------------------------------------------------------
 
+static std::string current_time_and_date()
+{
+    auto now = std::chrono::system_clock::now();
+    auto in_time_t = std::chrono::system_clock::to_time_t(now);
+
+    std::stringstream ss;
+    ss << std::put_time(std::localtime(&in_time_t), "%d/%m/%Y %H:%M");
+    return ss.str();
+}
+
+
 TEJDB EJDBFile("");
 
 /// Configurations from file path
 TEJDB::TEJDB( const std::string& path ):
-   TAbstractFile( path ), numEJDB(0),  ejDB(0)
+    TAbstractFile( path ), numEJDB(0),  ejDB(0)
 {
-     makeKeyword();
+    makeKeyword();
 }
 
 
@@ -247,19 +252,19 @@ void TEJDB::Open()
     else
     {
 
-      // Test and open file  (name of ejdb must be take from nFile)
-      ejDB = ejdbnew();
-      if (!ejdbopen(ejDB, Path.c_str(), JBOWRITER | JBOCREAT ))
-      {
-        ejdbdel(ejDB);
-        std::cout << "EJDB open error" << std::endl;
-        ejDB = 0;
-        isopened = false;
-        Error( Path, "EJDB open error");
-        return;
-       }
-      numEJDB++;
-      isopened = true;
+        // Test and open file  (name of ejdb must be take from nFile)
+        ejDB = ejdbnew();
+        if (!ejdbopen(ejDB, Path.c_str(), JBOWRITER | JBOCREAT ))
+        {
+            ejdbdel(ejDB);
+            std::cout << "EJDB open error" << std::endl;
+            ejDB = 0;
+            isopened = false;
+            Error( Path, "EJDB open error");
+            return;
+        }
+        numEJDB++;
+        isopened = true;
     }
 }
 
@@ -270,11 +275,11 @@ void TEJDB::Close()
 
     if( numEJDB <= 0 )
     { if(ejDB )
-      { ejdbclose(ejDB);
-        ejdbdel(ejDB);
-        ejDB = 0;
-      }
-    isopened = false;
+        { ejdbclose(ejDB);
+            ejdbdel(ejDB);
+            ejDB = 0;
+        }
+        isopened = false;
     }
 }
 
@@ -286,7 +291,7 @@ void TEJDB::Create()
     // make changelog.txt file
     std::string clfile = dir + "/Changelog.txt";
     std::fstream ff( clfile.c_str(), std::ios::out);
-    ff << "File " << name.c_str() << " created on " << curDate().c_str() << " " << curTime().c_str() << std::endl;
+    ff << "File " << name << " created on " << current_time_and_date() << std::endl;
     ff << "<Version> = v0.1" << std::endl;
 }
 
@@ -303,18 +308,18 @@ void TEJDB::readVersion( )
 
     while( ff.good() )
     {
-      getline ( ff ,fbuf);
-      pos = fbuf.find("<Version>");
-      if( pos != std::string::npos )
-      {
-         pos = fbuf.find("=", pos+1);
-         if( pos != std::string::npos )
-         {
-           version = fbuf.substr(pos+1);
-           strip( version);
-           break;
-         }
-      }
+        getline ( ff ,fbuf);
+        pos = fbuf.find("<Version>");
+        if( pos != std::string::npos )
+        {
+            pos = fbuf.find("=", pos+1);
+            if( pos != std::string::npos )
+            {
+                version = fbuf.substr(pos+1);
+                strip( version);
+                break;
+            }
+        }
     }
 }
 
@@ -339,7 +344,7 @@ void TFile::Open()
 {
     if( Test() )
     {
-       Close();
+        Close();
     }
 
     ff.open( Path.c_str(), mode );
@@ -361,7 +366,7 @@ bool removeDirectoryEntry( QDir dir )
     if ( ok )
     {
         QFileInfoList entries = dir.entryInfoList( QDir::NoDotAndDotDot |
-                QDir::Dirs | QDir::Files );
+                                                   QDir::Dirs | QDir::Files );
         foreach ( QFileInfo entryInfo, entries )
         {
             QString path = entryInfo.absoluteFilePath();
@@ -384,7 +389,7 @@ bool removeDirectoryEntry( QDir dir )
             }
         }
     }
-   return ok;
+    return ok;
 }
 
 

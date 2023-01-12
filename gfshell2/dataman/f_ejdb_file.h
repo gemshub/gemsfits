@@ -3,8 +3,8 @@
 //
 // Declaration of TAbstractFile, TEJDB and TFile classes
 //
-// Copyright (C) 2014  S.V.Dmytriyeva
-// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+// Copyright (C) 2014-2023  S.V.Dmytriyeva
+// Uses EJDB (https://ejdb.org),
 //    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
 // This file is part of the GEMSFITS GUI, which uses the
@@ -17,20 +17,16 @@
 // E-mail gems2.support@psi.ch
 //-------------------------------------------------------------------
 
-#ifndef _v_ejdb_file_h_
-#define _v_ejdb_file_h_
+#pragma once
 
 #include <fstream>
 #include <vector>
-#ifndef __APPLE__
-#include <memory>   // deprecated
-#endif
-
 #include "verror.h"
+
 class QWidget;
-class EJDB;
 class QDir;
 class QString;
+class EJDB;
 
 //----------------------------------------------------------------------
 // service functions
@@ -48,18 +44,18 @@ int vfQuestion3(QWidget* par, const std::string& title, const std::string& mess,
 bool vfQuestion(QWidget* par, const std::string& title, const std::string& mess);
 
 std::vector<std::string> vfMultiKeys(QWidget* par, const char* caption,
-                            int iRt, const char* key );
+                                     int iRt, const char* key );
 
-bool removeDirectoryEntry( QDir dir );
+bool removeDirectoryEntry(QDir dir);
 
-void removeComments( QString& valCsv );
+void removeComments(QString& valCsv);
+
 //----------------------------------------------------------------------
 
 // Mode enums
 enum { MDF_DATABASE=0, MDF_TASK=1, MDF_FITS=2 };
 
 typedef std::ios::openmode FileStatus;
-
 
 /// Base class for file manipulation
 class TAbstractFile
@@ -75,19 +71,13 @@ protected:
     std::string Path;
 
     virtual void makeKeyword();
-    //virtual void write( fstream& );
-    //virtual void read( fstream& );
 
 public:
 
-    //  TFile();
-    TAbstractFile(const std::string& fName,
-          const std::string& fExt, const std::string& fDir, FileStatus mode = std::ios::in );
-    TAbstractFile( const std::string& path, FileStatus mode = std::ios::in );
-    //TFile(fstream& fcfg);
+    TAbstractFile(const std::string& fName, const std::string& fExt,
+                  const std::string& fDir, FileStatus mode = std::ios::in);
+    TAbstractFile( const std::string& path, FileStatus mode = std::ios::in);
     virtual ~TAbstractFile() {}
-
-    //void toCFG(fstream& fcfg);
 
     //--- Selectors
     const std::string& GetKeywd() const
@@ -120,7 +110,7 @@ public:
     }
     void setMode( FileStatus aMode )
     {
-       mode = aMode;
+        mode = aMode;
     }
 
     //--- Manipulation
@@ -130,12 +120,12 @@ public:
     virtual void Open() = 0;
     virtual void Close() = 0;
 
-    bool ChooseFileOpen( QWidget* par, std::string& path_,
-              const char* title, const char *filter );
-    bool ChooseFileSave( QWidget* par, std::string& path_,
-           const char* title, const char *filter);
-    virtual void ChangePath( const std::string& path );
-    virtual void ChangeName( const std::string& name );
+    bool ChooseFileOpen(QWidget* par, std::string& path_,
+                         const char* title, const char *filter);
+    bool ChooseFileSave(QWidget* par, std::string& path_,
+                         const char* title, const char *filter);
+    virtual void ChangePath(const std::string& path);
+    virtual void ChangeName(const std::string& name);
 };
 
 
@@ -145,14 +135,12 @@ class TEJDB: public TAbstractFile
     std::string version; ///< Version of EJDB
     int numEJDB;    ///< Number of usage EJDB database
 
-protected:
-
-    virtual void makeKeyword();
+    void makeKeyword();
 
 public:
     EJDB *ejDB ;
 
-    TEJDB( const std::string& path );
+    TEJDB(const std::string& path);
     virtual ~TEJDB();
 
     const std::string& Version() const
@@ -178,13 +166,10 @@ protected:
 public:
     std::fstream ff;
 
-    TFile( const std::string& path, FileStatus mode = std::ios::in|std::ios::out );
+    TFile(const std::string& path, FileStatus mode = std::ios::in|std::ios::out);
     virtual ~TFile();
 
     //--- Manipulation
     virtual void Open();
     virtual void Close();
 };
-
-
-#endif // _f_ejdb_file_h

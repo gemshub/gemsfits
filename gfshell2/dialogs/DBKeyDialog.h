@@ -4,7 +4,7 @@
 // Declaration of DBKeyDialog and DBKeyFilter classes
 //
 // Copyright (C) 2014  S.V.Dmytriyeva
-// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+// Uses EJDB (https://ejdb.org),
 //    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
 // This file is part of the GEMSFITS GUI, which uses the
@@ -20,15 +20,21 @@
 #ifndef DBKeyDialog_included
 #define DBKeyDialog_included
 
+#include <string>
+#include <vector>
 #include <QDialog>
-#include "ui_DBKeyDialog.h"
-#include "verror.h"
+#include <QLineEdit>
+
+namespace Ui {
+class KeyDialogData;
+}
 
 /// List Keys Dialog
-class DBKeyDialog : public QDialog, public Ui::KeyDialogData
+class DBKeyDialog : public QDialog
 {
     Q_OBJECT
 
+    Ui::KeyDialogData *ui;
     bool multi;
     std::string keyFilter;
     int iRT;
@@ -42,13 +48,12 @@ protected slots:
     void CmFilter();
     void CmHelp();
 
-
 public:
 
     DBKeyDialog(QWidget* win, int irt, const char* key = "*",
-              const char* caption = 0, bool filter=true);
+                const char* caption = 0, bool filter=true);
     DBKeyDialog(QWidget* win, int irt, const std::vector<std::string>& sel,
-              const char* key = "*", const char* caption = 0 );
+                const char* key = "*", const char* caption = 0);
 
     virtual ~DBKeyDialog();
 
@@ -82,7 +87,7 @@ protected:
 
 public:
     DBKeyFilter(QWidget* win, int iRt, const char* keyFilter,
-              const char* caption, bool allowTemplates=true );
+                const char* caption, bool allowTemplates=true );
 
     std::string getFilter();
 };

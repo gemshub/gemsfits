@@ -4,7 +4,7 @@
 // Implementation of GEMSFITS GUI Main Window (menu part)
 //
 // Copyright (C) 2014  S.V.Dmytriyeva, D.A.Kulik
-// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+// Uses EJDB (https://ejdb.org),
 //    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
 // This file is part of the GEMSFITS GUI, which uses the
@@ -18,19 +18,16 @@
 //-------------------------------------------------------------------
 
 #include <QFileDialog>
-
 #include "FITMainWindow.h"
 #include "ui_FITMainWindow.h"
 #include "ProjectSettingsDialog.h"
 #include "PreferencesDialog.h"
 #include "DBKeyDialog.h"
+
 #include "f_ejdb.h"
 #include "v_yaml.h"
 #include "v_service.h"
 #include "keywords.h"
-#include "sstream"
-
-//#include "nodebuilder.h"
 #include "yaml-cpp/emitfromevents.h"
 
 // -----------------------------------------------------------
@@ -40,7 +37,7 @@
 void FITMainWindow::setActions()
 {
 
- // Tasks
+    // Tasks
     connect( ui->action_DataBase_mode, SIGNAL( triggered()), this, SLOT(CmDBMode()));
     connect( ui->action_Task_Mode, SIGNAL( triggered()), this, SLOT(CmTaskMode()));
     connect( ui->action_New_Project, SIGNAL( triggered()), this, SLOT(CmNewProject()));
@@ -49,7 +46,7 @@ void FITMainWindow::setActions()
     connect( ui->actionSelect_GEMS, SIGNAL( triggered()), this, SLOT(CmSelectGEMS()));
     connect( ui->action_Exit, SIGNAL( triggered()), this, SLOT(close()));
 
- // Help
+    // Help
     connect( ui->actionHelp, SIGNAL( triggered()), this, SLOT(CmHelp()));
     //connect( ui->actionHow_to, SIGNAL( triggered()), this, SLOT(CmHowto()));
     connect( ui->actionAbout, SIGNAL( triggered()), this, SLOT(CmHelpAbout()));
@@ -60,7 +57,7 @@ void FITMainWindow::setActions()
     connect( ui->action_Preferences, SIGNAL( triggered()), this, SLOT(CmSettingth()));
     //connect( ui->actionTutorial, SIGNAL( triggered()), this, SLOT(CmTutorial()));
 
-// Record
+    // Record
     connect( ui->actionCreate_New , SIGNAL( triggered()), this, SLOT(CmCreate()));
     connect( ui->action_Update, SIGNAL( triggered()), this, SLOT(CmUpdate()));
     connect( ui->action_Insert, SIGNAL( triggered()), this, SLOT(CmInsert()));
@@ -77,59 +74,59 @@ void FITMainWindow::setActions()
 
 
 
- // Record list
-       connect( ui->actionBackup_to_JSON, SIGNAL( triggered()), this, SLOT(CmBackupJSON()));
-       connect( ui->actionRestore_from_JSON, SIGNAL( triggered()), this, SLOT(CmRestoreJSON()));
-       connect( ui->actionBackup_to_csv, SIGNAL( triggered()), this, SLOT(CmBackupCSV()));
-       connect( ui->actionRestore_from_csv, SIGNAL( triggered()), this, SLOT(CmRestoreCSV()));
-       connect( ui->actionBackup_to_TXT, SIGNAL( triggered()), this, SLOT(CmBackupTXT()));
-       connect( ui->actionRestore_from_TXT, SIGNAL( triggered()), this, SLOT(CmRestoreTXT()));
-       connect( ui->actionBackup_to_YAML, SIGNAL( triggered()), this, SLOT(CmBackupYAML()));
-       connect( ui->actionRestore_from_YAML, SIGNAL( triggered()), this, SLOT(CmRestoreYAML()));
-       connect( ui->action_Delete_multiple_data, SIGNAL( triggered()), this, SLOT(CmDeleteList()));
-       connect( ui->actionExport_TP_pairs_to_CSV_file, SIGNAL( triggered()), this, SLOT(CmTPpairsCSV()));
+    // Record list
+    connect( ui->actionBackup_to_JSON, SIGNAL( triggered()), this, SLOT(CmBackupJSON()));
+    connect( ui->actionRestore_from_JSON, SIGNAL( triggered()), this, SLOT(CmRestoreJSON()));
+    connect( ui->actionBackup_to_csv, SIGNAL( triggered()), this, SLOT(CmBackupCSV()));
+    connect( ui->actionRestore_from_csv, SIGNAL( triggered()), this, SLOT(CmRestoreCSV()));
+    connect( ui->actionBackup_to_TXT, SIGNAL( triggered()), this, SLOT(CmBackupTXT()));
+    connect( ui->actionRestore_from_TXT, SIGNAL( triggered()), this, SLOT(CmRestoreTXT()));
+    connect( ui->actionBackup_to_YAML, SIGNAL( triggered()), this, SLOT(CmBackupYAML()));
+    connect( ui->actionRestore_from_YAML, SIGNAL( triggered()), this, SLOT(CmRestoreYAML()));
+    connect( ui->action_Delete_multiple_data, SIGNAL( triggered()), this, SLOT(CmDeleteList()));
+    connect( ui->actionExport_TP_pairs_to_CSV_file, SIGNAL( triggered()), this, SLOT(CmTPpairsCSV()));
 
-  //Calc
+    //Calc
     connect( ui->action_Run_test, SIGNAL( triggered()), this, SLOT(CmRunTest()));
     connect( ui->action_Show_Results, SIGNAL( triggered()), this, SLOT(CmShowCalcResults()));
     connect( ui->actionFits_View_Mode, SIGNAL( triggered()), this, SLOT(CmShowFitResults()));
     connect( ui->actionCancel_gemsfit2_run, SIGNAL( triggered()), this, SLOT(CmCancelGemsfit()));
-  // Find
+    // Find
     connect( ui->action_Find, SIGNAL( triggered()), this, SLOT(actionFind()));
     connect( ui->actionFind_Next, SIGNAL( triggered()), this, SLOT(actionFindNext()));
     connect( ui->actionFind_Previous, SIGNAL( triggered()), this, SLOT(actionFindPrevious()));
     connect( ui->actionZoom_In, SIGNAL( triggered()), this, SLOT(actionZoomIn()));
     connect( ui->actionZoom_Out, SIGNAL( triggered()), this, SLOT(actionZoomOut()));
 
-   pLineTask = new QLineEdit( ui->toolBarTask );
-   pLineTask->setEnabled( true );
-   pLineTask->setFocusPolicy( Qt::ClickFocus );
-   pLineTask->setReadOnly( true );
-   pLineTask->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
-   ui->toolBarTask->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
-   ui->toolBarTask->addWidget( pLineTask ); // setStretchableWidget( pLine );
+    pLineTask = new QLineEdit( ui->toolBarTask );
+    pLineTask->setEnabled( true );
+    pLineTask->setFocusPolicy( Qt::ClickFocus );
+    pLineTask->setReadOnly( true );
+    pLineTask->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
+    ui->toolBarTask->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
+    ui->toolBarTask->addWidget( pLineTask ); // setStretchableWidget( pLine );
 
-   pLineGEMS = new QLineEdit( ui->toolBarGems );
-   pLineGEMS->setEnabled( true );
-   pLineGEMS->setFocusPolicy( Qt::ClickFocus );
-   pLineGEMS->setReadOnly( true );
-   pLineGEMS->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
-   ui->toolBarGems->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
-   ui->toolBarGems->addWidget( pLineGEMS ); // setStretchableWidget( pLine );
+    pLineGEMS = new QLineEdit( ui->toolBarGems );
+    pLineGEMS->setEnabled( true );
+    pLineGEMS->setFocusPolicy( Qt::ClickFocus );
+    pLineGEMS->setReadOnly( true );
+    pLineGEMS->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
+    ui->toolBarGems->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
+    ui->toolBarGems->addWidget( pLineGEMS ); // setStretchableWidget( pLine );
 
-   QLabel *label_2 = new QLabel(ui->toolBarMenu);
-   label_2->setText("Find:");
-   label_2->setToolTip("Find in text");
+    QLabel *label_2 = new QLabel(ui->toolBarMenu);
+    label_2->setText("Find:");
+    label_2->setToolTip("Find in text");
 
-   ui->toolBarMenu->addWidget( label_2 );
+    ui->toolBarMenu->addWidget( label_2 );
 
-   findLine = new QLineEdit(ui->toolBarMenu);
-   findLine->setToolTip("Enter text to find");
-   findLine->setEnabled( true );
-   findLine->setFocusPolicy( Qt::ClickFocus );
-   ui->toolBarMenu->addWidget( findLine );
-   ui->toolBarMenu->addAction(ui->actionFind_Previous);
-   ui->toolBarMenu->addAction(ui->actionFind_Next);
+    findLine = new QLineEdit(ui->toolBarMenu);
+    findLine->setToolTip("Enter text to find");
+    findLine->setEnabled( true );
+    findLine->setFocusPolicy( Qt::ClickFocus );
+    ui->toolBarMenu->addWidget( findLine );
+    ui->toolBarMenu->addAction(ui->actionFind_Previous);
+    ui->toolBarMenu->addAction(ui->actionFind_Next);
 
 }
 
@@ -140,69 +137,69 @@ void FITMainWindow::setActions()
 void FITMainWindow::CmDBMode()
 {
     if( !MessageToSave() )
-         return;
+        return;
 
-   if( currentMode == MDF_DATABASE )
-   {
-       ui->action_DataBase_mode->setChecked(true);
-       return;
-   }
-   ui->action_DataBase_mode->setChecked(true);
-   ui->action_Task_Mode->setChecked(false);
+    if( currentMode == MDF_DATABASE )
+    {
+        ui->action_DataBase_mode->setChecked(true);
+        return;
+    }
+    ui->action_DataBase_mode->setChecked(true);
+    ui->action_Task_Mode->setChecked(false);
 
-   currentMode = MDF_DATABASE;
+    currentMode = MDF_DATABASE;
 
-   // define actions
-   ui->actionBackup_to_csv->setEnabled(true);
-   ui->actionRestore_from_csv->setEnabled(true);
-   ui->actionBackup_to_TXT->setEnabled(false);
-   ui->actionRestore_from_TXT->setEnabled(false);
-   ui->action_Run_test->setEnabled(false);
-   ui->action_Show_Results->setEnabled(false);
-   ui->actionFits_View_Mode->setEnabled(false);
-   ui->action_Delete_multiple_data->setEnabled(true);
-   ui->actionExport_TP_pairs_to_CSV_file->setEnabled(true);
-//   ui->menu_Calculate->setEnabled(false);
+    // define actions
+    ui->actionBackup_to_csv->setEnabled(true);
+    ui->actionRestore_from_csv->setEnabled(true);
+    ui->actionBackup_to_TXT->setEnabled(false);
+    ui->actionRestore_from_TXT->setEnabled(false);
+    ui->action_Run_test->setEnabled(false);
+    ui->action_Show_Results->setEnabled(false);
+    ui->actionFits_View_Mode->setEnabled(false);
+    ui->action_Delete_multiple_data->setEnabled(true);
+    ui->actionExport_TP_pairs_to_CSV_file->setEnabled(true);
+    //   ui->menu_Calculate->setEnabled(false);
 
-   // empty status
-   setStatusText( "" );
-   // update key list, editor, filter
-   resetMainWindow();
+    // empty status
+    setStatusText( "" );
+    // update key list, editor, filter
+    resetMainWindow();
 
 }
 
 /// Select experiments DB mode
 void FITMainWindow::CmTaskMode()
 {
-   if( !MessageToSave() )
-         return;
+    if( !MessageToSave() )
+        return;
 
-   if( currentMode == MDF_TASK )
-   {
-       ui->action_Task_Mode->setChecked(true);
-       return;
-   }
-   ui->action_DataBase_mode->setChecked(false);
-   ui->action_Task_Mode->setChecked(true);
+    if( currentMode == MDF_TASK )
+    {
+        ui->action_Task_Mode->setChecked(true);
+        return;
+    }
+    ui->action_DataBase_mode->setChecked(false);
+    ui->action_Task_Mode->setChecked(true);
 
-   currentMode = MDF_TASK;
+    currentMode = MDF_TASK;
 
-   // define actions
-   ui->actionBackup_to_csv->setEnabled(false);
-   ui->actionRestore_from_csv->setEnabled(false);
-   ui->actionExport_TP_pairs_to_CSV_file->setEnabled(false);
-   ui->actionBackup_to_TXT->setEnabled(true);
-   ui->actionRestore_from_TXT->setEnabled(true);
-   ui->action_Run_test->setEnabled(true);
-   ui->actionFits_View_Mode->setEnabled(true);
-//   ui->action_Show_Results->setEnabled(true);  // temporary
-   ui->action_Show_Results->setEnabled(!lastCalcRecordKey.empty());
-//   ui->menu_Calculate->setEnabled(true);
+    // define actions
+    ui->actionBackup_to_csv->setEnabled(false);
+    ui->actionRestore_from_csv->setEnabled(false);
+    ui->actionExport_TP_pairs_to_CSV_file->setEnabled(false);
+    ui->actionBackup_to_TXT->setEnabled(true);
+    ui->actionRestore_from_TXT->setEnabled(true);
+    ui->action_Run_test->setEnabled(true);
+    ui->actionFits_View_Mode->setEnabled(true);
+    //   ui->action_Show_Results->setEnabled(true);  // temporary
+    ui->action_Show_Results->setEnabled(!lastCalcRecordKey.empty());
+    //   ui->menu_Calculate->setEnabled(true);
 
-   // empty status
-   setStatusText( "" );
-   // update key list, editor, filter
-   resetMainWindow();
+    // empty status
+    setStatusText( "" );
+    // update key list, editor, filter
+    resetMainWindow();
 
 }
 
@@ -210,155 +207,155 @@ void FITMainWindow::CmTaskMode()
 void FITMainWindow::selectGEMS( const std::string& fname_ )
 {
     try {
-       // Creates TNode structure instance accessible trough the "node" pointer
-       aNode.reset( new TNode() );
-       std::string fname = fname_;
+        // Creates TNode structure instance accessible trough the "node" pointer
+        aNode.reset( new TNode() );
+        std::string fname = fname_;
 #ifdef buildWIN32
-    std::replace( fname.begin(), fname.end(), '/', '\\');
+        std::replace( fname.begin(), fname.end(), '/', '\\');
 #endif
 
 
-       // (1) Initialization of GEMS3K internal data by reading  files
-       if( node()->GEM_init( fname.c_str() ) )
-       {
-           Error( fname, "GEMS3K Init() error: \n"
-                   "Some GEMS3K input files are corrupt or cannot be found. \n"
-                  );
-       }
-       // setup icomp table
-       setTableIComp();
+        // (1) Initialization of GEMS3K internal data by reading  files
+        if( node()->GEM_init( fname.c_str() ) )
+        {
+            Error( fname, "GEMS3K Init() error: \n"
+                          "Some GEMS3K input files are corrupt or cannot be found. \n"
+                   );
+        }
+        // setup icomp table
+        setTableIComp();
 
-       // setup phase list
-       setListPhase();
+        // setup phase list
+        setListPhase();
 
-       pLineGEMS->setText(gemsLstFile.Name().c_str());
+        pLineGEMS->setText(gemsLstFile.Name().c_str());
     }
     catch( TError& err )
     {
-       setStatusText( err.title );
-       addLinetoStatus( err.mess );
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
     }
 }
 
 /// Select new GEMS3K files list and setup windows
 void FITMainWindow::CmSelectGEMS( const std::string& fname_ )
 {
-  try
+    try
     {
-       std::string fname = fname_;
-       if( fname.empty() )
-       {
-         fname = gemsLstFile.GetPath();
-         //Select files
-         if( !gemsLstFile.ChooseFileOpen( this, fname, "Please, select a GEMS3K lst file","*.lst" ))
-           return;
-       }
+        std::string fname = fname_;
+        if( fname.empty() )
+        {
+            fname = gemsLstFile.GetPath();
+            //Select files
+            if( !gemsLstFile.ChooseFileOpen( this, fname, "Please, select a GEMS3K lst file","*.lst" ))
+                return;
+        }
 
-       selectGEMS( fname );
+        selectGEMS( fname );
 
-       // make new path std::string
-       std::string newPath = makeSystemFileName("..");
-       changeEditeRecord( keys::G3Ksys[0] ,newPath, JsonDataShow);
-       changeEditeRecord( keys::G3Ksys[1] ,newPath, JsonDataShow);
-//       changeEditeRecord( "SystemFiles", newPath);
+        // make new path std::string
+        std::string newPath = makeSystemFileName("..");
+        changeEditeRecord( keys::G3Ksys[0] ,newPath, JsonDataShow);
+        changeEditeRecord( keys::G3Ksys[1] ,newPath, JsonDataShow);
+        //       changeEditeRecord( "SystemFiles", newPath);
 
-       setStatusText( "GEMS3K input file set is selected" );
+        setStatusText( "GEMS3K input file set is selected" );
     }
     catch( TError& err )
     {
-       setStatusText( err.title );
-       addLinetoStatus( err.mess );
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
     }
 }
 
 void FITMainWindow::CmSelectProject( const std::string& fname_ )
 {
-   std::string fname=fname_;
- try
- {
-   if( fname.empty())
-   { //Select fit project files
-      fname = userDir();
-     if( !fitTaskDir.ChooseFileOpen( this, fname, "Please, select a GEMSFITS project file","*.pro *.conf" ))
-        return;
-   }
+    std::string fname=fname_;
+    try
+    {
+        if( fname.empty())
+        { //Select fit project files
+            fname = userDir();
+            if( !fitTaskDir.ChooseFileOpen( this, fname, "Please, select a GEMSFITS project file","*.pro *.conf" ))
+                return;
+        }
 
-   //load project settings
-   if (fname.empty())
-     return;
-   if( projectSettings )
-       delete projectSettings;
-   projectSettings = new QSettings(fname.c_str(), QSettings::IniFormat);
-   if( !projectSettings->contains("GEMSFITSAPP") )
-       Error( fname, "This is not a GEMSFITS project file");
-   projectSettings->setValue("ProjFolderPath", fitTaskDir.Dir().c_str() );
-   projectSettings->setValue("ProjFileName", fitTaskDir.Name().c_str() );
+        //load project settings
+        if (fname.empty())
+            return;
+        if( projectSettings )
+            delete projectSettings;
+        projectSettings = new QSettings(fname.c_str(), QSettings::IniFormat);
+        if( !projectSettings->contains("GEMSFITSAPP") )
+            Error( fname, "This is not a GEMSFITS project file");
+        projectSettings->setValue("ProjFolderPath", fitTaskDir.Dir().c_str() );
+        projectSettings->setValue("ProjFileName", fitTaskDir.Name().c_str() );
 
-   //connect to EJDB for project&update key list
-   loadNewProject();
-  }
-   catch( TError& err )
-   {
-      setStatusText( err.title );
-      addLinetoStatus( err.mess );
-   }
+        //connect to EJDB for project&update key list
+        loadNewProject();
+    }
+    catch( TError& err )
+    {
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
+    }
 }
 
 void FITMainWindow::CmConfigProject()
 {
-  try
-  {    //Select fit project files
-    std::string fname = userDir();
-    if( !fitTaskDir.ChooseFileOpen( this, fname, "Please, select a GEMSFITS project file","*.pro *.conf" ))
-        return;
+    try
+    {    //Select fit project files
+        std::string fname = userDir();
+        if( !fitTaskDir.ChooseFileOpen( this, fname, "Please, select a GEMSFITS project file","*.pro *.conf" ))
+            return;
 
-    //load project settings
-   if (fname.empty())
-     return;
-   if( projectSettings )
-       delete projectSettings;
-   projectSettings = new QSettings(fname.c_str(), QSettings::IniFormat);
-   if( !projectSettings->contains("GEMSFITSAPP") )
-       Error( fname, "This is not a GEMSFITS project file");
-   projectSettings->setValue("ProjFolderPath", fitTaskDir.Dir().c_str() );
-   projectSettings->setValue("ProjFileName", fitTaskDir.Name().c_str() );
-   //
+        //load project settings
+        if (fname.empty())
+            return;
+        if( projectSettings )
+            delete projectSettings;
+        projectSettings = new QSettings(fname.c_str(), QSettings::IniFormat);
+        if( !projectSettings->contains("GEMSFITSAPP") )
+            Error( fname, "This is not a GEMSFITS project file");
+        projectSettings->setValue("ProjFolderPath", fitTaskDir.Dir().c_str() );
+        projectSettings->setValue("ProjFileName", fitTaskDir.Name().c_str() );
+        //
 
-   // change settings
-   ProjectSettingsDialog dlg(projectSettings);
-   if( !dlg.exec() )
-      return;
+        // change settings
+        ProjectSettingsDialog dlg(projectSettings);
+        if( !dlg.exec() )
+            return;
 
-   //connect to EJDB for project&update key list
-   loadNewProject();
-  }
+        //connect to EJDB for project&update key list
+        loadNewProject();
+    }
     catch( TError& err )
     {
-       setStatusText( err.title );
-       addLinetoStatus( err.mess );
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
     }
 }
 
 void FITMainWindow::CmNewProject()
 {
-  try
-  {  // define new project
-     ProjectSettingsDialog dlg;
-      if( !dlg.exec() )
-          return;
+    try
+    {  // define new project
+        ProjectSettingsDialog dlg;
+        if( !dlg.exec() )
+            return;
 
-     // get new settings
-     if( projectSettings )
-        delete projectSettings;
-      projectSettings = dlg.getNewSettings();
+        // get new settings
+        if( projectSettings )
+            delete projectSettings;
+        projectSettings = dlg.getNewSettings();
 
-     //connect to EJDB for project&update key list
-     loadNewProject();
-  }
+        //connect to EJDB for project&update key list
+        loadNewProject();
+    }
     catch( TError& err )
     {
-       setStatusText( err.title );
-       addLinetoStatus( err.mess );
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
     }
 }
 
@@ -377,7 +374,7 @@ std::string FITMainWindow::getRecordKey( int row )
         currentKey += keyTable->item( row, jj)->text().toStdString();
         strip(currentKey);
         currentKey +=":";
-     }
+    }
 
     return currentKey;
 }
@@ -393,90 +390,90 @@ void FITMainWindow::openRecordKey( int row, int    )
 /// Show another record from DB (Without check)
 void FITMainWindow::CmShow( const std::string& reckey )
 {
- try
-   {
-      if( !MessageToSave() )
-           return;
+    try
+    {
+        if( !MessageToSave() )
+            return;
 
-      // get key of record
-      std::string str;
-      if( reckey.empty() )
-      { //str = GetKeyofRecord( 0, "Select a document (data record) key ", KEY_OLD );
-        //      if( str.empty() )
-                return;
-       }
-       else  str = std::string(reckey);
-      rtEJ[ currentMode ].Get( str.c_str() );
-      std::string valDB;
-      if( JsonDataShow )
-        valDB =rtEJ[ currentMode ].GetJson();
-      else
-        valDB =rtEJ[ currentMode ].GetYAML();
-
-      ui->recordEdit->setText(valDB.c_str());
-      contentsChanged = false;
-
-      // load gems3k list
-      TFile newgems( rtEJ[ currentMode ].GetGems3kName() );
-      if( newgems.Name() != gemsLstFile.Name() ) // new list
-      {
-          if( !newgems.Name().empty() )
-          {   gemsLstFile.ChangeName( newgems.Name() );
-              selectGEMS( gemsLstFile.GetPath() );
-          }
-      }
-   }
-   catch( TError& err )
-        {
-           setStatusText( err.title );
-           addLinetoStatus( err.mess );
+        // get key of record
+        std::string str;
+        if( reckey.empty() )
+        { //str = GetKeyofRecord( 0, "Select a document (data record) key ", KEY_OLD );
+            //      if( str.empty() )
+            return;
         }
+        else  str = std::string(reckey);
+        rtEJ[ currentMode ].Get( str.c_str() );
+        std::string valDB;
+        if( JsonDataShow )
+            valDB =rtEJ[ currentMode ].GetJson();
+        else
+            valDB =rtEJ[ currentMode ].GetYAML();
+
+        ui->recordEdit->setText(valDB.c_str());
+        contentsChanged = false;
+
+        // load gems3k list
+        TFile newgems( rtEJ[ currentMode ].GetGems3kName() );
+        if( newgems.Name() != gemsLstFile.Name() ) // new list
+        {
+            if( !newgems.Name().empty() )
+            {   gemsLstFile.ChangeName( newgems.Name() );
+                selectGEMS( gemsLstFile.GetPath() );
+            }
+        }
+    }
+    catch( TError& err )
+    {
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
+    }
 }
 
 void FITMainWindow::CmNext()
 {
 
-  int row = keyTable->currentRow();
-  if( row < keyTable->rowCount()-1 )
-   {  row++;
+    int row = keyTable->currentRow();
+    if( row < keyTable->rowCount()-1 )
+    {  row++;
         QTableWidgetItem *curItem = keyTable->item(row,0);
         keyTable->setCurrentItem( curItem );
         keyTable->scrollToItem( curItem );
         openRecordKey( row, 0  );
-   }
+    }
 }
 
 void FITMainWindow::CmPrevious()
 {
-       int row = keyTable->currentRow();
-       if( row > 0  )
-       {  row--;
-          QTableWidgetItem *curItem = keyTable->item(row,0);
-          keyTable->setCurrentItem( curItem );
-          keyTable->scrollToItem( curItem );
-          openRecordKey( row, 0  );
-       }
+    int row = keyTable->currentRow();
+    if( row > 0  )
+    {  row--;
+        QTableWidgetItem *curItem = keyTable->item(row,0);
+        keyTable->setCurrentItem( curItem );
+        keyTable->scrollToItem( curItem );
+        openRecordKey( row, 0  );
+    }
 }
 
 void FITMainWindow::CmUpdateTest()
 {
-  try
+    try
     {
-      std::string recBson = ui->recordEdit->toPlainText().toStdString();
+        std::string recBson = ui->recordEdit->toPlainText().toStdString();
 
-      if( JsonDataShow )
-      { rtEJ[ currentMode ].TestBsonJson( recBson );
-        setStatusText( "Text in the editor is in valid JSON format" );
-      }
-      else { rtEJ[ currentMode ].TestBsonYAML( recBson );
-             setStatusText( "Text in the editor is in valid YAML format" );
-           }
+        if( JsonDataShow )
+        { rtEJ[ currentMode ].TestBsonJson( recBson );
+            setStatusText( "Text in the editor is in valid JSON format" );
+        }
+        else { rtEJ[ currentMode ].TestBsonYAML( recBson );
+            setStatusText( "Text in the editor is in valid YAML format" );
+        }
     }
     catch( TError& err )
-         {
-           setStatusText( err.title );
-           addLinetoStatus( err.mess );
-         }
+    {
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
+    }
 }
 
 /// Save current record to DB file as new
@@ -484,9 +481,9 @@ void FITMainWindow::CmUpdate()
 {
     try
     {
-       std::string recBson = ui->recordEdit->toPlainText().toStdString();
-       RecSave( recBson, rtEJ[ currentMode ].PackKey() );
-       setStatusText( "Record saved" );
+        std::string recBson = ui->recordEdit->toPlainText().toStdString();
+        RecSave( recBson, rtEJ[ currentMode ].PackKey() );
+        setStatusText( "Record saved" );
     }
     catch( TError& err )
     {
@@ -522,7 +519,7 @@ void FITMainWindow::CmDelete()
     {
         std::string strKey = rtEJ[ currentMode ].PackKey();
         if( !vfQuestion(window(), rtEJ[ currentMode ].GetKeywd(),
-               "Confirm deletion of data record keyed "+ strKey ))
+                        "Confirm deletion of data record keyed "+ strKey ))
             return;
         RecDelete(  strKey.c_str() );
         changeKeyList();
@@ -543,15 +540,15 @@ void FITMainWindow::CmCreate()
     try
     {
         if( currentMode == MDF_TASK )
-          createTaskTemplate();
+            createTaskTemplate();
         else
-          ui->recordEdit->setText( ExpTemplate );
+            ui->recordEdit->setText( ExpTemplate );
 
         if( !JsonDataShow )
         {    std::string valDB = ui->recordEdit->toPlainText().toStdString();
-             valDB = Json2YAML( valDB );
-             ui->recordEdit->setText(valDB.c_str());
-         }
+            valDB = Json2YAML( valDB );
+            ui->recordEdit->setText(valDB.c_str());
+        }
 
         contentsChanged = false;
     }
@@ -579,13 +576,13 @@ void FITMainWindow::CmSearch()
 
         if( currentMode == MDF_DATABASE )
         {
-          rtEJ[MDF_DATABASE].SetQueryJson(filterText);
-          // reopen records
-          rtEJ[MDF_DATABASE].Close();
-          rtEJ[MDF_DATABASE].Open();
-          resetMainWindow(); // need change key list& current record
-          contentsChanged = false;
-          setStatusText( "Record filtered" );
+            rtEJ[MDF_DATABASE].SetQueryJson(filterText);
+            // reopen records
+            rtEJ[MDF_DATABASE].Close();
+            rtEJ[MDF_DATABASE].Open();
+            resetMainWindow(); // need change key list& current record
+            contentsChanged = false;
+            setStatusText( "Record filtered" );
         }
     }
     catch( TError& err )
@@ -600,8 +597,8 @@ void FITMainWindow::CmResetSearch()
 {
     try
     {
-       if( currentMode == MDF_DATABASE )
-         ui->queryEdit->setText(SrchTemplate);
+        if( currentMode == MDF_DATABASE )
+            ui->queryEdit->setText(SrchTemplate);
     }
     catch( TError& err )
     {
@@ -616,19 +613,19 @@ void FITMainWindow::CmSaveSearch()
     try
     {
         // open file to unloading
-         std::string fname= fitTaskDir.Dir()+ "/search1.txt";
-         TFile  inFile( fname, std::ios::out);
-         if( !inFile.ChooseFileSave( this, fname, "Please, select file name to save search template","*.txt" ))
-              return;
+        std::string fname= fitTaskDir.Dir()+ "/search1.txt";
+        TFile  inFile( fname, std::ios::out);
+        if( !inFile.ChooseFileSave( this, fname, "Please, select file name to save search template","*.txt" ))
+            return;
 
-         QString filterText = ui->queryEdit->toPlainText();
+        QString filterText = ui->queryEdit->toPlainText();
 
-         QFile tmpStriam(fname.c_str());
-         if(tmpStriam.open( QIODevice::WriteOnly|QIODevice::Truncate))
-         {
-           tmpStriam.write(filterText.toUtf8());
-           tmpStriam.close();
-         }
+        QFile tmpStriam(fname.c_str());
+        if(tmpStriam.open( QIODevice::WriteOnly|QIODevice::Truncate))
+        {
+            tmpStriam.write(filterText.toUtf8());
+            tmpStriam.close();
+        }
 
     }
     catch( TError& err )
@@ -644,20 +641,20 @@ void FITMainWindow::CmLoadSearch()
     try
     {
         // open file to unloading
-         std::string fname = fitTaskDir.Dir();
-         TFile  inFile(fname, std::ios::in);
-         if( !inFile.ChooseFileOpen( this, fname, "Please, select file name to load search template","*.txt" ))
-              return;
+        std::string fname = fitTaskDir.Dir();
+        TFile  inFile(fname, std::ios::in);
+        if( !inFile.ChooseFileOpen( this, fname, "Please, select file name to load search template","*.txt" ))
+            return;
 
-         QString valStr;
-         QFile tmpStriam(fname.c_str());
-         if(tmpStriam.open( QIODevice::ReadOnly ))
-         {
-           valStr = tmpStriam.readAll();
-           tmpStriam.close();
-         }
-         else
-             Error( fname,  "error open file ");
+        QString valStr;
+        QFile tmpStriam(fname.c_str());
+        if(tmpStriam.open( QIODevice::ReadOnly ))
+        {
+            valStr = tmpStriam.readAll();
+            tmpStriam.close();
+        }
+        else
+            Error( fname,  "error open file ");
 
         ui->queryEdit->setText(valStr);
     }
@@ -689,7 +686,7 @@ void FITMainWindow::CmInsertSearch()
             bson_init( &bsrec );
             if( JsonDataShow )
             { pars.setJsonText( recBsonText.substr( recBsonText.find_first_of('{')+1 ) );
-              pars.parseObject(  &bsrec );
+                pars.parseObject(  &bsrec );
             } else
                 ParserYAML::parseYAMLToBson( recBsonText, &bsrec );
             bson_finish( &bsrec );
@@ -704,9 +701,9 @@ void FITMainWindow::CmInsertSearch()
             bson_finish( &out );
 
             if( JsonDataShow )
-              pars.printBsonObjectToJson( recBsonText, out.data );
+                pars.printBsonObjectToJson( recBsonText, out.data );
             else
-              ParserYAML::printBsonObjectToYAML( recBsonText, out.data );
+                ParserYAML::printBsonObjectToYAML( recBsonText, out.data );
             //show result
             ui->recordEdit->setText(recBsonText.c_str());
 
@@ -734,43 +731,43 @@ void FITMainWindow::CmRunTest()
 {
     try
     {
-       //if( !MessageToSave() )
-       //    return;
+        //if( !MessageToSave() )
+        //    return;
 
-       // create work directory
-       QString workDir = QString(fitTaskDir.Dir().c_str()) + "/work";
-       QDir dir(workDir);
-       if( !dir.mkpath(workDir ) )
-        Error( fitTaskDir.Dir(), "Error creating work directory");
+        // create work directory
+        QString workDir = QString(fitTaskDir.Dir().c_str()) + "/work";
+        QDir dir(workDir);
+        if( !dir.mkpath(workDir ) )
+            Error( fitTaskDir.Dir(), "Error creating work directory");
 
-       // empty work directory
-       removeDirectoryEntry( dir );
+        // empty work directory
+        removeDirectoryEntry( dir );
 
-       // Load curent record to bson structure
-       bson bsrec;
-       std::string recBsonText = ui->recordEdit->toPlainText().toStdString();
+        // Load curent record to bson structure
+        bson bsrec;
+        std::string recBsonText = ui->recordEdit->toPlainText().toStdString();
 
-       bson_init( &bsrec );
-       if( JsonDataShow )
-       { ParserJson pars;
-         pars.setJsonText( recBsonText.substr( recBsonText.find_first_of('{')+1 ) );
-         pars.parseObject(  &bsrec );
-       } else
-           ParserYAML::parseYAMLToBson( recBsonText, &bsrec );
-       bson_finish( &bsrec );
+        bson_init( &bsrec );
+        if( JsonDataShow )
+        { ParserJson pars;
+            pars.setJsonText( recBsonText.substr( recBsonText.find_first_of('{')+1 ) );
+            pars.parseObject(  &bsrec );
+        } else
+            ParserYAML::parseYAMLToBson( recBsonText, &bsrec );
+        bson_finish( &bsrec );
 
-       //test current key
-       lastCalcRecordKey = rtEJ[ currentMode ].getKeyFromBson(bsrec.data);
+        //test current key
+        lastCalcRecordKey = rtEJ[ currentMode ].getKeyFromBson(bsrec.data);
         //save record before run
-       if( rtEJ[ currentMode ].Find( lastCalcRecordKey.c_str() ))
-           rtEJ[ currentMode ].SaveRecord( lastCalcRecordKey.c_str());
-       else
-           rtEJ[ currentMode ].InsertRecord();
+        if( rtEJ[ currentMode ].Find( lastCalcRecordKey.c_str() ))
+            rtEJ[ currentMode ].SaveRecord( lastCalcRecordKey.c_str());
+        else
+            rtEJ[ currentMode ].InsertRecord();
 
-       // open file to unloading
+        // open file to unloading
         std::string fname;
         if( !bson_find_string( bsrec.data, "taskid", fname ) )
-                    fname = "undefined";
+            fname = "undefined";
         std::string fpath = "./" + fname + ".json";
         fname = fitTaskDir.Dir()+ "/work/" + fname + ".json";
 
@@ -783,7 +780,7 @@ void FITMainWindow::CmRunTest()
         }
         ff << recBsonText;
         ff.close();
-//        generateTxtfromBson( fname, &bsrec, useComments );
+        //        generateTxtfromBson( fname, &bsrec, useComments );
         bson_destroy( &bsrec);
 
         // start run
@@ -797,7 +794,7 @@ void FITMainWindow::CmRunTest()
         cParameters << "-run" << sss.c_str() << fpath.c_str();
 
         if( !runProcess( cParameters, workDir) )
-           Error("Run gemsfit -run", "Could not start a gemsfit2 process...");
+            Error("Run gemsfit -run", "Could not start a gemsfit2 process...");
 
         ui->action_Run_test->setEnabled(false);
         //ui->action_Show_Results->setEnabled(false);
@@ -838,12 +835,12 @@ void FITMainWindow::CmShowCalcResults()
 {
     try
     {
-       //if( !MessageToSave() )
-       //    return;
+        //if( !MessageToSave() )
+        //    return;
 
-       // path to work directory
-       QString workDir = QString(fitTaskDir.Dir().c_str()) + "/work/output";
-       OpenResults( lastCalcRecordKey, workDir );
+        // path to work directory
+        QString workDir = QString(fitTaskDir.Dir().c_str()) + "/work/output";
+        OpenResults( lastCalcRecordKey, workDir );
     }
     catch( TError& err )
     {
@@ -857,12 +854,12 @@ void FITMainWindow::CmShowFitResults()
 {
     try
     {
-       //if( !MessageToSave() )
-       //    return;
+        //if( !MessageToSave() )
+        //    return;
 
-       // path to work directory
-       std::string reckey = getRecordKey(  keyTable->currentRow()  );
-       OpenResults( reckey );
+        // path to work directory
+        std::string reckey = getRecordKey(  keyTable->currentRow()  );
+        OpenResults( reckey );
     }
     catch( TError& err )
     {
@@ -880,52 +877,52 @@ void FITMainWindow::CmBackupJSON()
 {
     try
     {
-       if( !MessageToSave() )
-           return;
+        if( !MessageToSave() )
+            return;
 
-       // get current filter
-       std::string keyFilter = ui->filterEdit->text().toStdString();
-       if( keyFilter.empty() )
-           keyFilter = ALLKEY;
+        // get current filter
+        std::string keyFilter = ui->filterEdit->text().toStdString();
+        if( keyFilter.empty() )
+            keyFilter = ALLKEY;
 
-       // select record list to unload
-       std::vector<std::string> aKey = vfMultiKeys( this, "Please, mark records to be unloaded to JSON",
-              currentMode, keyFilter.c_str() );
+        // select record list to unload
+        std::vector<std::string> aKey = vfMultiKeys( this, "Please, mark records to be unloaded to JSON",
+                                                     currentMode, keyFilter.c_str() );
         if( aKey.size() <1 )
-               return;
+            return;
 
-       // open file to unloading
+        // open file to unloading
         std::string fname =  projectSettings->value("ProjFileName", "undefined").toString().toStdString();
-               fname += ".";
-               fname += rtEJ[ currentMode ].GetKeywd();
-               fname += ".json";
+        fname += ".";
+        fname += rtEJ[ currentMode ].GetKeywd();
+        fname += ".json";
 
         TFile  outFile("", std::ios::out );
         if( !outFile.ChooseFileSave( this, fname, "Please, give a file name for unloading records","*.json" ))
-             return;
+            return;
         outFile.Open();
 
         TFile  outFiletest("", std::ios::out );
         if( !outFiletest.ChooseFileSave( this, fname, "Please, give a file name for unloading records","*.json" ))
-             return;
+            return;
         outFiletest.Open();
 
         outFile.ff << "[\n";
         outFiletest.ff << "[\n";
         for(size_t i=0; i<aKey.size(); i++ )
         {
-          rtEJ[ currentMode ].Get( aKey[i].c_str() );
-          std::string valDB =rtEJ[ currentMode ].GetJson();
-          outFile.ff << valDB;
-//          valDB = parseYAMLToJson(rtEJ[ currentMode ].GetYAML()); // DM 25.10.19 Yaml convert makes from "121" std::string to 121 number!!!
-          outFiletest.ff << valDB;
-          if( i<aKey.size()-1)
-          {
-              outFile.ff <<  ",";
-              outFiletest.ff <<  ",";
-          }
-              outFile.ff <<  "\n";
-              outFiletest.ff <<  "\n";
+            rtEJ[ currentMode ].Get( aKey[i].c_str() );
+            std::string valDB =rtEJ[ currentMode ].GetJson();
+            outFile.ff << valDB;
+            //          valDB = parseYAMLToJson(rtEJ[ currentMode ].GetYAML()); // DM 25.10.19 Yaml convert makes from "121" std::string to 121 number!!!
+            outFiletest.ff << valDB;
+            if( i<aKey.size()-1)
+            {
+                outFile.ff <<  ",";
+                outFiletest.ff <<  ",";
+            }
+            outFile.ff <<  "\n";
+            outFiletest.ff <<  "\n";
         }
         outFile.ff << "]";
         outFile.Close();
@@ -950,14 +947,14 @@ void FITMainWindow::CmRestoreJSON()
     try
     {
         if( !MessageToSave() )
-          return;
+            return;
 
         // open file to unloading
-         std::string fname;
-         TFile  inFile("", std::ios::in);
-         if( !inFile.ChooseFileOpen( this, fname, "Please, select file with unloaded records","*.json" ))
-              return;
-         inFile.Open();
+        std::string fname;
+        TFile  inFile("", std::ios::in);
+        if( !inFile.ChooseFileOpen( this, fname, "Please, select file with unloaded records","*.json" ))
+            return;
+        inFile.Open();
 
 
         // read bson records array from file
@@ -967,21 +964,21 @@ void FITMainWindow::CmRestoreJSON()
 
         while( !inFile.ff.eof() )
         {
-          inFile.ff.get(b);
-          if( b == jsBeginObject )
-          {
-            objStr =  parserJson.readObjectText(inFile.ff);
-            objStr = "{" + objStr;
-            rtEJ[ currentMode ].SetJson( objStr, true );
-            if( ui->actionOverwrite->isChecked() )
-               rtEJ[ currentMode ].SaveRecord(0);
-            else
-               rtEJ[ currentMode ].InsertRecord();
-         }
+            inFile.ff.get(b);
+            if( b == jsBeginObject )
+            {
+                objStr =  parserJson.readObjectText(inFile.ff);
+                objStr = "{" + objStr;
+                rtEJ[ currentMode ].SetJson( objStr, true );
+                if( ui->actionOverwrite->isChecked() )
+                    rtEJ[ currentMode ].SaveRecord(0);
+                else
+                    rtEJ[ currentMode ].InsertRecord();
+            }
         }
 
-    //    changeKeyList();
-    //    contentsChanged = false;
+        //    changeKeyList();
+        //    contentsChanged = false;
         setStatusText( "Records imported from json txt-file" );
     }
     catch( TError& err )
@@ -1000,38 +997,38 @@ void FITMainWindow::CmBackupYAML()
 {
     try
     {
-       if( !MessageToSave() )
-           return;
+        if( !MessageToSave() )
+            return;
 
-       // get current filter
-       std::string keyFilter = ui->filterEdit->text().toStdString();
-       if( keyFilter.empty() )
-           keyFilter = ALLKEY;
+        // get current filter
+        std::string keyFilter = ui->filterEdit->text().toStdString();
+        if( keyFilter.empty() )
+            keyFilter = ALLKEY;
 
-       // select record list to unload
-       std::vector<std::string> aKey = vfMultiKeys( this, "Please, mark records to be unloaded to YAML",
-              currentMode, keyFilter.c_str() );
+        // select record list to unload
+        std::vector<std::string> aKey = vfMultiKeys( this, "Please, mark records to be unloaded to YAML",
+                                                     currentMode, keyFilter.c_str() );
         if( aKey.size() <1 )
-               return;
+            return;
 
-       // open file to unloading
+        // open file to unloading
         std::string fname =  projectSettings->value("ProjFileName", "undefined").toString().toStdString();
-               fname += ".";
-               fname += rtEJ[ currentMode ].GetKeywd();
-               fname += ".yaml";
+        fname += ".";
+        fname += rtEJ[ currentMode ].GetKeywd();
+        fname += ".yaml";
         TFile  outFile("", std::ios::out );
         if( !outFile.ChooseFileSave( this, fname, "Please, give a file name for unloading records","*.yaml" ))
-             return;
+            return;
         outFile.Open();
 
         for(size_t i=0; i<aKey.size(); i++ )
         {
-          rtEJ[ currentMode ].Get( aKey[i].c_str() );
-          std::string valDB =rtEJ[ currentMode ].GetYAML();
-          outFile.ff << valDB;
-          if( i<aKey.size()-1)
-               outFile.ff <<  "\n---";
-          //outFile.ff <<  "\n";
+            rtEJ[ currentMode ].Get( aKey[i].c_str() );
+            std::string valDB =rtEJ[ currentMode ].GetYAML();
+            outFile.ff << valDB;
+            if( i<aKey.size()-1)
+                outFile.ff <<  "\n---";
+            //outFile.ff <<  "\n";
         }
 
         outFile.Close();
@@ -1053,38 +1050,38 @@ void FITMainWindow::CmRestoreYAML()
     try
     {
         if( !MessageToSave() )
-          return;
+            return;
 
         // open file to unloading
-         std::string fname;
-         TFile  inFile("", std::ios::in);
-         if( !inFile.ChooseFileOpen( this, fname, "Please, select file with unloaded records","*.yaml" ))
-              return;
-         inFile.Open();
+        std::string fname;
+        TFile  inFile("", std::ios::in);
+        if( !inFile.ChooseFileOpen( this, fname, "Please, select file with unloaded records","*.yaml" ))
+            return;
+        inFile.Open();
 
         // read bson records array from file
         try{
             YAML::Parser parser(inFile.ff);
             while (1)
             {
-              //YAML::NodeBuilder builder;
-              YAML::Emitter emt;
-              YAML::EmitFromEvents builder(emt);
-              if (!parser.HandleNextDocument(builder))
-                break;
-              std::string bsonVal = emt.c_str();
-              //cout << bsonVal.c_str() << "\n---" << endl;
-              rtEJ[ currentMode ].SetJson( bsonVal, false );
-              if( ui->actionOverwrite->isChecked() )
-                 rtEJ[ currentMode ].SaveRecord(0);
-              else
-                 rtEJ[ currentMode ].InsertRecord();
+                //YAML::NodeBuilder builder;
+                YAML::Emitter emt;
+                YAML::EmitFromEvents builder(emt);
+                if (!parser.HandleNextDocument(builder))
+                    break;
+                std::string bsonVal = emt.c_str();
+                //cout << bsonVal.c_str() << "\n---" << endl;
+                rtEJ[ currentMode ].SetJson( bsonVal, false );
+                if( ui->actionOverwrite->isChecked() )
+                    rtEJ[ currentMode ].SaveRecord(0);
+                else
+                    rtEJ[ currentMode ].InsertRecord();
             }
-           }
-           catch(YAML::Exception& e) {
-               std::cout << "parseYAMLToBson " << e.what() << std::endl;
-               Error( "parseYAMLToBson",  e.what() );
-           }
+        }
+        catch(YAML::Exception& e) {
+            std::cout << "parseYAMLToBson " << e.what() << std::endl;
+            Error( "parseYAMLToBson",  e.what() );
+        }
 
         setStatusText( "Records imported from yaml txt-file" );
     }
@@ -1106,19 +1103,19 @@ void FITMainWindow::CmRestoreCSV()
     {
         QString valCsv ="";
         if( !MessageToSave() )
-          return;
+            return;
 
         // select file with data
         std::string fname;
         TFile  inFile("", std::ios::in);
         if( !inFile.ChooseFileOpen( this, fname, "Please, select file with unloaded csv format","*.csv" ))
-             return;
+            return;
 
         // read file
         QString fpath = fname.c_str();
         QFile tmpStriam(fpath);
         if(!tmpStriam.open( QIODevice::ReadOnly ))
-           Error( fname, "File open error");
+            Error( fname, "File open error");
         valCsv = tmpStriam.readAll();
         tmpStriam.close();
 
@@ -1133,11 +1130,11 @@ void FITMainWindow::CmRestoreCSV()
         std::vector<std::string> row;
         bson exp;
 
-         //get header
+        //get header
 #if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
-         QStringList cells = allrows[0].split(',', QString::KeepEmptyParts);
+        QStringList cells = allrows[0].split(',', QString::KeepEmptyParts);
 #else
-         QStringList cells = allrows[0].split(',', Qt::KeepEmptyParts);
+        QStringList cells = allrows[0].split(',', Qt::KeepEmptyParts);
 #endif
         for( ii=0; ii< cells.count(); ii++ )
         {
@@ -1148,54 +1145,54 @@ void FITMainWindow::CmRestoreCSV()
 
         for( jj=1; jj< allrows.count(); jj++ )
         {
-          // get row
+            // get row
 #if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
             cells = allrows[jj].split(',', QString::KeepEmptyParts);
 #else
             cells = allrows[jj].split(',', Qt::KeepEmptyParts);
 #endif
-          if( cells.count() < headline.size() )
-              continue;
-          row.clear();
-          for( ii=0; ii< cells.count(); ii++ )
-          {
-              auto cell_ = cells[ii].remove('\"');
-              auto cellstr = cell_.remove('\r').toStdString();
-              row.push_back( cellstr );
-          }
+            if( cells.count() < headline.size() )
+                continue;
+            row.clear();
+            for( ii=0; ii< cells.count(); ii++ )
+            {
+                auto cell_ = cells[ii].remove('\"');
+                auto cellstr = cell_.remove('\r').toStdString();
+                row.push_back( cellstr );
+            }
 
-          if (row.size()>0)
-          {
-              size_t found = row[0].find("STOP");
-              if (found != std::string::npos)
-              {
-                  bson_destroy( &exp );
-                  break;
-              }
-          }
-          // convert row to bson
-          std::string message = "Saving record " + std::to_string(jj);
-          setStatusText(  message );
-          csvToBson( &exp, headline, row );
+            if (row.size()>0)
+            {
+                size_t found = row[0].find("STOP");
+                if (found != std::string::npos)
+                {
+                    bson_destroy( &exp );
+                    break;
+                }
+            }
+            // convert row to bson
+            std::string message = "Saving record " + std::to_string(jj);
+            setStatusText(  message );
+            csvToBson( &exp, headline, row );
 
-          // convert bson to json std::string
-          ParserJson pars;
-          std::string bsonVal;
-          pars.printBsonObjectToJson( bsonVal, exp.data );
-          // cout << bsonVal.c_str() << endl;
+            // convert bson to json std::string
+            ParserJson pars;
+            std::string bsonVal;
+            pars.printBsonObjectToJson( bsonVal, exp.data );
+            // cout << bsonVal.c_str() << endl;
 
-          //save results to EJDB
-          rtEJ[ currentMode ].SetJson( bsonVal, true );
-          if( ui->actionOverwrite->isChecked() )
-             rtEJ[ currentMode ].SaveRecord(0);
-          else
-             rtEJ[ currentMode ].InsertRecord();
+            //save results to EJDB
+            rtEJ[ currentMode ].SetJson( bsonVal, true );
+            if( ui->actionOverwrite->isChecked() )
+                rtEJ[ currentMode ].SaveRecord(0);
+            else
+                rtEJ[ currentMode ].InsertRecord();
 
-         bson_destroy( &exp );
+            bson_destroy( &exp );
         }
 
-//        changeKeyList();
-//        contentsChanged = false;
+        //        changeKeyList();
+        //        contentsChanged = false;
         setStatusText( "Records imported from csv-file" );
     }
     catch( TError& err )
@@ -1213,31 +1210,31 @@ void FITMainWindow::CmBackupTXT()
 {
     try
     {
-       if( !MessageToSave() )
-           return;
+        if( !MessageToSave() )
+            return;
 
-       std::string projDir = fitTaskDir.Dir();
-       QString dir = QFileDialog::getExistingDirectory(this, "Select Directory",
-        projDir.c_str(),  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
-       projDir = dir.toStdString();
+        std::string projDir = fitTaskDir.Dir();
+        QString dir = QFileDialog::getExistingDirectory(this, "Select Directory",
+                                                        projDir.c_str(),  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
+        projDir = dir.toStdString();
 
-       // Load curent record to bson structure
-       bson bsrec;
-       std::string recBsonText = ui->recordEdit->toPlainText().toStdString();
+        // Load curent record to bson structure
+        bson bsrec;
+        std::string recBsonText = ui->recordEdit->toPlainText().toStdString();
 
-       bson_init( &bsrec );
-       if( JsonDataShow )
-       { ParserJson pars;
-         pars.setJsonText( recBsonText.substr( recBsonText.find_first_of('{')+1 ) );
-         pars.parseObject(  &bsrec );
-       } else
-           ParserYAML::parseYAMLToBson( recBsonText, &bsrec );
-       bson_finish( &bsrec );
+        bson_init( &bsrec );
+        if( JsonDataShow )
+        { ParserJson pars;
+            pars.setJsonText( recBsonText.substr( recBsonText.find_first_of('{')+1 ) );
+            pars.parseObject(  &bsrec );
+        } else
+            ParserYAML::parseYAMLToBson( recBsonText, &bsrec );
+        bson_finish( &bsrec );
 
-       // open file to unloading
+        // open file to unloading
         std::string fname;
         if( !bson_find_string( bsrec.data, "taskid", fname ) )
-                    fname = "undefined";
+            fname = "undefined";
         fname = projDir + "/" + fname + ".json";
 
         // save txt data
@@ -1249,7 +1246,7 @@ void FITMainWindow::CmBackupTXT()
         }
         ff << recBsonText;
         ff.close();
-//        generateTxtfromBson( fname, &bsrec, useComments );
+        //        generateTxtfromBson( fname, &bsrec, useComments );
 
         bson_destroy( &bsrec);
 
@@ -1272,20 +1269,20 @@ void FITMainWindow::CmRestoreTXT()
     try
     {
         if( !MessageToSave() )
-          return;
+            return;
 
         // open file to unloading
-         std::string fname;
-         TFile  inFile("", std::ios::in);
-         if( !inFile.ChooseFileOpen( this, fname, "Please, select file with GEMSFIT2 specificatins file","*.json" ))
-              return;
+        std::string fname;
+        TFile  inFile("", std::ios::in);
+        if( !inFile.ChooseFileOpen( this, fname, "Please, select file with GEMSFIT2 specificatins file","*.json" ))
+            return;
 
         readTXT( inFile );
         if( !JsonDataShow )
         {    std::string valDB = ui->recordEdit->toPlainText().toStdString();
-             valDB = Json2YAML( valDB );
-             ui->recordEdit->setText( valDB.c_str());
-         }
+            valDB = Json2YAML( valDB );
+            ui->recordEdit->setText( valDB.c_str());
+        }
 
         changeKeyList();
         contentsChanged = true;
@@ -1301,44 +1298,44 @@ void FITMainWindow::CmRestoreTXT()
 /// Import Data Record from task configuration txt-file
 void FITMainWindow::readTXT( TFile& inFile )
 {
-         inFile.Open();
+    inFile.Open();
 
-        // read bson records array from file
-//         bson bsrec;
-//         bson_init( &bsrec );
-//         bson_append_std::string( &bsrec, "taskid", inFile.Name().c_str() );
-//         bson_append_std::string( &bsrec, "projectid", fitTaskDir.Name().c_str() );
-//         get_bson_from_gems_fit_txt( inFile.GetPath(), &bsrec );
-//         bson_finish( &bsrec );
+    // read bson records array from file
+    //         bson bsrec;
+    //         bson_init( &bsrec );
+    //         bson_append_std::string( &bsrec, "taskid", inFile.Name().c_str() );
+    //         bson_append_std::string( &bsrec, "projectid", fitTaskDir.Name().c_str() );
+    //         get_bson_from_gems_fit_txt( inFile.GetPath(), &bsrec );
+    //         bson_finish( &bsrec );
 
-//         //set bson to std::string
-//         ParserJson pars;
-//         std::string bsonVal;
-//         pars.printBsonObjectToJson( bsonVal, bsrec.data );
+    //         //set bson to std::string
+    //         ParserJson pars;
+    //         std::string bsonVal;
+    //         pars.printBsonObjectToJson( bsonVal, bsrec.data );
 
 
-         std::ifstream t(inFile.GetPath().c_str());
-         std::string str, str2;
+    std::ifstream t(inFile.GetPath().c_str());
+    std::string str, str2;
 
-         t.seekg(0, std::ios::end);
-         str.reserve(t.tellg());
-         t.seekg(0, std::ios::beg);
+    t.seekg(0, std::ios::end);
+    str.reserve(t.tellg());
+    t.seekg(0, std::ios::beg);
 
-         str.assign((std::istreambuf_iterator<char>(t)),
-                     std::istreambuf_iterator<char>());
+    str.assign((std::istreambuf_iterator<char>(t)),
+               std::istreambuf_iterator<char>());
 
-         size_t found;
+    size_t found;
 
-         // adds taskid and projectid fileds to the task configuration file
-         found = str.find("{");
-         str2 = "{\n     \"taskid\":   \""; str2 += inFile.Name().c_str(); str2 +="\", \n";
-         str2 += "     \"projectid\":   \""; str2 += fitTaskDir.Name().c_str(); str2 +="\", ";
-         str = str.substr(found+1, str.size());
-         str2 += str;
+    // adds taskid and projectid fileds to the task configuration file
+    found = str.find("{");
+    str2 = "{\n     \"taskid\":   \""; str2 += inFile.Name().c_str(); str2 +="\", \n";
+    str2 += "     \"projectid\":   \""; str2 += fitTaskDir.Name().c_str(); str2 +="\", ";
+    str = str.substr(found+1, str.size());
+    str2 += str;
 
-         //show result
-        ui->recordEdit->setText( str2.c_str());
-//        bson_destroy( &bsrec);
+    //show result
+    ui->recordEdit->setText( str2.c_str());
+    //        bson_destroy( &bsrec);
 }
 
 /// Delete the list of records
@@ -1356,14 +1353,14 @@ void FITMainWindow::CmDeleteList()
 
         // select record list to unload
         std::vector<std::string> aKey = vfMultiKeys( this, "Please, mark record keys to be deleted from database",
-               currentMode, keyFilter.c_str() );
+                                                     currentMode, keyFilter.c_str() );
         if( aKey.size() <1 )
-                return;
+            return;
 
         for(size_t i=0; i<aKey.size(); i++ )
             RecDelete( aKey[i].c_str() );
         rtEJ[currentMode].SetKey( ALLKEY );
-//        changeKeyList();
+        //        changeKeyList();
     }
     catch( TError& err )
     {
@@ -1379,12 +1376,12 @@ void FITMainWindow::CmTPpairsCSV()
     // Select all
     bson bq;
     bson_init_as_query(&bq);
-//    bson_append_start_object(&bq, "sT");
-//    bson_append_start_array(&bq, "$bt");
-//    bson_append_std::string(&bq, "0", "0");
-//    bson_append_std::string(&bq, "1", "2000");
-//    bson_append_finish_array(&bq);
-//    bson_append_finish_object(&bq);
+    //    bson_append_start_object(&bq, "sT");
+    //    bson_append_start_array(&bq, "$bt");
+    //    bson_append_std::string(&bq, "0", "0");
+    //    bson_append_std::string(&bq, "1", "2000");
+    //    bson_append_finish_array(&bq);
+    //    bson_append_finish_object(&bq);
     bson_finish(&bq);
 
     EJDBFile.Open();
@@ -1393,7 +1390,7 @@ void FITMainWindow::CmTPpairsCSV()
     uint32_t count;
 
     EJCOLL *coll = rtEJ[ currentMode ].openCollection2();
-//    coll = ejdbcreatecoll(EJDBFile.ejDB, "experiments", NULL );
+    //    coll = ejdbcreatecoll(EJDBFile.ejDB, "experiments", NULL );
     TCLIST *res = ejdbqryexecute(coll, q, &count, 0, NULL);
 
     std::vector<double> TP[2], TP_pairs[2];
@@ -1423,61 +1420,61 @@ void FITMainWindow::CmTPpairsCSV()
                 // adding temperature
                 TP[0].push_back(bson_iterator_double(&it));
             } else
-            if (key_ == "sP")
-            {
-                // adding pressure
-                TP[1].push_back(bson_iterator_double(&it));
-            }
+                if (key_ == "sP")
+                {
+                    // adding pressure
+                    TP[1].push_back(bson_iterator_double(&it));
+                }
         }
     }
-   tclistdel(res);
-   //Dispose query
-   ejdbquerydel(q);
-   bson_destroy(&bq);
+    tclistdel(res);
+    //Dispose query
+    ejdbquerydel(q);
+    bson_destroy(&bq);
 
-   // get distinct TP                                                          //D.2 getting the distinct T and P pairs
-   for (size_t i=0; i<TP[0].size(); i++)
-   {
-       // check if TP pair is presnt more than once in the TP vector
-       for (size_t j=0; j<TP[0].size(); j++)
-       {
-           if ((TP[0][i] == TP[0][j]) && (TP[1][i] == TP[1][j]) && (i != j))
-           {
-               isfound = true;
-           }
-       }
-       // check if TP pair was added to the unique TP pairs container
-       for (size_t j=0; j<TP_pairs[0].size(); ++j)
-       {
-           if ((TP[0][i] == TP_pairs[0][j]) && (TP[1][i] == TP_pairs[1][j]))
-           {
-               isfound2 = true;
-           }
-       }
-       // add TP pair if it does not repeat itself or was not added already in the container
-       if ((!isfound) || (!isfound2))
-       {
-           TP_pairs[0].push_back(TP[0][i]);
-           TP_pairs[1].push_back(TP[1][i]);
-       }
-       isfound = false;
-       isfound2 = false;
-   }
+    // get distinct TP                                                          //D.2 getting the distinct T and P pairs
+    for (size_t i=0; i<TP[0].size(); i++)
+    {
+        // check if TP pair is presnt more than once in the TP vector
+        for (size_t j=0; j<TP[0].size(); j++)
+        {
+            if ((TP[0][i] == TP[0][j]) && (TP[1][i] == TP[1][j]) && (i != j))
+            {
+                isfound = true;
+            }
+        }
+        // check if TP pair was added to the unique TP pairs container
+        for (size_t j=0; j<TP_pairs[0].size(); ++j)
+        {
+            if ((TP[0][i] == TP_pairs[0][j]) && (TP[1][i] == TP_pairs[1][j]))
+            {
+                isfound2 = true;
+            }
+        }
+        // add TP pair if it does not repeat itself or was not added already in the container
+        if ((!isfound) || (!isfound2))
+        {
+            TP_pairs[0].push_back(TP[0][i]);
+            TP_pairs[1].push_back(TP[1][i]);
+        }
+        isfound = false;
+        isfound2 = false;
+    }
 
-   std::string fname;
-   TFile  outFile("", std::ios::out );
-   if( !outFile.ChooseFileSave( this, fname, "Please, give a file name for exporting the P-T pairs ", "*.csv" ))
+    std::string fname;
+    TFile  outFile("", std::ios::out );
+    if( !outFile.ChooseFileSave( this, fname, "Please, give a file name for exporting the P-T pairs ", "*.csv" ))
         return;
-   outFile.Open();
+    outFile.Open();
 
-   for (size_t i=0; i<TP_pairs[1].size(); ++i)
-   {
-       outFile.ff <<TP_pairs[1][i]<<";"<<TP_pairs[0][i]<<std::endl;
-   }
-   outFile.ff << TP_pairs[1].size() <<std::endl;
-   outFile.Close();
+    for (size_t i=0; i<TP_pairs[1].size(); ++i)
+    {
+        outFile.ff <<TP_pairs[1][i]<<";"<<TP_pairs[0][i]<<std::endl;
+    }
+    outFile.ff << TP_pairs[1].size() <<std::endl;
+    outFile.Close();
 
-   setStatusText( "P-T pairs of the experiments in the database were exported to the csv file" );
+    setStatusText( "P-T pairs of the experiments in the database were exported to the csv file" );
 
 }
 
@@ -1531,34 +1528,34 @@ void FITMainWindow::actionZoomOut()
 
 void FITMainWindow::CmSettingth()
 {
-  try
-  {
-     if( !MessageToSave() )
+    try
+    {
+        if( !MessageToSave() )
             return;
 
-    // define new preferences
-     PreferencesDialog dlg(mainSettings);
-      if( !dlg.exec() )
-          return;
+        // define new preferences
+        PreferencesDialog dlg(mainSettings);
+        if( !dlg.exec() )
+            return;
 
-    //get data from settings
-    getDataFromPreferences();
-    // update key list, editor, filter
-    resetMainWindow();
-  }
+        //get data from settings
+        getDataFromPreferences();
+        // update key list, editor, filter
+        resetMainWindow();
+    }
     catch( TError& err )
     {
-       setStatusText( err.title );
-       addLinetoStatus( err.mess );
+        setStatusText( err.title );
+        addLinetoStatus( err.mess );
     }
 }
 
 void FITMainWindow::CmHelp()
 {
     if( currentMode == MDF_DATABASE )
-       OpenHelp( GF_SABOUT_HTML );
+        OpenHelp( GF_SABOUT_HTML );
     else
-       OpenHelp( GF_TASKDB_HTML );
+        OpenHelp( GF_TASKDB_HTML );
 }
 
 void FITMainWindow::CmHelpAbout()

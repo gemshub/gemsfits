@@ -23,37 +23,6 @@ QColor colorAt(const QColor &start, const QColor &end, qreal pos)
 // SeriesLineData
 //---------------------------------------------------------------------------
 
-#ifndef NO_JSONIO
-void SeriesLineData::toJsonNode( jsonio17::JsonBase& object ) const
-{
-    object.clear();
-    object.set_value_via_path( "gpt", markerShape );
-    object.set_value_via_path( "gps", markerSize );
-    object.set_value_via_path( "gls", penSize );
-    object.set_value_via_path( "glt", penStyle );
-    object.set_value_via_path( "gsp", spline );
-    object.set_value_via_path( "gndx", xcolumn );
-    object.set_value_via_path( "grd", red );
-    object.set_value_via_path( "ggr",  green );
-    object.set_value_via_path( "gbl",  blue );
-    object.set_value_via_path( "gnm",  name );
-}
-
-void SeriesLineData::fromJsonNode( const jsonio17::JsonBase& object )
-{
-    object.get_value_via_path( "gpt", markerShape, 0 );
-    object.get_value_via_path( "gps", markerSize, 4 );
-    object.get_value_via_path( "gls", penSize, 2 );
-    object.get_value_via_path( "glt", penStyle, 0 );
-    object.get_value_via_path( "gsp", spline, 0 );
-    object.get_value_via_path( "gndx", xcolumn, -1 );
-    object.get_value_via_path( "grd", red, 25 );
-    object.get_value_via_path( "ggr", green, 0 );
-    object.get_value_via_path( "gbl", blue, 150 );
-    object.get_value_via_path( "gnm", name, std::string("") );
-}
-
-#else
 
 void SeriesLineData::toBsonObject( bson *obj ) const
 {
@@ -82,8 +51,6 @@ void SeriesLineData::fromBsonObject( const char *obj )
     bson_find_value_def( obj, "gbl", blue, 150 );
     bson_find_string( obj, "gnm", name );
 }
-
-#endif
 
 
 void SeriesLineData::toJsonObject(QJsonObject& json) const
@@ -138,98 +105,6 @@ void ChartData::setMinMaxRegion( double reg[4] )
     part[3] = reg[3]-(reg[3]-reg[2])/3;
 
 }
-
-#ifndef NO_JSONIO
-void ChartData::toJsonNode( jsonio17::JsonBase& object ) const
-{
-    object.clear();
-    object.set_value_via_path( "title", title );
-    object.set_value_via_path( "graphType", graphType );
-
-    // define grid of plot
-    object.set_value_via_path( "axisTypeX", axisTypeX );
-    object.set_value_via_path( "axisTypeY", axisTypeY );
-    object.set_value_via_path( "axisFont", axisFont.toString().toStdString() );
-    object.set_value_via_path( "xName", xName );
-    object.set_value_via_path( "yName", yName );
-
-    object.set_value_via_path( "region", region );
-    object.set_value_via_path( "part", part );
-    object.set_value_via_path( "b_color", b_color );
-
-    // define curves
-    decltype(object)& arr1 = object.add_array_via_path( "lines" );
-    for(size_t ii=0; ii<linesdata.size(); ii++)
-    {
-        auto& obj = arr1.add_object_via_path( std::to_string(ii) );
-        linesdata[ii].toJsonNode( obj );
-    }
-
-    decltype(object)& arr2 = object.add_array_via_path( "models" );
-    for(size_t ii=0; ii<modelsdata.size(); ii++)
-    {
-        auto& obj = arr2.add_object_via_path( std::to_string(ii) );
-        modelsdata[ii]->toJsonNode( obj );
-    }
-}
-
-void ChartData::fromJsonNode( const jsonio17::JsonBase& object )
-{
-    size_t ii;
-    std::vector<double> reg_part;
-    std::vector<int> b_col_vec;
-
-    object.get_value_via_path<std::string>( "title", title, "title" );
-    object.get_value_via_path<int>( "graphType", graphType, LineChart );
-
-    // define grid of plot
-    object.get_value_via_path( "axisTypeX", axisTypeX, 5 );
-    object.get_value_via_path( "axisTypeY", axisTypeY, 5 );
-
-    std::string fntName;
-    if( object.get_value_via_path<std::string>( "axisFont", fntName, "" ) )
-        axisFont.fromString( fntName.c_str() );
-
-    object.get_value_via_path<std::string>( "xName", xName, "x");
-    object.get_value_via_path<std::string>( "yName", yName, "y");
-
-    if( object.get_value_via_path( "region", reg_part, {} ) && reg_part.size() >= 4 )
-        for( ii=0; ii<4; ii++)
-            region[ii] = reg_part[ii];
-
-    if( object.get_value_via_path( "part", reg_part, {} ) && reg_part.size() >= 4 )
-        for( ii=0; ii<4; ii++)
-            part[ii] = reg_part[ii];
-
-    b_color = { 255, 255, 255 };
-    if( object.get_value_via_path( "b_color", b_col_vec, {} ) && b_col_vec.size() >= 3 )
-        for( ii=0; ii<3; ii++)
-            b_color[ii] = b_col_vec[ii];
-
-    linesdata.clear();
-    SeriesLineData linebuf;
-    auto arr  = object.field( "lines" );
-    if(arr != nullptr)
-        for(ii=0; ii< arr->size(); ii++)
-        {
-            linebuf.fromJsonNode( arr->child(ii) );
-            linesdata.push_back(  linebuf );
-        }
-
-    arr  = object.field( "models" );
-    if(arr != nullptr)
-        for(ii=0; ii<arr->size(); ii++)
-        {
-            if( ii >= modelsdata.size())
-                break;
-            modelsdata[ii]->fromJsonNode( arr->child(ii) );
-        }
-    // refresh model type
-    setGraphType(graphType);
-}
-
-
-#else
 
 void ChartData::toBsonObject( bson *obj ) const
 {
@@ -360,8 +235,6 @@ void ChartData::fromBsonObject( const char *obj )
     // refresh model type
     setGraphType(graphType);
 }
-
-#endif
 
 void ChartData::toJsonObject(QJsonObject& json) const
 {

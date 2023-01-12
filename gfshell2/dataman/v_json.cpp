@@ -4,7 +4,7 @@
 // Implementation of ParserJson class and other bson functions
 //
 // Copyright (C) 2014  S.V.Dmytriyeva
-// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+// Uses EJDB (https://ejdb.org),
 //    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
 // This file is part of the GEMSFITS GUI, which uses the
@@ -20,8 +20,8 @@
 #include <sstream>
 #include <cstring>
 #include <iomanip>
-#include "v_service.h"
 #include "f_ejdb.h"
+#include "v_service.h"
 
 #define SHORT_EMPTY 	   -32768
 #define SHORT_ANY   	    32767
@@ -29,6 +29,8 @@
 #define USHORT_ANY           65535
 #define DOUBLE_EMPTY         2.2250738585072014e-308
 #define DOUBLE_ANY           1.7976931348623157e+308
+const char* S_EMPTY	=    "`";
+const char* S_ANY  	=    "*";
 
 bool bson_find_string( const char *obj, const char *name, std::string& str )
 {
@@ -43,13 +45,13 @@ bool bson_find_string( const char *obj, const char *name, std::string& str )
         break;
     case BSON_STRING:
         str = bson_iterator_string(&it);
-         break;
+        break;
     default: // error
-         // bson_errprintf("can't print type : %d\n", type);
+        // bson_errprintf("can't print type : %d\n", type);
         str = S_EMPTY;
         return false;
-   }
-   return true;
+    }
+    return true;
 }
 
 const char* bson_find_array( const char *obj, const char *name )
@@ -79,19 +81,19 @@ time_t bson_find_time_t( const char *obj, const char *name )
     switch( type )
     {
     case BSON_STRING:
-         { std::string stime = bson_iterator_string(&it);
-           ctm =  tcstrmktime(stime.c_str());
-         }
-         break;
+    { std::string stime = bson_iterator_string(&it);
+        ctm =  tcstrmktime(stime.c_str());
+    }
+        break;
     case BSON_DATE:
-         ctm = bson_iterator_time_t(&it);
-         break;
+        ctm = bson_iterator_time_t(&it);
+        break;
     case BSON_NULL:
     default:
-            ctm = time(NULL);
-            break;
-   }
-   return ctm;
+        ctm = time(NULL);
+        break;
+    }
+    return ctm;
 }
 
 void bson_print_raw_txt_(FILE *f, const char *data, int depth, int datatype );
@@ -110,111 +112,111 @@ void bson_print_raw_txt_(FILE *f, const char *data, int depth, int datatype )
     while (bson_iterator_next(&i))
     {
         if(!first )
-         fprintf(f, ",\n");
+            fprintf(f, ",\n");
         else
-         first = false;
+            first = false;
 
         bson_type t = bson_iterator_type(&i);
         if (t == 0)
-          break;
+            break;
 
         key = bson_iterator_key(&i);
 
         // before print
         switch( datatype )
         {
-         case BSON_OBJECT:
-           for (temp = 0; temp <= depth; temp++)
-             fprintf(f, "\t");
-           fprintf(f, "\"%s\": ", key );
-           break;
-         case BSON_ARRAY:
+        case BSON_OBJECT:
             for (temp = 0; temp <= depth; temp++)
-              fprintf(f, "\t");
+                fprintf(f, "\t");
+            fprintf(f, "\"%s\": ", key );
             break;
-         default:
+        case BSON_ARRAY:
+            for (temp = 0; temp <= depth; temp++)
+                fprintf(f, "\t");
+            break;
+        default:
             break;
         }
 
         switch (t)
         {
-          // impotant datatypes
-          case BSON_NULL:
-              fprintf(f, "null");
-              break;
-          case BSON_BOOL:
-               fprintf(f, "%s", bson_iterator_bool(&i) ? "true" : "false");
-               break;
-          case BSON_INT:
-               fprintf(f, "%d", bson_iterator_int(&i));
-               break;
-          case BSON_LONG:
-               fprintf(f, "%ld", (uint64_t) bson_iterator_long(&i));
-               break;
-          case BSON_DOUBLE:
-               fprintf(f, "%.10lg", bson_iterator_double(&i));
-               break;
-          case BSON_STRING:
-                fprintf(f, "\"%s\"", bson_iterator_string(&i));
-                break;
+        // impotant datatypes
+        case BSON_NULL:
+            fprintf(f, "null");
+            break;
+        case BSON_BOOL:
+            fprintf(f, "%s", bson_iterator_bool(&i) ? "true" : "false");
+            break;
+        case BSON_INT:
+            fprintf(f, "%d", bson_iterator_int(&i));
+            break;
+        case BSON_LONG:
+            fprintf(f, "%ld", (uint64_t) bson_iterator_long(&i));
+            break;
+        case BSON_DOUBLE:
+            fprintf(f, "%.10lg", bson_iterator_double(&i));
+            break;
+        case BSON_STRING:
+            fprintf(f, "\"%s\"", bson_iterator_string(&i));
+            break;
 
-          // main constructions
-          case BSON_OBJECT:
-             fprintf(f, "{\n");
-             bson_print_raw_txt_( f, bson_iterator_value(&i), depth + 1, BSON_OBJECT);
-             for (temp = 0; temp <= depth; temp++)
-               fprintf(f, "\t");
-             fprintf(f, "}");
-             break;
-          case BSON_ARRAY:
-               fprintf(f, "[\n");
-               bson_print_raw_txt_(f, bson_iterator_value(&i), depth + 1, BSON_ARRAY );
-               for (temp = 0; temp <= depth; temp++)
-                 fprintf(f, "\t");
-               fprintf(f, "]");
-               break;
+            // main constructions
+        case BSON_OBJECT:
+            fprintf(f, "{\n");
+            bson_print_raw_txt_( f, bson_iterator_value(&i), depth + 1, BSON_OBJECT);
+            for (temp = 0; temp <= depth; temp++)
+                fprintf(f, "\t");
+            fprintf(f, "}");
+            break;
+        case BSON_ARRAY:
+            fprintf(f, "[\n");
+            bson_print_raw_txt_(f, bson_iterator_value(&i), depth + 1, BSON_ARRAY );
+            for (temp = 0; temp <= depth; temp++)
+                fprintf(f, "\t");
+            fprintf(f, "]");
+            break;
 
-           // not used in GEMS data types
-              case BSON_SYMBOL:
-                     fprintf(f, "SYMBOL: %s", bson_iterator_string(&i));
-                     break;
-              case BSON_OID:
-                     bson_oid_to_string(bson_iterator_oid(&i), oidhex);
-                     fprintf(f, "%s", oidhex);
-                     break;
-              case BSON_DATE:
-                     char buf[100];
-                     tcdatestrhttp(bson_iterator_time_t(&i), INT_MAX, buf);
-                     fprintf(f, "\"%s\"", buf);
+            // not used in GEMS data types
+        case BSON_SYMBOL:
+            fprintf(f, "SYMBOL: %s", bson_iterator_string(&i));
+            break;
+        case BSON_OID:
+            bson_oid_to_string(bson_iterator_oid(&i), oidhex);
+            fprintf(f, "%s", oidhex);
+            break;
+        case BSON_DATE:
+            char buf[100];
+            tcdatestrhttp(bson_iterator_time_t(&i), INT_MAX, buf);
+            fprintf(f, "\"%s\"", buf);
             //fprintf(f, "%ld", (long int) bson_iterator_date(&i));
-                     break;
-              case BSON_BINDATA:
-                     fprintf(f, "BSON_BINDATA");
-                     break;
-              case BSON_UNDEFINED:
-                     fprintf(f, "BSON_UNDEFINED");
-                     break;
-              case BSON_REGEX:
-                     fprintf(f, "BSON_REGEX: %s", bson_iterator_regex(&i));
-                     break;
-              case BSON_CODE:
-                     fprintf(f, "BSON_CODE: %s", bson_iterator_code(&i));
-                     break;
-              case BSON_CODEWSCOPE:
-                     fprintf(f, "BSON_CODE_W_SCOPE: %s", bson_iterator_code(&i));
-                     /* bson_init( &scope ); */ /* review - stepped on by bson_iterator_code_scope? */
-                     bson_iterator_code_scope(&i, &scope);
-                     fprintf(f, "\n\t SCOPE: ");
-                     bson_print_raw_txt_(f, (const char*) &scope, 0, BSON_CODEWSCOPE);
-                     //bson_print(f, &scope);
-                     /* bson_destroy( &scope ); */ /* review - causes free error */
-                     break;
-               case BSON_TIMESTAMP:
-                     ts = bson_iterator_timestamp(&i);
-                     fprintf(f, "i: %d, t: %d", ts.i, ts.t);
-                     break;
-               default:
-                     fprintf(f, "can't print type : %d\n", t);
+            break;
+        case BSON_BINDATA:
+            fprintf(f, "BSON_BINDATA");
+            break;
+        case BSON_UNDEFINED:
+            fprintf(f, "BSON_UNDEFINED");
+            break;
+        case BSON_REGEX:
+            fprintf(f, "BSON_REGEX: %s", bson_iterator_regex(&i));
+            break;
+        case BSON_CODE:
+            fprintf(f, "BSON_CODE: %s", bson_iterator_code(&i));
+            break;
+        case BSON_CODEWSCOPE:
+            fprintf(f, "BSON_CODE_W_SCOPE: %s", bson_iterator_code(&i));
+            /* bson_init( &scope ); */ /* review - stepped on by bson_iterator_code_scope? */
+            bson_iterator_code_scope(&i, &scope);
+            fprintf(f, "\n\t SCOPE: ");
+            bson_print_raw_txt_(f, (const char*) &scope, 0, BSON_CODEWSCOPE);
+            //bson_print(f, &scope);
+            /* bson_destroy( &scope ); */ /* review - causes free error */
+            break;
+        case BSON_TIMESTAMP:
+            ts = bson_iterator_timestamp(&i);
+            fprintf(f, "i: %d, t: %d", ts.i, ts.t);
+            break;
+        default:
+            fprintf(f, "can't print type : %d\n", t);
         }
     }
     fprintf(f, "\n");
@@ -237,32 +239,32 @@ void print_bson_object_to_json(FILE *f, const bson *b)
 // Read one Json Object from text file to string
 std::string  ParserJson::readObjectText( std::fstream& ff )
 {
-  jsontext = "";
-  //jsontext += jsBeginObject;
-  int cntBeginObject = 1;
-  char input;
+    jsontext = "";
+    //jsontext += jsBeginObject;
+    int cntBeginObject = 1;
+    char input;
 
-  do{
-       ff.get( input );
-       if( input ==  jsBeginObject )
-          cntBeginObject++;
-       else if( input ==  jsEndObject )
-             cntBeginObject--;
-       jsontext+= input;
+    do{
+        ff.get( input );
+        if( input ==  jsBeginObject )
+            cntBeginObject++;
+        else if( input ==  jsEndObject )
+            cntBeginObject--;
+        jsontext+= input;
 
-     } while( cntBeginObject > 0 && !ff.eof());
+    } while( cntBeginObject > 0 && !ff.eof());
 
-  curjson = jsontext.c_str();
-  end = curjson + jsontext.length();
-  return jsontext;
+    curjson = jsontext.c_str();
+    end = curjson + jsontext.length();
+    return jsontext;
 }
 
 // Load Json text
 void  ParserJson::setJsonText( const std::string& json )
 {
-  jsontext = json;
-  curjson = jsontext.c_str();
-  end = curjson + jsontext.length();
+    jsontext = json;
+    curjson = jsontext.c_str();
+    end = curjson + jsontext.length();
 }
 
 bool ParserJson::xblanc()
@@ -296,7 +298,7 @@ void ParserJson::getNumber( double& value, int& type )
 
     // int = zero / ( digit1-9 *DIGIT )
     while (curjson < end && isdigit(*curjson) )
-            ++curjson;
+        ++curjson;
 
     // frac = decimal-point 1*DIGIT
     if (curjson < end && *curjson == '.')
@@ -322,9 +324,9 @@ void ParserJson::getNumber( double& value, int& type )
              "Termination by Number.");
     sscanf( start, "%lg", &value );
     if( isInt && ( value < SHORT_ANY && value > SHORT_EMPTY ) )
-      type = BSON_INT;
+        type = BSON_INT;
     else
-      type =  BSON_DOUBLE;       \
+        type =  BSON_DOUBLE;       \
 }
 
 
@@ -338,7 +340,7 @@ void ParserJson::parseValue( const char *name, bson *brec )
     {
     case 'n':
         if( (end - curjson) > 4 && (*curjson++ == 'u' &&
-            *curjson++ == 'l' && *curjson++ == 'l') )
+                                    *curjson++ == 'l' && *curjson++ == 'l') )
         {
             type = BSON_NULL;
             bson_append_null(brec, name );
@@ -347,7 +349,7 @@ void ParserJson::parseValue( const char *name, bson *brec )
         Error( "E05JSon: ", "Illegal Value.");
     case 't':
         if( (end - curjson) > 4 && (*curjson++ == 'r' &&
-            *curjson++ == 'u' && *curjson++ == 'e') )
+                                    *curjson++ == 'u' && *curjson++ == 'e') )
         {
             type = BSON_BOOL;
             bson_append_bool(brec, name, true );
@@ -356,7 +358,7 @@ void ParserJson::parseValue( const char *name, bson *brec )
         Error( "E05JSon: ", "Illegal Value.");
     case 'f':
         if( (end - curjson) > 5 && (*curjson++ == 'a' &&
-            *curjson++ == 'l'  && *curjson++ == 's' && *curjson++ == 'e' ) )
+                                    *curjson++ == 'l'  && *curjson++ == 's' && *curjson++ == 'e' ) )
         {
             type = BSON_BOOL;
             bson_append_bool(brec, name, false );
@@ -364,13 +366,13 @@ void ParserJson::parseValue( const char *name, bson *brec )
         }
         Error( "E05JSon: ", "Illegal Value.");
     case jsQuote:
-       {
+    {
         std::string str = "";
         type = BSON_STRING;
         getString( str );
         bson_append_string( brec, name, str.c_str() );
-       }
-       break;
+    }
+        break;
 
     case jsBeginArray:
         type = BSON_ARRAY;
@@ -387,30 +389,30 @@ void ParserJson::parseValue( const char *name, bson *brec )
         break;
 
     case jsEndArray:
-         --curjson;
+        --curjson;
         break;  // empty array
     case jsEndObject:
-         --curjson;
+        --curjson;
         break;  // empty object
 
     default:  // number
-      { --curjson;
+    { --curjson;
         if( isdigit(*curjson) || *curjson == '+' ||
-            *curjson == '-' || *curjson == '.' ||
-            *curjson == 'e' || *curjson == 'E'    )
+                *curjson == '-' || *curjson == '.' ||
+                *curjson == 'e' || *curjson == 'E'    )
         {
             double value = DOUBLE_EMPTY;
             getNumber( value, type );
             if( type == BSON_INT )
-              bson_append_int( brec, name, (int)value );
+                bson_append_int( brec, name, (int)value );
             else
-              bson_append_double( brec, name, value );
+                bson_append_double( brec, name, value );
             break;
         }
         else
             Error( "E05JSon: ", "Illegal Value.");
-      }
-      break;
+    }
+        break;
     }
 }
 
@@ -422,15 +424,15 @@ void ParserJson::parseArray( bson *brec )
 
     while( *curjson != jsEndArray )
     {
-      sprintf( name, "%d", ndx);
-      parseValue( name, brec );
-      ErrorIf( !xblanc() ,"E06JSon: ", "Unterminated Array.");
-      if( *curjson == jsValueSeparator  )
-        curjson++;
-      else
-        ErrorIf( *curjson != jsEndArray ,"E07JSon: ",
-                 "Missing Value Separator.");
-      ndx++;
+        sprintf( name, "%d", ndx);
+        parseValue( name, brec );
+        ErrorIf( !xblanc() ,"E06JSon: ", "Unterminated Array.");
+        if( *curjson == jsValueSeparator  )
+            curjson++;
+        else
+            ErrorIf( *curjson != jsEndArray ,"E07JSon: ",
+                     "Missing Value Separator.");
+        ndx++;
     }
     curjson++;
 }
@@ -442,29 +444,29 @@ void ParserJson::parseObject( bson *brec )
 
     while( *curjson != jsEndObject )
     {
-      // read key
-      ErrorIf( !xblanc() ,"E08JSon: ", "Unterminated Object.");
+        // read key
+        ErrorIf( !xblanc() ,"E08JSon: ", "Unterminated Object.");
 
-      if( *curjson++== jsQuote  )
-      {
-          getString( name );
-       }
-      else
-        Error( "E10JSon: ", "Missing Key of Object.");
+        if( *curjson++== jsQuote  )
+        {
+            getString( name );
+        }
+        else
+            Error( "E10JSon: ", "Missing Key of Object.");
 
-      ErrorIf( !xblanc() ,"E08JSon: ", "Unterminated Object.");
-      if( *curjson == jsNameSeparator  )
-          curjson++;
-      else
-        Error( "E09JSon: ", "Missing Name Separator.");
-      // read value
-      parseValue( name.c_str(), brec );
-      ErrorIf( !xblanc() ,"E08JSon: ", "Unterminated Object.");
-      if( *curjson == jsValueSeparator  )
-        curjson++;
-      else
-        ErrorIf( *curjson != jsEndObject ,"E07JSon: ",
-                 "Missing Value Separator.");
+        ErrorIf( !xblanc() ,"E08JSon: ", "Unterminated Object.");
+        if( *curjson == jsNameSeparator  )
+            curjson++;
+        else
+            Error( "E09JSon: ", "Missing Name Separator.");
+        // read value
+        parseValue( name.c_str(), brec );
+        ErrorIf( !xblanc() ,"E08JSon: ", "Unterminated Object.");
+        if( *curjson == jsValueSeparator  )
+            curjson++;
+        else
+            ErrorIf( *curjson != jsEndObject ,"E07JSon: ",
+                     "Missing Value Separator.");
     }
     curjson++;
 }
@@ -484,108 +486,108 @@ void ParserJson::bson_print_raw_txt( std::iostream& os, const char *data, int de
     {
         bson_type t = bson_iterator_type(&i);
         if (t == 0)
-          break;
+            break;
         if( t == BSON_OID )
-          continue;
+            continue;
 
         if(!first )
-         os <<  ",\n";
+            os <<  ",\n";
         else
-         first = false;
+            first = false;
 
         key = bson_iterator_key(&i);
 
-         // before print
+        // before print
         switch( datatype )
         {
-         case BSON_OBJECT:
-           for (temp = 0; temp <= depth; temp++)
-             os <<  "     ";
-           os << "\"" << key << "\" :   ";
-           break;
-         case BSON_ARRAY:
+        case BSON_OBJECT:
             for (temp = 0; temp <= depth; temp++)
-              os << "     ";
+                os <<  "     ";
+            os << "\"" << key << "\" :   ";
             break;
-         default:
+        case BSON_ARRAY:
+            for (temp = 0; temp <= depth; temp++)
+                os << "     ";
+            break;
+        default:
             break;
         }
 
         switch (t)
         {
-          // impotant datatypes
-          case BSON_NULL:
-               os << "null";
-              break;
-          case BSON_BOOL:
-               os << ( bson_iterator_bool(&i) ?  "true": "false");
-               break;
-          case BSON_INT:
-               os << bson_iterator_int(&i);
-               break;
-          case BSON_LONG:
-               os << bson_iterator_long(&i);
-               break;
-          case BSON_DOUBLE:
-               os << std::setprecision(15) << bson_iterator_double(&i);
-               break;
-          case BSON_STRING:
-               os << "\"" << bson_iterator_string(&i) << "\"";
-                break;
+        // impotant datatypes
+        case BSON_NULL:
+            os << "null";
+            break;
+        case BSON_BOOL:
+            os << ( bson_iterator_bool(&i) ?  "true": "false");
+            break;
+        case BSON_INT:
+            os << bson_iterator_int(&i);
+            break;
+        case BSON_LONG:
+            os << bson_iterator_long(&i);
+            break;
+        case BSON_DOUBLE:
+            os << std::setprecision(15) << bson_iterator_double(&i);
+            break;
+        case BSON_STRING:
+            os << "\"" << bson_iterator_string(&i) << "\"";
+            break;
 
-          // main constructions
-          case BSON_OBJECT:
-             os << "{\n";
-             bson_print_raw_txt( os, bson_iterator_value(&i), depth + 1, BSON_OBJECT);
-             for (temp = 0; temp <= depth; temp++)
-               os << "     ";
-             os << "}";
-             break;
-          case BSON_ARRAY:
-              os << "[\n";
-              bson_print_raw_txt(os, bson_iterator_value(&i), depth + 1, BSON_ARRAY );
-               for (temp = 0; temp <= depth; temp++)
-                 os << "     ";
-               os << "]";
-               break;
+            // main constructions
+        case BSON_OBJECT:
+            os << "{\n";
+            bson_print_raw_txt( os, bson_iterator_value(&i), depth + 1, BSON_OBJECT);
+            for (temp = 0; temp <= depth; temp++)
+                os << "     ";
+            os << "}";
+            break;
+        case BSON_ARRAY:
+            os << "[\n";
+            bson_print_raw_txt(os, bson_iterator_value(&i), depth + 1, BSON_ARRAY );
+            for (temp = 0; temp <= depth; temp++)
+                os << "     ";
+            os << "]";
+            break;
 
-           // not used in GEMS data types
-              case BSON_SYMBOL:
-              //       os<<  "SYMBOL: " << bson_iterator_string(&i);
-                     break;
-              case BSON_OID:
-              //       bson_oid_to_string(bson_iterator_oid(&i), oidhex);
-              //       os << oidhex;
-                     break;
-              case BSON_DATE:
-              //       char buf[100];
-              //       tcdatestrhttp(bson_iterator_time_t(&i), INT_MAX, buf);
-              //       os << "\"" << buf <<"\"";
-                     break;
-              case BSON_BINDATA:
-              //       os << "BSON_BINDATA";
-                     break;
-              case BSON_UNDEFINED:
-              //      os << "BSON_UNDEFINED";
-                     break;
-              case BSON_REGEX:
-              //       os << "BSON_REGEX: " << bson_iterator_regex(&i);
-                     break;
-              case BSON_CODE:
-              //       os << "BSON_CODE: " << bson_iterator_code(&i);
-                     break;
-              case BSON_CODEWSCOPE:
-              //       os << "BSON_CODE_W_SCOPE: " << bson_iterator_code(&i);
-              //       bson_iterator_code_scope(&i, &scope);
-              //       os << "\n      SCOPE: ";
-              //       bson_print_raw_txt( os, (const char*) &scope, 0, BSON_CODEWSCOPE);
-                     break;
-               case BSON_TIMESTAMP:
-              //       ts = bson_iterator_timestamp(&i);
-              //       os <<  "i: " << ts.i << ", t: " << ts.t;
-                     break;
-               default:
-                     os  << "can't print type : " << t;
+            // not used in GEMS data types
+        case BSON_SYMBOL:
+            //       os<<  "SYMBOL: " << bson_iterator_string(&i);
+            break;
+        case BSON_OID:
+            //       bson_oid_to_string(bson_iterator_oid(&i), oidhex);
+            //       os << oidhex;
+            break;
+        case BSON_DATE:
+            //       char buf[100];
+            //       tcdatestrhttp(bson_iterator_time_t(&i), INT_MAX, buf);
+            //       os << "\"" << buf <<"\"";
+            break;
+        case BSON_BINDATA:
+            //       os << "BSON_BINDATA";
+            break;
+        case BSON_UNDEFINED:
+            //      os << "BSON_UNDEFINED";
+            break;
+        case BSON_REGEX:
+            //       os << "BSON_REGEX: " << bson_iterator_regex(&i);
+            break;
+        case BSON_CODE:
+            //       os << "BSON_CODE: " << bson_iterator_code(&i);
+            break;
+        case BSON_CODEWSCOPE:
+            //       os << "BSON_CODE_W_SCOPE: " << bson_iterator_code(&i);
+            //       bson_iterator_code_scope(&i, &scope);
+            //       os << "\n      SCOPE: ";
+            //       bson_print_raw_txt( os, (const char*) &scope, 0, BSON_CODEWSCOPE);
+            break;
+        case BSON_TIMESTAMP:
+            //       ts = bson_iterator_timestamp(&i);
+            //       os <<  "i: " << ts.i << ", t: " << ts.t;
+            break;
+        default:
+            os  << "can't print type : " << t;
         }
     }
     os << "\n";

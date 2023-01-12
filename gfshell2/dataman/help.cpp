@@ -3,8 +3,8 @@
 //
 // Implementation of HelpConfigurator class
 //
-// Copyright (C) 2010-2014  S.V.Dmytriyeva
-// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+// Copyright (C) 2010-2023  S.V.Dmytriyeva
+// Uses EJDB (https://ejdb.org),
 //    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
 // This file is part of the GEMSFITS GUI, which uses the
@@ -19,7 +19,7 @@
 
 #include <fstream>
 #include <iostream>
-
+#include <QDir>
 #include "help.h"
 
 // read string untill "end"
@@ -32,7 +32,7 @@ void HelpConfigurator::u_getline(std::istream& is, QString& str, QString end )
         str += ch;
         if( str.indexOf(end) > 0)
         {
-          break;
+            break;
         }
         is.get(ch);
     }
@@ -41,43 +41,43 @@ void HelpConfigurator::u_getline(std::istream& is, QString& str, QString end )
 // read all reference from file
 void HelpConfigurator::getHrefs( QString file, QString file_name)
 {
-   char ch;
-   std::fstream f_in( file.toStdString(), std::ios::in );
-   QString ref;
+    char ch;
+    std::fstream f_in( file.toStdString(), std::ios::in );
+    QString ref;
 
-   if( !f_in.good() )
-   {
+    if( !f_in.good() )
+    {
 #ifdef IPMGEMPLUGIN
         std::cout << file.toStdString() << " Fileopen error" << std::endl;
 #else
         file += " Fileopen error";
         Error( "HelpConfigurator", file.toStdString());
 #endif
-         return;
-   }
+        return;
+    }
 
-   while( !f_in.eof() )
-   {
-       f_in.get(ch);
-       if(  ch == '<' )
-       {
-           f_in.get(ch);
-           if( ch == 'a' )  // <a name="keywd"></a>
-           {
-               ref = "<a";
-               u_getline(f_in, ref, "</a>" );
-               addNameToList(ref, file_name);
-               continue;
-           }
-           if( ch == 'i')  // <img src="file" ... >
-           {
-               ref = "<i";
-               u_getline(f_in, ref, ">" );
-               addImgToList(ref );
-               continue;
-           }
-       }
-   }
+    while( !f_in.eof() )
+    {
+        f_in.get(ch);
+        if(  ch == '<' )
+        {
+            f_in.get(ch);
+            if( ch == 'a' )  // <a name="keywd"></a>
+            {
+                ref = "<a";
+                u_getline(f_in, ref, "</a>" );
+                addNameToList(ref, file_name);
+                continue;
+            }
+            if( ch == 'i')  // <img src="file" ... >
+            {
+                ref = "<i";
+                u_getline(f_in, ref, ">" );
+                addImgToList(ref );
+                continue;
+            }
+        }
+    }
 }
 
 // read all reference from file
@@ -88,14 +88,14 @@ void HelpConfigurator::addNameToList( QString ref, QString file_name )
     QString value;
 
     int indx = ref.indexOf("name=");
-// cout << indx << "    " << ref.toStdString() << std::endl;
+    // cout << indx << "    " << ref.toStdString() << std::endl;
     if(indx > -1 )
     {
-      names.append(ref);
-      key =ref.section("\"",1,1);
-      value = file_name +"#"+key;
-      links.insert(key, QUrl(value));
-// cout << value.toStdString()<<endl;
+        names.append(ref);
+        key =ref.section("\"",1,1);
+        value = file_name +"#"+key;
+        links.insert(key, QUrl(value));
+        // cout << value.toStdString()<<endl;
     }
     else
         hrefs.append(ref);
@@ -107,15 +107,15 @@ void HelpConfigurator::addImgToList( QString ref )
 {
     QString value, rref, file_name;
     int indx = ref.indexOf("src=");
-// cout << indx << "    " << ref.toStdString(); // << std::endl;
-    if(indx > -1 )   // Bugfixes by DK on 15.02.2012
+    // cout << indx << "    " << ref.toStdString(); // << std::endl;
+    if(indx > -1 )
     {
-      rref = ref.mid(indx);
-      value = rref.section("\"",1,1);
-// cout << "+ " << value.toStdString() << std::endl;
-      file_name = value.section("/img/", -1);
-// cout << "- " << file_name.toStdString() << std::endl;
-      images.append(file_name);
+        rref = ref.mid(indx);
+        value = rref.section("\"",1,1);
+        // cout << "+ " << value.toStdString() << std::endl;
+        file_name = value.section("/img/", -1);
+        // cout << "- " << file_name.toStdString() << std::endl;
+        images.append(file_name);
     }
     else
         others.append(ref);
@@ -166,7 +166,7 @@ int HelpConfigurator::writeFile(const char *file)
     if( !f_out.good() )
     {
 #ifdef IPMGEMPLUGIN
-       std::cout << file << " Fileopen error" << std::endl;
+        std::cout << file << " Fileopen error" << std::endl;
 #else
         QString str = QString(file) + " Fileopen error";
         Error( "HelpConfigurator", str.toStdString());
@@ -198,13 +198,13 @@ void HelpConfigurator::writeFiles( std::fstream& f_out)
     f_out << "      <files>" << std::endl;
     for( int ii =0; ii<files.count(); ii++)
     {
-      f_out << "        <file>" << files[ii].toStdString() << "</file>" << std::endl;
+        f_out << "        <file>" << files[ii].toStdString() << "</file>" << std::endl;
     }
     images.sort();
     images.removeDuplicates();
     for( int ii =0; ii<images.count(); ii++)
     {
-      f_out << "        <file>" << images[ii].toStdString() << "</file>" << std::endl;
+        f_out << "        <file>" << images[ii].toStdString() << "</file>" << std::endl;
     }
     f_out << "      </files>" << std::endl;
 }
@@ -226,13 +226,13 @@ void HelpConfigurator::writeKeywords( std::fstream& f_out)
 #ifndef IPMGEMPLUGIN
         // add only keywords for objects
         if( showObjectForKeyword(kwds[ii])<0)
-          continue;
+            continue;
 #endif
         urls = links.values( kwds[ii] );
 
-      for( int jj=0; jj<urls.count(); jj++ )
-      f_out << "        <keyword name=\"" << kwds[ii].toStdString()
-            << "\" ref=\"" << urls[jj].toString().toStdString()  << "\"/>" << std::endl;
+        for( int jj=0; jj<urls.count(); jj++ )
+            f_out << "        <keyword name=\"" << kwds[ii].toStdString()
+                  << "\" ref=\"" << urls[jj].toString().toStdString()  << "\"/>" << std::endl;
     }
     f_out << "    </keywords>" << std::endl;
 }
@@ -241,7 +241,7 @@ void HelpConfigurator::writeContent( std::fstream& f_out)
 {
     QString ref;
     QString contentfile = path;
-            contentfile += "/gfshelpconfig.toc";
+    contentfile += "/gfshelpconfig.toc";
     std::fstream f_in( contentfile.toStdString(), std::ios::in );
     if( !f_in.good() )
     {
@@ -256,9 +256,9 @@ void HelpConfigurator::writeContent( std::fstream& f_out)
 
     while( !f_in.eof() )
     {
-      ref = "";
-      u_getline(f_in, ref, ">" );
-      f_out << ref.toStdString();
+        ref = "";
+        u_getline(f_in, ref, ">" );
+        f_out << ref.toStdString();
     }
 }
 
@@ -276,7 +276,7 @@ int HelpConfigurator::showObjectForKeyword(const QString &keyword)
     nO = aObj.Find(keyword.toLatin1().data());
     if( nO < 0 )
     {
-       QString kwInternal = keyword;
+        QString kwInternal = keyword;
         int ndx = kwInternal.lastIndexOf('_');  // finding only keyword
         if(ndx > -1)
         {

@@ -4,7 +4,7 @@
 // Implementation of ProjectSettingsDialog class
 //
 // Copyright (C) 2014  S.V.Dmytriyeva
-// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+// Uses EJDB (https://ejdb.org),
 //    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
 // This file is part of the GEMSFITS GUI, which uses the
@@ -78,10 +78,10 @@ void ProjectSettingsDialog::CmSave()
     QDir dir(ui->projDir->text());
     if( dir.mkpath(ui->projDir->text()) )
     {
-       dir.mkpath(ui->projDir->text()+ui->gemsDir->text());
-       dir.mkpath(ui->projDir->text()+ui->ejdbDir->text());
-       dir.mkpath(ui->projDir->text()+"/work");
-       dir.mkpath(ui->projDir->text()+"/dbimport");
+        dir.mkpath(ui->projDir->text()+ui->gemsDir->text());
+        dir.mkpath(ui->projDir->text()+ui->ejdbDir->text());
+        dir.mkpath(ui->projDir->text()+"/work");
+        dir.mkpath(ui->projDir->text()+"/dbimport");
     }
     accept();
 }
@@ -89,15 +89,16 @@ void ProjectSettingsDialog::CmSave()
 void ProjectSettingsDialog::CmProjectDir()
 {
     QString dir = QFileDialog::getExistingDirectory(this, "Select Project Directory",
-    pFitImp->userDir().c_str(),  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
+                                                    pFitImp->userDir().c_str(),
+                                                    QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
     ui->projDir->setText( dir );
 }
 
 void ProjectSettingsDialog::CmEJDBDir()
 {
     QString projDir = ui->projDir->text();
-//    QString dir = QFileDialog::getExistingDirectory(this, "Select EJDB Directory",
-//     projDir,  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
+    //    QString dir = QFileDialog::getExistingDirectory(this, "Select EJDB Directory",
+    //     projDir,  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
     std::string fname = ui->projDir->text().toStdString();
     //Select files
     TFile file("");
@@ -113,7 +114,7 @@ void ProjectSettingsDialog::CmGEMSDir()
 {
     QString projDir = ui->projDir->text();
     QString dir = QFileDialog::getExistingDirectory(this, "Select GEMS Directory",
-     projDir,  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
+                                                    projDir,  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
     
     
     dir = dir.remove(projDir);

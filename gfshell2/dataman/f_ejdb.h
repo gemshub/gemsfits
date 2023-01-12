@@ -1,10 +1,10 @@
-                                                                                                                          //-------------------------------------------------------------------
+//-------------------------------------------------------------------
 // $Id: f_ejdb.h 333 2014-03-13 13:23:32Z gemsfits $
 //
 // Declaration of TEJDBKey, TEJDataBase and EJDataBaseList classes
 //
-// Copyright (C) 2014  S.V.Dmytriyeva
-// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+// Copyright (C) 2014-2023  S.V.Dmytriyeva
+// Uses EJDB (https://ejdb.org),
 //    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
 // This file is part of the GEMSFITS GUI, which uses the
@@ -17,12 +17,10 @@
 // E-mail gems2.support@psi.ch
 //-------------------------------------------------------------------
 
-#ifndef __v_ejdb_h_
-#define __v_ejdb_h_
+#pragma once
 
 #include <vector>
 #include <set>
-
 #include "f_ejdb_file.h"
 #include "v_json.h"
 
@@ -42,42 +40,41 @@ enum RecStatus {   // states of keys record Data Base
 
 //enum modeList { openf = 0x01, closef = 0x02, oldself = 0x04 };
 
-
 /// Element in sequence of record keys
 class IndexEntry
 {
-   mutable std::string bson_oid;             /// oid of record (bson indexes)
-   std::vector<std::string> keyFlds;      /// Record key fields
-   //mutable int nFile;                   /// Index in db files list
+    mutable std::string bson_oid;             /// oid of record (bson indexes)
+    std::vector<std::string> keyFlds;      /// Record key fields
+    //mutable int nFile;                   /// Index in db files list
 
- public:
+public:
 
-   IndexEntry( const char* abson_oid, std::vector<std::string> akeyFlds):
-       bson_oid(abson_oid),  keyFlds(akeyFlds)
-   { }
+    IndexEntry( const char* abson_oid, std::vector<std::string> akeyFlds):
+        bson_oid(abson_oid),  keyFlds(akeyFlds)
+    { }
 
-   IndexEntry( std::vector<std::string>& akeyFlds ):
-       bson_oid("-1"),  keyFlds(akeyFlds)
-   { }
+    IndexEntry( std::vector<std::string>& akeyFlds ):
+        bson_oid("-1"),  keyFlds(akeyFlds)
+    { }
 
-   IndexEntry( const IndexEntry& ndxE ):
-       bson_oid(ndxE.bson_oid),  keyFlds(ndxE.keyFlds)
-   { }
+    IndexEntry( const IndexEntry& ndxE ):
+        bson_oid(ndxE.bson_oid),  keyFlds(ndxE.keyFlds)
+    { }
 
-   std::string getKey( std::vector<size_t>& rkLen );
-   const std::string& getKeyField( int ii ) const
-   { return keyFlds[ii];}
+    std::string getKey(std::vector<size_t>& rkLen);
+    const std::string& getKeyField(int ii) const
+    { return keyFlds[ii];}
 
-   const std::string& getBsonOid() const
-   { return bson_oid; }
-   void setBsonOid( const char* oid ) const
-   { bson_oid = oid; }
+    const std::string& getBsonOid() const
+    { return bson_oid; }
+    void setBsonOid(const char* oid) const
+    { bson_oid = oid; }
 
-   friend bool operator <( const IndexEntry&,  const IndexEntry& );
-   friend bool operator >( const IndexEntry&,  const IndexEntry& );
-   friend bool operator==( const IndexEntry&,  const IndexEntry& );
-   friend bool operator!=( const IndexEntry&,  const IndexEntry& );
-   friend class TEJDBKey;
+    friend bool operator <( const IndexEntry&,  const IndexEntry& );
+    friend bool operator >( const IndexEntry&,  const IndexEntry& );
+    friend bool operator==( const IndexEntry&,  const IndexEntry& );
+    friend bool operator!=( const IndexEntry&,  const IndexEntry& );
+    friend class TEJDBKey;
 };
 
 
@@ -90,12 +87,12 @@ protected:
     std::string pKey;             /// Current key in packed form ( external )
 
     /// Return record key in packed form
-    const char *pack( const std::vector<std::string>& akeyFlds );
+    const char *pack(const std::vector<std::string>& akeyFlds);
 
 public:
-    TEJDBKey( const std::vector<std::string>& nameKeyFlds );
+    TEJDBKey(const std::vector<std::string>& nameKeyFlds);
     //TEJDBKey( fstream& f);
-    TEJDBKey( const TEJDBKey& dbKey );
+    TEJDBKey(const TEJDBKey& dbKey);
     virtual ~TEJDBKey(){}
 
     /// Return current record key in packed form
@@ -117,25 +114,25 @@ public:
 
     //--- Manipulation keys
     /// Putting DB record key pkey to internal structure
-    void SetKey( const char *pkey );
+    void SetKey(const char *pkey);
     /// Change i-th field of TEJDBKey to fld
-    void SetFldKey( int i, const char *fld );
+    void SetFldKey(int i, const char *fld);
 
     IndexEntry retIndex()
     { return IndexEntry(rkFld); }
     /// Return index key in form
-    const char *indexKey( const IndexEntry& ndx )
+    const char *indexKey(const IndexEntry& ndx)
     {
-          return pack( ndx.keyFlds );
+        return pack( ndx.keyFlds );
     }
-    bool compareTemplate( const IndexEntry& elm );
+    bool compareTemplate(const IndexEntry& elm);
 
     // Test work DB record key
     bool isPattern();
     bool isAll();
 
- //   friend class compareTemplate;
- };
+    //   friend class compareTemplate;
+};
 
 
 /// This class contened the structure of EJDB Data Base
@@ -168,46 +165,46 @@ protected:
     //void fromCFG(fstream& f);
 
     //
-    EJCOLL *openCollection( bool createifempty = true );
+    EJCOLL *openCollection(bool createifempty = true);
     void closeCollection();
     void loadCollection();
     /// Load records key from bson structure
-    void KeyFromBson( const char* bsdata );
+    void KeyFromBson(const char* bsdata);
 
- public:
+public:
 
     //  Constructor
-    TEJDataBase( int nrt, const char* name, const std::vector<std::string>& nameKeyFlds  );
+    TEJDataBase(int nrt, const char* name, const std::vector<std::string>& nameKeyFlds);
     //TEJDataBase( fstream& f );
     ~TEJDataBase();
 
     // Save definition of chain to configuration file
     //void toCFG( fstream& f );
-    EJCOLL *openCollection2( bool createifempty = true );
+    EJCOLL *openCollection2(bool createifempty = true);
 
     //--- Selectors
     /// Get name of modules DB
     const char* GetKeywd() const
-       {  return Keywd.c_str();   }
+    {  return Keywd.c_str();   }
     /// Set name of modules DB
-    void SetKeywd( const std::string& newKeywd )
-       {  Keywd = newKeywd;   }
+    void SetKeywd(const std::string& newKeywd)
+    {  Keywd = newKeywd;   }
     /// Get records count in opened files
     int RecCount() const
-       {  return recList.size(); }
+    {  return recList.size(); }
 
     /// Get current record status
     RecStatus GetStatus() const
-       {  return status;  }
+    {  return status;  }
     /// Set current record status
     void SetStatus( RecStatus stt )
-       {   status = stt;   }
+    {   status = stt;   }
     /// Time of current record
     time_t Rtime() const
-        {  return crt;  }
-    time_t GetTime( const char *pkey );
-    std::string getKeyFromBson( const char* bsdata );
-    void putKeyToBson( bson *obj );
+    {  return crt;  }
+    time_t GetTime(const char *pkey);
+    std::string getKeyFromBson(const char* bsdata);
+    void putKeyToBson(bson *obj);
 
     //--- Selectors for key
     /* Return record key length
@@ -215,101 +212,100 @@ protected:
         { return key.KeyLen(); }*/
     /// Return current record key in packed form
     const char *PackKey()
-        { return key.PackKey(); }
+    { return key.PackKey(); }
     /// Return record key field i
-    const char *FldKey( int i ) const
-        { return key.FldKey(i); }
+    const char *FldKey(int i) const
+    { return key.FldKey(i); }
     /// Return number or record key fields
     int KeyNumFlds() const
-        { return key.KeyNumFlds();  }
+    { return key.KeyNumFlds();  }
     /// Access to TEJDBKey
     const TEJDBKey& GetDBKey() const
-        { return key; }
+    { return key; }
     /// Putting DB record key pkey to internal structure
-    void SetKey( const char *ckey )
-        {  key.SetKey(ckey);
-           // status = UNDF_;
-        }
+    void SetKey(const char *ckey)
+    {  key.SetKey(ckey);
+        // status = UNDF_;
+    }
     /// Change i-th field of TEJDBKey to key
-    void SetFldKey( int i, const char *fld )
-        {  key.SetFldKey( i, fld ); }
+    void SetFldKey(int i, const char *fld)
+    {  key.SetFldKey( i, fld ); }
     /// Return record key field name i
     const char* FldKeyName(int i) const
     {   return key.FldKeyName(i); }
     // Make packed key to seach.
-    void MakeKey( unsigned char nRtwrk, std::string& pkey, ...);
+    void MakeKey(unsigned char nRtwrk, std::string& pkey, ...);
 
     //--- Manipulation records
     /// Save current record to bson structure
-    void RecToBson( bson *obj, time_t crtt, const char *pkey = 0 );
+    void RecToBson(bson *obj, time_t crtt, const char *pkey = 0);
     /// Load data from bson structure (return readed record key)
-    std::string RecFromBson( bson *obj );
+    std::string RecFromBson(bson *obj);
     /// Test text is good json(bson) structure
-    void TestBsonJson( const std::string& recjson );
+    void TestBsonJson(const std::string& recjson);
     /// Test text is good yaml(bson) structure
-    void TestBsonYAML( const std::string& recjson );
+    void TestBsonYAML(const std::string& recjson);
 
 
     /// Return curent record in json format std::string
     const std::string& GetJson();
     /// Set json format std::string to curent record
-                                                                              void SetJson( const std::string& sjson, bool is_json = true);
+    void SetJson( const std::string& sjson, bool is_json = true);
     /// Return curent record in YAML format std::string
     const std::string& GetYAML();
     /// Return curent gems3k files name
     const std::string& GetGems3kName()
     {
-       return currentGems3kName;
+        return currentGems3kName;
     }
     /// Set json query std::string for collection
-    void SetQueryJson( const std::string& qrjson);
+    void SetQueryJson(const std::string& qrjson);
     /// Return curent query std::string value
     const std::string& GetLastQuery()
     {
-       return currentSearchJson;
+        return currentSearchJson;
     }
 
     /// Find record with key into internal record keys list
-    bool Find( const char *key );
+    bool Find(const char *key);
     /// Test state of record with key key_ as template.
     /// in field field setted any(*) data
-    bool FindPart( const char *key_, int field );
+    bool FindPart(const char *key_, int field);
     /// Retrive one record from the collection
-    void Get( const char *key );
+    void Get(const char *key);
     /// Removes record from the collection
-    void Del( const char *key );
+    void Del(const char *key);
     /// Save/update record in the collection
     // fnum - index into internal file list
-    void SaveRecord( const char* key  );
+    void SaveRecord(const char* key);
     /// Save/update record in the collection
     /// Question for replase
-    void SaveRecordQuestion(const char* pkey, bool& yesToAll );
+    void SaveRecordQuestion(const char* pkey, bool& yesToAll);
     /// Save new record in the collection
     void InsertRecord();
     /// Test state of record with key pkey.
     /// If mode == 1 and one record, read this record.
-    RecStatus Rtest( const char *key, int mode );
+    RecStatus Rtest(const char *key, int mode);
 
     //--- Manipulation list of records
     /// Get key list for a wildcard search
-    int GetKeyList( const char *keypat,
-        std::vector<std::string>& aKeyList, bool retUnpackform = true );
+    int GetKeyList(const char *keypat, std::vector<std::string>& aKeyList, bool retUnpackform = true);
 
     //--- From module part
 
     //--- Manipulation Data Base
 
     //void Open( std::vector<int>& indx);
-    void Open( );
+    void Open();
     void Close();
 
 };
 
 
 class EJDataBaseList:
-            public std::vector<TEJDataBase>
+        public std::vector<TEJDataBase>
 {
-  public:
+public:
     EJDataBaseList()
     {  Init(); }
 
@@ -325,4 +321,3 @@ class EJDataBaseList:
 
 extern EJDataBaseList rtEJ;
 
-#endif	// __f_ejdb_h_

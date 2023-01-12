@@ -7,20 +7,14 @@
 #include <QtPrintSupport/QPrinter>
 #include <QPrintDialog>
 #include <QHeaderView>
+#include <QFileDialog>
+#include <QFileInfo>
 
 #include "ui_GraphDialog4.h"
 #include "charts/GraphDialog.h"
 #include "charts/LegendDialog.h"
 #include "charts/SymbolDialog.h"
 #include "charts/chart_view.h"
-
-#ifndef NO_JSONIO
-#include "jsonui17/FileDialogs.h"
-#else
-
-#include <QFileDialog>
-#include <QFileInfo>
-
 
 bool ChooseFileSave( QWidget* par, std::string& path_, const char* title,
                      const QString& filter )
@@ -74,7 +68,6 @@ void helpWin( const std::string& name, const std::string& item )
 
 }
 
-#endif
 
 namespace jsonui17 {
 

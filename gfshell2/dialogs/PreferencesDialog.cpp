@@ -4,7 +4,7 @@
 // Implementation of PreferencesDialog class
 //
 // Copyright (C) 2014  S.V.Dmytriyeva
-// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+// Uses EJDB (https://ejdb.org),
 //    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
 // This file is part of the GEMSFITS GUI, which uses the
@@ -53,7 +53,7 @@ PreferencesDialog::PreferencesDialog(QSettings *aSet,QWidget *parent) :
                 f = it.next();;
                 ui->experimentsBox->addItem(f.fileName());
             }
-         ui->experimentsBox->setCurrentText(settings->value("ExpTemplateFileName", "...").toString());
+            ui->experimentsBox->setCurrentText(settings->value("ExpTemplateFileName", "...").toString());
         }
     }
 
@@ -72,9 +72,8 @@ PreferencesDialog::PreferencesDialog(QSettings *aSet,QWidget *parent) :
             f = it.next();;
             ui->searchBox->addItem(f.fileName());
         }
-     ui->searchBox->setCurrentText(settings->value("TemplateSearchFileName", "...").toString());
+        ui->searchBox->setCurrentText(settings->value("TemplateSearchFileName", "...").toString());
     }
-
 
     QObject::connect( ui->buttonBox, SIGNAL(accepted()), this, SLOT(CmSave()));
     QObject::connect( ui->buttonBox, SIGNAL(helpRequested()), this, SLOT(CmHelp()));
@@ -93,7 +92,7 @@ PreferencesDialog::~PreferencesDialog()
 void PreferencesDialog::CmSave()
 {
     if( !settings )
-       return;
+        return;
 
     settings->setValue("ResourcesFolderPath",    ui->resourcesEdit->text() );
     settings->setValue("HelpFolderPath",    ui->helpEdit->text() );
@@ -113,14 +112,14 @@ void PreferencesDialog::CmSave()
 void PreferencesDialog::CmProjectDir()
 {
     QString dir = QFileDialog::getExistingDirectory(this, "Select Project Directory",
-     "",  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
+                                                    "",  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
     ui->usersEdit->setText( dir );
 }
 
 void PreferencesDialog::CmResourceDir()
 {
     QString dir = QFileDialog::getExistingDirectory(this, "Select Resource Directory",
-     "",  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
+                                                    "",  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
     ui->resourcesEdit->setText( dir );
 }
 
@@ -128,64 +127,64 @@ void PreferencesDialog::CmHelpFile()
 {
     QString projDir = ui->resourcesEdit->text();
     QString dir = QFileDialog::getExistingDirectory(this, "Select Help Directory",
-     projDir,  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
+                                                    projDir,  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
     ui->helpEdit->setText( dir );
 }
 
 void PreferencesDialog::CmGemsFit2File()
 {
     QString dir = QFileDialog::getOpenFileName(  this,
-       "Select gemsfite program", "", "All files (*)", 0, QFileDialog::DontConfirmOverwrite );
+                                                 "Select gemsfite program", "", "All files (*)", 0, QFileDialog::DontConfirmOverwrite );
     ui->gemsfit2Edit->setText( dir );
 }
 
 void PreferencesDialog::CmGenerateHelp()
 {
-  try
+    try
     {
         QString phpdir =  ui->resourcesEdit->text()+"/doc/html/";
         QString qhpFile = phpdir +"gfshelpconfig.qhp";
         HelpConfigurator rr;
         if( rr.readDir(phpdir.toUtf8().data()) )
-           rr.writeFile(qhpFile.toUtf8().data());
+            rr.writeFile(qhpFile.toUtf8().data());
 
         if (!pFitImp->helpProcess)
-             pFitImp->helpProcess = new QProcess();
+            pFitImp->helpProcess = new QProcess();
 
-       if (pFitImp->helpProcess->state() != QProcess::Running)
-       {
-        QString docPath =  phpdir;
-        QString app;
+        if (pFitImp->helpProcess->state() != QProcess::Running)
+        {
+            QString docPath =  phpdir;
+            QString app;
 #ifdef __unix
 #ifdef __APPLE__
-                    app += QLatin1String("qcollectiongenerator");
+            app += QLatin1String("qcollectiongenerator");
 #else
-                   //app = QLatin1String(getenv("HOME"));
-                   //app += QLatin1String("/Gems3-app/qcollectiongenerator");
-        app += QLatin1String("qcollectiongenerator");
+            //app = QLatin1String(getenv("HOME"));
+            //app += QLatin1String("/Gems3-app/qcollectiongenerator");
+            app += QLatin1String("qcollectiongenerator");
 #endif
 #else    // windows
-                    app += QLatin1String("qcollectiongenerator.exe");
+            app += QLatin1String("qcollectiongenerator.exe");
 #endif
-       QStringList args;
-       args << docPath + QLatin1String("gfshelpconfig.qhcp")
-            << QLatin1String("-o")
-            << docPath + QLatin1String("gfshelp.qhc");
-                        ;
-       pFitImp->helpProcess->start(app, args);
-       std::cout << app.toStdString() << std::endl;
-       std::cout << args[2].toStdString() << std::endl;
+            QStringList args;
+            args << docPath + QLatin1String("gfshelpconfig.qhcp")
+                 << QLatin1String("-o")
+                 << docPath + QLatin1String("gfshelp.qhc");
+            ;
+            pFitImp->helpProcess->start(app, args);
+            std::cout << app.toStdString() << std::endl;
+            std::cout << args[2].toStdString() << std::endl;
 
-       if (!pFitImp->helpProcess->waitForStarted())
-       {
-           Error( "gemsfits", "Unable to launch qcollectiongenerator");
-       }
-     }
-   }
-   catch(TError& e)
-   {
-       std::cout <<  e.title <<  e.mess << std::endl;
-   }
+            if (!pFitImp->helpProcess->waitForStarted())
+            {
+                Error( "gemsfits", "Unable to launch qcollectiongenerator");
+            }
+        }
+    }
+    catch(TError& e)
+    {
+        std::cout <<  e.title <<  e.mess << std::endl;
+    }
 }
 
 

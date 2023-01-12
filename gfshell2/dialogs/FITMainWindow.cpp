@@ -4,7 +4,7 @@
 // Implementation of GEMSFITS GUI Main Window (window part)
 //
 // Copyright (C) 2014  S.V.Dmytriyeva, D.A.Kulik
-// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+// Uses EJDB (https://ejdb.org),
 //    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
 // This file is part of the GEMSFITS GUI, which uses the
@@ -17,20 +17,13 @@
 // E-mail gems2.support@psi.ch
 //-------------------------------------------------------------------
 
-#include <QKeyEvent>
-#include <QProcess>
-#include <QtGlobal>
-#include <QTextStream>
-
 #include "FITMainWindow.h"
 #include "ui_FITMainWindow.h"
 #include "HelpWindow.h"
 #include "FitResultsWindow.h"
 #include "f_ejdb.h"
 #include "v_service.h"
-//#include "keywords.h"
 #include "keywords.h"
-#include <sstream>
 
 //--------------------------------------------------------------------------
 
@@ -39,10 +32,10 @@ void TKeyTable::keyPressEvent(QKeyEvent* e)
     QTableWidget::keyPressEvent(e);
     switch( e->key() )
     {
-      case Qt::Key_Up:
-      case Qt::Key_Down:
-      case Qt::Key_PageUp:
-      case Qt::Key_PageDown:
+    case Qt::Key_Up:
+    case Qt::Key_Down:
+    case Qt::Key_PageUp:
+    case Qt::Key_PageDown:
         pFitImp->openRecordKey(  currentRow(), currentColumn()  );
         break;
     }
@@ -54,49 +47,49 @@ FITMainWindow* pFitImp;
 
 void FITMainWindow::setDefValues(int /*c*/, char** /*v*/)
 {
-   // load main programm settingth
-   mainSettings = new QSettings("gemsfits.ini", QSettings::IniFormat);
-   getDataFromPreferences();
+    // load main programm settingth
+    mainSettings = new QSettings("gemsfits.ini", QSettings::IniFormat);
+    getDataFromPreferences();
 }
 
 void FITMainWindow::getDataFromPreferences()
 {
-  if( !mainSettings)
-   return;
+    if( !mainSettings)
+        return;
 
-  SysFITDir =  mainSettings->value("ResourcesFolderPath", "../Resources/").toString().toStdString();
-  LocalDocDir =  mainSettings->value("HelpFolderPath", "../Resources/help").toString().toStdString();
-  UserDir = mainSettings->value("UserFolderPath", ".").toString().toStdString();
-  KeysLength = mainSettings->value("PrintComments", true).toBool();
-  JsonDataShow = !mainSettings->value("ViewinYAMLFormat", true).toBool();
+    SysFITDir =  mainSettings->value("ResourcesFolderPath", "../Resources/").toString().toStdString();
+    LocalDocDir =  mainSettings->value("HelpFolderPath", "../Resources/help").toString().toStdString();
+    UserDir = mainSettings->value("UserFolderPath", ".").toString().toStdString();
+    KeysLength = mainSettings->value("PrintComments", true).toBool();
+    JsonDataShow = !mainSettings->value("ViewinYAMLFormat", true).toBool();
 
-  QString program = mainSettings->value("Gemsfit2ProgramPath", "gemsfit2").toString();
-  fitProcess->setProgram( program );
+    QString program = mainSettings->value("Gemsfit2ProgramPath", "gemsfit2").toString();
+    fitProcess->setProgram( program );
 
-  // load experiment template text
-  QString fname = SysFITDir.c_str();
-          fname += "/data/" + mainSettings->value("ExpTemplateFileName", "...").toString();
-  QFile tmpString(fname);
-  if(tmpString.open( QIODevice::ReadOnly))
-  {
-    ExpTemplate = tmpString.readAll();
-    tmpString.close();
-  }
+    // load experiment template text
+    QString fname = SysFITDir.c_str();
+    fname += "/data/" + mainSettings->value("ExpTemplateFileName", "...").toString();
+    QFile tmpString(fname);
+    if(tmpString.open( QIODevice::ReadOnly))
+    {
+        ExpTemplate = tmpString.readAll();
+        tmpString.close();
+    }
 
-  // load experiment search text
-  fname = SysFITDir.c_str();
-          fname += "/templates/" + mainSettings->value("TemplateSearchFileName", "...").toString();
-  QFile tmpString1(fname);
-  if(tmpString1.open( QIODevice::ReadOnly))
-  {
-    SrchTemplate = tmpString1.readAll();
-    tmpString1.close();
-  }
+    // load experiment search text
+    fname = SysFITDir.c_str();
+    fname += "/templates/" + mainSettings->value("TemplateSearchFileName", "...").toString();
+    QFile tmpString1(fname);
+    if(tmpString1.open( QIODevice::ReadOnly))
+    {
+        SrchTemplate = tmpString1.readAll();
+        tmpString1.close();
+    }
 
-  if( mainSettings->value("PrintGEMSFITMessages", true).toBool())
-   connect( fitProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(showProcessMesage()) );
-  else
-   disconnect( fitProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(showProcessMesage()) );
+    if( mainSettings->value("PrintGEMSFITMessages", true).toBool())
+        connect( fitProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(showProcessMesage()) );
+    else
+        disconnect( fitProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(showProcessMesage()) );
 }
 
 FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
@@ -143,22 +136,22 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     //MyHighlighter *highlighter = new MyHighlighter( ui->recordEdit->document() );
     // set up menu
     setActions();
-    connect(ui->splV, SIGNAL(splitterMoved( int , int  )), this, SLOT(moveToolBar( int , int  )));
-    connect( keyTable, SIGNAL(cellClicked ( int , int  ) ), this, SLOT(openRecordKey( int, int )));
+    connect(ui->splV, SIGNAL(splitterMoved(int,int)), this, SLOT(moveToolBar(int,int)));
+    connect(keyTable, SIGNAL(cellClicked(int,int)), this, SLOT(openRecordKey(int,int)));
     //connect( ui->recordEdit, SIGNAL(textChanged()),  this, SLOT(recEdited()));
     connect( ui->recordEdit, SIGNAL(undoAvailable(bool)),  this, SLOT(recEdited(bool)));
-    connect( ui->filterEdit, SIGNAL( editingFinished ()), this, SLOT(changeKeyList()) );
+    connect( ui->filterEdit, SIGNAL(editingFinished()), this, SLOT(changeKeyList()) );
 
     // setup process
-     fitProcess = new QProcess( this);
-     //connect( fitProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(showProcessMesage()) );
-     connect( fitProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT( runFinished(int,QProcess::ExitStatus)));
-     //connect( fitProcess, SIGNAL(readyReadStandardError()), this, SLOT(ReadErr()) );
+    fitProcess = new QProcess( this);
+    //connect( fitProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(showProcessMesage()) );
+    connect( fitProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT( runFinished(int,QProcess::ExitStatus)));
+    //connect( fitProcess, SIGNAL(readyReadStandardError()), this, SLOT(ReadErr()) );
 
 
-   //set up main parameters
+    //set up main parameters
     setDefValues( c, v);
-   // setup first lists
+    // setup first lists
     CmDBMode();
 
 
@@ -173,21 +166,21 @@ void FITMainWindow::closeEvent(QCloseEvent* /*e*/)
 {
     //if( pVisor->CanClose() )
     {
-       for(int ii=0; ii<10000; ii++);
+        for(int ii=0; ii<10000; ii++);
 
-       if( HelpWindow::pDia )
-          delete HelpWindow::pDia;
+        if( HelpWindow::pDia )
+            delete HelpWindow::pDia;
 
-       if( FitResultsWindow::pDia )
-       {
-           FitResultsWindow::pDia->close();
-           //delete  FitResultsWindow::pDia;
-       }
-       //mdiArea->closeAllSubWindows();
-       //if( mdiArea->subWindowList().count() > 0 )
-       //    e->ignore();
-       //else
-       //    QWidget::closeEvent(e);
+        if( FitResultsWindow::pDia )
+        {
+            FitResultsWindow::pDia->close();
+            //delete  FitResultsWindow::pDia;
+        }
+        //mdiArea->closeAllSubWindows();
+        //if( mdiArea->subWindowList().count() > 0 )
+        //    e->ignore();
+        //else
+        //    QWidget::closeEvent(e);
     }
 }
 
@@ -212,29 +205,29 @@ void FITMainWindow::showEvent ( QShowEvent * event )
 */
 void FITMainWindow::GetHelp( )
 {
-        (new HelpWindow(  0  ));
-        //HelpWindow::pDia->show();
+    (new HelpWindow(0));
+    //HelpWindow::pDia->show();
 }
 
 void FITMainWindow::OpenHelp(const char* file, const char* item1, int page )
 {
     if( HelpWindow::pDia )
     {
-std::cout << "OpenHelp: " << file << std::endl;
+        std::cout << "OpenHelp: " << file << std::endl;
         if( item1 && page>=0 )
-       {
-          QString res = item1;
-          res += QString("_%1").arg(page);
-          std::string txt = res.toStdString();
-          HelpWindow::pDia->showDocumentation( file, txt.c_str() );
+        {
+            QString res = item1;
+            res += QString("_%1").arg(page);
+            std::string txt = res.toStdString();
+            HelpWindow::pDia->showDocumentation( file, txt.c_str() );
         }
         else
-          HelpWindow::pDia->showDocumentation( file, item1 );
+            HelpWindow::pDia->showDocumentation( file, item1 );
 
-       HelpWindow::pDia->show();
-       HelpWindow::pDia->raise();
+        HelpWindow::pDia->show();
+        HelpWindow::pDia->raise();
     }
-   // old help assistantClient->showDocumentation( file, item);
+    // old help assistantClient->showDocumentation( file, item);
 }
 
 void FITMainWindow::OpenResults( const std::string& key, const QString& dir )
@@ -244,9 +237,9 @@ void FITMainWindow::OpenResults( const std::string& key, const QString& dir )
         ( new FitResultsWindow(0) );
     }
     if( !dir.isEmpty() )
-      FitResultsWindow::pDia->ShowResults(key, dir);
+        FitResultsWindow::pDia->ShowResults(key, dir);
     else
-      FitResultsWindow::pDia->ShowResults(key );
+        FitResultsWindow::pDia->ShowResults(key );
 
     FitResultsWindow::pDia->raise();
 }
@@ -254,57 +247,57 @@ void FITMainWindow::OpenResults( const std::string& key, const QString& dir )
 
 void  FITMainWindow::moveToolBar( int , int )
 {
-   ui->toolBar_2->setFixedWidth(toolTasks->width());
-   ui->toolBarTask->setFixedWidth(ui->splV->widget(0)->width());
-   ui->toolBarMenu->setFixedWidth(ui->splV->widget(1)->width());
+    ui->toolBar_2->setFixedWidth(toolTasks->width());
+    ui->toolBarTask->setFixedWidth(ui->splV->widget(0)->width());
+    ui->toolBarMenu->setFixedWidth(ui->splV->widget(1)->width());
 }
 
 void FITMainWindow::setTableIComp()
 {
-   std::string valStr;
-   QTableWidgetItem *item;
+    std::string valStr;
+    QTableWidgetItem *item;
 
-   DATACH  *dCH =  node()->pCSD();
-   ui->tableIComp->clear();
+    DATACH  *dCH =  node()->pCSD();
+    ui->tableIComp->clear();
 
-   ui->tableIComp->setColumnCount(5);
-   ui->tableIComp->setRowCount(dCH->nIC/5+1);
+    ui->tableIComp->setColumnCount(5);
+    ui->tableIComp->setRowCount(dCH->nIC/5+1);
 
-   for( int ii = 0; ii<dCH->nIC; ii++ )
-   {
-     valStr = std::string( dCH->ICNL[ii], 0,MaxICN );
-     item = new QTableWidgetItem(tr("%1").arg( valStr.c_str()));
-     ui->tableIComp->setItem(ii/5, ii%5, item );
-   }
+    for( int ii = 0; ii<dCH->nIC; ii++ )
+    {
+        valStr = std::string( dCH->ICNL[ii], 0,MaxICN );
+        item = new QTableWidgetItem(tr("%1").arg( valStr.c_str()));
+        ui->tableIComp->setItem(ii/5, ii%5, item );
+    }
 }
 
 void FITMainWindow::setListPhase()
 {
-   int ii, jj,j;
-   std::string valStr;
+    int ii, jj,j;
+    std::string valStr;
 
-   DATACH  *dCH =  node()->pCSD();
-   ui->listPhases->clear();
+    DATACH  *dCH =  node()->pCSD();
+    ui->listPhases->clear();
 
-   for( ii = 0, jj=0; ii<dCH->nPH; ii++ )
-   {
-     valStr = std::string( dCH->PHNL[ii], 0,MaxPHN );
-     QTreeWidgetItem *phase = new QTreeWidgetItem(ui->listPhases);
-     phase->setText(0, valStr.c_str());
+    for( ii = 0, jj=0; ii<dCH->nPH; ii++ )
+    {
+        valStr = std::string( dCH->PHNL[ii], 0,MaxPHN );
+        QTreeWidgetItem *phase = new QTreeWidgetItem(ui->listPhases);
+        phase->setText(0, valStr.c_str());
 
-     for( j=0; j<dCH->nDCinPH[ii]; j++, jj++ )
-     {
-         valStr = std::string( dCH->DCNL[jj], 0, MaxDCN );
-         QTreeWidgetItem *dcomp = new QTreeWidgetItem(phase);
-         dcomp->setText(0, valStr.c_str());
-     }
-   }
+        for( j=0; j<dCH->nDCinPH[ii]; j++, jj++ )
+        {
+            valStr = std::string( dCH->DCNL[jj], 0, MaxDCN );
+            QTreeWidgetItem *dcomp = new QTreeWidgetItem(phase);
+            dcomp->setText(0, valStr.c_str());
+        }
+    }
 }
 
 void FITMainWindow::setStatusText( const std::string& text )
 {
-  QString vals = QString(text.c_str()) + "\n";
-  ui->statusEdit->setPlainText( vals );
+    QString vals = QString(text.c_str()) + "\n";
+    ui->statusEdit->setPlainText( vals );
 }
 
 void FITMainWindow::addLinetoStatus( const std::string& line )
@@ -320,17 +313,16 @@ void FITMainWindow::showProcessMesage( )
     QProcess *p = dynamic_cast<QProcess *>( sender() );
     if (p)
         ui->statusEdit->append( p->readAllStandardOutput() );
-
- }
+}
 
 //----------------------------------------------------------
 // Working with EJDB
 
 void FITMainWindow::closeEJDB()
 {
-  for(size_t ii=0; ii<rtEJ.size(); ii++ )
-     rtEJ[ii].Close();
-  EJDBFile.Close();
+    for(size_t ii=0; ii<rtEJ.size(); ii++ )
+        rtEJ[ii].Close();
+    EJDBFile.Close();
 }
 
 /// Connect project database
@@ -391,7 +383,7 @@ void FITMainWindow::loadNewProject()
 /// Set up data for Main window
 void FITMainWindow::resetMainWindow()
 {
-     // set up filter
+    // set up filter
     ui->filterEdit->setText("*");
 
     // update key list
@@ -400,43 +392,43 @@ void FITMainWindow::resetMainWindow()
     // load first record
     if( keyTable->rowCount() > 0 )
     {
-       if( curInd >= 0 )
-         openRecordKey( curInd, 0  );
-       else
-       { QTableWidgetItem *curItem = keyTable->item(0,0);
-         keyTable->setCurrentItem( curItem );
-         keyTable->scrollToItem( curItem );
-         openRecordKey( 0, 0  );
-       }
+        if( curInd >= 0 )
+            openRecordKey( curInd, 0  );
+        else
+        { QTableWidgetItem *curItem = keyTable->item(0,0);
+            keyTable->setCurrentItem( curItem );
+            keyTable->scrollToItem( curItem );
+            openRecordKey( 0, 0  );
+        }
     } else
-      {
+    {
         // loadTemplate( currentModule );
         CmCreate();
         if( !projectSettings )
-          addLinetoStatus(  "Please, open or create a project first." );
+            addLinetoStatus(  "Please, open or create a project first." );
     }
 
     // reset  ui->queryEdit
     ui->queryEdit->setText(rtEJ[currentMode].GetLastQuery().c_str());
     if(  !rtEJ[currentMode].GetLastQuery().empty() )
     {
-      ui->action_Insert->setEnabled(false);
-      ui->actionCreate_New->setEnabled(false);
-      ui->actionRestore_from_csv->setEnabled(false);
-      ui->actionRestore_from_JSON->setEnabled(false);
-      ui->actionRestore_from_TXT->setEnabled(false);
-      ui->actionRestore_from_YAML->setEnabled(false);
+        ui->action_Insert->setEnabled(false);
+        ui->actionCreate_New->setEnabled(false);
+        ui->actionRestore_from_csv->setEnabled(false);
+        ui->actionRestore_from_JSON->setEnabled(false);
+        ui->actionRestore_from_TXT->setEnabled(false);
+        ui->actionRestore_from_YAML->setEnabled(false);
     }
     else
     {
-      ui->action_Insert->setEnabled(true);
-      ui->actionCreate_New->setEnabled(true);
-      ui->actionRestore_from_JSON->setEnabled(true);
-      ui->actionRestore_from_YAML->setEnabled(true);
-      if( currentMode == MDF_DATABASE )
-        ui->actionRestore_from_csv->setEnabled(true);
-      else
-        ui->actionRestore_from_TXT->setEnabled(true);
+        ui->action_Insert->setEnabled(true);
+        ui->actionCreate_New->setEnabled(true);
+        ui->actionRestore_from_JSON->setEnabled(true);
+        ui->actionRestore_from_YAML->setEnabled(true);
+        if( currentMode == MDF_DATABASE )
+            ui->actionRestore_from_csv->setEnabled(true);
+        else
+            ui->actionRestore_from_TXT->setEnabled(true);
     }
 
 }
@@ -444,84 +436,84 @@ void FITMainWindow::resetMainWindow()
 
 void FITMainWindow::changeKeyList()
 {
-   defineModuleKeysList( currentMode );
+    defineModuleKeysList( currentMode );
 }
 
 /// Define list of Module keys using filter
 int FITMainWindow::defineModuleKeysList( int nRT )
 {
-  int ii, jj, kk, ln;
-  int curInd = -1;
-  std::string keyfld;
-  QTableWidgetItem *item, *curItem=0;
-  std::string oldKey = rtEJ[nRT].PackKey();
-  //settedCureentKeyIntotbKeys = false;
+    int ii, jj, kk, ln;
+    int curInd = -1;
+    std::string keyfld;
+    QTableWidgetItem *item, *curItem=0;
+    std::string oldKey = rtEJ[nRT].PackKey();
+    //settedCureentKeyIntotbKeys = false;
 
-  if( currentMode != nRT)
+    if( currentMode != nRT)
+        return curInd;
+
+    // define tbKeys
+    keyTable->clear();
+    keyTable->setSortingEnabled ( false );
+    keyTable->setColumnCount( rtEJ[nRT].KeyNumFlds());
+
+    // get list or record keys
+    std::string keyFilter = ui->filterEdit->text().toStdString();
+    if( keyFilter.empty() )
+        keyFilter = ALLKEY;
+    std::vector<std::string> keyList;
+    int nKeys = rtEJ[nRT].GetKeyList( keyFilter.c_str(), keyList);
+
+    //vector<int> colSizes;
+    //for(jj=0; jj<rtEJ[nRT].KeyNumFlds(); jj++)
+    // colSizes.push_back( 0 );
+
+    // define key list
+    keyTable->setRowCount(nKeys);
+
+    // set up table sizes
+    QFontMetrics fm(keyTable->fontMetrics());
+    int charWidth = fm.horizontalAdvance("5");
+    int charHeight = fm.height();
+
+    for( ii=0; ii<nKeys; ii++ )
+    {
+        keyTable->setRowHeight(ii, charHeight+2);
+        for(jj=0, kk=0; jj<rtEJ[nRT].KeyNumFlds(); jj++)
+        {
+            ln = keyList[ii].find_first_of(':', kk);
+            keyfld = std::string(keyList[ii], kk, ln-kk);
+            strip(keyfld);
+            //colsz = keyfld.length()+1;
+            //if( colsz > colSizes[jj])
+            //    colSizes[jj] = colsz;
+            kk = ln+1;
+            item = new QTableWidgetItem(tr("%1").arg( keyfld.c_str()));
+            keyTable->setItem(ii, jj, item );
+        }
+        if( oldKey == keyList[ii] )
+        {    curItem = keyTable->item(ii,0);
+            curInd = ii;
+            //       settedCureentKeyIntotbKeys = true;
+        }
+    }
+    for(jj=0; jj<rtEJ[nRT].KeyNumFlds(); jj++)
+    {
+        //keyTable->setColumnWidth(jj, charWidth*colSizes[jj] );
+        item = new QTableWidgetItem(tr("%1").arg( rtEJ[nRT].FldKeyName(jj) ));
+        //item->setToolTip( ((TCModule*)aMod[nRT])->GetFldHelp(jj));
+        keyTable->setHorizontalHeaderItem( jj, item );
+    }
+
+    keyTable->setSortingEnabled ( true );
+    if(curItem )
+    {
+        keyTable->setCurrentItem( curItem );
+        keyTable->scrollToItem( curItem, QAbstractItemView::PositionAtCenter );
+    }
+
+    rtEJ[nRT].SetKey(oldKey.c_str());
     return curInd;
-
-  // define tbKeys
-  keyTable->clear();
-  keyTable->setSortingEnabled ( false );
-  keyTable->setColumnCount( rtEJ[nRT].KeyNumFlds());
-
-  // get list or record keys
-  std::string keyFilter = ui->filterEdit->text().toStdString();
-  if( keyFilter.empty() )
-      keyFilter = ALLKEY;
-  std::vector<std::string> keyList;
-  int nKeys = rtEJ[nRT].GetKeyList( keyFilter.c_str(), keyList);
-
-  //vector<int> colSizes;
-  //for(jj=0; jj<rtEJ[nRT].KeyNumFlds(); jj++)
-  // colSizes.push_back( 0 );
-
-  // define key list
-  keyTable->setRowCount(nKeys);
-
-  // set up table sizes
-  QFontMetrics fm(keyTable->fontMetrics());
-  int charWidth = fm.horizontalAdvance("5");
-  int charHeight = fm.height();
-
-  for( ii=0; ii<nKeys; ii++ )
-  {
-      keyTable->setRowHeight(ii, charHeight+2);
-      for(jj=0, kk=0; jj<rtEJ[nRT].KeyNumFlds(); jj++)
-      {
-          ln = keyList[ii].find_first_of(':', kk);
-          keyfld = std::string(keyList[ii], kk, ln-kk);
-          strip(keyfld);
-          //colsz = keyfld.length()+1;
-          //if( colsz > colSizes[jj])
-          //    colSizes[jj] = colsz;
-          kk = ln+1;
-          item = new QTableWidgetItem(tr("%1").arg( keyfld.c_str()));
-          keyTable->setItem(ii, jj, item );
-       }
-      if( oldKey == keyList[ii] )
-      {    curItem = keyTable->item(ii,0);
-           curInd = ii;
-    //       settedCureentKeyIntotbKeys = true;
-      }
-  }
-  for(jj=0; jj<rtEJ[nRT].KeyNumFlds(); jj++)
-  {
-      //keyTable->setColumnWidth(jj, charWidth*colSizes[jj] );
-      item = new QTableWidgetItem(tr("%1").arg( rtEJ[nRT].FldKeyName(jj) ));
-      //item->setToolTip( ((TCModule*)aMod[nRT])->GetFldHelp(jj));
-      keyTable->setHorizontalHeaderItem( jj, item );
-  }
-
-  keyTable->setSortingEnabled ( true );
-  if(curItem )
-  {
-    keyTable->setCurrentItem( curItem );
-    keyTable->scrollToItem( curItem, QAbstractItemView::PositionAtCenter );
-  }
-
-  rtEJ[nRT].SetKey(oldKey.c_str());
-  return curInd;
 }
 
 
@@ -539,7 +531,7 @@ void FITMainWindow::RecDelete( const char* key )
 {
     rtEJ[ currentMode ].Del( key );
     if( currentMode == MDF_TASK && rtEJ[ MDF_FITS ].Find(key) )
-         rtEJ[ MDF_FITS ].Del( key );
+        rtEJ[ MDF_FITS ].Del( key );
 }
 
 /// Save solicitation
@@ -550,8 +542,8 @@ bool FITMainWindow::MessageToSave()
     if( contentsChanged && key_str.find_first_of("*?") == std::string::npos )
     {
         int res = vfQuestion3(window(), key_str.c_str(),
-                       "Data record has been changed!",
-               "Save changes", "Discard changes", "Cancel");
+                              "Data record has been changed!",
+                              "Save changes", "Discard changes", "Cancel");
         if( res == VF3_3 )
         {
             // set current key as selected in table keys
@@ -563,7 +555,7 @@ bool FITMainWindow::MessageToSave()
         {
             std::string recBson = ui->recordEdit->toPlainText().toStdString();
             RecSave( recBson, key_str.c_str() );
-         }
+        }
     }
     contentsChanged = false;
     return true;
@@ -572,47 +564,49 @@ bool FITMainWindow::MessageToSave()
 /// Change <SystemFiles> data in edit record
 std::string FITMainWindow::makeSystemFileName( const std::string& path  )
 {
-   std::string name = path;
-   if(projectSettings )
-          name += projectSettings->value("GEMS3KFilesPath", "/GEMS").toString().toStdString();
-   name += "/" + gemsLstFile.Name() + "." + gemsLstFile.Ext();
-   return name;
+    std::string name = path;
+    if(projectSettings )
+        name += projectSettings->value("GEMS3KFilesPath", "/GEMS").toString().toStdString();
+    name += "/" + gemsLstFile.Name() + "." + gemsLstFile.Ext();
+    return name;
 }
 
 /// Change <SystemFiles> or <DataDB> data in edit record
 void FITMainWindow::changeEditeRecord(const std::string& tagname, const std::string& newValue, bool is_json )
 {
-   // get value std::string
-   std::string valueStr = ui->recordEdit->toPlainText().toStdString();
+    // get value std::string
+    std::string valueStr = ui->recordEdit->toPlainText().toStdString();
 
-   // delete old path std::string
-   size_t found = valueStr.find( tagname );
-   size_t found3 = valueStr.find(":", found+1);
-   if (found != std::string::npos)
-   {
-       // change value
-//       found += 15;
-       size_t  found1;
-       size_t  found2;
-       if( is_json )
-       { found1 =  valueStr.find("\"", found3 );
-         found2 =  valueStr.find("\"", found1+1 );
-         valueStr.replace( found1+1, found2-found1-1, newValue);
-       }
-       else
-       { found1 =  valueStr.find_first_not_of(" ", found3+1 );
-         found2 =  valueStr.find("\n", found1 );
-         valueStr.replace( found1, found2-found1, newValue);
-       }
-       ui->recordEdit->setText(valueStr.c_str());
-       contentsChanged = true;
-   }
+    // delete old path std::string
+    size_t found = valueStr.find( tagname );
+    size_t found3 = valueStr.find(":", found+1);
+    if (found != std::string::npos)
+    {
+        // change value
+        //       found += 15;
+        size_t  found1;
+        size_t  found2;
+        if( is_json )
+        {
+            found1 =  valueStr.find("\"", found3 );
+            found2 =  valueStr.find("\"", found1+1 );
+            valueStr.replace( found1+1, found2-found1-1, newValue);
+        }
+        else
+        {
+            found1 =  valueStr.find_first_not_of(" ", found3+1 );
+            found2 =  valueStr.find("\n", found1 );
+            valueStr.replace( found1, found2-found1, newValue);
+        }
+        ui->recordEdit->setText(valueStr.c_str());
+        contentsChanged = true;
+    }
 
-//   valueStr = ui->recordEdit->toPlainText().toStdString();
-//   found = valueStr.find("{");
+    //   valueStr = ui->recordEdit->toPlainText().toStdString();
+    //   found = valueStr.find("{");
 
-//   std::string taskid_projectid = "\"taskid\": \"";
-////   valueStr.
+    //   std::string taskid_projectid = "\"taskid\": \"";
+    ////   valueStr.
 }
 
 
@@ -620,7 +614,7 @@ void FITMainWindow::changeEditeRecord(const std::string& tagname, const std::str
 bool FITMainWindow::createTaskTemplate()
 {
     if( gemsLstFile.Name().empty() )
-       Error("Create task template", "Undefined System File name.");
+        Error("Create task template", "Undefined System File name.");
 
     // create arguments std::string
     std::string newPath = makeSystemFileName( "." );
@@ -638,7 +632,7 @@ bool FITMainWindow::createTaskTemplate()
     cParameters << "-initJ" << sss.c_str() << newPath.c_str() << "template.json";
 
     if( !runProcess( cParameters, fitTaskDir.Dir().c_str()) )
-       Error("Run gemsfit -init", "Error starting gemsfit2 process. Check help->Preferences and set the correct path to gemsfit2 code.");
+        Error("Run gemsfit -init", "Error starting gemsfit2 process. Check help->Preferences and set the correct path to gemsfit2 code.");
 
     int ret = fitProcess->waitForFinished();
 
@@ -658,14 +652,15 @@ bool FITMainWindow::createTaskTemplate()
 
     // set up EJDB path
     if( projectSettings )
-     { std::string ejdbPath  = "..";
-       ejdbPath  += projectSettings->value("ProjDatabasePath", "/EJDB").toString().toStdString();
-       ejdbPath  += "/";
-       ejdbPath  += projectSettings->value("ProjDatabaseName", "myprojdb1" ).toString().toStdString();
-       changeEditeRecord( keys::DBPath[0] , ejdbPath, true);
-       changeEditeRecord( keys::DBPath[1] , ejdbPath, true );
-       changeEditeRecord( keys::DBColl[0], rtEJ[ MDF_DATABASE ].GetKeywd(), true);
-       changeEditeRecord( keys::DBColl[1], rtEJ[ MDF_DATABASE ].GetKeywd(), true);
+    {
+        std::string ejdbPath  = "..";
+        ejdbPath  += projectSettings->value("ProjDatabasePath", "/EJDB").toString().toStdString();
+        ejdbPath  += "/";
+        ejdbPath  += projectSettings->value("ProjDatabaseName", "myprojdb1" ).toString().toStdString();
+        changeEditeRecord( keys::DBPath[0] , ejdbPath, true);
+        changeEditeRecord( keys::DBPath[1] , ejdbPath, true );
+        changeEditeRecord( keys::DBColl[0], rtEJ[ MDF_DATABASE ].GetKeywd(), true);
+        changeEditeRecord( keys::DBColl[1], rtEJ[ MDF_DATABASE ].GetKeywd(), true);
     }
     return ret;
 }
@@ -695,35 +690,35 @@ void FITMainWindow::runFinished(int exitCode, QProcess::ExitStatus exitStatus)
 /// Make list of Experiments keys using query
 void FITMainWindow::defineModuleKeysList( std::string& samplelist )
 {
-  int ii, kk, ln;
-  std::string keyfld;
+    int ii, kk, ln;
+    std::string keyfld;
 
-  // get list or record keys
-  std::string keyFilter = ALLKEY;
-  std::vector<std::string> keyList;
-  int nKeys = rtEJ[ MDF_DATABASE ].GetKeyList( keyFilter.c_str(), keyList);
+    // get list or record keys
+    std::string keyFilter = ALLKEY;
+    std::vector<std::string> keyList;
+    int nKeys = rtEJ[ MDF_DATABASE ].GetKeyList( keyFilter.c_str(), keyList);
 
-  samplelist = " \"DataSelect\": {\n    \"samplelist\": [\n";
-  for( ii=0; ii<nKeys; ii++ )
-  {
-      samplelist += "{ \"SA\": \"";
-      kk=0;
-      ln = keyList[ii].find_first_of(':', kk);
-      keyfld = std::string(keyList[ii], kk, ln-kk);
-      strip(keyfld);
-      kk = ln+1;
-      samplelist += keyfld + "\", \"DS\": \"";
-      ln = keyList[ii].find_first_of(':', kk);
-      keyfld = std::string(keyList[ii], kk, ln-kk);
-      strip(keyfld);
-      samplelist += keyfld;
-      samplelist += "\", \"WT\": 1 }";
-      if( ii != nKeys-1)
-          samplelist += ",\n";
-      else
-          samplelist += "\n";
-  }
-  samplelist += "]\n } }";
+    samplelist = " \"DataSelect\": {\n    \"samplelist\": [\n";
+    for( ii=0; ii<nKeys; ii++ )
+    {
+        samplelist += "{ \"SA\": \"";
+        kk=0;
+        ln = keyList[ii].find_first_of(':', kk);
+        keyfld = std::string(keyList[ii], kk, ln-kk);
+        strip(keyfld);
+        kk = ln+1;
+        samplelist += keyfld + "\", \"DS\": \"";
+        ln = keyList[ii].find_first_of(':', kk);
+        keyfld = std::string(keyList[ii], kk, ln-kk);
+        strip(keyfld);
+        samplelist += keyfld;
+        samplelist += "\", \"WT\": 1 }";
+        if( ii != nKeys-1)
+            samplelist += ",\n";
+        else
+            samplelist += "\n";
+    }
+    samplelist += "]\n } }";
 }
 
 //--------------- end of  FITMainWindow.cpp  -----------------------------

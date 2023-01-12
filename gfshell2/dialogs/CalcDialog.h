@@ -4,7 +4,6 @@
 // Declaration of CalcDialog class
 //
 // Copyright (C) 1996-2010  A.Rysin, S.Dmytriyeva
-// Uses  string class (C) A.Rysin 1999
 //
 // This file is part of the GEM-Selektor GUI library which uses the
 // Qt v.4 cross-platform App & UI framework (http://qt.nokia.com)
@@ -19,25 +18,23 @@
 
 #ifndef CalcDialog_included
 #define CalcDialog_included
-
 #include <QDialog>
 #include <QButtonGroup>
 
-#include "ui_CalcDialog4.h"
-#include "verror.h"
+namespace Ui {
+class CalcDialogData;
+}
 
-//#define DOUBLE_EMPTY         2.2250738585072014e-308
-
-class CalcDialog : public QDialog, public Ui::CalcDialogData
+class CalcDialog : public QDialog
 {
     Q_OBJECT
 
+    Ui::CalcDialogData *ui;
     int  nObj;
     QButtonGroup *allButtons;
     
 protected slots:
-    virtual void languageChange();
-    virtual void setMode( int id);
+    virtual void setMode(int id);
     virtual void ok();
     virtual void unaryMode();
     
@@ -47,6 +44,6 @@ public:
 
     QString fun(double val);
 
- };
+};
 
 #endif // CalcDialog_included
