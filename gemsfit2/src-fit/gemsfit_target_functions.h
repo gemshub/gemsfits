@@ -52,9 +52,9 @@
 * @author DM
 * @date 17.05.2013
 */
-void check_unit(int i, int p, int e, string unit, TGfitTask *sys );
-void check_unit_dcomp(int i, int p, int dc, int dcp, string unit, TGfitTask *sys );
-void check_MR_unit(int i, int p, int f, string unit, TGfitTask *sys );
+void check_unit(int i, int p, int e, std::string unit, TGfitTask *sys );
+void check_unit_dcomp(int i, int p, int dc, int dcp, std::string unit, TGfitTask *sys );
+void check_MR_unit(int i, int p, int f, std::string unit, TGfitTask *sys );
 
 /**
 * Checks if the unit specified in the target function in the input file corresponds with the unit in the
@@ -67,7 +67,7 @@ void check_MR_unit(int i, int p, int f, string unit, TGfitTask *sys );
 * @author DM
 * @date 17.05.2013
 */
-void check_prop_unit(int i, int p, int pp, string unit, TGfitTask *sys );
+void check_prop_unit(int i, int p, int pp, std::string unit, TGfitTask *sys );
 
 
 /**
@@ -151,7 +151,7 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFun
 * @author DM
 * @date 17.05.2013
 */
-double weight (int i, int p, int e, TGfitTask::TargetFunction::obj_fun &objfun, string type, TGfitTask *sys);
+double weight (int i, int p, int e, TGfitTask::TargetFunction::obj_fun &objfun, std::string type, TGfitTask *sys);
 
 /**
 * Returns the weight based on the weight type
@@ -164,7 +164,7 @@ double weight (int i, int p, int e, TGfitTask::TargetFunction::obj_fun &objfun, 
 * @author DM
 * @date 17.08.2013
 */
-double weight_MR (int i, int p, int f, TGfitTask::TargetFunction::obj_fun &objfun, string type, TGfitTask *sys);
+double weight_MR (int i, int p, int f, TGfitTask::TargetFunction::obj_fun &objfun, std::string type, TGfitTask *sys);
 
 /**
 * Returns the weight based on the weight type
@@ -177,7 +177,7 @@ double weight_MR (int i, int p, int f, TGfitTask::TargetFunction::obj_fun &objfu
 * @author DM
 * @date 17.05.2013
 */
-double weight_phprop (int i, int p, int pp, TGfitTask::TargetFunction::obj_fun &objfun, string type, TGfitTask *sys);
+double weight_phprop (int i, int p, int pp, TGfitTask::TargetFunction::obj_fun &objfun, std::string type, TGfitTask *sys);
 
 /**
 * Returns the weight based on the weight type
@@ -191,9 +191,9 @@ double weight_phprop (int i, int p, int pp, TGfitTask::TargetFunction::obj_fun &
 * @author DM
 * @date 13.06.2013
 */
-double weight_phdcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFunction::obj_fun &objfun, string type, TGfitTask *sys);
+double weight_phdcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFunction::obj_fun &objfun, std::string type, TGfitTask *sys);
 
-double weight_prop (int i, int p, TGfitTask::TargetFunction::obj_fun &objfun, string type, TGfitTask *sys);
+double weight_prop (int i, int p, TGfitTask::TargetFunction::obj_fun &objfun, std::string type, TGfitTask *sys);
 
 /**
 * Returns the target function value (computed - measured)
@@ -204,7 +204,7 @@ double weight_prop (int i, int p, TGfitTask::TargetFunction::obj_fun &objfun, st
 * @author DM
 * @date 17.05.2013
 */
-double Tfunction (double computed_value, double measured_value, string type, TGfitTask::TargetFunction::obj_fun objfun);
+double Tfunction (double computed_value, double measured_value, std::string type, TGfitTask::TargetFunction::obj_fun objfun);
 
 #if defined(_UNICODE)
 double* AddVariable(const wchar_t *a_szName, void *pUserData);
@@ -212,6 +212,6 @@ double* AddVariable(const wchar_t *a_szName, void *pUserData);
 double* AddVariable(const char *a_szName, void *pUserData);
 #endif
 
-string formula_DCname_parser (string expr, vector<string> &exprO, vector<string> &exprP );
+std::string formula_DCname_parser (std::string expr, std::vector<std::string> &exprO, std::vector<std::string> &exprP );
 
 #endif // GEMSFIT_TARGET_FUNCTIONS_H

@@ -37,7 +37,7 @@
 /** \brief The eulerian number. */
 #define PARSER_CONST_E   2.718281828459045235360287
 
-using namespace std;
+//using namespace std;
 
 /** \file
     \brief Implementation of the standard floating point parser.

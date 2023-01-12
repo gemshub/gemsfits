@@ -43,20 +43,19 @@ macx-clang {
 }
 
 RESOURCES      = ./fgui.qrc
-
-QWT6_CPP       =  ./QWT
+#QWT6_CPP       =  ./QWT
 DATAMAN_CPP    =  ./dataman
 DIALOGS_CPP   =  ./dialogs
 GEMS3K_CPP     =  ../../standalone/GEMS3K
 KEYS_CPP     =  ../csvtoejdb/src-csvtoejdb
 
-QWT6_H       =  $$QWT6_CPP
+#QWT6_H       =  $$QWT6_CPP
 DATAMAN_H    =  $$DATAMAN_CPP
 DIALOGS_H    =  $$DIALOGS_CPP
 GEMS3K_H     =  $$GEMS3K_CPP
 KEYS_H       =   $$KEYS_CPP
 
-DEPENDPATH   += $$QWT6_H
+#DEPENDPATH   += $$QWT6_H
 DEPENDPATH   += $$DATAMAN_H
 DEPENDPATH   += $$DIALOGS_H
 DEPENDPATH   += $$GEMS3K_H
@@ -79,7 +78,7 @@ OBJECTS_DIR   = obj
 
 include($$DIALOGS_CPP/dialogs.pri)
 include($$GEMS3K_CPP/gems3k.pri)
-include($$QWT6_CPP/qwt.pri)
+#include($$QWT6_CPP/qwt.pri)
 include($$DATAMAN_CPP/dataman.pri)
 include($$YAML_PATH/yaml.pri)
 

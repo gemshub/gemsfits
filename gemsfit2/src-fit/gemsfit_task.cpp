@@ -47,12 +47,12 @@
 #endif
 
 
-using namespace std;
+//using namespace std;
 
 int master_counter;
 //int sizeTP;
 
-istream& f_getline(istream& is, string& str, char delim);
+std::istream& f_getline(std::istream& is, std::string& str, char delim);
 
 //extern outField DataBR_fields[58];
 
@@ -89,7 +89,7 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     }
 
     Opti = new optimization ( );
-    gpf->flog << "10. gemsfit_task.cpp(94). Initializing the Target function structure & get_DatTarget(); " << endl;
+    gpf->flog << "10. gemsfit_task.cpp(94). Initializing the Target function structure & get_DatTarget(); " << std::endl;
     Tfun = new TargetFunction;
 
     for (unsigned e=0; e < Opti->optParam.size(); e++)
@@ -98,18 +98,18 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     }
 
     // initialize nodes with the experimental data
-    gpf->flog << "06. gemsfit_task.cpp(89). Initializing nodes with the experimental data; " << endl;
+    gpf->flog << "06. gemsfit_task.cpp(89). Initializing nodes with the experimental data; " << std::endl;
     setnodes ( );  // initialization of nodes each for one experimental point (system)
     // getting the parameters to be optimized from DCH, DBR and multi structures, and optimization settings form the input file
-    gpf->flog << "07. gemsfit_task.cpp(92). Initializing optimization structure; " << endl;
+    gpf->flog << "07. gemsfit_task.cpp(92). Initializing optimization structure; " << std::endl;
 
 //    gpf->ftmp.open("tmp", ios::trunc);
 //    if( gpf->ftmp.fail() )
-//    { cout<<"Log fileopen error"<<endl; exit(1); }
+//    { std::cout<<"Log fileopen error"<<std::endl; exit(1); }
     gpf->sizeTP = this->TP_pairs[0].size();
 
 //    Opti = new optimization ( );
-//    gpf->flog << "10. gemsfit_task.cpp(94). Initializing the Target function structure & get_DatTarget(); " << endl;
+//    gpf->flog << "10. gemsfit_task.cpp(94). Initializing the Target function structure & get_DatTarget(); " << std::endl;
 //    Tfun = new TargetFunction;
 
 //    set_fixed_parameters(); //- moved to setnodes();
@@ -161,12 +161,12 @@ void TGfitTask::gfit_error ( )
     {
         if (!h_param_nestfun)
         {
-            cout << "Error - When using nested functions (fitting paramaters in each system node/experiment) paramaters such as bIC,  TK or P have to be marked ";
+            std::cout << "Error - When using nested functions (fitting paramaters in each system node/experiment) paramaters such as bIC,  TK or P have to be marked ";
             exit(1);
         }
         if (!h_nestfun)
         {
-            cout << "Error - When fitting bIC, TK or P nested functions have to be added to DataTarget, which tell the program which is the dependent value from each node/experiment ";
+            std::cout << "Error - When fitting bIC, TK or P nested functions have to be added to DataTarget, which tell the program which is the dependent value from each node/experiment ";
             exit(1);
         }
     }
@@ -174,7 +174,7 @@ void TGfitTask::gfit_error ( )
 
     if ((this->Opti->optParam.size() == 0) && (!h_nestfun))
     {
-        cout << "No parameters were marked (correctly marked) for optimization! " << endl;
+        std::cout << "No parameters were marked (correctly marked) for optimization! " << std::endl;
         exit (1);
     }
 }
@@ -182,7 +182,7 @@ void TGfitTask::gfit_error ( )
 void TGfitTask::run_optim()
 {
 //    titration(this);
-    gpf->flog << "11. gemsfit_task.cpp(152). Initializing optimization init_optim(); " << endl;
+    gpf->flog << "11. gemsfit_task.cpp(152). Initializing optimization init_optim(); " << std::endl;
     if (Tfun->objfun.size() > 0)
     {
         if (Opti->h_optNF) // if nested function
@@ -196,7 +196,7 @@ void TGfitTask::run_optim()
     {
         if (Opti->h_optNF) // if nested function
         {
-            string old = Tfun->type;               // storing the old type of target function
+            std::string old = Tfun->type;               // storing the old type of target function
             Tfun->type = "abs_dif";                // seeting the target function to simple abslute difference
             nestedfun(this);                             // optimizing the nested functions
             Tfun->type = old;
@@ -301,8 +301,8 @@ void TGfitTask::init_optim( std::vector<double> &optv_, /*int &countit,*/ double
     }
     else
     {
-        cout<<" Unknown optimization algorithm !!!! "<<endl;
-        cout<<" ... bail out now ... "<<endl;
+        std::cout<<" Unknown optimization algorithm !!!! "<<std::endl;
+        std::cout<<" ... bail out now ... "<<std::endl;
         exit(1);
     }
 
@@ -316,7 +316,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
     int j = 0;
     std::vector<double> grad;
 
-    gpf->flog << " ... initializing optimization object in build_optim() ... " << endl;
+    gpf->flog << " ... initializing optimization object in build_optim() ... " << std::endl;
 
 //     Reset counter to zero
     master_counter = 0;
@@ -334,27 +334,27 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
     // check if initial guesses have same number of elements as bound and check if initial guesses are within the bounds
     if( Opti->optv.size() != Opti->OptUpBounds.size() )
     {
-        cout<<endl;
-        cout<<"initial guess vector and bounds vector must have same number of elements !! "<<endl;
-        cout<<"optv.size() = "<<Opti->optv.size()<<" <-> OptUbBounds.size() = "<<Opti->OptUpBounds.size()<<endl;
-        cout<<" .... exiting now .... "<<endl;
-//            cout<<endl;
+        std::cout<<std::endl;
+        std::cout<<"initial guess vector and bounds vector must have same number of elements !! "<<std::endl;
+        std::cout<<"optv.size() = "<<Opti->optv.size()<<" <-> OptUbBounds.size() = "<<Opti->OptUpBounds.size()<<std::endl;
+        std::cout<<" .... exiting now .... "<<std::endl;
+//            std::cout<<std::endl;
         exit(1);
     }
     for( i=0; i<Opti->OptLoBounds.size(); i++ )
     {
         if( Opti->optv[i]<Opti->OptLoBounds[i] || Opti->optv[i]>Opti->OptUpBounds[i] )
         {
-            cout<<endl;
-            cout<<"Initial guess value is not within given bounds!!"<<endl;
-            cout<<"optv["<<i<<"] = "<<Opti->optv[i]<<" | OptLoBounds["<<i<<"] = "<<Opti->OptLoBounds[i]<<" | OptUpBounds["<<i<<"] = "<<Opti->OptUpBounds[i]<<endl;
-            cout<<" .... exiting now .... "<<endl;
-//                cout<<endl;
+            std::cout<<std::endl;
+            std::cout<<"Initial guess value is not within given bounds!!"<<std::endl;
+            std::cout<<"optv["<<i<<"] = "<<Opti->optv[i]<<" | OptLoBounds["<<i<<"] = "<<Opti->OptLoBounds[i]<<" | OptUpBounds["<<i<<"] = "<<Opti->OptUpBounds[i]<<std::endl;
+            std::cout<<" .... exiting now .... "<<std::endl;
+//                std::cout<<std::endl;
             exit(1);
         }
     }
 
-    gpf->flog << "... assigning bounds and tolerance for optimization..." << endl;
+    gpf->flog << "... assigning bounds and tolerance for optimization..." << std::endl;
     // assign bounds
     NLopti.set_lower_bounds( Opti->OptLoBounds );
     NLopti.set_upper_bounds( Opti->OptUpBounds );
@@ -370,7 +370,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
 
 
     /// specify objective function
-    gpf->flog << endl << "12. in gemsfit_task.cpp(287). Setting target (objective) function to minimize." << endl;
+    gpf->flog << std::endl << "12. in gemsfit_task.cpp(287). Setting target (objective) function to minimize." << std::endl;
     NLopti.set_min_objective( Equil_objective_function_callback, this );
 
 //        if( OptConstraints )
@@ -383,7 +383,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
     // Set initial stepsize
     if( Opti->OptInitStep > 0 )
     {
-        vector<double> inistep( Opti->optv.size(), 0. );
+        std::vector<double> inistep( Opti->optv.size(), 0. );
         for( j=0; j<(int) Opti->optv.size(); j++ )
         {
             inistep[j] = Opti->optv[j] * Opti->OptInitStep;
@@ -391,33 +391,33 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
         NLopti.set_initial_step( inistep );
     }
 
-    gpf->flog << "13. gemsfit_task.cpp(308). Performing optimization."<<endl;
+    gpf->flog << "13. gemsfit_task.cpp(308). Performing optimization."<<std::endl;
 
 //    //===== For testing the objective function without oprimization =====//
 //    weighted_Tfun_sum_of_residuals = Equil_objective_function_callback(Opti->optv, grad, this);
     if (optv_.size() == 0)
-    { cout << "No Parameter was marked for optimization! Check that there are parameters with PType : F! "<< endl; exit (1);}
+    { std::cout << "No Parameter was marked for optimization! Check that there are parameters with PType : F! "<< std::endl; exit (1);}
 
     nlopt::result result = NLopti.optimize( Opti->optv, weighted_Tfun_sum_of_residuals );
-    gpf->flog << "optv[0] = "<<Opti->optv[0]<<endl;
-    gpf->flog << "size of optv = "<<Opti->optv.size()<<endl;
+    gpf->flog << "optv[0] = "<<Opti->optv[0]<<std::endl;
+    gpf->flog << "size of optv = "<<Opti->optv.size()<<std::endl;
 
-    gpf->flog << "14. gemsfit_task.cpp(317). Finished optimization; " << endl;
+    gpf->flog << "14. gemsfit_task.cpp(317). Finished optimization; " << std::endl;
 
     Equil_objective_function_callback(Opti->optv, grad, this);
 
     // check results
     if( result < 0 )
     {
-        std::cout<<endl;
+        std::cout<<std::endl;
         std::cout<<"   !!!  nlopt failed  !!!   "<<std::endl;
         std::cout<<"   !!!  error code:   "<<result<<std::endl;
         Opti->print_return_message( result );
-        std::cout<<endl;
+        std::cout<<std::endl;
     }
     else
     {
-        std::cout<<" NLopt return code: "<<result<<endl;
+        std::cout<<" NLopt return code: "<<result<<std::endl;
         Opti->print_return_message( result );
         gpf->flog<<"found minimum at <<f( ";
         for( unsigned i=0; i<Opti->optv.size(); i++ )
@@ -477,8 +477,8 @@ void TGfitTask::setnodes()
     {
         if( NodT[n]->GEM_init( gpf->GEMS3LstFilePath().c_str() ) == 1 )
         {
-            cout<< gpf->GEMS3LstFilePath().c_str() << endl;
-            cout<<" .. ERROR occurred while reading input files !!! ..."<<endl;
+            std::cout<< gpf->GEMS3LstFilePath().c_str() << std::endl;
+            std::cout<<" .. ERROR occurred while reading input files !!! ..."<<std::endl;
         }
     }
 
@@ -488,22 +488,22 @@ void TGfitTask::setnodes()
 
     // set fixed parameters
     if( mLook == 0)
-    { cout << "G0 interpolation is active, G0 values cannot be set in GEMSFITS!" << endl;}
+    { std::cout << "G0 interpolation is active, G0 values cannot be set in GEMSFITS!" << std::endl;}
     try
     {
         set_fixed_parameters();
     }
     catch (TError & e)
     {
-        cout << e.title << e.mess << endl;
+        std::cout << e.title << e.mess << std::endl;
         exit(1);
     }
 
 
-//    cout << NodT[0]->Get_bIC(0) << endl;
-//    cout << NodT[0]->Get_bIC(1) << endl;
-//    cout << NodT[0]->Get_bIC(2) << endl;
-//    cout << NodT[0]->Get_bIC(3) << endl;
+//    std::cout << NodT[0]->Get_bIC(0) << std::endl;
+//    std::cout << NodT[0]->Get_bIC(1) << std::endl;
+//    std::cout << NodT[0]->Get_bIC(2) << std::endl;
+//    std::cout << NodT[0]->Get_bIC(3) << std::endl;
 
     // initialize the nodes using the input GEMS3 file
     for (n=0; n<NodT.size(); ++n)
@@ -540,17 +540,17 @@ void TGfitTask::setnodes()
                 for (k=0; k<experiments.at(n)->expphases[i]->phDC[j]->DCprop.size(); k++)
                 {
                     // Upper DC metastability
-//                    cout << experiments.at(n)->expphases[i]->phDC[j]->DCprop[k]->property << endl;
+//                    std::cout << experiments.at(n)->expphases[i]->phDC[j]->DCprop[k]->property << std::endl;
                     if (experiments.at(n)->expphases[i]->phDC[j]->DCprop[k]->property == keys::UMC)
                     {
                         PHndx = NodT[n]->Ph_name_to_xCH (experiments.at(n)->expphases[i]->phase.c_str());
                         DCndx = NodT[n]->Phx_to_DCx (PHndx);
-//                        cout << experiments.at(n)->expphases[i]->phDC[j]->DCprop[k]->property << endl;
+//                        std::cout << experiments.at(n)->expphases[i]->phDC[j]->DCprop[k]->property << std::endl;
                         for (l=DCndx; l<nDC; l++)
                         {
                             if (DCNL[l] == experiments.at(n)->expphases[i]->phDC[j]->DC)
                             {
-//                                cout<< DCNL[l] << endl;
+//                                std::cout<< DCNL[l] << std::endl;
                                 xDC_up[l] = experiments.at(n)->expphases[i]->phDC[j]->DCprop[k]->Qnt;
                             }
                         }
@@ -604,14 +604,14 @@ void TGfitTask::setnodes()
                 }
                 else
                 {
-                     cout<<" H2O is not given in grams !!!! "<<endl;
-                     cout<<" ... bail out now ... "<<endl;
+                     std::cout<<" H2O is not given in grams !!!! "<<std::endl;
+                     std::cout<<" ... bail out now ... "<<std::endl;
                      exit(1);
                 }
             }
         }
 
-        string majorsalt = "";
+        std::string majorsalt = "";
         double maxsalt = 0.0;
 
         for (j=0; j<experiments[n]->sbcomp.size(); ++j)
@@ -672,7 +672,7 @@ void TGfitTask::setnodes()
                 }
             }*/
 
-            string sMod;
+            std::string sMod;
             NodT[n]->Get_sMod(0, sMod);
 
             // check if we are dealing with HKF TSolMod !!!!
@@ -738,7 +738,7 @@ void TGfitTask::setnodes()
             nICb = dCH->nICb;
             strcpy( cName, experiments[n]->sbcomp[j]->comp.c_str() );
             // or -1 if no such name was found in the DATACH DC name list
-            xDCb = NodT[n]->DC_name_to_xDB( cName ); // Returns DBR index of DC given the DC Name string
+            xDCb = NodT[n]->DC_name_to_xDB( cName ); // Returns DBR index of DC given the DC Name std::string
                                     // or -1 if no such name was found in the DATACH DC name list
             if( xDCb >= 0 )
             { // This is a valid DC name from the system definition and DBR file
@@ -772,11 +772,11 @@ void TGfitTask::setnodes()
                 // This is not a name of DC used in DBR file. The GEMS formula parser is used
                 //  (implemented by SD on 4.03.2014)
                 TFormula aFo;
-                auto_ptr<double> A( new double[nIC]);
-                auto_ptr<char> SB1( new char[nIC*IC_RKLEN]);
+                std::shared_ptr<double> A( new double[nIC]);
+                std::shared_ptr<char> SB1( new char[nIC*IC_RKLEN]);
 
                 if ((experiments[n]->sbcomp[j]->Qunit != keys::mol) && (experiments[n]->sbcomp[j]->Qunit != keys::molal) && (experiments[n]->sbcomp[j]->Qunit != keys::gram))
-                   {cout << "ERROR: Unknown unit " << experiments[n]->sbcomp[j]->Qunit <<" for "<< experiments[n]->sbcomp[j]->comp <<" experiment " << experiments[n]->sample << endl; exit(1);}
+                   {std::cout << "ERROR: Unknown unit " << experiments[n]->sbcomp[j]->Qunit <<" for "<< experiments[n]->sbcomp[j]->comp <<" experiment " << experiments[n]->sample << std::endl; exit(1);}
 
                 // Set up SB1 - copy of ICNL
                 for( i=0; i<nIC; i++ )
@@ -785,7 +785,7 @@ void TGfitTask::setnodes()
                     strncpy( cName, dCH->ICNL[i], strlen(dCH->ICNL[i]) /*MaxICN*/ );
                     cName[IC_RKLEN] = 0;
                     aFo.fixup_ics( cName );
-                    memcpy( SB1.get()+i*IC_RKLEN, cName, MAXICNAME+MAXSYMB );
+                    std::memcpy( SB1.get()+i*IC_RKLEN, cName, MAXICNAME+MAXSYMB );
                 }
                 // Get the formula of the composition (e.g. SiO2)
                 strcpy( cName, experiments[n]->sbcomp[j]->comp.c_str() );
@@ -828,11 +828,11 @@ void TGfitTask::setnodes()
            }
      } catch( TError& err )
      {
-       cout << "Error in setting the input composition of experimental system:" << endl;
-       cout << "expsample: " << experiments[n]->sample.c_str() << " expdataset: " <<
+       std::cout << "Error in setting the input composition of experimental system:" << std::endl;
+       std::cout << "expsample: " << experiments[n]->sample.c_str() << " expdataset: " <<
             experiments[n]->expdataset.c_str() << " formula: "
-            <<   experiments[n]->sbcomp[j]->comp.c_str() << endl;
-       cout<< err.title << err.mess << endl;
+            <<   experiments[n]->sbcomp[j]->comp.c_str() << std::endl;
+       std::cout<< err.title << err.mess << std::endl;
        exit(1);
      }
    }
@@ -858,7 +858,7 @@ void TGfitTask::setnodes()
         // in the future - implement a Tnode function that stes just T, P and bIC vector of amount of independent components.
         // ---- // ---- // Transfer new temperature, pressure and b-vector to GEMS3K // ---- // ---- //
 //        NodT[n]->GEM_from_MT( NodeHandle, NodeStatusCH, T_k, P_pa, 0., 0., new_moles_IC, xDC_up, xDC_lo, Ph_surf );
-//cout << new_moles_IC[0] << " " << new_moles_IC[1] << " " <<new_moles_IC[2] << " " <<new_moles_IC[3] << " " <<new_moles_IC[4] << " " <<new_moles_IC[5] << " " <<new_moles_IC[6] << " " << endl;
+//std::cout << new_moles_IC[0] << " " << new_moles_IC[1] << " " <<new_moles_IC[2] << " " <<new_moles_IC[3] << " " <<new_moles_IC[4] << " " <<new_moles_IC[5] << " " <<new_moles_IC[6] << " " << std::endl;
         // variant (8c) of GEM_from_MT()
         NodT[n]->GEM_from_MT( NodeHandle, NEED_GEM_AIA, T_k, P_pa, new_moles_IC, xDC_up, xDC_lo );  // bugfix DK 09.01.2014
 
@@ -866,12 +866,12 @@ void TGfitTask::setnodes()
 //        {
 //            bICv[n][bi] = new_moles_IC[bi] ;
 //        }
-//            cout << NodT[0]->Get_bIC(0) << endl;
-//            cout << NodT[0]->Get_bIC(1) << endl;
-//            cout << NodT[0]->Get_bIC(2) << endl;
-//            cout << NodT[0]->Get_bIC(3) << endl;
+//            std::cout << NodT[0]->Get_bIC(0) << std::endl;
+//            std::cout << NodT[0]->Get_bIC(1) << std::endl;
+//            std::cout << NodT[0]->Get_bIC(2) << std::endl;
+//            std::cout << NodT[0]->Get_bIC(3) << std::endl;
         // mixed salt
-//        string sMod;
+//        std::string sMod;
 //        NodT[n]->Get_sMod(0, sMod);
 //        if (((sMod.compare(0,1,"H")) == 0) && (maxsalt > 0 ))
 //        {
@@ -883,15 +883,15 @@ void TGfitTask::setnodes()
 //            if( ( NodeStatusCH == ERR_GEM_AIA || NodeStatusCH == ERR_GEM_SIA ||
 //                           NodeStatusCH ==  T_ERROR_GEM ) )
 //            {
-//                 cout << "Error: GEM calculation results are not retrieved upon initializing experimental system (node) "
-//                      << NodeHandle << endl;
+//                 std::cout << "Error: GEM calculation results are not retrieved upon initializing experimental system (node) "
+//                      << NodeHandle << std::endl;
 //            }
 //            else
 //            {
 //               if( ( NodeStatusCH == BAD_GEM_AIA || NodeStatusCH == BAD_GEM_SIA  ) )
 //               {
-//                  cout << "Insufficient quality of GEM solution, but GEM results are retrieved upon initializing experimental system (node) "
-//                  << NodeHandle << endl;
+//                  std::cout << "Insufficient quality of GEM solution, but GEM results are retrieved upon initializing experimental system (node) "
+//                  << NodeHandle << std::endl;
 //               }
 //            }
 //        }
@@ -915,20 +915,20 @@ void TGfitTask::setnodes()
         NodeHandle = n;
         // Calling GEMIPM calculation
         long int NodeStatusCH2 = NodT[n]->GEM_run( true );
-        cout << "Node: " << n+1 << " Sample: " << experiments[n]->sample <<"  NodeStatusCH: " << NodeStatusCH2 << endl;
+        std::cout << "Node: " << n+1 << " Sample: " << experiments[n]->sample <<"  NodeStatusCH: " << NodeStatusCH2 << std::endl;
 
         if( ( NodeStatusCH2 == ERR_GEM_AIA || NodeStatusCH2 == ERR_GEM_SIA ||
                        NodeStatusCH2 ==  T_ERROR_GEM ) )
         {
-             cout << "Error: GEM calculation results are not retrieved upon initializing experimental system (node) "
-                  << n << endl;
+             std::cout << "Error: GEM calculation results are not retrieved upon initializing experimental system (node) "
+                  << n << std::endl;
         }
         else
         {
            if( ( NodeStatusCH2 == BAD_GEM_AIA || NodeStatusCH2 == BAD_GEM_SIA  ) )
            {
-              cout << "Insufficient quality of GEM solution, but GEM results are retrieved upon initializing experimental system (node) "
-              << n << endl;
+              std::cout << "Insufficient quality of GEM solution, but GEM results are retrieved upon initializing experimental system (node) "
+              << n << std::endl;
            }
         }
 
@@ -941,7 +941,7 @@ void TGfitTask::setnodes()
 
 void TGfitTask::get_DataLogK()
 {
-    vector<string> out, out2;
+    std::vector<std::string> out, out2;
 
     parse_JSON_object(DataLogK, keys::FunList, out);
     FlogK.resize(out.size());
@@ -949,17 +949,17 @@ void TGfitTask::get_DataLogK()
     {
 
         parse_JSON_object(out[i], keys::Ftype, out2);
-        if (out2.size() == 0) { cout << "Ftype has to be specified in DataLogK " << i << endl; exit(1);} // ERROR
+        if (out2.size() == 0) { std::cout << "Ftype has to be specified in DataLogK " << i << std::endl; exit(1);} // ERROR
         FlogK[i].Ftype = out2[0];
         out2.clear();
 
         parse_JSON_object(out[i], keys::Rndx, out2);
-        if (out2.size() == 0) { cout << "Rndx has to be specified in DataLogK " << i << endl; exit(1);} // ERROR
+        if (out2.size() == 0) { std::cout << "Rndx has to be specified in DataLogK " << i << std::endl; exit(1);} // ERROR
         FlogK[i].Rndx = atoi(out2[0].c_str());
         out2.clear();
 
         parse_JSON_object(out[i], keys::Fcoef, out2);
-        if (out2.size() != 7) { cout << "Fcoef has to be contain 7 coefficients (number or 0 for no coefficient)! " << i << endl; exit(1);} // ERROR
+        if (out2.size() != 7) { std::cout << "Fcoef has to be contain 7 coefficients (number or 0 for no coefficient)! " << i << std::endl; exit(1);} // ERROR
         FlogK[i].Fcoef.resize(7);
         for (unsigned int j = 0; j < out2.size(); j++)
         {
@@ -973,13 +973,13 @@ void TGfitTask::get_DataLogK()
 
 void TGfitTask::get_DataTarget ( )
 {
-    vector<string> out, out2;
+    std::vector<std::string> out, out2;
     parse_JSON_array_object(DataTarget, "OFUN", "OPH", out);
     out.clear();
 
     parse_JSON_object(DataTarget, keys::Target, out);
     if (out.size() == 0)
-    { cout << "No Target function defined!! "<< endl; exit(1);}
+    { std::cout << "No Target function defined!! "<< std::endl; exit(1);}
     Tfun->name = out[0]; // Name of target function
     out.clear();
 
@@ -1009,23 +1009,23 @@ void TGfitTask::get_DataTarget ( )
         Tfun->objfun[i].SumWTFun = 0.0;
 
         parse_JSON_object(out[i], keys::CT, out2);
-        if (out2.size() == 0) { cout << "Type of compared property has to be specified in Data Target->OFUN->CT!"<< endl; exit(1);} // ERROR
+        if (out2.size() == 0) { std::cout << "Type of compared property has to be specified in Data Target->OFUN->CT!"<< std::endl; exit(1);} // ERROR
         Tfun->objfun[i].exp_CT = out2[0];
         out2.clear();
 
         parse_JSON_object(out[i], keys::EPH[mode], out2);
-        if (out2.size() == 0 && Tfun->objfun[i].exp_CT != keys::property) { cout << "Phase name has to be specified in Data Target->OFUN->EPH!"<< endl; exit(1);} // ERROR
+        if (out2.size() == 0 && Tfun->objfun[i].exp_CT != keys::property) { std::cout << "Phase name has to be specified in Data Target->OFUN->EPH!"<< std::endl; exit(1);} // ERROR
         Tfun->objfun[i].exp_phase = out2[0];
         out2.clear();
 
         parse_JSON_object(out[i], keys::DCP, out2);
-        if ((out2.size() == 0) && (Tfun->objfun[i].exp_CT == keys::DC)) { cout << "Name of dependent component compared property has to be specified in Data Target->OFUN->DCP!"<< endl; exit(1);} // ERROR
+        if ((out2.size() == 0) && (Tfun->objfun[i].exp_CT == keys::DC)) { std::cout << "Name of dependent component compared property has to be specified in Data Target->OFUN->DCP!"<< std::endl; exit(1);} // ERROR
         if (out2.size() > 0)
         Tfun->objfun[i].exp_DCP = out2[0];
         out2.clear();
 
         parse_JSON_object(out[i], keys::CN, out2);
-        if (out2.size() == 0) { cout << "Data Target->OFUN->CN has to be speficied!"<< endl; exit(1);} // ERROR
+        if (out2.size() == 0) { std::cout << "Data Target->OFUN->CN has to be speficied!"<< std::endl; exit(1);} // ERROR
         Tfun->objfun[i].exp_CN = out2[0];
         out2.clear();
 
@@ -1065,23 +1065,23 @@ void TGfitTask::get_DataTarget ( )
         Tfun->nestfun[i].isComputed = false;
 
         parse_JSON_object(out[i], keys::EPH[mode], out2);
-        if (out2.size() == 0) { cout << "Phase name has to be specified in Data Target->NFUN->EPH!"<< endl; exit(1);} // ERROR
+        if (out2.size() == 0) { std::cout << "Phase name has to be specified in Data Target->NFUN->EPH!"<< std::endl; exit(1);} // ERROR
         Tfun->nestfun[i].exp_phase = out2[0];
         out2.clear();
 
         parse_JSON_object(out[i], keys::CT, out2);
-        if (out2.size() == 0) { cout << "Type of compared property has to be specified in Data Target->NFUN->CT!"<< endl; exit(1);} // ERROR
+        if (out2.size() == 0) { std::cout << "Type of compared property has to be specified in Data Target->NFUN->CT!"<< std::endl; exit(1);} // ERROR
         Tfun->nestfun[i].exp_CT = out2[0];
         out2.clear();
 
         parse_JSON_object(out[i], keys::DCP, out2);
-        if ((out2.size() == 0) && (Tfun->objfun[i].exp_CT == keys::DC)) { cout << "Name of dependent component compared property has to be specified in Data Target->NFUN->DCP!"<< endl; exit(1);} // ERROR
+        if ((out2.size() == 0) && (Tfun->objfun[i].exp_CT == keys::DC)) { std::cout << "Name of dependent component compared property has to be specified in Data Target->NFUN->DCP!"<< std::endl; exit(1);} // ERROR
         if (out2.size() > 0)
         Tfun->nestfun[i].exp_DCP = out2[0];
         out2.clear();
 
         parse_JSON_object(out[i], keys::CN, out2);
-        if (out2.size() == 0) { cout << "Data Target->OFUN->CN has to be speficied!"<< endl; exit(1);} // ERROR
+        if (out2.size() == 0) { std::cout << "Data Target->OFUN->CN has to be speficied!"<< std::endl; exit(1);} // ERROR
         Tfun->nestfun[i].exp_CN = out2[0];
         out2.clear();
 
@@ -1120,7 +1120,7 @@ void TGfitTask::get_DataTarget ( )
             Tfun->nestfun[i].sP = atof(out2[0].c_str());
         out2.clear();
 //        parse_JSON_object(out[i], keys::PType[mode], out2);
-//        if (out2.size() == 0) { cout << "Data Target->NFUN->Ptype has to be speficied!"<< endl; exit(1);} // ERROR
+//        if (out2.size() == 0) { std::cout << "Data Target->NFUN->Ptype has to be speficied!"<< std::endl; exit(1);} // ERROR
 //        Tfun->nestfun[i].Ptype = out2[0];
 //        out2.clear();
     }
@@ -1145,26 +1145,26 @@ void TGfitTask::get_DataTarget ( )
         Tfun->addout[i].isComputed = false;
 
         parse_JSON_object(out[i], keys::CT, out2);
-        if (out2.size() == 0) { cout << "Type of compared property has to be specified in Data Target->NFUN->CT!"<< endl; exit(1);} // ERROR
+        if (out2.size() == 0) { std::cout << "Type of compared property has to be specified in Data Target->NFUN->CT!"<< std::endl; exit(1);} // ERROR
         Tfun->addout[i].exp_CT = out2[0];
         out2.clear();
 
         parse_JSON_object(out[i], keys::EPH[mode], out2);
         if (out2.size() == 0) {
             if (Tfun->addout[i].exp_CT != keys::comp)
-            {cout << "Phase name has to be specified in Data Target->NFUN->EPH!"<< endl; exit(1);}} // ERROR
+            {std::cout << "Phase name has to be specified in Data Target->NFUN->EPH!"<< std::endl; exit(1);}} // ERROR
         if (out2.size() > 0)
             Tfun->addout[i].exp_phase = out2[0];
         out2.clear();
 
         parse_JSON_object(out[i], keys::DCP, out2);
-        if ((out2.size() == 0) && (Tfun->addout[i].exp_CT == keys::DC)) { cout << "Name of dependent component compared property has to be specified in Data Target->NFUN->DCP!"<< endl; exit(1);} // ERROR
+        if ((out2.size() == 0) && (Tfun->addout[i].exp_CT == keys::DC)) { std::cout << "Name of dependent component compared property has to be specified in Data Target->NFUN->DCP!"<< std::endl; exit(1);} // ERROR
         if (out2.size() > 0)
         Tfun->addout[i].exp_DCP = out2[0];
         out2.clear();
 
         parse_JSON_object(out[i], keys::CN, out2);
-        if (out2.size() == 0) { cout << "Data Target->OFUN->CN has to be speficied!"<< endl; exit(1);} // ERROR
+        if (out2.size() == 0) { std::cout << "Data Target->OFUN->CN has to be speficied!"<< std::endl; exit(1);} // ERROR
         Tfun->addout[i].exp_CN = out2[0];
         out2.clear();
 
@@ -1196,7 +1196,7 @@ void TGfitTask::get_DataTarget ( )
         parse_JSON_object(out[i], keys::SRC, out2);
         if (out2.size() == 0) {
             if (Tfun->addout[i].exp_CT != keys::comp)
-            {cout << "Data Target->ADDOUT->SRC has to be speficied!"<< endl; exit(1);}} // ERROR
+            {std::cout << "Data Target->ADDOUT->SRC has to be speficied!"<< std::endl; exit(1);}} // ERROR
         Tfun->addout[i].Otype = out2[0];
         out2.clear();
     }
@@ -1213,7 +1213,7 @@ void TGfitTask::set_logK_TPpairs()
     }
 }
 
-void TGfitTask::set_logK_TPpairs(vector<string> logK)
+void TGfitTask::set_logK_TPpairs(std::vector<std::string> logK)
 {
     unsigned int size = 0;
     int l = 0;
@@ -1224,7 +1224,7 @@ void TGfitTask::set_logK_TPpairs(vector<string> logK)
     }
 
     if (logK.size() != size)
-    { cout << "The number of logks is not equal to the number of R parameters * T-P pairs in the system! " << endl; exit(1);}
+    { std::cout << "The number of logks is not equal to the number of R parameters * T-P pairs in the system! " << std::endl; exit(1);}
 
     for (unsigned e=0; e <Opti->optParam.size(); e++)
     {
@@ -1262,8 +1262,8 @@ void TGfitTask::set_DH_Helgeson (int n)
 {
 
     double  Tk, Ppa, Gf, bgama, ao, Wbgama, Wao, TotAmount;
-    vector<double> RhoW, EpsW, SaltAmount;
-    vector<int> SaltIndex;
+    std::vector<double> RhoW, EpsW, SaltAmount;
+    std::vector<int> SaltIndex;
 
 
     Tk = NodT[n]->cTK();
@@ -1552,14 +1552,14 @@ void TGfitTask::calc_logK_TP ()
 
             } else
             {
-                cout << "Unknown type of logK function: " << FlogK[i].Ftype << endl;
+                std::cout << "Unknown type of logK function: " << FlogK[i].Ftype << std::endl;
                 exit(1);
             }
         }
     }
 }
 
-double TGfitTask::calc_logK_dT(vector<double> A, double Tk, double P, int Rndx, int e)
+double TGfitTask::calc_logK_dT(std::vector<double> A, double Tk, double P, int Rndx, int e)
 {
     double logK = 0.0;
     double dV0 = 0.0;
@@ -1568,7 +1568,7 @@ double TGfitTask::calc_logK_dT(vector<double> A, double Tk, double P, int Rndx, 
            + A[4]/(Tk*Tk) + A[5]*(Tk*Tk) + A[6]/(pow(Tk,0.5));
 
     // Calculating pressure correction to logK
-    vector<int> vNdx,vCoef;
+    std::vector<int> vNdx,vCoef;
 
     Opti->optParam[e]->Get_R_vNdx_vCoef(Rndx, vNdx, vCoef );
     for (unsigned s = 0; s < vNdx.size(); s++)
@@ -1586,9 +1586,9 @@ double TGfitTask::calc_logK_dT(vector<double> A, double Tk, double P, int Rndx, 
 
 }
 
-double TGfitTask::calc_logK_dRHOw(vector<double> A, double Tk, double P )
+double TGfitTask::calc_logK_dRHOw(std::vector<double> A, double Tk, double P )
 {
-    vector<double> RhoW;
+    std::vector<double> RhoW;
 
     double logK = 0.0;
     double Ppa = P * 100000;

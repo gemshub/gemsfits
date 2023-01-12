@@ -19,12 +19,11 @@
 
 #include <fstream>
 #include <iostream>
-using namespace std;
 
 #include "help.h"
 
 // read string untill "end"
-void HelpConfigurator::u_getline(istream& is, QString& str, QString end )
+void HelpConfigurator::u_getline(std::istream& is, QString& str, QString end )
 {
     char ch;
     is.get(ch);
@@ -43,16 +42,16 @@ void HelpConfigurator::u_getline(istream& is, QString& str, QString end )
 void HelpConfigurator::getHrefs( QString file, QString file_name)
 {
    char ch;
-   fstream f_in( file.toUtf8().data(), ios::in );
+   std::fstream f_in( file.toStdString(), std::ios::in );
    QString ref;
 
    if( !f_in.good() )
    {
 #ifdef IPMGEMPLUGIN
-        cout << file.toUtf8().data() << " Fileopen error" << endl;
+        std::cout << file.toStdString() << " Fileopen error" << std::endl;
 #else
         file += " Fileopen error";
-        Error( "HelpConfigurator", file.toUtf8().data());
+        Error( "HelpConfigurator", file.toStdString());
 #endif
          return;
    }
@@ -89,14 +88,14 @@ void HelpConfigurator::addNameToList( QString ref, QString file_name )
     QString value;
 
     int indx = ref.indexOf("name=");
-// cout << indx << "    " << ref.toUtf8().data() << endl;
+// cout << indx << "    " << ref.toStdString() << std::endl;
     if(indx > -1 )
     {
       names.append(ref);
       key =ref.section("\"",1,1);
       value = file_name +"#"+key;
-      links.insertMulti(key,QUrl(value));
-// cout << value.toUtf8().data()<<endl;
+      links.insert(key, QUrl(value));
+// cout << value.toStdString()<<endl;
     }
     else
         hrefs.append(ref);
@@ -108,14 +107,14 @@ void HelpConfigurator::addImgToList( QString ref )
 {
     QString value, rref, file_name;
     int indx = ref.indexOf("src=");
-// cout << indx << "    " << ref.toUtf8().data(); // << endl;
+// cout << indx << "    " << ref.toStdString(); // << std::endl;
     if(indx > -1 )   // Bugfixes by DK on 15.02.2012
     {
       rref = ref.mid(indx);
       value = rref.section("\"",1,1);
-// cout << "+ " << value.toUtf8().data() << endl;
+// cout << "+ " << value.toStdString() << std::endl;
       file_name = value.section("/img/", -1);
-// cout << "- " << file_name.toUtf8().data() << endl;
+// cout << "- " << file_name.toStdString() << std::endl;
       images.append(file_name);
     }
     else
@@ -130,23 +129,23 @@ int HelpConfigurator::readDir(const char *dir)
     if (!thisDir.isReadable())
     {
 #ifdef IPMGEMPLUGIN
-        cout <<  " GEMS DB directory is not readable" << endl;
+        std::cout <<  " GEMS DB directory is not readable" << std::endl;
 #else
         Error( "HelpConfigurator", "GEMS DB directory is not readable");
 #endif
         return 0;
     }
 
-    thisDir .setFilter(QDir::Files);
+    thisDir.setFilter(QDir::Files);
     QStringList filters;
     filters << "*.html";
     thisDir.setNameFilters(filters);
 
-    QFileInfoList files = thisDir.entryInfoList();
-    if (files.empty())
+    QFileInfoList files1 = thisDir.entryInfoList();
+    if (files1.empty())
         return 0;
 
-    QListIterator<QFileInfo> it(files);
+    QListIterator<QFileInfo> it(files1);
     QFileInfo f;
     while ( it.hasNext() )
     {
@@ -163,63 +162,65 @@ int HelpConfigurator::readDir(const char *dir)
 // Build *.qhp file for help system (gems3helpconfig.qhp by default)
 int HelpConfigurator::writeFile(const char *file)
 {
-    fstream f_out( file, ios::out );
+    std::fstream f_out( file, std::ios::out );
     if( !f_out.good() )
     {
 #ifdef IPMGEMPLUGIN
-        cout << file << " Fileopen error" << endl;
+       std::cout << file << " Fileopen error" << std::endl;
 #else
         QString str = QString(file) + " Fileopen error";
-        Error( "HelpConfigurator", str.toUtf8().data());
+        Error( "HelpConfigurator", str.toStdString());
 #endif
-         return 0;
+        return 0;
     }
 
     // Write head
-    f_out << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
-    f_out << "<QtHelpProject version=\"1.0\">" << endl;
-    f_out << "    <namespace>gemsfits</namespace>" << endl;
-    f_out << "    <virtualFolder>help</virtualFolder>" << endl;
-    f_out << "    <filterSection>" << endl;
+    f_out << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
+    f_out << "<QtHelpProject version=\"1.0\">" << std::endl;
+    f_out << "    <namespace>gemsfits</namespace>" << std::endl;
+    f_out << "    <virtualFolder>help</virtualFolder>" <<std::endl;
+    f_out << "    <filterSection>" << std::endl;
 
     writeContent( f_out);
     writeFiles( f_out );
     writeKeywords( f_out );
 
     // Write end
-    f_out << "    </filterSection>" << endl;
-    f_out << "   </QtHelpProject>" << endl;
+    f_out << "    </filterSection>" << std::endl;
+    f_out << "   </QtHelpProject>" << std::endl;
 
     return 1;
 }
 
-void HelpConfigurator::writeFiles( fstream& f_out)
+
+void HelpConfigurator::writeFiles( std::fstream& f_out)
 {
-    f_out << "      <files>" << endl;
+    f_out << "      <files>" << std::endl;
     for( int ii =0; ii<files.count(); ii++)
     {
-      f_out << "        <file>" << files[ii].toUtf8().data() << "</file>" << endl;
+      f_out << "        <file>" << files[ii].toStdString() << "</file>" << std::endl;
     }
     images.sort();
     images.removeDuplicates();
     for( int ii =0; ii<images.count(); ii++)
     {
-      f_out << "        <file>" << images[ii].toUtf8().data() << "</file>" << endl;
+      f_out << "        <file>" << images[ii].toStdString() << "</file>" << std::endl;
     }
-    f_out << "      </files>" << endl;
+    f_out << "      </files>" << std::endl;
 }
 
-void HelpConfigurator::writeKeywords( fstream& f_out)
+
+void HelpConfigurator::writeKeywords( std::fstream& f_out)
 {
     QStringList kwds;
     QList<QUrl> urls;
 
     //kwds = links.keys();
     //for(int ii=0; ii<links.count(); ii++ )
-    // cout << kwds[ii].toUtf8().data() << endl;
+    // cout << kwds[ii].toStdString() << std::endl;
 
     kwds = links.uniqueKeys();
-    f_out << "    <keywords>" << endl;
+    f_out << "    <keywords>" << std::endl;
     for( int ii =0; ii<kwds.count(); ii++)
     {
 #ifndef IPMGEMPLUGIN
@@ -230,34 +231,34 @@ void HelpConfigurator::writeKeywords( fstream& f_out)
         urls = links.values( kwds[ii] );
 
       for( int jj=0; jj<urls.count(); jj++ )
-      f_out << "        <keyword name=\"" << kwds[ii].toUtf8().data()
-            << "\" ref=\"" << urls[jj].toString().toUtf8().data()  << "\"/>" << endl;
+      f_out << "        <keyword name=\"" << kwds[ii].toStdString()
+            << "\" ref=\"" << urls[jj].toString().toStdString()  << "\"/>" << std::endl;
     }
-    f_out << "    </keywords>" << endl;
+    f_out << "    </keywords>" << std::endl;
 }
 
-void HelpConfigurator::writeContent( fstream& f_out)
+void HelpConfigurator::writeContent( std::fstream& f_out)
 {
     QString ref;
     QString contentfile = path;
             contentfile += "/gfshelpconfig.toc";
-    fstream f_in( contentfile.toUtf8().data(), ios::in );
+    std::fstream f_in( contentfile.toStdString(), std::ios::in );
     if( !f_in.good() )
     {
 #ifdef IPMGEMPLUGIN
-        cout << contentfile.toUtf8().data() << " Fileopen error" << endl;
+        std::cout << contentfile.toStdString() << " Fileopen error" << std::endl;
 #else
         contentfile += " Fileopen error";
-        Error( "HelpConfigurator", contentfile.toUtf8().data());
+        Error( "HelpConfigurator", contentfile.toStdString());
 #endif
-         return;
+        return;
     }
 
     while( !f_in.eof() )
     {
       ref = "";
       u_getline(f_in, ref, ">" );
-      f_out << ref.toUtf8().data();
+      f_out << ref.toStdString();
     }
 }
 
@@ -272,15 +273,16 @@ int HelpConfigurator::showObjectForKeyword(const QString &keyword)
     int nO = -1;
 
     // finding full name, not subString
-    nO = aObj.Find(keyword.toUtf8().data());
+    nO = aObj.Find(keyword.toLatin1().data());
     if( nO < 0 )
     {
        QString kwInternal = keyword;
-       int ndx = kwInternal.lastIndexOf('_');  // finding only keyword
-       if(ndx > -1)
-       {    kwInternal= kwInternal.remove(QRegExp("_[0-9]{1,3}")/*ndx*/);
-            nO = aObj.Find(kwInternal.toUtf8().data());
-       }
+        int ndx = kwInternal.lastIndexOf('_');  // finding only keyword
+        if(ndx > -1)
+        {
+            kwInternal= kwInternal.remove(QRegularExpression("_[0-9]{1,3}")/*ndx*/);
+            nO = aObj.Find(kwInternal.toLatin1().data());
+        }
     }
 
     return nO;

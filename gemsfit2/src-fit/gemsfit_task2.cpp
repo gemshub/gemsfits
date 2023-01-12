@@ -43,7 +43,7 @@
 #endif
 
 
-using namespace std;
+//using namespace std;
 
 // Main function that calculates the residual
 double TGfitTask::get_residual(int exp, TGfitTask::TargetFunction::obj_fun &objfun, int &count)
@@ -168,8 +168,8 @@ double TGfitTask::get_sum_of_residuals( )
     // think about pararelizing it
     double residual = 0.0, ofun_residual;
     int count = 0;
-    vector<double> residuals; residuals.resize(this->experiments.size());
-    vector<double> ofun_residuals; ofun_residuals.resize(this->experiments.size());
+    std::vector<double> residuals; residuals.resize(this->experiments.size());
+    std::vector<double> ofun_residuals; ofun_residuals.resize(this->experiments.size());
 
     // Loop trough target function
     for (unsigned int j=0; j<Tfun->objfun.size(); ++j)
@@ -247,7 +247,7 @@ void TGfitTask::set_average_objfun ()
 }
 
 
-void TGfitTask::add_MC_scatter( vector<double> scatter)
+void TGfitTask::add_MC_scatter( std::vector<double> scatter)
 {
     int count = 0;
     // loop trough objective function
@@ -482,9 +482,9 @@ void TGfitTask::print_param()
 {
     set_print_param();
     unsigned int nrcor = 0;
-    gpf->fparam.open(gpf->FITparamFile().c_str(), ios::trunc);
+    gpf->fparam.open(gpf->FITparamFile().c_str(), std::ios::trunc);
     if( gpf->fparam.fail() )
-    { cout<<"Fit parameters fileopen error"<<endl; exit(1); }
+    { std::cout<<"Fit parameters fileopen error"<<std::endl; exit(1); }
 
     // print param
     gpf->fparam << "ptype,parameter," << "name,"	<< "init.value,"
@@ -499,7 +499,7 @@ void TGfitTask::print_param()
         }
     }
 
-    gpf->fparam << endl;
+    gpf->fparam << std::endl;
 
     for (unsigned i= 0; i<fitparam.size(); i++)
     {
@@ -508,8 +508,8 @@ void TGfitTask::print_param()
         gpf->fparam << "," << fitparam[i]->Pname << ",";
 
 
-        gpf->fparam << setprecision(12) << fitparam[i]->Ival << ",";
-        gpf->fparam << setprecision(12) <<fitparam[i]->Fval << ",";
+        gpf->fparam << std::setprecision(12) << fitparam[i]->Ival << ",";
+        gpf->fparam << std::setprecision(12) <<fitparam[i]->Fval << ",";
 
         if (fitparam[i]->mcSTDEV != 0)
         {
@@ -535,7 +535,7 @@ void TGfitTask::print_param()
            {
                if (fitparam[i]->correl[j] !=0)
                {
-                   gpf->fparam << setprecision(4)<< fitparam[i]->correl[j] << ",";
+                   gpf->fparam << std::setprecision(4)<< fitparam[i]->correl[j] << ",";
                } else
                    gpf->fparam << "0,";
            } else
@@ -557,7 +557,7 @@ void TGfitTask::print_param()
         }
 
 
-    gpf->fparam << endl;
+    gpf->fparam << std::endl;
     }
 
 gpf->fparam.close();
@@ -568,17 +568,17 @@ void TGfitTask:: print_global_results ()
 {
 //    gpf->fres << "experiment,,,unit,measured,computed,residual," <<"residual_"+Tfun->type <<  endl;
     // GEMSFIT results file for all test runs. Keeps a log of all runs. The file has to be deleted manually.
-    string path_ = gpf->FITFile();
-    gpf->fres.open(path_.c_str(), ios::trunc);
+    std::string path_ = gpf->FITFile();
+    gpf->fres.open(path_.c_str(), std::ios::trunc);
     if( gpf->fres.fail() )
-    { cout<<"Results fileopen error"<<endl; exit(1); }
+    { std::cout<<"Results fileopen error"<<std::endl; exit(1); }
 
     int prec = 12;
-    setprecision(prec);
+    std::setprecision(prec);
     scientific(gpf->fres);
 //    gpf->fres.setf(ios::fixed);
 
-    vector<string> header;
+    std::vector<std::string> header;
     header.push_back(keys::expsample);
     header.push_back(keys::expdataset);
     header.push_back(keys::sT);
@@ -612,7 +612,7 @@ void TGfitTask:: print_global_results ()
 
     for (unsigned i = 0; i < Tfun->objfun.size(); i++)
     {
-        string temp ="";
+        std::string temp ="";
         temp += Tfun->objfun[i].exp_phase + "." + Tfun->objfun[i].exp_CN ;
         header.push_back(temp + "." + keys::meas);
         header.push_back(temp + "." + keys::calc);
@@ -623,7 +623,7 @@ void TGfitTask:: print_global_results ()
 
     for (unsigned i = 0; i < Tfun->addout.size(); i++)
     {
-        string temp ="";
+        std::string temp ="";
         if (Tfun->addout[i].exp_phase != "NULL")
         {
         temp += Tfun->addout[i].exp_phase;
@@ -656,7 +656,7 @@ void TGfitTask:: print_global_results ()
         gpf->fres << header[i] << ",";
     }
 
-    gpf->fres << endl;
+    gpf->fres << std::endl;
 
     for (unsigned i = 0; i<aTfun.size(); i++)
     {
@@ -668,10 +668,10 @@ void TGfitTask:: print_global_results ()
         {
             if (aTfun[i].objfun[j].isComputed)
             {
-                gpf->fres << setprecision(prec) << aTfun[i].objfun[j].results.measured_value <<","<<
-                             setprecision(prec) << aTfun[i].objfun[j].results.computed_value << ","<<
-                             setprecision(prec) << aTfun[i].objfun[j].results.residual<<","/*<< aTfun[i].objfun[j].results.WTfun_residual << ","*/ <<
-                             setprecision(prec) << aTfun[i].objfun[j].results.weight <<",";
+                gpf->fres << std::setprecision(prec) << aTfun[i].objfun[j].results.measured_value <<","<<
+                             std::setprecision(prec) << aTfun[i].objfun[j].results.computed_value << ","<<
+                             std::setprecision(prec) << aTfun[i].objfun[j].results.residual<<","/*<< aTfun[i].objfun[j].results.WTfun_residual << ","*/ <<
+                             std::setprecision(prec) << aTfun[i].objfun[j].results.weight <<",";
             } else
                 gpf->fres << ","<< ","<<","<< ",";
 
@@ -680,34 +680,34 @@ void TGfitTask:: print_global_results ()
         for (unsigned j=0; j < Tfun->addout.size(); j++)
         {
             if (aTfun[i].addout[j].exp_CT == keys::comp && aTfun[i].addout[j].results.input_value != -1.0)
-                gpf->fres << setprecision(prec) << aTfun[i].addout[j].results.input_value <<",";
+                gpf->fres << std::setprecision(prec) << aTfun[i].addout[j].results.input_value <<",";
             if (aTfun[i].addout[j].isComputed)
             {
                 if (aTfun[i].addout[j].Otype == keys::calc)
-                gpf->fres << setprecision(prec) << aTfun[i].addout[j].results.computed_value <<",";
+                gpf->fres << std::setprecision(prec) << aTfun[i].addout[j].results.computed_value <<",";
                 if (aTfun[i].addout[j].Otype == keys::meas)
-                gpf->fres << setprecision(prec) << aTfun[i].addout[j].results.measured_value <<",";
+                gpf->fres << std::setprecision(prec) << aTfun[i].addout[j].results.measured_value <<",";
             } else
                 gpf->fres << ",";
         }
 
-        gpf->fres << endl;
+        gpf->fres << std::endl;
     }
 
     gpf->fres.close();
 
     // print rhoW csv
-    ofstream fRHO;
+    std::ofstream fRHO;
     path_ = gpf->OutputDirPath() + "RHO.csv";
-    fRHO.open(path_.c_str(), ios::trunc);
+    fRHO.open(path_.c_str(), std::ios::trunc);
     if( fRHO.fail() )
-    { cout<<"Results fileopen error"<<endl; exit(1); }
-    fRHO << "Pb,TK,RHO_gcm-3" << endl;
-    fRHO << 1 <<","<< 25+273.15 <<"," << NodT[0]->DenH2Ow(100000,25+273.15) << endl;
+    { std::cout<<"Results fileopen error"<<std::endl; exit(1); }
+    fRHO << "Pb,TK,RHO_gcm-3" << std::endl;
+    fRHO << 1 <<","<< 25+273.15 <<"," << NodT[0]->DenH2Ow(100000,25+273.15) << std::endl;
 
     for (unsigned i = 0; i<TP_pairs[0].size(); i++)
     {
-        fRHO <<TP_pairs[1][i] <<","<<TP_pairs[0][i]+273.15 <<"," << NodT[i]->DenH2Ow(TP_pairs[1][i]*100000,TP_pairs[0][i]+273.15) << endl;
+        fRHO <<TP_pairs[1][i] <<","<<TP_pairs[0][i]+273.15 <<"," << NodT[i]->DenH2Ow(TP_pairs[1][i]*100000,TP_pairs[0][i]+273.15) << std::endl;
     }
 
     fRHO.close();
@@ -715,9 +715,9 @@ void TGfitTask:: print_global_results ()
 
 void TGfitTask:: print_nested_results ()
 {
-    gpf->fnfres.open(gpf->FITnfunFile().c_str(), ios::trunc);
+    gpf->fnfres.open(gpf->FITnfunFile().c_str(), std::ios::trunc);
     if( gpf->fnfres.fail() )
-    { cout<<"Nested Results fileopen error"<<endl; exit(1); }
+    { std::cout<<"Nested Results fileopen error"<<std::endl; exit(1); }
 
     gpf->fnfres << "sample,phase,name,unit,sT,sP,measured,computed,residual";
 
@@ -726,8 +726,8 @@ void TGfitTask:: print_nested_results ()
         gpf->fnfres << Opti->optNFParam[i]->Print_param();
     }
 
-    gpf->fnfres << endl;
-    setprecision(12);
+    gpf->fnfres << std::endl;
+    std::setprecision(12);
     scientific(gpf->fnfres);
 
 //    gpf->fnfres.setf(ios::fixed);
@@ -764,7 +764,7 @@ void TGfitTask:: print_nested_results ()
                         gpf->fnfres << "," << Opti->optNFParam[o]->Get_Lparam(p, i);
                     }
                 }
-                gpf->fnfres << endl;
+                gpf->fnfres << std::endl;
             }
         }
     }

@@ -19,7 +19,7 @@
 */
 
 #include <iostream>
-using namespace std;
+//using namespace std;
 #include <cstdlib>
 
 #include "gemsfit_iofiles.h"
@@ -61,8 +61,8 @@ int generateJConfig()
      // call GEM_init     --> read in input files
      if( (node->GEM_init( gpf->GEMS3LstFilePath().c_str() )) == 1 )
         {
-            cout << gpf->GEMS3LstFilePath() << endl;
-            cout<<" .. ERROR occurred while reading GEMS3K input files !!! ..."<<endl;
+            std::cout << gpf->GEMS3LstFilePath() << std::endl;
+            std::cout<<" .. ERROR occurred while reading GEMS3K input files !!! ..."<<std::endl;
             //return 1;
         }
 
@@ -73,8 +73,8 @@ int generateJConfig()
 
     generateBson (bson_task_file, node, gpf->KeysNdx);
 
-    string resStr;
-    stringstream os;
+    std::string resStr;
+    std::stringstream os;
     os << "{\n";
     resStr = os.str();
     bson_print_raw_txt( os, bson_task_file.data, 0, BSON_OBJECT);
@@ -82,8 +82,8 @@ int generateJConfig()
     resStr = os.str();
 
 
-    string fname = gpf->OptParamFile();
-    fstream ff(fname.c_str(), ios::out/*|ios::app*/ );
+    std::string fname = gpf->OptParamFile();
+    std::fstream ff(fname.c_str(), std::ios::out/*|ios::app*/ );
     ErrorIf( !ff.good() , fname.c_str(), "OptParamFile text open error");
 
     ff << resStr;
@@ -95,12 +95,12 @@ int generateJConfig()
 //    bson_print_raw(/*stderr,*/ bson_task_file.data, 0);
 
 
-cout << "Finished writing the input specification file template" << endl;
+std::cout << "Finished writing the input specification file template" << std::endl;
 //    }
 
     } catch(TError& err)
       {
-        cout << "Error:" << err.title.c_str() << ":" <<  err.mess.c_str() << endl;
+        std::cout << "Error:" << err.title.c_str() << ":" <<  err.mess.c_str() << std::endl;
         return 1;
       }
       catch(...)
@@ -133,7 +133,7 @@ enum eTableType
 
 std::string getPitzerIPName(TNode *node, std::vector<long int> aIPx, long int MaxOrd, int iIP)
 {
-    string name="";
+    std::string name="";
     switch( aIPx[iIP * MaxOrd + 3] )  // type of table
     {
         case bet0_:
@@ -214,15 +214,15 @@ std::string getPitzerIPName(TNode *node, std::vector<long int> aIPx, long int Ma
 
 void generateBson(bson &bson_task_file,TNode *node, int mode)
 {
-    unsigned int Np = 0, NG0p = 0, NG0PH = 0, Nip = 0, Ncoef = 0, G0ndx=0, ICndx=0, PMCndx = 0, DMCndx = 0, nIC,/* nDC,*/ nPS, nPH; long int nDCinPH;
+    unsigned int Np = 0, NG0p = 0, NG0PH = 0, Nip = 0, Ncoef = 0, G0ndx=0, ICndx=0, PMCndx = 0, DMCndx = 0,/* nIC, nDC,*/ nPS, nPH; long int nDCinPH;
     int DCndx = -1;
     double temp = 0.0;
-    stringstream ss; string sss, ipcn, dcipcn;
+    std::stringstream ss; std::string sss, ipcn, dcipcn;
     bson_init(&bson_task_file);
 
     DATACH* dCH = node->pCSD();
 
-    nIC = dCH->nIC;	// nr of independent components
+//    nIC = dCH->nIC;	// nr of independent components
 //    nDC = dCH->nDC;	// nr of dependent components
     nPS = dCH->nPS;
     nPH = dCH->nPH;
@@ -230,7 +230,7 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
     bson_append_string(&bson_task_file, keys::DBPath[mode], "../EJDB/<database name>");
     bson_append_string(&bson_task_file, keys::DBColl[mode], "<collection name>");
 
-    string path = "." + gpf->GEMS3LstFilePath();
+    std::string path = "." + gpf->GEMS3LstFilePath();
 #ifdef buildWIN32
     std::replace( path.begin(), path.end(), '\\', '/');
 #endif
@@ -284,7 +284,7 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
 
     // DataSelect
     bson_append_start_object(&bson_task_file, keys::DSelect[mode]);
-    //bson_append_string(&bson_task_file, keys::Info[mode], "What data to use in the fit? For example, provide a list of expdatasets in usedatasets.");
+    //bson_append_std::string(&bson_task_file, keys::Info[mode], "What data to use in the fit? For example, provide a list of expdatasets in usedatasets.");
     bson_append_start_array(&bson_task_file, keys::usedatasets);
     bson_append_finish_array(&bson_task_file);
     bson_append_start_array(&bson_task_file, keys::skipsamples);
@@ -297,7 +297,7 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
 
     // DataTarget
     bson_append_start_object(&bson_task_file, keys::DTarget[mode]);
-    //bson_append_string(&bson_task_file, keys::Info[mode], "What data to compare. In OFUN provide a list of properties to use in the fit. Use ADDOUT for additional aoutput in the results table. NFUN is used to adjust properties of each sample nested withn the golobal fit.");
+    //bson_append_std::string(&bson_task_file, keys::Info[mode], "What data to compare. In OFUN provide a list of properties to use in the fit. Use ADDOUT for additional aoutput in the results table. NFUN is used to adjust properties of each sample nested withn the golobal fit.");
     bson_append_string(&bson_task_file, keys::Target, "lsqFit");
     bson_append_string(&bson_task_file, keys::TT, "lsq");
     bson_append_string(&bson_task_file, keys::WT, "inverr3");
@@ -309,8 +309,8 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
     bson_append_finish_array(&bson_task_file);
     bson_append_finish_object(&bson_task_file);
 
-    //bson_append_string(&bson_task_file, keys::DSelect[mode], "{\"info\":\"What data to use in the fit? For example, provide a list of expdatasets in usedatasets.\",\"usedatasets\":[\"[FRE/VOI2004]-150\"],\"skipsamples\":[],\"sT\":[],\"sP\":[]}");
-    //bson_append_string(&bson_task_file, keys::DTarget[mode], "{\"info\":\"\",\"Target\":\"name\",\"TT\":\"lsq\",\"WT\":\"inverr3\",\"OFUN\":[],\"ADDOUT\":[],\"NFUN\":[]}");
+    //bson_append_std::string(&bson_task_file, keys::DSelect[mode], "{\"info\":\"What data to use in the fit? For example, provide a list of expdatasets in usedatasets.\",\"usedatasets\":[\"[FRE/VOI2004]-150\"],\"skipsamples\":[],\"sT\":[],\"sP\":[]}");
+    //bson_append_std::string(&bson_task_file, keys::DTarget[mode], "{\"info\":\"\",\"Target\":\"name\",\"TT\":\"lsq\",\"WT\":\"inverr3\",\"OFUN\":[],\"ADDOUT\":[],\"NFUN\":[]}");
 
     // Nested function parameters
     bson_append_string(&bson_task_file, keys::OptNFParameters[mode], "");
@@ -336,9 +336,9 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
     bson_append_finish_object(&bson_task_file);
     // finish additional params
 
-    string info = keys::OptParameters[mode];
-    string info_ = "info@"+info;
-    //bson_append_string(&bson_task_file, info_.c_str(), "G0: Standard Gibbs energy at 25 C 1 bar; PMc: Non-ideal phase interaction parameters. DMC: parameters of multi-site (sublattice) model. To fit change parameter type from S (set) to F (fit). Adjust the UB upper and LB lower bound accordingly");
+    std::string info = keys::OptParameters[mode];
+    std::string info_ = "info@"+info;
+    //bson_append_std::string(&bson_task_file, info_.c_str(), "G0: Standard Gibbs energy at 25 C 1 bar; PMc: Non-ideal phase interaction parameters. DMC: parameters of multi-site (sublattice) model. To fit change parameter type from S (set) to F (fit). Adjust the UB upper and LB lower bound accordingly");
 
     bson_append_start_array(&bson_task_file, keys::OptParameters[mode]);
 
@@ -406,11 +406,11 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
                         bson_append_start_object(&bson_task_file, sss.c_str());
                         {
                             // Get name of IP
-                            string sMod;
+                            std::string sMod;
                             node->Get_sMod(i, sMod);
                             if (sMod.compare(0,1,"Z")==0)
                             {
-                                string IPName = getPitzerIPName(node, aIPx,LsMod[(i)*3+1], Nip);
+                                std::string IPName = getPitzerIPName(node, aIPx,LsMod[(i)*3+1], Nip);
                                 bson_append_string(&bson_task_file, keys::IPName[mode], IPName.c_str());
                             }
                             // write IPC
@@ -525,7 +525,7 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
 
 //        bson_append_int(&bson_task_file, keys::OptUW[mode], -1);
 
-//        bson_append_string(&bson_task_file, keys::OptAlg[mode], "LN_BOBYQA");
+//        bson_append_std::string(&bson_task_file, keys::OptAlg[mode], "LN_BOBYQA");
 
 //        bson_append_double(&bson_task_file, keys::OptPBP[mode], -1);
 
@@ -645,7 +645,7 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
 
 void make_syn_bson_object (bson &bson_task_file, const char* key, int i, int mode)
 {
-    stringstream ss; string sss;
+    std::stringstream ss; std::string sss;
     ss << i;
     sss = ss.str();
     ss.str("");
@@ -659,7 +659,7 @@ void make_syn_bson_object (bson &bson_task_file, const char* key, int i, int mod
 }
 
 
-void bson_print_raw_txt( iostream& osx, const char *data, int depth, int datatype )
+void bson_print_raw_txt( std::iostream& osx, const char *data, int depth, int datatype )
 {
     bson_iterator i;
     const char *key;
@@ -723,7 +723,7 @@ void bson_print_raw_txt( iostream& osx, const char *data, int depth, int datatyp
                osx << bson_iterator_long(&i);
                break;
           case BSON_DOUBLE:
-               osx << setprecision(15) << bson_iterator_double(&i);
+               osx << std::setprecision(15) << bson_iterator_double(&i);
                break;
           case BSON_STRING:
                osx << "\"" << bson_iterator_string(&i) << "\"";
@@ -747,10 +747,10 @@ void bson_print_raw_txt( iostream& osx, const char *data, int depth, int datatyp
 
            // not used in GEMS data types
               case BSON_SYMBOL:
-              //       os<<  "SYMBOL: " << bson_iterator_string(&i);
+              //       os<<  "SYMBOL: " << bson_iterator_std::string(&i);
                      break;
               case BSON_OID:
-              //       bson_oid_to_string(bson_iterator_oid(&i), oidhex);
+              //       bson_oid_to_std::string(bson_iterator_oid(&i), oidhex);
               //       os << oidhex;
                      break;
               case BSON_DATE:
@@ -791,18 +791,18 @@ void bson_print_raw_txt( iostream& osx, const char *data, int depth, int datatyp
 // TGfitPath  class implementation
 //----------------------------------------------------------------
 //----- subfolder and default file names  ------------------------
-string INPUT_DIR = "input/";
-string OUTPUT_DIR = "output/";
-string RESULT_DIR = "results/";
+std::string INPUT_DIR = "input/";
+std::string OUTPUT_DIR = "output/";
+std::string RESULT_DIR = "results/";
 //const char *OPT_PARAM_FILE = "gemsfit2_input.dat";
-string FIT_CSV_FILE = "fit-results.csv";
-string FIT_NFUN_FILE = "fit-inverse-results.csv";
-string FIT_QQ_FILE = "qq-plot-data.csv";
-string FIT_SENS_FILE = "meas-data-sensitivity.csv";
-string FIT_MC_FILE = "mc-results.csv";
-string FIT_PARAM_FILE = "fit-params.csv";
-string FIT_STATISTIC = "sum-statistics.csv";
-string FIT_LOGFILE = "gemsfit2.log";
+std::string FIT_CSV_FILE = "fit-results.csv";
+std::string FIT_NFUN_FILE = "fit-inverse-results.csv";
+std::string FIT_QQ_FILE = "qq-plot-data.csv";
+std::string FIT_SENS_FILE = "meas-data-sensitivity.csv";
+std::string FIT_MC_FILE = "mc-results.csv";
+std::string FIT_PARAM_FILE = "fit-params.csv";
+std::string FIT_STATISTIC = "sum-statistics.csv";
+std::string FIT_LOGFILE = "gemsfit2.log";
 
 TGfitPath::TGfitPath(int c, char *v[]):
         argc(c), argv(v)
@@ -818,9 +818,9 @@ TGfitPath::TGfitPath(int c, char *v[]):
     _getcwd(cur_dir, 300);
     #endif
 
-    cout << cur_dir << endl;
+    std::cout << cur_dir << std::endl;
     for (int ii = 1; ii < argc; ii++)
-     cout << ii << " arg " << argv[ii] << endl;
+     std::cout << ii << " arg " << argv[ii] << std::endl;
 
     // parsing options -init, -run, -conf if given
 
@@ -846,14 +846,14 @@ TGfitPath::TGfitPath(int c, char *v[]):
 
     if (ihelp !=0)
     {
-        cout << " USAGE: \n"
+        std::cout << " USAGE: \n"
                 "   gemsfit2  -help \n"
                 "   gemsfit2  -run      <path to gemsfit2 input file> [ <path to GEMS3K input file list *-dat.lst> ] \n"
                 "   gemsfit2  -init     <path to GEMS3K input file list *-dat.lst> [ <init file template name> ] \n\n"
                 " WHERE: \n"
                 "   -run:   runs the program with the settings from the input file \n"
                 "   -init:  writes a template input file using the exported GEMS3K system files \n"
-                "   -help:  displays this help for command-line options." << endl;
+                "   -help:  displays this help for command-line options." << std::endl;
         mode = HELP_;
 //        return 0;
     } else
@@ -904,7 +904,7 @@ TGfitPath::TGfitPath(int c, char *v[]):
             optParamFile = argv[iconf + 1];
         }
 
-        string dir;
+        std::string dir;
 
         if( optParamFile.empty() )
         {
@@ -912,7 +912,7 @@ TGfitPath::TGfitPath(int c, char *v[]):
             optParamFile += "work/gfin00_";
             dir = "work/";
             int pos = 0;
-            string input_file = gems3LstFilePath, new_input;
+            std::string input_file = gems3LstFilePath, new_input;
             do
             {
                 new_input = input_file.substr(pos+1, input_file.size());
@@ -939,13 +939,13 @@ TGfitPath::TGfitPath(int c, char *v[]):
         }
         else
         {
-            string name;
-            string ext;
+            std::string name;
+            std::string ext;
             u_splitpath( optParamFile, optParamFilePath, name, ext );
         }
 
-        string path_init = optParamFilePath + dir;
-        string path_run, path;
+        std::string path_init = optParamFilePath + dir;
+        std::string path_run, path;
 
         switch( mode )
         {
@@ -998,11 +998,11 @@ TGfitPath::TGfitPath(int c, char *v[]):
                 fitStatistics = outputDir+FIT_STATISTIC;
                 fitLogFile = outputDir+FIT_LOGFILE;
                 // GEMSFIT logfile
-                flog << "GEMSFIT2: Start" << endl;
-                flog << "optParamFile = " << optParamFile << endl;
-                flog << "fitFile = " << fitFile << endl;
-                flog << "fitLogFile = " << fitLogFile << endl;
-                flog << "gems3LstFilePath = " << gems3LstFilePath << endl;
+                flog << "GEMSFIT2: Start" << std::endl;
+                flog << "optParamFile = " << optParamFile << std::endl;
+                flog << "fitFile = " << fitFile << std::endl;
+                flog << "fitLogFile = " << fitLogFile << std::endl;
+                flog << "gems3LstFilePath = " << gems3LstFilePath << std::endl;
                 flog.close();
                 break;
             default:
@@ -1015,23 +1015,23 @@ TGfitPath::TGfitPath(int c, char *v[]):
                 fitLogFile = outputDir+FIT_LOGFILE;
         }
 
-cout << "GEMSFIT2: Start" << endl;
-cout << "optParamFile = " << optParamFile << endl;
-cout << "fitFile = " << fitFile << endl;
-cout << "fitLogFile = " << fitLogFile << endl;
-cout << "gems3LstFilePath = " << gems3LstFilePath << endl;
+std::cout << "GEMSFIT2: Start" << std::endl;
+std::cout << "optParamFile = " << optParamFile << std::endl;
+std::cout << "fitFile = " << fitFile << std::endl;
+std::cout << "fitLogFile = " << fitLogFile << std::endl;
+std::cout << "gems3LstFilePath = " << gems3LstFilePath << std::endl;
     }
  }
 
 TGfitPath::~TGfitPath()
 {}
 
-void TGfitPath::deleteOutputDir(const char *dir)
+void TGfitPath::deleteOutputDir(const char */*dir*/)
 {
 }
 
 
-void TGfitPath::makeOutputDir(const char *dir)
+void TGfitPath::makeOutputDir(const char */*dir*/)
 {
 }
 

@@ -48,20 +48,20 @@ protected:
 
     struct parameters /// structure holding the target function information
     {
-        string Ptype;
-        string Pfittype;
-        string Pname;
+        std::string Ptype;
+        std::string Pfittype;
+        std::string Pname;
         double Ival;
         double Fval;
         double CSS;
         double mc95;
         double mcSTDEV;
         double mcMEAN;
-        vector<double> mcconfi;
-        vector<double> correl;
+        std::vector<double> mcconfi;
+        std::vector<double> correl;
     };
 
-    vector<parameters*> fitparam;
+    std::vector<parameters*> fitparam;
 
 private:
 
@@ -69,22 +69,22 @@ private:
     /**
     * Initializes the NLopt obeject and the optimization task
     * @author DM
-    * @param optv_ vector of optimized parameters
+    * @param optv_ std::vector of optimized parameters
     * @param weighted_Tfun_sum_of_residuals
     * @date 06.05.2013
     */
-    virtual void init_optim(vector<double> &optv_, /*int &countit,*/ double &weighted_Tfun_sum_of_residuals );
+    virtual void init_optim(std::vector<double> &optv_, /*int &countit,*/ double &weighted_Tfun_sum_of_residuals );
 
     /**
     * initialize optimization object and assign constraints and bounds.
     * performs the optimization.
     * @param NLopti			nlopt optimization object
-    * @param optv_              optimization vector
+    * @param optv_              optimization std::vector
     * @param weighted_Tfun_sum_of_residuals		sum of squared residuals
     * @author DM
     * @date 07.05.2013
     */
-    virtual void build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, /*std::vector<System_Properties*> *systems, int &countit,*/ double &weighted_Tfun_sum_of_residuals );
+    virtual void build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, /*std::std::vector<System_Properties*> *systems, int &countit,*/ double &weighted_Tfun_sum_of_residuals );
 
     /**
     * Reads the target function options form the input file and adds them to the TargetFunction structure
@@ -116,7 +116,7 @@ private:
     */
     void set_logK_TPpairs();
 
-    void set_logK_TPpairs(vector<string> logK);
+    void set_logK_TPpairs(std::vector<std::string> logK);
 
     /**
     * Gets the initial value of (a+b) form c=(a+b) for each experiment where c is a linked paramater to a and b with coeficients 1 and 1. also set initial values and bounds.
@@ -128,10 +128,10 @@ private:
     void set_fixed_parameters();
 
     /// the GEMSFIT configuration file (fixed to SS_GEMSFIT_input.dat)
-    string param_file;
+    std::string param_file;
 
     /// Printing Flag: if this flag is set to one, the result of the optimization will be printed to file (via optimization.cpp)
-    string resultsfile;
+    std::string resultsfile;
 
 public:
 
@@ -156,38 +156,38 @@ public:
     static TGfitTask* gft;   ///< static pointer to this class
 
     // indexes used in the dynamic functions//
-    vector<int> EXPndx, COMPndx, PHndx, PHPndx, PAndx, NEFndx;
+    std::vector<int> EXPndx, COMPndx, PHndx, PHPndx, PAndx, NEFndx;
     struct vect
     {
-       vector<unsigned int> ndx;
+       std::vector<unsigned int> ndx;
     };
-    vector<vect*> vPAndx, vEAndx; // keeps the indexes of the parameters (optPF, optPL, etc) and vector optNFParam when paralelized
+    std::vector<vect*> vPAndx, vEAndx; // keeps the indexes of the parameters (optPF, optPL, etc) and std::vector optNFParam when paralelized
 
     // true if gradient method is used
     bool h_grad;
     // titration IC initial values in moles //
-    vector<double>  iNa, iO, iH, iCl;
+    std::vector<double>  iNa, iO, iH, iCl;
 
     struct TargetFunction /// structure holding the target function information
     {
-        string name; /// target function name
-        string type; /// target function type
-        string weight; /// type of weight
+        std::string name; /// target function name
+        std::string type; /// target function type
+        std::string weight; /// type of weight
 
         struct obj_fun /// structure holding the information about the data to compare from the experiments
         {
-            string exp_phase;
-            string exp_CT;
-            string exp_CN;
-            string exp_unit;
-            string exp_DCP;
+            std::string exp_phase;
+            std::string exp_CT;
+            std::string exp_CN;
+            std::string exp_unit;
+            std::string exp_DCP;
             double meas_average;
-            string Ptype;
-            string Otype;
-            vector<string> Tformula;
-            string expr;
-            vector<string> Telem;
-            vector<int> Helem;
+            std::string Ptype;
+            std::string Otype;
+            std::vector<std::string> Tformula;
+            std::string expr;
+            std::vector<std::string> Telem;
+            std::vector<int> Helem;
             double TuWeight;
             double weight;
             double sT = -1.0;
@@ -209,23 +209,23 @@ public:
             double SumWTFun /*= 0.0*/;
             unsigned int count = 0;
         };
-        vector<obj_fun> objfun;
-        vector<obj_fun> nestfun;
-        vector<obj_fun> addout;
+        std::vector<obj_fun> objfun;
+        std::vector<obj_fun> nestfun;
+        std::vector<obj_fun> addout;
     };
 
     TargetFunction* Tfun; /// pointer to target function structure
 
-    vector<TargetFunction> aTfun;
+    std::vector<TargetFunction> aTfun;
 
     struct FunctionLogK
     {
-        string Ftype;
-        vector<double> Fcoef;
+        std::string Ftype;
+        std::vector<double> Fcoef;
         unsigned int Rndx;
     };
 
-    vector<FunctionLogK> FlogK;
+    std::vector<FunctionLogK> FlogK;
 
     /// Computed values for Monte Carlo confidence interval generation
     double_v computed_values_v;
@@ -293,11 +293,11 @@ public:
 
    /**
    * Adds the Monte Carlo Scatter to the measured values
-   * @param scatter vector of scatter values
+   * @param scatter std::vector of scatter values
    * @author DM
    * @date 30.10.2013
    */
-   void add_MC_scatter(vector<double> scatter);
+   void add_MC_scatter(std::vector<double> scatter);
 
    /**
    * Counts the number of residuals basesd on the current what to compare
@@ -315,7 +315,7 @@ public:
 
    /**
     * @brief Ainit_optim initializes the optimization inside the Monte Carlo function
-    * @param optv_ vector of optimized parameters
+    * @param optv_ std::vector of optimized parameters
     * @author DM
     * @date 30.10.2013
     */
@@ -378,7 +378,7 @@ public:
     * @author DM
     * @date 20.01.2014
     */
-   double calc_logK_dT (vector<double> A, double Tk, double P , int Rndx, int e);
+   double calc_logK_dT (std::vector<double> A, double Tk, double P , int Rndx, int e);
 
    /**
     * @brief calculates the logK using the RHO-depedence polynomial
@@ -388,7 +388,7 @@ public:
     * @author DM
     * @date 20.01.2014
     */
-   double calc_logK_dRHOw( vector<double> A, double Tk , double P );
+   double calc_logK_dRHOw( std::vector<double> A, double Tk , double P );
 
    /**
     * @brief sets the paramteres for the extended Debye-Hueckel equation (Helgeson). For mixed salts it calculates a weighted average of the parameters

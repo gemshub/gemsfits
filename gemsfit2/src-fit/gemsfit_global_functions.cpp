@@ -61,7 +61,7 @@ double Equil_objective_function_callback( const std::vector<double> &opt, std::v
             gradient(opt, grad, sys);
         }
 
-        vector<double> optV( opt.size() );
+        std::vector<double> optV( opt.size() );
         for( i=0; i<opt.size(); i++ )
         {
             if (opt[i] != 0)
@@ -144,15 +144,15 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     /// NESTED FUNCTION
     if (sys->Opti->h_optNF)
     {
-        string old = sys->Tfun->type;               // storing the old type of target function
+        std::string old = sys->Tfun->type;               // storing the old type of target function
         sys->Tfun->type = "abs_dif";                // seeting the target function to simple abslute difference
-        for (int i = 0; i < sys->NodT.size(); i++)
+        for (unsigned int i = 0; i < sys->NodT.size(); i++)
         {
             sys->aTfun[i].type = "abs_dif";
         }
         nestedfun(sys);                             // optimizing the nested functions
         sys->Tfun->type = old;
-        for (int i = 0; i < sys->NodT.size(); i++)
+        for (unsigned int i = 0; i < sys->NodT.size(); i++)
         {
             sys->aTfun[i].type = old;
         }
@@ -169,7 +169,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     // +++ Calculating equilibrium with GEMS3K +++ //
     for (unsigned int i=0; i<sys->NodT.size(); ++i)
     {
-        vector<DATABR*> dBR;
+        std::vector<DATABR*> dBR;
         dBR.push_back(sys->NodT[i]->pCNode());
         long int NodeStatusCH;
 
@@ -200,15 +200,15 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         {
             // possible return status analysis, error message
 //            sys->NodT[i]->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
-            cout<<"For node: "<< i+1 <<" sample "<< sys->experiments[i]->sample << endl;
-            cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
+            std::cout<<"For node: "<< i+1 <<" sample "<< sys->experiments[i]->sample << std::endl;
+            std::cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<std::endl;
         }
 
 
         for (unsigned j = 0; j< sys->Tfun->objfun.size(); ++j)
         {
             // Set the P in the node->CNode-P as in the experiments to avoid problem due to Psat notation as 0
-            string compare_type = sys->aTfun[i].objfun[j].exp_DCP;
+            std::string compare_type = sys->aTfun[i].objfun[j].exp_DCP;
             if (compare_type == "activity")
             {
                  sys->NodT[i]->Set_TK(273.15 + sys->experiments[i]->sT);
@@ -221,7 +221,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         for (unsigned j = 0; j< sys->Tfun->addout.size(); ++j)
         {
             // Set the P in the node->CNode-P as in the experiments to avoid problem due to Psat notation as 0
-            string compare_type = sys->aTfun[i].addout[j].exp_DCP;
+            std::string compare_type = sys->aTfun[i].addout[j].exp_DCP;
             if (compare_type == "activity")
             {
                  sys->NodT[i]->Set_TK(273.15 + sys->experiments[i]->sT);
@@ -302,22 +302,22 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     // debug for when using global algorithm
     if ((master_counter%1000 == 0) || (master_counter<(opt.size()*2)))
     {
-        cout << master_counter << " iterations, continuing..." << endl;
-        cout << "sum of residuals: "<<residuals_sys<< endl;
+        std::cout << master_counter << " iterations, continuing..." << std::endl;
+        std::cout << "sum of residuals: "<<residuals_sys<< std::endl;
         for (unsigned int i = 0; i<opt.size(); ++i)
         {
-            cout<<"parameter "<<i<<" : "<<opt[i]<<endl;
+            std::cout<<"parameter "<<i<<" : "<<opt[i]<<std::endl;
         }
     }
 
     if (sys->Opti->OptMixedSumOfResiduals>=0)
     {
-        gpf->flog << "~ m.count.= " << master_counter << " sum.res.= " << setprecision(15) << residuals_sys << " sum.lsres.= "<< squared_residuals << " sum.absres.= "<< Weighted_Abs_sum_of_residuals<< endl;
-        cout << "~ m.count.= " << master_counter << " sum.res.= " << setprecision(15) << residuals_sys << " sum.lsres.= "<< squared_residuals << " sum.absres.= "<< Weighted_Abs_sum_of_residuals<< endl;
+        gpf->flog << "~ m.count.= " << master_counter << " sum.res.= " << std::setprecision(15) << residuals_sys << " sum.lsres.= "<< squared_residuals << " sum.absres.= "<< Weighted_Abs_sum_of_residuals<< std::endl;
+        std::cout << "~ m.count.= " << master_counter << " sum.res.= " << std::setprecision(15) << residuals_sys << " sum.lsres.= "<< squared_residuals << " sum.absres.= "<< Weighted_Abs_sum_of_residuals<< std::endl;
     } else
     {
-        gpf->flog << "~ m.count.= " << master_counter << " sum.res.= " << setprecision(15) << residuals_sys << endl;
-        cout << "~ m.count.= " << master_counter << " sum.res.= " << setprecision(15) << residuals_sys << endl;
+        gpf->flog << "~ m.count.= " << master_counter << " sum.res.= " << std::setprecision(15) << residuals_sys << std::endl;
+        std::cout << "~ m.count.= " << master_counter << " sum.res.= " << std::setprecision(15) << residuals_sys << std::endl;
     }
 
 //    sys->print_global_results();
@@ -326,7 +326,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 }
 
 
-void gradient( vector<double> optn, vector<double> &grad, TGfitTask *sys )
+void gradient( std::vector<double> optn, std::vector<double> &grad, TGfitTask *sys )
 {
     double residual_sys;
 
@@ -418,8 +418,8 @@ void tsolmod_wrap( double &residual, const std::vector<double> &opt, TGfitTask *
     }
     residual = sys->get_sum_of_residuals( );
 
-    gpf->flog << "~ m.count.= " << master_counter << " sum.res.= " << residual << endl;
-    cout << "~ m.count.= " << master_counter << " sum.res.= " << residual << endl;
+    gpf->flog << "~ m.count.= " << master_counter << " sum.res.= " << residual << std::endl;
+    std::cout << "~ m.count.= " << master_counter << " sum.res.= " << residual << std::endl;
 
     for (unsigned j = 0; j < sys->Tfun->objfun.size(); j++)
     {
@@ -439,7 +439,7 @@ void tsolmod_wrap( double &residual, const std::vector<double> &opt, TGfitTask *
 }
 
 
-double median(vector<double> absresiduals)
+double median(std::vector<double> absresiduals)
 {
   double median;
   size_t size = absresiduals.size();
@@ -462,7 +462,7 @@ void set_Tuckey_weight_global (TGfitTask *sys)
 {
     double C = 0.0;
     double median_ = 0.0;
-    vector <double> abs_res;
+    std::vector <double> abs_res;
 
     for (unsigned int i = 0; i < sys->aTfun.size(); i++)
     {
@@ -502,7 +502,7 @@ void set_Tuckey_weight_global_norm (TGfitTask *sys)
 {
     double C = 0.0;
     double median_ = 0.0;
-    vector <double> abs_res;
+    std::vector <double> abs_res;
 
     for (unsigned int i = 0; i < sys->aTfun.size(); i++)
     {
@@ -540,10 +540,10 @@ void set_Tuckey_weight_global_norm (TGfitTask *sys)
 
 void set_Tuckey_weight_objfun (TGfitTask *sys)
 {
-    vector<double> C;
-    vector<double> median_;
-    vector<vector<double> > vabs_res;
-    vector<double> abs_res;
+    std::vector<double> C;
+    std::vector<double> median_;
+    std::vector<std::vector<double> > vabs_res;
+    std::vector<double> abs_res;
 
     for (unsigned int j = 0; j < sys->Tfun->objfun.size(); j++)
     {
@@ -591,10 +591,10 @@ void set_Tuckey_weight_objfun (TGfitTask *sys)
 
 void set_Tuckey_weight_objfun_norm (TGfitTask *sys)
 {
-    vector<double> C;
-    vector<double> median_;
-    vector<vector<double> > vabs_res;
-    vector<double> abs_res;
+    std::vector<double> C;
+    std::vector<double> median_;
+    std::vector<std::vector<double> > vabs_res;
+    std::vector<double> abs_res;
 
     for (unsigned int j = 0; j < sys->Tfun->objfun.size(); j++)
     {
@@ -643,10 +643,10 @@ void set_Tuckey_weight_objfun_norm (TGfitTask *sys)
 
 void set_Tuckey_weight_objfun_norm2 (TGfitTask *sys)
 {
-    vector<double> C;
-    vector<double> median_;
-    vector<vector<double> > vabs_res;
-    vector<double> abs_res;
+    std::vector<double> C;
+    std::vector<double> median_;
+    std::vector<std::vector<double> > vabs_res;
+    std::vector<double> abs_res;
 
     for (unsigned int j = 0; j < sys->Tfun->objfun.size(); j++)
     {
