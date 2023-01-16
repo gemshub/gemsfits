@@ -9,6 +9,7 @@ DEFINES         += Use_mt_mode
 DEFINES         += IPMGEMPLUGIN
 DEFINES         += _MYNOZLIB
 DEFINES         += USEBSON
+DEFINES         += OLD_EJDB
 
 #CONFIG -= warn_on
 #CONFIG += warn_off

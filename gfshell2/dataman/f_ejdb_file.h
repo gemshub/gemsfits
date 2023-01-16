@@ -23,10 +23,16 @@
 #include <vector>
 #include "verror.h"
 
+#ifdef OLD_EJDB
+#include <ejdb.h>
+#else
+#include <ejdb2/ejdb2.h>
+#endif
+
 class QWidget;
 class QDir;
 class QString;
-class EJDB;
+
 
 //----------------------------------------------------------------------
 // service functions
@@ -63,12 +69,12 @@ class TAbstractFile
 protected:
 
     FileStatus mode;
-    std::string Keywd;
-    bool  isopened;    // true, if file is opened
+    std::string keywd;
+    bool  is_opened;    // true, if file is opened
     std::string dir;
     std::string name;
     std::string ext;
-    std::string Path;
+    std::string path;
 
     virtual void makeKeyword();
 
@@ -76,44 +82,26 @@ public:
 
     TAbstractFile(const std::string& fName, const std::string& fExt,
                   const std::string& fDir, FileStatus mode = std::ios::in);
-    TAbstractFile( const std::string& path, FileStatus mode = std::ios::in);
+    TAbstractFile(const std::string& path, FileStatus mode = std::ios::in);
     virtual ~TAbstractFile() {}
 
     //--- Selectors
     const std::string& GetKeywd() const
-    {
-        return Keywd;
-    }
+    {  return keywd;  }
     bool Test() const
-    {
-        return isopened;
-    }
+    {  return is_opened; }
     const std::string& Name() const
-    {
-        return name;
-    }
+    {  return name;  }
     const std::string& Ext() const
-    {
-        return ext;
-    }
+    {  return ext;  }
     const std::string& Dir() const
-    {
-        return dir;
-    }
-    const std::string& GetPath() const
-    {
-        return Path;
-    }
+    {  return dir;  }
+    const std::string& getPath() const
+    {  return path;  }
     FileStatus Mode() const
-    {
-        return mode;
-    }
-    void setMode( FileStatus aMode )
-    {
-        mode = aMode;
-    }
-
-    //--- Manipulation
+    {  return mode;  }
+    void setMode(FileStatus aMode)
+    {  mode = aMode;  }
 
     void Makepath();
     bool Exist();
@@ -121,9 +109,9 @@ public:
     virtual void Close() = 0;
 
     bool ChooseFileOpen(QWidget* par, std::string& path_,
-                         const char* title, const char *filter);
+                        const char* title, const char *filter);
     bool ChooseFileSave(QWidget* par, std::string& path_,
-                         const char* title, const char *filter);
+                        const char* title, const char *filter);
     virtual void ChangePath(const std::string& path);
     virtual void ChangeName(const std::string& name);
 };
@@ -132,27 +120,31 @@ public:
 /// Class for EJDB file manipulation
 class TEJDB: public TAbstractFile
 {
-    std::string version; ///< Version of EJDB
-    int numEJDB;    ///< Number of usage EJDB database
+    /// Version of EJDB
+    std::string version;
+    /// Number of usage EJDB database
+    int numEJDB;
 
-    void makeKeyword();
+    void makeKeyword() override;
 
 public:
-    EJDB *ejDB ;
+
+#ifdef OLD_EJDB
+    EJDB *ejDB;
+#else
+    EJDB ejDB ;
+#endif
 
     TEJDB(const std::string& path);
-    virtual ~TEJDB();
+    ~TEJDB();
 
     const std::string& Version() const
-    {
-        return version;
-    }
+    {  return version;  }
     void readVersion();
 
-    //--- Manipulation
     void Create();
-    virtual void Open();
-    virtual void Close();
+    void Open() override;
+    void Close() override;
 
 };
 
@@ -161,15 +153,12 @@ extern TEJDB EJDBFile;
 /// Class for text file manipulation
 class TFile: public TAbstractFile
 {
-protected:
-
 public:
     std::fstream ff;
 
     TFile(const std::string& path, FileStatus mode = std::ios::in|std::ios::out);
-    virtual ~TFile();
+    ~TFile();
 
-    //--- Manipulation
-    virtual void Open();
-    virtual void Close();
+    void Open() override;
+    void Close() override;
 };

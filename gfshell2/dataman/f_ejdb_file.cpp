@@ -22,8 +22,6 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QFileDialog>
-#include <ejdb.h>
-
 #include "f_ejdb_file.h"
 #include "v_service.h"
 
@@ -32,8 +30,8 @@
 //----------------------------------------------------------
 
 TAbstractFile::TAbstractFile(const std::string& fName, const std::string& fExt,
-                             const std::string& fDir, FileStatus aMode ):
-    mode(aMode), isopened( false )
+                             const std::string& fDir, FileStatus aMode):
+    mode(aMode), is_opened(false)
 {
     dir = fDir;
     ext = fExt;
@@ -43,53 +41,54 @@ TAbstractFile::TAbstractFile(const std::string& fName, const std::string& fExt,
     makeKeyword();
 }
 
-TAbstractFile::TAbstractFile( const std::string& path, FileStatus aMode ):
-    mode(aMode), isopened( false ), Path(path)
+TAbstractFile::TAbstractFile(const std::string& apath, FileStatus aMode):
+    mode(aMode), is_opened(false), path(apath)
 {
     if( path.empty() )
         return;
-    u_splitpath(Path, dir, name, ext);
+    u_splitpath(path, dir, name, ext);
     makeKeyword();
 }
 
 // For all files is name
 void TAbstractFile::makeKeyword()
 {
-    Keywd = name;
+    keywd = name;
 }
 
 /// Get full name of file
 void TAbstractFile::Makepath()
 {
-    Path = u_makepath( dir, name, ext );
+    path = u_makepath( dir, name, ext );
 }
 
 /// Check for existence of file
 bool TAbstractFile::Exist()
 {
-    if( Test() )
+    if(Test())
         return true;  // file alredy open
-    if( Path.empty() )
+    if(path.empty())
         Makepath();
 
-    if( access( Path.c_str(), 0 ) )
+    if(access(path.c_str(), 0 ))
         return false;
-    else  return true;
+    else
+        return true;
 }
 
 bool TAbstractFile::ChooseFileOpen(QWidget* par, std::string& path_,
                                    const char* title, const char *filter )
 {
-    if( Test() )
+    if(Test())
         Close();
 
-    std::string path;
-    if( path_.find('/') == std::string::npos )
-    {
-        path  = dir; // userFITDir(); ???
-        path += path_;
+    std::string a_path;
+    if( path_.find('/') == std::string::npos ) {
+        a_path  = dir;
+        a_path += path_;
     }
-    else   path = path_;
+    else
+        a_path = path_;
 
     QString filt;
     if( filter )
@@ -98,21 +97,19 @@ bool TAbstractFile::ChooseFileOpen(QWidget* par, std::string& path_,
         filt = "All files (*)";
 
     QString fn = QFileDialog::getOpenFileName(  par, title,
-                                                path.c_str(), filt, 0,
+                                                a_path.c_str(), filt, 0,
                                                 QFileDialog::DontConfirmOverwrite );
 #ifdef buildWIN32
     std::replace( fn.begin(), fn.end(), '/', '\\');
 #endif
-    if ( !fn.isEmpty() )
-    {
+    if ( !fn.isEmpty() ) {
         mode = std::ios::in;
-        path_ = Path = fn.toStdString();
-        u_splitpath(Path, dir, name, ext);
+        path_ = path = fn.toStdString();
+        u_splitpath(path, dir, name, ext);
         return true;
     }
-    else
-    {
-        path_ = Path = "";
+    else {
+        path_ = path = "";
         return false;
     }
 
@@ -121,17 +118,18 @@ bool TAbstractFile::ChooseFileOpen(QWidget* par, std::string& path_,
 bool TAbstractFile::ChooseFileSave(QWidget* par, std::string& path_,
                                    const char* title, const char *filter)
 {
-    if( Test() )
+    if(Test())
         Close();
 
-    std::string path;
-    if( path_.find('/') == std::string::npos )
-    {      path  = dir;  // userFitDir();
-        path += path_;
+    std::string a_path;
+    if( path_.find('/') == std::string::npos )  {
+        a_path  = dir;
+        a_path += path_;
     }
-    else   path = path_;
+    else
+        a_path = path_;
 
-    replace(path.begin(), path.end(),'\\', '/');
+    replace(a_path.begin(), a_path.end(),'\\', '/');
 
     QStringList filt;
     if( filter )
@@ -143,43 +141,39 @@ bool TAbstractFile::ChooseFileSave(QWidget* par, std::string& path_,
 
     QString selectedFilter;
     QString fn = QFileDialog::getSaveFileName( par, title,
-                                               path.c_str(), filt.join( ";;" ), &selectedFilter,
+                                               a_path.c_str(), filt.join( ";;" ), &selectedFilter,
                                                QFileDialog::DontConfirmOverwrite);
 
-    if ( !fn.isEmpty() )
-    {
+    if ( !fn.isEmpty() ) {
         mode = std::ios::out;
-        path_ = Path = fn.toStdString();
-        u_splitpath(Path, dir, name, ext);
+        path_ = path = fn.toStdString();
+        u_splitpath(path, dir, name, ext);
         return true;
     }
-    else
-    {
-        path_ = Path = "";
+    else {
+        path_ = path = "";
         return false;
     }
 }
 
-void TAbstractFile::ChangePath( const std::string& path )
+void TAbstractFile::ChangePath( const std::string& a_path )
 {
-    if( Test() )
+    if(Test())
         Close();
 
-    Path = path;
-    if( path.empty() )
-    {
+    path = a_path;
+    if(path.empty()) {
         dir = name = ext = "";
     }
-    else
-    {
-        u_splitpath(Path, dir, name, ext);
+    else {
+        u_splitpath(path, dir, name, ext);
         makeKeyword();
     }
 }
 
 void TAbstractFile::ChangeName( const std::string& newname )
 {
-    if( Test() )
+    if(Test())
         Close();
 
     name = newname;
@@ -202,20 +196,32 @@ static std::string current_time_and_date()
     return ss.str();
 }
 
+#ifndef OLD_EJDB
+void ejdb_check_result(iwrc ecode, const std::string& mess) {
+    if (ecode) {
+        //iwlog_ecode_error3(ecode);
+        Error("EJDB storage handle", mess+iwlog_ecode_explained(ecode));
+    }
+}
+#endif
 
 TEJDB EJDBFile("");
 
 /// Configurations from file path
 TEJDB::TEJDB( const std::string& path ):
-    TAbstractFile( path ), numEJDB(0),  ejDB(0)
+    TAbstractFile( path ), numEJDB(0),  ejDB(nullptr)
 {
     makeKeyword();
+#ifndef OLD_EJDB
+    iwrc ecode = ejdb_init();
+    ejdb_check_result(ecode, "Error when init ejdb : ");
+#endif
 }
 
 
 TEJDB::~TEJDB()
 {
-    if( Test() )
+    if(Test())
         Close();
 }
 
@@ -231,40 +237,45 @@ void TEJDB::makeKeyword()
     key = std::string(fname, 0, 2);
     size_t npos = 0;
     size_t npos2 = fname.find("_", npos);
-    while( npos2 != std::string::npos )
-    {   npos = npos2+1;
+    while( npos2 != std::string::npos ) {
+        npos = npos2+1;
         key += std::string(fname, npos, 2);
         npos2 = fname.find("_", npos);
     }
     key += std::string(fname, npos+2);
 
-    Keywd = key;
+    keywd = key;
 }
 
 /// Open file in special mode
 void TEJDB::Open()
 {
-
-    if( Test() )
-    {
+    if(Test()) {
         numEJDB++;
     }
-    else
-    {
+    else {
 
+#ifdef OLD_EJDB
         // Test and open file  (name of ejdb must be take from nFile)
         ejDB = ejdbnew();
-        if (!ejdbopen(ejDB, Path.c_str(), JBOWRITER | JBOCREAT ))
-        {
-            ejdbdel(ejDB);
-            std::cout << "EJDB open error" << std::endl;
-            ejDB = 0;
-            isopened = false;
-            Error( Path, "EJDB open error");
-            return;
-        }
+        if (!ejdbopen(ejDB, path.c_str(), JBOWRITER | JBOCREAT )) {
+          ejdbdel(ejDB);
+          ejDB = 0;
+          is_opened = false;
+          Error( path, "EJDB open error");
+         }
+#else
+        EJDB_OPTS opts = {
+            .kv = {
+                .path = path.c_str(),
+                .oflags = IWKV_TRUNC
+            }
+        };
+        iwrc ecode = ejdb_open(&opts, &ejDB);
+        ejdb_check_result(ecode, path +" open error :");
+#endif
         numEJDB++;
-        isopened = true;
+        is_opened = true;
     }
 }
 
@@ -273,13 +284,21 @@ void TEJDB::Close()
 {
     numEJDB--;
 
-    if( numEJDB <= 0 )
-    { if(ejDB )
-        { ejdbclose(ejDB);
-            ejdbdel(ejDB);
-            ejDB = 0;
+    if( numEJDB <= 0 ) {
+
+#ifdef OLD_EJDB
+        if(ejDB) {
+            ejdbclose(ejDB);
+                ejdbdel(ejDB);
+                ejDB = 0;
+              }
+#else
+        if(ejDB) {
+            iwrc ecode=ejdb_close(&ejDB);
+            ejdb_check_result(ecode, path +" close error :");
         }
-        isopened = false;
+#endif
+        is_opened = false;
     }
 }
 
@@ -297,7 +316,7 @@ void TEJDB::Create()
 
 
 /// Read version from Changelog.txt file
-void TEJDB::readVersion( )
+void TEJDB::readVersion()
 {
     // open changelog.txt file
     std::string clfile = dir + "/Changelog.txt";
@@ -306,15 +325,12 @@ void TEJDB::readVersion( )
     size_t pos;
     version = "not versioned";
 
-    while( ff.good() )
-    {
-        getline ( ff ,fbuf);
+    while(ff.good()) {
+        getline(ff, fbuf);
         pos = fbuf.find("<Version>");
-        if( pos != std::string::npos )
-        {
+        if( pos != std::string::npos ) {
             pos = fbuf.find("=", pos+1);
-            if( pos != std::string::npos )
-            {
+            if( pos != std::string::npos ) {
                 version = fbuf.substr(pos+1);
                 strip( version);
                 break;
@@ -330,59 +346,53 @@ void TEJDB::readVersion( )
 /// Configurations from file path
 TFile::TFile( const std::string& path, FileStatus aMode ):
     TAbstractFile(path, aMode)
-{ }
+{}
 
 
 TFile::~TFile()
 {
-    if( Test() )
+    if(Test()) {
         Close();
+    }
 }
 
 /// Open file in special mode
 void TFile::Open()
 {
-    if( Test() )
-    {
+    if(Test()) {
         Close();
     }
 
-    ff.open( Path.c_str(), mode );
-    ErrorIf( !ff.good(), Path, "Error opening file" );
-    isopened = true;
+    ff.open( path.c_str(), mode );
+    ErrorIf( !ff.good(), path, "Error opening file" );
+    is_opened = true;
 }
 
 /// Close EJ DataBase
 void TFile::Close()
 {
     ff.close();
-    isopened = false;
+    is_opened = false;
 }
 
 // internal functions
 bool removeDirectoryEntry( QDir dir )
 {
     bool ok = dir.exists();
-    if ( ok )
-    {
+    if( ok ) {
         QFileInfoList entries = dir.entryInfoList( QDir::NoDotAndDotDot |
                                                    QDir::Dirs | QDir::Files );
-        foreach ( QFileInfo entryInfo, entries )
-        {
+        foreach ( QFileInfo entryInfo, entries ) {
             QString path = entryInfo.absoluteFilePath();
-            if ( entryInfo.isDir() )
-            {
-                if ( !removeDirectoryEntry( QDir( path ) ) )
-                {
+            if ( entryInfo.isDir() ) {
+                if( !removeDirectoryEntry(QDir( path ))) {
                     ok = false;
                     break;
                 }
             }
-            else
-            {
+            else {
                 QFile file( path );
-                if ( !file.remove() )
-                {
+                if( !file.remove() ) {
                     ok = false;
                     break;
                 }
