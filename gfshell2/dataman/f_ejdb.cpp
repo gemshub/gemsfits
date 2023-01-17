@@ -30,32 +30,32 @@
 
 const char* ALLKEY="*";
 
-std::string replace( std::string str, const char* old_part, const char* new_part)
+/*
+std::string replace(std::string str, const char* old_part, const char* new_part)
 {
-    size_t pos = str.find( old_part );
-    if( pos == std::string::npos )
+    size_t pos = str.find(old_part);
+    if(pos == std::string::npos)
         return str;
 
     std::string res = str.substr(0, pos);
     res += new_part;
-    res += str.substr( pos+strlen(old_part));
+    res += str.substr(pos+strlen(old_part));
     return res;
 }
 
 std::string replace_all( std::string str, const char* old_part, const char* new_part)
 {
-    size_t pos = str.find( old_part );
+    size_t pos = str.find(old_part);
     std::string res = "";
 
-    while( pos != std::string::npos )
-    {
+    while(pos != std::string::npos) {
         res += str.substr(0, pos);
         res += new_part;
         str = str.substr( pos+strlen(old_part));
         pos = str.find( old_part );
     }
     return res+str;
-}
+}*/
 
 //-------------------------------------------------------------
 // IndexEntry  - Element in sequence of record keys
@@ -63,34 +63,32 @@ std::string replace_all( std::string str, const char* old_part, const char* new_
 
 bool operator <( const IndexEntry& iEl,  const IndexEntry& iEr)
 {
-    for( size_t ii=0; ii<iEl.keyFlds.size(); ii++ )
-    {
-        if(iEl.keyFlds[ii] == iEr.keyFlds[ii])
+    for( size_t ii=0; ii<iEl.key_flds.size(); ii++ ) {
+        if(iEl.key_flds[ii] == iEr.key_flds[ii])
             continue;
-        return ( iEl.keyFlds[ii] < iEr.keyFlds[ii] ? true: false);
+        return (iEl.key_flds[ii] < iEr.key_flds[ii] ? true: false);
     }
     return false;
 }
 
 bool operator >( const IndexEntry& iEl,  const IndexEntry& iEr)
 {
-    for( size_t ii=0; ii<iEl.keyFlds.size(); ii++ )
-    {
-        if(iEl.keyFlds[ii] == iEr.keyFlds[ii])
+    for( size_t ii=0; ii<iEl.key_flds.size(); ii++ ) {
+        if(iEl.key_flds[ii] == iEr.key_flds[ii])
             continue;
-        return ( iEl.keyFlds[ii] > iEr.keyFlds[ii] ? true: false);
+        return (iEl.key_flds[ii] > iEr.key_flds[ii] ? true: false);
     }
     return false;
 }
 
 bool operator ==( const IndexEntry& iEl,  const IndexEntry& iEr)
 {
-    return equal( iEl.keyFlds.begin(), iEl.keyFlds.end(), iEr.keyFlds.begin());
+    return equal(iEl.key_flds.begin(), iEl.key_flds.end(), iEr.key_flds.begin());
 }
 
 bool operator !=( const IndexEntry& iEl,  const IndexEntry& iEr)
 {
-    return !equal( iEl.keyFlds.begin(), iEl.keyFlds.end(), iEr.keyFlds.begin());
+    return !(iEl==iEr);
 }
 
 //-------------------------------------------------------------
@@ -98,118 +96,94 @@ bool operator !=( const IndexEntry& iEl,  const IndexEntry& iEr)
 //-------------------------------------------------------------
 
 /// Default configuration
-TEJDBKey::TEJDBKey( const std::vector<std::string>& nameKeyFlds )
+TEJDBKey::TEJDBKey(const std::vector<std::string>& field_names)
 {
-    for( size_t ii=0; ii<nameKeyFlds.size(); ii++)
-    {   rkFldName.push_back( nameKeyFlds[ii] );
-        rkFld.push_back( "*" );
+    for(const auto& name: field_names) {
+        rk_fld_name.push_back(name);
+        rk_fld.push_back("*");
     }
-}
-
-
-/// Copy struct
-TEJDBKey::TEJDBKey( const TEJDBKey& dbKey )
-{
-    for(int ii=0; ii<dbKey.KeyNumFlds(); ii++)
-    {
-        rkFldName.push_back( dbKey.rkFldName[ii] );
-        rkFld.push_back( dbKey.rkFld[ii]  );
-    }
-    pKey = dbKey.pKey;
 }
 
 // Return record key in packed form
-const char *TEJDBKey::pack( const std::vector<std::string>& akeyFlds )
+const std::string& TEJDBKey::pack(const std::vector<std::string>& akey_flds)
 {
-    std::string sp;
-    pKey = "";
-
-    for(int ii=0; ii<KeyNumFlds(); ii++)
-    {
-        sp = akeyFlds[ii];
-        //strip( sp );
-        pKey += sp;
-        pKey+= ":";
+    pack_key.clear();
+    for(const auto& fld: akey_flds) {
+        //strip( fld );
+        pack_key += fld;
+        pack_key+= ":";
     }
-    return pKey.c_str();
+    return pack_key;
+}
+
+/// Check if pattern in record key
+bool TEJDBKey::is_pattern()
+{
+    for(const auto& fld: rk_fld) {
+        if(fld.find_first_of("*?") != std::string::npos) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/// Setted ALLKEY
+bool TEJDBKey::is_all()
+{
+    for(const auto& fld: rk_fld) {
+        if(fld != "*") {
+            return false;
+        }
+    }
+    return true;
 }
 
 // Putting DB record key key to internal structure
-void TEJDBKey::SetKey( const char *key )
+void TEJDBKey::setKey(const std::string& pkey)
 {
-    ErrorIf( key==0, "TEJDBKey", "Undefined key of record.");
-    rkFld.clear();
-    std::string sp = key;
+    size_t ii;
+    ErrorIf( pkey.empty(), "TEJDBKey", "Undefined key of record.");
+    std::vector<std::string> rk_fld_new;
+    std::string sp = pkey;
 
-    if( sp == ALLKEY )
-    {
-        for(int ii=0; ii<KeyNumFlds(); ii++)
-            rkFld.push_back( "*" );
+    if( sp == ALLKEY ) {
+        for(ii=0; ii<keySize(); ii++)
+            rk_fld_new.push_back("*");
     }
-    else
-    {
-        for(int ii=0; ii<KeyNumFlds(); ii++)
-        {
+    else {
+        for(ii=0; ii<keySize(); ii++) {
             size_t pos = sp.find_first_of(':');
-            if( pos == std::string::npos )
-            {
-                if( ii < KeyNumFlds()-1)
-                    Error( key, "Invalid packed record key.");
+            if( pos == std::string::npos ) {
+                if( ii < keySize()-1)
+                    Error(pkey, "Invalid packed record key.");
             }
-            rkFld.push_back( sp.substr(0, pos) );
-            strip( rkFld[ii] );
+            rk_fld_new.push_back(sp.substr(0, pos));
+            strip(rk_fld_new[ii]);
             if( sp[pos] == ':' )
                 pos++;
             sp = sp.substr(pos);
         }
     }
+    rk_fld = std::move(rk_fld_new);
 }
 
 // Change i-th field of TEJDBKey to key
-void TEJDBKey::SetFldKey( int i, const char *key )
+void TEJDBKey::setKeyField(size_t ndx, const char *fld)
 {
-    ErrorIf( i>= KeyNumFlds() || i<0, key, "Invalid key field number");
-    std::string sp = key;
-    strip( sp );
-    rkFld[i] = sp;
-}
-
-/// Check if pattern in record key
-bool TEJDBKey::isPattern()
-{
-    bool OneRec =  true;
-
-    for(int ii=0; ii<KeyNumFlds(); ii++)
-        if( rkFld[ii].find_first_of("*?") != std::string::npos )
-        {    OneRec = false;
-            break;
-        }
-    return !OneRec;
-}
-
-/// Setted ALLKEY
-bool TEJDBKey::isAll()
-{
-    bool AllRecs = true;
-
-    for(int ii=0; ii<KeyNumFlds(); ii++)
-        if( rkFld[ii] != "*" )
-        {    AllRecs = false;
-            break;
-        }
-    return AllRecs;
+    ErrorIf(ndx>=keySize(), fld, "Invalid key field number");
+    std::string sp = fld;
+    strip(sp);
+    rk_fld[ndx] = sp;
 }
 
 bool TEJDBKey::compareTemplate( const IndexEntry& elm )
 {
-    size_t i, rklen;
-    int j;
+    size_t i, j, rklen;
     std::string kpart, kelm;
 
-    for( j=0; j<KeyNumFlds(); j++)
-    {
-        kpart = FldKey(j);
-        kelm = elm.getKeyField(j);
+    for( j=0; j<keySize(); j++) {
+        kpart = keyField(j);
+        kelm = elm.get_key_field(j);
 
         if( kpart == "*" )
             continue; //to next field
@@ -218,13 +192,10 @@ bool TEJDBKey::compareTemplate( const IndexEntry& elm )
             return false;
 
         rklen = kpart.length();
-
-        for( i=0; i<rklen; i++ )
-        {
+        for( i=0; i<rklen; i++ ) {
             if( kpart[i] == '*' ) // next field
                 break;
-            switch( kpart[i] )
-            {
+            switch( kpart[i] ) {
             case '?': // no ' '
                 if( kelm[i] == ' ' )
                     return false;
@@ -237,7 +208,6 @@ bool TEJDBKey::compareTemplate( const IndexEntry& elm )
         if( kpart[i] != '*' && i < kelm.length())
             return false;
     }
-
     return true;
 }
 
@@ -245,619 +215,342 @@ bool TEJDBKey::compareTemplate( const IndexEntry& elm )
 // TEJDataBase - This class contains the structure of EJDB Data Base
 //-------------------------------------------------------------
 
-
-/// Default configuration of the Data Base
-TEJDataBase::TEJDataBase( int nrt, const char* name, const std::vector<std::string>& nameKeyFlds  ):
-    Keywd( name ), nRT( nrt ), key( nameKeyFlds ), status( UNDF_)
+// Set json or yaml format string to curent record
+void TEJDataBase::setJson( const std::string& sjson, bool is_json )
 {
-    crt = time(NULL);
-    currentSearchJson = "";
+    if( is_json ) {
+        current_Json = sjson;
+        current_YAML = "";
+    }
+    else {
+        current_YAML = sjson;
+        current_Json = "";
+    }
+}
+
+void TEJDataBase::setQuery(const std::string& query_str)
+{
+#ifdef OLD_EJDB
+    current_JQL = query_str;
+    replace_all(current_JQL, "\'", '\"');
+#else
+#endif
+}
+
+std::string TEJDataBase::getKeyFromJson(const nlohmann::json& bsdata)
+{
+    std::string key_str = "", kbuf;
+    for(size_t ii=0; ii<keySize(); ii++) {
+        kbuf = bsdata.value(key.keyFieldName(ii), "*");
+        strip( kbuf );
+        key_str += kbuf;
+        key_str += ":";
+    }
+    return key_str;
 }
 
 
-TEJDataBase::~TEJDataBase()
+void TEJDataBase::addKeyToJson(nlohmann::json& object)
 {
+    for(size_t ii=0; ii<keySize(); ii++) {
+        object[key.keyFieldName(ii)] = key.keyField(ii);
+    }
 }
 
-/// Get or create collection 'module name' before saving/delete
-EJCOLL *TEJDataBase::openCollection( bool createifempty )
+// Save current record to json structure
+nlohmann::json TEJDataBase::current_to_json(const std::string& pkey)
 {
-    // Test and open file  (name of ejdb must be take from nFile)
-    EJDBFile.Open();
-    if( !EJDBFile.ejDB )
-    {
-        std::string err= "Cannot open EJDB "+ EJDBFile.Name();
-        Error("TEJDB0011", err ); //return NULL;
-    }
-
-    EJCOLL *coll;
-    if( createifempty )
-    {  // Get or create collection 'module name'
-        coll = ejdbcreatecoll(EJDBFile.ejDB, GetKeywd(), NULL );
-        if( !coll )
-        {
-            closeCollection();
-            std::string err= "Cannot open EJDB collection "+ EJDBFile.Name()+GetKeywd();
-            Error("TEJDB0012", err );
-        }
-    }
+    nlohmann::json object;
+    if(!current_Json.empty())
+        object = fromJsonString(current_Json);
     else
-        coll = ejdbgetcoll(EJDBFile.ejDB, GetKeywd());
+        object = fromYamlString(current_YAML);
+    std::string key_str = getKeyFromJson(object);
 
-    return coll;
-}
-EJCOLL *TEJDataBase::openCollection2( bool createifempty )
-{
-    return openCollection(createifempty);
-}
-
-
-/// Close
-void TEJDataBase::closeCollection( )
-{
-    EJDBFile.Close();
-}
-
-// end of extern
-
-//--- Manipulation records
-
-// Load data from bson structure
-void TEJDataBase::KeyFromBson( const char* bsdata )
-{
-    // Get key of record
-    std::string keyStr = getKeyFromBson( bsdata );
-
-    char oidhex[25];
-    bson_iterator it;
-    bson_find_from_buffer(&it, bsdata, "_id" );
-    bson_oid_to_string(bson_iterator_oid(&it), oidhex);
-
-    // Try to insert new record to list
-    key.SetKey( keyStr.c_str() );
-    if( key.isPattern() )
-        Error("TEJDB0110", "Cannot save under record key template" );
-
-    std::pair<std::set<IndexEntry>::iterator,bool> ret;
-    ret = recList.insert( key.retIndex() );
-    itrL = ret.first;
-    // Test unique keys name before add the record(s)
-    if( ret.second == false)
-    {
-        std::string erstr = "Cannot add new record:\n";
-        erstr += keyStr;
-        erstr += ".\nTwo records with the same key!";
-        Error("TEJDB0014", erstr );
-    }
-    itrL->setBsonOid(oidhex);
-}
-
-/// put current record key to bson structure
-void TEJDataBase::putKeyToBson( bson *obj )
-{
-    for( int ii=0; ii < KeyNumFlds(); ii++)
-        bson_append_string( obj, FldKeyName(ii), FldKey(ii) );
-}
-
-// Save current record to bson structure
-void TEJDataBase::RecToBson( bson *obj, time_t /*crtt*/, const char *pkey )
-{
-    if( !currentJson.empty() )
-    { ParserJson pars;
-        pars.setJsonText( currentJson.substr( currentJson.find_first_of('{')+1 ) );
-        pars.parseObject(  obj );
-    }
-    else // yaml
-    {
-        ParserYAML::parseYAMLToBson( currentYAML, obj );
-    }
-
-    // added Modify time
-    // bson_append_time_t( obj , "mtime", crtt );
-
-    //get key from object
-    std::string keyStr = getKeyFromBson( obj->data );
-
-    if( pkey )
-    {
+    if(!pkey.empty()) {
         // Try to insert new record to list
-        key.SetKey( pkey );
-        if( key.PackKey() !=  keyStr )
-        {
+        key.setKey(pkey);
+        if(key.packKey() != key_str )  {
             std::string mess = " Try to update record with changed key fields\n";
             mess += " You must use command Insert";
             Error( pkey, mess );
         }
-    } else
-        key.SetKey( keyStr.c_str() );
-
-    if( key.isPattern() )
-        Error("TEJDB0010", "Cannot save under record key template" );
-
-}
-
-/// Get current record key from bson structure
-std::string TEJDataBase::getKeyFromBson( const char* bsdata )
-{
-    //get key from object
-    std::string keyStr = "", kbuf;
-    for(int ii=0; ii<KeyNumFlds(); ii++ )
-    {
-        if( !bson_find_string( bsdata, key.FldKeyName(ii), kbuf ) )
-            kbuf = "*";
-        strip( kbuf );
-        keyStr += kbuf;
-        keyStr += ":";
     }
-    return keyStr;
+    else {
+        key.setKey(key_str);
+   }
+
+    if( key.is_pattern() )
+        Error("TEJDB0010", "Cannot save under record key template" );
+    return object;
 }
 
-// Load data from bson structure
-std::string TEJDataBase::RecFromBson( bson *obj )
+// Load data from json string
+std::string TEJDataBase::record_from_json(const std::string& json_str)
 {
-    // record to json std::string
-    ParserJson pars;
-    pars.printBsonObjectToJson( currentJson, obj->data );
+    current_Json = json_str;
+    auto object = fromJsonString(current_Json);
+    current_YAML = yaml::dump(object);
 
-    // record to YAML std::string
-    ParserYAML::printBsonObjectToYAML( currentYAML, obj->data );
+    current_Gems3k_name.clear();
+    current_Gems3k_name = object.value(keys::G3Ksys[1], current_Gems3k_name);
+    current_Gems3k_name = object.value(keys::G3Ksys[0], current_Gems3k_name);
 
-    // get gems3k name
-    if( !bson_find_string( obj->data, keys::G3Ksys[0], currentGems3kName ) )
-        if( !bson_find_string( obj->data, keys::G3Ksys[1], currentGems3kName ) )
-            currentGems3kName = "";
-
-    // Get key of record
-    std::string keyStr = getKeyFromBson( obj->data );
-    return keyStr;
+    return getKeyFromJson(object);
 }
 
-// Test text is good bson structure
-void TEJDataBase::TestBsonJson( const std::string& recjson )
-{
-    ParserJson pars;
-    pars.setJsonText( recjson.substr( recjson.find_first_of('{')+1 ) );
+//---------------------------------------------------------------------
 
-    bson obj;
-    bson_init( &obj );
-    pars.parseObject(  &obj );
-    bson_finish( &obj );
-    bson_destroy( &obj );
-}
-
-// Test text is good yaml(bson) structure
-void TEJDataBase::TestBsonYAML( const std::string& recjson )
+// Seach record index with key pkey.
+bool TEJDataBase::findRecord(const std::string& pkey)
 {
-    bson obj;
-    bson_init( &obj );
-    ParserYAML::parseYAMLToBson( recjson, &obj );
-    bson_finish( &obj );
-    bson_destroy( &obj );
-}
-
-//Seach record index with key pkey.
-bool TEJDataBase::Find( const char *pkey )
-{
-    if(recList.empty() )
+    if(records.empty())
         return false;
     TEJDBKey wkey(key);
-    wkey.SetKey( pkey );
-    itrL = recList.find( wkey.retIndex() );
-
-    if( itrL == recList.end() )
-        return  false;
-    else
-        return true;
-}
-
-
-// Return curent record in json format std::string
-const std::string& TEJDataBase::GetJson()
-{
-    return currentJson;
-}
-
-
-// Set json format std::string to curent record
-void TEJDataBase::SetJson( const std::string& sjson, bool is_json )
-{
-    if( is_json )
-    { currentJson = sjson;
-        currentYAML = "";
-    }
-    else
-    { currentYAML = sjson;
-        currentJson = "";
-    }
-
-}
-
-
-// Return curent record in yaml format std::string
-const std::string& TEJDataBase::GetYAML()
-{
-    return currentYAML;
-}
-
-
-
-
-// Set json format std::string to curent record
-void TEJDataBase::SetQueryJson( const std::string& qrjson)
-{
-    currentSearchJson = replace_all( qrjson, "\'", "\"");
-}
-
-//Test state of record with key key_ as template.
-// in field field setted any(*) data
-bool TEJDataBase::FindPart( const char *pkey, int field )
-{
-    TEJDBKey wkey(key);
-    wkey.SetKey( pkey );
-    wkey.SetFldKey(field,"*");
-    RecStatus iRet = Rtest( wkey.PackKey(), 0 );
-    return ( iRet==MANY_ || iRet==ONEF_ );
+    wkey.setKey(pkey);
+    current_ndx = records.find(wkey.retIndex());
+    return( current_ndx != records.end() );
 }
 
 // Retrive one record from the collection
-void TEJDataBase::Get( const char *pkey )
+void TEJDataBase::getRecord(const std::string& pkey)
 {
-    key.SetKey( pkey );
-    if( key.isPattern() )
+    key.setKey(pkey);
+    if(key.is_pattern())
         Error("TEJDB0010", "Cannot get under record key template" );
 
-    itrL = recList.find( key.retIndex() );
-
-    if( itrL == recList.end() )
-    {
+    current_ndx = records.find( key.retIndex());
+    if(current_ndx == records.end()) {
         std::string erstr = pkey;
         erstr += "\nrecord to retrive does not exist!";
         Error("TEJDB0001", erstr );
     }
 
+    auto stroid = current_ndx->get_id();
+    std::string readed_json;
+
+#ifdef OLD_EJDB
     // Get oid of record
     bson_oid_t oid;
-    std::string stroid = itrL->getBsonOid();
     bson_oid_from_string( &oid, stroid.c_str() );
 
-    // Get current collection file ( must be done )
-    EJCOLL *coll = openCollection();
-
+    EJCOLL *coll = open_collection();
     bson *bsrec = ejdbloadbson(coll, &oid);
-    // Close database (must be done for exeption )
-    closeCollection();
+    close_collection();
 
-    if( !bsrec )
-    {  std::string errejdb = "Error Loading record ";
+    if(!bsrec){
+        std::string errejdb = "Error Loading record ";
         errejdb+= pkey;
         errejdb+= " from EJDB";
         Error( "TEJDB0025",  errejdb );
     }
 
-    // Save bson structure to internal arrays
-    RecFromBson( bsrec );
+    // record to json std::string
+    ParserJson pars;
+    pars.printBsonObjectToJson(readed_json, bsrec->data);
     bson_destroy(bsrec);
+#else
 
-    // Set up internal data
-    status = ONEF_;
+#endif
+    // Save readed json string to internal arrays
+    record_from_json(readed_json);
 }
 
 /// Removes record from the collection
-void TEJDataBase::Del( const char *pkey )
+void TEJDataBase::deleteRecord(const std::string& pkey)
 {
-    key.SetKey( pkey );
-    if( key.isPattern() )
+    key.setKey( pkey );
+    if( key.is_pattern() )
         Error("TEJDB0010", "Cannot delete under record key template" );
 
-    itrL = recList.find( key.retIndex() );
-
-    if( itrL == recList.end() )
-    {
+    current_ndx = records.find(key.retIndex());
+    if(current_ndx == records.end()) {
         std::string erstr = pkey;
         erstr+= "\nrecord to delete does not exist!";
         Error("TEJDB0002", erstr );
     }
-
-    // Get oid of record
+#ifdef OLD_EJDB
     bson_oid_t oid;
-    bson_oid_from_string( &oid, itrL->getBsonOid().c_str() );
+    bson_oid_from_string( &oid, current_ndx->get_id().c_str() );
 
-    // Get current collection file
-    EJCOLL *coll = openCollection();
-
+    EJCOLL *coll = open_collection();
     // Remove BSON object from collection.
     bool iRet = ejdbrmbson( coll,  &oid );
+    close_collection();
 
-    // Close database (must be done for exeption )
-    closeCollection( );
-
-    if( !iRet )
-    {  std::string errejdb = "Error deleting of record ";
+    if( !iRet ) {
+        std::string errejdb = "Error deleting of record ";
         errejdb+= pkey;
         errejdb+= " from EJDB";
         Error( "TEJDB0024",  errejdb );
     }
+#else
 
+#endif
     // Set up internal data
-    recList.erase(itrL);
-    itrL = recList.end();
-    status = UNDF_;
+    records.erase(current_ndx);
+    current_ndx = records.end();
 }
 
-/// Save new record in the collection
-void TEJDataBase::InsertRecord()
+// Save new record in the collection
+void TEJDataBase::insertRecord()
 {
-    bson bsrec;
-
-    bson_init( &bsrec );
-    // Get bson structure from internal std::string
-    RecToBson( &bsrec, time(NULL) );
-    bson_finish( &bsrec );
+    // Get json structure from internal std::string
+    auto object = current_to_json("");
 
     std::pair<std::set<IndexEntry>::iterator,bool> ret;
-    ret = recList.insert( key.retIndex() );
-    itrL = ret.first;
+    ret = records.insert(key.retIndex());
+    current_ndx = ret.first;
     // Test unique keys name before add the record(s)
-    if( ret.second == false)
-    {
+    if( ret.second == false)  {
         std::string erstr = "Cannot insert record:\n";
-        erstr += key.PackKey();
+        erstr += key.packKey();
         erstr += ".\nTwo records with the same key!";
         Error("TEJDB0004", erstr );
     }
 
-    // Get current collection file ( must be done )
-    EJCOLL *coll = openCollection();
+#ifdef OLD_EJDB
+    bson bsrec;
 
+    bson_init( &bsrec );
+    // Get bson structure from internal std::string
+    ParserJson pars;
+    pars.setJsonText( current_Json.substr( current_Json.find_first_of('{')+1 ) );
+    pars.parseObject(&bsrec);
+    bson_finish( &bsrec );
+
+    EJCOLL *coll = open_collection();
     // Persist BSON object in the collection
     char bytes[25];
     bson_oid_t oid;
     bool retSave = ejdbsavebson(coll, &bsrec, &oid);
-    // Close database (must be done for exeption )
-    closeCollection();
-    if( !retSave )
-    {  std::string errejdb = bson_first_errormsg(&bsrec);
+    close_collection();
+    if( !retSave ) {
+        std::string errejdb = bson_first_errormsg(&bsrec);
         bson_destroy(&bsrec);
-        recList.erase(itrL);
+        records.erase(current_ndx);
         Error( "TEJDB0021",  errejdb );
     }
-    else
-    {
+    else  {
         bson_oid_to_string( &oid, bytes );
-        itrL->setBsonOid(bytes);
+        current_ndx->set_id(bytes);
         /// putndx(nF); work with indexes
         bson_destroy(&bsrec);
     }
+#else
 
+#endif
     std::cout << "Add record " << retSave << " oid " << bytes << std::endl;
-
-    // Set up internal data
-    status = ONEF_;
 }
 
-/// Save/update record in the collection
-void TEJDataBase::SaveRecord(const char* pkey )
+// Save/update record in the collection
+void TEJDataBase::saveRecord(const std::string& pkey)
 {
+    auto object = current_to_json(pkey);
+    std::pair<std::set<IndexEntry>::iterator,bool> ret;
+    ret = records.insert(key.retIndex());
+    current_ndx = ret.first;
+
+#ifdef OLD_EJDB
     bson_oid_t oid;
     bson bsrec;
 
     bson_init( &bsrec );
     // Get bson structure from internal std::string
-    RecToBson( &bsrec, time(NULL), pkey );
-
-    std::pair<std::set<IndexEntry>::iterator,bool> ret;
-    ret = recList.insert( key.retIndex() );
-    itrL = ret.first;
-
-    if( ret.second == true ) // new record
-    {
-        // Get bson structure from internal arrays
-    }
-    else  // update record in the collection
-    {
-        bson_oid_from_string( &oid, itrL->getBsonOid().c_str() );
+    ParserJson pars;
+    pars.setJsonText( current_Json.substr( current_Json.find_first_of('{')+1 ) );
+    pars.parseObject(&bsrec);
+    if( ret.second != true ) {
+        bson_oid_from_string(&oid, current_ndx->get_id().c_str());
         bson_append_oid( &bsrec, JDBIDKEYNAME, &oid);
     }
     bson_finish( &bsrec );
 
-    EJCOLL *coll = openCollection();
-
+    EJCOLL *coll = open_collection();
     // Persist BSON object in the collection
     bool retSave = ejdbsavebson(coll, &bsrec, &oid);
-    // Close database (must be done for exeption )
-    closeCollection();
+    close_collection();
 
-    if( !retSave )
-    {  std::string errejdb = bson_first_errormsg(&bsrec);
+    if( !retSave ) {
+        std::string errejdb = bson_first_errormsg(&bsrec);
         bson_destroy(&bsrec);
         if( ret.second == true )
-            recList.erase(itrL);
+            records.erase(current_ndx);
         Error( "TEJDB0022",  errejdb );
     }
 
-    if( ret.second == true ) // new record
-    {   char bytes[25];
+    if( ret.second == true )  { // new record
+        char bytes[25];
         bson_oid_to_string( &oid, bytes );
-        itrL->setBsonOid(bytes);
+        current_ndx->set_id(bytes);
     }
     bson_destroy(&bsrec);
-    std::cout << "Saving record " << retSave <<
-                 " oid " << itrL->getBsonOid().c_str() << std::endl;
+#else
 
-    // Set up internal data
-    status = ONEF_;
+#endif
+    std::cout << "Saving record " << retSave << " oid " << current_ndx->get_id() << std::endl;
 }
 
-/// Save/update record in the collection
-/// Question for replase
-void TEJDataBase::SaveRecordQuestion(const char* pkey, bool& yesToAll )
+// Save/update record in the collection
+// Question for replase
+void TEJDataBase::saveRecordQuestion(const std::string& pkey, bool& yes_to_all)
 {
-    if( !yesToAll && Find( pkey ) )
-    {
+    if(!yes_to_all && findRecord(pkey))  {
         switch( vfQuestion3( pFitImp, pkey,
                              "Data record with this key already exists! Replace?",
                              "&Yes", "&No", "&Yes to All" ))
         {
-        case VF3_3: yesToAll=true;
+        case VF3_3: yes_to_all=true;
         case VF3_1: break;
         case VF3_2: return;
         }
     }
-    SaveRecord( pkey );
+    saveRecord(pkey);
 }
 
-// Test state of record with key pkey.
-// If mode == 1 and one record, read this record.
-// returns state of record
-RecStatus TEJDataBase::Rtest( const char *key, int mode )
-{
-    int iRec;
-    const char *pkey;
-    bool OneRec = true;
-
-    if( key != 0 && *key )
-        pkey = key;
-    else
-        pkey = PackKey();
-
-    if( strpbrk( pkey, "*?" ))
-        OneRec = false; // pattern
-
-    status = UNDF_;
-
-    if( RecCount() <= 0 )
-        return EMPC_;
-
-    if( OneRec )
-    {
-        if( !Find( pkey )  )
-            return NONE_;
-        if( mode == 1 )
-            Get( pkey );
-        return ONEF_;
-    }
-    else // template
-    {   std::vector<std::string> aKeyList;
-        iRec = GetKeyList( pkey, aKeyList, false );
-        if( iRec == 0 )
-            return NONE_;
-        if( iRec == 1 )
-        {
-            if( mode == 1 )
-                Get( aKeyList[0].c_str() );
-            return ONEF_;
-        }
-        return MANY_;
-    }
-}
-
-int TEJDataBase::GetKeyList( const char *keypat,
-                             std::vector<std::string>& aKeyList, bool /*retUnpackform*/ )
+int TEJDataBase::getKeyList(const std::string& keypat, std::vector<std::string>& key_list)
 {
     // Set key template
     TEJDBKey wkey(key);
-    wkey.SetKey( keypat );
-    aKeyList.clear();
+    wkey.setKey( keypat );
+    key_list.clear();
 
-    /* Define functional
-    compareTemplate tmpl;
-    tmpl.setKey( &wkey );
-    tmpl.setForm( retUnpackform );
-    // Applies function to each of the elements in the range
-    for_each( recList.begin(), recList.end(), tmpl );
-    // Copy result
-    copy( tmpl.getKeyList().begin(), tmpl.getKeyList().end(), aKeyList.begin() );
-    */
-
-    bool OneRec = !wkey.isPattern(),
-            AllRecs = wkey.isAll();
+    bool OneRec = !wkey.is_pattern(),
+            AllRecs = wkey.is_all();
 
     std::set<IndexEntry, std::less<IndexEntry> >::iterator it;
-    it = recList.begin();
-    while( it != recList.end() )
-    {
+    it = records.begin();
+    while( it != records.end() ) {
         if( !AllRecs )
-            if( !wkey.compareTemplate( *it ) )
-            { it++;
+            if( !wkey.compareTemplate( *it ) ) {
+                it++;
                 continue;
             }
-        aKeyList.push_back( wkey.indexKey( *it ) );
+        key_list.push_back( wkey.indexKey( *it ) );
         if( OneRec )
             break;
 
         it++;
     }
-    return aKeyList.size();
+    return key_list.size();
 }
 
-
-
-// make packed key to seach.
-void TEJDataBase::MakeKey( unsigned char nRTwrk, std::string& pkey, ... )
+void TEJDataBase::load_collection()
 {
-    TEJDBKey wkey(key);
-    va_list Marker;
-    int ii, rts, nkf;
-    char *imf;
-
-    va_start( Marker, pkey );
-    for( ii=0; ii< wkey.KeyNumFlds(); ii++ )
-    {
-        rts = va_arg( Marker, int );
-        switch( rts )
-        {
-        case K_END:
-            for( ; ii < wkey.KeyNumFlds(); ii++ )
-                wkey.SetFldKey( ii, S_ANY );
-            break;
-        case K_EMP:  // field "`"
-            wkey.SetFldKey( ii, S_EMPTY );
-            break;
-        case K_ANY:  // field  "*"
-            wkey.SetFldKey( ii, S_ANY );
-            break;
-        case K_IMM:  // field in std::string
-            imf = va_arg( Marker, char * );
-            wkey.SetFldKey( ii, imf );
-            break;
-        case K_ACT:  // get field from  PRIE request
-            rts = nRTwrk;
-            [[fallthrough]];
-        default:     // get field from enathe chain key
-            nkf = va_arg( Marker, int );
-            if( !*rtEJ[rts].FldKey( nkf ))
-                wkey.SetFldKey( ii, S_EMPTY );
-            else
-                wkey.SetFldKey( ii, rtEJ[rts].FldKey( nkf ) );
-
-            break;
-        }
-    }
-    pkey = wkey.PackKey();
-    va_end( Marker );
-}
-
-
-
-// Working with collections
-
-
-void TEJDataBase::loadCollection( )
-{
-    EJCOLL *coll = openCollection( false );
-
-    if( !coll )
-    {
-        closeCollection();
+#ifdef OLD_EJDB
+    EJCOLL *coll = open_collection(false);
+    if( !coll ) {
+        close_collection();
         return;
     }
 
     // select all records
     bson bsq1;
     bson_init_as_query(&bsq1);
-    if( !currentSearchJson.empty() )
-    { ParserJson pars;
-        pars.setJsonText( currentSearchJson.substr( currentSearchJson.find_first_of('{')+1 ) );
+    if( !current_JQL.empty() )
+    {
+        ParserJson pars;
+        pars.setJsonText( current_JQL.substr(current_JQL.find_first_of('{')+1 ));
         pars.parseObject( &bsq1 );
     }
     bson_finish(&bsq1);
@@ -866,8 +559,8 @@ void TEJDataBase::loadCollection( )
     bson_init_as_query(&bshits1);
     bson_append_start_object(&bshits1, "$fields");
     bson_append_int(&bshits1, "_id", 1);
-    for(int ii=0; ii<KeyNumFlds(); ii++ )
-        bson_append_int(&bshits1, key.FldKeyName(ii), 1);
+    for(size_t ii=0; ii<keySize(); ii++ )
+        bson_append_int(&bshits1, key.keyFieldName(ii).c_str(), 1);
     bson_append_finish_object(&bshits1);
     bson_finish(&bshits1);
 
@@ -879,13 +572,13 @@ void TEJDataBase::loadCollection( )
     TCLIST *q1res = ejdbqryexecute(coll, q1, &count, 0, log);
     //fprintf(stderr, "%s", TCXSTRPTR(log));
 
-    std::cout << count << " records in collection " << GetKeywd() << std::endl;
+    std::cout << count << " records in collection " << getKeywd() << std::endl;
     for (int i = 0; i < TCLISTNUM(q1res); ++i)
     {
         void *bsdata = TCLISTVALPTR(q1res, i);
         //bson_iterator_from_buffer(&it, (char *)bsdata);
         // added record key to list
-        KeyFromBson( (const char *)bsdata );
+        keyFromBson((const char *)bsdata);
     }
 
     bson_destroy(&bsq1);
@@ -893,29 +586,177 @@ void TEJDataBase::loadCollection( )
     tcxstrdel(log);
     ejdbquerydel(q1);
 
-    closeCollection( );
+    close_collection();
+#else
+
+#endif
 }
 
-
-/// Open EJDB files and build linked record list
+// Open EJDB files and build linked record list
 void TEJDataBase::Open()
 {
-    if( EJDBFile.GetPath() == "" )
+    if( EJDBFile.getPath() == "" )
         return;
 
-    recList.clear();
-    itrL= recList.end();
-    loadCollection();
+    records.clear();
+    current_ndx= records.end();
+    load_collection();
 }
-
 
 /// Close files all EJDB files
 void TEJDataBase::Close()
 {
     EJDBFile.Close();
-    recList.clear();
-    itrL= recList.end();
+    records.clear();
+    current_ndx = records.end();
 }
+
+#ifdef OLD_EJDB
+
+/// Get or create collection 'module name' before saving/delete
+EJCOLL *TEJDataBase::open_collection(bool createifempty)
+{
+    // Test and open file  (name of ejdb must be take from nFile)
+    EJDBFile.Open();
+    if(!EJDBFile.ejDB) {
+        std::string err= "Cannot open EJDB "+ EJDBFile.Name();
+        Error("TEJDB0011", err ); //return NULL;
+    }
+
+    EJCOLL *coll;
+    if( createifempty ) {  // Get or create collection 'module name'
+        coll = ejdbcreatecoll(EJDBFile.ejDB, getKeywd().c_str(), NULL );
+        if( !coll )
+        {
+            close_collection();
+            std::string err= "Cannot open EJDB collection "+ EJDBFile.Name()+getKeywd();
+            Error("TEJDB0012", err );
+        }
+    }
+    else
+        coll = ejdbgetcoll(EJDBFile.ejDB, getKeywd().c_str());
+
+    return coll;
+}
+
+void TEJDataBase::close_collection( )
+{
+    EJDBFile.Close();
+}
+
+EJCOLL *TEJDataBase::openCollection2(bool createifempty)
+{
+    return open_collection(createifempty);
+}
+
+std::string TEJDataBase::getKeyFromBson(const char* bsdata)
+{
+    //get key from object
+    std::string keyStr = "", kbuf;
+    for(size_t ii=0; ii<keySize(); ii++ ) {
+        if( !bson_find_string( bsdata, key.keyFieldName(ii).c_str(), kbuf ) )
+            kbuf = "*";
+        strip(kbuf);
+        keyStr += kbuf;
+        keyStr += ":";
+    }
+    return keyStr;
+}
+
+// Load data from bson structure
+void TEJDataBase::keyFromBson(const char* bsdata)
+{
+    // Get key of record
+    std::string keyStr = getKeyFromBson( bsdata );
+
+    char oidhex[25];
+    bson_iterator it;
+    bson_find_from_buffer(&it, bsdata, "_id" );
+    bson_oid_to_string(bson_iterator_oid(&it), oidhex);
+
+    // Try to insert new record to list
+    key.setKey( keyStr.c_str() );
+    if( key.is_pattern() )
+        Error("TEJDB0110", "Cannot save under record key template" );
+
+    std::pair<std::set<IndexEntry>::iterator,bool> ret;
+    ret = records.insert(key.retIndex());
+    current_ndx = ret.first;
+    // Test unique keys name before add the record(s)
+    if( ret.second == false)
+    {
+        std::string erstr = "Cannot add new record:\n";
+        erstr += keyStr;
+        erstr += ".\nTwo records with the same key!";
+        Error("TEJDB0014", erstr );
+    }
+    current_ndx->set_id(oidhex);
+}
+
+#endif
+
+// not used -------------------------------------
+
+//Test state of record with key key_ as template.
+// in field field setted any(*) data
+bool TEJDataBase::findPart(const std::string& pkey, int field)
+{
+    TEJDBKey wkey(key);
+    wkey.setKey(pkey);
+    wkey.setKeyField(field,"*");
+    return Rtest(wkey.packKey(), 0);
+}
+
+// Test state of record with key pkey.
+// If mode == 1 and one record, read this record.
+// returns state of record
+bool TEJDataBase::Rtest(const std::string& akey, int mode)
+{
+    int iRec;
+    std::string pkey;
+    bool OneRec = true;
+
+    if(!akey.empty())
+        pkey = akey;
+    else
+        pkey = packKey();
+
+    if(pkey.find_first_of("*?") != std::string::npos)
+        OneRec = false; // pattern
+    if(recordsCount() <= 0)
+        return false;
+
+    if( OneRec ) {
+        if(!findRecord(pkey))
+            return false;
+        if(mode == 1)
+            getRecord(pkey);
+        return true;
+    }
+    else { // template
+        std::vector<std::string> aKeyList;
+        iRec = getKeyList(pkey, aKeyList);
+        if(iRec == 0)
+            return false;
+        if(iRec == 1) {
+            if(mode == 1)
+                getRecord(aKeyList[0]);
+            return true;
+        }
+        return true;
+    }
+}
+
+
+// end of extern
+
+//--- -------------------------------------------------------
+
+
+
+
+
+
 
 
 //-------------------------------------------------------------
@@ -925,7 +766,7 @@ void TEJDataBase::Close()
 int EJDataBaseList::Find(const char* s)
 {
     for( size_t ii=0; ii<size(); ii++ )
-        if( at(ii).GetKeywd() == s  )
+        if( at(ii).getKeywd() == s  )
             return ii;
     return -1;
 }
@@ -953,8 +794,7 @@ void EJDataBaseList::Init()
 TEJDataBase&
 EJDataBaseList::operator[](size_t ii)
 {
-    ErrorIf( ii > size(),
-             "DataBaseList","Invalid chain index.");
+    ErrorIf( ii > size(), "DataBaseList","Invalid chain index.");
     return at(ii);
 }
 
