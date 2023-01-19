@@ -3,7 +3,7 @@
 //
 // Implementation of ParserJson class and other bson functions
 //
-// Copyright (C) 2014  S.V.Dmytriyeva
+// Copyright (C) 2023  S.V.Dmytriyeva
 // Uses EJDB (https://ejdb.org),
 //    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
@@ -17,11 +17,76 @@
 // E-mail gems2.support@psi.ch
 //-------------------------------------------------------------------
 
+#include <iostream>
+#include "verror.h"
+#include "v_yaml.h"
+#include "v_service.h"
+
+//------------------------------
+
+std::string fix_cvs(const std::string& json_str)
+{
+    std::string tmp_str;
+    bool is_str_object = false;
+    for(size_t ii=0; ii<json_str.size(); ii++) {
+        if(json_str[ii]=='\"')
+            is_str_object = !is_str_object;
+        if(is_str_object && json_str[ii]=='\n' && json_str[ii-1]!='\\')
+            tmp_str += "\\n";
+        else
+            tmp_str += json_str[ii];
+    }
+    return tmp_str;
+}
+
+nlohmann::json fromJsonString(const std::string& json_str)
+{
+    nlohmann::json object;
+    try  {
+        // temporally fix \n in csv
+        auto tmpstr = fix_cvs(json_str);
+        object = nlohmann::json::parse(tmpstr);
+    }
+    catch (nlohmann::json::parse_error& ex) {
+        std::cout << ex.what() << std::endl;
+        std::cout << json_str << std::endl;
+        Error("E01JSon: ", std::string("Json parse error: ") + ex.what());
+    }
+    return object;
+}
+
+nlohmann::json fromYamlString(const std::string& yaml_str)
+{
+    nlohmann::json object = yaml::loads(yaml_str);
+    return object;
+}
+
+nlohmann::json fromString(bool is_json, const std::string& data_str)
+{
+    if(is_json)
+        return fromJsonString(data_str);
+    else
+        return fromYamlString(data_str);
+}
+
+#ifdef OLD_EJDB
+
 #include <sstream>
 #include <cstring>
 #include <iomanip>
 #include "f_ejdb.h"
-#include "v_service.h"
+
+//------------------------------
+
+enum {
+    jsBeginArray = '[',    //0x5b,
+    jsBeginObject = '{',   //0x7b,
+    jsEndArray = ']',      //0x5d,
+    jsEndObject = '}',     //0x7d,
+    jsNameSeparator = ':', //0x3a,
+    jsValueSeparator = ',',//0x2c,
+    jsQuote = '\"'         //0x22
+};
 
 #define SHORT_EMPTY 	   -32768
 #define SHORT_ANY   	    32767
@@ -601,5 +666,7 @@ void ParserJson::printBsonObjectToJson( std::string& resStr, const char *b)
     os << "}";
     resStr = os.str();
 }
+
+#endif
 
 // ------------------------ end of v_json.cpp -------------------------------------------------------
