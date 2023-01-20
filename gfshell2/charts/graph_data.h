@@ -138,8 +138,8 @@ public:
         xcolumn = aNdxX;
     }
 
-    void toBsonObject( bson *obj ) const;
-    void fromBsonObject( const char *obj );
+    nlohmann::json toBsonObject() const;
+    void fromBsonObject( const nlohmann::json& object );
 
     void toJsonObject(QJsonObject& json) const;
     void fromJsonObject(const QJsonObject& json);
@@ -320,8 +320,8 @@ public:
         axisTypeY = axisY;
     }
 
-    void toBsonObject( bson *obj ) const;
-    void fromBsonObject( const char *obj );
+    nlohmann::json toBsonObject() const;
+    void fromBsonObject( const nlohmann::json& object );
 
     void toJsonObject(QJsonObject& json) const;
     void fromJsonObject(const QJsonObject& json);

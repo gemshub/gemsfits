@@ -340,13 +340,13 @@ void FITMainWindow::openEJDB()
 
     // change collections names
     std::string samlescolName = projectSettings->value("ExpSamplesDataColl", "experiments").toString().toStdString();
-    rtEJ[MDF_DATABASE].SetKeywd(samlescolName);
+    rtEJ[MDF_DATABASE].setKeywd(samlescolName);
     rtEJ[MDF_DATABASE].Open();
     std::string testcolName = projectSettings->value("TaskCasesDataColl", "tests").toString().toStdString();
-    rtEJ[MDF_TASK].SetKeywd(testcolName);
+    rtEJ[MDF_TASK].setKeywd(testcolName);
     rtEJ[MDF_TASK].Open();
     testcolName = projectSettings->value("FitsCasesDataColl", "fits").toString().toStdString();
-    rtEJ[MDF_FITS].SetKeywd(testcolName);
+    rtEJ[MDF_FITS].setKeywd(testcolName);
     rtEJ[MDF_FITS].Open();
 }
 
@@ -359,9 +359,9 @@ void FITMainWindow::loadNewProject()
     pLineGEMS->setText("");
     // clear all queries
     ui->queryEdit->setText("");
-    rtEJ[MDF_DATABASE].SetQueryJson("");
-    rtEJ[MDF_TASK].SetQueryJson("");
-    rtEJ[MDF_FITS].SetQueryJson("");
+    rtEJ[MDF_DATABASE].setQuery("");
+    rtEJ[MDF_TASK].setQuery("");
+    rtEJ[MDF_FITS].setQuery("");
 
     // Connect project database
     openEJDB();
@@ -395,12 +395,14 @@ void FITMainWindow::resetMainWindow()
         if( curInd >= 0 )
             openRecordKey( curInd, 0  );
         else
-        { QTableWidgetItem *curItem = keyTable->item(0,0);
+        {
+            QTableWidgetItem *curItem = keyTable->item(0,0);
             keyTable->setCurrentItem( curItem );
             keyTable->scrollToItem( curItem );
             openRecordKey( 0, 0  );
         }
-    } else
+    }
+    else
     {
         // loadTemplate( currentModule );
         CmCreate();
@@ -409,8 +411,8 @@ void FITMainWindow::resetMainWindow()
     }
 
     // reset  ui->queryEdit
-    ui->queryEdit->setText(rtEJ[currentMode].GetLastQuery().c_str());
-    if(  !rtEJ[currentMode].GetLastQuery().empty() )
+    ui->queryEdit->setText(rtEJ[currentMode].getLastQuery().c_str());
+    if(  !rtEJ[currentMode].getLastQuery().empty() )
     {
         ui->action_Insert->setEnabled(false);
         ui->actionCreate_New->setEnabled(false);
@@ -442,11 +444,11 @@ void FITMainWindow::changeKeyList()
 /// Define list of Module keys using filter
 int FITMainWindow::defineModuleKeysList( int nRT )
 {
-    int ii, jj, kk, ln;
+    int ii, kk, ln;
     int curInd = -1;
     std::string keyfld;
     QTableWidgetItem *item, *curItem=0;
-    std::string oldKey = rtEJ[nRT].PackKey();
+    std::string oldKey = rtEJ[nRT].packKey();
     //settedCureentKeyIntotbKeys = false;
 
     if( currentMode != nRT)
@@ -455,17 +457,17 @@ int FITMainWindow::defineModuleKeysList( int nRT )
     // define tbKeys
     keyTable->clear();
     keyTable->setSortingEnabled ( false );
-    keyTable->setColumnCount( rtEJ[nRT].KeyNumFlds());
+    keyTable->setColumnCount( rtEJ[nRT].keySize());
 
     // get list or record keys
     std::string keyFilter = ui->filterEdit->text().toStdString();
     if( keyFilter.empty() )
         keyFilter = ALLKEY;
     std::vector<std::string> keyList;
-    int nKeys = rtEJ[nRT].GetKeyList( keyFilter.c_str(), keyList);
+    int nKeys = rtEJ[nRT].getKeyList(keyFilter, keyList);
 
     //vector<int> colSizes;
-    //for(jj=0; jj<rtEJ[nRT].KeyNumFlds(); jj++)
+    //for(jj=0; jj<rtEJ[nRT].keySize(); jj++)
     // colSizes.push_back( 0 );
 
     // define key list
@@ -479,7 +481,7 @@ int FITMainWindow::defineModuleKeysList( int nRT )
     for( ii=0; ii<nKeys; ii++ )
     {
         keyTable->setRowHeight(ii, charHeight+2);
-        for(jj=0, kk=0; jj<rtEJ[nRT].KeyNumFlds(); jj++)
+        for(size_t jj=0, kk=0; jj<rtEJ[nRT].keySize(); jj++)
         {
             ln = keyList[ii].find_first_of(':', kk);
             keyfld = std::string(keyList[ii], kk, ln-kk);
@@ -497,10 +499,10 @@ int FITMainWindow::defineModuleKeysList( int nRT )
             //       settedCureentKeyIntotbKeys = true;
         }
     }
-    for(jj=0; jj<rtEJ[nRT].KeyNumFlds(); jj++)
+    for(size_t jj=0; jj<rtEJ[nRT].keySize(); jj++)
     {
         //keyTable->setColumnWidth(jj, charWidth*colSizes[jj] );
-        item = new QTableWidgetItem(tr("%1").arg( rtEJ[nRT].FldKeyName(jj) ));
+        item = new QTableWidgetItem(tr("%1").arg( rtEJ[nRT].keyFieldName(jj) ));
         //item->setToolTip( ((TCModule*)aMod[nRT])->GetFldHelp(jj));
         keyTable->setHorizontalHeaderItem( jj, item );
     }
@@ -512,33 +514,33 @@ int FITMainWindow::defineModuleKeysList( int nRT )
         keyTable->scrollToItem( curItem, QAbstractItemView::PositionAtCenter );
     }
 
-    rtEJ[nRT].SetKey(oldKey.c_str());
+    rtEJ[nRT].setKey(oldKey);
     return curInd;
 }
 
 
 /// Save record structure to Data Base
-void FITMainWindow::RecSave( const std::string& recBsonText, const char* key )
+void FITMainWindow::RecSave( const std::string& recBsonText, const std::string& key)
 {
-    rtEJ[ currentMode ].SetJson( recBsonText, JsonDataShow );
-    rtEJ[ currentMode ].SaveRecord( key );
+    rtEJ[ currentMode ].setJson( recBsonText, JsonDataShow );
+    rtEJ[ currentMode ].saveRecord(key);
     //defineModuleKeysList( currentMode ); //?? need change key list if new record
     contentsChanged = false;
 }
 
 /// Delete record structure from Data Base
-void FITMainWindow::RecDelete( const char* key )
+void FITMainWindow::RecDelete(const std::string& key )
 {
-    rtEJ[ currentMode ].Del( key );
-    if( currentMode == MDF_TASK && rtEJ[ MDF_FITS ].Find(key) )
-        rtEJ[ MDF_FITS ].Del( key );
+    rtEJ[ currentMode ].deleteRecord(key);
+    if( currentMode == MDF_TASK && rtEJ[ MDF_FITS ].findRecord(key) )
+        rtEJ[ MDF_FITS ].deleteRecord( key );
 }
 
 /// Save solicitation
 /// Returns true if user pressed 'save' or 'discard' and false on 'cancel'
 bool FITMainWindow::MessageToSave()
 {
-    std::string key_str = rtEJ[ currentMode ].PackKey();
+    std::string key_str = rtEJ[ currentMode ].packKey();
     if( contentsChanged && key_str.find_first_of("*?") == std::string::npos )
     {
         int res = vfQuestion3(window(), key_str.c_str(),
@@ -636,7 +638,7 @@ bool FITMainWindow::createTaskTemplate()
 
     int ret = fitProcess->waitForFinished();
 
-    // read "template.dat" to bson
+    // read "template.dat" to json
     std::string path = fitTaskDir.Dir()+ "/template.json";
 
     std::ifstream my_file(path.c_str());
@@ -659,8 +661,8 @@ bool FITMainWindow::createTaskTemplate()
         ejdbPath  += projectSettings->value("ProjDatabaseName", "myprojdb1" ).toString().toStdString();
         changeEditeRecord( keys::DBPath[0] , ejdbPath, true);
         changeEditeRecord( keys::DBPath[1] , ejdbPath, true );
-        changeEditeRecord( keys::DBColl[0], rtEJ[ MDF_DATABASE ].GetKeywd(), true);
-        changeEditeRecord( keys::DBColl[1], rtEJ[ MDF_DATABASE ].GetKeywd(), true);
+        changeEditeRecord( keys::DBColl[0], rtEJ[ MDF_DATABASE ].getKeywd(), true);
+        changeEditeRecord( keys::DBColl[1], rtEJ[ MDF_DATABASE ].getKeywd(), true);
     }
     return ret;
 }
@@ -696,7 +698,7 @@ void FITMainWindow::defineModuleKeysList( std::string& samplelist )
     // get list or record keys
     std::string keyFilter = ALLKEY;
     std::vector<std::string> keyList;
-    int nKeys = rtEJ[ MDF_DATABASE ].GetKeyList( keyFilter.c_str(), keyList);
+    int nKeys = rtEJ[ MDF_DATABASE ].getKeyList(keyFilter, keyList);
 
     samplelist = " \"DataSelect\": {\n    \"samplelist\": [\n";
     for( ii=0; ii<nKeys; ii++ )

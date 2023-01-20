@@ -20,12 +20,13 @@ QT   += core gui widgets
 QT   += svg printsupport concurrent
 QT   += charts help
 
-QMAKE_CXXFLAGS += -O3
-QMAKE_LFLAGS += -O3
+QMAKE_CXXFLAGS += -O3 -fno-inline-small-functions
+QMAKE_LFLAGS += -O3 -fno-inline-small-functions
 
 !win32 {
   DEFINES += __unix
   INCLUDEPATH   += "/usr/local/include/ejdb"
+  INCLUDEPATH   += "/usr/local/include/ejdb2"
 }
 
 macx-g++ {
@@ -101,10 +102,10 @@ MOC_DIR = tmp
 UI_DIR        = $$MOC_DIR
 OBJECTS_DIR   = obj
 
-include($$DIALOGS_CPP/dialogs.pri)
 include($$GEMS3K_CPP/gems3k.pri)
 include($$CHARTS_CPP/charts.pri)
 include($$DATAMAN_CPP/dataman.pri)
+include($$DIALOGS_CPP/dialogs.pri)
 #include($$EJDB_PATH/ejdb.pri)
 
 CONFIG(release, debug|release): LIBS += -lejdb -lyaml-cpp

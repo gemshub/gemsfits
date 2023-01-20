@@ -1,7 +1,7 @@
 //-------------------------------------------------------------------
 // $Id: v_json.h 333 2014-03-13 13:23:32Z gemsfits $
 //
-// Implementation of ParserJson class and other bson functions
+// Implementation of ParserJson class and other json functions
 //
 // Copyright (C) 2023  S.V.Dmytriyeva
 // Uses EJDB (https://ejdb.org),
@@ -33,6 +33,8 @@ std::string fix_cvs(const std::string& json_str)
             is_str_object = !is_str_object;
         if(is_str_object && json_str[ii]=='\n' && json_str[ii-1]!='\\')
             tmp_str += "\\n";
+        else if(is_str_object && json_str[ii]=='\r' && json_str[ii-1]!='\\')
+            tmp_str += "\\r";
         else
             tmp_str += json_str[ii];
     }

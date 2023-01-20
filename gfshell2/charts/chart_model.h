@@ -2,7 +2,7 @@
 
 #include <QJsonObject>
 #include <QtCore/QAbstractTableModel>
-#include <bson.h>
+#include <nlohmann/json.hpp>
 
 namespace jsonui17 {
 
@@ -152,8 +152,8 @@ public:
     const std::vector<int>& YColumns() const
     { return ycolumns; }
 
-    void toBsonObject( bson *obj ) const;
-    void fromBsonObject( const char *obj );
+    nlohmann::json toBsonObject() const;
+    void fromBsonObject( const nlohmann::json& object );
 
     void toJsonObject( QJsonObject& json ) const;
     void fromJsonObject( const QJsonObject& json );

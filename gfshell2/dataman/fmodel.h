@@ -27,8 +27,6 @@
 #include <QTableView>
 #include <QSortFilterProxyModel>
 #include <QtPrintSupport/QPrinter>
-
-#include "f_ejdb.h"
 #include "charts/graph_data.h"
 
 namespace jsonui17 {
@@ -131,8 +129,8 @@ public:
     void matrixToCsvFile(const QString& dir);
     void matrixFromCsvString(const QString& valueCsv);
     QString matrixToCsvString();
-    void matrixToBson(bson *obj);
-    void matrixFromBson(QSortFilterProxyModel *pmodel,  const char *bsdata);
+    void matrixToBson(nlohmann::json& object);
+    void matrixFromBson(QSortFilterProxyModel *pmodel, const nlohmann::json& object);
     int getNumberStringColumns() const
     {   return numberStringColumns; }
 

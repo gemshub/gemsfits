@@ -156,8 +156,8 @@ DBKeyDialog::DBKeyDialog(QWidget* win, int irt, const char* key,
     s +=  keyFilter;
     ui->pLabel->setText(s.c_str());
 
-    s  = std::string(rtEJ[irt].PackKey());
-    int n = rtEJ[irt].GetKeyList( keyFilter.c_str(), keyList);
+    s  = rtEJ[irt].packKey();
+    int n = rtEJ[irt].getKeyList(keyFilter, keyList);
     int sel = 0;
 
     for( int ii=0; ii<n; ii++ )
@@ -236,7 +236,7 @@ void DBKeyDialog::SetList()
     s +=  keyFilter;
     ui->pLabel->setText(s.c_str());
 
-    int n = rtEJ[iRT].GetKeyList( keyFilter.c_str(), keyList );
+    int n = rtEJ[iRT].getKeyList(keyFilter, keyList);
 
     for( int ii=0; ii<n; ii++ )
         ui->pList->addItem(keyList[ii].c_str());
@@ -275,7 +275,7 @@ std::string DBKeyDialog::getKey()
 void DBKeyDialog::CmFilter()
 {
     std::string str_name = "Template for ";
-    str_name +=  rtEJ[iRT].GetKeywd();
+    str_name +=  rtEJ[iRT].getKeywd();
     str_name += " record key";
     DBKeyFilter dbFilter(this, iRT, keyFilter.c_str(), str_name.c_str() );
     if( dbFilter.exec() )
@@ -334,18 +334,18 @@ DBKeyFilter::DBKeyFilter(QWidget* win, int irt, const char* key,
     setWindowModality(Qt::WindowModal);
     setWindowTitle(caption);
 
-    TEJDBKey dbKey( rtEJ[irt].GetDBKey() );
+    TEJDBKey dbKey(rtEJ[irt].getDBKey());
     if( key )
-        dbKey.SetKey(key);
+        dbKey.setKey(key);
 
     QGridLayout* editBox = new QGridLayout();
-    for( int ii=0; ii<dbKey.KeyNumFlds(); ii++)
+    for( size_t ii=0; ii<dbKey.keySize(); ii++)
     {
         aEdit.append( pEdit = new QLineEdit(this) );
-        QString str = rtEJ[irt].FldKeyName(ii);
+        QString str = rtEJ[irt].keyFieldName(ii);
         pEdit->setToolTip( str );
         pEdit->setMaxLength( 100 );
-        pEdit->setText( dbKey.FldKey(ii) );
+        pEdit->setText( dbKey.keyField(ii).c_str() );
         connect( pEdit, SIGNAL(editingFinished()), this, SLOT(setKeyLine()) );
 
         editBox->addWidget( pEdit, ii, 0, Qt::AlignRight);
@@ -386,7 +386,7 @@ DBKeyFilter::DBKeyFilter(QWidget* win, int irt, const char* key,
     buttonBox->addWidget( btn );
 
     fullKey = new QLineEdit(this);
-    fullKey->setText(dbKey.PackKey());
+    fullKey->setText(dbKey.packKey().c_str());
     fullKey->setFocusPolicy( Qt::ClickFocus );
     fullKey->setReadOnly( true );
 
@@ -412,7 +412,7 @@ void DBKeyFilter::CmHelp()
 {
     std::string dbName =  DBM;
     dbName +="_";
-    dbName += std::string(rtEJ[iRT].GetKeywd());
+    dbName += rtEJ[iRT].getKeywd();
     // pFitImp->OpenHelp(  GEMS_REKEY_HTML, dbName.c_str() );
 }
 
@@ -457,11 +457,11 @@ void DBKeyFilter::EvGetList()
     if( !dlg.exec() )
         return;
 
-    TEJDBKey dbKey( rtEJ[iRT].GetDBKey() );
-    dbKey.SetKey(dlg.getKey().c_str());
+    TEJDBKey dbKey(rtEJ[iRT].getDBKey());
+    dbKey.setKey(dlg.getKey());
 
-    for( int ii=0; ii<dbKey.KeyNumFlds(); ii++)
-        aEdit[ii]->setText( dbKey.FldKey(ii) );
+    for(size_t ii=0; ii<dbKey.keySize(); ii++)
+        aEdit[ii]->setText( dbKey.keyField(ii).c_str() );
     setKeyLine();
 }
 

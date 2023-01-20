@@ -1,7 +1,7 @@
 //-------------------------------------------------------------------
 // $Id: v_json.h 333 2014-03-13 13:23:32Z gemsfits $
 //
-// Declaration of ParserJson class and other bson functions
+// Declaration of ParserJson class and other json functions
 //
 // Copyright (C) 2023  S.V.Dmytriyeva
 // Uses EJDB (https://ejdb.org),

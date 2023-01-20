@@ -2,8 +2,6 @@
 #include <QJsonArray>
 #include "charts/chart_model.h"
 #include "charts/graph_data.h"
-#include "v_json.h"
-
 
 namespace jsonui17 {
 
@@ -156,56 +154,21 @@ void ChartDataModel::modelColumnsRemoved(QModelIndex m_parent, int start, int en
 
 // ------------------------ work with selection
 
-void ChartDataModel::toBsonObject( bson *obj ) const
+nlohmann::json ChartDataModel::toBsonObject() const
 {
-    size_t ii;
-
-    bson_append_start_array(obj, "gxclms");
-    for( ii=0; ii<xcolumns.size(); ii++)
-    {
-        bson_append_int( obj, std::to_string(ii).c_str(), xcolumns[ii] );
-    }
-    bson_append_finish_array(obj);
-
-    bson_append_start_array(obj, "gyclms");
-    for( ii=0; ii<ycolumns.size(); ii++)
-    {
-        bson_append_int( obj, std::to_string(ii).c_str(), ycolumns[ii] );
-    }
-    bson_append_finish_array(obj);
+    nlohmann::json object;
+    object["gxclms"] = xcolumns;
+    object["gyclms"] = ycolumns;
+    return object;
 }
 
-void ChartDataModel::fromBsonObject( const char *obj )
+void ChartDataModel::fromBsonObject( const nlohmann::json& object )
 {
-    int ii, val;
-    char buf[100];
-
     xcolumns.clear();
-    auto arr  = bson_find_array(  obj, "gxclms" );
-    bson_iterator iter;
-    bson_iterator_from_buffer(&iter, arr /*bson_iterator_value(it)*/);
-    ii=0;
-    while (bson_iterator_next(&iter))
-    {
-        sprintf(buf, "%d", ii++);
-        bson_find_value_def( arr,  buf, val, 0 );
-        xcolumns.push_back( val );
-    }
-
+    xcolumns = object.value("gxclms", xcolumns);
     ycolumns.clear();
-    arr  = bson_find_array(  obj, "gyclms" );
-    bson_iterator itery;
-    bson_iterator_from_buffer(&itery, arr /*bson_iterator_value(it)*/);
-    ii=0;
-    while (bson_iterator_next(&itery))
-    {
-        sprintf(buf, "%d", ii++);
-        bson_find_value_def( arr,  buf, val, 0 );
-        ycolumns.push_back( val );
-    }
-
+    ycolumns = object.value("gyclms", ycolumns);
 }
-
 
 void ChartDataModel::toJsonObject(QJsonObject& json) const
 {

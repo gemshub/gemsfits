@@ -83,8 +83,8 @@ class FITMainWindow : public QMainWindow
     void loadNewProject();
     void resetMainWindow();
     bool MessageToSave();
-    void RecSave(const std::string& recBsonText, const char* key=0);
-    void RecDelete(const char* key);
+    void RecSave(const std::string& recBsonText, const std::string& key="");
+    void RecDelete(const std::string& key);
     void changeEditeRecord(const std::string& tagname, const std::string& newValue, bool is_json);
     bool runProcess(const QStringList& cParameters, const QString& workDir);
     void selectGEMS(const std::string& fname_);

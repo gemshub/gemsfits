@@ -592,6 +592,55 @@ void TEJDataBase::load_collection()
 #endif
 }
 
+
+// write TP paris file
+void TEJDataBase::selectQuery(const std::string& query, SetReaded_f setfnc)
+{
+#ifdef OLD_EJDB
+    EJCOLL *coll = open_collection(false);
+    if( !coll ) {
+        close_collection();
+        return;
+    }
+
+    bson bsq1;
+    bson_init_as_query(&bsq1);
+    if( !query.empty() )
+    {
+        ParserJson pars;
+        pars.setJsonText( query.substr(query.find_first_of('{')+1 ));
+        pars.parseObject( &bsq1 );
+    }
+    bson_finish(&bsq1);
+
+    EJQ *q = ejdbcreatequery(EJDBFile.ejDB, &bsq1, NULL, 0, NULL);
+    ErrorIf( !q, "TEJDB0015", "Error in query (test)" );
+    uint32_t count = 0;
+    TCXSTR *log = tcxstrnew();
+    TCLIST *qres = ejdbqryexecute(coll, q, &count, 0, log);
+    //fprintf(stderr, "%s", TCXSTRPTR(log));
+    std::cout << count << " records in collection " << getKeywd() << std::endl;
+
+    for (int i = 0; i < TCLISTNUM(qres); ++i)
+    {
+        void *bsdata = TCLISTVALPTR(qres, i);
+        const char *bsdata_ = static_cast<const char*>(bsdata);
+        setfnc(bsdata_);
+    }
+
+    tclistdel(qres);
+    tcxstrdel(log);
+    ejdbquerydel(q);
+    bson_destroy(&bsq1);
+
+    close_collection();
+#else
+
+#endif
+}
+
+
+
 // Open EJDB files and build linked record list
 void TEJDataBase::Open()
 {
@@ -610,6 +659,8 @@ void TEJDataBase::Close()
     records.clear();
     current_ndx = records.end();
 }
+
+
 
 #ifdef OLD_EJDB
 
@@ -644,11 +695,6 @@ void TEJDataBase::close_collection( )
     EJDBFile.Close();
 }
 
-EJCOLL *TEJDataBase::openCollection2(bool createifempty)
-{
-    return open_collection(createifempty);
-}
-
 std::string TEJDataBase::getKeyFromBson(const char* bsdata)
 {
     //get key from object
@@ -675,12 +721,11 @@ void TEJDataBase::keyFromBson(const char* bsdata)
     bson_oid_to_string(bson_iterator_oid(&it), oidhex);
 
     // Try to insert new record to list
-    key.setKey( keyStr.c_str() );
+    key.setKey(keyStr);
     if( key.is_pattern() )
         Error("TEJDB0110", "Cannot save under record key template" );
 
-    std::pair<std::set<IndexEntry>::iterator,bool> ret;
-    ret = records.insert(key.retIndex());
+    auto ret = records.insert(key.retIndex());
     current_ndx = ret.first;
     // Test unique keys name before add the record(s)
     if( ret.second == false)
@@ -747,18 +792,6 @@ bool TEJDataBase::Rtest(const std::string& akey, int mode)
     }
 }
 
-
-// end of extern
-
-//--- -------------------------------------------------------
-
-
-
-
-
-
-
-
 //-------------------------------------------------------------
 // DataBaseList
 //-------------------------------------------------------------
@@ -791,8 +824,7 @@ void EJDataBaseList::Init()
 }
 
 
-TEJDataBase&
-EJDataBaseList::operator[](size_t ii)
+TEJDataBase& EJDataBaseList::operator[](size_t ii)
 {
     ErrorIf( ii > size(), "DataBaseList","Invalid chain index.");
     return at(ii);

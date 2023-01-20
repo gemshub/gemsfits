@@ -342,80 +342,43 @@ void TMatrixModel::matrixToCsvFile( const QString& dir )
 
 }
 
-/// write model to bson structure
-void TMatrixModel::matrixToBson(  bson *obj )
+/// write model to json structure
+void TMatrixModel::matrixToBson(nlohmann::json& object)
 {
-    size_t ii;
-
-    // get std::string to output
     std::string name = fname.toStdString();
     std::string valCsv = matrixToCsvString().toStdString();
-    int iRet = bson_append_string( obj, name.c_str(), valCsv.c_str() );
-    ErrorIf( iRet == BSON_ERROR, name, "Error append string"+name );
+    object[name] = valCsv;
 
     // added graphic part
-    if( chart_data )
-    {
+    if( chart_data ) {
         std::string label= "graph_"+name;
-        bson_append_start_object( obj, label.c_str());
-        //
-        bson_append_start_array(obj, "xcolms");
-        for( ii=0; ii<xColumns.size(); ii++)
-        {
-            bson_append_int( obj, std::to_string(ii).c_str(), xColumns[ii] );
-        }
-        bson_append_finish_array(obj);
-
-        bson_append_start_array(obj, "ycolms");
-        for( ii=0; ii<yColumns.size(); ii++)
-        {
-            bson_append_int( obj, std::to_string(ii).c_str(), yColumns[ii] );
-        }
-        bson_append_finish_array(obj);
-
-        chart_data->toBsonObject(obj);
-        bson_append_finish_object( obj );
+        object[label] = chart_data->toBsonObject();
+        object[label]["xcolms"] = xColumns;
+        object[label]["ycolms"] = yColumns;
     }
-
 }
 
-/// read model from bson structure
-void TMatrixModel::matrixFromBson( QSortFilterProxyModel *pmodel, const char *bsdata )
+/// read model from json structure
+void TMatrixModel::matrixFromBson( QSortFilterProxyModel *pmodel, const nlohmann::json& object )
 {
-    // get std::string from obj
     std::string valCsv;
     std::string name = fname.toStdString();
-    if( !bson_find_string( bsdata, name.c_str(), valCsv ) )
-        valCsv = "";
+    valCsv = object.value(name, "");
     //set up data
     matrixFromCsvString(valCsv.c_str());
 
     // load graphic part
     std::string label= "graph_"+name;
-    bson_iterator it;
-    bson_type type;
-    type =  bson_find_from_buffer(&it, bsdata, label.c_str() );
-    if( type != BSON_OBJECT )
-    {
-        return; // no graphic
+    if(object.contains(label)) {
+        xColumns.clear();
+        xColumns = object[label].value("xcolms", xColumns);
+        yColumns.clear();
+        yColumns = object[label].value("ycolms", yColumns);
+
+        setGraphData( pmodel, "" );
+        if( chart_data )
+            chart_data->fromBsonObject(object[label]);
     }
-    const char *objbson = bson_iterator_value(&it);
-
-    xColumns.clear();
-    const char *arr  = bson_find_array(  objbson, "xcolms" );
-    bson_iterator iter;
-    bson_iterator_from_buffer(&iter, arr );
-    while (bson_iterator_next(&iter))
-        xColumns.push_back( bson_iterator_int(&iter));
-    yColumns.clear();
-    arr  = bson_find_array(  objbson, "ycolms" );
-    bson_iterator_from_buffer(&iter, arr );
-    while (bson_iterator_next(&iter))
-        yColumns.push_back( bson_iterator_int(&iter));
-
-    setGraphData( pmodel,  "" );
-    if( chart_data )
-        chart_data->fromBsonObject(objbson);
 }
 
 void TMatrixModel::CloseGraph()
@@ -1005,8 +968,7 @@ TCellInput::TCellInput( int in, int im, QWidget * parent ):
     dVal->setDecimals( 15 );
     setValidator( dVal );
 
-    connect( this, SIGNAL(textEdited( const QString& )),
-             this, SLOT(setCh()));
+    connect( this, SIGNAL(textEdited(const QString&)), this, SLOT(setCh()));
 }
 
 /*void

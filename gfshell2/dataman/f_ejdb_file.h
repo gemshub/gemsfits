@@ -26,7 +26,8 @@
 #ifdef OLD_EJDB
 #include <ejdb.h>
 #else
-#include <ejdb2/ejdb2.h>
+//#define G_GNUC_NO_INLINE __attribute__ ((__noinline__))
+#include <ejdb2.h>
 #endif
 
 class QWidget;

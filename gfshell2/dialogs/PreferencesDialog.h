@@ -47,7 +47,6 @@ public:
     explicit PreferencesDialog(QSettings *aSet=0,QWidget *parent = 0);
     ~PreferencesDialog();
 
-
 };
 
 #endif // PREFERENCESDIALOG_H

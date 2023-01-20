@@ -1,7 +1,6 @@
 
 #include <QJsonArray>
 #include <QVector>
-#include "v_json.h"
 #include "verror.h"
 #include "charts/graph_data.h"
 
@@ -24,32 +23,34 @@ QColor colorAt(const QColor &start, const QColor &end, qreal pos)
 //---------------------------------------------------------------------------
 
 
-void SeriesLineData::toBsonObject( bson *obj ) const
+nlohmann::json SeriesLineData::toBsonObject() const
 {
-    bson_append_int( obj, "gpt", markerShape );
-    bson_append_int( obj, "gps", markerSize );
-    bson_append_int( obj, "gls", penSize );
-    bson_append_int( obj, "glt", penStyle );
-    bson_append_int( obj, "gsp", spline );
-    bson_append_int( obj, "gndx", xcolumn );
-    bson_append_int( obj, "grd", red );
-    bson_append_int( obj, "ggr",  green );
-    bson_append_int( obj, "gbl",  blue );
-    bson_append_string( obj, "gnm",  name.c_str() );
+    nlohmann::json object;
+    object["gpt"] = markerShape;
+    object["gps"] = markerSize;
+    object["gls"] = penSize;
+    object["glt"] = penStyle;
+    object["gsp"] = spline;
+    object["gndx"] = xcolumn;
+    object["grd"] = red;
+    object["ggr"] = green;
+    object["gbl"] =  blue;
+    object["gnm"] =  name;
+    return object;
 }
 
-void SeriesLineData::fromBsonObject( const char *obj )
+void SeriesLineData::fromBsonObject( const nlohmann::json& object )
 {
-    bson_find_value_def( obj, "gpt", markerShape, 0 );
-    bson_find_value_def( obj, "gps", markerSize, 4 );
-    bson_find_value_def( obj, "gls", penSize, 2 );
-    bson_find_value_def( obj, "glt", penStyle, 0 );
-    bson_find_value_def( obj, "gsp", spline, 0 );
-    bson_find_value_def( obj, "gndx", xcolumn, -1 );
-    bson_find_value_def( obj, "grd", red, 25 );
-    bson_find_value_def( obj, "ggr", green, 0 );
-    bson_find_value_def( obj, "gbl", blue, 150 );
-    bson_find_string( obj, "gnm", name );
+    markerShape = object.value("gpt", 0);
+    markerSize = object.value("gps", 4);
+    penSize = object.value("gls", 2);
+    penStyle = object.value("glt", 0);
+    spline = object.value("gsp", 0);
+    xcolumn = object.value("gndx", -1);
+    red = object.value("grd", 25);
+    green = object.value("ggr", 0);
+    blue = object.value("gbl", 150);
+    name = object.value("gnm", "");
 }
 
 
@@ -106,132 +107,68 @@ void ChartData::setMinMaxRegion( double reg[4] )
 
 }
 
-void ChartData::toBsonObject( bson *obj ) const
+nlohmann::json ChartData::toBsonObject() const
 {
-    int ii;
-    char buf[100];
+    nlohmann::json object;
+    object[ "title" ] =  title;
+    object[ "graphType" ] = graphType;
+    object[ "axisTypeX" ] = axisTypeX;
+    object[ "axisTypeY" ] = axisTypeY;
+    object[ "axisFont" ] = axisFont.toString().toStdString();
+    object[ "xName" ] =  xName;
+    object[ "yName" ] = yName;
 
-    bson_append_string( obj,"title", title.c_str() );
-    bson_append_int( obj, "graphType", graphType );
+    object["region"] = region;
+    object["part"] = part;
+    object["b_color"] = b_color;
 
-    // define grid of plot
-    bson_append_int( obj, "axisTypeX", axisTypeX );
-    bson_append_int( obj, "axisTypeY", axisTypeY );
-    bson_append_string( obj,"xName", xName.c_str() );
-    bson_append_string( obj,"yName", yName.c_str() );
-    bson_append_string( obj, "axisFont", axisFont.toString().toStdString().c_str() );
-
-    bson_append_start_array(obj, "region");
-    for( ii=0; ii<4; ii++)
-    {
-        sprintf(buf, "%d", ii);
-        bson_append_double( obj, buf, region[ii] );
+    auto linesArray = nlohmann::json::array();
+    for(const auto& line: linesdata) {
+        linesArray.push_back(line.toBsonObject());
     }
-    bson_append_finish_array(obj);
+    object["lines"] = linesArray;
 
-    bson_append_start_array(obj, "part");
-    for( ii=0; ii<4; ii++)
-    {
-        sprintf(buf, "%d", ii);
-        bson_append_double( obj, buf, part[ii] );
+    auto modelArray = nlohmann::json::array();
+    for(const auto& amodel: modelsdata) {
+        modelArray.push_back(amodel->toBsonObject());
     }
-    bson_append_finish_array(obj);
+    object["models"] = modelArray;
 
-    bson_append_start_array(obj, "b_color");
-    for( ii=0; ii<3; ii++)
-    {
-        sprintf(buf, "%d", ii);
-        bson_append_int( obj, buf, b_color[ii] );
-    }
-    bson_append_finish_array(obj);
-
-     // define curves
-     bson_append_start_array(obj, "lines");
-          for(size_t ii=0; ii<linesdata.size(); ii++)
-          {
-              bson_append_start_object( obj, std::to_string(ii).c_str());
-              linesdata[ii].toBsonObject( obj );
-              bson_append_finish_object( obj );
-          }
-      bson_append_finish_array(obj);
-
-      // data to isoline plots
-      bson_append_start_array(obj, "scale");
-           for(size_t ii=0; ii<modelsdata.size(); ii++)
-           {
-               bson_append_start_object( obj, std::to_string(ii).c_str());
-               modelsdata[ii]->toBsonObject( obj );
-               bson_append_finish_object( obj );
-           }
-       bson_append_finish_array(obj);
+    return object;
 }
 
-void ChartData::fromBsonObject( const char *obj )
+void ChartData::fromBsonObject( const nlohmann::json& object )
 {
-    size_t ii;
-    std::vector<double> reg_part;
-    std::vector<int> b_col_vec;
+    title = object.value("title", "Graph title");
+    graphType = object.value("graphType", LineChart);
+    axisTypeX = object.value("axisTypeX", 5);
+    axisTypeY = object.value("axisTypeY", 5);
+    QString fntname = object.value("axisFont", "Sans Serif").c_str();
+    axisFont.fromString( fntname );
+    xName = object.value("xName", "x");
+    yName = object.value("yName", "y");
 
-    if( !bson_find_string( obj, "title", title ) )
-        title = "title";
-    bson_find_value_def<int>( obj, "graphType", graphType, LineChart );
-
-    // define grid of plot
-    bson_find_value_def( obj, "axisTypeX", axisTypeX, 5 );
-    bson_find_value_def( obj, "axisTypeY", axisTypeY, 5 );
-
-    std::string fntName;
-    if( bson_find_string( obj, "axisFont", fntName ) )
-        axisFont.fromString( fntName.c_str() );
-
-    if( !bson_find_string( obj, "xName", xName ) )
-        xName = "x";
-    if( !bson_find_string( obj, "yName", yName ) )
-        yName = "y";
-
-    auto arr  = bson_find_array(  obj, "region" );
-    for( ii=0; ii<4; ii++)
-    {
-        if(!bson_find_value( arr, std::to_string(ii).c_str(), region[ii] ) )
-            region[ii] = 0;
-    }
-
-    arr  = bson_find_array(  obj, "part" );
-    for( ii=0; ii<4; ii++)
-    {
-        if(!bson_find_value( arr,  std::to_string(ii).c_str(), part[ii] ) )
-            part[ii] = 0;
-    }
-
-    arr  = bson_find_array(  obj, "b_color" );
-    for( ii=0; ii<3; ii++)
-    {
-        if(!bson_find_value( arr, std::to_string(ii).c_str(), b_color[ii] ) )
-            b_color[ii] = 255;
-    }
+    region = object.value("region", std::array<double, 4>{0,0,0,0} );
+    part = object.value("part", std::array<double, 4>{0,0,0,0} );
+    b_color = object.value("b_color", std::array<int, 3>{} );
 
     linesdata.clear();
-    SeriesLineData linebuf;
-    arr  = bson_find_array(  obj, "lines" );
-    bson_iterator iter;
-    bson_iterator_from_buffer(&iter, arr /*bson_iterator_value(it)*/);
-    while (bson_iterator_next(&iter))
-    {
-        linebuf.fromBsonObject( bson_iterator_value(&iter) );
-        linesdata.push_back( linebuf );
+    if(object.contains("lines")) {
+        SeriesLineData linebuf;
+        for(const auto& obj: object["lines"]) {
+            linebuf.fromBsonObject(obj);
+            linesdata.push_back(linebuf);
+        }
     }
 
-    arr  = bson_find_array(  obj, "models" );
-    bson_iterator iter_mod;
-    bson_iterator_from_buffer(&iter_mod, arr /*bson_iterator_value(it)*/);
-    ii=0;
-    while (bson_iterator_next(&iter_mod))
-    {
-        if( ii >= modelsdata.size())
-            break;
-        modelsdata[ii++]->fromBsonObject( bson_iterator_value(&iter_mod) );
+    if(object.contains("models")) {
+        size_t ii=0;
+        for(const auto& obj: object["models"]) {
+            if( ii >= modelsdata.size() )
+                break;
+            modelsdata[ii++]->fromBsonObject(obj);
+        }
     }
-
     // refresh model type
     setGraphType(graphType);
 }

@@ -26,9 +26,16 @@
 extern const char* ALLKEY;
 
 #ifdef OLD_EJDB
+/// Callback function fetching document from a collection that match the specified condition
+using  SetReaded_f = std::function<void( const char * bjsondata )>;
 typedef  std::string ejdb_id_type;
+const ejdb_id_type empty_key="";
 #else
+
+/// Callback function fetching document from a collection that match the specified condition
+using  SetReaded_f = std::function<void( const char * bjsondata )>;
 typedef  int64_t ejdb_id_type;
+const ejdb_id_type empty_key=0;
 #endif
 
 /// Element in sequence of record keys
@@ -48,7 +55,7 @@ public:
         ejdb_id(id),  key_flds(akey_flds)
     {}
     IndexEntry(std::vector<std::string>& akey_flds):
-        ejdb_id(0),  key_flds(akey_flds)
+        ejdb_id(empty_key),  key_flds(akey_flds)
     {}
     IndexEntry(const IndexEntry& ndx):
         ejdb_id(ndx.ejdb_id),  key_flds(ndx.key_flds)
@@ -183,7 +190,7 @@ public:
     const std::string& packKey()
     {  return key.packKey();  }
     /// Putting DB record key pkey to internal structure
-    void setKey(const char *ckey)
+    void setKey(const std::string& ckey)
     {  key.setKey(ckey);  }
     /// Return record key field name i
     const char* keyFieldName(int i) const
@@ -207,6 +214,10 @@ public:
     {  return current_JQL;  }
     /// Set query string for collection
     void setQuery(const std::string& query_str);
+    /// Fetches all documents from a collection that match the specified condition.
+    ///  \param query -    selection condition
+    ///  \param setfnc -   callback function fetching document data
+    void selectQuery(const std::string &query, SetReaded_f setfnc);
 
     /// Get current record key from json structure
     std::string getKeyFromJson(const nlohmann::json& bsdata);
@@ -240,10 +251,6 @@ public:
     /// in field field setted any(*) data
     bool findPart(const std::string& pkey, int field);
 
-#ifdef OLD_EJDB
-    EJCOLL *openCollection2(bool create_if_empty = true);
-#endif
-
 protected:
 
     /// Save current record to json structure
@@ -261,11 +268,9 @@ protected:
 #endif
 
  // not used -------------------------------------
-
     /// Test state of record with key pkey.
     /// If mode == 1 and one record, read this record.
     bool Rtest(const std::string& pkey, int mode);
-
 };
 
 

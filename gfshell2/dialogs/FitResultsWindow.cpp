@@ -3,7 +3,7 @@
 //
 // Implementation of GEMSFITS GUI Results Window
 //
-// Copyright (C) 2014  S.V.Dmytriyeva, D.A.Kulik
+// Copyright (C) 2014-2023  S.V.Dmytriyeva, D.A.Kulik
 // Uses EJDB (https://ejdb.org),
 //    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
@@ -34,6 +34,7 @@
 #include "ui_FitResultsWindow.h"
 #include "FITMainWindow.h"
 #include "DialogFindFromPlot.h"
+#include "f_ejdb.h"
 
 FitResultsWindow* FitResultsWindow::pDia = 0;
 
@@ -213,7 +214,8 @@ void FitResultsWindow::CmOpenFile( const QString& dir_ )
         // select directory
         dir = QFileDialog::getExistingDirectory(this, "Select work/output  Directory (Only test!!!)",
                                                 "",  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
-    } else
+    }
+    else
         dir = dir_;
 
     modelFitResults->matrixFromCsvFile( dir );
@@ -300,54 +302,40 @@ void FitResultsWindow::editFiledsToFile( const QString& dir )
 
 void FitResultsWindow::CmSaveBsonRecord()
 {
-    bson bsrec;
     std::string key = pLineTask->text().toStdString();
-
     try
     {
         if( key.empty() )
             return;
-        rtEJ[MDF_FITS ].SetKey(key.c_str());
+        rtEJ[MDF_FITS].setKey(key);
 
-        bson_init( &bsrec );
-        // added key to bson record
-        rtEJ[MDF_FITS ].putKeyToBson( &bsrec );
+        nlohmann::json object;
+        // added key to json record
+        rtEJ[MDF_FITS].addKeyToJson(object);
 
-        // added tableViews to bson Record
-        modelFitParams->matrixToBson( &bsrec );
-        modelFitResults->matrixToBson( &bsrec );
-        modelMCResults->matrixToBson( &bsrec );
-        modelSensitivity->matrixToBson( &bsrec );
-        modelQQplot->matrixToBson( &bsrec );
-        modelFitInverse->matrixToBson( &bsrec );
-        modelFitStatistics->matrixToBson( &bsrec );
+        // added tableViews to json Record
+        modelFitParams->matrixToBson(object);
+        modelFitResults->matrixToBson(object);
+        modelMCResults->matrixToBson(object);
+        modelSensitivity->matrixToBson(object);
+        modelQQplot->matrixToBson(object);
+        modelFitInverse->matrixToBson(object);
+        modelFitStatistics->matrixToBson(object);
 
-        // added text bufers to bson record
-        // write file  FIT_STATISTIC
-        //    std::string valCsv = ui->textStatistic->toPlainText().toStdString();
-        //    std::string name = fFitStatistic.toStdString();
-        //    int iRet = bson_append_std::string( &bsrec, name.c_str(), valCsv.c_str() );
-        //    ErrorIf( iRet == BSON_ERROR, name, "Error append std::string"+name );
-        // write file  FIT_LOGFILE
+        // added text bufers to json record
         std::string valCsv = ui->textEdit->toPlainText().toStdString();
         std::string name = fFitLogfile.toStdString();
-        int iRet = bson_append_string( &bsrec, name.c_str(), valCsv.c_str() );
-        ErrorIf( iRet == BSON_ERROR, name, "Error append string"+name );
+        object[name] = valCsv;
 
-        bson_finish( &bsrec );
-
-        //set bson to std::string
-        ParserJson pars;
-        std::string recBsonText;
-        pars.printBsonObjectToJson( recBsonText, bsrec.data );
-        bson_destroy( &bsrec);
+        // json to string
+        std::string recBsonText = object.dump();
 
         // save record
-        rtEJ[ MDF_FITS ].SetJson( recBsonText );
-        if( rtEJ[ MDF_FITS ].Find( key.c_str() ))
-            rtEJ[ MDF_FITS ].SaveRecord( key.c_str());
+        rtEJ[ MDF_FITS ].setJson(recBsonText);
+        if( rtEJ[ MDF_FITS ].findRecord(key))
+            rtEJ[ MDF_FITS ].saveRecord(key);
         else
-            rtEJ[ MDF_FITS ].InsertRecord();
+            rtEJ[ MDF_FITS ].insertRecord();
 
     }
     catch( TError& err )
@@ -359,54 +347,31 @@ void FitResultsWindow::CmSaveBsonRecord()
 
 void FitResultsWindow::readBsonRecord()
 {
-    bson bsrec;
     std::string key = pLineTask->text().toStdString();
-
     try
     {
+        nlohmann::json object;
         if( key.empty() )
             return;
 
-        bson_init( &bsrec );
-
         // empty data
-        if( rtEJ[ MDF_FITS ].Find( key.c_str() ))
-        {  //read record
-            rtEJ[ MDF_FITS ].Get( key.c_str() );
-            std::string valDB =rtEJ[ MDF_FITS ].GetJson();
-
-            //get bson bsrec;
-            ParserJson pars;
-            pars.setJsonText( valDB.substr( valDB.find_first_of('{')+1 ) );
-            bson_init( &bsrec );
-            pars.parseObject( &bsrec );
+        if(rtEJ[MDF_FITS].findRecord(key))  {
+            //read record
+            rtEJ[MDF_FITS].getRecord(key);
+            object = fromJsonString(rtEJ[MDF_FITS].getJson());
         }
-        bson_finish( &bsrec );
 
-        //  tableViews from bson Record
-        modelFitParams->matrixFromBson( (QSortFilterProxyModel *)tableFitParams->model(), bsrec.data );
-        modelFitResults->matrixFromBson( (QSortFilterProxyModel *)tableFitResults->model(), bsrec.data );
-        modelMCResults->matrixFromBson( (QSortFilterProxyModel *)tableMCResults->model(), bsrec.data );
-        modelSensitivity->matrixFromBson( (QSortFilterProxyModel *)tableSensitivity->model(), bsrec.data );
-        modelQQplot->matrixFromBson( (QSortFilterProxyModel *)tableQQplot->model(),  bsrec.data );
-        modelFitInverse->matrixFromBson( (QSortFilterProxyModel *)tableFitInverse->model(), bsrec.data );
-        modelFitStatistics->matrixFromBson( (QSortFilterProxyModel *)tableFitStatistics->model(), bsrec.data );
-
-        // added text bufers to bson record
-        // write file  FIT_STATISTIC
-        //       std::string name = fFitStatistic.toStdString();
-        std::string valCsv;
-        //       if( !bson_find_std::string( bsrec.data, name.c_str(), valCsv ) )
-        //           valCsv = "";
-        //       ui->textStatistic->setText(valCsv.c_str());
-
-        // write file  FIT_LOGFILE
+        //  tableViews from json Record
+        modelFitParams->matrixFromBson( (QSortFilterProxyModel *)tableFitParams->model(), object );
+        modelFitResults->matrixFromBson( (QSortFilterProxyModel *)tableFitResults->model(), object );
+        modelMCResults->matrixFromBson( (QSortFilterProxyModel *)tableMCResults->model(), object );
+        modelSensitivity->matrixFromBson( (QSortFilterProxyModel *)tableSensitivity->model(), object );
+        modelQQplot->matrixFromBson( (QSortFilterProxyModel *)tableQQplot->model(), object );
+        modelFitInverse->matrixFromBson( (QSortFilterProxyModel *)tableFitInverse->model(), object );
+        modelFitStatistics->matrixFromBson( (QSortFilterProxyModel *)tableFitStatistics->model(), object );
         std::string name = fFitLogfile.toStdString();
-        if( !bson_find_string( bsrec.data, name.c_str(), valCsv ) )
-            valCsv = "";
+        std::string valCsv = object.value(name, "");
         ui->textEdit->setText(valCsv.c_str());
-
-        bson_destroy( &bsrec);
     }
     catch( TError& err )
     {
@@ -435,8 +400,8 @@ void FitResultsWindow::CmBackupJSON()
         outFile.ff << "[\n";
         for(size_t i=0; i<aKey.size(); i++ )
         {
-            rtEJ[ MDF_FITS ].Get( aKey[i].c_str() );
-            std::string valDB =rtEJ[ MDF_FITS ].GetJson();
+            rtEJ[ MDF_FITS ].getRecord(aKey[i]);
+            std::string valDB =rtEJ[ MDF_FITS ].getJson();
             outFile.ff << valDB;
             if( i<aKey.size()-1)
                 outFile.ff <<  ",";
@@ -457,12 +422,12 @@ void FitResultsWindow::CmDeleteRecord()
     try
     {
         std::string key = pLineTask->text().toStdString();
-        if( !rtEJ[ MDF_FITS ].Find(key.c_str()) )
+        if( !rtEJ[ MDF_FITS ].findRecord(key) )
             return;
 
-        if( vfQuestion( this, rtEJ[ MDF_FITS ].GetKeywd(),
+        if( vfQuestion( this, rtEJ[MDF_FITS].getKeywd(),
                         "Confirm deletion of data record keyed "+ key ))
-            rtEJ[ MDF_FITS ].Del( key.c_str() );
+            rtEJ[ MDF_FITS ].deleteRecord(key);
     }
     catch( TError& err )
     {
