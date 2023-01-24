@@ -309,7 +309,7 @@ void FitResultsWindow::CmSaveBsonRecord()
             return;
         rtEJ[MDF_FITS].setKey(key);
 
-        nlohmann::json object;
+        jsonio::JsonFree object;
         // added key to json record
         rtEJ[MDF_FITS].addKeyToJson(object);
 
@@ -350,7 +350,7 @@ void FitResultsWindow::readBsonRecord()
     std::string key = pLineTask->text().toStdString();
     try
     {
-        nlohmann::json object;
+        jsonio::JsonFree object;
         if( key.empty() )
             return;
 

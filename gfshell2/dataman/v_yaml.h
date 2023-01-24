@@ -5,10 +5,10 @@
 namespace yaml {
 
 /// @brief Dump object to YAML string.
-std::string dump(const nlohmann::json& object);
+std::string dump(const jsonio::JsonFree& object);
 
 /// Deserialize a YAML document to a free format json object.
-nlohmann::json loads(const std::string& yaml_str);
+jsonio::JsonFree parse(const std::string& yaml_str);
 
 /// Parse YAML string to json string
 std::string Yaml2Json(const std::string& yaml_str);

@@ -23,9 +23,9 @@ QColor colorAt(const QColor &start, const QColor &end, qreal pos)
 //---------------------------------------------------------------------------
 
 
-nlohmann::json SeriesLineData::toBsonObject() const
+jsonio::JsonFree SeriesLineData::toBsonObject() const
 {
-    nlohmann::json object;
+    jsonio::JsonFree object;
     object["gpt"] = markerShape;
     object["gps"] = markerSize;
     object["gls"] = penSize;
@@ -39,7 +39,7 @@ nlohmann::json SeriesLineData::toBsonObject() const
     return object;
 }
 
-void SeriesLineData::fromBsonObject( const nlohmann::json& object )
+void SeriesLineData::fromBsonObject( const jsonio::JsonFree& object )
 {
     markerShape = object.value("gpt", 0);
     markerSize = object.value("gps", 4);
@@ -107,9 +107,9 @@ void ChartData::setMinMaxRegion( double reg[4] )
 
 }
 
-nlohmann::json ChartData::toBsonObject() const
+jsonio::JsonFree ChartData::toBsonObject() const
 {
-    nlohmann::json object;
+    jsonio::JsonFree object;
     object[ "title" ] =  title;
     object[ "graphType" ] = graphType;
     object[ "axisTypeX" ] = axisTypeX;
@@ -122,13 +122,13 @@ nlohmann::json ChartData::toBsonObject() const
     object["part"] = part;
     object["b_color"] = b_color;
 
-    auto linesArray = nlohmann::json::array();
+    auto linesArray = jsonio::JsonFree::array();
     for(const auto& line: linesdata) {
         linesArray.push_back(line.toBsonObject());
     }
     object["lines"] = linesArray;
 
-    auto modelArray = nlohmann::json::array();
+    auto modelArray = jsonio::JsonFree::array();
     for(const auto& amodel: modelsdata) {
         modelArray.push_back(amodel->toBsonObject());
     }
@@ -137,10 +137,10 @@ nlohmann::json ChartData::toBsonObject() const
     return object;
 }
 
-void ChartData::fromBsonObject( const nlohmann::json& object )
+void ChartData::fromBsonObject( const jsonio::JsonFree& object )
 {
     title = object.value("title", "Graph title");
-    graphType = object.value("graphType", LineChart);
+    graphType = object.value<int>("graphType", LineChart);
     axisTypeX = object.value("axisTypeX", 5);
     axisTypeY = object.value("axisTypeY", 5);
     QString fntname = object.value("axisFont", "Sans Serif").c_str();
@@ -148,15 +148,18 @@ void ChartData::fromBsonObject( const nlohmann::json& object )
     xName = object.value("xName", "x");
     yName = object.value("yName", "y");
 
-    region = object.value("region", std::array<double, 4>{0,0,0,0} );
-    part = object.value("part", std::array<double, 4>{0,0,0,0} );
-    b_color = object.value("b_color", std::array<int, 3>{} );
+    auto arr = object.value<std::vector<double>>("region", std::vector<double>{0,0,0,0} );
+    std::copy_n(arr.begin(), 4, region.begin());
+    arr = object.value("part", std::vector<double>{0,0,0,0} );
+    std::copy_n(arr.begin(), 4, part.begin());
+    auto iarr = object.value("region", std::vector<int>{});
+    std::copy_n(iarr.begin(), 3, b_color.begin());
 
     linesdata.clear();
     if(object.contains("lines")) {
         SeriesLineData linebuf;
         for(const auto& obj: object["lines"]) {
-            linebuf.fromBsonObject(obj);
+            linebuf.fromBsonObject(*obj);
             linesdata.push_back(linebuf);
         }
     }
@@ -166,7 +169,7 @@ void ChartData::fromBsonObject( const nlohmann::json& object )
         for(const auto& obj: object["models"]) {
             if( ii >= modelsdata.size() )
                 break;
-            modelsdata[ii++]->fromBsonObject(obj);
+            modelsdata[ii++]->fromBsonObject(*obj);
         }
     }
     // refresh model type

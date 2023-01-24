@@ -1,92 +1,107 @@
 
 #include <iostream>
 #include <yaml-cpp/yaml.h>
-#include "v_detail.h"
 #include "v_yaml.h"
 
 namespace yaml {
 
-void yaml_emitter(YAML::Emitter& out, const nlohmann::json& object);
-nlohmann::json json_emitter(const YAML::Node &yaml_object);
+void yaml_emitter(YAML::Emitter& out, const jsonio::JsonFree& object);
+jsonio::JsonFree json_emitter(const YAML::Node &yaml_object);
 
 //---------------------------------------------------------------------
 
-void yaml_emitter(YAML::Emitter& out, const nlohmann::json& object)
+void yaml_emitter(YAML::Emitter& out, const jsonio::JsonFree& object)
 {
     //for (const auto& childobj: object.items())
-    for (const auto& [key, val] : object.items())
+    for (const auto& childobj: object)
     {
         if(object.is_object()) {
-            out << YAML::Key << key;
+            out << YAML::Key << childobj->get_key();
             out << YAML::Value;
         }
 
-        switch(val.type())
+        switch(childobj->type())
         {
-        case nlohmann::json::value_t::null:
+        case jsonio::JsonFree::Null:
             out << YAML::_Null();
             break;
-        case nlohmann::json::value_t::boolean:
-        case nlohmann::json::value_t::number_float:
-        case nlohmann::json::value_t::number_integer:
-        case nlohmann::json::value_t::number_unsigned:
-            out << val.dump();
+        case jsonio::JsonFree::Bool:
+        case jsonio::JsonFree::Double:
+        case jsonio::JsonFree::Int:
+            out << childobj->dump();
             break;
-        case nlohmann::json::value_t::string:
-            out << val.get<std::string>();
+        case jsonio::JsonFree::String:
+            out << childobj->to_string();
             break;
-        case nlohmann::json::value_t::object:
+        case jsonio::JsonFree::Object:
             out << YAML::BeginMap;
-            yaml_emitter(out, val);
+            yaml_emitter(out, *childobj);
             out << YAML::EndMap;
             break;
-        case nlohmann::json::value_t::array:
+        case jsonio::JsonFree::Array:
             out << YAML::BeginSeq;
-            yaml_emitter(out, val);
+            yaml_emitter(out, *childobj);
             out << YAML::EndSeq;
             break;
-        case nlohmann::json::value_t::binary:
-        case nlohmann::json::value_t::discarded:
-            out  << key << "can't print type \n";
         }
     }
 }
 
-nlohmann::json add_scalar(const std::string& value)
+//void yaml_emitter(YAML::Emitter& out, const jsonio::JsonFree& object)
+//{
+//    //for (const auto& childobj: object.items())
+//    for (const auto& [key, val] : object.items())
+//    {
+//        if(object.is_object()) {
+//            out << YAML::Key << key;
+//            out << YAML::Value;
+//        }
+
+//        switch(val.type())
+//        {
+//        case jsonio::JsonFree::value_t::null:
+//            out << YAML::_Null();
+//            break;
+//        case jsonio::JsonFree::value_t::boolean:
+//        case jsonio::JsonFree::value_t::number_float:
+//        case jsonio::JsonFree::value_t::number_integer:
+//        case jsonio::JsonFree::value_t::number_unsigned:
+//            out << val.dump();
+//            break;
+//        case jsonio::JsonFree::value_t::string:
+//            out << val.get<std::string>();
+//            break;
+//        case jsonio::JsonFree::value_t::object:
+//            out << YAML::BeginMap;
+//            yaml_emitter(out, val);
+//            out << YAML::EndMap;
+//            break;
+//        case jsonio::JsonFree::value_t::array:
+//            out << YAML::BeginSeq;
+//            yaml_emitter(out, val);
+//            out << YAML::EndSeq;
+//            break;
+//        case jsonio::JsonFree::value_t::binary:
+//        case jsonio::JsonFree::value_t::discarded:
+//            out  << key << "can't print type \n";
+//        }
+//    }
+//}
+
+
+jsonio::JsonFree json_emitter(const YAML::Node &yaml_object)
 {
-    nlohmann::json object;
-    int ival = 0;
-    double dval=0.;
-
-    if( value == "~" || value == "null" )
-        ;
-    else if( value == "true" )
-        object = true;
-    else if( value == "false" )
-        object = false;
-    else if( is<int>(ival, value) )
-        object = ival;
-    else if( is<double>(dval, value))
-        object = dval;
-    else
-        object = value;
-
-    return object;
-}
-
-nlohmann::json json_emitter(const YAML::Node &yaml_object)
-{
-    nlohmann::json json_object{};
+    jsonio::JsonFree json_object{};
 
     switch(yaml_object.Type())
     {
     case YAML::NodeType::Null:
         break;
     case YAML::NodeType::Scalar:
-        return add_scalar(yaml_object.as<std::string>());
+        return jsonio::JsonFree::scalar(yaml_object.as<std::string>());
     case YAML::NodeType::Sequence:
         for(const auto &node : yaml_object)
-            json_object.emplace_back(json_emitter(node));
+            json_object.push_back(json_emitter(node));
         break;
     case YAML::NodeType::Map:
         for(const auto &it : yaml_object)
@@ -99,7 +114,7 @@ nlohmann::json json_emitter(const YAML::Node &yaml_object)
 
 //-------------------------------------------------------------------------------------------------
 
-std::string dump(const nlohmann::json& object)
+std::string dump(const jsonio::JsonFree& object)
 {
     YAML::Emitter out;
     if( object.is_object() )
@@ -118,7 +133,7 @@ std::string dump(const nlohmann::json& object)
     return out.c_str();
 }
 
-nlohmann::json loads(const std::string &yaml_str)
+jsonio::JsonFree parse(const std::string &yaml_str)
 {
     try{
         YAML::Node yaml_node = YAML::Load(yaml_str);
@@ -131,7 +146,7 @@ nlohmann::json loads(const std::string &yaml_str)
 
 std::string Yaml2Json(const std::string &yaml_str)
 {
-    auto object = yaml::loads(yaml_str);
+    auto object = yaml::parse(yaml_str);
     return object.dump();
 }
 

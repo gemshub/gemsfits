@@ -22,6 +22,7 @@
 #include <set>
 #include "f_ejdb_file.h"
 #include "v_json.h"
+#include "v_json_old.h"
 
 extern const char* ALLKEY;
 
@@ -220,9 +221,9 @@ public:
     void selectQuery(const std::string &query, SetReaded_f setfnc);
 
     /// Get current record key from json structure
-    std::string getKeyFromJson(const nlohmann::json& bsdata);
+    std::string getKeyFromJson(const jsonio::JsonFree& bsdata);
     /// Put current record key to json structure
-    void addKeyToJson(nlohmann::json& object);
+    void addKeyToJson(jsonio::JsonFree& object);
 
     /// Find record with key into internal record keys list
     bool findRecord(const std::string& pkey);
@@ -254,7 +255,7 @@ public:
 protected:
 
     /// Save current record to json structure
-    nlohmann::json current_to_json(const std::string& pkey);
+    jsonio::JsonFree current_to_json(const std::string& pkey);
     /// Load data from json structure (return readed record key)
     std::string record_from_json(const std::string& json_str);
     /// Download all or by query (current_JQL) record keys from collection

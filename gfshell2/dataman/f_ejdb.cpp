@@ -237,7 +237,7 @@ void TEJDataBase::setQuery(const std::string& query_str)
 #endif
 }
 
-std::string TEJDataBase::getKeyFromJson(const nlohmann::json& bsdata)
+std::string TEJDataBase::getKeyFromJson(const jsonio::JsonFree& bsdata)
 {
     std::string key_str = "", kbuf;
     for(size_t ii=0; ii<keySize(); ii++) {
@@ -250,7 +250,7 @@ std::string TEJDataBase::getKeyFromJson(const nlohmann::json& bsdata)
 }
 
 
-void TEJDataBase::addKeyToJson(nlohmann::json& object)
+void TEJDataBase::addKeyToJson(jsonio::JsonFree& object)
 {
     for(size_t ii=0; ii<keySize(); ii++) {
         object[key.keyFieldName(ii)] = key.keyField(ii);
@@ -258,9 +258,9 @@ void TEJDataBase::addKeyToJson(nlohmann::json& object)
 }
 
 // Save current record to json structure
-nlohmann::json TEJDataBase::current_to_json(const std::string& pkey)
+jsonio::JsonFree TEJDataBase::current_to_json(const std::string& pkey)
 {
-    nlohmann::json object;
+    jsonio::JsonFree object;
     if(!current_Json.empty())
         object = fromJsonString(current_Json);
     else

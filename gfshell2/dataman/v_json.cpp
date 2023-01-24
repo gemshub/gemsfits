@@ -1,26 +1,11 @@
-//-------------------------------------------------------------------
-// $Id: v_json.h 333 2014-03-13 13:23:32Z gemsfits $
-//
-// Implementation of ParserJson class and other json functions
-//
-// Copyright (C) 2023  S.V.Dmytriyeva
-// Uses EJDB (https://ejdb.org),
-//    yaml-cpp (https://code.google.com/p/yaml-cpp/)
-//
-// This file is part of the GEMSFITS GUI, which uses the
-// Qt v.5 cross-platform App & UI framework (http://qt-project.org)
-// under LGPL v.2.1 (http://www.gnu.org/licenses/lgpl-2.1.html)
-//
-// This file may be distributed under the terms of LGPL v.3 license
-//
-// See http://gems.web.psi.ch/GEMSFIT for more information
-// E-mail gems2.support@psi.ch
-//-------------------------------------------------------------------
-
+#include <cmath>
+#include <iomanip>
 #include <iostream>
-#include "verror.h"
+#include <fstream>
 #include "v_yaml.h"
-#include "v_service.h"
+#include "v_detail.h"
+#include "jsonparser.h"
+
 
 //------------------------------
 
@@ -41,29 +26,30 @@ std::string fix_cvs(const std::string& json_str)
     return tmp_str;
 }
 
-nlohmann::json fromJsonString(const std::string& json_str)
+jsonio::JsonFree fromJsonString(const std::string& json_str)
 {
-    nlohmann::json object;
+    jsonio::JsonFree object;
     try  {
         // temporally fix \n in csv
         auto tmpstr = fix_cvs(json_str);
-        object = nlohmann::json::parse(tmpstr);
+        object = jsonio::JsonFree::parse(tmpstr);
     }
-    catch (nlohmann::json::parse_error& ex) {
-        std::cout << ex.what() << std::endl;
+//    catch (jsonio::JsonFree::parse_error& ex) {
+    catch (TError& ex) {
+        std::cout << ex.mess << std::endl;
         std::cout << json_str << std::endl;
-        Error("E01JSon: ", std::string("Json parse error: ") + ex.what());
+        Error("E01JSon: ", std::string("Json parse error: ") + ex.mess);
     }
     return object;
 }
 
-nlohmann::json fromYamlString(const std::string& yaml_str)
+jsonio::JsonFree fromYamlString(const std::string& yaml_str)
 {
-    nlohmann::json object = yaml::loads(yaml_str);
+    jsonio::JsonFree object = yaml::parse(yaml_str);
     return object;
 }
 
-nlohmann::json fromString(bool is_json, const std::string& data_str)
+jsonio::JsonFree fromString(bool is_json, const std::string& data_str)
 {
     if(is_json)
         return fromJsonString(data_str);
@@ -71,604 +57,462 @@ nlohmann::json fromString(bool is_json, const std::string& data_str)
         return fromYamlString(data_str);
 }
 
-#ifdef OLD_EJDB
 
-#include <sstream>
-#include <cstring>
-#include <iomanip>
-#include "f_ejdb.h"
+namespace jsonio {
 
-//------------------------------
+namespace detail {
 
-enum {
-    jsBeginArray = '[',    //0x5b,
-    jsBeginObject = '{',   //0x7b,
-    jsEndArray = ']',      //0x5d,
-    jsEndObject = '}',     //0x7d,
-    jsNameSeparator = ':', //0x3a,
-    jsValueSeparator = ',',//0x2c,
-    jsQuote = '\"'         //0x22
-};
+static const std::string field_path_delimiters =  "./[]\"";
 
-#define SHORT_EMPTY 	   -32768
-#define SHORT_ANY   	    32767
-#define USHORT_EMPTY         0
-#define USHORT_ANY           65535
-#define DOUBLE_EMPTY         2.2250738585072014e-308
-#define DOUBLE_ANY           1.7976931348623157e+308
-const char* S_EMPTY	=    "`";
-const char* S_ANY  	=    "*";
+int doublePrecision = 15;
+int floatPrecision = 7;
+const char* infiniteValue = "---"; //"null";
 
-bool bson_find_string( const char *obj, const char *name, std::string& str )
+
+std::string value2string( const char* value )
 {
-    bson_iterator it;
-    bson_type type;
-    type =  bson_find_from_buffer(&it, obj, name );
+    return std::string(value);
+}
 
-    switch( type )
+template <> std::string value2string( const std::string& value )
+{
+    return value;
+}
+
+template<> std::string value2string( const bool& value )
+{
+    return value ? "true" : "false";
+}
+
+template <> std::string value2string( const double& value )
+{
+    if(std::isfinite(value))
     {
-    case BSON_NULL:
-        str = S_EMPTY;
-        break;
-    case BSON_STRING:
-        str = bson_iterator_string(&it);
-        break;
-    default: // error
-        // bson_errprintf("can't print type : %d\n", type);
-        str = S_EMPTY;
-        return false;
+        std::ostringstream os;
+        os << std::setprecision(doublePrecision) << value;
+        return os.str();
     }
+    else
+    {
+        return infiniteValue;
+    }
+}
+
+template <> std::string value2string( const float& value )
+{
+    if(std::isfinite(value))
+    {
+        std::ostringstream os;
+        os << std::setprecision(floatPrecision) << value;
+        return os.str();
+    }
+    else
+    {
+        return infiniteValue;
+    }
+}
+
+template <>  bool string2value( const std::string& data, std::string& value )
+{
+    value = data;
     return true;
 }
 
-const char* bson_find_array( const char *obj, const char *name )
+template <>  bool string2value( const std::string& data, bool& value )
 {
-    bson_iterator it;
-    bson_type type;
-    type =  bson_find_from_buffer(&it, obj, name );
-    ErrorIf( type != BSON_ARRAY, "E005BSon: ", "Must be array.");
-    return bson_iterator_value(&it);
+    value = ( data.find("true") != std::string::npos ? true: false);
+    return true;
 }
 
-const char* bson_find_object( const char *obj, const char *name )
+static std::string decode_string(const std::string &value )
 {
-    bson_iterator it;
-    bson_type type;
-    type =  bson_find_from_buffer(&it, obj, name );
-    ErrorIf( type != BSON_OBJECT, "E006BSon: ", "Must be object.");
-    return bson_iterator_value(&it);
-}
-
-time_t bson_find_time_t( const char *obj, const char *name )
-{
-    time_t ctm;
-    bson_iterator it;
-    bson_type type;
-    type =  bson_find_from_buffer(&it, obj, name );
-    switch( type )
-    {
-    case BSON_STRING:
-    { std::string stime = bson_iterator_string(&it);
-        ctm =  tcstrmktime(stime.c_str());
-    }
-        break;
-    case BSON_DATE:
-        ctm = bson_iterator_time_t(&it);
-        break;
-    case BSON_NULL:
-    default:
-        ctm = time(NULL);
-        break;
-    }
-    return ctm;
-}
-
-void bson_print_raw_txt_(FILE *f, const char *data, int depth, int datatype );
-
-void bson_print_raw_txt_(FILE *f, const char *data, int depth, int datatype )
-{
-    bson_iterator i;
-    const char *key;
-    int temp;
-    bson_timestamp_t ts;
-    char oidhex[25];
-    bson scope;
-    bool first = true;
-
-    bson_iterator_from_buffer(&i, data);
-    while (bson_iterator_next(&i))
-    {
-        if(!first )
-            fprintf(f, ",\n");
-        else
-            first = false;
-
-        bson_type t = bson_iterator_type(&i);
-        if (t == 0)
-            break;
-
-        key = bson_iterator_key(&i);
-
-        // before print
-        switch( datatype )
-        {
-        case BSON_OBJECT:
-            for (temp = 0; temp <= depth; temp++)
-                fprintf(f, "\t");
-            fprintf(f, "\"%s\": ", key );
-            break;
-        case BSON_ARRAY:
-            for (temp = 0; temp <= depth; temp++)
-                fprintf(f, "\t");
-            break;
-        default:
-            break;
-        }
-
-        switch (t)
-        {
-        // impotant datatypes
-        case BSON_NULL:
-            fprintf(f, "null");
-            break;
-        case BSON_BOOL:
-            fprintf(f, "%s", bson_iterator_bool(&i) ? "true" : "false");
-            break;
-        case BSON_INT:
-            fprintf(f, "%d", bson_iterator_int(&i));
-            break;
-        case BSON_LONG:
-            fprintf(f, "%ld", (uint64_t) bson_iterator_long(&i));
-            break;
-        case BSON_DOUBLE:
-            fprintf(f, "%.10lg", bson_iterator_double(&i));
-            break;
-        case BSON_STRING:
-            fprintf(f, "\"%s\"", bson_iterator_string(&i));
-            break;
-
-            // main constructions
-        case BSON_OBJECT:
-            fprintf(f, "{\n");
-            bson_print_raw_txt_( f, bson_iterator_value(&i), depth + 1, BSON_OBJECT);
-            for (temp = 0; temp <= depth; temp++)
-                fprintf(f, "\t");
-            fprintf(f, "}");
-            break;
-        case BSON_ARRAY:
-            fprintf(f, "[\n");
-            bson_print_raw_txt_(f, bson_iterator_value(&i), depth + 1, BSON_ARRAY );
-            for (temp = 0; temp <= depth; temp++)
-                fprintf(f, "\t");
-            fprintf(f, "]");
-            break;
-
-            // not used in GEMS data types
-        case BSON_SYMBOL:
-            fprintf(f, "SYMBOL: %s", bson_iterator_string(&i));
-            break;
-        case BSON_OID:
-            bson_oid_to_string(bson_iterator_oid(&i), oidhex);
-            fprintf(f, "%s", oidhex);
-            break;
-        case BSON_DATE:
-            char buf[100];
-            tcdatestrhttp(bson_iterator_time_t(&i), INT_MAX, buf);
-            fprintf(f, "\"%s\"", buf);
-            //fprintf(f, "%ld", (long int) bson_iterator_date(&i));
-            break;
-        case BSON_BINDATA:
-            fprintf(f, "BSON_BINDATA");
-            break;
-        case BSON_UNDEFINED:
-            fprintf(f, "BSON_UNDEFINED");
-            break;
-        case BSON_REGEX:
-            fprintf(f, "BSON_REGEX: %s", bson_iterator_regex(&i));
-            break;
-        case BSON_CODE:
-            fprintf(f, "BSON_CODE: %s", bson_iterator_code(&i));
-            break;
-        case BSON_CODEWSCOPE:
-            fprintf(f, "BSON_CODE_W_SCOPE: %s", bson_iterator_code(&i));
-            /* bson_init( &scope ); */ /* review - stepped on by bson_iterator_code_scope? */
-            bson_iterator_code_scope(&i, &scope);
-            fprintf(f, "\n\t SCOPE: ");
-            bson_print_raw_txt_(f, (const char*) &scope, 0, BSON_CODEWSCOPE);
-            //bson_print(f, &scope);
-            /* bson_destroy( &scope ); */ /* review - causes free error */
-            break;
-        case BSON_TIMESTAMP:
-            ts = bson_iterator_timestamp(&i);
-            fprintf(f, "i: %d, t: %d", ts.i, ts.t);
-            break;
-        default:
-            fprintf(f, "can't print type : %d\n", t);
+    std::string out;
+    out += '"';
+    for (size_t i = 0; i < value.length(); i++) {
+        const char ch = value[i];
+        if (ch == '\\') {
+            out += "\\\\";
+        } else if (ch == '"') {
+            out += "\\\"";
+        } else if (ch == '\b') {
+            out += "\\b";
+        } else if (ch == '\f') {
+            out += "\\f";
+        } else if (ch == '\n') {
+            out += "\\n";
+        } else if (ch == '\r') {
+            out += "\\r";
+        } else if (ch == '\t') {
+            out += "\\t";
+        } else if (static_cast<uint8_t>(ch) <= 0x1f) {
+            char buf[8];
+            snprintf(buf, sizeof buf, "\\u%04x", ch);
+            out += buf;
+        } else if (static_cast<uint8_t>(ch) == 0xe2 && static_cast<uint8_t>(value[i+1]) == 0x80
+                   && static_cast<uint8_t>(value[i+2]) == 0xa8) {
+            out += "\\u2028";
+            i += 2;
+        } else if (static_cast<uint8_t>(ch) == 0xe2 && static_cast<uint8_t>(value[i+1]) == 0x80
+                   && static_cast<uint8_t>(value[i+2]) == 0xa9) {
+            out += "\\u2029";
+            i += 2;
+        } else {
+            out += ch;
         }
     }
-    fprintf(f, "\n");
+    out += '"';
+
+    return out;
+}
 
 }
 
-void print_bson_to_json(FILE *f, const bson *b)
+JsonFree::JsonFree( JsonFree::Type atype, const std::string &akey, const std::string &avalue, JsonFree *aparent ):
+    field_type(atype), field_key(akey), field_value(avalue), ndx_in_parent(0), parent_object(aparent), children()
 {
-    bson_print_raw_txt_(f, b->data, 0, BSON_OBJECT);
-}
-
-void print_bson_object_to_json(FILE *f, const bson *b)
-{
-    fprintf(f, "{\n");
-    bson_print_raw_txt_(f, b->data, 0, BSON_OBJECT);
-    fprintf(f, "}");
-}
-
-
-// Read one Json Object from text file to string
-std::string  ParserJson::readObjectText( std::fstream& ff )
-{
-    jsontext = "";
-    //jsontext += jsBeginObject;
-    int cntBeginObject = 1;
-    char input;
-
-    do{
-        ff.get( input );
-        if( input ==  jsBeginObject )
-            cntBeginObject++;
-        else if( input ==  jsEndObject )
-            cntBeginObject--;
-        jsontext+= input;
-
-    } while( cntBeginObject > 0 && !ff.eof());
-
-    curjson = jsontext.c_str();
-    end = curjson + jsontext.length();
-    return jsontext;
-}
-
-// Load Json text
-void  ParserJson::setJsonText( const std::string& json )
-{
-    jsontext = json;
-    curjson = jsontext.c_str();
-    end = curjson + jsontext.length();
-}
-
-bool ParserJson::xblanc()
-{
-    curjson += strspn( curjson, " \r\n\t" );
-    return (curjson < end);
-}
-
-// Get "<string>" data
-void ParserJson::getString( std::string& str )
-{
-    //curjson++;
-    const char * posQuote = strchr( curjson, jsQuote );
-    ErrorIf( !posQuote ,"E01JSon: ",
-             "Missing \" - end of string constant.");
-    str = std::string(curjson, 0, posQuote-curjson);
-    curjson = ++posQuote;
-    ErrorIf( curjson >= end ,"E02JSon: ",
-             "Termination by String.");
-}
-
-// Get <double/integer> data
-void ParserJson::getNumber( double& value, int& type )
-{
-    const char *start = curjson;
-    bool isInt = true;
-
-    // minus
-    if (curjson < end &&  ( *curjson == '-' || *curjson == '+' ) )
-        ++curjson;
-
-    // int = zero / ( digit1-9 *DIGIT )
-    while (curjson < end && isdigit(*curjson) )
-        ++curjson;
-
-    // frac = decimal-point 1*DIGIT
-    if (curjson < end && *curjson == '.')
+    if(parent_object)
     {
-        isInt = false;
-        ++curjson;
-        while (curjson < end && isdigit(*curjson) )
-            ++curjson;
+        ndx_in_parent = parent_object->children.size();
     }
+}
 
-    // exp = e [ minus / plus ] 1*DIGIT
-    if (curjson < end && (*curjson == 'e' || *curjson == 'E'))
-    {
-        isInt = false;
-        ++curjson;
-        if (curjson < end && (*curjson == '-' || *curjson == '+'))
-            ++curjson;
-        while (curjson < end && isdigit(*curjson) )
-            ++curjson;
-    }
+JsonFree::JsonFree():
+    field_type(JsonFree::Null), field_key("top"), field_value(""),
+    ndx_in_parent(0), parent_object(nullptr), children()
+{ }
 
-    ErrorIf( curjson >= end ,"E03JSon: ",
-             "Termination by Number.");
-    sscanf( start, "%lg", &value );
-    if( isInt && ( value < SHORT_ANY && value > SHORT_EMPTY ) )
-        type = BSON_INT;
+
+JsonFree::JsonFree( const JsonFree &obj ):
+    field_type(obj.field_type), field_key(obj.field_key), field_value(obj.field_value),
+    ndx_in_parent(0), parent_object(nullptr), children()
+{
+    copy(obj);
+}
+
+JsonFree::JsonFree( JsonFree &&obj ) noexcept:
+    field_type(obj.field_type), field_key( obj.field_key ), field_value( "" ),
+    ndx_in_parent(obj.ndx_in_parent), parent_object(obj.parent_object), children()
+{
+    move(std::move(obj));
+}
+
+
+// Deserialize a JSON document to a json object
+JsonFree JsonFree::scalar(const std::string &value)
+{
+    jsonio::JsonFree object;
+    int ival = 0;
+    double dval=0.;
+
+    if( value == "~" || value == "null" )
+        ;
+    else if( value == "true" )
+        object = true;
+    else if( value == "false" )
+        object = false;
+    else if( is<int>(ival, value) )
+        object = ival;
+    else if( is<double>(dval, value))
+        object = dval;
     else
-        type =  BSON_DOUBLE;       \
+        object = value;
+
+    return object;
 }
 
-
-// value = false / null / true / object / array / number / string
-void ParserJson::parseValue( const char *name, bson *brec )
-{
-    int type = BSON_UNDEFINED;
-    ErrorIf( !xblanc() ,"E04JSon: ", "Must be value.");
-
-    switch (*curjson++)
-    {
-    case 'n':
-        if( (end - curjson) > 4 && (*curjson++ == 'u' &&
-                                    *curjson++ == 'l' && *curjson++ == 'l') )
-        {
-            type = BSON_NULL;
-            bson_append_null(brec, name );
-            break;
-        }
-        Error( "E05JSon: ", "Illegal Value.");
-    case 't':
-        if( (end - curjson) > 4 && (*curjson++ == 'r' &&
-                                    *curjson++ == 'u' && *curjson++ == 'e') )
-        {
-            type = BSON_BOOL;
-            bson_append_bool(brec, name, true );
-            break;
-        }
-        Error( "E05JSon: ", "Illegal Value.");
-    case 'f':
-        if( (end - curjson) > 5 && (*curjson++ == 'a' &&
-                                    *curjson++ == 'l'  && *curjson++ == 's' && *curjson++ == 'e' ) )
-        {
-            type = BSON_BOOL;
-            bson_append_bool(brec, name, false );
-            break;
-        }
-        Error( "E05JSon: ", "Illegal Value.");
-    case jsQuote:
-    {
-        std::string str = "";
-        type = BSON_STRING;
-        getString( str );
-        bson_append_string( brec, name, str.c_str() );
-    }
-        break;
-
-    case jsBeginArray:
-        type = BSON_ARRAY;
-        bson_append_start_array( brec, name);
-        parseArray( brec );
-        bson_append_finish_array(brec);
-        break;
-
-    case jsBeginObject:
-        type = BSON_OBJECT;
-        bson_append_start_object( brec, name);
-        parseObject( brec );
-        bson_append_finish_object(brec);
-        break;
-
-    case jsEndArray:
-        --curjson;
-        break;  // empty array
-    case jsEndObject:
-        --curjson;
-        break;  // empty object
-
-    default:  // number
-    { --curjson;
-        if( isdigit(*curjson) || *curjson == '+' ||
-                *curjson == '-' || *curjson == '.' ||
-                *curjson == 'e' || *curjson == 'E'    )
-        {
-            double value = DOUBLE_EMPTY;
-            getNumber( value, type );
-            if( type == BSON_INT )
-                bson_append_int( brec, name, (int)value );
-            else
-                bson_append_double( brec, name, value );
-            break;
-        }
-        else
-            Error( "E05JSon: ", "Illegal Value.");
-    }
-        break;
-    }
-}
-
-//    array = [ <value1>, ... <valueN> ]
-void ParserJson::parseArray( bson *brec )
-{
-    char name[40];
-    int ndx = 0;
-
-    while( *curjson != jsEndArray )
-    {
-        sprintf( name, "%d", ndx);
-        parseValue( name, brec );
-        ErrorIf( !xblanc() ,"E06JSon: ", "Unterminated Array.");
-        if( *curjson == jsValueSeparator  )
-            curjson++;
-        else
-            ErrorIf( *curjson != jsEndArray ,"E07JSon: ",
-                     "Missing Value Separator.");
-        ndx++;
-    }
-    curjson++;
-}
-
-//  object = { "<key1>" : <value1>, ... , "<keyN>" : <valueN> }
-void ParserJson::parseObject( bson *brec )
-{
-    std::string name;
-
-    while( *curjson != jsEndObject )
-    {
-        // read key
-        ErrorIf( !xblanc() ,"E08JSon: ", "Unterminated Object.");
-
-        if( *curjson++== jsQuote  )
-        {
-            getString( name );
-        }
-        else
-            Error( "E10JSon: ", "Missing Key of Object.");
-
-        ErrorIf( !xblanc() ,"E08JSon: ", "Unterminated Object.");
-        if( *curjson == jsNameSeparator  )
-            curjson++;
-        else
-            Error( "E09JSon: ", "Missing Name Separator.");
-        // read value
-        parseValue( name.c_str(), brec );
-        ErrorIf( !xblanc() ,"E08JSon: ", "Unterminated Object.");
-        if( *curjson == jsValueSeparator  )
-            curjson++;
-        else
-            ErrorIf( *curjson != jsEndObject ,"E07JSon: ",
-                     "Missing Value Separator.");
-    }
-    curjson++;
-}
-
-void ParserJson::bson_print_raw_txt( std::iostream& os, const char *data, int depth, int datatype )
-{
-    bson_iterator i;
-    const char *key;
-    int temp;
-    //bson_timestamp_t ts;
-    //char oidhex[25];
-    //bson scope;
-    bool first = true;
-
-    bson_iterator_from_buffer(&i, data);
-    while (bson_iterator_next(&i))
-    {
-        bson_type t = bson_iterator_type(&i);
-        if (t == 0)
-            break;
-        if( t == BSON_OID )
-            continue;
-
-        if(!first )
-            os <<  ",\n";
-        else
-            first = false;
-
-        key = bson_iterator_key(&i);
-
-        // before print
-        switch( datatype )
-        {
-        case BSON_OBJECT:
-            for (temp = 0; temp <= depth; temp++)
-                os <<  "     ";
-            os << "\"" << key << "\" :   ";
-            break;
-        case BSON_ARRAY:
-            for (temp = 0; temp <= depth; temp++)
-                os << "     ";
-            break;
-        default:
-            break;
-        }
-
-        switch (t)
-        {
-        // impotant datatypes
-        case BSON_NULL:
-            os << "null";
-            break;
-        case BSON_BOOL:
-            os << ( bson_iterator_bool(&i) ?  "true": "false");
-            break;
-        case BSON_INT:
-            os << bson_iterator_int(&i);
-            break;
-        case BSON_LONG:
-            os << bson_iterator_long(&i);
-            break;
-        case BSON_DOUBLE:
-            os << std::setprecision(15) << bson_iterator_double(&i);
-            break;
-        case BSON_STRING:
-            os << "\"" << bson_iterator_string(&i) << "\"";
-            break;
-
-            // main constructions
-        case BSON_OBJECT:
-            os << "{\n";
-            bson_print_raw_txt( os, bson_iterator_value(&i), depth + 1, BSON_OBJECT);
-            for (temp = 0; temp <= depth; temp++)
-                os << "     ";
-            os << "}";
-            break;
-        case BSON_ARRAY:
-            os << "[\n";
-            bson_print_raw_txt(os, bson_iterator_value(&i), depth + 1, BSON_ARRAY );
-            for (temp = 0; temp <= depth; temp++)
-                os << "     ";
-            os << "]";
-            break;
-
-            // not used in GEMS data types
-        case BSON_SYMBOL:
-            //       os<<  "SYMBOL: " << bson_iterator_string(&i);
-            break;
-        case BSON_OID:
-            //       bson_oid_to_string(bson_iterator_oid(&i), oidhex);
-            //       os << oidhex;
-            break;
-        case BSON_DATE:
-            //       char buf[100];
-            //       tcdatestrhttp(bson_iterator_time_t(&i), INT_MAX, buf);
-            //       os << "\"" << buf <<"\"";
-            break;
-        case BSON_BINDATA:
-            //       os << "BSON_BINDATA";
-            break;
-        case BSON_UNDEFINED:
-            //      os << "BSON_UNDEFINED";
-            break;
-        case BSON_REGEX:
-            //       os << "BSON_REGEX: " << bson_iterator_regex(&i);
-            break;
-        case BSON_CODE:
-            //       os << "BSON_CODE: " << bson_iterator_code(&i);
-            break;
-        case BSON_CODEWSCOPE:
-            //       os << "BSON_CODE_W_SCOPE: " << bson_iterator_code(&i);
-            //       bson_iterator_code_scope(&i, &scope);
-            //       os << "\n      SCOPE: ";
-            //       bson_print_raw_txt( os, (const char*) &scope, 0, BSON_CODEWSCOPE);
-            break;
-        case BSON_TIMESTAMP:
-            //       ts = bson_iterator_timestamp(&i);
-            //       os <<  "i: " << ts.i << ", t: " << ts.t;
-            break;
-        default:
-            os  << "can't print type : " << t;
-        }
-    }
-    os << "\n";
-}
-
-void ParserJson::printBsonObjectToJson( std::string& resStr, const char *b)
+std::string JsonFree::dump(bool dense) const
 {
     std::stringstream os;
-    os << "{\n";
-    bson_print_raw_txt( os, b, 0, BSON_OBJECT);
-    os << "}";
-    resStr = os.str();
+    dump(os,  dense);
+    return os.str();
 }
 
-#endif
+void JsonFree::dump( std::ostream &os, bool dense ) const
+{
+    auto objtype = type();
+    if( objtype == Object )
+        os << ( dense ? "{" : "{\n" );
+    else
+        if( objtype == Array )
+            os << ( dense ? "[" : "[\n" );
+        else
+            if( objtype == String )
+            {
+                os << detail::decode_string(field_value);
+                return;
+            }
+            else
+            {
+                os << field_value;
+                return;
+            }
 
-// ------------------------ end of v_json.cpp -------------------------------------------------------
+    dump2stream( os, 0, dense );
+    if( objtype == Object )
+        os << "}";
+    else
+        os << "]";
+}
+
+JsonFree JsonFree::parse(const std::string &json_str)
+{
+    JsonParser parser("");
+    return parser.parse(json_str);
+}
+
+JsonFree JsonFree::parse(std::fstream& ff)
+{
+    std::stringstream buffer;
+    buffer << ff.rdbuf();
+    auto retstr = buffer.str();
+    return parse(retstr);
+}
+
+bool JsonFree::clear()
+{
+    children.clear();
+    if( is_bool() )
+        field_value = "false";
+    else if( is_number() )
+        field_value = "0";
+    else
+        field_value = "";
+
+    return true;
+}
+
+std::string JsonFree::to_string( bool dense ) const
+{
+    if( is_structured() )
+    {
+        return dump( dense );
+    }
+    return field_value;
+}
+
+double JsonFree::to_double() const
+{
+    double val = 0.0;
+    if( is_number() )
+    {
+        detail::string2value( field_value, val );
+    }
+    return val;
+}
+
+long JsonFree::to_int() const
+{
+    long val = 0;
+    if( type() == Type::Int )
+    {
+        detail::string2value( field_value, val );
+    }
+    return val;
+}
+
+bool JsonFree::to_bool() const
+{
+    bool val = false;
+    if( is_bool() )
+    {
+        detail::string2value( field_value, val );
+    }
+    return val;
+}
+
+//----------------------------------------------------------------
+
+// key and parent not changed
+void JsonFree::copy(const JsonFree &obj)
+{
+    field_type =  obj.field_type;
+    // field_key =  obj.field_key; // copy only data
+    field_value = obj.field_value;
+
+    children.clear();
+    for( const auto& child: obj.children )
+    {
+        children.push_back( std::make_shared<JsonFree>(*child) );
+        children.back()->parent_object = this;
+        children.back()->ndx_in_parent = children.size()-1;
+    }
+}
+
+// key and parent not changed
+void JsonFree::move(JsonFree &&obj)
+{
+    field_type =  obj.field_type;
+    // field_key =  std::move(obj.field_key);  // stl using
+    field_value = std::move(obj.field_value);
+    children = std::move(obj.children);
+
+    obj.children.clear();
+    for( const auto& child: children )
+    {
+        child->parent_object = this;
+    }
+}
+
+void JsonFree::update_node(JsonFree::Type atype, const std::string &avalue)
+{
+    children.clear();
+    field_type = atype;
+    field_value = avalue;
+}
+
+JsonFree& JsonFree::append_node(const std::string &akey, JsonFree::Type atype, const std::string &avalue )
+{
+    auto shptr = new JsonFree(atype, akey, avalue, this);
+    children.push_back( std::shared_ptr<JsonFree>(shptr) );
+    return *children.back();
+}
+
+const JsonFree& JsonFree::get_child(std::size_t idx) const
+{
+    ErrorIf( idx>=size(), "JsonFree", "array index " + std::to_string(idx) + " is out of range" );
+    return *children[idx];
+}
+
+JsonFree& JsonFree::get_child(std::size_t idx)
+{
+    ErrorIf( idx>size(), "JsonFree", "array index " + std::to_string(idx) + " is out of range" );
+    if( idx==size() ) // next element
+    {
+        append_node( std::to_string(idx), JsonFree::Null, "" );
+        return *children.back();
+    }
+    return *children[idx];
+}
+
+JsonFree& JsonFree::get_child(const std::string &key)
+{
+    auto element = find_key(key);
+    if( element == children.end() )
+    {
+        return append_node( key, JsonFree::Null, "" );
+    }
+    return *element->get();
+}
+
+const JsonFree& JsonFree::get_child(const std::string &key) const
+{
+    auto element = find_key(key);
+    if( element == children.end() )
+    {
+        Error( "JsonFree", "key '" + key + "' not found" );
+    }
+    return *element->get();
+}
+
+JsonFree &JsonFree::get_parent() const
+{
+    ErrorIf( !parent_object, "JsonFree", "parent Object is undefined" );
+    return *parent_object;
+}
+
+void JsonFree::dump2stream( std::ostream& os, int depth, bool dense ) const
+{
+    int temp;
+    bool first = true;
+    auto objtype = type();
+
+    for( const auto& childobj: children )
+    {
+         if( !first )
+            os << ( dense ? "," : ",\n" );
+        else
+            first = false;
+
+        // before print
+        switch( objtype )
+        {
+        case Object:
+            if(!dense)
+            {
+                for (temp = 0; temp <= depth; temp++)
+                    os <<  "     ";
+            }
+            os << "\"" << childobj->get_key() << ( dense ? "\":" : "\" :   " );
+            break;
+        case Array:
+            if(!dense)
+            {
+                for (temp = 0; temp <= depth; temp++)
+                    os << "     ";
+            }
+            break;
+        default:
+            break;
+        }
+
+        switch (childobj->type())
+        {
+        // impotant datatypes
+        case Null:
+            os << "null";
+            break;
+        case Bool:
+        case Int:
+            os << childobj->field_value;
+            break;
+        case Double:
+            os << std::setprecision(detail::doublePrecision) << childobj->to_double();
+            break;
+        case String:
+            os << detail::decode_string( childobj->field_value );
+            break;
+
+            // main constructions
+        case Object:
+            os << ( dense ? "{" : "{\n" );
+            childobj->dump2stream( os, depth + 1, dense );
+            if(!dense)
+            {
+                for (temp = 0; temp <= depth; temp++)
+                    os << "     ";
+            }
+            os << "}";
+            break;
+        case Array:
+            os << ( dense ? "[" : "[\n" );
+            childobj->dump2stream(os, depth + 1, dense );
+            if(!dense)
+            {
+                for (temp = 0; temp <= depth; temp++)
+                    os << "     ";
+            }
+            os << "]";
+            break;
+        default:
+            os  << "can't print type : " << childobj->type();
+        }
+    }
+    if( !dense )
+        os << "\n";
+}
+
+
+
+const char *JsonFree::type_name(JsonFree::Type type)
+{
+    switch( type )
+    {
+    case Int:
+        return "int";
+    case Double:
+        return "double";
+    case Null:
+        return "null";
+    case Object:
+        return "object";
+    case Array:
+        return "array";
+    case String:
+        return "string";
+    case Bool:
+        return "bool";
+    }
+    return "";
+}
+
+} // namespace jsonio

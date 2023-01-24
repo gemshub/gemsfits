@@ -717,7 +717,7 @@ void FITMainWindow::CmRunTest()
 
         // Load curent record to json structure
         std::string recBsonText = ui->recordEdit->toPlainText().toStdString();
-        nlohmann::json  jsrec = fromString(JsonDataShow, recBsonText);
+        jsonio::JsonFree  jsrec = fromString(JsonDataShow, recBsonText);
 
         //test current key
         lastCalcRecordKey = rtEJ[currentMode].getKeyFromJson(jsrec);
@@ -898,11 +898,11 @@ void FITMainWindow::CmRestoreJSON()
         if( !inFile.ChooseFileOpen( this, fname, "Please, select file with unloaded records","*.json" ))
             return;
         inFile.Open();
-        auto arr_json = nlohmann::json::parse(inFile.ff);
+        auto arr_json = jsonio::JsonFree::parse(inFile.ff);
 
         for(const auto& object : arr_json)
         {
-            rtEJ[currentMode].setJson( object.dump(), true );
+            rtEJ[currentMode].setJson( object->dump(true), true );
             if( ui->actionOverwrite->isChecked() )
                 rtEJ[currentMode].saveRecord("");
             else
@@ -1057,7 +1057,7 @@ void FITMainWindow::CmRestoreCSV()
         int ii, jj;
         std::vector<std::string> headline;
         std::vector<std::string> row;
-        nlohmann::json exp;
+        jsonio::JsonFree exp;
 
         //get header
 #if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
@@ -1139,7 +1139,7 @@ void FITMainWindow::CmBackupTXT()
 
         // Load curent record to json structure
         std::string recBsonText = ui->recordEdit->toPlainText().toStdString();
-        nlohmann::json  bsrec = fromString(JsonDataShow, recBsonText);
+        jsonio::JsonFree  bsrec = fromString(JsonDataShow, recBsonText);
 
         std::string fname = bsrec.value("taskid", "undefined");
         fname = projDir + "/" + fname + ".json";
