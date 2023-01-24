@@ -202,21 +202,40 @@ void JsonParser::parse_value( int depth, const std::string &name, JsonFree& obje
         parse_string( str );
         // conwert all pair ('\\''\n') to one simbol '\n' and other
         undump_string( str );
-        object[name] = str;
+        if(name.empty())
+            object.push_back(jsonio::JsonFree::scalar(str));
+        else
+            object[name] = str;
     }
         break;
 
     case jsBeginArray:
     {
-        object[name] = jsonio::JsonFree::array(name);
-        parse_array( depth+1, object[name] );
+        auto obj = jsonio::JsonFree::array(name);
+        parse_array( depth+1, obj );
+        if(name.empty())
+        {
+            object.push_back(std::move(obj));
+        }
+        else
+        {
+           object[name] = obj;
+        }
     }
         break;
 
     case jsBeginObject:
     {
-        object[name] = jsonio::JsonFree::object(name);
-        parse_object( depth+1, object[name] );
+        auto obj = jsonio::JsonFree::object(name);
+        parse_object( depth+1, obj );
+        if(name.empty())
+        {
+            object.push_back(std::move(obj));
+        }
+        else
+        {
+           object[name] = obj;
+        }
     }
         break;
 
@@ -231,7 +250,10 @@ void JsonParser::parse_value( int depth, const std::string &name, JsonFree& obje
         auto valuestr = jsontext.substr(cur_pos, end_size);
         trim(valuestr);
         ErrorIf( valuestr.empty(), "JsonParser", "must be value " + err_part() );
-        object[name] = jsonio::JsonFree::scalar(valuestr);
+        if(name.empty())
+            object.push_back(jsonio::JsonFree::scalar(valuestr));
+        else
+            object[name] = jsonio::JsonFree::scalar(valuestr);
         cur_pos = pos_end_value;
     }
         break;

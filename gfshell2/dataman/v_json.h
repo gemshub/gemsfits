@@ -515,6 +515,7 @@ public:
             children.push_back(std::make_shared<JsonFree>(std::move(val)));
             children.back()->parent_object = this;
             children.back()->ndx_in_parent = children.size()-1;
+            return;
         }
         Error( "JsonFree", "cannot use push_back() with " + std::string( type_name() ) );
     }
