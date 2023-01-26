@@ -20,9 +20,7 @@
 #pragma once
 
 #include <set>
-#include "f_ejdb_file.h"
 #include "v_json.h"
-#include "v_json_old.h"
 
 extern const char* ALLKEY;
 
@@ -31,8 +29,8 @@ extern const char* ALLKEY;
 using  SetReaded_f = std::function<void( const char * bjsondata )>;
 typedef  std::string ejdb_id_type;
 const ejdb_id_type empty_key="";
+class EJCOLL;
 #else
-
 /// Callback function fetching document from a collection that match the specified condition
 using  SetReaded_f = std::function<void( const char * bjsondata )>;
 typedef  int64_t ejdb_id_type;
@@ -286,6 +284,8 @@ public:
     TEJDataBase& operator[](size_t) ;
     int Find(const char* keywd);
     void Init();
+    void Close();
+    void ChangePath(const std::string& ejdbPath);
 };
 
 extern EJDataBaseList rtEJ;

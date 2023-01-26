@@ -7,8 +7,8 @@ VERSION         = 1.4.0
 DEFINES         += Use_mt_mode
 #DEFINES         += NODEARRAYLEVEL
 DEFINES         += IPMGEMPLUGIN
-DEFINES         += _MYNOZLIB
-DEFINES         += USEBSON
+#DEFINES         += _MYNOZLIB
+#DEFINES         += USEBSON
 DEFINES         += OLD_EJDB
 
 #CONFIG -= warn_on
@@ -20,8 +20,9 @@ QT   += core gui widgets
 QT   += svg printsupport concurrent
 QT   += charts help
 
-QMAKE_CXXFLAGS += -O3 -fno-inline-small-functions
+QMAKE_CXXFLAGS += -O3 -fno-inline-small-functions -DIW_STATIC
 QMAKE_LFLAGS += -O3 -fno-inline-small-functions
+QMAKE_CFLAGS += -DIW_STATIC
 
 !win32 {
   DEFINES += __unix
@@ -108,8 +109,16 @@ include($$DATAMAN_CPP/dataman.pri)
 include($$DIALOGS_CPP/dialogs.pri)
 #include($$EJDB_PATH/ejdb.pri)
 
+contains(DEFINES, OLD_EJDB) {
 CONFIG(release, debug|release): LIBS += -lejdb -lyaml-cpp
 CONFIG(debug, debug|release): LIBS += -lejdb -lyaml-cpp
+}
+else
+{
+CONFIG(release, debug|release): LIBS += -lejdb2 -lyaml-cpp
+CONFIG(debug, debug|release): LIBS += -lejdb2 -lyaml-cpp
+}
+
 
 #CONFIG(release, debug|release): LIBS += -L$$YAML_LIB_PATH/release/ -lyaml-cpp
 #CONFIG(debug, debug|release): LIBS += -L$$YAML_LIB_PATH/debug/ -lyaml-cpp

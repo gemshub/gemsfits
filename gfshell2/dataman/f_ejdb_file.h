@@ -1,7 +1,7 @@
 ﻿//-------------------------------------------------------------------
 // $Id: f_ejdb_file.h 333 2014-03-13 13:23:32Z gemsfits $
 //
-// Declaration of TAbstractFile, TEJDB and TFile classes
+// Declaration of TAbstractFile and TFile classes
 //
 // Copyright (C) 2014-2023  S.V.Dmytriyeva
 // Uses EJDB (https://ejdb.org),
@@ -19,21 +19,16 @@
 
 #pragma once
 
+#ifndef EJDB_FILE_H
+#define EJDB_FILE_H
+
 #include <fstream>
 #include <vector>
 #include "verror.h"
 
-#ifdef OLD_EJDB
-#include <ejdb.h>
-#else
-//#define G_GNUC_NO_INLINE __attribute__ ((__noinline__))
-#include <ejdb2.h>
-#endif
-
 class QWidget;
 class QDir;
 class QString;
-
 
 //----------------------------------------------------------------------
 // service functions
@@ -117,40 +112,6 @@ public:
     virtual void ChangeName(const std::string& name);
 };
 
-
-/// Class for EJDB file manipulation
-class TEJDB: public TAbstractFile
-{
-    /// Version of EJDB
-    std::string version;
-    /// Number of usage EJDB database
-    int numEJDB;
-
-    void makeKeyword() override;
-
-public:
-
-#ifdef OLD_EJDB
-    EJDB *ejDB;
-#else
-    EJDB ejDB ;
-#endif
-
-    TEJDB(const std::string& path);
-    ~TEJDB();
-
-    const std::string& Version() const
-    {  return version;  }
-    void readVersion();
-
-    void Create();
-    void Open() override;
-    void Close() override;
-
-};
-
-extern TEJDB EJDBFile;
-
 /// Class for text file manipulation
 class TFile: public TAbstractFile
 {
@@ -163,3 +124,5 @@ public:
     void Open() override;
     void Close() override;
 };
+
+#endif

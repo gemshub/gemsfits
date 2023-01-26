@@ -22,6 +22,7 @@
 #include "DBKeyDialog.h"
 #include "ui_DBKeyDialog.h"
 #include "f_ejdb.h"
+#include "f_ejdb_file.h"
 #include "v_service.h"
 
 extern const char *DBM;

@@ -320,9 +320,7 @@ void FITMainWindow::showProcessMesage( )
 
 void FITMainWindow::closeEJDB()
 {
-    for(size_t ii=0; ii<rtEJ.size(); ii++ )
-        rtEJ[ii].Close();
-    EJDBFile.Close();
+    rtEJ.Close();
 }
 
 /// Connect project database
@@ -336,7 +334,7 @@ void FITMainWindow::openEJDB()
     ejdbPath  += projectSettings->value("ProjDatabasePath", "/EJDB").toString().toStdString();
     ejdbPath  += "/";
     ejdbPath  += projectSettings->value("ProjDatabaseName", "myprojdb1" ).toString().toStdString();
-    EJDBFile.ChangePath(ejdbPath);
+    rtEJ.ChangePath(ejdbPath);
 
     // change collections names
     std::string samlescolName = projectSettings->value("ExpSamplesDataColl", "experiments").toString().toStdString();

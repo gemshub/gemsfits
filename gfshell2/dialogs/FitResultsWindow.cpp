@@ -160,6 +160,12 @@ void FitResultsWindow::ShowResults( const std::string& key, const QString& dir )
     show();
 }
 
+TMatrixTable *FitResultsWindow::current_table() const
+{
+//    return dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+    return dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->childAt(10,10));
+}
+
 
 //  Connect all actions
 void FitResultsWindow::setActions()
@@ -439,7 +445,7 @@ void FitResultsWindow::CmPlotTable()
 {
     try
     {
-        TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+        TMatrixTable *tableCurrent = current_table();
         if( !tableCurrent )
             return;
 
@@ -461,7 +467,7 @@ void FitResultsWindow::CmPrintTable()
 {
     try
     {
-        TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+        TMatrixTable *tableCurrent = current_table();
         if( !(tableCurrent && tableCurrent->model()->rowCount()>0) )
             return;
 
@@ -515,21 +521,21 @@ void FitResultsWindow::CmAbout_Results_window()
 
 void FitResultsWindow::CmCalc()
 {
-    TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+    TMatrixTable *tableCurrent = current_table();
     if( tableCurrent && tableCurrent->model()->rowCount()>0 )
         tableCurrent->CmCalc();
 }
 
 void FitResultsWindow::SelectColumn()
 {
-    TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+    TMatrixTable *tableCurrent = current_table();
     if( tableCurrent && tableCurrent->model()->rowCount()>0)
         tableCurrent->SelectColumn();
 }
 
 void FitResultsWindow::SelectAll()
 {
-    TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+    TMatrixTable *tableCurrent = current_table();
     if( tableCurrent && tableCurrent->model()->rowCount()>0)
         tableCurrent->SelectAll();
 }
@@ -537,49 +543,49 @@ void FitResultsWindow::SelectAll()
 void FitResultsWindow::CutData()
 
 {
-    TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+    TMatrixTable *tableCurrent = current_table();
     if( tableCurrent && tableCurrent->model()->rowCount()>0)
         tableCurrent->CutData();
 }
 
 void FitResultsWindow::ClearData()
 {
-    TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+    TMatrixTable *tableCurrent = current_table();
     if( tableCurrent && tableCurrent->model()->rowCount()>0)
         tableCurrent->ClearData();
 }
 
 void FitResultsWindow::CopyData()
 {
-    TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+    TMatrixTable *tableCurrent = current_table();
     if( tableCurrent && tableCurrent->model()->rowCount()>0)
         tableCurrent->CopyData();
 }
 
 void FitResultsWindow::PasteData()
 {
-    TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+    TMatrixTable *tableCurrent = current_table();
     if( tableCurrent && tableCurrent->model()->rowCount()>0)
         tableCurrent->PasteData();
 }
 
 void FitResultsWindow::PasteTransposedData()
 {
-    TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+    TMatrixTable *tableCurrent = current_table();
     if( tableCurrent && tableCurrent->model()->rowCount()>0)
         tableCurrent->PasteTransposedData();
 }
 
 void FitResultsWindow::ToggleX()
 {
-    TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+    TMatrixTable *tableCurrent = current_table();
     if( tableCurrent && tableCurrent->model()->rowCount()>0)
         tableCurrent->ToggleX();
 }
 
 void FitResultsWindow::ToggleY()
 {
-    TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+    TMatrixTable *tableCurrent = current_table();
     if( tableCurrent && tableCurrent->model()->rowCount()>0)
         tableCurrent->ToggleY();
 }
@@ -589,7 +595,7 @@ void FitResultsWindow::CmFindFromPlot()
     try
     {
 
-        TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+        TMatrixTable *tableCurrent = current_table();
         if( !tableCurrent )
             return;
 

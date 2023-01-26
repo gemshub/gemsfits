@@ -27,6 +27,7 @@
 #include "f_ejdb.h"
 #include "v_service.h"
 #include "keywords.h"
+#include "v_json_old.h"
 
 #include "v_yaml.h"
 #include <yaml-cpp/yaml.h>

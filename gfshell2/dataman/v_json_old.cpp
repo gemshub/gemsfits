@@ -18,6 +18,7 @@
 //-------------------------------------------------------------------
 
 #include <iostream>
+#include <fstream>
 #include "verror.h"
 #include "v_json_old.h"
 #include "v_service.h"

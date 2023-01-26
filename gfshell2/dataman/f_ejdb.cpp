@@ -1,7 +1,7 @@
 //-------------------------------------------------------------------
 // $Id: f_ejdb.cpp 333 2014-03-13 13:23:32Z gemsfits $
 //
-// Implementation of TEJDBKey, TEJDataBase and EJDataBaseList classes
+// Implementation of TEJDBKey, TEJDB, TEJDataBase and EJDataBaseList classes
 //
 // Copyright (C) 2014-2023  S.V.Dmytriyeva
 // Uses EJDB (https://ejdb.org),
@@ -21,6 +21,15 @@
 #include <cstdarg>
 #include <cstring>
 
+#ifdef OLD_EJDB
+#include <ejdb.h>
+#else
+//https://stackoverflow.com/questions/18362315/static-size-of-array-in-c99
+#include <ejdb2.h>
+#endif
+#include "v_json_old.h"
+
+
 #include "f_ejdb.h"
 #include "FITMainWindow.h"
 #include "v_yaml.h"
@@ -30,32 +39,193 @@
 
 const char* ALLKEY="*";
 
-/*
-std::string replace(std::string str, const char* old_part, const char* new_part)
+/// Class for EJDB file manipulation
+class TEJDB: public TAbstractFile
 {
-    size_t pos = str.find(old_part);
-    if(pos == std::string::npos)
-        return str;
+    /// Version of EJDB
+    std::string version;
+    /// Number of usage EJDB database
+    int numEJDB;
 
-    std::string res = str.substr(0, pos);
-    res += new_part;
-    res += str.substr(pos+strlen(old_part));
-    return res;
+    void makeKeyword() override;
+
+public:
+
+#ifdef OLD_EJDB
+    EJDB *ejDB;
+#else
+    EJDB ejDB ;
+#endif
+
+    TEJDB(const std::string& path);
+    ~TEJDB();
+
+    const std::string& Version() const
+    {  return version;  }
+    void readVersion();
+
+    void Create();
+    void Open() override;
+    void Close() override;
+
+};
+
+//-------------------------------------------------------------
+// TEJDB, files that contain EJDB records
+//-------------------------------------------------------------
+
+static std::string current_time_and_date()
+{
+    auto now = std::chrono::system_clock::now();
+    auto in_time_t = std::chrono::system_clock::to_time_t(now);
+
+    std::stringstream ss;
+    ss << std::put_time(std::localtime(&in_time_t), "%d/%m/%Y %H:%M");
+    return ss.str();
 }
 
-std::string replace_all( std::string str, const char* old_part, const char* new_part)
-{
-    size_t pos = str.find(old_part);
-    std::string res = "";
-
-    while(pos != std::string::npos) {
-        res += str.substr(0, pos);
-        res += new_part;
-        str = str.substr( pos+strlen(old_part));
-        pos = str.find( old_part );
+#ifndef OLD_EJDB
+void ejdb_check_result(iwrc ecode, const std::string& mess) {
+    if (ecode) {
+        //iwlog_ecode_error3(ecode);
+        Error("EJDB storage handle", mess+iwlog_ecode_explained(ecode));
     }
-    return res+str;
-}*/
+}
+#endif
+
+static TEJDB EJDBFile("");
+
+/// Configurations from file path
+TEJDB::TEJDB( const std::string& path ):
+    TAbstractFile( path ), numEJDB(0),  ejDB(nullptr)
+{
+    makeKeyword();
+#ifndef OLD_EJDB
+    iwrc ecode = ejdb_init();
+    ejdb_check_result(ecode, "Error when init ejdb : ");
+#endif
+}
+
+
+TEJDB::~TEJDB()
+{
+    if(Test())
+        Close();
+}
+
+/// Make keyword of DB internal file
+void TEJDB::makeKeyword()
+{
+    std::string key;
+    if( name.empty() )
+        return;
+
+    std::string fname = name;
+
+    key = std::string(fname, 0, 2);
+    size_t npos = 0;
+    size_t npos2 = fname.find("_", npos);
+    while( npos2 != std::string::npos ) {
+        npos = npos2+1;
+        key += std::string(fname, npos, 2);
+        npos2 = fname.find("_", npos);
+    }
+    key += std::string(fname, npos+2);
+
+    keywd = key;
+}
+
+/// Open file in special mode
+void TEJDB::Open()
+{
+    if(Test()) {
+        numEJDB++;
+    }
+    else {
+
+#ifdef OLD_EJDB
+        // Test and open file  (name of ejdb must be take from nFile)
+        ejDB = ejdbnew();
+        if (!ejdbopen(ejDB, path.c_str(), JBOWRITER | JBOCREAT )) {
+          ejdbdel(ejDB);
+          ejDB = 0;
+          is_opened = false;
+          Error( path, "EJDB open error");
+         }
+#else
+        EJDB_OPTS opts = {
+            .kv = {
+                .path = path.c_str(),
+                .oflags = IWKV_TRUNC
+            }
+        };
+        iwrc ecode = ejdb_open(&opts, &ejDB);
+        ejdb_check_result(ecode, path +" open error :");
+#endif
+        numEJDB++;
+        is_opened = true;
+    }
+}
+
+/// Close EJ DataBase
+void TEJDB::Close()
+{
+    numEJDB--;
+
+    if( numEJDB <= 0 ) {
+
+#ifdef OLD_EJDB
+        if(ejDB) {
+            ejdbclose(ejDB);
+                ejdbdel(ejDB);
+                ejDB = 0;
+              }
+#else
+        if(ejDB) {
+            iwrc ecode=ejdb_close(&ejDB);
+            ejdb_check_result(ecode, path +" close error :");
+        }
+#endif
+        is_opened = false;
+    }
+}
+
+/// Create PDB file
+void TEJDB::Create()
+{
+    Open();
+    Close();
+    // make changelog.txt file
+    std::string clfile = dir + "/Changelog.txt";
+    std::fstream ff( clfile.c_str(), std::ios::out);
+    ff << "File " << name << " created on " << current_time_and_date() << std::endl;
+    ff << "<Version> = v0.1" << std::endl;
+}
+
+
+/// Read version from Changelog.txt file
+void TEJDB::readVersion()
+{
+    // open changelog.txt file
+    std::string clfile = dir + "/Changelog.txt";
+    std::fstream ff( clfile.c_str(), std::ios::in);
+    std::string fbuf;
+    size_t pos;
+    version = "not versioned";
+
+    while(ff.good()) {
+        getline(ff, fbuf);
+        pos = fbuf.find("<Version>");
+        if( pos != std::string::npos ) {
+            pos = fbuf.find("=", pos+1);
+            if( pos != std::string::npos ) {
+                version = fbuf.substr(pos+1);
+                strip( version);
+                break;
+            }
+        }
+    }
+}
 
 //-------------------------------------------------------------
 // IndexEntry  - Element in sequence of record keys
@@ -437,10 +607,10 @@ void TEJDataBase::insertRecord()
         /// putndx(nF); work with indexes
         bson_destroy(&bsrec);
     }
+    std::cout << "Add record " << retSave << " oid " << bytes << std::endl;
 #else
 
 #endif
-    std::cout << "Add record " << retSave << " oid " << bytes << std::endl;
 }
 
 // Save/update record in the collection
@@ -485,10 +655,10 @@ void TEJDataBase::saveRecord(const std::string& pkey)
         current_ndx->set_id(bytes);
     }
     bson_destroy(&bsrec);
+    std::cout << "Saving record " << retSave << " oid " << current_ndx->get_id() << std::endl;
 #else
 
 #endif
-    std::cout << "Saving record " << retSave << " oid " << current_ndx->get_id() << std::endl;
 }
 
 // Save/update record in the collection
@@ -821,6 +991,18 @@ void EJDataBaseList::Init()
 
     // MDF_FITS default
     push_back( TEJDataBase( MDF_FITS, "fits", tsKeyFlds  ));
+}
+
+void EJDataBaseList::Close()
+{
+    for(size_t ii=0; ii<size(); ii++ )
+        at(ii).Close();
+    EJDBFile.Close();
+}
+
+void EJDataBaseList::ChangePath(const std::string &ejdbPath)
+{
+      EJDBFile.ChangePath(ejdbPath);
 }
 
 

@@ -25,7 +25,7 @@
 
 #ifdef OLD_EJDB
 
-#include <ejdb.h>
+#include <bson.h>
 
 /// Class for read/write bson structure from/to text file or std::string
 class ParserJson

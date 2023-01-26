@@ -101,6 +101,8 @@ private:
 
     QString fFitLogfile;  // name file  FIT_LOGFILE
 
+    TMatrixTable *current_table() const;
+
 };
 
 #endif // FITRESULTSWINDOW_H
