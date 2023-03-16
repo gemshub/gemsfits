@@ -18,99 +18,13 @@
 //-------------------------------------------------------------------
 
 #include <QListWidget>
-#include <QMessageBox>
 #include "DBKeyDialog.h"
 #include "ui_DBKeyDialog.h"
-#include "f_ejdb.h"
-#include "f_ejdb_file.h"
+#include "f_database.h"
+#include "gui_service.h"
 #include "v_service.h"
 
 extern const char *DBM;
-
-//------------------------------------------------------------------
-// service functions
-
-void messageCritical(QWidget* par, const std::string& title, const std::string& mess)
-{
-    QString titl, spac, messag;
-    titl = title.c_str(); spac = "\n\n"; messag = mess.c_str();
-
-    QMessageBox::critical(par,
-                      #ifdef __unix
-                      #ifdef __APPLE__
-                          "Title", titl.append(spac+=messag)
-                      #else
-                          titl, messag
-                      #endif
-                      #else
-                          titl, messag
-                      #endif
-                          );
-}
-
-static int posx=0, posy=0;
-// returns VF3_1, VF3_2 or VF3_3
-int vfQuestion3(QWidget* par, const std::string& title, const std::string& mess, const std::string& s1,
-                const std::string& s2,  const std::string& s3, bool i_mov)
-{
-    QString titl, spac, messag;
-    titl = title.c_str(); spac = "\n\n"; messag = mess.c_str();
-
-    QMessageBox qm( QMessageBox::Question,
-                #ifdef __unix
-                #ifdef __APPLE__
-                    "Title", titl.append(spac+=messag),
-                #else
-                    titl, messag,
-                #endif
-                #else
-                    titl, messag,
-                #endif
-                    QMessageBox::NoButton, par);
-
-    QAbstractButton *yesButton = qm.addButton(s1.c_str(), QMessageBox::YesRole);
-    QAbstractButton *noButton = qm.addButton(s2.c_str(), QMessageBox::NoRole);
-    QAbstractButton *cancelButton = nullptr;
-    if( !s3.empty() )
-        cancelButton = qm.addButton(s3.c_str(), QMessageBox::RejectRole);
-    if( i_mov )
-        qm.move(posx, posy);
-    qm.exec();
-    if( i_mov )
-    {
-        posx = qm.x();
-        posy = qm.y();
-    }
-    if (qm.clickedButton() == yesButton) {
-        return VF3_1;
-    }
-    else if (qm.clickedButton() == noButton) {
-        return VF3_2;
-    }
-    else if (qm.clickedButton() == cancelButton) {
-        return VF3_3;
-    }
-    return VF3_3;
-}
-
-bool vfQuestion(QWidget* par, const std::string& title, const std::string& mess)
-{
-    QString titl, spac, messag;
-    titl = title.c_str(); spac = "\n\n"; messag = mess.c_str();
-
-    int rest = (QMessageBox::question(par,
-                                  #ifdef __unix
-                                  #ifdef __APPLE__
-                                      "Title", titl.append(spac+=messag),
-                                  #else
-                                      titl, messag,
-                                  #endif
-                                  #else
-                                      titl, messag,
-                                  #endif
-                                      QMessageBox::Yes | QMessageBox::No));
-    return rest==QMessageBox::Yes;
-}
 
 std::vector<std::string> vfMultiKeys(QWidget* par, const char* caption,
                                      int iRt, const char* key)

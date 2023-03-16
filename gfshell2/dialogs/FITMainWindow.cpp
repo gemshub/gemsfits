@@ -21,8 +21,9 @@
 #include "ui_FITMainWindow.h"
 #include "HelpWindow.h"
 #include "FitResultsWindow.h"
-#include "f_ejdb.h"
+#include "f_database.h"
 #include "v_service.h"
+#include "gui_service.h"
 #include "keywords.h"
 
 //--------------------------------------------------------------------------

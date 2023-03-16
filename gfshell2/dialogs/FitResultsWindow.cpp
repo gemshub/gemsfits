@@ -34,7 +34,8 @@
 #include "ui_FitResultsWindow.h"
 #include "FITMainWindow.h"
 #include "DialogFindFromPlot.h"
-#include "f_ejdb.h"
+#include "f_database.h"
+#include "gui_service.h"
 
 FitResultsWindow* FitResultsWindow::pDia = 0;
 
@@ -399,7 +400,7 @@ void FitResultsWindow::CmBackupJSON()
         // open file to unloading
         std::string fname;
         TFile  outFile("", std::ios::out );
-        if( !outFile.ChooseFileSave( this, fname, "Please, give a file name for unloading records","*.json" ))
+        if( !ChooseFileSave(&outFile, this, fname, "Please, give a file name for unloading records","*.json" ))
             return;
         outFile.Open();
 

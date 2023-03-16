@@ -8,7 +8,6 @@ DEFINES         += Use_mt_mode
 #DEFINES         += NODEARRAYLEVEL
 DEFINES         += IPMGEMPLUGIN
 #DEFINES         += _MYNOZLIB
-#DEFINES         += USEBSON
 DEFINES         += OLD_EJDB
 
 #CONFIG -= warn_on
@@ -48,56 +47,35 @@ RESOURCES      = ./fgui.qrc
 CHARTS_CPP   =  ./charts
 DATAMAN_CPP  =  ./dataman
 DIALOGS_CPP  =  ./dialogs
+COMMON_CPP  =  ../common
 GEMS3K_CPP   =  ../../standalone/GEMS3K
 KEYS_CPP     =  ../csvtoejdb/src-csvtoejdb
 
 CHARTS_H     =  $$CHARTS_CPP
 DATAMAN_H    =  $$DATAMAN_CPP
 DIALOGS_H    =  $$DIALOGS_CPP
+COMMON_H     =  $$COMMON_CPP
 GEMS3K_H     =  $$GEMS3K_CPP
 KEYS_H       =   $$KEYS_CPP
 
-#EJDB_PATH = ../../standalone/EJDB
-#YAML_PATH = $$PWD/YAML
 
 win32{
    EJDB_LIB_PATH =  $$EJDB_PATH/build-win32
 }
-#unix{
-#   EJDB_LIB_PATH =  $$EJDB_PATH/build
-#}
-#app{
-#   EJDB_LIB_PATH =  $$EJDB_PATH/build
-#}
-
-#YAML_LIB_PATH =  $$YAML_PATH/build
-#YAML_H =  $$YAML_PATH/include
-#YAML_H2 =  $$YAML_PATH/src
-
-#EJDB_BSON_H = $$EJDB_PATH/src/bson
-#EJDB_EJDB_H = $$EJDB_PATH/src/ejdb
-#EJDB_TCUTIL_H = $$EJDB_PATH/src/tcutil
-#EJDB_GENERATED_H = $$EJDB_LIB_PATH/debug/src/generated
-#CONFIG(release, debug|release): EJDB_GENERATED_H = $$EJDB_LIB_PATH/release/src/generated
-#CONFIG(debug, debug|release): EJDB_GENERATED_H = $$EJDB_LIB_PATH/debug/src/generated
 
 DEPENDPATH   += $$CHARTS_H
 DEPENDPATH   += $$DATAMAN_H
 DEPENDPATH   += $$DIALOGS_H
+DEPENDPATH   += $$COMMON_H
 DEPENDPATH   += $$GEMS3K_H
 DEPENDPATH   += $$KEYS_H
 
 INCLUDEPATH   += $CHARTS_H
 INCLUDEPATH   += $$DATAMAN_H
 INCLUDEPATH   += $$DIALOGS_H
+INCLUDEPATH   += $$COMMON_H
 INCLUDEPATH   += $$GEMS3K_H
 INCLUDEPATH   += $$KEYS_H
-#INCLUDEPATH   += $$EJDB_BSON_H
-#INCLUDEPATH   += $$EJDB_EJDB_H
-#INCLUDEPATH   += $$EJDB_GENERATED_H
-#INCLUDEPATH   += $$EJDB_TCUTIL_H
-#INCLUDEPATH   += $$YAML_H
-#INCLUDEPATH   += $$YAML_H2
 
 MOC_DIR = tmp
 UI_DIR        = $$MOC_DIR
@@ -107,7 +85,7 @@ include($$GEMS3K_CPP/gems3k.pri)
 include($$CHARTS_CPP/charts.pri)
 include($$DATAMAN_CPP/dataman.pri)
 include($$DIALOGS_CPP/dialogs.pri)
-#include($$EJDB_PATH/ejdb.pri)
+include($$COMMON_CPP/common.pri)
 
 contains(DEFINES, OLD_EJDB) {
 CONFIG(release, debug|release): LIBS += -lejdb -lyaml-cpp
@@ -119,10 +97,4 @@ CONFIG(release, debug|release): LIBS += -lejdb2 -lyaml-cpp
 CONFIG(debug, debug|release): LIBS += -lejdb2 -lyaml-cpp
 }
 
-
-#CONFIG(release, debug|release): LIBS += -L$$YAML_LIB_PATH/release/ -lyaml-cpp
-#CONFIG(debug, debug|release): LIBS += -L$$YAML_LIB_PATH/debug/ -lyaml-cpp
-
-#CONFIG(release, debug|release): LIBS += -L$$EJDB_LIB_PATH/release/src/ -lejdb
-#CONFIG(debug, debug|release): LIBS += -L$$EJDB_LIB_PATH/debug/src/ -lejdb
 

@@ -21,6 +21,7 @@
 #include "ProjectSettingsDialog.h"
 #include "ui_ProjectSettingsDialog.h"
 #include "FITMainWindow.h"
+#include "gui_service.h"
 extern const char *_FIT_version_stamp;
 
 ProjectSettingsDialog::ProjectSettingsDialog( QSettings *aSet, QWidget *parent) :
@@ -102,9 +103,9 @@ void ProjectSettingsDialog::CmEJDBDir()
     std::string fname = ui->projDir->text().toStdString();
     //Select files
     TFile file("");
-    if( !file.ChooseFileSave( this, fname, "Select EJDB Directory", "" ))
+    if( !ChooseFileSave(&file, this, fname, "Select EJDB Directory", "" ))
         return;
-    QString dir( file.Dir().c_str() );
+    QString dir(file.Dir().c_str());
     dir = dir.remove(projDir);
     ui->ejdbDir->setText( dir );
     ui->ejdbName->setText( file.Name().c_str() );

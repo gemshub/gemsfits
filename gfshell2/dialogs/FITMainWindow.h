@@ -25,7 +25,7 @@
 #include <QLineEdit>
 #include <QTableWidget>
 #include <QProcess>
-#include "f_ejdb_file.h"
+#include "f_file.h"
 #include "node.h"
 
 namespace Ui {

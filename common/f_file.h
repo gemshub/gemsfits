@@ -19,40 +19,12 @@
 
 #pragma once
 
-#ifndef EJDB_FILE_H
-#define EJDB_FILE_H
+#ifndef FILE_H
+#define FILE_H
 
 #include <fstream>
 #include <vector>
 #include "verror.h"
-
-class QWidget;
-class QDir;
-class QString;
-
-//----------------------------------------------------------------------
-// service functions
-
-/// remove numbers!
-const int VF3_1 = 6;
-const int VF3_2 = 7;
-const int VF3_3 = 2;
-
-// returns VF3_1, VF3_2 or VF3_3
-int vfQuestion3(QWidget* par, const std::string& title, const std::string& mess,
-                const std::string& s1, const std::string& s2,  const std::string& s3="&Cancel",
-                bool i_mov = false);
-
-bool vfQuestion(QWidget* par, const std::string& title, const std::string& mess);
-
-std::vector<std::string> vfMultiKeys(QWidget* par, const char* caption,
-                                     int iRt, const char* key );
-
-bool removeDirectoryEntry(QDir dir);
-
-void removeComments(QString& valCsv);
-
-//----------------------------------------------------------------------
 
 // Mode enums
 enum { MDF_DATABASE=0, MDF_TASK=1, MDF_FITS=2 };
@@ -104,10 +76,6 @@ public:
     virtual void Open() = 0;
     virtual void Close() = 0;
 
-    bool ChooseFileOpen(QWidget* par, std::string& path_,
-                        const char* title, const char *filter);
-    bool ChooseFileSave(QWidget* par, std::string& path_,
-                        const char* title, const char *filter);
     virtual void ChangePath(const std::string& path);
     virtual void ChangeName(const std::string& name);
 };

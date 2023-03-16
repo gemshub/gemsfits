@@ -23,14 +23,15 @@
 
 #ifdef OLD_EJDB
 #include <ejdb.h>
+#include "v_json_old.h"
 #else
 //https://stackoverflow.com/questions/18362315/static-size-of-array-in-c99
 #include <ejdb2.h>
 #endif
-#include "v_json_old.h"
 
 
-#include "f_ejdb.h"
+#include "f_database.h"
+#include "f_file.h"
 #include "FITMainWindow.h"
 #include "v_yaml.h"
 #include "v_service.h"
@@ -663,20 +664,20 @@ void TEJDataBase::saveRecord(const std::string& pkey)
 
 // Save/update record in the collection
 // Question for replase
-void TEJDataBase::saveRecordQuestion(const std::string& pkey, bool& yes_to_all)
-{
-    if(!yes_to_all && findRecord(pkey))  {
-        switch( vfQuestion3( pFitImp, pkey,
-                             "Data record with this key already exists! Replace?",
-                             "&Yes", "&No", "&Yes to All" ))
-        {
-        case VF3_3: yes_to_all=true;
-        case VF3_1: break;
-        case VF3_2: return;
-        }
-    }
-    saveRecord(pkey);
-}
+//void TEJDataBase::saveRecordQuestion(const std::string& pkey, bool& yes_to_all)
+//{
+//    if(!yes_to_all && findRecord(pkey))  {
+//        switch( vfQuestion3( pFitImp, pkey,
+//                             "Data record with this key already exists! Replace?",
+//                             "&Yes", "&No", "&Yes to All" ))
+//        {
+//        case VF3_3: yes_to_all=true;
+//        case VF3_1: break;
+//        case VF3_2: return;
+//        }
+//    }
+//    saveRecord(pkey);
+//}
 
 int TEJDataBase::getKeyList(const std::string& keypat, std::vector<std::string>& key_list)
 {
@@ -1011,7 +1012,6 @@ TEJDataBase& EJDataBaseList::operator[](size_t ii)
     ErrorIf( ii > size(), "DataBaseList","Invalid chain index.");
     return at(ii);
 }
-
 
 EJDataBaseList rtEJ;
 

@@ -51,9 +51,9 @@
 #include <string>
 #include "node.h"
 #ifdef buildWIN32
-#include <tcejdb/ejdb.h>
+//#include <tcejdb/ejdb.h>
 #else
-#include "ejdb.h"
+//#include "ejdb.h"
 #endif
 #include <algorithm>
 #include "optimization.h"

@@ -1,5 +1,4 @@
 //-------------------------------------------------------------------
-// $Id: DBKeyDialog.h 333 2014-03-13 13:23:32Z gemsfits $
 //
 // Declaration of DBKeyDialog and DBKeyFilter classes
 //

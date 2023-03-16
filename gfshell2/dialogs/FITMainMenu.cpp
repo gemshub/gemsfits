@@ -24,11 +24,11 @@
 #include "PreferencesDialog.h"
 #include "DBKeyDialog.h"
 
-#include "f_ejdb.h"
+#include "f_database.h"
 #include "v_service.h"
+#include "gui_service.h"
 #include "keywords.h"
 #include "v_json_old.h"
-
 #include "v_yaml.h"
 #include <yaml-cpp/yaml.h>
 #include <yaml-cpp/eventhandler.h>
@@ -245,7 +245,7 @@ void FITMainWindow::CmSelectGEMS( const std::string& fname_ )
         {
             fname = gemsLstFile.getPath();
             //Select files
-            if( !gemsLstFile.ChooseFileOpen( this, fname, "Please, select a GEMS3K lst file","*.lst" ))
+            if( !ChooseFileOpen(&gemsLstFile, this, fname, "Please, select a GEMS3K lst file","*.lst" ))
                 return;
         }
 
@@ -274,7 +274,7 @@ void FITMainWindow::CmSelectProject( const std::string& fname_ )
         if( fname.empty())
         { //Select fit project files
             fname = userDir();
-            if( !fitTaskDir.ChooseFileOpen( this, fname, "Please, select a GEMSFITS project file","*.pro *.conf" ))
+            if( !ChooseFileOpen(&fitTaskDir, this, fname, "Please, select a GEMSFITS project file","*.pro *.conf" ))
                 return;
         }
 
@@ -304,7 +304,7 @@ void FITMainWindow::CmConfigProject()
     try
     {    //Select fit project files
         std::string fname = userDir();
-        if( !fitTaskDir.ChooseFileOpen( this, fname, "Please, select a GEMSFITS project file","*.pro *.conf" ))
+        if( !ChooseFileOpen(&fitTaskDir, this, fname, "Please, select a GEMSFITS project file","*.pro *.conf" ))
             return;
 
         //load project settings
@@ -430,7 +430,6 @@ void FITMainWindow::CmShow( const std::string& reckey )
 
 void FITMainWindow::CmNext()
 {
-
     int row = keyTable->currentRow();
     if( row < keyTable->rowCount()-1 )
     {
@@ -614,19 +613,16 @@ void FITMainWindow::CmSaveSearch()
     {
         // open file to unloading
         std::string fname= fitTaskDir.Dir()+ "/search1.txt";
-        TFile  inFile( fname, std::ios::out);
-        if( !inFile.ChooseFileSave( this, fname, "Please, select file name to save search template","*.txt" ))
+        if( !ChooseFileSave( nullptr, this, fname, "Please, select file name to save search template","*.txt" ))
             return;
 
         QString filterText = ui->queryEdit->toPlainText();
-
         QFile tmpStriam(fname.c_str());
         if(tmpStriam.open( QIODevice::WriteOnly|QIODevice::Truncate))
         {
             tmpStriam.write(filterText.toUtf8());
             tmpStriam.close();
         }
-
     }
     catch( TError& err )
     {
@@ -642,8 +638,7 @@ void FITMainWindow::CmLoadSearch()
     {
         // open file to unloading
         std::string fname = fitTaskDir.Dir();
-        TFile  inFile(fname, std::ios::in);
-        if( !inFile.ChooseFileOpen( this, fname, "Please, select file name to load search template","*.txt" ))
+        if( !ChooseFileOpen(nullptr, this, fname, "Please, select file name to load search template","*.txt" ))
             return;
 
         QString valStr;
@@ -856,7 +851,7 @@ void FITMainWindow::CmBackupJSON()
         fname += ".json";
 
         TFile  outFile("", std::ios::out );
-        if( !outFile.ChooseFileSave( this, fname, "Please, give a file name for unloading records","*.json" ))
+        if( !ChooseFileSave(&outFile, this, fname, "Please, give a file name for unloading records","*.json" ))
             return;
         outFile.Open();
 
@@ -896,7 +891,7 @@ void FITMainWindow::CmRestoreJSON()
         // open file to unloading
         std::string fname;
         TFile  inFile("", std::ios::in);
-        if( !inFile.ChooseFileOpen( this, fname, "Please, select file with unloaded records","*.json" ))
+        if( !ChooseFileOpen(&inFile, this, fname, "Please, select file with unloaded records","*.json" ))
             return;
         inFile.Open();
         auto arr_json = jsonio::JsonFree::parse(inFile.ff);
@@ -947,7 +942,7 @@ void FITMainWindow::CmBackupYAML()
         fname += rtEJ[ currentMode ].getKeywd();
         fname += ".yaml";
         TFile  outFile("", std::ios::out );
-        if( !outFile.ChooseFileSave( this, fname, "Please, give a file name for unloading records","*.yaml" ))
+        if( !ChooseFileSave(&outFile, this, fname, "Please, give a file name for unloading records","*.yaml" ))
             return;
         outFile.Open();
 
@@ -985,7 +980,7 @@ void FITMainWindow::CmRestoreYAML()
         // open file to unloading
         std::string fname;
         TFile  inFile("", std::ios::in);
-        if( !inFile.ChooseFileOpen( this, fname, "Please, select file with unloaded records","*.yaml" ))
+        if( !ChooseFileOpen(&inFile, this, fname, "Please, select file with unloaded records","*.yaml" ))
             return;
         inFile.Open();
 
@@ -1038,7 +1033,7 @@ void FITMainWindow::CmRestoreCSV()
         // select file with data
         std::string fname;
         TFile  inFile("", std::ios::in);
-        if( !inFile.ChooseFileOpen( this, fname, "Please, select file with unloaded csv format","*.csv" ))
+        if( !ChooseFileOpen(&inFile, this, fname, "Please, select file with unloaded csv format","*.csv" ))
             return;
 
         // read file
@@ -1177,7 +1172,7 @@ void FITMainWindow::CmRestoreTXT()
         // open file to unloading
         std::string fname;
         TFile  inFile("", std::ios::in);
-        if( !inFile.ChooseFileOpen( this, fname, "Please, select file with GEMSFIT2 specificatins file","*.json" ))
+        if( !ChooseFileOpen(&inFile, this, fname, "Please, select file with GEMSFIT2 specificatins file","*.json" ))
             return;
 
         readTXT(inFile);
@@ -1334,7 +1329,7 @@ void FITMainWindow::CmTPpairsCSV()
 
     std::string fname;
     TFile  outFile("", std::ios::out );
-    if( !outFile.ChooseFileSave( this, fname, "Please, give a file name for exporting the P-T pairs ", "*.csv" ))
+    if( !ChooseFileSave(&outFile, this, fname, "Please, give a file name for exporting the P-T pairs ", "*.csv" ))
         return;
     outFile.Open();
 
