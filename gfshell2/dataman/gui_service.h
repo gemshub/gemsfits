@@ -25,7 +25,10 @@
 class QWidget;
 class QDir;
 class QString;
+
+namespace common {
 class TAbstractFile;
+}
 
 //----------------------------------------------------------------------
 // service functions
@@ -49,7 +52,7 @@ bool removeDirectoryEntry(QDir dir);
 
 void removeComments(QString& valCsv);
 
-bool ChooseFileOpen(TAbstractFile* file, QWidget* par, std::string& template_path, const char* title, const char *filter);
-bool ChooseFileSave(TAbstractFile* file, QWidget* par, std::string& template_path, const char* title, const char *filter);
+bool ChooseFileOpen(common::TAbstractFile* file, QWidget* par, std::string& template_path, const char* title, const char *filter);
+bool ChooseFileSave(common::TAbstractFile* file, QWidget* par, std::string& template_path, const char* title, const char *filter);
 
 

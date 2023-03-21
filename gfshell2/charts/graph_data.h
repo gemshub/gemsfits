@@ -138,8 +138,8 @@ public:
         xcolumn = aNdxX;
     }
 
-    jsonio::JsonFree toBsonObject() const;
-    void fromBsonObject( const jsonio::JsonFree& object );
+    common::JsonFree toBsonObject() const;
+    void fromBsonObject( const common::JsonFree& object );
 
     void toJsonObject(QJsonObject& json) const;
     void fromJsonObject(const QJsonObject& json);
@@ -320,8 +320,8 @@ public:
         axisTypeY = axisY;
     }
 
-    jsonio::JsonFree toBsonObject() const;
-    void fromBsonObject( const jsonio::JsonFree& object );
+    common::JsonFree toBsonObject() const;
+    void fromBsonObject( const common::JsonFree& object );
 
     void toJsonObject(QJsonObject& json) const;
     void fromJsonObject(const QJsonObject& json);

@@ -61,8 +61,8 @@ class FITMainWindow : public QMainWindow
     QString ExpTemplate; ///< Current template for experiments record
     QString SrchTemplate; ///< Current template for experiments search
 
-    TFile  gemsLstFile; ///< Path to GEMS3K files
-    TFile  fitTaskDir;  ///< Path to the database file
+    common::TFile  gemsLstFile; ///< Path to GEMS3K files
+    common::TFile  fitTaskDir;  ///< Path to the database file
 
     QFont	axisLabelFont; // used in graphics
 
@@ -90,7 +90,7 @@ class FITMainWindow : public QMainWindow
     void selectGEMS(const std::string& fname_);
     std::string makeSystemFileName(const std::string& path);
     bool createTaskTemplate();
-    void readTXT(TFile& inFile);
+    void readTXT(common::TFile& inFile);
     std::string getRecordKey(int row);
     void defineModuleKeysList( std::string& samplelist);
 

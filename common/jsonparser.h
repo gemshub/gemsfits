@@ -2,7 +2,7 @@
 
 #include "v_json.h"
 
-namespace jsonio {
+namespace common {
 
 
 /// Class for read JsonBase structure from json string.
@@ -14,13 +14,13 @@ class JsonParser final
 public:
 
     /// Constructor
-    explicit JsonParser( const std::string &jsondata ):jsontext()
+    explicit JsonParser(const std::string &jsondata):jsontext()
     {
         set_string( jsondata );
     }
 
     /// Update string to parse.
-    void set_string( const std::string &jsondata )
+    void set_string(const std::string &jsondata)
     {
         jsontext = jsondata;
         cur_pos = 0;
@@ -52,4 +52,4 @@ protected:
 
 };
 
-} // namespace jsonio
+} // namespace common

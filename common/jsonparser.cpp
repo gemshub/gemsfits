@@ -4,13 +4,11 @@
 #include "v_service.h"
 
 
-namespace jsonio {
-
+namespace common {
 
 static const int json_max_depth = 10000;
 ///  @brief scan a string literal
 static void undump_string( std::string& strvalue );
-
 
 enum {
     jsBeginArray = '[',    //0x5b,
@@ -26,25 +24,23 @@ JsonFree JsonParser::parse(const std::string& new_str)
 {
     JsonFree obj;
 
-    if( !new_str.empty() )
-         set_string( new_str );
+    if( !new_str.empty() ) {
+        set_string( new_str );
+    }
 
     cur_pos = 0;
     skip_space_comment();
 
-    if( jsontext[cur_pos] == jsBeginObject )
-    {
+    if( jsontext[cur_pos] == jsBeginObject ) {
         obj = JsonFree::object();
         parse_object( 0, obj );
     }
-    else if( jsontext[cur_pos] == jsBeginArray )
-    {
+    else if( jsontext[cur_pos] == jsBeginArray ) {
         obj = JsonFree::array();
         parse_array( 0, obj );
     }
-    else // update value Scalar
-    {
-      set_scalar(obj);
+    else { // update value Scalar
+        set_scalar(obj);
     }
     skip_space_comment();
     ErrorIf( cur_pos < end_pos, "JsonParser", "extra value after close: " + err_part() );
@@ -55,38 +51,38 @@ JsonFree JsonParser::parse(const std::string& new_str)
 void JsonParser::parse_object( int depth, JsonFree& object)
 {
     std::string keyn;
-    if( jsontext[cur_pos] == jsBeginObject )
+    if( jsontext[cur_pos] == jsBeginObject ) {
         cur_pos++;
+    }
     ErrorIf( !skip_space_comment(), "JsonParser", "unterminated object: " + err_part() );
 
     // empty object
-    if( jsontext[cur_pos] == jsEndObject )
-    {
+    if( jsontext[cur_pos] == jsEndObject ) {
         cur_pos++;
         return;
     }
 
     do {
-        if( !parse_string( keyn ) )
+        if( !parse_string( keyn ) ) {
             Error(  "JsonParser",  "missing key of object: " + err_part() );
-
+        }
         ErrorIf( !skip_space_comment(), "JsonParser", "missing value of object: " + err_part() );
 
-        if( jsontext[cur_pos] == jsNameSeparator  )
+        if( jsontext[cur_pos] == jsNameSeparator  ) {
             cur_pos++;
-        else
+        }
+        else {
             Error(  "JsonParser", "missing ':' : " + err_part() );
+        }
 
         parse_value( depth, keyn, object );
         ErrorIf( !skip_space_comment(), "JsonParser", "unterminated object: " + err_part() );
 
-        if( jsontext[cur_pos] == jsEndObject  )
-        {
+        if( jsontext[cur_pos] == jsEndObject ) {
             cur_pos++;
             return;
         }
-
-    }while( jsontext[cur_pos++] == jsValueSeparator );
+    } while( jsontext[cur_pos++] == jsValueSeparator );
 
     Error(  "JsonParser", "illegal symbol : '" + jsontext.substr(cur_pos-1, err_block_size)+"'" );
 }
@@ -94,13 +90,13 @@ void JsonParser::parse_object( int depth, JsonFree& object)
 //    array = [ <value1>, ... <valueN> ]
 void JsonParser::parse_array( int depth, JsonFree& object)
 {
-    if( jsontext[cur_pos] == jsBeginArray )
+    if( jsontext[cur_pos] == jsBeginArray ) {
         cur_pos++;
+    }
     ErrorIf( !skip_space_comment(), "JsonParser", "unterminated array: " + err_part() );
 
     // empty array
-    if( jsontext[cur_pos] == jsEndArray )
-    {
+    if( jsontext[cur_pos] == jsEndArray ) {
         cur_pos++;
         return;
     }
@@ -108,12 +104,11 @@ void JsonParser::parse_array( int depth, JsonFree& object)
     do {
         parse_value( depth, "",  object);
         ErrorIf( !skip_space_comment(), "JsonParser", "unterminated array: " + err_part() );
-        if( jsontext[cur_pos] == jsEndArray  )
-        {
+        if( jsontext[cur_pos] == jsEndArray ) {
             cur_pos++;
             return;
         }
-    }while( jsontext[cur_pos++] == jsValueSeparator );
+    } while( jsontext[cur_pos++] == jsValueSeparator );
 
     Error(  "JsonParser", "illegal symbol : '" + jsontext.substr(cur_pos-1, err_block_size)+"'" );
 }
@@ -121,12 +116,15 @@ void JsonParser::parse_array( int depth, JsonFree& object)
 std::string JsonParser::err_part() const
 {
     std::string asubstr;
-    if( cur_pos < end_pos - err_block_size)
+    if( cur_pos < end_pos - err_block_size) {
         asubstr =  jsontext.substr(cur_pos, err_block_size);
-    else if( end_pos < err_block_size )
+    }
+    else if( end_pos < err_block_size ) {
         asubstr = jsontext;
-    else
+    }
+    else {
         asubstr = jsontext.substr( end_pos - err_block_size);
+    }
 
     return "'" + asubstr  + "'";
 }
@@ -134,10 +132,10 @@ std::string JsonParser::err_part() const
 
 bool JsonParser::skip_space()
 {
-    for( ; cur_pos<end_pos; ++cur_pos )
-    {
-        if( !std::isspace(jsontext[cur_pos], std::locale()) )
+    for( ; cur_pos<end_pos; ++cur_pos ) {
+        if( !std::isspace(jsontext[cur_pos], std::locale()) ) {
             break;
+        }
     }
     return (cur_pos < end_pos);
 }
@@ -145,11 +143,11 @@ bool JsonParser::skip_space()
 bool JsonParser::skip_space_comment()
 {
     bool haznext = skip_space();
-    while( haznext && jsontext[cur_pos] == '#' )
-    {
+    while( haznext && jsontext[cur_pos] == '#' ) {
         cur_pos = jsontext.find_first_of( "\n", cur_pos );
-        if( cur_pos == std::string::npos )
+        if( cur_pos == std::string::npos ) {
             return  false;
+        }
         haznext = skip_space();
     }
     return haznext;
@@ -161,27 +159,30 @@ bool JsonParser::parse_string( std::string &str )
     str = "";
     ErrorIf( !skip_space_comment(), "JsonParser", "must be string: " + err_part() );
 
-    if( jsontext[cur_pos++] != jsQuote )
+    if( jsontext[cur_pos++] != jsQuote ) {
         return false;
+    }
 
-    while( jsontext[cur_pos] != jsQuote || lastCh )
-    {
+    while( jsontext[cur_pos] != jsQuote || lastCh ) {
         // non-UTF-8 sequence
-        if (  !std::isspace(jsontext[cur_pos], std::locale()) && static_cast<uint8_t>(jsontext[cur_pos]) < 0x20)
-        {
-          // control character
-          Error( "JsonParser", "Unexpected control character" + err_part() );
+        if(!std::isspace(jsontext[cur_pos], std::locale())
+                && static_cast<uint8_t>(jsontext[cur_pos]) < 0x20) {
+            // control character
+            Error( "JsonParser", "Unexpected control character" + err_part() );
         }
 
         str += jsontext[cur_pos];
-        if( jsontext[cur_pos] == '\\' )
+        if( jsontext[cur_pos] == '\\' ) {
             lastCh = !lastCh;
-        else
+        }
+        else {
             lastCh = false;
+        }
 
         cur_pos++;
-        if( cur_pos>=end_pos )
+        if( cur_pos>=end_pos ) {
             return false;
+        }
     }
     cur_pos++;
     // conwert all pair ('\\''\n') to one simbol '\n' and other
@@ -194,66 +195,61 @@ void JsonParser::parse_value( int depth, const std::string &name, JsonFree& obje
     ErrorIf( depth > json_max_depth, "JsonParser", "exceeded maximum nesting depth " + err_part() );
     ErrorIf( !skip_space_comment(), "JsonParser", "must be value " + err_part() );
 
-    switch( jsontext[cur_pos] )
-    {
-    case jsQuote:
-    {
+    switch( jsontext[cur_pos] )  {
+    case jsQuote: {
         std::string str;
         parse_string( str );
         // conwert all pair ('\\''\n') to one simbol '\n' and other
         undump_string( str );
-        if(name.empty())
-            object.push_back(jsonio::JsonFree::scalar(str));
-        else
+        if(name.empty()) {
+            object.push_back(JsonFree::scalar(str));
+        }
+        else {
             object[name] = str;
+        }
     }
         break;
 
-    case jsBeginArray:
-    {
-        auto obj = jsonio::JsonFree::array(name);
+    case jsBeginArray: {
+        auto obj = JsonFree::array(name);
         parse_array( depth+1, obj );
-        if(name.empty())
-        {
+        if(name.empty()) {
             object.push_back(std::move(obj));
         }
-        else
-        {
-           object[name] = obj;
+        else {
+            object[name] = obj;
         }
     }
         break;
 
-    case jsBeginObject:
-    {
-        auto obj = jsonio::JsonFree::object(name);
+    case jsBeginObject: {
+        auto obj = JsonFree::object(name);
         parse_object( depth+1, obj );
-        if(name.empty())
-        {
+        if(name.empty()) {
             object.push_back(std::move(obj));
         }
-        else
-        {
-           object[name] = obj;
+        else {
+            object[name] = obj;
         }
     }
         break;
 
-    default:  // addScalar true/false/null/number
-    {
+    default:  { // addScalar true/false/null/number
+
         auto pos_end_value = jsontext.find_first_of( ",]}", cur_pos );
         auto end_size = pos_end_value;
-        if( pos_end_value != std::string::npos )
-        {
-           end_size -= cur_pos;
+        if( pos_end_value != std::string::npos ) {
+            end_size -= cur_pos;
         }
         auto valuestr = jsontext.substr(cur_pos, end_size);
         trim(valuestr);
         ErrorIf( valuestr.empty(), "JsonParser", "must be value " + err_part() );
-        if(name.empty())
-            object.push_back(jsonio::JsonFree::scalar(valuestr));
-        else
-            object[name] = jsonio::JsonFree::scalar(valuestr);
+        if(name.empty()) {
+            object.push_back(JsonFree::scalar(valuestr));
+        }
+        else {
+            object[name] = JsonFree::scalar(valuestr);
+        }
         cur_pos = pos_end_value;
     }
         break;
@@ -263,8 +259,7 @@ void JsonParser::parse_value( int depth, const std::string &name, JsonFree& obje
 // decision about value type
 void JsonParser::set_scalar( JsonFree& object )
 {
-    if( jsontext[cur_pos] == jsQuote )
-    {
+    if( jsontext[cur_pos] == jsQuote ) {
         std::string str;
         parse_string( str );
         undump_string( str );
@@ -274,7 +269,7 @@ void JsonParser::set_scalar( JsonFree& object )
 
     std::string valuestr(jsontext.substr(cur_pos));
     cur_pos = std::string::npos;
-    object = jsonio::JsonFree::scalar(valuestr);
+    object = JsonFree::scalar(valuestr);
 }
 
 
@@ -332,24 +327,21 @@ static void encode_utf8(long pt, std::string & out) {
 ///  @brief scan a string literal
 static void undump_string( std::string& strvalue )
 {
-    if(strvalue.empty())
+    if(strvalue.empty()) {
         return;
+    }
 
-    if( strvalue.find_first_of("\\") != std::string::npos )
-    {
+    if( strvalue.find_first_of("\\") != std::string::npos ) {
         std::string resstr = "";
         size_t ii=0;
         long last_escaped_codepoint = -1;
 
-        while( ii<strvalue.length()  )
-        {
-            if( strvalue[ii]  == '\\')
-            {
+        while( ii<strvalue.length() )  {
+            if( strvalue[ii]  == '\\') {
                 ii++;
                 auto ch = strvalue[ii++];
 
-                if( ch == 'u')
-                {
+                if( ch == 'u') {
                     // Extract 4-byte escape sequence
                     std::string esc = strvalue.substr(ii, 4);
                     // Explicitly check length of the substring. The following loop
@@ -358,7 +350,7 @@ static void undump_string( std::string& strvalue )
                     ErrorIf( esc.length() < 4, "JsonParser", "bad \\u escape: " + esc );
                     for (size_t j = 0; j < 4; j++) {
                         ErrorIf( !in_range(esc[j], 'a', 'f') && !in_range(esc[j], 'A', 'F') && !in_range(esc[j], '0', '9'),
-                                          "JsonParser", "bad \\u escape: " + esc );
+                                 "JsonParser", "bad \\u escape: " + esc );
                     }
                     long codepoint = strtol(esc.data(), nullptr, 16);
 
@@ -385,8 +377,7 @@ static void undump_string( std::string& strvalue )
                 encode_utf8(last_escaped_codepoint, resstr);
                 last_escaped_codepoint = -1;
 
-                switch( ch )
-                {
+                switch( ch ) {
                 case '\"': resstr += '\"'; break;
                 case '\'': resstr += '\''; break;
                 case '\\': resstr += '\\'; break;
@@ -400,13 +391,12 @@ static void undump_string( std::string& strvalue )
                     Error( "JsonParser", "invalid escape character " + esc(ch) );
                 }
             }
-            else
-            {
+            else {
                 encode_utf8(last_escaped_codepoint, resstr);
                 last_escaped_codepoint = -1;
                 auto ch = strvalue[ii++];
                 ErrorIf( !std::isspace(ch, std::locale()) && in_range<long>(ch, 0, 0x1f),
-                                  "JsonParser", "unescaped in string" );
+                         "JsonParser", "unescaped in string" );
                 resstr += ch;
             }
         }
@@ -415,4 +405,4 @@ static void undump_string( std::string& strvalue )
     }
 }
 
-} // namespace jsonio
+} // namespace common

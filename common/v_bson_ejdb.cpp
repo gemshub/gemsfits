@@ -17,18 +17,68 @@
 // E-mail gems2.support@psi.ch
 //-------------------------------------------------------------------
 
-#include <iostream>
-#include <fstream>
-#include "verror.h"
-#include "v_json_old.h"
-#include "v_service.h"
 
 #ifdef OLD_EJDB
 
-#include <sstream>
 #include <cstring>
+#include <sstream>
 #include <iomanip>
-#include "f_database.h"
+#include <fstream>
+#include "verror.h"
+#include "v_bson_ejdb.h"
+
+namespace common {
+
+/// Class for read/write bson structure from/to text file or std::string
+class ParserJson
+{
+protected:
+
+    std::string jsontext;
+    const char *curjson;
+    const char *end;
+
+    bool xblanc();
+    void getString(std::string& str);
+    void getNumber(double& value, int& type);
+    void parseValue(const char *name, bson *brec);
+    void bson_print_raw_txt(std::iostream& os, const char *data, int depth, int datatype);
+
+public:
+
+    ParserJson():curjson(0), end(0)
+    {}
+    virtual ~ParserJson()
+    {}
+
+    /// Parse internal jsontext std::string to bson structure (without first {)
+    void parseObject(bson *brec);
+    void parseArray(bson *brec);
+
+    /// Print bson structure to JSON std::string
+    void printBsonObjectToJson(std::string& resStr, const char *b);
+
+    /// Read one json object from text file
+    std::string readObjectText(std::fstream& fin);
+    /// Set up internal jsontext before parsing
+    void  setJsonText(const std::string& json);
+
+};
+
+/// Generate json string from bson structure
+bool bson_to_json_string(const char *bsdata, std::string& result_json) {
+    ParserJson pars;
+    pars.printBsonObjectToJson(result_json, bsdata);
+    return true;
+}
+
+/// Generate bson structure from json string
+bool json_string_to_bson(const std::string& input_json, bson *bsrec) {
+    ParserJson pars;
+    pars.setJsonText(input_json.substr(input_json.find_first_of('{')+1));
+    pars.parseObject(bsrec);
+    return true;
+}
 
 //------------------------------
 
@@ -620,6 +670,8 @@ void ParserJson::printBsonObjectToJson( std::string& resStr, const char *b)
     os << "}";
     resStr = os.str();
 }
+
+} // namespace common
 
 #endif
 

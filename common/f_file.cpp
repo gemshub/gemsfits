@@ -17,9 +17,22 @@
 //-------------------------------------------------------------------
 
 #include <unistd.h>
-#include <iostream>
+#include <iomanip>
+#include <chrono>
 #include "f_file.h"
 #include "v_service.h"
+
+namespace common {
+
+static std::string current_time_and_date()
+{
+    auto now = std::chrono::system_clock::now();
+    auto in_time_t = std::chrono::system_clock::to_time_t(now);
+
+    std::stringstream ss;
+    ss << std::put_time(std::localtime(&in_time_t), "%d/%m/%Y %H:%M");
+    return ss.str();
+}
 
 //----------------------------------------------------------
 // TAbstractFile
@@ -32,9 +45,8 @@ TAbstractFile::TAbstractFile(const std::string& fName, const std::string& fExt,
     dir = fDir;
     ext = fExt;
     name = fName;
-
+    keywd = name;
     Makepath();
-    makeKeyword();
 }
 
 TAbstractFile::TAbstractFile(const std::string& apath, FileStatus aMode):
@@ -43,7 +55,7 @@ TAbstractFile::TAbstractFile(const std::string& apath, FileStatus aMode):
     if( path.empty() )
         return;
     u_splitpath(path, dir, name, ext);
-    makeKeyword();
+    keywd = name;
 }
 
 // For all files is name
@@ -61,7 +73,7 @@ void TAbstractFile::Makepath()
 /// Check for existence of file
 bool TAbstractFile::Exist()
 {
-    if(Test())
+    if(is_opened)
         return true;  // file alredy open
     if(path.empty())
         Makepath();
@@ -72,9 +84,9 @@ bool TAbstractFile::Exist()
         return true;
 }
 
-void TAbstractFile::ChangePath( const std::string& a_path )
+void TAbstractFile::ChangePath(const std::string& a_path)
 {
-    if(Test())
+    if(is_opened)
         Close();
 
     path = a_path;
@@ -87,9 +99,9 @@ void TAbstractFile::ChangePath( const std::string& a_path )
     }
 }
 
-void TAbstractFile::ChangeName( const std::string& newname )
+void TAbstractFile::ChangeName(const std::string& newname)
 {
-    if(Test())
+    if(is_opened)
         Close();
 
     name = newname;
@@ -110,7 +122,7 @@ TFile::TFile( const std::string& path, FileStatus aMode ):
 
 TFile::~TFile()
 {
-    if(Test()) {
+    if(is_opened) {
         Close();
     }
 }
@@ -118,7 +130,7 @@ TFile::~TFile()
 /// Open file in special mode
 void TFile::Open()
 {
-    if(Test()) {
+    if(is_opened) {
         Close();
     }
 
@@ -133,6 +145,81 @@ void TFile::Close()
     ff.close();
     is_opened = false;
 }
+
+//-------------------------------------------------------------
+// TDataBaseFile
+//-------------------------------------------------------------
+
+// Configurations from file path
+TDataBaseFile::TDataBaseFile(const std::string& path):TAbstractFile(path)
+{
+    makeKeyword();
+}
+
+
+TDataBaseFile::~TDataBaseFile()
+{}
+
+/// Make keyword of DB internal file
+void TDataBaseFile::makeKeyword()
+{
+    std::string key;
+    if( name.empty() )
+        return;
+
+    std::string fname = name;
+
+    key = std::string(fname, 0, 2);
+    size_t npos = 0;
+    size_t npos2 = fname.find("_", npos);
+    while( npos2 != std::string::npos ) {
+        npos = npos2+1;
+        key += std::string(fname, npos, 2);
+        npos2 = fname.find("_", npos);
+    }
+    key += std::string(fname, npos+2);
+
+    keywd = key;
+}
+
+/// Create PDB file
+void TDataBaseFile::Create()
+{
+    Open();
+    Close();
+    // make changelog.txt file
+    std::string clfile = dir + "/Changelog.txt";
+    std::fstream ff( clfile.c_str(), std::ios::out);
+    ff << "File " << name << " created on " << current_time_and_date() << std::endl;
+    ff << "<Version> = v0.1" << std::endl;
+}
+
+
+/// Read version from Changelog.txt file
+void TDataBaseFile::readVersion()
+{
+    // open changelog.txt file
+    std::string clfile = dir + "/Changelog.txt";
+    std::fstream ff( clfile.c_str(), std::ios::in);
+    std::string fbuf;
+    size_t pos;
+    version = "not versioned";
+
+    while(ff.good()) {
+        getline(ff, fbuf);
+        pos = fbuf.find("<Version>");
+        if( pos != std::string::npos ) {
+            pos = fbuf.find("=", pos+1);
+            if( pos != std::string::npos ) {
+                version = fbuf.substr(pos+1);
+                strip( version);
+                break;
+            }
+        }
+    }
+}
+
+} // namespace common
 
 //--------------------- End of f_file.cpp ---------------------------
 

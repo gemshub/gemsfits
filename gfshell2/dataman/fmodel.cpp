@@ -343,7 +343,7 @@ void TMatrixModel::matrixToCsvFile( const QString& dir )
 }
 
 /// write model to json structure
-void TMatrixModel::matrixToBson(jsonio::JsonFree& object)
+void TMatrixModel::matrixToBson(common::JsonFree& object)
 {
     std::string name = fname.toStdString();
     std::string valCsv = matrixToCsvString().toStdString();
@@ -359,7 +359,7 @@ void TMatrixModel::matrixToBson(jsonio::JsonFree& object)
 }
 
 /// read model from json structure
-void TMatrixModel::matrixFromBson( QSortFilterProxyModel *pmodel, const jsonio::JsonFree& object )
+void TMatrixModel::matrixFromBson( QSortFilterProxyModel *pmodel, const common::JsonFree& object )
 {
     std::string valCsv;
     std::string name = fname.toStdString();

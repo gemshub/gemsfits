@@ -33,11 +33,11 @@ using namespace keys;
 // cuts the csv header into strings from phase.aq_gen.IC.Al.Q to output = [pahse, aq_gen, IC, Al, Q]
 int cut_csv_header (std::string input, std::string delimiter, std::vector<std::string> &output);
 // adds Qunit and Qerror to BSON object
-bool add_unit_and_error(jsonio::JsonFree& exp, std::vector<std::string> headline, std::vector<std::string> row , unsigned int &position);
+bool add_unit_and_error(common::JsonFree& exp, std::vector<std::string> headline, std::vector<std::string> row , unsigned int &position);
 // checks if the std::string is the name of a possilbe phase property
 bool it_is_phase_property (std::string ph_prop);
 
-bool add_unit_and_error (jsonio::JsonFree& exp, std::vector<std::string> headline, std::vector<std::string> row, unsigned int &position )
+bool add_unit_and_error (common::JsonFree& exp, std::vector<std::string> headline, std::vector<std::string> row, unsigned int &position )
 {
     double error = 0.0;
     if (position+1< headline.size() && (headline[position+1]==Qerror))
@@ -110,7 +110,7 @@ bool iequals(const std::string& a, const std::string& b)
     return true;
 }
 
-void csvToBson( jsonio::JsonFree& exp, const  std::vector<std::string>& headline, const std::vector<std::string>& row )
+void csvToBson( common::JsonFree& exp, const  std::vector<std::string>& headline, const std::vector<std::string>& row )
 {
     //int //ic = 0,      // counts the number of system comp (recipe entries), independent components per pahse, phase properties per pahse, and dependent components properties per dependent component
         //phc = 0,     // counts the number of phases per system/experiment
@@ -183,13 +183,13 @@ void csvToBson( jsonio::JsonFree& exp, const  std::vector<std::string>& headline
     // 2nd level - bulk composition of chemical system for the current experiment
     // array of components
     //++ START array sbcomp ++//
-    exp[sbcomp] = jsonio::JsonFree::array();
+    exp[sbcomp] = common::JsonFree::array();
     for (unsigned int i=0; i<headline.size(); ++i)
     {
         cut_csv_header(headline[i], header_delimiter, header_vector);
         if ((header_vector[ndx_comp] == comp) && (!row[i].empty()))
         {
-            auto obj = jsonio::JsonFree::object();
+            auto obj = common::JsonFree::object();
             obj[comp] = header_vector[ndx_component_name];
             obj[Qnt] = atof(row[i].c_str());
             // checking if there are errors and units included in the CSV and adding them in the database
@@ -207,13 +207,13 @@ void csvToBson( jsonio::JsonFree& exp, const  std::vector<std::string>& headline
     //++ START array prop ++//
     if (h_prop)
     {
-    exp[props] = jsonio::JsonFree::array();
+    exp[props] = common::JsonFree::array();
     for (unsigned int i=0; i<headline.size(); ++i)
     {
         cut_csv_header(headline[i], header_delimiter, header_vector);
         if ((header_vector[ndx_props] == property) && (!row[i].empty()))
         {
-            auto obj = jsonio::JsonFree::object();
+            auto obj = common::JsonFree::object();
             obj[property] = header_vector[ndx_prop_name];
             obj[Qnt] = atof(row[i].c_str());
             // checking if there are errors and units included in the CSV and adding them in the database
@@ -231,7 +231,7 @@ void csvToBson( jsonio::JsonFree& exp, const  std::vector<std::string>& headline
     //++ START array expphases ++//
     if (h_phase)
     {
-    exp[expphases] = jsonio::JsonFree::array(); // going trough the headline and searching for "phase" keyword
+    exp[expphases] = common::JsonFree::array(); // going trough the headline and searching for "phase" keyword
     for (unsigned int i=0; i<headline.size(); ++i)
     {
         cut_csv_header(headline[i], header_delimiter, header_vector);
@@ -252,7 +252,7 @@ void csvToBson( jsonio::JsonFree& exp, const  std::vector<std::string>& headline
             if (!phase_already_added) // START if not phase_already_added. Every phase is scaned only once troughout out the headline.
             // The program goes trough this if only at the first enocunter of the phase name and scans the document for recuring of the phase.
             {
-                auto obj_phase = jsonio::JsonFree::object();                                                            // phases counter increased by 1
+                auto obj_phase = common::JsonFree::object();                                                            // phases counter increased by 1
                 obj_phase[phase] = phase_name;
                 phases.push_back(phase_name);                    // std::vector that keeps already present phases
 
@@ -287,7 +287,7 @@ void csvToBson( jsonio::JsonFree& exp, const  std::vector<std::string>& headline
                 //++ START array phprop ++//
                 if (h_phprop)
                 {
-                    obj_phase[phprop] = jsonio::JsonFree::array();
+                    obj_phase[phprop] = common::JsonFree::array();
                     // get phase properties
                     for (unsigned int j=0; j<headline.size(); ++j)
                     {
@@ -296,7 +296,7 @@ void csvToBson( jsonio::JsonFree& exp, const  std::vector<std::string>& headline
                         if ((header_vector[ndx_phase] == phase) && (header_vector[ndx_phase_name] == phase_name) &&
                             (it_is_phase_property(header_vector[ndx_phase_property])) && (!row[j].empty()))
                         {
-                            auto obj = jsonio::JsonFree::object();                                                            // phases counter increased by 1                                      // increase the number of phases properties with one
+                            auto obj = common::JsonFree::object();                                                            // phases counter increased by 1                                      // increase the number of phases properties with one
                             obj[property] = header_vector[ndx_phase_property];
                             obj[Qnt] = atof(row[j].c_str());
                             // checking if there are errors and units included in the CSV and adding tem in the database
@@ -314,7 +314,7 @@ void csvToBson( jsonio::JsonFree& exp, const  std::vector<std::string>& headline
                 //++ START array phcomp IC ++//
                 if (h_phIC)
                 {
-                    obj_phase[phIC] = jsonio::JsonFree::array();
+                    obj_phase[phIC] = common::JsonFree::array();
                     // get phase comp
                     for (unsigned int j=0; j<headline.size(); ++j)
                     {
@@ -323,7 +323,7 @@ void csvToBson( jsonio::JsonFree& exp, const  std::vector<std::string>& headline
                         if ((header_vector[ndx_phase] == phase) && (!row[j].empty()) &&
                             (header_vector[ndx_phase_name] == phase_name) && (header_vector[ndx_IC] == IC ))
                         {
-                            auto obj = jsonio::JsonFree::object();
+                            auto obj = common::JsonFree::object();
                             // quantity of this IC in the phase
                             obj[IC] = header_vector[ndx_IC_name];
                             obj[Qnt] = strtod(row[j].c_str(), NULL);
@@ -342,7 +342,7 @@ void csvToBson( jsonio::JsonFree& exp, const  std::vector<std::string>& headline
                 //++ START getting data reported as molar fraction
                 if (h_phMR)
                 {
-                    obj_phase[phMR] = jsonio::JsonFree::array();
+                    obj_phase[phMR] = common::JsonFree::array();
                     // get phase MR
                     for (unsigned int j=0; j<headline.size(); ++j)
                     {
@@ -351,7 +351,7 @@ void csvToBson( jsonio::JsonFree& exp, const  std::vector<std::string>& headline
                         if ((header_vector[ndx_phase] == phase) && (!row[j].empty()) &&
                             (header_vector[ndx_phase_name] == phase_name) && (header_vector[ndx_MR] == MR ))
                         {
-                            auto obj = jsonio::JsonFree::object();
+                            auto obj = common::JsonFree::object();
                             obj[MR] = header_vector[ndx_MR_formula];
                             obj[Qnt] = atof(row[j].c_str());
 
@@ -370,7 +370,7 @@ void csvToBson( jsonio::JsonFree& exp, const  std::vector<std::string>& headline
                 if (h_phDC) // check if there is species data in the CSV header
                 {
                     std::string dcomp_name;
-                    obj_phase[phDC] = jsonio::JsonFree::array();
+                    obj_phase[phDC] = common::JsonFree::array();
                     for (unsigned int j=0; j<headline.size(); ++j)
                     {
                         cut_csv_header(headline[j], header_delimiter, header_vector);
@@ -394,19 +394,19 @@ void csvToBson( jsonio::JsonFree& exp, const  std::vector<std::string>& headline
                             if (!dcomp_already_added)
                             {
                                 //++ START species object
-                                auto spec_obj = jsonio::JsonFree::object();
+                                auto spec_obj = common::JsonFree::object();
                                 spec_obj[DC] = dcomp_name;
                                 dcomps.push_back(dcomp_name);
 
                                 // loop to get all the properties of current dcomp
-                                spec_obj[DCprop] = jsonio::JsonFree::array();
+                                spec_obj[DCprop] = common::JsonFree::array();
                                 for (unsigned int k=0; k<headline.size(); ++k)
                                 {
                                     cut_csv_header(headline[k], header_delimiter, header_vector);
                                     if ((header_vector[ndx_DC_name] == dcomp_name) && (header_vector[ndx_phase] == phase) &&
                                         (header_vector[ndx_phase_name] == phase_name) && (header_vector[ndx_DC] == DC ) && (!row[k].empty()))
                                     {
-                                        auto obj = jsonio::JsonFree::object();
+                                        auto obj = common::JsonFree::object();
                                         obj[property] = header_vector[ndx_DC_prop_name];
                                         obj[Qnt] = atof(row[k].c_str()); // quantity of the property
 

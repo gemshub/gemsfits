@@ -154,15 +154,15 @@ void ChartDataModel::modelColumnsRemoved(QModelIndex m_parent, int start, int en
 
 // ------------------------ work with selection
 
-jsonio::JsonFree ChartDataModel::toBsonObject() const
+common::JsonFree ChartDataModel::toBsonObject() const
 {
-    jsonio::JsonFree object;
+    common::JsonFree object;
     object["gxclms"] = xcolumns;
     object["gyclms"] = ycolumns;
     return object;
 }
 
-void ChartDataModel::fromBsonObject( const jsonio::JsonFree& object )
+void ChartDataModel::fromBsonObject( const common::JsonFree& object )
 {
     xcolumns.clear();
     xcolumns = object.value("gxclms", xcolumns);

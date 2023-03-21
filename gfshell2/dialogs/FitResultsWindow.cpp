@@ -316,7 +316,7 @@ void FitResultsWindow::CmSaveBsonRecord()
             return;
         rtEJ[MDF_FITS].setKey(key);
 
-        jsonio::JsonFree object;
+        common::JsonFree object;
         // added key to json record
         rtEJ[MDF_FITS].addKeyToJson(object);
 
@@ -357,7 +357,7 @@ void FitResultsWindow::readBsonRecord()
     std::string key = pLineTask->text().toStdString();
     try
     {
-        jsonio::JsonFree object;
+        common::JsonFree object;
         if( key.empty() )
             return;
 
@@ -399,7 +399,7 @@ void FitResultsWindow::CmBackupJSON()
 
         // open file to unloading
         std::string fname;
-        TFile  outFile("", std::ios::out );
+        common::TFile  outFile("", std::ios::out );
         if( !ChooseFileSave(&outFile, this, fname, "Please, give a file name for unloading records","*.json" ))
             return;
         outFile.Open();

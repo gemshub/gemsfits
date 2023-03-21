@@ -23,9 +23,9 @@ QColor colorAt(const QColor &start, const QColor &end, qreal pos)
 //---------------------------------------------------------------------------
 
 
-jsonio::JsonFree SeriesLineData::toBsonObject() const
+common::JsonFree SeriesLineData::toBsonObject() const
 {
-    jsonio::JsonFree object;
+    common::JsonFree object;
     object["gpt"] = markerShape;
     object["gps"] = markerSize;
     object["gls"] = penSize;
@@ -39,7 +39,7 @@ jsonio::JsonFree SeriesLineData::toBsonObject() const
     return object;
 }
 
-void SeriesLineData::fromBsonObject( const jsonio::JsonFree& object )
+void SeriesLineData::fromBsonObject( const common::JsonFree& object )
 {
     markerShape = object.value("gpt", 0);
     markerSize = object.value("gps", 4);
@@ -107,9 +107,9 @@ void ChartData::setMinMaxRegion( double reg[4] )
 
 }
 
-jsonio::JsonFree ChartData::toBsonObject() const
+common::JsonFree ChartData::toBsonObject() const
 {
-    jsonio::JsonFree object;
+    common::JsonFree object;
     object[ "title" ] =  title;
     object[ "graphType" ] = graphType;
     object[ "axisTypeX" ] = axisTypeX;
@@ -122,13 +122,13 @@ jsonio::JsonFree ChartData::toBsonObject() const
     object["part"] = part;
     object["b_color"] = b_color;
 
-    auto linesArray = jsonio::JsonFree::array();
+    auto linesArray = common::JsonFree::array();
     for(const auto& line: linesdata) {
         linesArray.push_back(line.toBsonObject());
     }
     object["lines"] = linesArray;
 
-    auto modelArray = jsonio::JsonFree::array();
+    auto modelArray = common::JsonFree::array();
     for(const auto& amodel: modelsdata) {
         modelArray.push_back(amodel->toBsonObject());
     }
@@ -137,7 +137,7 @@ jsonio::JsonFree ChartData::toBsonObject() const
     return object;
 }
 
-void ChartData::fromBsonObject( const jsonio::JsonFree& object )
+void ChartData::fromBsonObject( const common::JsonFree& object )
 {
     title = object.value("title", "Graph title");
     graphType = object.value<int>("graphType", LineChart);

@@ -10,7 +10,7 @@
 #include "verror.h"
 #include "type_test.h"
 
-namespace jsonio {
+namespace common {
 
 namespace detail {
 
@@ -394,7 +394,7 @@ public:
 
 
     /// @brief merge objects
-    void merge_patch(const jsonio::JsonFree& other_object)
+    void merge_patch(const JsonFree& other_object)
     {
         if (other_object.is_object())
         {
@@ -567,13 +567,13 @@ private:
 };
 
 
-} // namespace jsonio
+} // namespace common
 
 
-jsonio::JsonFree fromJsonString(const std::string& json_str);
-jsonio::JsonFree fromYamlString(const std::string& yaml_str);
-jsonio::JsonFree fromString(bool is_json, const std::string& data_str);
+common::JsonFree fromJsonString(const std::string& json_str);
+common::JsonFree fromYamlString(const std::string& yaml_str);
+common::JsonFree fromString(bool is_json, const std::string& data_str);
 
-extern void csvToBson(jsonio::JsonFree& object,
+extern void csvToBson(common::JsonFree& object,
                       const std::vector<std::string>& headline,
                       const std::vector<std::string>& row);

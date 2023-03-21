@@ -21,64 +21,16 @@
 
 #include <set>
 #include "v_json.h"
+#include "dbdriver.h"
 
 extern const char* ALLKEY;
-
-#ifdef OLD_EJDB
-/// Callback function fetching document from a collection that match the specified condition
-using  SetReaded_f = std::function<void( const char * bjsondata )>;
-typedef  std::string ejdb_id_type;
-const ejdb_id_type empty_key="";
-class EJCOLL;
-#else
-/// Callback function fetching document from a collection that match the specified condition
-using  SetReaded_f = std::function<void( const char * bjsondata )>;
-typedef  int64_t ejdb_id_type;
-const ejdb_id_type empty_key=0;
-#endif
-
-/// Element in sequence of record keys
-class IndexEntry
-{
-    /// Document id placeholder
-    mutable ejdb_id_type ejdb_id;
-    /// Record key fields
-    std::vector<std::string> key_flds;
-
-    friend class TEJDataBase;
-    friend class TEJDBKey;
-
-public:
-
-    IndexEntry(ejdb_id_type id, const std::vector<std::string>& akey_flds):
-        ejdb_id(id),  key_flds(akey_flds)
-    {}
-    IndexEntry(std::vector<std::string>& akey_flds):
-        ejdb_id(empty_key),  key_flds(akey_flds)
-    {}
-    IndexEntry(const IndexEntry& ndx):
-        ejdb_id(ndx.ejdb_id),  key_flds(ndx.key_flds)
-    {}
-
-    const std::string& get_key_field(int ii) const
-    {  return key_flds[ii];  }
-
-    ejdb_id_type get_id() const
-    {  return ejdb_id;  }
-    void set_id(ejdb_id_type oid) const
-    {  ejdb_id = oid;  }
-
-    friend bool operator <( const IndexEntry&,  const IndexEntry& );
-    friend bool operator >( const IndexEntry&,  const IndexEntry& );
-    friend bool operator==( const IndexEntry&,  const IndexEntry& );
-    friend bool operator!=( const IndexEntry&,  const IndexEntry& );
-
-};
-
+// Mode enums
+enum { MDF_DATABASE=0, MDF_TASK=1, MDF_FITS=2 };
 
 /// This is struct contened the key of record
 class TEJDBKey
 {
+    friend class TEJDataBase;
 
 public:
     TEJDBKey(const std::vector<std::string>& field_names);
@@ -109,12 +61,12 @@ public:
     /// Change i-th field of TEJDBKey to fld
     void setKeyField(size_t ndx, const char *fld);
 
-    IndexEntry retIndex()
-    {  return IndexEntry(rk_fld);  }
+    common::IndexEntry retIndex()
+    {  return common::IndexEntry(rk_fld);  }
     /// Return index key in form
-    const std::string& indexKey(const IndexEntry& ndx)
-    {  return pack(ndx.key_flds); }
-    bool compareTemplate(const IndexEntry& elm);
+    std::string indexKey(const common::IndexEntry& ndx) const
+    {  return ndx.pack_key(); }
+    bool compareTemplate(const common::IndexEntry& elm);
 
     bool is_pattern();
     bool is_all();
@@ -145,9 +97,9 @@ class TEJDataBase final
 
     // Definition of record key list
     /// Linked records list
-    std::set<IndexEntry, std::less<IndexEntry>> records;
+    common::keysmap_t records;
     /// Current index in recList
-    std::set<IndexEntry, std::less<IndexEntry>>::iterator current_ndx;
+    common::keysmap_t::iterator current_ndx;
 
     // Work data
     /// last read/save record json
@@ -160,6 +112,8 @@ class TEJDataBase final
     std::string current_JQL;
 
 public:
+
+    static std::shared_ptr<common::DBDriverBase> dbdriver;
 
     /// Default configuration of the Data Base
     TEJDataBase(size_t nrt, const char* name,
@@ -216,12 +170,12 @@ public:
     /// Fetches all documents from a collection that match the specified condition.
     ///  \param query -    selection condition
     ///  \param setfnc -   callback function fetching document data
-    void selectQuery(const std::string &query, SetReaded_f setfnc);
+    void selectQuery(const std::string &query, common::SetReaded_f setfnc);
 
     /// Get current record key from json structure
-    std::string getKeyFromJson(const jsonio::JsonFree& bsdata);
+    std::string getKeyFromJson(const common::JsonFree& bsdata);
     /// Put current record key to json structure
-    void addKeyToJson(jsonio::JsonFree& object);
+    void addKeyToJson(common::JsonFree& object);
 
     /// Find record with key into internal record keys list
     bool findRecord(const std::string& pkey);
@@ -241,9 +195,9 @@ public:
     int getKeyList(const std::string& keypat, std::vector<std::string>& key_list);
 
     /// Open EJDB files and build linked record list
-    void Open();
+    void OpenDB();
     /// Close files all EJDB
-    void Close();
+    void CloseDB();
 
  // not used -------------------------------------
     /// Test state of record with key as template.
@@ -253,20 +207,15 @@ public:
 protected:
 
     /// Save current record to json structure
-    jsonio::JsonFree current_to_json(const std::string& pkey);
+    common::JsonFree current_to_json(const std::string& pkey);
     /// Load data from json structure (return readed record key)
     std::string record_from_json(const std::string& json_str);
     /// Download all or by query (current_JQL) record keys from collection
     void load_collection();
 
-#ifdef OLD_EJDB
-    EJCOLL *open_collection(bool create_if_empty = true);
-    void close_collection();
-    std::string getKeyFromBson(const char* bsdata);
-    void keyFromBson(const char* bsdata);
-#endif
+    void add_key_to_set(const std::string& key, const common::ejdb_id_type& oidhex);
 
- // not used -------------------------------------
+   // not used -------------------------------------
     /// Test state of record with key pkey.
     /// If mode == 1 and one record, read this record.
     bool Rtest(const std::string& pkey, int mode);

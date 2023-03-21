@@ -28,7 +28,7 @@
 #include "v_service.h"
 #include "gui_service.h"
 #include "keywords.h"
-#include "v_json_old.h"
+#include "v_bson_ejdb.h"
 #include "v_yaml.h"
 #include <yaml-cpp/yaml.h>
 #include <yaml-cpp/eventhandler.h>
@@ -412,7 +412,7 @@ void FITMainWindow::CmShow( const std::string& reckey )
         contentsChanged = false;
 
         // load gems3k list
-        TFile newgems( rtEJ[currentMode].getGems3kName() );
+        common::TFile newgems( rtEJ[currentMode].getGems3kName() );
         if( newgems.Name() != gemsLstFile.Name() ) // new list
         {
             if( !newgems.Name().empty() )
@@ -545,7 +545,7 @@ void FITMainWindow::CmCreate()
         if( !JsonDataShow )
         {
             std::string valDB = ui->recordEdit->toPlainText().toStdString();
-            valDB = yaml::Json2Yaml(valDB);
+            valDB = common::yaml::Json2Yaml(valDB);
             ui->recordEdit->setText(valDB.c_str());
         }
 
@@ -577,8 +577,8 @@ void FITMainWindow::CmSearch()
         {
             rtEJ[MDF_DATABASE].setQuery(filterText);
             // reopen records
-            rtEJ[MDF_DATABASE].Close();
-            rtEJ[MDF_DATABASE].Open();
+            rtEJ[MDF_DATABASE].CloseDB();
+            rtEJ[MDF_DATABASE].OpenDB();
             resetMainWindow(); // need change key list& current record
             contentsChanged = false;
             setStatusText( "Record filtered" );
@@ -713,7 +713,7 @@ void FITMainWindow::CmRunTest()
 
         // Load curent record to json structure
         std::string recBsonText = ui->recordEdit->toPlainText().toStdString();
-        jsonio::JsonFree  jsrec = fromString(JsonDataShow, recBsonText);
+        common::JsonFree  jsrec = fromString(JsonDataShow, recBsonText);
 
         //test current key
         lastCalcRecordKey = rtEJ[currentMode].getKeyFromJson(jsrec);
@@ -850,7 +850,7 @@ void FITMainWindow::CmBackupJSON()
         fname += rtEJ[ currentMode ].getKeywd();
         fname += ".json";
 
-        TFile  outFile("", std::ios::out );
+        common::TFile  outFile("", std::ios::out );
         if( !ChooseFileSave(&outFile, this, fname, "Please, give a file name for unloading records","*.json" ))
             return;
         outFile.Open();
@@ -890,11 +890,11 @@ void FITMainWindow::CmRestoreJSON()
 
         // open file to unloading
         std::string fname;
-        TFile  inFile("", std::ios::in);
+        common::TFile  inFile("", std::ios::in);
         if( !ChooseFileOpen(&inFile, this, fname, "Please, select file with unloaded records","*.json" ))
             return;
         inFile.Open();
-        auto arr_json = jsonio::JsonFree::parse(inFile.ff);
+        auto arr_json = common::JsonFree::parse(inFile.ff);
 
         for(const auto& object : arr_json)
         {
@@ -941,7 +941,7 @@ void FITMainWindow::CmBackupYAML()
         fname += ".";
         fname += rtEJ[ currentMode ].getKeywd();
         fname += ".yaml";
-        TFile  outFile("", std::ios::out );
+        common::TFile  outFile("", std::ios::out );
         if( !ChooseFileSave(&outFile, this, fname, "Please, give a file name for unloading records","*.yaml" ))
             return;
         outFile.Open();
@@ -979,7 +979,7 @@ void FITMainWindow::CmRestoreYAML()
 
         // open file to unloading
         std::string fname;
-        TFile  inFile("", std::ios::in);
+        common::TFile  inFile("", std::ios::in);
         if( !ChooseFileOpen(&inFile, this, fname, "Please, select file with unloaded records","*.yaml" ))
             return;
         inFile.Open();
@@ -1032,7 +1032,7 @@ void FITMainWindow::CmRestoreCSV()
 
         // select file with data
         std::string fname;
-        TFile  inFile("", std::ios::in);
+        common::TFile  inFile("", std::ios::in);
         if( !ChooseFileOpen(&inFile, this, fname, "Please, select file with unloaded csv format","*.csv" ))
             return;
 
@@ -1053,7 +1053,7 @@ void FITMainWindow::CmRestoreCSV()
         int ii, jj;
         std::vector<std::string> headline;
         std::vector<std::string> row;
-        jsonio::JsonFree exp;
+        common::JsonFree exp;
 
         //get header
 #if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
@@ -1135,7 +1135,7 @@ void FITMainWindow::CmBackupTXT()
 
         // Load curent record to json structure
         std::string recBsonText = ui->recordEdit->toPlainText().toStdString();
-        jsonio::JsonFree  bsrec = fromString(JsonDataShow, recBsonText);
+        common::JsonFree  bsrec = fromString(JsonDataShow, recBsonText);
 
         std::string fname = bsrec.value("taskid", "undefined");
         fname = projDir + "/" + fname + ".json";
@@ -1171,7 +1171,7 @@ void FITMainWindow::CmRestoreTXT()
 
         // open file to unloading
         std::string fname;
-        TFile  inFile("", std::ios::in);
+        common::TFile  inFile("", std::ios::in);
         if( !ChooseFileOpen(&inFile, this, fname, "Please, select file with GEMSFIT2 specificatins file","*.json" ))
             return;
 
@@ -1179,7 +1179,7 @@ void FITMainWindow::CmRestoreTXT()
         if( !JsonDataShow )
         {
             std::string valDB = ui->recordEdit->toPlainText().toStdString();
-            valDB = yaml::Json2Yaml(valDB);
+            valDB = common::yaml::Json2Yaml(valDB);
             ui->recordEdit->setText(valDB.c_str());
         }
 
@@ -1195,7 +1195,7 @@ void FITMainWindow::CmRestoreTXT()
 }
 
 /// Import Data Record from task configuration txt-file
-void FITMainWindow::readTXT( TFile& inFile )
+void FITMainWindow::readTXT( common::TFile& inFile )
 {
     inFile.Open();
 
@@ -1262,37 +1262,15 @@ void FITMainWindow::CmTPpairsCSV()
     std::vector<double> TP[2], TP_pairs[2];
     bool isfound = false, isfound2 = false;
 
-    SetReaded_f setfnc = [&TP](const char* bsdata)
+    common::SetReaded_f setfnc = [&TP](const std::string& bsdata)
     {
-#ifdef OLD_EJDB
-        // filing in the TP[]                                                  //D.1 getting the T and P of the experiments which will be later used to select the distinct P and T pairs
-        bson_iterator it;
-        const char *key;
-        std::string key_;
-
-        bson_iterator_from_buffer(&it, bsdata);
-        while (bson_iterator_next(&it))
-        {
-            bson_type t = bson_iterator_type(&it);
-            if (t == 0)
-                break;
-            key = bson_iterator_key(&it);
-            key_ = key;
-
-            if (key_ == "sT")
-            {
-                // adding temperature
-                TP[0].push_back(bson_iterator_double(&it));
-            }
-            else if (key_ == "sP")
-            {
-                // adding pressure
-                TP[1].push_back(bson_iterator_double(&it));
-            }
+        auto object = fromJsonString(bsdata);
+        if (object.contains("sT") ) {
+            TP[0].push_back(object["sT"].to_double());
         }
-#else
-
-#endif
+        if (object.contains("sP") ) {
+            TP[1].push_back(object["sP"].to_double());
+        }
     };
 
     // execute setfnc for all records
@@ -1328,7 +1306,7 @@ void FITMainWindow::CmTPpairsCSV()
     }
 
     std::string fname;
-    TFile  outFile("", std::ios::out );
+    common::TFile  outFile("", std::ios::out );
     if( !ChooseFileSave(&outFile, this, fname, "Please, give a file name for exporting the P-T pairs ", "*.csv" ))
         return;
     outFile.Open();

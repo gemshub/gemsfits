@@ -102,7 +102,7 @@ void ProjectSettingsDialog::CmEJDBDir()
     //     projDir,  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
     std::string fname = ui->projDir->text().toStdString();
     //Select files
-    TFile file("");
+    common::TFile file("");
     if( !ChooseFileSave(&file, this, fname, "Select EJDB Directory", "" ))
         return;
     QString dir(file.Dir().c_str());

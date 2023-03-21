@@ -6,9 +6,6 @@
 #include "v_detail.h"
 #include "jsonparser.h"
 
-
-//------------------------------
-
 std::string fix_cvs(const std::string& json_str)
 {
     std::string tmp_str;
@@ -26,15 +23,14 @@ std::string fix_cvs(const std::string& json_str)
     return tmp_str;
 }
 
-jsonio::JsonFree fromJsonString(const std::string& json_str)
+common::JsonFree fromJsonString(const std::string& json_str)
 {
-    jsonio::JsonFree object;
+    common::JsonFree object;
     try  {
         // temporally fix \n in csv
         auto tmpstr = fix_cvs(json_str);
-        object = jsonio::JsonFree::parse(tmpstr);
+        object = common::JsonFree::parse(tmpstr);
     }
-//    catch (jsonio::JsonFree::parse_error& ex) {
     catch (TError& ex) {
         std::cout << ex.mess << std::endl;
         std::cout << json_str << std::endl;
@@ -43,13 +39,13 @@ jsonio::JsonFree fromJsonString(const std::string& json_str)
     return object;
 }
 
-jsonio::JsonFree fromYamlString(const std::string& yaml_str)
+common::JsonFree fromYamlString(const std::string& yaml_str)
 {
-    jsonio::JsonFree object = yaml::parse(yaml_str);
+    common::JsonFree object = common::yaml::parse(yaml_str);
     return object;
 }
 
-jsonio::JsonFree fromString(bool is_json, const std::string& data_str)
+common::JsonFree fromString(bool is_json, const std::string& data_str)
 {
     if(is_json)
         return fromJsonString(data_str);
@@ -58,7 +54,7 @@ jsonio::JsonFree fromString(bool is_json, const std::string& data_str)
 }
 
 
-namespace jsonio {
+namespace common {
 
 namespace detail {
 
@@ -86,28 +82,24 @@ template<> std::string value2string( const bool& value )
 
 template <> std::string value2string( const double& value )
 {
-    if(std::isfinite(value))
-    {
+    if(std::isfinite(value)) {
         std::ostringstream os;
         os << std::setprecision(doublePrecision) << value;
         return os.str();
     }
-    else
-    {
+    else {
         return infiniteValue;
     }
 }
 
 template <> std::string value2string( const float& value )
 {
-    if(std::isfinite(value))
-    {
+    if(std::isfinite(value)) {
         std::ostringstream os;
         os << std::setprecision(floatPrecision) << value;
         return os.str();
     }
-    else
-    {
+    else {
         return infiniteValue;
     }
 }
@@ -170,8 +162,7 @@ static std::string decode_string(const std::string &value )
 JsonFree::JsonFree( JsonFree::Type atype, const std::string &akey, const std::string &avalue, JsonFree *aparent ):
     field_type(atype), field_key(akey), field_value(avalue), ndx_in_parent(0), parent_object(aparent), children()
 {
-    if(parent_object)
-    {
+    if(parent_object) {
         ndx_in_parent = parent_object->children.size();
     }
 }
@@ -200,7 +191,7 @@ JsonFree::JsonFree( JsonFree &&obj ) noexcept:
 // Deserialize a JSON document to a json object
 JsonFree JsonFree::scalar(const std::string &value)
 {
-    jsonio::JsonFree object;
+    JsonFree object;
     int ival = 0;
     double dval=0.;
 
@@ -230,28 +221,28 @@ std::string JsonFree::dump(bool dense) const
 void JsonFree::dump( std::ostream &os, bool dense ) const
 {
     auto objtype = type();
-    if( objtype == Object )
+    if( objtype == Object ) {
         os << ( dense ? "{" : "{\n" );
-    else
-        if( objtype == Array )
-            os << ( dense ? "[" : "[\n" );
-        else
-            if( objtype == String )
-            {
-                os << detail::decode_string(field_value);
-                return;
-            }
-            else
-            {
-                os << field_value;
-                return;
-            }
+    }
+    else if( objtype == Array ) {
+        os << ( dense ? "[" : "[\n" );
+    }
+    else if( objtype == String ) {
+        os << detail::decode_string(field_value);
+        return;
+    }
+    else {
+        os << field_value;
+        return;
+    }
 
     dump2stream( os, 0, dense );
-    if( objtype == Object )
+    if( objtype == Object ) {
         os << "}";
-    else
+    }
+    else {
         os << "]";
+    }
 }
 
 JsonFree JsonFree::parse(const std::string &json_str)
@@ -283,8 +274,7 @@ bool JsonFree::clear()
 
 std::string JsonFree::to_string( bool dense ) const
 {
-    if( is_structured() )
-    {
+    if( is_structured() ) {
         return dump( dense );
     }
     return field_value;
@@ -293,8 +283,7 @@ std::string JsonFree::to_string( bool dense ) const
 double JsonFree::to_double() const
 {
     double val = 0.0;
-    if( is_number() )
-    {
+    if( is_number() )  {
         detail::string2value( field_value, val );
     }
     return val;
@@ -303,8 +292,7 @@ double JsonFree::to_double() const
 long JsonFree::to_int() const
 {
     long val = 0;
-    if( type() == Type::Int )
-    {
+    if( type() == Type::Int )  {
         detail::string2value( field_value, val );
     }
     return val;
@@ -313,8 +301,7 @@ long JsonFree::to_int() const
 bool JsonFree::to_bool() const
 {
     bool val = false;
-    if( is_bool() )
-    {
+    if( is_bool() ) {
         detail::string2value( field_value, val );
     }
     return val;
@@ -330,8 +317,7 @@ void JsonFree::copy(const JsonFree &obj)
     field_value = obj.field_value;
 
     children.clear();
-    for( const auto& child: obj.children )
-    {
+    for( const auto& child: obj.children ) {
         children.push_back( std::make_shared<JsonFree>(*child) );
         children.back()->parent_object = this;
         children.back()->ndx_in_parent = children.size()-1;
@@ -347,8 +333,7 @@ void JsonFree::move(JsonFree &&obj)
     children = std::move(obj.children);
 
     obj.children.clear();
-    for( const auto& child: children )
-    {
+    for( const auto& child: children ) {
         child->parent_object = this;
     }
 }
@@ -376,8 +361,7 @@ const JsonFree& JsonFree::get_child(std::size_t idx) const
 JsonFree& JsonFree::get_child(std::size_t idx)
 {
     ErrorIf( idx>size(), "JsonFree", "array index " + std::to_string(idx) + " is out of range" );
-    if( idx==size() ) // next element
-    {
+    if( idx==size() ) { // next element
         append_node( std::to_string(idx), JsonFree::Null, "" );
         return *children.back();
     }
@@ -387,8 +371,7 @@ JsonFree& JsonFree::get_child(std::size_t idx)
 JsonFree& JsonFree::get_child(const std::string &key)
 {
     auto element = find_key(key);
-    if( element == children.end() )
-    {
+    if( element == children.end() ) {
         return append_node( key, JsonFree::Null, "" );
     }
     return *element->get();
@@ -397,8 +380,7 @@ JsonFree& JsonFree::get_child(const std::string &key)
 const JsonFree& JsonFree::get_child(const std::string &key) const
 {
     auto element = find_key(key);
-    if( element == children.end() )
-    {
+    if( element == children.end() ) {
         Error( "JsonFree", "key '" + key + "' not found" );
     }
     return *element->get();
@@ -416,27 +398,23 @@ void JsonFree::dump2stream( std::ostream& os, int depth, bool dense ) const
     bool first = true;
     auto objtype = type();
 
-    for( const auto& childobj: children )
-    {
-         if( !first )
+    for( const auto& childobj: children ) {
+        if( !first )
             os << ( dense ? "," : ",\n" );
         else
             first = false;
 
         // before print
-        switch( objtype )
-        {
+        switch( objtype ) {
         case Object:
-            if(!dense)
-            {
+            if(!dense) {
                 for (temp = 0; temp <= depth; temp++)
                     os <<  "     ";
             }
             os << "\"" << childobj->get_key() << ( dense ? "\":" : "\" :   " );
             break;
         case Array:
-            if(!dense)
-            {
+            if(!dense) {
                 for (temp = 0; temp <= depth; temp++)
                     os << "     ";
             }
@@ -445,8 +423,7 @@ void JsonFree::dump2stream( std::ostream& os, int depth, bool dense ) const
             break;
         }
 
-        switch (childobj->type())
-        {
+        switch (childobj->type()) {
         // impotant datatypes
         case Null:
             os << "null";
@@ -466,8 +443,7 @@ void JsonFree::dump2stream( std::ostream& os, int depth, bool dense ) const
         case Object:
             os << ( dense ? "{" : "{\n" );
             childobj->dump2stream( os, depth + 1, dense );
-            if(!dense)
-            {
+            if(!dense) {
                 for (temp = 0; temp <= depth; temp++)
                     os << "     ";
             }
@@ -476,8 +452,7 @@ void JsonFree::dump2stream( std::ostream& os, int depth, bool dense ) const
         case Array:
             os << ( dense ? "[" : "[\n" );
             childobj->dump2stream(os, depth + 1, dense );
-            if(!dense)
-            {
+            if(!dense) {
                 for (temp = 0; temp <= depth; temp++)
                     os << "     ";
             }
@@ -495,8 +470,7 @@ void JsonFree::dump2stream( std::ostream& os, int depth, bool dense ) const
 
 const char *JsonFree::type_name(JsonFree::Type type)
 {
-    switch( type )
-    {
+    switch( type ) {
     case Int:
         return "int";
     case Double:

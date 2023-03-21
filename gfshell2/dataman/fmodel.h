@@ -129,8 +129,8 @@ public:
     void matrixToCsvFile(const QString& dir);
     void matrixFromCsvString(const QString& valueCsv);
     QString matrixToCsvString();
-    void matrixToBson(jsonio::JsonFree& object);
-    void matrixFromBson(QSortFilterProxyModel *pmodel, const jsonio::JsonFree& object);
+    void matrixToBson(common::JsonFree& object);
+    void matrixFromBson(QSortFilterProxyModel *pmodel, const common::JsonFree& object);
     int getNumberStringColumns() const
     {   return numberStringColumns; }
 

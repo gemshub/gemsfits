@@ -19,15 +19,11 @@
 
 #pragma once
 
-#ifndef FILE_H
-#define FILE_H
-
 #include <fstream>
 #include <vector>
 #include "verror.h"
 
-// Mode enums
-enum { MDF_DATABASE=0, MDF_TASK=1, MDF_FITS=2 };
+namespace common {
 
 typedef std::ios::openmode FileStatus;
 
@@ -56,8 +52,6 @@ public:
     //--- Selectors
     const std::string& GetKeywd() const
     {  return keywd;  }
-    bool Test() const
-    {  return is_opened; }
     const std::string& Name() const
     {  return name;  }
     const std::string& Ext() const
@@ -93,4 +87,25 @@ public:
     void Close() override;
 };
 
-#endif
+/// Class for database file manipulation
+class TDataBaseFile: public TAbstractFile
+{
+public:
+
+    TDataBaseFile(const std::string& path);
+    ~TDataBaseFile();
+
+    const std::string& Version() const
+    {  return version;  }
+    void readVersion();
+
+    virtual void Create();
+
+protected:
+    /// Version of db
+    std::string version;
+    void makeKeyword() override;
+
+};
+
+} // namespace common

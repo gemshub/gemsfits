@@ -27,7 +27,7 @@
 #include "gui_service.h"
 #include "f_file.h"
 
-bool ChooseFileOpen(TAbstractFile* file, QWidget* par, std::string& template_path,
+bool ChooseFileOpen(common::TAbstractFile* file, QWidget* par, std::string& template_path,
                     const char* title, const char *filter)
 {
     if( file && template_path.find('/') == std::string::npos ) {
@@ -60,7 +60,7 @@ bool ChooseFileOpen(TAbstractFile* file, QWidget* par, std::string& template_pat
 
 }
 
-bool ChooseFileSave(TAbstractFile* file, QWidget* par, std::string& template_path,
+bool ChooseFileSave(common::TAbstractFile* file, QWidget* par, std::string& template_path,
                     const char* title, const char *filter)
 {
     if( file && template_path.find('/') == std::string::npos ) {

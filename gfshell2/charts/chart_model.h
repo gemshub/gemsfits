@@ -152,8 +152,8 @@ public:
     const std::vector<int>& YColumns() const
     { return ycolumns; }
 
-    jsonio::JsonFree toBsonObject() const;
-    void fromBsonObject( const jsonio::JsonFree& object );
+    common::JsonFree toBsonObject() const;
+    void fromBsonObject( const common::JsonFree& object );
 
     void toJsonObject( QJsonObject& json ) const;
     void fromJsonObject( const QJsonObject& json );

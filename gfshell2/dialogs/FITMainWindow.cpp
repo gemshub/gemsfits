@@ -340,13 +340,13 @@ void FITMainWindow::openEJDB()
     // change collections names
     std::string samlescolName = projectSettings->value("ExpSamplesDataColl", "experiments").toString().toStdString();
     rtEJ[MDF_DATABASE].setKeywd(samlescolName);
-    rtEJ[MDF_DATABASE].Open();
+    rtEJ[MDF_DATABASE].OpenDB();
     std::string testcolName = projectSettings->value("TaskCasesDataColl", "tests").toString().toStdString();
     rtEJ[MDF_TASK].setKeywd(testcolName);
-    rtEJ[MDF_TASK].Open();
+    rtEJ[MDF_TASK].OpenDB();
     testcolName = projectSettings->value("FitsCasesDataColl", "fits").toString().toStdString();
     rtEJ[MDF_FITS].setKeywd(testcolName);
-    rtEJ[MDF_FITS].Open();
+    rtEJ[MDF_FITS].OpenDB();
 }
 
 /// Set up data for current project
@@ -648,7 +648,7 @@ bool FITMainWindow::createTaskTemplate()
         outfile.close();
     }
 
-    TFile  inFile(path, std::ios::in);
+    common::TFile  inFile(path, std::ios::in);
     readTXT( inFile );
 
     // set up EJDB path
