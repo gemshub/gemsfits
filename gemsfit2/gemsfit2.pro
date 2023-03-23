@@ -39,6 +39,7 @@ DEFINES         += IPMGEMPLUGIN
 DEFINES         += useomp
 DEFINES         += _MYNOZLIB
 CONFIG          += c++17
+DEFINES         += OLD_EJDB
 
 QMAKE_CXXFLAGS += -O3
 QMAKE_LFLAGS += -O3
@@ -101,11 +102,13 @@ FIT_CPP      =  ./src-fit
 GEMS3K_CPP   =  ../../standalone/GEMS3K
 KEYS_CPP     =  ../csvtoejdb/src-csvtoejdb
 MUP_CPP      =  ./muparser/src
+COMMON_CPP  =  ../common
 
 FIT_H        =   $$FIT_CPP
 GEMS3K_H     =   $$GEMS3K_CPP
 KEYS_H       =   $$KEYS_CPP
 MUP_H        =   $$MUP_CPP
+COMMON_H     =  $$COMMON_CPP
 
 #EJDB_PATH = ../../standalone/EJDB
 
@@ -128,11 +131,13 @@ DEPENDPATH   += $$FIT_H
 DEPENDPATH   += $$GEMS3K_H
 DEPENDPATH   += $$KEYS_H
 DEPENDPATH   += $$MUP_H
+DEPENDPATH   += $$COMMON_H
 
 INCLUDEPATH  += $$FIT_H
 INCLUDEPATH  += $$GEMS3K_H   
 INCLUDEPATH  += $$KEYS_H
 INCLUDEPATH  += $$MUP_H
+INCLUDEPATH   += $$COMMON_H
 
 #INCLUDEPATH   += $$EJDB_BSON_H
 #INCLUDEPATH   += $$EJDB_EJDB_H
@@ -141,6 +146,7 @@ INCLUDEPATH  += $$MUP_H
 
 OBJECTS_DIR       = obj
 
+include($$COMMON_CPP/common.pri)
 include($$FIT_CPP/fit.pri)
 include($$GEMS3K_CPP/gems3k.pri)
 include($$MUP_CPP/muparser.pri)
@@ -149,3 +155,6 @@ include($$MUP_CPP/muparser.pri)
 
 #CONFIG(release, debug|release): LIBS += -L$$EJDB_LIB_PATH/release/src/ -lejdb
 #CONFIG(debug, debug|release): LIBS += -L$$EJDB_LIB_PATH/debug/src/ -lejdb
+
+CONFIG(release, debug|release): LIBS += -lyaml-cpp
+CONFIG(debug, debug|release): LIBS += -lyaml-cpp

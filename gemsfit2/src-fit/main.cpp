@@ -85,6 +85,13 @@ int generateJConfig();
 
 // ---- // ---- // ---- // MAIN FUNCTION FOR GEMSFIT PROGRAM // ---- // ---- // ---- //
  
+// CSH-solid-solution/work
+// -run 1 ./01-initial-values.json
+
+
+// CSH-solid-solution
+// -initJ 1 GEMS/TCSH-dat.lst
+
 int main( int argc, char *argv[] )
 {
     int countit = 0;
