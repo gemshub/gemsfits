@@ -8,6 +8,10 @@
 #include "v_bson_ejdb.h"
 #include "v_service.h"
 
+#ifdef useomp
+#include <omp.h>
+#endif
+
 std::shared_ptr<common::DBDriverBase> TEJDataBase::dbdriver = std::make_shared<common::EjdbDBClient>();
 
 namespace common {
@@ -270,6 +274,56 @@ void EjdbDBClient::select_query(const std::string& collname, const std::string& 
     //fprintf(stderr, "%s", TCXSTRPTR(log));
     //std::cout << count << " records in collection " << collname << std::endl;
 
+    for (int i = 0; i < TCLISTNUM(qres); ++i) {
+        void *bsdata = TCLISTVALPTR(qres, i);
+        std::string json_str;
+        bson_to_json_string(static_cast<const char*>(bsdata), json_str);
+        setfnc(json_str);
+    }
+
+    tclistdel(qres);
+    tcxstrdel(log);
+    ejdbquerydel(q);
+    bson_destroy(&bsq1);
+
+    close_collection();
+}
+
+void EjdbDBClient::select_query_omp(const std::string& collname, const std::string& query, SetReaded_f setfnc, int num_threads)
+{
+    if(!is_connected()) {
+      return;
+    }
+
+    EJCOLL *coll = open_collection(collname, false);
+    if( !coll ) {
+        close_collection();
+        return;
+    }
+
+    bson bsq1;
+    bson_init_as_query(&bsq1);
+    if( !query.empty() ) {
+        json_string_to_bson(query, &bsq1);
+    }
+    bson_finish(&bsq1);
+
+    EJQ *q = ejdbcreatequery(ejdb_db->ejDB, &bsq1, NULL, 0, NULL);
+    ErrorIf( !q, "TEJDB0015", "Error in query (test)" );
+    uint32_t count = 0;
+    TCXSTR *log = tcxstrnew();
+    TCLIST *qres = ejdbqryexecute(coll, q, &count, 0, log);
+    //fprintf(stderr, "%s", TCXSTRPTR(log));
+    //std::cout << count << " records in collection " << collname << std::endl;
+
+#ifdef useomp
+    omp_set_num_threads(num_threads);
+#ifdef buildWIN32
+    #pragma omp parallel for schedule(static)
+#else
+    #pragma omp parallel for schedule(dynamic)
+#endif
+#endif
     for (int i = 0; i < TCLISTNUM(qres); ++i) {
         void *bsdata = TCLISTVALPTR(qres, i);
         std::string json_str;

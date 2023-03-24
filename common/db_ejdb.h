@@ -4,6 +4,10 @@
 
 #include "dbdriver.h"
 
+#ifdef useomp
+#include <omp.h>
+#endif
+
 class EJCOLL;
 
 namespace common {
@@ -73,6 +77,13 @@ public:
     ///  \param query -    selection condition
     ///  \param setfnc -   callback function fetching document data
     void select_query(const std::string& collname, const std::string& query, SetReaded_f setfnc) override;
+
+    /// Fetches all documents from a collection that match the specified condition, use omp parallel.
+    ///  \param collname - collection name
+    ///  \param query -    selection condition
+    ///  \param setfnc -   callback function fetching document data
+    ///  \param num_threads -   callback function fetching document data
+    void select_query_omp(const std::string& collname, const std::string& query, SetReaded_f setfnc, int num_threads) override;
 
     /// Fetches all documents from a collection.
     ///  \param collname -    collection name

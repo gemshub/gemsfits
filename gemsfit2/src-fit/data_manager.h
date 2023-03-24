@@ -50,6 +50,7 @@
 #include <vector>
 #include <string>
 #include "node.h"
+#include "v_json.h"
 #ifdef buildWIN32
 //#include <tcejdb/ejdb.h>
 #else
@@ -222,7 +223,9 @@ class Data_Manager : public TNode
 //        */
 //        void out_db_specs_txt( bool with_comments, bool brief_mode );
 
-    private:
+protected:
+            std::string default_unit_to_property(const std::string &property_name) const;
+private:
 
         /// get measurement data from EJDB (default) (0) CSV file (1) or PostgreSQL database (2)
         int datasource;
@@ -275,7 +278,7 @@ class Data_Manager : public TNode
         * @param pos position of the BSON object in the std::vector experiments
         * @date 19.04.2013
         */
-        void bson_to_Data_Manager(const char *data, int pos);
+        void bson_to_Data_Manager(const std::string& data, int pos);
 
         /**
         * Gest the distinct T-P pairs form the experimental data

@@ -429,7 +429,7 @@ public:
 
     bool set_from( const std::string& value  )
     {
-        update_node(  String, (value) );
+        update_node(  String, value );
         return true;
     }
 
@@ -486,7 +486,7 @@ public:
         update_node(  Array, "" );
         for( const auto& el: values )
         {
-            auto obj = append_node( std::to_string(ii++), Null, "" );
+            auto& obj = append_node( std::to_string(ii++), Null, "" );
             obj.set_from(el);
         }
     }
@@ -499,7 +499,7 @@ public:
         update_node(  Object, "" );
         for( const auto& el: values )
         {
-            auto obj = append_node( v2string(el.first), Null, "" );
+            auto& obj = append_node( v2string(el.first), Null, "" );
             obj.set_from(el.second);
         }
     }
