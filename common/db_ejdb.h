@@ -4,10 +4,6 @@
 
 #include "dbdriver.h"
 
-#ifdef useomp
-#include <omp.h>
-#endif
-
 class EJCOLL;
 
 namespace common {

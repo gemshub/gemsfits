@@ -35,6 +35,7 @@
 #include "optimization.h"
 #include "json_parse.h"
 #include "keywords.h"
+#include "v_json.h"
 
 
 optimization::optimization()
@@ -66,7 +67,6 @@ optimization::optimization()
 void optimization::get_nlopt_param()
 {
     std::string fname;
-    std::vector<std::string> out, out2;
     int mode = gpf->KeysNdx;
 
     fname = gpf->OptParamFile();
@@ -78,86 +78,33 @@ void optimization::get_nlopt_param()
 
     GEMSsys = gpf->GEMS3LstFilePath();
 
-    parse_JSON_object(s, keys::OptParameters[mode], out);
-    if (out.size() == 0) {std::cout << "Error: No keyword for \""
-                               <<keys::OptParameters[mode]<<"\" found in the task definition"
-                               << std::endl; exit(1);}
-    OptParameters = out;
-    out.clear();
-
-    parse_JSON_object(s, keys::OptNFParameters[mode], out);
-    NFunParameters = out[0];
-    out.clear();
-
-    parse_JSON_object(s, keys::AddOptParameters[mode], out);
-    AddOptParameters = out[0];
-    out.clear();
+    common::JsonFree db_opt_object = fromJsonString(s);
+    OptParameters = db_opt_object.value( keys::OptParameters[mode], std::vector<std::string>{});
+    if (OptParameters.size() == 0) {
+          std::cout << "Error: No keyword for \""
+          << keys::OptParameters[mode] <<"\" found in the task definition" << std::endl;
+          exit(1);
+    }
+    NFunParameters = db_opt_object.value(keys::OptNFParameters[mode], std::string());
+    AddOptParameters = db_opt_object.value(keys::AddOptParameters[mode], std::string());
 
     // Optimization settings and statistics
-    parse_JSON_object(s, keys::OptSet[mode], out);
-
-    parse_JSON_object(out[0], keys::OptDW[mode], out2);
-    OptDoWhat = atoi(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::OptPrcParamDigits[mode], out2);
-    OptPrcParamDigits = atoi(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::OptEQ[mode], out2);
-    OptEquilibrium = atoi(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::SIA[mode], out2);
-    if (out2.size()>0)
-        OptGemsSIA = atoi(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::OptUW[mode], out2);
-    OptUserWeight = atoi(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::OptMixedResiduals[mode], out2);
-    if (out2.size()>0)
-        OptMixedSumOfResiduals = atoi(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::OptTu[mode], out2);
-    OptTuckey = atoi(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::OptTuVal[mode], out2);
-    OptTuckeyVal = atoi(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::OptAlg[mode], out2);
-    OptAlgo = out2[0].c_str();
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::OptPBP[mode], out2);
-    OptBoundPerc = atof(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::OptTRel[mode], out2);
-    OptTolRel = atof(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::OptTAbs[mode], out2);
-    OptTolAbs = atof(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::OptMEv[mode], out2);
-    OptMaxEval = atoi(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::OptNormP[mode], out2);
-    OptNormParam = atoi(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::OptPer[mode], out2);
-    OptPerturbator = atof(out2[0].c_str());
-    out2.clear();
-    out.clear();
+    auto& opt_set_object =  db_opt_object[keys::OptSet[mode]];
+    OptDoWhat = opt_set_object.value(keys::OptDW[mode], OptDoWhat);
+    OptPrcParamDigits = opt_set_object.value( keys::OptPrcParamDigits[mode], OptPrcParamDigits);
+    OptEquilibrium = opt_set_object.value(keys::OptEQ[mode], OptEquilibrium);
+    OptGemsSIA = opt_set_object.value(keys::SIA[mode], OptGemsSIA);
+    OptUserWeight = opt_set_object.value(keys::OptUW[mode], OptUserWeight);
+    OptMixedSumOfResiduals = opt_set_object.value(keys::OptMixedResiduals[mode], OptMixedSumOfResiduals);
+    OptTuckey = opt_set_object.value(keys::OptTu[mode], OptTuckey);
+    OptTuckeyVal = opt_set_object.value(keys::OptTuVal[mode], OptTuckeyVal);
+    OptAlgo = opt_set_object.value(keys::OptAlg[mode], OptAlgo);
+    OptBoundPerc = opt_set_object.value(keys::OptPBP[mode], OptBoundPerc);
+    OptTolRel = opt_set_object.value(keys::OptTRel[mode], OptTolRel);
+    OptTolAbs = opt_set_object.value(keys::OptTAbs[mode], OptTolAbs);
+    OptMaxEval = opt_set_object.value(keys::OptMEv[mode], OptMaxEval);
+    OptNormParam = opt_set_object.value(keys::OptNormP[mode], OptNormParam);
+    OptPerturbator = opt_set_object.value(keys::OptPer[mode], OptPerturbator);
 }
 
 void optimization::OptParameterCreate ()

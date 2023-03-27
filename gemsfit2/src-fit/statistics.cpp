@@ -33,7 +33,6 @@
 
 #include "statistics.h"
 #include "gemsfit_global_functions.h"
-#include "json_parse.h"
 #include <armadillo>
 #include <boost/math/distributions/students_t.hpp>
 #include <boost/math/distributions/normal.hpp>
@@ -92,7 +91,7 @@ std::cout<<" Statistics Constructor: sum of squares: "<<Weighted_Tfun_sum_of_res
 
 std::cout<<" Statistics Constructor: number_of_parameters: "<<number_of_parameters<<std::endl;
 
-    get_stat_param(); // <----------------------------------------------------++++++
+    get_stat_param(gfittask->OptSet); // <----------------------------------------------------++++++
 //stat->set_plotfit_vars_txt();
 
 //    /// Instantiate pointer to PlotFit class to print results
@@ -258,32 +257,13 @@ statistics::~statistics()
 
 }
 
-void statistics::get_stat_param()
+void statistics::get_stat_param(const std::string& optset_json)
 {
-    std::string fname, str, data;
-    std::vector<std::string> out, out2;
     int mode = gpf->KeysNdx;
-
-    fname = gpf->OptParamFile();
-
-    std::ifstream file(fname.c_str());
-    std::ostringstream tmp;
-    tmp<<file.rdbuf();
-    std::string s = tmp.str();
-
-    parse_JSON_object(s, keys::OptSet[mode], out);
-
-    parse_JSON_object(out[0], keys::StatMC[mode], out2);
-    MCbool = atoi(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::StatMCr[mode], out2);
-    num_of_MC_runs = atoi(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::StatPer[mode], out2);
-    perturbator = atof(out2[0].c_str());
-    out2.clear();
+    common::JsonFree db_opt_object = fromJsonString(optset_json);
+    MCbool = db_opt_object.value(keys::StatMC[mode], MCbool);
+    num_of_MC_runs = db_opt_object.value(keys::StatMCr[mode], num_of_MC_runs);
+    perturbator = db_opt_object.value(keys::StatPer[mode], perturbator);
 }
 
 // Perform basic statistical analysis

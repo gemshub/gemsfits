@@ -37,21 +37,9 @@
  *
  */
 
+#include <fstream>
 #include "data_manager.h"
-#include "gemsfit_iofiles.h"
 #include "keywords.h"
-#include <jansson.h>
-#ifdef buildWIN32
-#include <tcejdb/ejdb.h>
-#else
-#include "ejdb.h"
-#endif
-//#include <sstream>
-#include "json_parse.h"
-#include "fstream"
-
-#include "v_bson_ejdb.h"
-#include "v_json.h"
 #include "f_database.h"
 
 // Constructor
@@ -89,83 +77,49 @@ Data_Manager::~Data_Manager( )
 
 void Data_Manager::get_DataSyn()
 {
-    std::vector<std::string> out, out2, out3;
     Data_Manager::DataSynonyms ss;
     Data_Manager::PhSyn sss;
-    parse_JSON_object(DataSyn, keys::PhNames[mode], out);
-    for (unsigned i = 0; i < out.size(); i++)
-    {
+    common::JsonFree data_syn_object = fromJsonString(DataSyn);
 
-        SynPHs.push_back(sss);
-        parse_JSON_object(out[i], keys::NameSys[mode], out2);
-        SynPHs[SynPHs.size()-1].GemsName = out2[0];
-        out2.clear();
-        parse_JSON_object(out[i], keys::Syn[mode], out2);
-        if (out2[0] != "")
-        SynPHs[SynPHs.size()-1].syn = out2;
-        out2.clear();
+    if( data_syn_object.contains(keys::PhNames[mode]) ) {
+        for (const auto& element : data_syn_object[keys::PhNames[mode]]) {
+            SynPHs.push_back(sss);
+            SynPHs.back().GemsName  = element->value(keys::NameSys[mode], std::string());
+            SynPHs.back().syn = element->value(keys::Syn[mode], std::vector<std::string>{});
 
-        parse_JSON_object(out[i], keys::DcNames[mode], out3);
-        for (unsigned i = 0; i < out3.size(); i++)
-        {
-            SynPHs[SynPHs.size()-1].SynDCs.push_back(ss);
-            parse_JSON_object(out3[i], keys::NameSys[mode], out2);
-            SynPHs[SynPHs.size()-1].SynDCs[SynPHs[SynPHs.size()-1].SynDCs.size()-1].GemsName = out2[0];
-            out2.clear();
-            parse_JSON_object(out3[i], keys::Syn[mode], out2);
-            if (out2[0] != "")
-            SynPHs[SynPHs.size()-1].SynDCs[SynPHs[SynPHs.size()-1].SynDCs.size()-1].syn = out2;
-            out2.clear();
+            if( element->contains(keys::DcNames[mode]) ) {
+                for (const auto& sub_element : (*element)[keys::DcNames[mode]]) {
+                    SynPHs.back().SynDCs.push_back(ss);
+                    SynPHs.back().SynDCs.back().GemsName  = element->value(keys::NameSys[mode], std::string());
+                    SynPHs.back().SynDCs.back().syn = element->value(keys::Syn[mode], std::vector<std::string>{});
+                }
+            }
+         }
+    }
+
+    if( data_syn_object.contains(keys::PhPropNames[mode]) ) {
+        for (const auto& element : data_syn_object[keys::PhPropNames[mode]]) {
+            SynPHPs.push_back(ss);
+            SynPHPs.back().GemsName  = element->value(keys::NameSys[mode], std::string());
+            SynPHPs.back().syn = element->value(keys::Syn[mode], std::vector<std::string>{});
         }
-        out3.clear();
     }
-    out.clear();
 
-    parse_JSON_object(DataSyn, keys::PhPropNames[mode], out);
-    for (unsigned i = 0; i < out.size(); i++)
-    {
-
-        SynPHPs.push_back(ss);
-        parse_JSON_object(out[i], keys::NameSys[mode], out2);
-        SynPHPs[SynPHPs.size()-1].GemsName = out2[0];
-        out2.clear();
-        parse_JSON_object(out[i], keys::Syn[mode], out2);
-        if (out2[0] != "")
-        SynPHPs[SynPHPs.size()-1].syn = out2;
-        out2.clear();
-
+    if( data_syn_object.contains(keys::PropertyNames[mode]) ) {
+        for (const auto& element : data_syn_object[keys::PropertyNames[mode]]) {
+            SynProps.push_back(ss);
+            SynProps.back().GemsName  = element->value(keys::NameSys[mode], std::string());
+            SynProps.back().syn = element->value(keys::Syn[mode], std::vector<std::string>{});
+        }
     }
-    out.clear();
 
-    parse_JSON_object(DataSyn, keys::PropertyNames[mode], out);
-    for (unsigned i = 0; i < out.size(); i++)
-    {
-
-        SynProps.push_back(ss);
-        parse_JSON_object(out[i], keys::NameSys[mode], out2);
-        SynProps[SynProps.size()-1].GemsName = out2[0];
-        out2.clear();
-        parse_JSON_object(out[i], keys::Syn[mode], out2);
-        if (out2[0] != "")
-        SynProps[SynProps.size()-1].syn = out2;
-        out2.clear();
+    if( data_syn_object.contains(keys::DcPropNames[mode]) ) {
+        for (const auto& element : data_syn_object[keys::DcPropNames[mode]])  {
+            SynDCPs.push_back(ss);
+            SynDCPs.back().GemsName  = element->value(keys::NameSys[mode], std::string());
+            SynDCPs.back().syn = element->value(keys::Syn[mode], std::vector<std::string>{});
+        }
     }
-    out.clear();
-
-
-    parse_JSON_object(DataSyn, keys::DcPropNames[mode], out);
-    for (unsigned i = 0; i < out.size(); i++)
-    {
-        SynDCPs.push_back(ss);
-        parse_JSON_object(out[i], keys::NameSys[mode], out2);
-        SynDCPs[SynDCPs.size()-1].GemsName = out2[0];
-        out2.clear();
-        parse_JSON_object(out[i], keys::Syn[mode], out2);
-        if (out2[0] != "")
-        SynDCPs[SynDCPs.size()-1].syn = out2;
-        out2.clear();
-    }
-    out.clear();
 }
 
 void Data_Manager::check_Syn()
@@ -279,82 +233,69 @@ void Data_Manager::check_Syn()
 
 void Data_Manager::get_db_specs_txt()
 {
-    std::string fname;
-    std::vector<std::string> out, out2;
     int mode = gpf->KeysNdx;
-
-    fname = gpf->OptParamFile();
-
-    std::ifstream file(fname.c_str());
+    std::string fname = gpf->OptParamFile();
+    std::ifstream file(fname);
     std::ostringstream tmp;
     tmp<<file.rdbuf();
     std::string s = tmp.str();
-//    std::std::cout<<s<<std::std::endl;
+    //    std::std::cout<<s<<std::std::endl;
 
-    parse_JSON_object(s, keys::DBPath[0], out);
-    if (out.size() == 0)
-    {
-        parse_JSON_object(s, keys::DBPath[1], out);
-     mode = 1; gpf->KeysNdx = 1;
+    common::JsonFree db_specs_object = fromJsonString(s);
+    DBname = db_specs_object.value(keys::DBPath[0], std::string());
+    if (DBname.empty()) {
+        DBname = db_specs_object.value(keys::DBPath[1], DBname);
+        mode = 1;
+        gpf->KeysNdx = 1;
     }
-    if (out.size() == 0) {std::cout << "Error: No keyword for \""
-                               <<keys::DBPath[0]<<"\" or \""
-                               <<keys::DBPath[1]<<"\" found in the task definition"
-                               << std::endl; exit(1);}
-    DBname = out[0];
-    out.clear();
+    if (DBname.empty())  {
+        std::cout << "Error: No keyword for \""
+                  << keys::DBPath[0]<<"\" or \""
+                  << keys::DBPath[1]<<"\" found in the task definition" << std::endl;
+        exit(1);
+    }
+    collection = db_specs_object.value(keys::DBColl[mode], std::string());
+    if (collection.empty()) {
+        std::cout << "Error: No keyword for \""
+                  << keys::DBColl[mode]<<"\" found in the task definition" << std::endl;
+        exit(1);
+    }
+    DataSelect = db_specs_object[keys::DSelect[mode]].dump();
+    if (DataSelect.empty()) {
+        std::cout << "Error: No keyword for \""
+                  <<keys::DSelect[mode]<<"\" found in the task definition"
+                 << std::endl;
+        exit(1);
+    }
+    DataTarget = db_specs_object[keys::DTarget[mode]].dump();
+    if (DataSelect.empty())  {
+        std::cout << "Error: No keyword for \""
+                  << keys::DTarget[mode] <<"\" found in the task definition" << std::endl;
+        exit(1);
+    }
+    LogK = db_specs_object.value(keys::LogK[mode], std::vector<std::string>{});
 
-    parse_JSON_object(s, keys::DBColl[mode], out);
-    if (out.size() == 0) {std::cout << "Error: No keyword for \""
-                               <<keys::DBColl[mode]<<"\" found in the task definition"
-                               << std::endl; exit(1);}
-    collection = out[0];
-    out.clear();
-
-    parse_JSON_object(s, keys::DSelect[mode], out);
-    if (out.size() == 0) {std::cout << "Error: No keyword for \""
-                               <<keys::DSelect[mode]<<"\" found in the task definition"
-                               << std::endl; exit(1);}
-    DataSelect = out[0];
-    out.clear();
-
-    parse_JSON_object(s, keys::DTarget[mode], out);
-    if (out.size() == 0) {std::cout << "Error: No keyword for \""
-                               <<keys::DTarget[mode]<<"\" found in the task definition"
-                               << std::endl; exit(1);}
-    DataTarget = out[0];
-    out.clear();
-
-    parse_JSON_object(s, keys::LogK[mode], out);
-    if (out[0] != "") LogK = out;
-    out.clear();
-
-    parse_JSON_object(s, keys::G3Ksys[mode], out);
-    if (out.size() == 0) {std::cout << "Error: No keyword for \""
-                               <<keys::G3Ksys[mode]<<"\" found in the task definition"
-                               << std::endl; exit(1);}
+    std::string gems_path = db_specs_object.value(keys::G3Ksys[mode], std::string());
+    if (gems_path.empty()) {
+        std::cout << "Error: No keyword for \""
+                  << keys::G3Ksys[mode]<<"\" found in the task definition" << std::endl;
+        exit(1);
+    }
 #ifdef buildWIN32
     std::replace( out[0].begin(), out[0].end(), '/', '\\');
 #endif
-    gpf->setGEMS3LstFilePath(out[0].c_str());
-    out.clear();
+    gpf->setGEMS3LstFilePath(gems_path);
 
-    parse_JSON_object(s, keys::DatLogK[mode], out);
-    DataLogK = out[0];
-    out.clear();
-
-    parse_JSON_object(s, keys::DataSyn[mode], out);
-    DataSyn = out[0];
-    out.clear();
-
-    parse_JSON_object(s, keys::OptSet[mode], out);
-    if (out.size() == 0) {std::cout << "Error: No keyword for \""
-                               <<keys::OptSet[mode]<<"\" found in the task definition"
-                               << std::endl; exit(1);}
-    parse_JSON_object(out[0], keys::MPI[mode], out2);
-    MPI = atoi(out2[0].c_str());
-    out2.clear();
-
+    DataLogK = db_specs_object.value(keys::DatLogK[mode], std::string());
+    DataSyn = db_specs_object[keys::DataSyn[mode]].dump();
+    //OptSet = db_specs_object[keys::OptSet[mode]].dump();
+    OptSet = db_specs_object.value(keys::OptSet[mode], std::string());
+    if (OptSet.empty()) {
+        std::cout << "Error: No keyword for \""
+                  <<keys::OptSet[mode]<<"\" found in the task definition" << std::endl;
+        exit(1);
+    }
+    MPI = db_specs_object.value(keys::MPI[mode], MPI);
 }
 
 // Reading data from EJDB database
@@ -377,10 +318,6 @@ void Data_Manager::get_EJDB()
     string_v usesample, skipsample, usedataset, skipdataset, skippdatasets,skippsamples, usepdatasets, usepsamples, SA, DS;
     double_v qsT, qsP, WT;
     unsigned int Nsamples = 0 , Ndatasets = 0;
-
-    std::fstream ff2("DataSelect_query.json", std::ios::out/*|ios::app*/ );
-    ff2 << DataSelect;
-    ff2.close();
 
     common::JsonFree data_sel_object = fromJsonString(DataSelect);
     {
@@ -543,7 +480,7 @@ void Data_Manager::get_EJDB()
         }
     }
 
-    std::fstream ff3("D_query.json", std::ios::out/*|ios::app*/ );
+    std::fstream ff3("D_query_tmp.json", std::ios::out/*|ios::app*/ );
     ff3 << query_object.dump();
     ff3.close();
 
@@ -753,7 +690,6 @@ void Data_Manager::bson_to_Data_Manager(const std::string& data, int pos)
                             experiments[pos]->expphases.back()->phDC.back()->DCprop.back()->Qunit = sub_el2->value(keys::Qunit, def_unit);
                         }
                     }
-
                 }
             }
         }

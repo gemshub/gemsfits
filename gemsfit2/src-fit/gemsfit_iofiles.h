@@ -143,7 +143,7 @@ public:
         return gems3LstFilePath;
     }
 
-    void setGEMS3LstFilePath( const char* name)  {
+    void setGEMS3LstFilePath( const std::string name)  {
         gems3LstFilePath = name;
     }
 

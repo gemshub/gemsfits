@@ -111,6 +111,7 @@ class Data_Manager : public TNode
         std::string DataLogK;
         std::vector<std::string> LogK;
         std::string DataSyn;
+        std::string OptSet;
         double h_datasetlist;
 
         int MPI; /// number of paralele threads
