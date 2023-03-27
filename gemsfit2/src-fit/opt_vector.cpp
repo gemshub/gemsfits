@@ -22,11 +22,9 @@
 //-------------------------------------------------------------------
 //
 
-
+#include "keywords.h"
 #include "gemsfit_iofiles.h"
 #include "gemsfit_global_variables.h"
-#include "keywords.h"
-#include "json_parse.h"
 #include "gemsfit_target_functions.h"
 #include <sstream>
 #include <muParser.h>
@@ -50,47 +48,38 @@ void OptParameter::Set_TPpairs(std::vector<double> TPpairs[2])
     TP_pairs[1] = TPpairs[1];
 }
 
-void OptParameter::Pval_to_optF (int p, std::string data, F_parameter *opt)
+void OptParameter::Pval_to_optF(int p, const common::JsonFree& object_data, F_parameter *opt)
 {
     std::vector<std::string> out2, out3;
     bool UB_LB = true;
 
-//    parse_JSON_object(data, keys::spec, out2);
-//    if (out2.size() !=1) { std::cout << "ERROR: Parameter \"F\"-type " << p << " has no \"spec\" or initial value defined! "<< std::endl; exit(1); }
-//    if (atof(out2[0].c_str()) == 0)
-//    {
-        parse_JSON_object(data, keys::IV[mode], out3);
-        if (out3.size() !=1) {std::cout << "ERROR: Parameter \"F\"-type " << p << " has no \"IV\" defined! "<< std::endl; exit(1); }
-        opt->opt = atof(out3[0].c_str());
-        opt->IV = atof(out3[0].c_str());
-        out3.clear();
+    if (!object_data.contains(keys::IV[mode])) {
+        std::cout << "ERROR: Parameter \"F\"-type " << p << " has no \"IV\" defined! "<< std::endl;
+        exit(1);
+    }
+    opt->IV = opt->opt = object_data.value(keys::IV[mode], 0.);
 
-        parse_JSON_object(data, keys::LB[mode], out3);
-        if (out3.size() !=1) { UB_LB = false; }
-        else opt->LB = atof(out3[0].c_str());
-        out3.clear();
+    if (!object_data.contains(keys::LB[mode]))
+        UB_LB = false;
+    else
+        opt->LB = object_data.value(keys::LB[mode], 0.);
 
-        parse_JSON_object(data, keys::UB[mode], out3);
-        if (out3.size() !=1) { UB_LB = false; }
-        else opt->UB = atof(out3[0].c_str());
-        out3.clear();
+    if (!object_data.contains(keys::UB[mode]))
+        UB_LB = false;
+    else
+        opt->UB = object_data.value(keys::UB[mode], 0.);
 
-        if (OptBoundPerc > 0)
-        {
-            opt->LB = opt->opt-fabs(opt->opt)*OptBoundPerc/100;
-            opt->UB = opt->opt+fabs(opt->opt)*OptBoundPerc/100;
-        }
+    if (OptBoundPerc > 0) {
+        opt->LB = opt->opt-fabs(opt->opt)*OptBoundPerc/100;
+        opt->UB = opt->opt+fabs(opt->opt)*OptBoundPerc/100;
+    }
+    opt->optNdx = -1;
 
-        opt->optNdx = -1;
-
-//    } else
-        if (!UB_LB)
-    {
-//        opt->opt = atof(out2[0].c_str());
-        if (opt->opt == 0)
-        {
-           std::cout << "ERROR: If the intial value of the parameter is 0 you must specify the UB (upper) and LB (lower) bounds in JSON format { \"IV\": val, \"UB\": val, \"LB\": val}" << std::endl
-                    << "for parameter: " << p << std::endl;
+    if (!UB_LB) {
+        //        opt->opt = atof(out2[0].c_str());
+        if (opt->opt == 0) {
+            std::cout << "ERROR: If the intial value of the parameter is 0 you must specify the UB (upper) and LB (lower) bounds in JSON format { \"IV\": val, \"UB\": val, \"LB\": val}" << std::endl
+                      << "for parameter: " << p << std::endl;
             exit(1);
         }
         opt->LB = opt->opt-fabs(opt->opt)*keys::bperc/100;
@@ -98,98 +87,55 @@ void OptParameter::Pval_to_optF (int p, std::string data, F_parameter *opt)
     }
 }
 
-void OptParameter::Pval_to_optL (int p, std::string data, L_parameter *opt)
+void OptParameter::Pval_to_optL(int p, const common::JsonFree& object_data, L_parameter *opt)
 {
-    std::vector<std::string> /*out2,*/ out3;
-
-//    parse_JSON_object(data, keys::spec, out2);
-//    if (out2.size() !=1) {std::cout << "ERROR: Parameter \"L\"-type " << p << " has no \"spec\" defined! "<< std::endl; exit(1); }
-
-    parse_JSON_object(data, keys::IV[mode], out3);
-    if (out3.size())
-    {opt->IV = atof(out3.at(0).c_str());
-        opt->opt = atof(out3.at(0).c_str());}
-    out3.clear();
-
-//    parse_JSON_object(out, keys::ICN, out3);
-//    opt->Pname = out3.at(0);
-//    out3.clear();
-
-    parse_JSON_object(data, keys::LICs[mode], out3);
-    if (out3.size() == 0)
-    {std::cout << "ERROR: No linked independent component name defined! " << std::endl; exit(1);}
-    for (unsigned int i = 0 ; i < out3.size() ; i++)
-    {
-        opt->L_param.push_back( out3.at(i) );
-    }
-    out3.clear();
-
-    parse_JSON_object(data, keys::LCoef[mode], out3);
-    if (out3.size() != opt->L_param.size())
-    {
-       std::cout << "ERROR: Number of linked parameters is not equal with the number of link coeficients for parameter "<< p  << std::endl;
+    if (object_data.contains(keys::IV[mode]))
+        opt->IV = opt->opt = object_data.value(keys::IV[mode], 0.);
+    opt->L_param = object_data.value(keys::LICs[mode], vs{});
+    if (opt->L_param.size() == 0) {
+        std::cout << "ERROR: No linked independent component name defined! " << std::endl;
         exit(1);
     }
-    for (unsigned int i = 0 ; i < out3.size() ; i++)
-    {
-        opt->L_param_coef.push_back( atof(out3.at(i).c_str()) );
+    opt->L_param_coef = object_data.value(keys::LCoef[mode], vd{});
+    if (opt->L_param_coef.size() != opt->L_param.size()) {
+        std::cout << "ERROR: Number of linked parameters is not equal with the number of link coeficients for parameter "<< p  << std::endl;
+        exit(1);
     }
-
-    out3.clear();
-
 }
 
-void OptParameter::Pval_to_optR (int p, std::string data, R_parameter *opt)
+void OptParameter::Pval_to_optR(int p, const common::JsonFree& object_data, R_parameter *opt)
 {
-    std::vector<std::string> /*out2,*/ out3;
-
-//    parse_JSON_object(data, keys::spec, out2);
-//    if (out2.size() !=1) {std::cout << "ERROR: Parameter \"R\"-type " << p << " has no \"spec\" defined! "<< std::endl; exit(1); }
-////    Data_Manager *temp = new Data_Manager(1);
-
-    parse_JSON_object(data, keys::IV[mode], out3);
-    if (out3.size() !=1) {std::cout << "ERROR: Parameter \"R\"-type " << p << " has no \"IV\" defined! "<< std::endl; exit(1); }
-    opt->IV = atof(out3.at(0).c_str()); opt->opt = opt->IV;
-    out3.clear();
-
-//    parse_JSON_object(out2[0], keys::Ref, out3);
-//    opt.Ref = out3.at(0);
-//    out3.clear();
-
-//    temp->parse_JSON_object(Jformat.format, keys::logK, out);
-//    r->logK = atof(out.at(0).c_str());
-//    out.clear();
-
-    parse_JSON_object(data, keys::nC, out3);
-    if (out3.size() !=1) {std::cout << "ERROR: Parameter \"R\"-type " << p << " has no \"nC\" defined! "<< std::endl; exit(1); }
-    opt->nC = atoi(out3.at(0).c_str());
-    out3.clear();
-
-//    parse_JSON_object(data, keys::DCN, out3);
-//    if (out3.size() !=1) {std::cout << "ERROR: Parameter \"R\"-type " << p << " has no \"DCN\" defined! "<< std::endl; exit(1); }
-//    opt->DCn = out3.at(0);
-//    out3.clear();
-
-    parse_JSON_object(data, keys::RC, out3);
-    if (out3.size() <1) {std::cout << "ERROR: Parameter \"R\"-type " << p << " has no \"RC\" defined! "<< std::endl; exit(1); }
-    for (unsigned int i = 0 ; i < out3.size() ; i++)
-    {
-        opt->rdc_species.push_back( out3.at(i) );
-    }
-    out3.clear();
-
-    parse_JSON_object(data, keys::Rcoef, out3);
-    if (out3.size() != opt->rdc_species.size())
-    {
-       std::cout << "ERROR: Number of reaction components is not equal with the number of reaction coeficients; R-type parameter: "<< opt->Pname << std::endl;
+    ////    Data_Manager *temp = new Data_Manager(1);
+    if (!object_data.contains(keys::IV[mode])) {
+        std::cout << "ERROR: Parameter \"R\"-type " << p << " has no \"IV\" defined! "<< std::endl;
         exit(1);
     }
-    for (unsigned int i = 0 ; i < out3.size() ; i++)
-    {
-        opt->rdc_species_coef.push_back( atof(out3.at(i).c_str()) );
+    opt->IV = opt->opt = object_data.value(keys::IV[mode], 0.);
+    //    parse_JSON_object(out2[0], keys::Ref, out3);
+    //    opt.Ref = out3.at(0);
+    //    out3.clear();
+    //    temp->parse_JSON_object(Jformat.format, keys::logK, out);
+    //    r->logK = atof(out.at(0).c_str());
+    //    out.clear();
+    opt->nC = object_data.value(keys::nC, -1);
+    if (opt->nC == -1) {
+        std::cout << "ERROR: Parameter \"R\"-type " << p << " has no \"nC\" defined! "<< std::endl;
+        exit(1);
     }
-
-    out3.clear();
+    //    parse_JSON_object(data, keys::DCN, out3);
+    //    if (out3.size() !=1) {std::cout << "ERROR: Parameter \"R\"-type " << p << " has no \"DCN\" defined! "<< std::endl; exit(1); }
+    //    opt->DCn = out3.at(0);
+    //    out3.clear();
+    opt->rdc_species = object_data.value(keys::RC, vs{});
+    if (opt->rdc_species.size() <1) {
+        std::cout << "ERROR: Parameter \"R\"-type " << p << " has no \"RC\" defined! "<< std::endl;
+        exit(1);
+    }
+    opt->rdc_species_coef = object_data.value(keys::Rcoef, vi{});
+    if (opt->rdc_species_coef.size() != opt->rdc_species.size()) {
+        std::cout << "ERROR: Number of reaction components is not equal with the number of reaction coeficients; R-type parameter: "<< opt->Pname << std::endl;
+        exit(1);
+    }
 }
 
 void OptParameter::Get_R_vNdx_vCoef(int ndx, vi &vNdx, vi &vCoef )
@@ -285,85 +231,88 @@ OptParameter::~OptParameter()
 Opt_G0::Opt_G0(std::vector<std::string> data, double OptBoundPrc, unsigned &p) :
     OptParameter (data, OptBoundPrc )
 {
-    std::vector<std::string> out,out2;
+    std::vector<std::string> out;
     Ptype = "G0";
     int Rndx = -1;
+    double iv=0.;
+    std::string iPType, iDCN;
 
     for (unsigned int i = 0 ; i < Jdata.size() ; i++)
     {
-        parse_JSON_object(Jdata[i], keys::PType[mode], out);
-        if (out[0] == "R")
-        {
+        common::JsonFree object = fromJsonString(Jdata[i]);
+        iPType = object.value( keys::PType[mode], std::string());
+        if (iPType == "R") {
             optRP.push_back( new Opt_G0::R_parameter);
-            optRP[optRP.size()-1]->Pndx = -1;
+            optRP.back()->Pndx = -1;
         }
-        out.clear();
     }
 
     for (unsigned int i = 0 ; i < Jdata.size() ; i++)
     {
-        parse_JSON_object(Jdata[i], keys::PType[mode], out);
-        if (out.size() !=1) {std::cout << "Parameter " << p << " (G0) has no \"ptype\" defined! "<< std::endl; exit(1); }
+        common::JsonFree object = fromJsonString(Jdata[i]);
+        iPType = object.value( keys::PType[mode], std::string());
+        iDCN = object.value( keys::DCN[mode], std::string());
 
-        if (out[0] != "S" && out[0] != "F" && out[0] != "R" && out[0] != "L") {
-            parse_JSON_object(Jdata[i], keys::DCN[mode], out2);
-           std::cout << "Parameter " << out2[0] << " (G0) has unknown type " << out[0] << " defined! "<<std::endl; exit(1); }
-
-        if (out[0] == "F")
-        {
-            out.clear();
+        if (iPType.empty()) {
+            std::cout << p << "Parameter " << iDCN << " (G0) has no \"ptype\" defined! "<< std::endl;
+            exit(1);
+        }
+        if (iPType == "F") {
             optFP.push_back( new Opt_G0::F_parameter);
-            optFP[optFP.size()-1]->Pndx = p;
-            Pval_to_optF (p, Jdata[i], optFP[optFP.size()-1]);
-
-            parse_JSON_object(Jdata[i], keys::DCN[mode], out);
-            if (out.size() !=1) {std::cout << "Parameter \"F\"-type " << p << " (G0) has no \"DCN\" defined! "<< std::endl; exit(1); }
-            optFP[optFP.size()-1]->Pname = out[0];
+            optFP.back()->Pndx = p;
+            Pval_to_optF(p, object, optFP.back());
+            if (iDCN.empty()) {
+                std::cout << "Parameter \"F\"-type " << p << " (G0) has no \"DCN\" defined! "<< std::endl;
+                exit(1);
+            }
+            optFP.back()->Pname = iDCN;
             p++;
         }
-        if (out[0] == "R")
-        {
-            out.clear();
-            parse_JSON_object(Jdata[i], keys::Rndx, out);
-            Rndx = atoi(out[0].c_str()); out.clear();
-//            optRP.push_back( new Opt_G0::R_parameter);
+        else if (iPType == "R") {
+            Rndx = object.value( keys::Rndx, -1);
+            //            optRP.push_back( new Opt_G0::R_parameter);
+            if (Rndx<0 || Rndx >= optRP.size() ) {
+                std::cout << "Parameter \"R\"-type " << p << " illegal index: " << Rndx << std::endl;
+                exit(1);
+            }
             optRP[Rndx]->Pndx = p;
-
-            parse_JSON_object(Jdata[i], keys::DCN[mode], out);
-            if (out.size() !=1) {std::cout << "Parameter \"F\"-type " << p << " (G0) has no \"DCN\" defined! "<< std::endl; exit(1); }
-            if (optRP[Rndx]->Pname != "") {std::cout << "The index: "<<Rndx<< " was already defined for R-parameter: "<< optRP[Rndx]->Pname << std::endl; exit(1); }
-            optRP[Rndx]->Pname = out[0];
-
-            Pval_to_optR (p, Jdata[i], optRP[Rndx]);
-
-//            h_optR = true;
+            if (iDCN.empty()) {
+                std::cout << "Parameter \"F\"-type " << p << " (G0) has no \"DCN\" defined! "<< std::endl;
+                exit(1);
+            }
+            if (optRP[Rndx]->Pname != "") {
+                std::cout << "The index: "<<Rndx<< " was already defined for R-parameter: "<< optRP[Rndx]->Pname << std::endl;
+                exit(1);
+            }
+            optRP[Rndx]->Pname = iDCN;
+            Pval_to_optR(p, object, optRP[Rndx]);
+            //            h_optR = true;
             p++;
         }
-        if (out[0] == "S")
-        {
-            out.clear();
+        else if (iPType == "S") {
             optSP.push_back( new Opt_G0::S_parameter);
-            optSP[optSP.size()-1]->Pndx = p;
-
-            parse_JSON_object(Jdata[i], keys::DCN[mode], out);
-            if (out.size() !=1) {std::cout << "Parameter \"S\"-type " << p << " (G0) has no \"DCN\" defined! "<< std::endl; exit(1); }
-            optSP[optSP.size()-1]->Pname = out[0];
-            out.clear();
-
-            parse_JSON_object(Jdata[i], keys::IV[mode], out);
-            if (out.size() !=1) {std::cout << "Parameter \"S\"-type " << p << " (G0) has no \"spec\" defined! "<< std::endl; exit(1); }
-            optSP[optSP.size()-1]->IV = atof(out[0].c_str()); optSP[optSP.size()-1]->opt = atof(out[0].c_str());
+            optSP.back()->Pndx = p;
+            if (iDCN.empty()) {
+                std::cout << "Parameter \"S\"-type " << p << " (G0) has no \"DCN\" defined! "<< std::endl;
+                exit(1);
+            }
+            optSP.back()->Pname = iDCN;
+            if (!object.contains(keys::IV[mode])) {
+                std::cout << "Parameter \"S\"-type " << p << " (G0) has no \"spec\" defined! "<< std::endl;
+                exit(1);
+            }
+            iv = object.value(keys::IV[mode], iv);
+            optSP.back()->IV = iv;
+            optSP.back()->opt = iv;
             p++;
         }
-        if (out[0] == "L")
-        {
-           std::cout << "There is no option at this point to have a G0 parameter as L-Type (linked)! "<<std::endl; exit(1);
-//            out.clear();
-//            optLP.push_back( new Opt_bIC::L_parameter);
-//            h_optL = true;
-//            Pval_to_optL (p, Jdata[i], optLP[optLP.size()-1]);
+        else if (iPType == "L")  {
+            std::cout << "There is no option at this point to have a G0 parameter as L-Type (linked)! "<<std::endl; exit(1);
         }
-        out.clear();
+        else {
+            std::cout << p << "Parameter " << iDCN << " (G0) has unknown type " << iPType << " defined! "<<std::endl;
+            exit(1);
+        }
     }
 }
 
@@ -607,51 +556,49 @@ Opt_G0::~Opt_G0()
 Opt_PMc::Opt_PMc(std::vector<std::string> data, double OptBoundPrc, unsigned &p) :
     OptParameter (data, OptBoundPrc )
 {
-    std::vector<std::string> out, out2;
     Ptype = "PMc";
+    double iv=0.;
+    std::string iPType, iIPCN;
+
     for (unsigned int i = 0 ; i < Jdata.size() ; i++)
     {
-        parse_JSON_object(Jdata[i], keys::PType[mode], out);
-        if (out.size() !=1) {std::cout << "Parameter " << p << " (PMc) has no \"PType\" defined! "<< std::endl; exit(1); }
+        common::JsonFree object = fromJsonString(Jdata[i]);
+        iPType = object.value( keys::PType[mode], std::string());
+        iIPCN = object.value( keys::IPCN[mode], std::string());
 
-        if (out[0] != "S" && out[0] != "F" /*&& out[0] != "R"*/ && out[0] != "L") {
-            parse_JSON_object(Jdata[i], keys::IPCN[mode], out2);
-           std::cout << "Parameter " << out2[0] << " (IP) has unknown type " << out[0] << " defined! "<<std::endl; exit(1); }
+        if (iPType.empty()) {
+            std::cout << "Parameter " << p << " (PMc) has no \"PType\" defined! "<< std::endl;
+            exit(1);
+        }
 
-        if (out[0] == "F")
-        {
-            out.clear();
+        if (iPType == "F") {
             optFP.push_back( new Opt_PMc::F_parameter);
-            optFP[optFP.size()-1]->Pndx = i;
-            parse_JSON_object(Jdata[i], keys::IPCN[mode], out);
-            if (out.size() == 1) optFP[optFP.size()-1]->Pname = out[0];
-            else optFP[optFP.size()-1]->Pname = "PMc";
-            Pval_to_optF (p, Jdata[i], optFP[optFP.size()-1]);
-
+            optFP.back()->Pndx = i;
+            optFP.back()->Pname = ( iIPCN.empty() ? "PMc" : iIPCN);
+            Pval_to_optF (p, object, optFP.back());
             p++;
         }
-//        if (out[0] == "R")
-//        {
-
-//        }
-        if (out[0] == "S")
-        {
-            out.clear();
+        else if (iPType == "S") {
             optSP.push_back( new Opt_PMc::S_parameter);
-            optSP[optSP.size()-1]->Pndx = i;
-            optSP[optSP.size()-1]->Pname = "PMc";
-
-            parse_JSON_object(Jdata[i], keys::IV[mode], out);
-            if (out.size() !=1) {std::cout << "Parameter \"S\"-type " << p << " (G0) has no \"spec\" defined! "<< std::endl; exit(1); }
-            optSP[optSP.size()-1]->IV = atof(out[0].c_str()); optSP[optSP.size()-1]->opt = atof(out[0].c_str());
+            optSP.back()->Pndx = i;
+            optSP.back()->Pname = "PMc";
+            if (!object.contains(keys::IV[mode])) {
+                std::cout << "Parameter \"S\"-type " << p << " (G0) has no \"spec\" defined! "<< std::endl;
+                exit(1);
+            }
+            iv = object.value(keys::IV[mode], iv);
+            optSP.back()->IV = iv;
+            optSP.back()->opt = iv;
             p++;
         }
-        if (out[0] == "L")
-        {
-           std::cout << "There is no option at this point to have a PMc parameter as L-Type (linked)! "<<std::endl; exit(1);
-
+        else if (iPType == "L") {
+           std::cout << "There is no option at this point to have a PMc parameter as L-Type (linked)! "<<std::endl;
+           exit(1);
         }
-        out.clear();
+        else {
+            std::cout << "Parameter " << iIPCN << " (IP) has unknown type " << iPType << " defined! "<<std::endl;
+            exit(1);
+        }
     }
 }
 
@@ -696,50 +643,50 @@ Opt_PMc::~Opt_PMc()
 Opt_DMc::Opt_DMc(std::vector<std::string> data, double OptBoundPrc, unsigned &p) :
     OptParameter (data, OptBoundPrc )
 {
-    std::vector<std::string> out, out2;
+    double iv=0.;
+    std::string iPType, iIPCN;
     Ptype = "DMc";
+
     for (unsigned int i = 0 ; i < Jdata.size() ; i++)
     {
-        parse_JSON_object(Jdata[i], keys::PType[mode], out);
-        if (out.size() !=1) {std::cout << "Parameter " << p << " (G0) has no \"PType\" defined! "<< std::endl; exit(1); }
+        common::JsonFree object = fromJsonString(Jdata[i]);
+        iPType = object.value( keys::PType[mode], std::string());
+        iIPCN = object.value( keys::IPCN[mode], std::string());
 
-        if (out[0] != "S" && out[0] != "F" /*&& out[0] != "R"*/ && out[0] != "L") {
-            parse_JSON_object(Jdata[i], keys::IPCN[mode], out2);
-           std::cout << "Parameter " << out2[0] << " (IP) has unknown type " << out[0] << " defined! "<<std::endl; exit(1); }
+        if (iPType.empty()) {
+            std::cout << "Parameter " << p << " (G0) has no \"PType\" defined! "<< std::endl;
+            exit(1);
+        }
 
-        if (out[0] == "F")
-        {
-            out.clear();
+        if (iPType == "F") {
             optFP.push_back( new Opt_DMc::F_parameter);
-            optFP[optFP.size()-1]->Pndx = i;
-            if (out.size() == 1) optFP[optFP.size()-1]->Pname = out[0];
-            else optFP[optFP.size()-1]->Pname = "DMc";
-            Pval_to_optF (p, Jdata[i], optFP[optFP.size()-1]);
-
+            optFP.back()->Pndx = i;
+            optFP.back()->Pname =  ( iIPCN.empty() ? "DMc" : iIPCN);
+            Pval_to_optF(p, object, optFP.back());
             p++;
         }
-//        if (out[0] == "R")
-//        {
-
-//        }
-        if (out[0] == "S")
-        {
-            out.clear();
+        else if (iPType == "S") {
             optSP.push_back( new Opt_DMc::S_parameter);
-            optSP[optSP.size()-1]->Pndx = i;
-            optSP[optSP.size()-1]->Pname = "DMc";
-
-            parse_JSON_object(Jdata[i], keys::IV[mode], out);
-            if (out.size() !=1) {std::cout << "Parameter \"S\"-type " << p << " (G0) has no \"spec\" defined! "<< std::endl; exit(1); }
-            optSP[optSP.size()-1]->IV = atof(out[0].c_str()); optSP[optSP.size()-1]->opt = atof(out[0].c_str());
+            optSP.back()->Pndx = i;
+            optSP.back()->Pname = "DMc";
+            if (!object.contains(keys::IV[mode])) {
+                std::cout << "Parameter \"S\"-type " << p << " (G0) has no \"spec\" defined! "<< std::endl;
+                exit(1);
+            }
+            iv = object.value(keys::IV[mode], iv);
+            optSP.back()->IV = iv;
+            optSP.back()->opt = iv;
             p++;
         }
-        if (out[0] == "L")
+        else if (iPType == "L")
         {
-           std::cout << "There is no option at this point to have a DMc parameter as L-Type (linked)! "<<std::endl; exit(1);
+            std::cout << "There is no option at this point to have a DMc parameter as L-Type (linked)! "<<std::endl; exit(1);
 
         }
-        out.clear();
+        else  {
+            std::cout << "Parameter " << Jdata[i] << " (IP) has unknown type " <<  iPType<< " defined! "<<std::endl;
+            exit(1);
+        }
     }
 }
 
@@ -782,59 +729,52 @@ Opt_DMc::~Opt_DMc()
 Opt_bIC::Opt_bIC(std::vector<std::string> data, double OptBoundPrc, unsigned &p, bool isNFun) :
     OptParameter (data, OptBoundPrc )
 {
-    std::vector<std::string> out, out2;
+    double iv=0.;
+    std::string iPType, iICN;
     Ptype = "bIC";
+
     for (unsigned int i = 0 ; i < Jdata.size() ; i++)
     {
-        parse_JSON_object(Jdata[i], keys::PType[mode], out);
-        if (out.size() !=1) {std::cout << "Parameter " << p << " (bIC) has no \"ptype\" defined! "<< std::endl; exit(1); }
+        common::JsonFree object = fromJsonString(Jdata[i]);
+        iPType = object.value( keys::PType[mode], std::string());
+        iICN = object.value( keys::ICN[mode], std::string());
 
-        if (/*out[0] != "S" &&*/ out[0] != "F" /*&& out[0] != "R"*/ && out[0] != "L" && out[0] != "") {
-            parse_JSON_object(Jdata[i], keys::ICN[mode], out2);
-           std::cout << "Parameter " << out2[0] << " (bIC) has unknown type " << out[0] << " defined! "<<std::endl; exit(1); }
+        if (iPType.empty()) {
+            std::cout << "Parameter " << p << " (bIC) has no \"ptype\" defined! "<< std::endl;
+            exit(1);
+        }
+        if (!isNFun && iPType != "F" && iPType != "") {
+                       std::cout << "Parameter " <<iICN << " (bIC) has not available type " << iPType << " defined! "<<std::endl;
+                       exit(1);
+        }
 
-        out2.clear();
-        if (!isNFun && out[0] != "F" && out[0] != "") {
-            parse_JSON_object(Jdata[i], keys::ICN[mode], out2);
-           std::cout << "Parameter " << out2[0] << " (bIC) has not available type " << out[0] << " defined! "<<std::endl; exit(1); }
-
-        if (out[0] == "F")
-        {
-            out.clear();
+        if (iPType == "F") {
             optFP.push_back( new Opt_bIC::F_parameter);
-            optFP[optFP.size()-1]->Pndx = -1;
-
-            parse_JSON_object(Jdata[i], keys::expr, out);
-            if (out.size() ==1 )
-                optFP[optFP.size()-1]->expr = out[0];
-            else optFP[optFP.size()-1]->expr = "";
-            out.clear();
-
-            parse_JSON_object(Jdata[i], keys::NFndx[mode], out);
-            if (out.size() !=1 && isNFun) {std::cout << "Parameter \"F\"-type " << p << " (bIC) has no \"NFndx\" defined! "<< std::endl; exit(1); }
-            optFP[optFP.size()-1]->Fndx = atoi(out[0].c_str());
-            out.clear();
-
-            Pval_to_optF (p, Jdata[i], optFP[optFP.size()-1]);
-
-            parse_JSON_object(Jdata[i], keys::ICN[mode], out);
-            if (out.size() !=1 && isNFun) {std::cout << "Parameter \"F\"-type " << p << " (bIC) has no \"ICN\" defined! "<< std::endl; exit(1); }
-            optFP[optFP.size()-1]->Pname = out[0];
+            optFP.back()->expr = object.value(keys::expr, std::string());
+            optFP.back()->Fndx = object.value(keys::NFndx[mode], -1);
+            if (optFP.back()->Fndx == -1 && isNFun) {
+                std::cout << "Parameter \"F\"-type " << p << " (bIC) has no \"NFndx\" defined! "<< std::endl;
+                exit(1);
+            }
+            Pval_to_optF(p, object, optFP.back());
+            if (iICN.empty() && isNFun) {
+                std::cout << "Parameter \"F\"-type " << p << " (bIC) has no \"ICN\" defined! "<< std::endl;
+                exit(1);
+            }
+            optFP.back()->Pname = iICN;
             p++;
         }
-        if (out[0] == "L")
-        {
-            out.clear();
+        else if (iPType == "L") {
             optLP.push_back( new Opt_bIC::L_parameter);
-            optLP[optLP.size()-1]->Pndx = -1;
-            Pval_to_optL (p, Jdata[i], optLP[optLP.size()-1]);
-
-            parse_JSON_object(Jdata[i], keys::ICN[mode], out);
-            if (out.size() !=1) {std::cout << "Parameter \"L\"-type " << p << " (bIC) has no \"ICN\" defined! "<< std::endl; exit(1); }
-            optLP[optLP.size()-1]->Pname = out[0];
+            optLP.back()->Pndx = -1;
+            Pval_to_optL(p, object, optLP.back());
+            if (iICN.empty()) {
+                std::cout << "Parameter \"L\"-type " << p << " (bIC) has no \"ICN\" defined! "<< std::endl;
+                exit(1);
+            }
+            optLP.back()->Pname = iICN;
             p++;
         }
-        out.clear();
     }
 }
 
@@ -1088,42 +1028,40 @@ Opt_bIC::~Opt_bIC( )
 Opt_Tk::Opt_Tk(std::vector<std::string> data, double OptBoundPrc, unsigned &p) :
     OptParameter (data, OptBoundPrc )
 {
-    std::vector<std::string> out;
     Ptype = "TK";
 
     for (unsigned int i = 0 ; i < Jdata.size() ; i++)
     {
-        parse_JSON_object(Jdata[i], keys::PType[mode], out);
-        if (out.size() !=1) {std::cout << "Parameter " << p << " (TK) has no \"ptype\" defined! "<< std::endl; exit(1); }
+        common::JsonFree object = fromJsonString(Jdata[i]);
+        auto iPType = object.value( keys::PType[mode], std::string());
 
-        if (out[0] != "S" && out[0] != "F" /*&& out[0] != "R"*/ && out[0] != "L") {
-           std::cout << "Parameter (TK) has unknown type " << out[0] << " defined! "<<std::endl; exit(1); }
+        if (iPType.empty()) {
+            std::cout << "Parameter " << p << " (TK) has no \"ptype\" defined! "<< std::endl;
+            exit(1);
+        }
 
-        if (out[0] == "F")
-        {
-            out.clear();
+        if (iPType != "S" && iPType != "F" /*&& out[0] != "R"*/ && iPType != "L") {
+            std::cout << "Parameter (TK) has unknown type " << iPType<< " defined! "<<std::endl;
+            exit(1);
+        }
+
+        if (iPType == "F") {
             optFP.push_back( new Opt_Tk::F_parameter);
-
-            parse_JSON_object(Jdata[i], keys::NFndx[mode], out);
-            if (out.size() !=1) {std::cout << "Parameter \"F\"-type " << p << " (TK) has no \"NFndx\" defined! "<< std::endl; exit(1); }
-            optFP[optFP.size()-1]->Fndx = atoi(out[0].c_str());
-            out.clear();
-            optFP[optFP.size()-1]->Pname = "TCelsius";
-
-            Pval_to_optF (p, Jdata[i], optFP[optFP.size()-1]);
-
+            optFP.back()->Fndx = object.value(keys::NFndx[mode], -1);
+            if (optFP.back()->Fndx == -1 ) {
+                std::cout << "Parameter \"F\"-type " << p << " (TK) has no \"NFndx\" defined! "<< std::endl;
+                exit(1);
+            }
+            optFP.back()->Pname = "TCelsius";
+            Pval_to_optF (p, object, optFP.back());
             p++;
 
         }
-        if (out[0] == "L")
-        {
-           std::cout << " Tk parameters cannot be L-type! "<< std::endl;
+        if(iPType == "L") {
+            std::cout << " Tk parameters cannot be L-type! "<< std::endl;
             exit(1);
-
         }
-        out.clear();
     }
-
 }
 
 long int Opt_Tk::SetIndex_param(TNode */*node*/)
@@ -1176,42 +1114,38 @@ Opt_Tk::~Opt_Tk( )
 Opt_P::Opt_P(std::vector<std::string> data, double OptBoundPrc, unsigned &p) :
     OptParameter (data, OptBoundPrc )
 {
-    std::vector<std::string> out;
     Ptype = "P";
 
     for (unsigned int i = 0 ; i < Jdata.size() ; i++)
     {
-        parse_JSON_object(Jdata[i], keys::PType[mode], out);
-        if (out.size() !=1) {std::cout << "Parameter " << p << " (P) has no \"ptype\" defined! "<< std::endl; exit(1); }
-
-        if (/*out[0] != "S" &&*/ out[0] != "F" /*&& out[0] != "R"*/ && out[0] != "L") {
-           std::cout << "Parameter (Pbar) has unknown type " << out[0] << " defined! "<<std::endl; exit(1); }
-
-        if (out[0] == "F")
-        {
-            out.clear();
-            optFP.push_back( new Opt_P::F_parameter);
-
-            parse_JSON_object(Jdata[i], keys::NFndx[mode], out);
-            if (out.size() !=1) {std::cout << "Parameter \"F\"-type " << p << " (P) has no \"NFndx\" defined! "<< std::endl; exit(1); }
-            optFP[optFP.size()-1]->Fndx = atoi(out[0].c_str());
-            out.clear();
-            optFP[optFP.size()-1]->Pname = "Pbar";
-
-            Pval_to_optF (p, Jdata[i], optFP[optFP.size()-1]);
-
-            p++;
-
-        }
-        if (out[0] == "L")
-        {
-           std::cout << " P parameters cannot be L-type! "<< std::endl;
+        common::JsonFree object = fromJsonString(Jdata[i]);
+        auto iPType = object.value( keys::PType[mode], std::string());
+        if (iPType.empty()) {
+            std::cout << "Parameter " << p << " (P) has no \"ptype\" defined! "<< std::endl;
             exit(1);
-
         }
-        out.clear();
-    }
 
+        if (/*iPType != "S" &&*/ iPType != "F" /*&& out[0] != "R"*/ && iPType != "L") {
+            std::cout << "Parameter (Pbar) has unknown type " << iPType << " defined! "<<std::endl;
+            exit(1);
+        }
+
+        if (iPType == "F") {
+            optFP.push_back( new Opt_P::F_parameter);
+            optFP.back()->Fndx = object.value(keys::NFndx[mode], -1);
+            if (optFP.back()->Fndx == -1 ) {
+                std::cout << "Parameter \"F\"-type " << p << " (P) has no \"NFndx\" defined! " << std::endl;
+                exit(1);
+            }
+            optFP.back()->Pname = "Pbar";
+            Pval_to_optF(p, object, optFP.back());
+            p++;
+        }
+        if (iPType == "L") {
+            std::cout << " P parameters cannot be L-type! "<< std::endl;
+            exit(1);
+        }
+    }
 }
 
 long int Opt_P::SetIndex_param(TNode */*node*/)

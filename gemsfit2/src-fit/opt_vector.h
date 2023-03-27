@@ -35,6 +35,7 @@
 #include <vector>
 #include <string>
 #include "node.h"
+#include "v_json.h"
 
 
 /// Base class for the optimized parameters
@@ -113,9 +114,9 @@ class OptParameter
         * @param *opt pointer to the F_parameter object
         * @date 17.10.2014
         */
-        void Pval_to_optF (int p, std::string data, F_parameter *opt);
+        void Pval_to_optF(int p, const common::JsonFree& object_data, F_parameter *opt);
 
-        void Pval_to_optR (int p, std::string data, R_parameter *opt);
+        void Pval_to_optR(int p, const common::JsonFree& object_data, R_parameter *opt);
 
         /**
         * Reads in the attributes of the L-type parameters
@@ -125,7 +126,7 @@ class OptParameter
         * @param *opt pointer to the L_parameter object
         * @date 17.10.2014
         */
-        void Pval_to_optL (int p, std::string data, L_parameter *opt);
+        void Pval_to_optL(int p, const common::JsonFree& object_data, L_parameter *opt);
 
     public:
         /// Generic constructor
