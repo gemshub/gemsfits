@@ -33,7 +33,6 @@
 
 
 #include "optimization.h"
-#include "json_parse.h"
 #include "keywords.h"
 #include "v_json.h"
 
@@ -110,8 +109,7 @@ void optimization::get_nlopt_param()
 void optimization::OptParameterCreate ()
 {
     unsigned  p = 0;
-    std::vector<std::string> out, out2, out3, outG0, outPMc, outDMc;
-
+    std::vector<std::string> temp, outG0, outPMc, outDMc;
     OptParameter* myOPT = 0;
 
     // call GEM_init to read GEMS3K input files
@@ -137,53 +135,32 @@ void optimization::OptParameterCreate ()
 
     //OFUN parameters
     // NFUN parameters
-//    parse_JSON_object(OptParameters, keys::G0[mode], out);
-//    if (out.size() > 0)
-//    {
-//        Opt_G0* myPT = new Opt_G0( out, OptBoundPerc, p );
-//        myPT->SetIndex_param(node);
-//        myOPT = (Opt_G0*)myPT;
-//    }
-//    if(myOPT) { optParam.push_back( myOPT ); myOPT = 0; };
-//    out.clear(); p=0;
-
-//    parse_JSON_object(OptParameters, keys::PAM[mode], out);
-
-
-
     if (OptParameters.size() > 0)
     {
         for (unsigned i = 0; i < OptParameters.size(); i++)
         {
+            common::JsonFree object = fromJsonString(OptParameters[i]);
             // G0
-            parse_JSON_object(OptParameters[i], keys::G0[mode], out2);
-            outG0.insert(outG0.end(), out2.begin(), out2.end());
-            out2.clear();
-
+            temp = object.value(keys::G0[mode], std::vector<std::string>{});
+            outG0.insert(outG0.end(), temp.begin(), temp.end());
             // PMc
-            parse_JSON_object(OptParameters[i], keys::PMc[mode], out2);
-            for (unsigned j = 0; j < out2.size(); j++)
-            {
-                parse_JSON_object(out2[j], keys::IPCs[mode], out3);
-                outPMc.insert(outPMc.end(), out3.begin(), out3.end());
-                out3.clear();
+            if( object.contains(keys::PMc[mode]) ) {
+                for (const auto& element : object[keys::PMc[mode]]) {
+                    temp = element->value(keys::IPCs[mode], std::vector<std::string>{});
+                    outPMc.insert(outPMc.end(), temp.begin(), temp.end());
+                }
             }
-            out2.clear();
-
             // DMc
-            parse_JSON_object(OptParameters[i], keys::DMc[mode], out2);
-            for (unsigned j = 0; j < out2.size(); j++)
-            {
-                parse_JSON_object(out2[j], keys::PDCC[mode], out3);
-                outDMc.insert(outDMc.end(), out3.begin(), out3.end());
-                out3.clear();
+            if( object.contains(keys::DMc[mode]) ) {
+                for (const auto& element : object[keys::DMc[mode]]) {
+                    temp = element->value(keys::PDCC[mode], std::vector<std::string>{});
+                    outDMc.insert(outPMc.end(), temp.begin(), temp.end());
+                }
             }
-            out2.clear();
         }
 
-        if (outG0.size() > 0)
-        {
-            Opt_G0* myPT = new Opt_G0( outG0, OptBoundPerc, p );
+        if (outG0.size() > 0) {
+            Opt_G0* myPT = new Opt_G0(outG0, OptBoundPerc, p);
             myPT->SetIndex_param(node);
             myOPT = (Opt_G0*)myPT;
         }
@@ -191,9 +168,8 @@ void optimization::OptParameterCreate ()
          p=0;
 
         // PMc
-        if (outPMc.size() > 0)
-        {
-            Opt_PMc* myPT = new Opt_PMc( outPMc, OptBoundPerc, p );
+        if (outPMc.size() > 0) {
+            Opt_PMc* myPT = new Opt_PMc(outPMc, OptBoundPerc, p);
 //            myPT->SetIndex_param(node);
             myOPT = (Opt_PMc*)myPT;
         }
@@ -201,64 +177,59 @@ void optimization::OptParameterCreate ()
          p=0;
 
         // DMc
-        if (outPMc.size() > 0)
-        {
-            Opt_DMc* myPT = new Opt_DMc( outDMc, OptBoundPerc, p );
+        if (outPMc.size() > 0) {
+            Opt_DMc* myPT = new Opt_DMc(outDMc, OptBoundPerc, p);
 //            myPT->SetIndex_param(node);
             myOPT = (Opt_DMc*)myPT;
         }
         if(myOPT) { optParam.push_back( myOPT ); myOPT = 0; };
          p=0;
     }
-    out.clear();
 
     // NFUN parameters
     if (NFunParameters != "")
     {
-        parse_JSON_object(NFunParameters, keys::bIC[mode], out);
-        if (out.size() > 0)
-        {
-            Opt_bIC* myPT = new Opt_bIC( out, OptBoundPerc, p );
+        common::JsonFree object = fromJsonString(NFunParameters);
+        temp = object.value(keys::bIC[mode], std::vector<std::string>{});
+        if (temp.size() > 0) {
+            Opt_bIC* myPT = new Opt_bIC(temp, OptBoundPerc, p );
             myPT->SetIndex_param(node);
             myOPT = (Opt_bIC*)myPT;
         }
         if(myOPT) { optNFParam.push_back( myOPT ); myOPT = 0; };
-        out.clear(); p=0;
+        p=0;
 
-        parse_JSON_object(NFunParameters, keys::TK[mode], out);
-        if (out.size() > 0)
-        {
-            Opt_Tk* myPT = new Opt_Tk( out, OptBoundPerc, p );
+        temp = object.value(keys::TK[mode], std::vector<std::string>{});
+        if (temp.size() > 0) {
+            Opt_Tk* myPT = new Opt_Tk( temp, OptBoundPerc, p );
             myPT->SetIndex_param(node);
             myOPT = (Opt_Tk*)myPT;
         }
         if(myOPT) { optNFParam.push_back( myOPT ); myOPT = 0; };
-        out.clear(); p=0;
+        p=0;
 
-        parse_JSON_object(NFunParameters, keys::Pb[mode], out);
-        if (out.size() > 0)
-        {
-            Opt_P* myPT = new Opt_P( out, OptBoundPerc, p );
+        temp = object.value(keys::Pb[mode], std::vector<std::string>{});
+        if (temp.size() > 0) {
+            Opt_P* myPT = new Opt_P(temp, OptBoundPerc, p);
             myPT->SetIndex_param(node);
             myOPT = (Opt_P*)myPT;
         }
         if(myOPT) { optNFParam.push_back( myOPT ); myOPT = 0; };
-        out.clear(); p=0;
+        p=0;
     }
-    out.clear();
 
     // Additional parameters
     if (AddOptParameters != "")
     {
-        parse_JSON_object(AddOptParameters, keys::bIC[mode], out);
-        if (out.size() > 0)
-        {
-            Opt_bIC* myPT = new Opt_bIC( out, OptBoundPerc, p, false );
+        common::JsonFree object = fromJsonString(AddOptParameters);
+        temp = object.value(keys::bIC[mode], std::vector<std::string>{});
+        if (temp.size() > 0) {
+            Opt_bIC* myPT = new Opt_bIC(temp, OptBoundPerc, p, false);
             myPT->SetIndex_param(node);
             myOPT = (Opt_bIC*)myPT;
         }
         if(myOPT) { optParam.push_back( myOPT ); myOPT = 0; };
-        out.clear(); p=0;
+        p=0;
     }
 }
 

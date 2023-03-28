@@ -50,7 +50,6 @@ void OptParameter::Set_TPpairs(std::vector<double> TPpairs[2])
 
 void OptParameter::Pval_to_optF(int p, const common::JsonFree& object_data, F_parameter *opt)
 {
-    std::vector<std::string> out2, out3;
     bool UB_LB = true;
 
     if (!object_data.contains(keys::IV[mode])) {
@@ -105,27 +104,16 @@ void OptParameter::Pval_to_optL(int p, const common::JsonFree& object_data, L_pa
 
 void OptParameter::Pval_to_optR(int p, const common::JsonFree& object_data, R_parameter *opt)
 {
-    ////    Data_Manager *temp = new Data_Manager(1);
     if (!object_data.contains(keys::IV[mode])) {
         std::cout << "ERROR: Parameter \"R\"-type " << p << " has no \"IV\" defined! "<< std::endl;
         exit(1);
     }
     opt->IV = opt->opt = object_data.value(keys::IV[mode], 0.);
-    //    parse_JSON_object(out2[0], keys::Ref, out3);
-    //    opt.Ref = out3.at(0);
-    //    out3.clear();
-    //    temp->parse_JSON_object(Jformat.format, keys::logK, out);
-    //    r->logK = atof(out.at(0).c_str());
-    //    out.clear();
     opt->nC = object_data.value(keys::nC, -1);
     if (opt->nC == -1) {
         std::cout << "ERROR: Parameter \"R\"-type " << p << " has no \"nC\" defined! "<< std::endl;
         exit(1);
     }
-    //    parse_JSON_object(data, keys::DCN, out3);
-    //    if (out3.size() !=1) {std::cout << "ERROR: Parameter \"R\"-type " << p << " has no \"DCN\" defined! "<< std::endl; exit(1); }
-    //    opt->DCn = out3.at(0);
-    //    out3.clear();
     opt->rdc_species = object_data.value(keys::RC, vs{});
     if (opt->rdc_species.size() <1) {
         std::cout << "ERROR: Parameter \"R\"-type " << p << " has no \"RC\" defined! "<< std::endl;

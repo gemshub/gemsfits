@@ -23,9 +23,9 @@
 #include <cstdlib>
 
 #include "gemsfit_iofiles.h"
-#include "json_parse.h"
 #include "keywords.h"
 #include "v_service.h"
+#include "v_json.h"
 #include <omp.h>
 #ifdef __unix
 #include <unistd.h>
@@ -36,7 +36,7 @@
 #include <direct.h>
 #endif
 #endif
-#include "v_json.h"
+
 
 common::JsonFree generateJson(TNode *node, int mode);
 

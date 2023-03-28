@@ -29,7 +29,6 @@
 //
 
 
-
 #ifndef OPTIMIZATION_H
 #define OPTIMIZATION_H
 
@@ -38,12 +37,9 @@
 #include <string>
 #include <fstream>
 #include <iostream>
-#include "gemsfit_iofiles.h"
-//#include <jansson.h>
 #include <sstream>
 #include "opt_vector.h"
-//using namespace std;
-
+#include "gemsfit_iofiles.h"
 
 class optimization
 {
