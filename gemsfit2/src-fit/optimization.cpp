@@ -36,6 +36,7 @@
 #include "json_parse.h"
 #include "keywords.h"
 
+std::ostream& operator<<(std::ostream& stream, const optimization& data);
 
 optimization::optimization()
 {
@@ -53,8 +54,12 @@ optimization::optimization()
     get_nlopt_param();
 
     OptParameterCreate();
-
     GetParameters ();
+
+#ifdef CHECK_LOAD
+    std::fstream test_out("optimization.log", std::ios::out);
+    test_out << *this;
+#endif
 
     if (OptBoundPerc > 0.)
     {
@@ -131,7 +136,7 @@ void optimization::get_nlopt_param()
     out2.clear();
 
     parse_JSON_object(out[0], keys::OptAlg[mode], out2);
-    OptAlgo = out2[0].c_str();
+     OptAlgo = out2[0].c_str();
     out2.clear();
 
     parse_JSON_object(out[0], keys::OptPBP[mode], out2);
@@ -427,3 +432,25 @@ void optimization::print_return_message( const int result )
     }
 }// end print_return_message
 
+std::ostream& operator<<(std::ostream& stream, const optimization& data) {
+
+    stream << data.OptAlgo<< "\n";
+    stream << data.OptNormParam << " " << data.OptMaxEval << " " << data.OptDoWhat << " " << data.OptPrcParamDigits << " ";
+    stream << data.OptEquilibrium << " " << data.OptGemsSIA << " " << data.OptTuckey << " " << data.OptTuckeyVal << " ";
+    stream << data.OptTitration << " " << data.OptUserWeight << " " << data.OptMixedSumOfResiduals << "\n";
+    stream << data.OptTolRel << " " << data.OptTolAbs << " " << data.OptInitStep<< " ";
+    stream << data.OptBoundPerc << " " << data.OptPerturbator << " " << data.h_optNF << "\n";
+
+    stream << "optParam\n";
+    int ii=0;
+    for (auto item : data.optParam) {
+        stream << "parameter " << ii++ << "\n" << item << std::endl;
+    }
+    stream << "optNFParam\n";
+    ii=0;
+    for (auto item : data.optNFParam) {
+        stream << "parameter " << ii++ << "\n" << item << "\n";
+    }
+
+    return stream;
+}

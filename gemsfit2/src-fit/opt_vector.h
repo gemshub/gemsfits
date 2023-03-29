@@ -40,6 +40,8 @@
 /// Base class for the optimized parameters
 class OptParameter
 {
+    friend std::ostream& operator<<(std::ostream& stream, const OptParameter* data);
+
     protected:
 
         typedef std::vector<double> vd;        // std::vector of double
@@ -405,5 +407,12 @@ class Opt_DMc : public OptParameter
 
 };
 
+template <typename T>
+std::ostream& operator<<(std::ostream& stream, const std::vector<T>& input) {
+    for (auto const& i : input) {
+        stream << " " << i << ",";
+    }
+    return stream;
+}
 
 #endif // OPT_VECTOR_H

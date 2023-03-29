@@ -181,7 +181,7 @@ public:
             std::string exp_CN;
             std::string exp_unit;
             std::string exp_DCP;
-            double meas_average;
+            double meas_average = 0.;
             std::string Ptype;
             std::string Otype;
             std::vector<std::string> Tformula;

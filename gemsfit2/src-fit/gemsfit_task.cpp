@@ -53,6 +53,8 @@ int master_counter;
 //int sizeTP;
 
 std::istream& f_getline(std::istream& is, std::string& str, char delim);
+std::ostream& operator<<(std::ostream& stream, const TGfitTask::TargetFunction::obj_fun& data);
+std::ostream& operator<<(std::ostream& stream, const TGfitTask::TargetFunction& data);
 
 //extern outField DataBR_fields[58];
 
@@ -1201,7 +1203,10 @@ void TGfitTask::get_DataTarget ( )
         out2.clear();
     }
     out.clear();
-
+#ifdef CHECK_LOAD
+    std::fstream test_out("DataTarget.log", std::ios::out);
+    test_out << *Tfun << "\n";
+#endif
 }
 
 // will go away after implementing way to read logK's from the input file
@@ -1648,6 +1653,35 @@ void TGfitTask::test()
         mean_reisdulas +=residuals_v[i];
     }
     mean_reisdulas = mean_reisdulas / residuals_v.size();
+}
+
+
+std::ostream& operator<<(std::ostream& stream, const TGfitTask::TargetFunction::obj_fun& data) {
+    stream << data.exp_phase << " " << data.exp_CT << " " << data.exp_CN << " " << data.exp_unit << "\n";
+    stream << data.exp_DCP << " " << data.meas_average << " " << data.Ptype << " " << data.Otype << "\n";
+    stream << data.expr << " " << data.TuWeight << " " << data.weight << " " << data.sT << " " << data.sT << "\n";
+    stream << "Tformula: " << data.Tformula << "\n";
+    stream << "Telem: " << data.Telem << "\n";
+    stream << "Helem: " << data.Helem << "\n";
+    return stream;
+}
+
+
+std::ostream& operator<<(std::ostream& stream, const TGfitTask::TargetFunction& data) {
+    stream << data.name << " " << data.type << " " << data.weight  << "\n";
+    stream << "---------objfun \n";
+    for (auto item : data.objfun) {
+        stream << "---------\n" << item << "\n";
+    }
+    stream << "---------nestfun \n";
+    for (auto item : data.nestfun) {
+        stream << "---------\n" << item << "\n";
+    }
+    stream << "---------addout \n";
+    for (auto item : data.addout) {
+        stream << "---------\n" << item << "\n";
+    }
+    return stream;
 }
 
 //-----------------------End of gemsfit_task.cpp--------------------------

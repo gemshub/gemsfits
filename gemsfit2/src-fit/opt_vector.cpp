@@ -1257,4 +1257,48 @@ Opt_P::~Opt_P( )
 
 }
 
+std::ostream& operator<<(std::ostream& stream, const OptParameter* data) {
+    stream << "F_parameter : \n";
+    for (auto item : data->optFP) {
+        stream << item->Pname << " " << item->IV << " " << item->opt << " "
+               << item->optNdx << " " << item->Pndx << " " << item->unit << " " << item->expr << "\n";
+        stream << item->Fndx << " " << item->UB << " " << item->LB << "\n";
+        stream << "IVv: " << item->IVv << "\n";
+        stream << "EVv: " << item->EVv << "\n";
+    }
+    stream << "R_parameter : \n";
+    for (auto item : data->optRP) {
+        stream << item->Pname << " " << item->IV << " " << item->opt << " "
+               << item->optNdx << " " << item->Pndx << " " << item->unit << " " << item->expr << "\n";
+        stream << item->nC << " " << item->Ref << "\n";
+        stream << "IVv: " << item->IVv << "\n";
+        stream << "EVv: " << item->EVv << "\n";
+        stream << "logK_TPpairs: " << item->logK_TPpairs << "\n";
+        stream << "dG_reaction_TP: " << item->dG_reaction_TP << "\n";
+        stream << "rdc_species: " << item->rdc_species << "\n";
+        stream << "rdc_species_ind: " << item->rdc_species_ind << "\n";
+        stream << "rdc_species_coef: " << item->rdc_species_coef << "\n";
+    }
+    stream << "L_parameter : \n";
+    for (auto item : data->optLP) {
+        stream << item->Pname << " " << item->IV << " " << item->opt << " "
+               << item->optNdx << " " << item->Pndx << " " << item->unit << " " << item->expr << "\n";
+        stream << "IVv: " << item->IVv << "\n";
+        stream << "EVv: " << item->EVv << "\n";
+        stream << "delta: " << item->delta << "\n";
+        stream << "L_param: " << item->L_param << "\n";
+        stream << "L_param_ind: " << item->L_param_ind << "\n";
+        stream << "L_param_coef: " << item->L_param_coef << "\n";
+    }
+    stream << "S_parameter : \n";
+    for (auto item : data->optSP) {
+        stream << item->Pname << " " << item->IV << " " << item->opt << " "
+               << item->optNdx << " " << item->Pndx << " " << item->unit << " " << item->expr << "\n";
+        stream << "IVv: " << item->IVv << "\n";
+        stream << "EVv: " << item->EVv << "\n";
+    }
+    return stream;
+}
+
+
 // End P //

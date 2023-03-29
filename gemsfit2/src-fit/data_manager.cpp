@@ -50,6 +50,10 @@
 #include "json_parse.h"
 #include "fstream"
 
+std::ostream& operator<<(std::ostream& stream, const Data_Manager::DataSynonyms& data);
+std::ostream& operator<<(std::ostream& stream, const Data_Manager::PhSyn& data);
+std::ostream& operator<<(std::ostream& stream, const Data_Manager::samples& data);
+
 // Constructor
 Data_Manager::Data_Manager( )
 {
@@ -162,6 +166,27 @@ void Data_Manager::get_DataSyn()
         out2.clear();
     }
     out.clear();
+
+#ifdef CHECK_LOAD
+    std::fstream test_out("datasyn.log", std::ios::out);
+    test_out << "SynPHs\n";
+    for (auto const& item : SynPHs) {
+           test_out << item << "\n";
+    }
+    test_out << "SynPHPs\n";
+    for (auto const& item : SynPHPs) {
+           test_out << item << "\n";
+    }
+    test_out << "SynDCPs\n";
+    for (auto const& item : SynDCPs) {
+           test_out << item << "\n";
+    }
+    test_out << "SynProps\n";
+    for (auto const& item : SynProps) {
+           test_out << item << "\n";
+    }
+#endif
+
 }
 
 void Data_Manager::check_Syn()
@@ -724,6 +749,15 @@ std::cout << DBname.c_str() << std::endl;
 
         // finish creading bson query object
         bson_finish(&bq2);
+#ifdef CHECK_LOAD
+    std::fstream ff3("DBquery.json", std::ios::out );
+    ff3 << "{\n";
+    bson_print_raw_txt( ff3, bq2.data, 0, BSON_OBJECT);
+    ff3 << "}";
+    ff3.close();
+#endif
+
+
         EJQ *q2 = ejdbcreatequery(jb, &bq2, NULL, 0, NULL);
 
         uint32_t count;
@@ -830,6 +864,13 @@ std::cout << DBname.c_str() << std::endl;
             }
             fprintf(stderr, "Records after removing skipped pairs (dataset-samples): %d\n", count);
         }
+
+#ifdef CHECK_LOAD
+    std::fstream test_out("experiments.log", std::ios::out);
+    for (auto const& item : experiments) {
+           test_out << *item << "\n";
+    }
+#endif
 }
 
 void Data_Manager::bson_to_Data_Manager(/* FILE *f, */ const char *data, int pos)
@@ -1339,6 +1380,65 @@ void Data_Manager::get_distinct_TP( )
     }   
 }
 
+std::ostream& operator<<(std::ostream& stream, const Data_Manager::DataSynonyms& data) {
+    stream << data.GemsName << " : ";
+    for (auto const& item : data.syn) {
+        stream << "" << item << "\n";
+    }
+    return stream;
+}
 
+std::ostream& operator<<(std::ostream& stream, const Data_Manager::PhSyn& data) {
+    stream << data.GemsName << " : ";
+    for (auto const& item : data.syn) {
+        stream << " " << item;
+    }
+    stream << "\nSynDCs\n";
+    for (auto const& item : data.SynDCs) {
+        stream << "   " << item << "\n";
+    }
+    return stream;
+}
+
+std::ostream& operator<<(std::ostream& stream, const Data_Manager::samples& data_lst) {
+    stream << "----------------------------\n";
+    stream << data_lst.idsample << " " << data_lst.sample << " " << data_lst.expdataset << " " << data_lst.Type << " " << "\n";
+    stream << data_lst.weight << " " << data_lst.sT << " " << data_lst.Tunit << " " << data_lst.sP << " "
+           << data_lst.Punit << " " << data_lst.sV << " " << data_lst.Vunit << "\n";
+
+    stream << " sbcomp: \n";
+    for (auto const& item : data_lst.sbcomp) {
+        stream << "    " << item->comp << " " << item->Qnt << " " << item->Qerror << " " << item->Qunit  << "\n";
+    }
+    stream << " props: \n";
+    for (auto const& item : data_lst.props) {
+        stream << "    " << item->prop << " " << item->Qnt << " " << item->Qerror << " " << item->Qunit  << "\n";
+    }
+    stream << " expphases: \n";
+    for (auto const& item_ph : data_lst.expphases) {
+        stream << item_ph->idphase << " " << item_ph->phase << " " << "\n";
+        stream << " phprop: \n";
+        for (auto const& item : item_ph->phprop) {
+            stream << "    " << item->property << " " << item->Qnt << " " << item->Qerror << " " << item->Qunit  << "\n";
+        }
+        stream << " phIC: \n";
+        for (auto const& item : item_ph->phIC) {
+            stream << "    " << item->comp << " " << item->Qnt << " " << item->Qerror << " " << item->Qunit  << "\n";
+        }
+        stream << " phMR: \n";
+        for (auto const& item : item_ph->phMR) {
+            stream << "    " << item->comp << " " << item->Qnt << " " << item->Qerror << " " << item->Qunit  << "\n";
+        }
+        stream << " phDC: \n";
+        for (auto const& item_dc : item_ph->phDC) {
+            stream << item_dc->DC << "\n";
+            for (auto const& item : item_dc->DCprop) {
+                stream << "    " << item->property << " " << item->Qnt << " " << item->Qerror << " " << item->Qunit  << "\n";
+            }
+        }
+    }
+    stream << std::endl;
+    return stream;
+}
 
 
