@@ -52,6 +52,8 @@ int master_counter;
 //int sizeTP;
 
 std::istream& f_getline(std::istream& is, std::string& str, char delim);
+std::ostream& operator<<(std::ostream& stream, const TGfitTask::TargetFunction::obj_fun& data);
+std::ostream& operator<<(std::ostream& stream, const TGfitTask::TargetFunction& data);
 
 //extern outField DataBR_fields[58];
 
@@ -1046,39 +1048,43 @@ void TGfitTask::get_DataTarget ( )
             //if (Tfun->nestfun.back().Ptype == "NULL")
             //   { std::cout << "Data Target->NFUN->Ptype has to be speficied!"<< std::endl; exit(1);} // ERROR
         }
-
-        // get DFUN
-        if( data_tar_object.contains(keys::ADDOUT) ) {
-            for (const auto& element : data_tar_object[keys::ADDOUT]) {
-                TargetFunction::obj_fun addout;
-                Tfun->addout.push_back(addout); // initializing
-                Tfun->addout.back().TuWeight = 1;
-                Tfun->addout.back().isComputed = false;
-
-                Tfun->addout.back().exp_CT = element->value(keys::CT, std::string("NULL"));
-                if (Tfun->addout.back().exp_CT == "NULL")
-                { std::cout << "Type of compared property has to be specified in Data Target->NFUN->CT!"<< std::endl; exit(1);} // ERROR
-                Tfun->addout.back().exp_phase = element->value(keys::EPH[mode], std::string("NULL"));
-                if (Tfun->addout.back().exp_phase == "NULL" && Tfun->addout.back().exp_CT != keys::comp)
-                {std::cout << "Phase name has to be specified in Data Target->NFUN->EPH!"<< std::endl; exit(1);} // ERROR
-                Tfun->addout.back().exp_DCP = element->value(keys::DCP, std::string("NULL"));
-                if ((Tfun->addout.back().exp_DCP == "NULL") && ( Tfun->addout.back().exp_CT == keys::DC))
-                { std::cout << "Name of dependent component compared property has to be specified in Data Target->NFUN->DCP!"<< std::endl; exit(1);} // ERROR
-                Tfun->addout.back().exp_CN = element->value(keys::CN, std::string("NULL"));
-                if (Tfun->addout.back().exp_CN == "NULL")
-                { std::cout << "Data Target->OFUN->CN has to be speficied!"<< std::endl; exit(1);} // ERROR
-
-                Tfun->addout.back().exp_unit = element->value(keys::Qunit, std::string("NULL"));
-                Tfun->addout.back().weight = element->value(keys::WT, 1.);
-                Tfun->addout.back().Telem = element->value(keys::Telem, std::vector<std::string>{});
-                Tfun->addout.back().Tformula = element->value(keys::Tforumla, std::vector<std::string>{});
-                Tfun->addout.back().expr = element->value(keys::expr, std::string("NULL"));
-                Tfun->addout.back().Otype = element->value(keys::SRC, std::string("NULL"));
-                if (Tfun->addout.back().Otype == "NULL" && Tfun->addout.back().exp_CT != keys::comp)
-                {std::cout << "Data Target->ADDOUT->SRC has to be speficied!"<< std::endl; exit(1);}} // ERROR
-        }
-
     }
+
+    // get ADDOUT
+    if( data_tar_object.contains(keys::ADDOUT) ) {
+        for (const auto& element : data_tar_object[keys::ADDOUT]) {
+            TargetFunction::obj_fun addout;
+            Tfun->addout.push_back(addout); // initializing
+            Tfun->addout.back().TuWeight = 1;
+            Tfun->addout.back().isComputed = false;
+
+            Tfun->addout.back().exp_CT = element->value(keys::CT, std::string("NULL"));
+            if (Tfun->addout.back().exp_CT == "NULL")
+            { std::cout << "Type of compared property has to be specified in Data Target->NFUN->CT!"<< std::endl; exit(1);} // ERROR
+            Tfun->addout.back().exp_phase = element->value(keys::EPH[mode], std::string("NULL"));
+            if (Tfun->addout.back().exp_phase == "NULL" && Tfun->addout.back().exp_CT != keys::comp)
+            {std::cout << "Phase name has to be specified in Data Target->NFUN->EPH!"<< std::endl; exit(1);} // ERROR
+            Tfun->addout.back().exp_DCP = element->value(keys::DCP, std::string("NULL"));
+            if ((Tfun->addout.back().exp_DCP == "NULL") && ( Tfun->addout.back().exp_CT == keys::DC))
+            { std::cout << "Name of dependent component compared property has to be specified in Data Target->NFUN->DCP!"<< std::endl; exit(1);} // ERROR
+            Tfun->addout.back().exp_CN = element->value(keys::CN, std::string("NULL"));
+            if (Tfun->addout.back().exp_CN == "NULL")
+            { std::cout << "Data Target->OFUN->CN has to be speficied!"<< std::endl; exit(1);} // ERROR
+
+            Tfun->addout.back().exp_unit = element->value(keys::Qunit, std::string("NULL"));
+            Tfun->addout.back().weight = element->value(keys::WT, 1.);
+            Tfun->addout.back().Telem = element->value(keys::Telem, std::vector<std::string>{});
+            Tfun->addout.back().Tformula = element->value(keys::Tforumla, std::vector<std::string>{});
+            Tfun->addout.back().expr = element->value(keys::expr, std::string("NULL"));
+            Tfun->addout.back().Otype = element->value(keys::SRC, std::string("NULL"));
+            if (Tfun->addout.back().Otype == "NULL" && Tfun->addout.back().exp_CT != keys::comp)
+            {std::cout << "Data Target->ADDOUT->SRC has to be speficied!"<< std::endl; exit(1);}} // ERROR
+    }
+#ifdef CHECK_LOAD
+    std::fstream test_out("DataTarget.log", std::ios::out);
+    test_out << *Tfun << "\n";
+#endif
+
 }
 
 // will go away after implementing way to read logK's from the input file
@@ -1527,5 +1533,32 @@ void TGfitTask::test()
     mean_reisdulas = mean_reisdulas / residuals_v.size();
 }
 
+std::ostream& operator<<(std::ostream& stream, const TGfitTask::TargetFunction::obj_fun& data) {
+    stream << data.exp_phase << " " << data.exp_CT << " " << data.exp_CN << " " << data.exp_unit << "\n";
+    stream << data.exp_DCP << " " << data.meas_average << " " << data.Ptype << " " << data.Otype << "\n";
+    stream << data.expr << " " << data.TuWeight << " " << data.weight << " " << data.sT << " " << data.sT << "\n";
+    stream << "Tformula: " << data.Tformula << "\n";
+    stream << "Telem: " << data.Telem << "\n";
+    stream << "Helem: " << data.Helem << "\n";
+    return stream;
+}
+
+
+std::ostream& operator<<(std::ostream& stream, const TGfitTask::TargetFunction& data) {
+    stream << data.name << " " << data.type << " " << data.weight  << "\n";
+    stream << "---------objfun \n";
+    for (auto item : data.objfun) {
+        stream << "---------\n" << item << "\n";
+    }
+    stream << "---------nestfun \n";
+    for (auto item : data.nestfun) {
+        stream << "---------\n" << item << "\n";
+    }
+    stream << "---------addout \n";
+    for (auto item : data.addout) {
+        stream << "---------\n" << item << "\n";
+    }
+    return stream;
+}
 //-----------------------End of gemsfit_task.cpp--------------------------
 

@@ -36,6 +36,7 @@
 #include "keywords.h"
 #include "v_json.h"
 
+std::ostream& operator<<(std::ostream& stream, const optimization& data);
 
 optimization::optimization()
 {
@@ -53,8 +54,12 @@ optimization::optimization()
     get_nlopt_param();
 
     OptParameterCreate();
-
     GetParameters ();
+
+#ifdef CHECK_LOAD
+    std::fstream test_out("optimization.log", std::ios::out);
+    test_out << *this;
+#endif
 
     if (OptBoundPerc > 0.)
     {
@@ -102,7 +107,7 @@ void optimization::get_nlopt_param()
     OptTolRel = opt_set_object.value(keys::OptTRel[mode], OptTolRel);
     OptTolAbs = opt_set_object.value(keys::OptTAbs[mode], OptTolAbs);
     OptMaxEval = opt_set_object.value(keys::OptMEv[mode], OptMaxEval);
-    OptNormParam = opt_set_object.value(keys::OptNormP[mode], OptNormParam);
+    OptNormParam = opt_set_object.value(keys::OptNormP[mode], 0);
     OptPerturbator = opt_set_object.value(keys::OptPer[mode], OptPerturbator);
 }
 
@@ -345,3 +350,25 @@ void optimization::print_return_message( const int result )
     }
 }// end print_return_message
 
+std::ostream& operator<<(std::ostream& stream, const optimization& data) {
+
+    stream << data.OptAlgo<< "\n";
+    stream << data.OptNormParam << " " << data.OptMaxEval << " " << data.OptDoWhat << " " << data.OptPrcParamDigits << " ";
+    stream << data.OptEquilibrium << " " << data.OptGemsSIA << " " << data.OptTuckey << " " << data.OptTuckeyVal << " ";
+    stream << data.OptTitration << " " << data.OptUserWeight << " " << data.OptMixedSumOfResiduals << "\n";
+    stream << data.OptTolRel << " " << data.OptTolAbs << " " << data.OptInitStep<< " ";
+    stream << data.OptBoundPerc << " " << data.OptPerturbator << " " << data.h_optNF << "\n";
+
+    stream << "optParam\n";
+    int ii=0;
+    for (auto item : data.optParam) {
+        stream << "parameter " << ii++ << "\n" << item << std::endl;
+    }
+    stream << "optNFParam\n";
+    ii=0;
+    for (auto item : data.optNFParam) {
+        stream << "parameter " << ii++ << "\n" << item << "\n";
+    }
+
+    return stream;
+}

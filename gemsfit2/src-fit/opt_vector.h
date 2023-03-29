@@ -41,6 +41,8 @@
 /// Base class for the optimized parameters
 class OptParameter
 {
+    friend std::ostream& operator<<(std::ostream& stream, const OptParameter* data);
+
     protected:
 
         typedef std::vector<double> vd;        // std::vector of double
@@ -63,7 +65,7 @@ class OptParameter
         {
             double IV; /// initial value
             double opt; /// parameter value that gets changed during the optimization
-            int    optNdx; /// index in the global optimization std::vector
+            int    optNdx=0; /// index in the global optimization std::vector
             double Pndx; /// parameter index
             std::string Pname; /// parameter name (DCName, ICname, etc.)
             vd IVv; /// std::vector of initial values for each node/experiment - used in nested optimization
@@ -75,7 +77,7 @@ class OptParameter
         struct F_parameter : parameter /// structure storing F-type parameter iformation
         {
 //            std::string Ftype; /// function type (OFUN, NFUN)
-            int    Fndx; /// function index
+            int    Fndx=0; /// function index
             double UB; /// upper boundary
             double LB; /// lower boundary
         };
@@ -406,5 +408,12 @@ class Opt_DMc : public OptParameter
 
 };
 
+template <typename T>
+std::ostream& operator<<(std::ostream& stream, const std::vector<T>& input) {
+    for (auto const& i : input) {
+        stream << " " << i << ",";
+    }
+    return stream;
+}
 
 #endif // OPT_VECTOR_H

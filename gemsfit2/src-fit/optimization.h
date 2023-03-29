@@ -102,12 +102,12 @@ public:
     double OptTolAbs;
     int OptMaxEval;
     int OptDoWhat;
-    int OptPrcParamDigits;
+    int OptPrcParamDigits = 1;
     int OptEquilibrium;
     int OptGemsSIA = -1;
     int OptTuckey;
     int OptTuckeyVal;
-    int OptTitration;
+    int OptTitration = 0;
     int OptUserWeight;
     int OptMixedSumOfResiduals = -1;
     double OptInitStep;
