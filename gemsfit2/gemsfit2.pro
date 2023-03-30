@@ -40,7 +40,7 @@ DEFINES         += IPMGEMPLUGIN
 DEFINES         += _MYNOZLIB
 CONFIG          += c++17
 DEFINES         += OLD_EJDB
-#DEFINES         += CHECK_LOAD
+DEFINES         += CHECK_LOAD
 
 QMAKE_CXXFLAGS += -O3
 QMAKE_LFLAGS += -O3

@@ -465,11 +465,8 @@ void Data_Manager::get_EJDB()
                 while (k<usepsamples.size())  {
                     if (!(usepsamples[k] == "")) {
                         auto obj = common::JsonFree::object();
-                        // in old version array
-                        //obj["$and"][0][keys::expdataset] = usepdatasets[j];
-                        //obj["$and"][1][keys::expsample] = usepsamples[k];
-                        obj["$and"][keys::expdataset] = usepdatasets[j];
-                        obj["$and"][keys::expsample] = usepsamples[k];
+                        obj["$and"].push_back(common::JsonFree::parse(std::string("{\"")+keys::expdataset+"\":\""+usepdatasets[j]+"\"}"));
+                        obj["$and"].push_back(common::JsonFree::parse(std::string("{\"")+keys::expsample+"\":\""+usepsamples[k]+"\"}"));
                         arr.push_back(std::move(obj));
                     }
                     else   {
@@ -491,11 +488,8 @@ void Data_Manager::get_EJDB()
                 auto arr = common::JsonFree::array();
                 for  (unsigned k = 0; k<SA.size(); k++) {
                     auto obj = common::JsonFree::object();
-                    // in old version array
-                    //obj["$and"][0][keys::expdataset] = DS[k];
-                    //obj["$and"][1][keys::expsample] = SA[k];
-                    obj["$and"][keys::expdataset] = DS[k];
-                    obj["$and"][keys::expsample] = SA[k];
+                    obj["$and"].push_back(common::JsonFree::parse(std::string("{\"")+keys::expdataset+"\":\""+DS[k]+"\"}"));
+                    obj["$and"].push_back(common::JsonFree::parse(std::string("{\"")+keys::expsample+"\":\""+SA[k]+"\"}"));
                     arr.push_back(std::move(obj));
                 }
                 query_object["$or"] = arr;
