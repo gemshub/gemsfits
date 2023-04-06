@@ -6,10 +6,12 @@ CONFIG += c++17
 CONFIG += sanitizer sanitize_thread
 
 DEFINES         += IPMGEMPLUGIN
-DEFINES         += OLD_EJDB
+#DEFINES         += OLD_EJDB
 
 !win32 {
   DEFINES += __unix
+  INCLUDEPATH   += "/usr/local/include/ejdb"
+  INCLUDEPATH   += "/usr/local/include/ejdb2"
 #QMAKE_CFLAGS += pedantic -Wall -Wextra -Wwrite-strings -Werror
 #QMAKE_CXXFLAGS += -ansi -pedantic -Wall -Wextra -Weffc++
 }
@@ -51,9 +53,17 @@ include($$COMMON_CPP/common.pri)
 include($$GEMS3K_CPP/gems3k.pri)
 
 OBJECTS_DIR       = obj
-LIBS += -lyaml-cpp -lejdb
 
+contains(DEFINES, OLD_EJDB) {
+ LIBS += -lejdb -lyaml-cpp
+}
+else {
+ LIBS += -lejdb2 -lyaml-cpp
+}
 
 SOURCES += \
        dbtest_main.cpp
+
+HEADERS += \
+    db_ejdb2.h
 

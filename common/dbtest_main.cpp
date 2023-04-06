@@ -66,7 +66,7 @@ int test_CRUD(size_t db_ndx)
 int test_query(size_t db_ndx)
 {
     // Select from number of documents
-    int numOfDocuments =  10;
+    int numOfDocuments =  0;
 
     // Record keys
     std::vector<std::string> recKeys;
@@ -118,16 +118,17 @@ int test_query(size_t db_ndx)
             "\nFILTER u.name == 'a' \n"
             "RETURN u";
     std::string templ_query = query_object.dump(); // In future generate quer from json
-
+    templ_query = "/[index <= 6 and index >= 3 ]";
+    templ_query = "/[index <= 6 and index >= 3 ] and /[name = a]";
 
     recjsonValues.clear();
     std::cout << "Query : \n" << templ_query <<  std::endl;
-    rtEJ[db_ndx].selectQuery( query_object.dump(), setfnc );
+    rtEJ[db_ndx].selectQuery( templ_query, setfnc );
     printData( "Load by query", recjsonValues );
 
     // delete all
-    for( const auto& key: recKeys)
-        rtEJ[db_ndx].deleteRecord(key);;
+    //for( const auto& key: recKeys)
+    //    rtEJ[db_ndx].deleteRecord(key);;
 
     print_all_keys("End Query", db_ndx);
     return 0;
@@ -136,7 +137,7 @@ int test_query(size_t db_ndx)
 
 int main(int, char* [])
 {
-    std::string dbPath = "EJDB/testdb"; // could be from argument
+    std::string dbPath = "EJDB2/testdb"; // could be from argument
 
     try{
 
@@ -149,7 +150,7 @@ int main(int, char* [])
         rtEJ[test_ndx].OpenDB();
 
         // Test CRUD commands
-        test_CRUD(test_ndx);
+        //test_CRUD(test_ndx);
 
         // Test selection query
         test_query(test_ndx);
