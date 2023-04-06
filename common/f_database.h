@@ -185,9 +185,6 @@ public:
     void deleteRecord(const std::string& pkey);
     /// Save/update record in the collection
     void saveRecord(const std::string& pkey);
-    /// Save/update record in the collection
-    /// Question for replase
-    void saveRecordQuestion(const std::string& pkey, bool& yes_to_all);
     /// Save new record in the collection
     void insertRecord();
 

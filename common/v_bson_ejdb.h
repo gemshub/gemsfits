@@ -23,7 +23,7 @@
 #ifdef OLD_EJDB
 
 #include <string>
-#include <bson.h>
+#include <ejdb/bson.h>
 
 namespace common {
 

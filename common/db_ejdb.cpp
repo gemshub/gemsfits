@@ -1,7 +1,7 @@
 #ifdef OLD_EJDB
 
-#include <ejdb.h>
-#include <bson.h>
+#include <ejdb/ejdb.h>
+#include <ejdb/bson.h>
 #include "db_ejdb.h"
 #include "f_file.h"
 #include "f_database.h"
@@ -28,7 +28,7 @@ public:
     ~TEJDB()
     {
         if(is_opened) {
-            Close();
+//            Close();
         }
     }
 

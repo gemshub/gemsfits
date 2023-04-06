@@ -5,8 +5,9 @@
                     $$COMMON_H/v_json.h \
                     $$COMMON_H/type_test.h \
                     $$COMMON_H/jsonparser.h \
-    $$PWD/db_ejdb.h \
-    $$PWD/dbdriver.h
+                    $$COMMON_H/db_ejdb.h \
+                    $$COMMON_H/dbdriver.h \
+                     $$COMMON_H/keywords.h
 
 
          SOURCES += $$COMMON_CPP/f_database.cpp \
@@ -15,6 +16,6 @@
                     $$COMMON_CPP/v_yaml.cpp \
                     $$COMMON_CPP/v_json.cpp \
                     $$COMMON_CPP/jsonparser.cpp \
-    $$PWD/db_ejdb.cpp
+                    $$COMMON_CPP/db_ejdb.cpp
 
 
