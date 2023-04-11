@@ -87,8 +87,8 @@ void Ejdb2DBClient::connect()
     ejdb_db->Open();
     // Test and open file  (name of ejdb must be take from nFile)
     if(!ejdb_db->ejDB) {
-        std::string err= "Cannot open EJDB "+ ejdb_db->Name();
-        Error("TEJDB0011", err );
+        std::string err= "Cannot open EJDB2 "+ ejdb_db->Name();
+        Error("TEJDB2021", err );
     }
 }
 
@@ -107,6 +107,79 @@ void Ejdb2DBClient::change_path(const std::string &path)
         ejdb_db = std::make_unique<TEJDB2>(ejdb_db_path);
     }
     ejdb_db->ChangePath(ejdb_db_path);
+}
+
+// EJDB query language (JQL) generation
+// https://github.com/Softmotions/ejdb#jql-grammar
+// Not full only adapted part for gemsfit Data_Manager::get_EJDB() "DataSelect"
+static std::string generate_filter(const common::JsonFree& object, const std::string& path)
+{
+    std::string gen_data;
+
+    if( object.is_object()) {
+        for( const auto& child: object ) {
+            if(!gen_data.empty()) {
+                gen_data += " and ";
+            }
+            if(child->get_key() == "$in") {
+                gen_data += path + " in ";
+                gen_data += child->dump(true);
+            }
+            else if(child->get_key() == "$nin") {
+                gen_data += path + " not in ";
+                gen_data += child->dump(true);
+            }
+            else if(child->get_key() == "$bt" && child->is_array() && child->size() > 1 ) {
+                gen_data = path + " >= " + (*child)[0].to_string() + " and ";
+                gen_data += path + " <= " + (*child)[1].to_string();
+            }
+            else {
+                gen_data = path + " = " + child->dump(true);
+            }
+        }
+    }
+    else {
+        gen_data = path + " = " + object.dump(true);
+    }
+    gen_data = "/[ " + gen_data + " ]";
+    return gen_data;
+}
+
+static std::string generate_filters(const common::JsonFree& object, const std::string& and_or)
+{
+    std::string gen_data;
+
+    for( const auto& child: object ) {
+
+        if(!gen_data.empty()) {
+            gen_data += and_or;
+        }
+
+        if(object.is_array()) {
+            gen_data += generate_filters(*child, and_or);
+        }
+        else if(child->get_key() == "$and") {
+            gen_data += "(";
+            gen_data += generate_filters(*child, " and ");
+            gen_data += ")";
+        }
+        else if(child->get_key() == "$or") {
+            gen_data += "(";
+            gen_data += generate_filters(*child, " or ");
+            gen_data += ")";
+        }
+        else  {
+            gen_data += "(";
+            gen_data += generate_filter(*child, child->get_key());
+            gen_data += ")";
+        }
+    }
+    return gen_data;
+}
+
+std::string Ejdb2DBClient::generate_query(const JsonFree &object)
+{
+    return generate_filters(object, " and ");
 }
 
 
@@ -167,7 +240,7 @@ error:
         jbl_destroy(&jbl);
     }
     iwxstr_destroy(xstr);
-    Error( "TEJDB0025", errejdb);
+    Error( "TEJDB2025", errejdb);
     return false;
 }
 
@@ -184,7 +257,7 @@ bool Ejdb2DBClient::delete_record(const std::string& collname, keysmap_t::iterat
 error:
     std::string errejdb = "Delete record "+itr->pack_key()+" error: ";
     errejdb += iwlog_ecode_explained(rc);
-    Error( "TEJDB0024",  errejdb );
+    Error( "TEJDB2024",  errejdb );
     return false;
 }
 
@@ -251,7 +324,7 @@ error:
     if (list) {
         ejdb_list_destroy(&list);
     }
-    Error( "TEJDB0025", errejdb);
+    Error( "TEJDB2026", errejdb);
 }
 
 void Ejdb2DBClient::select_query_omp(const std::string& collname, const std::string& query, SetReaded_f setfnc, int num_threads)
@@ -282,7 +355,7 @@ void Ejdb2DBClient::select_query_omp(const std::string& collname, const std::str
         rc = jbl_as_json(doc->raw, jbl_xstr_json_printer, xstr, JBL_PRINT_PRETTY/*0*/);
         if(!rc) {
             std::string rec_json = iwxstr_ptr(xstr);
-            std::cout << doc->id << " " << rec_json <<  std::endl;
+            //std::cout << doc->id << " " << rec_json <<  std::endl;
             setfnc(rec_json);
         }
         else {
@@ -300,7 +373,7 @@ error:
     if (list) {
         ejdb_list_destroy(&list);
     }
-    Error( "TEJDB0025", errejdb);
+    Error( "TEJDB2027", errejdb);
 }
 
 
@@ -315,7 +388,7 @@ void Ejdb2DBClient::all_query(const std::string& collname, const std::string& qu
     if(internall_query.empty()) {
         internall_query = "/*"; // all
     }
-    // protection
+    // projection (now not work, but must look like)
     if(key_fields.size()>0) {
         internall_query += " | /{";
         for(const auto& key_fls: key_fields) {
@@ -326,12 +399,10 @@ void Ejdb2DBClient::all_query(const std::string& collname, const std::string& qu
         }
         internall_query += "}";
     }
-
-    //internall_query = "/* | /fld1";
     std::cout << "All query " << internall_query <<  std::endl;
 
     EJDB_LIST list = 0;
-    IWXSTR *xstr = iwxstr_new();
+ //   IWXSTR *xstr = iwxstr_new();
     auto rc = ejdb_list2(ejdb_db->ejDB, collname.c_str(), internall_query.c_str(), 0, &list);
     RCGO(rc, error);
 
@@ -352,29 +423,29 @@ void Ejdb2DBClient::all_query(const std::string& collname, const std::string& qu
         // added record key to list
         setfnc(current_key, doc->id);
 
-        // temporally to test
-        iwxstr_clear(xstr);
-        rc = jbl_as_json(doc->raw, jbl_xstr_json_printer, xstr, JBL_PRINT_PRETTY/*0*/);
-        if(!rc) {
-            std::string rec_json = iwxstr_ptr(xstr);
-            std::cout << doc->id << " " << rec_json <<  std::endl;
-        }
-        else {
-            std::cout << doc->id << " error " <<  std::endl;
-        }
+//        // temporally to test
+//        iwxstr_clear(xstr);
+//        rc = jbl_as_json(doc->raw, jbl_xstr_json_printer, xstr, JBL_PRINT_PRETTY/*0*/);
+//        if(!rc) {
+//            std::string rec_json = iwxstr_ptr(xstr);
+//            std::cout << doc->id << " " << rec_json <<  std::endl;
+//        }
+//        else {
+//            std::cout << doc->id << " error " <<  std::endl;
+//        }
     }
     ejdb_list_destroy(&list);
-    iwxstr_destroy(xstr);
+//    iwxstr_destroy(xstr);
     return;
 
 error:
     std::string errejdb = "Select query error: ";
     errejdb += iwlog_ecode_explained(rc);
-    iwxstr_destroy(xstr);
+//    iwxstr_destroy(xstr);
     if (list) {
         ejdb_list_destroy(&list);
     }
-    Error( "TEJDB0025", errejdb);
+    Error( "TEJDB2028", errejdb);
 }
 
 

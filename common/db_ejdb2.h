@@ -37,6 +37,11 @@ public:
     void disconnect() override;
     void change_path(const std::string& path) override;
 
+    /// Generatre database query string.
+    /// \param object - json object with data
+    /// \return adapted query string.
+    std::string generate_query(const common::JsonFree& object) override;
+
     // CRUD API
 
     /// Creates a new document in the collection from the given data.
@@ -87,18 +92,12 @@ public:
                    const std::vector<std::string>& key_fields, SetReadedKey_f setfnc) override;
 
 protected:
-
     /// Ejdb connection data
     std::string ejdb_db_path;
     /// connection for db
     std::unique_ptr<TEJDB2> ejdb_db;
 
-    //EJCOLL *open_collection(const std::string& collname, bool create_if_empty = true);
-    //void close_collection();
-    //std::string get_key_from_bson(const std::vector<std::string>& key_fields, const char* bsdata);
-
     bool is_connected();
-
 };
 
 

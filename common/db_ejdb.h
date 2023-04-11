@@ -39,6 +39,11 @@ public:
     void disconnect() override;
     void change_path(const std::string& path) override;
 
+    /// Generatre database query string.
+    /// \param object - json object with data
+    /// \return adapted query string.
+    std::string generate_query(const common::JsonFree& object) override;
+
     // CRUD API
 
     /// Creates a new document in the collection from the given data.

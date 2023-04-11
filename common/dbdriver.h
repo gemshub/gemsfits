@@ -91,6 +91,11 @@ public:
     virtual void disconnect() = 0;
     virtual void change_path(const std::string& path) = 0;
 
+    /// Generatre database query string.
+    /// \param object - json object with data
+    /// \return adapted query string.
+    virtual std::string generate_query(const common::JsonFree& object) = 0;
+
     // CRUD API
 
     /// Creates a new document in the collection from the given data.

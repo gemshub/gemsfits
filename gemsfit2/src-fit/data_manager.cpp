@@ -421,7 +421,7 @@ void Data_Manager::get_EJDB()
         }
 
         // for skipping expdatasets
-        if (skipdataset.size() && skipdataset[0].empty()) {
+        if (skipdataset.size() > 0 && !skipdataset[0].empty()) {
             query_object[keys::expdataset]["$nin"] = skipdataset;
         }
 

@@ -94,6 +94,11 @@ void EjdbDBClient::change_path(const std::string &path)
     ejdb_db->ChangePath(ejdb_db_path);
 }
 
+std::string EjdbDBClient::generate_query(const JsonFree &object)
+{
+    return object.dump();
+}
+
 /// Get or create collection 'module name' before saving/delete
 EJCOLL *EjdbDBClient::open_collection(const std::string& collname, bool createifempty)
 {

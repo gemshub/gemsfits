@@ -3,7 +3,7 @@ CONFIG += thread console
 CONFIG -= app_bundle
 CONFIG -= qt
 CONFIG += c++17
-CONFIG += sanitizer sanitize_thread
+#CONFIG += sanitizer sanitize_thread
 
 DEFINES         += IPMGEMPLUGIN
 #DEFINES         += OLD_EJDB
