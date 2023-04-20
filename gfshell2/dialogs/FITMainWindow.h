@@ -32,6 +32,10 @@ namespace Ui {
 class FITMainWindow;
 }
 
+namespace jsonui17 {
+class JsonView;
+}
+
 class TKeyTable: public QTableWidget
 {
     Q_OBJECT
@@ -58,6 +62,7 @@ class FITMainWindow : public QMainWindow
 
     bool KeysLength;   ///< Write TXT files with comments
     bool JsonDataShow;   ///< Write edited data in Json format
+    bool EditorDataShow;   ///< Write edited data in Json editor
     QString ExpTemplate; ///< Current template for experiments record
     QString SrchTemplate; ///< Current template for experiments search
 
@@ -85,7 +90,6 @@ class FITMainWindow : public QMainWindow
     bool MessageToSave();
     void RecSave(const std::string& recBsonText, const std::string& key="");
     void RecDelete(const std::string& key);
-    void changeEditeRecord(const std::string& tagname, const std::string& newValue, bool is_json);
     bool runProcess(const QStringList& cParameters, const QString& workDir);
     void selectGEMS(const std::string& fname_);
     std::string makeSystemFileName(const std::string& path);
@@ -104,7 +108,7 @@ private slots:
     void showProcessMesage();
     void runFinished(int exitCode, QProcess::ExitStatus exitStatus);
     void changeKeyList();
-    void recEdited()
+    void objectChanged()
     {
         contentsChanged = true;
     }
@@ -204,12 +208,17 @@ private:
     TKeyTable* keyTable;   ///< Curent collection EJDB keys list
     QProcess*  fitProcess;
     QLineEdit *findLine = nullptr;
+    /// Tree view editor widget
+    QScopedPointer<jsonui17::JsonView>  json_tree;
 
     void setTableIComp();
     void setListPhase();
     void setStatusText( const std::string& text );
     void addLinetoStatus( const std::string& line );
     int defineModuleKeysList( int nRT );
+
+    void set_record_edit(const std::string& json_text);
+    std::string get_record_edit();
 
 };
 

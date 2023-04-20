@@ -193,16 +193,9 @@ bool TEJDBKey::compareTemplate(const common::IndexEntry& elm)
 //-------------------------------------------------------------
 
 // Set json or yaml format string to curent record
-void TEJDataBase::setJson(const std::string& sjson, bool is_json)
+void TEJDataBase::setJson(const std::string& sjson)
 {
-    if( is_json ) {
-        current_Json = sjson;
-        current_YAML = "";
-    }
-    else {
-        current_YAML = sjson;
-        current_Json = "";
-    }
+    current_Json = sjson;
 }
 
 void TEJDataBase::setQuery(const std::string& query_str)
@@ -235,10 +228,7 @@ void TEJDataBase::addKeyToJson(common::JsonFree& object)
 common::JsonFree TEJDataBase::current_to_json(const std::string& pkey)
 {
     common::JsonFree object;
-    if(!current_Json.empty())
-        object = fromJsonString(current_Json);
-    else
-        object = fromYamlString(current_YAML);
+    object = fromJsonString(current_Json);
     std::string key_str = getKeyFromJson(object);
 
     if(!pkey.empty()) {
@@ -264,12 +254,9 @@ std::string TEJDataBase::record_from_json(const std::string& json_str)
 {
     current_Json = json_str;
     auto object = fromJsonString(current_Json);
-    current_YAML = common::yaml::dump(object);
-
     current_Gems3k_name.clear();
     current_Gems3k_name = object.value(keys::G3Ksys[1], current_Gems3k_name);
     current_Gems3k_name = object.value(keys::G3Ksys[0], current_Gems3k_name);
-
     return getKeyFromJson(object);
 }
 

@@ -236,12 +236,12 @@ public:
     }
 
     /// Test top object
-    bool is_top()
+    bool is_top() const
     { return parent_object == nullptr; }
 
     // Get methods  --------------------------
 
-    const std::string& get_key()
+    const std::string& get_key() const
     {   return  field_key;   }
 
     /// @brief Dump object to JSON string.
@@ -513,6 +513,7 @@ public:
         if( is_array() )
         {
             children.push_back(std::make_shared<JsonFree>(std::move(val)));
+            children.back()->field_key = std::to_string(children.size()-1);
             children.back()->parent_object = this;
             children.back()->ndx_in_parent = children.size()-1;
             return;
@@ -529,6 +530,17 @@ public:
     ///   Returns the type name as string to be used in error messages - usually to
     ///   indicate that a function was called on a wrong JSON type.
     static const char* type_name(Type type);
+
+    // GUI data
+    JsonFree *get_parent() const;
+    const JsonFree *child_from_ndx(std::size_t idx) const;
+    size_t get_ndx() const
+    {   return ndx_in_parent;  }
+    const std::string& get_field_value() const
+    {   return  field_value;  }
+    std::string get_path() const;
+    bool remove_child(JsonFree *child);
+    void array_resize(std::size_t newsize, const std::string &defval);
 
 private:
 
@@ -561,7 +573,6 @@ private:
     JsonFree &get_child( std::size_t idx );
     const JsonFree &get_child(const std::string& key) const;
     JsonFree &get_child(const std::string& key);
-    JsonFree &get_parent() const;
 
     void dump2stream(std::ostream &os, int depth, bool dense) const;
 };

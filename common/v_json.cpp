@@ -307,6 +307,17 @@ bool JsonFree::to_bool() const
     return val;
 }
 
+
+std::string JsonFree::get_path() const
+{
+    if( is_top() || get_parent()->is_top()) {
+        return get_key();
+    }
+    else {
+        return  get_parent()->get_path()+"."+ get_key();
+    }
+}
+
 //----------------------------------------------------------------
 
 // key and parent not changed
@@ -386,10 +397,61 @@ const JsonFree& JsonFree::get_child(const std::string &key) const
     return *element->get();
 }
 
-JsonFree &JsonFree::get_parent() const
+bool JsonFree::remove_child( JsonFree* child )
+{
+    int thisndx = -1;
+    for(std::size_t ii=0; ii< children.size(); ii++ )
+    {
+        if( children[ii].get() == child )
+            thisndx = static_cast<int>(ii);
+        if( thisndx >= 0 )
+        {
+          children[ii]->ndx_in_parent--;
+          if( is_array() )
+              children[ii]->field_key = std::to_string(children[ii]->ndx_in_parent);
+        }
+    }
+    if( thisndx >= 0 )
+    {   children.erase(children.begin() + thisndx);
+        return true;
+    }
+    return false;
+}
+
+void JsonFree::array_resize( std::size_t  newsize, const std::string& defval  )
+{
+    ErrorIf( !is_array(), "JsonFree", "cannot resize not array data " + std::string( type_name() ) );
+
+    if( newsize == children.size() )     // the same size
+        ;
+    else if( newsize < children.size() ) // delete if smaler
+        children.erase( children.begin()+newsize, children.end());
+    else {
+        JsonFree chdefval;
+        if(defval.empty()) {
+            chdefval =  JsonFree::parse(defval);
+        }
+        else if( children.size()>0 )  {
+            chdefval = children[0];
+        }
+
+        for( auto ii=children.size(); ii<newsize; ii++) {
+            push_back(JsonFree(chdefval));
+        }
+    }
+}
+
+JsonFree *JsonFree::get_parent() const
 {
     ErrorIf( !parent_object, "JsonFree", "parent Object is undefined" );
-    return *parent_object;
+    return parent_object;
+}
+
+const JsonFree *JsonFree::child_from_ndx(std::size_t idx) const
+{
+    ErrorIf( idx>=size(), "JsonFree", "array index " + std::to_string(idx) + " is out of range" );
+    return children[idx].get();
+
 }
 
 void JsonFree::dump2stream( std::ostream& os, int depth, bool dense ) const

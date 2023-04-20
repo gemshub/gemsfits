@@ -25,6 +25,8 @@
 #include "v_service.h"
 #include "gui_service.h"
 #include "keywords.h"
+#include "json_view.h"
+#include "v_yaml.h"
 
 //--------------------------------------------------------------------------
 
@@ -62,7 +64,8 @@ void FITMainWindow::getDataFromPreferences()
     LocalDocDir =  mainSettings->value("HelpFolderPath", "../Resources/help").toString().toStdString();
     UserDir = mainSettings->value("UserFolderPath", ".").toString().toStdString();
     KeysLength = mainSettings->value("PrintComments", true).toBool();
-    JsonDataShow = !mainSettings->value("ViewinYAMLFormat", true).toBool();
+    JsonDataShow = !mainSettings->value("ViewinYAMLFormat", false).toBool();
+    EditorDataShow = mainSettings->value("ViewinModelEditor", true).toBool();
 
     QString program = mainSettings->value("Gemsfit2ProgramPath", "gemsfit2").toString();
     fitProcess->setProgram( program );
@@ -116,6 +119,18 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     toolTasks->addAction(ui->actionFits_View_Mode);
     toolTasks->setWindowTitle("toolTasks");
 
+    // define edit tree view
+   QStringList aHeaderData;
+   aHeaderData << "key" << "value";
+   json_tree.reset( new jsonui17::JsonView(this) );
+   auto* json_model = new jsonui17::JsonModel("", aHeaderData, this );
+   jsonui17::JsonDelegate* deleg_schema = new jsonui17::JsonDelegate();
+   json_tree->setModel(json_model);
+   json_tree->setItemDelegate(deleg_schema);
+   json_tree->setColumnWidth( 0, 250 );
+   json_tree->expandToDepth(2);
+   ui->verticalLayout_7->addWidget(json_tree.get());
+
     // define main window
     keyTable = new TKeyTable( this );
     ui->gridLayout->addWidget( keyTable, 1, 0, 1, 2 );
@@ -134,12 +149,10 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     ui->splV->setStretchFactor(1, 3);
     ui->splV->setStretchFactor(2, 2);
 
-    //MyHighlighter *highlighter = new MyHighlighter( ui->recordEdit->document() );
     // set up menu
     setActions();
     connect(ui->splV, SIGNAL(splitterMoved(int,int)), this, SLOT(moveToolBar(int,int)));
     connect(keyTable, SIGNAL(cellClicked(int,int)), this, SLOT(openRecordKey(int,int)));
-    //connect( ui->recordEdit, SIGNAL(textChanged()),  this, SLOT(recEdited()));
     connect( ui->recordEdit, SIGNAL(undoAvailable(bool)),  this, SLOT(recEdited(bool)));
     connect( ui->filterEdit, SIGNAL(editingFinished()), this, SLOT(changeKeyList()) );
 
@@ -517,11 +530,41 @@ int FITMainWindow::defineModuleKeysList( int nRT )
     return curInd;
 }
 
+void FITMainWindow::set_record_edit(const std::string &json_text)
+{
+    std::string current_json;
+
+     if(JsonDataShow) {
+            current_json = json_text;
+        }
+        else{
+        current_json = common::yaml::Json2Yaml(json_text);
+    }
+    json_tree->updateModelData(json_text);
+    ui->recordEdit->setText(current_json.c_str());
+}
+
+string FITMainWindow::get_record_edit()
+{
+    std::string editor_data;
+
+    if(EditorDataShow) {
+        editor_data = json_tree->saveToJson();
+    }
+    else  {
+        editor_data = ui->recordEdit->toPlainText().toStdString();
+        if(!JsonDataShow) {
+            editor_data = common::yaml::Yaml2Json(editor_data);
+        }
+    }
+    return editor_data;
+}
+
 
 /// Save record structure to Data Base
 void FITMainWindow::RecSave( const std::string& recBsonText, const std::string& key)
 {
-    rtEJ[ currentMode ].setJson( recBsonText, JsonDataShow );
+    rtEJ[ currentMode ].setJson(recBsonText);
     rtEJ[ currentMode ].saveRecord(key);
     //defineModuleKeysList( currentMode ); //?? need change key list if new record
     contentsChanged = false;
@@ -554,8 +597,7 @@ bool FITMainWindow::MessageToSave()
 
         if( res == VF3_1 )
         {
-            std::string recBson = ui->recordEdit->toPlainText().toStdString();
-            RecSave( recBson, key_str.c_str() );
+            RecSave(get_record_edit(), key_str);
         }
     }
     contentsChanged = false;
@@ -570,44 +612,6 @@ std::string FITMainWindow::makeSystemFileName( const std::string& path  )
         name += projectSettings->value("GEMS3KFilesPath", "/GEMS").toString().toStdString();
     name += "/" + gemsLstFile.Name() + "." + gemsLstFile.Ext();
     return name;
-}
-
-/// Change <SystemFiles> or <DataDB> data in edit record
-void FITMainWindow::changeEditeRecord(const std::string& tagname, const std::string& newValue, bool is_json )
-{
-    // get value std::string
-    std::string valueStr = ui->recordEdit->toPlainText().toStdString();
-
-    // delete old path std::string
-    size_t found = valueStr.find( tagname );
-    size_t found3 = valueStr.find(":", found+1);
-    if (found != std::string::npos)
-    {
-        // change value
-        //       found += 15;
-        size_t  found1;
-        size_t  found2;
-        if( is_json )
-        {
-            found1 =  valueStr.find("\"", found3 );
-            found2 =  valueStr.find("\"", found1+1 );
-            valueStr.replace( found1+1, found2-found1-1, newValue);
-        }
-        else
-        {
-            found1 =  valueStr.find_first_not_of(" ", found3+1 );
-            found2 =  valueStr.find("\n", found1 );
-            valueStr.replace( found1, found2-found1, newValue);
-        }
-        ui->recordEdit->setText(valueStr.c_str());
-        contentsChanged = true;
-    }
-
-    //   valueStr = ui->recordEdit->toPlainText().toStdString();
-    //   found = valueStr.find("{");
-
-    //   std::string taskid_projectid = "\"taskid\": \"";
-    ////   valueStr.
 }
 
 
@@ -658,10 +662,13 @@ bool FITMainWindow::createTaskTemplate()
         ejdbPath  += projectSettings->value("ProjDatabasePath", "/EJDB").toString().toStdString();
         ejdbPath  += "/";
         ejdbPath  += projectSettings->value("ProjDatabaseName", "myprojdb1" ).toString().toStdString();
-        changeEditeRecord( keys::DBPath[0] , ejdbPath, true);
-        changeEditeRecord( keys::DBPath[1] , ejdbPath, true );
-        changeEditeRecord( keys::DBColl[0], rtEJ[ MDF_DATABASE ].getKeywd(), true);
-        changeEditeRecord( keys::DBColl[1], rtEJ[ MDF_DATABASE ].getKeywd(), true);
+        std::string templ_json = get_record_edit();
+        auto templ_obj = common::JsonFree::parse(templ_json);
+        templ_obj[keys::DBPath[0]] = ejdbPath;
+        templ_obj[keys::DBPath[1]] = ejdbPath;
+        templ_obj[keys::DBColl[0]] = rtEJ[ MDF_DATABASE ].getKeywd();
+        templ_obj[keys::DBColl[1]] = rtEJ[ MDF_DATABASE ].getKeywd();
+        set_record_edit(templ_obj.dump());
     }
     return ret;
 }

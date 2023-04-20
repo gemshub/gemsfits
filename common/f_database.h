@@ -104,8 +104,6 @@ class TEJDataBase final
     // Work data
     /// last read/save record json
     std::string current_Json;
-    /// last read/save record YAML
-    std::string current_YAML;
     /// last read gems3k files name (<SystemFiles>) in record
     std::string current_Gems3k_name;
     /// last query for select record
@@ -152,11 +150,8 @@ public:
     /// Return curent record in json format std::string
     const std::string& getJson() const
     {  return current_Json; }
-    /// Return curent record in YAML format std::string
-    const std::string& getYAML() const
-    {  return current_YAML; }
     /// Set json format std::string to curent record
-    void setJson( const std::string& sjson, bool is_json = true);
+    void setJson( const std::string& sjson);
 
     /// Return curent gems3k files name
     const std::string& getGems3kName()
