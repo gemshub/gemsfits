@@ -196,9 +196,6 @@
               </property>
              </widget>
             </item>
-            <item>
-             <widget class="QTextEdit" name="recordEdit"/>
-            </item>
            </layout>
           </widget>
           <widget class="QWidget" name="widget_2" native="true">
@@ -496,10 +493,26 @@
     <addaction name="actionAuthors"/>
     <addaction name="actionLicense"/>
    </widget>
+   <widget class="QMenu" name="menu_Edit">
+    <property name="title">
+     <string>&amp;Edit</string>
+    </property>
+    <addaction name="actionAdd_One_Field"/>
+    <addaction name="action_Remove_Selected_Field"/>
+    <addaction name="actionResize_Selected_List"/>
+    <addaction name="actionClone_Selected_Field"/>
+    <addaction name="separator"/>
+    <addaction name="actionCopy_Field_Path"/>
+    <addaction name="actionCopy_Field"/>
+    <addaction name="actionPaste_Field_Value"/>
+    <addaction name="separator"/>
+    <addaction name="actionCalculator"/>
+   </widget>
    <addaction name="menuTask"/>
    <addaction name="menuRecord"/>
    <addaction name="menuRecod_List"/>
    <addaction name="menu_Calc"/>
+   <addaction name="menu_Edit"/>
    <addaction name="menuFin_d"/>
    <addaction name="menuView"/>
    <addaction name="menu_Help"/>
@@ -963,6 +976,91 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+-</string>
+   </property>
+  </action>
+  <action name="actionAdd_One_Field">
+   <property name="text">
+    <string>Add &amp;One Field ...</string>
+   </property>
+   <property name="toolTip">
+    <string>Add new line into object</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="action_Remove_Selected_Field">
+   <property name="text">
+    <string>&amp;Remove Selected Field</string>
+   </property>
+   <property name="toolTip">
+    <string>Delete current line from object</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionResize_Selected_List">
+   <property name="text">
+    <string>Resize Selected List ...</string>
+   </property>
+   <property name="toolTip">
+    <string>Change current array size</string>
+   </property>
+   <property name="shortcut">
+    <string>F4</string>
+   </property>
+  </action>
+  <action name="actionClone_Selected_Field">
+   <property name="text">
+    <string>Clone Selected Field</string>
+   </property>
+   <property name="toolTip">
+    <string>Add copy of field to end of list</string>
+   </property>
+  </action>
+  <action name="actionCopy_Field_Path">
+   <property name="text">
+    <string>Copy Field &amp;Path</string>
+   </property>
+   <property name="toolTip">
+    <string>Copy selected field path</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionCopy_Field">
+   <property name="text">
+    <string>Copy &amp;Field</string>
+   </property>
+   <property name="toolTip">
+    <string>Copy &amp;Field</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actionPaste_Field_Value">
+   <property name="text">
+    <string>Paste Field &amp;Value</string>
+   </property>
+   <property name="toolTip">
+    <string>Paste data to field</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
+   </property>
+  </action>
+  <action name="actionCalculator">
+   <property name="text">
+    <string>Calculator</string>
+   </property>
+   <property name="toolTip">
+    <string>Use Calculator for specified cells</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
    </property>
   </action>
  </widget>

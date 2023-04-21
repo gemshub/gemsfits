@@ -32,6 +32,8 @@ namespace Ui {
 class FITMainWindow;
 }
 
+class QTextEdit;
+
 namespace jsonui17 {
 class JsonView;
 }
@@ -210,6 +212,7 @@ private:
     QLineEdit *findLine = nullptr;
     /// Tree view editor widget
     QScopedPointer<jsonui17::JsonView>  json_tree;
+    QScopedPointer<QTextEdit> recordEdit;
 
     void setTableIComp();
     void setListPhase();

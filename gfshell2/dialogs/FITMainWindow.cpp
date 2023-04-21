@@ -104,6 +104,15 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     projectSettings(0),  mainSettings(0)
 {
     ui->setupUi(this);
+
+    // setup process
+    fitProcess = new QProcess( this);
+    //connect( fitProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(showProcessMesage()) );
+    connect( fitProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT( runFinished(int,QProcess::ExitStatus)));
+    //connect( fitProcess, SIGNAL(readyReadStandardError()), this, SLOT(ReadErr()) );
+
+    //set up main parameters
+    setDefValues( c, v);
     axisLabelFont = QFont("Courier New", 14);
     ui->actionCancel_gemsfit2_run->setEnabled(false);
 
@@ -119,17 +128,22 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     toolTasks->addAction(ui->actionFits_View_Mode);
     toolTasks->setWindowTitle("toolTasks");
 
-    // define edit tree view
+   // define edit tree view
    QStringList aHeaderData;
    aHeaderData << "key" << "value";
-   json_tree.reset( new jsonui17::JsonView(this) );
+   json_tree.reset( new jsonui17::JsonView() );
    auto* json_model = new jsonui17::JsonModel("", aHeaderData, this );
    jsonui17::JsonDelegate* deleg_schema = new jsonui17::JsonDelegate();
    json_tree->setModel(json_model);
    json_tree->setItemDelegate(deleg_schema);
    json_tree->setColumnWidth( 0, 250 );
    json_tree->expandToDepth(2);
+   json_tree->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
    ui->verticalLayout_7->addWidget(json_tree.get());
+
+   recordEdit.reset( new QTextEdit());
+   recordEdit->setObjectName("recordEdit");
+   ui->verticalLayout_7->addWidget(recordEdit.get());
 
     // define main window
     keyTable = new TKeyTable( this );
@@ -153,22 +167,11 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     setActions();
     connect(ui->splV, SIGNAL(splitterMoved(int,int)), this, SLOT(moveToolBar(int,int)));
     connect(keyTable, SIGNAL(cellClicked(int,int)), this, SLOT(openRecordKey(int,int)));
-    connect( ui->recordEdit, SIGNAL(undoAvailable(bool)),  this, SLOT(recEdited(bool)));
+    connect( recordEdit.get(), SIGNAL(undoAvailable(bool)),  this, SLOT(recEdited(bool)));
     connect( ui->filterEdit, SIGNAL(editingFinished()), this, SLOT(changeKeyList()) );
 
-    // setup process
-    fitProcess = new QProcess( this);
-    //connect( fitProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(showProcessMesage()) );
-    connect( fitProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT( runFinished(int,QProcess::ExitStatus)));
-    //connect( fitProcess, SIGNAL(readyReadStandardError()), this, SLOT(ReadErr()) );
-
-
-    //set up main parameters
-    setDefValues( c, v);
     // setup first lists
     CmDBMode();
-
-
 }
 
 FITMainWindow::~FITMainWindow()
@@ -395,6 +398,24 @@ void FITMainWindow::loadNewProject()
 /// Set up data for Main window
 void FITMainWindow::resetMainWindow()
 {
+    if(EditorDataShow) {
+        recordEdit->hide();
+        json_tree->show();
+        ui->menuFin_d->setEnabled(false);
+        ui->menuView->setEnabled(false);
+        ui->actionFind_Previous->setEnabled(false);
+        ui->actionFind_Next->setEnabled(false);
+        ui->menu_Edit->setEnabled(true);
+    }
+    else {
+       json_tree->hide();
+       recordEdit->show();
+       ui->menuFin_d->setEnabled(true);
+       ui->menuView->setEnabled(true);
+       ui->actionFind_Previous->setEnabled(true);
+       ui->actionFind_Next->setEnabled(true);
+       ui->menu_Edit->setEnabled(false);
+    }
     // set up filter
     ui->filterEdit->setText("*");
 
@@ -541,7 +562,7 @@ void FITMainWindow::set_record_edit(const std::string &json_text)
         current_json = common::yaml::Json2Yaml(json_text);
     }
     json_tree->updateModelData(json_text);
-    ui->recordEdit->setText(current_json.c_str());
+    recordEdit->setText(current_json.c_str());
 }
 
 string FITMainWindow::get_record_edit()
@@ -552,7 +573,7 @@ string FITMainWindow::get_record_edit()
         editor_data = json_tree->saveToJson();
     }
     else  {
-        editor_data = ui->recordEdit->toPlainText().toStdString();
+        editor_data = recordEdit->toPlainText().toStdString();
         if(!JsonDataShow) {
             editor_data = common::yaml::Yaml2Json(editor_data);
         }

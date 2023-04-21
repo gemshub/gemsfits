@@ -428,11 +428,11 @@ void JsonFree::array_resize( std::size_t  newsize, const std::string& defval  )
         children.erase( children.begin()+newsize, children.end());
     else {
         JsonFree chdefval;
-        if(defval.empty()) {
+        if(!defval.empty()) {
             chdefval =  JsonFree::parse(defval);
         }
         else if( children.size()>0 )  {
-            chdefval = children[0];
+            chdefval = *children[0];
         }
 
         for( auto ii=children.size(); ii<newsize; ii++) {

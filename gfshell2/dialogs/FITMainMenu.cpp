@@ -28,8 +28,9 @@
 #include "v_service.h"
 #include "gui_service.h"
 #include "keywords.h"
-#include "v_bson_ejdb.h"
+//#include "v_bson_ejdb.h"
 #include "v_yaml.h"
+#include "json_view.h"
 #include <yaml-cpp/yaml.h>
 #include <yaml-cpp/eventhandler.h>
 #include "yaml-cpp/emitfromevents.h"
@@ -92,6 +93,16 @@ void FITMainWindow::setActions()
     connect( ui->action_Show_Results, SIGNAL( triggered()), this, SLOT(CmShowCalcResults()));
     connect( ui->actionFits_View_Mode, SIGNAL( triggered()), this, SLOT(CmShowFitResults()));
     connect( ui->actionCancel_gemsfit2_run, SIGNAL( triggered()), this, SLOT(CmCancelGemsfit()));
+
+    // Edit
+    QObject::connect(ui->actionAdd_One_Field, &QAction::triggered, json_tree.get(), &jsonui17::JsonView::CmAddObject);
+    QObject::connect(ui->actionClone_Selected_Field, &QAction::triggered, json_tree.get(), &jsonui17::JsonView::CmCloneObject);
+    QObject::connect(ui->action_Remove_Selected_Field, &QAction::triggered, json_tree.get(), &jsonui17::JsonView::CmDelObject);
+    QObject::connect(ui->actionResize_Selected_List, &QAction::triggered, json_tree.get(), &jsonui17::JsonView::CmResizeArray);
+    QObject::connect(ui->actionCalculator, &QAction::triggered, json_tree.get(), &jsonui17::JsonView::CmCalc);
+    QObject::connect(ui->actionCopy_Field_Path, &QAction::triggered, json_tree.get(), &jsonui17::JsonView::CopyFieldPath);
+    QObject::connect(ui->actionCopy_Field, &QAction::triggered, json_tree.get(), &jsonui17::JsonView::CopyField);
+    QObject::connect(ui->actionPaste_Field_Value, &QAction::triggered, json_tree.get(), &jsonui17::JsonView::PasteField);
     // Find
     connect( ui->action_Find, SIGNAL( triggered()), this, SLOT(actionFind()));
     connect( ui->actionFind_Next, SIGNAL( triggered()), this, SLOT(actionFindNext()));
@@ -456,7 +467,7 @@ void FITMainWindow::CmPrevious()
 void FITMainWindow::CmUpdateTest()
 {
     try {
-        std::string recBson = ui->recordEdit->toPlainText().toStdString();
+        std::string recBson= recordEdit->toPlainText().toStdString();
         if( JsonDataShow ) {
             fromJsonString(recBson);
             setStatusText( "Text in the editor is in valid JSON format" );
@@ -780,7 +791,7 @@ void FITMainWindow::CmShowCalcResults()
         setStatusText( err.title );
         addLinetoStatus( err.mess );
     }
-}
+}//#include "v_yaml.h"
 
 /// Show saved gemsfit results
 void FITMainWindow::CmShowFitResults()
@@ -1300,7 +1311,7 @@ void FITMainWindow::actionFindNext()
     if(ui->action_Whole_words->isChecked() )
         flg |=QTextDocument::FindWholeWords;
 
-    ui->recordEdit->find( findLine->text(), flg );
+    recordEdit->find( findLine->text(), flg );
 }
 
 void FITMainWindow::actionFindPrevious()
@@ -1315,7 +1326,7 @@ void FITMainWindow::actionFindPrevious()
     if(ui->action_Whole_words->isChecked() )
         flg |=QTextDocument::FindWholeWords;
 
-    ui->recordEdit->find( findLine->text(), flg );
+    recordEdit->find( findLine->text(), flg );
 }
 
 void FITMainWindow::actionFind()
@@ -1325,12 +1336,12 @@ void FITMainWindow::actionFind()
 
 void FITMainWindow::actionZoomIn()
 {
-    ui->recordEdit->zoomIn(2);
+    recordEdit->zoomIn(2);
 }
 
 void FITMainWindow::actionZoomOut()
 {
-    ui->recordEdit->zoomOut(2);
+    recordEdit->zoomOut(2);
 }
 
 //-------------------------------------------------------------------------------------

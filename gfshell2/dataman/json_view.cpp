@@ -104,7 +104,7 @@ void JsonView::slotPopupContextMenu( const QPoint &pos )
     if(  themodel && themodel->isCanBeResized(index) )
     {
         menu->addSeparator();
-        act =  new QAction(tr("Resize Selected List/Map/Set ..."), this);
+        act =  new QAction(tr("Resize Selected List ..."), this);
         act->setShortcut(QKeySequence(Qt::Key_F4));
         act->setShortcutVisibleInContextMenu(true);
         act->setStatusTip(tr("Change current array size"));
@@ -115,8 +115,8 @@ void JsonView::slotPopupContextMenu( const QPoint &pos )
     if(  themodel && themodel->isCanBeCloned( index ) )
     {
         act =  new QAction(tr("Clone Selected Field"), this);
-        act->setShortcut(tr("Ctr+C"));
-        act->setStatusTip(tr("Add copy of field to end of list/map"));
+        //act->setShortcut(tr("Ctr+C"));
+        act->setStatusTip(tr("Add copy of field to end of list"));
         connect(act, &QAction::triggered, this, &JsonView::CmCloneObject);
         menu->addAction(act);
     }
@@ -141,8 +141,8 @@ void JsonView::slotPopupContextMenu( const QPoint &pos )
         connect(act, &QAction::triggered, this, &JsonView::CopyFieldPath);
         menu->addAction(act);
 
-        act =  new QAction(tr("Copy &Field"), this);
-        act->setShortcut(tr("Ctrl+F"));
+        act =  new QAction(tr("Copy Field"), this);
+        act->setShortcut(tr("Ctrl+C"));
         act->setStatusTip(tr("Copy selected field data"));
         connect(act, &QAction::triggered, this, &JsonView::CopyField);
         menu->addAction(act);
