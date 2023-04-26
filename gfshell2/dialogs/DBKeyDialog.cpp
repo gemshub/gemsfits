@@ -4,8 +4,7 @@
 // Implementation of DBKeyDialog and DBKeyFilter classes
 //
 // Copyright (C) 2014  S.V.Dmytriyeva
-// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
-//    yaml-cpp (https://code.google.com/p/yaml-cpp/)
+// Uses EJDB (http://ejdb.org), yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
 // This file is part of the GEMSFITS GUI, which uses the
 // Qt v.5 cross-platform App & UI framework (http://qt-project.org)
