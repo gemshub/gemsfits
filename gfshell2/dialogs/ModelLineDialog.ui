@@ -45,11 +45,6 @@
      </item>
      <item>
       <property name="text">
-       <string>int</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
        <string>bool</string>
       </property>
      </item>

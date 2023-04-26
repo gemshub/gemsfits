@@ -289,15 +289,6 @@ double JsonFree::to_double() const
     return val;
 }
 
-long JsonFree::to_int() const
-{
-    long val = 0;
-    if( type() == Type::Int )  {
-        detail::string2value( field_value, val );
-    }
-    return val;
-}
-
 bool JsonFree::to_bool() const
 {
     bool val = false;
@@ -491,7 +482,6 @@ void JsonFree::dump2stream( std::ostream& os, int depth, bool dense ) const
             os << "null";
             break;
         case Bool:
-        case Int:
             os << childobj->field_value;
             break;
         case Double:
@@ -533,8 +523,6 @@ void JsonFree::dump2stream( std::ostream& os, int depth, bool dense ) const
 const char *JsonFree::type_name(JsonFree::Type type)
 {
     switch( type ) {
-    case Int:
-        return "int";
     case Double:
         return "double";
     case Null:

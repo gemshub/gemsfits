@@ -27,7 +27,6 @@ void yaml_emitter(YAML::Emitter& out, const JsonFree& object)
             break;
         case JsonFree::Bool:
         case JsonFree::Double:
-        case JsonFree::Int:
             out << childobj->dump();
             break;
         case JsonFree::String:
