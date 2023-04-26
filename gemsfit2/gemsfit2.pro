@@ -71,8 +71,8 @@ CONFIG( mpi, serial|mpi ) {
         QMAKE_CFLAGS += $$system(mpicc --showme:compile)
         QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions $$system(mpic++ --showme:compile) -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions -fopenmp
 #        QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions $$system(mpic++ --showme:compile) -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions
-        LIBS +=  $$system(mpic++ --showme:link) -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp -ljansson -lejdb
-#        LIBS +=  $$system(mpic++ --showme:link) -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz -liomp5 -ljansson -lejdb
+        LIBS +=  $$system(mpic++ --showme:link) -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp
+#        LIBS +=  $$system(mpic++ --showme:link) -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz -liomp5
 }
 
 #contains( CONFIG, serial ) {
@@ -83,12 +83,13 @@ CONFIG( serial, serial|mpi ) {
         QMAKE_CFLAGS += -fopenmp
         QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions -fopenmp
 #        QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions
-        LIBS += -lnlopt -lm -lboost_filesystem  -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp -ljansson -lejdb
-#        LIBS += -lnlopt -lm -lboost_filesystem  -lboost_system -llapack -lblas -larmadillo -lpthread -lz -liomp5 -ljansson -lejdb
+        LIBS += -lnlopt -lm -lboost_filesystem  -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp
+#        LIBS += -lnlopt -lm -lboost_filesystem  -lboost_system -llapack -lblas -larmadillo -lpthread -lz -liomp5
 }
 
 !macx-clang {
   INCLUDEPATH   += "/usr/local/include/ejdb"
+  INCLUDEPATH   += "/usr/local/include/ejdb2"
 }else{
   INCLUDEPATH   += "/usr/local/include"
 #  INCLUDEPATH   += "/usr/local/Cellar/libiomp/20150701/include/libiomp"
@@ -157,5 +158,13 @@ include($$MUP_CPP/muparser.pri)
 #CONFIG(release, debug|release): LIBS += -L$$EJDB_LIB_PATH/release/src/ -lejdb
 #CONFIG(debug, debug|release): LIBS += -L$$EJDB_LIB_PATH/debug/src/ -lejdb
 
-CONFIG(release, debug|release): LIBS += -lyaml-cpp
-CONFIG(debug, debug|release): LIBS += -lyaml-cpp
+contains(DEFINES, OLD_EJDB) {
+CONFIG(release, debug|release): LIBS += -lejdb -lyaml-cpp
+CONFIG(debug, debug|release): LIBS += -lejdb -lyaml-cpp
+}
+else
+{
+CONFIG(release, debug|release): LIBS += -lejdb2 -lyaml-cpp
+CONFIG(debug, debug|release): LIBS += -lejdb2 -lyaml-cpp
+}
+
