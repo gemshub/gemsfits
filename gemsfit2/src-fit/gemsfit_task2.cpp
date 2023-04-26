@@ -53,7 +53,7 @@ double TGfitTask::get_residual(int exp, TGfitTask::TargetFunction::obj_fun &objf
 
     // loop trough objective function
     /// Target function
-    if ((objfun.exp_phase !="NULL") && (this->experiments[exp]->expphases.size() > 0))
+    if ((objfun.exp_phase !="NULL") && (this->experiments[exp]->expphases.size() > 0) && (objfun.exp_phase !="prop"))
     {
         // loop trough all phases
         for (unsigned int p=0; p<this->experiments[exp]->expphases.size(); ++p)
@@ -675,7 +675,7 @@ void TGfitTask:: print_global_results ()
                              setprecision(prec) << (100*aTfun[i].objfun[j].results.residual/aTfun[i].objfun[j].results.measured_value)<<","<<
                              setprecision(prec) << aTfun[i].objfun[j].results.weight <<",";
             } else
-                gpf->fres << ","<< ","<<","<< ",";
+                gpf->fres << ","<< ","<<","<< ","<< ",";
 
         }
 
@@ -683,6 +683,7 @@ void TGfitTask:: print_global_results ()
         {
             if (aTfun[i].addout[j].exp_CT == keys::comp && aTfun[i].addout[j].results.input_value != -1.0)
                 gpf->fres << setprecision(prec) << aTfun[i].addout[j].results.input_value <<",";
+            else
             if (aTfun[i].addout[j].isComputed)
             {
                 if (aTfun[i].addout[j].Otype == keys::calc)
