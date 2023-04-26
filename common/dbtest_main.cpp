@@ -3,9 +3,19 @@
 #include <iostream>
 #include "f_database.h"
 
+template<class T>
+void printData( const std::string& title, const std::vector<T>& values )
+{
+    std::cout <<  title <<  "\n";
+    for( const auto& item: values)
+        std::cout <<  item <<  "\n";
+    std::cout <<  std::endl;
+}
+
 int test_CRUD(size_t db_ndx);
 int test_query(size_t db_ndx);
 int test_query_generator(size_t db_ndx);
+int test_array_load();
 
 int main(int, char* [])
 {
@@ -33,6 +43,8 @@ int main(int, char* [])
         // Example generation JQL query from json
         test_query_generator(test_ndx);
 
+        test_array_load();
+
         rtEJ.Close();
     }
     catch(TError& e)
@@ -49,14 +61,6 @@ int main(int, char* [])
     }
 
     return 0;
-}
-
-void printData( const std::string& title, const std::vector<std::string>& values )
-{
-    std::cout <<  title <<  "\n";
-    for( const auto& item: values)
-        std::cout <<  item <<  "\n";
-    std::cout <<  std::endl;
 }
 
 void print_all_keys(const std::string& header, size_t db_ndx)
@@ -345,6 +349,37 @@ int test_query_generator(size_t db_ndx)
     std::cout << "Query : \n" << templ_query <<  std::endl;
     // check query
     rtEJ[db_ndx].selectQuery( templ_query, setfnc );
+
+    return 0;
+}
+
+std::string gemsfit_check_array_load  = R"({
+     "expdataset" :  [
+               "CH04D",
+               "Haas-thesis-CSHeq"
+          ],
+     "sample" : "Cw_06",
+     "sT" : [
+               25,
+               50,
+               100
+          ],
+     "sP" :  1000
+})";
+
+int test_array_load()
+{
+    common::JsonFree query_object = common::JsonFree::parse(gemsfit_check_array_load);
+
+    auto expdataset = query_object.value("expdataset", std::vector<std::string>{});
+    printData( "expdataset", expdataset );
+    auto sample = query_object.value("sample", std::vector<std::string>{});
+    printData( "sample", sample );
+
+    auto sT = query_object.value("sT", std::vector<double>{});
+    printData( "sT", sT );
+    auto sP = query_object.value("sP", std::vector<double>{});
+    printData( "sP", sP );
 
     return 0;
 }
