@@ -28,7 +28,6 @@
 #include "v_service.h"
 #include "gui_service.h"
 #include "keywords.h"
-//#include "v_bson_ejdb.h"
 #include "v_yaml.h"
 #include "json_view.h"
 #include <yaml-cpp/yaml.h>
@@ -791,7 +790,7 @@ void FITMainWindow::CmShowCalcResults()
         setStatusText( err.title );
         addLinetoStatus( err.mess );
     }
-}//#include "v_yaml.h"
+}
 
 /// Show saved gemsfit results
 void FITMainWindow::CmShowFitResults()

@@ -8,7 +8,7 @@ namespace common {
 
 class TEJDB2;
 
-/// Implementation of Database Driver using ejdb.
+/// Implementation of Database Driver using ejdb2.
 class Ejdb2DBClient: public DBDriverBase
 {
 
