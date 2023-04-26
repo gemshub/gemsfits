@@ -320,11 +320,6 @@ QWidget *JsonDelegate::createEditor( QWidget *parent, const QStyleOptionViewItem
                 return accessComboBox;
             }
             case common::JsonFree::Int:
-            {
-                QLineEdit *lineEdit = new QLineEdit(parent);
-                lineEdit->setValidator(new QIntValidator(lineEdit));
-                return lineEdit;
-            }
             case common::JsonFree::Double:
             {
                 QLineEdit *lineEdit = new QLineEdit(parent);
