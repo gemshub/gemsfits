@@ -326,12 +326,15 @@ public:
         values.clear();
         if( is_null() )
             return true;
-        if( !is_structured() )
-            return false;
         typename T::value_type val;
+        if( !is_structured() ) {
+            get_to(val);
+            values.emplace_back(val);
+            return true;
+        }
         for ( size_t ii=0; ii<size(); ii++)
         {
-            if( children[ii]->get_to( val ) )
+            if( children[ii]->get_to(val) )
                 values.emplace_back(val);
         }
         return true;
