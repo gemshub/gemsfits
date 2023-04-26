@@ -56,7 +56,7 @@ public:
     enum Type {
         Null = 1,
         Bool = 2,    // T_BOOL
-        Int = 8,     // T_I32
+        //Int = 8,     // T_I32
         Double = 4,  // T_DOUBLE
         String = 11, // T_STRING
         Object = 12, // T_STRUCT
@@ -205,7 +205,7 @@ public:
 
     /// This function returns true if and only if the JSON type is a numeric value.
     virtual bool is_number() const
-    { return  type() == Type::Int || type() == Type::Double; }
+    { return  type() == Type::Double; }
 
     /// This function returns true if and only if the JSON type is boolean.
     virtual bool is_bool() const
@@ -254,8 +254,6 @@ public:
     virtual std::string to_string(bool dense = false) const;
     /// Returns the object converted to a double value.
     virtual double to_double() const;
-    /// Returns the object converted to a long value.
-    virtual long   to_int() const;
     /// Returns the object converted to a boolean value.
     virtual bool   to_bool() const;
 
@@ -444,11 +442,7 @@ public:
               std::enable_if_t<!is_container<T>{}&!is_mappish<T>{}, int> = 0 >
     bool set_from( const T& value  )
     {
-        if( std::is_integral<T>::value )
-        {
-            update_node(Int, detail::value2string(value));
-        }
-        else if( std::is_floating_point<T>::value )
+        if( std::is_integral<T>::value || std::is_floating_point<T>::value )
         {
             update_node(Double, detail::value2string(value));
         }

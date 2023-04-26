@@ -59,10 +59,6 @@ void ModelLineDialog::set_editor_by_type(common::JsonFree::Type jstype)
 {
     ui->defEdit->setEnabled( true );
     switch(jstype) {
-    case common::JsonFree::Int:
-        ui->defEdit->setValidator(new QIntValidator(ui->defEdit));
-        ui->defEdit->setText("0");
-        break;
     case common::JsonFree::Double:
         ui->defEdit->setValidator(new QDoubleValidator(ui->defEdit));
         ui->defEdit->setText("0.0");
@@ -82,13 +78,11 @@ common::JsonFree::Type ModelLineDialog::objectType() const
         break;
     case 1:  new_type = common::JsonFree::Double;
         break;
-    case 2:  new_type = common::JsonFree::Int;
+    case 2:  new_type = common::JsonFree::Bool;
         break;
-    case 3:  new_type = common::JsonFree::Bool;
+    case 3:  new_type = common::JsonFree::Object;
         break;
-    case 4:  new_type = common::JsonFree::Object;
-        break;
-    case 5:  new_type = common::JsonFree::Array;
+    case 4:  new_type = common::JsonFree::Array;
         break;
     }
     return new_type;
@@ -117,11 +111,6 @@ QVariant ModelLineDialog::objectValue() const
         break;
     case common::JsonFree::String:
         value = ui->defEdit->text();
-        break;
-    case common::JsonFree::Int:
-        value = ui->defEdit->text().toInt(&ok);
-        if( !ok )
-            value = 0;
         break;
     case common::JsonFree::Double:
         value = ui->defEdit->text().toDouble(&ok);

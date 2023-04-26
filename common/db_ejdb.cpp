@@ -1,5 +1,6 @@
 #ifdef OLD_EJDB
 
+#include <iostream>
 #include <ejdb/ejdb.h>
 #include <ejdb/bson.h>
 #include "db_ejdb.h"
@@ -208,7 +209,7 @@ bool EjdbDBClient::delete_record(const std::string& collname, keysmap_t::iterato
 
     EJCOLL *coll = open_collection(collname);
     // Remove BSON object from collection.
-    bool ret = ejdbrmbson( coll,  &oid );
+    auto ret = ejdbrmbson( coll,  &oid );
     close_collection();
 
     if( !ret ) {
@@ -216,6 +217,7 @@ bool EjdbDBClient::delete_record(const std::string& collname, keysmap_t::iterato
         errejdb+= itr->pack_key() + " from EJDB";
         Error( "TEJDB0024",  errejdb );
     }
+    return true;
 }
 
 // Save/update record in the collection

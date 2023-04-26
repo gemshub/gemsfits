@@ -250,14 +250,6 @@ bool JsonModel::set_value_via_type(common::JsonFree& object, common::JsonFree::T
     case common::JsonFree::Bool:
         object = add_value.toString() == "true";
         break;
-    case common::JsonFree::Int:
-    {
-        int ivalue = add_value.toInt(&ok);
-        if( !ok )
-            ivalue = 0;
-        object = ivalue;
-    }
-        break;
     case common::JsonFree::Double:
     {
         auto dvalue = add_value.toDouble(&ok);
@@ -318,12 +310,6 @@ QWidget *JsonDelegate::createEditor( QWidget *parent, const QStyleOptionViewItem
                 accessComboBox->addItem(tr("false"));
                 accessComboBox->addItem(tr("true"));
                 return accessComboBox;
-            }
-            case common::JsonFree::Int:
-            {
-                QLineEdit *lineEdit = new QLineEdit(parent);
-                lineEdit->setValidator(new QIntValidator(lineEdit));
-                return lineEdit;
             }
             case common::JsonFree::Double:
             {
