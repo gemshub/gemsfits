@@ -2,7 +2,7 @@
 
 #include <iostream>
 //https://stackoverflow.com/questions/18362315/static-size-of-array-in-c99
-#include <ejdb2.h>
+#include <ejdb2/ejdb2.h>
 
 #include "db_ejdb2.h"
 #include "f_file.h"

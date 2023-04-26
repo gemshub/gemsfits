@@ -462,7 +462,7 @@ void JsonFree::dump2stream( std::ostream& os, int depth, bool dense ) const
         case Object:
             if(!dense) {
                 for (temp = 0; temp <= depth; temp++)
-                    os <<  "     ";
+                    os <<  "\t";
             }
             os << "\"" << childobj->get_key() << ( dense ? "\":" : "\" :   " );
             break;
