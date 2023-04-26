@@ -114,7 +114,7 @@ class Data_Manager : public TNode
         std::string OptSet;
         double h_datasetlist;
 
-        int MPI; /// number of paralele threads
+        int MPI = 1; /// number of paralell threads
 
         double LimitOfDetection; /// Experimetal limit of detection
         double minimum_value; /// Minimum measured avlue

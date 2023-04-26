@@ -415,7 +415,7 @@ void Data_Manager::get_EJDB()
         if(usedataset.size() > 0 || Ndatasets > 0) {
             auto temp = usedataset;
             temp.insert(temp.end(), DS.begin(), DS.end());
-            std::cout << temp[0] << "  " << temp[1] << std::endl;
+            //std::cout << temp[0] << "  " << temp[1] << std::endl;
             query_object[keys::expdataset]["$in"] = temp;
             this->h_datasetlist = (Ndatasets > 0);
         }
