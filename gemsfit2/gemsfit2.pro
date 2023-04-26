@@ -39,8 +39,8 @@ DEFINES         += IPMGEMPLUGIN
 #DEFINES         += useomp
 DEFINES         += _MYNOZLIB
 CONFIG          += c++17
-#DEFINES         += OLD_EJDB
-DEFINES         += CHECK_LOAD
+DEFINES         += OLD_EJDB # compile using ejdb1
+DEFINES         += CHECK_LOAD # to generate print for initial data after read input configuration.
 
 QMAKE_CXXFLAGS += -O3
 QMAKE_LFLAGS += -O3

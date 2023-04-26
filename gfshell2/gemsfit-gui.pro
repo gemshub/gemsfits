@@ -8,7 +8,7 @@ DEFINES         += Use_mt_mode
 #DEFINES         += NODEARRAYLEVEL
 DEFINES         += IPMGEMPLUGIN
 #DEFINES         += _MYNOZLIB
-DEFINES         += OLD_EJDB
+DEFINES         += OLD_EJDB # compile using ejdb1
 
 #CONFIG -= warn_on
 #CONFIG += warn_off
