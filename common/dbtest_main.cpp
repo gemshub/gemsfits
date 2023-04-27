@@ -344,7 +344,7 @@ int test_query_generator(size_t db_ndx)
 
     auto object4 = fromJsonString(gemsfit_query4);
     templ_query = TEJDataBase::dbdriver->generate_query(object4);
-    templ_query = "((/[ expdataset = set1 ]  and /[ sample = smp1 ])  or (/[ expdataset = set1 ]  and /[ sample = smp2 ]))";
+    //templ_query = "((/[ expdataset = set1 ]  and /[ sample = smp1 ])  or (/[ expdataset = set1 ]  and /[ sample = smp2 ]))";
     std::cout << "\nJson : \n" << object4.dump() <<  std::endl;
     std::cout << "Query : \n" << templ_query <<  std::endl;
     // check query

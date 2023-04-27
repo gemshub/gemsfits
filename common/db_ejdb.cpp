@@ -23,6 +23,7 @@ class TEJDB: public TDataBaseFile
 
 public:
     EJDB *ejDB;
+    int numEJDB=0;    ///< Number of usage EJDB database
     TEJDB(const std::string& path):
         TDataBaseFile(path), ejDB(nullptr)
     {}
@@ -35,7 +36,12 @@ public:
 
     void Open() override
     {
-        if(!is_opened) {
+
+        if(is_opened) {
+            numEJDB++;
+        }
+        else
+        {
             // Test and open file  (name of ejdb must be take from nFile)
             ejDB = ejdbnew();
             if (!ejdbopen(ejDB, path.c_str(), JBOWRITER | JBOCREAT )) {
@@ -44,16 +50,25 @@ public:
                 is_opened = false;
                 Error( path, " EJDB open error");
             }
+            numEJDB++;
             is_opened = true;
         }
+        //std::cout << "EJDB open " << numEJDB << std::endl;
     }
 
     void Close() override
     {
-        ejdbclose(ejDB);
-        ejdbdel(ejDB);
-        ejDB = 0;
-        is_opened = false;
+        numEJDB--;
+
+        if( numEJDB <= 0 ) {
+            if(ejDB ) {
+                ejdbclose(ejDB);
+                ejdbdel(ejDB);
+                ejDB = 0;
+            }
+            is_opened = false;
+        }
+        //std::cout << "EJDB close " << numEJDB << std::endl;
     }
 };
 
@@ -62,7 +77,7 @@ public:
 //-------------------------------------------------------------
 
 bool EjdbDBClient::is_connected() {
-    return ( ejdb_db!=nullptr && ejdb_db->ejDB);
+    return ( ejdb_db!=nullptr );// && ejdb_db->ejDB);
 }
 
 void EjdbDBClient::connect()
@@ -70,12 +85,12 @@ void EjdbDBClient::connect()
   if(!ejdb_db) {
     ejdb_db = std::make_unique<TEJDB>(ejdb_db_path);
   }
-  ejdb_db->Open();
+  //ejdb_db->Open();
   // Test and open file  (name of ejdb must be take from nFile)
-  if(!ejdb_db->ejDB) {
-        std::string err= "Cannot open EJDB "+ ejdb_db->Name();
-        Error("TEJDB0011", err );
-  }
+  //if(!ejdb_db->ejDB) {
+  //      std::string err= "Cannot open EJDB "+ ejdb_db->Name();
+  //      Error("TEJDB0011", err );
+  //}
 }
 
 void EjdbDBClient::disconnect()
@@ -103,6 +118,7 @@ std::string EjdbDBClient::generate_query(const JsonFree &object)
 /// Get or create collection 'module name' before saving/delete
 EJCOLL *EjdbDBClient::open_collection(const std::string& collname, bool createifempty)
 {
+    ejdb_db->Open();
     EJCOLL *coll=nullptr;
     if( createifempty ) {  // Get or create collection 'module name'
         coll = ejdbcreatecoll(ejdb_db->ejDB, collname.c_str(), NULL );
@@ -121,6 +137,7 @@ EJCOLL *EjdbDBClient::open_collection(const std::string& collname, bool createif
 void EjdbDBClient::close_collection()
 {
  // do we need free   EJCOLL *
+    ejdb_db->Close();
 }
 
 std::string EjdbDBClient::get_key_from_bson(const std::vector<std::string>& key_fields,  const char* bsdata)

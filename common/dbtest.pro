@@ -6,7 +6,7 @@ CONFIG += c++17
 #CONFIG += sanitizer sanitize_thread
 
 DEFINES         += IPMGEMPLUGIN
-#DEFINES         += OLD_EJDB
+DEFINES         += OLD_EJDB
 
 !win32 {
   DEFINES += __unix
@@ -64,6 +64,4 @@ else {
 SOURCES += \
        dbtest_main.cpp
 
-HEADERS += \
-    db_ejdb2.h
 
