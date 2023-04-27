@@ -128,7 +128,7 @@ int NumDigits(int x)
 enum eTableType
 {
     bet0_ = -10, bet1_ = -11, bet2_ = -12, Cphi_ = -20, Lam_ = -30, Lam1_ = -31, Lam2_ = -32,
-    Theta_ = -40,  Theta1_ = -41, Psi_ = -50, Psi1_ = -51, Zeta_ = -60
+    Theta_ = -40,  Theta1_ = -41, Psi_ = -50, Psi1_ = -51, Zeta_ = -60, Eta_ = -70, Eta1_ = -71, Alp1_ = -80, Alp2_= -81
 };
 
 std::string getPitzerIPName(TNode *node, std::vector<long int> aIPx, long int MaxOrd, int iIP)
@@ -151,6 +151,15 @@ std::string getPitzerIPName(TNode *node, std::vector<long int> aIPx, long int Ma
             break;
         case Cphi_:
         name += "cphi_";
+        goto binary;
+            break;
+
+        case Alp1_:
+        name += "alpha1_";
+        goto binary;
+            break;
+        case Alp2_:
+        name += "alpha2_";
         goto binary;
             break;
 
@@ -193,8 +202,20 @@ std::string getPitzerIPName(TNode *node, std::vector<long int> aIPx, long int Ma
         name += "zeta_";
         goto ternary;
             break;
+
+        case Eta_:
+        name += "eta_";
+        goto ternary;
+            break;
+
+        case Eta1_:
+        name += "eta_";
+        goto ternary;
+            break;
+
         default:
             break;
+
     }
 
     binary:

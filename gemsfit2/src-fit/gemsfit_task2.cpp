@@ -53,7 +53,7 @@ double TGfitTask::get_residual(int exp, TGfitTask::TargetFunction::obj_fun &objf
 
     // loop trough objective function
     /// Target function
-    if ((objfun.exp_phase !="NULL") && (this->experiments[exp]->expphases.size() > 0))
+    if ((objfun.exp_phase !="NULL") && (this->experiments[exp]->expphases.size() > 0) && (objfun.exp_phase !="prop"))
     {
         // loop trough all phases
         for (unsigned int p=0; p<this->experiments[exp]->expphases.size(); ++p)
@@ -617,6 +617,7 @@ void TGfitTask:: print_global_results ()
         header.push_back(temp + "." + keys::meas);
         header.push_back(temp + "." + keys::calc);
         header.push_back("residual");
+        header.push_back("%residual");
         header.push_back("weight");
 //        header.push_back("residual."+ Tfun->type);
     }
@@ -668,12 +669,13 @@ void TGfitTask:: print_global_results ()
         {
             if (aTfun[i].objfun[j].isComputed)
             {
-                gpf->fres << std::setprecision(prec) << aTfun[i].objfun[j].results.measured_value <<","<<
-                             std::setprecision(prec) << aTfun[i].objfun[j].results.computed_value << ","<<
-                             std::setprecision(prec) << aTfun[i].objfun[j].results.residual<<","/*<< aTfun[i].objfun[j].results.WTfun_residual << ","*/ <<
-                             std::setprecision(prec) << aTfun[i].objfun[j].results.weight <<",";
+                gpf->fres << setprecision(prec) << aTfun[i].objfun[j].results.measured_value <<","<<
+                             setprecision(prec) << aTfun[i].objfun[j].results.computed_value << ","<<
+                             setprecision(prec) << aTfun[i].objfun[j].results.residual<<","/*<< aTfun[i].objfun[j].results.WTfun_residual << ","*/ <<
+                             setprecision(prec) << (100*aTfun[i].objfun[j].results.residual/aTfun[i].objfun[j].results.measured_value)<<","<<
+                             setprecision(prec) << aTfun[i].objfun[j].results.weight <<",";
             } else
-                gpf->fres << ","<< ","<<","<< ",";
+                gpf->fres << ","<< ","<<","<< ","<< ",";
 
         }
 
@@ -681,6 +683,7 @@ void TGfitTask:: print_global_results ()
         {
             if (aTfun[i].addout[j].exp_CT == keys::comp && aTfun[i].addout[j].results.input_value != -1.0)
                 gpf->fres << std::setprecision(prec) << aTfun[i].addout[j].results.input_value <<",";
+            else
             if (aTfun[i].addout[j].isComputed)
             {
                 if (aTfun[i].addout[j].Otype == keys::calc)
@@ -719,7 +722,7 @@ void TGfitTask:: print_nested_results ()
     if( gpf->fnfres.fail() )
     { std::cout<<"Nested Results fileopen error"<<std::endl; exit(1); }
 
-    gpf->fnfres << "sample,phase,name,unit,sT,sP,measured,computed,residual";
+    gpf->fnfres << "sample,phase,name,unit,sT,sP,measured,computed,residual,%residual";
 
     for (unsigned i = 0; i<Opti->optNFParam.size(); i++)
     {
@@ -745,7 +748,7 @@ void TGfitTask:: print_nested_results ()
                 else
                     gpf->fnfres << experiments[i]->sT << "," << experiments[i]->sP <<",";
 
-                gpf->fnfres << aTfun[i].nestfun[j].results.measured_value <<","<< aTfun[i].nestfun[j].results.computed_value << ","<< aTfun[i].nestfun[j].results.residual;
+                gpf->fnfres << aTfun[i].nestfun[j].results.measured_value <<","<< aTfun[i].nestfun[j].results.computed_value << ","<< aTfun[i].nestfun[j].results.residual << "," << (100*aTfun[i].nestfun[j].results.residual/aTfun[i].nestfun[j].results.measured_value);
 
                 for (unsigned o = 0; o<Opti->optNFParam.size(); o++)
                 {

@@ -43,7 +43,14 @@
                     "CN" :   "Ca/Si",
                     "unit" :   "molratio",
                     "WT" :   1
-               },             
+               },  
+# compare osmotic coefficient water
+               {
+                    "EPH" :   "aq_gen",
+                    "CT" :   "prop",
+                    "CN" :   "oscw",
+                    "WT" :   0.5
+               },           
 # compare measured and calculated phase property computed using a mathematical expression 
 # mChainL (mean silicate chain length)
         {

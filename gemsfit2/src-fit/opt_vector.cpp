@@ -628,6 +628,8 @@ Opt_PMc::Opt_PMc(std::vector<std::string> data, double OptBoundPrc, unsigned &p)
             else optFP[optFP.size()-1]->Pname = "PMc";
             Pval_to_optF (p, Jdata[i], optFP[optFP.size()-1]);
 
+            Pindexes[optFP[optFP.size()-1]->Pname]=i;
+
             p++;
         }
 //        if (out[0] == "R")
@@ -639,17 +641,33 @@ Opt_PMc::Opt_PMc(std::vector<std::string> data, double OptBoundPrc, unsigned &p)
             out.clear();
             optSP.push_back( new Opt_PMc::S_parameter);
             optSP[optSP.size()-1]->Pndx = i;
-            optSP[optSP.size()-1]->Pname = "PMc";
+            parse_JSON_object(Jdata[i], keys::IPCN[mode], out);
+            if (out.size() == 1) optSP[optSP.size()-1]->Pname = out[0];
+            else optSP[optSP.size()-1]->Pname = "PMc";
+            out.clear();
 
             parse_JSON_object(Jdata[i], keys::IV[mode], out);
-            if (out.size() !=1) {std::cout << "Parameter \"S\"-type " << p << " (G0) has no \"spec\" defined! "<< std::endl; exit(1); }
+            if (out.size() !=1) {std::cout << "Parameter \"S\"-type " << p << " (PMC) has no \"spec\" defined! "<< std::endl; exit(1); }
             optSP[optSP.size()-1]->IV = atof(out[0].c_str()); optSP[optSP.size()-1]->opt = atof(out[0].c_str());
+
+            Pindexes[optSP[optSP.size()-1]->Pname]=i;
+
             p++;
         }
         if (out[0] == "L")
         {
-           std::cout << "There is no option at this point to have a PMc parameter as L-Type (linked)! "<<std::endl; exit(1);
+            out.clear();
+            optLP.push_back( new Opt_PMc::L_parameter);
+            optLP[optLP.size()-1]->Pndx = i;
+            parse_JSON_object(Jdata[i], keys::IPCN[mode], out);
+            if (out.size() == 1) optLP[optLP.size()-1]->Pname = out[0];
+            else optLP[optLP.size()-1]->Pname = "PMc";
+            Pval_to_optL (p, Jdata[i], optLP[optLP.size()-1]);
 
+            Pindexes[optLP[optLP.size()-1]->Pname]=i;
+
+            p++;
+            //cout << "There is no option at this point to have a PMc parameter as L-Type (linked)! "<<endl; exit(1);
         }
         out.clear();
     }
@@ -665,6 +683,10 @@ long int Opt_PMc::Adjust_param(TNode *node, std::vector<double> opt)
     }
 
     // R param
+
+    // L param
+    Opt_PMc::Adjust_Lparam( node);
+
 return 1;
 }
 
@@ -681,6 +703,23 @@ long int Opt_PMc::Adjust_Sparam(TNode *node)
         Adjust_Fparam(node, optSP[i]->Pndx, optSP[i]->opt);
     }
 return 1;
+}
+
+long int Opt_PMc::Adjust_Lparam(TNode *node)
+{
+    // it does not loop if there are no optLP
+    for (unsigned int i=0; i <optLP.size(); ++i )
+    {
+        for (unsigned int j=0; j < optLP[i]->L_param.size(); ++j )
+        {
+            double lparam = 0.0;
+            node->Get_PMc(lparam, Pindexes[optLP[i]->L_param[j]]);
+            double nparam = lparam*optLP[i]->L_param_coef[j];
+            node->Set_PMc(nparam, optLP[i]->Pndx);
+            optLP[i]->opt = nparam;
+        }
+    }
+    return 1;
 }
 
 
