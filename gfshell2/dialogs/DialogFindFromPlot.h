@@ -2,7 +2,7 @@
 #define DIALOGFINDFROMPLOT_H
 
 #include <QDialog>
-#include "fmodel.h"
+#include "charts/graph_data.h"
 
 namespace Ui {
 class DialogFindFromPlot;
@@ -12,18 +12,18 @@ class DialogFindFromPlot : public QDialog
 {
     Q_OBJECT
 
-    GraphData* grdata;
+    Ui::DialogFindFromPlot *ui;
+    const jsonui17::ChartData* grdata;
+
 public slots:
     void ChangeIndex(int index);
 
 public:
-    explicit DialogFindFromPlot(GraphData* data, QWidget *parent = 0);
+    explicit DialogFindFromPlot(const jsonui17::ChartData* data, QWidget *parent = 0);
     ~DialogFindFromPlot();
 
     void getData( int *xyndx, double *reg );
 
-private:
-    Ui::DialogFindFromPlot *ui;
 };
 
 #endif // DIALOGFINDFROMPLOT_H

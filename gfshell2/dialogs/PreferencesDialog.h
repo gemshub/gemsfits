@@ -31,6 +31,7 @@ class PreferencesDialog : public QDialog
 {
     Q_OBJECT
 
+    Ui::PreferencesDialog *ui;
     QSettings *settings;
 
 public slots:
@@ -46,8 +47,7 @@ public:
     explicit PreferencesDialog(QSettings *aSet=0,QWidget *parent = 0);
     ~PreferencesDialog();
 
-private:
-    Ui::PreferencesDialog *ui;
+
 };
 
 #endif // PREFERENCESDIALOG_H

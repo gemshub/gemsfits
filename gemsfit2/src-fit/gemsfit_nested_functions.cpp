@@ -50,13 +50,13 @@ void nestedfun (TGfitTask *sys)
 #endif
     for  (unsigned int i = 0; i<sys->experiments.size(); i++)
     {
-        vector <double> x, UB, LB;
+        std::vector <double> x, UB, LB;
         int Pndx = -1, Fndx = -1; double Pval = 0.0, Ub = 0.0, Lb = 0.0;
         int bounds = 0;
 
         for (unsigned int j = 0; j<sys->Tfun->nestfun.size(); j++)
         {
-            string compare_type = sys->Tfun->nestfun[j].exp_DCP;
+            std::string compare_type = sys->Tfun->nestfun[j].exp_DCP;
             if (compare_type == "activity")
             {
                 sys->NodT[i]->Set_TK(273.15 + sys->experiments[i]->sT);
@@ -161,32 +161,32 @@ void nestedfun (TGfitTask *sys)
 //                cout << "before: "<< sys->experiments[sys->EXPndx[P_id]]->sample << endl;
                 if (x.size() == 0 )
                 {
-                    cout << "Error setting the NFUN parameters! " << endl; exit(1);
+                   std::cout << "Error setting the NFUN parameters! " << std::endl; exit(1);
                 }
 
                 try
                 {
-                nlopt::result result = opt.optimize(x, minf);
+                /*nlopt::result result =*/ opt.optimize(x, minf);
 //                cout << "Nested: " << i << " " << sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]].count << endl;
                 sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]].count = 0;
                 }
                 catch (std::invalid_argument &fs)
                 {
-                    cout << fs.what() << endl;
-                    cout << "NFUN: sample "<< sys->experiments[i]->sample << endl;
-                    cout << "see: http://ab-initio.mit.edu/wiki/index.php/NLopt_C-plus-plus_Reference#Return_values "<< endl;
+                    std::cout << fs.what() << std::endl;
+                    std::cout << "NFUN: sample "<< sys->experiments[i]->sample << std::endl;
+                    std::cout << "see: http://ab-initio.mit.edu/wiki/index.php/NLopt_C-plus-plus_Reference#Return_values "<< std::endl;
                 }
                 catch (nlopt::roundoff_limited &rf )
                 {
-                    cout << "NFUN: sample "<< sys->experiments[i]->sample << endl;
-                    cout << rf.what() << endl;
+                    std::cout << "NFUN: sample "<< sys->experiments[i]->sample << std::endl;
+                    std::cout << rf.what() << std::endl;
                 }
 
 //                double xx = minf;
 
                 // Store result parameters
     //            sys->experiments[sys->EXPndx[P_id]]->sbcomp[sys->COMPndx[P_id]]->Qnt = x[0];
-                vector<double> grad;
+                std::vector<double> grad;
                 nestminfunc ( x, grad, sys );
 
                 for (unsigned int k = 0; k < sys->vPAndx[P_id]->ndx.size(); k++)
@@ -204,7 +204,7 @@ void nestedfun (TGfitTask *sys)
     }
 }
 
-double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data )
+double nestminfunc ( const std::vector<double> &opt, std::vector<double> &/*grad*/, void *obj_func_data )
 {
     TGfitTask *sys = reinterpret_cast<TGfitTask*>(obj_func_data);
     double residual = 0.0;
@@ -267,7 +267,7 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, 
     }
 
 
-    vector<DATABR*> dBR;
+    std::vector<DATABR*> dBR;
     dBR.push_back(sys->NodT[sys->EXPndx[P_id]]->pCNode());
 
     // Asking GEM to run with automatic initial approximation
@@ -288,8 +288,8 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, 
     {
         // possible return status analysis, error message
 //            sys->NodT[i]->GEM_print_ipm( "GEMS3K_log.out" );   // possible debugging printout
-        cout<<"For experiment nested sample "<<sys->experiments[sys->EXPndx[P_id]]->sample <<" dataset "<<sys->experiments[sys->EXPndx[P_id]]->expdataset<< endl;
-        cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<endl;
+        std::cout<<"For experiment nested sample "<<sys->experiments[sys->EXPndx[P_id]]->sample <<" dataset "<<sys->experiments[sys->EXPndx[P_id]]->expdataset<< std::endl;
+        std::cout<<" GEMS3K did not converge properly !!!! continuing anyway ... "<<std::endl;
     }
 
 //    double meas_pH = sys->experiments[sys->EXPndx[P_id]]->expphases[0]->phprop[0]->Qnt;
@@ -301,7 +301,7 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &grad, 
     int count = 0;
     sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]].count++;
 
-    string compare_type = sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]].exp_DCP;
+    std::string compare_type = sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]].exp_DCP;
 //    if (compare_type == "activity")
 //    {
         sys->NodT[sys->EXPndx[P_id]]->Set_TK(273.15 + sys->experiments[sys->EXPndx[P_id]]->sT);
@@ -317,7 +317,7 @@ bool isTitration (TGfitTask *sys, int i, int j, int p)
 {
 //    int P_id = omp_get_thread_num();
         // check titrant in experiment
-    double residual = 0.0;
+    //double residual = 0.0;
     int P_id = omp_get_thread_num();
 
 //    for (unsigned int t=0; t<sys->Tfun->nestfun[j].Tformula.size(); t++)

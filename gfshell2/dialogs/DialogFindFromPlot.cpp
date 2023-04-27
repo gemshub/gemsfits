@@ -2,7 +2,7 @@
 #include "DialogFindFromPlot.h"
 #include "ui_DialogFindFromPlot.h"
 
-DialogFindFromPlot::DialogFindFromPlot(GraphData* data, QWidget *parent) :
+DialogFindFromPlot::DialogFindFromPlot(const jsonui17::ChartData* data, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::DialogFindFromPlot), grdata(data)
 {
@@ -25,8 +25,8 @@ DialogFindFromPlot::DialogFindFromPlot(GraphData* data, QWidget *parent) :
      ui->ymaxVal->setMinimum( data->region[2]);
      ui->ymaxVal->setValue( data->part[3]);
 
-    for(int ii=0; ii<data->lines.size(); ii++ )
-     ui->namesBox->addItem( data->getName(ii).c_str());
+    for(size_t ii=0; ii<data->linesNumber(); ii++ )
+     ui->namesBox->addItem( data->lineData(ii).getName().c_str());
 
     ChangeIndex(0);
     QObject::connect( ui->namesBox, SIGNAL(currentIndexChanged(int)), this, SLOT(ChangeIndex(int)));
@@ -50,7 +50,7 @@ void DialogFindFromPlot::getData( int *xyndx, double *reg )
 
 void DialogFindFromPlot::ChangeIndex(int index)
 {
-   int xc, yc;
+   int xc=-1, yc=0;
    grdata->getXYColumns( index, xc, yc );
    ui->xNum->setValue(xc);
    ui->yNum->setValue(yc);

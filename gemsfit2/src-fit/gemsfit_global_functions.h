@@ -78,7 +78,7 @@ void tsolmod_wrap( double &residual, const std::vector<double> &opt, TGfitTask *
 * @author DM
 * @date 10.06.2013
 */
-void gradient(vector<double> optn, vector<double> &grad, TGfitTask *sys );
+void gradient(std::vector<double> optn, std::vector<double> &grad, TGfitTask *sys );
 
 /**
 * Gets the median form a vector of values
@@ -86,7 +86,7 @@ void gradient(vector<double> optn, vector<double> &grad, TGfitTask *sys );
 * @author DM
 * @date 18.12.2014
 */
-double median(vector<double> absresiduals);
+double median( std::vector<double> absresiduals);
 
 /**
 * Calculates the Tuckey weight for each resiual and adds it in the Tucke_weights vector

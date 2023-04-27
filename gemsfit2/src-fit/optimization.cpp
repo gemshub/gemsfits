@@ -47,7 +47,7 @@ optimization::optimization()
     OptTuckey = 0;
     OptInitStep = 0;
 
-    gpf->flog << "09. optimization.cpp(48). Reading NLopt optimization settings from the input file; " << endl;
+    gpf->flog << "09. optimization.cpp(48). Reading NLopt optimization settings from the input file; " << std::endl;
 
 //    define_nlopt_param();
     get_nlopt_param();
@@ -65,8 +65,8 @@ optimization::optimization()
 
 void optimization::get_nlopt_param()
 {
-    string fname;
-    vector<string> out, out2;
+    std::string fname;
+    std::vector<std::string> out, out2;
     int mode = gpf->KeysNdx;
 
     fname = gpf->OptParamFile();
@@ -79,9 +79,9 @@ void optimization::get_nlopt_param()
     GEMSsys = gpf->GEMS3LstFilePath();
 
     parse_JSON_object(s, keys::OptParameters[mode], out);
-    if (out.size() == 0) {cout << "Error: No keyword for \""
+    if (out.size() == 0) {std::cout << "Error: No keyword for \""
                                <<keys::OptParameters[mode]<<"\" found in the task definition"
-                               << endl; exit(1);}
+                               << std::endl; exit(1);}
     OptParameters = out;
     out.clear();
 
@@ -164,7 +164,7 @@ void optimization::get_nlopt_param()
 void optimization::OptParameterCreate ()
 {
     unsigned  p = 0;
-    vector<string> out, out2, out3, outG0, outPMc, outDMc;
+    std::vector<std::string> out, out2, out3, outG0, outPMc, outDMc;
 
     OptParameter* myOPT = 0;
 
@@ -176,16 +176,16 @@ void optimization::OptParameterCreate ()
         // call GEM_init     --> read in input files
         if( (node->GEM_init( GEMSsys.c_str() )) == 1 )
         {
-            cout << GEMSsys << endl;
-            cout<<" .. ERROR occurred while reading GEMS3K input files !!! ..."<<endl;
+            std::cout << GEMSsys << std::endl;
+            std::cout<<" .. ERROR occurred while reading GEMS3K input files !!! ..."<<std::endl;
             exit(1);
         }
     }
     catch(TError& err)
     {
         if( !GEMSsys.empty() )
-            cout << "GEMS3K input : file " << GEMSsys << endl;
-        cout << err.title.c_str() << "  : " << err.mess.c_str() << endl;
+            std::cout << "GEMS3K input : file " << GEMSsys << std::endl;
+        std::cout << err.title.c_str() << "  : " << err.mess.c_str() << std::endl;
     }
 
 
@@ -283,7 +283,7 @@ void optimization::OptParameterCreate ()
         if (out.size() > 0)
         {
             Opt_Tk* myPT = new Opt_Tk( out, OptBoundPerc, p );
-            myPT->SetIndex_param( );
+            myPT->SetIndex_param(node);
             myOPT = (Opt_Tk*)myPT;
         }
         if(myOPT) { optNFParam.push_back( myOPT ); myOPT = 0; };
@@ -293,7 +293,7 @@ void optimization::OptParameterCreate ()
         if (out.size() > 0)
         {
             Opt_P* myPT = new Opt_P( out, OptBoundPerc, p );
-            myPT->SetIndex_param( );
+            myPT->SetIndex_param(node);
             myOPT = (Opt_P*)myPT;
         }
         if(myOPT) { optNFParam.push_back( myOPT ); myOPT = 0; };
@@ -318,7 +318,7 @@ void optimization::OptParameterCreate ()
 
 void optimization::GetParameters ()
 {
-    vector<double> opt_, UB_, LB_;
+    std::vector<double> opt_, UB_, LB_;
     for (unsigned i = 0; i <optParam.size(); i++)
     {
         optParam[i]->Get_IVparam(opt_, UB_, LB_);
@@ -340,13 +340,13 @@ optimization::~optimization()
 
 }
 
-void optimization::normalize_params(const vector<double> initguesses , bool NormBounds)
+void optimization::normalize_params(const std::vector<double> initguesses , bool NormBounds)
 {
     unsigned int i= 0;
 
-    gpf->flog << " ... performing parameter normalization ... " << endl;
+    gpf->flog << " ... performing parameter normalization ... " << std::endl;
 
-    // Normalize init guess vector
+    // Normalize init guess std::vector
     optv.resize( initguesses.size() );
     for(i=0; i<optv.size(); i++)
     {
@@ -354,30 +354,30 @@ void optimization::normalize_params(const vector<double> initguesses , bool Norm
         optv[i] = initguesses[i] / fabs(initguesses[i]);
     }
 
-    // Normalize upper bounds vector
+    // Normalize upper bounds std::vector
     NormBounds = false; // the bounds are normalized each time to the new param values
     if (!NormBounds)
     {
     for(i=0; i<OptUpBounds.size(); i++)
     {
-        gpf->flog << "     Init guess ["<<i<<"] = " << initguesses[i] << endl;
-        gpf->flog << "     Upper Bound old ["<<i<<"]= " << OptUpBounds[i] << endl;
+        gpf->flog << "     Init guess ["<<i<<"] = " << initguesses[i] << std::endl;
+        gpf->flog << "     Upper Bound old ["<<i<<"]= " << OptUpBounds[i] << std::endl;
 //        if ((optv[i] != 0) && (fabs(initguesses[i]) > 9e-11))
         OptUpBounds[i] = UB[i] / fabs(initguesses[i]);
-        gpf->flog << "     Upper Bound new ["<<i<<"]= " << OptUpBounds[i] << endl;
+        gpf->flog << "     Upper Bound new ["<<i<<"]= " << OptUpBounds[i] << std::endl;
     }
 
-    // Normalize lower bounds vector
+    // Normalize lower bounds std::vector
     for(i=0; i<OptLoBounds.size(); i++)
     {
-        gpf->flog << "     Init guess ["<<i<<"] = " << initguesses[i] << endl;
-        gpf->flog << "     Lower Bound old ["<<i<<"]= " << OptLoBounds[i] << endl;
+        gpf->flog << "     Init guess ["<<i<<"] = " << initguesses[i] << std::endl;
+        gpf->flog << "     Lower Bound old ["<<i<<"]= " << OptLoBounds[i] << std::endl;
 //        if ((optv[i] != 0) && (fabs(initguesses[i]) > 9e-11))
         OptLoBounds[i] = LB[i] / fabs(initguesses[i]);
-        gpf->flog << "     Lower Bound new ["<<i<<"]= " << OptLoBounds[i] << endl;
+        gpf->flog << "     Lower Bound new ["<<i<<"]= " << OptLoBounds[i] << std::endl;
     }
 
-//     Normalize constraints vector
+//     Normalize constraints std::vector
     for(i=0; i<constraint_data_v.size(); i++)
     {
 //        if ((optv[i] != 0) && (fabs(initguesses[i]) > 9e-11))
@@ -393,37 +393,37 @@ void optimization::print_return_message( const int result )
     switch (result)
     {
         case -5:
-            cout<<" Halted because of a forced termination: the user called nlopt_force_stop(opt) on the optimization’s nlopt_opt object opt from the user’s objective function or constraints. "<<endl;
+            std::cout<<" Halted because of a forced termination: the user called nlopt_force_stop(opt) on the optimization’s nlopt_opt object opt from the user’s objective function or constraints. "<<std::endl;
             break;
         case -4:
-            cout<<" Halted because roundoff errors limited progress. (In this case, the optimization still typically returns a useful result.) "<<endl;
+            std::cout<<" Halted because roundoff errors limited progress. (In this case, the optimization still typically returns a useful result.) "<<std::endl;
             break;
         case -3:
-            cout<<" Ran out of memory. "<<endl;
+            std::cout<<" Ran out of memory. "<<std::endl;
             break;
         case -2:
-            cout<<" Invalid arguments (e.g. lower bounds are bigger than upper bounds, an unknown algorithm was specified, etc.). "<<endl;
+            std::cout<<" Invalid arguments (e.g. lower bounds are bigger than upper bounds, an unknown algorithm was specified, etc.). "<<std::endl;
             break;
         case -1:
-            cout<<" Generic failure code. "<<endl;
+            std::cout<<" Generic failure code. "<<std::endl;
             break;
         case 1:
-            cout<<" Generic success return value. "<<endl;
+            std::cout<<" Generic success return value. "<<std::endl;
             break;
         case 2:
-            cout<<" Optimization stopped because stopval was reached. "<<endl;
+            std::cout<<" Optimization stopped because stopval was reached. "<<std::endl;
             break;
         case 3:
-            cout<<" Optimization stopped because ftol_rel or ftol_abs was reached. "<<endl;
+            std::cout<<" Optimization stopped because ftol_rel or ftol_abs was reached. "<<std::endl;
             break;
         case 4:
-            cout<<" Optimization stopped because xtol_rel or xtol_abs was reached. "<<endl;
+            std::cout<<" Optimization stopped because xtol_rel or xtol_abs was reached. "<<std::endl;
             break;
         case 5:
-            cout<<" Optimization stopped because maxeval was reached. "<<endl;
+            std::cout<<" Optimization stopped because maxeval was reached. "<<std::endl;
             break;
         case 6:
-            cout<<" Optimization stopped because maxtime was reached. "<<endl;
+            std::cout<<" Optimization stopped because maxtime was reached. "<<std::endl;
             break;
     }
 }// end print_return_message

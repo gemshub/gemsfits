@@ -55,8 +55,8 @@ TFITApp::TFITApp(int& c, char** v):
       argc(c),
       argv(v)
 {
-    cout << "QSqlDatabase: available drivers:" <<
-          QSqlDatabase::drivers().join(QLatin1String(" ")).toLatin1().data() << endl;
+    std::cout << "QSqlDatabase: available drivers:" <<
+          QSqlDatabase::drivers().join(QLatin1String(" ")).toLatin1().data() << std::endl;
 
     shMemory.setKey("gemsfits");
     if( shMemory.attach())
@@ -98,7 +98,7 @@ main(int argc, char* argv[])
 
     if(IntegApp.isRunning())
     {
-       cerr << "gemsfits: Unable to create second instance." << endl;
+       std::cerr << "gemsfits: Unable to create second instance." << std::endl;
        return -2;
     }
     try
@@ -111,15 +111,15 @@ main(int argc, char* argv[])
     }
     catch(TError& err)
     {
-        cerr << "gemsfits: " << err.mess.c_str() << endl;
-        string s = err.title;
+        std::cerr << "gemsfits: " << err.mess.c_str() << std::endl;
+        std::string s = err.title;
         s += ": ";
         s += err.mess;
         QMessageBox::critical(0, "FIT fatal error", s.c_str());
     }
     catch(...)
     {
-        cerr << "gemsfits: Unknown exception: program aborted" << endl;
+        std::cerr << "gemsfits: Unknown exception: program aborted" << std::endl;
         return -1;
     }
     return 0;

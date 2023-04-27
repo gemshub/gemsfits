@@ -144,7 +144,7 @@
      </property>
      <property name="font">
       <font>
-       <weight>75</weight>
+       <pointsize>10</pointsize>
        <bold>true</bold>
       </font>
      </property>
@@ -169,7 +169,7 @@
      </property>
      <property name="font">
       <font>
-       <weight>75</weight>
+       <pointsize>10</pointsize>
        <bold>true</bold>
       </font>
      </property>
@@ -191,7 +191,7 @@
      </property>
      <property name="font">
       <font>
-       <weight>75</weight>
+       <pointsize>10</pointsize>
        <bold>true</bold>
       </font>
      </property>
@@ -213,7 +213,7 @@
      </property>
      <property name="font">
       <font>
-       <weight>75</weight>
+       <pointsize>10</pointsize>
        <bold>true</bold>
       </font>
      </property>
@@ -235,7 +235,7 @@
      </property>
      <property name="font">
       <font>
-       <weight>75</weight>
+       <pointsize>10</pointsize>
        <bold>true</bold>
       </font>
      </property>
@@ -263,7 +263,7 @@
      </property>
      <property name="font">
       <font>
-       <weight>75</weight>
+       <pointsize>10</pointsize>
        <bold>true</bold>
       </font>
      </property>
@@ -286,86 +286,5 @@
   <tabstop>PushButton3</tabstop>
  </tabstops>
  <resources/>
- <connections>
-  <connection>
-   <sender>PushButton1</sender>
-   <signal>clicked()</signal>
-   <receiver>KeyDialogData</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>PushButton3</sender>
-   <signal>clicked()</signal>
-   <receiver>KeyDialogData</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pFilterButton</sender>
-   <signal>clicked()</signal>
-   <receiver>KeyDialogData</receiver>
-   <slot>CmFilter()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pButton2</sender>
-   <signal>clicked()</signal>
-   <receiver>KeyDialogData</receiver>
-   <slot>CmSelectAll()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pButton3</sender>
-   <signal>clicked()</signal>
-   <receiver>KeyDialogData</receiver>
-   <slot>CmClearAll()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

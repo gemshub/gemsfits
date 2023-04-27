@@ -1,29 +1,33 @@
 
 #include <iostream>
 #include <QMenu>
+#include <QHeaderView>
 #include <QKeyEvent>
 #include <QClipboard>
 #include <QSortFilterProxyModel>
+#include <QPainter>
+#include <QFile>
+#include <QVectorIterator>
 
 #include "fmodel.h"
 #include "CalcDialog.h"
-#include "GraphDialog.h"
+#include "charts/GraphDialog.h"
 #include "v_service.h"
 #include "v_detail.h"
 
 
 void removeComments( QString& valCsv )
 {
-    int foundStart = valCsv.indexOf('#');
+    auto foundStart = valCsv.indexOf('#');
     int foundEnd;
     while( foundStart >= 0 )
     {
       foundEnd = valCsv.indexOf('\n');
       if( foundEnd > 0 )
-        valCsv.remove( foundStart, foundEnd-foundStart+1 );
+        valCsv.remove(foundStart, foundEnd-foundStart+1 );
       else
         {
-           valCsv.remove( foundStart);
+           valCsv.remove(foundStart, valCsv.size()-foundStart);
            break;
         }
       foundStart = valCsv.indexOf('#', foundStart );
@@ -49,14 +53,19 @@ bool TSortFilterProxyModel::lessThan(const QModelIndex &left,
 //  class TMatrixModel
 
 TMatrixModel::TMatrixModel( const QString& afname, int aNumCol, QObject * parent ):
-    QAbstractTableModel(parent), fname(afname), numberStringColumns(aNumCol),
-    grdata(0), graph_dlg(0)
+    QAbstractTableModel(parent), fname(afname), numberStringColumns(aNumCol)
 {
+}
+
+TMatrixModel::~TMatrixModel()
+{
+    if( graph_dlg )
+        delete graph_dlg;
 }
 
 int TMatrixModel::rowCount( const QModelIndex & /*parent*/ ) const
 {
-     return matrix.size();
+    return matrix.size();
 }	
 
 
@@ -137,9 +146,9 @@ QVariant TMatrixModel::headerData( int section, Qt::Orientation orientation, int
          if( orientation == Qt::Horizontal )
          {
             QString valh = colHeads.at(section);
-            if( xcolms.contains( section ))
+            if(std::find(xColumns.begin(), xColumns.end(), section) != xColumns.end())
                 valh += "(x)";
-            if( ycolms.contains( section ))
+            if(std::find(yColumns.begin(), yColumns.end(), section) != yColumns.end())
                 valh += "(y)";
             return valh;
          }
@@ -164,27 +173,34 @@ Qt::ItemFlags TMatrixModel::flags( const QModelIndex & index ) const
 // internal part
 void TMatrixModel::matrixFromCsvString( const QString& valueCsv )
 {
-#if QT_VERSION >= 0x050000
+
     beginResetModel();
-#endif
    int ii, jj, nlines;
   // clear old data
   colHeads.clear();
   matrix.clear();
 
   if(!valueCsv.isEmpty())
-  { //
-    const QStringList rows = valueCsv.split('\n', QString::KeepEmptyParts);
+  {
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
+      const QStringList rows = valueCsv.split('\n', QString::KeepEmptyParts);
+      QStringList cells = rows[0].split(',', QString::KeepEmptyParts);
+#else
+      const QStringList rows = valueCsv.split('\n', Qt::KeepEmptyParts);
+      QStringList cells = rows[0].split(',', Qt::KeepEmptyParts);
+#endif
 
-    // get header
-    QStringList cells = rows[0].split(',', QString::KeepEmptyParts);
     for( ii=0; ii< cells.count(); ii++ )
        colHeads.push_back( cells[ii] );
 
     // get values
     for( jj=1, nlines=0;  jj<rows.count(); jj++ )
     {
-     cells = rows[jj].split(',', QString::KeepEmptyParts);
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
+      cells = rows[jj].split(',', QString::KeepEmptyParts);
+#else
+      cells = rows[jj].split(',', Qt::KeepEmptyParts);
+#endif
      if(cells.count() < colHeads.size() )
         continue;
      QVector<QVariant> vec;
@@ -197,13 +213,34 @@ void TMatrixModel::matrixFromCsvString( const QString& valueCsv )
      nlines++;
     }
    }
-#if QT_VERSION >= 0x050000
-    endResetModel();
-#else
-    reset();
-#endif
 
+    endResetModel();
 }
+
+void TMatrixModel::toggle_X(int ncolmn)
+{
+    auto it = std::find( xColumns.begin(), xColumns.end(), ncolmn );
+    if ( it != xColumns.end() )
+        xColumns.erase( it );
+    else
+        xColumns.push_back( ncolmn );
+
+    if( chart_data )
+        chart_models[0]->setXColumns( xColumns );
+}
+
+void TMatrixModel::toggle_Y(int ncolmn)
+{
+    auto it = std::find( yColumns.begin(), yColumns.end(), ncolmn );
+    if ( it != yColumns.end() )
+        yColumns.erase( it );
+    else
+        yColumns.push_back( ncolmn );
+
+    if( chart_data )
+        chart_models[0]->setYColumns( yColumns, true );
+}
+
 
 QString TMatrixModel::matrixToCsvString( )
 {
@@ -257,7 +294,7 @@ void TMatrixModel::matrixFromCsvFile( const QString& dir )
     }
     else
       {
-        cout << "error open file " << fpath.toUtf8().data() << endl;
+        std::cout << "error open file " << fpath.toStdString() << std::endl;
         //return;
       }
 
@@ -274,7 +311,7 @@ void TMatrixModel::matrixFromCsvFile( const QString& dir )
 
 void TMatrixModel::matrixToCsvFile( const QString& dir )
 {
-    // get string to output
+    // get std::string to output
     QString valCsv = matrixToCsvString( );
 
     // write file
@@ -291,38 +328,35 @@ void TMatrixModel::matrixToCsvFile( const QString& dir )
 /// write model to bson structure
 void TMatrixModel::matrixToBson(  bson *obj )
 {
-    int ii;
-    char buf[100];
+    size_t ii;
 
-    // get string to output
-    string name = fname.toUtf8().data();
-    string valCsv = matrixToCsvString().toUtf8().data();
+    // get std::string to output
+    std::string name = fname.toStdString();
+    std::string valCsv = matrixToCsvString().toStdString();
     int iRet = bson_append_string( obj, name.c_str(), valCsv.c_str() );
     ErrorIf( iRet == BSON_ERROR, name, "Error append string"+name );
 
     // added graphic part
-    if( grdata )
+    if( chart_data )
     {
-      string label= "graph_"+name;
+      std::string label= "graph_"+name;
       bson_append_start_object( obj, label.c_str());
       //
       bson_append_start_array(obj, "xcolms");
-      for( ii=0; ii<xcolms.size(); ii++)
+      for( ii=0; ii<xColumns.size(); ii++)
       {
-          sprintf(buf, "%d", ii);
-          bson_append_double( obj, buf, xcolms[ii] );
+          bson_append_int( obj, std::to_string(ii).c_str(), xColumns[ii] );
       }
       bson_append_finish_array(obj);
 
       bson_append_start_array(obj, "ycolms");
-      for( ii=0; ii<ycolms.size(); ii++)
+      for( ii=0; ii<yColumns.size(); ii++)
       {
-          sprintf(buf, "%d", ii);
-          bson_append_double( obj, buf, ycolms[ii] );
+          bson_append_int( obj, std::to_string(ii).c_str(), yColumns[ii] );
       }
       bson_append_finish_array(obj);
 
-      grdata->toBsonObject(obj);
+      chart_data->toBsonObject(obj);
       bson_append_finish_object( obj );
     }
 
@@ -331,67 +365,40 @@ void TMatrixModel::matrixToBson(  bson *obj )
 /// read model from bson structure
 void TMatrixModel::matrixFromBson( QSortFilterProxyModel *pmodel, const char *bsdata )
 {
-    // get string from obj
-    string valCsv;
-    string name = fname.toUtf8().data();
+    // get std::string from obj
+    std::string valCsv;
+    std::string name = fname.toStdString();
     if( !bson_find_string( bsdata, name.c_str(), valCsv ) )
         valCsv = "";
     //set up data
-    matrixFromCsvString( trUtf8(valCsv.c_str()) );
+    matrixFromCsvString(valCsv.c_str());
 
     // load graphic part
-    string label= "graph_"+name;
+    std::string label= "graph_"+name;
     bson_iterator it;
     bson_type type;
     type =  bson_find_from_buffer(&it, bsdata, label.c_str() );
     if( type != BSON_OBJECT )
-    {  //if(grdata)
-       //  delete grdata;
-       // grdata = 0;
+    {
         return; // no graphic
     }
     const char *objbson = bson_iterator_value(&it);
 
-    xcolms.clear();
+    xColumns.clear();
     const char *arr  = bson_find_array(  objbson, "xcolms" );
     bson_iterator iter;
     bson_iterator_from_buffer(&iter, arr );
     while (bson_iterator_next(&iter))
-        xcolms.push_back( bson_iterator_int(&iter));
-    ycolms.clear();
+        xColumns.push_back( bson_iterator_int(&iter));
+    yColumns.clear();
     arr  = bson_find_array(  objbson, "ycolms" );
     bson_iterator_from_buffer(&iter, arr );
     while (bson_iterator_next(&iter))
-        ycolms.push_back( bson_iterator_int(&iter));
+        yColumns.push_back( bson_iterator_int(&iter));
 
     setGraphData( pmodel,  "" );
-    //if( !grdata )
-    //{   vector<TPlot> plt;
-    //    grdata = new GraphData( plt, "", "x", "y" );
-    //}
-    grdata->fromBsonObject(objbson);
-}
-
-void TMatrixModel::ToggleX( int ncolmn )
-{
-    int ii = xcolms.indexOf( ncolmn );
-    if( ii != -1 )
-       xcolms.remove( ii );
-    else
-       xcolms.append( ncolmn );
-
-    // Update headers
-}
-
-void TMatrixModel::ToggleY( int ncolmn )
-{
-    int ii = ycolms.indexOf( ncolmn );
-    if( ii != -1 )
-       ycolms.remove( ii );
-    else
-       ycolms.append( ncolmn );
-
-    // Update headers
+    if( chart_data )
+        chart_data->fromBsonObject(objbson);
 }
 
 void TMatrixModel::CloseGraph()
@@ -400,79 +407,64 @@ void TMatrixModel::CloseGraph()
       graph_dlg->close();
 }
 
-void TMatrixModel::setGraphData( QSortFilterProxyModel *pmodel,  const string& title_ )
+void TMatrixModel::setGraphData( QSortFilterProxyModel */*pmodel*/,  const std::string& title )
 {
-    string title = title_;
-    vector<int> xval;
-    vector<int> yval;
-    vector<string> ynames;
-    int lines = matrix.size();
-
-    foreach (const int &value, xcolms)
-       xval.push_back( value);
-
-    foreach (const int &value, ycolms)
-    {   yval.push_back( value);
-        ynames.push_back( colHeads[value].toUtf8().data() );
+    if(!chart_data)
+    {
+        chart_models.push_back( std::shared_ptr<jsonui17::ChartDataModel>( new jsonui17::ChartDataModel( this )) );
+        chart_models[0]->setXColumns( xColumns );
+        chart_models[0]->setYColumns( yColumns, true );
+        chart_data = std::make_shared<jsonui17::ChartData>( chart_models, title, "x", "y" );
     }
-
-    vector<TPlot> plt;
-    plt.push_back( TPlot( pmodel, lines, xval, yval, ynames ));
-    title += "."+ getName();
-
-   // Set up GraphDialog
-    if( !grdata )
-         grdata = new GraphData( plt, title.c_str(), "x", "y" );
-    else
-         grdata->setNewPlot( plt );
 }
 
-
-void TMatrixModel::showGraphData( QSortFilterProxyModel *pmodel,  const string& title )
+void TMatrixModel::showGraphData( QSortFilterProxyModel *pmodel,  const std::string& title )
 {
    // Set up GraphDialog
    setGraphData( pmodel,  title );
 
    if( graph_dlg )
      delete  graph_dlg;
-   graph_dlg = new GraphDialog( grdata, 0 );
+   graph_dlg = new jsonui17::GraphDialog( chart_data.get(), 0 );
    graph_dlg->show();
 }
 
 int TMatrixModel::findRow( int *xynd, double *reg )
 {
-   int ndx;
-   QVector<int> xfcol;
-   QVector<int> yfcol;
+    int ndx;
+    QVector<int> xfcol;
+    QVector<int> yfcol;
 
-   if( xynd[0] < colHeads.size() && xynd[0] >= 0 )
-     xfcol.push_back( xynd[0] );
+    if( xynd[0] < colHeads.size() && xynd[0] >= 0 )
+        xfcol.push_back( xynd[0] );
 
-   if( xynd[1] < colHeads.size() && xynd[1] >= 0 )
-     yfcol.push_back( xynd[1] );
-   else
-     yfcol = ycolms; // ally
+    if( xynd[1] < colHeads.size() && xynd[1] >= 0 )
+        yfcol.push_back( xynd[1] );
+    else {
+        for(const auto& val:yColumns )  // ally
+            yfcol.push_back( val );
+    }
 
-   ndx = 0;
-   QVectorIterator<QVector<QVariant> > line(matrix);
-   while (line.hasNext())
-   {
-       QVector<QVariant> valC(line.next());
-       foreach (const int &valuey, yfcol)
-       {
-           if( reg[2] <= valC[valuey].toDouble() && valC[valuey].toDouble() <= reg[3] )
-           {  if( xfcol.count() < 1 &&  ( reg[0] <= ndx && ndx <= reg[1] ) )
-                  return ndx;
-              foreach (const int &valuex, xfcol)
-              {
-                if( reg[0] <= valC[valuex].toDouble() && valC[valuex].toDouble() <= reg[1] )
+    ndx = 0;
+    QVectorIterator<QVector<QVariant> > line(matrix);
+    while (line.hasNext())
+    {
+        QVector<QVariant> valC(line.next());
+        foreach (const int &valuey, yfcol)
+        {
+            if( reg[2] <= valC[valuey].toDouble() && valC[valuey].toDouble() <= reg[3] )
+            {  if( xfcol.count() < 1 &&  ( reg[0] <= ndx && ndx <= reg[1] ) )
                     return ndx;
-             }
-           }
-       }
-       ndx++;
-   }
-   return -1;
+                foreach (const int &valuex, xfcol)
+                {
+                    if( reg[0] <= valC[valuex].toDouble() && valC[valuex].toDouble() <= reg[1] )
+                        return ndx;
+                }
+            }
+        }
+        ndx++;
+    }
+    return -1;
 }
 
 
@@ -511,8 +503,8 @@ TMatrixTable::TMatrixTable( QWidget * parent ):
 }
 
  
- static bool no_menu_out = true;
- static bool no_menu_in = true;
+ //static bool no_menu_out = true;
+ //static bool no_menu_in = true;
  void TMatrixTable::focusOutEvent( QFocusEvent * event )
  {
      //   if( no_menu_out )
@@ -529,61 +521,6 @@ TMatrixTable::TMatrixTable( QWidget * parent ):
     //          QItemSelectionModel::SelectCurrent );
     //no_menu_in = true;
   }
-
- void TMatrixTable::printTable(QPainter* painter, const QRect& area)
- {
-     const int rows = model()->rowCount();
-     const int cols = model()->columnCount();
-
-     // calculate the total width/height table would need without scaling
-     double totalWidth = 0.0;
-     for (int c = 0; c < cols; ++c)
-     {
-         totalWidth += columnWidth(c);
-     }
-     double totalHeight = 0.0;
-     for (int r = 0; r < rows; ++r)
-     {
-         totalHeight += rowHeight(r);
-     }
-
-     // calculate proper scale factors
-     const double scaleX = area.width() / totalWidth;
-     const double scaleY = area.height() / totalHeight;
-     painter->scale(scaleX, scaleY);
-
-     // paint cells
-     for (int r = 0; r < rows; ++r)
-     {
-         for (int c = 0; c <cols; ++c)
-         {
-             QModelIndex idx = model()->index(r, c);
-             QStyleOptionViewItem option = viewOptions();
-             option.rect = visualRect(idx);
-             itemDelegate()->paint(painter, option, idx);
-         }
-     }
- }
-
- /*
- // printer usage
- QPainter painter(&printer);
- tableView->print(&painter, printer.pageRect());
-
- // test on pixmap
- QPixmap pixmap(320, 240);
- QPainter painter(&pixmap);
- tableView->print(&painter, pixmap.rect());
- pixmap.save("table.png", "PNG");
-
-
-
- QStyleOptionViewItem TMatrixTable::viewOptions() const
- {
-    QStyleOptionViewItem option = QAbstractItemView::viewOptions();
-    return option;
- }
-*/
 
  void TMatrixTable::slotPopupContextMenu(const QPoint &pos)
  {
@@ -729,7 +666,7 @@ void TMatrixTable::ToggleX()
     //    TMatrixModel* model =(TMatrixModel *)index.model();
     TMatrixModel* model =(TMatrixModel *)sortmodel->sourceModel();
 
-    model->ToggleX( index.column() );
+    model->toggle_X(index.column());
     horizontalHeader()->update();
 }
 
@@ -737,11 +674,10 @@ void TMatrixTable::ToggleX()
 void TMatrixTable::ToggleY()
 {
     QModelIndex index = currentIndex();
-    //TMatrixModel* model =(TMatrixModel *)index.model();
     QSortFilterProxyModel *sortmodel = (QSortFilterProxyModel *)index.model();
     TMatrixModel* model =(TMatrixModel *)sortmodel->sourceModel();
 
-    model->ToggleY( index.column() );
+    model->toggle_Y(index.column());
     horizontalHeader()->update();
 }
 
@@ -880,7 +816,11 @@ void TMatrixTable::CmCalc()
   	    return;
   	
      QModelIndex wIndex;
-     const QStringList rows = str.split(splitrow, QString::KeepEmptyParts);
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
+      const QStringList rows = str.split(splitrow, QString::KeepEmptyParts);
+#else
+      const QStringList rows = str.split(splitrow, Qt::KeepEmptyParts);
+#endif
 
      int ii, jj;
      int rowNum = sel.N1;
@@ -890,13 +830,16 @@ void TMatrixTable::CmCalc()
   	{
   	    //if( rows[it].isEmpty() ) sd 29/10/2008 
   		// continue;
-
-  	    const QStringList cells = rows[it].split('\t', QString::KeepEmptyParts);
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
+      const QStringList cells = rows[it].split('\t', QString::KeepEmptyParts);
+#else
+       const QStringList cells = rows[it].split('\t', Qt::KeepEmptyParts);
+#endif
   	    int cellNum = sel.M1;
   	    const int mLimit = (transpose) ? (sel.M1 + sel.N2-sel.N1) : sel.M2;
   	    for( int cellIt = 0;  cellIt < cells.count() && cellNum <= mLimit; cellIt++, cellNum++) 
   	    {
-          string value = (const char*)cells[ cellIt ].toLatin1().data();
+          std::string value = (const char*)cells[ cellIt ].toLatin1().data();
           strip( value );
           //if( value.empty() /*|| value == emptiness*/ )
           //    value = "";//"---";
@@ -951,8 +894,8 @@ void TMatrixTable::CmCalc()
   	     }
          if( largerN || largerM )
          {
-           cout <<  "Object paste" <<
-            "Pasting contents has larger dimensions then the object!" << endl;
+           std::cout <<  "Object paste" <<
+            "Pasting contents has larger dimensions then the object!" << std::endl;
          }
          undoString = createString( sel );
       

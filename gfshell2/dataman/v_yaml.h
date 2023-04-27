@@ -26,7 +26,6 @@
 #include <vector>
 #include <stack>
 #include <iostream>
-using namespace std;
 
 #include "yaml-cpp/yaml.h"
 #include "yaml-cpp/eventhandler.h"
@@ -40,16 +39,16 @@ namespace ParserYAML
     void bson_emitter( YAML::Emitter& out, const char *data, int datatype );
 
     /// Print bson structure to YAML string
-    void printBsonObjectToYAML( string& resStr, const char *b);
+    void printBsonObjectToYAML( std::string& resStr, const char *b);
 
     /// Print bson structure to YAML format file
-    void printBsonObjectToYAML(fstream& fout, const char *b);
+    void printBsonObjectToYAML(std::fstream& fout, const char *b);
 
     /// Read one YAML object from text file and parse to bson structure
-    void parseYAMLToBson( fstream& fin, bson *brec );
+    void parseYAMLToBson( std::fstream& fin, bson *brec );
 
     /// Parse one YAML object from string to bson structure
-    void parseYAMLToBson( const string& currentYAML, bson *obj );
+    void parseYAMLToBson( const std::string& currentYAML, bson *obj );
 
 };
 
@@ -59,7 +58,7 @@ class BsonHandler: public YAML::EventHandler
 
  public:
 
-  string to_string();
+  std::string to_string();
 
   BsonHandler(bson* bobj);
 
@@ -90,7 +89,7 @@ class BsonHandler: public YAML::EventHandler
   enum   STATE_ { WaitingForSequenceEntry, WaitingForKey, WaitingForValue, };
 
   struct State {
-    string key;
+    std::string key;
     int    ndx;
     STATE_ state;
 
@@ -105,8 +104,8 @@ class BsonHandler: public YAML::EventHandler
 class JsonHandler: public YAML::EventHandler
 {
 
- void addHead(const string& key );
- void addScalar(const string&  key, const string& value );
+ void addHead(const std::string& key );
+ void addScalar(const std::string&  key, const std::string& value );
  void shift()
  {
    for(int temp = 0; temp < m_depth; temp++)
@@ -115,9 +114,9 @@ class JsonHandler: public YAML::EventHandler
 
  public:
 
-  string to_string();
+  std::string to_string();
 
-  JsonHandler(stringstream& os_);
+  JsonHandler(std::stringstream& os_);
 
   virtual void OnDocumentStart(const YAML::Mark& mark);
   virtual void OnDocumentEnd();
@@ -141,14 +140,14 @@ class JsonHandler: public YAML::EventHandler
   //void EmitProps(const std::string& tag, YAML::anchor_t anchor);
 
  private:
-  stringstream& m_os;
+  std::stringstream& m_os;
   int m_depth =0;
   bool m_first= true;
 
   enum   STATE_ { WaitingForSequenceEntry, WaitingForKey, WaitingForValue, };
 
   struct State {
-    string key;
+    std::string key;
     int    ndx;
     STATE_ state;
 
@@ -160,8 +159,8 @@ class JsonHandler: public YAML::EventHandler
   std::stack<State> m_stateStack;
 };
 
-string Json2YAML( const string& jsonData );
-string parseYAMLToJson( const string& currentYAML );
+std::string Json2YAML( const std::string& jsonData );
+std::string parseYAMLToJson( const std::string& currentYAML );
 
 //#include <iostream>
 //template <typename T>

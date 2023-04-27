@@ -6,12 +6,12 @@
 #include <iomanip>
 #include <iostream>
 
-void parse_JSON_object(string query, const char* key, vector<string> &result)
+void parse_JSON_object(std::string query, const char* key, std::vector<std::string> &result)
 {
     json_t *root; json_t *data; json_t *object;
     json_error_t jerror;
     std::stringstream ss;
-    string sss;
+    std::string sss;
 
     const char * JSON = query.c_str();
     root = json_loads(JSON, 0, &jerror);
@@ -85,12 +85,12 @@ void parse_JSON_object(string query, const char* key, vector<string> &result)
 
 }
 
-void parse_JSON_array_object( string data_, const char *arr , const char *key, vector<string> &result )
+void parse_JSON_array_object( std::string data_, const char *arr , const char *key, std::vector<std::string> &result )
 {
     json_t *root; json_t *data1; json_t *data; json_t *object; json_t *data2;
     json_error_t jerror;
-    stringstream ss;
-    string sss;
+    std::stringstream ss;
+    std::string sss;
 
     const char * JSON = data_.c_str();
     root = json_loads(JSON, 0, &jerror);
@@ -154,9 +154,9 @@ void parse_JSON_array_object( string data_, const char *arr , const char *key, v
                                 result.push_back(sss);
                             }
                         }
-                        string arr_ = arr;
-                        string key_use= keys::usepair;
-                        string key_skip= keys::skippair;
+                        std::string arr_ = arr;
+                        std::string key_use= keys::usepair;
+                        std::string key_skip= keys::skippair;
                         if ((arr_ == key_use) || (arr_ == key_skip))
                         {result.push_back("");}
                     }

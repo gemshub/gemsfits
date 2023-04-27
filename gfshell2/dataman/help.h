@@ -20,7 +20,7 @@
 #ifndef __help_h
 #define __help_h
 
-#include <QMap>
+#include <QMultiMap>
 #include <QString>
 #include <QStringList>
 #include <QUrl>
@@ -29,12 +29,12 @@
 class HelpConfigurator
 {
   QString path;
-  QMap<QString, QUrl> links;
+  QMultiMap<QString, QUrl> links;
   QStringList images;
   QStringList files;
 
   void getHrefs( QString file, QString file_name);
-  void u_getline(istream& is, QString& str, QString end );
+  void u_getline(std::istream& is, QString& str, QString end );
   void addNameToList( QString ref, QString file_name );
   void addImgToList(  QString ref );
   void addFileToList(  QString file )
@@ -42,9 +42,9 @@ class HelpConfigurator
       files.append(file);
   }
 
-  void writeFiles( fstream& f_out);
-  void writeKeywords( fstream& f_out);
-  void writeContent( fstream& f_out);
+  void writeFiles( std::fstream& f_out);
+  void writeKeywords( std::fstream& f_out);
+  void writeContent( std::fstream& f_out);
 
 #ifndef IPMGEMPLUGIN
   int showObjectForKeyword(const QString &keyword);

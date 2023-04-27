@@ -1,9 +1,9 @@
-/// \file opt_vector.h
-/// Contains declaration of opti_vector class used in GEMSFIT for
-/// storing optimized vector information
+/// \file opt_std::vector.h
+/// Contains declaration of opti_std::vector class used in GEMSFIT for
+/// storing optimized std::vector information
 //
-/// \class opti_vector opt_vector.h
-///  The opti_vector class, retrieves and stores the adjusted paramaters and
+/// \class opti_std::vector opt_std::vector.h
+///  The opti_std::vector class, retrieves and stores the adjusted paramaters and
 /// reaction constraints from the GEMSFIT input file.
 
 //
@@ -43,45 +43,45 @@ class OptParameter
 {
     protected:
 
-        typedef vector<double> vd;        // vector of double
-        typedef vector<vector<double> > vvd;  // 2D vector of double
-        typedef vector<string> vs;        // vector of string
-        typedef vector<int> vi;           // vecotr of integer
-        typedef vector<vector<int> > vvi; // 2D vector of integer
+        typedef std::vector<double> vd;        // std::vector of double
+        typedef std::vector<std::vector<double> > vvd;  // 2D std::vector of double
+        typedef std::vector<std::string> vs;        // std::vector of std::string
+        typedef std::vector<int> vi;           // vecotr of integer
+        typedef std::vector<std::vector<int> > vvi; // 2D std::vector of integer
 
-        string Ptype; /// stores the type of parameter (G0, bIC, DMc, PMc, TK, P, etc.)
+        std::string Ptype; /// stores the type of parameter (G0, bIC, DMc, PMc, TK, P, etc.)
 
         std::map<std::string, int> Pindexes;
 
-        vector<string> Jdata; /// JSON string containing the parameter information read from the configuration file
+        std::vector<std::string> Jdata; /// JSON std::string containing the parameter information read from the configuration file
 
         double OptBoundPerc; /// Bounds percentage read from the configuration file
 
         int mode;
 
-        vector<double> TP_pairs[2];
+        std::vector<double> TP_pairs[2];
 
         struct parameter /// base structure for storing parameter information
         {
             double IV; /// initial value
             double opt; /// parameter value that gets changed during the optimization
-            int    optNdx; /// index in the global optimization vector
+            int    optNdx; /// index in the global optimization std::vector
             double Pndx; /// parameter index
-            string Pname; /// parameter name (DCName, ICname, etc.)
-            vd IVv; /// vector of initial values for each node/experiment - used in nested optimization
-            vd EVv; /// vector of end values for each node/experiment - used in nested optimization
-            string expr;
-            string unit;
+            std::string Pname; /// parameter name (DCName, ICname, etc.)
+            vd IVv; /// std::vector of initial values for each node/experiment - used in nested optimization
+            vd EVv; /// std::vector of end values for each node/experiment - used in nested optimization
+            std::string expr;
+            std::string unit;
         };
 
         struct F_parameter : parameter /// structure storing F-type parameter iformation
         {
-//            string Ftype; /// function type (OFUN, NFUN)
+//            std::string Ftype; /// function type (OFUN, NFUN)
             int    Fndx; /// function index
             double UB; /// upper boundary
             double LB; /// lower boundary
         };
-        vector<F_parameter*> optFP; /// vector of pointers to F-type parameters
+        std::vector<F_parameter*> optFP; /// std::vector of pointers to F-type parameters
 
         struct R_parameter : parameter /// structure storing reaction constraint information
         {
@@ -91,9 +91,9 @@ class OptParameter
             vs rdc_species; /// Names of species involved in reaction (the last one is the fixed species)
             vi rdc_species_ind; /// indices of RDC species in GEMS3K - read from node class after reading the experimental data
             vi rdc_species_coef; /// reaction coeficients
-            string Ref; /// reference for log K
+            std::string Ref; /// reference for log K
         };
-        vector<R_parameter*> optRP; /// Vector of reactions (rdc_species struct that hold the reaction dependent species and the reaction properties)
+        std::vector<R_parameter*> optRP; /// std::vector of reactions (rdc_species struct that hold the reaction dependent species and the reaction properties)
 
         struct L_parameter : parameter /// structure holding liked parameters information
         {
@@ -102,37 +102,37 @@ class OptParameter
             vi L_param_ind; /// GEMS3K indexes of the linked parameters
             vd L_param_coef; /// linking coefiecients e.g 1.0 for Cl and 2.0 for S
         };
-        vector<L_parameter*> optLP; /// Vector of pointers to L-type parameters
+        std::vector<L_parameter*> optLP; /// std::vector of pointers to L-type parameters
 
         struct S_parameter : parameter /// structure holding liked parameters information
         { };
-        vector<S_parameter*> optSP; /// Vector of pointers to S-type parameters
+        std::vector<S_parameter*> optSP; /// std::vector of pointers to S-type parameters
 
         /**
         * Reads in the attributes of the F-type parameters
         * @author DM
         * @param p counts the parameters
-        * @param data JSON string holding the parameter attributes
+        * @param data JSON std::string holding the parameter attributes
         * @param *opt pointer to the F_parameter object
         * @date 17.10.2014
         */
-        void Pval_to_optF (int p, string data, F_parameter *opt);
+        void Pval_to_optF (int p, std::string data, F_parameter *opt);
 
-        void Pval_to_optR (int p, string data, R_parameter *opt);
+        void Pval_to_optR (int p, std::string data, R_parameter *opt);
 
         /**
         * Reads in the attributes of the L-type parameters
         * @author DM
         * @param p counts the parameters
-        * @param data JSON string holding the parameter attributes
+        * @param data JSON std::string holding the parameter attributes
         * @param *opt pointer to the L_parameter object
         * @date 17.10.2014
         */
-        void Pval_to_optL (int p, string data, L_parameter *opt);
+        void Pval_to_optL (int p, std::string data, L_parameter *opt);
 
     public:
         /// Generic constructor
-        OptParameter (vector<string> data, double OptBoundPerc );
+        OptParameter (std::vector<std::string> data, double OptBoundPerc );
         /// Destructor
         virtual ~OptParameter();
 
@@ -142,53 +142,53 @@ class OptParameter
             return 0;
         };
 
-        virtual long int Set_logKTP(TNode *node, vector<double> TP_pairs[2] )
+        virtual long int Set_logKTP(TNode */*node*/, std::vector<double> /*TP_pairs*/[2] )
         {
             return 0;
         };
 
-        virtual long int Set_logKTP(int RPndx, double logK  )
+        virtual long int Set_logKTP(int /*RPndx*/, double /*logK*/  )
         {
             return 0;
         };
 
-        virtual long int Adjust_param(TNode *node, vector<double> opt)
+        virtual long int Adjust_param(TNode */*node*/, std::vector<double> /*opt*/)
         {
             return 0;
         };
 
-        virtual long int Adjust_Fparam(TNode *node, int Pndx, double Pval)
+        virtual long int Adjust_Fparam(TNode */*node*/, int /*Pndx*/, double /*Pval*/)
         {
             return 0;
         };
 
-        virtual long int Adjust_Sparam(TNode *node)
+        virtual long int Adjust_Sparam(TNode */*node*/)
         {
             return 0;
         };
 
-        virtual long int Adjust_Lparam(TNode *node, int exp)
+        virtual long int Adjust_Lparam(TNode */*node*/, int /*exp*/)
         {
             return 0;
         };
 
-        virtual long int SetIndex_param(TNode node)
+        virtual long int SetIndex_param(TNode */*node*/)
         {
             return 0;
         };
 
-        virtual string Print_param(  )
+        virtual std::string Print_param(  )
         {
             return 0;
         };
 
-        virtual long int SetIVvEVvDelta(TNode *node)
+        virtual long int SetIVvEVvDelta(TNode */*node*/)
         {
             return 0;
         };
 
         /**
-        * Gets the size of optFP, F parameters vector
+        * Gets the size of optFP, F parameters std::vector
         * @author DM
         * @date 17.10.2014
         */
@@ -201,15 +201,15 @@ class OptParameter
         long int Get_optRPsize ()
         { return optRP.size(); }
 
-        string Get_optType ()
+        std::string Get_optType ()
         { return Ptype; }
 
-        void Set_TPpairs (vector<double> TPpairs[2]);
+        void Set_TPpairs (std::vector<double> TPpairs[2]);
 
         /**
         * Gets the size of F parameter GEMS3K index
         * @author DM
-        * @param ndx index on the optFP vector
+        * @param ndx index on the optFP std::vector
         * @date 17.10.2014
         */
         long int Get_FPndx(int ndx)
@@ -221,18 +221,18 @@ class OptParameter
 
         double Get_Lparam(int ndx, int exp );
 
-        void Get_Fparam(int ndx, string &name, double &IV, double &EV );
+        void Get_Fparam(int ndx, std::string &name, double &IV, double &EV );
 
-        void Get_Rparam(int ndx, string &name, double &IV, double &EV );
+        void Get_Rparam(int ndx, std::string &name, double &IV, double &EV );
 
         void Get_R_vNdx_vCoef(int ndx, vi &vNdx, vi &vCoef );
 
-        void Get_Lparam(int ndx, string &name, double &IV, double &EV );
+        void Get_Lparam(int ndx, std::string &name, double &IV, double &EV );
 
         /**
         * Gets the attributes of the F-type parameter with index ndx
         * @author DM
-        * @param ndx index on the optFP vector
+        * @param ndx index on the optFP std::vector
         * @param &Fndx retrieves the index of the OFUN or NFUN function
         * @param &Pndx retrieves the GEMS3K index of the parameter
         * @param &Pval retrieves the value of the parameter
@@ -245,7 +245,7 @@ class OptParameter
         /**
         * Gets the attributes of the F-type parameter with index ndx and OptPndx
         * @author DM
-        * @param ndx index on the optFP vector
+        * @param ndx index on the optFP std::vector
         * @param exp index of the current node/experiment
         * @param &Fndx retrieves the index of the OFUN or NFUN function
         * @param &Pndx retrieves the GEMS3K index of the parameter
@@ -259,7 +259,7 @@ class OptParameter
         /**
         * Sets the value of the F-type parameter with index ndx
         * @author DM
-        * @param ndx index of the optFP vector
+        * @param ndx index of the optFP std::vector
         * @param Pval new value of the parameter
         * @date 17.10.2014
         */
@@ -268,7 +268,7 @@ class OptParameter
         /**
         * Sets the value of the F-type parameter with index ndx
         * @author DM
-        * @param ndx index in the optFP vector
+        * @param ndx index in the optFP std::vector
         * @param exp index of the current node/experiment
         * @param Pval new value of the parameter
         * @date 17.10.2014
@@ -281,7 +281,7 @@ class Opt_bIC : public OptParameter
     public:
 
     /// Constructor
-    Opt_bIC (vector<string> data, double OptBoundPrc, unsigned &p, bool isNFun=true );
+    Opt_bIC (std::vector<std::string> data, double OptBoundPrc, unsigned &p, bool isNFun=true );
     /// Destructor
     virtual ~Opt_bIC();
 
@@ -289,15 +289,15 @@ class Opt_bIC : public OptParameter
 
     long int SetIVvEVvDelta(TNode *node);
 
-    long int Adjust_param(TNode *node, vector<double> opt);
+    long int Adjust_param(TNode *node, std::vector<double> opt);
 
     long int Adjust_Fparam(TNode *node, int Pndx, double Pval);
 
-    long int Adjust_Fparam(TNode *node, int Pndx, double Pval, string expr);
+    long int Adjust_Fparam(TNode *node, int Pndx, double Pval, std::string expr);
 
     long int Adjust_Lparam(TNode *node, int exp);
 
-    string Print_param();
+    std::string Print_param();
 };
 
 class Opt_Tk : public OptParameter
@@ -305,11 +305,11 @@ class Opt_Tk : public OptParameter
     public:
 
     /// Constructor
-    Opt_Tk (vector<string> data, double OptBoundPrc, unsigned &p );
+    Opt_Tk (std::vector<std::string> data, double OptBoundPrc, unsigned &p );
     /// Destructor
     virtual ~Opt_Tk();
 
-    long int SetIndex_param();
+    long int SetIndex_param(TNode *node);
 
     long int SetIVvEVvDelta(TNode *node);
 
@@ -317,7 +317,7 @@ class Opt_Tk : public OptParameter
 
 //    long int Adjust_Lparam(TNode *node, int exp);
 
-    string Print_param();
+    std::string Print_param();
 };
 
 class Opt_P : public OptParameter
@@ -325,11 +325,11 @@ class Opt_P : public OptParameter
     public:
 
     /// Constructor
-    Opt_P (vector<string> data, double OptBoundPrc, unsigned &p );
+    Opt_P (std::vector<std::string> data, double OptBoundPrc, unsigned &p );
     /// Destructor
     virtual ~Opt_P();
 
-    long int SetIndex_param();
+    long int SetIndex_param(TNode *node);
 
     long int SetIVvEVvDelta(TNode *node);
 
@@ -337,7 +337,7 @@ class Opt_P : public OptParameter
 
 //    long int Adjust_Lparam(TNode *node, int exp);
 
-    string Print_param();
+    std::string Print_param();
 };
 
 
@@ -346,21 +346,21 @@ class Opt_G0 : public OptParameter
     public:
 
     /// Constructor
-    Opt_G0 (vector<string> data, double OptBoundPrc, unsigned &p );
+    Opt_G0 (std::vector<std::string> data, double OptBoundPrc, unsigned &p );
     /// Destructor
     virtual ~Opt_G0();
 
     long int SetIndex_param(TNode *node);
 
-//    long int Get_param(vector<double> &opt);
+//    long int Get_param(std::vector<double> &opt);
 
-//    long int Set_param(vector<double> opt, unsigned &p);
+//    long int Set_param(std::vector<double> opt, unsigned &p);
 
-    long int Set_logKTP(TNode *node, vector<double> TP_pairs[2] );
+    long int Set_logKTP(TNode *node, std::vector<double> TP_pairs[2] );
 
     long int Set_logKTP(int RPndx, double logK  );
 
-    long int Adjust_param(TNode *node, vector<double> opt);
+    long int Adjust_param(TNode *node, std::vector<double> opt);
 
     long int Adjust_Fparam(TNode *node, int Pndx, double Pval);
 
@@ -370,7 +370,7 @@ class Opt_G0 : public OptParameter
 
 //    long int Adjust_Lparam(TNode *node, int exp);
 
-//    string Print_param();
+//    std::string Print_param();
 };
 
 
@@ -379,11 +379,11 @@ class Opt_PMc : public OptParameter
     public:
 
     /// Constructor
-    Opt_PMc (vector<string> data, double OptBoundPrc, unsigned &p );
+    Opt_PMc (std::vector<std::string> data, double OptBoundPrc, unsigned &p );
     /// Destructor
     virtual ~Opt_PMc();
 
-    long int Adjust_param(TNode *node, vector<double> opt);
+    long int Adjust_param(TNode *node, std::vector<double> opt);
 
     long int Adjust_Fparam(TNode *node, int Pndx, double Pval);
 
@@ -399,11 +399,11 @@ class Opt_DMc : public OptParameter
     public:
 
     /// Constructor
-    Opt_DMc (vector<string> data, double OptBoundPrc, unsigned &p );
+    Opt_DMc (std::vector<std::string> data, double OptBoundPrc, unsigned &p );
     /// Destructor
     virtual ~Opt_DMc();
 
-    long int Adjust_param(TNode *node, vector<double> opt);
+    long int Adjust_param(TNode *node, std::vector<double> opt);
 
     long int Adjust_Fparam(TNode *node, int Pndx, double Pval);
 
