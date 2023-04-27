@@ -291,7 +291,7 @@ void Data_Manager::get_db_specs_txt()
         exit(1);
     }
     DataTarget = db_specs_object[keys::DTarget[mode]].dump();
-    if (DataSelect.empty())  {
+    if (DataTarget.empty())  {
         std::cout << "Error: No keyword for \""
                   << keys::DTarget[mode] <<"\" found in the task definition" << std::endl;
         exit(1);
@@ -318,7 +318,8 @@ void Data_Manager::get_db_specs_txt()
                   <<keys::OptSet[mode]<<"\" found in the task definition" << std::endl;
         exit(1);
     }
-    MPI = db_specs_object.value(keys::MPI[mode], MPI);
+    common::JsonFree optset_object = fromJsonString(OptSet);
+    MPI = optset_object.value(keys::MPI[mode], MPI);
 }
 
 // Reading data from EJDB database

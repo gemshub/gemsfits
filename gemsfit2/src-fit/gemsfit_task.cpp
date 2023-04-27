@@ -1011,7 +1011,7 @@ void TGfitTask::get_DataTarget ( )
         }
     }
 
-    // get DFUN
+    // get NFUN
     if( data_tar_object.contains(keys::NFUN) ) {
         for (const auto& element : data_tar_object[keys::NFUN]) {
             Opti->h_optNF = true;
@@ -1042,8 +1042,8 @@ void TGfitTask::get_DataTarget ( )
             Tfun->nestfun.back().expr = element->value(keys::expr, std::string("NULL"));
             Tfun->nestfun.back().Telem = element->value(keys::Telem, std::vector<std::string>{});
             Tfun->nestfun.back().Tformula = element->value(keys::Tforumla, std::vector<std::string>{});
-            Tfun->nestfun.back().sT = element->value(keys::sT, 0.);
-            Tfun->nestfun.back().sP = element->value(keys::sP, 0.);
+            Tfun->nestfun.back().sT = element->value(keys::sT, -1.0);
+            Tfun->nestfun.back().sP = element->value(keys::sP, -1.0);
             //Tfun->nestfun.back().Ptype = element->value(keys::PType[mode], std::string("NULL"));
             //if (Tfun->nestfun.back().Ptype == "NULL")
             //   { std::cout << "Data Target->NFUN->Ptype has to be speficied!"<< std::endl; exit(1);} // ERROR
