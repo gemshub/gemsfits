@@ -205,6 +205,12 @@ void ChartData::fromJsonNode( const jsonio17::JsonBase& object )
     if( object.get_value_via_path( "b_color", b_col_vec, {} ) && b_col_vec.size() >= 3 )
         for( ii=0; ii<3; ii++)
             b_color[ii] = b_col_vec[ii];
+    auto arr = object.value<std::vector<double>>("region", std::vector<double>{0,0,0,0} );
+    std::copy_n(arr.begin(), 4, region.begin());
+    arr = object.value("part", std::vector<double>{0,0,0,0} );
+    std::copy_n(arr.begin(), 4, part.begin());
+    auto iarr = object.value("b_color", std::vector<int>{});
+    std::copy_n(iarr.begin(), 3, b_color.begin());
 
     linesdata.clear();
     SeriesLineData linebuf;

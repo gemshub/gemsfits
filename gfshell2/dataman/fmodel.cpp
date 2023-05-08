@@ -407,15 +407,20 @@ void TMatrixModel::CloseGraph()
       graph_dlg->close();
 }
 
-void TMatrixModel::setGraphData( QSortFilterProxyModel */*pmodel*/,  const std::string& title )
+void TMatrixModel::setGraphData( QSortFilterProxyModel *pmodel,  const std::string& title )
 {
     if(!chart_data)
     {
-        chart_models.push_back( std::shared_ptr<jsonui17::ChartDataModel>( new jsonui17::ChartDataModel( this )) );
+        chart_models.push_back( std::shared_ptr<jsonui17::ChartDataModel>( new jsonui17::ChartDataModel( pmodel )) );
         chart_models[0]->setXColumns( xColumns );
         chart_models[0]->setYColumns( yColumns, true );
         chart_data = std::make_shared<jsonui17::ChartData>( chart_models, title, "x", "y" );
-    }
+        connect( pmodel, &QSortFilterProxyModel::layoutChanged,
+                 [this]() {
+            std::cout << "YYYYYYYYYYYY" << std::endl;
+            chart_models.back()->modelSortUpdated();
+        });
+   }
 }
 
 void TMatrixModel::showGraphData( QSortFilterProxyModel *pmodel,  const std::string& title )
