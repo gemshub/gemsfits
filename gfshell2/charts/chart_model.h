@@ -32,6 +32,7 @@ public Q_SLOTS:
     void modelRowsRemoved(QModelIndex parent, int start, int end);
     void modelColumnsAdded(QModelIndex parent, int start, int end);
     void modelColumnsRemoved(QModelIndex parent, int start, int end);
+    void modelSortUpdated();
 
 signals:
     void changedXSelections();
@@ -39,7 +40,7 @@ signals:
 
 public:
 
-    explicit ChartDataModel( QAbstractTableModel* tableModel, QObject* parent = nullptr);
+    explicit ChartDataModel( QAbstractItemModel* tableModel, QObject* parent = nullptr);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
@@ -161,7 +162,7 @@ public:
 protected:
 
     /// Extern Table wir
-    QAbstractTableModel *m_model;
+    QAbstractItemModel *m_model;
 
     /// GRAPHTYPES ( LineChart,  AreaChart,  BarChart, Isolines ... )
     GRAPHTYPES graphType = LineChart;

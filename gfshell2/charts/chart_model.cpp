@@ -5,7 +5,7 @@
 
 namespace jsonui17 {
 
-ChartDataModel::ChartDataModel( QAbstractTableModel *tableModel, QObject *parent) :
+ChartDataModel::ChartDataModel( QAbstractItemModel *tableModel, QObject *parent) :
     QAbstractTableModel(parent), m_model(tableModel)
 {
     //    connect signals from the model
@@ -150,6 +150,13 @@ void ChartDataModel::modelColumnsRemoved(QModelIndex m_parent, int start, int en
 {
     beginRemoveColumns(indexM(m_parent), start, end);
     endRemoveColumns();
+}
+
+void ChartDataModel::modelSortUpdated()
+{
+    QModelIndex topLeft = createIndex(0,0);
+    QModelIndex bottomRight = createIndex( rowCount(topLeft) ,columnCount(topLeft));
+    emit dataChanged( topLeft, bottomRight );
 }
 
 // ------------------------ work with selection

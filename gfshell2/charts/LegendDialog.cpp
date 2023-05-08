@@ -1,3 +1,4 @@
+#include <iostream>
 #include <QColorDialog>
 #include <QFontDialog>
 #include "ui_LegendDialog4.h"
@@ -73,8 +74,9 @@ void LegendDialog::CmBackground()
     QColor cl = QColorDialog::getColor(backgroundColor, this);
 
     if( cl.isValid() )
-    {   QPalette pl = ui->pColor->palette();
-        pl.setColor( QPalette::Window, cl);
+    {
+        QPalette pl = ui->pColor->palette();
+        pl.setColor(QPalette::Window, cl);
         ui->pColor->setPalette(pl);
         backgroundColor = cl;
     }
@@ -127,7 +129,7 @@ void LegendDialog::setChartData()
     ui->pfYn->setText( str.setNum (graph->part[3]) );
 
     backgroundColor = graph->getBackgroundColor();
-    ui->pColor->setAutoFillBackground( true);
+    ui->pColor->setAutoFillBackground(true);
     QPalette pl = ui->pColor->palette();
     pl.setColor( QPalette::Window, backgroundColor );
     ui->pColor->setPalette(pl);

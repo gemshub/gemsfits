@@ -152,7 +152,7 @@ void ChartData::fromBsonObject( const common::JsonFree& object )
     std::copy_n(arr.begin(), 4, region.begin());
     arr = object.value("part", std::vector<double>{0,0,0,0} );
     std::copy_n(arr.begin(), 4, part.begin());
-    auto iarr = object.value("region", std::vector<int>{});
+    auto iarr = object.value("b_color", std::vector<int>{});
     std::copy_n(iarr.begin(), 3, b_color.begin());
 
     linesdata.clear();
