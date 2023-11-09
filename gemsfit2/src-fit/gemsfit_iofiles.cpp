@@ -597,13 +597,15 @@ TGfitPath::TGfitPath(int c, char *v[]):
             dir = "work/";
             int pos = 0;
             std::string input_file = gems3LstFilePath, new_input;
-            do
+            if(!input_file.empty())
             {
-                new_input = input_file.substr(pos+1, input_file.size());
-                pos = new_input.find("/");
-                input_file = new_input;
-            } while (pos >-1);
-
+                do
+                {
+                    new_input = input_file.substr(pos+1, input_file.size());
+                    pos = new_input.find("/");
+                    input_file = new_input;
+                } while (pos >-1);
+            }
             pos = input_file.find("-dat.lst");
             if (pos <0)
             {
