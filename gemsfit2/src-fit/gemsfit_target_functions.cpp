@@ -734,7 +734,8 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
     // Get aqueous phase pHm
     if ((objfun.exp_CN == keys::pHm)  && (ccPH == *keys::aq) && (PHndx >=0))
     {
-        DCndx = sys->NodT[i]->DC_name_to_xCH("H+"); // think about a way to find H+ name in gems and not hard code it!!!!
+        //DCndx = sys->NodT[i]->DC_name_to_xCH("H<+>"); // think about a way to find H+ name in gems and not hard code it!!!!
+        DCndx = sys->NodT[i]->Phx_to_DCx(1) - 2; // Returns the DCH index of the first DC belonging to the 2nd system phase 1st being the aq phase, one before last DC is H+
         DCndx2 = sys->NodT[i]->DC_name_to_xCH("HCl@");
         log_gama = log10(sys->NodT[i]->Get_gDC(DCndx));
         HCl_ = sys->NodT[i]->Get_cDC(DCndx2);

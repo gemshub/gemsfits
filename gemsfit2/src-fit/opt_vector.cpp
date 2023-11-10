@@ -564,23 +564,31 @@ Opt_PMc::Opt_PMc(std::vector<std::string> data, double OptBoundPrc, unsigned &p)
             optFP.back()->Pndx = i;
             optFP.back()->Pname = ( iIPCN.empty() ? "PMc" : iIPCN);
             Pval_to_optF (p, object, optFP.back());
+            Pindexes[optFP.back()->Pname]=i;
             p++;
         }
         else if (iPType == "S") {
             optSP.push_back( new Opt_PMc::S_parameter);
             optSP.back()->Pndx = i;
-            optSP.back()->Pname = "PMc";
+            optSP.back()->Pname = ( iIPCN.empty() ? "PMc" : iIPCN);
             if (!object.contains(keys::IV[mode])) {
-                std::cout << "Parameter \"S\"-type " << p << " (G0) has no \"spec\" defined! "<< std::endl;
+                std::cout << "Parameter \"S\"-type " << p << " (PMC) has no \"spec\" defined! "<< std::endl;
                 exit(1);
             }
             iv = object.value(keys::IV[mode], 0.);
             optSP.back()->IV = iv;
             optSP.back()->opt = iv;
+            Pindexes[optSP.back()->Pname]=i;
             p++;
         }
         else if (iPType == "L") {
-           std::cout << "There is no option at this point to have a PMc parameter as L-Type (linked)! "<<std::endl;
+            optLP.push_back( new Opt_PMc::L_parameter);
+            optLP.back()->Pndx = i;
+            optLP.back()->Pname = ( iIPCN.empty() ? "PMc" : iIPCN);
+            Pval_to_optL (p, object, optLP.back());
+            Pindexes[optLP.back()->Pname]=i;
+            p++;
+           //std::cout << "There is no option at this point to have a PMc parameter as L-Type (linked)! "<<std::endl;
            exit(1);
         }
         else {
@@ -600,6 +608,10 @@ long int Opt_PMc::Adjust_param(TNode *node, std::vector<double> opt)
     }
 
     // R param
+
+    // L param
+    Opt_PMc::Adjust_Lparam( node);
+
 return 1;
 }
 
@@ -616,6 +628,23 @@ long int Opt_PMc::Adjust_Sparam(TNode *node)
         Adjust_Fparam(node, optSP[i]->Pndx, optSP[i]->opt);
     }
 return 1;
+}
+
+long int Opt_PMc::Adjust_Lparam(TNode *node)
+{
+    // it does not loop if there are no optLP
+    for (unsigned int i=0; i <optLP.size(); ++i )
+    {
+        for (unsigned int j=0; j < optLP[i]->L_param.size(); ++j )
+        {
+            double lparam = 0.0;
+            node->Get_PMc(lparam, Pindexes[optLP[i]->L_param[j]]);
+            double nparam = lparam*optLP[i]->L_param_coef[j];
+            node->Set_PMc(nparam, optLP[i]->Pndx);
+            optLP[i]->opt = nparam;
+        }
+    }
+    return 1;
 }
 
 

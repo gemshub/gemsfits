@@ -1,7 +1,7 @@
 
 TEMPLATE	= app
 LANGUAGE        = C++
-TARGET		= gemsfits
+TARGET		= gemsshell
 VERSION         = 1.4.0
 
 DEFINES         += Use_mt_mode
