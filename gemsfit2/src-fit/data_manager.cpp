@@ -379,9 +379,12 @@ void Data_Manager::get_EJDB()
             }
         }
 
-        qsT = data_sel_object.value(keys::sT, qsT);
-        qsP = data_sel_object.value(keys::sP, qsP);
-
+        if( data_sel_object.contains(keys::sT) ) {
+            qsT = data_sel_object.value(keys::sT, qsT);
+        }
+        if( data_sel_object.contains(keys::sP) ) {
+            qsP = data_sel_object.value(keys::sP, qsP);
+        }
         if( data_sel_object.contains(keys::samplelist) ) {
             Nsamples = data_sel_object[keys::samplelist].size();
             for (const auto& element : data_sel_object[keys::samplelist])
@@ -585,7 +588,7 @@ void Data_Manager::get_EJDB()
 #ifdef CHECK_LOAD
     std::fstream test_out("experiments.log", std::ios::out);
     for (auto const& item : experiments) {
-           test_out << *item << "\n";
+        test_out << *item << "\n";
     }
 #endif
 }
@@ -703,7 +706,7 @@ void Data_Manager::bson_to_Data_Manager(const std::string& data, int pos)
             if( element->contains(keys::phDC) ) {
                 for (const auto& sub_el : (*element)[keys::phDC]) {
                     experiments[pos]->expphases.back()->phDC.push_back( new samples::phases::dcomps );
-                    experiments[pos]->expphases.back()->phDC.back()->DC = sub_el->value(keys::MR, std::string());;
+                    experiments[pos]->expphases.back()->phDC.back()->DC = sub_el->value(keys::DC, std::string());;
                     // adding dependent compoponents properties
                     if( sub_el->contains(keys::DCprop) ) {
                         for (const auto& sub_el2 : (*sub_el)[keys::DCprop])  {

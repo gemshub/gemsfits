@@ -199,6 +199,9 @@ void JsonParser::parse_value( int depth, const std::string &name, JsonFree& obje
     case jsQuote: {
         std::string str;
         parse_string( str );
+        if(str.empty()) {
+            break;
+        }
         // conwert all pair ('\\''\n') to one simbol '\n' and other
         undump_string( str );
         if(name.empty()) {
