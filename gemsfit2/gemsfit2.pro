@@ -36,7 +36,7 @@ VERSION         = 2.3.0
 # GEMS3K commit 66761a7
 
 DEFINES         += IPMGEMPLUGIN
-DEFINES         += useomp
+#DEFINES         += useomp
 DEFINES         += _MYNOZLIB
 CONFIG          += c++17
 DEFINES         += OLD_EJDB # compile using ejdb1

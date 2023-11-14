@@ -89,7 +89,7 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
         NodT.push_back( new TNode );
     }
 
-    Opti = new optimization ( );
+    Opti = new optimization;
     gpf->flog << "10. gemsfit_task.cpp(94). Initializing the Target function structure & get_DatTarget(); " << std::endl;
     Tfun = new TargetFunction;
 
@@ -996,8 +996,14 @@ void TGfitTask::get_DataTarget ( )
             if (Tfun->objfun.back().exp_CT == "NULL")
             { std::cout << "Type of compared property has to be specified in Data Target->OFUN->CT!"<< std::endl; exit(1);} // ERROR
             Tfun->objfun.back().exp_phase = element->value(keys::EPH[mode], std::string("NULL"));
-            if (Tfun->objfun.back().exp_phase == "NULL" && Tfun->objfun.back().exp_CT != keys::property)
-            { std::cout << "Phase name has to be specified in Data Target->OFUN->EPH!"<< std::endl; exit(1);} // ERROR
+            if (Tfun->objfun.back().exp_phase == "NULL") {
+                 if( Tfun->objfun.back().exp_CT != keys::property) {
+                     std::cout << "Phase name has to be specified in Data Target->OFUN->EPH!"<< std::endl; exit(1);
+                 } // ERROR
+                 else {
+                   Tfun->objfun.back().exp_phase =  Tfun->objfun.back().exp_CT;
+                 }
+            }
             Tfun->objfun.back().exp_DCP = element->value(keys::DCP, std::string("NULL"));
             if (Tfun->objfun.back().exp_DCP == "NULL" && (Tfun->objfun.back().exp_CT == keys::DC))
             { std::cout << "Name of dependent component compared property has to be specified in Data Target->OFUN->DCP!"<< std::endl; exit(1);} // ERROR

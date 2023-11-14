@@ -159,7 +159,7 @@ void optimization::OptParameterCreate ()
             if( object.contains(keys::DMc[mode]) ) {
                 for (const auto& element : object[keys::DMc[mode]]) {
                     temp = element->value(keys::PDCC[mode], std::vector<std::string>{});
-                    outDMc.insert(outPMc.end(), temp.begin(), temp.end());
+                    outDMc.insert(outDMc.end(), temp.begin(), temp.end());
                 }
             }
         }
