@@ -1250,10 +1250,10 @@ void TGfitTask::set_DH_Helgeson (int n)
         NodT[n]->Set_PMc(Wao, 1 );
         NodT[n]->Set_PMc(0, 4 );
 
-        TMulti *multi = NodT[n]->pMulti();
+        //TMulti *multi = NodT[n]->pMulti();
 
         // aq_gen has index 0
-        TSolMod *sol = multi->pTSolMod(0);
+        TSolMod *sol = (TSolMod*)(NodT[n]->get_ptrTSolMod(0));
         sol->Set_Felect_bc(0, Wbgama, Wao);
 
     } else

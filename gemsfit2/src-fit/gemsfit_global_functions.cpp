@@ -393,17 +393,15 @@ void tsolmod_wrap( double &residual, const std::vector<double> &opt, TGfitTask *
     for (unsigned int i=0; i<sys->NodT.size(); ++i)
     {
 
-        TMulti *multi = sys->NodT[i]->pMulti();
-
-        unsigned int sizeFIs = multi->get_sizeFIs();
-
+        unsigned int sizeFIs = sys->NodT[i]->get_sizeTSolMod();
         for (unsigned j=0; j<sizeFIs; j++)
         {
-        TSolMod *sol = multi->pTSolMod(j);
-        multi->Access_GEM_IMP_init();
+        TSolMod *sol = (TSolMod*)(sys->NodT[i]->get_ptrTSolMod(j));
+        sys->NodT[i]->Access_GEM_IMP_init();
         sol->PTparam();
         sol->MixMod();
         }
+
     }
 
     if (sys->Opti->OptTuckey == 1)

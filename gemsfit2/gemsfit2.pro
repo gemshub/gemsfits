@@ -35,20 +35,28 @@ TARGET		= gemsfit2
 VERSION         = 2.3.0
 # GEMS3K commit 66761a7
 
-DEFINES         += IPMGEMPLUGIN
-#DEFINES         += useomp
-DEFINES         += _MYNOZLIB
-CONFIG          += c++17
-DEFINES         += OLD_EJDB # compile using ejdb1
-DEFINES         += CHECK_LOAD # to generate print for initial data after read input configuration.
-
-#QMAKE_CXXFLAGS += -O3
-#QMAKE_LFLAGS += -O3
-
 CONFIG -= qt
 CONFIG += warn_on
 CONFIG += console
 CONFIG += serial release
+CONFIG += c++17
+
+# check settengs
+#CONFIG += sanitaze sanitaze_thread
+#DEFINES         += useomp
+#DEFINES += OVERFLOW_EXCEPT  #compile with nan inf exceptions
+DEFINES += CHECK_LOAD # to generate print for initial data after read input configuration.
+
+DEFINES += OLD_EJDB # compile using ejdb1
+
+DEFINES += IPMGEMPLUGIN
+#DEFINES += NODEARRAYLEVEL
+#DEFINES += USE_NLOHMANNJSON
+#DEFINES += USE_THERMOFUN
+#DEFINES += USE_THERMO_LOG
+
+#QMAKE_CXXFLAGS += -O3
+#QMAKE_LFLAGS += -O3
 
 CONFIG( release,  debug|release ) {
         message( "Configuring for release build ..." )

@@ -17,6 +17,7 @@
 // E-mail gems2.support@psi.ch
 //-------------------------------------------------------------------
 
+#include <iostream>
 #include <QLabel>
 #include <QFileDialog>
 #include <QCloseEvent>

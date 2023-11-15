@@ -4,16 +4,19 @@ LANGUAGE        = C++
 TARGET		= gemsshell
 VERSION         = 1.4.0
 
-DEFINES         += Use_mt_mode
-#DEFINES         += NODEARRAYLEVEL
-DEFINES         += IPMGEMPLUGIN
-#DEFINES         += _MYNOZLIB
-DEFINES         += OLD_EJDB # compile using ejdb1
-
 #CONFIG -= warn_on
 #CONFIG += warn_off
 CONFIG += thread
 CONFIG += c++17
+
+DEFINES         += OLD_EJDB # compile using ejdb1
+
+#DEFINES         += Use_mt_mode
+DEFINES         += IPMGEMPLUGIN
+#DEFINES += NODEARRAYLEVEL
+#DEFINES += USE_NLOHMANNJSON
+#DEFINES += USE_THERMOFUN
+#DEFINES += USE_THERMO_LOG
 
 QT   += core gui widgets
 QT   += svg printsupport concurrent

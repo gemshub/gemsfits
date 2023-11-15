@@ -17,6 +17,7 @@
 // E-mail gems2.support@psi.ch
 //-------------------------------------------------------------------
 
+#include <iostream>
 #include <QFileDialog>
 #include "PreferencesDialog.h"
 #include "ui_PreferencesDialog.h"

@@ -22,6 +22,7 @@
 #define _gemsfit_iofiles_h_
 
 #include <string>
+#include <fstream>
 #include "node.h"
 //#include "opt_vector.h"
 #include <sys/stat.h>

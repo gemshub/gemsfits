@@ -17,6 +17,7 @@
 // E-mail gems2.support@psi.ch
 //-------------------------------------------------------------------
 
+#include <iostream>
 #include "FITMainWindow.h"
 #include "ui_FITMainWindow.h"
 #include "HelpWindow.h"
@@ -565,7 +566,7 @@ void FITMainWindow::set_record_edit(const std::string &json_text)
     recordEdit->setText(current_json.c_str());
 }
 
-string FITMainWindow::get_record_edit()
+std::string FITMainWindow::get_record_edit()
 {
     std::string editor_data;
 
