@@ -27,26 +27,23 @@
 //-------------------------------------------------------------------
 //
 
+#ifndef __unix
+#include <io.h>
+#endif
+
+#include <cmath>
+#include <iomanip>
+#include <memory>
 #include "gemsfit_task.h"
 #include "gdatastream.h"
 #include "gemsfit_iofiles.h"
 #include "keywords.h"
 #include "gemsfit_global_functions.h"
 //#include "gemsfit_nested_functions.h"
-#include <cmath>
 #include "gemsfit_target_functions.h"
 #include "gemsfit_nested_functions.h"
-#include <iomanip>
 #include "s_solmod.h"
 #include "s_formula.h"
-#include <memory>
-
-#ifndef __unix
-#include <io.h>
-#endif
-
-
-//using namespace std;
 
 int master_counter;
 //int sizeTP;

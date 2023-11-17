@@ -332,7 +332,15 @@ void EjdbDBClient::select_query_omp(const std::string& collname, const std::stri
     }
     bson_finish(&bsq1);
 
-    EJQ *q = ejdbcreatequery(ejdb_db->ejDB, &bsq1, NULL, 0, NULL);
+    // make order
+    bson bshits1;
+    bson_init_as_query(&bshits1);
+    bson_append_start_object(&bshits1, "$orderby");
+    bson_append_int(&bshits1, "sample", 1);
+    bson_append_finish_object(&bshits1);
+    bson_finish(&bshits1);
+
+    EJQ *q = ejdbcreatequery(ejdb_db->ejDB, &bsq1, NULL, 0, &bshits1);
     ErrorIf( !q, "TEJDB0015", "Error in query (test)" );
     uint32_t count = 0;
     TCXSTR *log = tcxstrnew();
@@ -340,7 +348,7 @@ void EjdbDBClient::select_query_omp(const std::string& collname, const std::stri
     //fprintf(stderr, "%s", TCXSTRPTR(log));
     //std::cout << count << " records in collection " << collname << std::endl;
 
-#ifdef useomp
+#ifdef useomp1
     omp_set_num_threads(num_threads);
 #ifdef buildWIN32
     #pragma omp parallel for schedule(static)
@@ -358,6 +366,7 @@ void EjdbDBClient::select_query_omp(const std::string& collname, const std::stri
     tclistdel(qres);
     tcxstrdel(log);
     ejdbquerydel(q);
+    bson_destroy(&bshits1);
     bson_destroy(&bsq1);
 
     close_collection();
@@ -416,6 +425,7 @@ void EjdbDBClient::all_query(const std::string& collname, const std::string& que
         setfnc(current_key, oidhex);
     }
 
+    bson_destroy(&bshits1);
     bson_destroy(&bsq1);
     tclistdel(q1res);
     tcxstrdel(log);

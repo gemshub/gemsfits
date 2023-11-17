@@ -18,6 +18,7 @@
 
 #ifndef CalcDialog_included
 #define CalcDialog_included
+
 #include <QDialog>
 #include <QButtonGroup>
 

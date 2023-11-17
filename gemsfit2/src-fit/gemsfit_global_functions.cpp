@@ -34,13 +34,12 @@
  *
  */
 
-
+#include <iomanip>
 #include "gemsfit_global_functions.h"
 #include "gemsfit_target_functions.h"
 #include "gemsfit_nested_functions.h"
 #include "gemsfit_task.h"
 #include "statistics.h"
-#include <iomanip>
 
 double Equil_objective_function_callback( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data )
 {
@@ -138,7 +137,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         {
             sys->Opti->optParam[e]->Adjust_param(sys->NodT[i], opt);
         }
-//        cout<<"adjusting parameters for: "<< i+1 <<" sample "<< sys->experiments[i]->sample << endl;
+        //std::cout<<"adjusting parameters for: "<< i+1 <<" sample "<< sys->experiments[i]->sample << std::endl;
     }
 
     /// NESTED FUNCTION

@@ -23,13 +23,9 @@
 
 #include <string>
 #include <fstream>
-#include "node.h"
-//#include "opt_vector.h"
 #include <sys/stat.h>
 #include <ctime>
-
-//using namespace std;
-
+#include "node.h"
 
 
 /**

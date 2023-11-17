@@ -38,12 +38,12 @@ VERSION         = 2.3.0
 CONFIG -= qt
 CONFIG += warn_on
 CONFIG += console
+CONFIG += sanitaze sanitaze_thread
 CONFIG += serial release
 CONFIG += c++17
 
 # check settengs
-#CONFIG += sanitaze sanitaze_thread
-#DEFINES         += useomp
+DEFINES         += useomp
 #DEFINES += OVERFLOW_EXCEPT  #compile with nan inf exceptions
 DEFINES += CHECK_LOAD # to generate print for initial data after read input configuration.
 
@@ -110,15 +110,13 @@ CONFIG( serial, serial|mpi ) {
 
 FIT_CPP      =  ./src-fit
 GEMS3K_CPP   =  ../../standalone/GEMS3K
-KEYS_CPP     =  ../csvtoejdb/src-csvtoejdb
 MUP_CPP      =  ./muparser/src
 COMMON_CPP  =  ../common
 
 FIT_H        =   $$FIT_CPP
 GEMS3K_H     =   $$GEMS3K_CPP
-KEYS_H       =   $$KEYS_CPP
 MUP_H        =   $$MUP_CPP
-COMMON_H     =  $$COMMON_CPP
+COMMON_H     =   $$COMMON_CPP
 
 #EJDB_PATH = ../../standalone/EJDB
 
@@ -162,9 +160,6 @@ include($$GEMS3K_CPP/gems3k.pri)
 include($$MUP_CPP/muparser.pri)
 #include($$EJDB_CPP/tcejdb.pri)
 #include($$EJDB_PATH/ejdb.pri)
-
-#CONFIG(release, debug|release): LIBS += -L$$EJDB_LIB_PATH/release/src/ -lejdb
-#CONFIG(debug, debug|release): LIBS += -L$$EJDB_LIB_PATH/debug/src/ -lejdb
 
 contains(DEFINES, OLD_EJDB) {
 CONFIG(release, debug|release): LIBS += -lejdb -lyaml-cpp

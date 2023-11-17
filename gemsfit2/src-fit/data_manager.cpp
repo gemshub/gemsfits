@@ -514,10 +514,15 @@ void Data_Manager::get_EJDB()
 
     common::SetReaded_f setfnc = [&](const std::string& json_rec)
     {
-        experiments.push_back( new samples );
-        experiments.back()->idsample= 0;
+        int pos = -1;
+        {
+            std::lock_guard<std::shared_mutex> g(select_query_mutex);
+            experiments.push_back( new samples );
+            experiments.back()->idsample= 0;
+            pos = experiments.size()-1;
+        }
         // adding the data returned by the selection query into the data storage class
-        bson_to_Data_Manager(json_rec, experiments.size()-1);
+        bson_to_Data_Manager(json_rec, pos);
     };
 
     gpf->flog << "05. data_manager.cpp(365). Adding the data returned by the selection query into the data structure; " << std::endl;
@@ -626,6 +631,10 @@ std::string Data_Manager::default_unit_to_property(const std::string& property_n
 
 void Data_Manager::bson_to_Data_Manager(const std::string& data, int pos)
 {
+    if(pos<0) {
+        return;
+    }
+
     common::JsonFree data_object = fromJsonString(data);
 
     experiments[pos]->expdataset = data_object.value(keys::expdataset, std::string());

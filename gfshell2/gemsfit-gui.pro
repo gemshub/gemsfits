@@ -1,7 +1,7 @@
 
 TEMPLATE	= app
 LANGUAGE        = C++
-TARGET		= gemsshell
+TARGET		= fits_shell
 VERSION         = 1.4.0
 
 #CONFIG -= warn_on
@@ -52,14 +52,12 @@ DATAMAN_CPP  =  ./dataman
 DIALOGS_CPP  =  ./dialogs
 COMMON_CPP  =  ../common
 GEMS3K_CPP   =  ../../standalone/GEMS3K
-KEYS_CPP     =  ../csvtoejdb/src-csvtoejdb
 
 CHARTS_H     =  $$CHARTS_CPP
 DATAMAN_H    =  $$DATAMAN_CPP
 DIALOGS_H    =  $$DIALOGS_CPP
 COMMON_H     =  $$COMMON_CPP
 GEMS3K_H     =  $$GEMS3K_CPP
-KEYS_H       =   $$KEYS_CPP
 
 
 win32{

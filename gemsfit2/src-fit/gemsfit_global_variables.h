@@ -16,7 +16,6 @@
 #define GEMSFIT_GLOBAL_VARIABLES_H
 
 #include <string>
-//using namespace std;
 
 // MPI variable declarations
 //namespace mpispace

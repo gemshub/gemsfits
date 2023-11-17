@@ -32,13 +32,12 @@
  */
 
 
-
-#include "gemsfit_target_functions.h"
-#include "keywords.h"
 #include <boost/lexical_cast.hpp>
 #include <boost/locale.hpp>
 #include <muParser.h>
 #include "muparserfix.h"
+#include "gemsfit_target_functions.h"
+#include "keywords.h"
 
 void to_log10(double &Qnt, double &Qerror)
 {

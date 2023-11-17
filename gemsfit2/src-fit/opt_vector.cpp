@@ -22,12 +22,12 @@
 //-------------------------------------------------------------------
 //
 
+#include <sstream>
+#include <muParser.h>
 #include "keywords.h"
 #include "gemsfit_iofiles.h"
 #include "gemsfit_global_variables.h"
 #include "gemsfit_target_functions.h"
-#include <sstream>
-#include <muParser.h>
 
 #if defined(_UNICODE)
 #include "muparserfix.h"

@@ -1,16 +1,15 @@
          HEADERS += $$DATAMAN_H/help.h \
                     $$DATAMAN_H/fmodel.h \
-                    $$KEYS_H/keywords.h \
-    $$PWD/gui_service.h \
-    $$PWD/json_model.h \
-    $$PWD/json_view.h
+                    $$DATAMAN_H/gui_service.h \
+                    $$DATAMAN_H/json_model.h \
+                    $$DATAMAN_H/json_view.h
 
          SOURCES += $$DATAMAN_CPP/help.cpp \
                     $$DATAMAN_CPP/main.cpp \
                     $$DATAMAN_CPP/gemsfit_iobson.cpp \
                     $$DATAMAN_CPP/fmodel.cpp \
-    $$PWD/gui_service.cpp \
-    $$PWD/json_model.cpp \
-    $$PWD/json_view.cpp
+                    $$DATAMAN_CPP/gui_service.cpp \
+                    $$DATAMAN_CPP/json_model.cpp \
+                    $$DATAMAN_CPP/json_view.cpp
 
 

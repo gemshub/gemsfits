@@ -49,21 +49,16 @@
 
 #include <vector>
 #include <string>
+#include <thread>
+#include <shared_mutex>
+#include <algorithm>
 #include "node.h"
 #include "v_json.h"
-#ifdef buildWIN32
-//#include <tcejdb/ejdb.h>
-#else
-//#include "ejdb.h"
-#endif
-#include <algorithm>
 #include "optimization.h"
 
 //#ifdef USE_MPI
 #include "omp.h"
 //#endif
-
-//using namespace std;
 
 
 // The Data_Manager class retrieves and stores optimization-specific data from the GEMSFIT input file
@@ -97,6 +92,8 @@ class Data_Manager : public TNode
         * @date 06.11.2012
         */
         virtual ~Data_Manager( );
+
+        mutable std::shared_mutex select_query_mutex;
 
         typedef std::vector<int>     int_v;
         typedef std::vector<double>  double_v;
