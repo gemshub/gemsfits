@@ -1,0 +1,3 @@
+[submodule "gems3k"]
+	path = gems3k
+	url = git@bitbucket.org:gems4/gems3k.git

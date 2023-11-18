@@ -1,5 +1,6 @@
 #!/bin/bash
 # Installing dependencies needed to build gemsfits on (k)ubuntu linux 20.04 or MacOS
+# ejdb(wjdb2), yaml-cpp, nlopt, omp, boost, armadillo
 
 if [ "$(uname)" == "Darwin" ]; then
 
@@ -10,14 +11,14 @@ if [ "$(uname)" == "Darwin" ]; then
 
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
 
-    sudo apt install libarmadillo-dev libjansson-dev libboost-all-dev libomp-11-dev
+    sudo apt install libarmadillo-dev libboost-all-dev libomp-11-dev
     EXTN=so
 
 fi
 
 #sudo rm -f /usr/local/lib/libnlopt.*
 #sudo rm -f /usr/local/lib/libejdb.*
-sudo rm -f /usr/local/lib/libejdb2.*
+#sudo rm -f /usr/local/lib/libejdb2.*
 #sudo rm -f /usr/local/lib/libyaml-cpp.*
 
 BUILD_TYPE=Release
