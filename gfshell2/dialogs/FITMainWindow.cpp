@@ -500,16 +500,16 @@ int FITMainWindow::defineModuleKeysList( int nRT )
     std::vector<std::string> keyList;
     int nKeys = rtEJ[nRT].getKeyList(keyFilter, keyList);
 
-    //vector<int> colSizes;
-    //for(jj=0; jj<rtEJ[nRT].keySize(); jj++)
-    // colSizes.push_back( 0 );
+    std::vector<size_t> colSizes;
+    for(size_t jj=0; jj<rtEJ[nRT].keySize(); jj++)
+     colSizes.push_back( 0 );
 
     // define key list
     keyTable->setRowCount(nKeys);
 
     // set up table sizes
     QFontMetrics fm(keyTable->fontMetrics());
-    int charWidth = fm.horizontalAdvance("5");
+    int charWidth = fm.horizontalAdvance("B");
     int charHeight = fm.height();
 
     for( ii=0; ii<nKeys; ii++ )
@@ -520,9 +520,8 @@ int FITMainWindow::defineModuleKeysList( int nRT )
             ln = keyList[ii].find_first_of(':', kk);
             keyfld = std::string(keyList[ii], kk, ln-kk);
             strip(keyfld);
-            //colsz = keyfld.length()+1;
-            //if( colsz > colSizes[jj])
-            //    colSizes[jj] = colsz;
+            if( keyfld.length()+1 > colSizes[jj])
+                colSizes[jj] = keyfld.length()+1;
             kk = ln+1;
             item = new QTableWidgetItem(tr("%1").arg( keyfld.c_str()));
             keyTable->setItem(ii, jj, item );
@@ -535,7 +534,7 @@ int FITMainWindow::defineModuleKeysList( int nRT )
     }
     for(size_t jj=0; jj<rtEJ[nRT].keySize(); jj++)
     {
-        //keyTable->setColumnWidth(jj, charWidth*colSizes[jj] );
+        keyTable->setColumnWidth(jj, charWidth*colSizes[jj] );
         item = new QTableWidgetItem(tr("%1").arg( rtEJ[nRT].keyFieldName(jj) ));
         //item->setToolTip( ((TCModule*)aMod[nRT])->GetFldHelp(jj));
         keyTable->setHorizontalHeaderItem( jj, item );

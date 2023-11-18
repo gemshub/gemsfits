@@ -51,7 +51,7 @@ CHARTS_CPP   =  ./charts
 DATAMAN_CPP  =  ./dataman
 DIALOGS_CPP  =  ./dialogs
 COMMON_CPP  =  ../common
-GEMS3K_CPP   =  ../../standalone/GEMS3K
+GEMS3K_CPP   =  ../gems3k/GEMS3K
 
 CHARTS_H     =  $$CHARTS_CPP
 DATAMAN_H    =  $$DATAMAN_CPP

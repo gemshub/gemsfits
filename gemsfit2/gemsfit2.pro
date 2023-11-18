@@ -109,7 +109,7 @@ CONFIG( serial, serial|mpi ) {
 }
 
 FIT_CPP      =  ./src-fit
-GEMS3K_CPP   =  ../../standalone/GEMS3K
+GEMS3K_CPP   =  ../gems3k/GEMS3K
 MUP_CPP      =  ./muparser/src
 COMMON_CPP  =  ../common
 
