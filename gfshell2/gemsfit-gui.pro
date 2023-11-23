@@ -2,7 +2,7 @@
 TEMPLATE	= app
 LANGUAGE        = C++
 TARGET		= fits_shell
-VERSION         = 1.4.0
+VERSION         = 2.0.0
 
 #CONFIG -= warn_on
 #CONFIG += warn_off

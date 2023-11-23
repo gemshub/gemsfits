@@ -1,0 +1,36 @@
+name: gemsfit2
+
+dependencies:
+  - gxx_linux-64>=9.4.0  # [linux]
+  - cmake>=3.13
+  - ninja # [unix]
+  - make  # [win]
+  - git
+  - ccache  # [unix]
+  - spdlog
+  - nlohmann_json
+  - spdlog
+  - yaml-cpp
+  - nlopt
+  - libgomp
+  - boost-cpp
+  - armadillo
+  #- gems3k>=4.3.6
+  #- thermofun>=0.4.3
+  - qt>=5.12.5
+  - mesalib
+  - mesa-libgl-cos6-x86_64 # [linux]
+  - libselinux-cos6-x86_64 # [linux]
+  - libxxf86vm-cos6-x86_64 # [linux]
+  - xorg-libxext # [linux]
+  - xorg-libxau # [linux]
+  - xorg-libxdamage # [linux]
+
+
+environment:
+
+  LD_LIBRARY_PATH:                                                   # [unix]
+    - {{ root }}/artifacts/lib                                       # [unix]
+
+  PATH:                                                              # [win]
+    - {{ root }}\artifacts\bin                                       # [win]

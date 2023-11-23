@@ -38,7 +38,7 @@ COMMON_H     =  $$COMMON_CPP
 DEPENDPATH   += $$COMMON_H
 INCLUDEPATH   += $$COMMON_H
 
-GEMS3K_CPP   =  ../../standalone/GEMS3K
+GEMS3K_CPP   =  ../gems3k/GEMS3K
 COMMON_CPP  =  .
 GEMS3K_H     =   $$GEMS3K_CPP
 COMMON_H     =  $$COMMON_CPP
@@ -62,6 +62,6 @@ else {
 }
 
 SOURCES += \
-       dbtest_main.cpp
+       dbtest_main.cxx
 
 

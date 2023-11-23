@@ -32,7 +32,7 @@
 TEMPLATE	= app
 #LANGUAGE        = C++
 TARGET		= gemsfit2
-VERSION         = 2.3.0
+VERSION         = 2.0.0
 # GEMS3K commit 66761a7
 
 CONFIG -= qt

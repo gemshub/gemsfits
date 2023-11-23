@@ -1,0 +1,64 @@
+# C/C++ with GCC
+# Build your C/C++ project with GCC using make.
+# Add steps that publish test results, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/c-cpp/gcc
+
+trigger:
+- master
+- releases/*
+
+jobs:
+- job: Linux
+  pool:
+    vmImage: 'ubuntu-latest'
+
+  steps:
+  - checkout: self
+    submodules: recursive
+  - task: Bash@3
+    inputs:
+      filePath: 'ci/pipelines/install-linux.sh'
+
+  - script: ./ci/pipelines/test.sh
+    displayName: Test
+
+- job: macOS
+  pool:
+    vmImage: 'macOS-latest'
+
+  steps:
+  - checkout: self
+    submodules: recursive
+  - task: Bash@3
+    inputs:
+      filePath: 'ci/pipelines/install-osx.sh'
+
+  - script: |
+        ./ci/pipelines/test.sh
+    displayName: Test
+
+- job: win64_VS
+  pool:
+    vmImage: 'windows-2019'
+
+  steps:
+  - checkout: self
+    submodules: recursive
+  - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
+    displayName: Add conda to PATH
+
+  - script: |
+      conda config --system --set always_yes yes --set changeps1 no
+      conda config --system --append channels conda-forge
+      conda install -n base conda-devenv
+      conda update -q conda
+      conda info -a
+      conda devenv
+      call activate gemsfit2
+    displayName: Create Anaconda environment
+
+  - task: BatchScript@1
+    inputs:
+      filename: 'ci/pipelines/install-VS.bat'
+
+ 
