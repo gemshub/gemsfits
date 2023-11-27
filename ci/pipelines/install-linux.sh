@@ -16,7 +16,8 @@ conda install conda-devenv
 conda update -q conda
 conda info -a
 conda devenv
-source activate gemsfit2
+source activate gemsfits
+./conda-install-dependencies.sh
 mkdir build
 cd build
 # Configure step
