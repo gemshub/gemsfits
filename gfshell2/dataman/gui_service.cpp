@@ -31,7 +31,7 @@ bool ChooseFileOpen(common::TAbstractFile* file, QWidget* par, std::string& temp
                     const char* title, const char *filter)
 {
     if( file && template_path.find('/') == std::string::npos ) {
-        template_path  = file->Dir()+template_path;
+        template_path  = file->WorkDir()+template_path;
     }
 
     QString filt;
@@ -46,6 +46,8 @@ bool ChooseFileOpen(common::TAbstractFile* file, QWidget* par, std::string& temp
     std::replace( fn.begin(), fn.end(), '/', '\\');
 #endif
     if ( !fn.isEmpty() ) {
+        QFileInfo flinfo(fn);
+        common::TAbstractFile::current_work_directory = flinfo.dir().path().toStdString()+"/";
         template_path = fn.toStdString();
         if(file)  {
             file->setMode(std::ios::in);
@@ -64,7 +66,7 @@ bool ChooseFileSave(common::TAbstractFile* file, QWidget* par, std::string& temp
                     const char* title, const char *filter)
 {
     if( file && template_path.find('/') == std::string::npos ) {
-        template_path  = file->Dir()+template_path;
+        template_path  = file->WorkDir()+template_path;
     }
     replace(template_path.begin(), template_path.end(),'\\', '/');
 
@@ -81,6 +83,8 @@ bool ChooseFileSave(common::TAbstractFile* file, QWidget* par, std::string& temp
                                               &selectedFilter, QFileDialog::DontConfirmOverwrite);
 
     if ( !fn.isEmpty() ) {
+        QFileInfo flinfo(fn);
+        common::TAbstractFile::current_work_directory = flinfo.dir().path().toStdString()+"/";
         template_path = fn.toStdString();
         if(file) {
             file->setMode(std::ios::out);

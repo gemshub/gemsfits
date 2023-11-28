@@ -188,7 +188,7 @@ bool TEJDBKey::compareTemplate(const common::IndexEntry& elm)
 }
 
 //-------------------------------------------------------------
-// TEJDataBase - This class contains the structure of EJDB Data Base
+// TEJDataBase - This class contains the structure of Data Base
 //-------------------------------------------------------------
 
 // Set json or yaml format string to curent record
@@ -420,7 +420,7 @@ void TEJDataBase::selectQuery(const std::string& query, common::SetReaded_f setf
     dbdriver->select_query(getKeywd(), query, setfnc);
 }
 
-// Open EJDB files and build linked record list
+// Open DB files and build linked record list
 void TEJDataBase::OpenDB()
 {
     records.clear();
@@ -428,7 +428,7 @@ void TEJDataBase::OpenDB()
     load_collection();
 }
 
-/// Close files all EJDB files
+// Close files all DB files
 void TEJDataBase::CloseDB()
 {
     records.clear();

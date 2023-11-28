@@ -21,11 +21,11 @@ static void ejdb_check_result(iwrc ecode, const std::string& mess)
 {
     if (ecode) {
         //iwlog_ecode_error3(ecode);
-        Error("EJDB storage handle", mess+iwlog_ecode_explained(ecode));
+        Error("EJDB2 storage handle", mess+iwlog_ecode_explained(ecode));
     }
 }
 
-/// Class for EJDB file manipulation
+/// Class for EJDB2 file manipulation
 class TEJDB2: public TDataBaseFile
 {
 
@@ -53,7 +53,8 @@ public:
                 .kv = {
                     .path = path.c_str()
                     //.oflags = IWKV_TRUNC
-                }
+                },
+                .no_wal = true
             };
             iwrc ecode = ejdb_open(&opts, &ejDB);
             ejdb_check_result(ecode, path +" open error :");
@@ -224,6 +225,7 @@ bool Ejdb2DBClient::read_record(const std::string& collname, keysmap_t::iterator
     rc = jbl_as_json(jbl, jbl_xstr_json_printer, xstr, JBL_PRINT_PRETTY/*0*/);
     RCGO(rc, error);
     jsonrec = iwxstr_ptr(xstr);
+    //std::cout << "Record \n" << jsonrec << std::endl;
     iwxstr_clear(xstr);
     //size_t json_size;
     //rc = jbl_as_json(jbl, jbl_count_json_printer, &json_size, JBL_PRINT_PRETTY);
@@ -295,6 +297,12 @@ void Ejdb2DBClient::select_query(const std::string& collname, const std::string&
     if(internall_query.empty()) {
         internall_query = "/*"; // all
     }
+    else {
+        common::JsonFree query_object = fromJsonString(query);
+        internall_query = TEJDataBase::dbdriver->generate_query(query_object);
+    }
+    std::cout << "Select query " << internall_query <<  std::endl;
+
 
     EJDB_LIST list = 0;
     IWXSTR *xstr = iwxstr_new();
@@ -336,13 +344,19 @@ void Ejdb2DBClient::select_query_omp(const std::string& collname, const std::str
     if(internall_query.empty()) {
         internall_query = "/*"; // all
     }
+    else {
+        common::JsonFree query_object = fromJsonString(query);
+        internall_query = TEJDataBase::dbdriver->generate_query(query_object);
+    }
+    internall_query += " | asc /sample";
+    std::cout << "Select query omp " << internall_query <<  std::endl;
 
     EJDB_LIST list = 0;
     IWXSTR *xstr = iwxstr_new();
     auto rc = ejdb_list2(ejdb_db->ejDB, collname.c_str(), internall_query.c_str(), 0, &list);
     RCGO(rc, error);
 
-#ifdef useomp
+#ifdef useomp1
     omp_set_num_threads(num_threads);
 #ifdef buildWIN32
     #pragma omp parallel for schedule(static)

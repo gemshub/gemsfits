@@ -43,6 +43,8 @@ protected:
     virtual void makeKeyword();
 
 public:
+    /// Current work directory
+    static std::string current_work_directory;
 
     TAbstractFile(const std::string& fName, const std::string& fExt,
                   const std::string& fDir, FileStatus mode = std::ios::in);
@@ -58,6 +60,14 @@ public:
     {  return ext;  }
     const std::string& Dir() const
     {  return dir;  }
+    const std::string& WorkDir() const
+    {
+        if(dir.empty())
+            return current_work_directory;
+        else
+            return dir;
+    }
+
     const std::string& getPath() const
     {  return path;  }
     FileStatus Mode() const

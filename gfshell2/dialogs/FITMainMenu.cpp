@@ -729,6 +729,10 @@ void FITMainWindow::CmRunTest()
         ff << current_json;
         ff.close();
 
+#ifndef OLD_EJDB
+        // disconnect from EJDB2
+        closeEJDB();
+#endif
         // start run
         // create arguments std::string
         std::stringstream ss;
@@ -747,6 +751,7 @@ void FITMainWindow::CmRunTest()
         ui->actionCancel_gemsfit2_run->setEnabled(true);
 
         setStatusText( "Started a gemsfit2 task process..." );
+
     }
     catch( TError& err )
     {

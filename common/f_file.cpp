@@ -24,6 +24,8 @@
 
 namespace common {
 
+std::string TAbstractFile::current_work_directory;
+
 static std::string current_time_and_date()
 {
     auto now = std::chrono::system_clock::now();

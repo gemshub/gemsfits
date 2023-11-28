@@ -237,7 +237,11 @@ common::JsonFree generateJson(TNode *node, int mode)
     nPS = dCH->nPS;
     nPH = dCH->nPH;
 
+#ifndef OLD_EJDB
+    object[keys::DBPath[mode]] = "../EJDB2/<database name>";
+#else
     object[keys::DBPath[mode]] = "../EJDB/<database name>";
+#endif
     object[keys::DBColl[mode]] = "<collection name>";
 
     std::string path = "." + gpf->GEMS3LstFilePath();

@@ -48,7 +48,7 @@ public:
                 ejdbdel(ejDB);
                 ejDB = 0;
                 is_opened = false;
-                Error( path, " EJDB open error");
+                Error( path, " EJDB1 open error");
             }
             numEJDB++;
             is_opened = true;
@@ -123,7 +123,7 @@ EJCOLL *EjdbDBClient::open_collection(const std::string& collname, bool createif
     if( createifempty ) {  // Get or create collection 'module name'
         coll = ejdbcreatecoll(ejdb_db->ejDB, collname.c_str(), NULL );
         if( !coll ) {
-            std::string err= "Cannot open EJDB collection "+ ejdb_db->Name()+collname;
+            std::string err= "Cannot open EJDB1 collection "+ ejdb_db->Name()+collname;
             Error("TEJDB0012", err );
         }
     }
@@ -205,7 +205,7 @@ bool EjdbDBClient::read_record(const std::string& collname, keysmap_t::iterator&
 
     if(!bsrec){
         std::string errejdb = "Error Loading record ";
-        errejdb+= it->pack_key()+" from EJDB";
+        errejdb+= it->pack_key()+" from EJDB1";
         Error( "TEJDB0025",  errejdb );
     }
 
@@ -231,7 +231,7 @@ bool EjdbDBClient::delete_record(const std::string& collname, keysmap_t::iterato
 
     if( !ret ) {
         std::string errejdb = "Error deleting of record ";
-        errejdb+= itr->pack_key() + " from EJDB";
+        errejdb+= itr->pack_key() + " from EJDB1";
         Error( "TEJDB0024",  errejdb );
     }
     return true;

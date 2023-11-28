@@ -4,7 +4,7 @@
 // Read/Write GEMSFIT input configuration file functions
 //
 // Copyright (C) 2015-2023  S.V.Dmytriyeva, G.D.Miron
-// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+// Uses EJDB (http://ejdb.org),
 //    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
 // This file is part of the GEMSFITS GUI, which uses the

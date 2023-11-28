@@ -84,7 +84,7 @@ protected:
 };
 
 
-/// This class contened the structure of EJDB Data Base
+/// This class contened the structure of Data Base
 class TEJDataBase final
 {
     /// Definition of collection
@@ -186,9 +186,9 @@ public:
     /// Get key list for a wildcard search
     int getKeyList(const std::string& keypat, std::vector<std::string>& key_list);
 
-    /// Open EJDB files and build linked record list
+    /// Open DB files and build linked record list
     void OpenDB();
-    /// Close files all EJDB
+    /// Close all DB files
     void CloseDB();
 
  // not used -------------------------------------

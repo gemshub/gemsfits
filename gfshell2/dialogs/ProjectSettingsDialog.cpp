@@ -33,7 +33,11 @@ ProjectSettingsDialog::ProjectSettingsDialog( QSettings *aSet, QWidget *parent) 
     {
         ui->projDir->setText( settings->value("ProjFolderPath", ".").toString() );
         ui->projName->setText( settings->value("ProjFileName", "myproj1").toString() );
+#ifndef OLD_EJDB
+        ui->ejdbDir->setText( settings->value("ProjDatabasePath", "/EJDB2").toString() );
+#else
         ui->ejdbDir->setText( settings->value("ProjDatabasePath", "/EJDB").toString() );
+#endif
         ui->ejdbName->setText( settings->value("ProjDatabaseName", "myprojdb1").toString() );
         ui->experCollect->setText( settings->value("ExpSamplesDataColl", "experiments").toString() );
         ui->taskCollection->setText( settings->value("TaskCasesDataColl", "tests").toString() );

@@ -349,8 +349,20 @@ void FITMainWindow::openEJDB()
 
     // set up new ejdb file
     std::string ejdbPath  = projectSettings->value("ProjFolderPath", ".").toString().toStdString();
-    ejdbPath  += projectSettings->value("ProjDatabasePath", "/EJDB").toString().toStdString();
-    ejdbPath  += "/";
+    std:: string ejdbDir;
+#ifndef OLD_EJDB
+    ejdbDir = projectSettings->value("ProjDatabasePath", "/EJDB2").toString().toStdString();
+    if(ejdbDir == "/EJDB")
+        ejdbDir = "/EJDB2";
+#else
+    ejdbDir = projectSettings->value("ProjDatabasePath", "/EJDB").toString().toStdString();
+#endif
+    ejdbPath  += ejdbDir+"/";
+    // make ifno exists
+    QDir dir(ejdbPath.c_str());
+    if( !dir.exists() ) {
+       dir.mkpath(ejdbPath.c_str());
+    }
     ejdbPath  += projectSettings->value("ProjDatabaseName", "myprojdb1" ).toString().toStdString();
     rtEJ.ChangePath(ejdbPath);
 
@@ -680,7 +692,11 @@ bool FITMainWindow::createTaskTemplate()
     if( projectSettings )
     {
         std::string ejdbPath  = "..";
+#ifndef OLD_EJDB
+        ejdbPath  += projectSettings->value("ProjDatabasePath", "/EJDB2").toString().toStdString();
+#else
         ejdbPath  += projectSettings->value("ProjDatabasePath", "/EJDB").toString().toStdString();
+#endif
         ejdbPath  += "/";
         ejdbPath  += projectSettings->value("ProjDatabaseName", "myprojdb1" ).toString().toStdString();
         std::string templ_json = get_record_edit();
@@ -714,6 +730,10 @@ void FITMainWindow::runFinished(int exitCode, QProcess::ExitStatus exitStatus)
         addLinetoStatus( "Finished gemsfit2 task calculation o.k." );
     else
         addLinetoStatus( "Error in gemsfit2 task calculation..." );
+#ifndef OLD_EJDB
+    // Connect to EJDB2
+    openEJDB();
+#endif
 }
 
 /// Make list of Experiments keys using query
