@@ -236,7 +236,7 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &/*grad
             {
                 int Pindex;
                 Pindex = sys->Opti->optNFParam[sys->vEAndx[P_id]->ndx[e]]->Get_FPndx(sys->vPAndx[P_id]->ndx[op] );
-                sys->Opti->optNFParam[sys->vEAndx[P_id]->ndx[e]]->Adjust_Fparam(sys->NodT[sys->EXPndx[P_id]], Pindex, opt[op]);
+                sys->Opti->optNFParam[sys->vEAndx[P_id]->ndx[e]]->Adjust_Fparam(sys->NodT[sys->EXPndx[P_id]].get(), Pindex, opt[op]);
                 op++;
             }
         }
@@ -244,7 +244,7 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &/*grad
 
     for (unsigned e = 0; e < sys->vEAndx[P_id]->ndx.size(); e++) // loops trough OptParameter vector
     {
-    sys->Opti->optNFParam[sys->vEAndx[P_id]->ndx[e]]->Adjust_Lparam(sys->NodT[sys->EXPndx[P_id]], sys->EXPndx[P_id] );
+    sys->Opti->optNFParam[sys->vEAndx[P_id]->ndx[e]]->Adjust_Lparam(sys->NodT[sys->EXPndx[P_id]].get(), sys->EXPndx[P_id] );
     }
 
     sys->experiments[sys->EXPndx[P_id]]->sT = sys->NodT[sys->EXPndx[P_id]]->Get_TK() - 273.15;
@@ -267,19 +267,15 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &/*grad
     }
 
 
-    std::vector<DATABR*> dBR;
-    dBR.push_back(sys->NodT[sys->EXPndx[P_id]]->pCNode());
-
+    DATABR* dBR = sys->NodT[sys->EXPndx[P_id]]->pCNode();
     // Asking GEM to run with automatic initial approximation
-    dBR.at(0)->NodeStatusCH = NEED_GEM_AIA;
-
+    dBR->NodeStatusCH = NEED_GEM_AIA;
     // Asking GEM to run with smart initial approximation
     if (sys->Opti->OptGemsSIA == 1)
-        dBR.at(0)->NodeStatusCH = NEED_GEM_SIA;
+        dBR->NodeStatusCH = NEED_GEM_SIA;
 
     // RUN GEMS3K
     NodeStatusCH = sys->NodT[sys->EXPndx[P_id]]->GEM_run( false );
-
     if( NodeStatusCH == OK_GEM_AIA || NodeStatusCH == OK_GEM_SIA  )
     {
 //            sys->NodT[i]->GEM_priqnt_ipm( "GEMS3K_log.out" );   // possible debugging printout

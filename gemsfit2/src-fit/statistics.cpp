@@ -139,7 +139,7 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
   for (unsigned j = 0; j<gfittask->Tfun->objfun.size(); j++)
   {
       min_res = 0.0; max_res =0.0; int obj_neg_residuals = 0; int obj_pos_residuals = 0;
-      objfun_stat.push_back(new statistics::objfunstat);
+      objfun_stat.push_back(std::make_shared<statistics::objfunstat>());
       objfun_stat[j]->stdev_res = 0.0;
       objfun_stat[j]->mean_res = 0.0;
       objfun_stat[j]->mean_meas = 0.0;
@@ -305,7 +305,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         for (unsigned i=0; i<gfittask->Opti->optParam[e]->Get_optFPsize(); ++i)
         {
             // Print optimized parameter values to file
-            fitparam.push_back(new parameters);
+            fitparam.push_back(std::make_shared<parameters>());
 
             fitparam[i+npx]->Ptype = gfittask->Opti->optParam[e]->Get_optType();
             fitparam[i+npx]->Pfittype = "F";
@@ -326,7 +326,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     {
         for ( i=0; i<gfittask->Opti->optParam[e]->Get_optRPsize(); ++i)
         {
-            fitparam.push_back(new parameters);
+            fitparam.push_back(std::make_shared<parameters>());
             fitparam[np+i]->Ptype = gfittask->Opti->optParam[e]->Get_optType();
             fitparam[np+i]->Pfittype = "R";
 
@@ -344,7 +344,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     {
         for (unsigned i=0; i<gfittask->Opti->optParam[e]->Get_optLPsize(); ++i)
         {
-            fitparam.push_back(new parameters);
+            fitparam.push_back(std::make_shared<parameters>());
             fitparam[np+i]->Ptype = gfittask->Opti->optParam[e]->Get_optType();
             fitparam[np+i]->Pfittype = "L";
 

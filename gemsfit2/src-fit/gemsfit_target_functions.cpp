@@ -446,7 +446,7 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
 {
     const char *elem_name, *phase_name;
     int ICndx, HCndx, PHndx, nIC;
-    double computed_value, measured_value, error_value;
+    double computed_value = 0.0, measured_value = 0.0, error_value = 0.0;
     double Tfun_residual = 0.0, Weighted_Tfun_residual = 0.0, weight_ = 1.0;
     DATACH* dCH = sys->NodT[i]->pCSD();
     double* IC_in_PH;

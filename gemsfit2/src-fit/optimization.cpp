@@ -118,7 +118,7 @@ void optimization::OptParameterCreate ()
     OptParameter* myOPT = 0;
 
     // call GEM_init to read GEMS3K input files
-    TNode* node  = new TNode();
+    std::shared_ptr<TNode> node  = std::make_shared<TNode>();
 
     try
     {
@@ -166,10 +166,10 @@ void optimization::OptParameterCreate ()
 
         if (outG0.size() > 0) {
             Opt_G0* myPT = new Opt_G0(outG0, OptBoundPerc, p);
-            myPT->SetIndex_param(node);
+            myPT->SetIndex_param(node.get());
             myOPT = (Opt_G0*)myPT;
         }
-        if(myOPT) { optParam.push_back( myOPT ); myOPT = 0; };
+        if(myOPT) { optParam.push_back( std::shared_ptr<OptParameter>(myOPT) ); myOPT = 0; };
          p=0;
 
         // PMc
@@ -178,7 +178,7 @@ void optimization::OptParameterCreate ()
 //            myPT->SetIndex_param(node);
             myOPT = (Opt_PMc*)myPT;
         }
-        if(myOPT) { optParam.push_back( myOPT ); myOPT = 0; };
+        if(myOPT) { optParam.push_back( std::shared_ptr<OptParameter>(myOPT) ); myOPT = 0; };
          p=0;
 
         // DMc
@@ -187,7 +187,7 @@ void optimization::OptParameterCreate ()
 //            myPT->SetIndex_param(node);
             myOPT = (Opt_DMc*)myPT;
         }
-        if(myOPT) { optParam.push_back( myOPT ); myOPT = 0; };
+        if(myOPT) { optParam.push_back( std::shared_ptr<OptParameter>(myOPT) ); myOPT = 0; };
          p=0;
     }
 
@@ -198,28 +198,28 @@ void optimization::OptParameterCreate ()
         temp = object.value(keys::bIC[mode], std::vector<std::string>{});
         if (temp.size() > 0) {
             Opt_bIC* myPT = new Opt_bIC(temp, OptBoundPerc, p );
-            myPT->SetIndex_param(node);
+            myPT->SetIndex_param(node.get());
             myOPT = (Opt_bIC*)myPT;
         }
-        if(myOPT) { optNFParam.push_back( myOPT ); myOPT = 0; };
+        if(myOPT) { optNFParam.push_back( std::shared_ptr<OptParameter>(myOPT) ); myOPT = 0; };
         p=0;
 
         temp = object.value(keys::TK[mode], std::vector<std::string>{});
         if (temp.size() > 0) {
             Opt_Tk* myPT = new Opt_Tk( temp, OptBoundPerc, p );
-            myPT->SetIndex_param(node);
+            myPT->SetIndex_param(node.get());
             myOPT = (Opt_Tk*)myPT;
         }
-        if(myOPT) { optNFParam.push_back( myOPT ); myOPT = 0; };
+        if(myOPT) { optNFParam.push_back( std::shared_ptr<OptParameter>(myOPT) ); myOPT = 0; };
         p=0;
 
         temp = object.value(keys::Pb[mode], std::vector<std::string>{});
         if (temp.size() > 0) {
             Opt_P* myPT = new Opt_P(temp, OptBoundPerc, p);
-            myPT->SetIndex_param(node);
+            myPT->SetIndex_param(node.get());
             myOPT = (Opt_P*)myPT;
         }
-        if(myOPT) { optNFParam.push_back( myOPT ); myOPT = 0; };
+        if(myOPT) { optNFParam.push_back( std::shared_ptr<OptParameter>(myOPT) ); myOPT = 0; };
         p=0;
     }
 
@@ -230,10 +230,10 @@ void optimization::OptParameterCreate ()
         temp = object.value(keys::bIC[mode], std::vector<std::string>{});
         if (temp.size() > 0) {
             Opt_bIC* myPT = new Opt_bIC(temp, OptBoundPerc, p, false);
-            myPT->SetIndex_param(node);
+            myPT->SetIndex_param(node.get());
             myOPT = (Opt_bIC*)myPT;
         }
-        if(myOPT) { optParam.push_back( myOPT ); myOPT = 0; };
+        if(myOPT) { optParam.push_back( std::shared_ptr<OptParameter>(myOPT) ); myOPT = 0; };
         p=0;
     }
 }

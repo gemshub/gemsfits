@@ -65,8 +65,8 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     {
         EXPndx.push_back(-1);COMPndx.push_back(-1);PHndx.push_back(-1);PHPndx.push_back(-1);
         iNa.push_back(0.0); iO.push_back(0.0); iH.push_back(0.0); iCl.push_back(0.0); NEFndx.push_back(-1);
-        vPAndx.push_back( new vect);
-        vEAndx.push_back( new vect);
+        vPAndx.push_back(std::make_shared<vect>());
+        vEAndx.push_back(std::make_shared<vect>());
     }
     h_grad = false;
 
@@ -83,12 +83,12 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
 
     for (int j=0; j<anNodes; j++)
     {
-        NodT.push_back( new TNode );
+        NodT.push_back(std::make_shared<TNode>());
     }
 
-    Opti = new optimization;
+    Opti = std::make_shared<optimization>();
     gpf->flog << "10. gemsfit_task.cpp(94). Initializing the Target function structure & get_DatTarget(); " << std::endl;
-    Tfun = new TargetFunction;
+    Tfun = std::make_shared<TargetFunction>();
 
     for (unsigned e=0; e < Opti->optParam.size(); e++)
     {
@@ -459,10 +459,10 @@ void TGfitTask::setnodes()
     unsigned int nIC, nDC, nPH,  DCndx, PHndx;
     long int NodeStatusCH, NodeHandle;
     double P_pa, T_k/*, PMc*/;
-    double* new_moles_IC;
-    double* xDC_up;
-    double* xDC_lo;
-    double* Ph_surf;
+    std::shared_ptr<double[]> new_moles_IC;
+    std::shared_ptr<double[]> xDC_up;
+    std::shared_ptr<double[]> xDC_lo;
+    std::shared_ptr<double[]> Ph_surf;
     double h2o_kgamount = 0.0;
     char (*DCNL)[16];
 
@@ -517,11 +517,11 @@ void TGfitTask::setnodes()
         nDC = dCH->nDC;	// nr of dependent components
         nPH = dCH->nPH;
         DCNL = dCH->DCNL;
-        xDC_up = new double[ nDC ];  // memory leaks may be here! (these arrays must be re-created at each n)
-        xDC_lo = new double[ nDC ];
-        Ph_surf = new double[ nPH ];
-        new_moles_IC = new double[ nIC ]; // vector for holding the moles of independent components for each experiment
-        bICv.push_back( new double[ nIC ] );
+        xDC_up.reset(new double[nDC]());  // std::make_shared<double[]>(nDC);  // new double[ nDC ];  // memory leaks may be here! (these arrays must be re-created at each n)
+        xDC_lo.reset(new double[nDC]());  // std::make_shared<double[]>(nDC);  // new double[ nDC ];
+        Ph_surf.reset(new double[nPH]());  // = std::make_shared<double[]>(nPH);  // new double[ nPH ];
+        new_moles_IC.reset(new double[nIC]());  // = std::make_shared<double[]>(nIC);  // new double[ nIC ]; // vector for holding the moles of independent components for each experiment
+        bICv.push_back(std::shared_ptr<double[]>(new double[nIC]()));
 
         // lower and upper bounds for concentration of DC
         for( i=0; i<nDC; i++ )
@@ -770,8 +770,8 @@ void TGfitTask::setnodes()
                 // This is not a name of DC used in DBR file. The GEMS formula parser is used
                 //  (implemented by SD on 4.03.2014)
                 TFormula aFo;
-                std::shared_ptr<double> A( new double[nIC]);
-                std::shared_ptr<char> SB1( new char[nIC*IC_RKLEN]);
+                std::shared_ptr<double[]> A( new double[nIC]());
+                std::shared_ptr<char[]> SB1( new char[nIC*IC_RKLEN]());
 
                 if ((experiments[n]->sbcomp[j]->Qunit != keys::mol) && (experiments[n]->sbcomp[j]->Qunit != keys::molal) && (experiments[n]->sbcomp[j]->Qunit != keys::gram))
                    {std::cout << "ERROR: Unknown unit " << experiments[n]->sbcomp[j]->Qunit <<" for "<< experiments[n]->sbcomp[j]->comp <<" experiment " << experiments[n]->sample << std::endl; exit(1);}
@@ -858,7 +858,7 @@ void TGfitTask::setnodes()
 //        NodT[n]->GEM_from_MT( NodeHandle, NodeStatusCH, T_k, P_pa, 0., 0., new_moles_IC, xDC_up, xDC_lo, Ph_surf );
 //std::cout << new_moles_IC[0] << " " << new_moles_IC[1] << " " <<new_moles_IC[2] << " " <<new_moles_IC[3] << " " <<new_moles_IC[4] << " " <<new_moles_IC[5] << " " <<new_moles_IC[6] << " " << std::endl;
         // variant (8c) of GEM_from_MT()
-        NodT[n]->GEM_from_MT( NodeHandle, NEED_GEM_AIA, T_k, P_pa, new_moles_IC, xDC_up, xDC_lo );  // bugfix DK 09.01.2014
+        NodT[n]->GEM_from_MT( NodeHandle, NEED_GEM_AIA, T_k, P_pa, new_moles_IC.get(), xDC_up.get(), xDC_lo.get() );  // bugfix DK 09.01.2014
 
 //        for (unsigned int bi=0; bi < sizeof(new_moles_IC); bi++)
 //        {
@@ -894,10 +894,10 @@ void TGfitTask::setnodes()
 //            }
 //        }
 
-        delete[] new_moles_IC;
-        delete[] xDC_up;
-        delete[] xDC_lo;
-        delete[] Ph_surf;
+        //delete[] new_moles_IC;
+        //delete[] xDC_up;
+        //delete[] xDC_lo;
+        //delete[] Ph_surf;
     }  // for n
 
 #ifdef useomp
@@ -1095,7 +1095,7 @@ void TGfitTask::set_logK_TPpairs()
 {
     for (unsigned i=0; i <Opti->optParam.size(); i++)
     {
-        Opti->optParam[i]->Set_logKTP(this->NodT[0], this->TP_pairs );
+        Opti->optParam[i]->Set_logKTP(this->NodT[0].get(), this->TP_pairs );
     }
 }
 
@@ -1134,12 +1134,12 @@ void TGfitTask::get_Lparams_delta()
     {
        for (unsigned i=0; i< Opti->optNFParam.size(); i++)
        {
-           Opti->optNFParam[i]->SetIVvEVvDelta(NodT[e]);
+           Opti->optNFParam[i]->SetIVvEVvDelta(NodT[e].get());
        }
 
        for (unsigned i=0; i< Opti->optParam.size(); i++)
        {
-           Opti->optParam[i]->SetIVvEVvDelta(NodT[e]);
+           Opti->optParam[i]->SetIVvEVvDelta(NodT[e].get());
        }
     }
 }
@@ -1229,7 +1229,7 @@ void TGfitTask::set_DH_Helgeson (int n)
     {
         bgama = 0.0; ao = 0.0;
 
-        bgama = BgammaTP(SaltIndex[j],  NodT[n], Gf, EpsW[0]);
+        bgama = BgammaTP(SaltIndex[j],  NodT[n].get(), Gf, EpsW[0]);
         ao = IonsizeTP(SaltIndex[j], Gf);
 
         Wbgama += bgama * SaltAmount[j];

@@ -72,11 +72,11 @@ Data_Manager::Data_Manager( )
 Data_Manager::~Data_Manager( )
 {
     // Delete measurement data std::vector of experiments
-    for (unsigned int i=0; i<experiments.size(); ++i)
-    {
-        delete experiments[i];
-        delete bICv[i];
-    }  
+    //for (unsigned int i=0; i<experiments.size(); ++i)
+    //{
+        //delete experiments[i];
+    //    delete bICv[i];
+    //}
 }
 
 void Data_Manager::get_DataSyn()
@@ -517,7 +517,7 @@ void Data_Manager::get_EJDB()
         int pos = -1;
         {
             std::lock_guard<std::shared_mutex> g(select_query_mutex);
-            experiments.push_back( new samples );
+            experiments.push_back(std::make_shared<samples>());
             experiments.back()->idsample= 0;
             pos = experiments.size()-1;
         }
@@ -648,7 +648,7 @@ void Data_Manager::bson_to_Data_Manager(const std::string& data, int pos)
     // adding experiment components/recipe
     if( data_object.contains(keys::sbcomp) ) {
         for (const auto& element : data_object[keys::sbcomp]) {
-            experiments[pos]->sbcomp.push_back( new samples::components );
+            experiments[pos]->sbcomp.push_back(std::make_shared<samples::components>());
             experiments[pos]->sbcomp.back()->comp = element->value(keys::comp, std::string());
             experiments[pos]->sbcomp.back()->Qnt = element->value(keys::Qnt, 0.);
             experiments[pos]->sbcomp.back()->Qerror = element->value(keys::Qerror, 1.);
@@ -659,7 +659,7 @@ void Data_Manager::bson_to_Data_Manager(const std::string& data, int pos)
     // adding experiment components/recipe
     if( data_object.contains(keys::props) ) {
         for (const auto& element : data_object[keys::props]) {
-            experiments[pos]->props.push_back( new samples::properties );
+            experiments[pos]->props.push_back(std::make_shared<samples::properties>());
             experiments[pos]->props.back()->prop = element->value(keys::property, std::string());
             experiments[pos]->props.back()->Qnt = element->value(keys::Qnt, 0.);
             experiments[pos]->props.back()->Qerror = element->value(keys::Qerror, 0.);
@@ -670,13 +670,13 @@ void Data_Manager::bson_to_Data_Manager(const std::string& data, int pos)
     // adding experiment components/recipe
     if( data_object.contains(keys::expphases) ) {
         for (const auto& element : data_object[keys::expphases])  {
-            experiments[pos]->expphases.push_back( new samples::phases );
+            experiments[pos]->expphases.push_back(std::make_shared<samples::phases>());
             experiments[pos]->expphases.back()->idphase = 0;
             experiments[pos]->expphases.back()->phase = element->value(keys::phase, std::string());
 
             if( element->contains(keys::phIC) ) {
                 for (const auto& sub_el : (*element)[keys::phIC])  {
-                    experiments[pos]->expphases.back()->phIC.push_back( new samples::components );
+                    experiments[pos]->expphases.back()->phIC.push_back(std::make_shared<samples::components>());
                     std::string def_unit; // =  (experiments[pos]->expphases.back()->phase == keys::aqueous ? keys::molal: keys::molratio);
                     experiments[pos]->expphases.back()->phIC.back()->comp = sub_el->value(keys::IC, std::string());
                     experiments[pos]->expphases.back()->phIC.back()->Qnt = sub_el->value(keys::Qnt, 0.);
@@ -688,7 +688,7 @@ void Data_Manager::bson_to_Data_Manager(const std::string& data, int pos)
             // adding phase IC as mole fractions MR
             if( element->contains(keys::phMR) ) {
                 for (const auto& sub_el : (*element)[keys::phMR]) {
-                    experiments[pos]->expphases.back()->phMR.push_back( new samples::components );
+                    experiments[pos]->expphases.back()->phMR.push_back(std::make_shared<samples::components>());
                     std::string def_unit = keys::molratio;
                     // =  (experiments[pos]->expphases.back()->phase == keys::aqueous ? keys::molal: keys::molratio);
                     experiments[pos]->expphases.back()->phMR.back()->comp = sub_el->value(keys::MR, std::string());
@@ -701,7 +701,7 @@ void Data_Manager::bson_to_Data_Manager(const std::string& data, int pos)
             // adding phase properties
             if( element->contains(keys::phprop) ) {
                 for (const auto& sub_el : (*element)[keys::phprop]) {
-                    experiments[pos]->expphases.back()->phprop.push_back( new samples::phases::prop );
+                    experiments[pos]->expphases.back()->phprop.push_back(std::make_shared<samples::phases::prop>());
                     std::string p_name = sub_el->value(keys::property, std::string());
                     experiments[pos]->expphases.back()->phprop.back()->property = p_name;
                     std::string def_unit =default_unit_to_property(p_name);
@@ -714,12 +714,12 @@ void Data_Manager::bson_to_Data_Manager(const std::string& data, int pos)
             // adding phase dcomps
             if( element->contains(keys::phDC) ) {
                 for (const auto& sub_el : (*element)[keys::phDC]) {
-                    experiments[pos]->expphases.back()->phDC.push_back( new samples::phases::dcomps );
+                    experiments[pos]->expphases.back()->phDC.push_back(std::make_shared<samples::phases::dcomps>());
                     experiments[pos]->expphases.back()->phDC.back()->DC = sub_el->value(keys::DC, std::string());;
                     // adding dependent compoponents properties
                     if( sub_el->contains(keys::DCprop) ) {
                         for (const auto& sub_el2 : (*sub_el)[keys::DCprop])  {
-                            experiments[pos]->expphases.back()->phDC.back()->DCprop.push_back( new samples::phases::dcomps::dcprop );
+                            experiments[pos]->expphases.back()->phDC.back()->DCprop.push_back(std::make_shared<samples::phases::dcomps::dcprop>());
                             std::string def_unit; // = keys::molratio;
                             // =  (experiments[pos]->expphases.back()->phase == keys::aqueous ? keys::molal: keys::molratio);
                             experiments[pos]->expphases.back()->phDC.back()->DCprop.back()->property = sub_el2->value(keys::property, std::string());

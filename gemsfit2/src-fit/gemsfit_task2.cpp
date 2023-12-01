@@ -424,7 +424,7 @@ void TGfitTask::set_print_param()
         for (unsigned i=0; i<Opti->optParam[e]->Get_optFPsize(); ++i)
         {
             // Print optimized parameter values to file
-            fitparam.push_back(new parameters);
+            fitparam.push_back(std::make_shared<parameters>());
 
             fitparam[i+npx]->Ptype = Opti->optParam[e]->Get_optType();
             fitparam[i+npx]->Pfittype = "F";
@@ -445,7 +445,7 @@ void TGfitTask::set_print_param()
     {
         for (unsigned i=0; i<Opti->optParam[e]->Get_optRPsize(); ++i)
         {
-            fitparam.push_back(new parameters);
+            fitparam.push_back(std::make_shared<parameters>());
             fitparam[np+i]->Ptype = Opti->optParam[e]->Get_optType();
             fitparam[np+i]->Pfittype = "R";
 
@@ -463,7 +463,7 @@ void TGfitTask::set_print_param()
     {
         for (unsigned i=0; i<Opti->optParam[e]->Get_optLPsize(); ++i)
         {
-            fitparam.push_back(new parameters);
+            fitparam.push_back(std::make_shared<parameters>());
             fitparam[np+i]->Ptype = Opti->optParam[e]->Get_optType();
             fitparam[np+i]->Pfittype = "L";
 
@@ -883,7 +883,7 @@ void TGfitTask::set_fixed_parameters()
         for (unsigned n=0; n<NodT.size(); n++  )
             for (unsigned e = 0; e <Opti->optParam.size(); e++)
                 if ( Opti->optParam[e]->Get_optType() != "G0" )
-                    Opti->optParam[e]->Adjust_Sparam(NodT[n]);
+                    Opti->optParam[e]->Adjust_Sparam(NodT[n].get() );
     }
     else
 #ifdef useomp
@@ -892,5 +892,5 @@ void TGfitTask::set_fixed_parameters()
 #endif
         for (unsigned n=0; n<NodT.size(); n++  )
             for (unsigned e = 0; e <Opti->optParam.size(); e++)
-                Opti->optParam[e]->Adjust_Sparam(NodT[n]);
+                Opti->optParam[e]->Adjust_Sparam(NodT[n].get());
 }

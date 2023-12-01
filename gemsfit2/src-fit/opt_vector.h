@@ -84,7 +84,7 @@ class OptParameter
             double UB; /// upper boundary
             double LB; /// lower boundary
         };
-        std::vector<F_parameter*> optFP; /// std::vector of pointers to F-type parameters
+        std::vector<std::shared_ptr<F_parameter>> optFP; /// std::vector of pointers to F-type parameters
 
         struct R_parameter : parameter /// structure storing reaction constraint information
         {
@@ -96,7 +96,7 @@ class OptParameter
             vi rdc_species_coef; /// reaction coeficients
             std::string Ref; /// reference for log K
         };
-        std::vector<R_parameter*> optRP; /// std::vector of reactions (rdc_species struct that hold the reaction dependent species and the reaction properties)
+        std::vector<std::shared_ptr<R_parameter>> optRP; /// std::vector of reactions (rdc_species struct that hold the reaction dependent species and the reaction properties)
 
         struct L_parameter : parameter /// structure holding liked parameters information
         {
@@ -105,11 +105,11 @@ class OptParameter
             vi L_param_ind; /// GEMS3K indexes of the linked parameters
             vd L_param_coef; /// linking coefiecients e.g 1.0 for Cl and 2.0 for S
         };
-        std::vector<L_parameter*> optLP; /// std::vector of pointers to L-type parameters
+        std::vector<std::shared_ptr<L_parameter>> optLP; /// std::vector of pointers to L-type parameters
 
         struct S_parameter : parameter /// structure holding liked parameters information
         { };
-        std::vector<S_parameter*> optSP; /// std::vector of pointers to S-type parameters
+        std::vector<std::shared_ptr<S_parameter>> optSP; /// std::vector of pointers to S-type parameters
 
         /**
         * Reads in the attributes of the F-type parameters

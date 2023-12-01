@@ -135,7 +135,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     {
         for (unsigned e=0; e < sys->Opti->optParam.size(); e++)
         {
-            sys->Opti->optParam[e]->Adjust_param(sys->NodT[i], opt);
+            sys->Opti->optParam[e]->Adjust_param(sys->NodT[i].get(), opt);
         }
         //std::cout<<"adjusting parameters for: "<< i+1 <<" sample "<< sys->experiments[i]->sample << std::endl;
     }
@@ -384,7 +384,7 @@ void tsolmod_wrap( double &residual, const std::vector<double> &opt, TGfitTask *
     {
         for (unsigned e=0; e < sys->Opti->optParam.size(); e++)
         {
-            sys->Opti->optParam[e]->Adjust_param(sys->NodT[i], opt);
+            sys->Opti->optParam[e]->Adjust_param(sys->NodT[i].get(), opt);
         }
     }
 

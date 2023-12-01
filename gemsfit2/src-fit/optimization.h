@@ -130,8 +130,8 @@ public:
 
 
     long int sizeOPs;     ///
-    std::vector<OptParameter*> optParam; ///
-    std::vector<OptParameter*> optNFParam;
+    std::vector<std::shared_ptr<OptParameter>> optParam; ///
+    std::vector<std::shared_ptr<OptParameter>> optNFParam;
 
     void OptParameterCreate ();
 

@@ -230,7 +230,7 @@ Opt_G0::Opt_G0(std::vector<std::string> data, double OptBoundPrc, unsigned &p) :
         common::JsonFree object = fromJsonString(Jdata[i]);
         iPType = object.value( keys::PType[mode], std::string());
         if (iPType == "R") {
-            optRP.push_back( new Opt_G0::R_parameter);
+            optRP.push_back(std::make_shared<Opt_G0::R_parameter>());
             optRP.back()->Pndx = -1;
         }
     }
@@ -246,9 +246,9 @@ Opt_G0::Opt_G0(std::vector<std::string> data, double OptBoundPrc, unsigned &p) :
             exit(1);
         }
         if (iPType == "F") {
-            optFP.push_back( new Opt_G0::F_parameter);
+            optFP.push_back(std::make_shared<Opt_G0::F_parameter>());
             optFP.back()->Pndx = p;
-            Pval_to_optF(p, object, optFP.back());
+            Pval_to_optF(p, object, optFP.back().get());
             if (iDCN.empty()) {
                 std::cout << "Parameter \"F\"-type " << p << " (G0) has no \"DCN\" defined! "<< std::endl;
                 exit(1);
@@ -273,12 +273,12 @@ Opt_G0::Opt_G0(std::vector<std::string> data, double OptBoundPrc, unsigned &p) :
                 exit(1);
             }
             optRP[Rndx]->Pname = iDCN;
-            Pval_to_optR(p, object, optRP[Rndx]);
+            Pval_to_optR(p, object, optRP[Rndx].get());
             //            h_optR = true;
             p++;
         }
         else if (iPType == "S") {
-            optSP.push_back( new Opt_G0::S_parameter);
+            optSP.push_back(std::make_shared<Opt_G0::S_parameter>());
             optSP.back()->Pndx = p;
             if (iDCN.empty()) {
                 std::cout << "Parameter \"S\"-type " << p << " (G0) has no \"DCN\" defined! "<< std::endl;
@@ -560,15 +560,15 @@ Opt_PMc::Opt_PMc(std::vector<std::string> data, double OptBoundPrc, unsigned &p)
         }
 
         if (iPType == "F") {
-            optFP.push_back( new Opt_PMc::F_parameter);
+            optFP.push_back(std::make_shared<Opt_PMc::F_parameter>());
             optFP.back()->Pndx = i;
             optFP.back()->Pname = ( iIPCN.empty() ? "PMc" : iIPCN);
-            Pval_to_optF (p, object, optFP.back());
+            Pval_to_optF (p, object, optFP.back().get());
             Pindexes[optFP.back()->Pname]=i;
             p++;
         }
         else if (iPType == "S") {
-            optSP.push_back( new Opt_PMc::S_parameter);
+            optSP.push_back(std::make_shared<Opt_PMc::S_parameter>());
             optSP.back()->Pndx = i;
             optSP.back()->Pname = ( iIPCN.empty() ? "PMc" : iIPCN);
             if (!object.contains(keys::IV[mode])) {
@@ -582,10 +582,10 @@ Opt_PMc::Opt_PMc(std::vector<std::string> data, double OptBoundPrc, unsigned &p)
             p++;
         }
         else if (iPType == "L") {
-            optLP.push_back( new Opt_PMc::L_parameter);
+            optLP.push_back(std::make_shared<Opt_PMc::L_parameter>());
             optLP.back()->Pndx = i;
             optLP.back()->Pname = ( iIPCN.empty() ? "PMc" : iIPCN);
-            Pval_to_optL (p, object, optLP.back());
+            Pval_to_optL (p, object, optLP.back().get());
             Pindexes[optLP.back()->Pname]=i;
             p++;
            //std::cout << "There is no option at this point to have a PMc parameter as L-Type (linked)! "<<std::endl;
@@ -676,14 +676,14 @@ Opt_DMc::Opt_DMc(std::vector<std::string> data, double OptBoundPrc, unsigned &p)
         }
 
         if (iPType == "F") {
-            optFP.push_back( new Opt_DMc::F_parameter);
+            optFP.push_back(std::make_shared<Opt_DMc::F_parameter>());
             optFP.back()->Pndx = i;
             optFP.back()->Pname =  ( iIPCN.empty() ? "DMc" : iIPCN);
-            Pval_to_optF(p, object, optFP.back());
+            Pval_to_optF(p, object, optFP.back().get());
             p++;
         }
         else if (iPType == "S") {
-            optSP.push_back( new Opt_DMc::S_parameter);
+            optSP.push_back(std::make_shared<Opt_DMc::S_parameter>());
             optSP.back()->Pndx = i;
             optSP.back()->Pname = "DMc";
             if (!object.contains(keys::IV[mode])) {
@@ -766,14 +766,14 @@ Opt_bIC::Opt_bIC(std::vector<std::string> data, double OptBoundPrc, unsigned &p,
         }
 
         if (iPType == "F") {
-            optFP.push_back( new Opt_bIC::F_parameter);
+            optFP.push_back(std::make_shared<Opt_bIC::F_parameter>());
             optFP.back()->expr = object.value(keys::expr, std::string());
             optFP.back()->Fndx = object.value(keys::NFndx[mode], -1);
             if (optFP.back()->Fndx == -1 && isNFun) {
                 std::cout << "Parameter \"F\"-type " << p << " (bIC) has no \"NFndx\" defined! "<< std::endl;
                 exit(1);
             }
-            Pval_to_optF(p, object, optFP.back());
+            Pval_to_optF(p, object, optFP.back().get());
             if (iICN.empty() && isNFun) {
                 std::cout << "Parameter \"F\"-type " << p << " (bIC) has no \"ICN\" defined! "<< std::endl;
                 exit(1);
@@ -782,9 +782,9 @@ Opt_bIC::Opt_bIC(std::vector<std::string> data, double OptBoundPrc, unsigned &p,
             p++;
         }
         else if (iPType == "L") {
-            optLP.push_back( new Opt_bIC::L_parameter);
+            optLP.push_back(std::make_shared<Opt_bIC::L_parameter>());
             optLP.back()->Pndx = -1;
-            Pval_to_optL(p, object, optLP.back());
+            Pval_to_optL(p, object, optLP.back().get());
             if (iICN.empty()) {
                 std::cout << "Parameter \"L\"-type " << p << " (bIC) has no \"ICN\" defined! "<< std::endl;
                 exit(1);
@@ -1063,14 +1063,14 @@ Opt_Tk::Opt_Tk(std::vector<std::string> data, double OptBoundPrc, unsigned &p) :
         }
 
         if (iPType == "F") {
-            optFP.push_back( new Opt_Tk::F_parameter);
+            optFP.push_back(std::make_shared<Opt_Tk::F_parameter>());
             optFP.back()->Fndx = object.value(keys::NFndx[mode], -1);
             if (optFP.back()->Fndx == -1 ) {
                 std::cout << "Parameter \"F\"-type " << p << " (TK) has no \"NFndx\" defined! "<< std::endl;
                 exit(1);
             }
             optFP.back()->Pname = "TCelsius";
-            Pval_to_optF (p, object, optFP.back());
+            Pval_to_optF (p, object, optFP.back().get());
             p++;
 
         }
@@ -1148,14 +1148,14 @@ Opt_P::Opt_P(std::vector<std::string> data, double OptBoundPrc, unsigned &p) :
         }
 
         if (iPType == "F") {
-            optFP.push_back( new Opt_P::F_parameter);
+            optFP.push_back(std::make_shared<Opt_P::F_parameter>());
             optFP.back()->Fndx = object.value(keys::NFndx[mode], -1);
             if (optFP.back()->Fndx == -1 ) {
                 std::cout << "Parameter \"F\"-type " << p << " (P) has no \"NFndx\" defined! " << std::endl;
                 exit(1);
             }
             optFP.back()->Pname = "Pbar";
-            Pval_to_optF(p, object, optFP.back());
+            Pval_to_optF(p, object, optFP.back().get());
             p++;
         }
         if (iPType == "L") {

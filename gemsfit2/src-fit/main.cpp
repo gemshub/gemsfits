@@ -141,7 +141,7 @@ int main( int argc, char *argv[] )
 
     // Reading in the data //
     gpf->flog << "01. main.cpp(108). Creating new TGfitTask" << std::endl;
-    TGfitTask* gfittask = new TGfitTask();
+    std::shared_ptr<TGfitTask> gfittask = std::make_shared<TGfitTask>();
 
     // if optimization with statistics, without statistics or >2 only statistics
     if (gfittask->Opti->OptDoWhat > 0)
@@ -156,7 +156,7 @@ int main( int argc, char *argv[] )
             // CHECK NESTED pH to use acid or base
             gfittask->nestedpH ();
         }
-        Equil_objective_function_callback(gfittask->Opti->optv, grad, gfittask);
+        Equil_objective_function_callback(gfittask->Opti->optv, grad, gfittask.get());
     }
 
     gpf->flog << std::endl <<"15. Back in main.cpp(122). Performing statistics ..."<< std::endl;
@@ -164,26 +164,26 @@ int main( int argc, char *argv[] )
     countit = master_counter;
 
     // Perform statistical analysis: Instantiate object of Statistics class
-    if (gfittask->Tfun->objfun.size() > 0)
+    if ( gfittask->Tfun->objfun.size() > 0)
     {
-        statistics stat( gfittask, gfittask->weighted_Tfun_sum_of_residuals, (int) gfittask->Opti->optv.size(), countit );
+        statistics stat( gfittask.get(), gfittask->weighted_Tfun_sum_of_residuals, (int) gfittask->Opti->optv.size(), countit );
 
         // perform basic statistical analysis
-        stat.basic_stat( gfittask->Opti->optv, gfittask );
+        stat.basic_stat( gfittask->Opti->optv, gfittask.get() );
 
         if( gfittask->Opti->OptDoWhat != 2 )
         {
-            stat.sensitivity_correlation( gfittask->Opti->optv, gfittask );
+            stat.sensitivity_correlation( gfittask->Opti->optv, gfittask.get() );
         }
 
-        if(stat.MCbool > 0)  stat.MC_confidence_interval( gfittask->Opti->optv, gfittask );
+        if(stat.MCbool > 0)  stat.MC_confidence_interval( gfittask->Opti->optv, gfittask.get() );
         stat.print_param();
         gfittask->print_global_results( );
     }   
     if (gfittask->Opti->h_optNF)
     gfittask->print_nested_results();
 
-    delete gfittask;
+    //delete gfittask;
 
     gettimeofday(&end_, nullptr);
 

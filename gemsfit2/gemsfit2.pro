@@ -43,11 +43,11 @@ CONFIG += serial release
 CONFIG += c++17
 
 # check settengs
-DEFINES         += useomp
+#DEFINES         += useomp
 #DEFINES += OVERFLOW_EXCEPT  #compile with nan inf exceptions
 DEFINES += CHECK_LOAD # to generate print for initial data after read input configuration.
 
-#DEFINES += OLD_EJDB # compile using ejdb1
+DEFINES += OLD_EJDB # compile using ejdb1
 
 DEFINES += IPMGEMPLUGIN
 #DEFINES += NODEARRAYLEVEL

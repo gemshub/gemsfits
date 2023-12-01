@@ -100,8 +100,8 @@ class Data_Manager : public TNode
         typedef std::vector<std::string>  string_v;
         typedef std::vector<bool>    bool_v;
 
-        std::vector<TNode*> NodT;
-        std::vector<double*> bICv;
+        std::vector<std::shared_ptr<TNode>> NodT;
+        std::vector<std::shared_ptr<double[]>> bICv;
 
         /// JSON object for building the target function
         std::string DataTarget;
@@ -142,7 +142,7 @@ class Data_Manager : public TNode
                     double Qerror;       /// error (uncertainty) of quantity in the same units
                     std::string Qunit;        /// units of measurement of quantity { 'g' or 'mol' (default) or … }
                 };
-                std::vector<components*> sbcomp;
+                std::vector<std::shared_ptr<components>> sbcomp;
 
                 // defines properties for this experiment 2nd level in EJDB
                 struct properties
@@ -152,7 +152,7 @@ class Data_Manager : public TNode
                     double Qerror;       /// error (uncertainty) of quantity in the same units
                     std::string Qunit;        /// units of measurement of quantity
                 };
-                std::vector<properties*> props;
+                std::vector<std::shared_ptr<properties>> props;
 
                 struct phases                         /// data for phases characterised (measured) in this experiment 2nd level in EJDB
                 {
@@ -166,12 +166,12 @@ class Data_Manager : public TNode
                         double Qerror;                  /// error
                         std::string Qunit;                   /// units
                     };
-                    std::vector<prop*> phprop;
+                    std::vector<std::shared_ptr<prop>> phprop;
 
                     // composition of the phases in elements
-                    std::vector<components*> phIC;
+                    std::vector<std::shared_ptr<components>> phIC;
 
-                    std::vector<components*> phMR;
+                    std::vector<std::shared_ptr<components>> phMR;
 
                     // dcomps (end member, phase component) 3rd level in EJDB
                     struct dcomps
@@ -184,13 +184,13 @@ class Data_Manager : public TNode
                             double Qerror;               /// error
                             std::string Qunit;                /// units
                         };
-                        std::vector<dcprop*> DCprop; /// std::vector of dependent components porperties
+                        std::vector<std::shared_ptr<dcprop>> DCprop; /// std::vector of dependent components porperties
                     };
-                    std::vector<dcomps*> phDC;       /// std::vector of dependent components in a phase
+                    std::vector<std::shared_ptr<dcomps>> phDC;       /// std::vector of dependent components in a phase
                 };
-                std::vector<phases*> expphases;      /// std::vector of phases measured in one experiment
+                std::vector<std::shared_ptr<phases>> expphases;      /// std::vector of phases measured in one experiment
             };
-            std::vector<samples*> experiments;         /// std::vector of samples from one experimental dataset
+            std::vector<std::shared_ptr<samples>> experiments;         /// std::vector of samples from one experimental dataset
 
 
             struct DataSynonyms
