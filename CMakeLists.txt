@@ -77,12 +77,12 @@ endif()
 
 # Set the headers directory path
 set(COMMON_DIR "${CMAKE_SOURCE_DIR}/common")
-set(GEMS3K_DIR "${CMAKE_SOURCE_DIR}/gems3k/GEMS3K")
+set(GEMS3K_DIR "${CMAKE_SOURCE_DIR}/standalone/GEMS3K")
 
 # Set the include directories
 include_directories(${COMMON_DIR})
 include_directories(${GEMS3K_DIR})
-include_directories("${CMAKE_SOURCE_DIR}/gems3k")
+include_directories("${CMAKE_SOURCE_DIR}/standalone")
 if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
     include_directories("/usr/local/include")
     link_directories("/usr/local/lib")
