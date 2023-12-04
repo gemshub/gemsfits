@@ -6,7 +6,7 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     EXTN=so
 fi
 
-USING_EJDB=NO #$1 # OLD_EJDBr
+USING_EJDB=OLD_EJDB #$1 # OLD_EJDBr
 
 # EJDB2 is an embeddable JSON database engine.
 if [ "$USING_EJDB" == "OLD_EJDB" ];
