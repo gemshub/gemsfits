@@ -26,8 +26,8 @@ if [ "$USING_EJDB" == "OLD_EJDB" ];
                   sudo make install
 
           # Removing generated build files
-          cd ~ && \
-                   rm -rf ~/code
+          #cd ~ && \
+          #         rm -rf ~/code
   }
   else
   test -f /usr/local/lib/libejdb2.$EXTN || {

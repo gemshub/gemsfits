@@ -1,13 +1,14 @@
 name: gemsfit2
 
 dependencies:
-  - gxx_linux-64>=9.4.0  # [linux]
   - cmake>=3.13
-  - ninja # [unix]
-  - make  # [win]
-  - git
+  - ninja
+  - clcache  # [win]
   - ccache  # [unix]
-  - spdlog
+  - gxx_linux-64>=9.4.0  # [linux]
+  - clangxx_osx-64  # [osx]
+  - vs2019_win-64  # [win]
+  - git
   - nlohmann_json
   - spdlog
   - yaml-cpp
