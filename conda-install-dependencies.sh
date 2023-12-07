@@ -8,6 +8,26 @@ fi
 
 USING_EJDB=OLD_EJDB #$1 # OLD_EJDBr
 
+# NLopt is a library for nonlinear local and global optimization
+# https://github.com/stevengj/nlopt/archive/v2.7.0.tar.gz
+test -f /usr/local/lib/libnlopt.$EXTN || {
+
+        # Building nlopt library
+        mkdir -p ~/code && \
+                cd ~/code && \
+                git clone https://github.com/stevengj/nlopt.git && \
+                cd nlopt && \
+                mkdir -p build && \
+                cd build && \
+                cmake .. -DCMAKE_CXX_FLAGS=-fPIC -DCMAKE_BUILD_TYPE=Release && \
+                make && \
+                sudo make install
+
+        # Removing generated build files
+        cd ~ && \
+                 rm -rf ~/code
+}
+
 # EJDB2 is an embeddable JSON database engine.
 if [ "$USING_EJDB" == "OLD_EJDB" ];
   then
@@ -26,8 +46,8 @@ if [ "$USING_EJDB" == "OLD_EJDB" ];
                   sudo make install
 
           # Removing generated build files
-          #cd ~ && \
-          #         rm -rf ~/code
+          cd ~ && \
+                   rm -rf ~/code
   }
   else
   test -f /usr/local/lib/libejdb2.$EXTN || {
@@ -44,8 +64,8 @@ if [ "$USING_EJDB" == "OLD_EJDB" ];
                 sudo make install
 
         # Removing generated build files
-        cd ~ && \
-                 rm -rf ~/code
+        #cd ~ && \
+        #         rm -rf ~/code
    }
 fi
 

@@ -12,7 +12,7 @@ dependencies:
   - nlohmann_json
   - spdlog
   - yaml-cpp
-  - nlopt
+  #- nlopt
   - libgomp
   - boost-cpp
   - armadillo
