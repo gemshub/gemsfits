@@ -54,7 +54,7 @@ jobs:
       conda update -q conda
       conda info -a
       conda devenv
-      call activate gemsfits2
+      call activate gemsfits
     displayName: Create Anaconda environment
 
   - task: BatchScript@1

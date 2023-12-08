@@ -11,4 +11,4 @@ pipelines:
         script: # Modify the commands below to build your repository.
           - git submodule update --init --recursive
           - bash ci/pipelines/install-linux.sh
-           - bash ci/pipelines/test.sh
+          - bash ci/pipelines/test.sh

@@ -16,20 +16,22 @@ conda install conda-devenv
 conda update -q conda
 conda info -a
 conda devenv
-source activate gemsfits2
+source activate gemsfits
 ./conda-install-dependencies.sh
 mkdir build
 cd build
 # Configure step
 cmake -GNinja \
-    -DPYTHON_EXECUTABLE:FILEPATH=$python_path \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_LIBDIR=lib \
     ..
 ninja install
-if [ $? -eq 1 ]
+if [ $? -eq 0 ]
 then
-echo "The install failed" >&2
+echo "The make step ran ok"
+else
+echo "The make step failed" >&2
 exit 1
 fi
 conda list
+cd ..

@@ -1,4 +1,4 @@
-name: gemsfit2
+name: gemsfits
 
 dependencies:
   - cmake>=3.13

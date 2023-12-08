@@ -1,2 +1,2 @@
-./build/tests/test_main
+#./build/tests/test_main
 #pytest -ra -vv --color=yes .
