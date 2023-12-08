@@ -18,7 +18,8 @@ dependencies:
   - armadillo
   #- gems3k>=4.3.6
   #- thermofun>=0.4.3
-  - qt>=5.12.5
+  - qt6-main
+  - qt6-charts
   - mesalib
   - mesa-libgl-cos6-x86_64 # [linux]
   - libselinux-cos6-x86_64 # [linux]
