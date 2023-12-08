@@ -12,22 +12,12 @@ dependencies:
   - nlohmann_json
   - spdlog
   - yaml-cpp
-  #- nlopt
   - libgomp
   - boost=1.83.0
   - armadillo
-  #- gems3k>=4.3.6
-  #- thermofun>=0.4.3
   - qt6-main
   - qt6-charts
-  - mesalib
-  - mesa-libgl-cos6-x86_64 # [linux]
-  - libselinux-cos6-x86_64 # [linux]
-  - libxxf86vm-cos6-x86_64 # [linux]
-  - xorg-libxext # [linux]
-  - xorg-libxau # [linux]
-  - xorg-libxdamage # [linux]
-
+  - mesa-libgl-devel-cos7-x86_64 # [unix]
 
 environment:
 
