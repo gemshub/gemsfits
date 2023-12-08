@@ -28,9 +28,11 @@ add_executable( gemsfit3 $<TARGET_OBJECTS:FITS_OBJECT> )
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     target_link_libraries(gemsfit3 pthread )
 else()
-    #target_link_libraries(gemsfit3 nlopt Boost::filesystem Boost::system armadillo ejdb yaml-cpp openmp pthread)
-    target_link_libraries(gemsfit3 nlopt boost_filesystem boost_system armadillo ejdb yaml-cpp pthread)
+    target_link_libraries(gemsfit3 nlopt Boost::filesystem Boost::system armadillo ejdb yaml-cpp pthread)
+    #target_link_libraries(gemsfit3 nlopt boost_filesystem boost_system armadillo ejdb yaml-cpp openmp pthread)
 endif()
+
+
 
 if(USE_THERMOFUN MATCHES ON)
   target_link_libraries(gemsfit3 PUBLIC ThermoFun::ThermoFun)

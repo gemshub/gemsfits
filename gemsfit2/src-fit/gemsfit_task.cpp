@@ -467,7 +467,11 @@ void TGfitTask::setnodes()
 
 #ifdef useomp
     omp_set_num_threads(this->MPI);
+#ifdef buildWIN32
     #pragma omp parallel for schedule(static)
+#else
+    #pragma omp parallel for schedule(dynamic)
+#endif
 #endif
     for (n=0; n<NodT.size(); ++n)
     {

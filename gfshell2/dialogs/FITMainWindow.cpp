@@ -29,6 +29,8 @@
 #include "json_view.h"
 #include "v_yaml.h"
 
+#include "io_template.h"
+extern std::vector<io_formats::outField> DataCH_dynamic_fields;
 //--------------------------------------------------------------------------
 
 void TKeyTable::keyPressEvent(QKeyEvent* e)
@@ -105,6 +107,9 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     projectSettings(0),  mainSettings(0)
 {
     ui->setupUi(this);
+
+    // Some changes in GEMS3k to read CH files without V0
+    DataCH_dynamic_fields[f_V0].alws = 0;
 
     // setup process
     fitProcess = new QProcess( this);

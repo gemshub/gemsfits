@@ -80,6 +80,9 @@ int gettimeofday(struct timeval* tp, struct timezone* tzp) {
 //using namespace std;
 namespace bfs=boost::filesystem;
 
+#include "io_template.h"
+extern std::vector<io_formats::outField> DataCH_dynamic_fields;
+
 int generateConfig(); // Mode GEMSFIT to generate input configuration file
 int generateJConfig();
 
@@ -98,6 +101,9 @@ int main( int argc, char *argv[] )
     struct timeval start, end_;
     // benchmark code
     gettimeofday(&start, nullptr);
+
+    // Some changes in GEMS3k to read CH files without V0
+    DataCH_dynamic_fields[f_V0].alws = 0;
 
     std::shared_ptr<TGfitPath> gpf_shared = std::make_shared<TGfitPath>(argc, argv);
     gpf = gpf_shared.get();

@@ -9,7 +9,7 @@ VERSION         = 2.0.0
 CONFIG += thread
 CONFIG += c++17
 
-#DEFINES         += OLD_EJDB # compile using ejdb1
+DEFINES         += OLD_EJDB # compile using ejdb1
 
 #DEFINES         += Use_mt_mode
 DEFINES         += IPMGEMPLUGIN

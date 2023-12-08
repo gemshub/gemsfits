@@ -348,7 +348,7 @@ void EjdbDBClient::select_query_omp(const std::string& collname, const std::stri
     //fprintf(stderr, "%s", TCXSTRPTR(log));
     //std::cout << count << " records in collection " << collname << std::endl;
 
-#ifdef useomp
+#ifdef useomp1 // hide parallel valrind problems
     omp_set_num_threads(num_threads);
 #ifdef buildWIN32
     #pragma omp parallel for schedule(static)
