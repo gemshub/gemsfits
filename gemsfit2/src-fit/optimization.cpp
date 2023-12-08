@@ -43,7 +43,7 @@ optimization::optimization()
     h_optNF = false;
     mode = gpf->KeysNdx;
 
-    constraint_data = new my_constraint_data;
+    constraint_data = std::make_shared<my_constraint_data>();
 
     OptTuckey = 0;
     OptInitStep = 0;
@@ -258,8 +258,6 @@ void optimization::GetParameters ()
 
 optimization::~optimization()
 {
-    delete constraint_data;
-
 }
 
 void optimization::normalize_params(const std::vector<double> initguesses , bool NormBounds)

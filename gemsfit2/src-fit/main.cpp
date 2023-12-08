@@ -99,7 +99,8 @@ int main( int argc, char *argv[] )
     // benchmark code
     gettimeofday(&start, nullptr);
 
-    gpf = new TGfitPath(argc, argv);
+    std::shared_ptr<TGfitPath> gpf_shared = std::make_shared<TGfitPath>(argc, argv);
+    gpf = gpf_shared.get();
 
     // cleaning work folder
     remove( gpf->FITFile().c_str() );

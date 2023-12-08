@@ -211,7 +211,7 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &/*grad
     int P_id = omp_get_thread_num();
     long int NodeStatusCH;
 //    bool notP = true, notT=true;
-    int op = 0;
+    size_t op = 0;
 
     /// error think about a way to store the indexes of the nfun parameters
 
@@ -219,20 +219,19 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &/*grad
     {
         for (unsigned j = 0; j < sys->Opti->optNFParam[e]->Get_optFPsize(); j++) // loops torugh optPF vector
         {
-            if ((sys->vPAndx[P_id]->ndx[op] == j) && (sys->vEAndx[P_id]->ndx[e] == e))
+            if ( (sys->vPAndx[P_id]->ndx.size() > op ) && (sys->vPAndx[P_id]->ndx[op] == j) && (sys->vEAndx[P_id]->ndx[e] == e))
             {
                 sys->Opti->optNFParam[sys->vEAndx[P_id]->ndx[e]]->Set_Fparam(sys->vPAndx[P_id]->ndx[op], sys->EXPndx[P_id], opt[op]);
                 op++;
-            }
+           }
         }
     }
-
     op = 0;
     for (unsigned e = 0; e < sys->vEAndx[P_id]->ndx.size(); e++) // loops trough OptParameter vector
     {
         for (unsigned j = 0; j < sys->Opti->optNFParam[e]->Get_optFPsize(); j++) // loops torugh optPF vector
         {
-            if ((sys->vPAndx[P_id]->ndx[op] == j) && (sys->vEAndx[P_id]->ndx[e] == e))
+            if ( (sys->vPAndx[P_id]->ndx.size() > op ) && (sys->vPAndx[P_id]->ndx[op] == j) && (sys->vEAndx[P_id]->ndx[e] == e))
             {
                 int Pindex;
                 Pindex = sys->Opti->optNFParam[sys->vEAndx[P_id]->ndx[e]]->Get_FPndx(sys->vPAndx[P_id]->ndx[op] );
@@ -241,7 +240,6 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &/*grad
             }
         }
     }
-
     for (unsigned e = 0; e < sys->vEAndx[P_id]->ndx.size(); e++) // loops trough OptParameter vector
     {
     sys->Opti->optNFParam[sys->vEAndx[P_id]->ndx[e]]->Adjust_Lparam(sys->NodT[sys->EXPndx[P_id]].get(), sys->EXPndx[P_id] );
@@ -305,7 +303,6 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &/*grad
 //    }
 
     residual = sys->get_residual (sys->EXPndx[P_id], sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]], count);
-
     return residual;
 }
 

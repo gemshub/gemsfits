@@ -52,7 +52,7 @@ private:
         int id;
         double Constraints;
     } my_constraint_data;
-    my_constraint_data* constraint_data;
+    std::shared_ptr<my_constraint_data> constraint_data;
     std::vector<my_constraint_data> constraint_data_v;
 
 

@@ -69,7 +69,6 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
         vEAndx.push_back(std::make_shared<vect>());
     }
     h_grad = false;
-
     mode = gpf->KeysNdx; // determines if the long keys or short keys
 
     // file containing the input parameters of the system and of the optimization class
@@ -133,18 +132,17 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
 
     get_Lparams_delta (); // change
 
-
     // check for errors and inconsitencies of input options and parameters
     gfit_error ( );
 
     number_of_residuals = get_number_of_residuals( );
+
     set_average_objfun ();
 
     set_weights();
 
     if (this->LimitOfDetection > (this->minimum_value/100))
         this->LimitOfDetection = this->minimum_value/100; // sets the limit of detection not more than 100 times smaller than the lowest experimental value
-
 }
 
 void TGfitTask::gfit_error ( )

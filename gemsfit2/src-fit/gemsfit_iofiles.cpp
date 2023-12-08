@@ -45,7 +45,7 @@ int generateJConfig()
     try
     {
         // call GEM_init to read GEMS3K input files
-        TNode* node  = new TNode();
+        std::shared_ptr<TNode> node  = std::make_shared<TNode>();
 
         // call GEM_init     --> read in input files
         if( (node->GEM_init( gpf->GEMS3LstFilePath().c_str() )) == 1 )
@@ -57,7 +57,7 @@ int generateJConfig()
 
         bool with_comments = true;
         bool brief_mode = false;
-        auto json_obj = generateJson(node, gpf->KeysNdx);
+        auto json_obj = generateJson(node.get(), gpf->KeysNdx);
 
         std::string fname = gpf->OptParamFile();
         std::fstream ff(fname.c_str(), std::ios::out/*|ios::app*/ );

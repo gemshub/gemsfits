@@ -445,7 +445,7 @@ double residual_properties(int i, int p, TGfitTask::TargetFunction::obj_fun &obj
 double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_fun &objfun, TGfitTask *sys)
 {
     const char *elem_name, *phase_name;
-    int ICndx, HCndx, PHndx, nIC;
+    int ICndx, PHndx, nIC;
     double computed_value = 0.0, measured_value = 0.0, error_value = 0.0;
     double Tfun_residual = 0.0, Weighted_Tfun_residual = 0.0, weight_ = 1.0;
     DATACH* dCH = sys->NodT[i]->pCSD();
@@ -502,7 +502,7 @@ double residual_phase_elem (int i, int p, int e, TGfitTask::TargetFunction::obj_
             }
             if (objfun.exp_unit == keys::molkg_dry || objfun.exp_unit == keys::logmolkg_dry)
             {
-                HCndx = sys->NodT[i]->IC_name_to_xDB("H");
+                int HCndx = sys->NodT[i]->IC_name_to_xDB("H");
                 double H_amount = IC_in_PH[HCndx];
                 double H2O_mass = H_amount/2*18.02/1000; // in kg
                 computed_value = computed_value / (sys->NodT[i]->Ph_Mass(PHndx)-H2O_mass);

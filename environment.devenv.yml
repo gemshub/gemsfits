@@ -14,7 +14,7 @@ dependencies:
   - yaml-cpp
   #- nlopt
   - libgomp
-  - boost-cpp
+  - boost
   - armadillo
   #- gems3k>=4.3.6
   #- thermofun>=0.4.3

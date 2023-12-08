@@ -50,6 +50,7 @@ statistics::statistics(TGfitTask *gfittask, double Weighted_Tfun_sum_of_residual
 
 //    gfittask->test();
 
+    Weighted_mean_res = 0.0;
     number_of_measurements = 0;
     number_of_measurements += gfittask->computed_values_v.size();
     Tfun_sum_of_residuals = 0.0;
@@ -100,7 +101,6 @@ std::cout<<" Statistics Constructor: number_of_parameters: "<<number_of_paramete
     // Degrees of freedom
     degrees_of_freedom = number_of_measurements-number_of_parameters;
 
-
     // Compute standard deviation of residuals
     for (unsigned int i=0; i<number_of_measurements; i++)
     {
@@ -110,6 +110,7 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
             mean_res += gfittask->residuals_v[i];
 
     }
+
 // copute means
  Weighted_TF_mean_res = Weighted_TF_mean_res / number_of_measurements;  // mean of residuals that summ up to give the minimized value
          Abs_mean_res = Abs_mean_res / number_of_measurements;          // mean of the absolute value of residuals
@@ -228,6 +229,7 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
       }
   }
 
+
   for (unsigned j = 0; j<gfittask->Tfun->objfun.size(); j++)
   {
       for (unsigned i=0; i<gfittask->aTfun.size(); i++)
@@ -246,7 +248,6 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
       objfun_stat[j]->norm_stdev_res = sqrt(objfun_stat[j]->norm_stdev_res / objfun_stat[j]->nr);
       objfun_stat[j]->stdev_res = sqrt(objfun_stat[j]->stdev_res / objfun_stat[j]->nr);
   }
-
 
 }
 
@@ -358,7 +359,6 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     }
 
 
-
     // Compute R^2: coefficient of determination for all data
         mean = 0;
     for (i=0; i< number_of_measurements; i++)
@@ -368,7 +368,6 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     mean = mean / gfittask->measured_values_v.size();
 
     assert( gfittask->computed_values_v.size() == gfittask->measured_values_v.size() );
-
 
     for(i=0; i< number_of_measurements; i++ )
     {
@@ -391,7 +390,6 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         }
         objfun_stat[j]->R2 = 1 - ResSumSquares / TotalSumSquares;
     }
-
 
     // Pearson Chi Square test
     Pearsons_chi_square = 0.;
@@ -649,7 +647,6 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         gpf->fstat << "Number-of-parameters," << number_of_parameters 	<< std::endl;
         gpf->fstat << "Number-of-runs-needed-for-regression," << num_of_runs 		<< std::endl;
         gpf->fstat << "Degrees-of-freedom," << degrees_of_freedom	 	<< std::endl;
-
 //        gpf->fstat << " - - - - - - - RESIDUAL STATISTICS - - - - - - - " << std::endl;
         gpf->fstat << "Value-of-the-minimized-function-sum," << Weighted_Tfun_sum_of_residuals 		<< std::endl;
 //        gpf->fstat << " Target function sum  :                                                	" << Tfun_sum_of_residuals 		<< std::endl;
@@ -1087,7 +1084,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
     for( i=0; i<num_of_MC_runs; i++ )
         MCR_fitted_parameters_all[i] = &MCR_fitted_parameters_all_storage[ i * n_Rparam ];
 
-    double* scatter_all 	  = new double[ number_of_measurements * num_of_MC_runs ];
+    //double* scatter_all 	  = new double[ number_of_measurements * num_of_MC_runs ];
 
     int count = 0;
 
@@ -1453,7 +1450,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
     free (MCR_fitted_parameters_all[0]);
     free (MCR_fitted_parameters_all);
 
-    delete[] scatter_all;
+    //delete[] scatter_all;
 
 
 
