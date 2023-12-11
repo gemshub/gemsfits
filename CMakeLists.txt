@@ -73,6 +73,7 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
         /MP4
         /EHsc
         /Od
+        /Zc
         /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING
         /DNOMINMAX
     )
