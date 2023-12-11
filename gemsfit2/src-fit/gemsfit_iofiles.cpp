@@ -23,15 +23,15 @@
 #include <cstdlib>
 
 #include <omp.h>
-#ifdef __unix
-#include <unistd.h>
-#include <sys/time.h>
-#else
-#include <io.h>
-#ifdef _MSC_VER
-#include <direct.h>
-#endif
-#endif
+//#ifdef __unix
+//#include <unistd.h>
+//#include <sys/time.h>
+//#else
+//#include <io.h>
+//#ifdef _MSC_VER
+//#include <direct.h>
+//#endif
+//#endif
 #include "gemsfit_iofiles.h"
 #include "keywords.h"
 #include "v_service.h"
