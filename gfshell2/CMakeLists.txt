@@ -35,10 +35,10 @@ add_library( GUI_OBJECT OBJECT ${HEADER_FILES} ${SOURCE_FILES} ${GUI_SRCS}
                     ${GEMS3K_HEADER_FILES} ${GEMS3K_SOURCE_FILES} )
 
 # Create an executable named app
-add_executable( shellfit3 $<TARGET_OBJECTS:GUI_OBJECT> )
+add_executable(shellfit3 $<TARGET_OBJECTS:GUI_OBJECT> )
 
 # Link your application against Qt C++ library.
-target_link_libraries ( shellfit3 ${GUI_QT_TARGETS} )
+target_link_libraries(shellfit3 ${GUI_QT_TARGETS} )
 
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     target_link_libraries(shellfit3 pthread )
@@ -47,10 +47,10 @@ else()
 endif()
 
 if(USE_THERMOFUN MATCHES ON)
-  target_link_libraries(shellfit3 PUBLIC ThermoFun::ThermoFun)
+  target_link_libraries(shellfit3 ThermoFun::ThermoFun)
 else()
   if(USE_SPDLOG_PRECOMPILED)
-     target_link_libraries(shellfit3 PUBLIC spdlog::spdlog)
+     target_link_libraries(shellfit3 spdlog::spdlog)
   endif()
 endif()
 

@@ -23,7 +23,7 @@ add_library( FITS_OBJECT OBJECT ${COMMON_HEADER_FILES} ${COMMON_SOURCE_FILES}
                     ${MUPARSER_HEADER_FILES} ${MUPARSER_SOURCE_FILES} )
 
 # Create an executable named app
-add_executable( gemsfit3 $<TARGET_OBJECTS:FITS_OBJECT> )
+add_executable(gemsfit3 $<TARGET_OBJECTS:FITS_OBJECT>)
 
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     target_link_libraries(gemsfit3 pthread )
@@ -35,10 +35,10 @@ endif()
 
 
 if(USE_THERMOFUN MATCHES ON)
-  target_link_libraries(gemsfit3 PUBLIC ThermoFun::ThermoFun)
+  target_link_libraries(gemsfit3 ThermoFun::ThermoFun)
 else()
   if(USE_SPDLOG_PRECOMPILED)
-     target_link_libraries(gemsfit3 PUBLIC spdlog::spdlog)
+     target_link_libraries(gemsfit3 spdlog::spdlog)
   endif()
 endif()
 
