@@ -7,6 +7,7 @@ if(USE_SPDLOG_PRECOMPILED)
      else()
          message(STATUS "Found spdlog v${spdlog_VERSION}")
      endif()
+  endif()
 endif()
 
 find_library(NLOPT_LIB nlopt)
