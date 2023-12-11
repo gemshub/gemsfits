@@ -48,6 +48,7 @@ else()
    option(USE_SPDLOG_PRECOMPILED "Use spdlog in compiled version" OFF)
 endif()
 
+
 # Set the list of compiler flags for GNU compiler
 if(${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
     add_compile_options( -pthread -Wall -Wno-misleading-indentation -Wno-ignored-attributes -Wno-variadic-macros -Wno-deprecated)

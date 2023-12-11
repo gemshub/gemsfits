@@ -38,9 +38,9 @@
 #include "gemsfit_target_functions.h"
 
 
-#ifndef __unix
-#include <io.h>
-#endif
+//#ifndef __unix
+//#include <io.h>
+//#endif
 
 
 //using namespace std;

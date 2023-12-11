@@ -27,9 +27,9 @@
 //-------------------------------------------------------------------
 //
 
-#ifndef __unix
-#include <io.h>
-#endif
+//#ifndef __unix
+//#include <io.h>
+//#endif
 
 #include <cmath>
 #include <iomanip>

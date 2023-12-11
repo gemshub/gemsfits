@@ -23,7 +23,7 @@
 //
 
 #include <sstream>
-#include <muParser.h>
+#include "muParser.h"
 #include "keywords.h"
 #include "gemsfit_iofiles.h"
 #include "gemsfit_global_variables.h"

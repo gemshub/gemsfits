@@ -1,6 +1,6 @@
 #include <string>
 #include <vector>
-#include <muParser.h>
+#include "muParser.h"
 #include "muparserfix.h"
 
 #if defined(_UNICODE)

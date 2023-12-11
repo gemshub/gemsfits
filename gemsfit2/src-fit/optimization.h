@@ -33,7 +33,6 @@
 #define OPTIMIZATION_H
 
 #include <vector>
-#include <math.h>
 #include <string>
 #include <fstream>
 #include <iostream>

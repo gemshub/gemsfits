@@ -34,7 +34,7 @@
 
 #include <boost/lexical_cast.hpp>
 #include <boost/locale.hpp>
-#include <muParser.h>
+#include "muParser.h"
 #include "muparserfix.h"
 #include "gemsfit_target_functions.h"
 #include "keywords.h"

@@ -16,7 +16,6 @@
 // E-mail gems2.support@psi.ch
 //-------------------------------------------------------------------
 
-#include <unistd.h>
 #include <iomanip>
 #include <chrono>
 #include <string>

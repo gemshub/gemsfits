@@ -23,7 +23,6 @@
 
 #include <string>
 #include <fstream>
-#include <sys/stat.h>
 #include <ctime>
 #include "node.h"
 
