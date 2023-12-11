@@ -19,19 +19,11 @@
 */
 
 #include <iostream>
-//using namespace std;
 #include <cstdlib>
+#include <filesystem>
+namespace fs = std::filesystem;
 
 #include <omp.h>
-//#ifdef __unix
-//#include <unistd.h>
-//#include <sys/time.h>
-//#else
-//#include <io.h>
-//#ifdef _MSC_VER
-//#include <direct.h>
-//#endif
-//#endif
 #include "gemsfit_iofiles.h"
 #include "keywords.h"
 #include "v_service.h"
@@ -518,15 +510,7 @@ TGfitPath::TGfitPath(int c, char *v[]):
     optParamFilePath = "";
     gems3LstFilePath = "";
 
-    char cur_dir[300];
-    // let's try to find resources by path of the executable
-#ifdef __unix
-    getcwd(cur_dir, 300);
-#else
-    _getcwd(cur_dir, 300);
-#endif
-
-    std::cout << cur_dir << std::endl;
+    std::cout << fs::current_path() << std::endl;
     for (int ii = 1; ii < argc; ii++)
         std::cout << ii << " arg " << argv[ii] << std::endl;
 

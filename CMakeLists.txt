@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.9)
 project(gemsfits VERSION 2.0.0 LANGUAGES CXX C)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_MACOSX_RPATH ON)
 
@@ -63,6 +63,7 @@ if(${CMAKE_CXX_COMPILER_ID} MATCHES "Intel")
     add_compile_options(-Wall -Wno-variadic-macros -Wno-deprecated)
 endif()
 
+
 # Set the list of compiler flags for MSVC compiler
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     add_compile_options(
@@ -70,6 +71,7 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
         /D_CRT_SECURE_NO_WARNINGS=1
         /MP4
         /EHsc
+        /Od
         /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING
         /DNOMINMAX
     )

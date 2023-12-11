@@ -65,22 +65,8 @@ int gettimeofday(struct timeval* tp, struct timezone* tzp) {
 #include "gemsfit_task.h"
 #include "statistics.h"
 #include "gemsfit_global_functions.h"
-#include <iomanip>
-
-#ifdef buildWIN32
-#define BOOST_FILESYSTEM_VERSION 3
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-#include <boost_win32/boost/filesystem.hpp>
-#else
-#define BOOST_FILESYSTEM_VERSION 3
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-#include <boost/filesystem.hpp>
-#endif
-
-//using namespace std;
-namespace bfs=boost::filesystem;
-
 #include "io_template.h"
+
 extern std::vector<io_formats::outField> DataCH_dynamic_fields;
 
 int generateConfig(); // Mode GEMSFIT to generate input configuration file

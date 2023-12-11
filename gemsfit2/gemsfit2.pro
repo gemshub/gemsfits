@@ -79,8 +79,8 @@ CONFIG( mpi, serial|mpi ) {
         QMAKE_CFLAGS += $$system(mpicc --showme:compile)
         QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions $$system(mpic++ --showme:compile) -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions -fopenmp
 #        QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions $$system(mpic++ --showme:compile) -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions
-        LIBS +=  $$system(mpic++ --showme:link) -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp
-#        LIBS +=  $$system(mpic++ --showme:link) -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz -liomp5
+        LIBS +=  $$system(mpic++ --showme:link) -lnlopt -lm -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp
+#        LIBS +=  $$system(mpic++ --showme:link) -lnlopt -lm  -lboost_system -llapack -lblas -larmadillo -lpthread -lz -liomp5
 }
 
 #contains( CONFIG, serial ) {
@@ -91,8 +91,8 @@ CONFIG( serial, serial|mpi ) {
         QMAKE_CFLAGS += -fopenmp
         QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions -fopenmp
 #        QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions
-        LIBS += -lnlopt -lm -lboost_filesystem  -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp
-#        LIBS += -lnlopt -lm -lboost_filesystem  -lboost_system -llapack -lblas -larmadillo -lpthread -lz -liomp5
+        LIBS += -lnlopt -lm  -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp
+#        LIBS += -lnlopt -lm -lboost_system -llapack -lblas -larmadillo -lpthread -lz -liomp5
 }
 
 !macx-clang {
