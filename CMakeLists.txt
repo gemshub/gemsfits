@@ -78,6 +78,7 @@ endif()
 # Set the headers directory path
 set(COMMON_DIR "${CMAKE_SOURCE_DIR}/common")
 set(GEMS3K_DIR "${CMAKE_SOURCE_DIR}/standalone/GEMS3K")
+set(EJDB_DIR "${CMAKE_SOURCE_DIR}/gemsfit2/tcejdb_win32-64")
 
 # Set the include directories
 include_directories(${COMMON_DIR})
@@ -86,6 +87,10 @@ include_directories("${CMAKE_SOURCE_DIR}/standalone")
 if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
     include_directories("/usr/local/include")
     link_directories("/usr/local/lib")
+endif()
+if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+    include_directories("${EJDB_DIR}/include")
+    link_directories("${EJDB_DIR}/lib")
 endif()
 
 # Find all gemsfits dependencies

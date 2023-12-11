@@ -19,6 +19,8 @@
 #include <unistd.h>
 #include <iomanip>
 #include <chrono>
+#include <string>
+#include <sstream>
 #include "f_file.h"
 #include "v_service.h"
 

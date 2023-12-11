@@ -15,6 +15,7 @@ dependencies:
   - libgomp # [linux]
   - boost=1.83.0
   - armadillo
+  - nlopt  # [win]
   - qt6-main
   - qt6-charts
   - mesa-libgl-devel-cos7-x86_64 # [unix]
