@@ -23,57 +23,23 @@
 /**
     @mainpage GEMSFIT2 - fitting thermodynamic data
     @ author G. Dan Miron
-	GEMFSIT - fitting tool for thermodynamic data
+    GEMFSIT - fitting tool for thermodynamic data
 */
 
 
-#include <stdio.h>
-#include <iostream>
-#include <vector>
-#include <string>
-#include <ctime>
-#include <fstream>
-
-#ifdef __unix
-#include <unistd.h>
-#include <sys/time.h>
-#else
-#ifdef __MINGW32__
-#include <sys/time.h>
-#endif
-#ifdef _MSC_VER
-#include <io.h>
-#include <time.h>
 #include <chrono>
-#include <Windows.h>
-#include <direct.h>
-
-int gettimeofday(struct timeval* tp, struct timezone* tzp) {
-  namespace sc = std::chrono;
-  sc::system_clock::duration d = sc::system_clock::now().time_since_epoch();
-  sc::seconds s = sc::duration_cast<sc::seconds>(d);
-  tp->tv_sec = s.count();
-  tp->tv_usec = sc::duration_cast<sc::microseconds>(d - s).count();
-
-  return 0;
-}
-#endif
-#endif
-
-
 #include "gemsfit_iofiles.h"
 #include "gemsfit_task.h"
 #include "statistics.h"
 #include "gemsfit_global_functions.h"
 #include "io_template.h"
-
 extern std::vector<io_formats::outField> DataCH_dynamic_fields;
 
 int generateConfig(); // Mode GEMSFIT to generate input configuration file
 int generateJConfig();
 
 // ---- // ---- // ---- // MAIN FUNCTION FOR GEMSFIT PROGRAM // ---- // ---- // ---- //
- 
+
 // CSH-solid-solution/work
 // -run 1 ./01-initial-values.json
 
@@ -84,9 +50,8 @@ int generateJConfig();
 int main( int argc, char *argv[] )
 {
     int countit = 0;
-    struct timeval start, end_;
-    // benchmark code
-    gettimeofday(&start, nullptr);
+    // start time
+    auto start_time = std::chrono::high_resolution_clock::now();
 
     // Some changes in GEMS3k to read CH files without V0
     DataCH_dynamic_fields[f_V0].alws = 0;
@@ -111,26 +76,25 @@ int main( int argc, char *argv[] )
 
     if( gpf->isRunMode() )
     {
-    if ( access( gpf->OutputDirPath().c_str(), 0 ) != 0 )
+        if ( access( gpf->OutputDirPath().c_str(), 0 ) != 0 )
 #ifdef buildWIN32
-        mkdir(gpf->OutputDirPath().c_str());
+            mkdir(gpf->OutputDirPath().c_str());
 #else
-        mkdir(gpf->OutputDirPath().c_str(), 0775);
+            mkdir(gpf->OutputDirPath().c_str(), 0775);
 #endif
     }
 
-//    if( gpf->isInitMode() ) // Mode GEMSFIT to generate input configuration file
-//      return generateConfig();
+    //    if( gpf->isInitMode() ) // Mode GEMSFIT to generate input configuration file
+    //      return generateConfig();
 
     if( gpf->isInitJMode() ) // Mode GEMSFIT to generate input configuration file
-      return generateJConfig();
+        return generateJConfig();
 
     gpf->flog.open(gpf->FITLogFile().c_str(), std::ios::trunc);
     if( gpf->flog.fail() )
-    { std::cout<<"Log fileopen error"<<std::endl; exit(1); }
-
-//    time_t now = time(0);
-//    char* dt = ctime(&now);
+    {
+        std::cout<<"Log fileopen error"<<std::endl; exit(1);
+    }
 
     // Reading in the data //
     gpf->flog << "01. main.cpp(108). Creating new TGfitTask" << std::endl;
@@ -141,7 +105,8 @@ int main( int argc, char *argv[] )
     {
         // ++++++++++ RUN OPTIMIZATION ++++++++++ //
         gfittask->run_optim();
-    } else
+    }
+    else
     {
         std::vector<double> grad;
         if (gfittask->Opti->h_optNF) // if nested function
@@ -172,19 +137,17 @@ int main( int argc, char *argv[] )
         if(stat.MCbool > 0)  stat.MC_confidence_interval( gfittask->Opti->optv, gfittask.get() );
         stat.print_param();
         gfittask->print_global_results( );
-    }   
+    }
     if (gfittask->Opti->h_optNF)
-    gfittask->print_nested_results();
+        gfittask->print_nested_results();
 
-    //delete gfittask;
+    // end time
+    auto end_time = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<float> delta = end_time - start_time;
 
-    gettimeofday(&end_, nullptr);
-
-    double delta = ((end_.tv_sec  - start.tv_sec) * 1000000u +
-             end_.tv_usec - start.tv_usec) / 1.e6;
     gpf->flog <<"16. main.cpp(152): finished in ";
-    gpf->flog << delta << " seconds. GEMSFITS: End. Bye!" << std::endl;
-    std::cout << delta << " seconds." << std::endl;
+    gpf->flog << delta.count() << " seconds. GEMSFITS: End. Bye!" << std::endl;
+    std::cout << delta.count() << " seconds." << std::endl;
     std::cout << "GEMSFITS: End. Bye!" << std::endl;
     gpf->flog.close();
     gpf->fstat.close();

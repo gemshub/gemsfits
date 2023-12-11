@@ -10,7 +10,7 @@ dependencies:
   - vs2019_win-64  # [win]
   - git
   - nlohmann_json
-  - spdlog
+  - spdlog=1.11.0
   - yaml-cpp
   - libgomp # [linux]
   - boost=1.83.0
