@@ -27,7 +27,7 @@
 /**
  *	@file data_manager.cpp
  *
- *	@brief this source file contains the implementation of the data manager class,
+ *	@brief this source fout[0].begin(), out[0].end()ile contains the implementation of the data manager class,
  *	which retrieves and stores data from thre GEMSFIT2 input file as well as
  *	the measurement form an EJDB local database.
  *
@@ -41,6 +41,7 @@
 #include "data_manager.h"
 #include "keywords.h"
 #include "f_database.h"
+#include "v_service.h"
 
 std::ostream& operator<<(std::ostream& stream, const Data_Manager::DataSynonyms& data);
 std::ostream& operator<<(std::ostream& stream, const Data_Manager::PhSyn& data);
@@ -305,7 +306,7 @@ void Data_Manager::get_db_specs_txt()
         exit(1);
     }
 #ifdef _WIN32
-    std::replace( out[0].begin(), out[0].end(), '/', '\\');
+    replace_all( gems_path, "/", '\\');
 #endif
     gpf->setGEMS3LstFilePath(gems_path);
 
