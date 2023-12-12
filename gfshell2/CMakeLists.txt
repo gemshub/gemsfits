@@ -41,7 +41,7 @@ add_executable(shellfit3 $<TARGET_OBJECTS:GUI_OBJECT> )
 target_link_libraries(shellfit3 ${GUI_QT_TARGETS} )
 
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-    target_link_libraries(shellfit3 pthread )
+    target_link_libraries(shellfit3 ejdb yaml-cpp pthread )
 else()
     target_link_libraries(shellfit3 ejdb yaml-cpp pthread)
 endif()
