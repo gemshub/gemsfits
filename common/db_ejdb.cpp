@@ -350,7 +350,7 @@ void EjdbDBClient::select_query_omp(const std::string& collname, const std::stri
 
 #ifdef useomp1 // hide parallel valrind problems
     omp_set_num_threads(num_threads);
-#ifdef buildWIN32
+#ifdef _WIN32
     #pragma omp parallel for schedule(static)
 #else
     #pragma omp parallel for schedule(dynamic)

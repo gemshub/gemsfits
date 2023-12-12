@@ -452,7 +452,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
 
 void TGfitTask::setnodes()
 {
-    unsigned int n, i, j, k, l;
+    unsigned int i, j, k, l;
     // DATACH structure content
     unsigned int nIC, nDC, nPH,  DCndx, PHndx;
     long int NodeStatusCH, NodeHandle;
@@ -467,13 +467,13 @@ void TGfitTask::setnodes()
 
 #ifdef useomp
     omp_set_num_threads(this->MPI);
-#ifdef buildWIN32
+#ifdef _WIN32
     #pragma omp parallel for schedule(static)
 #else
     #pragma omp parallel for schedule(dynamic)
 #endif
 #endif
-    for (n=0; n<NodT.size(); ++n)
+    for (int n=0; n<NodT.size(); ++n)
     {
         if( NodT[n]->GEM_init( gpf->GEMS3LstFilePath().c_str() ) == 1 )
         {
@@ -506,7 +506,7 @@ void TGfitTask::setnodes()
 //    std::cout << NodT[0]->Get_bIC(3) << std::endl;
 
     // initialize the nodes using the input GEMS3 file
-    for (n=0; n<NodT.size(); ++n)
+    for (int n=0; n<NodT.size(); ++n)
     {
         // Getting direct access to work node DATABR structure which exchanges the
         // data with GEMS3K (already filled out by reading the DBR input file)
@@ -904,13 +904,13 @@ void TGfitTask::setnodes()
 
 #ifdef useomp
     omp_set_num_threads(this->MPI);
-#ifdef buildWIN32
+#ifdef _WIN32
     #pragma omp parallel for schedule(static)
 #else
     #pragma omp parallel for schedule(dynamic)
 #endif
 #endif
-    for (unsigned int n = 0; n<NodT.size(); ++n)
+    for (int n = 0; n<NodT.size(); ++n)
     {
         NodeHandle = n;
         // Calling GEMIPM calculation

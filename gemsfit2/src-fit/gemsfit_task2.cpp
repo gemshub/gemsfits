@@ -180,13 +180,13 @@ double TGfitTask::get_sum_of_residuals( )
 
 #ifdef useomp
     omp_set_num_threads(this->MPI);
-#ifdef buildWIN32
+#ifdef _WIN32
     #pragma omp parallel for schedule(static)
 #else
     #pragma omp parallel for schedule(dynamic)
 #endif
 #endif
-        for (unsigned int i=0; i<this->experiments.size(); ++i)
+        for (int i=0; i<this->experiments.size(); ++i)
         {
             double res = get_residual(i, aTfun[i].objfun[j],count);
             residuals[i] = residuals[i] + res;
@@ -880,8 +880,8 @@ void TGfitTask::set_fixed_parameters()
     omp_set_num_threads(this->MPI);
     #pragma omp parallel for schedule(static)
 #endif
-        for (unsigned n=0; n<NodT.size(); n++  )
-            for (unsigned e = 0; e <Opti->optParam.size(); e++)
+        for (int n=0; n<NodT.size(); n++  )
+            for (int e = 0; e <Opti->optParam.size(); e++)
                 if ( Opti->optParam[e]->Get_optType() != "G0" )
                     Opti->optParam[e]->Adjust_Sparam(NodT[n].get() );
     }
@@ -890,7 +890,7 @@ void TGfitTask::set_fixed_parameters()
     omp_set_num_threads(this->MPI);
     #pragma omp parallel for schedule(static)
 #endif
-        for (unsigned n=0; n<NodT.size(); n++  )
-            for (unsigned e = 0; e <Opti->optParam.size(); e++)
+        for (int n=0; n<NodT.size(); n++  )
+            for (int e = 0; e <Opti->optParam.size(); e++)
                 Opti->optParam[e]->Adjust_Sparam(NodT[n].get());
 }

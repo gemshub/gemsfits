@@ -358,7 +358,7 @@ void Ejdb2DBClient::select_query_omp(const std::string& collname, const std::str
 
 #ifdef useomp1
     omp_set_num_threads(num_threads);
-#ifdef buildWIN32
+#ifdef _WIN32
     #pragma omp parallel for schedule(static)
 #else
     #pragma omp parallel for schedule(dynamic)

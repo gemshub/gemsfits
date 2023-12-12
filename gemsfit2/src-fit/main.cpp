@@ -77,7 +77,7 @@ int main( int argc, char *argv[] )
     if( gpf->isRunMode() )
     {
         if ( access( gpf->OutputDirPath().c_str(), 0 ) != 0 )
-#ifdef buildWIN32
+#ifdef _WIN32
             mkdir(gpf->OutputDirPath().c_str());
 #else
             mkdir(gpf->OutputDirPath().c_str(), 0775);

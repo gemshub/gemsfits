@@ -237,7 +237,7 @@ common::JsonFree generateJson(TNode *node, int mode)
     object[keys::DBColl[mode]] = "<collection name>";
 
     std::string path = "." + gpf->GEMS3LstFilePath();
-#ifdef buildWIN32
+#ifdef _WIN32
     std::replace( path.begin(), path.end(), '\\', '/');
 #endif
     object[keys::G3Ksys[mode]] = path;
@@ -646,7 +646,7 @@ TGfitPath::TGfitPath(int c, char *v[]):
         case INIT_:
             // set up default paths
             // later these paths and filenames can be read from the task file
-#ifdef buildWIN32
+#ifdef _WIN32
             mkdir(path_init.c_str());
 #else
             mkdir(path_init.c_str(), 0775);
@@ -664,7 +664,7 @@ TGfitPath::TGfitPath(int c, char *v[]):
         case INITJ_:
             // set up default paths
             // later these paths and filenames can be read from the task file
-#ifdef buildWIN32
+#ifdef _WIN32
             mkdir(path_init.c_str());
 #else
             mkdir(path_init.c_str(), 0775);

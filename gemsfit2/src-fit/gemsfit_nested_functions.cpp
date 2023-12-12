@@ -42,13 +42,13 @@ void nestedfun (TGfitTask *sys)
     // loop over the nested functions
 #ifdef useomp
     omp_set_num_threads(sys->MPI);
-#ifdef buildWIN32
+#ifdef _WIN32
     #pragma omp parallel for schedule(static)
 #else
     #pragma omp parallel for schedule(dynamic)
 #endif
 #endif
-    for  (unsigned int i = 0; i<sys->experiments.size(); i++)
+    for  (int i = 0; i<sys->experiments.size(); i++)
     {
         std::vector <double> x, UB, LB;
         int Pndx = -1, Fndx = -1; double Pval = 0.0, Ub = 0.0, Lb = 0.0;

@@ -304,7 +304,7 @@ void Data_Manager::get_db_specs_txt()
                   << keys::G3Ksys[mode]<<"\" found in the task definition" << std::endl;
         exit(1);
     }
-#ifdef buildWIN32
+#ifdef _WIN32
     std::replace( out[0].begin(), out[0].end(), '/', '\\');
 #endif
     gpf->setGEMS3LstFilePath(gems_path);
