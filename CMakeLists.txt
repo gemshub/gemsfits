@@ -92,7 +92,6 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
         /MP4
         /EHsc
         /Od
-        /Zc
         /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING
         /DNOMINMAX
     )
@@ -114,6 +113,7 @@ endif()
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     include_directories("${EJDB_DIR}/include")
     link_directories("${EJDB_DIR}/lib")
+    link_directories("${EJDB_DIR}/bin")
 endif()
 
 # Find all gemsfits dependencies
