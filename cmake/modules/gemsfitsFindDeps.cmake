@@ -1,15 +1,3 @@
-
-if(USE_SPDLOG_PRECOMPILED)
-  if(NOT TARGET spdlog::spdlog)
-     find_package(spdlog CONFIG REQUIRED)
-     if(NOT spdlog_FOUND)
-         message(FATAL_ERROR "spdlog library not found")
-     else()
-         message(STATUS "Found spdlog v${spdlog_VERSION}")
-     endif()
-  endif()
-endif()
-
 find_library(NLOPT_LIB nlopt)
 if(NOT NLOPT_LIB)
    message(FATAL_ERROR "nlopt library not found")

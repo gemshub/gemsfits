@@ -29,23 +29,42 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 # Set libraries to be compiled with position independent code mode (i.e., fPIC option in GNU compilers)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-# Set the default build type to Release
-if(NOT CMAKE_BUILD_TYPE)
-    message(STATUS "Setting build type to 'Release' as none was specified.")
-    set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
-    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
-endif()
 
 # Define which types of libraries to build
 option(USE_THERMOFUN "Use ThermoFun" OFF)
 option(USE_OLD_EJDB "Compile using ejdb1" ON)
-option(BUILD_GUI "Build Qt GUI shell" ON)
+if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+   option(BUILD_GUI "Build Qt GUI shell" OFF)
+else()
+   option(BUILD_GUI "Build Qt GUI shell" ON)
+endif()
 
 # Used into conda only
 if(DEFINED ENV{CONDA_PREFIX})
    option(USE_SPDLOG_PRECOMPILED "Use spdlog in compiled version" ON)
 else()
    option(USE_SPDLOG_PRECOMPILED "Use spdlog in compiled version" OFF)
+endif()
+
+if(USE_SPDLOG_PRECOMPILED)
+   if(NOT TARGET spdlog::spdlog)
+       find_package(spdlog CONFIG REQUIRED)
+       if(NOT spdlog_FOUND)
+           message(FATAL_ERROR "spdlog library not found")
+       else()
+           message(STATUS "Found spdlog v${spdlog_VERSION}")
+           if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+                add_definitions(-DSPDLOG_FMT_EXTERNAL)
+           endif()
+       endif()
+   endif()
+endif()
+
+# Set the default build type to Release
+if(NOT CMAKE_BUILD_TYPE)
+    message(STATUS "Setting build type to 'Release' as none was specified.")
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 endif()
 
 
