@@ -91,11 +91,11 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
         /D_CRT_SECURE_NO_WARNINGS=1
         /MP4
         /EHsc
-        /Od
         /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING
         /DNOMINMAX
     )
 endif()
+
 
 # Set the headers directory path
 set(COMMON_DIR "${CMAKE_SOURCE_DIR}/common")

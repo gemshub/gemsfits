@@ -27,7 +27,7 @@ add_library( FITS_OBJECT OBJECT ${COMMON_HEADER_FILES} ${COMMON_SOURCE_FILES}
 add_executable(gemsfit3 $<TARGET_OBJECTS:FITS_OBJECT>)
 
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-    target_link_libraries(gemsfit3 nlopt Boost::system armadillo libejdb yaml-cpp)
+    target_link_libraries(gemsfit3 nlopt Boost::system libejdb yaml-cpp armadillo)
 else()
     target_link_libraries(gemsfit3 nlopt Boost::system armadillo ejdb yaml-cpp Threads::Threads)
     #target_link_libraries(gemsfit3 nlopt boost_system armadillo ejdb yaml-cpp openmp pthread)
