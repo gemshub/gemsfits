@@ -4,15 +4,10 @@ if(NOT NLOPT_LIB)
 endif()
 
 if(DEFINED ENV{CONDA_PREFIX})
-   set(Boost_USE_STATIC_LIBS        ON)  # only find static libs
-   set(Boost_USE_DEBUG_LIBS        OFF)  # ignore debug libs and
-   set(Boost_USE_RELEASE_LIBS       ON)  # only find release libs
-   set(Boost_USE_MULTITHREADED      ON)
-   set(Boost_USE_STATIC_RUNTIME    OFF)
    find_package(Boost 1.83.0  REQUIRED COMPONENTS system)
    if (Boost_FOUND)
-      #INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
-      #ADD_DEFINITIONS( "-DHAS_BOOST" )
+      INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
+      ADD_DEFINITIONS( "-DHAS_BOOST" )
    else()
     message(FATAL_ERROR "Boost library not found")
    endif()
