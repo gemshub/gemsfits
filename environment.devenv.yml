@@ -3,11 +3,11 @@ name: gemsfits
 dependencies:
   - cmake>=3.13
   - ninja
-  - clcache  # [win]
+  #- clcache  # [win]
   - ccache  # [unix]
   - gxx_linux-64>=9.4.0  # [linux]
   - clangxx_osx-64  # [osx]
-  - vs2019_win-64  # [win]
+  #- vs2019_win-64  # [win]
   - git
   - nlohmann_json
   - spdlog=1.11.0
@@ -16,8 +16,9 @@ dependencies:
   - boost=1.83.0
   - armadillo
   - nlopt
-  - qt6-main
-  - qt6-charts
+  #- qt6-main
+  #- qt6-charts
+  - qt-main=5.15.8
   - mesa-libgl-devel-cos7-x86_64 # [unix]
 
 environment:

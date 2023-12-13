@@ -48,7 +48,7 @@ if(NOT YAML_LIB)
 endif()
 
 if(BUILD_GUI)
-  find_package(Qt6 COMPONENTS Core Gui Widgets Charts Concurrent PrintSupport Svg Help Sql REQUIRED)
+  find_package(Qt6 COMPONENTS Core Gui Widgets Charts Concurrent PrintSupport Svg Help Sql )
 
   if(NOT Qt6_FOUND)
     find_package(Qt5 COMPONENTS Core Gui Widgets Charts Concurrent PrintSupport Svg Help Sql REQUIRED)

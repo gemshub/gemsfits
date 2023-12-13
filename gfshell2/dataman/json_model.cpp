@@ -45,8 +45,10 @@ void JsonModel::setupModelData(const std::string& json_string)
 QModelIndex JsonModel::index( int row, int column, const QModelIndex &parent ) const
 {
     auto parentItem = lineFromIndex( parent );
-    if( parentItem->size() > 0 )
+    if( parentItem->size() > 0 ) {
+
         return createIndex( row, column, parentItem->child_from_ndx(row) );
+    }
     else
         return QModelIndex();
 }

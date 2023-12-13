@@ -438,7 +438,7 @@ JsonFree *JsonFree::get_parent() const
     return parent_object;
 }
 
-const JsonFree *JsonFree::child_from_ndx(std::size_t idx) const
+JsonFree *JsonFree::child_from_ndx(std::size_t idx) const
 {
     ErrorIf( idx>=size(), "JsonFree", "array index " + std::to_string(idx) + " is out of range" );
     return children[idx].get();

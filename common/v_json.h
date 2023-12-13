@@ -530,7 +530,7 @@ public:
 
     // GUI data
     JsonFree *get_parent() const;
-    const JsonFree *child_from_ndx(std::size_t idx) const;
+    JsonFree *child_from_ndx(std::size_t idx) const;
     size_t get_ndx() const
     {   return ndx_in_parent;  }
     const std::string& get_field_value() const
