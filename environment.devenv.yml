@@ -16,9 +16,9 @@ dependencies:
   - boost=1.83.0
   - armadillo
   - nlopt
-  #- qt6-main
-  #- qt6-charts
-  - qt-main=5.15.8
+  - qt6-main
+  - qt6-charts
+  #- qt-main=5.15.8
   - mesa-libgl-devel-cos7-x86_64 # [unix]
 
 environment:
