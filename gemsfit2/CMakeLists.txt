@@ -29,10 +29,10 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
                             PUBLIC yaml-cpp
                             PUBLIC armadillo)
    if(USE_THERMOFUN MATCHES ON)
-         target_link_libraries(gemsfit-static ThermoFun::ThermoFun)
+         target_link_libraries(gemsfit-static PUBLIC ThermoFun::ThermoFun)
    else()
          if(USE_SPDLOG_PRECOMPILED)
-              target_link_libraries(gemsfit-static spdlog::spdlog)
+              target_link_libraries(gemsfit-static PUBLIC spdlog::spdlog)
          endif()
    endif()
 
