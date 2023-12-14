@@ -28,6 +28,8 @@
 
 
 #include <chrono>
+#include <filesystem>
+namespace fs = std::filesystem;
 #include "gemsfit_iofiles.h"
 #include "gemsfit_task.h"
 #include "statistics.h"
@@ -76,12 +78,8 @@ int main( int argc, char *argv[] )
 
     if( gpf->isRunMode() )
     {
-        if ( access( gpf->OutputDirPath().c_str(), 0 ) != 0 )
-#ifdef _WIN32
-            mkdir(gpf->OutputDirPath().c_str());
-#else
-            mkdir(gpf->OutputDirPath().c_str(), 0775);
-#endif
+        if ( !fs::exists(gpf->OutputDirPath()) )
+            fs::create_directory(gpf->OutputDirPath());
     }
 
     //    if( gpf->isInitMode() ) // Mode GEMSFIT to generate input configuration file

@@ -20,6 +20,8 @@
 #include <chrono>
 #include <string>
 #include <sstream>
+#include <filesystem>
+namespace fs = std::filesystem;
 #include "f_file.h"
 #include "v_service.h"
 
@@ -80,11 +82,7 @@ bool TAbstractFile::Exist()
         return true;  // file alredy open
     if(path.empty())
         Makepath();
-
-    if(access(path.c_str(), 0 ))
-        return false;
-    else
-        return true;
+    return fs::exists(path);
 }
 
 void TAbstractFile::ChangePath(const std::string& a_path)
