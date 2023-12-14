@@ -17,28 +17,48 @@ file(GLOB GEMS3K_SOURCE_FILES ${GEMS3K_DIR}/*.cpp)
 file(GLOB FITS_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src-fit/*.cpp)
 file(GLOB MUPARSER_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/muparser/src/*.cpp)
 
-# Create a library using the collected source files
-add_library( FITS_OBJECT OBJECT ${COMMON_HEADER_FILES} ${COMMON_SOURCE_FILES}
+if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+
+   add_library(gemsfit-static STATIC ${COMMON_HEADER_FILES} ${COMMON_SOURCE_FILES}
+                                      ${GEMS3K_HEADER_FILES} ${GEMS3K_SOURCE_FILES}
+                                      ${MUPARSER_HEADER_FILES} ${MUPARSER_SOURCE_FILES})
+   target_link_libraries(gemsfit-static
+                            PUBLIC nlopt
+                            PUBLIC Boost::system
+                            PUBLIC libejdb
+                            PUBLIC yaml-cpp
+                            PUBLIC armadillo)
+   if(USE_THERMOFUN MATCHES ON)
+         target_link_libraries(gemsfit-static ThermoFun::ThermoFun)
+   else()
+         if(USE_SPDLOG_PRECOMPILED)
+              target_link_libraries(gemsfit-static spdlog::spdlog)
+         endif()
+   endif()
+
+   add_executable(gemsfit3 ${FITS_HEADER_FILES} ${FITS_SOURCE_FILES})
+   target_link_libraries(gemsfit3 gemsfit-static Threads::Threads)
+
+else()
+   # Create a library using the collected source files
+   add_library( FITS_OBJECT OBJECT ${COMMON_HEADER_FILES} ${COMMON_SOURCE_FILES}
                     ${GEMS3K_HEADER_FILES} ${GEMS3K_SOURCE_FILES}
                     ${FITS_HEADER_FILES} ${FITS_SOURCE_FILES}
                     ${MUPARSER_HEADER_FILES} ${MUPARSER_SOURCE_FILES} )
 
-# Create an executable named app
-add_executable(gemsfit3 $<TARGET_OBJECTS:FITS_OBJECT>)
+   # Create an executable named app
+   add_executable(gemsfit3 $<TARGET_OBJECTS:FITS_OBJECT>)
+   target_link_libraries(gemsfit3 nlopt Boost::system armadillo ejdb yaml-cpp Threads::Threads)
+   #target_link_libraries(gemsfit3 nlopt boost_system armadillo ejdb yaml-cpp openmp pthread)
 
-if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-    target_link_libraries(gemsfit3 nlopt Boost::system libejdb yaml-cpp armadillo)
-else()
-    target_link_libraries(gemsfit3 nlopt Boost::system armadillo ejdb yaml-cpp Threads::Threads)
-    #target_link_libraries(gemsfit3 nlopt boost_system armadillo ejdb yaml-cpp openmp pthread)
-endif()
+  if(USE_THERMOFUN MATCHES ON)
+     target_link_libraries(gemsfit3 ThermoFun::ThermoFun)
+  else()
+     if(USE_SPDLOG_PRECOMPILED)
+       target_link_libraries(gemsfit3 spdlog::spdlog)
+     endif()
+  endif()
 
-if(USE_THERMOFUN MATCHES ON)
-  target_link_libraries(gemsfit3 ThermoFun::ThermoFun)
-else()
-   if(USE_SPDLOG_PRECOMPILED)
-     target_link_libraries(gemsfit3 spdlog::spdlog)
-   endif()
 endif()
 
 install(TARGETS gemsfit3 DESTINATION bin)
