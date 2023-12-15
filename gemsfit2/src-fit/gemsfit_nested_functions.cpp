@@ -48,7 +48,7 @@ void nestedfun (TGfitTask *sys)
     #pragma omp parallel for schedule(dynamic)
 #endif
 #endif
-    for  (size_t i = 0; i<sys->experiments.size(); i++)
+    for  (int i = 0; i<sys->experiments.size(); i++)
     {
         std::vector <double> x, UB, LB;
         int Pndx = -1, Fndx = -1; double Pval = 0.0, Ub = 0.0, Lb = 0.0;
