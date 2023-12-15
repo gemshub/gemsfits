@@ -1,5 +1,5 @@
 # Require a certain version of cmake
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.16)
 
 # Set the name of the project
 project(gemsfits VERSION 2.0.0 LANGUAGES CXX C)

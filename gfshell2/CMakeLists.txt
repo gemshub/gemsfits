@@ -13,6 +13,7 @@ file(GLOB_RECURSE SOURCE_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 file(GLOB COMMON_SOURCE_FILES ${COMMON_DIR}/*.cpp)
 file(GLOB GEMS3K_SOURCE_FILES ${GEMS3K_DIR}/*.cpp)
 
+qt_standard_project_setup()
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
@@ -38,8 +39,8 @@ add_library( GUI_OBJECT OBJECT ${HEADER_FILES} ${SOURCE_FILES} ${GUI_SRCS}
 add_executable(shellfit3 $<TARGET_OBJECTS:GUI_OBJECT> )
 
 if (MSVC)
-  target_compile_options(shellfit3 PUBLIC "/Zc:__cplusplus")
-elseif ()
+  target_compile_options(shellfit3 PUBLIC "/Zc:__cplusplus" "/permissive-")
+endif ()
 
 # Link your application against Qt C++ library.
 target_link_libraries(shellfit3 ${GUI_QT_TARGETS} )
