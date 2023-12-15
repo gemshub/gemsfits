@@ -19,15 +19,18 @@ file(GLOB MUPARSER_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/muparser/src/*.cpp)
 
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 
+   set(ARMADILLO_DIR "${CMAKE_SOURCE_DIR}/gemsfit2/armadillo_win32")
+   include_directories("${ARMADILLO_DIR}/include")
+   link_directories("${ARMADILLO_DIR}/examples/lib_win64")
+
+
    add_library(gemsfit-static STATIC ${COMMON_HEADER_FILES} ${COMMON_SOURCE_FILES}
                                       ${GEMS3K_HEADER_FILES} ${GEMS3K_SOURCE_FILES}
                                       ${MUPARSER_HEADER_FILES} ${MUPARSER_SOURCE_FILES})
    target_link_libraries(gemsfit-static
-                            PUBLIC nlopt
                             PUBLIC Boost::system
                             PUBLIC libejdb
-                            PUBLIC yaml-cpp
-                            PUBLIC armadillo)
+                            PUBLIC yaml-cpp)
    if(USE_THERMOFUN MATCHES ON)
          target_link_libraries(gemsfit-static PUBLIC ThermoFun::ThermoFun)
    else()
@@ -37,7 +40,7 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
    endif()
 
    add_executable(gemsfit3 ${FITS_HEADER_FILES} ${FITS_SOURCE_FILES})
-   target_link_libraries(gemsfit3 gemsfit-static Threads::Threads)
+   target_link_libraries(gemsfit3 gemsfit-static nlopt blas_win64_MT lapack_win64_MT Threads::Threads)
 
 else()
    # Create a library using the collected source files

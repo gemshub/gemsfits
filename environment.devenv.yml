@@ -13,8 +13,8 @@ dependencies:
   - spdlog=1.11.0
   - yaml-cpp
   - libgomp # [linux]
-  - boost=1.83.0
-  - armadillo
+  - boost-cpp=1.83.0
+  - armadillo # [unix]
   - nlopt
   - qt6-main
   - qt6-charts
