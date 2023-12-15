@@ -646,11 +646,8 @@ TGfitPath::TGfitPath(int c, char *v[]):
         case INIT_:
             // set up default paths
             // later these paths and filenames can be read from the task file
-#ifdef _WIN32
-            mkdir(path_init.c_str());
-#else
-            mkdir(path_init.c_str(), 0775);
-#endif
+            fs::create_directory(path_init);
+
             outputDir = path_init + OUTPUT_DIR;
             fitsens = outputDir+FIT_SENS_FILE;
             fitFile = outputDir+FIT_CSV_FILE;
@@ -664,11 +661,8 @@ TGfitPath::TGfitPath(int c, char *v[]):
         case INITJ_:
             // set up default paths
             // later these paths and filenames can be read from the task file
-#ifdef _WIN32
-            mkdir(path_init.c_str());
-#else
-            mkdir(path_init.c_str(), 0775);
-#endif
+            fs::create_directory(path_init);
+
             outputDir = path_init + OUTPUT_DIR;
             fitsens = outputDir+FIT_SENS_FILE;
             fitFile = outputDir+FIT_CSV_FILE;
