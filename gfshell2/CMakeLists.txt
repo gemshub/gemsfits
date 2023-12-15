@@ -37,6 +37,10 @@ add_library( GUI_OBJECT OBJECT ${HEADER_FILES} ${SOURCE_FILES} ${GUI_SRCS}
 # Create an executable named app
 add_executable(shellfit3 $<TARGET_OBJECTS:GUI_OBJECT> )
 
+if (MSVC)
+  target_compile_options(shellfit3 PUBLIC "/Zc:__cplusplus")
+elseif ()
+
 # Link your application against Qt C++ library.
 target_link_libraries(shellfit3 ${GUI_QT_TARGETS} )
 
