@@ -69,7 +69,7 @@ class OptParameter
             double IV; /// initial value
             double opt; /// parameter value that gets changed during the optimization
             int    optNdx=0; /// index in the global optimization std::vector
-            double Pndx; /// parameter index
+            int    Pndx; /// parameter index
             std::string Pname; /// parameter name (DCName, ICname, etc.)
             vd IVv; /// std::vector of initial values for each node/experiment - used in nested optimization
             vd EVv; /// std::vector of end values for each node/experiment - used in nested optimization
@@ -195,13 +195,13 @@ class OptParameter
         * @author DM
         * @date 17.10.2014
         */
-        long int Get_optFPsize ()
+        size_t Get_optFPsize ()
         { return optFP.size(); }
 
-        long int Get_optLPsize ()
+        size_t Get_optLPsize ()
         { return optLP.size(); }
 
-        long int Get_optRPsize ()
+        size_t Get_optRPsize ()
         { return optRP.size(); }
 
         std::string Get_optType ()
@@ -220,17 +220,17 @@ class OptParameter
 
         void Get_IVparam(vd &opt, vd &UB, vd &LB );
 
-        double Get_Fparam(int ndx, int exp );
+        double Get_Fparam(size_t ndx, int exp );
 
-        double Get_Lparam(int ndx, int exp );
+        double Get_Lparam(size_t ndx, int exp );
 
-        void Get_Fparam(int ndx, std::string &name, double &IV, double &EV );
+        void Get_Fparam(size_t ndx, std::string &name, double &IV, double &EV );
 
-        void Get_Rparam(int ndx, std::string &name, double &IV, double &EV );
+        void Get_Rparam(size_t ndx, std::string &name, double &IV, double &EV );
 
         void Get_R_vNdx_vCoef(int ndx, vi &vNdx, vi &vCoef );
 
-        void Get_Lparam(int ndx, std::string &name, double &IV, double &EV );
+        void Get_Lparam(size_t ndx, std::string &name, double &IV, double &EV );
 
         /**
         * Gets the attributes of the F-type parameter with index ndx
@@ -243,7 +243,7 @@ class OptParameter
         * @param &Lb retrieves the lower bound of the parameter
         * @date 17.10.2014
         */
-        long int Get_Fparam(int ndx, int &Fndx, int &Pndx, double &Pval, double &Ub, double &Lb);
+        long int Get_Fparam(size_t ndx, int &Fndx, int &Pndx, double &Pval, double &Ub, double &Lb);
 
         /**
         * Gets the attributes of the F-type parameter with index ndx and OptPndx
@@ -257,7 +257,7 @@ class OptParameter
         * @param &Lb retrieves the lower bound of the parameter
         * @date 17.10.2014
         */
-        long int Get_Fparam(int ndx, int exp, int &Fndx, int &Pndx, double &Pval, double &Ub, double &Lb);
+        long int Get_Fparam(size_t ndx, int exp, int &Fndx, int &Pndx, double &Pval, double &Ub, double &Lb);
 
         /**
         * Sets the value of the F-type parameter with index ndx

@@ -1103,9 +1103,9 @@ void TGfitTask::set_logK_TPpairs()
 
 void TGfitTask::set_logK_TPpairs(std::vector<std::string> logK)
 {
-    unsigned int size = 0;
+    size_t size = 0;
     int l = 0;
-    for (unsigned e=0; e <Opti->optParam.size(); e++)
+    for (size_t e=0; e <Opti->optParam.size(); e++)
     {
         if (Opti->optParam[e]->Get_optType() == "G0")
         size += Opti->optParam[e]->Get_optRPsize();
@@ -1114,13 +1114,13 @@ void TGfitTask::set_logK_TPpairs(std::vector<std::string> logK)
     if (logK.size() != size)
     { std::cout << "The number of logks is not equal to the number of R parameters * T-P pairs in the system! " << std::endl; exit(1);}
 
-    for (unsigned e=0; e <Opti->optParam.size(); e++)
+    for (size_t e=0; e <Opti->optParam.size(); e++)
     {
         if (Opti->optParam[e]->Get_optType() == "G0")
         {
-            for (unsigned j = 0; j < Opti->optParam[e]->Get_optRPsize(); j++)
+            for (size_t j = 0; j < Opti->optParam[e]->Get_optRPsize(); j++)
             {
-                for (unsigned k = 0; k < TP_pairs[0].size(); k++)
+                for (size_t k = 0; k < TP_pairs[0].size(); k++)
                 {
                     Opti->optParam[e]->Set_logKTP(j, atof(logK[l].c_str()) );
                     l++;
@@ -1459,7 +1459,7 @@ double TGfitTask::calc_logK_dT(std::vector<double> A, double Tk, double P, int R
     std::vector<int> vNdx,vCoef;
 
     Opti->optParam[e]->Get_R_vNdx_vCoef(Rndx, vNdx, vCoef );
-    for (unsigned s = 0; s < vNdx.size(); s++)
+    for (size_t s = 0; s < vNdx.size(); s++)
     {
         dV0 +=   (NodT[0]->DC_V0(vNdx[s], 100000, 298.15))
                * ( vCoef[s] );

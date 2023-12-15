@@ -48,13 +48,13 @@ void nestedfun (TGfitTask *sys)
     #pragma omp parallel for schedule(dynamic)
 #endif
 #endif
-    for  (int i = 0; i<sys->experiments.size(); i++)
+    for  (size_t i = 0; i<sys->experiments.size(); i++)
     {
         std::vector <double> x, UB, LB;
         int Pndx = -1, Fndx = -1; double Pval = 0.0, Ub = 0.0, Lb = 0.0;
         int bounds = 0;
 
-        for (unsigned int j = 0; j<sys->Tfun->nestfun.size(); j++)
+        for (size_t j = 0; j<sys->Tfun->nestfun.size(); j++)
         {
             std::string compare_type = sys->Tfun->nestfun[j].exp_DCP;
             if (compare_type == "activity")
@@ -71,9 +71,9 @@ void nestedfun (TGfitTask *sys)
                 sys->EXPndx[P_id]=i;
                 sys->NEFndx[P_id]=j;
 
-                for (unsigned e = 0; e < sys->Opti->optNFParam.size(); e++) // loops trough optNFParam
+                for (size_t e = 0; e < sys->Opti->optNFParam.size(); e++) // loops trough optNFParam
                 {
-                    for (unsigned p = 0; p < sys->Opti->optNFParam[e]->Get_optFPsize(); p++ )
+                    for (size_t p = 0; p < sys->Opti->optNFParam[e]->Get_optFPsize(); p++ )
                     {
                         sys->Opti->optNFParam[e]->Get_Fparam(p, i, Fndx, Pndx, Pval, Ub, Lb);
                         if (Fndx == j) // checks if the nested function parameters point to the curent NFUN with the Fndx
@@ -215,9 +215,9 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &/*grad
 
     /// error think about a way to store the indexes of the nfun parameters
 
-    for (unsigned e = 0; e < sys->vEAndx[P_id]->ndx.size(); e++) // loops trough OptParameter vector
+    for (size_t e = 0; e < sys->vEAndx[P_id]->ndx.size(); e++) // loops trough OptParameter vector
     {
-        for (unsigned j = 0; j < sys->Opti->optNFParam[e]->Get_optFPsize(); j++) // loops torugh optPF vector
+        for (size_t j = 0; j < sys->Opti->optNFParam[e]->Get_optFPsize(); j++) // loops torugh optPF vector
         {
             if ( (sys->vPAndx[P_id]->ndx.size() > op ) && (sys->vPAndx[P_id]->ndx[op] == j) && (sys->vEAndx[P_id]->ndx[e] == e))
             {
@@ -227,9 +227,9 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &/*grad
         }
     }
     op = 0;
-    for (unsigned e = 0; e < sys->vEAndx[P_id]->ndx.size(); e++) // loops trough OptParameter vector
+    for (size_t e = 0; e < sys->vEAndx[P_id]->ndx.size(); e++) // loops trough OptParameter vector
     {
-        for (unsigned j = 0; j < sys->Opti->optNFParam[e]->Get_optFPsize(); j++) // loops torugh optPF vector
+        for (size_t j = 0; j < sys->Opti->optNFParam[e]->Get_optFPsize(); j++) // loops torugh optPF vector
         {
             if ( (sys->vPAndx[P_id]->ndx.size() > op ) && (sys->vPAndx[P_id]->ndx[op] == j) && (sys->vEAndx[P_id]->ndx[e] == e))
             {

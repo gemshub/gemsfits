@@ -34,7 +34,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 option(USE_THERMOFUN "Use ThermoFun" OFF)
 option(USE_OLD_EJDB "Compile using ejdb1" ON)
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-   option(BUILD_GUI "Build Qt GUI shell" OFF)
+   option(BUILD_GUI "Build Qt GUI shell" ON)
 else()
    option(BUILD_GUI "Build Qt GUI shell" ON)
 endif()
@@ -89,7 +89,7 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     add_compile_options(
         /D_SCL_SECURE_NO_WARNINGS
         /D_CRT_SECURE_NO_WARNINGS=1
-        /MP4
+        /MP1
         /EHsc
         /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING
         /DNOMINMAX

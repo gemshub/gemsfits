@@ -271,7 +271,7 @@ void statistics::get_stat_param(const std::string& optset_json)
 void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 {
     // Variable declarations
-    unsigned int i;
+    size_t i;
     double mean = 0.;
     double ResSumSquares = 0., TotalSumSquares = 0.;
     bool noqq = false;
@@ -296,14 +296,14 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     if( gpf->fqq.fail() )
     { std::cout<<"QQ plot data fileopen error"<<std::endl; exit(1); }
 
-    int np = optv_.size();
+    size_t np = optv_.size();
 
 //    for(unsigned i=0; i< optv_.size(); i++ ) // cols
 //    {
-    int npx = 0;
-    for (unsigned e =0; e < gfittask->Opti->optParam.size(); e++)
+    size_t npx = 0;
+    for (size_t e =0; e < gfittask->Opti->optParam.size(); e++)
     {
-        for (unsigned i=0; i<gfittask->Opti->optParam[e]->Get_optFPsize(); ++i)
+        for (size_t i=0; i<gfittask->Opti->optParam[e]->Get_optFPsize(); ++i)
         {
             // Print optimized parameter values to file
             fitparam.push_back(std::make_shared<parameters>());
@@ -323,7 +323,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 
 //    }
 
-    for (unsigned e =0; e < gfittask->Opti->optParam.size(); e++)
+    for (size_t e =0; e < gfittask->Opti->optParam.size(); e++)
     {
         for ( i=0; i<gfittask->Opti->optParam[e]->Get_optRPsize(); ++i)
         {
@@ -341,9 +341,9 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         }
     }
     np = fitparam.size();
-    for (unsigned e =0; e < gfittask->Opti->optParam.size(); e++)
+    for (size_t e =0; e < gfittask->Opti->optParam.size(); e++)
     {
-        for (unsigned i=0; i<gfittask->Opti->optParam[e]->Get_optLPsize(); ++i)
+        for (size_t i=0; i<gfittask->Opti->optParam[e]->Get_optLPsize(); ++i)
         {
             fitparam.push_back(std::make_shared<parameters>());
             fitparam[np+i]->Ptype = gfittask->Opti->optParam[e]->Get_optType();
@@ -828,8 +828,8 @@ void statistics::sensitivity_correlation( std::vector<double> &optv_, TGfitTask*
 
         gpf->fsens << "sample,";
 
-        int n_Rparam = 0;
-        for (unsigned e = 0; e<gfittask->Opti->optParam.size(); e++)
+        size_t n_Rparam = 0;
+        for (size_t e = 0; e<gfittask->Opti->optParam.size(); e++)
         {
             n_Rparam += gfittask->Opti->optParam[e]->Get_optRPsize();
         }
@@ -1275,9 +1275,9 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
         std::string name; double IV, EV;
         j=0;
 
-        for (unsigned e = 0; e<gfittask->Opti->optParam.size(); e++)
+        for (size_t e = 0; e<gfittask->Opti->optParam.size(); e++)
         {
-            for (unsigned r = 0; r< gfittask->Opti->optParam[e]->Get_optRPsize(); r++)
+            for (size_t r = 0; r< gfittask->Opti->optParam[e]->Get_optRPsize(); r++)
             {
                 gfittask->Opti->optParam[e]->Get_Rparam(r, name, IV, EV );
                 MCR_fitted_parameters_all[ id ][ j ] = EV;

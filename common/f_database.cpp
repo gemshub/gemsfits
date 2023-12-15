@@ -377,7 +377,7 @@ void TEJDataBase::saveRecord(const std::string& pkey)
     }
 }
 
-int TEJDataBase::getKeyList(const std::string& keypat, std::vector<std::string>& key_list)
+size_t TEJDataBase::getKeyList(const std::string& keypat, std::vector<std::string>& key_list)
 {
     // Set key template
     TEJDBKey wkey(key);
@@ -452,7 +452,6 @@ bool TEJDataBase::findPart(const std::string& pkey, int field)
 // returns state of record
 bool TEJDataBase::Rtest(const std::string& akey, int mode)
 {
-    int iRec;
     std::string pkey;
     bool OneRec = true;
 
@@ -475,7 +474,7 @@ bool TEJDataBase::Rtest(const std::string& akey, int mode)
     }
     else { // template
         std::vector<std::string> aKeyList;
-        iRec = getKeyList(pkey, aKeyList);
+        auto iRec = getKeyList(pkey, aKeyList);
         if(iRec == 0)
             return false;
         if(iRec == 1) {
@@ -490,14 +489,6 @@ bool TEJDataBase::Rtest(const std::string& akey, int mode)
 //-------------------------------------------------------------
 // DataBaseList
 //-------------------------------------------------------------
-
-int EJDataBaseList::Find(const char* s)
-{
-    for( size_t ii=0; ii<size(); ii++ )
-        if( at(ii).getKeywd() == s  )
-            return ii;
-    return -1;
-}
 
 // default configuration
 void EJDataBaseList::Init()

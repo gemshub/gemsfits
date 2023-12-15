@@ -184,7 +184,7 @@ public:
     void insertRecord();
 
     /// Get key list for a wildcard search
-    int getKeyList(const std::string& keypat, std::vector<std::string>& key_list);
+    size_t getKeyList(const std::string& keypat, std::vector<std::string>& key_list);
 
     /// Open DB files and build linked record list
     void OpenDB();
@@ -223,7 +223,6 @@ public:
     {}
 
     TEJDataBase& operator[](size_t) ;
-    int Find(const char* keywd);
     void Init();
     void Close();
     void ChangePath(const std::string& ejdbPath);

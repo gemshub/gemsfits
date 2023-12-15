@@ -418,10 +418,10 @@ void TGfitTask::set_print_param()
 
 //    for(unsigned i=0; i< optv_.size(); i++ ) // cols
 //    {
-    int npx = 0;
-    for (unsigned e =0; e < Opti->optParam.size(); e++)
+    size_t npx = 0;
+    for (size_t e =0; e < Opti->optParam.size(); e++)
     {
-        for (unsigned i=0; i<Opti->optParam[e]->Get_optFPsize(); ++i)
+        for (size_t i=0; i<Opti->optParam[e]->Get_optFPsize(); ++i)
         {
             // Print optimized parameter values to file
             fitparam.push_back(std::make_shared<parameters>());
@@ -441,9 +441,9 @@ void TGfitTask::set_print_param()
 
 //    }
 
-    for (unsigned e =0; e < Opti->optParam.size(); e++)
+    for (size_t e =0; e < Opti->optParam.size(); e++)
     {
-        for (unsigned i=0; i<Opti->optParam[e]->Get_optRPsize(); ++i)
+        for (size_t i=0; i<Opti->optParam[e]->Get_optRPsize(); ++i)
         {
             fitparam.push_back(std::make_shared<parameters>());
             fitparam[np+i]->Ptype = Opti->optParam[e]->Get_optType();
@@ -459,9 +459,9 @@ void TGfitTask::set_print_param()
         }
     }
     np = fitparam.size();
-    for (unsigned e =0; e < Opti->optParam.size(); e++)
+    for (size_t e =0; e < Opti->optParam.size(); e++)
     {
-        for (unsigned i=0; i<Opti->optParam[e]->Get_optLPsize(); ++i)
+        for (size_t i=0; i<Opti->optParam[e]->Get_optLPsize(); ++i)
         {
             fitparam.push_back(std::make_shared<parameters>());
             fitparam[np+i]->Ptype = Opti->optParam[e]->Get_optType();
@@ -724,7 +724,7 @@ void TGfitTask:: print_nested_results ()
 
     gpf->fnfres << "sample,phase,name,unit,sT,sP,measured,computed,residual,%residual";
 
-    for (unsigned i = 0; i<Opti->optNFParam.size(); i++)
+    for (size_t i = 0; i<Opti->optNFParam.size(); i++)
     {
         gpf->fnfres << Opti->optNFParam[i]->Print_param();
     }
@@ -735,9 +735,9 @@ void TGfitTask:: print_nested_results ()
 
 //    gpf->fnfres.setf(ios::fixed);
 
-    for (unsigned  i=0; i<aTfun.size(); i++)
+    for (size_t  i=0; i<aTfun.size(); i++)
     {
-        for (unsigned  j = 0; j <aTfun[i].nestfun.size(); j++)
+        for (size_t  j = 0; j <aTfun[i].nestfun.size(); j++)
         {
             if (aTfun[i].nestfun[j].isComputed)
             {
@@ -750,19 +750,19 @@ void TGfitTask:: print_nested_results ()
 
                 gpf->fnfres << aTfun[i].nestfun[j].results.measured_value <<","<< aTfun[i].nestfun[j].results.computed_value << ","<< aTfun[i].nestfun[j].results.residual << "," << (100*aTfun[i].nestfun[j].results.residual/aTfun[i].nestfun[j].results.measured_value);
 
-                for (unsigned o = 0; o<Opti->optNFParam.size(); o++)
+                for (size_t o = 0; o<Opti->optNFParam.size(); o++)
                 {
 
-                    for (unsigned int p= 0; p<Opti->optNFParam[o]->Get_optFPsize(); p++)
+                    for (size_t p= 0; p<Opti->optNFParam[o]->Get_optFPsize(); p++)
                     {
                         gpf->fnfres << "," << Opti->optNFParam[o]->Get_Fparam(p, i);
                     }
                 }
 
-                for (unsigned o = 0; o<Opti->optNFParam.size(); o++)
+                for (size_t o = 0; o<Opti->optNFParam.size(); o++)
                 {
 
-                    for (unsigned int p= 0; p<Opti->optNFParam[o]->Get_optLPsize(); p++)
+                    for (size_t p= 0; p<Opti->optNFParam[o]->Get_optLPsize(); p++)
                     {
                         gpf->fnfres << "," << Opti->optNFParam[o]->Get_Lparam(p, i);
                     }
@@ -776,7 +776,7 @@ void TGfitTask:: print_nested_results ()
 
 void TGfitTask::get_addout_input(int exp, TGfitTask::TargetFunction::obj_fun &objfun )
 {
-    for (unsigned int c=0; c<this->experiments[exp]->sbcomp.size(); c++)
+    for (size_t c=0; c<this->experiments[exp]->sbcomp.size(); c++)
     {
         if (objfun.exp_CN == this->experiments[exp]->sbcomp[c]->comp)
         {

@@ -144,7 +144,7 @@ void OptParameter::Get_IVparam( vd &opt, vd &UB, vd &LB )
      }
  }
 
-long int OptParameter::Get_Fparam(int ndx, int &Fndx, int &Pndx, double &Pval, double &Ub, double &Lb)
+long int OptParameter::Get_Fparam(size_t ndx, int &Fndx, int &Pndx, double &Pval, double &Ub, double &Lb)
 {
     Fndx = optFP[ndx]->Fndx;
     Pndx = optFP[ndx]->Pndx;
@@ -154,7 +154,7 @@ long int OptParameter::Get_Fparam(int ndx, int &Fndx, int &Pndx, double &Pval, d
     return 1;
 }
 
-long int OptParameter::Get_Fparam(int ndx, int exp, int &Fndx, int &Pndx, double &Pval, double &Ub, double &Lb)
+long int OptParameter::Get_Fparam(size_t ndx, int exp, int &Fndx, int &Pndx, double &Pval, double &Ub, double &Lb)
 {
     Fndx = optFP[ndx]->Fndx;
     Pndx = optFP[ndx]->Pndx;
@@ -165,7 +165,7 @@ long int OptParameter::Get_Fparam(int ndx, int exp, int &Fndx, int &Pndx, double
     return 1;
 }
 
-double OptParameter::Get_Fparam(int ndx, int exp )
+double OptParameter::Get_Fparam(size_t ndx, int exp )
 {
     if (optFP[ndx]->Pname == "TCelsius")
         return (optFP[ndx]->EVv[exp] - 273.15 );
@@ -176,26 +176,26 @@ double OptParameter::Get_Fparam(int ndx, int exp )
         return (optFP[ndx]->EVv[exp]);
 }
 
-double OptParameter::Get_Lparam(int ndx, int exp )
+double OptParameter::Get_Lparam(size_t ndx, int exp )
 {
    return (optLP[ndx]->EVv[exp]);
 }
 
-void OptParameter::Get_Lparam(int ndx, std::string &name, double &IV, double &EV )
+void OptParameter::Get_Lparam(size_t ndx, std::string &name, double &IV, double &EV )
 {
     name = optLP[ndx]->Pname;
     IV   = optLP[ndx]->IV;
     EV   = optLP[ndx]->opt;
 }
 
-void OptParameter::Get_Rparam(int ndx, std::string &name, double &IV, double &EV )
+void OptParameter::Get_Rparam(size_t ndx, std::string &name, double &IV, double &EV )
 {
     name = optRP[ndx]->Pname;
     IV   = optRP[ndx]->IV;
     EV   = optRP[ndx]->opt;
 }
 
-void OptParameter::Get_Fparam(int ndx, std::string &name, double &IV, double &EV )
+void OptParameter::Get_Fparam(size_t ndx, std::string &name, double &IV, double &EV )
 {
     name = optFP[ndx]->Pname;
     IV   = optFP[ndx]->IV;
@@ -225,7 +225,7 @@ Opt_G0::Opt_G0(std::vector<std::string> data, double OptBoundPrc, unsigned &p) :
     double iv=0.;
     std::string iPType, iDCN;
 
-    for (unsigned int i = 0 ; i < Jdata.size() ; i++)
+    for (size_t i = 0 ; i < Jdata.size() ; i++)
     {
         common::JsonFree object = fromJsonString(Jdata[i]);
         iPType = object.value( keys::PType[mode], std::string());
@@ -235,7 +235,7 @@ Opt_G0::Opt_G0(std::vector<std::string> data, double OptBoundPrc, unsigned &p) :
         }
     }
 
-    for (unsigned int i = 0 ; i < Jdata.size() ; i++)
+    for (size_t i = 0 ; i < Jdata.size() ; i++)
     {
         common::JsonFree object = fromJsonString(Jdata[i]);
         iPType = object.value( keys::PType[mode], std::string());
@@ -798,14 +798,14 @@ Opt_bIC::Opt_bIC(std::vector<std::string> data, double OptBoundPrc, unsigned &p,
 long int Opt_bIC::SetIndex_param(TNode *node)
 {
     // index for F type parameters
-    for (unsigned i = 0; i <optFP.size(); i++)
+    for (size_t i = 0; i <optFP.size(); i++)
     {
         optFP[i]->Pndx = node->IC_name_to_xCH(optFP[i]->Pname.c_str());
     }
 
     // index for L type parameters
     int index_IC;
-    for (unsigned i = 0; i < optLP.size(); i++ )
+    for (size_t i = 0; i < optLP.size(); i++ )
     {
         index_IC = node->IC_name_to_xCH( optLP[i]->Pname.c_str() );
         if( index_IC < 0 )
@@ -817,7 +817,7 @@ long int Opt_bIC::SetIndex_param(TNode *node)
             optLP[i]->Pndx = index_IC;
         }
 
-        for (unsigned int j=0; j<optLP[i]->L_param.size(); ++j )
+        for (size_t j=0; j<optLP[i]->L_param.size(); ++j )
         {
             // Get form GEMS the index of to_fit_species of interest
             try
