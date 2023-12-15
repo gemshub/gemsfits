@@ -89,7 +89,8 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     add_compile_options(
         /D_SCL_SECURE_NO_WARNINGS
         /D_CRT_SECURE_NO_WARNINGS=1
-        /MP1
+        /MP4
+        /Zc:__cplusplus
         /EHsc
         /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING
         /DNOMINMAX
