@@ -20,12 +20,11 @@
 #include <iostream>
 #include <cstdarg>
 #include <cstring>
-
 #include "f_database.h"
 #include "f_file.h"
 #include "v_service.h"
 #include "keywords.h"
-#include "yaml-cpp/emitfromevents.h"
+
 
 const char* ALLKEY="*";
 

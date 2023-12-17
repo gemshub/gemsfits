@@ -32,8 +32,8 @@
 #include "v_yaml.h"
 #include "json_view.h"
 #include <yaml-cpp/yaml.h>
-#include <yaml-cpp/eventhandler.h>
-#include "yaml-cpp/emitfromevents.h"
+//#include <yaml-cpp/eventhandler.h>
+//#include <yaml-cpp/emitfromevents.h>
 
 // -----------------------------------------------------------
 // Actions and commands
@@ -970,7 +970,7 @@ void FITMainWindow::CmRestoreYAML()
 {
     try
     {
-        if( !MessageToSave() )
+/*        if( !MessageToSave() )
             return;
 
         // open file to unloading
@@ -1004,7 +1004,7 @@ void FITMainWindow::CmRestoreYAML()
             std::cout << "parseYAMLToBson " << e.what() << std::endl;
             Error( "parseYAMLToBson",  e.what() );
         }
-
+*/
         setStatusText( "Records imported from yaml txt-file" );
     }
     catch( TError& err )
