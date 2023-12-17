@@ -35,9 +35,9 @@ if(Qt6_FOUND)
   # Create an executable named app
   qt_add_executable(shellfit3 $<TARGET_OBJECTS:GUI_OBJECT> )
 
-  #if (MSVC)
-  #  target_compile_options(shellfit3 PUBLIC "/Zc:__cplusplus" "/permissive-")
-  #endif ()
+  if (MSVC)
+    target_compile_options(shellfit3 PUBLIC "/Zc:__cplusplus" "/permissive-")
+  endif ()
 
 else()
 
