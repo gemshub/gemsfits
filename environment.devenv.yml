@@ -1,7 +1,7 @@
 name: gemsfits
 
 dependencies:
-  - cmake>=3.13
+  - cmake>=3.16
   - ninja
   #- clcache  # [win]
   - ccache  # [unix]
