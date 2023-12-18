@@ -3,11 +3,9 @@ name: gemsfits
 dependencies:
   - cmake>=3.16
   - ninja
-  #- clcache  # [win]
   - ccache  # [unix]
   - gxx_linux-64>=9.4.0  # [linux]
   - clangxx_osx-64  # [osx]
-  #- vs2019_win-64  # [win]
   - git
   - nlohmann_json
   - spdlog=1.11.0

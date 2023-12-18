@@ -31,9 +31,6 @@
 #include "keywords.h"
 #include "v_yaml.h"
 #include "json_view.h"
-#include <yaml-cpp/yaml.h>
-//#include <yaml-cpp/eventhandler.h>
-//#include <yaml-cpp/emitfromevents.h>
 
 // -----------------------------------------------------------
 // Actions and commands
@@ -940,18 +937,21 @@ void FITMainWindow::CmBackupYAML()
         common::TFile  outFile("", std::ios::out );
         if( !ChooseFileSave(&outFile, this, fname, "Please, give a file name for unloading records","*.yaml" ))
             return;
-        outFile.Open();
-
+        std::string json_array_str = "[\n";
         for(size_t i=0; i<aKey.size(); i++ )
         {
             rtEJ[ currentMode ].getRecord(aKey[i]);
-            std::string valDB =common::yaml::Json2Yaml(rtEJ[currentMode].getJson());
-            outFile.ff << valDB;
-            if( i<aKey.size()-1)
-                outFile.ff <<  "\n---";
-            //outFile.ff <<  "\n";
+            json_array_str +=  rtEJ[currentMode].getJson();
+            if( i<aKey.size()-1) {
+                json_array_str +=  ",";
+            }
+            json_array_str += "\n";
         }
+        json_array_str += "]";
 
+        auto yaml_str = common::yaml::Json2Yaml(json_array_str);
+        outFile.Open();
+        outFile.ff << yaml_str;
         outFile.Close();
 
         changeKeyList();
@@ -970,7 +970,7 @@ void FITMainWindow::CmRestoreYAML()
 {
     try
     {
-/*        if( !MessageToSave() )
+        if( !MessageToSave() )
             return;
 
         // open file to unloading
@@ -978,33 +978,19 @@ void FITMainWindow::CmRestoreYAML()
         common::TFile  inFile("", std::ios::in);
         if( !ChooseFileOpen(&inFile, this, fname, "Please, select file with unloaded records","*.yaml" ))
             return;
-        inFile.Open();
+        auto yaml_str = inFile.ReadAll();
+        auto jsonstr =  common::yaml::Yaml2Json(yaml_str);
+        auto arr_json = common::JsonFree::parse(jsonstr);
 
-        // read json records array from file
-        try{
-            YAML::Parser parser(inFile.ff);
-            while (1)
-            {
-                //YAML::NodeBuilder builder;
-                YAML::Emitter emt;
-                YAML::EmitFromEvents builder(emt);
-                if (!parser.HandleNextDocument(builder))
-                    break;
-                std::string bsonVal = emt.c_str();
-                //cout << bsonVal.c_str() << "\n---" << endl;
-                bsonVal = common::yaml::Yaml2Json(bsonVal);
-                rtEJ[currentMode].setJson(bsonVal);
-                if( ui->actionOverwrite->isChecked() )
-                    rtEJ[currentMode].saveRecord("");
-                else
-                    rtEJ[currentMode].insertRecord();
-            }
+        for(const auto& object : arr_json)
+        {
+            rtEJ[currentMode].setJson( object->dump(true));
+            if( ui->actionOverwrite->isChecked() )
+                rtEJ[currentMode].saveRecord("");
+            else
+                rtEJ[currentMode].insertRecord();
+
         }
-        catch(YAML::Exception& e) {
-            std::cout << "parseYAMLToBson " << e.what() << std::endl;
-            Error( "parseYAMLToBson",  e.what() );
-        }
-*/
         setStatusText( "Records imported from yaml txt-file" );
     }
     catch( TError& err )

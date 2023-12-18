@@ -95,6 +95,7 @@ public:
 
     void Open() override;
     void Close() override;
+    std::string ReadAll();
 };
 
 /// Class for database file manipulation

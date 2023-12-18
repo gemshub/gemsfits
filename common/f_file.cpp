@@ -147,6 +147,26 @@ void TFile::Close()
     is_opened = false;
 }
 
+
+std::string TFile::ReadAll()
+{
+    Open();
+    std::stringstream buffer;
+    buffer << ff.rdbuf();
+
+    auto retstr = buffer.str();
+    // skip over optional BOM http://unicode.org/faq/utf_bom.html
+    if ( retstr.size() >= 3 && static_cast<uint8_t>(retstr[0]) == 0xef &&
+         static_cast<uint8_t>(retstr[1]) == 0xbb &&
+         static_cast<uint8_t>(retstr[2]) == 0xbf )
+    {
+        // found UTF-8 BOM. simply skip over it
+        retstr = retstr.substr(3);
+    }
+    return retstr;
+}
+
+
 //-------------------------------------------------------------
 // TDataBaseFile
 //-------------------------------------------------------------

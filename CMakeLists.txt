@@ -33,11 +33,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # Define which types of libraries to build
 option(USE_THERMOFUN "Use ThermoFun" OFF)
 option(USE_OLD_EJDB "Compile using ejdb1" ON)
-if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-   option(BUILD_GUI "Build Qt GUI shell" ON)
-else()
-   option(BUILD_GUI "Build Qt GUI shell" ON)
-endif()
+option(BUILD_GUI "Build Qt GUI shell" ON)
 
 # Used into conda only
 if(DEFINED ENV{CONDA_PREFIX})
@@ -97,7 +93,6 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
         /DNOMINMAX
     )
 endif()
-
 
 # Set the headers directory path
 set(COMMON_DIR "${CMAKE_SOURCE_DIR}/common")
