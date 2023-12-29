@@ -377,6 +377,7 @@ void Data_Manager::get_EJDB()
                 templ.clear();
                 templ = element->value(keys::samples, templ);
                 skippsamples.insert(skippsamples.end(), templ.begin(), templ.end());
+                skippsamples.push_back("");
             }
         }
 
@@ -530,6 +531,9 @@ void Data_Manager::get_EJDB()
     TEJDataBase::dbdriver->select_query_omp(collection, query_object.dump(), setfnc, this->MPI);
     TEJDataBase::dbdriver->disconnect();
 
+    std::cout <<"experiments from database "<<  experiments.size() <<std::endl;
+    gpf->flog<<"experiments from database "<<  experiments.size() <<std::endl;
+
     // Set weights provided in the sample list
     if (Nsamples > 0)
     {
@@ -567,7 +571,6 @@ void Data_Manager::get_EJDB()
             unsigned int k=0; // counts torugh the skippsamples std::vector
             for (unsigned int j=0; j<skippdatasets.size(); ++j)
             {
-                //                    for (k; k<skippsamples.size(); k++)
                 while (k<skippsamples.size())
                 {
                     if (!(skippsamples[k] == ""))
@@ -591,10 +594,25 @@ void Data_Manager::get_EJDB()
         }
         fprintf(stderr, "Records after removing skipped pairs (dataset-samples): %ld\n", experiments.size());
     }
+
+    std::cout <<"Records after removing skipped pairs "<<  experiments.size() <<std::endl;
+    gpf->flog<<"Records after removing skipped pairs "<<  experiments.size() <<std::endl;
+
 #ifdef CHECK_LOAD
     std::fstream test_out("experiments.log", std::ios::out);
+    std::fstream test_out_name("experiments_name.log", std::ios::out);
+    test_out_name << "skippdatasets ----------------" << "\n";
+    for (auto const& item : skippdatasets) {
+         test_out_name << item << "\n";
+     }
+    test_out_name << "skippsamples ---------------" << "\n";
+    for (auto const& item : skippsamples) {
+        test_out_name << item << "\n";
+     }
+    test_out_name << "experiments ---------------" << "\n";
     for (auto const& item : experiments) {
         test_out << *item << "\n";
+        test_out_name << item->idsample << " " << item->sample << " " << item->expdataset << "\n";
     }
 #endif
 }

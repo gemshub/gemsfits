@@ -439,6 +439,7 @@
     </property>
     <addaction name="actionOverwrite"/>
     <addaction name="separator"/>
+    <addaction name="actionList"/>
     <addaction name="actionBackup_to_JSON"/>
     <addaction name="actionRestore_from_JSON"/>
     <addaction name="separator"/>
@@ -1061,6 +1062,11 @@
    </property>
    <property name="shortcut">
     <string>F5</string>
+   </property>
+  </action>
+  <action name="actionList">
+   <property name="text">
+    <string>List ...</string>
    </property>
   </action>
  </widget>

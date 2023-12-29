@@ -155,6 +155,7 @@ public slots:
     void CmInsertSearch();
 
     // Record list
+    void CmKeysToTXT();
     void CmBackupJSON();
     void CmRestoreJSON();
     void CmBackupCSV(){}

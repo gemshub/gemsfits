@@ -74,6 +74,7 @@ void FITMainWindow::setActions()
     connect( ui->actionInsert_search_results_into_task_definition, SIGNAL( triggered()), this, SLOT(CmInsertSearch()));
 
     // Record list
+    connect( ui->actionList, SIGNAL( triggered()), this, SLOT(CmKeysToTXT()));
     connect( ui->actionBackup_to_JSON, SIGNAL( triggered()), this, SLOT(CmBackupJSON()));
     connect( ui->actionRestore_from_JSON, SIGNAL( triggered()), this, SLOT(CmRestoreJSON()));
     connect( ui->actionBackup_to_csv, SIGNAL( triggered()), this, SLOT(CmBackupCSV()));
@@ -817,6 +818,50 @@ void FITMainWindow::CmShowFitResults()
 
 //-------------------------------------------------------------------------------------
 // Record list
+
+void FITMainWindow::CmKeysToTXT()
+{
+    try
+    {
+        if( ! MessageToSave() )
+        return;
+
+        // get current filter
+        std::string keyFilter = ui->filterEdit->text().toStdString();
+        if( keyFilter.empty() )
+            keyFilter = ALLKEY;
+
+        // select record list to unload
+        std::vector<std::string> aKey = vfMultiKeys( this, "Please, mark records to be listed", currentMode, keyFilter.c_str() );
+        if( aKey.size() <1 )
+                return;
+
+        // open file to unloading
+         std::string fname =  projectSettings->value("ProjFileName", "undefined").toString().toStdString();
+                fname += ".";
+                fname += rtEJ[ currentMode ].getKeywd();
+                fname += ".txt";
+         common::TFile  outFile("", std::ios::out );
+         if( !ChooseFileSave(&outFile, this, fname, "Please, give a file name for unloading keys","*.txt" ))
+              return;
+         outFile.Open();
+
+         for(size_t i=0; i<aKey.size(); i++ )  {
+           outFile.ff << aKey[i] << "\n";
+         }
+         outFile.Close();
+
+         changeKeyList();
+         contentsChanged = false;
+         setStatusText( "Keys exported to txt-file" );
+     }
+     catch( TError& err )
+     {
+         setStatusText( err.title );
+         addLinetoStatus( err.mess );
+     }
+}
+
 
 /// Export Data Records to json txt-file
 void FITMainWindow::CmBackupJSON()

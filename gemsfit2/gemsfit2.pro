@@ -43,7 +43,7 @@ CONFIG += serial release
 CONFIG += c++17
 
 # check settengs
-DEFINES         += useomp
+#DEFINES         += useomp
 #DEFINES += OVERFLOW_EXCEPT  #compile with nan inf exceptions
 DEFINES += CHECK_LOAD # to generate print for initial data after read input configuration.
 
