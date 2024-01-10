@@ -305,6 +305,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         std::cout << "sum of residuals: "<<residuals_sys<< std::endl;
         for (unsigned int i = 0; i<opt.size(); ++i)
         {
+            gpf->flog<<"parameter "<<i<<" : "<<opt[i]<<std::endl;
             std::cout<<"parameter "<<i<<" : "<<opt[i]<<std::endl;
         }
     }

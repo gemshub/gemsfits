@@ -34,16 +34,7 @@
 #include "gemsfit_iofiles.h"
 #include "keywords.h"
 #include "gemsfit_global_functions.h"
-//#include "gemsfit_nested_functions.h"
 #include "gemsfit_target_functions.h"
-
-
-//#ifndef __unix
-//#include <io.h>
-//#endif
-
-
-//using namespace std;
 
 // Main function that calculates the residual
 double TGfitTask::get_residual(int exp, TGfitTask::TargetFunction::obj_fun &objfun, int &count)
@@ -200,8 +191,10 @@ double TGfitTask::get_sum_of_residuals( )
         Tfun->objfun[j].SumWTFun = ofun_residual;
     }
 
-    for(std::vector<double>::iterator it = residuals.begin(); it != residuals.end(); ++it)
+    for(std::vector<double>::iterator it = residuals.begin(); it != residuals.end(); ++it) {
+        //gpf->flog<<"residual "<< *it<<std::endl;
         residual += *it;
+   }
 
     return residual;
 }
