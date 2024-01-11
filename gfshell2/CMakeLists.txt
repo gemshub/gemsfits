@@ -60,7 +60,7 @@ target_link_libraries(shellfit3 PRIVATE ${GUI_QT_TARGETS} )
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
      target_link_libraries(shellfit3 PRIVATE libejdb yaml-cpp Threads::Threads)
 else()
-     target_link_libraries(shellfit3 PRIVATE ejdb yaml-cpp Threads::Threads)
+     target_link_libraries(shellfit3 PRIVATE ${EJDB_LIB} yaml-cpp Threads::Threads)
 endif()
 
 if(USE_THERMOFUN MATCHES ON)

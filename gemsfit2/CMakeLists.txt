@@ -51,7 +51,7 @@ else()
 
    # Create an executable named app
    add_executable(gemsfit3 $<TARGET_OBJECTS:FITS_OBJECT>)
-   target_link_libraries(gemsfit3 nlopt Boost::system armadillo ejdb yaml-cpp Threads::Threads)
+   target_link_libraries(gemsfit3 nlopt Boost::system armadillo ${EJDB_LIB} yaml-cpp Threads::Threads)
 
   if(USE_THERMOFUN MATCHES ON)
      target_link_libraries(gemsfit3 ThermoFun::ThermoFun)
