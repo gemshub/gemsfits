@@ -1,0 +1,12 @@
+diff -ruN iowow/src/json/iwjson.c iowow_changed/src/json/iwjson.c
+--- iowow/src/json/iwjson.c	2024-01-11 14:49:03.311510261 +0200
++++ iowow_changed/src/json/iwjson.c	2024-01-11 14:57:21.768563536 +0200
+@@ -26,7 +26,7 @@
+ 
+ void iwjson_ftoa(long double val, char buf[static IWNUMBUF_SIZE], size_t *out_len) {
+   // TODO: review
+-  int len = snprintf(buf, IWNUMBUF_SIZE, "%.8Lf", val);
++  int len = snprintf(buf, IWNUMBUF_SIZE, "%.16Lf", val);
+   if (len <= 0) {
+     buf[0] = '\0';
+     *out_len = 0;

@@ -32,7 +32,12 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # Define which types of libraries to build
 option(USE_THERMOFUN "Use ThermoFun" OFF)
-option(USE_OLD_EJDB "Compile using ejdb1" ON)
+if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+  option(USE_OLD_EJDB "Compile using ejdb1" ON)
+else()
+  option(USE_OLD_EJDB "Compile using ejdb1" OFF)
+  add_definitions(-Duseomp)
+endif()
 option(BUILD_GUI "Build Qt GUI shell" ON)
 
 # Used into conda only
@@ -118,9 +123,7 @@ include(gemsfitsFindDeps)
 
 # Set some necessary definitions
 add_definitions(-DIPMGEMPLUGIN)
-if(NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-    add_definitions(-Duseomp)
-endif()
+#add_definitions(-Duseomp)
 
 if(USE_OLD_EJDB MATCHES ON)
   add_definitions(-DOLD_EJDB)
