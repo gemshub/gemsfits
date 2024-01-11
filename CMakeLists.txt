@@ -118,7 +118,9 @@ include(gemsfitsFindDeps)
 
 # Set some necessary definitions
 add_definitions(-DIPMGEMPLUGIN)
-add_definitions(-Duseomp)
+if(NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+    add_definitions(-Duseomp)
+endif()
 
 if(USE_OLD_EJDB MATCHES ON)
   add_definitions(-DOLD_EJDB)
