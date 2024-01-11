@@ -112,7 +112,7 @@ bool TAbstractFile::ChooseFileOpen(QWidget* par, std::string& path_,
    if ( !fn.isEmpty() )
     {
         mode = std::ios::in;
-        path_ = Path = fn.toUtf8().data();
+        path_ = Path = fn.toStdString();
         u_splitpath(Path, dir, name, ext);
         return true;
     }
@@ -155,7 +155,7 @@ bool TAbstractFile::ChooseFileSave(QWidget* par, std::string& path_,
     if ( !fn.isEmpty() )
     {
         mode = std::ios::out;
-        path_ = Path = fn.toUtf8().data();
+        path_ = Path = fn.toStdString();
         u_splitpath(Path, dir, name, ext);
         return true;
     }

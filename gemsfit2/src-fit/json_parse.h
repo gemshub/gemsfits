@@ -26,7 +26,7 @@
 #include <string>
 #include <vector>
 
-using namespace std;
+//using namespace std;
 
 
 /**
@@ -34,10 +34,10 @@ using namespace std;
 * @author DM
 * @param query JSON object
 * @param key JSON object member that we want to have the value/s returned
-* @param result vector of strings representing the values of the key in the JSON object
+* @param result std::vector of strings representing the values of the key in the JSON object
 * @date 19.04.2013
 */
-void parse_JSON_object( string query, const char *key, vector<string> &result );
+void parse_JSON_object( std::string query, const char *key, std::vector<std::string> &result );
 
 /**
 * Interprets 2 level JSON object in the array arr pointed by the variable key
@@ -45,9 +45,9 @@ void parse_JSON_object( string query, const char *key, vector<string> &result );
 * @param data_ JSON object
 * @param arr JSON array name that we want to parse
 * @param key JSON array-object member that we want to have the value/s returned
-* @param result vector of strings representing the values of the key in the JSON object
+* @param result std::vector of strings representing the values of the key in the JSON object
 * @date 08.05.2013
 */
-void parse_JSON_array_object( string data_, const char *arr , const char *key, vector<string> &result );
+void parse_JSON_array_object( std::string data_, const char *arr , const char *key, std::vector<std::string> &result );
 
 #endif // JSON_PARSE_H

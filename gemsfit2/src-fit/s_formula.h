@@ -24,7 +24,7 @@
 #include <string>
 #include <list>
 #include <vector>
-using namespace std;
+//using namespace std;
 
 #ifdef IPMGEMPLUGIN
 
@@ -41,8 +41,8 @@ extern const char * CHARGE_NAME;
 
 struct ICTERM     // description of parsed element
 {
-    string ick;
-    string ick_iso;
+    std::string ick;
+    std::string ick_iso;
     int val;             // valence IC
     double stoc;          // stoich. coef.
 
@@ -59,7 +59,7 @@ struct ICTERM     // description of parsed element
 
 struct MOITERM    // description of moiety element
 {
-    string name;
+    std::string name;
     int  site;        // sublattice site
     double nj;          // moiety-site occupancy.
 
@@ -68,7 +68,7 @@ struct MOITERM    // description of moiety element
     {
        char val[100];
        sprintf(val, "{%s}%d", aName, site);
-       name = string(val);
+       name = std::string(val);
     }
 
     MOITERM( const MOITERM& data ):
@@ -80,8 +80,8 @@ struct MOITERM    // description of moiety element
 
 class Formuan  // stack for analyzing formula
 {
-    string form_str;
-    string charge_str;
+    std::string form_str;
+    std::string charge_str;
 
     //TIArray<ICTERM>  ict_;
 
@@ -90,10 +90,10 @@ class Formuan  // stack for analyzing formula
 
 protected:
 
-    void icadd(  list<ICTERM>& itt_, const char *icn,
+    void icadd(  std::list<ICTERM>& itt_, const char *icn,
                  const char *iso, int val, double csto );
-    void icadd(  list<ICTERM>& itt_, ICTERM& it );
-    int ictcomp( list<ICTERM>::iterator& it, string& ick, int val );
+    void icadd(  std::list<ICTERM>& itt_, ICTERM& it );
+    int ictcomp( std::list<ICTERM>::iterator& it, std::string& ick, int val );
 
 
     inline bool iscapl( char ch )  // is cap letter
@@ -105,16 +105,16 @@ protected:
         return( (ch>='a' && ch<='z') ||  ch == '_' );
     }
     //char *xblanc( char *cur );
-    void xblanc( string& str );
+    void xblanc( std::string& str );
 
-    void charge(list<ICTERM>& tt);
+    void charge(std::list<ICTERM>& tt);
     void   scanCharge();
-    void scanFterm( list<ICTERM>& itt_, string& startPos, char endSimb );
-    void scanElem( list<ICTERM>& itt_, string& cur );
-    void getReal( double& real, string& cur);
-    void scanValence( int& val, string& cur);
-    void scanIsotope( string& isotop, string& cur);
-    void scanICsymb(  string& icName, string& cur);
+    void scanFterm( std::list<ICTERM>& itt_, std::string& startPos, char endSimb );
+    void scanElem( std::list<ICTERM>& itt_, std::string& cur );
+    void getReal( double& real, std::string& cur);
+    void scanValence( int& val, std::string& cur);
+    void scanIsotope( std::string& isotop, std::string& cur);
+    void scanICsymb(  std::string& icName, std::string& cur);
 
 
 public:
@@ -122,8 +122,8 @@ public:
     Formuan( const char * formula );
     ~Formuan();
 
-    int scanMoiety( vector<MOITERM>& moit_ );
-    void scanFormula( list<ICTERM>& tt );
+    int scanMoiety( std::vector<MOITERM>& moit_ );
+    void scanFormula( std::list<ICTERM>& tt );
 
 };
 
@@ -132,17 +132,17 @@ class TFormula  // description of disassembled formula token
 {
     double aZ;   // calculated charge in Mol
 
-    vector<string>  aCn;  // list of IC
-    vector<double> aSC;  // list of stoichiometric coef.
-    vector<short> aVal;  // list of valence numbers
+    std::vector<std::string>  aCn;  // list of IC
+    std::vector<double> aSC;  // list of stoichiometric coef.
+    std::vector<short> aVal;  // list of valence numbers
     //TIArray<MOITERM> moit_;
 
-    string aFormula;  // analayzed formula
+    std::string aFormula;  // analayzed formula
 
 protected:
 
     void fo_clear();
-    void fo_unpak( list<ICTERM>& itt_ );
+    void fo_unpak( std::list<ICTERM>& itt_ );
 
 public:
 
@@ -175,7 +175,7 @@ public:
         return aFormula.c_str();
     }
 
-    int BuildMoiety( const char * StrForm, vector<MOITERM>& moit_ );
+    int BuildMoiety( const char * StrForm, std::vector<MOITERM>& moit_ );
 
     //--- Value manipulation
     void fixup_ics( char* ICs );
@@ -185,7 +185,7 @@ int Fmwtz( double &Z, double &mW, double &eSm, short *lAn, double &Nj );
     void TestIC( const char *key, int N, char *ICsym );
     void Stm_line( int N, double *Sml, char *ICsym, short *ICval );
     void Reset();
-    string form_extr( int nCk, int L, char *Cfor );
+    std::string form_extr( int nCk, int L, char *Cfor );
 };
 
 

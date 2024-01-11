@@ -48,7 +48,7 @@ double* AddVariable(const wchar_t *a_szName, void *pUserData)
 double* AddVariable(const char *a_szName, void *pUserData)
 #endif
 {
-   double afValBuf[500];
+   static double afValBuf[500];
    int iVal = -1;
 #if defined(_UNICODE)
   std::vector<std::wstring> *test = reinterpret_cast<std::vector<std::wstring> *>(pUserData);

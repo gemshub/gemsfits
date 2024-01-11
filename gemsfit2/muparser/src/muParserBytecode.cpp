@@ -216,6 +216,68 @@ namespace mu
       {
         switch(a_Oprt)
         {
+        case mu::cmLE:
+            break;
+        case mu::cmGE:
+            break;
+        case mu::cmNEQ:
+            break;
+        case mu::cmEQ:
+            break;
+        case mu::cmLT:
+            break;
+        case mu::cmGT:
+            break;
+        case mu::cmLAND:
+            break;
+        case mu::cmLOR:
+            break;
+        case mu::cmASSIGN:
+            break;
+        case mu::cmBO:
+            break;
+        case mu::cmBC:
+            break;
+        case mu::cmIF:
+            break;
+        case mu::cmELSE:
+            break;
+        case mu::cmENDIF:
+            break;
+        case mu::cmARG_SEP:
+            break;
+        case mu::cmVAR:
+            break;
+        case mu::cmVAL:
+            break;
+        case mu::cmVARPOW2:
+            break;
+        case mu::cmVARPOW3:
+            break;
+        case mu::cmVARPOW4:
+            break;
+        case mu::cmVARMUL:
+            break;
+        case mu::cmPOW2:
+            break;
+        case mu::cmFUNC:
+            break;
+        case mu::cmFUNC_STR:
+            break;
+        case mu::cmFUNC_BULK:
+            break;
+        case mu::cmSTRING:
+            break;
+        case mu::cmOPRT_BIN:
+            break;
+        case mu::cmOPRT_POSTFIX:
+            break;
+        case mu::cmOPRT_INFIX:
+            break;
+        case mu::cmEND:
+            break;
+        case mu::cmUNKNOWN:
+            break;
         case  cmPOW:
               // Optimization for ploynomials of low order
               if (m_vRPN[sz-2].Cmd == cmVAR && m_vRPN[sz-1].Cmd == cmVAL)

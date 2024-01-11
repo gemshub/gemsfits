@@ -3,9 +3,6 @@
 
 #pragma GCC diagnostic ignored "-Wunused-variable"
 
-#include "string"
-#include "vector"
-
 namespace keys
 { // Keywords for the fitting task definition
 //                                  Keyword long                       short

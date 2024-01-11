@@ -28,7 +28,6 @@
 
 #include <algorithm>
 #include <iostream>
-using namespace std;
 
 #include "string.h"
 #include "verror.h"
@@ -54,21 +53,21 @@ typedef unsigned int uint;
 #endif //  __noborl
 
 // Returns string representation of current date in dd/mm/yyyy format
-string curDate();
+std::string curDate();
 
 // Returns string representation of current date in dd/mm/yy format
-string curDateSmol(char ch = '/');
+std::string curDateSmol(char ch = '/');
 
 // Returns string representation of current time in HH:MM  format
-string curTime();
+std::string curTime();
 
 // Returns string representation of current date and time
 inline
-string curDateTime()
+std::string curDateTime()
 {
     return curDate() + curTime();
 }
 // Returns string representation of time in "dd/mm/yyyy, HH:MM"  format
-string timeToStr( time_t time );
+std::string timeToStr( time_t time );
 
 #endif // V_USER_H

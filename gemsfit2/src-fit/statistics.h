@@ -38,7 +38,7 @@
 #include "keywords.h"
 
 
-using namespace std;
+//using namespace std;
 
 
 class statistics
@@ -48,9 +48,9 @@ class statistics
 
     struct parameters /// structure holding the target function information
     {
-        string Ptype;
-        string Pfittype;
-        string Pname;
+        std::string Ptype;
+        std::string Pfittype;
+        std::string Pname;
         double Ival;
         double Fval;
         double Roundval = 0.0;
@@ -58,18 +58,18 @@ class statistics
         double mc95;
         double mcSTDEV;
         double mcMEAN;
-        vector<double> mcconfi;
-        vector<double> correl;
+        std::vector<double> mcconfi;
+        std::vector<double> correl;
     };
 
-    vector<parameters*> fitparam;
+    std::vector<parameters*> fitparam;
 
     struct objfunstat
     {
-        vector<double> scatter, scatter2;
-        vector<double> percentiles;
-        vector<double> quantiles;
-        vector<double> orderd_res;
+        std::vector<double> scatter, scatter2;
+        std::vector<double> percentiles;
+        std::vector<double> quantiles;
+        std::vector<double> orderd_res;
         double stdev_res;
         double norm_stdev_res;
         double mean_res;
@@ -86,17 +86,17 @@ class statistics
 
         struct expdataset
         {
-            string name;
-            vector<double> scatter;
-            vector<double> residuals;
-            vector<double> norm_residuals;
-            vector<double> measured_value;
-            vector<double> measured_error;
+            std::string name;
+            std::vector<double> scatter;
+            std::vector<double> residuals;
+            std::vector<double> norm_residuals;
+            std::vector<double> measured_value;
+            std::vector<double> measured_error;
         };
-        vector<expdataset> exp_dataset;
+        std::vector<expdataset> exp_dataset;
     };
 
-    vector<objfunstat*> objfun_stat;
+    std::vector<objfunstat*> objfun_stat;
 
     double Weighted_mean_res;
     double means_res;
@@ -114,11 +114,11 @@ class statistics
     /// Absolute sum of residuals
     double           Abs_sum_of_residuals;
 
-    vector <double> weighted_residuals; /// residuals weighted with the weighting shceeme selected during fitting
-    vector <double> measured_norm_residuals;  /// in %, residuals normalized to measured value * 100
+    std::vector <double> weighted_residuals; /// residuals weighted with the weighting shceeme selected during fitting
+    std::vector <double> measured_norm_residuals;  /// in %, residuals normalized to measured value * 100
     /// number of independent fitted parameters
     int number_of_ind_parameters;
-    /// number of parameters of the last regression (length of optimization vector)
+    /// number of parameters of the last regression (length of optimization std::vector)
     int number_of_parameters;
     /// number of measurements invoilved in the parameter regression
     unsigned int number_of_measurements;
@@ -175,9 +175,9 @@ class statistics
         * and instantiates a pointer to the PlotFit class to print results.
         *
         * @author DM, FFH
-        * @param systems vector of pointers to instances of System_Properties structs
+        * @param systems std::vector of pointers to instances of System_Properties structs
         * @param weighted_Tfun_sum_of_residuals_ the sum of squares which result from the performed regression
-        * @param num_of_params_ the number of variables which were fitted (length of optimization vector)
+        * @param num_of_params_ the number of variables which were fitted (length of optimization std::vector)
         * @param num_of_runs_ the number of runs needed for the parameter regression
         * @date 21.11.2012
         */
@@ -209,8 +209,8 @@ class statistics
         *
         * @author DM, FFH
         * @date 21.11.2012
-        * @param optv_ optimization vector
-        * @param systems vector of pointers to instances of System_Properties structs
+        * @param optv_ optimization std::vector
+        * @param systems std::vector of pointers to instances of System_Properties structs
         */
 
         void basic_stat(std::vector<double> &optv_, TGfitTask *gfittask );
@@ -219,8 +219,8 @@ class statistics
         * Compute confidence intervals using Mone Carlo.
         * @author DM
         * @param actmod   pointer to instance of ActivityModel object.
-        * @param optv_    optimization vector
-        * @param systems  vector of pointers to instances of System_Properties structs
+        * @param optv_    optimization std::vector
+        * @param systems  std::vector of pointers to instances of System_Properties structs
         * @param countit  global counter of runs over measurement data
         * @date 05.12.2012
         */
@@ -229,11 +229,11 @@ class statistics
         /**
         * Perform sensitivity analysis of selected parameters.
         * @author DM
-        * @param optv_    optimization vector
-        * @param systems  vector of pointers to instances of System_Properties structs
+        * @param optv_    optimization std::vector
+        * @param systems  std::vector of pointers to instances of System_Properties structs
         * @date 06.12.2012
         */
-        void sensitivity_correlation(vector<double> &optv_, TGfitTask* gfittask );
+        void sensitivity_correlation(std::vector<double> &optv_, TGfitTask* gfittask );
 
 
         void print_param ();

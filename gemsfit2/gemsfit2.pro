@@ -38,10 +38,11 @@ VERSION         = 2.3.0
 DEFINES         += IPMGEMPLUGIN
 DEFINES         += useomp
 DEFINES         += _MYNOZLIB
-CONFIG          += c++11
+#DEFINES         += CHECK_LOAD
+CONFIG          += c++17
 
-QMAKE_CXXFLAGS += -O3
-QMAKE_LFLAGS += -O3
+#QMAKE_CXXFLAGS += -O3
+#QMAKE_LFLAGS += -O3
 
 CONFIG -= qt
 CONFIG += warn_on

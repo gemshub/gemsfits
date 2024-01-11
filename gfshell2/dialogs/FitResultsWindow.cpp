@@ -22,7 +22,15 @@
 #include <QFileDialog>
 #include <QCloseEvent>
 #include <QSortFilterProxyModel>
+#include <QPainter>
+#include <QMessageBox>
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+#include <QtPrintSupport/QPrintDialog>
+#include <QtPrintSupport/QPrinter>
+#else
 #include <QPrintDialog>
+#include <QPrinter>
+#endif
 
 #include "FitResultsWindow.h"
 #include "FITMainWindow.h"
@@ -140,16 +148,16 @@ void FitResultsWindow::closeEvent(QCloseEvent* ev)
        ev->accept();
 }
 
-void FitResultsWindow::ShowResults( const string& key )
+void FitResultsWindow::ShowResults( const std::string& key )
 {
-   pLineTask->setText( trUtf8( key.c_str() ));
+   pLineTask->setText( key.c_str() );
    readBsonRecord();
    show();
 }
 
-void FitResultsWindow::ShowResults( const string& key, const QString& dir )
+void FitResultsWindow::ShowResults( const std::string& key, const QString& dir )
 {
-   pLineTask->setText( trUtf8( key.c_str() ));
+   pLineTask->setText( key.c_str());
    readBsonRecord();
    CmOpenFile( dir );
    show();
@@ -250,7 +258,7 @@ void FitResultsWindow::editFiledsFromFile( const QString& dir )
 //    }
 //    else
 //      {
-//        cout << "error open file " << fpath.toUtf8().data() << endl;
+//        cout << "error open file " << fpath.toStdString() << endl;
 //      }
 //    ui->textStatistic->setText(valCsv);
 
@@ -265,7 +273,7 @@ void FitResultsWindow::editFiledsFromFile( const QString& dir )
     }
     else
       {
-        cout << "error open file " << fpath.toUtf8().data() << endl;
+        std::cout << "error open file " << fpath.toStdString() << std::endl;
       }
     ui->textEdit->setText(valCsv);
 
@@ -296,7 +304,7 @@ void FitResultsWindow::editFiledsToFile( const QString& dir )
 void FitResultsWindow::CmSaveBsonRecord()
 {
     bson bsrec;
-    string key = pLineTask->text().toUtf8().data();
+    std::string key = pLineTask->text().toStdString();
 
   try
   {
@@ -319,21 +327,21 @@ void FitResultsWindow::CmSaveBsonRecord()
 
     // added text bufers to bson record
     // write file  FIT_STATISTIC
-//    string valCsv = ui->textStatistic->toPlainText().toUtf8().data();
-//    string name = fFitStatistic.toUtf8().data();
-//    int iRet = bson_append_string( &bsrec, name.c_str(), valCsv.c_str() );
-//    ErrorIf( iRet == BSON_ERROR, name, "Error append string"+name );
+//    std::string valCsv = ui->textStatistic->toPlainText().toStdString();
+//    std::string name = fFitStatistic.toStdString();
+//    int iRet = bson_append_std::string( &bsrec, name.c_str(), valCsv.c_str() );
+//    ErrorIf( iRet == BSON_ERROR, name, "Error append std::string"+name );
     // write file  FIT_LOGFILE
-    string valCsv = ui->textEdit->toPlainText().toUtf8().data();
-    string name = fFitLogfile.toUtf8().data();
+    std::string valCsv = ui->textEdit->toPlainText().toStdString();
+    std::string name = fFitLogfile.toStdString();
     int iRet = bson_append_string( &bsrec, name.c_str(), valCsv.c_str() );
     ErrorIf( iRet == BSON_ERROR, name, "Error append string"+name );
 
     bson_finish( &bsrec );
 
-    //set bson to string
+    //set bson to std::string
     ParserJson pars;
-    string recBsonText;
+    std::string recBsonText;
     pars.printBsonObjectToJson( recBsonText, bsrec.data );
     bson_destroy( &bsrec);
 
@@ -347,7 +355,7 @@ void FitResultsWindow::CmSaveBsonRecord()
    }
     catch( TError& err )
     {
-      cout << err.title << err.mess << endl;
+      std::cout << err.title << err.mess << std::endl;
     }
 }
 
@@ -355,7 +363,7 @@ void FitResultsWindow::CmSaveBsonRecord()
 void FitResultsWindow::readBsonRecord()
 {
     bson bsrec;
-    string key = pLineTask->text().toUtf8().data();
+    std::string key = pLineTask->text().toStdString();
 
   try
   {
@@ -368,7 +376,7 @@ void FitResultsWindow::readBsonRecord()
     if( rtEJ[ MDF_FITS ].Find( key.c_str() ))
     {  //read record
         rtEJ[ MDF_FITS ].Get( key.c_str() );
-        string valDB =rtEJ[ MDF_FITS ].GetJson();
+        std::string valDB =rtEJ[ MDF_FITS ].GetJson();
 
         //get bson bsrec;
         ParserJson pars;
@@ -389,14 +397,14 @@ void FitResultsWindow::readBsonRecord()
 
        // added text bufers to bson record
        // write file  FIT_STATISTIC
-//       string name = fFitStatistic.toUtf8().data();
-       string valCsv;
-//       if( !bson_find_string( bsrec.data, name.c_str(), valCsv ) )
+//       std::string name = fFitStatistic.toStdString();
+       std::string valCsv;
+//       if( !bson_find_std::string( bsrec.data, name.c_str(), valCsv ) )
 //           valCsv = "";
 //       ui->textStatistic->setText(valCsv.c_str());
 
        // write file  FIT_LOGFILE
-       string name = fFitLogfile.toUtf8().data();
+       std::string name = fFitLogfile.toStdString();
        if( !bson_find_string( bsrec.data, name.c_str(), valCsv ) )
             valCsv = "";
        ui->textEdit->setText(valCsv.c_str());
@@ -405,7 +413,7 @@ void FitResultsWindow::readBsonRecord()
    }
     catch( TError& err )
     {
-      cout << err.title << err.mess << endl;
+      std::cout << err.title << err.mess << std::endl;
     }
 }
 
@@ -415,23 +423,23 @@ void FitResultsWindow::CmBackupJSON()
     try
     {
        // select record list to unload
-       vector<string> aKey = vfMultiKeys( this, "Please, mark records to be unloaded to JSON",
+       std::vector<std::string> aKey = vfMultiKeys( this, "Please, mark records to be unloaded to JSON",
               MDF_FITS, "*" );
         if( aKey.size() <1 )
                return;
 
        // open file to unloading
-        string fname;
-        TFile  outFile("", ios::out );
+        std::string fname;
+        TFile  outFile("", std::ios::out );
         if( !outFile.ChooseFileSave( this, fname, "Please, give a file name for unloading records","*.json" ))
              return;
         outFile.Open();
 
         outFile.ff << "[\n";
-        for(int i=0; i<aKey.size(); i++ )
+        for(size_t i=0; i<aKey.size(); i++ )
         {
           rtEJ[ MDF_FITS ].Get( aKey[i].c_str() );
-          string valDB =rtEJ[ MDF_FITS ].GetJson();
+          std::string valDB =rtEJ[ MDF_FITS ].GetJson();
           outFile.ff << valDB;
           if( i<aKey.size()-1)
                outFile.ff <<  ",";
@@ -442,7 +450,7 @@ void FitResultsWindow::CmBackupJSON()
     }
     catch( TError& err )
     {
-        cout << err.title << err.mess << endl;
+        std::cout << err.title << err.mess << std::endl;
     }
 }
 
@@ -451,7 +459,7 @@ void FitResultsWindow::CmDeleteRecord()
 {
     try
     {
-        string key = pLineTask->text().toUtf8().data();
+        std::string key = pLineTask->text().toStdString();
         if( !rtEJ[ MDF_FITS ].Find(key.c_str()) )
            return;
 
@@ -461,7 +469,7 @@ void FitResultsWindow::CmDeleteRecord()
     }
     catch( TError& err )
     {
-        cout << err.title << err.mess << endl;
+        std::cout << err.title << err.mess << std::endl;
     }
 }
 
@@ -473,8 +481,8 @@ void FitResultsWindow::CmPlotTable()
         if( !tableCurrent )
           return;
 
-        string title = "Task ";
-               title  += pLineTask->text().toUtf8().data();
+        std::string title = "Task ";
+               title  += pLineTask->text().toStdString();
         QSortFilterProxyModel *pmodel = (QSortFilterProxyModel *)tableCurrent->model();
         ((TMatrixModel *)pmodel->sourceModel())->showGraphData(pmodel, title );
 
@@ -482,7 +490,8 @@ void FitResultsWindow::CmPlotTable()
     }
     catch( TError& err )
     {
-        cout << err.title << err.mess << endl;
+        QMessageBox::critical( this, err.title.c_str(), err.mess.c_str() );
+        std::cout << err.title << err.mess << std::endl;
     }
 }
 
@@ -501,16 +510,16 @@ void FitResultsWindow::CmPrintTable()
         if (dlg->exec() != QDialog::Accepted)
              return;
 
-        if( QPrinter::Landscape != printer.orientation() )
-            printer.setOrientation(QPrinter::Landscape);
+        if( QPageLayout::Landscape != printer.pageLayout().orientation() )
+            printer.setPageOrientation(QPageLayout::Landscape);
 
         QPainter painter;
         painter.begin(&printer);
-        double xscale = printer.pageRect().width()/double(tableCurrent->width());
-        double yscale = printer.pageRect().height()/double(tableCurrent->height());
+        double xscale = printer.pageRect(QPrinter::DevicePixel).width()/double(tableCurrent->width());
+        double yscale = printer.pageRect(QPrinter::DevicePixel).height()/double(tableCurrent->height());
         double scale = qMin(xscale, yscale);
-        painter.translate(printer.paperRect().x() + printer.pageRect().width()/2,
-                          printer.paperRect().y() + printer.pageRect().height()/2);
+        painter.translate(printer.paperRect(QPrinter::DevicePixel).x() + printer.pageRect(QPrinter::DevicePixel).width()/2,
+                          printer.paperRect(QPrinter::DevicePixel).y() + printer.pageRect(QPrinter::DevicePixel).height()/2);
         painter.scale(scale, scale);
         painter.translate(-tableCurrent->width()/2, -tableCurrent->height()/2);
 
@@ -523,7 +532,7 @@ void FitResultsWindow::CmPrintTable()
     }
     catch( TError& err )
     {
-        cout << err.title << err.mess << endl;
+        std::cout << err.title << err.mess << std::endl;
     }
 }
 
@@ -615,40 +624,41 @@ void FitResultsWindow::ToggleY()
 
 void FitResultsWindow::CmFindFromPlot()
 {
-  try
-  {
+    try
+    {
 
-     TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
-     if( !tableCurrent )
-        return;
+        TMatrixTable *tableCurrent = dynamic_cast<TMatrixTable*>(ui->tabsResults->currentWidget()->focusWidget());
+        if( !tableCurrent )
+            return;
 
-     QSortFilterProxyModel *pmodel = (QSortFilterProxyModel *)tableCurrent->model();
-     TMatrixModel *matrmodel = (TMatrixModel *)pmodel->sourceModel();
-     GraphData *grdata = matrmodel->getGraphData();
-     //if( !grdata )
-     //  return;
+        QSortFilterProxyModel *pmodel = (QSortFilterProxyModel *)tableCurrent->model();
+        TMatrixModel *matrmodel = (TMatrixModel *)pmodel->sourceModel();
+        auto* grdata = matrmodel->getGraphData();
+        if( !grdata )
+            return;
 
-     // define new project
-     DialogFindFromPlot dlg( grdata, this);
-      if( !dlg.exec() )
-          return;
+        // define new project
+        DialogFindFromPlot dlg( grdata, this);
+        if( !dlg.exec() )
+            return;
 
-    //find data from dlg
-    int xyndx[2];
-    double reg[4];
-    dlg.getData( xyndx, reg );
+        //find data from dlg
+        int xyndx[2];
+        double reg[4];
+        dlg.getData( xyndx, reg );
 
-    //search by data
-    int frstrow = matrmodel->findRow( xyndx, reg);
-    if( frstrow >= 0 )
-    { QModelIndex ind = pmodel->mapFromSource(matrmodel->index(frstrow, 0));
-      tableCurrent->selectRow(ind.row());
+        //search by data
+        int frstrow = matrmodel->findRow( xyndx, reg);
+        if( frstrow >= 0 )
+        {
+            QModelIndex ind = pmodel->mapFromSource(matrmodel->index(frstrow, 0));
+            tableCurrent->selectRow(ind.row());
+        }
+
     }
-
-  }
     catch( TError& err )
     {
-    cout << err.title << err.mess << endl;
+        std::cout << err.title << err.mess << std::endl;
     }
 }
 

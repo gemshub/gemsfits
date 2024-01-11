@@ -85,12 +85,12 @@ Weighted_Abs_sum_of_residuals += fabs(gfittask->residuals_v[i])*gfittask->weight
 
     num_of_runs		= num_of_runs_;
 
-cout<<" Statistics Constructor: sum of squares: "<<Weighted_Tfun_sum_of_residuals<<endl;
+std::cout<<" Statistics Constructor: sum of squares: "<<Weighted_Tfun_sum_of_residuals<<std::endl;
 
     number_of_ind_parameters   = num_of_params_;
     number_of_parameters = number_of_ind_parameters /*+ gfittask->Opti->reactions.size() + gfittask->Opti->Lparams.size()*/;
 
-cout<<" Statistics Constructor: number_of_parameters: "<<number_of_parameters<<endl;
+std::cout<<" Statistics Constructor: number_of_parameters: "<<number_of_parameters<<std::endl;
 
     get_stat_param(); // <----------------------------------------------------++++++
 //stat->set_plotfit_vars_txt();
@@ -190,7 +190,7 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
       objfun_stat[j]->nr_neg_res = obj_neg_residuals;
 
       int dscount = -1;
-      string dataset = "";
+      std::string dataset = "";
       for (unsigned i=0; i<gfittask->aTfun.size(); i++)
       {
           if (gfittask->aTfun[i].objfun[j].isComputed)
@@ -260,8 +260,8 @@ statistics::~statistics()
 
 void statistics::get_stat_param()
 {
-    string fname, str, data;
-    vector<string> out, out2;
+    std::string fname, str, data;
+    std::vector<std::string> out, out2;
     int mode = gpf->KeysNdx;
 
     fname = gpf->OptParamFile();
@@ -299,21 +299,21 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 //    double Res = 0.;
     double m2 = 0., m3 = 0., m4 = 0.;
     double sqrtb1, b2, Y, beta2_sqrtb1, W2, delta, alpha, Z_sqrtb1, E_b2, Var_b2, x, sqrt_beta1_b2, A, Z_b2, K2/*, K2test*/;
-    vector<double> percentiles_v;
-    vector<double> quantiles_v;
-//    vector<double> abs_residuals_v;
+    std::vector<double> percentiles_v;
+    std::vector<double> quantiles_v;
+//    std::vector<double> abs_residuals_v;
 
-    gpf->fstat.open(gpf->FITStatisticsFile().c_str(), ios::trunc);
+    gpf->fstat.open(gpf->FITStatisticsFile().c_str(), std::ios::trunc);
     if( gpf->fstat.fail() )
-    { cout<<"Summary and statistics fileopen error"<<endl; exit(1); }
+    { std::cout<<"Summary and statistics fileopen error"<<std::endl; exit(1); }
 
-    gpf->fsens.open(gpf->FITsensFile().c_str(), ios::trunc);
+    gpf->fsens.open(gpf->FITsensFile().c_str(), std::ios::trunc);
     if( gpf->fsens.fail() )
-    { cout<<"Sensitivities fileopen error"<<endl; exit(1); }
+    { std::cout<<"Sensitivities fileopen error"<<std::endl; exit(1); }
 
-    gpf->fqq.open(gpf->FITqqFile().c_str(), ios::trunc);
+    gpf->fqq.open(gpf->FITqqFile().c_str(), std::ios::trunc);
     if( gpf->fqq.fail() )
-    { cout<<"QQ plot data fileopen error"<<endl; exit(1); }
+    { std::cout<<"QQ plot data fileopen error"<<std::endl; exit(1); }
 
     int np = optv_.size();
 
@@ -509,7 +509,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         gpf->fqq << ".quantile"<<",";
     }
 
-    gpf->fqq << endl;
+    gpf->fqq << std::endl;
     bool waswritten = false;
     for( unsigned int j=0; j<  N;  j++ )
     {
@@ -538,12 +538,12 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
             waswritten = false;
         }
         exp++;
-        gpf->fqq << endl;
+        gpf->fqq << std::endl;
     }
     gpf->fqq.close();
 }
 
-//    gpf->fqq << endl;
+//    gpf->fqq << std::endl;
 //    bool waswritten = false;
 //    for( int j=0; j<  N;  j++ )
 //    {
@@ -574,7 +574,7 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 //            waswritten = false;
 //        }
 //        exp++;
-//        gpf->fqq << endl;
+//        gpf->fqq << std::endl;
 //    }
 //    gpf->fqq.close();
 
@@ -600,8 +600,8 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     Y             = sqrtb1 * sqrt( ((N+1.)*(N+3.))/(6*(N-2.)) );
     beta2_sqrtb1  = ( 36*(N*N + 2*N - 5)*(N - 7.)  ) / ( (N - 2.)*(N + 5.)*(N + 7.)*(N + 9.) );
     W2            = -1. + sqrt(2 * (beta2_sqrtb1 + 2.) );
-if( W2 < 1.)  // workaround to suppress nan() and zdiv crash
-    W2 = 1.001;
+    if( W2 < 1.)  // workaround to suppress nan() and zdiv crash
+         W2 = 1.001;
     delta         = 1. / sqrt( log( sqrt(W2) ) ) ;
     alpha         = sqrt( 2. / (W2 - 1) );
     Z_sqrtb1      = delta * log( Y / alpha + sqrt( pow( (Y/alpha), 2 ) + 1 ) );
@@ -630,11 +630,11 @@ if( W2 < 1.)  // workaround to suppress nan() and zdiv crash
 
 
     // Write first statistcs to file
-//        gpf->fstat << "############################################" << endl;
-//        gpf->fstat << "# Summary and statistics from Gemsfits run #" << endl;
-//        gpf->fstat << "############################################" << endl;
-//        gpf->fstat << endl;
-//        gpf->fstat << " Best fit results for parameters from regression : "                         <<endl;
+//        gpf->fstat << "############################################" << std::endl;
+//        gpf->fstat << "# Summary and statistics from Gemsfits run #" << std::endl;
+//        gpf->fstat << "############################################" << std::endl;
+//        gpf->fstat << std::endl;
+//        gpf->fstat << " Best fit results for parameters from regression : "                         <<std::endl;
 //        for(unsigned i=0; i< optv_.size(); i++ ) // cols
 //        {
 //            // Print optimized parameter values to file
@@ -642,85 +642,85 @@ if( W2 < 1.)  // workaround to suppress nan() and zdiv crash
 //            {
 //                gpf->fstat <<"          parameter G0 "<<
 //                         gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])
-//                       <<" : " << optv_[i] << endl;
-////                cout /*<< gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])*/ << endl;
+//                       <<" : " << optv_[i] << std::endl;
+////                cout /*<< gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i])*/ << std::endl;
 //            } else
 //              gpf->fstat <<"            parameter " << gfittask->Opti->Ptype[i] << " : "
-//                     << setprecision(8) << optv_[i] << endl;
+//                     << setprecision(8) << optv_[i] << std::endl;
 //        }
 //        if (gfittask->Opti->h_RDc)
 //        {
 //            for (unsigned i=0; i<gfittask->Opti->reactions.size(); ++i)
 //            {
-//                gpf->fstat <<"          Reac parameter "<<gfittask->Opti->reactions[i]->Dc_name <<" : "<<setprecision(8)<<gfittask->Opti->reactions[i]->std_gibbs<<endl;
+//                gpf->fstat <<"          Reac parameter "<<gfittask->Opti->reactions[i]->Dc_name <<" : "<<setprecision(8)<<gfittask->Opti->reactions[i]->std_gibbs<<std::endl;
 //            }
 //        }
 //        if (gfittask->Opti->h_Lp)
 //        {
 //            for (unsigned i=0; i<gfittask->Opti->Lparams.size(); ++i)
 //            {
-//                gpf->fstat <<"          Linked parameter "<<gfittask->Opti->Lparams[i]->name <<" : "<<setprecision(8)<<gfittask->Opti->Lparams[i]->EV<<endl;
+//                gpf->fstat <<"          Linked parameter "<<gfittask->Opti->Lparams[i]->name <<" : "<<setprecision(8)<<gfittask->Opti->Lparams[i]->EV<<std::endl;
 //            }
 //        }
-//        gpf->fstat << endl;
-//        gpf->fstat << " Basic statistics:" << endl;
-        gpf->fstat << "Statistics-Parameter,Value" << endl;
-        gpf->fstat << "Number-of-measurements," << number_of_measurements     << endl;
-        gpf->fstat << "Number-of-parameters," << number_of_parameters 	<< endl;
-        gpf->fstat << "Number-of-runs-needed-for-regression," << num_of_runs 		<< endl;
-        gpf->fstat << "Degrees-of-freedom," << degrees_of_freedom	 	<< endl;
+//        gpf->fstat << std::endl;
+//        gpf->fstat << " Basic statistics:" << std::endl;
+        gpf->fstat << "Statistics-Parameter,Value" << std::endl;
+        gpf->fstat << "Number-of-measurements," << number_of_measurements     << std::endl;
+        gpf->fstat << "Number-of-parameters," << number_of_parameters 	<< std::endl;
+        gpf->fstat << "Number-of-runs-needed-for-regression," << num_of_runs 		<< std::endl;
+        gpf->fstat << "Degrees-of-freedom," << degrees_of_freedom	 	<< std::endl;
 
-//        gpf->fstat << " - - - - - - - RESIDUAL STATISTICS - - - - - - - " << endl;
-        gpf->fstat << "Value-of-the-minimized-function-sum," << Weighted_Tfun_sum_of_residuals 		<< endl;
-//        gpf->fstat << " Target function sum  :                                                	" << Tfun_sum_of_residuals 		<< endl;
-//        gpf->fstat << endl;
-        gpf->fstat << "Sum-of-absolute-values-of-residuals," << Abs_sum_of_residuals << endl;
-//        gpf->fstat << endl;
-//        gpf->fstat << " Sum-of-absolute-values-of-residuals:        " << Weighted_Abs_sum_of_residuals << endl;
-        gpf->fstat << "Standard-deviation-of-residuals," << SD_of_residuals 		<< endl;
-//        gpf->fstat << endl;
-//        gpf->fstat << " Standard deviation of the residuals :       " << Weighted_SD_of_residuals 		<< endl;
-//        gpf->fstat << " Standard deviation of the weighted target function values :             " << Weighted_TF_SD_of_residuals 		<< endl;
-//        gpf->fstat << endl;
-//        gpf->fstat << " Standard deviation of the absolute values of the residuals :            " << Abs_SD_of_residuals 		<< endl;
-//        gpf->fstat << endl;
-        gpf->fstat << "Average-residual," << Weighted_mean_res 		<< endl;
-        gpf->fstat << "Maximum-residual," << Weighted_max_res 		<< endl;
-        gpf->fstat << "Minimum-residual," << Weighted_min_res 		<< endl;
-        gpf->fstat << "Number-of-positive-residuals," << pos_residuals 		<< endl;
-        gpf->fstat << "Number-of-negative-residuals," << neg_residuals 		<< endl;
-        gpf->fstat << "Coefficient-of-determination-R^2," << coeff_of_determination     << endl;
-//        gpf->fstat << " Correlation coefficient (Brockwell and Davis, 1987, p304) RN^2:         " << Correlation_coef     << endl;
-//        gpf->fstat << endl;
-//        gpf->fstat << " Pearson's Chi Square test :                                             " << Pearsons_chi_square   	<< endl;
-//        gpf->fstat << endl;
-//        gpf->fstat << " Reduced_chi_square :                                                	" << reduced_chi_square 	<< endl;
-//        gpf->fstat << endl;
-//        gpf->fstat << " Error variance :                                                     	" << error_variance 	<< endl;
-//        gpf->fstat << endl;
+//        gpf->fstat << " - - - - - - - RESIDUAL STATISTICS - - - - - - - " << std::endl;
+        gpf->fstat << "Value-of-the-minimized-function-sum," << Weighted_Tfun_sum_of_residuals 		<< std::endl;
+//        gpf->fstat << " Target function sum  :                                                	" << Tfun_sum_of_residuals 		<< std::endl;
+//        gpf->fstat << std::endl;
+        gpf->fstat << "Sum-of-absolute-values-of-residuals," << Abs_sum_of_residuals << std::endl;
+//        gpf->fstat << std::endl;
+//        gpf->fstat << " Sum-of-absolute-values-of-residuals:        " << Weighted_Abs_sum_of_residuals << std::endl;
+        gpf->fstat << "Standard-deviation-of-residuals," << SD_of_residuals 		<< std::endl;
+//        gpf->fstat << std::endl;
+//        gpf->fstat << " Standard deviation of the residuals :       " << Weighted_SD_of_residuals 		<< std::endl;
+//        gpf->fstat << " Standard deviation of the weighted target function values :             " << Weighted_TF_SD_of_residuals 		<< std::endl;
+//        gpf->fstat << std::endl;
+//        gpf->fstat << " Standard deviation of the absolute values of the residuals :            " << Abs_SD_of_residuals 		<< std::endl;
+//        gpf->fstat << std::endl;
+        gpf->fstat << "Average-residual," << Weighted_mean_res 		<< std::endl;
+        gpf->fstat << "Maximum-residual," << Weighted_max_res 		<< std::endl;
+        gpf->fstat << "Minimum-residual," << Weighted_min_res 		<< std::endl;
+        gpf->fstat << "Number-of-positive-residuals," << pos_residuals 		<< std::endl;
+        gpf->fstat << "Number-of-negative-residuals," << neg_residuals 		<< std::endl;
+        gpf->fstat << "Coefficient-of-determination-R^2," << coeff_of_determination     << std::endl;
+//        gpf->fstat << " Correlation coefficient (Brockwell and Davis, 1987, p304) RN^2:         " << Correlation_coef     << std::endl;
+//        gpf->fstat << std::endl;
+//        gpf->fstat << " Pearson's Chi Square test :                                             " << Pearsons_chi_square   	<< std::endl;
+//        gpf->fstat << std::endl;
+//        gpf->fstat << " Reduced_chi_square :                                                	" << reduced_chi_square 	<< std::endl;
+//        gpf->fstat << std::endl;
+//        gpf->fstat << " Error variance :                                                     	" << error_variance 	<< std::endl;
+//        gpf->fstat << std::endl;
 
-//        gpf->fstat << " D'Agostino K square test, K squared :                                   " << K2 << endl;
-//        gpf->fstat << endl;
-//        gpf->fstat << " Probability that K squared follows Chi-squared distribution :           " << K2test << endl;
-//        gpf->fstat << endl;
-        gpf->fstat <<", ," << endl;
+//        gpf->fstat << " D'Agostino K square test, K squared :                                   " << K2 << std::endl;
+//        gpf->fstat << std::endl;
+//        gpf->fstat << " Probability that K squared follows Chi-squared distribution :           " << K2test << std::endl;
+//        gpf->fstat << std::endl;
+        gpf->fstat <<", ," << std::endl;
 //        gpf->fstat.close();
 
         for (unsigned o = 0; o<gfittask->Tfun->objfun.size(); o++)
         {
-            gpf->fstat << "OFUN-"<< gfittask->Tfun->objfun[o].exp_CT << "-"<< gfittask->Tfun->objfun[o].exp_CN << ","<<endl;
-            gpf->fstat << "minimized-function-sum-("<<setprecision(2) << objfun_stat[o]->SumWTFun*100/Weighted_Tfun_sum_of_residuals<<"%-of-total)," << objfun_stat[o]->SumWTFun 	<<endl;
-            gpf->fstat << "Standard-deviation-of-residuals," << objfun_stat[o]->stdev_res 		<< endl;
-            gpf->fstat << "Mean-squared-error," << objfun_stat[o]->MSE 		<< endl;
-            gpf->fstat << "Root-mean-squared-error," << sqrt(objfun_stat[o]->MSE)		<< endl;
-            gpf->fstat << "Average-residual," << objfun_stat[o]->mean_res 		<< endl;
-            gpf->fstat << "Maximum-residual," << objfun_stat[o]->max_res 		<< endl;
-            gpf->fstat << "Minimum-residual," << objfun_stat[o]->min_res 		<< endl;
-            gpf->fstat << "Number-of-positive-residuals," << objfun_stat[o]->nr_pos_res 		<< endl;
-            gpf->fstat << "Number-of-negative-residuals," << objfun_stat[o]->nr_neg_res 		<< endl;
-            gpf->fstat << "Coefficient-of-determination-R^2," << objfun_stat[o]->R2     << endl;
+            gpf->fstat << "OFUN-"<< gfittask->Tfun->objfun[o].exp_CT << "-"<< gfittask->Tfun->objfun[o].exp_CN << ","<<std::endl;
+            gpf->fstat << "minimized-function-sum-("<<std::setprecision(2) << objfun_stat[o]->SumWTFun*100/Weighted_Tfun_sum_of_residuals<<"%-of-total)," << objfun_stat[o]->SumWTFun 	<<std::endl;
+            gpf->fstat << "Standard-deviation-of-residuals," << objfun_stat[o]->stdev_res 		<< std::endl;
+            gpf->fstat << "Mean-squared-error," << objfun_stat[o]->MSE 		<< std::endl;
+            gpf->fstat << "Root-mean-squared-error," << sqrt(objfun_stat[o]->MSE)		<< std::endl;
+            gpf->fstat << "Average-residual," << objfun_stat[o]->mean_res 		<< std::endl;
+            gpf->fstat << "Maximum-residual," << objfun_stat[o]->max_res 		<< std::endl;
+            gpf->fstat << "Minimum-residual," << objfun_stat[o]->min_res 		<< std::endl;
+            gpf->fstat << "Number-of-positive-residuals," << objfun_stat[o]->nr_pos_res 		<< std::endl;
+            gpf->fstat << "Number-of-negative-residuals," << objfun_stat[o]->nr_neg_res 		<< std::endl;
+            gpf->fstat << "Coefficient-of-determination-R^2," << objfun_stat[o]->R2     << std::endl;
 
-            gpf->fstat <<", ," << endl;
+            gpf->fstat <<", ," << std::endl;
         }
 
         gpf->fqq.close();
@@ -737,7 +737,7 @@ double round_to_digits(double value, int digits)
 
 
 // perform sensitivity analysis of selected parameters
-void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfittask )
+void statistics::sensitivity_correlation( std::vector<double> &optv_, TGfitTask* gfittask )
 {
         unsigned int i, j, k, len_meas;
         double residual_sys;
@@ -772,7 +772,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
         for( i=0; i< optv_.size(); i++ )
         {
             opt_scan = optv_;
-            vector<double> sens;
+            std::vector<double> sens;
 
             // Central finite differences:
             opt_scan[i] = optv_[i] + optv_[i]*delta;
@@ -780,7 +780,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
             if (gfittask->Opti->OptEquilibrium)
             gems3k_wrap( residual_sys, opt_scan, gfittask );
             else tsolmod_wrap(residual_sys, opt_scan, gfittask);
-//cout<<"residual_sys = "<<residual_sys<<endl;
+//std::cout<<"residual_sys = "<<residual_sys<<std::endl;
             computed_up = gfittask->computed_values_v;
 
             opt_scan[i] = optv_[i] - optv_[i]*delta;
@@ -789,7 +789,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
             gems3k_wrap( residual_sys, opt_scan, gfittask );
             else tsolmod_wrap(residual_sys, opt_scan, gfittask);
 //            gems3k_wrap( residual_sys, opt_scan, gfittask );
-//cout<<"residual_sys = "<<residual_sys<<endl;
+//std::cout<<"residual_sys = "<<residual_sys<<std::endl;
             computed_lo = gfittask->computed_values_v;
 
             for( k=0; k< len_meas; k++ )
@@ -835,7 +835,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
 //                }
 //            }
 
-//            cout << CompositeScaledSensitivities2(j) << endl;
+//            cout << CompositeScaledSensitivities2(j) << std::endl;
 //        }
 
 //}
@@ -845,8 +845,8 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
         else tsolmod_wrap( residual_sys, optv_, gfittask );
 
 
-//        gpf->fstat << " Sensitivity matrix over each parameter [j] measurement point [i]: "<<endl;
-//        gpf->fstat << " Calculated using central diferences, see ref. [1] section 4.3 "<<endl;
+//        gpf->fstat << " Sensitivity matrix over each parameter [j] measurement point [i]: "<<std::endl;
+//        gpf->fstat << " Calculated using central diferences, see ref. [1] section 4.3 "<<std::endl;
         int exp = 0;
 
         gpf->fsens << "sample,";
@@ -866,7 +866,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
             }
         }
 
-        gpf->fsens << endl;
+        gpf->fsens << std::endl;
 
         for( i=0; i<  computed_up.size();  i++ )
         {
@@ -882,7 +882,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
                     for( j=0; j<  optv_.size(); j++ )
                     {
                         // Write sensitivities to file
-                        gpf->fsens<< setprecision(prec)<<SensitivityMatrix(i,j) <<",";
+                        gpf->fsens<< std::setprecision(prec)<<SensitivityMatrix(i,j) <<",";
                     }
 
                 } else
@@ -894,11 +894,11 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
                 }
             }
             exp++;
-            gpf->fsens << endl;
+            gpf->fsens << std::endl;
         }
 
 
-//        gpf->fstat << " Composite Scaled Sensitivities (CSS): "<<endl;
+//        gpf->fstat << " Composite Scaled Sensitivities (CSS): "<<std::endl;
         {
             // Write sensitivities to file
             for( i=0; i< optv_.size(); i++ )
@@ -908,10 +908,10 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
 //                gpf->fstat <<"            parameter "<< i;
 //                         if (gfittask->Opti->Ptype[i] == "G0") gpf->fstat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[i]);
 //                         else gpf->fstat << "  " << gfittask->Opti->Ptype[i];
-//                gpf->fstat <<" :	     " << CompositeScaledSensitivities(i)	<< endl;
+//                gpf->fstat <<" :	     " << CompositeScaledSensitivities(i)	<< std::endl;
             }
         }
-//        gpf->fstat << endl;
+//        gpf->fstat << std::endl;
 
 
 //SensitivityMatrix.print("SensitivityMatrix:");
@@ -949,7 +949,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
 //        VarCovarMatrix.print("Variance Covariance Matrix:");
 
         // Print Variance-Covariance matrix to file
-//        gpf->fstat << " Variance-Covariance matrix: "<<endl;
+//        gpf->fstat << " Variance-Covariance matrix: "<<std::endl;
 //        for(unsigned i=0; i< optv_.size(); i++ )
 //        {
 //            if( i== 0 )
@@ -965,7 +965,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
 //                else gpf->fstat << "  " << gfittask->Opti->Ptype[i];
 //            }
 //        }
-//        gpf->fstat << endl;
+//        gpf->fstat << std::endl;
 //        for( i=0; i<  optv_.size(); i++ )
 //        {
 //            gpf->fstat <<"			parameter "<< i;
@@ -978,9 +978,9 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
 //                else
 //                    gpf->fstat <<"          " <<VarCovarMatrix(i,j);
 //            }
-//            gpf->fstat << endl;
+//            gpf->fstat << std::endl;
 //        }
-//        gpf->fstat << endl;
+//        gpf->fstat << std::endl;
 
         // Correlation matrix
         arma::mat CorellationMatrix( (int) optv_.size(), (int) optv_.size() );
@@ -1021,7 +1021,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
         {
             double diff_prec = 0.0;
 //            int j = 1;
-            int x = 2;
+            int x = 1;
 
             do
             {
@@ -1063,7 +1063,7 @@ void statistics::sensitivity_correlation( vector<double> &optv_, TGfitTask* gfit
 void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* gfittask/*, int &countit */)
 {
 
-//cout<<"pid : "<<pid<<" entered Statistics::MC_confidence_interval ..."<<endl;
+//std::cout<<"pid : "<<pid<<" entered Statistics::MC_confidence_interval ..."<<std::endl;
 
     unsigned int i,n_param,id,imc;
     unsigned int j, p_=1, pid_=0; // k
@@ -1074,9 +1074,9 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
     std::vector<std::vector<double> > computed_values_backup;
     std::vector<double> sum_res;
 
-    gpf->fmc.open(gpf->FITmcFile().c_str(), ios::trunc);
+    gpf->fmc.open(gpf->FITmcFile().c_str(), std::ios::trunc);
     if( gpf->fmc.fail() )
-    { cout<<"Fit Monte Carlo fileopen error"<<endl; exit(1); }
+    { std::cout<<"Fit Monte Carlo fileopen error"<<std::endl; exit(1); }
 
     unsigned int n_Rparam = 0;
     for (unsigned e = 0; e<gfittask->Opti->optParam.size(); e++)
@@ -1189,7 +1189,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
                     for ( unsigned int r = 0; r < objfun_stat[j]->exp_dataset[d].residuals.size(); r++ )
                     {
                         int x  = dice();
-                        // the residual will be de-normalized when added to the scatter vector in the MC runs
+                        // the residual will be de-normalized when added to the scatter std::vector in the MC runs
                         objfun_stat[j]->exp_dataset[d].scatter[r] = objfun_stat[j]->exp_dataset[d].norm_residuals[x] /* * objfun_stat[j]->exp_dataset[d].measured_value[r]*/;
                         count ++;
                     }
@@ -1201,7 +1201,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
     }
     if ((MCbool == 1) || (MCbool == 2)) // sampling per each individual objfun
     {
-        // make scatter object vector for each objfun
+        // make scatter object std::vector for each objfun
         for (j = 0; j<gfittask->Tfun->objfun.size(); j++)
         {
             for (i = 0; i< num_of_MC_runs * objfun_stat[j]->nr; i++)
@@ -1229,7 +1229,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
     } /*else
     {
         if (MCbool != 0)
-        cout << "MCBool doesn't have a correct value between 0-4! "<< endl;
+        cout << "MCBool doesn't have a correct value between 0-4! "<< std::endl;
         exit(1);
     }*/
 
@@ -1240,11 +1240,11 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
     {
 //        sum_of_squares_MC = 0.;
 
-        gpf->flog << " #MC: " << imc << endl;
-        cout << " #MC: " << imc << endl;
+        gpf->flog << " #MC: " << imc << std::endl;
+        std::cout << " #MC: " << imc << std::endl;
 
         i= 0;
-        // make the scatter vector by adding the scatter value for each objfun for the #imc mc run
+        // make the scatter std::vector by adding the scatter value for each objfun for the #imc mc run
         for (j = 0; j<objfun_stat.size(); j++)
         {
             for (unsigned n = imc*objfun_stat[j]->nr; n < ((imc*objfun_stat[j]->nr) + objfun_stat[j]->nr); n++)
@@ -1295,7 +1295,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
         }
 
         // Store reaction parameters
-        string name; double IV, EV;
+        std::string name; double IV, EV;
         j=0;
 
         for (unsigned e = 0; e<gfittask->Opti->optParam.size(); e++)
@@ -1334,10 +1334,10 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
         arma::vec MCRparams( num_of_MC_runs );
 
 
-        vector<double> SD_Fparam, SD_Rparam, MN_Fparam, MN_Rparam;
+        std::vector<double> SD_Fparam, SD_Rparam, MN_Fparam, MN_Rparam;
 
-        gpf->fstat << " Confidence intervals of MC parameters : "<<endl;
-        gpf->fstat << " -> standard deviation of parameters generated during Monte Carlo runs "<<endl;
+        gpf->fstat << " Confidence intervals of MC parameters : "<<std::endl;
+        gpf->fstat << " -> standard deviation of parameters generated during Monte Carlo runs "<<std::endl;
 
 
 
@@ -1357,7 +1357,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
 //            gpf->fstat <<"			parameter "<< j;
 //            if (gfittask->Opti->Ptype[j] == "G0") gpf->fstat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[j]);
 //            else gpf->fstat << "  " << gfittask->Opti->Ptype[j];
-//            gpf->fstat <<" :	           " << StandardDeviation << endl;
+//            gpf->fstat <<" :	           " << StandardDeviation << std::endl;
 
         }
 
@@ -1377,15 +1377,15 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
 //            gpf->fstat <<"			parameter "<< j;
 //            if (gfittask->Opti->Ptype[j] == "G0") gpf->fstat << "  " << gfittask->NodT[0]->xCH_to_DC_name(gfittask->Opti->Pindex[j]);
 //            else gpf->fstat << "  " << gfittask->Opti->Ptype[j];
-//            gpf->fstat <<" :	           " << StandardDeviation << endl;
+//            gpf->fstat <<" :	           " << StandardDeviation << std::endl;
 
         }
-        gpf->fstat << endl;
+        gpf->fstat << std::endl;
         gpf->fstat.close();
 
 
 //        ofstream gpf->fmc;
-//        string path2 = gpf->OutputDirPath() + "gpf->fmc.csv";
+//        std::string path2 = gpf->OutputDirPath() + "gpf->fmc.csv";
 //        gpf->fmc.open(path2.c_str(), ios::trunc);
 
 
@@ -1404,7 +1404,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
             gpf->fmc << "R."<<fitparam[j+p]->Ptype<<"."<<fitparam[j+p]->Pname<<",";
         }
         gpf->fmc << "minimized_sum";
-        gpf->fmc << endl;
+        gpf->fmc << std::endl;
 
         for( i=0; i<num_of_MC_runs; i++ ) // rows
         {
@@ -1419,7 +1419,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
                 gpf->fmc << MCR_fitted_parameters_all[ i ][ j ]<<",";
             }
             gpf->fmc << sum_res[i];
-            gpf->fmc << endl;
+            gpf->fmc << std::endl;
         }
 
         gpf->fmc.close();
@@ -1483,9 +1483,9 @@ void statistics::print_param()
 {
 
     unsigned int nrcor = 0;
-    gpf->fparam.open(gpf->FITparamFile().c_str(), ios::trunc);
+    gpf->fparam.open(gpf->FITparamFile().c_str(), std::ios::trunc);
     if( gpf->fparam.fail() )
-    { cout<<"Fit parameters fileopen error"<<endl; exit(1); }
+    { std::cout<<"Fit parameters fileopen error"<<std::endl; exit(1); }
 
     // print param
     gpf->fparam << "ptype,parameter," << "name,"	<< "init.value,"
@@ -1500,7 +1500,7 @@ void statistics::print_param()
         }
     }
 
-    gpf->fparam << endl;
+    gpf->fparam << std::endl;
 
     for (unsigned i= 0; i<fitparam.size(); i++)
     {
@@ -1509,11 +1509,11 @@ void statistics::print_param()
         gpf->fparam << "," << fitparam[i]->Pname << ",";
 
 
-        gpf->fparam << setprecision(12) << fitparam[i]->Ival << ",";
+        gpf->fparam << std::setprecision(12) << fitparam[i]->Ival << ",";
         if (fitparam[i]->Roundval != 0.0)
-            gpf->fparam << setprecision(12) <<fitparam[i]->Roundval << ",";
+            gpf->fparam << std::setprecision(12) <<fitparam[i]->Roundval << ",";
         else
-            gpf->fparam << setprecision(12) <<fitparam[i]->Fval << ",";
+            gpf->fparam << std::setprecision(12) <<fitparam[i]->Fval << ",";
 
         if (fitparam[i]->mcSTDEV != 0)
         {
@@ -1539,7 +1539,7 @@ void statistics::print_param()
            {
                if (fitparam[i]->correl[j] !=0)
                {
-                   gpf->fparam << setprecision(4)<< fitparam[i]->correl[j] << ",";
+                   gpf->fparam << std::setprecision(4)<< fitparam[i]->correl[j] << ",";
                } else
                    gpf->fparam << "0,";
            } else
@@ -1569,7 +1569,7 @@ void statistics::print_param()
         }
 
 
-    gpf->fparam << endl;
+    gpf->fparam << std::endl;
     }
 
 gpf->fparam.close();

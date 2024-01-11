@@ -55,6 +55,7 @@ public:
 
     std::vector<std::string> allSelectedKeys();
     std::string getKey();
+    void set_connect();
 };
 
 //------------------------------------------------------------

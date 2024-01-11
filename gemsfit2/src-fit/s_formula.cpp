@@ -68,7 +68,7 @@ const char* VACANCY       ="Va";
 */
 Formuan::Formuan( const char *formula )
 {
-   form_str = string(formula);
+   form_str = std::string(formula);
    charge_str = "";
 }
 
@@ -76,12 +76,12 @@ Formuan::~Formuan()
 { }
 
 //get <formula>  ::= <fterm> | <fterm><charge>
-void Formuan::scanFormula( list<ICTERM>& tt )
+void Formuan::scanFormula( std::list<ICTERM>& tt )
 {
   scanCharge();
 
  // cout << form_str.c_str() << charge_str.c_str() << endl;
-  string term = form_str;
+  std::string term = form_str;
   scanFterm( tt, term, '\0');
 
 
@@ -96,10 +96,10 @@ void Formuan::scanFormula( list<ICTERM>& tt )
 }
 
 //add component to sorted list
-void Formuan::icadd(  list<ICTERM>& itt_, ICTERM& it )
+void Formuan::icadd(  std::list<ICTERM>& itt_, ICTERM& it )
 {
     int iRet;
-    list<ICTERM>::iterator itr;
+    std::list<ICTERM>::iterator itr;
     itr = itt_.begin();
 
     // test for setting element before
@@ -119,14 +119,14 @@ void Formuan::icadd(  list<ICTERM>& itt_, ICTERM& it )
 }
 
 //add component to sorted list
-void Formuan::icadd(  list<ICTERM>& itt_, const char *icn,
+void Formuan::icadd(  std::list<ICTERM>& itt_, const char *icn,
                       const char *iso, int val, double csto )
 {
     ICTERM term( icn, iso, val, csto );
     icadd( itt_, term );
 }
 
-int Formuan::ictcomp( list<ICTERM>::iterator& itr, string& ick, int val )
+int Formuan::ictcomp( std::list<ICTERM>::iterator& itr, std::string& ick, int val )
 {
     //int iRet = memcmp( itt_[ii].ick.c_str(), ick, MAXICNAME+MAXSYMB );
     //if( iRet ) return( iRet );
@@ -138,12 +138,12 @@ int Formuan::ictcomp( list<ICTERM>::iterator& itr, string& ick, int val )
 }
 
 
-void Formuan::xblanc( string& str )
+void Formuan::xblanc( std::string& str )
 {
     if(str.empty())
       return;
     size_t ti = str.find_first_not_of(BLANK_SYMBOLS);
-    if( ti == string::npos ) // no charge token
+    if( ti == std::string::npos ) // no charge token
        str = "";
     else
        str = str.substr(ti);
@@ -158,14 +158,14 @@ void Formuan::xblanc( string& str )
 void Formuan::scanCharge( )
 {
   size_t ti = form_str.find_last_of(CHARGE_TOK );
-  if( ti == string::npos ) // no charge token
+  if( ti == std::string::npos ) // no charge token
      return;
 
   size_t pp = form_str.find( B_VALENT, ti);
-  if( pp != string::npos )   // no charge (this is valence)
+  if( pp != std::string::npos )   // no charge (this is valence)
       return;
 
-  // get charge string
+  // get charge std::string
   charge_str = form_str.substr(ti);
   form_str   = form_str.substr(0,ti);
 }
@@ -173,12 +173,12 @@ void Formuan::scanCharge( )
 
 
 // read charge
-void Formuan::charge(list<ICTERM>& tt)
+void Formuan::charge(std::list<ICTERM>& tt)
 {
  double cha = 1.0;
  int sign = 1;
  double aZ = 0.0;
- string chan = charge_str;
+ std::string chan = charge_str;
  //char *chan = (char *)charge_str.c_str();
 
  switch( chan[0] )
@@ -196,12 +196,12 @@ void Formuan::charge(list<ICTERM>& tt)
 
 //get <fterm>  ::= <icterm> | <icterm><icterm>
 //    <icterm> ::= <elem>   | <elem>< elem_st_coef>
-void Formuan::scanFterm( list<ICTERM>& itt_, string& startPos, char endSimb )
+void Formuan::scanFterm( std::list<ICTERM>& itt_, std::string& startPos, char endSimb )
 {
   //char *cur_ = startPos;
   double st_coef;
-  list<ICTERM> elt_;
-  list<ICTERM>::iterator ite;
+  std::list<ICTERM> elt_;
+  std::list<ICTERM>::iterator ite;
 
   while( startPos[0] != endSimb && !startPos.empty())  // list of <elem>< elem_st_coef>
   {
@@ -239,7 +239,7 @@ void Formuan::scanFterm( list<ICTERM>& itt_, string& startPos, char endSimb )
 //                   <isotope_mass><icsymb><valence> |
 //                   <isotope_mass><icsymb> |
 //                   <icsymb><valence> | <icsymb>
-void Formuan::scanElem( list<ICTERM>& itt_, string& startPos )
+void Formuan::scanElem( std::list<ICTERM>& itt_, std::string& startPos )
 {
   //char *cur = startPos;
 
@@ -273,8 +273,8 @@ void Formuan::scanElem( list<ICTERM>& itt_, string& startPos )
                       } // else goto default - other <icsymb>
     default: // <isotope_mass><icsymb><valence>
         {
-          string isotop = string(ISOTOPE_N);
-          string icName = "";
+          std::string isotop = std::string(ISOTOPE_N);
+          std::string icName = "";
           int val = SHORT_EMPTY;;
 
           scanIsotope( isotop, startPos);
@@ -292,7 +292,7 @@ void Formuan::scanElem( list<ICTERM>& itt_, string& startPos )
 //  <real>    ::= <num>.<num> | <num>. | .<num> | <num>
 //  <num>     ::= <digit> | <num><digit>
 //  <digit>   ::= 0 |  1 |  2 |  3 |  4 |  5 |  6 |  7 |  8 |  9
-void Formuan::getReal( double& valReal, string& cur)
+void Formuan::getReal( double& valReal, std::string& cur)
 {
     xblanc( cur );
     if( cur.empty() )
@@ -302,8 +302,8 @@ void Formuan::getReal( double& valReal, string& cur)
     if(ti == 0)
       return;  // next token no real
 
-    string val = cur.substr(0,ti);
-    if( ti== string::npos )
+    std::string val = cur.substr(0,ti);
+    if( ti== std::string::npos )
        cur="";
     else
        cur = cur.substr(ti);
@@ -314,7 +314,7 @@ void Formuan::getReal( double& valReal, string& cur)
 
 // get <valence>   ::= |-<integer>| \ |+<integer>| \ |<integer>|
 //  <integer>    ::= <num>
-void Formuan::scanValence( int& val, string& cur)
+void Formuan::scanValence( int& val, std::string& cur)
 {
     xblanc( cur );
     if( cur.empty() )
@@ -328,7 +328,7 @@ void Formuan::scanValence( int& val, string& cur)
         Error( cur,  "Term valence scan error");
 
     size_t ti = cur.find_first_of(B_VALENT);
-    if( ti >= 3 || ti==string::npos )
+    if( ti >= 3 || ti==std::string::npos )
         Error( cur,  "Term valence scan error");
 
     if( !sscanf( cur.c_str(), " %d", &val ))
@@ -338,7 +338,7 @@ void Formuan::scanValence( int& val, string& cur)
 
 // /3/H2/18/O             isotopic form of water.
 //  get <isotope_mass>  ::= /<integer>/
-void Formuan::scanIsotope( string& isotop, string& cur)
+void Formuan::scanIsotope( std::string& isotop, std::string& cur)
 {
     xblanc( cur );
     if( cur.empty() )
@@ -352,15 +352,15 @@ void Formuan::scanIsotope( string& isotop, string& cur)
         Error( cur,  "Term isotope scan error");
 
     size_t ti = cur.find_first_of(B_ISOTOPE);
-    if( ti >= MAXICNAME || ti==string::npos )
+    if( ti >= MAXICNAME || ti==std::string::npos )
         Error( cur,  "Term isotope scan error");
 
-    isotop = string( cur, 0, ti );  // test please
+    isotop = std::string( cur, 0, ti );  // test please
     cur = cur.substr(ti+1);
 }
 
 // <icsymb>    ::= <Capital_letter> \ <icsymb><lcase_letter> \ <icsymb>_
-void Formuan::scanICsymb( string& icName, string& cur)
+void Formuan::scanICsymb( std::string& icName, std::string& cur)
 {
     unsigned int i=1;
 
@@ -376,18 +376,18 @@ void Formuan::scanICsymb( string& icName, string& cur)
            break;
     ErrorIf(  i>=MAXICNAME, cur,  "IC Symbol scan error");
 
-    icName = string( cur, 0, i ); //  strncpy( ic, aFa.cur, len );
+    icName = std::string( cur, 0, i ); //  strncpy( ic, aFa.cur, len );
     cur = cur.substr(i);
 }
 
 // <fterm>  ::= <site_term> : | <fterm> <site_term>:
 // <site_term> ::= <moiety>   | <moiety><moiety>
 // <moiety>    ::= {<elem>}   | {<elem>} <elem_st_coef> | Va
-int Formuan::scanMoiety( vector<MOITERM>& moit_ )
+int Formuan::scanMoiety( std::vector<MOITERM>& moit_ )
 {
-  string cur_ = form_str;
+  std::string cur_ = form_str;
   size_t endmoi;
-  string moiName;
+  std::string moiName;
   double nj;          // moiety-site occupancy.
   moit_.clear();
 
@@ -403,10 +403,10 @@ int Formuan::scanMoiety( vector<MOITERM>& moit_ )
                       if( cur_.empty() )
                           Error( "scanMoiety","Must be }");
                       endmoi =  cur_.find_first_of( RBRACKET3 );
-                      if( endmoi == string::npos )
+                      if( endmoi == std::string::npos )
                           Error( "scanMoiety","Must be }");
-                      moiName = string( cur_, 0, endmoi );
-                      //  moiName = string( cur_, 0, endmoi-1 );
+                      moiName = std::string( cur_, 0, endmoi );
+                      //  moiName = std::string( cur_, 0, endmoi-1 );
                       cur_ = cur_.substr(endmoi+1);
                       nj = 1.;
                       getReal( nj, cur_ );
@@ -460,21 +460,21 @@ void TFormula::Reset()
 }
 
 // unpack list of terms to data and calculate charge
-void TFormula::fo_unpak( list<ICTERM>& itt_ )
+void TFormula::fo_unpak( std::list<ICTERM>& itt_ )
 {
     char ICbuf[MAXICNAME+MAXSYMB+2];
-    string specSim = string(CHARGE_TYPE) + string(ISOTOPE_N) + "v";
+    std::string specSim = std::string(CHARGE_TYPE) + std::string(ISOTOPE_N) + "v";
 
     fo_clear();
-    list<ICTERM>::iterator itr;
+    std::list<ICTERM>::iterator itr;
     itr = itt_.begin();
     while( itr != itt_.end() )
     {
         memset( ICbuf, ' ', MAXICNAME+MAXSYMB );
-        strncpy( ICbuf, itr->ick.c_str(), min(itr->ick.length(), (size_t)MAXICNAME));
+        strncpy( ICbuf, itr->ick.c_str(), std::min(itr->ick.length(), (size_t)MAXICNAME));
 
-        if( itr->ick_iso.find_first_not_of(specSim) != string::npos )
-            strncpy( ICbuf+MAXICNAME, itr->ick_iso.c_str(), min(itr->ick_iso.length(), (size_t)MAXSYMB));
+        if( itr->ick_iso.find_first_not_of(specSim) != std::string::npos )
+            strncpy( ICbuf+MAXICNAME, itr->ick_iso.c_str(), std::min(itr->ick_iso.length(), (size_t)MAXSYMB));
         else
             ICbuf[MAXICNAME] = '*';
         ICbuf[MAXICNAME+MAXSYMB]=0;
@@ -491,7 +491,7 @@ void TFormula::fo_unpak( list<ICTERM>& itt_ )
 
 const char* EQDEL_CHARS   ="$&,=<>";
 
-int TFormula::BuildMoiety( const char * StrForm, vector<MOITERM>& moit_ )
+int TFormula::BuildMoiety( const char * StrForm, std::vector<MOITERM>& moit_ )
 {
     int nSites = 0;
     Formuan aFa( StrForm );
@@ -513,17 +513,17 @@ void TFormula::SetFormula( const char * StrForm )
 
     fo_clear();
 
-    aFormula = string(StrForm);
+    aFormula = std::string(StrForm);
     if( aFormula.empty() )
         return;
 
     len = strcspn( StrForm, EQDEL_CHARS );
     ti = strlen( StrForm );
     len = ( len < ti )? len: ti;
-    ErrorIf( !len, "TFormula", "E32FPrun: Null length of the formula string");
+    ErrorIf( !len, "TFormula", "E32FPrun: Null length of the formula std::string");
 
-    string fbuf = string( StrForm, 0, len );
-    list<ICTERM> itt_;
+    std::string fbuf = std::string( StrForm, 0, len );
+    std::list<ICTERM> itt_;
 
     Formuan aFa( fbuf.c_str() );
 
@@ -594,10 +594,10 @@ void TFormula::TestIC( const char* key, int N, char *ICsym )
         }
         if( jj==-1 )
         {
-            string msg = "IComp: ";
-            msg += string(ICS, 0, MAXICNAME+MAXSYMB );
+            std::string msg = "IComp: ";
+            msg += std::string(ICS, 0, MAXICNAME+MAXSYMB );
             msg += "\n in formula in DComp/ReacDC record: \n";
-            msg += string( key, 0, DC_RKLEN);
+            msg += std::string( key, 0, DC_RKLEN);
             Error( "E37FPrun: Invalid symbol ", msg );
         }
     }
@@ -693,10 +693,10 @@ void fillValue( T* arr, T value, int size )
 //
 void TFormula::Stm_line( int N, double *Sml, char *ICsym, short *ICval )
 {
-    int i;
-    int ii, jj=-1;
+    unsigned int i, ii;
+    int jj=-1;
     char ICS[IC_RKLEN+1];
-    char *icsp = ICS;
+    //char *icsp = ICS;
 
     fillValue( Sml, 0., N);
     for( i=0; i<aCn.size(); i++ )
@@ -733,7 +733,7 @@ void TFormula::Stm_line( int N, double *Sml, char *ICsym, short *ICval )
     if( ii < aCn.size() )
         if( fabs( (aZ - tt) ) > 1e-6 )
         {
-            string str = " in the formula: ";
+            std::string str = " in the formula: ";
             str +=  aFormula;
             str += "\n calculated charge: ";
             char   buf[40];
@@ -744,14 +744,14 @@ void TFormula::Stm_line( int N, double *Sml, char *ICsym, short *ICval )
   vfMessage( 0,  "W34FPrun: Charge imbalance ", str.c_str() );
 #else
 
-  cout << "W34FPrun: Charge imbalance " <<  str.c_str() << endl;
+  std::cout << "W34FPrun: Charge imbalance " <<  str.c_str() << std::endl;
 #endif
 
          }
 }
 
 // Get a formula with index nCk from the formula list Cfor (L is total number of formulae in the list)
-string TFormula::form_extr( int nCk, int L, char *Cfor )
+std::string TFormula::form_extr( int nCk, int L, char *Cfor )
 {
     int i, len;
     char  *Fbg;
@@ -773,7 +773,7 @@ string TFormula::form_extr( int nCk, int L, char *Cfor )
 
     ErrorIf( !len, "Formula", "E36FPrun: Invalid formula length!" );
 
-    string rez( Fbg, 0, len );
+    std::string rez( Fbg, 0, len );
     return rez;
 }
 

@@ -22,7 +22,6 @@
 
 #include <QMainWindow>
 #include "fmodel.h"
-#include "GraphDialog.h"
 
 
 namespace Ui {
@@ -73,8 +72,8 @@ public:
     explicit FitResultsWindow(QWidget *parent = 0);
     ~FitResultsWindow();
 
-    void ShowResults( const string& key );
-    void ShowResults( const string& key, const QString& dir );
+    void ShowResults( const std::string& key );
+    void ShowResults( const std::string& key, const QString& dir );
 
 private:
     Ui::FitResultsWindow *ui;

@@ -77,7 +77,7 @@ int gettimeofday(struct timeval* tp, struct timezone* tzp) {
 #include <boost/filesystem.hpp>
 #endif
 
-using namespace std;
+//using namespace std;
 namespace bfs=boost::filesystem;
 
 int generateConfig(); // Mode GEMSFIT to generate input configuration file
@@ -125,15 +125,15 @@ int main( int argc, char *argv[] )
     if( gpf->isInitJMode() ) // Mode GEMSFIT to generate input configuration file
       return generateJConfig();
 
-    gpf->flog.open(gpf->FITLogFile().c_str(), ios::trunc);
+    gpf->flog.open(gpf->FITLogFile().c_str(), std::ios::trunc);
     if( gpf->flog.fail() )
-    { cout<<"Log fileopen error"<<endl; exit(1); }
+    { std::cout<<"Log fileopen error"<<std::endl; exit(1); }
 
 //    time_t now = time(0);
 //    char* dt = ctime(&now);
 
     // Reading in the data //
-    gpf->flog << "01. main.cpp(108). Creating new TGfitTask" << endl;
+    gpf->flog << "01. main.cpp(108). Creating new TGfitTask" << std::endl;
     TGfitTask* gfittask = new TGfitTask();
 
     // if optimization with statistics, without statistics or >2 only statistics
@@ -143,7 +143,7 @@ int main( int argc, char *argv[] )
         gfittask->run_optim();
     } else
     {
-        vector<double> grad;
+        std::vector<double> grad;
         if (gfittask->Opti->h_optNF) // if nested function
         {
             // CHECK NESTED pH to use acid or base
@@ -152,7 +152,7 @@ int main( int argc, char *argv[] )
         Equil_objective_function_callback(gfittask->Opti->optv, grad, gfittask);
     }
 
-    gpf->flog << endl <<"15. Back in main.cpp(122). Performing statistics ..."<< endl;
+    gpf->flog << std::endl <<"15. Back in main.cpp(122). Performing statistics ..."<< std::endl;
 
     countit = master_counter;
 
@@ -183,9 +183,9 @@ int main( int argc, char *argv[] )
     double delta = ((end_.tv_sec  - start.tv_sec) * 1000000u +
              end_.tv_usec - start.tv_usec) / 1.e6;
     gpf->flog <<"16. main.cpp(152): finished in ";
-    gpf->flog << delta << " seconds. GEMSFITS: End. Bye!" << endl;
-    cout << delta << " seconds." << endl;
-    cout << "GEMSFITS: End. Bye!" << endl;
+    gpf->flog << delta << " seconds. GEMSFITS: End. Bye!" << std::endl;
+    std::cout << delta << " seconds." << std::endl;
+    std::cout << "GEMSFITS: End. Bye!" << std::endl;
     gpf->flog.close();
     gpf->fstat.close();
 }

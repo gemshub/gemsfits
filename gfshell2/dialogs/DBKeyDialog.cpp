@@ -28,7 +28,7 @@
 //------------------------------------------------------------------
 // service functions
 
-void messageCritical(QWidget* par, const string& title, const string& mess )
+void messageCritical(QWidget* par, const std::string& title, const std::string& mess )
 {
     QString titl, spac, messag;
     titl = title.c_str(); spac = "\n\n"; messag = mess.c_str();
@@ -49,13 +49,13 @@ void messageCritical(QWidget* par, const string& title, const string& mess )
 
 static int posx=0, posy=0;
 // returns VF3_1, VF3_2 or VF3_3
-int vfQuestion3(QWidget* par, const string& title, const string& mess, const string& s1,
-            const string& s2,  const string& s3, bool i_mov )
+int vfQuestion3(QWidget* par, const std::string& title, const std::string& mess, const std::string& s1,
+            const std::string& s2,  const std::string& s3, bool i_mov )
 {
   QString titl, spac, messag;
   titl = title.c_str(); spac = "\n\n"; messag = mess.c_str();
 
-   QMessageBox qm(
+   QMessageBox qm( QMessageBox::Question,
 #ifdef __unix
 #ifdef __APPLE__
          "Title", titl.append(spac+=messag),
@@ -64,38 +64,35 @@ int vfQuestion3(QWidget* par, const string& title, const string& mess, const str
 #endif
 #else
           titl, messag,
-#endif
-           QMessageBox::Question,
-           QMessageBox::Yes | QMessageBox::Default,
-           (s3.empty()) ? (QMessageBox::No | QMessageBox::Escape) : QMessageBox::No,
-           (s3.empty()) ? QMessageBox::NoButton : (QMessageBox::Cancel | QMessageBox::Escape),
-           par);
+#endif           
+           QMessageBox::NoButton, par);
 
-    qm.setButtonText(QMessageBox::Yes, s1.c_str());
-    qm.setButtonText(QMessageBox::No, s2.c_str());
+    QAbstractButton *yesButton = qm.addButton(s1.c_str(), QMessageBox::YesRole);
+    QAbstractButton *noButton = qm.addButton(s2.c_str(), QMessageBox::NoRole);
+    QAbstractButton *cancelButton = nullptr;
     if( !s3.empty() )
-       qm.setButtonText(QMessageBox::Cancel, s3.c_str());
+       cancelButton = qm.addButton(s3.c_str(), QMessageBox::RejectRole);
     if( i_mov )
         qm.move(posx, posy);
-    int res = qm.exec();
+    qm.exec();
     if( i_mov )
     {
         posx = qm.x();
         posy = qm.y();
     }
-    switch( res )
-    {
-    case QMessageBox::Yes :
+    if (qm.clickedButton() == yesButton) {
         return VF3_1;
-    case QMessageBox::No :
+    }
+    else if (qm.clickedButton() == noButton) {
         return VF3_2;
-    case QMessageBox::Cancel :
+    }
+    else if (qm.clickedButton() == cancelButton) {
         return VF3_3;
     }
     return VF3_3;
 }
 
-bool vfQuestion(QWidget* par, const string& title, const string& mess)
+bool vfQuestion(QWidget* par, const std::string& title, const std::string& mess)
 {
   QString titl, spac, messag;
   titl = title.c_str(); spac = "\n\n"; messag = mess.c_str();
@@ -110,21 +107,21 @@ bool vfQuestion(QWidget* par, const string& title, const string& mess)
 #else
          titl, messag,
 #endif
-         "&Yes", "&No") == 0);
-    return rest;
+         QMessageBox::Yes | QMessageBox::No));
+    return rest==QMessageBox::Yes;
 }
 
-vector<string> vfMultiKeys(QWidget* par, const char* caption,
+std::vector<std::string> vfMultiKeys(QWidget* par, const char* caption,
                             int iRt, const char* key )
 {
-    vector<string> sel;
+    std::vector<std::string> sel;
     DBKeyDialog dbk(par, iRt, sel, key, caption);
     dbk.exec();
     return dbk.allSelectedKeys();
 }
 
-vector<string> vfMultiKeysSet(QWidget* par, const char* caption,
-                    int iRt, const char* key, vector<string>& sel )
+std::vector<std::string> vfMultiKeysSet(QWidget* par, const char* caption,
+                    int iRt, const char* key, std::vector<std::string>& sel )
 {
     DBKeyDialog dbk(par, iRt, sel, key, caption);
     dbk.exec();
@@ -143,27 +140,22 @@ DBKeyDialog::DBKeyDialog(QWidget* win, int irt, const char* key,
 	 
     old_sel.clear();
     //pList->setFont( pVisorImp->getCellFont() );
-    QObject::connect(pList, SIGNAL(itemDoubleClicked ( QListWidgetItem *) ), this, SLOT(accept()));
+    QObject::connect(pList, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(accept()));
     setWindowTitle( caption );
-    vector<string> keyList;
+    std::vector<std::string> keyList;
 
-    bool yesFilter = false;
-
-    ErrorIf(!key, "DBKeyDialog", "Record Key is null");
-
-    if( strpbrk(key, "*?") == 0 )
+    if(!key)
+        Error( "DBKeyDialog", "Record Key is null");
+    else if( strpbrk(key, "*?") == 0 )
         keyFilter = "*";
     else
-    {
         keyFilter = key;
-        yesFilter = true;
-    }
 
-    string s = "Please, select one record key. Filter: ";
+    std::string s = "Please, select one record key. Filter: ";
     s +=  keyFilter;
     pLabel->setText(s.c_str());
 
-    s  = string(rtEJ[irt].PackKey());
+    s  = std::string(rtEJ[irt].PackKey());
     int n = rtEJ[irt].GetKeyList( keyFilter.c_str(), keyList);
     int sel = 0;
 
@@ -181,12 +173,12 @@ DBKeyDialog::DBKeyDialog(QWidget* win, int irt, const char* key,
     pButton2->hide();
     if( !filter )
       pFilterButton->hide();
-    QObject::connect( bHelp, SIGNAL( clicked() ), this, SLOT( CmHelp() ) );
+    set_connect();
     pList->setFocus();
 }
 
 DBKeyDialog::DBKeyDialog(QWidget* win, int irt,
-                     const vector<string>& sel,
+                     const std::vector<std::string>& sel,
                      const char* key, const char* caption):
         QDialog( win),
         multi(true), iRT(irt)
@@ -194,27 +186,37 @@ DBKeyDialog::DBKeyDialog(QWidget* win, int irt,
 	setupUi(this);
 
     old_sel.clear();
-    for(int ii=0; ii<sel.size(); ii++)
+    for(size_t ii=0; ii<sel.size(); ii++)
           old_sel.push_back( sel[ii] );
 
     //pList->setFont( pVisorImp->getCellFont() );
     pList->setSelectionMode(QAbstractItemView::MultiSelection);
     setWindowTitle( caption );
 
-    ErrorIf(!key, "KeyDialog", "pkey is null");
-    if( strpbrk(key, "*?") == 0 )
+    if(!key)
+       Error("KeyDialog", "pkey is null");
+    else if( strpbrk(key, "*?") == 0 )
         keyFilter = "*";
     else
         keyFilter = key;
 
     SetList();
-    QObject::connect( bHelp, SIGNAL( clicked() ), this, SLOT( CmHelp() ) );
+    set_connect();
     pList->setFocus();
 }
 
-
 DBKeyDialog::~DBKeyDialog()
 {}
+
+void DBKeyDialog::set_connect()
+{
+    QObject::connect( bHelp, SIGNAL( clicked() ), this, SLOT( CmHelp() ) );
+    QObject::connect(PushButton1, &QPushButton::clicked, this, qOverload<>(&QDialog::accept));
+    QObject::connect(PushButton3, &QPushButton::clicked, this, qOverload<>(&QDialog::reject));
+    QObject::connect(pFilterButton, &QPushButton::clicked, this, qOverload<>(&DBKeyDialog::CmFilter));
+    QObject::connect(pButton2, &QPushButton::clicked, this, qOverload<>(&DBKeyDialog::CmSelectAll));
+    QObject::connect(pButton3, &QPushButton::clicked, this, qOverload<>(&DBKeyDialog::CmClearAll));
+}
 
 void DBKeyDialog::CmHelp()
 {
@@ -224,9 +226,9 @@ void DBKeyDialog::CmHelp()
 
 void DBKeyDialog::SetList()
 {
-    vector<string> keyList;
+    std::vector<std::string> keyList;
 
-    string s = "Please, mark one or more record keys. Filter: ";
+    std::string s = "Please, mark one or more record keys. Filter: ";
     s +=  keyFilter;
     pLabel->setText(s.c_str());
 
@@ -236,13 +238,13 @@ void DBKeyDialog::SetList()
        pList->addItem(keyList[ii].c_str());
 
     if( multi )
-    {  for(int jj=0; jj<old_sel.size(); jj++)
+    {  for(size_t jj=0; jj<old_sel.size(); jj++)
           for( int ii=0; ii<n; ii++ )
           {
             // comparing parts before '*' for overwrite dcomp, reacdc ....
             size_t pos = old_sel[jj].find('*');
-            string str(old_sel[jj], 0, pos);
-            if( keyList[ii].find(str) != string::npos )
+            std::string str(old_sel[jj], 0, pos);
+            if( keyList[ii].find(str) != std::string::npos )
             {
               pList->item(ii)->setSelected( true);
               break;
@@ -252,22 +254,22 @@ void DBKeyDialog::SetList()
  }
 
 
-string DBKeyDialog::getKey()
+std::string DBKeyDialog::getKey()
 {
     int sel = pList->currentRow();
     if( sel != -1 )
     {
         /// !!!! ((TCModule*)aMod[iRt])->setFilter(keyFilter.c_str());
-        string res = pList->item(sel)->text().toUtf8().data();
+        std::string res = pList->item(sel)->text().toStdString();
         return res;
     }
-    return string();
+    return std::string();
 }
 
 
 void DBKeyDialog::CmFilter()
 {
-    string str_name = "Template for ";
+    std::string str_name = "Template for ";
             str_name +=  rtEJ[iRT].GetKeywd();
             str_name += " record key";
     DBKeyFilter dbFilter(this, iRT, keyFilter.c_str(), str_name.c_str() );
@@ -295,9 +297,9 @@ void DBKeyDialog::CmClearAll()
 
 /// returns selection array
 ///    array is empty if nothing is selected
-vector<string> DBKeyDialog::allSelectedKeys()
+std::vector<std::string> DBKeyDialog::allSelectedKeys()
 {
-    vector<string> arr;
+    std::vector<std::string> arr;
 
     if( !result() )
         return arr;
@@ -305,7 +307,7 @@ vector<string> DBKeyDialog::allSelectedKeys()
     for( int ii=0; ii<pList->count(); ii++ )
         if( pList->item(ii)->isSelected() )
         {
-         string s = pList->item(ii)->text().toUtf8().data();;
+         std::string s = pList->item(ii)->text().toStdString();
          arr.push_back(s);
         }
     return arr;
@@ -339,7 +341,7 @@ DBKeyFilter::DBKeyFilter(QWidget* win, int irt, const char* key,
         pEdit->setToolTip( str );
         pEdit->setMaxLength( 100 );
         pEdit->setText( dbKey.FldKey(ii) );
-        connect( pEdit, SIGNAL(editingFinished ()), this, SLOT(setKeyLine()) );
+        connect( pEdit, SIGNAL(editingFinished()), this, SLOT(setKeyLine()) );
 
         editBox->addWidget( pEdit, ii, 0, Qt::AlignRight);
         pLabel = new QLabel( str, this);
@@ -403,15 +405,15 @@ DBKeyFilter::DBKeyFilter(QWidget* win, int irt, const char* key,
 
 void DBKeyFilter::CmHelp()
 {
-   string dbName =  DBM;
+   std::string dbName =  DBM;
    dbName +="_";
-   dbName += string(rtEJ[iRT].GetKeywd());
+   dbName += std::string(rtEJ[iRT].GetKeywd());
    // pFitImp->OpenHelp(  GEMS_REKEY_HTML, dbName.c_str() );
 }
 
 void DBKeyFilter::CmOk()
 {
-    if( allowTemplates || SetKeyString().find_first_of("*?") == string::npos )
+    if( allowTemplates || SetKeyString().find_first_of("*?") == std::string::npos )
     {
         accept();
         return;
@@ -419,12 +421,12 @@ void DBKeyFilter::CmOk()
     messageCritical(this, "Key error", "No templates allowed!");
 }
 
-string DBKeyFilter::SetKeyString()
+std::string DBKeyFilter::SetKeyString()
 {
-    string Key = "";
+    std::string Key = "";
     for( int ii=0; ii<aEdit.count(); ii++ )
     {
-        string s = aEdit[ii]->text().toUtf8().data();
+        std::string s = aEdit[ii]->text().toStdString();
         Key += s;
         strip(Key);
         Key += ":";
@@ -458,7 +460,7 @@ void DBKeyFilter::EvGetList()
     setKeyLine();
 }
 
-string DBKeyFilter::getFilter()
+std::string DBKeyFilter::getFilter()
 {
     return SetKeyString();
 }

@@ -98,15 +98,15 @@ void ProjectSettingsDialog::CmEJDBDir()
     QString projDir = ui->projDir->text();
 //    QString dir = QFileDialog::getExistingDirectory(this, "Select EJDB Directory",
 //     projDir,  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
-    string fname = ui->projDir->text().toUtf8().data();
+    std::string fname = ui->projDir->text().toStdString();
     //Select files
     TFile file("");
     if( !file.ChooseFileSave( this, fname, "Select EJDB Directory", "" ))
         return;
-    QString dir( trUtf8( file.Dir().c_str() ));
+    QString dir( file.Dir().c_str() );
     dir = dir.remove(projDir);
     ui->ejdbDir->setText( dir );
-    ui->ejdbName->setText( trUtf8( file.Name().c_str() ) );
+    ui->ejdbName->setText( file.Name().c_str() );
 }
 
 void ProjectSettingsDialog::CmGEMSDir()

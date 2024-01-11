@@ -27,6 +27,21 @@
                               1
                          ]
                     },
+                    
+# L-type PMC parameters
+                              {
+                                   "IPCN" :   "aq_ext_upSx[0|0]",
+                                   "PType" :   "L",
+                                   "IV" :   0.1,
+                                   "UB" :   -0.0400319993495941,
+                                   "LB" :   -0.0400319993495941,
+                                   "LICs" :   [
+                                        "aq_ext_upSx[7|0]"
+                                   ],
+                                   "LCoef" :   [
+                                        1
+                                   ]
+                              },
                   
 
 # to provide a specific logK function equation use "LogKFun"
