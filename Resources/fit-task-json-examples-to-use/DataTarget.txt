@@ -134,4 +134,12 @@
                     "CN" :   "Cl-",
                     "DCP" :   "activity"
                },
+               
+# write the phase stability (saturation) index log10(Omega)
+               {
+                    "SRC" : "calc",
+                    "EPH" : "Gibbsite",
+                    "CT" : "prop",
+                    "CN" : "SI"
+               },
 
