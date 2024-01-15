@@ -50,7 +50,7 @@ FitResultsWindow::FitResultsWindow(QWidget *parent) :
     TSortFilterProxyModel *proxyModel;
 
     // set up FIT_CSV_FILE
-    modelFitResults = new TMatrixModel( "fit-results", 2 );
+    modelFitResults = new TMatrixModel( "fit-results", 2, 'e', 12 );
     tableFitResults = new TMatrixTable(0/*ui->tabFitResults*/);
     proxyModel = new TSortFilterProxyModel();
     proxyModel->setSourceModel( modelFitResults );
@@ -70,7 +70,7 @@ FitResultsWindow::FitResultsWindow(QWidget *parent) :
     ui->verticalLayout_7->addWidget(tableSensitivity);
 
     // set up FIT_PARAM_FILE
-    modelFitParams = new TMatrixModel( "fit-params", 3, 0 );
+    modelFitParams = new TMatrixModel( "fit-params", 3 );
     proxyModel = new TSortFilterProxyModel();
     proxyModel->setSourceModel( modelFitParams );
     tableFitParams = new TMatrixTable(  /*ui->tabFitParams*/);
@@ -90,7 +90,7 @@ FitResultsWindow::FitResultsWindow(QWidget *parent) :
     ui->verticalLayout_8->addWidget(tableQQplot);
 
     // set up FIT_NFUN_FILE
-    modelFitInverse = new TMatrixModel( "fit-inverse-results", 4, 0 );
+    modelFitInverse = new TMatrixModel( "fit-inverse-results", 4, 'e', 6 );
     proxyModel = new TSortFilterProxyModel();
     proxyModel->setSourceModel( modelFitInverse );
     tableFitInverse = new TMatrixTable( 0 /*ui->tabInverse*/);
@@ -100,7 +100,7 @@ FitResultsWindow::FitResultsWindow(QWidget *parent) :
     ui->verticalLayout_9->addWidget(tableFitInverse);
 
     // set up FIT_STAT_FILE
-    modelFitStatistics = new TMatrixModel( "sum-statistics", 1, 0 );
+    modelFitStatistics = new TMatrixModel( "sum-statistics", 1 );
     proxyModel = new TSortFilterProxyModel();
     proxyModel->setSourceModel( modelFitStatistics );
     tableFitStatistics = new TMatrixTable( 0 /*ui->tabStatistics*/);
@@ -110,7 +110,7 @@ FitResultsWindow::FitResultsWindow(QWidget *parent) :
     ui->verticalLayout_2->addWidget(tableFitStatistics);
 
     // set up FIT_MC_FILE
-    modelMCResults = new TMatrixModel( "mc-results", 0, 0 );
+    modelMCResults = new TMatrixModel( "mc-results", 0 );
     proxyModel = new TSortFilterProxyModel();
     proxyModel->setSourceModel( modelMCResults );
     tableMCResults = new TMatrixTable( 0 /*ui->tabMcResults*/);

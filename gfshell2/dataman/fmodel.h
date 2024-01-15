@@ -104,13 +104,16 @@ class TMatrixModel: public QAbstractTableModel
     std::shared_ptr<jsonui17::ChartData> chart_data;
     jsonui17::GraphDialog *graph_dlg = nullptr;
 
+    char dbl_format;
+    int dbl_precision;
+
     QString ValToString(double val, int digits) const;
     double ValFromString(const QVariant& strval);
     void setGraphData(QSortFilterProxyModel *pmodel, const std::string& title);
 
 public:
 
-    TMatrixModel(const QString& fname, int aNumCol, QObject *parent = nullptr);
+    TMatrixModel(const QString& fname, int aNumCol, char format = 'g', int precision = 12, QObject *parent = nullptr);
     ~TMatrixModel();
 
     const jsonui17::ChartData *getGraphData()

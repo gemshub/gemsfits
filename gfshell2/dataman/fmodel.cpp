@@ -69,8 +69,10 @@ bool TSortFilterProxyModel::lessThan(const QModelIndex &left,
 //--------------------------------------------------------------------------------------
 //  class TMatrixModel
 
-TMatrixModel::TMatrixModel( const QString& afname, int aNumCol, QObject * parent ):
-    QAbstractTableModel(parent), fname(afname), numberStringColumns(aNumCol)
+TMatrixModel::TMatrixModel( const QString& afname, int aNumCol,
+                            char format, int precision, QObject * parent ):
+    QAbstractTableModel(parent), fname(afname), numberStringColumns(aNumCol),
+    dbl_format(format),  dbl_precision(precision)
 {
 }
 
@@ -97,7 +99,7 @@ QString TMatrixModel::ValToString( double val, int digits ) const
     if( val == DOUBLE_EMPTY )
         retstr = "";
     else
-        retstr = QString::number(  val, 'g', digits );
+        retstr = QString::number(  val, dbl_format, digits );
 
     return  retstr;
 }
@@ -284,7 +286,7 @@ QString TMatrixModel::matrixToCsvString( )
         {
             QVariant val = valC.next();
             if( col  >= numberStringColumns )
-                valCsv += ValToString(val.toDouble(), 12);
+                valCsv += ValToString(val.toDouble(), dbl_precision);
             else
                 valCsv += val.toString();
             if(valC.hasNext() )
