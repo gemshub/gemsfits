@@ -1,0 +1,561 @@
+[
+{
+     "sample" :   "004/2",
+     "expdataset" :   "Kidder2013",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   300,
+     "sP" :   2600,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2",
+               "Q" :   100,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "TiO2",
+               "Q" :   100,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "QtzRu",
+               "phDC" :   [
+                    {
+                         "DC" :   "Rutile",
+                         "DCprop" :   [
+                              {
+                                   "prop" :   "Q",
+                                   "Q" :   2.38641074733771e-07,
+                                   "unit" :   "molfrac"
+                              }
+                         ]
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "004/34",
+     "expdataset" :   "Kidder2013",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   300,
+     "sP" :   3100,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2",
+               "Q" :   100,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "TiO2",
+               "Q" :   100,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "QtzRu",
+               "phDC" :   [
+                    {
+                         "DC" :   "Rutile",
+                         "DCprop" :   [
+                              {
+                                   "prop" :   "Q",
+                                   "Q" :   6.53122675174165e-07,
+                                   "unit" :   "molfrac"
+                              }
+                         ]
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "004/34_",
+     "expdataset" :   "Kidder2013",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   300,
+     "sP" :   3000,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2",
+               "Q" :   100,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "TiO2",
+               "Q" :   100,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "QtzRu",
+               "phDC" :   [
+                    {
+                         "DC" :   "Rutile",
+                         "DCprop" :   [
+                              {
+                                   "prop" :   "Q",
+                                   "Q" :   6.02882499176419e-07,
+                                   "unit" :   "molfrac"
+                              }
+                         ]
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "005",
+     "expdataset" :   "Kidder2013",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   300,
+     "sP" :   3100,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2",
+               "Q" :   100,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "TiO2",
+               "Q" :   100,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "QtzRu",
+               "phDC" :   [
+                    {
+                         "DC" :   "Rutile",
+                         "DCprop" :   [
+                              {
+                                   "prop" :   "Q",
+                                   "Q" :   3.76801645755263e-07,
+                                   "unit" :   "molfrac"
+                              }
+                         ]
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "123b",
+     "expdataset" :   "Kidder2013",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   300,
+     "sP" :   2800,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2",
+               "Q" :   100,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "TiO2",
+               "Q" :   100,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "QtzRu",
+               "phDC" :   [
+                    {
+                         "DC" :   "Rutile",
+                         "DCprop" :   [
+                              {
+                                   "prop" :   "Q",
+                                   "Q" :   6.78242761311485e-07,
+                                   "unit" :   "molfrac"
+                              }
+                         ]
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "148j",
+     "expdataset" :   "Kidder2013",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   300,
+     "sP" :   3200,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2",
+               "Q" :   100,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "TiO2",
+               "Q" :   100,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "QtzRu",
+               "phDC" :   [
+                    {
+                         "DC" :   "Rutile",
+                         "DCprop" :   [
+                              {
+                                   "prop" :   "Q",
+                                   "Q" :   9.04323480700763e-07,
+                                   "unit" :   "molfrac"
+                              }
+                         ]
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Bundner",
+     "expdataset" :   "Miron2013",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   300,
+     "sP" :   3000,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2",
+               "Q" :   100,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "TiO2",
+               "Q" :   100,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "QtzRu",
+               "phDC" :   [
+                    {
+                         "DC" :   "Rutile",
+                         "DCprop" :   [
+                              {
+                                   "prop" :   "Q",
+                                   "Q" :   1.25910044695665e-06,
+                                   "unit" :   "molfrac"
+                              }
+                         ]
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Bundner_hi",
+     "expdataset" :   "Miron2013",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   300,
+     "sP" :   3000,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2",
+               "Q" :   100,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "TiO2",
+               "Q" :   100,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "QtzRu",
+               "phDC" :   [
+                    {
+                         "DC" :   "Rutile",
+                         "DCprop" :   [
+                              {
+                                   "prop" :   "Q",
+                                   "Q" :   1.46006135944184e-06,
+                                   "unit" :   "molfrac"
+                              }
+                         ]
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Bundner_low",
+     "expdataset" :   "Miron2013",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   300,
+     "sP" :   3000,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2",
+               "Q" :   100,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "TiO2",
+               "Q" :   100,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "QtzRu",
+               "phDC" :   [
+                    {
+                         "DC" :   "Rutile",
+                         "DCprop" :   [
+                              {
+                                   "prop" :   "Q",
+                                   "Q" :   1.05813953447145e-06,
+                                   "unit" :   "molfrac"
+                              }
+                         ]
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Cavagnoli",
+     "expdataset" :   "Klara2013",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   300,
+     "sP" :   3000,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2",
+               "Q" :   100,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "TiO2",
+               "Q" :   100,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "QtzRu",
+               "phDC" :   [
+                    {
+                         "DC" :   "Rutile",
+                         "DCprop" :   [
+                              {
+                                   "prop" :   "Q",
+                                   "Q" :   6.5186e-06,
+                                   "unit" :   "molfrac"
+                              }
+                         ]
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Faido",
+     "expdataset" :   "Klara2013",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   300,
+     "sP" :   3000,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2",
+               "Q" :   100,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "TiO2",
+               "Q" :   100,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "QtzRu",
+               "phDC" :   [
+                    {
+                         "DC" :   "Rutile",
+                         "DCprop" :   [
+                              {
+                                   "prop" :   "Q",
+                                   "Q" :   6.8e-06,
+                                   "unit" :   "molfrac"
+                              }
+                         ]
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Gauli",
+     "expdataset" :   "Klara2013",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   300,
+     "sP" :   3000,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2",
+               "Q" :   100,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "TiO2",
+               "Q" :   100,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "QtzRu",
+               "phDC" :   [
+                    {
+                         "DC" :   "Rutile",
+                         "DCprop" :   [
+                              {
+                                   "prop" :   "Q",
+                                   "Q" :   1.884e-06,
+                                   "unit" :   "molfrac"
+                              }
+                         ]
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Tiefengletscher",
+     "expdataset" :   "Klara2013",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   300,
+     "sP" :   3000,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2",
+               "Q" :   100,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "TiO2",
+               "Q" :   100,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "QtzRu",
+               "phDC" :   [
+                    {
+                         "DC" :   "Rutile",
+                         "DCprop" :   [
+                              {
+                                   "prop" :   "Q",
+                                   "Q" :   2.2757e-06,
+                                   "unit" :   "molfrac"
+                              }
+                         ]
+                    }
+               ]
+          }
+     ]
+}
+]

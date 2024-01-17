@@ -348,7 +348,7 @@ void Ejdb2DBClient::select_query_omp(const std::string& collname, const std::str
         common::JsonFree query_object = fromJsonString(query);
         internall_query = TEJDataBase::dbdriver->generate_query(query_object);
     }
-    internall_query += " | asc /sample";
+    internall_query += " | asc /sample asc /expdataset";
     std::cout << "Select query omp " << internall_query <<  std::endl;
 
     EJDB_LIST list = 0;

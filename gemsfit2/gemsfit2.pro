@@ -33,7 +33,7 @@ TEMPLATE	= app
 #LANGUAGE        = C++
 TARGET		= gemsfit2
 VERSION         = 2.0.0
-# GEMS3K commit 66761a7
+# GEMS3K commit
 
 CONFIG -= qt
 CONFIG += warn_on
@@ -44,10 +44,9 @@ CONFIG += c++17
 
 # check settengs
 DEFINES         += useomp
-#DEFINES += OVERFLOW_EXCEPT  #compile with nan inf exceptions
 DEFINES += CHECK_LOAD # to generate print for initial data after read input configuration.
-
 DEFINES += OLD_EJDB # compile using ejdb1
+#DEFINES += OVERFLOW_EXCEPT  #compile with nan inf exceptions
 
 DEFINES += IPMGEMPLUGIN
 #DEFINES += NODEARRAYLEVEL
@@ -55,8 +54,6 @@ DEFINES += IPMGEMPLUGIN
 #DEFINES += USE_THERMOFUN
 #DEFINES += USE_THERMO_LOG
 
-#QMAKE_CXXFLAGS += -O3
-#QMAKE_LFLAGS += -O3
 
 CONFIG( release,  debug|release ) {
         message( "Configuring for release build ..." )
@@ -100,12 +97,7 @@ CONFIG( serial, serial|mpi ) {
   INCLUDEPATH   += "/usr/local/include/ejdb2"
 }else{
   INCLUDEPATH   += "/usr/local/include"
-#  INCLUDEPATH   += "/usr/local/Cellar/libiomp/20150701/include/libiomp"
   LIBPATH += "/usr/local/lib/"
-#  LIBPATH +=  "/usr/local/Cellar//libiomp/20150701/lib"
-
-#  INCLUDEPATH   += /usr/local/Cellar/jansson/2.7
-#  INCLUDEPATH   +=  /usr/local/Cellar/gcc/5.2.0
 }
 
 FIT_CPP      =  ./src-fit
@@ -117,23 +109,6 @@ FIT_H        =   $$FIT_CPP
 GEMS3K_H     =   $$GEMS3K_CPP
 MUP_H        =   $$MUP_CPP
 COMMON_H     =   $$COMMON_CPP
-
-#EJDB_PATH = ../../standalone/EJDB
-
-#win32{
-#   EJDB_LIB_PATH =  $$EJDB_PATH/build-win32
-#}
-#unix{
-#   EJDB_LIB_PATH =  $$EJDB_PATH/build
-#}
-
-#EJDB_BSON_H = $$EJDB_PATH/src/bson
-#EJDB_EJDB_H = $$EJDB_PATH/src/ejdb
-#EJDB_TCUTIL_H = $$EJDB_PATH/src/tcutil
-#EJDB_GENERATED_H = $$EJDB_LIB_PATH/debug/src/generated
-#CONFIG(release, debug|release): EJDB_GENERATED_H = $$EJDB_LIB_PATH/release/src/generated
-#CONFIG(debug, debug|release): EJDB_GENERATED_H = $$EJDB_LIB_PATH/debug/src/generated
-
 
 DEPENDPATH   += $$FIT_H
 DEPENDPATH   += $$GEMS3K_H
@@ -147,19 +122,12 @@ INCLUDEPATH  += $$KEYS_H
 INCLUDEPATH  += $$MUP_H
 INCLUDEPATH   += $$COMMON_H
 
-#INCLUDEPATH   += $$EJDB_BSON_H
-#INCLUDEPATH   += $$EJDB_EJDB_H
-#INCLUDEPATH   += $$EJDB_GENERATED_H
-#INCLUDEPATH   += $$EJDB_TCUTIL_H
-
 OBJECTS_DIR       = obj
 
 include($$COMMON_CPP/common.pri)
 include($$FIT_CPP/fit.pri)
 include($$GEMS3K_CPP/gems3k.pri)
 include($$MUP_CPP/muparser.pri)
-#include($$EJDB_CPP/tcejdb.pri)
-#include($$EJDB_PATH/ejdb.pri)
 
 contains(DEFINES, OLD_EJDB) {
 CONFIG(release, debug|release): LIBS += -lejdb -lyaml-cpp

@@ -337,6 +337,7 @@ void EjdbDBClient::select_query_omp(const std::string& collname, const std::stri
     bson_init_as_query(&bshits1);
     bson_append_start_object(&bshits1, "$orderby");
     bson_append_int(&bshits1, "sample", 1);
+    bson_append_int(&bshits1, "expdataset", 1);
     bson_append_finish_object(&bshits1);
     bson_finish(&bshits1);
 

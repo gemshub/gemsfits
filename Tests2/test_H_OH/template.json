@@ -1,0 +1,509 @@
+{
+     "DBPath" :   "../EJDB/<database name>",
+     "DBColl" :   "<collection name>",
+     "GEMSFPath" :   "../GEMS/MySystem-dat.lst",
+     "comment" :   "Instead of current text, write here a short comment for the fitting task.",
+     "OptSet" :   {
+          "NumMPI" :   7,
+          "DoWhat" :   1,
+          "UseEqC" :   1,
+          "GemsSIA" :   -1,
+          "UDWts" :   -1,
+          "UMixedResiduals" :   -1,
+          "OptAlg" :   "LN_BOBYQA",
+          "PBPerc" :   -1,
+          "ConTolRel" :   1e-05,
+          "ConTolAbs" :   1e-05,
+          "MaxLoops" :   10000,
+          "NormPar" :   1,
+          "GradPert" :   0.0001,
+          "SensPert" :   0.0001,
+          "OptTu" :   -1,
+          "OptTuC" :   6,
+          "UseMCPE" :   -1,
+          "NumMCT" :   100
+     },
+     "DataSelect" :   {
+          "usedatasets" :   [
+
+          ],
+          "skipsamples" :   [
+
+          ],
+          "sT" :   [
+
+          ],
+          "sP" :   [
+
+          ]
+     },
+     "DataTarget" :   {
+          "Target" :   "lsqFit",
+          "TT" :   "lsq",
+          "WT" :   "inverr3",
+          "OFUN" :   [
+
+          ],
+          "NFUN" :   [
+
+          ],
+          "ADDOUT" :   [
+
+          ]
+     },
+     "NFunParToOpt" :   "",
+     "AddParToOpt" :   {
+          "bIC" :   [
+
+          ]
+     },
+     "ParToOpt" :   [
+          {
+               "EPH" :   "aq_gen",
+               "G0" :   [
+                    {
+                         "DCN" :   "Na+",
+                         "PType" :   "S",
+                         "IV" :   -261881.00017392,
+                         "UB" :   -261881.00017392,
+                         "LB" :   -261881.00017392
+                    },
+                    {
+                         "DCN" :   "NaOH@",
+                         "PType" :   "S",
+                         "IV" :   -418123.99998422,
+                         "UB" :   -418123.99998422,
+                         "LB" :   -418123.99998422
+                    },
+                    {
+                         "DCN" :   "ClO4-",
+                         "PType" :   "S",
+                         "IV" :   -8535.3605102429,
+                         "UB" :   -8535.3605102429,
+                         "LB" :   -8535.3605102429
+                    },
+                    {
+                         "DCN" :   "Cl-",
+                         "PType" :   "S",
+                         "IV" :   -131290.00076597,
+                         "UB" :   -131290.00076597,
+                         "LB" :   -131290.00076597
+                    },
+                    {
+                         "DCN" :   "H2@",
+                         "PType" :   "S",
+                         "IV" :   17729.00010995,
+                         "UB" :   17729.00010995,
+                         "LB" :   17729.00010995
+                    },
+                    {
+                         "DCN" :   "N2@",
+                         "PType" :   "S",
+                         "IV" :   18194.000182444,
+                         "UB" :   18194.000182444,
+                         "LB" :   18194.000182444
+                    },
+                    {
+                         "DCN" :   "O2@",
+                         "PType" :   "S",
+                         "IV" :   16446.000207432,
+                         "UB" :   16446.000207432,
+                         "LB" :   16446.000207432
+                    },
+                    {
+                         "DCN" :   "OH-",
+                         "PType" :   "S",
+                         "IV" :   -157270.00090727,
+                         "UB" :   -157270.00090727,
+                         "LB" :   -157270.00090727
+                    },
+                    {
+                         "DCN" :   "H+",
+                         "PType" :   "S",
+                         "IV" :   0,
+                         "UB" :   0,
+                         "LB" :   0
+                    },
+                    {
+                         "DCN" :   "H2O@",
+                         "PType" :   "S",
+                         "IV" :   -237181.38483664,
+                         "UB" :   -237181.38483664,
+                         "LB" :   -237181.38483664
+                    }
+               ],
+               "PMc" :   [
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_gen[0|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0,
+                                   "UB" :   0,
+                                   "LB" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_gen[0|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0,
+                                   "UB" :   0,
+                                   "LB" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_gen[0|2]",
+                                   "PType" :   "S",
+                                   "IV" :   0,
+                                   "UB" :   0,
+                                   "LB" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_gen[0|3]",
+                                   "PType" :   "S",
+                                   "IV" :   0,
+                                   "UB" :   0,
+                                   "LB" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_gen[1|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0,
+                                   "UB" :   0,
+                                   "LB" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_gen[1|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0,
+                                   "UB" :   0,
+                                   "LB" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_gen[1|2]",
+                                   "PType" :   "S",
+                                   "IV" :   0,
+                                   "UB" :   0,
+                                   "LB" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_gen[1|3]",
+                                   "PType" :   "S",
+                                   "IV" :   0,
+                                   "UB" :   0,
+                                   "LB" :   0
+                              }
+                         ]
+                    }
+               ]
+          },
+          {
+               "EPH" :   "MontX",
+               "G0" :   [
+                    {
+                         "DCN" :   "ClayH@",
+                         "PType" :   "S",
+                         "IV" :   9960,
+                         "UB" :   9960,
+                         "LB" :   9960
+                    },
+                    {
+                         "DCN" :   "ClayNa@",
+                         "PType" :   "S",
+                         "IV" :   -251921,
+                         "UB" :   -251921,
+                         "LB" :   -251921
+                    }
+               ],
+               "PMc" :   [
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "MontX[0|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0,
+                                   "UB" :   0,
+                                   "LB" :   0
+                              },
+                              {
+                                   "IPCN" :   "MontX[0|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0,
+                                   "UB" :   0,
+                                   "LB" :   0
+                              },
+                              {
+                                   "IPCN" :   "MontX[0|2]",
+                                   "PType" :   "S",
+                                   "IV" :   0,
+                                   "UB" :   0,
+                                   "LB" :   0
+                              }
+                         ]
+                    }
+               ]
+          },
+          {
+               "EPH" :   "MonEdS",
+               "G0" :   [
+                    {
+                         "DCN" :   "=SsO-",
+                         "PType" :   "S",
+                         "IV" :   -192089,
+                         "UB" :   -192089,
+                         "LB" :   -192089
+                    },
+                    {
+                         "DCN" :   "=SsOH2+",
+                         "PType" :   "S",
+                         "IV" :   -262870,
+                         "UB" :   -262870,
+                         "LB" :   -262870
+                    },
+                    {
+                         "DCN" :   "=SsOH@",
+                         "PType" :   "S",
+                         "IV" :   -237183,
+                         "UB" :   -237183,
+                         "LB" :   -237183
+                    },
+                    {
+                         "DCN" :   "=SvO-",
+                         "PType" :   "S",
+                         "IV" :   -192089,
+                         "UB" :   -192089,
+                         "LB" :   -192089
+                    },
+                    {
+                         "DCN" :   "=SvOH2+",
+                         "PType" :   "S",
+                         "IV" :   -262869,
+                         "UB" :   -262869,
+                         "LB" :   -262869
+                    },
+                    {
+                         "DCN" :   "=SvOH@",
+                         "PType" :   "S",
+                         "IV" :   -237183,
+                         "UB" :   -237183,
+                         "LB" :   -237183
+                    },
+                    {
+                         "DCN" :   "=SwO-",
+                         "PType" :   "S",
+                         "IV" :   -177249,
+                         "UB" :   -177249,
+                         "LB" :   -177249
+                    },
+                    {
+                         "DCN" :   "=SwOH2+",
+                         "PType" :   "S",
+                         "IV" :   -271431,
+                         "UB" :   -271431,
+                         "LB" :   -271431
+                    },
+                    {
+                         "DCN" :   "=SwOH@",
+                         "PType" :   "S",
+                         "IV" :   -237183,
+                         "UB" :   -237183,
+                         "LB" :   -237183
+                    }
+               ]
+          }
+     ],
+     "LogKFun" :   "",
+     "LogKVal" :   "",
+     "DataSyn" :   {
+          "PHN" :   [
+               {
+                    "NIS" :   "aq_gen",
+                    "Syn" :   "",
+                    "DCN" :   [
+                         {
+                              "NIS" :   "Na+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "NaOH@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "ClO4-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "Cl-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "H2@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "N2@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "O2@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "OH-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "H+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "H2O@",
+                              "Syn" :   ""
+                         }
+                    ]
+               },
+               {
+                    "NIS" :   "MontX",
+                    "Syn" :   "",
+                    "DCN" :   [
+                         {
+                              "NIS" :   "ClayH@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "ClayNa@",
+                              "Syn" :   ""
+                         }
+                    ]
+               },
+               {
+                    "NIS" :   "MonEdS",
+                    "Syn" :   "",
+                    "DCN" :   [
+                         {
+                              "NIS" :   "=SsO-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=SsOH2+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=SsOH@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=SvO-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=SvOH2+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=SvOH@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=SwO-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=SwOH2+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=SwOH@",
+                              "Syn" :   ""
+                         }
+                    ]
+               }
+          ],
+          "PHPN" :   [
+               {
+                    "NIS" :   "pH",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "pHm",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "pe",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Eh",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "IS",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "SI",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "alk",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "pV",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "RHO",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "sArea",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Gex",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "mChainL",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "expr",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "activityRatio",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "frAlIV",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "frAlV",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "frAlVI",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Rd",
+                    "Syn" :   ""
+               }
+          ],
+          "DCPN" :   [
+               {
+                    "NIS" :   "activity",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "@coef",
+                    "Syn" :   ""
+               }
+          ]
+     }
+}

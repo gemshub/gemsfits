@@ -898,7 +898,8 @@ void FITMainWindow::CmBackupJSON()
         {
             rtEJ[currentMode].getRecord(aKey[i]);
             std::string valDB = rtEJ[currentMode].getJson();
-            outFile.ff << valDB;
+            auto obj_json = common::JsonFree::parse(valDB);
+            outFile.ff << obj_json.dump();
             if( i<aKey.size()-1)
             {
                 outFile.ff <<  ",";

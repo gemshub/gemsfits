@@ -1,0 +1,1136 @@
+[
+{
+     "sample" :   "xCa0.0",
+     "expdataset" :   "C96Gex",
+     "comment" :   "assumed",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Arg",
+               "Q" :   1e-06,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "Str",
+               "Q" :   0.999999,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "CO2",
+               "Q" :   0.002,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "ArgStr",
+               "phprop" :   [
+                    {
+                         "prop" :   "Gex",
+                         "Q" :   0.001,
+                         "error" :   0.001,
+                         "unit" :   "J/mol"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "xCa0.0",
+     "expdataset" :   "C96Hmix",
+     "comment" :   "assumed",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Arg",
+               "Q" :   1e-06,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "Str",
+               "Q" :   0.999999,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "CO2",
+               "Q" :   0.002,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "ArgStr",
+               "phprop" :   [
+                    {
+                         "prop" :   "Gex",
+                         "Q" :   0.001,
+                         "error" :   0.001,
+                         "unit" :   "J/mol"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "xCa0.11",
+     "expdataset" :   "C96Gex",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Arg",
+               "Q" :   0.11,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "Str",
+               "Q" :   0.89,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "CO2",
+               "Q" :   0.002,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "ArgStr",
+               "phprop" :   [
+                    {
+                         "prop" :   "Gex",
+                         "Q" :   660,
+                         "error" :   510,
+                         "unit" :   "J/mol"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "xCa0.22",
+     "expdataset" :   "C96Hmix",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Arg",
+               "Q" :   0.22,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "Str",
+               "Q" :   0.78,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "CO2",
+               "Q" :   0.002,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "ArgStr",
+               "phprop" :   [
+                    {
+                         "prop" :   "Gex",
+                         "Q" :   2172,
+                         "error" :   166,
+                         "unit" :   "J/mol"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "xCa0.225",
+     "expdataset" :   "C96Gex",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Arg",
+               "Q" :   0.225,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "Str",
+               "Q" :   0.775,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "CO2",
+               "Q" :   0.002,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "ArgStr",
+               "phprop" :   [
+                    {
+                         "prop" :   "Gex",
+                         "Q" :   980,
+                         "error" :   550,
+                         "unit" :   "J/mol"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "xCa0.409",
+     "expdataset" :   "C96Gex",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Arg",
+               "Q" :   0.409,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "Str",
+               "Q" :   0.591,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "CO2",
+               "Q" :   0.002,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "ArgStr",
+               "phprop" :   [
+                    {
+                         "prop" :   "Gex",
+                         "Q" :   1260,
+                         "error" :   1010,
+                         "unit" :   "J/mol"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "xCa0.41",
+     "expdataset" :   "C96Hmix",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Arg",
+               "Q" :   0.41,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "Str",
+               "Q" :   0.59,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "CO2",
+               "Q" :   0.002,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "ArgStr",
+               "phprop" :   [
+                    {
+                         "prop" :   "Gex",
+                         "Q" :   2494,
+                         "error" :   1360,
+                         "unit" :   "J/mol"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "xCa0.51",
+     "expdataset" :   "C96Hmix",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Arg",
+               "Q" :   0.51,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "Str",
+               "Q" :   0.49,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "CO2",
+               "Q" :   0.002,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "ArgStr",
+               "phprop" :   [
+                    {
+                         "prop" :   "Gex",
+                         "Q" :   3806,
+                         "error" :   980,
+                         "unit" :   "J/mol"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "xCa0.511",
+     "expdataset" :   "C96Gex",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Arg",
+               "Q" :   0.511,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "Str",
+               "Q" :   0.489,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "CO2",
+               "Q" :   0.002,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "ArgStr",
+               "phprop" :   [
+                    {
+                         "prop" :   "Gex",
+                         "Q" :   2060,
+                         "error" :   720,
+                         "unit" :   "J/mol"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "xCa0.584",
+     "expdataset" :   "C96Gex",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Arg",
+               "Q" :   0.584,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "Str",
+               "Q" :   0.416,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "CO2",
+               "Q" :   0.002,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "ArgStr",
+               "phprop" :   [
+                    {
+                         "prop" :   "Gex",
+                         "Q" :   2420,
+                         "error" :   1420,
+                         "unit" :   "J/mol"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "xCa0.696",
+     "expdataset" :   "C96Gex",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Arg",
+               "Q" :   0.696,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "Str",
+               "Q" :   0.304,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "CO2",
+               "Q" :   0.002,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "ArgStr",
+               "phprop" :   [
+                    {
+                         "prop" :   "Gex",
+                         "Q" :   950,
+                         "error" :   2600,
+                         "unit" :   "J/mol"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "xCa0.723",
+     "expdataset" :   "C96Gex",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Arg",
+               "Q" :   0.723,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "Str",
+               "Q" :   0.277,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "CO2",
+               "Q" :   0.002,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "ArgStr",
+               "phprop" :   [
+                    {
+                         "prop" :   "Gex",
+                         "Q" :   2950,
+                         "error" :   1570,
+                         "unit" :   "J/mol"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "xCa0.75",
+     "expdataset" :   "C96Hmix",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Arg",
+               "Q" :   0.75,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "Str",
+               "Q" :   0.25,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "CO2",
+               "Q" :   0.002,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "ArgStr",
+               "phprop" :   [
+                    {
+                         "prop" :   "Gex",
+                         "Q" :   2165,
+                         "error" :   1020,
+                         "unit" :   "J/mol"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "xCa0.751",
+     "expdataset" :   "C96Gex",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Arg",
+               "Q" :   0.751,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "Str",
+               "Q" :   0.249,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "CO2",
+               "Q" :   0.002,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "ArgStr",
+               "phprop" :   [
+                    {
+                         "prop" :   "Gex",
+                         "Q" :   1920,
+                         "error" :   610,
+                         "unit" :   "J/mol"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "xCa0.791",
+     "expdataset" :   "C96Gex",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Arg",
+               "Q" :   0.791,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "Str",
+               "Q" :   0.209,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "CO2",
+               "Q" :   0.002,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "ArgStr",
+               "phprop" :   [
+                    {
+                         "prop" :   "Gex",
+                         "Q" :   530,
+                         "error" :   1070,
+                         "unit" :   "J/mol"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "xCa0.899",
+     "expdataset" :   "C96Gex",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Arg",
+               "Q" :   0.899,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "Str",
+               "Q" :   0.101,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "CO2",
+               "Q" :   0.002,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "ArgStr",
+               "phprop" :   [
+                    {
+                         "prop" :   "Gex",
+                         "Q" :   50,
+                         "error" :   1300,
+                         "unit" :   "J/mol"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "xCa0.9",
+     "expdataset" :   "C96Hmix",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Arg",
+               "Q" :   0.9,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "Str",
+               "Q" :   0.1,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "CO2",
+               "Q" :   0.002,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "ArgStr",
+               "phprop" :   [
+                    {
+                         "prop" :   "Gex",
+                         "Q" :   2614,
+                         "error" :   1560,
+                         "unit" :   "J/mol"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "xCa0.967",
+     "expdataset" :   "C96Gex",
+     "comment" :   "exclude?",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Arg",
+               "Q" :   0.967,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "Str",
+               "Q" :   0.033,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "CO2",
+               "Q" :   0.002,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "ArgStr",
+               "phprop" :   [
+                    {
+                         "prop" :   "Gex",
+                         "Q" :   -360,
+                         "error" :   820,
+                         "unit" :   "J/mol"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "xCa0.986",
+     "expdataset" :   "C96Gex",
+     "comment" :   "exclude?",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Arg",
+               "Q" :   0.986,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "Str",
+               "Q" :   0.014,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "CO2",
+               "Q" :   0.002,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "ArgStr",
+               "phprop" :   [
+                    {
+                         "prop" :   "Gex",
+                         "Q" :   -180,
+                         "error" :   320,
+                         "unit" :   "J/mol"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "xCa1.0",
+     "expdataset" :   "C96Gex",
+     "comment" :   "assumed",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Arg",
+               "Q" :   0.999999,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "Str",
+               "Q" :   1e-06,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "CO2",
+               "Q" :   0.002,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "ArgStr",
+               "phprop" :   [
+                    {
+                         "prop" :   "Gex",
+                         "Q" :   0.001,
+                         "error" :   0.001,
+                         "unit" :   "J/mol"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "xCa1.0",
+     "expdataset" :   "C96Hmix",
+     "comment" :   "assumed",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "sV" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Arg",
+               "Q" :   0.999999,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "Str",
+               "Q" :   1e-06,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "CO2",
+               "Q" :   0.002,
+               "unit" :   "mole"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "ArgStr",
+               "phprop" :   [
+                    {
+                         "prop" :   "Gex",
+                         "Q" :   0.001,
+                         "error" :   0.001,
+                         "unit" :   "J/mol"
+                    }
+               ]
+          }
+     ]
+}
+]

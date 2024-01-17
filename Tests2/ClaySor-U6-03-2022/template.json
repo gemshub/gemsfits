@@ -1,0 +1,1394 @@
+{
+     "DBPath" :   "../EJDB/<database name>",
+     "DBColl" :   "<collection name>",
+     "GEMSFPath" :   "../GEMS/ExpoU01Illi-simple-dat.lst",
+     "comment" :   "Instead of current text, write here a short comment for the fitting task.",
+     "OptSet" :   {
+          "NumMPI" :   15,
+          "DoWhat" :   1,
+          "UseEqC" :   1,
+          "GemsSIA" :   -1,
+          "UDWts" :   -1,
+          "UMixedResiduals" :   -1,
+          "OptAlg" :   "LN_BOBYQA",
+          "PBPerc" :   -1,
+          "ConTolRel" :   1e-05,
+          "ConTolAbs" :   1e-05,
+          "MaxLoops" :   10000,
+          "NormPar" :   1,
+          "GradPert" :   0.0001,
+          "SensPert" :   0.0001,
+          "OptTu" :   -1,
+          "OptTuC" :   6,
+          "UseMCPE" :   -1,
+          "NumMCT" :   100
+     },
+     "DataSelect" :   "",
+     "DataTarget" :   "",
+     "NFunParToOpt" :   "",
+     "AddParToOpt" :   {
+          "bIC" :   [
+
+          ]
+     },
+     "ParToOpt" :   [
+          {
+               "EPH" :   "aq_sit_psi2020",
+               "G0" :   [
+                    {
+                         "DCN" :   "Cl-",
+                         "PType" :   "S",
+                         "IV" :   -131217
+                    },
+                    {
+                         "DCN" :   "ClO4-",
+                         "PType" :   "S",
+                         "IV" :   -8535.36
+                    },
+                    {
+                         "DCN" :   "H2(aq)",
+                         "PType" :   "S",
+                         "IV" :   17723.47050605
+                    },
+                    {
+                         "DCN" :   "Na+",
+                         "PType" :   "S",
+                         "IV" :   -261953
+                    },
+                    {
+                         "DCN" :   "NaOH(aq)",
+                         "PType" :   "S",
+                         "IV" :   -416897.19475455
+                    },
+                    {
+                         "DCN" :   "O2(aq)",
+                         "PType" :   "S",
+                         "IV" :   16520.285987818
+                    },
+                    {
+                         "DCN" :   "UO2+2",
+                         "PType" :   "S",
+                         "IV" :   -952550
+                    },
+                    {
+                         "DCN" :   "UO2Cl+",
+                         "PType" :   "S",
+                         "IV" :   -1084737.3671453
+                    },
+                    {
+                         "DCN" :   "UO2Cl2(aq)",
+                         "PType" :   "S",
+                         "IV" :   -1208705.153766
+                    },
+                    {
+                         "DCN" :   "(UO2)2(OH)2+2",
+                         "PType" :   "S",
+                         "IV" :   -2347300.8037862
+                    },
+                    {
+                         "DCN" :   "(UO2)2OH+3",
+                         "PType" :   "S",
+                         "IV" :   -2126828.2865165
+                    },
+                    {
+                         "DCN" :   "(UO2)3(OH)4+2",
+                         "PType" :   "S",
+                         "IV" :   -3738284.2998319
+                    },
+                    {
+                         "DCN" :   "(UO2)3(OH)5+",
+                         "PType" :   "S",
+                         "IV" :   -3954589.946419
+                    },
+                    {
+                         "DCN" :   "(UO2)3(OH)7-",
+                         "PType" :   "S",
+                         "IV" :   -4333831.0466039
+                    },
+                    {
+                         "DCN" :   "(UO2)4(OH)7+",
+                         "PType" :   "S",
+                         "IV" :   -5345173.8795225
+                    },
+                    {
+                         "DCN" :   "UO2(OH)2(aq)",
+                         "PType" :   "S",
+                         "IV" :   -1357477.2893242
+                    },
+                    {
+                         "DCN" :   "UO2(OH)3-",
+                         "PType" :   "S",
+                         "IV" :   -1548382.1488736
+                    },
+                    {
+                         "DCN" :   "UO2(OH)4-2",
+                         "PType" :   "S",
+                         "IV" :   -1716169.4381977
+                    },
+                    {
+                         "DCN" :   "UO2OH+",
+                         "PType" :   "S",
+                         "IV" :   -1159722.7793376
+                    },
+                    {
+                         "DCN" :   "N2(aq)atm",
+                         "PType" :   "S",
+                         "IV" :   18194.000182443
+                    },
+                    {
+                         "DCN" :   "OH-",
+                         "PType" :   "S",
+                         "IV" :   -157227.41156693
+                    },
+                    {
+                         "DCN" :   "H+",
+                         "PType" :   "S",
+                         "IV" :   0
+                    },
+                    {
+                         "DCN" :   "H2O(l)",
+                         "PType" :   "S",
+                         "IV" :   -237140
+                    }
+               ],
+               "PMc" :   [
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[0|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.689999997615814
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[0|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[1|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.569999992847443
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[1|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[2|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[2|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[3|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.25
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[3|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[4|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.600000023841858
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[4|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[5|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[5|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[6|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.5
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[6|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[7|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.889999985694885
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[7|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[8|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[8|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[9|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.810000002384186
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[9|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[10|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.449999988079071
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[10|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[11|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[11|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[12|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[12|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[13|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[13|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[14|0]",
+                                   "PType" :   "S",
+                                   "IV" :   -0.0500000007450581
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[14|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[15|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.0500000007450581
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[15|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[16|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.200000002980232
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[16|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[17|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[17|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[18|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.119999997317791
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[18|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[19|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.140000000596046
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[19|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[20|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[20|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[21|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[21|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[22|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[22|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[23|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[23|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[24|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[24|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[25|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[25|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[26|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[26|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[27|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[27|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[28|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[28|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[29|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[29|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[30|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[30|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[31|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[31|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[32|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.0399999991059303
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[32|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[33|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[33|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[34|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[34|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[35|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[35|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[36|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[36|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[37|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[37|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[38|0]",
+                                   "PType" :   "S",
+                                   "IV" :   -0.239999994635582
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[38|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[39|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[39|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[40|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[40|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[41|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.00999999977648258
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[41|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[42|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.209999993443489
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[42|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[43|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.46000000834465
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[43|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[44|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[44|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[45|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.330000013113022
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[45|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[46|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.330000013113022
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[46|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[47|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[47|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[48|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[48|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[49|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[49|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[50|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[50|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[51|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0.0500000007450581
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[51|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[52|0]",
+                                   "PType" :   "S",
+                                   "IV" :   -0.0599999986588955
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[52|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[53|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "aq_sit_psi2020[53|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    }
+               ]
+          },
+          {
+               "EPH" :   "gas_gen",
+               "G0" :   [
+                    {
+                         "DCN" :   "H2(g)",
+                         "PType" :   "S",
+                         "IV" :   0
+                    },
+                    {
+                         "DCN" :   "N2(g)atm",
+                         "PType" :   "S",
+                         "IV" :   0
+                    },
+                    {
+                         "DCN" :   "O2(g)",
+                         "PType" :   "S",
+                         "IV" :   0
+                    }
+               ]
+          },
+          {
+               "EPH" :   "IlliteX",
+               "G0" :   [
+                    {
+                         "DCN" :   "ClaiH@",
+                         "PType" :   "S",
+                         "IV" :   10032
+                    },
+                    {
+                         "DCN" :   "ClaiNa@",
+                         "PType" :   "S",
+                         "IV" :   -251921
+                    },
+                    {
+                         "DCN" :   "ClaiUO2@",
+                         "PType" :   "S",
+                         "IV" :   -930804.98162189
+                    }
+               ],
+               "PMc" :   [
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "IlliteX[0|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "IlliteX[0|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "IlliteX[0|2]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    }
+               ]
+          },
+          {
+               "EPH" :   "IllEdS",
+               "G0" :   [
+                    {
+                         "DCN" :   "=iSsO-",
+                         "PType" :   "S",
+                         "IV" :   -201793.13940821
+                    },
+                    {
+                         "DCN" :   "=iSsOH2+",
+                         "PType" :   "S",
+                         "IV" :   -260015.16812374
+                    },
+                    {
+                         "DCN" :   "=iSsOH@",
+                         "PType" :   "S",
+                         "IV" :   -237183
+                    },
+                    {
+                         "DCN" :   "=iSsOUO2(OH)2-",
+                         "PType" :   "S",
+                         "IV" :   -1602366.1460659
+                    },
+                    {
+                         "DCN" :   "=iSsOUO2(OH)3-2",
+                         "PType" :   "S",
+                         "IV" :   -1794412.6140215
+                    },
+                    {
+                         "DCN" :   "=iSsOUO2+",
+                         "PType" :   "S",
+                         "IV" :   -1201149.0840619
+                    },
+                    {
+                         "DCN" :   "=iSsOUO2OH@",
+                         "PType" :   "S",
+                         "IV" :   -1404611.6360794
+                    },
+                    {
+                         "DCN" :   "=iSvO-",
+                         "PType" :   "S",
+                         "IV" :   -201793.13940821
+                    },
+                    {
+                         "DCN" :   "=iSvOH2+",
+                         "PType" :   "S",
+                         "IV" :   -260015.16812374
+                    },
+                    {
+                         "DCN" :   "=iSvOH@",
+                         "PType" :   "S",
+                         "IV" :   -237183
+                    },
+                    {
+                         "DCN" :   "=iSvOUO2(OH)2-",
+                         "PType" :   "S",
+                         "IV" :   -1593804.0830195
+                    },
+                    {
+                         "DCN" :   "=iSvOUO2+",
+                         "PType" :   "S",
+                         "IV" :   -1189733
+                    },
+                    {
+                         "DCN" :   "=iSvOUO2OH@",
+                         "PType" :   "S",
+                         "IV" :   -1393766.3562206
+                    },
+                    {
+                         "DCN" :   "=iSwO-",
+                         "PType" :   "S",
+                         "IV" :   -177248.55867519
+                    },
+                    {
+                         "DCN" :   "=iSwOH2+",
+                         "PType" :   "S",
+                         "IV" :   -285701.35726294
+                    },
+                    {
+                         "DCN" :   "=iSwOH@",
+                         "PType" :   "S",
+                         "IV" :   -237183
+                    }
+               ]
+          },
+          {
+               "EPH" :   "UO2(am_hyd)",
+               "G0" :   [
+                    {
+                         "DCN" :   "UO2(am_hyd)",
+                         "PType" :   "S",
+                         "IV" :   -995617.9369536
+                    }
+               ]
+          },
+          {
+               "EPH" :   "UO3w2(cr)",
+               "G0" :   [
+                    {
+                         "DCN" :   "UO3w2(cr)",
+                         "PType" :   "S",
+                         "IV" :   -1633431.9751345
+                    }
+               ]
+          }
+     ],
+     "LogKFun" :   "",
+     "LogKVal" :   "",
+     "DataSyn" :   {
+          "PHN" :   [
+               {
+                    "NIS" :   "aq_sit_psi2020",
+                    "Syn" :   "",
+                    "DCN" :   [
+                         {
+                              "NIS" :   "Cl-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "ClO4-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "H2(aq)",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "Na+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "NaOH(aq)",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "O2(aq)",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "UO2+2",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "UO2Cl+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "UO2Cl2(aq)",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "(UO2)2(OH)2+2",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "(UO2)2OH+3",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "(UO2)3(OH)4+2",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "(UO2)3(OH)5+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "(UO2)3(OH)7-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "(UO2)4(OH)7+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "UO2(OH)2(aq)",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "UO2(OH)3-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "UO2(OH)4-2",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "UO2OH+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "N2(aq)atm",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "OH-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "H+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "H2O(l)",
+                              "Syn" :   ""
+                         }
+                    ]
+               },
+               {
+                    "NIS" :   "gas_gen",
+                    "Syn" :   "",
+                    "DCN" :   [
+                         {
+                              "NIS" :   "H2(g)",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "N2(g)atm",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "O2(g)",
+                              "Syn" :   ""
+                         }
+                    ]
+               },
+               {
+                    "NIS" :   "IlliteX",
+                    "Syn" :   "",
+                    "DCN" :   [
+                         {
+                              "NIS" :   "ClaiH@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "ClaiNa@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "ClaiUO2@",
+                              "Syn" :   ""
+                         }
+                    ]
+               },
+               {
+                    "NIS" :   "IllEdS",
+                    "Syn" :   "",
+                    "DCN" :   [
+                         {
+                              "NIS" :   "=iSsO-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSsOH2+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSsOH@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSsOUO2(OH)2-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSsOUO2(OH)3-2",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSsOUO2+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSsOUO2OH@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSvO-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSvOH2+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSvOH@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSvOUO2(OH)2-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSvOUO2+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSvOUO2OH@",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSwO-",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSwOH2+",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "=iSwOH@",
+                              "Syn" :   ""
+                         }
+                    ]
+               },
+               {
+                    "NIS" :   "UO2(am_hyd)",
+                    "Syn" :   "",
+                    "DCN" :   [
+                         {
+                              "NIS" :   "UO2(am_hyd)",
+                              "Syn" :   ""
+                         }
+                    ]
+               },
+               {
+                    "NIS" :   "UO3w2(cr)",
+                    "Syn" :   "",
+                    "DCN" :   [
+                         {
+                              "NIS" :   "UO3w2(cr)",
+                              "Syn" :   ""
+                         }
+                    ]
+               }
+          ],
+          "PHPN" :   [
+               {
+                    "NIS" :   "pH",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "pHm",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "pe",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Eh",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "IS",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "SI",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "alk",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "pV",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "RHO",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "sArea",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Gex",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "mChainL",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "expr",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "activityRatio",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "frAlIV",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "frAlV",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "frAlVI",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Rd",
+                    "Syn" :   ""
+               }
+          ],
+          "DCPN" :   [
+               {
+                    "NIS" :   "activity",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "@coef",
+                    "Syn" :   ""
+               }
+          ]
+     }
+}

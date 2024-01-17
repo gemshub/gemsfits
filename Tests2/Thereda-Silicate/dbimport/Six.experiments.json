@@ -1,0 +1,7911 @@
+[
+{
+     "sample" :   "001",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   60,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.643
+          }
+     ]
+},
+{
+     "sample" :   "001",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   0,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   4.662,
+               "error" :   0.049
+          }
+     ]
+},
+{
+     "sample" :   "001",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   60,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s_q21",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B21",
+               "Q" :   4.25,
+               "error" :   0.03
+          }
+     ]
+},
+{
+     "sample" :   "001",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-",
+     "weight" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   0.0603,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.8923,
+                         "error" :   0.0096
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "002",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.2
+          }
+     ]
+},
+{
+     "sample" :   "002",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   4.168,
+               "error" :   0.033
+          }
+     ]
+},
+{
+     "sample" :   "002",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   60,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s_q21",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B21",
+               "Q" :   3.53,
+               "error" :   0.07
+          }
+     ]
+},
+{
+     "sample" :   "002",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-",
+     "weight" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   0.0603,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.8926,
+                         "error" :   0.0096
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "003",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   150,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.791
+          }
+     ]
+},
+{
+     "sample" :   "003",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   50,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.767,
+               "error" :   0.025
+          }
+     ]
+},
+{
+     "sample" :   "003",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   60,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s_q21",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B21",
+               "Q" :   2.56,
+               "error" :   0.09
+          }
+     ]
+},
+{
+     "sample" :   "003",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   0.3674,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.8339,
+                         "error" :   0.0091
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "004",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   200,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.491
+          }
+     ]
+},
+{
+     "sample" :   "004",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   75,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.438,
+               "error" :   0.022
+          }
+     ]
+},
+{
+     "sample" :   "004",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   60,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s_q21",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B21",
+               "Q" :   2.81,
+               "error" :   0.12
+          }
+     ]
+},
+{
+     "sample" :   "004",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   0.369,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.8304,
+                         "error" :   0.009
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "005",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.199
+          }
+     ]
+},
+{
+     "sample" :   "005",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.165,
+               "error" :   0.022
+          }
+     ]
+},
+{
+     "sample" :   "005",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   60,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s_q21",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B21",
+               "Q" :   1.97,
+               "error" :   0.15
+          }
+     ]
+},
+{
+     "sample" :   "005",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   0.5313,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.8188,
+                         "error" :   0.0088
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "006",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   150,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.79
+          }
+     ]
+},
+{
+     "sample" :   "006",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   125,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.937,
+               "error" :   0.022
+          }
+     ]
+},
+{
+     "sample" :   "006",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   0.5313,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.8188,
+                         "error" :   0.0088
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "007",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   200,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.489
+          }
+     ]
+},
+{
+     "sample" :   "007",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   150,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.746,
+               "error" :   0.021
+          }
+     ]
+},
+{
+     "sample" :   "007",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   0.8637,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.779,
+                         "error" :   0.0083
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "008",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   250,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.268
+          }
+     ]
+},
+{
+     "sample" :   "008",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   175,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.585,
+               "error" :   0.021
+          }
+     ]
+},
+{
+     "sample" :   "008",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   0.8629,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.7797,
+                         "error" :   0.0083
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "009",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   295,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.12
+          }
+     ]
+},
+{
+     "sample" :   "009",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   200,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.448,
+               "error" :   0.022
+          }
+     ]
+},
+{
+     "sample" :   "009",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   1.2063,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.7614,
+                         "error" :   0.008
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "010",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   60,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.637
+          }
+     ]
+},
+{
+     "sample" :   "010",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   225,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.332,
+               "error" :   0.024
+          }
+     ]
+},
+{
+     "sample" :   "010",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   1.2059,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.7617,
+                         "error" :   0.008
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "011",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.193
+          }
+     ]
+},
+{
+     "sample" :   "011",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   250,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.233,
+               "error" :   0.027
+          }
+     ]
+},
+{
+     "sample" :   "011",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   1.4928,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.7607,
+                         "error" :   0.0078
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "012",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   150,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.782
+          }
+     ]
+},
+{
+     "sample" :   "012",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   275,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.149,
+               "error" :   0.031
+          }
+     ]
+},
+{
+     "sample" :   "012",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   1.4927,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.7608,
+                         "error" :   0.0078
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "013",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   200,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.484
+          }
+     ]
+},
+{
+     "sample" :   "013",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   300,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.078,
+               "error" :   0.037
+          }
+     ]
+},
+{
+     "sample" :   "013",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   1.8213,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.7685,
+                         "error" :   0.0078
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "014",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   60,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.25,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.687
+          }
+     ]
+},
+{
+     "sample" :   "014",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   0,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   4.793,
+               "error" :   0.045
+          }
+     ]
+},
+{
+     "sample" :   "014",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   1.8241,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.7674,
+                         "error" :   0.0077
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "015",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   60,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.25,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.68
+          }
+     ]
+},
+{
+     "sample" :   "015",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   10,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   4.297,
+               "error" :   0.026
+          }
+     ]
+},
+{
+     "sample" :   "015",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   2.3745,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.8021,
+                         "error" :   0.0078
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "016",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.25,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.233
+          }
+     ]
+},
+{
+     "sample" :   "016",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   50,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.893,
+               "error" :   0.014
+          }
+     ]
+},
+{
+     "sample" :   "016",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   2.3725,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.8028,
+                         "error" :   0.0078
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "017",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   150,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.25,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.819
+          }
+     ]
+},
+{
+     "sample" :   "017",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   75,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.562,
+               "error" :   0.01
+          }
+     ]
+},
+{
+     "sample" :   "017",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-NaOH",
+     "weight" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   0.0466,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   0.0466,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.9625,
+                         "error" :   0.0104
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "018",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   200,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.25,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.518
+          }
+     ]
+},
+{
+     "sample" :   "018",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.286,
+               "error" :   0.01
+          }
+     ]
+},
+{
+     "sample" :   "018",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-NaOH",
+     "weight" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   0.0468,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   0.0468,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.9572,
+                         "error" :   0.0103
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "019",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   250,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.25,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.302
+          }
+     ]
+},
+{
+     "sample" :   "019",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   125,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.056,
+               "error" :   0.01
+          }
+     ]
+},
+{
+     "sample" :   "019",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-NaOH",
+     "weight" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   0.097,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   0.097,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.9267,
+                         "error" :   0.0101
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "020",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   295,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.25,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.149
+          }
+     ]
+},
+{
+     "sample" :   "020",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   150,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.861,
+               "error" :   0.01
+          }
+     ]
+},
+{
+     "sample" :   "020",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-NaOH",
+     "weight" :   0,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   0.0973,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   0.0973,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.9239,
+                         "error" :   0.01
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "021",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   60,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.25,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.69
+          }
+     ]
+},
+{
+     "sample" :   "021",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   175,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.696,
+               "error" :   0.01
+          }
+     ]
+},
+{
+     "sample" :   "021",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-NaOH",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   0.1481,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   0.1481,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.8816,
+                         "error" :   0.0096
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "022",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.25,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.245
+          }
+     ]
+},
+{
+     "sample" :   "022",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   200,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.556,
+               "error" :   0.011
+          }
+     ]
+},
+{
+     "sample" :   "022",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-NaOH",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   0.1465,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   0.1465,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.891,
+                         "error" :   0.0097
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "023",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   150,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.25,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.83
+          }
+     ]
+},
+{
+     "sample" :   "023",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   225,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.436,
+               "error" :   0.014
+          }
+     ]
+},
+{
+     "sample" :   "023",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-NaOH",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   0.3519,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   0.3519,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.844,
+                         "error" :   0.0091
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "024",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   200,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.25,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.526
+          }
+     ]
+},
+{
+     "sample" :   "024",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   250,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.333,
+               "error" :   0.018
+          }
+     ]
+},
+{
+     "sample" :   "024",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-NaOH",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   0.474,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   0.474,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.8236,
+                         "error" :   0.0088
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "025",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   60,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.25,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.691
+          }
+     ]
+},
+{
+     "sample" :   "025",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   275,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.245,
+               "error" :   0.023
+          }
+     ]
+},
+{
+     "sample" :   "025",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-NaOH",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   0.5289,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   0.5289,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.8175,
+                         "error" :   0.0087
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "026",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   60,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.25,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.685
+          }
+     ]
+},
+{
+     "sample" :   "026",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   300,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.169,
+               "error" :   0.03
+          }
+     ]
+},
+{
+     "sample" :   "026",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-NaOH",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   0.2335,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   0.2335,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.8624,
+                         "error" :   0.0094
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "027",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.25,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.236
+          }
+     ]
+},
+{
+     "sample" :   "027",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   0,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   4.865,
+               "error" :   0.046
+          }
+     ]
+},
+{
+     "sample" :   "027",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-NaOH",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   0.2338,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   0.2338,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.8611,
+                         "error" :   0.0093
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "028",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   150,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.25,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.819
+          }
+     ]
+},
+{
+     "sample" :   "028",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   10,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   4.367,
+               "error" :   0.027
+          }
+     ]
+},
+{
+     "sample" :   "028",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-NaOH",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   0.3557,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   0.3557,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.8352,
+                         "error" :   0.009
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "029",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   200,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.25,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.513
+          }
+     ]
+},
+{
+     "sample" :   "029",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   50,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.961,
+               "error" :   0.016
+          }
+     ]
+},
+{
+     "sample" :   "029",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-NaOH",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   0.4731,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   0.4731,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.8253,
+                         "error" :   0.0088
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "030",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   250,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.25,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.29
+          }
+     ]
+},
+{
+     "sample" :   "030",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   75,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.627,
+               "error" :   0.012
+          }
+     ]
+},
+{
+     "sample" :   "030",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-NaOH",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   0.5263,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   0.5263,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.8216,
+                         "error" :   0.0087
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "031",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   60,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.796
+          }
+     ]
+},
+{
+     "sample" :   "031",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.348,
+               "error" :   0.012
+          }
+     ]
+},
+{
+     "sample" :   "031",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-NaOH",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   0.7859,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   0.7859,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.8222,
+                         "error" :   0.0085
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "032",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.297
+          }
+     ]
+},
+{
+     "sample" :   "032",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   125,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.115,
+               "error" :   0.013
+          }
+     ]
+},
+{
+     "sample" :   "032",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-NaOH",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1.0186,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   1.0186,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.8408,
+                         "error" :   0.0085
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "033",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   150,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.856
+          }
+     ]
+},
+{
+     "sample" :   "033",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   150,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.917,
+               "error" :   0.013
+          }
+     ]
+},
+{
+     "sample" :   "033",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-NaOH",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1.3269,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   1.3269,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.8843,
+                         "error" :   0.0085
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "034",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.303
+          }
+     ]
+},
+{
+     "sample" :   "034",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   175,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.749,
+               "error" :   0.013
+          }
+     ]
+},
+{
+     "sample" :   "034",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-NaOH",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1.3246,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   1.3246,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.8858,
+                         "error" :   0.0086
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "035",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   150,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.86
+          }
+     ]
+},
+{
+     "sample" :   "035",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   200,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.605,
+               "error" :   0.013
+          }
+     ]
+},
+{
+     "sample" :   "035",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-NaOH",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1.4967,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   1.4967,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.9019,
+                         "error" :   0.0085
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "036",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   200,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.541
+          }
+     ]
+},
+{
+     "sample" :   "036",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   225,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.481,
+               "error" :   0.015
+          }
+     ]
+},
+{
+     "sample" :   "036",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-NaOH",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1.6635,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   1.6635,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.9326,
+                         "error" :   0.0086
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "037",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   60,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.803
+          }
+     ]
+},
+{
+     "sample" :   "037",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   250,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.374,
+               "error" :   0.018
+          }
+     ]
+},
+{
+     "sample" :   "037",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-NaOH",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1.6629,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   1.6629,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.9329,
+                         "error" :   0.0086
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "038",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   60,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.79
+          }
+     ]
+},
+{
+     "sample" :   "038",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   275,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.281,
+               "error" :   0.023
+          }
+     ]
+},
+{
+     "sample" :   "038",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-NaOH",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   0.7846,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   0.7846,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.8236,
+                         "error" :   0.0085
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "039",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.296
+          }
+     ]
+},
+{
+     "sample" :   "039",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   300,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.2,
+               "error" :   0.029
+          }
+     ]
+},
+{
+     "sample" :   "039",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-NaOH",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   0.9599,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   0.9599,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.8323,
+                         "error" :   0.0084
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "040",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   150,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.854
+          }
+     ]
+},
+{
+     "sample" :   "040",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   0,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   5.072,
+               "error" :   0.051
+          }
+     ]
+},
+{
+     "sample" :   "040",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-NaOH",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   0.9582,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   0.9582,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.8338,
+                         "error" :   0.0085
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "041",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   200,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.539
+          }
+     ]
+},
+{
+     "sample" :   "041",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   10,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   4.565,
+               "error" :   0.031
+          }
+     ]
+},
+{
+     "sample" :   "041",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-NaOH",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1.0181,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   1.0181,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.8412,
+                         "error" :   0.0085
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "042",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   250,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.339
+          }
+     ]
+},
+{
+     "sample" :   "042",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   50,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   4.15,
+               "error" :   0.018
+          }
+     ]
+},
+{
+     "sample" :   "042",
+     "comment" :   "",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "PAR/ENG1998-Na2SiO3-NaOH",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1.4954,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na2SiO3",
+               "Q" :   1.4954,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "oscw",
+                         "Q" :   0.9027,
+                         "error" :   0.0085
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "043",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   250,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.356
+          }
+     ]
+},
+{
+     "sample" :   "043",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   75,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.805,
+               "error" :   0.012
+          }
+     ]
+},
+{
+     "sample" :   "044",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   295,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.182
+          }
+     ]
+},
+{
+     "sample" :   "044",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.516,
+               "error" :   0.011
+          }
+     ]
+},
+{
+     "sample" :   "045",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   60,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.791
+          }
+     ]
+},
+{
+     "sample" :   "045",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   125,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.27,
+               "error" :   0.011
+          }
+     ]
+},
+{
+     "sample" :   "046",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   60,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.79
+          }
+     ]
+},
+{
+     "sample" :   "046",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   150,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.059,
+               "error" :   0.011
+          }
+     ]
+},
+{
+     "sample" :   "047",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.318
+          }
+     ]
+},
+{
+     "sample" :   "047",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   175,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.876,
+               "error" :   0.011
+          }
+     ]
+},
+{
+     "sample" :   "048",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   150,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.881
+          }
+     ]
+},
+{
+     "sample" :   "048",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   200,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.717,
+               "error" :   0.011
+          }
+     ]
+},
+{
+     "sample" :   "049",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   60,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.79
+          }
+     ]
+},
+{
+     "sample" :   "049",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   225,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.577,
+               "error" :   0.012
+          }
+     ]
+},
+{
+     "sample" :   "050",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   60,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.787
+          }
+     ]
+},
+{
+     "sample" :   "050",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   250,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.452,
+               "error" :   0.015
+          }
+     ]
+},
+{
+     "sample" :   "051",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.315
+          }
+     ]
+},
+{
+     "sample" :   "051",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   275,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.341,
+               "error" :   0.019
+          }
+     ]
+},
+{
+     "sample" :   "052",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   150,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.877
+          }
+     ]
+},
+{
+     "sample" :   "052",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   300,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.241,
+               "error" :   0.024
+          }
+     ]
+},
+{
+     "sample" :   "053",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.325
+          }
+     ]
+},
+{
+     "sample" :   "053",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   0,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   5.266,
+               "error" :   0.059
+          }
+     ]
+},
+{
+     "sample" :   "054",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.326
+          }
+     ]
+},
+{
+     "sample" :   "054",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   10,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   4.75,
+               "error" :   0.039
+          }
+     ]
+},
+{
+     "sample" :   "055",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   60,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.78
+          }
+     ]
+},
+{
+     "sample" :   "055",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   50,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   4.324,
+               "error" :   0.026
+          }
+     ]
+},
+{
+     "sample" :   "056",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.319
+          }
+     ]
+},
+{
+     "sample" :   "056",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   75,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.968,
+               "error" :   0.019
+          }
+     ]
+},
+{
+     "sample" :   "057",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   150,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.894
+          }
+     ]
+},
+{
+     "sample" :   "057",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.666,
+               "error" :   0.015
+          }
+     ]
+},
+{
+     "sample" :   "058",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   200,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.583
+          }
+     ]
+},
+{
+     "sample" :   "058",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   125,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.407,
+               "error" :   0.014
+          }
+     ]
+},
+{
+     "sample" :   "059",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   60,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.779
+          }
+     ]
+},
+{
+     "sample" :   "059",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   150,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.181,
+               "error" :   0.013
+          }
+     ]
+},
+{
+     "sample" :   "060",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   150,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.907
+          }
+     ]
+},
+{
+     "sample" :   "060",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   175,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.984,
+               "error" :   0.013
+          }
+     ]
+},
+{
+     "sample" :   "061",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   200,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.551
+          }
+     ]
+},
+{
+     "sample" :   "061",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   200,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.808,
+               "error" :   0.013
+          }
+     ]
+},
+{
+     "sample" :   "062",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   150,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.087
+          }
+     ]
+},
+{
+     "sample" :   "062",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   225,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.651,
+               "error" :   0.016
+          }
+     ]
+},
+{
+     "sample" :   "063",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   200,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.732
+          }
+     ]
+},
+{
+     "sample" :   "063",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   250,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.509,
+               "error" :   0.02
+          }
+     ]
+},
+{
+     "sample" :   "064",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   250,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.464
+          }
+     ]
+},
+{
+     "sample" :   "064",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   275,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.379,
+               "error" :   0.025
+          }
+     ]
+},
+{
+     "sample" :   "065",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   60,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.995
+          }
+     ]
+},
+{
+     "sample" :   "065",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   300,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977s",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.259,
+               "error" :   0.031
+          }
+     ]
+},
+{
+     "sample" :   "066",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   60,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.988
+          }
+     ]
+},
+{
+     "sample" :   "067",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.503
+          }
+     ]
+},
+{
+     "sample" :   "068",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   150,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.048
+          }
+     ]
+},
+{
+     "sample" :   "069",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   200,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.704
+          }
+     ]
+},
+{
+     "sample" :   "070",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.517
+          }
+     ]
+},
+{
+     "sample" :   "071",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   150,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.056
+          }
+     ]
+},
+{
+     "sample" :   "072",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   200,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.708
+          }
+     ]
+},
+{
+     "sample" :   "073",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   250,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.462
+          }
+     ]
+},
+{
+     "sample" :   "074",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   295,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.28
+          }
+     ]
+},
+{
+     "sample" :   "075",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.652
+          }
+     ]
+},
+{
+     "sample" :   "076",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   150,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.167
+          }
+     ]
+},
+{
+     "sample" :   "077",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   200,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.795
+          }
+     ]
+},
+{
+     "sample" :   "078",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   60,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   4.175
+          }
+     ]
+},
+{
+     "sample" :   "079",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.664
+          }
+     ]
+},
+{
+     "sample" :   "080",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.637
+          }
+     ]
+},
+{
+     "sample" :   "081",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   150,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.153
+          }
+     ]
+},
+{
+     "sample" :   "082",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   200,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.78
+          }
+     ]
+},
+{
+     "sample" :   "083",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   250,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.488
+          }
+     ]
+},
+{
+     "sample" :   "084",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.667
+          }
+     ]
+},
+{
+     "sample" :   "085",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   150,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.187
+          }
+     ]
+},
+{
+     "sample" :   "086",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   200,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.813
+          }
+     ]
+},
+{
+     "sample" :   "087",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   250,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.521
+          }
+     ]
+},
+{
+     "sample" :   "088",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   296,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.271
+          }
+     ]
+},
+{
+     "sample" :   "089",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   296,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.276
+          }
+     ]
+},
+{
+     "sample" :   "090",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   60,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   4.181
+          }
+     ]
+},
+{
+     "sample" :   "091",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.688
+          }
+     ]
+},
+{
+     "sample" :   "092",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   150,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.203
+          }
+     ]
+},
+{
+     "sample" :   "093",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   200,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.824
+          }
+     ]
+},
+{
+     "sample" :   "094",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   250,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.526
+          }
+     ]
+},
+{
+     "sample" :   "095",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   296,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.28
+          }
+     ]
+},
+{
+     "sample" :   "096",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.695
+          }
+     ]
+},
+{
+     "sample" :   "097",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   150,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.199
+          }
+     ]
+},
+{
+     "sample" :   "098",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   200,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.814
+          }
+     ]
+},
+{
+     "sample" :   "099",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   60,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.818
+          }
+     ]
+},
+{
+     "sample" :   "1",
+     "comment" :   "NaClO4",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   0,
+     "expdataset" :   "BLI/ING1967",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5132,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   4.26033054797917,
+               "error" :   0.02
+          },
+          {
+               "prop" :   "logQ_K11",
+               "Q" :   9.44868335663313,
+               "error" :   0.02
+          }
+     ]
+},
+{
+     "sample" :   "1",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   0,
+     "expdataset" :   "ING1959",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   4.29,
+               "error" :   0.05
+          },
+          {
+               "prop" :   "logQ_K11",
+               "Q" :   9.51,
+               "error" :   0.05
+          },
+          {
+               "prop" :   "logQ_B21",
+               "Q" :   5.28,
+               "error" :   0.15
+          },
+          {
+               "prop" :   "logQ_K21",
+               "Q" :   22.12,
+               "error" :   0.15
+          }
+     ]
+},
+{
+     "sample" :   "1",
+     "comment" :   "NaClO4",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   0,
+     "expdataset" :   "LAG1959",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   4.27,
+               "error" :   0.05
+          },
+          {
+               "prop" :   "logQ_K11",
+               "Q" :   9.46,
+               "error" :   0.05
+          },
+          {
+               "prop" :   "logQ_B21",
+               "Q" :   5.44,
+               "error" :   0.05
+          },
+          {
+               "prop" :   "logQ_K21",
+               "Q" :   22.02,
+               "error" :   0.05
+          }
+     ]
+},
+{
+     "sample" :   "1",
+     "comment" :   "NaClO4",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   0,
+     "expdataset" :   "SAN/SCH1974",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1.125,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   4.24949466889866,
+               "error" :   0.005
+          },
+          {
+               "prop" :   "logQ_K11",
+               "Q" :   9.41984747755262,
+               "error" :   0.004
+          }
+     ]
+},
+{
+     "sample" :   "1",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   0,
+     "expdataset" :   "SJO/HAG1983",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.05019,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   4.151,
+               "error" :   0.015
+          },
+          {
+               "prop" :   "logQ_K11",
+               "Q" :   9.65235280865396,
+               "error" :   0.005
+          },
+          {
+               "prop" :   "logQ_B21",
+               "Q" :   4.87,
+               "error" :   0.07
+          },
+          {
+               "prop" :   "logQ_K21",
+               "Q" :   22.7367056173079,
+               "error" :   0.06
+          }
+     ]
+},
+{
+     "sample" :   "1",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   0,
+     "expdataset" :   "SJO/NOR1981",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.6082,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   4.25075202592157,
+               "error" :   0.002
+          },
+          {
+               "prop" :   "logQ_K11",
+               "Q" :   9.46610483457553,
+               "error" :   0.002
+          },
+          {
+               "prop" :   "logQ_B21",
+               "Q" :   5.384,
+               "error" :   0.05
+          },
+          {
+               "prop" :   "logQ_K21",
+               "Q" :   22.0582096691511,
+               "error" :   0.05
+          }
+     ]
+},
+{
+     "sample" :   "1",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   0,
+     "expdataset" :   "SJO/NOR1985",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.6082,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B21",
+               "Q" :   5.334,
+               "error" :   0.01
+          },
+          {
+               "prop" :   "logQ_K21",
+               "Q" :   22.1082096691511,
+               "error" :   0.01
+          }
+     ]
+},
+{
+     "sample" :   "100",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   100,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.324
+          }
+     ]
+},
+{
+     "sample" :   "101",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   200,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.591
+          }
+     ]
+},
+{
+     "sample" :   "102",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   250,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.37
+          }
+     ]
+},
+{
+     "sample" :   "103",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   288,
+     "sP" :   0,
+     "expdataset" :   "BUS/MES1977",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   2.25
+          }
+     ]
+},
+{
+     "sample" :   "2",
+     "comment" :   "NaClO4",
+     "type" :   "",
+     "sT" :   50,
+     "sP" :   0,
+     "expdataset" :   "LAG1959",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   3.84,
+               "error" :   0.05
+          },
+          {
+               "prop" :   "logQ_K11",
+               "Q" :   9.13,
+               "error" :   0.05
+          },
+          {
+               "prop" :   "logQ_B21",
+               "Q" :   4.9,
+               "error" :   0.05
+          },
+          {
+               "prop" :   "logQ_K21",
+               "Q" :   21.04,
+               "error" :   0.05
+          }
+     ]
+},
+{
+     "sample" :   "2",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   0,
+     "expdataset" :   "SJO/HAG1983",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.1005,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   4.18748112958953,
+               "error" :   0.081
+          },
+          {
+               "prop" :   "logQ_K11",
+               "Q" :   9.58483393824349,
+               "error" :   0.08
+          },
+          {
+               "prop" :   "logQ_B21",
+               "Q" :   5,
+               "error" :   0.031
+          },
+          {
+               "prop" :   "logQ_K21",
+               "Q" :   22.545667876487,
+               "error" :   0.03
+          }
+     ]
+},
+{
+     "sample" :   "3",
+     "comment" :   "NaClO4",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   0,
+     "expdataset" :   "LAG1959",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   3,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   4.6,
+               "error" :   0.05
+          },
+          {
+               "prop" :   "logQ_K11",
+               "Q" :   9.43,
+               "error" :   0.05
+          },
+          {
+               "prop" :   "logQ_B21",
+               "Q" :   5.92,
+               "error" :   0.05
+          },
+          {
+               "prop" :   "logQ_K21",
+               "Q" :   22.14,
+               "error" :   0.05
+          }
+     ]
+},
+{
+     "sample" :   "3",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   0,
+     "expdataset" :   "SJO/HAG1983",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.2013,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   4.20083341212137,
+               "error" :   0.013
+          },
+          {
+               "prop" :   "logQ_K11",
+               "Q" :   9.54418622077533,
+               "error" :   0.005
+          },
+          {
+               "prop" :   "logQ_B21",
+               "Q" :   5.108,
+               "error" :   0.028
+          },
+          {
+               "prop" :   "logQ_K21",
+               "Q" :   22.3843724415507,
+               "error" :   0.02
+          }
+     ]
+},
+{
+     "sample" :   "4",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   0,
+     "expdataset" :   "SJO/HAG1983",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.404,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   4.2353258175634,
+               "error" :   0.015
+          },
+          {
+               "prop" :   "logQ_K11",
+               "Q" :   9.49067862621736,
+               "error" :   0.011
+          },
+          {
+               "prop" :   "logQ_B21",
+               "Q" :   5.216,
+               "error" :   0.024
+          },
+          {
+               "prop" :   "logQ_K21",
+               "Q" :   22.2413572524347,
+               "error" :   0.02
+          }
+     ]
+},
+{
+     "sample" :   "5",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   0,
+     "expdataset" :   "SJO/HAG1983",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   0.6082,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   4.25075202592157,
+               "error" :   0.003
+          },
+          {
+               "prop" :   "logQ_K11",
+               "Q" :   9.46610483457553,
+               "error" :   0.002
+          },
+          {
+               "prop" :   "logQ_B21",
+               "Q" :   5.384,
+               "error" :   0.011
+          },
+          {
+               "prop" :   "logQ_K21",
+               "Q" :   22.0582096691511,
+               "error" :   0.01
+          }
+     ]
+},
+{
+     "sample" :   "6",
+     "comment" :   "NaCl",
+     "type" :   "",
+     "sT" :   25,
+     "sP" :   0,
+     "expdataset" :   "SJO/HAG1983",
+     "weight" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaCl",
+               "Q" :   2.086,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   1.2,
+               "unit" :   "g"
+          }
+     ],
+     "properties" :   [
+          {
+               "prop" :   "logQ_B11",
+               "Q" :   4.38936288291951,
+               "error" :   0.038
+          },
+          {
+               "prop" :   "logQ_K11",
+               "Q" :   9.44171569157347,
+               "error" :   0.008
+          },
+          {
+               "prop" :   "logQ_B21",
+               "Q" :   5.622,
+               "error" :   0.08
+          },
+          {
+               "prop" :   "logQ_K21",
+               "Q" :   22.0734313831469,
+               "error" :   0.05
+          }
+     ]
+}
+]

@@ -1,6 +1,11 @@
 # options
 message(STATUS "Building gemsfit3")
-file(COPY "${CMAKE_SOURCE_DIR}/Tests" DESTINATION "${CMAKE_BINARY_DIR}/bin")
+
+if(USE_OLD_EJDB MATCHES ON)
+   file(COPY "${CMAKE_SOURCE_DIR}/Tests" DESTINATION "${CMAKE_BINARY_DIR}/bin")
+else()
+   file(COPY "${CMAKE_SOURCE_DIR}/Tests2" DESTINATION "${CMAKE_BINARY_DIR}/bin")
+endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/muparser/src)
 find_package(Threads REQUIRED)

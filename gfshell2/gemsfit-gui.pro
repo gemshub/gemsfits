@@ -9,18 +9,16 @@ VERSION         = 2.0.0
 CONFIG += thread
 CONFIG += c++17
 
-DEFINES         += OLD_EJDB # compile using ejdb1
+QT   += core gui widgets
+QT   += svg printsupport concurrent
+QT   += charts help
 
-#DEFINES         += Use_mt_mode
+DEFINES         += OLD_EJDB # compile using ejdb1
 DEFINES         += IPMGEMPLUGIN
 #DEFINES += NODEARRAYLEVEL
 #DEFINES += USE_NLOHMANNJSON
 #DEFINES += USE_THERMOFUN
 #DEFINES += USE_THERMO_LOG
-
-QT   += core gui widgets
-QT   += svg printsupport concurrent
-QT   += charts help
 
 QMAKE_CXXFLAGS += -O3 -fno-inline-small-functions -DIW_STATIC
 QMAKE_LFLAGS += -O3 -fno-inline-small-functions
@@ -36,14 +34,12 @@ macx-g++ {
   DEFINES += __APPLE__
 }
 
-
 macx-clang {
   DEFINES += __APPLE__
   INCLUDEPATH   += "/usr/local/include"
 }
 else {
 }
-
 
 RESOURCES      = ./fgui.qrc
 
@@ -58,7 +54,6 @@ DATAMAN_H    =  $$DATAMAN_CPP
 DIALOGS_H    =  $$DIALOGS_CPP
 COMMON_H     =  $$COMMON_CPP
 GEMS3K_H     =  $$GEMS3K_CPP
-
 
 win32{
    EJDB_LIB_PATH =  $$EJDB_PATH/build-win32
