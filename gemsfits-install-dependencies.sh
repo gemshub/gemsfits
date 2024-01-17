@@ -25,7 +25,7 @@ sudo rm -f /usr/local/lib/libiowow*.*
 
 BUILD_TYPE=Release
 threads=3
-USING_EJDB=NO #$1 # OLD_EJDB
+USING_EJDB=OLD_EJDB #EJDB2 #$1 # OLD_EJDB
 BASEDIR=${PWD}
 echo "Script location: ${BASEDIR}"
 

@@ -1055,89 +1055,93 @@ void FITMainWindow::CmRestoreCSV()
 {
     try
     {
+        int ii, jj;
         QString valCsv ="";
         if( !MessageToSave() )
             return;
 
-        // select file with data
-        std::string fname;
-        common::TFile  inFile("", std::ios::in);
-        if( !ChooseFileOpen(&inFile, this, fname, "Please, select file with unloaded csv format","*.csv" ))
-            return;
+        // select files with data
+        auto csv_files = ChooseListFilesOpen(this, "", "Please, select file with unloaded csv format","*.csv" );
+        setStatusText( "Records importing from csv-file ..." );
+        foreach (const QString &fpath, csv_files) {
+            // read file
+            std::cout << "Read file: " << fpath.toStdString() << std::endl;
+            QFileInfo striam(fpath);
+            addLinetoStatus( striam.fileName().toStdString());
 
-        // read file
-        QString fpath = fname.c_str();
-        QFile tmpStriam(fpath);
-        if(!tmpStriam.open( QIODevice::ReadOnly ))
-            Error( fname, "File open error");
-        valCsv = tmpStriam.readAll();
-        tmpStriam.close();
+            try {
+                QFile tmpStriam(fpath);
+                if(!tmpStriam.open( QIODevice::ReadOnly ))
+                    Error( fpath.toStdString(), "File open error");
+                valCsv = tmpStriam.readAll();
+                tmpStriam.close();
 
-        // split csv data
+                // split csv data
 #if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
-        const QStringList allrows = valCsv.split('\n', QString::KeepEmptyParts);
+                const QStringList allrows = valCsv.split('\n', QString::KeepEmptyParts);
 #else
-        const QStringList allrows = valCsv.split('\n', Qt::KeepEmptyParts);
+                const QStringList allrows = valCsv.split('\n', Qt::KeepEmptyParts);
 #endif
-        int ii, jj;
-        std::vector<std::string> headline;
-        std::vector<std::string> row;
-        common::JsonFree exp;
+                std::vector<std::string> headline;
+                std::vector<std::string> row;
+                common::JsonFree exp;
 
-        //get header
+                //get header
 #if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
-        QStringList cells = allrows[0].split(',', QString::KeepEmptyParts);
+                QStringList cells = allrows[0].split(',', QString::KeepEmptyParts);
 #else
-        QStringList cells = allrows[0].split(',', Qt::KeepEmptyParts);
+                QStringList cells = allrows[0].split(',', Qt::KeepEmptyParts);
 #endif
-        for( ii=0; ii< cells.count(); ii++ )
-        {
-            auto cell_ = cells[ii].remove('\"');
-            auto cellstr = cell_.remove('\r').toStdString();
-            headline.push_back( cellstr );
-        }
-
-        for( jj=1; jj< allrows.count(); jj++ )
-        {
-            // get row
-#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
-            cells = allrows[jj].split(',', QString::KeepEmptyParts);
-#else
-            cells = allrows[jj].split(',', Qt::KeepEmptyParts);
-#endif
-            if( cells.count() < headline.size() )
-                continue;
-            row.clear();
-            for( ii=0; ii< cells.count(); ii++ )
-            {
-                auto cell_ = cells[ii].remove('\"');
-                auto cellstr = cell_.remove('\r').toStdString();
-                row.push_back( cellstr );
-            }
-
-            if (row.size()>0)
-            {
-                size_t found = row[0].find("STOP");
-                if (found != std::string::npos)
+                for( ii=0; ii< cells.count(); ii++ )
                 {
-                    break;
+                    auto cell_ = cells[ii].remove('\"');
+                    auto cellstr = cell_.remove('\r').toStdString();
+                    headline.push_back( cellstr );
+                }
+
+                for( jj=1; jj< allrows.count(); jj++ )
+                {
+                    // get row
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
+                    cells = allrows[jj].split(',', QString::KeepEmptyParts);
+#else
+                    cells = allrows[jj].split(',', Qt::KeepEmptyParts);
+#endif
+                    if( cells.count() < headline.size() )
+                        continue;
+                    row.clear();
+                    for( ii=0; ii< cells.count(); ii++ )
+                    {
+                        auto cell_ = cells[ii].remove('\"');
+                        auto cellstr = cell_.remove('\r').toStdString();
+                        row.push_back( cellstr );
+                    }
+
+                    if (row.size()>0)
+                    {
+                        size_t found = row[0].find("STOP");
+                        if (found != std::string::npos)
+                        {
+                            break;
+                        }
+                    }
+                    // convert row to json
+                    csvToBson( exp, headline, row );
+                    std::string bsonVal = exp.dump();
+
+                    //save results to EJDB
+                    rtEJ[ currentMode ].setJson(bsonVal);
+                    if( ui->actionOverwrite->isChecked() )
+                        rtEJ[currentMode].saveRecord("");
+                    else
+                        rtEJ[currentMode].insertRecord();
                 }
             }
-            // convert row to json
-            std::string message = "Saving record " + std::to_string(jj);
-            setStatusText(  message );
-            csvToBson( exp, headline, row );
-            std::string bsonVal = exp.dump();
-            // cout << bsonVal.c_str() << endl;
-
-            //save results to EJDB
-            rtEJ[ currentMode ].setJson(bsonVal);
-            if( ui->actionOverwrite->isChecked() )
-                rtEJ[currentMode].saveRecord("");
-            else
-                rtEJ[currentMode].insertRecord();
+            catch(TError& err) {
+                addLinetoStatus(err.mess);
+            }
         }
-        setStatusText( "Records imported from csv-file" );
+        addLinetoStatus( "Records imported from csv-file" );
     }
     catch( TError& err )
     {

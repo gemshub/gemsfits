@@ -62,6 +62,29 @@ bool ChooseFileOpen(common::TAbstractFile* file, QWidget* par, std::string& temp
 
 }
 
+QStringList ChooseListFilesOpen(QWidget* par, const std::string& dir_path,
+                                const std::string& title, const std::string& filter)
+{
+    QString dir;
+    if( dir_path.empty() ) {
+        dir  = common::TAbstractFile::current_work_directory.c_str();
+    }
+
+    QString filt;
+    if( !filter.empty() )
+        filt = QString("Text files (%1);;All files (*)").arg(filter.c_str());
+    else
+        filt = "All files (*)";
+
+    auto fileNames = QFileDialog::getOpenFileNames(par, title.c_str(), dir, filt);
+
+    if ( !fileNames.isEmpty() ) {
+        QFileInfo flinfo(fileNames[0]);
+        common::TAbstractFile::current_work_directory = flinfo.dir().path().toStdString()+"/";
+    }
+   return fileNames;
+}
+
 bool ChooseFileSave(common::TAbstractFile* file, QWidget* par, std::string& template_path,
                     const char* title, const char *filter)
 {

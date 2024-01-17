@@ -21,10 +21,11 @@
 
 #include <string>
 #include <vector>
+#include <QString>
+#include <QStringList>
 
 class QWidget;
 class QDir;
-class QString;
 
 namespace common {
 class TAbstractFile;
@@ -53,6 +54,9 @@ bool removeDirectoryEntry(QDir dir);
 void removeComments(QString& valCsv);
 
 bool ChooseFileOpen(common::TAbstractFile* file, QWidget* par, std::string& template_path, const char* title, const char *filter);
+/// Select list of files to open
+QStringList ChooseListFilesOpen(QWidget* par, const std::string&  dir_path,
+                                const std::string& title, const std::string& filter);
 bool ChooseFileSave(common::TAbstractFile* file, QWidget* par, std::string& template_path, const char* title, const char *filter);
 
 

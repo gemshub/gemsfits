@@ -36,9 +36,8 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
   option(USE_OLD_EJDB "Compile using ejdb1" ON)
   option(BUILD_GUI "Build Qt GUI shell" OFF)
 else()
-  option(USE_OLD_EJDB "Compile using ejdb1" OFF)
+  option(USE_OLD_EJDB "Compile using ejdb1" ON)
   option(BUILD_GUI "Build Qt GUI shell" ON)
-  add_definitions(-Duseomp)
 endif()
 
 # Used into conda only
@@ -124,7 +123,7 @@ include(gemsfitsFindDeps)
 
 # Set some necessary definitions
 add_definitions(-DIPMGEMPLUGIN)
-#add_definitions(-Duseomp)
+add_definitions(-Duseomp)
 
 if(USE_OLD_EJDB MATCHES ON)
   add_definitions(-DOLD_EJDB)
