@@ -24,11 +24,6 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 
 if(Qt6_FOUND)
 
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
   qt_standard_project_setup()
   qt_add_resources(GUI_SRCS ${RESOURCE})
 

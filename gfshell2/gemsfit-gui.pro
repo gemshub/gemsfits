@@ -93,4 +93,7 @@ CONFIG(release, debug|release): LIBS += -lejdb2 -lyaml-cpp
 CONFIG(debug, debug|release): LIBS += -lejdb2 -lyaml-cpp
 }
 
+contains(DEFINES, USE_THERMOFUN) {
+  LIBS += -lThermoFun -lChemicalFun
+} ## end USE_THERMOFUN
 

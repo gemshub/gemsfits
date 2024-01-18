@@ -97,6 +97,7 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
         /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING
         /DNOMINMAX
     )
+    add_definitions(-DbuildWIN32)
 endif()
 
 # Set the headers directory path
