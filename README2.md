@@ -31,7 +31,6 @@ git clone --recurse-submodules https://svetadmitrieva@bitbucket.org/gems4/gemsfi
 
 ### How to build gemsfits applications (on Ubuntu Linux)
 
-
 * Make sure you have g++, cmake and git installed. If not, install them:
 
 ```sh
@@ -48,7 +47,7 @@ In order to build the gemsfits library on Ubuntu Linux or MacOS, first execute t
 
 ```sh
 
-cd gemsfits
+cd ~/gemsfits
 ./gemsfits-install-dependencies.sh  [ OLD_EJDB ]
 
 ```
@@ -61,28 +60,10 @@ To build gemsfits and install it in your home directory or in the system directo
 cd ~/gemsfits
 mkdir build
 cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/home/<you>/Qt/6.5.0/gcc_64  [ -DUSE_OLD_EJDB=OFF ] 
+cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/home/<you>/Qt/6.5.0/gcc_64  [ -DUSE_OLD_EJDB=ON ]
 make -j 4
 ```
 
-### How to run gemsfits applications 
-
-* gemsfit3
-
-To start the application, open a terminal window and execute:
-
-```sh
-cd ~/gemsfits/build/bin
-./gemsfit3 ...
-
-```
-
-* To run Qt GUI launcher, execute the following (or use *gemsfits/gfshell2/gemsfit-gui.pro* with QtCreator):
-
-```sh
-cd ~/gemsfits/build/bin
-./shellfit3
-```
 
 ### How to build gemsfits applications (on conda-devenv)
 
@@ -105,13 +86,39 @@ Once this step is successfully completed, you can activate the `gemsfits` conda 
 conda activate gemsfits
 ```
 
+In order to build the 'gemsfits' library on Linux or MacOS, first execute the following:
+
+```sh
+./conda-install-dependencies.sh  [ OLD_EJDB ]
+```
+
 Now it's time to use `cmake` to configure and build the C++ applications:
 
 ```sh
-cmake -S . -B build
+
+cmake -S . -B build   [ -DUSE_OLD_EJDB=ON ]
 cmake --build build --parallel
 ```
 
 This step will produce (inside the created directory `gemsfits/build`):
 
+
+### How to run gemsfits applications
+
+* gemsfit3
+
+To start the application, open a terminal window and execute:
+
+```sh
+cd ~/gemsfits/build/bin
+./gemsfit3 ...
+
+```
+
+* To run Qt GUI launcher, execute the following (or use *gemsfits/gfshell2/gemsfit-gui.pro* with QtCreator):
+
+```sh
+cd ~/gemsfits/build/bin
+./shellfit3
+```
 

@@ -25,7 +25,7 @@ sudo rm -f /usr/local/lib/libiowow*.*
 
 BUILD_TYPE=Release
 threads=3
-USING_EJDB=OLD_EJDB #EJDB2 #$1 # OLD_EJDB
+USING_EJDB=$1 #EJDB2 #$1 # OLD_EJDB
 BASEDIR=${PWD}
 echo "Script location: ${BASEDIR}"
 
@@ -52,6 +52,8 @@ test -f /usr/local/lib/libnlopt.$EXTN || {
 # EJDB2 is an embeddable JSON database engine.
 if [ "$USING_EJDB" == "OLD_EJDB" ];
   then
+
+  echo "Using ejdb1"
   # git checkout v1.2.12
   test -f /usr/local/lib/libejdb.$EXTN || {
 
@@ -70,10 +72,12 @@ if [ "$USING_EJDB" == "OLD_EJDB" ];
           cd ~ && \
                    rm -rf ~/code
   }
+
   else
+
+  echo "Using ejdb2"
   test -f /usr/local/lib/libejdb2.$EXTN || {
 
-        echo "Using ejdb2"
         CMAKE_PATH=/home/sveta/Install/bin/cmake
         # Building ejdb library
         # https://geeksww.com/tutorials/operating_systems/linux/installation/downloading_compiling_and_installing_cmake_on_linux.php

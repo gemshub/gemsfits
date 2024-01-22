@@ -6,7 +6,7 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     EXTN=so
 fi
 
-USING_EJDB=EJDB2 #EJDB2 #$1 # OLD_EJDB
+USING_EJDB=$1 #EJDB2 #$1 # OLD_EJDB
 BASEDIR=${PWD}
 echo "Script location: ${BASEDIR}"
 
