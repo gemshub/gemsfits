@@ -14,8 +14,6 @@ dependencies:
   - boost-cpp=1.83.0
   - armadillo # [unix]
   - nlopt
-  #- platformdirs # [win]
-  #- distro # [win]
   - qt6-main=6.6.0
   - qt6-charts=6.6.0
   #- qt-main=5.15.8

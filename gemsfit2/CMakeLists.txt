@@ -34,7 +34,7 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
                                       ${MUPARSER_HEADER_FILES} ${MUPARSER_SOURCE_FILES})
    target_link_libraries(gemsfit-static
                             PUBLIC Boost::system
-                            PUBLIC libejdb
+                            PUBLIC ${EJDB_WIN_LIB}
                             PUBLIC yaml-cpp)
    if(USE_THERMOFUN MATCHES ON)
          target_link_libraries(gemsfit-static PUBLIC ThermoFun::ThermoFun)

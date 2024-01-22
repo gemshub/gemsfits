@@ -33,10 +33,10 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # Define which types of libraries to build
 option(USE_THERMOFUN "Use ThermoFun" OFF)
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-  option(USE_OLD_EJDB "Compile using ejdb1" ON)
+  option(USE_OLD_EJDB "Compile using ejdb1" OFF)
   option(BUILD_GUI "Build Qt GUI shell" ON)
 else()
-  option(USE_OLD_EJDB "Compile using ejdb1" ON)
+  option(USE_OLD_EJDB "Compile using ejdb1" OFF)
   option(BUILD_GUI "Build Qt GUI shell" ON)
 endif()
 
@@ -68,6 +68,8 @@ if(NOT CMAKE_BUILD_TYPE)
     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 endif()
 
+# Find all gemsfits dependencies
+include(gemsfitsFindDeps)
 
 # Set the list of compiler flags for GNU compiler
 if(${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
@@ -103,24 +105,16 @@ endif()
 # Set the headers directory path
 set(COMMON_DIR "${CMAKE_SOURCE_DIR}/common")
 set(GEMS3K_DIR "${CMAKE_SOURCE_DIR}/standalone/GEMS3K")
-set(EJDB_DIR "${CMAKE_SOURCE_DIR}/gemsfit2/tcejdb_win32-64")
 
 # Set the include directories
 include_directories(${COMMON_DIR})
 include_directories(${GEMS3K_DIR})
 include_directories("${CMAKE_SOURCE_DIR}/standalone")
+
 if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
     include_directories("/usr/local/include")
     link_directories("/usr/local/lib")
 endif()
-if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-    include_directories("${EJDB_DIR}/include")
-    link_directories("${EJDB_DIR}/lib")
-    link_directories("${EJDB_DIR}/bin")
-endif()
-
-# Find all gemsfits dependencies
-include(gemsfitsFindDeps)
 
 # Set some necessary definitions
 add_definitions(-DIPMGEMPLUGIN)
@@ -130,8 +124,25 @@ if(USE_OLD_EJDB MATCHES ON)
   add_definitions(-DOLD_EJDB)
   add_definitions(-DCHECK_LOAD)
   set(EJDB_LIB ejdb)
+
+  if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+    set(EJDB_DIR "${CMAKE_SOURCE_DIR}/gemsfit2/tcejdb_win32-64")
+    include_directories("${EJDB_DIR}/include")
+    link_directories("${EJDB_DIR}/lib")
+    link_directories("${EJDB_DIR}/bin")
+    set(EJDB_WIN_LIB libejdb)
+  endif()
+
 else()
+
   set(EJDB_LIB ejdb2)
+  if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+      set(EJDB_DIR "${CMAKE_SOURCE_DIR}/gemsfit2/ejdb2_win32-64")
+      include_directories("${EJDB_DIR}/include")
+      link_directories("${EJDB_DIR}/lib")
+      link_directories("${EJDB_DIR}/bin")
+      set(EJDB_WIN_LIB libejdb2)
+  endif()
 endif()
 
 if(USE_THERMOFUN MATCHES ON)
