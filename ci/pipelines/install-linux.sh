@@ -22,7 +22,7 @@ mkdir build
 cd build
 # Configure step
 cmake -GNinja \
-    -DUSE_OLD_EJDB=ON
+    -DUSE_OLD_EJDB=ON \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_LIBDIR=lib \
     ..
