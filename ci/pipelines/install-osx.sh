@@ -17,11 +17,12 @@ conda update -q conda
 conda info -a
 conda devenv
 source activate gemsfits
-./conda-install-dependencies.sh
+./conda-install-dependencies.sh OLD_EJDB
 mkdir build
 cd build
 # Configure step
 cmake  \
+    -DUSE_OLD_EJDB=ON \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_LIBDIR=lib \
     ..
