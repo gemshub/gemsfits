@@ -945,8 +945,23 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
                              case DC_SOL_MINDEP:
                              case DC_SOL_MAJDEP:
                              case DC_SCM_SPECIES:
+                             case DC_SSC_A0:
+                             case DC_SSC_A1:
+                             case DC_SSC_A2:
+                             case DC_SSC_A3:
+                             case DC_SSC_A4:
+                             case DC_WSC_A0:
+                             case DC_WSC_A1:
+                             case DC_WSC_A2:
+                             case DC_WSC_A3:
+                             case DC_WSC_A4:
+                             case DC_IESC_A:
+                             case DC_IEWC_B:
                              case DC_PEL_CARRIER:
                              case DC_SUR_MINAL:
+                             case DC_SUR_GROUP:
+                             case DC_SUR_COMPLEX:
+                             case DC_SUR_IPAIR:
                              case DC_SUR_CARRIER: // mol/kg
                                         value = sys->NodT[i]->Get_nDC(DCndx)/sys->NodT[i]->Ph_Mass(PHndx);
                                         if (objfun.exp_unit == keys::Lkg_dry )
