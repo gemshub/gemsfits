@@ -669,11 +669,11 @@ void TGfitTask:: print_global_results ()
         {
             if (aTfun[i].objfun[j].isComputed)
             {
-                gpf->fres << setprecision(prec) << aTfun[i].objfun[j].results.measured_value <<","<<
-                             setprecision(prec) << aTfun[i].objfun[j].results.computed_value << ","<<
-                             setprecision(prec) << aTfun[i].objfun[j].results.residual<<","/*<< aTfun[i].objfun[j].results.WTfun_residual << ","*/ <<
-                             setprecision(prec) << (100*aTfun[i].objfun[j].results.residual/aTfun[i].objfun[j].results.measured_value)<<","<<
-                             setprecision(prec) << aTfun[i].objfun[j].results.weight <<",";
+                gpf->fres << std::setprecision(prec) << aTfun[i].objfun[j].results.measured_value <<","<<
+                             std::setprecision(prec) << aTfun[i].objfun[j].results.computed_value << ","<<
+                             std::setprecision(prec) << aTfun[i].objfun[j].results.residual<<","/*<< aTfun[i].objfun[j].results.WTfun_residual << ","*/ <<
+                             std::setprecision(prec) << (100*aTfun[i].objfun[j].results.residual/aTfun[i].objfun[j].results.measured_value)<<","<<
+                             std::setprecision(prec) << aTfun[i].objfun[j].results.weight <<",";
             } else
                 gpf->fres << ","<< ","<<","<< ","<< ",";
 
