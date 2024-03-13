@@ -160,8 +160,8 @@ bool TMatrixModel::setData( const QModelIndex &index, const QVariant& value, int
 QVariant TMatrixModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
     switch( role )
-    { case Qt::DisplayRole:
-
+    {
+    case Qt::DisplayRole:
         if( orientation == Qt::Horizontal )
         {
             QString valh = colHeads.at(section);
@@ -396,7 +396,9 @@ void TMatrixModel::setGraphData( QSortFilterProxyModel *pmodel,  const std::stri
         chart_models.push_back( std::shared_ptr<jsonui17::ChartDataModel>( new jsonui17::ChartDataModel( pmodel )) );
         chart_models[0]->setXColumns( xColumns );
         chart_models[0]->setYColumns( yColumns, true );
-        chart_data = std::make_shared<jsonui17::ChartData>( chart_models, title, "x", "y" );
+        std::string x_name = (xColumns.size()>0 ? colHeads.at(xColumns.back()).toStdString() : "index");
+        std::string y_name = (yColumns.size()>0 ? colHeads.at(yColumns.back()).toStdString() : "y");
+        chart_data = std::make_shared<jsonui17::ChartData>( chart_models, title, x_name, y_name );
         connect( pmodel, &QSortFilterProxyModel::layoutChanged,
                  [this]() { chart_models.back()->modelSortUpdated(); });
    }
