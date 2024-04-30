@@ -273,27 +273,28 @@ void Data_Manager::get_db_specs_txt()
         gpf->KeysNdx = 1;
     }
     if (DBname.empty())  {
-        std::cout << "Error: No keyword for \""
+        std::cout << "Error: No value for \""
                   << keys::DBPath[0]<<"\" or \""
                   << keys::DBPath[1]<<"\" found in the task definition" << std::endl;
         exit(1);
     }
     collection = db_specs_object.value(keys::DBColl[mode], std::string());
     if (collection.empty()) {
-        std::cout << "Error: No keyword for \""
+        std::cout << "Error: No value for \""
                   << keys::DBColl[mode]<<"\" found in the task definition" << std::endl;
         exit(1);
     }
     DataSelect = db_specs_object[keys::DSelect[mode]].dump();
-    if (DataSelect.empty()) {
-        std::cout << "Error: No keyword for \""
-                  <<keys::DSelect[mode]<<"\" found in the task definition"
-                 << std::endl;
-        exit(1);
-    }
+    // "DataSelect" :  "", for select all DM 30.04.2024, if no DataSelect is present, the same effect
+    //if (DataSelect.empty()) {
+    //    std::cout << "Error: No value for \""
+    //              <<keys::DSelect[mode]<<"\" found in the task definition"
+    //             << std::endl;
+    //    exit(1);
+    //}
     DataTarget = db_specs_object[keys::DTarget[mode]].dump();
     if (DataTarget.empty())  {
-        std::cout << "Error: No keyword for \""
+        std::cout << "Error: No value for \""
                   << keys::DTarget[mode] <<"\" found in the task definition" << std::endl;
         exit(1);
     }
@@ -301,7 +302,7 @@ void Data_Manager::get_db_specs_txt()
 
     std::string gems_path = db_specs_object.value(keys::G3Ksys[mode], std::string());
     if (gems_path.empty()) {
-        std::cout << "Error: No keyword for \""
+        std::cout << "Error: No value for \""
                   << keys::G3Ksys[mode]<<"\" found in the task definition" << std::endl;
         exit(1);
     }
@@ -315,7 +316,7 @@ void Data_Manager::get_db_specs_txt()
     //OptSet = db_specs_object[keys::OptSet[mode]].dump();
     OptSet = db_specs_object.value(keys::OptSet[mode], std::string());
     if (OptSet.empty()) {
-        std::cout << "Error: No keyword for \""
+        std::cout << "Error: No value for \""
                   <<keys::OptSet[mode]<<"\" found in the task definition" << std::endl;
         exit(1);
     }
