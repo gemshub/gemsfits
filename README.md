@@ -1,8 +1,9 @@
-# GEMSFITS #
-
+# GEMSFITS 
 Code and Graphical Shell for GEM Input Parameter Optimization and Inverse Modelling
+Linux, OSX, Windows
 
-## What GEMSFITS can do? ##
+
+## What GEMSFITS can do? 
 
 * Can fit internally consistent input parameters of chemical thermodynamic models against the experimental data
 * Is coupled with the GEMS3K code for Gibbs Energy Minimization calculation of equilibrium states
@@ -20,140 +21,120 @@ If you find GEMSFITS useful for your research applications, please cite the foll
 * Kulik D.A., Wagner T., Dmytrieva S.V., Kosakowski G., Hingerl F.F., Chudnenko K.V., Berner U. (2013): GEM-Selektor geochemical modeling package: revised algorithm and GEMS3K numerical kernel for coupled simulation codes. Computational Geosciences 17, 1-24, [doi](http://dx.doi.org/10.1007/s10596-012-9310-6).
 * Wagner T., Kulik D.A., Hingerl F.F., Dmytrieva S.V. (2012): GEM-Selektor geochemical modeling package: TSolMod library and data interface for multicomponent phase models. Canadian Mineralogist 50, 1173-1195, [doi](http://dx.doi.org/10.3749/canmin.50.5.1173).
 
-## How to download GEMSFITS source code? ##
 
-In your home directory, make a folder named e.g. ~/gitGEMSFIT with two subfolders ~/gitGEMSFIT/gemsfits and ~/gitGEMSFIT/standalone.
+## How to clone (download) the GEMSFITS source code?
 
-## Prepare building tools
+*  Download gemsfits source code using git clone command:
 
-* Make sure you have g++, cmake and git installed. If not, install them (on Ubuntu Linux):
+```sh
+
+git clone --recurse-submodules https://bitbucket.org/gems4/gemsfits.git
 
 ```
-#!bash
+
+
+## How to build GEMSFITS Ubuntu Linux and MacOS?
+
+* Make sure you have g++, CMake and [Qt6](https://doc.qt.io/qt-6/get-and-install-qt.html) installed. If not, install them:
+
+```sh
+
 sudo apt-get install g++ cmake git
+
 ```
 
-### Clone the GEMSFITS repository ###
+For MacOS, make sure that Homebrew is installed (see [Homebrew web site](http://brew.sh) )
+   
 
-Change into ~/gitGEMSFIT/gemsfits folder and clone this repository from https://bitbucket.org/gems4/gemsfits.git using a preinstalled free git client SourceTree or SmartGit (the best way on Windows). 
+* Install Dependencies
 
-Alternatively on Mac OS X or linux, open a terminal, cd ~/gitGEMSFIT/gemsfits and type in the command line (do not forget a period at the end):
-~~~
-git clone https://bitbucket.org/gems4/gemsfits.git .
-~~~
-Check that the active branch is master: in terminal, cd to ~/gitGEMSFIT/gemsfits and run a command 
-~~~
-git branch 
-~~~
-which should return "* master". If not, run the commands
-~~~
-git checkout -b master --track origin/master
-git pull origin master
-~~~
+In order to build the gemsfits library on Ubuntu Linux or MacOS, first execute the following (may ask your sudo password):
 
-### Clone the GEMS3K repository ###
+```sh
 
-Change into ~/gitGEMSFIT/standalone folder and clone the GEMS3K repository from https://bitbucket.org/gems4/gems3k.git using the git client.
+cd ~/gemsfits
+./gemsfits-install-dependencies.sh  [ OLD_EJDB ]
 
-Alternatively on Mac OS X or linux terminal cd ~/gitGEMSFIT/standalone and run a command (do not forget a period at the end):
-~~~
-git clone https://bitbucket.org/gems4/gems3k.git . 
-~~~
+```
 
-Switch the GEMS3K code repository to a git branch branches/dev-gemsfits using the git client, or in terminal, run the commands
-~~~
-git checkout dev-gemsfits
-~~~
+* Build gemsfits applications
 
-## How to build GEMSFITS on linux? ##
+To build gemsfits and install it in your home directory or in the system directory (as in the example below), a typical sequence of commands can be executed in the terminal:
 
-Make sure that you have the following packages installed (on debian-type linuxes such as Kubuntu 15.10) by running in the terminal:
-~~~
-sudo apt-get update
-sudo apt-get install libarmadillo-dev libjansson-dev libboost-all-dev libomp5
-~~~
-or install equivalent packages, if you have another linux desktop.
-
-Ubuntu > 20 
-~~~
-sudo apt install libarmadillo-dev libjansson-dev libboost-all-dev libomp-11-dev
-~~~
-
-Download and install NLopt library from source:
-
-download [NLopt v2.7.0](https://github.com/stevengj/nlopt/archive/v2.7.0.tar.gz), extract the archive
-
-~~~
-cd nlopt-2.7.0
+```sh
+cd ~/gemsfits
 mkdir build
 cd build
-cmake ..
-make
-sudo make install
-~~~
+cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/home/<you>/Qt/6.5.0/gcc_64  [ -DUSE_OLD_EJDB=ON ]
+make -j 4
+```
 
-Install EJDB library from source : 
+### Compiling gemsfits applications in Qt Creator
 
-~~~
-git clone https://github.com/Softmotions/ejdb.git
-cd ejdb
-git checkout v1.2.12 
-mkdir build
-cd build
-cmake -DCMAKE_BUILD_TYPE=Release ../
-make
-sudo make install
-~~~
+* In Qt Creator open ~/gemsfits/gemsfit2/gemsfit2.pro
+* Set the build folder to ~/gemsfits/gemsfit2-build
+* In Qt Creator open ~/gemsfits/gfshell2/gemsfit2-gui.pro
+* Set the build folder to ~/gemsfits/gfshell2-build
+* After the successful compilation try to run gemsfit2-gui GUI from Qt Creator. 
 
-Download, unzip and install yaml-cpp library from source - [download here](https://github.com/jbeder/yaml-cpp/releases/tag/yaml-cpp-0.6.3):
 
-~~~
-cd yaml-cpp-yaml-cpp-0.6.3
-mkdir build
-cd build
-cmake ..
-make
-sudo make install
-~~~
+### How to build gemsfits applications (on conda-devenv)
 
-If building from source fails (problems in Ubuntu) try the following command: 
+Before building `gemsfits`, make sure you have the `conda-devenv` tool installed. Otherwise, run the following command in a terminal (assuming here that `conda` is already installed!):
 
-~~~
-sudo apt-get install libyaml-cpp-dev
-~~~
+```sh
+conda install conda-devenv
+```
 
-Make sure that you have the complete Qt5 toolkit (with QtCreator) installed either in the system or locally after downloading from [qt.io](http://www.qt.io/download/) site. Select Qt Cumstom installation, then expand Qt and version 5.15.2 where you need to select "Desktop gcc 64 bit", "QT Charts" and "Qt WebEngine".
+We will use this tool now to create the `gemsfits` conda environment which contains all the dependencies for building `gemsfits` code. In the terminal, do:
 
-Qt5 should be installed in the local user folder: home/<user>/Qt/5. ...
+```sh
+cd path/to/gemsfits
+conda devenv
+```
 
-Optional
+Once this step is successfully completed, you can activate the `gemsfits` conda environment as follows:
 
-On latest versions of Linux, Qt5 is available for installation in the system. For example on Ubuntu 15.10 it can be installed using a command:
-~~~
-sudo apt-get install qt5-default qtcreator
-~~~ 
+```sh
+conda activate gemsfits
+```
 
-If error "Unknown module(s) in QT:" "help" or "svg" appears, try the following command:
-~~~
-sudo apt-get install qttools5-dev libqt5svg5-dev
-~~~
+In order to build the 'gemsfits' library on Linux or MacOS, first execute the following:
 
-### Build the gemsfit2 code ###
+```sh
+./conda-install-dependencies.sh  [ OLD_EJDB ]
+```
 
-In QtCreator, open a project  ~/gitGEMSFIT/gemsfits/gemsfit2/gemsfit2.pro and configure it to build release (or debug) into ~/gitGEMSFIT/gemsfits/gemsfit2-build folder. Then run qmake and build the gemsfit2 executable code. 
+Now it's time to use `cmake` to configure and build the C++ applications:
 
-### Build and run the gemsfits code ###
+```sh
 
-If you are using QT installed in your home folder you will probably encounter an error about missing gl.h when building with QT. To avoid this do:
-~~~
-sudo apt-get install build-essential libgl1-mesa-dev libxcb-xinerama0
-~~~
+cmake -S . -B build   [ -DUSE_OLD_EJDB=ON ]
+cmake --build build --parallel
+```
 
-In QtCreator, open a project  ~/gitGEMSFIT/gemsfits/gfshell2/gemsfit-gui.pro and configure it to build release (or debug) into ~/gitGEMSFIT/gemsfits/gfshell-build folder. Then run qmake and build the gemsfits executable code.
+This step will produce (inside the created directory `gemsfits/build`):
 
-Launch the gemsfits code (without command-line parameters) from QtCreator and open its help window to learn how to use it. The gemsfit2 code will be called from within the gemsfits GUI code when necessary.
 
-## TBD ###
+### How to run gemsfits applications
+
+* gemsfit3
+
+To start the application, open a terminal window and execute:
+
+```sh
+cd ~/gemsfits/build/bin
+./gemsfit3 ...
+
+```
+
+* To run Qt GUI launcher, execute the following (or use *gemsfits/gfshell2/gemsfit-gui.pro* with QtCreator):
+
+```sh
+cd ~/gemsfits/build/bin
+./shellfit3
+```
+
 
 ## License ##
 
