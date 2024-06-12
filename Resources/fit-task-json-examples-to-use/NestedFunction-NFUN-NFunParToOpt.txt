@@ -3,7 +3,7 @@
 ##########################################################################################
 
 # Nested function to fix the pH of each experiment to the measured value by acid/base titration
-
+          "NFUN" :   [
                {
                     "EPH" :   "aq_gen",
                     "CT" :   "prop",
@@ -18,6 +18,30 @@
                     ],
                     "unit" :   "-loga"
                }
+          ],
+               
+# Nested function to fix the pH of each experiment to the measured value at given temperature (e.g., 25 C), then do the 
+# paramter fit at the temperature of the experiments (using the acid/base composition derived at e.g., 25 C)
+
+          "NFUN" :   [
+               {
+                    "PType" :   "T-P",
+                    "sT" :   25,
+                    "sP" :   1,
+                    "EPH" :   "aq_gen",
+                    "CT" :   "prop",
+                    "CN" :   "pH",
+                    "Tformula" :   [
+                         "NaOH",
+                         "HCl"
+                    ],
+                    "Telem" :   [
+                         "Na",
+                         "Cl"
+                    ],
+                    "unit" :   "-loga"
+               }
+          ],
                
 # above nested function needs:
      "NFunParToOpt" :   {
