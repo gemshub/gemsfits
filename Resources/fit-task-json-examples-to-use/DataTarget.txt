@@ -33,7 +33,7 @@
                     "EPH" :   "aq_gen",
                     "CT" :   "prop",
                     "CN" :   "pH",
-                    "unit" :   " -loga",
+                    "unit" :   "-loga",
                     "WT" :   1
                },
 # compare measured and calculated molar ratio MR e.g. Ca/Si in C-S-H
@@ -117,7 +117,7 @@
                     "CT" :   "comp",
                     "CN" :   "NaOH"
                },
-# write amount of species in a phase
+# write amount of species in a phase unit mol or log_molal (log10 concntation in aq phase)
                {
                     "SRC" :   "calc",
                     "EPH" :   "IllEdS",
@@ -141,5 +141,15 @@
                     "EPH" : "Gibbsite",
                     "CT" : "prop",
                     "CN" : "SI"
+               },
+               
+# wrrit the G0 of species @ the temperature and pressure of the sample / experiment, unit kJ/mol, mol/mol (divided by RT), default J/mol
+               {
+                    "SRC" :   "calc",
+                    "EPH" :   "aq_gen",
+                    "CT" :   "DC",
+                    "CN" :   "AlOH+2",
+                    "DCP" :   "G0@T",
+                    "unit" :   "J/mol"
                },
 

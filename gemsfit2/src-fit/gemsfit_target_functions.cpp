@@ -1176,6 +1176,16 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFun
             computed_value = log10(sys->NodT[i]->DC_c( DCndx ) / 100000);
 //         else computed_value = sys->NodT[i]->DC_c( DCndx, true );
     } else
+    if ((objfun.exp_DCP == keys::G0_T) && (DCndx >=0))
+    {
+         if (objfun.exp_unit == keys::kJ_mol)
+            computed_value = sys->NodT[i]->DC_G0(DCndx, sys->NodT[i]->Get_P() , sys->experiments[i]->sT+273.15/*sys->experiments[i]->sP*1e5*/, false)/1000;
+         else if (objfun.exp_unit == keys::mol_mol)
+            computed_value = sys->NodT[i]->DC_G0(DCndx, sys->NodT[i]->Get_P() , sys->experiments[i]->sT+273.15/*sys->experiments[i]->sP*1e5*/, true);
+            else {
+                computed_value = sys->NodT[i]->DC_G0(DCndx, sys->NodT[i]->Get_P() , sys->experiments[i]->sT+273.15/*sys->experiments[i]->sP*1e5*/, false);
+            }
+    } else
     { if (DCndx < 0)
          {
              std::cout << "Error: "<< dcomp_name <<" is not present in the GEMS3K CSD files "; exit(1);
