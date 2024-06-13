@@ -135,6 +135,7 @@ static const char *expphases        = "expphases"; //	               1    array	
               static const char *activity ="activity";
               static const char *PpG      ="PpG"; //                        string          dependent component in gas phase partial pressure
                         // with Qerror and Qunit
+        static const char *G0_T     = "G0@T"; //                                             Gibbs free energy @ temperature of the experiment
         // Phase properties
     static const char *phprop       = "phprop"; //                      2    array		    known bulk properties of the phase
         static const char *property = "prop"; //                        3    string         name of property category
@@ -242,6 +243,7 @@ static const char *log_molfrac      = "log_molfrac";
 static const char *ln_molfrac       = "ln_molfrac";
 static const char *g_cm3            = "g/cm3"; //                            string          density, g/cm3
 static const char *Volts            = "Volts"; //                            string          Eh, V
+static const char *mol_mol          = "mol/mol"; //                          string          energy mol/mol divided by RT
 static const char *J_mol            = "J/mol"; //                            string          energy per mole, J/mol
 static const char *kJ_mol           = "kJ/mol"; //                           string          energy per mole, kJ/mol
 static const char *bar              = "bar"; //                              string          bar = 10^5 Pa

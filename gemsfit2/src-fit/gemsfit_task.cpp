@@ -1607,10 +1607,8 @@ void TGfitTask::calc_logK_TP ()
                 for (unsigned e=0; e <Opti->optParam.size(); e++)
                 {
                     if (Opti->optParam[e]->Get_optType() == "G0")
-                    Opti->optParam[e]->Set_logKTP(FlogK[i].Rndx, calc_logK_dT(FlogK[i].Fcoef, TP_pairs[0][j] + 273.15, Pbar, FlogK[i].Rndx-1, e ) );
+                    Opti->optParam[e]->Set_logKTP(FlogK[i].Rndx, calc_logK_dT(FlogK[i].Fcoef, TP_pairs[0][j] + 273.15, Pbar, FlogK[i].Rndx, e ) );
                 }
-
-
             } else
             if (FlogK[i].Ftype == "logK_dRHOw")
             {

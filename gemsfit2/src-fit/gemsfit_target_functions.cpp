@@ -945,8 +945,23 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
                              case DC_SOL_MINDEP:
                              case DC_SOL_MAJDEP:
                              case DC_SCM_SPECIES:
+                             case DC_SSC_A0:
+                             case DC_SSC_A1:
+                             case DC_SSC_A2:
+                             case DC_SSC_A3:
+                             case DC_SSC_A4:
+                             case DC_WSC_A0:
+                             case DC_WSC_A1:
+                             case DC_WSC_A2:
+                             case DC_WSC_A3:
+                             case DC_WSC_A4:
+                             case DC_IESC_A:
+                             case DC_IEWC_B:
                              case DC_PEL_CARRIER:
                              case DC_SUR_MINAL:
+                             case DC_SUR_GROUP:
+                             case DC_SUR_COMPLEX:
+                             case DC_SUR_IPAIR:
                              case DC_SUR_CARRIER: // mol/kg
                                         value = sys->NodT[i]->Get_nDC(DCndx)/sys->NodT[i]->Ph_Mass(PHndx);
                                         if (objfun.exp_unit == keys::Lkg_dry )
@@ -1160,6 +1175,16 @@ double residual_phase_dcomp (int i, int p, int dc, int dcp, TGfitTask::TargetFun
             // default log10bar
             computed_value = log10(sys->NodT[i]->DC_c( DCndx ) / 100000);
 //         else computed_value = sys->NodT[i]->DC_c( DCndx, true );
+    } else
+    if ((objfun.exp_DCP == keys::G0_T) && (DCndx >=0))
+    {
+         if (objfun.exp_unit == keys::kJ_mol)
+            computed_value = sys->NodT[i]->DC_G0(DCndx, sys->NodT[i]->Get_P() , sys->experiments[i]->sT+273.15/*sys->experiments[i]->sP*1e5*/, false)/1000;
+         else if (objfun.exp_unit == keys::mol_mol)
+            computed_value = sys->NodT[i]->DC_G0(DCndx, sys->NodT[i]->Get_P() , sys->experiments[i]->sT+273.15/*sys->experiments[i]->sP*1e5*/, true);
+            else {
+                computed_value = sys->NodT[i]->DC_G0(DCndx, sys->NodT[i]->Get_P() , sys->experiments[i]->sT+273.15/*sys->experiments[i]->sP*1e5*/, false);
+            }
     } else
     { if (DCndx < 0)
          {
