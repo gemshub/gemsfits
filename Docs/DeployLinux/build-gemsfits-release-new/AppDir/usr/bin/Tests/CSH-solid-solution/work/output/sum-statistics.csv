@@ -1,0 +1,55 @@
+Statistics-Parameter,Value
+Number-of-measurements,176
+Number-of-parameters,8
+Number-of-runs-needed-for-regression,2
+Degrees-of-freedom,168
+Value-of-the-minimized-function-sum,2.98128
+Sum-of-absolute-values-of-residuals,723.397
+Standard-deviation-of-residuals,21.506
+Average-residual,3.07012e-06
+Maximum-residual,0.207678
+Minimum-residual,-0.0651708
+Number-of-positive-residuals,99
+Number-of-negative-residuals,77
+Coefficient-of-determination-R^2,-4.70746
+, ,
+OFUN-IC-Ca,
+minimized-function-sum-(30%-of-total),0.9
+Standard-deviation-of-residuals,0.28
+Average-residual,0.072
+Maximum-residual,0.61
+Minimum-residual,-0.3
+Number-of-positive-residuals,23
+Number-of-negative-residuals,21
+Coefficient-of-determination-R^2,0.64
+, ,
+OFUN-IC-Si,
+minimized-function-sum-(53%-of-total),1.6
+Standard-deviation-of-residuals,0.53
+Average-residual,-0.64
+Maximum-residual,0.23
+Minimum-residual,-1.5
+Number-of-positive-residuals,7
+Number-of-negative-residuals,37
+Coefficient-of-determination-R^2,0.28
+, ,
+OFUN-MR-Ca/Si,
+minimized-function-sum-(0.053%-of-total),0.0016
+Standard-deviation-of-residuals,0.023
+Average-residual,0.0015
+Maximum-residual,0.036
+Minimum-residual,-0.072
+Number-of-positive-residuals,30
+Number-of-negative-residuals,14
+Coefficient-of-determination-R^2,0.32
+, ,
+OFUN-prop-mChainL,
+minimized-function-sum-(17%-of-total),0.5
+Standard-deviation-of-residuals,41
+Average-residual,-10
+Maximum-residual,8.1
+Minimum-residual,-1.4e+02
+Number-of-positive-residuals,39
+Number-of-negative-residuals,5
+Coefficient-of-determination-R^2,-12
+, ,

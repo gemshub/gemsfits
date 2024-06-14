@@ -75,16 +75,34 @@ sudo apt-get install libarmadillo-dev libjansson-dev libboost-all-dev libomp5
 or install equivalent packages, if you have another linux desktop.
 
 Ubuntu > 20 
+
+In terminal, run the script
+
+~~~
+ /gemsfits/gemsfits-install-dependencies.sh
+~~~
+
+and proceed to "building" section below. 
+
+Alternatively, you can in old fashion execute parts of this script in terminal as follows:
+
 ~~~
 sudo apt install libarmadillo-dev libjansson-dev libboost-all-dev libomp-11-dev
 ~~~
 
-Download and install NLopt library from source:
-
-download [NLopt v2.7.0](https://github.com/stevengj/nlopt/archive/v2.7.0.tar.gz), extract the archive
+In terminal, run the script
 
 ~~~
-cd nlopt-2.7.0
+ /gemsfits/gemsfits-install-dependencies.sh
+~~~
+
+Alternatively, you can execute parts of this script as follows:
+
+Download and install NLopt library from source:
+
+~~~
+git clone https://github.com/stevengj/nlopt.git
+cd nlopt
 mkdir build
 cd build
 cmake ..
@@ -146,7 +164,7 @@ In QtCreator, open a project  ~/gitGEMSFIT/gemsfits/gemsfit2/gemsfit2.pro and co
 
 If you are using QT installed in your home folder you will probably encounter an error about missing gl.h when building with QT. To avoid this do:
 ~~~
-sudo apt-get install build-essential libgl1-mesa-dev libxcb-xinerama0
+sudo apt-get install build-essential libgl1-mesa-dev libxcb-xinerama0 libxcb-cursor0
 ~~~
 
 In QtCreator, open a project  ~/gitGEMSFIT/gemsfits/gfshell2/gemsfit-gui.pro and configure it to build release (or debug) into ~/gitGEMSFIT/gemsfits/gfshell-build folder. Then run qmake and build the gemsfits executable code.

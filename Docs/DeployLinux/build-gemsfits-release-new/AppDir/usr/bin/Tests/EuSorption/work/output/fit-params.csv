@@ -1,0 +1,5 @@
+ptype,parameter,name,init.value,fittted.value,mc.mean,mc.stdev,confi99,confi95,confi90,CSS.sensitivity,correl.coef.=iSsOEu(CO3)2-2,correl.coef.=iSsOEuCO3@,correl.coef.=iSsOEuOHCO3-,correl.coef.=iSvOEuCO3@,
+F,G0,=iSsOEu(CO3)2-2,-1933455.3,-1945290.33356,,,,,,444.646814319,1,-0.1651,0.0447,0.01831,
+F,G0,=iSsOEuCO3@,-1387773.3,-1397197.35308,,,,,,423.910527022,-0.1651,1,0.06331,-0.3609,
+F,G0,=iSsOEuOHCO3-,-1570554.01,-1567857.03225,,,,,,1.98620138481,0.0447,0.06331,1,0.02275,
+F,G0,=iSvOEuCO3@,-1372084.90626,-1372409.47696,,,,,,1.22677947399,0.01831,-0.3609,0.02275,1,

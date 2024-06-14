@@ -1,0 +1,64 @@
+##########################################################################################
+# NFUN elements
+##########################################################################################
+
+# Nested function to fix the pH of each experiment to the measured value by acid/base titration
+
+               {
+                    "EPH" :   "aq_gen",
+                    "CT" :   "prop",
+                    "CN" :   "pH",
+                    "Tformula" :   [
+                         "NaOH",
+                         "HCl"
+                    ],
+                    "Telem" :   [
+                         "Na",
+                         "Cl"
+                    ],
+                    "unit" :   "-loga"
+               }
+               
+# above nested function needs:
+     "NFunParToOpt" :   {
+          "bIC" :   [
+               {
+                    "ICN" :   "Cl",
+                    "PType" :   "F",
+                    "NFndx" :   0,
+                    "IV" :   0.0109558194127147,
+                    "UB" :   4,
+                    "LB" :   1e-05
+               },
+               {
+                    "NFndx" :   0,
+                    "ICN" :   "H",
+                    "PType" :   "L",
+                    "IV" :   44.5761406330092,
+                    "LICs" :   [
+                         "Na",
+                         "Cl"
+                    ],
+                    "LCoef" :   [
+                         1,
+                         1
+                    ]
+               },
+               {
+                    "NFndx" :   0,
+                    "ICN" :   "Na",
+                    "PType" :   "F",
+                    "IV" :   0.00821315904404505,
+                    "UB" :   4,
+                    "LB" :   1e-05
+               },
+               {
+                    "NFndx" :   0,
+                    "ICN" :   "O",
+                    "PType" :   "L",
+                    "IV" :   22.5367479506933,
+                    "LICs" :   "Na",
+                    "LCoef" :   1
+               }
+          ]
+     },

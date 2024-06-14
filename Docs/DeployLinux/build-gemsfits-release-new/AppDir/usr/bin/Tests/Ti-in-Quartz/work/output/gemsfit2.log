@@ -1,0 +1,106 @@
+01. main.cpp(108). Creating new TGfitTask
+02. data_manager.cpp(51). Reading database parameter get_db_specs(); 
+03. data_manager.cpp(55). Getting data form the EJDB database; 
+05. data_manager.cpp(365). Adding the data returned by the selection query into the data structure; 
+04. data_manager.cpp(58). Getting distinct T and P pairs; 
+09. optimization.cpp(48). Reading NLopt optimization settings from the input file; 
+10. gemsfit_task.cpp(94). Initializing the Target function structure & get_DatTarget(); 
+06. gemsfit_task.cpp(89). Initializing nodes with the experimental data; 
+07. gemsfit_task.cpp(92). Initializing optimization structure; 
+11. gemsfit_task.cpp(152). Initializing optimization init_optim(); 
+ ... initializing optimization object in build_optim() ... 
+ ... performing parameter normalization ... 
+     Init guess [0] = 60300
+     Upper Bound old [0]= 70300
+     Upper Bound new [0]= 1.16584
+     Init guess [1] = -1.17
+     Upper Bound old [1]= 0.5
+     Upper Bound new [1]= 0.42735
+     Init guess [2] = 1.79
+     Upper Bound old [2]= 2.5
+     Upper Bound new [2]= 1.39665
+     Init guess [0] = 60300
+     Lower Bound old [0]= 50300
+     Lower Bound new [0]= 0.834163
+     Init guess [1] = -1.17
+     Lower Bound old [1]= -1.9
+     Lower Bound new [1]= -1.62393
+     Init guess [2] = 1.79
+     Lower Bound old [2]= 1
+     Lower Bound new [2]= 0.558659
+... assigning bounds and tolerance for optimization...
+
+12. in gemsfit_task.cpp(287). Setting target (objective) function to minimize.
+13. gemsfit_task.cpp(308). Performing optimization.
+~ m.count.= 1 sum.res.= 0.848930891034016
+~ m.count.= 2 sum.res.= 6.4157071528228
+~ m.count.= 3 sum.res.= 0.988617446546078
+~ m.count.= 4 sum.res.= 6.16416676558986
+~ m.count.= 5 sum.res.= 18.4005845719826
+~ m.count.= 6 sum.res.= 1.03978365756729
+~ m.count.= 7 sum.res.= 20.6423984821971
+~ m.count.= 8 sum.res.= 2.88997859665102
+~ m.count.= 9 sum.res.= 1.09782182278356
+~ m.count.= 10 sum.res.= 0.925587832291375
+~ m.count.= 11 sum.res.= 0.880528760255601
+~ m.count.= 12 sum.res.= 0.849101087824273
+~ m.count.= 13 sum.res.= 0.850242352153535
+~ m.count.= 14 sum.res.= 0.85123666538063
+~ m.count.= 15 sum.res.= 0.849028480479862
+~ m.count.= 16 sum.res.= 0.848303734358772
+~ m.count.= 17 sum.res.= 0.848186713591309
+~ m.count.= 18 sum.res.= 0.848086008993029
+~ m.count.= 19 sum.res.= 0.848535963224786
+~ m.count.= 20 sum.res.= 0.849272790699592
+~ m.count.= 21 sum.res.= 0.84844562529334
+~ m.count.= 22 sum.res.= 0.848174634970251
+~ m.count.= 23 sum.res.= 0.848726834291834
+~ m.count.= 24 sum.res.= 0.848445453244455
+~ m.count.= 25 sum.res.= 0.848114504006096
+~ m.count.= 26 sum.res.= 0.848098720048132
+~ m.count.= 27 sum.res.= 0.848089490292641
+~ m.count.= 28 sum.res.= 0.84810066176184
+~ m.count.= 29 sum.res.= 0.848086692390271
+~ m.count.= 30 sum.res.= 0.848080407091591
+~ m.count.= 31 sum.res.= 0.848076511388668
+~ m.count.= 32 sum.res.= 0.848078234553256
+~ m.count.= 33 sum.res.= 0.84806704239599
+~ m.count.= 34 sum.res.= 0.848470676231078
+~ m.count.= 35 sum.res.= 0.848064371759675
+~ m.count.= 36 sum.res.= 0.848066216617675
+~ m.count.= 37 sum.res.= 0.848065609900899
+~ m.count.= 38 sum.res.= 0.848063864171285
+~ m.count.= 39 sum.res.= 0.848474121632317
+~ m.count.= 40 sum.res.= 0.848063386688273
+~ m.count.= 41 sum.res.= 0.84806333069195
+~ m.count.= 42 sum.res.= 0.848063219611553
+~ m.count.= 43 sum.res.= 0.848063070928951
+~ m.count.= 44 sum.res.= 0.848063798873813
+~ m.count.= 45 sum.res.= 0.848062825869212
+~ m.count.= 46 sum.res.= 0.848474017929341
+~ m.count.= 47 sum.res.= 0.84847402075349
+~ m.count.= 48 sum.res.= 0.848473897222889
+~ m.count.= 49 sum.res.= 0.848062858228527
+~ m.count.= 50 sum.res.= 0.848473780952695
+~ m.count.= 51 sum.res.= 0.848063218913092
+~ m.count.= 52 sum.res.= 0.848062739619842
+~ m.count.= 53 sum.res.= 0.848062568046618
+~ m.count.= 54 sum.res.= 0.848062845902795
+~ m.count.= 55 sum.res.= 0.848062677439206
+~ m.count.= 56 sum.res.= 0.848473958214167
+optv[0] = 1.00001948213652
+size of optv = 3
+14. gemsfit_task.cpp(317). Finished optimization; 
+~ m.count.= 57 sum.res.= 0.848062568046618
+found minimum at <<f( 1.00001948213652 -1.01463628723072 1.00127869906339 ) = 0.848062568046618
+ after 57 evaluations.
+
+15. Back in main.cpp(122). Performing statistics ...
+~ m.count.= 58 sum.res.= 0.848063280163616
+~ m.count.= 59 sum.res.= 0.848473623906746
+~ m.count.= 60 sum.res.= 0.848473810813425
+~ m.count.= 61 sum.res.= 0.848063126918362
+~ m.count.= 62 sum.res.= 0.848062559905228
+~ m.count.= 63 sum.res.= 0.848474132025262
+~ m.count.= 64 sum.res.= 0.848062568046618
+16. main.cpp(152): finished in 0.236023 seconds. GEMSFITS: End. Bye!

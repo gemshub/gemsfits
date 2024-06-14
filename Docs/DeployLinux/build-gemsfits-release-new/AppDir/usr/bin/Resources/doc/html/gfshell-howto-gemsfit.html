@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=windows-1252" http-equiv="content-type">
+    <title>How To / Workflow</title>
+  </head>
+  <body style="     background-image: url(bgimg-gray.jpg);">
+    <h1> <img style="width: 48px; height: 48px;" title="GEMSFITS" alt="GEMSFITS"
+        src="gemsfit2.png"> GEMSFITS Code for GEM Input Parameter Optimization</h1>
+    <h2>How to do GEM input parameter optimization. Workflow</h2>
+    <hr>For building the executable file of gfshell2, and gemsfit2, see <a href="gemsfit-techinfo.html">gemsfit-techinfo.html</a>.
+    <br>
+    <h3>Contents</h3>
+    <h3>&nbsp;&nbsp;&nbsp; Workflow</h3>
+    <ol>
+      <li><a href="#create">Create a new project in gfshell</a></li>
+      <li><a href="#prepare">Prepare experimental data and database</a></li>
+      <li><a href="gfshell-howto-gemsfit.html#GEMS">Create
+          the chemical system in GEM-Selektor and export the GEMS3K files</a></li>
+      <li><a href="#create_edit_task">Create and Edit the task specification</a></li>
+      <li><a href="#run">Run gesmift2 optimization code</a></li>
+      <li><a href="#retrieve">Retrieve the results</a></li>
+      <li><a href="#structure">Project folder structure</a></li>
+    </ol>
+    <hr>
+    <h3><a id="create">1. Create new project in gfshell</a></h3>
+    <p style="height: 41px;">To create a new project from the menu click: <span
+        style="font-weight: bold;">Project -&gt; New Project</span>. A Project
+      setup window opens.</p>
+    <table style="width: 1696px; height: 537px;" border="0">
+      <tbody>
+        <tr>
+          <td><img title="Project Setup" alt="Project Setup" src="ProjectSetup.png"
+              align="left"></td>
+          <td>
+            <p><br>
+              <span style="font-weight: bold;"></span></p>
+            <p><span style="font-weight: bold;"><br>
+              </span></p>
+            <p><span style="font-weight: bold;">Project folder path</span> -
+              select the folder where the project will be stored. In this folder
+              dbimport, GEMS, and EJDB sub-folders will be automatically
+              created.</p>
+            <p><span style="font-weight: bold;">Project name</span> - give name
+              of the project (avoid spaces). A *.pro file with the project name
+              will be created</p>
+            <p><span style="font-weight: bold;">Database path</span> -&nbsp;
+              sub-folder in the project folder where the database related files
+              will be stored. Default <span style="font-weight: bold;">/EJDB</span>,
+              no change required.</p>
+            <p><span style="font-weight: bold;">Database file name</span> - name
+              of the database. The database with the desired name will be
+              created and stored in the sub-folders specified above.</p>
+            <p><span style="font-weight: bold;">Experimental samples database
+                collection name</span> - collection name where the experiments
+              will be stored. Default <span style="font-weight: bold;">experiments</span>,
+              no change required.</p>
+            <p><span style="font-weight: bold;">Fitting tasks database
+                collection name</span> - collection name where the tasks will be
+              stored. Default <span style="font-weight: bold;">tasks</span>, no
+              change required.</p>
+            <p><span style="font-weight: bold;">Results database collection name</span>
+              - collection name where the results will be stored. Default <span
+                style="font-weight: bold;">fits</span>, no change required.</p>
+            <p><span style="font-weight: bold;">GEMS3K input file set path</span>
+              - sub-folder in the project folder where the GEMS3K files are
+              stored. Default <span style="font-weight: bold;">/GEMS</span>, no
+              change required.</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <hr>
+    <h3><a id="prepare">2. Prepare experimental data</a></h3>
+    <p>The experimental data has to be first prepared into a <a href="howto-database.html">special
+        format spreadsheet</a>. Details can be found in the "<a href="howto-database.html">How
+        to prepare the pre-fotmatted spreadsheet of experiments</a>" The
+      spreadsheet can be saved in CSV format and uploaded in the experimental
+      database using gfshell (graphical user interface). This is shown in the <a
+        href="gfshell-dbmode.html#manage_data">gfshell Database Mode help
+        section</a>.<br>
+      <br>
+      Every time new bulk data needs to be added into the database this has to
+      go trough the same steps.</p>
+    <hr>
+    <h3><a id="GEMS">3. GEM-Selektor</a></h3>
+    <p>GEM-Selektor v3 code package (<a href="http://gems.web.psi.ch/GEMS3">http://gems.web.psi.ch/GEMS3</a>)
+      is needed to create the chemical system definition to model the
+      experiments. In GEMS3, elements in the system, dependent components,
+      phases, and input thermodynamic data can be selected and combined within
+      the chemical thermodynamic system, which can be checked in trial
+      calculations. For an overview, installation, and use of GEMS3, see GEMS3
+      site, the program's help window, and test projects.</p>
+    <p>After the&nbsp; system is created and tested, the user needs to export
+      the GEMS3K system definition files that later will be input for gemsfit2
+      (which includes the same GEMS3K GEM solver of equilibria as GEM-Selektor
+      v.3). This is done from the "Single Thermodynamic System" dialog of
+      GEM-Selektor. Just calculate the equilibrium state, and use the menu
+      "Data"-&gt; "Export GEMS3K files...", which opens the "GEMS3K files
+      export" dialog. </p>
+    <ul>
+      <li> In the "T and P values and look-up array structure", select "enter
+        temperature and pressure values" and "disable interpolation". Important!
+        If you want to fit pressure and temperature do not select disable
+        interpolation and make sure that the T and P points are withing the
+        desired bounds, and that there are enough points (for interpolation) to
+        represent the parameter searching space.</li>
+    </ul>
+    <ul>
+      <li> In the "number of P points or pairs", enter the number of unique T
+        and P points which you can get from the&nbsp; <a href="gfshell-dbmode.html#distinctTP.csv">..._distinctTP.csv</a>
+        file exported using gfshell.</li>
+    </ul>
+    <ul>
+      <li> At the next step, you have to copy and paste all the P and T points
+        also found in the&nbsp; <a href="gfshell-dbmode.html#distinctTP.csv">..._distinctTP.csv</a>
+        file. How to do this exactly, depends on the operation system and the
+        spreadsheet program that you use. In GEM-Selektor, Ctrl-C copies the
+        previously selected data to clipboard, and Ctrl-V pastes the data (click
+        on the first cell before executing Paste operation).</li>
+    </ul>
+    <p>The exported GEMS3K files will be then used to generate the task
+      definition file where necessary options during the parameter fitting will
+      be set.</p>
+    <hr>
+    <h3><a id="create_edit_task">4. Create and edit the task specification<br>
+      </a></h3>
+    Create a new task specification and set all options required for
+    optimization. Details about creating a and setting the options in the task
+    specification is given in <a href="gfshell-taskmode.html">GEMSFITS shell
+      Task Mode</a> help section.<br>
+    <p> After the task specification is created in most of the fitting cases set
+      the values of the following keys (other key values may be left to their
+      default values):</p>
+    <p>1.<a style="font-family: Courier New,Courier,monospace;" href="gfshell-taskmode.html#dataselect">"DataSelect"</a>
+      (what experiments to use from the database)</p>
+    <p>2.<a style="font-family: Courier New,Courier,monospace;" href="gfshell-taskmode.html#datatarget">"DataTarget"</a>
+      (what calculated values to compare with the measured counterparts +
+      weighting)</p>
+    <p>3.Decide which of the parameters you want to fit <a href="gfshell-taskmode.html#ParToOpt">and
+        mark them accordingly</a></p>
+    <p>4.Set the desired <a href="gfshell-taskmode.html#OptSet">optimization
+        and statistics options</a> or leave default values </p>
+    <hr>
+    <h3><a id="run">5. Run gesmift2 optimization code</a></h3>
+    <p>To run GEMSFITS click Run Gemsfit2 parameter fitting task <img style="width: 21px; height: 24px;"
+        alt="Run gemsfit2" title="Run gesmfit2" src="img/CalculateRecordDataIcon24.png">
+      in the gfshell <a href="gfshell-taskmode.html#run">Fitting task mode</a>.
+      A *.json file is created representing the task specification file which is
+      read in by gwmsfit2 code and which will execute the optimization. </p>
+    <hr>
+    <h3><a id="retrieve">6. Retrieve the results</a></h3>
+    <p>Retrieve the results directly from the /work/output project sub-folder in
+      the *.csv files, or view them in the results window of the gfshell.
+      Fitting task /work folder is re-created upon running gemsfit2&nbsp; (<span
+        style="color: red;"></span><span style="font-weight: bold;"><span style="color: red;">the
+          contents will be erased for every run of the fitting program, the
+          results will be lost if not <big><small><a href="file:///home/dmiron/(c) 2014-2022/devGFshell/gemsfit/Resources/doc/html/gfshell-taskmode.html#save_results">saved
+                in the database</a></small></big></span></span>)</p>
+    <hr>
+    <h3><span style="color: #33cc00;"><a id="structure"><span style="color: black;">7.
+            Project Structure (example from tests projects)</span><br>
+        </a></span></h3>
+    <p>The project sub-folder are automatically created when making a new
+      project in gfshell. <br>
+      <br>
+      <span style="font-family: Courier New,Courier,monospace;">/Tests</span><br>
+      <span style="font-family: Courier New,Courier,monospace;">/Tests/CSHQsol&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        // </span>this test example<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">cshqsol.pro&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        //</span> GEMSFITS project file<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">template.json
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //</span>
+      Template file generated gfshell from selected GEMS3K files and used to
+      generate new task specification
+      templates&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <br><span style="font-family: Courier New,Courier,monospace;">/Tests/CSHQsol/GEMS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        //</span> GEM-Selektor project with GEMS3K files<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">CSHQsol.zip&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        //</span> project file (zipped), for future use<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">CSHQsol-ipm.dat&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        //</span> exported IPM file<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">CSHQsol-dch.dat&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        //</span> exported DCH file<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">CSHQsol-dbr-0-0000.dat&nbsp;&nbsp;
+        //</span> exported DBR file<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">CSHQsol-dbr.lst&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        //</span> list of DBR files<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">CSHQsol-dat.lst&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        //</span> list of files for GEMS3K<br>
+      <span style="font-family: Courier New,Courier,monospace;">/Tests/CSHQsol/dbimport&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        // </span>file(s) with experimental data<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">CSHsoluDataChen04.csv&nbsp;&nbsp;&nbsp;
+        //</span> .csv file for database import<br>
+      <br>
+      <span style="font-family: Courier New,Courier,monospace;">/Tests/CSHQsol/EJDB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        //</span> EJDB database files generated by gfshell and used by gemsfit2
+      (optimization code)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">cshqsoldata&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        //</span> database file<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">cshqsoldata_experiments&nbsp;
+        //</span> experiments collection file<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">cshqsoldata_tasks&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        //</span> tasks collection file<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">cshqsoldata_fits&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        //</span> results collection file<br>
+      <span style="font-family: Courier New,Courier,monospace;">/Tests/CSH/work&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        //</span> Fitting task working directory<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">mix4em_logm_rwip2_b3.json//</span>
+      GEMSFIT2 input specification file<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">ipmlog.txt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        //</span> generated by GEMS3K diagnostics<br>
+      <span style="font-family: Courier New,Courier,monospace;">/Tests/CSH/01/output&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        //</span> files with results generated by GEMSFIT2<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">fit-params.csv&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        //</span> .csv file with parameter optimization results and associated
+      statistics<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">fit-results.csv&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        //</span> .csv file with measured and calculated values and additional
+      output (if specified)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">mc-results.csv&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        //</span> .csv parameter values resulted during the Monte Carlo
+      simulations<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">meas-data-sensitivity.csv
+        //</span> .csv calculated sensitivities for each measured value per each
+      parameter<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">qq-plot-data.csv&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        //</span> .csv file with data for making the Q-Q normality plot for
+      testing the residuals distributions<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">sum-statistics.csv&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        //</span> summary statistics information<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: Courier New,Courier,monospace;">gemsfit2.log&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        //</span> logging file generated by GEMSFIT2 (diagnostics)<br>
+      <br>
+      Edited values in the <span style="font-family: Courier New,Courier,monospace;">Tests/CSHQsol/mix4em_logm_rwip2_b3.json</span>:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...&nbsp;&nbsp; <br>
+      &nbsp;&nbsp;&nbsp; # DataDB: EJDB database path (please, edit to put the
+      actual path)<br>
+      <span style="font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;
+        "DataDB" : "../EJDB/solargstr"</span><br>
+      <br>
+      &nbsp;&nbsp;&nbsp; # DataCollection: database collection name (please,
+      edit to put the actual name)<br>
+      &nbsp;&nbsp;&nbsp;<span style="font-family: Courier New,Courier,monospace;">&nbsp;
+        "DataCollection" :&nbsp; "experiments"</span><br>
+      <br>
+      &nbsp;&nbsp;&nbsp; # SystemFiles: path to the list of GEMS3K input files
+      (also used for this template file)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family: Courier New,Courier,monospace;">"SystemFiles"
+        : "../GEMS/ArgStrGex-dat.lst"<br>
+      </span><br>
+      Edit the rest of this file, as described in the <a href="gfshell-taskmode.html">GEMSFITS
+        shell Task Mode help</a> manual.</p>
+    <hr>
+    <p>Last updated:&nbsp; 15. 06. 2022&nbsp; DM, DK</p>
+    <p>Copyright&nbsp; (c) 2015&nbsp; <a target="_blank" title="http://gems.web.psi.ch/teamhist.html"
+        href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a></p>
+    <hr>
+    <p><br>
+    </p>
+  </body>
+</html>
