@@ -574,9 +574,9 @@
               </span></span></td>
           <td><span style="font-family: Courier New,Courier,monospace;"><br>
             </span></td>
-          <td><span style="font-family: Courier New,Courier,monospace;">--<br>
+          <td><span style="font-family: Courier New,Courier,monospace;">double<br>
             </span></td>
-          <td><span style="font-family: Courier New,Courier,monospace;">activity<br>
+          <td><span style="font-family: Courier New,Courier,monospace;">activity of a species in a phase<br>
             </span></td>
           <td><br>
           </td>
@@ -838,6 +838,60 @@
               expression for calculating a certain phase property</span></td>
           <td><span style="font-family: Courier New,Courier,monospace;">3/sum({end_memeber1},
               {end_mmber2},...)-1</span></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
+              activity_model<br>
+            </span> </td>
+          <td style="vertical-align: top; font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;"><a
+                name="activity_model"></a>phDC<br>
+            </span> </td>
+          <td><br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"> <br>
+            </span> </td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">to set the common parameters for the D-H Helgeson aqueous activity model for each experiments</span></td>
+          <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;"><br>
+            </span> </td>
+        </tr>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              b_gamma<br>
+            </span></td>
+          <td><span style="font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;">b_gamma<br>
+              </span></span></td>
+          <td><br>
+          </td>
+          <td><span style="font-family: Courier New,Courier,monospace;">double<br>
+            </span></td>
+          <td><span style="font-family: Courier New,Courier,monospace;">value for the common b_gamma parameter</span></td>
+          <td><span style="font-family: Courier New,Courier,monospace;"> e.g., 0.064 for NaCl background electrolyte</span></td>
+        </tr>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              b_gammaT<br>
+            </span></td>
+          <td><span style="font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;">b_gammaT<br>
+              </span></span></td>
+          <td><br>
+          </td>
+          <td><span style="font-family: Courier New,Courier,monospace;">string<br>
+            </span></td>
+          <td><span style="font-family: Courier New,Courier,monospace;">method for calculating the b_gamma at given T</span></td>
+          <td><span style="font-family: Courier New,Courier,monospace;"> constant (provided value is used), NaCl, KCl, NaOH, KOH - methods implemented in GEMS</span></td>
+        </tr>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              a0<br>
+            </span></td>
+          <td><span style="font-weight: bold;"><span style="font-family: Courier New,Courier,monospace;">a0<br>
+              </span></span></td>
+          <td><br>
+          </td>
+          <td><span style="font-family: Courier New,Courier,monospace;">double<br>
+            </span></td>
+          <td><span style="font-family: Courier New,Courier,monospace;">common ion size parameter</span></td>
+          <td><span style="font-family: Courier New,Courier,monospace;"> </span></td>
         </tr>
         <tr>
           <td style="vertical-align: top;"><a name="parameter_marking"></a><a href="gfshell-taskmode.html#ParToOpt"><span

@@ -162,6 +162,14 @@ static const char *frAlVI  = "frAlVI"; //  fraction of Al(VI) relative to total 
         static const char *Rd       = "Rd";
         static const char *activityRatio = "activityRatio";
 
+        // Phase models
+    static const char *activity_model = "activity_model";
+        static const char *b_gamma = "b_gamma";
+        static const char *b_gammaT = "b_gammaT";
+        static const char *a0 = "a0";
+        static const char *gammaN = "gammaN";
+        static const char *gammaW = "gammaW";
+
 // general keywords for error and unit present in the header of the input csv file
 static const char *_error           = "error";
 static const char *_unit            = "unit";
