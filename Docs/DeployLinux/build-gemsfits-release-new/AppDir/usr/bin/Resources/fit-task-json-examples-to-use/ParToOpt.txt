@@ -1,0 +1,64 @@
+# Parameter optimization
+# Independently fitted parameter
+                    {
+                         "DCN" :   "Al(OH)2+",
+                         "PType" :   "F",
+                         "IV" :   -899506,
+                         "UB" :   -889506,
+                         "LB" :   -909506
+                    },
+# Reaction constraint, The properties of the species is constrined by reaction having the logK
+# based on the properties from the GEMS system files
+                    {
+                         "DCN" :   "AlOH+2",
+                         "PType" :   "R",
+                         "IV" :   -696322,
+                         "Ref" :   "PalWes93",
+                         "Rndx" :   0,
+                         "nC" :   3,
+                         "RC" :   [
+                              "Al+3",
+                              "H2O@",
+                              "AlOH+2"
+                         ],
+                         "RCoef" :   [
+                              -1,
+                              -1,
+                              1
+                         ]
+                    },
+                    
+# L-type PMC parameters
+                              {
+                                   "IPCN" :   "aq_ext_upSx[0|0]",
+                                   "PType" :   "L",
+                                   "IV" :   0.1,
+                                   "UB" :   -0.0400319993495941,
+                                   "LB" :   -0.0400319993495941,
+                                   "LICs" :   [
+                                        "aq_ext_upSx[7|0]"
+                                   ],
+                                   "LCoef" :   [
+                                        1
+                                   ]
+                              },
+                  
+
+# to provide a specific logK function equation use "LogKFun"
+     "LogKFun" :   {
+          "FunList" :   [
+               {
+                    "FType" :   "logK_dRHOw",
+                    "FCoef" :   [
+                         4.7648,
+                         -2895.4,
+                         0,
+                         0,
+                         0,
+                         0,
+                         0
+                    ],
+                    "Rndx" :   0
+               }
+          ]
+     },

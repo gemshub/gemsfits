@@ -1,0 +1,25 @@
+# search query on phase components; deleted "phase" field to search in all phases
+# leave out fields that are not necessary in the search e.g. "unit" :   "val"
+# '$gt' - greater than (can be replaced with '$gte' - >=) or '$lt' - lower than and '$lte'- <=
+# '$in' - matches the values
+
+{
+     "expphases" :   [
+          {
+               "phase" :   {'$in' : ["val1", "val2", "val3"]},
+               "phDC" :   [
+                    {
+                         "DC" :   {'$in' : ["val1", "val2", "val3"]},
+		         "DCprop" :   [
+				{ 
+				     "prop" : {'$in' : ["val1", "val2", "val3"]},  
+				     "Q" : {'$gt' : number},
+			             "unit" :   "val"
+			        } 
+			 ]
+                    }
+               ]
+          }   
+     ]
+}
+

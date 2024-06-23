@@ -1,0 +1,368 @@
+{
+     "taskid" :   "SS-Local",
+     "projectid" :   "TiQ_normal",
+     "DBPath" :   "../EJDB/TiQ_normal",
+     "DBColl" :   "experiments",
+     "GEMSFPath" :   "../GEMS/TiQ_Aud_Tho_War-dat.lst",
+     "DataSelect" :   {
+          "usesamples" :   "",
+          "usedatasets" :   [
+               "Thomas2010",
+               "Wark&Watson2006"
+          ],
+          "skipdataset" :   "",
+          "sT" :   [
+               25,
+               1000
+          ],
+          "sP" :   [
+               1,
+               40000
+          ]
+     },
+     "DataTarget" :   {
+          "Target" :   "fitTiQ",
+          "TT" :   "lsq",
+          "WT" :   "inverr3",
+          "OFUN" :   [
+               {
+                    "EPH" :   "QtzRu",
+                    "CT" :   "DC",
+                    "CN" :   "Rutile",
+                    "DCP" :   "Q",
+                    "unit" :   "molfrac"
+               }
+          ]
+     },
+     "ParToOpt" :   [
+          {
+               "EPH" :   "fluid_gen",
+               "G0" :   [
+                    {
+                         "DCN" :   "H2",
+                         "PType" :   "S",
+                         "IV" :   -24
+                    },
+                    {
+                         "DCN" :   "H2O",
+                         "PType" :   "S",
+                         "IV" :   -228527
+                    },
+                    {
+                         "DCN" :   "O2",
+                         "PType" :   "S",
+                         "IV" :   -16
+                    }
+               ],
+               "PMc" :   [
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "fluid_gen[0|0]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "fluid_gen[0|1]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    }
+               ],
+               "DMc" :   [
+                    {
+                         "DCN" :   "H2",
+                         "PDCC" :   [
+                              {
+                                   "IPCN" :   "fluid_gen|H2[0]",
+                                   "PType" :   "S",
+                                   "IV" :   33.2000007629395
+                              },
+                              {
+                                   "IPCN" :   "fluid_gen|H2[1]",
+                                   "PType" :   "S",
+                                   "IV" :   12.9700002670288
+                              },
+                              {
+                                   "IPCN" :   "fluid_gen|H2[2]",
+                                   "PType" :   "S",
+                                   "IV" :   -0.219999998807907
+                              },
+                              {
+                                   "IPCN" :   "fluid_gen|H2[3]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "fluid_gen|H2[4]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "fluid_gen|H2[5]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "fluid_gen|H2[6]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "DCN" :   "H2O",
+                         "PDCC" :   [
+                              {
+                                   "IPCN" :   "fluid_gen|H2O[0]",
+                                   "PType" :   "S",
+                                   "IV" :   647.286010742188
+                              },
+                              {
+                                   "IPCN" :   "fluid_gen|H2O[1]",
+                                   "PType" :   "S",
+                                   "IV" :   220.897994995117
+                              },
+                              {
+                                   "IPCN" :   "fluid_gen|H2O[2]",
+                                   "PType" :   "S",
+                                   "IV" :   0.343800008296967
+                              },
+                              {
+                                   "IPCN" :   "fluid_gen|H2O[3]",
+                                   "PType" :   "S",
+                                   "IV" :   -0.0663499981164932
+                              },
+                              {
+                                   "IPCN" :   "fluid_gen|H2O[4]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "fluid_gen|H2O[5]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "fluid_gen|H2O[6]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    },
+                    {
+                         "DCN" :   "O2",
+                         "PDCC" :   [
+                              {
+                                   "IPCN" :   "fluid_gen|O2[0]",
+                                   "PType" :   "S",
+                                   "IV" :   154.770004272461
+                              },
+                              {
+                                   "IPCN" :   "fluid_gen|O2[1]",
+                                   "PType" :   "S",
+                                   "IV" :   50.9000015258789
+                              },
+                              {
+                                   "IPCN" :   "fluid_gen|O2[2]",
+                                   "PType" :   "S",
+                                   "IV" :   0.0212799999862909
+                              },
+                              {
+                                   "IPCN" :   "fluid_gen|O2[3]",
+                                   "PType" :   "S",
+                                   "IV" :   0.0151199996471405
+                              },
+                              {
+                                   "IPCN" :   "fluid_gen|O2[4]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "fluid_gen|O2[5]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              },
+                              {
+                                   "IPCN" :   "fluid_gen|O2[6]",
+                                   "PType" :   "S",
+                                   "IV" :   0
+                              }
+                         ]
+                    }
+               ]
+          },
+          {
+               "EPH" :   "QtzRu",
+               "G0" :   [
+                    {
+                         "DCN" :   "Quartz",
+                         "PType" :   "S",
+                         "IV" :   -856432.97934399
+                    },
+                    {
+                         "DCN" :   "Rutile",
+                         "PType" :   "S",
+                         "IV" :   -888945
+                    }
+               ],
+               "PMc" :   [
+                    {
+                         "IPCs" :   [
+                              {
+                                   "IPCN" :   "QtzRu[0|0]",
+                                   "PType" :   "F",
+                                   "IV" :   60300,
+                                   "LB" :   50300,
+                                   "UB" :   70300
+                              },
+                              {
+                                   "IPCN" :   "QtzRu[0|1]",
+                                   "PType" :   "F",
+                                   "IV" :   -1.17,
+                                   "LB" :   -1.9,
+                                   "UB" :   0.5
+                              },
+                              {
+                                   "IPCN" :   "QtzRu[0|2]",
+                                   "PType" :   "F",
+                                   "IV" :   1.79,
+                                   "LB" :   1,
+                                   "UB" :   2.5
+                              }
+                         ]
+                    }
+               ]
+          },
+          {
+               "EPH" :   "Rutile",
+               "G0" :   [
+                    {
+                         "DCN" :   "Rutile",
+                         "PType" :   "S",
+                         "IV" :   -888945
+                    }
+               ]
+          }
+     ],
+     "NFunParToOpt" :   "",
+     "LogKFun" :   "",
+     "LogKVal" :   "",
+     "OptSet" :   {
+          "NumMPI" :   4,
+          "DoWhat" :   1,
+          "UseEqC" :   1,
+          "UDWts" :   0,
+          "OptAlg" :   "LN_BOBYQA",
+          "PBPerc" :   -1,
+          "ConTolRel" :   1e-08,
+          "ConTolAbs" :   1e-08,
+          "MaxLoops" :   5000,
+          "NormPar" :   1,
+          "GradPert" :   1e-06,
+          "SensPert" :   1e-06,
+          "OptTu" :   -1,
+          "OptTuC" :   6,
+          "UseMCPE" :   0,
+          "NumMCT" :   100
+     },
+     "DataSyn" :   {
+          "PHN" :   [
+               {
+                    "NIS" :   "fluid_gen",
+                    "Syn" :   "",
+                    "DCN" :   [
+                         {
+                              "NIS" :   "H2",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "H2O",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "O2",
+                              "Syn" :   ""
+                         }
+                    ]
+               },
+               {
+                    "NIS" :   "QtzRu",
+                    "Syn" :   "",
+                    "DCN" :   [
+                         {
+                              "NIS" :   "Quartz",
+                              "Syn" :   ""
+                         },
+                         {
+                              "NIS" :   "Rutile",
+                              "Syn" :   ""
+                         }
+                    ]
+               },
+               {
+                    "NIS" :   "Rutile",
+                    "Syn" :   "",
+                    "DCN" :   [
+                         {
+                              "NIS" :   "Rutile",
+                              "Syn" :   "Rutilexxy"
+                         }
+                    ]
+               }
+          ],
+          "PHPN" :   [
+               {
+                    "NIS" :   "pH",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "pe",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Eh",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "IS",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "alk",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "pV",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "RHO",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "sArea",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "Gex",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "mChainL",
+                    "Syn" :   ""
+               }
+          ],
+          "DCPN" :   [
+               {
+                    "NIS" :   "activity",
+                    "Syn" :   ""
+               },
+               {
+                    "NIS" :   "@coef",
+                    "Syn" :   ""
+               }
+          ]
+     }
+}

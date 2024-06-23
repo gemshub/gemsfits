@@ -1,0 +1,272 @@
+01. main.cpp(108). Creating new TGfitTask
+02. data_manager.cpp(51). Reading database parameter get_db_specs(); 
+03. data_manager.cpp(55). Getting data form the EJDB database; 
+05. data_manager.cpp(365). Adding the data returned by the selection query into the data structure; 
+04. data_manager.cpp(58). Getting distinct T and P pairs; 
+09. optimization.cpp(48). Reading NLopt optimization settings from the input file; 
+10. gemsfit_task.cpp(94). Initializing the Target function structure & get_DatTarget(); 
+06. gemsfit_task.cpp(89). Initializing nodes with the experimental data; 
+07. gemsfit_task.cpp(92). Initializing optimization structure; 
+11. gemsfit_task.cpp(152). Initializing optimization init_optim(); 
+ ... initializing optimization object in build_optim() ... 
+ ... performing parameter normalization ... 
+     Init guess [0] = 0.0745618
+     Upper Bound old [0]= 0.082018
+     Upper Bound new [0]= 1.1
+     Init guess [1] = -470.789
+     Upper Bound old [1]= -423.71
+     Upper Bound new [1]= -0.9
+     Init guess [2] = -1.85114
+     Upper Bound old [2]= -1.66603
+     Upper Bound new [2]= -0.9
+     Init guess [3] = 0.00165565
+     Upper Bound old [3]= 0.00182121
+     Upper Bound new [3]= 1.1
+     Init guess [4] = 0.275241
+     Upper Bound old [4]= 0.302765
+     Upper Bound new [4]= 1.1
+     Init guess [5] = -521.118
+     Upper Bound old [5]= -469.006
+     Upper Bound new [5]= -0.9
+     Init guess [6] = -2.88036
+     Upper Bound old [6]= -2.59232
+     Upper Bound new [6]= -0.9
+     Init guess [7] = 0.00471463
+     Upper Bound old [7]= 0.00518609
+     Upper Bound new [7]= 1.1
+     Init guess [8] = 0.00153693
+     Upper Bound old [8]= 0.00169062
+     Upper Bound new [8]= 1.1
+     Init guess [9] = 48.0726
+     Upper Bound old [9]= 52.8799
+     Upper Bound new [9]= 1.1
+     Init guess [10] = 0.17468
+     Upper Bound old [10]= 0.192148
+     Upper Bound new [10]= 1.1
+     Init guess [11] = -0.000156269
+     Upper Bound old [11]= -0.000140642
+     Upper Bound new [11]= -0.9
+     Init guess [12] = 0.0883444
+     Upper Bound old [12]= 0.0971788
+     Upper Bound new [12]= 1.1
+     Init guess [13] = -1197.85
+     Upper Bound old [13]= -1078.06
+     Upper Bound new [13]= -0.9
+     Init guess [14] = -6.10983
+     Upper Bound old [14]= -5.49885
+     Upper Bound new [14]= -0.9
+     Init guess [15] = 0.00743325
+     Upper Bound old [15]= 0.00817658
+     Upper Bound new [15]= 1.1
+     Init guess [16] = 0.244421
+     Upper Bound old [16]= 0.268863
+     Upper Bound new [16]= 1.1
+     Init guess [17] = 1627.03
+     Upper Bound old [17]= 1789.73
+     Upper Bound new [17]= 1.1
+     Init guess [18] = 9.4825
+     Upper Bound old [18]= 10.4308
+     Upper Bound new [18]= 1.1
+     Init guess [19] = -0.0115789
+     Upper Bound old [19]= -0.010421
+     Upper Bound new [19]= -0.9
+     Init guess [20] = 0.00399944
+     Upper Bound old [20]= 0.00439938
+     Upper Bound new [20]= 1.1
+     Init guess [21] = 88.2476
+     Upper Bound old [21]= 97.0724
+     Upper Bound new [21]= 1.1
+     Init guess [22] = 0.406876
+     Upper Bound old [22]= 0.447564
+     Upper Bound new [22]= 1.1
+     Init guess [23] = -0.000475667
+     Upper Bound old [23]= -0.0004281
+     Upper Bound new [23]= -0.9
+     Init guess [24] = -0.05
+     Upper Bound old [24]= -0.045
+     Upper Bound new [24]= -0.9
+     Init guess [25] = 0.036
+     Upper Bound old [25]= 0.0396
+     Upper Bound new [25]= 1.1
+     Init guess [26] = 0.177001
+     Upper Bound old [26]= 0.194701
+     Upper Bound new [26]= 1.1
+     Init guess [27] = -33.4777
+     Upper Bound old [27]= -30.1299
+     Upper Bound new [27]= -0.9
+     Init guess [28] = -0.262215
+     Upper Bound old [28]= -0.235993
+     Upper Bound new [28]= -0.9
+     Init guess [29] = 0.000125778
+     Upper Bound old [29]= 0.000138356
+     Upper Bound new [29]= 1.1
+     Init guess [30] = 0.292922
+     Upper Bound old [30]= 0.322214
+     Upper Bound new [30]= 1.1
+     Init guess [31] = 3402.47
+     Upper Bound old [31]= 3742.72
+     Upper Bound new [31]= 1.1
+     Init guess [32] = 19.7936
+     Upper Bound old [32]= 21.773
+     Upper Bound new [32]= 1.1
+     Init guess [33] = -0.0279388
+     Upper Bound old [33]= -0.0251449
+     Upper Bound new [33]= -0.9
+     Init guess [34] = 0.000362
+     Upper Bound old [34]= 0.0003982
+     Upper Bound new [34]= 1.1
+     Init guess [35] = -2.91038e-011
+     Upper Bound old [35]= -2.61934e-011
+     Upper Bound new [35]= -0.9
+     Init guess [36] = -3.036e-005
+     Upper Bound old [36]= -2.7324e-005
+     Upper Bound new [36]= -0.9
+     Init guess [37] = -0.00601
+     Upper Bound old [37]= -0.005409
+     Upper Bound new [37]= -0.9
+     Init guess [38] = -9.93
+     Upper Bound old [38]= -8.937
+     Upper Bound new [38]= -0.9
+     Init guess [0] = 0.0745618
+     Lower Bound old [0]= 0.0671056
+     Lower Bound new [0]= 0.9
+     Init guess [1] = -470.789
+     Lower Bound old [1]= -517.868
+     Lower Bound new [1]= -1.1
+     Init guess [2] = -1.85114
+     Lower Bound old [2]= -2.03625
+     Lower Bound new [2]= -1.1
+     Init guess [3] = 0.00165565
+     Lower Bound old [3]= 0.00149008
+     Lower Bound new [3]= 0.9
+     Init guess [4] = 0.275241
+     Lower Bound old [4]= 0.247717
+     Lower Bound new [4]= 0.9
+     Init guess [5] = -521.118
+     Lower Bound old [5]= -573.23
+     Lower Bound new [5]= -1.1
+     Init guess [6] = -2.88036
+     Lower Bound old [6]= -3.1684
+     Lower Bound new [6]= -1.1
+     Init guess [7] = 0.00471463
+     Lower Bound old [7]= 0.00424317
+     Lower Bound new [7]= 0.9
+     Init guess [8] = 0.00153693
+     Lower Bound old [8]= 0.00138324
+     Lower Bound new [8]= 0.9
+     Init guess [9] = 48.0726
+     Lower Bound old [9]= 43.2653
+     Lower Bound new [9]= 0.9
+     Init guess [10] = 0.17468
+     Lower Bound old [10]= 0.157212
+     Lower Bound new [10]= 0.9
+     Init guess [11] = -0.000156269
+     Lower Bound old [11]= -0.000171896
+     Lower Bound new [11]= -1.1
+     Init guess [12] = 0.0883444
+     Lower Bound old [12]= 0.07951
+     Lower Bound new [12]= 0.9
+     Init guess [13] = -1197.85
+     Lower Bound old [13]= -1317.63
+     Lower Bound new [13]= -1.1
+     Init guess [14] = -6.10983
+     Lower Bound old [14]= -6.72081
+     Lower Bound new [14]= -1.1
+     Init guess [15] = 0.00743325
+     Lower Bound old [15]= 0.00668993
+     Lower Bound new [15]= 0.9
+     Init guess [16] = 0.244421
+     Lower Bound old [16]= 0.219979
+     Lower Bound new [16]= 0.9
+     Init guess [17] = 1627.03
+     Lower Bound old [17]= 1464.33
+     Lower Bound new [17]= 0.9
+     Init guess [18] = 9.4825
+     Lower Bound old [18]= 8.53425
+     Lower Bound new [18]= 0.9
+     Init guess [19] = -0.0115789
+     Lower Bound old [19]= -0.0127368
+     Lower Bound new [19]= -1.1
+     Init guess [20] = 0.00399944
+     Lower Bound old [20]= 0.0035995
+     Lower Bound new [20]= 0.9
+     Init guess [21] = 88.2476
+     Lower Bound old [21]= 79.4228
+     Lower Bound new [21]= 0.9
+     Init guess [22] = 0.406876
+     Lower Bound old [22]= 0.366188
+     Lower Bound new [22]= 0.9
+     Init guess [23] = -0.000475667
+     Lower Bound old [23]= -0.000523234
+     Lower Bound new [23]= -1.1
+     Init guess [24] = -0.05
+     Lower Bound old [24]= -0.055
+     Lower Bound new [24]= -1.1
+     Init guess [25] = 0.036
+     Lower Bound old [25]= 0.0324
+     Lower Bound new [25]= 0.9
+     Init guess [26] = 0.177001
+     Lower Bound old [26]= 0.159301
+     Lower Bound new [26]= 0.9
+     Init guess [27] = -33.4777
+     Lower Bound old [27]= -36.8255
+     Lower Bound new [27]= -1.1
+     Init guess [28] = -0.262215
+     Lower Bound old [28]= -0.288436
+     Lower Bound new [28]= -1.1
+     Init guess [29] = 0.000125778
+     Lower Bound old [29]= 0.0001132
+     Lower Bound new [29]= 0.9
+     Init guess [30] = 0.292922
+     Lower Bound old [30]= 0.26363
+     Lower Bound new [30]= 0.9
+     Init guess [31] = 3402.47
+     Lower Bound old [31]= 3062.22
+     Lower Bound new [31]= 0.9
+     Init guess [32] = 19.7936
+     Lower Bound old [32]= 17.8142
+     Lower Bound new [32]= 0.9
+     Init guess [33] = -0.0279388
+     Lower Bound old [33]= -0.0307327
+     Lower Bound new [33]= -1.1
+     Init guess [34] = 0.000362
+     Lower Bound old [34]= 0.0003258
+     Lower Bound new [34]= 0.9
+     Init guess [35] = -2.91038e-011
+     Lower Bound old [35]= -3.20142e-011
+     Lower Bound new [35]= -1.1
+     Init guess [36] = -3.036e-005
+     Lower Bound old [36]= -3.3396e-005
+     Lower Bound new [36]= -1.1
+     Init guess [37] = -0.00601
+     Lower Bound old [37]= -0.006611
+     Lower Bound new [37]= -1.1
+     Init guess [38] = -9.93
+     Lower Bound old [38]= -10.923
+     Lower Bound new [38]= -1.1
+... assigning bounds and tolerance for optimization...
+
+12. in gemsfit_task.cpp(287). Setting target (objective) function to minimize.
+13. gemsfit_task.cpp(308). Performing optimization.
+~ m.count.= 1 sum.res.= 0.119285148733967
+~ m.count.= 2 sum.res.= 0.119285148621059
+~ m.count.= 3 sum.res.= 0.119285149316234
+~ m.count.= 4 sum.res.= 0.119285147930001
+~ m.count.= 5 sum.res.= 0.119285148477918
+~ m.count.= 6 sum.res.= 0.119285149113452
+~ m.count.= 7 sum.res.= 0.11928514811128
+~ m.count.= 8 sum.res.= 0.11928514993802
+~ m.count.= 9 sum.res.= 0.119285149421314
+~ m.count.= 10 sum.res.= 0.119285148659224
+~ m.count.= 11 sum.res.= 0.119285150716549
+~ m.count.= 12 sum.res.= 0.119285146310334
+~ m.count.= 13 sum.res.= 0.119285147957462
+~ m.count.= 14 sum.res.= 0.119285147280656
+~ m.count.= 15 sum.res.= 0.119285168198593
+~ m.count.= 16 sum.res.= 0.119285124597114
+~ m.count.= 17 sum.res.= 0.119285137061987
+~ m.count.= 18 sum.res.= 0.119285148321108
+~ m.count.= 19 sum.res.= 0.119285151124756
+~ m.count.= 20 sum.res.= 0.119285144109975
+~ m.count.= 21 sum.res.= 0.119285146713029
+~ m.count.= 22 sum.res.= 0.119285148574152

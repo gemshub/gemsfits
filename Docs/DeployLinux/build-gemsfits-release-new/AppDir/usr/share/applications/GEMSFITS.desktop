@@ -1,0 +1,22 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=GEMSFITS
+Categories=Science;
+Comment=GEMSFITS v.1.2.1 Package
+TryExec=gemsfits
+Exec=gemsfits
+Icon=gemsfits
+Terminal=false
+Actions=Resume;Reload;
+
+X-AppImage-Version=3.9.6
+
+[Desktop Action Resume]
+Exec=gemsfits
+Name=Resume GEMSFITS
+
+[Desktop Action Reload]
+Exec=gemsfits
+Name=Reload GEMSFITS
+

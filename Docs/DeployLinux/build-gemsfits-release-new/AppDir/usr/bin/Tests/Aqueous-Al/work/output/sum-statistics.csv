@@ -1,0 +1,27 @@
+Statistics-Parameter,Value
+Number-of-measurements,81
+Number-of-parameters,4
+Number-of-runs-needed-for-regression,39
+Degrees-of-freedom,77
+Value-of-the-minimized-function-sum,1.12099
+Sum-of-absolute-values-of-residuals,7.3786
+Standard-deviation-of-residuals,0.120673
+Average-residual,-0.000729049
+Maximum-residual,0.195598
+Minimum-residual,-0.338248
+Number-of-positive-residuals,44
+Number-of-negative-residuals,37
+Coefficient-of-determination-R^2,0.993379
+, ,
+OFUN-IC-Al,
+minimized-function-sum-(1e+02%-of-total),1.1
+Standard-deviation-of-residuals,0.12
+Mean-squared-error,0.014
+Root-mean-squared-error,0.12
+Average-residual,-0.00073
+Maximum-residual,0.2
+Minimum-residual,-0.34
+Number-of-positive-residuals,44
+Number-of-negative-residuals,37
+Coefficient-of-determination-R^2,0.99
+, ,

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=windows-1252" http-equiv="content-type">
+    <title>GEMSFITS JSON</title>
+  </head>
+  <body style="     background-image: url(bgimg-gray.jpg);">
+    <h1> <img style="width: 48px; height: 48px;" title="GEMSFITS" alt="GEMSFITS"
+        src="gemsfit2.png"> GEMSFITS Code for GEM Input Parameter Optimization</h1>
+    <h2>About JSON (Java Script Object Notation)</h2>
+    <hr>
+    <h3>Contents</h3>
+    <p>Formal syntax of JSON (http://json.org)</p>
+    <table style="width: 385px; height: 1566px;" border="0">
+      <tbody>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;">object<br>
+              &nbsp;&nbsp;&nbsp; {}<br>
+              &nbsp;&nbsp;&nbsp; { members }<br>
+              <br>
+              members<br>
+              &nbsp;&nbsp;&nbsp; pair<br>
+              &nbsp;&nbsp;&nbsp; pair , members<br>
+              <br>
+              pair<br>
+              &nbsp;&nbsp;&nbsp; string : value<br>
+              <br>
+              array<br>
+              &nbsp;&nbsp;&nbsp; []<br>
+              &nbsp;&nbsp;&nbsp; [ elements ]<br>
+              <br>
+              elements<br>
+              &nbsp;&nbsp;&nbsp; value<br>
+              &nbsp;&nbsp;&nbsp; value , elements<br>
+              <br>
+              value<br>
+              &nbsp;&nbsp;&nbsp; string<br>
+              &nbsp;&nbsp;&nbsp; number<br>
+              &nbsp;&nbsp;&nbsp; object<br>
+              &nbsp;&nbsp;&nbsp; array<br>
+              &nbsp;&nbsp;&nbsp; true<br>
+              &nbsp;&nbsp;&nbsp; false<br>
+              &nbsp;&nbsp;&nbsp; null<br>
+            </span> <span style="font-family: Courier New,Courier,monospace;"><br>
+              string<br>
+              &nbsp;&nbsp;&nbsp; ""<br>
+              &nbsp;&nbsp;&nbsp; " chars "<br>
+              <br>
+              chars<br>
+              &nbsp;&nbsp;&nbsp; char<br>
+              &nbsp;&nbsp;&nbsp; char chars<br>
+              <br>
+              char<br>
+              &nbsp;&nbsp;&nbsp; any-Unicode-character-<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; except-"-or-\-or-<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; control-character<br>
+              &nbsp;&nbsp;&nbsp; \"<br>
+              &nbsp;&nbsp;&nbsp; \\<br>
+              &nbsp;&nbsp;&nbsp; \/<br>
+              &nbsp;&nbsp;&nbsp; \b<br>
+              &nbsp;&nbsp;&nbsp; \f<br>
+              &nbsp;&nbsp;&nbsp; \n<br>
+              &nbsp;&nbsp;&nbsp; \r<br>
+              &nbsp;&nbsp;&nbsp; \t<br>
+              &nbsp;&nbsp;&nbsp; \u four-hex-digits<br>
+              <br>
+              number<br>
+              &nbsp;&nbsp;&nbsp; int<br>
+              &nbsp;&nbsp;&nbsp; int frac<br>
+              &nbsp;&nbsp;&nbsp; int exp<br>
+              &nbsp;&nbsp;&nbsp; int frac exp<br>
+              <br>
+              int<br>
+              &nbsp;&nbsp;&nbsp; digit<br>
+              &nbsp;&nbsp;&nbsp; digit1-9 digits<br>
+              &nbsp;&nbsp;&nbsp; - digit<br>
+              &nbsp;&nbsp;&nbsp; - digit1-9 digits<br>
+              <br>
+              frac<br>
+              &nbsp;&nbsp;&nbsp; . digits<br>
+              <br>
+              exp<br>
+              &nbsp;&nbsp;&nbsp; e digits<br>
+              <br>
+              digits<br>
+              &nbsp;&nbsp;&nbsp; digit<br>
+              &nbsp;&nbsp;&nbsp; digit digits<br>
+              e<br>
+              &nbsp;&nbsp;&nbsp; e<br>
+              &nbsp;&nbsp;&nbsp; e+<br>
+              &nbsp;&nbsp;&nbsp; e-<br>
+              &nbsp;&nbsp;&nbsp; E<br>
+              &nbsp;&nbsp;&nbsp; E+<br>
+              &nbsp;&nbsp;&nbsp; E-</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p><br>
+      <span style="font-weight: bold;">Example of database record in JSON:</span></p>
+    <table style="width: 391px; height: 852px;" border="0">
+      <tbody>
+        <tr>
+          <td><span style="font-family: Courier New,Courier,monospace;">{<br>
+              &nbsp;&nbsp;&nbsp; "expdataset" "Bhm_Ben_etal2001",<br>
+              &nbsp;&nbsp;&nbsp; "sample" : "Ben_1",<br>
+              &nbsp;&nbsp;&nbsp; "sT" : 101.5,<br>
+              &nbsp;&nbsp;&nbsp; "sP" : 0,<br>
+              &nbsp;&nbsp;&nbsp; "sbcomp" : [<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              "comp" :"AlO(OH)",<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              "Q" : 10,<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              "unit" : "g"<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              "comp" :"H2O",<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              "Q" : 400,<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              "unit" : "g"<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              "comp" :"NaCl",<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              "Q" : 0.48,<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              "unit" : "g"<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
+              &nbsp;&nbsp;&nbsp; ],<br>
+              "expphases" : [<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              "phase" : "aq_gen",<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              "phprop" : [<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              {<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              "prop" : "pH",<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              "Q" : 2.484<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              }<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              ],<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              "phIC" : [<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              {<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              "IC" : "Al",<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              "Q" : 0.0003681,<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              "unit" : "molal"<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              }<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              ]<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+              &nbsp;&nbsp;&nbsp; ]<br>
+              }</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <hr>
+    <p>Last updated:&nbsp; 15. 06. 2022&nbsp; DM, DK</p>
+    <p>Copyright&nbsp; (c) 2014-2022&nbsp; <a target="_blank" title="http://gems.web.psi.ch/teamhist.html"
+        href="http://gems.web.psi.ch/teamhist.html">GEMS Development Team</a></p>
+    <hr>
+    <p><br>
+    </p>
+  </body>
+</html>
