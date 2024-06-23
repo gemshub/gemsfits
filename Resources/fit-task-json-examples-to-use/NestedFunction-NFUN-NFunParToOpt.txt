@@ -141,3 +141,67 @@
           ]
      },
 
+# example of NFUN to fix the activity of certain species by titrating specified composition 
+
+          "NFUN" :   [
+               {
+                    "EPH" :   "aq_gen",
+                    "CT" :   "DC",
+                    "CN" :   "F-",
+                    "DCP" :   "activity",
+                    "Tformula" :   [
+                         "NaOH",
+                         "HF"
+                    ],
+                    "Telem" :   [
+                         "Na",
+                         "F"
+                    ],
+                    "unit" :   "loga"
+               }
+          ],
+          
+#  the above nested function needs:
+
+     "NFunParToOpt" :   {
+          "bIC" :   [
+               {
+                    "ICN" :   "F",
+                    "PType" :   "F",
+                    "NFndx" :   0,
+                    "IV" :   0.0109558194127147,
+                    "UB" :   0.5,
+                    "LB" :   1e-05
+               },
+               {
+                    "NFndx" :   0,
+                    "ICN" :   "H",
+                    "PType" :   "L",
+                    "IV" :   44.5761406330092,
+                    "LICs" :   [
+                         "Na",
+                         "F"
+                    ],
+                    "LCoef" :   [
+                         1,
+                         1
+                    ]
+               },
+               {
+                    "NFndx" :   0,
+                    "ICN" :   "Na",
+                    "PType" :   "F",
+                    "IV" :   0.1,
+                    "UB" :   1.8,
+                    "LB" :   1e-05
+               },
+               {
+                    "NFndx" :   0,
+                    "ICN" :   "O",
+                    "PType" :   "L",
+                    "IV" :   22.5367479506933,
+                    "LICs" :   "Na",
+                    "LCoef" :   1
+               }
+          ]
+     },

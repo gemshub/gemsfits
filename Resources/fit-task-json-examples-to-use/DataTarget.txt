@@ -134,6 +134,14 @@
                     "CN" :   "Cl-",
                     "DCP" :   "activity"
                },
+# write activity coefficent of species in a phase
+               {
+                    "SRC" :   "calc",
+                    "EPH" :   "aq_gen",
+                    "CT" :   "DC",
+                    "CN" :   "Cl-",
+                    "DCP" :   "@coef"
+               },
                
 # write the phase stability (saturation) index log10(Omega)
                {
