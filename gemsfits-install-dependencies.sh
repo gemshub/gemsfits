@@ -18,9 +18,9 @@ fi
 
 #sudo rm -f /usr/local/lib/libnlopt.*
 #sudo rm -f /usr/local/lib/libejdb.*
-sudo rm -f /usr/local/lib/libejdb2*.*
-sudo rm -f /usr/local/lib/libiwnet*.*
-sudo rm -f /usr/local/lib/libiowow*.*
+#sudo rm -f /usr/local/lib/libejdb2*.*
+#sudo rm -f /usr/local/lib/libiwnet*.*
+#sudo rm -f /usr/local/lib/libiowow*.*
 #sudo rm -f /usr/local/lib/libyaml-cpp.*
 
 BUILD_TYPE=Release
