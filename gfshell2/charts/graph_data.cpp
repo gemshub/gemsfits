@@ -276,25 +276,25 @@ void ChartData::toBsonObject( bson *obj ) const
     }
     bson_append_finish_array(obj);
 
-     // define curves
-     bson_append_start_array(obj, "lines");
-          for(size_t ii=0; ii<linesdata.size(); ii++)
-          {
-              bson_append_start_object( obj, std::to_string(ii).c_str());
-              linesdata[ii].toBsonObject( obj );
-              bson_append_finish_object( obj );
-          }
-      bson_append_finish_array(obj);
+    // define curves
+    bson_append_start_array(obj, "lines");
+    for(size_t ii=0; ii<linesdata.size(); ii++)
+    {
+        bson_append_start_object( obj, std::to_string(ii).c_str());
+        linesdata[ii].toBsonObject( obj );
+        bson_append_finish_object( obj );
+    }
+    bson_append_finish_array(obj);
 
-      // data to isoline plots
-      bson_append_start_array(obj, "scale");
-           for(size_t ii=0; ii<modelsdata.size(); ii++)
-           {
-               bson_append_start_object( obj, std::to_string(ii).c_str());
-               modelsdata[ii]->toBsonObject( obj );
-               bson_append_finish_object( obj );
-           }
-       bson_append_finish_array(obj);
+    // data to isoline plots
+    bson_append_start_array(obj, "models");
+    for(size_t ii=0; ii<modelsdata.size(); ii++)
+    {
+        bson_append_start_object( obj, std::to_string(ii).c_str());
+        modelsdata[ii]->toBsonObject( obj );
+        bson_append_finish_object( obj );
+    }
+    bson_append_finish_array(obj);
 }
 
 void ChartData::fromBsonObject( const char *obj )
@@ -326,14 +326,12 @@ void ChartData::fromBsonObject( const char *obj )
         if(!bson_find_value( arr, std::to_string(ii).c_str(), region[ii] ) )
             region[ii] = 0;
     }
-
     arr  = bson_find_array(  obj, "part" );
     for( ii=0; ii<4; ii++)
     {
         if(!bson_find_value( arr,  std::to_string(ii).c_str(), part[ii] ) )
             part[ii] = 0;
     }
-
     arr  = bson_find_array(  obj, "b_color" );
     for( ii=0; ii<3; ii++)
     {
@@ -352,17 +350,22 @@ void ChartData::fromBsonObject( const char *obj )
         linesdata.push_back( linebuf );
     }
 
-    arr  = bson_find_array(  obj, "models" );
-    bson_iterator iter_mod;
-    bson_iterator_from_buffer(&iter_mod, arr /*bson_iterator_value(it)*/);
-    ii=0;
-    while (bson_iterator_next(&iter_mod))
-    {
-        if( ii >= modelsdata.size())
-            break;
-        modelsdata[ii++]->fromBsonObject( bson_iterator_value(&iter_mod) );
+    // avoid error
+    bson_iterator it;
+    bson_type type;
+    type =  bson_find_from_buffer(&it, obj, "models" );
+    if( type == BSON_ARRAY ) {
+        arr  = bson_find_array(  obj, "models" );
+        bson_iterator iter_mod;
+        bson_iterator_from_buffer(&iter_mod, arr /*bson_iterator_value(it)*/);
+        ii=0;
+        while (bson_iterator_next(&iter_mod))
+        {
+            if( ii >= modelsdata.size())
+                break;
+            modelsdata[ii++]->fromBsonObject( bson_iterator_value(&iter_mod) );
+        }
     }
-
     // refresh model type
     setGraphType(graphType);
 }

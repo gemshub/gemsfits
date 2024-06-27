@@ -417,7 +417,6 @@ void TMatrixModel::setGraphData( QSortFilterProxyModel *pmodel,  const std::stri
         chart_data = std::make_shared<jsonui17::ChartData>( chart_models, title, "x", "y" );
         connect( pmodel, &QSortFilterProxyModel::layoutChanged,
                  [this]() {
-            std::cout << "YYYYYYYYYYYY" << std::endl;
             chart_models.back()->modelSortUpdated();
         });
    }
