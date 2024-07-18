@@ -240,7 +240,7 @@ private:
         int datasource;
 
         /// name of CSV file containing measurement data
-        std::string CSVfile;
+        std::string CSVfile_;
 
         // Database connection parameters
         /// PostgreSQL/EJDB database: database name (path)
@@ -256,7 +256,7 @@ private:
         std::string passwd;
 
         /// PostgreSQL database: URL of psql server
-        std::string psql_server;
+        std::string psql_server_;
 
         /// EJDB data selection query
         std::string DataSelect;

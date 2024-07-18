@@ -392,7 +392,7 @@ class Opt_PMc : public OptParameter
 
     long int Adjust_Sparam(TNode *node );
 
-    long int Adjust_Lparam(TNode *node);
+    long int Adjust_Lparam(TNode *node, int exp);
 
 
 };

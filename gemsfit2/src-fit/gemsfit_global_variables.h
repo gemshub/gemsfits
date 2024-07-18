@@ -21,7 +21,7 @@
 //namespace mpispace
 //{
     extern int pid;			    // Process rank
-    extern int p;				// Number of processes
+    extern int p_;				// Number of processes
     extern int master_counter;
     extern int slave_counter;
 //}

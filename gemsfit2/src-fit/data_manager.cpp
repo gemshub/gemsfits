@@ -730,12 +730,22 @@ void Data_Manager::bson_to_Data_Manager(const std::string& data, int pos)
                     experiments[pos]->expphases.back()->phprop.back()->Qunit = sub_el->value(keys::Qunit, def_unit);
                 }
             }
+            // adding phase activity_model
+            if (element->contains(keys::activity_model)) {
+                experiments[pos]->expphases.back()->phactmod.isActMod = true;
+                const auto& sub_el = (*element)[keys::activity_model];
+                experiments[pos]->expphases.back()->phactmod.b_gamma = sub_el.value(keys::b_gamma, -1.);
+                experiments[pos]->expphases.back()->phactmod.b_gammaT = sub_el.value(keys::b_gammaT, std::string());
+                experiments[pos]->expphases.back()->phactmod.a0 = sub_el.value(keys::a0, -1.);
+                experiments[pos]->expphases.back()->phactmod.gammaN = sub_el.value(keys::gammaN, -1);
+                experiments[pos]->expphases.back()->phactmod.gammaW = sub_el.value(keys::gammaW, -1);
+            }
 
             // adding phase dcomps
             if( element->contains(keys::phDC) ) {
                 for (const auto& sub_el : (*element)[keys::phDC]) {
                     experiments[pos]->expphases.back()->phDC.push_back(std::make_shared<samples::phases::dcomps>());
-                    experiments[pos]->expphases.back()->phDC.back()->DC = sub_el->value(keys::DC, std::string());;
+                    experiments[pos]->expphases.back()->phDC.back()->DC = sub_el->value(keys::DC, std::string());
                     // adding dependent compoponents properties
                     if( sub_el->contains(keys::DCprop) ) {
                         for (const auto& sub_el2 : (*sub_el)[keys::DCprop])  {

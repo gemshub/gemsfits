@@ -610,7 +610,7 @@ long int Opt_PMc::Adjust_param(TNode *node, std::vector<double> opt)
     // R param
 
     // L param
-    Opt_PMc::Adjust_Lparam( node);
+    Opt_PMc::Adjust_Lparam( node, 0);
 
 return 1;
 }
@@ -630,7 +630,7 @@ long int Opt_PMc::Adjust_Sparam(TNode *node)
 return 1;
 }
 
-long int Opt_PMc::Adjust_Lparam(TNode *node)
+long int Opt_PMc::Adjust_Lparam(TNode *node, int )
 {
     // it does not loop if there are no optLP
     for (unsigned int i=0; i <optLP.size(); ++i )
