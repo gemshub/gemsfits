@@ -35,7 +35,7 @@
 
 
 #include "gemsfit_nested_functions.h"
-#include "gemsfit_target_functions.h"
+#include "keywords.h"
 
 void nestedfun (TGfitTask *sys)
 {
@@ -57,10 +57,11 @@ void nestedfun (TGfitTask *sys)
         for (size_t j = 0; j<sys->Tfun->nestfun.size(); j++)
         {
             std::string compare_type = sys->Tfun->nestfun[j].exp_DCP;
-            if (compare_type == "activity")
+            if (compare_type == keys::activity)
             {
                 sys->NodT[i]->Set_TK(273.15 + sys->experiments[i]->sT);
                 sys->NodT[i]->Set_P(100000 * sys->experiments[i]->sP);
+                if (sys->Tfun->nestfun[j].exp_unit == keys::loga) bounds = 1;
             }
 
             int P_id = omp_get_thread_num();
@@ -78,7 +79,7 @@ void nestedfun (TGfitTask *sys)
                         sys->Opti->optNFParam[e]->Get_Fparam(p, i, Fndx, Pndx, Pval, Ub, Lb);
                         if (Fndx == j) // checks if the nested function parameters point to the curent NFUN with the Fndx
                         {
-                            if (((sys->Tfun->nestfun[sys->NEFndx[P_id]].exp_CN == "pH") || (sys->Tfun->nestfun[sys->NEFndx[P_id]].exp_CN == "pHm") )&& (sys->Tfun->nestfun[j].Telem.size() > 0))
+                            if (((sys->Tfun->nestfun[sys->NEFndx[P_id]].exp_CN == keys::pH) || (sys->Tfun->nestfun[sys->NEFndx[P_id]].exp_CN == keys::pHm) )&& (sys->Tfun->nestfun[j].Telem.size() > 0))
                             {
 //                                for (unsigned int bi=0; bi<sizeof(sys->bICv[sys->EXPndx[P_id]]); bi++)
 //                                {
@@ -114,7 +115,7 @@ void nestedfun (TGfitTask *sys)
                                 }
                             } else
                             {
-                                if (sys->Tfun->nestfun[sys->NEFndx[P_id]].exp_DCP == "PpG" )  bounds = 1;
+                                if (sys->Tfun->nestfun[sys->NEFndx[P_id]].exp_DCP == keys::PpG )  bounds = 1;
                                 x.push_back(Pval);
                                 UB.push_back(Ub);
                                 LB.push_back(Lb);
@@ -126,7 +127,7 @@ void nestedfun (TGfitTask *sys)
                 }
 
                 nlopt::opt opt(nlopt::LN_BOBYQA, x.size());
-                if (sys->Tfun->nestfun[sys->NEFndx[P_id]].exp_DCP == "PpG")
+                if (sys->Tfun->nestfun[sys->NEFndx[P_id]].exp_DCP == keys::PpG)
                 {
                     nlopt::opt opt2(nlopt::GN_DIRECT_L, x.size());
                     opt=opt2;

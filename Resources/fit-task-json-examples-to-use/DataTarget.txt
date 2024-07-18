@@ -33,7 +33,7 @@
                     "EPH" :   "aq_gen",
                     "CT" :   "prop",
                     "CN" :   "pH",
-                    "unit" :   " -loga",
+                    "unit" :   "-loga",
                     "WT" :   1
                },
 # compare measured and calculated molar ratio MR e.g. Ca/Si in C-S-H
@@ -43,7 +43,14 @@
                     "CN" :   "Ca/Si",
                     "unit" :   "molratio",
                     "WT" :   1
-               },             
+               },  
+# compare osmotic coefficient water
+               {
+                    "EPH" :   "aq_gen",
+                    "CT" :   "prop",
+                    "CN" :   "oscw",
+                    "WT" :   0.5
+               },           
 # compare measured and calculated phase property computed using a mathematical expression 
 # mChainL (mean silicate chain length)
         {
@@ -110,7 +117,7 @@
                     "CT" :   "comp",
                     "CN" :   "NaOH"
                },
-# write amount of species in a phase
+# write amount of species in a phase unit mol or log_molal (log10 concntation in aq phase)
                {
                     "SRC" :   "calc",
                     "EPH" :   "IllEdS",
@@ -126,5 +133,31 @@
                     "CT" :   "DC",
                     "CN" :   "Cl-",
                     "DCP" :   "activity"
+               },
+# write activity coefficent of species in a phase
+               {
+                    "SRC" :   "calc",
+                    "EPH" :   "aq_gen",
+                    "CT" :   "DC",
+                    "CN" :   "Cl-",
+                    "DCP" :   "@coef"
+               },
+               
+# write the phase stability (saturation) index log10(Omega)
+               {
+                    "SRC" : "calc",
+                    "EPH" : "Gibbsite",
+                    "CT" : "prop",
+                    "CN" : "SI"
+               },
+               
+# wrrit the G0 of species @ the temperature and pressure of the sample / experiment, unit kJ/mol, mol/mol (divided by RT), default J/mol
+               {
+                    "SRC" :   "calc",
+                    "EPH" :   "aq_gen",
+                    "CT" :   "DC",
+                    "CN" :   "AlOH+2",
+                    "DCP" :   "G0@T",
+                    "unit" :   "J/mol"
                },
 

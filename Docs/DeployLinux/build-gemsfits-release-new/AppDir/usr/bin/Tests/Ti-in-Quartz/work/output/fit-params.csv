@@ -1,0 +1,4 @@
+ptype,parameter,name,init.value,fittted.value,mc.mean,mc.stdev,confi99,confi95,confi90,CSS.sensitivity,correl.coef.QtzRu[0|0],correl.coef.QtzRu[0|1],correl.coef.QtzRu[0|2],
+F,PMc,QtzRu[0|0],60300,60301.1747728,,,,,,225.665946704,1,0.84,-0.8986,
+F,PMc,QtzRu[0|1],-1.17,-1.18712445606,,,,,,194.198834257,0.84,1,-0.9929,
+F,PMc,QtzRu[0|2],1.79,1.79228887132,,,,,,206.549914576,-0.8986,-0.9929,1,

@@ -1,0 +1,14 @@
+# Copy the DataSelect section to your project and change acordingly
+"DataSelect" : { "usedatasets" : ["CH04", "CH04D"],
+                 "skipdatasets" : ["CH03", "CH03D"],
+                 "usesamples" : [],
+                 "skipsamples" : [],
+                 "usepairs" : [],
+                 "skippairs" : [
+                       { "dataset": "CHO4", "samples": ["01", "02"]},
+                       { "dataset": "CHO4D", "samples": ["01", "02"]},
+                     ],
+                  "sT" : [0, 1000],
+                  "sP" : [0, 500]
+}, 
+

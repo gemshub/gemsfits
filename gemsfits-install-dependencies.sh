@@ -11,7 +11,7 @@ if [ "$(uname)" == "Darwin" ]; then
 
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
 
-    #sudo apt install libarmadillo-dev libboost-all-dev libomp-12-dev
+    sudo apt install libarmadillo-dev libboost-all-dev libomp-12-dev
     EXTN=so
 
 fi

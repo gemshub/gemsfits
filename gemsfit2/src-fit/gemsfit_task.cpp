@@ -450,6 +450,39 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
       }
 }
 
+bool iequals(const std::string& a, const std::string& b)
+{
+    unsigned int sz = a.size();
+    if (b.size() != sz)
+        return false;
+    for (unsigned int i = 0; i < sz; ++i)
+        if (tolower(a[i]) != tolower(b[i]))
+            return false;
+    return true;
+}
+
+int get_b_gammaT(const std::string& s)
+{
+    int b_gammaT = -1;
+
+    if (iequals(s, "Constant"))
+        b_gammaT = 0;
+    else
+    if (iequals(s, "NaCl"))
+        b_gammaT = 1;
+    else
+    if (iequals(s, "KCl"))
+        b_gammaT = 2;
+    else
+    if (iequals(s, "NaOH"))
+        b_gammaT = 3;
+    else
+    if (iequals(s, "KOH"))
+        b_gammaT = 4;
+
+    return b_gammaT;
+}
+
 void TGfitTask::setnodes()
 {
     unsigned int i, j, k, l;
@@ -481,6 +514,13 @@ void TGfitTask::setnodes()
             std::cout<<" .. ERROR occurred while reading input files !!! ..."<<std::endl;
         }
     }
+
+    if (NodT.size() ==0)
+    {
+        std::cout<<" .. ERROR No experiments read from the database. See \"DataSelect\" ..."<<std::endl;
+        exit(1);
+    }
+
 
     DATACH* dCH_ = NodT[0]->pCSD();
 
@@ -675,54 +715,74 @@ void TGfitTask::setnodes()
             std::string sMod;
             NodT[n]->Get_sMod(0, sMod);
 
+            bool isSetActMod = false;
+
             // check if we are dealing with HKF TSolMod !!!!
+            //ndx 0: b_gamma; 1: a0; 2: gammma neutral species; 3: gamma H2O; 4: b_gammaT
             // ................ //
             // major salts interation parameters
             if (sMod.compare(0,1,"H") == 0)
             {
-            if (majorsalt == "NaCl")
-            {
-                NodT[n]->Set_PMc(0.064, 0 );
-                NodT[n]->Set_PMc(3.72, 1 );
-                NodT[n]->Set_PMc(1, 4 );
-            } else
-            if (majorsalt == "KCl")
-            {
-                NodT[n]->Set_PMc(0.025, 0 );
-                NodT[n]->Set_PMc(4.08, 1 );
-                NodT[n]->Set_PMc(2, 4 );
-            } else
-            if (majorsalt == "NaOH")
-            {
-                NodT[n]->Set_PMc(0.098, 0 );
-                NodT[n]->Set_PMc(3.31, 1 );
-                NodT[n]->Set_PMc(3, 4 );
-            } else
-            if (majorsalt == "KOH")
-            {
-                NodT[n]->Set_PMc(0.123, 0 );
-                NodT[n]->Set_PMc(3.67, 1 );
-                NodT[n]->Set_PMc(4, 4 );
-            } else
-            if (majorsalt == "CaCl2")
-            {
-                NodT[n]->Set_PMc(0.077, 0 );
-                NodT[n]->Set_PMc(4.32, 1 );
-                NodT[n]->Set_PMc(0, 4 );
-            } else
-            if (majorsalt == "MgCl2")
-            {
-                NodT[n]->Set_PMc(0.106, 0 );
-                NodT[n]->Set_PMc(4.11, 1 );
-                NodT[n]->Set_PMc(0, 4 );
-            } /*else // default NaCl
+                for (size_t p = 0; p <experiments[n]->expphases.size(); p++)
+                {
+                    if (experiments[n]->expphases[p]->phactmod.isActMod)
+                    {
+                        isSetActMod = true;
+                        // setting activity model paramters
+                        if (experiments[n]->expphases[p]->phactmod.b_gamma !=-1.0)
+                            NodT[n]->Set_PMc(experiments[n]->expphases[p]->phactmod.b_gamma, 0 );
+                        if (experiments[n]->expphases[p]->phactmod.a0 !=-1.0)
+                            NodT[n]->Set_PMc(experiments[n]->expphases[p]->phactmod.a0, 1 );
+                        if (experiments[n]->expphases[p]->phactmod.gammaN !=-1.0)
+                            NodT[n]->Set_PMc(experiments[n]->expphases[p]->phactmod.gammaN, 2 );
+                        if (experiments[n]->expphases[p]->phactmod.gammaW !=-1.0)
+                            NodT[n]->Set_PMc(experiments[n]->expphases[p]->phactmod.gammaW, 3 );
+                        if (experiments[n]->expphases[p]->phactmod.b_gammaT !="")
+                            NodT[n]->Set_PMc(get_b_gammaT(experiments[n]->expphases[p]->phactmod.b_gammaT), 4 );
+                    }
+                }
+
+                if (!isSetActMod) {
+                    if (majorsalt == "NaCl")   {
+                        NodT[n]->Set_PMc(0.064, 0 );
+                        NodT[n]->Set_PMc(3.72, 1 );
+                        NodT[n]->Set_PMc(1, 4 );
+                    }
+                    else if (majorsalt == "KCl") {
+                        NodT[n]->Set_PMc(0.025, 0 );
+                        NodT[n]->Set_PMc(4.08, 1 );
+                        NodT[n]->Set_PMc(2, 4 );
+                    }
+                    else if (majorsalt == "NaOH")  {
+                        NodT[n]->Set_PMc(0.098, 0 );
+                        NodT[n]->Set_PMc(3.31, 1 );
+                        NodT[n]->Set_PMc(3, 4 );
+                    }
+                    else if (majorsalt == "KOH") {
+                        NodT[n]->Set_PMc(0.123, 0 ); // b_gamma
+                        NodT[n]->Set_PMc(3.67, 1 ); // a0
+                        NodT[n]->Set_PMc(4, 4 ); // T function
+                    }
+                    else if (majorsalt == "CaCl2")  {
+                        NodT[n]->Set_PMc(0.077, 0 );
+                        NodT[n]->Set_PMc(4.32, 1 );
+                        NodT[n]->Set_PMc(0, 4 );
+                    }
+                    else if (majorsalt == "MgCl2")  {
+                        NodT[n]->Set_PMc(0.106, 0 );
+                        NodT[n]->Set_PMc(4.11, 1 );
+                        NodT[n]->Set_PMc(0, 4 );
+                    } /*else // default NaCl
             {
                 NodT[n]->Set_PMc(0.064, 0 );
                 NodT[n]->Set_PMc(3.72, 1 );
                 NodT[n]->Set_PMc(1, 4 );
             }*/
+                }
             }
         }
+
+
 
 // ....................................................................
 // NodT[n]->  This is written using TNode functions on 05.01.2014 by DK
@@ -1089,7 +1149,6 @@ void TGfitTask::get_DataTarget ( )
     std::fstream test_out("DataTarget.log", std::ios::out);
     test_out << *Tfun << "\n";
 #endif
-
 }
 
 // will go away after implementing way to read logK's from the input file
@@ -1425,10 +1484,8 @@ void TGfitTask::calc_logK_TP ()
                 for (unsigned e=0; e <Opti->optParam.size(); e++)
                 {
                     if (Opti->optParam[e]->Get_optType() == "G0")
-                    Opti->optParam[e]->Set_logKTP(FlogK[i].Rndx, calc_logK_dT(FlogK[i].Fcoef, TP_pairs[0][j] + 273.15, Pbar, FlogK[i].Rndx-1, e ) );
+                    Opti->optParam[e]->Set_logKTP(FlogK[i].Rndx, calc_logK_dT(FlogK[i].Fcoef, TP_pairs[0][j] + 273.15, Pbar, FlogK[i].Rndx, e ) );
                 }
-
-
             } else
             if (FlogK[i].Ftype == "logK_dRHOw")
             {

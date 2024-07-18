@@ -1,0 +1,18 @@
+# '$gt' - greater than (can be replaced with '$gte' - >=) or '$lt' - lower than and '$lte'- <=
+# '$in' - matches the values
+# all values are optional e.g. if the search is not on the "phase" the field can be deleted
+
+{
+     "expphases" :   [
+          {
+               "phase" :   {'$in' : ["val1", "val2", "val3"]},
+               "phprop" :   [
+                    {
+                         "prop" :   {'$in' : ["val1", "val2", "val3"]},
+                         "Q" :   {'$gt' : number}
+                    }
+               ]
+          }   
+     ]
+}
+

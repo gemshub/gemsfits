@@ -69,6 +69,12 @@ cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/home/<you>/Qt/6.5.0/gcc
 make -j 4
 ```
 
+If you are using Qt installed in your home folder you will probably encounter an error about missing gl.h when building with QT. To avoid this do:
+```
+sudo apt-get install build-essential libgl1-mesa-dev libxcb-xinerama0 libxcb-cursor0
+```
+
+
 ### Compiling gemsfits applications in Qt Creator
 
 * In Qt Creator open ~/gemsfits/gemsfit2/gemsfit2.pro
