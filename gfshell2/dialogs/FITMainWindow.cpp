@@ -47,7 +47,7 @@ const char *GEMFIT_APP = "/gemsfit3";
 #endif
 
 // User home resource
-const char *DEFAULT_USER_DIR= "/Library/GemsFits/";
+const char *DEFAULT_USER_DIR= "/Library/GEMSFITS/";
 const char *DEFAULT_PR_DIR= "projects/";
 
 //--------------------------------------------------------------------------
@@ -103,7 +103,7 @@ void FITMainWindow::setDefValues(int /*c*/, char** /*v*/)
 
     LocalDocDir = SysFITDir + HELP_DB_DIR;
     GemsSettings::data_logger_directory = UserDir;
-    UserDir += DEFAULT_PR_DIR; // "/Library/GemsFits/projects";
+    UserDir += DEFAULT_PR_DIR; // "/Library/GEMSFITS/projects";
 
     // check home dir
     std::string dir = userDir();
