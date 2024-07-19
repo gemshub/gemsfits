@@ -28,9 +28,28 @@
 #include "keywords.h"
 #include "json_view.h"
 #include "v_yaml.h"
-
+#include "jsonconfig.h"
 #include "io_template.h"
+
 extern std::vector<io_formats::outField> DataCH_dynamic_fields;
+
+// subfolder and file names constants
+// System resource
+const char *RESOURCES_DIR = "/Resources/";
+const char *HELP_DB_DIR = "help/";
+const char *HELP_SRC_DIR = "doc/html/";
+const char *DATA_TEMPLATES = "data/";
+const char *SEARCH_TEMPLATES = "search-templates/";
+#ifdef _WIN32
+const char *GEMFIT_APP = "/gemsfit3.exe";
+#else
+const char *GEMFIT_APP = "/gemsfit3";
+#endif
+
+// User home resource
+const char *DEFAULT_USER_DIR= "/Library/GemsFits/";
+const char *DEFAULT_PR_DIR= "projects/";
+
 //--------------------------------------------------------------------------
 
 void TKeyTable::keyPressEvent(QKeyEvent* e)
@@ -49,13 +68,57 @@ void TKeyTable::keyPressEvent(QKeyEvent* e)
 
 //------------------------------------------------------------------------------
 
+
 FITMainWindow* pFitImp;
 
 void FITMainWindow::setDefValues(int /*c*/, char** /*v*/)
 {
+
+    QString dirExe;
+
+// set up default path
+#ifdef __APPLE__
+    dirExe = QCoreApplication::applicationDirPath();
+    auto app_index = dirExe.lastIndexOf("/shellfit3.app/Contents", -1, Qt::CaseInsensitive );
+
+    if( app_index >= 0 )
+    {
+        SysFITDir = dirExe.left(app_index).toStdString() + "/shellfit3.app/Contents/Resources/";
+    }
+    else {
+        // non-standard executable path, search for resources starting with current dir
+        SysFITDir = dirExe.toStdString() + "/shellfit3.app/Contents/Resources/";
+    }
+    UserDir = home_dir() + DEFAULT_USER_DIR;
+
+#else
+    // Linux and Windows - in user's home directory
+    // By default: /Resources in the same dir as the exe file;
+    dirExe = QCoreApplication::applicationDirPath();
+    SysFITDir = dirExe.toStdString() + RESOURCES_DIR;
+    WorkDir = dirExe.toStdString();
+    UserDir = home_dir() + DEFAULT_USER_DIR;
+    GemsfitApplication = dirExe + GEMFIT_APP;
+#endif
+
+    LocalDocDir = SysFITDir + HELP_DB_DIR;
+    GemsSettings::data_logger_directory = UserDir;
+    UserDir += DEFAULT_PR_DIR; // "/Library/GemsFits/projects";
+
+    // check home dir
+    std::string dir = userDir();
+    QDir user_fit(dir.c_str());
+    bool firstTimeStart = !user_fit.exists();
+    if (firstTimeStart) {
+        if( !user_fit.mkpath(userDir().c_str()) )
+            throw TFatalError("gemsfit Init", "Cannot create user directory");
+        // here could be copy default projects
+    }
+
     // load main programm settingth
-    mainSettings = new QSettings("gemsfits.ini", QSettings::IniFormat);
+    mainSettings = new QSettings(dirExe+"/gemsfits.ini", QSettings::IniFormat);
     getDataFromPreferences();
+
 }
 
 void FITMainWindow::getDataFromPreferences()
@@ -63,19 +126,22 @@ void FITMainWindow::getDataFromPreferences()
     if( !mainSettings)
         return;
 
-    SysFITDir =  mainSettings->value("ResourcesFolderPath", "../Resources/").toString().toStdString();
-    LocalDocDir =  mainSettings->value("HelpFolderPath", "../Resources/help").toString().toStdString();
-    UserDir = mainSettings->value("UserFolderPath", ".").toString().toStdString();
+    SysFITDir =  mainSettings->value("ResourcesFolderPath", SysFITDir.c_str()).toString().toStdString();
+    if( !SysFITDir.empty() && SysFITDir.back() != '/') {
+       SysFITDir += "/";
+    }
+    LocalDocDir =  mainSettings->value("HelpFolderPath", LocalDocDir.c_str()).toString().toStdString();
+    UserDir = mainSettings->value("UserFolderPath", UserDir.c_str()).toString().toStdString();
     KeysLength = mainSettings->value("PrintComments", true).toBool();
     JsonDataShow = !mainSettings->value("ViewinYAMLFormat", false).toBool();
     EditorDataShow = mainSettings->value("ViewinModelEditor", true).toBool();
 
-    QString program = mainSettings->value("Gemsfit2ProgramPath", "gemsfit2").toString();
-    fitProcess->setProgram( program );
+    GemsfitApplication = mainSettings->value("Gemsfit2ProgramPath", GemsfitApplication).toString();
+    fitProcess->setProgram( GemsfitApplication );
 
     // load experiment template text
-    QString fname = SysFITDir.c_str();
-    fname += "/data/" + mainSettings->value("ExpTemplateFileName", "...").toString();
+    QString fname = sysDir().c_str();
+    fname += DATA_TEMPLATES + mainSettings->value("ExpTemplateFileName", "...").toString();
     QFile tmpString(fname);
     if(tmpString.open( QIODevice::ReadOnly))
     {
@@ -84,8 +150,8 @@ void FITMainWindow::getDataFromPreferences()
     }
 
     // load experiment search text
-    fname = SysFITDir.c_str();
-    fname += "/templates/" + mainSettings->value("TemplateSearchFileName", "...").toString();
+    fname = sysDir().c_str();
+    fname += SEARCH_TEMPLATES + mainSettings->value("TemplateSearchFileName", "...").toString();
     QFile tmpString1(fname);
     if(tmpString1.open( QIODevice::ReadOnly))
     {
@@ -118,7 +184,7 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     //connect( fitProcess, SIGNAL(readyReadStandardError()), this, SLOT(ReadErr()) );
 
     //set up main parameters
-    setDefValues( c, v);
+    setDefValues(c, v);
     axisLabelFont = QFont("Courier New", 14);
     ui->actionCancel_gemsfit2_run->setEnabled(false);
 

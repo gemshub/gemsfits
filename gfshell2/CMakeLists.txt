@@ -1,4 +1,5 @@
 message(STATUS "Building shellfit3")
+file(COPY "${CMAKE_SOURCE_DIR}/Resources" DESTINATION "${CMAKE_BINARY_DIR}/bin")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/dataman)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/dialogs)

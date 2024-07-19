@@ -38,6 +38,11 @@ namespace jsonui17 {
 class JsonView;
 }
 
+extern const char *HELP_SRC_DIR;
+extern const char *DATA_TEMPLATES;
+extern const char *SEARCH_TEMPLATES;
+
+
 class TKeyTable: public QTableWidget
 {
     Q_OBJECT
@@ -59,8 +64,10 @@ class FITMainWindow : public QMainWindow
     int currentMode;    ///< DataBase or Task mode
 
     std::string SysFITDir;   ///< Path to resources directory
-    std::string LocalDocDir; ///< Path to help directory
     std::string UserDir;     ///< Path to User directory
+    std::string WorkDir;     ///< Path to last used directory
+    std::string LocalDocDir; ///< Path to help directory
+    QString GemsfitApplication; ///< Path to gemsfit application
 
     bool KeysLength;   ///< Write TXT files with comments
     bool JsonDataShow;   ///< Write edited data in Json format
@@ -190,6 +197,9 @@ public:
     }
     const std::string& docDir() const {
         return LocalDocDir;
+    }
+    const QString& fitApp() const {
+        return GemsfitApplication;
     }
     const QFont& getAxisLabelFont() const
     {  return axisLabelFont; }
