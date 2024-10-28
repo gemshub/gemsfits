@@ -904,6 +904,16 @@ void TGfitTask::setnodes()
      }
    }
 
+        for (i=0; i<nIC; i++) // assigining default values for all IC (1e-09 - absent component); 0 for charge.
+        {
+            if (new_moles_IC[i] > 1e-9)
+                new_moles_IC[i]-=1e-9;
+            if (i==nIC-1) {
+                new_moles_IC[i]=0.;
+            }
+        }
+
+
 
 
         // for j
