@@ -27,6 +27,7 @@
 //-------------------------------------------------------------------
 //
 
+#include <string>
 #include "gemsfit_task.h"
 #include "gdatastream.h"
 #include "gemsfit_iofiles.h"
@@ -456,7 +457,7 @@ void TGfitTask::build_optim( nlopt::opt &NLopti, std::vector<double> &optv_, dou
       }
 }
 
-bool iequals(const string& a, const string& b)
+bool iequals(const std::string& a, const std::string& b)
 {
     unsigned int sz = a.size();
     if (b.size() != sz)
@@ -467,7 +468,7 @@ bool iequals(const string& a, const string& b)
     return true;
 }
 
-int get_b_gammaT(const string& s)
+int get_b_gammaT(const std::string& s)
 {
     int b_gammaT = -1;
 
@@ -519,7 +520,7 @@ void TGfitTask::setnodes()
 
     if (NodT.size() ==0)
     {
-        cout<<" .. ERROR No experiments read from the database. See \"DataSelect\" ..."<<endl;
+        std::cout<<" .. ERROR No experiments read from the database. See \"DataSelect\" ..."<<std::endl;
         exit(1);
     }
 

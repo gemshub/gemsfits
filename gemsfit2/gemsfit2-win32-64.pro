@@ -32,7 +32,7 @@
 TEMPLATE	= app
 #LANGUAGE        = C++
 TARGET		= gemsfit2
-VERSION         = 2.2.1
+VERSION         = 2.2.2
 CONFIG          += c++17
 
 DEFINES         += IPMGEMPLUGIN
@@ -46,6 +46,9 @@ CONFIG -= qt
 CONFIG += warn_on
 CONFIG += console
 #CONFIG += serial release
+
+#DEFINES += USE_THERMOFUN
+#DEFINES += USE_THERMO_LOG
 
 CONFIG( release,  debug|release ) {
         message( "Configuring for release build ..." )
@@ -84,6 +87,11 @@ CONFIG( serial, serial|mpi ) {
   PLATFORM_CPP       =  ./tcejdb/nix
 }
 else {
+
+#  INCLUDEPATH   += "C:\usr\local\include"
+#  DEPENDPATH   += "C:\usr\local\include"
+#  LIBPATH += "C:\usr\local\lib"
+
   DEFINES           += buildWIN32
   DEFINES           += HAVE_STDINT_H
   QMAKE_CXXFLAGS    += -D__USE_MINGW_ANSI_STDIO=1 -frounding-math -fopenmp -O3

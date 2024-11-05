@@ -59,6 +59,7 @@ gfshell2/gemsfit-win32-64-gui.pro.user*
 gemsfit2/gemsfit2-win.pro.user*
 gfshell2/gemsfit-win-gui.pro.user*
 gfshell2/gemsfit-gui.pro.user*
+build*
 
 .vscode/
 GEMSFITSDEPLOY/

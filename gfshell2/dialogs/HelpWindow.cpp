@@ -47,7 +47,7 @@
 const char *FIT_HOWHELP_HTML = "gemsfit-techinfo.html";
 const char *FIT_ABOUT_HTML = "gemsfits-about.html";
 
-const char *_FIT_version_stamp = "GEMSFITS v1.3.2";
+const char *_FIT_version_stamp = "GEMSFITS v1.3.3";
 extern const char *_GEMIPM_version_stamp;
 
 HelpWindow* HelpWindow::pDia = 0;

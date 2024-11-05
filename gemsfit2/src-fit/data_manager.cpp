@@ -1283,7 +1283,7 @@ void Data_Manager::bson_to_Data_Manager(/* FILE *f, */ const char *data, int pos
                                 bson_iterator_subiterator( k, d2 );
                                 while (bson_iterator_next(d2) != BSON_EOO )
                                 {
-                                    string key_ = bson_iterator_key(d2);
+                                    std::string key_ = bson_iterator_key(d2);
                                     if ((key_ == keys::b_gamma))
                                     {
                                         double qw = bson_iterator_double(d2) ;
@@ -1291,7 +1291,7 @@ void Data_Manager::bson_to_Data_Manager(/* FILE *f, */ const char *data, int pos
                                     } else
                                     if ((key_ == keys::b_gammaT))
                                     {
-                                        string qw = bson_iterator_string(d2) ;
+                                        std::string qw = bson_iterator_string(d2) ;
                                         experiments[pos]->expphases[ip]->phactmod.b_gammaT = qw ;
                                     } else
                                     if ((key_ == keys::a0))
