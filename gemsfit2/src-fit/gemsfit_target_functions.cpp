@@ -359,7 +359,7 @@ double residual_properties(int i, int p, TGfitTask::TargetFunction::obj_fun &obj
         std::vector<std::wstring> varStr;
 #else
         parser.SetExpr(expr);
-        vector<string> varStr;
+        std::vector<std::string> varStr;
 #endif
 
         parser.SetVarFactory(AddVariable, &varStr);
@@ -615,7 +615,7 @@ double residual_phase_elemMR (int i, int p, int f, TGfitTask::TargetFunction::ob
         std::vector<std::wstring> varStr;
 #else
         parser.SetExpr(objfun.exp_CN);
-        vector<string> varStr;
+        std::vector<std::string> varStr;
 #endif
         parser.SetVarFactory(AddVariable, &varStr);
         parser.GetUsedVar();
@@ -880,7 +880,7 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
             std::vector<std::wstring> varStr;
 #else
             parser.SetExpr(expr);
-            vector<string> varStr;
+            std::vector<std::string> varStr;
 #endif
 
             parser.SetVarFactory(AddVariable, &varStr);

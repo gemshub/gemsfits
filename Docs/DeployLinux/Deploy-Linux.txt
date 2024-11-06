@@ -15,6 +15,10 @@ Copy the /Resources and /Tests folders into /GEMSFITSDEPLOY folder. Copy
 the files  gemsfits.png, Readme.Run.Linux.txt, and rungemsfits.sh from
 /Docs/DeployLinux to /GEMSFITSDEPLOY/gemsfits-app
 
+Atention! the deploy my produce confilcting libraries - until fixed 
+compile the executables with Desktop_Qt_5_11_0_GCC_64bit-Release on Ubuntu18 and 
+copy the contents of folder BuildRunLinux to gemsfits-app
+
 @@ gfshell2 @@ 
 3.a Using QtCreator (Qt 5.5.1 64bit Ubuntu 16.04 system 
     /usr/lib/x86_64-linux-gnu/qt5), build the actual release variant of 
