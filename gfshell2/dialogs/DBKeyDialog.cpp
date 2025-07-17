@@ -21,7 +21,7 @@
 #include "ui_DBKeyDialog.h"
 #include "f_database.h"
 #include "gui_service.h"
-#include "v_service.h"
+#include <GEMS3K/v_service.h>
 
 extern const char *DBM;
 

@@ -9,12 +9,12 @@ find_package(Threads REQUIRED)
 # Recursively collect all header files
 file(GLOB_RECURSE HEADER_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.hpp *.h)
 file(GLOB COMMON_HEADER_FILES ${COMMON_DIR}/*.h)
-file(GLOB GEMS3K_HEADER_FILES ${GEMS3K_DIR}/*.h)
+#file(GLOB GEMS3K_HEADER_FILES ${GEMS3K_DIR}/*.h)
 
 # Recursively collect all source files
 file(GLOB_RECURSE SOURCE_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 file(GLOB COMMON_SOURCE_FILES ${COMMON_DIR}/*.cpp)
-file(GLOB GEMS3K_SOURCE_FILES ${GEMS3K_DIR}/*.cpp)
+#file(GLOB GEMS3K_SOURCE_FILES ${GEMS3K_DIR}/*.cpp)
 
 
 file(GLOB QRC_FILES *.qrc)
@@ -64,13 +64,7 @@ else()
      target_link_libraries(shellfit3 PRIVATE ${EJDB_LIB} yaml-cpp Threads::Threads)
 endif()
 
-if(USE_THERMOFUN MATCHES ON)
-     target_link_libraries(shellfit3 PRIVATE ThermoFun::ThermoFun)
-else()
-    if(USE_SPDLOG_PRECOMPILED)
-       target_link_libraries(shellfit3 PRIVATE spdlog::spdlog)
-    endif()
-endif()
+target_link_libraries(shellfit3 PRIVATE PUBLIC GEMS3K::GEMS3K)
 
 if(Qt6_FOUND)
 

@@ -74,7 +74,7 @@ echo "Creating README..."
 
 readme=$tardir/README
 echo "================================================================================" >> $readme
-echo "GEMSFITS v1.0 $etardir" >> $readme
+echo "GEMSFITS v1.3.3 $etardir" >> $readme
 echo "Please, read Readme.Run.linux.txt file first, and do things as suggested there." >> $readme
 echo "To have projects in /home/you/Library/GEMSFITS (default location," >> $readme 
 echo "  launch once $executable via" >> $readme

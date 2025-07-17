@@ -23,15 +23,15 @@
 #include "HelpWindow.h"
 #include "FitResultsWindow.h"
 #include "f_database.h"
-#include "v_service.h"
+#include <GEMS3K/v_service.h>
 #include "gui_service.h"
 #include "keywords.h"
 #include "json_view.h"
 #include "v_yaml.h"
-#include "jsonconfig.h"
-#include "io_template.h"
+#include <GEMS3K/jsonconfig.h>
+#include <GEMS3K/io_template.h>
 
-extern std::vector<io_formats::outField> DataCH_dynamic_fields;
+//// extern std::vector<io_formats::outField> DataCH_dynamic_fields;
 
 // subfolder and file names constants
 // System resource
@@ -175,7 +175,7 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     ui->setupUi(this);
 
     // Some changes in GEMS3k to read CH files without V0
-    DataCH_dynamic_fields[f_V0].alws = 0;
+    ///// DataCH_dynamic_fields[f_V0].alws = 0;
 
     // setup process
     fitProcess = new QProcess( this);

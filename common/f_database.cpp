@@ -22,7 +22,7 @@
 #include <cstring>
 #include "f_database.h"
 #include "f_file.h"
-#include "v_service.h"
+#include <GEMS3K/v_service.h>
 #include "keywords.h"
 
 

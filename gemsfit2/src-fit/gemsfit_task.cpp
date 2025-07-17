@@ -27,22 +27,19 @@
 //-------------------------------------------------------------------
 //
 
-//#ifndef __unix
-//#include <io.h>
-//#endif
-
 #include <cmath>
 #include <iomanip>
 #include <memory>
+#include <string>
 #include "gemsfit_task.h"
-#include "gdatastream.h"
+#include <GEMS3K/gdatastream.h>
 #include "gemsfit_iofiles.h"
 #include "keywords.h"
 #include "gemsfit_global_functions.h"
 //#include "gemsfit_nested_functions.h"
 #include "gemsfit_target_functions.h"
 #include "gemsfit_nested_functions.h"
-#include "s_solmod.h"
+#include <GEMS3K/s_solmod.h>
 #include "s_formula.h"
 
 int master_counter;
@@ -896,6 +893,16 @@ void TGfitTask::setnodes()
        exit(1);
      }
    }
+
+        for (i=0; i<nIC; i++) // assigining default values for all IC (1e-09 - absent component); 0 for charge.
+        {
+            if (new_moles_IC[i] > 1e-9)
+                new_moles_IC[i]-=1e-9;
+            if (i==nIC-1) {
+                new_moles_IC[i]=0.;
+            }
+        }
+
 
 
 

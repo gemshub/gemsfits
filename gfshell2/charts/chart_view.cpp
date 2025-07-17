@@ -22,7 +22,7 @@
 #include <QtSvg/QSvgGenerator>
 #include <QPixmap>
 
-#include "v_detail.h"
+#include <GEMS3K/v_detail.h>
 #include "charts/graph_data.h"
 #include "charts/chart_view.h"
 

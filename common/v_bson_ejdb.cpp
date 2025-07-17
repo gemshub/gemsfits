@@ -24,7 +24,7 @@
 #include <sstream>
 #include <iomanip>
 #include <fstream>
-#include "verror.h"
+#include <GEMS3K/verror.h>
 #include "v_bson_ejdb.h"
 
 namespace common {

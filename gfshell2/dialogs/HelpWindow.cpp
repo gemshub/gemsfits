@@ -43,8 +43,8 @@
 const char *FIT_HOWHELP_HTML = "gemsfit-techinfo.html";
 const char *FIT_ABOUT_HTML = "gemsfits-about.html";
 
-const char *_FIT_version_stamp = "GEMSFITS v1.3.2";
-extern const char *_GEMIPM_version_stamp;
+const char *_FIT_version_stamp = "GEMSFITS v1.3.3";
+////extern const char *_GEMIPM_version_stamp;
 
 HelpWindow* HelpWindow::pDia = 0;
 
@@ -244,7 +244,7 @@ void HelpWindow::helpVersion()
                          #endif
                              QString("\nThis is GEMSFITS coupled code\n\n")+
                              QString( _FIT_version_stamp ) + QString(  "\n\nusing " )+
-                             QString( _GEMIPM_version_stamp ) +
+                             ////QString( _GEMIPM_version_stamp ) +
                              QString( "\n\n\nFor GEMS R&D community\n\n"
                                       "(c) 2014-2022, GEMS Development Team\n\n"
                                       "          PSI-UH-ETHZ" ) );

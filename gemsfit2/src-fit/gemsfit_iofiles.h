@@ -24,7 +24,7 @@
 #include <string>
 #include <fstream>
 #include <ctime>
-#include "node.h"
+#include <GEMS3K/node.h>
 
 
 /**

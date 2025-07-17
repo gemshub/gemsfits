@@ -26,7 +26,7 @@ namespace fs = std::filesystem;
 #include <omp.h>
 #include "gemsfit_iofiles.h"
 #include "keywords.h"
-#include "v_service.h"
+#include <GEMS3K/v_service.h>
 #include "v_json.h"
 
 common::JsonFree generateJson(TNode *node, int mode);

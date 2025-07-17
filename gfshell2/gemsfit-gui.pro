@@ -17,8 +17,8 @@ DEFINES         += OLD_EJDB # compile using ejdb1
 DEFINES         += IPMGEMPLUGIN
 #DEFINES += NODEARRAYLEVEL
 #DEFINES += USE_NLOHMANNJSON
-#DEFINES += USE_THERMOFUN
-#DEFINES += USE_THERMO_LOG
+DEFINES += USE_THERMOFUN
+DEFINES += USE_THERMO_LOG
 
 QMAKE_CXXFLAGS += -O3 -fno-inline-small-functions -DIW_STATIC
 QMAKE_LFLAGS += -O3 -fno-inline-small-functions
@@ -93,6 +93,7 @@ CONFIG(release, debug|release): LIBS += -lejdb2 -lyaml-cpp
 CONFIG(debug, debug|release): LIBS += -lejdb2 -lyaml-cpp
 }
 
+LIBS += -lGEMS3K
 contains(DEFINES, USE_THERMOFUN) {
   LIBS += -lThermoFun -lChemicalFun
 } ## end USE_THERMOFUN

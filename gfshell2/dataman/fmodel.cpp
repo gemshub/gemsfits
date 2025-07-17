@@ -30,8 +30,8 @@
 #include "fmodel.h"
 #include "CalcDialog.h"
 #include "charts/GraphDialog.h"
-#include "v_service.h"
-#include "v_detail.h"
+#include <GEMS3K/v_service.h>
+#include <GEMS3K/v_detail.h>
 
 void removeComments( QString& valCsv )
 {

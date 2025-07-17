@@ -30,7 +30,7 @@
 #include <cmath>
 #include <iomanip>
 #include "gemsfit_task.h"
-#include "gdatastream.h"
+#include <GEMS3K/gdatastream.h>
 #include "gemsfit_iofiles.h"
 #include "keywords.h"
 #include "gemsfit_global_functions.h"

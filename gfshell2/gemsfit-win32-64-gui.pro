@@ -46,26 +46,26 @@ CHARTS_CPP   =  ./charts
 DATAMAN_CPP  =  ./dataman
 DIALOGS_CPP  =  ./dialogs
 COMMON_CPP  =  ../common
-GEMS3K_CPP   =  ../standalone/GEMS3K
+#GEMS3K_CPP   =  ../standalone/GEMS3K
 
 CHARTS_H     =  $$CHARTS_CPP
 DATAMAN_H    =  $$DATAMAN_CPP
 DIALOGS_H    =  $$DIALOGS_CPP
 COMMON_H     =  $$COMMON_CPP
-GEMS3K_H     =  $$GEMS3K_CPP
+#GEMS3K_H     =  $$GEMS3K_CPP
 
 DEPENDPATH   += $$CHARTS_H
 DEPENDPATH   += $$DATAMAN_H
 DEPENDPATH   += $$DIALOGS_H
 DEPENDPATH   += $$COMMON_H
-DEPENDPATH   += $$GEMS3K_H
+#DEPENDPATH   += $$GEMS3K_H
 DEPENDPATH   += $$KEYS_H
 
 INCLUDEPATH   += $CHARTS_H
 INCLUDEPATH   += $$DATAMAN_H
 INCLUDEPATH   += $$DIALOGS_H
 INCLUDEPATH   += $$COMMON_H
-INCLUDEPATH   += $$GEMS3K_H
+#INCLUDEPATH   += $$GEMS3K_H
 INCLUDEPATH   += $$KEYS_H
 
 INCLUDEPATH += $$PWD/../gemsfit2/boost_win32
@@ -76,7 +76,7 @@ MOC_DIR = tmp
 UI_DIR        = $$MOC_DIR
 OBJECTS_DIR   = obj
 
-include($$GEMS3K_CPP/gems3k.pri)
+#include($$GEMS3K_CPP/gems3k.pri)
 include($$CHARTS_CPP/charts.pri)
 include($$DATAMAN_CPP/dataman.pri)
 include($$DIALOGS_CPP/dialogs.pri)

@@ -18,7 +18,7 @@
 
 #include "CalcDialog.h"
 #include "ui_CalcDialog4.h"
-#include "v_detail.h"
+#include <GEMS3K/v_detail.h>
 
 const double IPNC_DBL_MAX = 1e37;
 const double IPNC_DBL_MIN = 1e-37;

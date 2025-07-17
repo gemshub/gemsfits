@@ -3,7 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include "v_yaml.h"
-#include "v_detail.h"
+#include <GEMS3K/v_detail.h>
 #include "jsonparser.h"
 
 std::string fix_cvs(const std::string& json_str)

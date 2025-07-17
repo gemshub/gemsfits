@@ -40,7 +40,7 @@ CONFIG += warn_on
 CONFIG += console
 CONFIG += sanitaze sanitaze_thread
 CONFIG += serial release
-CONFIG += c++17
+CONFIG += c++20
 
 # check settengs
 DEFINES         += useomp
@@ -54,6 +54,8 @@ DEFINES += IPMGEMPLUGIN
 #DEFINES += USE_THERMOFUN
 #DEFINES += USE_THERMO_LOG
 
+QMAKE_CXXFLAGS += -O3
+QMAKE_LFLAGS += -O3
 
 CONFIG( release,  debug|release ) {
         message( "Configuring for release build ..." )
@@ -101,23 +103,23 @@ CONFIG( serial, serial|mpi ) {
 }
 
 FIT_CPP      =  ./src-fit
-GEMS3K_CPP   =  ../standalone/GEMS3K
+#GEMS3K_CPP   =  ../standalone/GEMS3K
 MUP_CPP      =  ./muparser/src
 COMMON_CPP  =  ../common
 
 FIT_H        =   $$FIT_CPP
-GEMS3K_H     =   $$GEMS3K_CPP
+#GEMS3K_H     =   $$GEMS3K_CPP
 MUP_H        =   $$MUP_CPP
 COMMON_H     =   $$COMMON_CPP
 
 DEPENDPATH   += $$FIT_H
-DEPENDPATH   += $$GEMS3K_H
+#DEPENDPATH   += $$GEMS3K_H
 DEPENDPATH   += $$KEYS_H
 DEPENDPATH   += $$MUP_H
 DEPENDPATH   += $$COMMON_H
 
 INCLUDEPATH  += $$FIT_H
-INCLUDEPATH  += $$GEMS3K_H   
+#INCLUDEPATH  += $$GEMS3K_H
 INCLUDEPATH  += $$KEYS_H
 INCLUDEPATH  += $$MUP_H
 INCLUDEPATH   += $$COMMON_H
@@ -126,7 +128,7 @@ OBJECTS_DIR       = obj
 
 include($$COMMON_CPP/common.pri)
 include($$FIT_CPP/fit.pri)
-include($$GEMS3K_CPP/gems3k.pri)
+#include($$GEMS3K_CPP/gems3k.pri)
 include($$MUP_CPP/muparser.pri)
 
 contains(DEFINES, OLD_EJDB) {
@@ -139,6 +141,7 @@ CONFIG(release, debug|release): LIBS += -lejdb2 -lyaml-cpp
 CONFIG(debug, debug|release): LIBS += -lejdb2 -lyaml-cpp
 }
 
+LIBS += -lGEMS3K
 contains(DEFINES, USE_THERMOFUN) {
   LIBS += -lThermoFun -lChemicalFun
 } ## end USE_THERMOFUN

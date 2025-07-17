@@ -26,7 +26,7 @@
 #include "DBKeyDialog.h"
 
 #include "f_database.h"
-#include "v_service.h"
+#include <GEMS3K/v_service.h>
 #include "gui_service.h"
 #include "keywords.h"
 #include "v_yaml.h"

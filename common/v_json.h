@@ -7,7 +7,7 @@
 #include <sstream>
 #include <limits>
 
-#include "verror.h"
+#include <GEMS3K/verror.h>
 #include "type_test.h"
 
 namespace common {

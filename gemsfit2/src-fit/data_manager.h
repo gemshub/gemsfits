@@ -52,7 +52,7 @@
 #include <thread>
 #include <shared_mutex>
 #include <algorithm>
-#include "node.h"
+#include <GEMS3K/node.h>
 #include "v_json.h"
 #include "optimization.h"
 

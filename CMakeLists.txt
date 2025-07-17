@@ -31,7 +31,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 
 # Define which types of libraries to build
-option(USE_THERMOFUN "Use ThermoFun" OFF)
+option(USE_THERMOFUN "Use ThermoFun" ON)
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
   option(USE_OLD_EJDB "Compile using ejdb1" ON)
   option(BUILD_GUI "Build Qt GUI shell" ON)

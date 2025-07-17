@@ -32,15 +32,21 @@
 TEMPLATE	= app
 #LANGUAGE        = C++
 TARGET		= gemsfit2
-VERSION         = 2.0.0
-# GEMS3K commit
+VERSION         = 2.2.2
+
+
+DEFINES         += IPMGEMPLUGIN
+DEFINES         += useomp
+DEFINES         += _MYNOZLIB
+DEFINES         += HAVE_STDINT_H
+
 
 CONFIG -= qt
 CONFIG += warn_on
 CONFIG += console
 #CONFIG += sanitaze sanitaze_thread
 CONFIG += serial release
-CONFIG += c++17
+CONFIG += c++20
 
 # check settengs
 DEFINES         += useomp
@@ -55,6 +61,9 @@ DEFINES += IPMGEMPLUGIN
 #DEFINES += USE_THERMOFUN
 #DEFINES += USE_THERMO_LOG
 
+
+#DEFINES += USE_THERMOFUN
+#DEFINES += USE_THERMO_LOG
 
 CONFIG( release,  debug|release ) {
         message( "Configuring for release build ..." )
@@ -93,6 +102,11 @@ CONFIG( serial, serial|mpi ) {
   PLATFORM_CPP       =  ./tcejdb/nix
 }
 else {
+
+#  INCLUDEPATH   += "C:\usr\local\include"
+#  DEPENDPATH   += "C:\usr\local\include"
+#  LIBPATH += "C:\usr\local\lib"
+
   DEFINES           += buildWIN32
   DEFINES           += HAVE_STDINT_H
   QMAKE_CXXFLAGS    += -D__USE_MINGW_ANSI_STDIO=1 -frounding-math -fopenmp -O3

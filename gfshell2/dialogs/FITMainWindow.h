@@ -26,7 +26,7 @@
 #include <QTableWidget>
 #include <QProcess>
 #include "f_file.h"
-#include "node.h"
+#include <GEMS3K/node.h>
 
 namespace Ui {
 class FITMainWindow;

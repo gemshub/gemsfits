@@ -22,7 +22,7 @@
 #include <sstream>
 #include <algorithm>
 
-#include "node.h"
+#include <GEMS3K/node.h>
 #include "keywords.h"
 #include "v_json.h"
 

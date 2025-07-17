@@ -7,7 +7,7 @@
 #include "f_file.h"
 #include "f_database.h"
 #include "v_bson_ejdb.h"
-#include "v_service.h"
+#include <GEMS3K/v_service.h>
 
 #ifdef useomp
 #include <omp.h>

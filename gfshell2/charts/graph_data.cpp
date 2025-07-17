@@ -1,7 +1,7 @@
 
 #include <QJsonArray>
 #include <QVector>
-#include "verror.h"
+#include <GEMS3K/verror.h>
 #include "charts/graph_data.h"
 
 namespace jsonui17 {

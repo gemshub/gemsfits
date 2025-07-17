@@ -41,7 +41,7 @@
 #include "data_manager.h"
 #include "keywords.h"
 #include "f_database.h"
-#include "v_service.h"
+#include <GEMS3K/v_service.h>
 
 std::ostream& operator<<(std::ostream& stream, const Data_Manager::DataSynonyms& data);
 std::ostream& operator<<(std::ostream& stream, const Data_Manager::PhSyn& data);
