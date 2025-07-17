@@ -1,26 +1,32 @@
-#ifndef _tmodel_h
-#define _tmodel_h
+//-------------------------------------------------------------------
+// $Id:  $
+//
+// Declaration of TMatrixModel, TMatrixTable, TMatrixDelegate
+// and TCellInput classes
+//
+// Copyright (C) 2010-2023  S.V.Dmytriyeva
+// Uses EJDB (https://ejdb.org),
+//    yaml-cpp (https://code.google.com/p/yaml-cpp/)
+//
+// This file is part of the GEMSFITS GUI, which uses the
+// Qt v.5 cross-platform App & UI framework (http://qt-project.org)
+// under LGPL v.2.1 (http://www.gnu.org/licenses/lgpl-2.1.html)
+//
+// This file may be distributed under the terms of LGPL v.3 license
+//
+// See http://gems.web.psi.ch/GEMSFIT for more information
+// E-mail gems2.support@psi.ch
+//-----------------------------------------------------------------
+
+#pragma once
 
 #include <vector>
-
 #include <QAbstractTableModel>
 #include <QItemDelegate>
 #include <QLineEdit>
 #include <QTableView>
 #include <QSortFilterProxyModel>
-
-#include <QAbstractItemDelegate>
-#include <QFontMetrics>
-#include <QModelIndex>
-#include <QSize>
-
-#if QT_VERSION >= 0x050000
 #include <QtPrintSupport/QPrinter>
-#else
-#include <QPrinter>
-#endif
-
-#include "f_ejdb.h"
 #include "charts/graph_data.h"
 
 namespace jsonui17 {
@@ -68,9 +74,6 @@ protected:
 };
 
 
-//===========================================
-// TVectorModel class
-//===========================================
 
 /*!
   \ class TMatrixModel
@@ -79,7 +82,6 @@ protected:
   \ Reading/writing data from/to std::vector classes
   
 */
-
 
 class TMatrixModel: public QAbstractTableModel
 {
@@ -102,13 +104,16 @@ class TMatrixModel: public QAbstractTableModel
     std::shared_ptr<jsonui17::ChartData> chart_data;
     jsonui17::GraphDialog *graph_dlg = nullptr;
 
-    QString ValToString( double val, int digits ) const;
-    double ValFromString( const QVariant& strval  );
-    void setGraphData( QSortFilterProxyModel *pmodel, const std::string& title );
+    char dbl_format;
+    int dbl_precision;
+
+    QString ValToString(double val, int digits) const;
+    double ValFromString(const QVariant& strval);
+    void setGraphData(QSortFilterProxyModel *pmodel, const std::string& title);
 
 public:
 
-    TMatrixModel( const QString& fname, int aNumCol, QObject * parent = 0 );
+    TMatrixModel(const QString& fname, int aNumCol, char format = 'g', int precision = 12, QObject *parent = nullptr);
     ~TMatrixModel();
 
     const jsonui17::ChartData *getGraphData()
@@ -116,19 +121,19 @@ public:
         return chart_data.get();
     }
 
-    int rowCount ( const QModelIndex & parent ) const;
-    int columnCount ( const QModelIndex & parent  ) const;
-    QVariant data ( const QModelIndex & index, int role ) const;
-    bool setData ( const QModelIndex & index, const QVariant & value, int role );
-    QVariant headerData ( int section, Qt::Orientation orientation, int role ) const;
-    Qt::ItemFlags flags( const QModelIndex & index ) const;
+    int rowCount(const QModelIndex & parent) const;
+    int columnCount(const QModelIndex & parent) const;
+    QVariant data(const QModelIndex & index, int role) const;
+    bool setData(const QModelIndex & index, const QVariant & value, int role);
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    Qt::ItemFlags flags(const QModelIndex & index ) const;
 
-    void matrixFromCsvFile( const QString& dir );
-    void matrixToCsvFile( const QString& dir );
-    void matrixFromCsvString( const QString& valueCsv );
-    QString matrixToCsvString( );
-    void matrixToBson(  bson *obj );
-    void matrixFromBson( QSortFilterProxyModel *pmodel,  const char *bsdata );
+    void matrixFromCsvFile(const QString& dir);
+    void matrixToCsvFile(const QString& dir);
+    void matrixFromCsvString(const QString& valueCsv);
+    QString matrixToCsvString();
+    void matrixToBson(common::JsonFree& object);
+    void matrixFromBson(QSortFilterProxyModel *pmodel, const common::JsonFree& object);
     int getNumberStringColumns() const
     {   return numberStringColumns; }
 
@@ -139,9 +144,9 @@ public:
     void toggle_Y(int ncolmn);
 
     // get graph info
-    void showGraphData( QSortFilterProxyModel *pmodel, const std::string& title );
+    void showGraphData(QSortFilterProxyModel *pmodel, const std::string& title);
     void CloseGraph();
-    int findRow( int *xyndx, double *reg );
+    int findRow(int *xyndx, double *reg);
 
 };
 
@@ -161,17 +166,17 @@ class TMatrixTable: public QTableView
     bool vScroll;
     bool hScroll;
 
-    void focusOutEvent( QFocusEvent * event );
-    void focusInEvent( QFocusEvent * event );
+    void focusOutEvent(QFocusEvent * event);
+    void focusInEvent(QFocusEvent * event);
     void keyPressEvent(QKeyEvent* e);
 
-    QList<QAction*> itemActions( const QModelIndex & current);
+    QList<QAction*> itemActions(const QModelIndex & current);
 
-    Selection getSelectionRange( bool paste_ = false );
-    QString createString( Selection& sel );
+    Selection getSelectionRange(bool paste_ = false);
+    QString createString(Selection& sel);
     QString createHeader();
-    void pasteIntoArea( Selection& sel, bool transpose);
-    void  setFromString(char splitrow, const QString& str,
+    void pasteIntoArea(Selection& sel, bool transpose);
+    void setFromString(char splitrow, const QString& str,
                         Selection sel, bool transpose);
 
 protected slots:
@@ -191,7 +196,7 @@ public slots:
 
 
 public:
-    TMatrixTable( QWidget * parent = 0 );
+    TMatrixTable(QWidget * parent = 0);
     ~TMatrixTable() {}
 
 };
@@ -200,7 +205,6 @@ public:
 /*!
   \ class TVectorDelegate
   \ individual items in views are rendered and edited using delegates
-
 */
 
 class TMatrixDelegate: public QItemDelegate
@@ -211,7 +215,7 @@ class TMatrixDelegate: public QItemDelegate
 
 public:
 
-    TMatrixDelegate( int nStringColumn, QObject * parent = 0 );
+    TMatrixDelegate(int nStringColumn, QObject * parent = 0);
     QWidget *createEditor(QWidget *parent,
                           const QStyleOptionViewItem &option,
                           const QModelIndex &index) const;
@@ -220,11 +224,6 @@ public:
                       const QModelIndex &index) const;
 
 };
-
-
-//===========================================
-// TCell... classes
-//===========================================
 
 
 /*!
@@ -246,7 +245,7 @@ protected slots:
     void setCh() { edited=true; }
 
 public:
-    TCellInput(  int in, int im, QWidget * parent = 0 );
+    TCellInput(int in, int im, QWidget * parent = 0);
     ~TCellInput()
     {}
 
@@ -255,14 +254,12 @@ public:
         return text();
     }
 
-    virtual void setData( QString data )
+    virtual void setData(QString data)
     {
-        setText( data );
+        setText(data);
     }
 
     bool dataCh()
     { return edited; }
 };
 
-
-#endif   // _tmodel_h

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QString>
 #include <QDialog>
 #include <QButtonGroup>
 #include "graph_data.h"

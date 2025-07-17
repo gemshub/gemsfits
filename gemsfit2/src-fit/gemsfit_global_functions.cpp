@@ -34,13 +34,12 @@
  *
  */
 
-
+#include <iomanip>
 #include "gemsfit_global_functions.h"
 #include "gemsfit_target_functions.h"
 #include "gemsfit_nested_functions.h"
 #include "gemsfit_task.h"
 #include "statistics.h"
-#include <iomanip>
 
 double Equil_objective_function_callback( const std::vector<double> &opt, std::vector<double> &grad, void *obj_func_data )
 {
@@ -132,13 +131,13 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
     omp_set_num_threads(sys->MPI);
     #pragma omp parallel for schedule(static) /*schedule(dynamic)*/
 #endif
-    for (unsigned i=0; i<sys->NodT.size(); ++i)
+    for (int i=0; i<sys->NodT.size(); ++i)
     {
-        for (unsigned e=0; e < sys->Opti->optParam.size(); e++)
+        for (int e=0; e < sys->Opti->optParam.size(); e++)
         {
-            sys->Opti->optParam[e]->Adjust_param(sys->NodT[i], opt);
+            sys->Opti->optParam[e]->Adjust_param(sys->NodT[i].get(), opt);
         }
-//        cout<<"adjusting parameters for: "<< i+1 <<" sample "<< sys->experiments[i]->sample << endl;
+        //std::cout<<"adjusting parameters for: "<< i+1 <<" sample "<< sys->experiments[i]->sample << std::endl;
     }
 
     /// NESTED FUNCTION
@@ -160,14 +159,14 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
 
 #ifdef useomp
     omp_set_num_threads(sys->MPI);
-#ifdef buildWIN32
+#ifdef _WIN32
     #pragma omp parallel for schedule(static)
 #else
     #pragma omp parallel for schedule(dynamic)
 #endif
 #endif
     // +++ Calculating equilibrium with GEMS3K +++ //
-    for (unsigned int i=0; i<sys->NodT.size(); ++i)
+    for (int i=0; i<sys->NodT.size(); ++i)
     {
         std::vector<DATABR*> dBR;
         dBR.push_back(sys->NodT[i]->pCNode());
@@ -306,6 +305,7 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         std::cout << "sum of residuals: "<<residuals_sys<< std::endl;
         for (unsigned int i = 0; i<opt.size(); ++i)
         {
+            gpf->flog<<"parameter "<<i<<" : "<<opt[i]<<std::endl;
             std::cout<<"parameter "<<i<<" : "<<opt[i]<<std::endl;
         }
     }
@@ -385,7 +385,7 @@ void tsolmod_wrap( double &residual, const std::vector<double> &opt, TGfitTask *
     {
         for (unsigned e=0; e < sys->Opti->optParam.size(); e++)
         {
-            sys->Opti->optParam[e]->Adjust_param(sys->NodT[i], opt);
+            sys->Opti->optParam[e]->Adjust_param(sys->NodT[i].get(), opt);
         }
     }
 
@@ -393,17 +393,15 @@ void tsolmod_wrap( double &residual, const std::vector<double> &opt, TGfitTask *
     for (unsigned int i=0; i<sys->NodT.size(); ++i)
     {
 
-        TMulti *multi = sys->NodT[i]->pMulti();
-
-        unsigned int sizeFIs = multi->get_sizeFIs();
-
+        unsigned int sizeFIs = sys->NodT[i]->get_sizeTSolMod();
         for (unsigned j=0; j<sizeFIs; j++)
         {
-        TSolMod *sol = multi->pTSolMod(j);
-        multi->Access_GEM_IMP_init();
+        TSolMod *sol = (TSolMod*)(sys->NodT[i]->get_ptrTSolMod(j));
+        sys->NodT[i]->Access_GEM_IMP_init();
         sol->PTparam();
         sol->MixMod();
         }
+
     }
 
     if (sys->Opti->OptTuckey == 1)

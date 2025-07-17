@@ -35,7 +35,8 @@
 #include <vector>
 #include <map>
 #include <string>
-#include "node.h"
+#include <GEMS3K/node.h>
+#include "v_json.h"
 
 
 /// Base class for the optimized parameters
@@ -67,8 +68,8 @@ class OptParameter
         {
             double IV; /// initial value
             double opt; /// parameter value that gets changed during the optimization
-            int    optNdx; /// index in the global optimization std::vector
-            double Pndx; /// parameter index
+            int    optNdx=0; /// index in the global optimization std::vector
+            int    Pndx; /// parameter index
             std::string Pname; /// parameter name (DCName, ICname, etc.)
             vd IVv; /// std::vector of initial values for each node/experiment - used in nested optimization
             vd EVv; /// std::vector of end values for each node/experiment - used in nested optimization
@@ -79,11 +80,11 @@ class OptParameter
         struct F_parameter : parameter /// structure storing F-type parameter iformation
         {
 //            std::string Ftype; /// function type (OFUN, NFUN)
-            int    Fndx; /// function index
+            int    Fndx=0; /// function index
             double UB; /// upper boundary
             double LB; /// lower boundary
         };
-        std::vector<F_parameter*> optFP; /// std::vector of pointers to F-type parameters
+        std::vector<std::shared_ptr<F_parameter>> optFP; /// std::vector of pointers to F-type parameters
 
         struct R_parameter : parameter /// structure storing reaction constraint information
         {
@@ -95,7 +96,7 @@ class OptParameter
             vi rdc_species_coef; /// reaction coeficients
             std::string Ref; /// reference for log K
         };
-        std::vector<R_parameter*> optRP; /// std::vector of reactions (rdc_species struct that hold the reaction dependent species and the reaction properties)
+        std::vector<std::shared_ptr<R_parameter>> optRP; /// std::vector of reactions (rdc_species struct that hold the reaction dependent species and the reaction properties)
 
         struct L_parameter : parameter /// structure holding liked parameters information
         {
@@ -104,11 +105,11 @@ class OptParameter
             vi L_param_ind; /// GEMS3K indexes of the linked parameters
             vd L_param_coef; /// linking coefiecients e.g 1.0 for Cl and 2.0 for S
         };
-        std::vector<L_parameter*> optLP; /// std::vector of pointers to L-type parameters
+        std::vector<std::shared_ptr<L_parameter>> optLP; /// std::vector of pointers to L-type parameters
 
         struct S_parameter : parameter /// structure holding liked parameters information
         { };
-        std::vector<S_parameter*> optSP; /// std::vector of pointers to S-type parameters
+        std::vector<std::shared_ptr<S_parameter>> optSP; /// std::vector of pointers to S-type parameters
 
         /**
         * Reads in the attributes of the F-type parameters
@@ -118,9 +119,9 @@ class OptParameter
         * @param *opt pointer to the F_parameter object
         * @date 17.10.2014
         */
-        void Pval_to_optF (int p, std::string data, F_parameter *opt);
+        void Pval_to_optF(int p, const common::JsonFree& object_data, F_parameter *opt);
 
-        void Pval_to_optR (int p, std::string data, R_parameter *opt);
+        void Pval_to_optR(int p, const common::JsonFree& object_data, R_parameter *opt);
 
         /**
         * Reads in the attributes of the L-type parameters
@@ -130,7 +131,7 @@ class OptParameter
         * @param *opt pointer to the L_parameter object
         * @date 17.10.2014
         */
-        void Pval_to_optL (int p, std::string data, L_parameter *opt);
+        void Pval_to_optL(int p, const common::JsonFree& object_data, L_parameter *opt);
 
     public:
         /// Generic constructor
@@ -194,13 +195,13 @@ class OptParameter
         * @author DM
         * @date 17.10.2014
         */
-        long int Get_optFPsize ()
+        size_t Get_optFPsize ()
         { return optFP.size(); }
 
-        long int Get_optLPsize ()
+        size_t Get_optLPsize ()
         { return optLP.size(); }
 
-        long int Get_optRPsize ()
+        size_t Get_optRPsize ()
         { return optRP.size(); }
 
         std::string Get_optType ()
@@ -219,17 +220,17 @@ class OptParameter
 
         void Get_IVparam(vd &opt, vd &UB, vd &LB );
 
-        double Get_Fparam(int ndx, int exp );
+        double Get_Fparam(size_t ndx, int exp );
 
-        double Get_Lparam(int ndx, int exp );
+        double Get_Lparam(size_t ndx, int exp );
 
-        void Get_Fparam(int ndx, std::string &name, double &IV, double &EV );
+        void Get_Fparam(size_t ndx, std::string &name, double &IV, double &EV );
 
-        void Get_Rparam(int ndx, std::string &name, double &IV, double &EV );
+        void Get_Rparam(size_t ndx, std::string &name, double &IV, double &EV );
 
         void Get_R_vNdx_vCoef(int ndx, vi &vNdx, vi &vCoef );
 
-        void Get_Lparam(int ndx, std::string &name, double &IV, double &EV );
+        void Get_Lparam(size_t ndx, std::string &name, double &IV, double &EV );
 
         /**
         * Gets the attributes of the F-type parameter with index ndx
@@ -242,7 +243,7 @@ class OptParameter
         * @param &Lb retrieves the lower bound of the parameter
         * @date 17.10.2014
         */
-        long int Get_Fparam(int ndx, int &Fndx, int &Pndx, double &Pval, double &Ub, double &Lb);
+        long int Get_Fparam(size_t ndx, int &Fndx, int &Pndx, double &Pval, double &Ub, double &Lb);
 
         /**
         * Gets the attributes of the F-type parameter with index ndx and OptPndx
@@ -256,7 +257,7 @@ class OptParameter
         * @param &Lb retrieves the lower bound of the parameter
         * @date 17.10.2014
         */
-        long int Get_Fparam(int ndx, int exp, int &Fndx, int &Pndx, double &Pval, double &Ub, double &Lb);
+        long int Get_Fparam(size_t ndx, int exp, int &Fndx, int &Pndx, double &Pval, double &Ub, double &Lb);
 
         /**
         * Sets the value of the F-type parameter with index ndx
@@ -391,7 +392,7 @@ class Opt_PMc : public OptParameter
 
     long int Adjust_Sparam(TNode *node );
 
-    long int Adjust_Lparam(TNode *node);
+    long int Adjust_Lparam(TNode *node, int exp);
 
 
 };

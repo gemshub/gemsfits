@@ -1,21 +1,15 @@
-         HEADERS += $$DATAMAN_H/f_ejdb.h \
-                    $$DATAMAN_H/f_ejdb_file.h \
-                    $$DATAMAN_H/v_json.h \
-                    $$DATAMAN_H/help.h \
-                    $$DATAMAN_H/v_user.h \
+         HEADERS += $$DATAMAN_H/help.h \
                     $$DATAMAN_H/fmodel.h \
-                    $$KEYS_H/keywords.h \
-                    $$DATAMAN_H/v_yaml.h
+                    $$DATAMAN_H/gui_service.h \
+                    $$DATAMAN_H/json_model.h \
+                    $$DATAMAN_H/json_view.h
 
-
-         SOURCES += $$DATAMAN_CPP/f_ejdb.cpp \
-                    $$DATAMAN_CPP/f_ejdb_file.cpp \
-                    $$DATAMAN_CPP/v_json.cpp \
-                    $$DATAMAN_CPP/help.cpp \
+         SOURCES += $$DATAMAN_CPP/help.cpp \
                     $$DATAMAN_CPP/main.cpp \
-                    $$DATAMAN_CPP/v_user.cpp \
                     $$DATAMAN_CPP/gemsfit_iobson.cpp \
                     $$DATAMAN_CPP/fmodel.cpp \
-                    $$DATAMAN_CPP/v_yaml.cpp
+                    $$DATAMAN_CPP/gui_service.cpp \
+                    $$DATAMAN_CPP/json_model.cpp \
+                    $$DATAMAN_CPP/json_view.cpp
 
 

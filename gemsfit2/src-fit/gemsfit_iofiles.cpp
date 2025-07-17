@@ -19,94 +19,55 @@
 */
 
 #include <iostream>
-//using namespace std;
 #include <cstdlib>
+#include <filesystem>
+namespace fs = std::filesystem;
 
-#include "gemsfit_iofiles.h"
-//#include "data_manager.h"
-#include "json_parse.h"
-#include "keywords.h"
-#include "v_service.h"
 #include <omp.h>
-#include <sstream>
-#ifdef __unix
-#include <unistd.h>
-#include <sys/time.h>
-#else
-#include <io.h>
-#ifdef _MSC_VER
-#include <direct.h>
-#endif
-#endif
-#include <cctype>
-#include <iomanip>
-#ifdef buildWIN32
-        #include <tcejdb/bson.h>
-#else
-        #include <bson.h>
-#endif
+#include "gemsfit_iofiles.h"
+#include "keywords.h"
+#include <GEMS3K/v_service.h>
+#include "v_json.h"
 
-
-void generateBson (bson &bson_task_file, TNode *node, int mode);
-void make_syn_bson_object (bson &bson_task_file, const char *key, int i, int mode);
+common::JsonFree generateJson(TNode *node, int mode);
 
 /// Mode GEMSFIT to generate input configuration file
 int generateJConfig()
 {
-   try
-   {
-     // call GEM_init to read GEMS3K input files
-     TNode* node  = new TNode();
+    try
+    {
+        // call GEM_init to read GEMS3K input files
+        std::shared_ptr<TNode> node  = std::make_shared<TNode>();
 
-     // call GEM_init     --> read in input files
-     if( (node->GEM_init( gpf->GEMS3LstFilePath().c_str() )) == 1 )
+        // call GEM_init     --> read in input files
+        if( (node->GEM_init( gpf->GEMS3LstFilePath().c_str() )) == 1 )
         {
             std::cout << gpf->GEMS3LstFilePath() << std::endl;
             std::cout<<" .. ERROR occurred while reading GEMS3K input files !!! ..."<<std::endl;
             //return 1;
         }
 
-    bool with_comments = true;
-    bool brief_mode = false;
+        bool with_comments = true;
+        bool brief_mode = false;
+        auto json_obj = generateJson(node.get(), gpf->KeysNdx);
 
-    bson bson_task_file;
+        std::string fname = gpf->OptParamFile();
+        std::fstream ff(fname.c_str(), std::ios::out/*|ios::app*/ );
+        ErrorIf( !ff.good(), fname.c_str(), "OptParamFile text open error");
 
-    generateBson (bson_task_file, node, gpf->KeysNdx);
-
-    std::string resStr;
-    std::stringstream os;
-    os << "{\n";
-    resStr = os.str();
-    bson_print_raw_txt( os, bson_task_file.data, 0, BSON_OBJECT);
-    os << "}";
-    resStr = os.str();
-
-
-    std::string fname = gpf->OptParamFile();
-    std::fstream ff(fname.c_str(), std::ios::out/*|ios::app*/ );
-    ErrorIf( !ff.good() , fname.c_str(), "OptParamFile text open error");
-
-    ff << resStr;
-
-    ff.close();
-
-//    cout << resStr << endl;
-
-//    bson_print_raw(/*stderr,*/ bson_task_file.data, 0);
-
-
-std::cout << "Finished writing the input specification file template" << std::endl;
-//    }
+        ff << json_obj.dump();
+        ff.close();
+        std::cout << "Finished writing the input specification file template" << std::endl;
 
     } catch(TError& err)
-      {
+    {
         std::cout << "Error:" << err.title.c_str() << ":" <<  err.mess.c_str() << std::endl;
         return 1;
-      }
-      catch(...)
-      {
+    }
+    catch(...)
+    {
         return -1;
-      }
+    }
     return 0;
 }
 
@@ -114,15 +75,15 @@ int NumDigits(int x)
 {
     x = abs(x);
     return (x < 10 ? 1 :
-        (x < 100 ? 2 :
-        (x < 1000 ? 3 :
-        (x < 10000 ? 4 :
-        (x < 100000 ? 5 :
-        (x < 1000000 ? 6 :
-        (x < 10000000 ? 7 :
-        (x < 100000000 ? 8 :
-        (x < 1000000000 ? 9 :
-        10)))))))));
+                     (x < 100 ? 2 :
+                                (x < 1000 ? 3 :
+                                            (x < 10000 ? 4 :
+                                                         (x < 100000 ? 5 :
+                                                                       (x < 1000000 ? 6 :
+                                                                                      (x < 10000000 ? 7 :
+                                                                                                      (x < 100000000 ? 8 :
+                                                                                                                       (x < 1000000000 ? 9 :
+                                                                                                                                         10)))))))));
 }
 
 enum eTableType
@@ -136,23 +97,23 @@ std::string getPitzerIPName(TNode *node, std::vector<long int> aIPx, long int Ma
     std::string name="";
     switch( aIPx[iIP * MaxOrd + 3] )  // type of table
     {
-        case bet0_:
+    case bet0_:
         name += "beta0_";
         goto binary;
-            break;
-        case bet1_:
+        break;
+    case bet1_:
         name += "beta1_";
         goto binary;
-            break;
+        break;
 
-        case bet2_:
+    case bet2_:
         name += "beta2_";
         goto binary;
-            break;
-        case Cphi_:
+        break;
+    case Cphi_:
         name += "cphi_";
         goto binary;
-            break;
+        break;
 
         case Alp1_:
         name += "alpha1_";
@@ -166,39 +127,39 @@ std::string getPitzerIPName(TNode *node, std::vector<long int> aIPx, long int Ma
         case Lam_:
         name += "lambda_";
         goto binary;
-            break;
+        break;
 
-        case Lam1_:
+    case Lam1_:
         name += "lambda_";
         goto binary;
-            break;
+        break;
 
-        case Lam2_:
+    case Lam2_:
         name += "lambda_";
         goto binary;
-            break;
+        break;
 
-        case Theta_:
+    case Theta_:
         name += "theta_";
         goto binary;
-            break;
+        break;
 
-        case Theta1_:
+    case Theta1_:
         name += "theta_";
         goto binary;
-            break;
+        break;
 
-        case Psi_:
+    case Psi_:
         name += "psi_";
         goto ternary;
-            break;
+        break;
 
-        case Psi1_:
+    case Psi1_:
         name += "psi_";
         goto ternary;
-            break;
+        break;
 
-        case Zeta_:
+    case Zeta_:
         name += "zeta_";
         goto ternary;
             break;
@@ -218,12 +179,12 @@ std::string getPitzerIPName(TNode *node, std::vector<long int> aIPx, long int Ma
 
     }
 
-    binary:
+binary:
     name += node->xCH_to_DC_name(aIPx[iIP * MaxOrd + 0]);
     name += "_";
     name += node->xCH_to_DC_name(aIPx[iIP * MaxOrd + 1]);
     return name;
-    ternary:
+ternary:
     name += node->xCH_to_DC_name(aIPx[iIP * MaxOrd + 0]);
     name += "_";
     name += node->xCH_to_DC_name(aIPx[iIP * MaxOrd + 1]);
@@ -233,198 +194,158 @@ std::string getPitzerIPName(TNode *node, std::vector<long int> aIPx, long int Ma
 
 }
 
-void generateBson(bson &bson_task_file,TNode *node, int mode)
+common::JsonFree make_syn_object(const char* key, int mode)
 {
-    unsigned int Np = 0, NG0p = 0, NG0PH = 0, Nip = 0, Ncoef = 0, G0ndx=0, ICndx=0, PMCndx = 0, DMCndx = 0,/* nIC, nDC,*/ nPS, nPH; long int nDCinPH;
+    common::JsonFree object;
+    object[keys::NameSys[mode]] = key;
+    object[keys::Syn[mode]] = "";
+    return object;
+}
+
+common::JsonFree make_UP_LB(double temp, int mode, const std::string& key1,
+                            const std::string& val1,const std::string& val2)
+{
+    common::JsonFree object;
+    object[key1] = val1;
+    object[keys::PType[mode]] = val2;
+    object[keys::IV[mode]] = temp;
+    object[keys::UB[mode]] = temp;
+    object[keys::LB[mode]] = temp;
+    return object;
+}
+
+common::JsonFree generateJson(TNode *node, int mode)
+{
+    common::JsonFree object;
+
+    unsigned int Np = 0, NG0p = 0, NG0PH = 0, Nip = 0, Ncoef = 0, G0ndx=0, ICndx=0,
+            PMCndx = 0, DMCndx = 0,/* nIC, nDC,*/ nPS, nPH;
+    long int nDCinPH;
     int DCndx = -1;
     double temp = 0.0;
-    std::stringstream ss; std::string sss, ipcn, dcipcn;
-    bson_init(&bson_task_file);
+    std::string ipcn, dcipcn;
 
     DATACH* dCH = node->pCSD();
-
-//    nIC = dCH->nIC;	// nr of independent components
-//    nDC = dCH->nDC;	// nr of dependent components
     nPS = dCH->nPS;
     nPH = dCH->nPH;
 
-    bson_append_string(&bson_task_file, keys::DBPath[mode], "../EJDB/<database name>");
-    bson_append_string(&bson_task_file, keys::DBColl[mode], "<collection name>");
+#ifndef OLD_EJDB
+    object[keys::DBPath[mode]] = "../EJDB2/<database name>";
+#else
+    object[keys::DBPath[mode]] = "../EJDB/<database name>";
+#endif
+    object[keys::DBColl[mode]] = "<collection name>";
 
     std::string path = "." + gpf->GEMS3LstFilePath();
-#ifdef buildWIN32
+#ifdef _WIN32
     std::replace( path.begin(), path.end(), '\\', '/');
 #endif
-    bson_append_string(&bson_task_file, keys::G3Ksys[mode], path.c_str() );
-
-    bson_append_string(&bson_task_file, "comment", std::string("Instead of current text, write here a short comment for the fitting task.").c_str() );
+    object[keys::G3Ksys[mode]] = path;
+    object["comment"] = "Instead of current text, write here a short comment for the fitting task.";
 
     // Optimization Settings
-    bson_append_start_object(&bson_task_file, keys::OptSet[mode]);
-    {
-        bson_append_int(&bson_task_file, keys::MPI[mode], (omp_get_num_threads() * omp_get_num_procs()-1));
-
-        bson_append_int(&bson_task_file, keys::OptDW[mode], 1);
-
-        bson_append_int(&bson_task_file, keys::OptPrcParamDigits[mode], -1);
-
-        bson_append_int(&bson_task_file, keys::OptEQ[mode], 1);
-
-        bson_append_int(&bson_task_file, keys::SIA[mode], -1);
-
-        bson_append_int(&bson_task_file, keys::OptUW[mode], -1);
-
-        bson_append_int(&bson_task_file, keys::OptMixedResiduals[mode], -1);
-
-        bson_append_string(&bson_task_file, keys::OptAlg[mode], "LN_BOBYQA");
-
-        bson_append_double(&bson_task_file, keys::OptPBP[mode], -1);
-
-        bson_append_double(&bson_task_file, keys::OptTRel[mode], 1e-5);
-
-        bson_append_double(&bson_task_file, keys::OptTAbs[mode], 1e-5);
-
-        bson_append_int(&bson_task_file, keys::OptMEv[mode], 10000);
-
-        bson_append_int(&bson_task_file, keys::OptNormP[mode], 1);
-
-        bson_append_double(&bson_task_file, keys::OptPer[mode], 0.0001);
-
-         // Statistics Settings
-        bson_append_double(&bson_task_file, keys::StatPer[mode], 0.0001);
-
-        bson_append_int(&bson_task_file, keys::OptTu[mode], -1);
-
-        bson_append_int(&bson_task_file, keys::OptTuVal[mode], 6);
-
-        bson_append_int(&bson_task_file, keys::StatMC[mode], -1);
-
-        bson_append_int(&bson_task_file, keys::StatMCr[mode], 100);
-
-    } bson_append_finish_object(&bson_task_file);
+    common::JsonFree opt_object;
+    opt_object[keys::MPI[mode]] = (omp_get_num_threads() * omp_get_num_procs()-1);
+    opt_object[keys::OptDW[mode]] = 1;
+    opt_object[keys::OptPrcParamDigits[mode]] =  -1;
+    opt_object[keys::OptEQ[mode]] =  1;
+    opt_object[keys::SIA[mode]] = -1;
+    opt_object[keys::OptUW[mode]] = -1;
+    opt_object[keys::OptMixedResiduals[mode]] = -1;
+    opt_object[keys::OptAlg[mode]] = "LN_BOBYQA";
+    opt_object[keys::OptPBP[mode]] = -1;
+    opt_object[keys::OptTRel[mode]] = 1e-5;
+    opt_object[keys::OptTAbs[mode]] = 1e-5;
+    opt_object[keys::OptMEv[mode]] = 10000;
+    opt_object[keys::OptNormP[mode]] = 1;
+    opt_object[keys::OptPer[mode]] = 0.0001;
+    // Statistics Settings
+    opt_object[keys::StatPer[mode]] = 0.0001;
+    opt_object[keys::OptTu[mode]] = -1;
+    opt_object[keys::OptTuVal[mode]] = 6;
+    opt_object[keys::StatMC[mode]] = -1;
+    opt_object[keys::StatMCr[mode]] = 100;
+    object[keys::OptSet[mode]] = opt_object;
 
     // DataSelect
-    bson_append_start_object(&bson_task_file, keys::DSelect[mode]);
-    //bson_append_std::string(&bson_task_file, keys::Info[mode], "What data to use in the fit? For example, provide a list of expdatasets in usedatasets.");
-    bson_append_start_array(&bson_task_file, keys::usedatasets);
-    bson_append_finish_array(&bson_task_file);
-    bson_append_start_array(&bson_task_file, keys::skipsamples);
-    bson_append_finish_array(&bson_task_file);
-    bson_append_start_array(&bson_task_file, keys::sT);
-    bson_append_finish_array(&bson_task_file);
-    bson_append_start_array(&bson_task_file, keys::sP);
-    bson_append_finish_array(&bson_task_file);
-    bson_append_finish_object(&bson_task_file);
+    common::JsonFree dsel_object;
+    //dsel_object[keys::Info[mode]] = "What data to use in the fit? For example, provide a list of expdatasets in usedatasets.";
+    dsel_object[keys::usedatasets] = common::JsonFree::array();
+    dsel_object[keys::skipsamples] = common::JsonFree::array();
+    dsel_object[keys::sT] = common::JsonFree::array();
+    dsel_object[keys::sP] = common::JsonFree::array();
+    object[keys::DSelect[mode]] = dsel_object;
 
     // DataTarget
-    bson_append_start_object(&bson_task_file, keys::DTarget[mode]);
-    //bson_append_std::string(&bson_task_file, keys::Info[mode], "What data to compare. In OFUN provide a list of properties to use in the fit. Use ADDOUT for additional aoutput in the results table. NFUN is used to adjust properties of each sample nested withn the golobal fit.");
-    bson_append_string(&bson_task_file, keys::Target, "lsqFit");
-    bson_append_string(&bson_task_file, keys::TT, "lsq");
-    bson_append_string(&bson_task_file, keys::WT, "inverr3");
-    bson_append_start_array(&bson_task_file, keys::OFUN);
-    bson_append_finish_array(&bson_task_file);
-    bson_append_start_array(&bson_task_file, keys::NFUN);
-    bson_append_finish_array(&bson_task_file);
-    bson_append_start_array(&bson_task_file, keys::ADDOUT);
-    bson_append_finish_array(&bson_task_file);
-    bson_append_finish_object(&bson_task_file);
-
-    //bson_append_std::string(&bson_task_file, keys::DSelect[mode], "{\"info\":\"What data to use in the fit? For example, provide a list of expdatasets in usedatasets.\",\"usedatasets\":[\"[FRE/VOI2004]-150\"],\"skipsamples\":[],\"sT\":[],\"sP\":[]}");
-    //bson_append_std::string(&bson_task_file, keys::DTarget[mode], "{\"info\":\"\",\"Target\":\"name\",\"TT\":\"lsq\",\"WT\":\"inverr3\",\"OFUN\":[],\"ADDOUT\":[],\"NFUN\":[]}");
+    common::JsonFree dtar_object;
+    //dtar_object[keys::Info[mode]] = "What data to compare. In OFUN provide a list of properties to use in the fit. Use ADDOUT for additional aoutput in the results table. NFUN is used to adjust properties of each sample nested withn the golobal fit.";
+    dtar_object[keys::Target] = "lsqFit";
+    dtar_object[keys::TT] =  "lsq";
+    dtar_object[keys::WT] = "inverr3";
+    dtar_object[keys::OFUN] = common::JsonFree::array();
+    dtar_object[keys::NFUN] = common::JsonFree::array();
+    dtar_object[ keys::ADDOUT] = common::JsonFree::array();
+    object[keys::DTarget[mode]] = dtar_object;
 
     // Nested function parameters
-    bson_append_string(&bson_task_file, keys::OptNFParameters[mode], "");
+    object[keys::OptNFParameters[mode]]="";
     // start additional params
-    bson_append_start_object(&bson_task_file, keys::AddOptParameters[mode]);
-    bson_append_start_array(&bson_task_file, keys::bIC[mode]);
-//    for (unsigned i = 0; i < nIC; i++)
-//    {
-//        ss << i;
-//        sss = ss.str();
-//        ss.str("");
-//        bson_append_start_object(&bson_task_file, sss.c_str());
-//        {
-//            bson_append_string(&bson_task_file, keys::ICN[mode], node->xCH_to_IC_name(ICndx));
-//            bson_append_string(&bson_task_file, keys::PType[mode], "S");
-//            bson_append_double(&bson_task_file, keys::IV[mode], node->Get_bIC(ICndx));
-//        }
-//        bson_append_finish_object(&bson_task_file);
-//        ICndx++;
-//    }
+    auto arr = common::JsonFree::array();
+    //    for (unsigned i = 0; i < nIC; i++)
+    //    {
+    //        common::JsonFree it_object;
+    //        it_object[keys::ICN[mode]] = node->xCH_to_IC_name(ICndx);
+    //        it_object[keys::PType[mode]] = "S";
+    //        it_object[keys::IV[mode]] = node->Get_bIC(ICndx);
+    //        ICndx++;
+    //        arr.push_back(std::move(it_object));
+    //    }
+    object[keys::AddOptParameters[mode]][keys::bIC[mode]]=arr;
 
-    bson_append_finish_array(&bson_task_file);
-    bson_append_finish_object(&bson_task_file);
-    // finish additional params
+    //std::string info = keys::OptParameters[mode];
+    //std::string info_ = "info@"+info;
+    //object[info_]="G0: Standard Gibbs energy at 25 C 1 bar; PMc: Non-ideal phase interaction parameters. DMC: parameters of multi-site (sublattice) model. To fit change parameter type from S (set) to F (fit). Adjust the UB upper and LB lower bound accordingly";
 
-    std::string info = keys::OptParameters[mode];
-    std::string info_ = "info@"+info;
-    //bson_append_std::string(&bson_task_file, info_.c_str(), "G0: Standard Gibbs energy at 25 C 1 bar; PMc: Non-ideal phase interaction parameters. DMC: parameters of multi-site (sublattice) model. To fit change parameter type from S (set) to F (fit). Adjust the UB upper and LB lower bound accordingly");
-
-    bson_append_start_array(&bson_task_file, keys::OptParameters[mode]);
-
+    auto ph_arr = common::JsonFree::array();
     // Write interaction parameters
     long int *LsMod = node->Get_LsMod();
     long int *LsMdc = node->Get_LsMdc();
-//    bson_append_start_array(&bson_task_file, keys::PAM[mode]);
-
     int x=0;
     for (unsigned i = 0; i < nPH; i++)
     {
-
         NG0PH = dCH->nDCinPH[i];
-
         Nip = 0;
-        ss << Np;
-        sss = ss.str();
-        ss.str("");
-        bson_append_start_object(&bson_task_file, sss.c_str());
+
+        auto ph_obj = common::JsonFree::object();
         {
-            bson_append_string(&bson_task_file, keys::EPH[mode], node->xCH_to_PH_name(i));
-            ipcn.append(node->xCH_to_PH_name(i)); ipcn.append("[");
+            ipcn.append(node->xCH_to_PH_name(i));
+            ph_obj[keys::EPH[mode]] = ipcn;
+            ipcn.append("[");
 
             // G0
-            bson_append_start_array(&bson_task_file, keys::G0[mode]);
+            auto g0_arr = common::JsonFree::array();
             for (unsigned g = 0; g < NG0PH; g++)
             {
-                ss << g;
-                sss = ss.str();
-                ss.str("");
-                bson_append_start_object(&bson_task_file, sss.c_str());
-                {
-                    temp = node->DC_G0(G0ndx, 100000, 25 + 273.15, false);
-                    bson_append_string(&bson_task_file, keys::DCN[mode], node->xCH_to_DC_name(G0ndx));
-                    bson_append_string(&bson_task_file, keys::PType[mode], "S");
-                    bson_append_double(&bson_task_file, keys::IV[mode], temp );
-                    bson_append_double(&bson_task_file, keys::UB[mode], temp );
-                    bson_append_double(&bson_task_file, keys::LB[mode], temp );
-                    temp = 0.0;
-                }
-                bson_append_finish_object(&bson_task_file);
-                NG0p++;
+                temp = node->DC_G0(G0ndx, 100000, 25 + 273.15, false);
+                g0_arr.push_back(make_UP_LB( temp, mode, keys::DCN[mode], node->xCH_to_DC_name(G0ndx), "S"));
                 G0ndx++;
             }
-            bson_append_finish_array(&bson_task_file);
-            NG0p = 0;
-
+            ph_obj[keys::G0[mode]] = g0_arr;
 
             if (((LsMod[i+x] > 0) || (LsMdc[i+x] > 0)) && (i < nPS))
             {
-        	long int ip_IPx=0; long int ip_IPc=0; long int ip_DCc=0;
-        	std::vector<long int> aIPx;
-        	node->Get_IPc_IPx_DCc_indices(ip_IPx,ip_IPc, ip_DCc, i );
-        	node->Get_aIPx(aIPx,ip_IPx, i);
+                long int ip_IPx=0; long int ip_IPc=0; long int ip_DCc=0;
+                std::vector<long int> aIPx;
+                node->Get_IPc_IPx_DCc_indices(ip_IPx,ip_IPc, ip_DCc, i );
+                node->Get_aIPx(aIPx,ip_IPx, i);
                 // PMc parameters
                 if ((LsMod[i+x] > 0))
                 {
-                    bson_append_start_array(&bson_task_file, keys::PMc[mode]);
+                    auto PMc_arr = common::JsonFree::array();
                     for (unsigned j = 0; j < LsMod[i+x]; j++)
                     {
-                        ss << Nip;
-                        sss = ss.str();
-                        ss.str("");
-                        ipcn.append(sss); ipcn.append("|");
-                        bson_append_start_object(&bson_task_file, sss.c_str());
+                        ipcn.append(std::to_string(Nip)); ipcn.append("|");
+                        auto PMc_object = common::JsonFree::object();
                         {
                             // Get name of IP
                             std::string sMod;
@@ -432,380 +353,138 @@ void generateBson(bson &bson_task_file,TNode *node, int mode)
                             if (sMod.compare(0,1,"Z")==0)
                             {
                                 std::string IPName = getPitzerIPName(node, aIPx,LsMod[(i)*3+1], Nip);
-                                bson_append_string(&bson_task_file, keys::IPName[mode], IPName.c_str());
+                                PMc_object[keys::IPName[mode]] = IPName;
                             }
                             // write IPC
-                    //        bson_append_int(&bson_task_file, "IPndx", Nip);
-                            bson_append_start_array(&bson_task_file, keys::IPCs[mode]);
+                            // PMc_object["IPndx"] = Nip;
+                            auto pmc_arr = common::JsonFree::array();
                             Ncoef = 0;
                             for (unsigned k = 0; k < LsMod[i+x+2]; k++)
                             {
-                                ss << Ncoef;
-                                sss = ss.str();
-                                ss.str("");
-                                ipcn.append(sss); ipcn.append("]");
-                                bson_append_start_object(&bson_task_file, sss.c_str());
-                                {
-                                    node->Get_PMc(temp, PMCndx);
-                                    bson_append_string(&bson_task_file, keys::IPCN[mode], ipcn.c_str());
-                                    bson_append_string(&bson_task_file, keys::PType[mode], "S");
-                                    bson_append_double(&bson_task_file, keys::IV[mode], temp );
-                                    bson_append_double(&bson_task_file, keys::UB[mode], temp );
-                                    bson_append_double(&bson_task_file, keys::LB[mode], temp );
-    //                                bson_append_int(&bson_task_file, keys::Pndx[mode], PMCndx );
-                                    temp=0;
-                                } // finish IPC
-                                bson_append_finish_object(&bson_task_file);
+                                node->Get_PMc(temp, PMCndx);
+                                pmc_arr.push_back(make_UP_LB( temp, mode, keys::IPCN[mode], ipcn+std::to_string(Ncoef)+"]", "S"));
+                                temp=0;
                                 PMCndx++;
-                                ipcn.erase(ipcn.size()-(1+NumDigits(Ncoef)), ipcn.size());
                                 Ncoef++;
                             }
-                            bson_append_finish_array(&bson_task_file);
+                            PMc_object[keys::IPCs[mode]] = pmc_arr;
                         } // finish IParameters
-                        bson_append_finish_object(&bson_task_file);
+                        PMc_arr.push_back(std::move(PMc_object));
                         ipcn.erase(ipcn.size()-(1+NumDigits(Nip)), ipcn.size());
                         Nip++;
                     }
-                    bson_append_finish_array(&bson_task_file);
+                    ph_obj[keys::PMc[mode]] = PMc_arr;
                 }
 
                 // DMc parameters
                 if (LsMdc[i+x] > 0)
                 {
-                    bson_append_start_array(&bson_task_file, keys::DMc[mode]);
-
+                    auto DMc_arr = common::JsonFree::array();
                     DCndx = node->PhtoDC_DCH(i, nDCinPH);
                     for (unsigned k = 0; k < nDCinPH; k++)
                     {
-                        ss << k;
-                        sss = ss.str();
-                        ss.str("");
-                        bson_append_start_object(&bson_task_file, sss.c_str());
+                        auto DMc_object = common::JsonFree::object();
                         {
-                            bson_append_string(&bson_task_file, keys::DCN[mode], node->xCH_to_DC_name(DCndx + k));
+                            DMc_object[keys::DCN[mode]] = node->xCH_to_DC_name(DCndx + k);
                             dcipcn.append(node->xCH_to_PH_name(i)); dcipcn.append("|");
                             dcipcn.append(node->xCH_to_DC_name(DCndx + k)); dcipcn.append("[");
 
                             // write IPDCoef
-                    //        bson_append_int(&bson_task_file, "IPndx", Nip);
-                            bson_append_start_array(&bson_task_file, keys::PDCC[mode]);
+                            //        DMc_object["IPndx"] = Nip;
+                            auto dmc_arr = common::JsonFree::array();
                             Ncoef = 0;
                             for (unsigned j = 0; j < LsMdc[i+x]; j++)
                             {
-                                ss << Ncoef;
-                                sss = ss.str();
-                                ss.str("");
-                                dcipcn.append(sss);dcipcn.append("]");
-                                bson_append_start_object(&bson_task_file, sss.c_str());
-                                {
-                                    node->Get_DMc(temp, DMCndx);
-                                    bson_append_string(&bson_task_file, keys::IPCN[mode], dcipcn.c_str());
-                                    bson_append_string(&bson_task_file, keys::PType[mode], "S");
-                                    bson_append_double(&bson_task_file, keys::IV[mode], temp );
-                                    bson_append_double(&bson_task_file, keys::UB[mode], temp );
-                                    bson_append_double(&bson_task_file, keys::LB[mode], temp );
-    //                                bson_append_int(&bson_task_file, keys::Pndx[mode], DMCndx );
-                                    temp=0;
-                                } // finish IPDCoef
-                                bson_append_finish_object(&bson_task_file);
+                                node->Get_DMc(temp, DMCndx);
+                                dmc_arr.push_back(make_UP_LB( temp, mode, keys::IPCN[mode], dcipcn+std::to_string(Ncoef)+"]", "S"));
+                                temp=0;
                                 Ncoef++;
                                 DMCndx++;
-                                dcipcn.erase(dcipcn.size()-2, dcipcn.size());
                             }
-                            bson_append_finish_array(&bson_task_file);
                             dcipcn.clear();
+                            DMc_object[keys::PDCC[mode]] = dmc_arr;
                         }
-                        bson_append_finish_object(&bson_task_file);
+                        DMc_arr.push_back(std::move(DMc_object));
                     }
-                    bson_append_finish_array(&bson_task_file);
+                    ph_obj[keys::DMc[mode]] = DMc_arr;
                 }
             }
             ipcn.clear();
             x +=2;
         } // finish object
-        bson_append_finish_object(&bson_task_file);
+
+        ph_arr.push_back(std::move(ph_obj));
         Np++;
     } // finish Phases array
-//    bson_append_finish_array(&bson_task_file);
-
     // finish Parameters to Optimize
-    bson_append_finish_array(&bson_task_file);
+    object[keys::OptParameters[mode]] = ph_arr;
 
-    bson_append_string(&bson_task_file, keys::DatLogK[mode], "");
-
-    bson_append_string(&bson_task_file, keys::LogK[mode], "");
-
-//    // Optimization Settings
-//    bson_append_start_object(&bson_task_file, keys::OptSet[mode]);
-//    {
-//        bson_append_int(&bson_task_file, keys::MPI[mode], omp_get_num_threads() * omp_get_num_procs());
-
-//        bson_append_int(&bson_task_file, keys::OptDW[mode], 1);
-
-//        bson_append_int(&bson_task_file, keys::OptEQ[mode], 1);
-
-//        bson_append_int(&bson_task_file, keys::OptUW[mode], -1);
-
-//        bson_append_std::string(&bson_task_file, keys::OptAlg[mode], "LN_BOBYQA");
-
-//        bson_append_double(&bson_task_file, keys::OptPBP[mode], -1);
-
-//        bson_append_double(&bson_task_file, keys::OptTRel[mode], 1e-5);
-
-//        bson_append_double(&bson_task_file, keys::OptTAbs[mode], 1e-5);
-
-//        bson_append_int(&bson_task_file, keys::OptMEv[mode], 10000);
-
-//        bson_append_int(&bson_task_file, keys::OptNormP[mode], 1);
-
-//        bson_append_double(&bson_task_file, keys::OptPer[mode], 0.0001);
-
-//         // Statistics Settings
-//        bson_append_double(&bson_task_file, keys::StatPer[mode], 0.0001);
-
-//        bson_append_int(&bson_task_file, keys::OptTu[mode], -1);
-
-//        bson_append_int(&bson_task_file, keys::OptTuVal[mode], 6);
-
-//        bson_append_int(&bson_task_file, keys::StatMC[mode], -1);
-
-//        bson_append_int(&bson_task_file, keys::StatMCr[mode], 100);
-
-//    } bson_append_finish_object(&bson_task_file);
+    object[keys::DatLogK[mode]] = "";
+    object[keys::LogK[mode]] = "";
 
     G0ndx = 0;
-
-    bson_append_start_object(&bson_task_file, keys::DataSyn[mode]);
+    auto DataSyn_obj = common::JsonFree::object();
     {
-        bson_append_start_array(&bson_task_file, keys::PhNames[mode]);
+        auto ph_arr = common::JsonFree::array();
         {
             for (unsigned i = 0; i<nPH; i++)
             {
-                make_syn_bson_object(bson_task_file, node->xCH_to_PH_name(i), i , mode);
+                auto syn_obj =  make_syn_object(node->xCH_to_PH_name(i), mode);
                 // DC
                 NG0PH = dCH->nDCinPH[i];
-                bson_append_start_array(&bson_task_file, keys::DcNames[mode]);
+                auto syn_arr = common::JsonFree::array();
                 {
                     for (unsigned j = 0; j<NG0PH; j++)
                     {
-                        make_syn_bson_object(bson_task_file, node->xCH_to_DC_name(G0ndx), j, mode);
-                        bson_append_finish_object(&bson_task_file);
+                        syn_arr.push_back(make_syn_object(node->xCH_to_DC_name(G0ndx), mode));
                         G0ndx++;
                     }
                 }
-                bson_append_finish_array(&bson_task_file);
-                // finish phase object
-                bson_append_finish_object(&bson_task_file);
+                syn_obj[keys::DcNames[mode]] = syn_arr;
+                ph_arr.push_back(std::move(syn_obj));
             }
         }
-        bson_append_finish_array(&bson_task_file);
+        DataSyn_obj[keys::PhNames[mode]] = ph_arr;
 
-        bson_append_start_array(&bson_task_file, keys::PhPropNames[mode]);
+        auto syn2_arr = common::JsonFree::array();
         {
-            unsigned i = 0;
-            make_syn_bson_object(bson_task_file, keys::pH, i, mode); i++; bson_append_finish_object(&bson_task_file);
-
-            make_syn_bson_object(bson_task_file, keys::pHm, i, mode); i++; bson_append_finish_object(&bson_task_file);
-
-            make_syn_bson_object(bson_task_file, keys::pe, i, mode); i++; bson_append_finish_object(&bson_task_file);
-
-            make_syn_bson_object(bson_task_file, keys::Eh, i, mode); i++; bson_append_finish_object(&bson_task_file);
-
-            make_syn_bson_object(bson_task_file, keys::IS, i, mode); i++; bson_append_finish_object(&bson_task_file);
-
-            make_syn_bson_object(bson_task_file, keys::SI, i, mode); i++; bson_append_finish_object(&bson_task_file);
-
-            make_syn_bson_object(bson_task_file, keys::all, i, mode); i++; bson_append_finish_object(&bson_task_file);
-
-            make_syn_bson_object(bson_task_file, keys::pV, i, mode); i++; bson_append_finish_object(&bson_task_file);
-
-            make_syn_bson_object(bson_task_file, keys::RHO, i, mode); i++; bson_append_finish_object(&bson_task_file);
-
-            make_syn_bson_object(bson_task_file, keys::sArea, i, mode); i++; bson_append_finish_object(&bson_task_file);
-
-            make_syn_bson_object(bson_task_file, keys::Gex, i, mode); i++; bson_append_finish_object(&bson_task_file);
-
-            make_syn_bson_object(bson_task_file, keys::mChainL, i, mode); i++; bson_append_finish_object(&bson_task_file);
-
-            make_syn_bson_object(bson_task_file, keys::expr, i, mode); i++; bson_append_finish_object(&bson_task_file);
-
-            make_syn_bson_object(bson_task_file, keys::activityRatio, i, mode); i++; bson_append_finish_object(&bson_task_file);
-
-            make_syn_bson_object(bson_task_file, keys::frAlIV, i, mode); i++; bson_append_finish_object(&bson_task_file);
-
-            make_syn_bson_object(bson_task_file, keys::frAlV, i, mode); i++; bson_append_finish_object(&bson_task_file);
-
-            make_syn_bson_object(bson_task_file, keys::frAlVI, i, mode); i++; bson_append_finish_object(&bson_task_file);
-
-            make_syn_bson_object(bson_task_file, keys::Rd, i, mode); i++; bson_append_finish_object(&bson_task_file);
+            syn2_arr.push_back(make_syn_object(keys::pH, mode));
+            syn2_arr.push_back(make_syn_object(keys::pHm, mode));
+            syn2_arr.push_back(make_syn_object(keys::pe, mode));
+            syn2_arr.push_back(make_syn_object(keys::Eh, mode));
+            syn2_arr.push_back(make_syn_object(keys::IS, mode));
+            syn2_arr.push_back(make_syn_object(keys::SI, mode));
+            syn2_arr.push_back(make_syn_object(keys::all, mode));
+            syn2_arr.push_back(make_syn_object(keys::pV, mode));
+            syn2_arr.push_back(make_syn_object(keys::RHO, mode));
+            syn2_arr.push_back(make_syn_object(keys::sArea, mode));
+            syn2_arr.push_back(make_syn_object(keys::Gex, mode));
+            syn2_arr.push_back(make_syn_object(keys::mChainL, mode));
+            syn2_arr.push_back(make_syn_object(keys::expr, mode));
+            syn2_arr.push_back(make_syn_object(keys::activityRatio, mode));
+            syn2_arr.push_back(make_syn_object(keys::frAlIV, mode));
+            syn2_arr.push_back(make_syn_object(keys::frAlV, mode));
+            syn2_arr.push_back(make_syn_object(keys::frAlVI, mode));
+            syn2_arr.push_back(make_syn_object(keys::Rd, mode));
         }
-        bson_append_finish_array(&bson_task_file);
+        DataSyn_obj[keys::PhPropNames[mode]] = syn2_arr;
 
-//        bson_append_start_array(&bson_task_file, keys::DcNames[mode]);
-//        {
-//            for (unsigned i = 0; i<nDC; i++)
-//            {
-//                make_syn_bson_object(bson_task_file, node->xCH_to_DC_name(i), i, mode);
-//            }
-//        }
-//        bson_append_finish_array(&bson_task_file);
+        //        auto syn4_arr = common::JsonFree::array();
+        //        {
+        //            for (unsigned i = 0; i<nDC; i++)
+        //                syn4_arr.push_back(make_syn_object(node->xCH_to_DC_name(i), mode));
+        //        }
+        //        DataSyn_obj[keys::DcNames[mode]] = syn4_arr;
 
-        bson_append_start_array(&bson_task_file, keys::DcPropNames[mode]);
+        auto syn3_arr = common::JsonFree::array();
         {
-            unsigned i = 0;
-            make_syn_bson_object(bson_task_file, keys::activity, i, mode); i++; bson_append_finish_object(&bson_task_file);
-
-            make_syn_bson_object(bson_task_file, keys::actcoef, i, mode); i++; bson_append_finish_object(&bson_task_file);
+            syn3_arr.push_back(make_syn_object(keys::activity, mode));
+            syn3_arr.push_back(make_syn_object(keys::actcoef, mode));
         }
-        bson_append_finish_array(&bson_task_file);
+        DataSyn_obj[keys::DcPropNames[mode]] = syn3_arr;
     }
-    bson_append_finish_object(&bson_task_file);
-
-    bson_finish(&bson_task_file);
-}
-
-void make_syn_bson_object (bson &bson_task_file, const char* key, int i, int mode)
-{
-    std::stringstream ss; std::string sss;
-    ss << i;
-    sss = ss.str();
-    ss.str("");
-    //pH
-    bson_append_start_object(&bson_task_file, sss.c_str());
-    {
-        bson_append_string(&bson_task_file, keys::NameSys[mode], key);
-        bson_append_string(&bson_task_file, keys::Syn[mode], "");
-
-    }
-}
-
-
-void bson_print_raw_txt( std::iostream& osx, const char *data, int depth, int datatype )
-{
-    bson_iterator i;
-    const char *key;
-    int temp;
-    bson_timestamp_t ts;
-    char oidhex[25];
-    bson scope;
-    bool first = true;
-
-    bson_iterator_from_buffer(&i, data);
-    while (bson_iterator_next(&i))
-    {
-        bson_type t = bson_iterator_type(&i);
-        if (t == 0)
-          break;
-        if( t == BSON_OID )
-          continue;
-
-        if(!first )
-         osx <<  ",\n";
-        else
-         first = false;
-
-        key = bson_iterator_key(&i);
-
-         // before print
-        bool nr = true;
-        switch( datatype )
-        {
-         case BSON_OBJECT:
-           for (temp = 0; temp <= depth; temp++)
-             osx <<  "     ";
-           osx << "\"" << key << "\" :   ";
-           break;
-         case BSON_ARRAY:
-            for (temp = 0; temp <= depth; temp++)
-              osx << "     ";
-            for (unsigned x = 0; x <strlen(key); x++)
-            {
-            if (!isdigit(key[x])) nr = false;
-            }
-            if (!nr) osx << "\"" << key << "\" :   ";
-            break;
-         default:
-            break;
-        }
-
-        switch (t)
-        {
-          // impotant datatypes
-          case BSON_NULL:
-               osx << "null";
-              break;
-          case BSON_BOOL:
-               osx << ( bson_iterator_bool(&i) ?  "true": "false");
-               break;
-          case BSON_INT:
-               osx << bson_iterator_int(&i);
-               break;
-          case BSON_LONG:
-               osx << bson_iterator_long(&i);
-               break;
-          case BSON_DOUBLE:
-               osx << std::setprecision(15) << bson_iterator_double(&i);
-               break;
-          case BSON_STRING:
-               osx << "\"" << bson_iterator_string(&i) << "\"";
-                break;
-
-          // main constructions
-          case BSON_OBJECT:
-             osx << "{\n";
-             bson_print_raw_txt( osx, bson_iterator_value(&i), depth + 1, BSON_OBJECT);
-             for (temp = 0; temp <= depth; temp++)
-               osx << "     ";
-             osx << "}";
-             break;
-          case BSON_ARRAY:
-              osx << "[\n";
-              bson_print_raw_txt(osx, bson_iterator_value(&i), depth + 1, BSON_ARRAY );
-               for (temp = 0; temp <= depth; temp++)
-                 osx << "     ";
-               osx << "]";
-               break;
-
-           // not used in GEMS data types
-              case BSON_SYMBOL:
-              //       os<<  "SYMBOL: " << bson_iterator_std::string(&i);
-                     break;
-              case BSON_OID:
-              //       bson_oid_to_std::string(bson_iterator_oid(&i), oidhex);
-              //       os << oidhex;
-                     break;
-              case BSON_DATE:
-              //       char buf[100];
-              //       tcdatestrhttp(bson_iterator_time_t(&i), INT_MAX, buf);
-              //       os << "\"" << buf <<"\"";
-                     break;
-              case BSON_BINDATA:
-              //       os << "BSON_BINDATA";
-                     break;
-              case BSON_UNDEFINED:
-              //      os << "BSON_UNDEFINED";
-                     break;
-              case BSON_REGEX:
-              //       os << "BSON_REGEX: " << bson_iterator_regex(&i);
-                     break;
-              case BSON_CODE:
-              //       os << "BSON_CODE: " << bson_iterator_code(&i);
-                     break;
-              case BSON_CODEWSCOPE:
-              //       os << "BSON_CODE_W_SCOPE: " << bson_iterator_code(&i);
-              //       bson_iterator_code_scope(&i, &scope);
-              //       os << "\n      SCOPE: ";
-              //       bson_print_raw_txt( os, (const char*) &scope, 0, BSON_CODEWSCOPE);
-                     break;
-               case BSON_TIMESTAMP:
-              //       ts = bson_iterator_timestamp(&i);
-              //       os <<  "i: " << ts.i << ", t: " << ts.t;
-                     break;
-               default:
-                     osx  << "can't print type : " << t;
-        }
-    }
-    osx << "\n";
+    object[keys::DataSyn[mode]] = DataSyn_obj;
+    return object;
 }
 
 //----------------------------------------------------------------
@@ -826,22 +505,14 @@ std::string FIT_STATISTIC = "sum-statistics.csv";
 std::string FIT_LOGFILE = "gemsfit2.log";
 
 TGfitPath::TGfitPath(int c, char *v[]):
-        argc(c), argv(v)
+    argc(c), argv(v)
 {
     optParamFilePath = "";
     gems3LstFilePath = "";
 
-    char cur_dir[300];
-        // let's try to find resources by path of the executable
-    #ifdef __unix
-    getcwd(cur_dir, 300);
-    #else
-    _getcwd(cur_dir, 300);
-    #endif
-
-    std::cout << cur_dir << std::endl;
+    std::cout << fs::current_path() << std::endl;
     for (int ii = 1; ii < argc; ii++)
-     std::cout << ii << " arg " << argv[ii] << std::endl;
+        std::cout << ii << " arg " << argv[ii] << std::endl;
 
     // parsing options -init, -run, -conf if given
 
@@ -854,29 +525,29 @@ TGfitPath::TGfitPath(int c, char *v[]):
     for (int ii = 1; ii < argc; ii++)
     {
         if (strcmp(argv[ii], "-init") == 0 )
-          iinit = ii;
+            iinit = ii;
         else if (strcmp(argv[ii], "-run") == 0 )
             irun = ii;
-                 else if (strcmp(argv[ii], "-conf") == 0)
-                     iconf = ii;
-                        else if (strcmp(argv[ii], "-help") == 0)
-                            ihelp = ii;
-                                else if (strcmp(argv[ii], "-initJ") == 0)
-                                    iinitJ = ii;
+        else if (strcmp(argv[ii], "-conf") == 0)
+            iconf = ii;
+        else if (strcmp(argv[ii], "-help") == 0)
+            ihelp = ii;
+        else if (strcmp(argv[ii], "-initJ") == 0)
+            iinitJ = ii;
     }
 
     if (ihelp !=0)
     {
         std::cout << " USAGE: \n"
-                "   gemsfit2  -help \n"
-                "   gemsfit2  -run      <path to gemsfit2 input file> [ <path to GEMS3K input file list *-dat.lst> ] \n"
-                "   gemsfit2  -init     <path to GEMS3K input file list *-dat.lst> [ <init file template name> ] \n\n"
-                " WHERE: \n"
-                "   -run:   runs the program with the settings from the input file \n"
-                "   -init:  writes a template input file using the exported GEMS3K system files \n"
-                "   -help:  displays this help for command-line options." << std::endl;
+                     "   gemsfit2  -help \n"
+                     "   gemsfit2  -run      <path to gemsfit2 input file> [ <path to GEMS3K input file list *-dat.lst> ] \n"
+                     "   gemsfit2  -init     <path to GEMS3K input file list *-dat.lst> [ <init file template name> ] \n\n"
+                     " WHERE: \n"
+                     "   -run:   runs the program with the settings from the input file \n"
+                     "   -init:  writes a template input file using the exported GEMS3K system files \n"
+                     "   -help:  displays this help for command-line options." << std::endl;
         mode = HELP_;
-//        return 0;
+        //        return 0;
     } else
     {
         if (irun != 0)
@@ -889,7 +560,7 @@ TGfitPath::TGfitPath(int c, char *v[]):
             mode = RUN_;
         }
 
-       if (iinit != 0)
+        if (iinit != 0)
         {
             if (argc <= iinit + 1)
                 Error("Wrong options", "Wrong argument for option -init");
@@ -898,12 +569,12 @@ TGfitPath::TGfitPath(int c, char *v[]):
             if (argc > iinit + 2)  // Optional: file name for the GEMSFIT2 init file template
             {
                 optParamFile = optParamFilePath;
-//                optParamFile += "/";
+                //                optParamFile += "/";
                 optParamFile += argv[iinit+2];
             }
         }
 
-       if (iinitJ != 0)
+        if (iinitJ != 0)
         {
             if (argc <= iinitJ + 1)
                 Error("Wrong options", "Wrong argument for option -init");
@@ -912,7 +583,7 @@ TGfitPath::TGfitPath(int c, char *v[]):
             if (argc > iinitJ + 3)  // Optional: file name for the GEMSFIT2 init file template
             {
                 optParamFile = optParamFilePath;
-//                optParamFile += "/";
+                //                optParamFile += "/";
                 optParamFile += argv[iinitJ+3];
             }
             KeysNdx = atoi(argv[iinitJ + 1]);
@@ -934,13 +605,15 @@ TGfitPath::TGfitPath(int c, char *v[]):
             dir = "work/";
             int pos = 0;
             std::string input_file = gems3LstFilePath, new_input;
-            do
+            if(!input_file.empty())
             {
-                new_input = input_file.substr(pos+1, input_file.size());
-                pos = new_input.find("/");
-                input_file = new_input;
-            } while (pos >-1);
-
+                do
+                {
+                    new_input = input_file.substr(pos+1, input_file.size());
+                    pos = new_input.find("/");
+                    input_file = new_input;
+                } while (pos >-1);
+            }
             pos = input_file.find("-dat.lst");
             if (pos <0)
             {
@@ -970,79 +643,73 @@ TGfitPath::TGfitPath(int c, char *v[]):
 
         switch( mode )
         {
-            case INIT_:
-                // set up default paths
-                // later these paths and filenames can be read from the task file
-#ifdef buildWIN32
-        mkdir(path_init.c_str());
-#else
-        mkdir(path_init.c_str(), 0775);
-#endif
-                outputDir = path_init + OUTPUT_DIR;
-                fitsens = outputDir+FIT_SENS_FILE;
-                fitFile = outputDir+FIT_CSV_FILE;
-                fitnfun = outputDir+FIT_NFUN_FILE;
-                fitqq = outputDir+FIT_QQ_FILE;
-                fitparam = outputDir+FIT_PARAM_FILE;
-                fitmc = outputDir+FIT_MC_FILE;
-                fitStatistics = outputDir+FIT_STATISTIC;
-                fitLogFile = outputDir+FIT_LOGFILE;
-                break;
-            case INITJ_:
-                // set up default paths
-                // later these paths and filenames can be read from the task file
-#ifdef buildWIN32
-        mkdir(path_init.c_str());
-#else
-        mkdir(path_init.c_str(), 0775);
-#endif
-                outputDir = path_init + OUTPUT_DIR;
-                fitsens = outputDir+FIT_SENS_FILE;
-                fitFile = outputDir+FIT_CSV_FILE;
-                fitnfun = outputDir+FIT_NFUN_FILE;
-                fitqq = outputDir+FIT_QQ_FILE;
-                fitparam = outputDir+FIT_PARAM_FILE;
-                fitmc = outputDir+FIT_MC_FILE;
-                fitStatistics = outputDir+FIT_STATISTIC;
-                fitLogFile = outputDir+FIT_LOGFILE;
-                break;
-            case RUN_:
-                // set up default paths
-                // later these paths and filenames can be read from the task file
-                outputDir = path_run + OUTPUT_DIR;
-                fitFile = outputDir+FIT_CSV_FILE;
-                fitsens = outputDir+FIT_SENS_FILE;
-                fitnfun = outputDir+FIT_NFUN_FILE;
-                fitqq = outputDir+FIT_QQ_FILE;
-                fitparam = outputDir+FIT_PARAM_FILE;
-                fitmc = outputDir+FIT_MC_FILE;
-                fitStatistics = outputDir+FIT_STATISTIC;
-                fitLogFile = outputDir+FIT_LOGFILE;
-                // GEMSFIT logfile
-                flog << "GEMSFIT2: Start" << std::endl;
-                flog << "optParamFile = " << optParamFile << std::endl;
-                flog << "fitFile = " << fitFile << std::endl;
-                flog << "fitLogFile = " << fitLogFile << std::endl;
-                flog << "gems3LstFilePath = " << gems3LstFilePath << std::endl;
-                flog.close();
-                break;
-            default:
-                // set up default paths
-                // later these paths and filenames can be read from the task file
-                inputDir = path + INPUT_DIR;
-                outputDir = path + OUTPUT_DIR;
-                fitFile = outputDir+FIT_CSV_FILE;
-                fitStatistics = outputDir+FIT_STATISTIC;
-                fitLogFile = outputDir+FIT_LOGFILE;
+        case INIT_:
+            // set up default paths
+            // later these paths and filenames can be read from the task file
+            fs::create_directory(path_init);
+
+            outputDir = path_init + OUTPUT_DIR;
+            fitsens = outputDir+FIT_SENS_FILE;
+            fitFile = outputDir+FIT_CSV_FILE;
+            fitnfun = outputDir+FIT_NFUN_FILE;
+            fitqq = outputDir+FIT_QQ_FILE;
+            fitparam = outputDir+FIT_PARAM_FILE;
+            fitmc = outputDir+FIT_MC_FILE;
+            fitStatistics = outputDir+FIT_STATISTIC;
+            fitLogFile = outputDir+FIT_LOGFILE;
+            break;
+        case INITJ_:
+            // set up default paths
+            // later these paths and filenames can be read from the task file
+            fs::create_directory(path_init);
+
+            outputDir = path_init + OUTPUT_DIR;
+            fitsens = outputDir+FIT_SENS_FILE;
+            fitFile = outputDir+FIT_CSV_FILE;
+            fitnfun = outputDir+FIT_NFUN_FILE;
+            fitqq = outputDir+FIT_QQ_FILE;
+            fitparam = outputDir+FIT_PARAM_FILE;
+            fitmc = outputDir+FIT_MC_FILE;
+            fitStatistics = outputDir+FIT_STATISTIC;
+            fitLogFile = outputDir+FIT_LOGFILE;
+            break;
+        case RUN_:
+            // set up default paths
+            // later these paths and filenames can be read from the task file
+            outputDir = path_run + OUTPUT_DIR;
+            fitFile = outputDir+FIT_CSV_FILE;
+            fitsens = outputDir+FIT_SENS_FILE;
+            fitnfun = outputDir+FIT_NFUN_FILE;
+            fitqq = outputDir+FIT_QQ_FILE;
+            fitparam = outputDir+FIT_PARAM_FILE;
+            fitmc = outputDir+FIT_MC_FILE;
+            fitStatistics = outputDir+FIT_STATISTIC;
+            fitLogFile = outputDir+FIT_LOGFILE;
+            // GEMSFIT logfile
+            flog << "GEMSFIT2: Start" << std::endl;
+            flog << "optParamFile = " << optParamFile << std::endl;
+            flog << "fitFile = " << fitFile << std::endl;
+            flog << "fitLogFile = " << fitLogFile << std::endl;
+            flog << "gems3LstFilePath = " << gems3LstFilePath << std::endl;
+            flog.close();
+            break;
+        default:
+            // set up default paths
+            // later these paths and filenames can be read from the task file
+            inputDir = path + INPUT_DIR;
+            outputDir = path + OUTPUT_DIR;
+            fitFile = outputDir+FIT_CSV_FILE;
+            fitStatistics = outputDir+FIT_STATISTIC;
+            fitLogFile = outputDir+FIT_LOGFILE;
         }
 
-std::cout << "GEMSFIT2: Start" << std::endl;
-std::cout << "optParamFile = " << optParamFile << std::endl;
-std::cout << "fitFile = " << fitFile << std::endl;
-std::cout << "fitLogFile = " << fitLogFile << std::endl;
-std::cout << "gems3LstFilePath = " << gems3LstFilePath << std::endl;
+        std::cout << "GEMSFIT2: Start" << std::endl;
+        std::cout << "optParamFile = " << optParamFile << std::endl;
+        std::cout << "fitFile = " << fitFile << std::endl;
+        std::cout << "fitLogFile = " << fitLogFile << std::endl;
+        std::cout << "gems3LstFilePath = " << gems3LstFilePath << std::endl;
     }
- }
+}
 
 TGfitPath::~TGfitPath()
 {}

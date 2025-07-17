@@ -49,20 +49,16 @@
 
 #include <vector>
 #include <string>
-#include "node.h"
-#ifdef buildWIN32
-#include <tcejdb/ejdb.h>
-#else
-#include "ejdb.h"
-#endif
+#include <thread>
+#include <shared_mutex>
 #include <algorithm>
+#include <GEMS3K/node.h>
+#include "v_json.h"
 #include "optimization.h"
 
 //#ifdef USE_MPI
 #include "omp.h"
 //#endif
-
-//using namespace std;
 
 
 // The Data_Manager class retrieves and stores optimization-specific data from the GEMSFIT input file
@@ -97,24 +93,27 @@ class Data_Manager : public TNode
         */
         virtual ~Data_Manager( );
 
+        mutable std::shared_mutex select_query_mutex;
+
         typedef std::vector<int>     int_v;
         typedef std::vector<double>  double_v;
         typedef std::vector<std::string>  string_v;
         typedef std::vector<bool>    bool_v;
 
-        std::vector<TNode*> NodT;
-        std::vector<double*> bICv;
+        std::vector<std::shared_ptr<TNode>> NodT;
+        std::vector<std::shared_ptr<double[]>> bICv;
 
         /// JSON object for building the target function
         std::string DataTarget;
         std::string DataLogK;
         std::vector<std::string> LogK;
         std::string DataSyn;
+        std::string OptSet;
         double h_datasetlist;
 
-        int MPI; /// number of paralele threads
+        int MPI = 1; /// number of paralell threads
 
-        double LimitOfDetection; /// Experimetal limit of detection
+        double LimitOfDetection = 0;//1e7; /// Experimetal limit of detection  (Not defined SD)
         double minimum_value; /// Minimum measured avlue
 
         std::vector<double> TP_pairs[2]; /// Stores unique TP pairs of the experiments. TP_pairs[0] temperature; TP_pairs[1] pressure.
@@ -143,7 +142,7 @@ class Data_Manager : public TNode
                     double Qerror;       /// error (uncertainty) of quantity in the same units
                     std::string Qunit;        /// units of measurement of quantity { 'g' or 'mol' (default) or … }
                 };
-                std::vector<components*> sbcomp;
+                std::vector<std::shared_ptr<components>> sbcomp;
 
                 // defines properties for this experiment 2nd level in EJDB
                 struct properties
@@ -153,7 +152,7 @@ class Data_Manager : public TNode
                     double Qerror;       /// error (uncertainty) of quantity in the same units
                     std::string Qunit;        /// units of measurement of quantity
                 };
-                std::vector<properties*> props;
+                std::vector<std::shared_ptr<properties>> props;
 
                 struct phases                         /// data for phases characterised (measured) in this experiment 2nd level in EJDB
                 {
@@ -167,7 +166,7 @@ class Data_Manager : public TNode
                         double Qerror;                  /// error
                         std::string Qunit;                   /// units
                     };
-                    std::vector<prop*> phprop;
+                    std::vector<std::shared_ptr<prop>> phprop;
 
                     struct actmod
                     {
@@ -181,9 +180,9 @@ class Data_Manager : public TNode
                     actmod phactmod;
 
                     // composition of the phases in elements
-                    std::vector<components*> phIC;
+                    std::vector<std::shared_ptr<components>> phIC;
 
-                    std::vector<components*> phMR;
+                    std::vector<std::shared_ptr<components>> phMR;
 
                     // dcomps (end member, phase component) 3rd level in EJDB
                     struct dcomps
@@ -196,13 +195,13 @@ class Data_Manager : public TNode
                             double Qerror;               /// error
                             std::string Qunit;                /// units
                         };
-                        std::vector<dcprop*> DCprop; /// std::vector of dependent components porperties
+                        std::vector<std::shared_ptr<dcprop>> DCprop; /// std::vector of dependent components porperties
                     };
-                    std::vector<dcomps*> phDC;       /// std::vector of dependent components in a phase
+                    std::vector<std::shared_ptr<dcomps>> phDC;       /// std::vector of dependent components in a phase
                 };
-                std::vector<phases*> expphases;      /// std::vector of phases measured in one experiment
+                std::vector<std::shared_ptr<phases>> expphases;      /// std::vector of phases measured in one experiment
             };
-            std::vector<samples*> experiments;         /// std::vector of samples from one experimental dataset
+            std::vector<std::shared_ptr<samples>> experiments;         /// std::vector of samples from one experimental dataset
 
 
             struct DataSynonyms
@@ -233,13 +232,15 @@ class Data_Manager : public TNode
 //        */
 //        void out_db_specs_txt( bool with_comments, bool brief_mode );
 
-    private:
+protected:
+            std::string default_unit_to_property(const std::string &property_name) const;
+private:
 
         /// get measurement data from EJDB (default) (0) CSV file (1) or PostgreSQL database (2)
         int datasource;
 
         /// name of CSV file containing measurement data
-        std::string CSVfile;
+        std::string CSVfile_;
 
         // Database connection parameters
         /// PostgreSQL/EJDB database: database name (path)
@@ -255,7 +256,7 @@ class Data_Manager : public TNode
         std::string passwd;
 
         /// PostgreSQL database: URL of psql server
-        std::string psql_server;
+        std::string psql_server_;
 
         /// EJDB data selection query
         std::string DataSelect;
@@ -286,7 +287,7 @@ class Data_Manager : public TNode
         * @param pos position of the BSON object in the std::vector experiments
         * @date 19.04.2013
         */
-        void bson_to_Data_Manager(const char *data, int pos);
+        void bson_to_Data_Manager(const std::string& data, int pos);
 
         /**
         * Gest the distinct T-P pairs form the experimental data

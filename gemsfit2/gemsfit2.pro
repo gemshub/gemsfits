@@ -32,22 +32,30 @@
 TEMPLATE	= app
 #LANGUAGE        = C++
 TARGET		= gemsfit2
-VERSION         = 2.3.0
+VERSION         = 2.3.2
 # GEMS3K commit 66761a7
-
-DEFINES         += IPMGEMPLUGIN
-DEFINES         += useomp
-DEFINES         += _MYNOZLIB
-#DEFINES         += CHECK_LOAD
-CONFIG          += c++17
-
-QMAKE_CXXFLAGS += -O3
-QMAKE_LFLAGS += -O3
 
 CONFIG -= qt
 CONFIG += warn_on
 CONFIG += console
+CONFIG += sanitaze sanitaze_thread
 CONFIG += serial release
+CONFIG += c++20
+
+# check settengs
+DEFINES         += useomp
+DEFINES += CHECK_LOAD # to generate print for initial data after read input configuration.
+DEFINES += OLD_EJDB # compile using ejdb1
+#DEFINES += OVERFLOW_EXCEPT  #compile with nan inf exceptions
+
+DEFINES += IPMGEMPLUGIN
+#DEFINES += NODEARRAYLEVEL
+#DEFINES += USE_NLOHMANNJSON
+#DEFINES += USE_THERMOFUN
+#DEFINES += USE_THERMO_LOG
+
+QMAKE_CXXFLAGS += -O3
+QMAKE_LFLAGS += -O3
 
 CONFIG( release,  debug|release ) {
         message( "Configuring for release build ..." )
@@ -70,8 +78,8 @@ CONFIG( mpi, serial|mpi ) {
         QMAKE_CFLAGS += $$system(mpicc --showme:compile)
         QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions $$system(mpic++ --showme:compile) -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions -fopenmp
 #        QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions $$system(mpic++ --showme:compile) -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions
-        LIBS +=  $$system(mpic++ --showme:link) -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp -ljansson -lejdb
-#        LIBS +=  $$system(mpic++ --showme:link) -lnlopt -lm -lboost_filesystem -lboost_system -llapack -lblas -larmadillo -lpthread -lz -liomp5 -ljansson -lejdb
+        LIBS +=  $$system(mpic++ --showme:link) -lnlopt -lm -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp
+#        LIBS +=  $$system(mpic++ --showme:link) -lnlopt -lm  -lboost_system -llapack -lblas -larmadillo -lpthread -lz -liomp5
 }
 
 #contains( CONFIG, serial ) {
@@ -82,71 +90,59 @@ CONFIG( serial, serial|mpi ) {
         QMAKE_CFLAGS += -fopenmp
         QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions -fopenmp
 #        QMAKE_CXXFLAGS += -Wall -pedantic -fexceptions -Wl,-rpath -Wl,/usr/lib -Wl,-Bsymbolic-functions
-        LIBS += -lnlopt -lm -lboost_filesystem  -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp -ljansson -lejdb
-#        LIBS += -lnlopt -lm -lboost_filesystem  -lboost_system -llapack -lblas -larmadillo -lpthread -lz -liomp5 -ljansson -lejdb
+        LIBS += -lnlopt -lm  -lboost_system -llapack -lblas -larmadillo -lpthread -lz -fopenmp
+#        LIBS += -lnlopt -lm -lboost_system -llapack -lblas -larmadillo -lpthread -lz -liomp5
 }
 
 !macx-clang {
   INCLUDEPATH   += "/usr/local/include/ejdb"
+  INCLUDEPATH   += "/usr/local/include/ejdb2"
 }else{
   INCLUDEPATH   += "/usr/local/include"
-#  INCLUDEPATH   += "/usr/local/Cellar/libiomp/20150701/include/libiomp"
   LIBPATH += "/usr/local/lib/"
-#  LIBPATH +=  "/usr/local/Cellar//libiomp/20150701/lib"
-
-#  INCLUDEPATH   += /usr/local/Cellar/jansson/2.7
-#  INCLUDEPATH   +=  /usr/local/Cellar/gcc/5.2.0
 }
 
 FIT_CPP      =  ./src-fit
-GEMS3K_CPP   =  ../../standalone/GEMS3K
-KEYS_CPP     =  ../csvtoejdb/src-csvtoejdb
+#GEMS3K_CPP   =  ../standalone/GEMS3K
 MUP_CPP      =  ./muparser/src
+COMMON_CPP  =  ../common
 
 FIT_H        =   $$FIT_CPP
-GEMS3K_H     =   $$GEMS3K_CPP
-KEYS_H       =   $$KEYS_CPP
+#GEMS3K_H     =   $$GEMS3K_CPP
 MUP_H        =   $$MUP_CPP
-
-#EJDB_PATH = ../../standalone/EJDB
-
-#win32{
-#   EJDB_LIB_PATH =  $$EJDB_PATH/build-win32
-#}
-#unix{
-#   EJDB_LIB_PATH =  $$EJDB_PATH/build
-#}
-
-#EJDB_BSON_H = $$EJDB_PATH/src/bson
-#EJDB_EJDB_H = $$EJDB_PATH/src/ejdb
-#EJDB_TCUTIL_H = $$EJDB_PATH/src/tcutil
-#EJDB_GENERATED_H = $$EJDB_LIB_PATH/debug/src/generated
-#CONFIG(release, debug|release): EJDB_GENERATED_H = $$EJDB_LIB_PATH/release/src/generated
-#CONFIG(debug, debug|release): EJDB_GENERATED_H = $$EJDB_LIB_PATH/debug/src/generated
-
+COMMON_H     =   $$COMMON_CPP
 
 DEPENDPATH   += $$FIT_H
-DEPENDPATH   += $$GEMS3K_H
+#DEPENDPATH   += $$GEMS3K_H
 DEPENDPATH   += $$KEYS_H
 DEPENDPATH   += $$MUP_H
+DEPENDPATH   += $$COMMON_H
 
 INCLUDEPATH  += $$FIT_H
-INCLUDEPATH  += $$GEMS3K_H   
+#INCLUDEPATH  += $$GEMS3K_H
 INCLUDEPATH  += $$KEYS_H
 INCLUDEPATH  += $$MUP_H
-
-#INCLUDEPATH   += $$EJDB_BSON_H
-#INCLUDEPATH   += $$EJDB_EJDB_H
-#INCLUDEPATH   += $$EJDB_GENERATED_H
-#INCLUDEPATH   += $$EJDB_TCUTIL_H
+INCLUDEPATH   += $$COMMON_H
 
 OBJECTS_DIR       = obj
 
+include($$COMMON_CPP/common.pri)
 include($$FIT_CPP/fit.pri)
-include($$GEMS3K_CPP/gems3k.pri)
+#include($$GEMS3K_CPP/gems3k.pri)
 include($$MUP_CPP/muparser.pri)
-#include($$EJDB_CPP/tcejdb.pri)
-#include($$EJDB_PATH/ejdb.pri)
 
-#CONFIG(release, debug|release): LIBS += -L$$EJDB_LIB_PATH/release/src/ -lejdb
-#CONFIG(debug, debug|release): LIBS += -L$$EJDB_LIB_PATH/debug/src/ -lejdb
+contains(DEFINES, OLD_EJDB) {
+CONFIG(release, debug|release): LIBS += -lejdb -lyaml-cpp
+CONFIG(debug, debug|release): LIBS += -lejdb -lyaml-cpp
+}
+else
+{
+CONFIG(release, debug|release): LIBS += -lejdb2 -lyaml-cpp
+CONFIG(debug, debug|release): LIBS += -lejdb2 -lyaml-cpp
+}
+
+LIBS += -lGEMS3K
+contains(DEFINES, USE_THERMOFUN) {
+  LIBS += -lThermoFun -lChemicalFun
+} ## end USE_THERMOFUN
+

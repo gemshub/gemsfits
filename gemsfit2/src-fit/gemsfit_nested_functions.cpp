@@ -42,19 +42,19 @@ void nestedfun (TGfitTask *sys)
     // loop over the nested functions
 #ifdef useomp
     omp_set_num_threads(sys->MPI);
-#ifdef buildWIN32
+#ifdef _WIN32
     #pragma omp parallel for schedule(static)
 #else
     #pragma omp parallel for schedule(dynamic)
 #endif
 #endif
-    for  (unsigned int i = 0; i<sys->experiments.size(); i++)
+    for  (int i = 0; i<sys->experiments.size(); i++)
     {
         std::vector <double> x, UB, LB;
         int Pndx = -1, Fndx = -1; double Pval = 0.0, Ub = 0.0, Lb = 0.0;
         int bounds = 0;
 
-        for (unsigned int j = 0; j<sys->Tfun->nestfun.size(); j++)
+        for (size_t j = 0; j<sys->Tfun->nestfun.size(); j++)
         {
             std::string compare_type = sys->Tfun->nestfun[j].exp_DCP;
             if (compare_type == keys::activity)
@@ -72,9 +72,9 @@ void nestedfun (TGfitTask *sys)
                 sys->EXPndx[P_id]=i;
                 sys->NEFndx[P_id]=j;
 
-                for (unsigned e = 0; e < sys->Opti->optNFParam.size(); e++) // loops trough optNFParam
+                for (size_t e = 0; e < sys->Opti->optNFParam.size(); e++) // loops trough optNFParam
                 {
-                    for (unsigned p = 0; p < sys->Opti->optNFParam[e]->Get_optFPsize(); p++ )
+                    for (size_t p = 0; p < sys->Opti->optNFParam[e]->Get_optFPsize(); p++ )
                     {
                         sys->Opti->optNFParam[e]->Get_Fparam(p, i, Fndx, Pndx, Pval, Ub, Lb);
                         if (Fndx == j) // checks if the nested function parameters point to the curent NFUN with the Fndx
@@ -212,40 +212,38 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &/*grad
     int P_id = omp_get_thread_num();
     long int NodeStatusCH;
 //    bool notP = true, notT=true;
-    int op = 0;
+    size_t op = 0;
 
     /// error think about a way to store the indexes of the nfun parameters
 
-    for (unsigned e = 0; e < sys->vEAndx[P_id]->ndx.size(); e++) // loops trough OptParameter vector
+    for (size_t e = 0; e < sys->vEAndx[P_id]->ndx.size(); e++) // loops trough OptParameter vector
     {
-        for (unsigned j = 0; j < sys->Opti->optNFParam[e]->Get_optFPsize(); j++) // loops torugh optPF vector
+        for (size_t j = 0; j < sys->Opti->optNFParam[e]->Get_optFPsize(); j++) // loops torugh optPF vector
         {
-            if ((sys->vPAndx[P_id]->ndx[op] == j) && (sys->vEAndx[P_id]->ndx[e] == e))
+            if ( (sys->vPAndx[P_id]->ndx.size() > op ) && (sys->vPAndx[P_id]->ndx[op] == j) && (sys->vEAndx[P_id]->ndx[e] == e))
             {
                 sys->Opti->optNFParam[sys->vEAndx[P_id]->ndx[e]]->Set_Fparam(sys->vPAndx[P_id]->ndx[op], sys->EXPndx[P_id], opt[op]);
                 op++;
-            }
+           }
         }
     }
-
     op = 0;
-    for (unsigned e = 0; e < sys->vEAndx[P_id]->ndx.size(); e++) // loops trough OptParameter vector
+    for (size_t e = 0; e < sys->vEAndx[P_id]->ndx.size(); e++) // loops trough OptParameter vector
     {
-        for (unsigned j = 0; j < sys->Opti->optNFParam[e]->Get_optFPsize(); j++) // loops torugh optPF vector
+        for (size_t j = 0; j < sys->Opti->optNFParam[e]->Get_optFPsize(); j++) // loops torugh optPF vector
         {
-            if ((sys->vPAndx[P_id]->ndx[op] == j) && (sys->vEAndx[P_id]->ndx[e] == e))
+            if ( (sys->vPAndx[P_id]->ndx.size() > op ) && (sys->vPAndx[P_id]->ndx[op] == j) && (sys->vEAndx[P_id]->ndx[e] == e))
             {
                 int Pindex;
                 Pindex = sys->Opti->optNFParam[sys->vEAndx[P_id]->ndx[e]]->Get_FPndx(sys->vPAndx[P_id]->ndx[op] );
-                sys->Opti->optNFParam[sys->vEAndx[P_id]->ndx[e]]->Adjust_Fparam(sys->NodT[sys->EXPndx[P_id]], Pindex, opt[op]);
+                sys->Opti->optNFParam[sys->vEAndx[P_id]->ndx[e]]->Adjust_Fparam(sys->NodT[sys->EXPndx[P_id]].get(), Pindex, opt[op]);
                 op++;
             }
         }
     }
-
     for (unsigned e = 0; e < sys->vEAndx[P_id]->ndx.size(); e++) // loops trough OptParameter vector
     {
-    sys->Opti->optNFParam[sys->vEAndx[P_id]->ndx[e]]->Adjust_Lparam(sys->NodT[sys->EXPndx[P_id]], sys->EXPndx[P_id] );
+    sys->Opti->optNFParam[sys->vEAndx[P_id]->ndx[e]]->Adjust_Lparam(sys->NodT[sys->EXPndx[P_id]].get(), sys->EXPndx[P_id] );
     }
 
     sys->experiments[sys->EXPndx[P_id]]->sT = sys->NodT[sys->EXPndx[P_id]]->Get_TK() - 273.15;
@@ -268,19 +266,15 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &/*grad
     }
 
 
-    std::vector<DATABR*> dBR;
-    dBR.push_back(sys->NodT[sys->EXPndx[P_id]]->pCNode());
-
+    DATABR* dBR = sys->NodT[sys->EXPndx[P_id]]->pCNode();
     // Asking GEM to run with automatic initial approximation
-    dBR.at(0)->NodeStatusCH = NEED_GEM_AIA;
-
+    dBR->NodeStatusCH = NEED_GEM_AIA;
     // Asking GEM to run with smart initial approximation
     if (sys->Opti->OptGemsSIA == 1)
-        dBR.at(0)->NodeStatusCH = NEED_GEM_SIA;
+        dBR->NodeStatusCH = NEED_GEM_SIA;
 
     // RUN GEMS3K
     NodeStatusCH = sys->NodT[sys->EXPndx[P_id]]->GEM_run( false );
-
     if( NodeStatusCH == OK_GEM_AIA || NodeStatusCH == OK_GEM_SIA  )
     {
 //            sys->NodT[i]->GEM_priqnt_ipm( "GEMS3K_log.out" );   // possible debugging printout
@@ -310,7 +304,6 @@ double nestminfunc ( const std::vector<double> &opt, std::vector<double> &/*grad
 //    }
 
     residual = sys->get_residual (sys->EXPndx[P_id], sys->aTfun[sys->EXPndx[P_id]].nestfun[sys->NEFndx[P_id]], count);
-
     return residual;
 }
 

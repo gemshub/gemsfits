@@ -27,28 +27,20 @@
 //-------------------------------------------------------------------
 //
 
+#include <cmath>
+#include <iomanip>
+#include <memory>
 #include <string>
 #include "gemsfit_task.h"
-#include "gdatastream.h"
+#include <GEMS3K/gdatastream.h>
 #include "gemsfit_iofiles.h"
 #include "keywords.h"
 #include "gemsfit_global_functions.h"
 //#include "gemsfit_nested_functions.h"
-#include <cmath>
 #include "gemsfit_target_functions.h"
 #include "gemsfit_nested_functions.h"
-#include <iomanip>
-#include "s_solmod.h"
+#include <GEMS3K/s_solmod.h>
 #include "s_formula.h"
-#include <memory>
-#include "json_parse.h"
-
-#ifndef __unix
-#include <io.h>
-#endif
-
-
-//using namespace std;
 
 int master_counter;
 //int sizeTP;
@@ -70,11 +62,10 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
     {
         EXPndx.push_back(-1);COMPndx.push_back(-1);PHndx.push_back(-1);PHPndx.push_back(-1);
         iNa.push_back(0.0); iO.push_back(0.0); iH.push_back(0.0); iCl.push_back(0.0); NEFndx.push_back(-1);
-        vPAndx.push_back( new vect);
-        vEAndx.push_back( new vect);
+        vPAndx.push_back(std::make_shared<vect>());
+        vEAndx.push_back(std::make_shared<vect>());
     }
     h_grad = false;
-
     mode = gpf->KeysNdx; // determines if the long keys or short keys
 
     // file containing the input parameters of the system and of the optimization class
@@ -88,12 +79,12 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
 
     for (int j=0; j<anNodes; j++)
     {
-        NodT.push_back( new TNode );
+        NodT.push_back(std::make_shared<TNode>());
     }
 
-    Opti = new optimization ( );
+    Opti = std::make_shared<optimization>();
     gpf->flog << "10. gemsfit_task.cpp(94). Initializing the Target function structure & get_DatTarget(); " << std::endl;
-    Tfun = new TargetFunction;
+    Tfun = std::make_shared<TargetFunction>();
 
     for (unsigned e=0; e < Opti->optParam.size(); e++)
     {
@@ -138,18 +129,17 @@ TGfitTask::TGfitTask(  )/*: anNodes(nNod)*/
 
     get_Lparams_delta (); // change
 
-
     // check for errors and inconsitencies of input options and parameters
     gfit_error ( );
 
     number_of_residuals = get_number_of_residuals( );
+
     set_average_objfun ();
 
     set_weights();
 
     if (this->LimitOfDetection > (this->minimum_value/100))
         this->LimitOfDetection = this->minimum_value/100; // sets the limit of detection not more than 100 times smaller than the lowest experimental value
-
 }
 
 void TGfitTask::gfit_error ( )
@@ -492,24 +482,28 @@ int get_b_gammaT(const std::string& s)
 
 void TGfitTask::setnodes()
 {
-    unsigned int n, i, j, k, l, p;
+    unsigned int i, j, k, l;
     // DATACH structure content
     unsigned int nIC, nDC, nPH,  DCndx, PHndx;
     long int NodeStatusCH, NodeHandle;
     double P_pa, T_k/*, PMc*/;
-    double* new_moles_IC;
-    double* xDC_up;
-    double* xDC_lo;
-    double* Ph_surf;
+    std::shared_ptr<double[]> new_moles_IC;
+    std::shared_ptr<double[]> xDC_up;
+    std::shared_ptr<double[]> xDC_lo;
+    std::shared_ptr<double[]> Ph_surf;
     double h2o_kgamount = 0.0;
     char (*DCNL)[16];
 
 
 #ifdef useomp
     omp_set_num_threads(this->MPI);
+#ifdef _WIN32
     #pragma omp parallel for schedule(static)
+#else
+    #pragma omp parallel for schedule(dynamic)
 #endif
-    for (n=0; n<NodT.size(); ++n)
+#endif
+    for (int n=0; n<NodT.size(); ++n)
     {
         if( NodT[n]->GEM_init( gpf->GEMS3LstFilePath().c_str() ) == 1 )
         {
@@ -549,7 +543,7 @@ void TGfitTask::setnodes()
 //    std::cout << NodT[0]->Get_bIC(3) << std::endl;
 
     // initialize the nodes using the input GEMS3 file
-    for (n=0; n<NodT.size(); ++n)
+    for (int n=0; n<NodT.size(); ++n)
     {
         // Getting direct access to work node DATABR structure which exchanges the
         // data with GEMS3K (already filled out by reading the DBR input file)
@@ -562,11 +556,11 @@ void TGfitTask::setnodes()
         nDC = dCH->nDC;	// nr of dependent components
         nPH = dCH->nPH;
         DCNL = dCH->DCNL;
-        xDC_up = new double[ nDC ];  // memory leaks may be here! (these arrays must be re-created at each n)
-        xDC_lo = new double[ nDC ];
-        Ph_surf = new double[ nPH ];
-        new_moles_IC = new double[ nIC ]; // vector for holding the moles of independent components for each experiment
-        bICv.push_back( new double[ nIC ] );
+        xDC_up.reset(new double[nDC]());  // std::make_shared<double[]>(nDC);  // new double[ nDC ];  // memory leaks may be here! (these arrays must be re-created at each n)
+        xDC_lo.reset(new double[nDC]());  // std::make_shared<double[]>(nDC);  // new double[ nDC ];
+        Ph_surf.reset(new double[nPH]());  // = std::make_shared<double[]>(nPH);  // new double[ nPH ];
+        new_moles_IC.reset(new double[nIC]());  // = std::make_shared<double[]>(nIC);  // new double[ nIC ]; // vector for holding the moles of independent components for each experiment
+        bICv.push_back(std::shared_ptr<double[]>(new double[nIC]()));
 
         // lower and upper bounds for concentration of DC
         for( i=0; i<nDC; i++ )
@@ -726,67 +720,62 @@ void TGfitTask::setnodes()
             // major salts interation parameters
             if (sMod.compare(0,1,"H") == 0)
             {
-            for (p = 0; p <experiments[n]->expphases.size(); p++)
-            {
-                if (experiments[n]->expphases[p]->phactmod.isActMod)
+                for (size_t p = 0; p <experiments[n]->expphases.size(); p++)
                 {
-                    isSetActMod = true;
-                    // setting activity model paramters
-                    if (experiments[n]->expphases[p]->phactmod.b_gamma !=-1.0)
-                        NodT[n]->Set_PMc(experiments[n]->expphases[p]->phactmod.b_gamma, 0 );
-                    if (experiments[n]->expphases[p]->phactmod.a0 !=-1.0)
-                        NodT[n]->Set_PMc(experiments[n]->expphases[p]->phactmod.a0, 1 );
-                    if (experiments[n]->expphases[p]->phactmod.gammaN !=-1.0)
-                        NodT[n]->Set_PMc(experiments[n]->expphases[p]->phactmod.gammaN, 2 );
-                    if (experiments[n]->expphases[p]->phactmod.gammaW !=-1.0)
-                        NodT[n]->Set_PMc(experiments[n]->expphases[p]->phactmod.gammaW, 3 );
-                    if (experiments[n]->expphases[p]->phactmod.b_gammaT !="")
-                        NodT[n]->Set_PMc(get_b_gammaT(experiments[n]->expphases[p]->phactmod.b_gammaT), 4 );
+                    if (experiments[n]->expphases[p]->phactmod.isActMod)
+                    {
+                        isSetActMod = true;
+                        // setting activity model paramters
+                        if (experiments[n]->expphases[p]->phactmod.b_gamma !=-1.0)
+                            NodT[n]->Set_PMc(experiments[n]->expphases[p]->phactmod.b_gamma, 0 );
+                        if (experiments[n]->expphases[p]->phactmod.a0 !=-1.0)
+                            NodT[n]->Set_PMc(experiments[n]->expphases[p]->phactmod.a0, 1 );
+                        if (experiments[n]->expphases[p]->phactmod.gammaN !=-1.0)
+                            NodT[n]->Set_PMc(experiments[n]->expphases[p]->phactmod.gammaN, 2 );
+                        if (experiments[n]->expphases[p]->phactmod.gammaW !=-1.0)
+                            NodT[n]->Set_PMc(experiments[n]->expphases[p]->phactmod.gammaW, 3 );
+                        if (experiments[n]->expphases[p]->phactmod.b_gammaT !="")
+                            NodT[n]->Set_PMc(get_b_gammaT(experiments[n]->expphases[p]->phactmod.b_gammaT), 4 );
+                    }
                 }
-            }
 
-            if (!isSetActMod)
-            if (majorsalt == "NaCl")
-            {
-                NodT[n]->Set_PMc(0.064, 0 );
-                NodT[n]->Set_PMc(3.72, 1 );
-                NodT[n]->Set_PMc(1, 4 );
-            } else
-            if (majorsalt == "KCl")
-            {
-                NodT[n]->Set_PMc(0.025, 0 );
-                NodT[n]->Set_PMc(4.08, 1 );
-                NodT[n]->Set_PMc(2, 4 );
-            } else
-            if (majorsalt == "NaOH")
-            {
-                NodT[n]->Set_PMc(0.098, 0 );
-                NodT[n]->Set_PMc(3.31, 1 );
-                NodT[n]->Set_PMc(3, 4 );
-            } else
-            if (majorsalt == "KOH")
-            {
-                NodT[n]->Set_PMc(0.123, 0 ); // b_gamma
-                NodT[n]->Set_PMc(3.67, 1 ); // a0
-                NodT[n]->Set_PMc(4, 4 ); // T function
-            } else
-            if (majorsalt == "CaCl2")
-            {
-                NodT[n]->Set_PMc(0.077, 0 );
-                NodT[n]->Set_PMc(4.32, 1 );
-                NodT[n]->Set_PMc(0, 4 );
-            } else
-            if (majorsalt == "MgCl2")
-            {
-                NodT[n]->Set_PMc(0.106, 0 );
-                NodT[n]->Set_PMc(4.11, 1 );
-                NodT[n]->Set_PMc(0, 4 );
-            } /*else // default NaCl
+                if (!isSetActMod) {
+                    if (majorsalt == "NaCl")   {
+                        NodT[n]->Set_PMc(0.064, 0 );
+                        NodT[n]->Set_PMc(3.72, 1 );
+                        NodT[n]->Set_PMc(1, 4 );
+                    }
+                    else if (majorsalt == "KCl") {
+                        NodT[n]->Set_PMc(0.025, 0 );
+                        NodT[n]->Set_PMc(4.08, 1 );
+                        NodT[n]->Set_PMc(2, 4 );
+                    }
+                    else if (majorsalt == "NaOH")  {
+                        NodT[n]->Set_PMc(0.098, 0 );
+                        NodT[n]->Set_PMc(3.31, 1 );
+                        NodT[n]->Set_PMc(3, 4 );
+                    }
+                    else if (majorsalt == "KOH") {
+                        NodT[n]->Set_PMc(0.123, 0 ); // b_gamma
+                        NodT[n]->Set_PMc(3.67, 1 ); // a0
+                        NodT[n]->Set_PMc(4, 4 ); // T function
+                    }
+                    else if (majorsalt == "CaCl2")  {
+                        NodT[n]->Set_PMc(0.077, 0 );
+                        NodT[n]->Set_PMc(4.32, 1 );
+                        NodT[n]->Set_PMc(0, 4 );
+                    }
+                    else if (majorsalt == "MgCl2")  {
+                        NodT[n]->Set_PMc(0.106, 0 );
+                        NodT[n]->Set_PMc(4.11, 1 );
+                        NodT[n]->Set_PMc(0, 4 );
+                    } /*else // default NaCl
             {
                 NodT[n]->Set_PMc(0.064, 0 );
                 NodT[n]->Set_PMc(3.72, 1 );
                 NodT[n]->Set_PMc(1, 4 );
             }*/
+                }
             }
         }
 
@@ -840,8 +829,8 @@ void TGfitTask::setnodes()
                 // This is not a name of DC used in DBR file. The GEMS formula parser is used
                 //  (implemented by SD on 4.03.2014)
                 TFormula aFo;
-                std::shared_ptr<double> A( new double[nIC]);
-                std::shared_ptr<char> SB1( new char[nIC*IC_RKLEN]);
+                std::shared_ptr<double[]> A( new double[nIC]());
+                std::shared_ptr<char[]> SB1( new char[nIC*IC_RKLEN]());
 
                 if ((experiments[n]->sbcomp[j]->Qunit != keys::mol) && (experiments[n]->sbcomp[j]->Qunit != keys::molal) && (experiments[n]->sbcomp[j]->Qunit != keys::gram))
                    {std::cout << "ERROR: Unknown unit " << experiments[n]->sbcomp[j]->Qunit <<" for "<< experiments[n]->sbcomp[j]->comp <<" experiment " << experiments[n]->sample << std::endl; exit(1);}
@@ -938,7 +927,7 @@ void TGfitTask::setnodes()
 //        NodT[n]->GEM_from_MT( NodeHandle, NodeStatusCH, T_k, P_pa, 0., 0., new_moles_IC, xDC_up, xDC_lo, Ph_surf );
 //std::cout << new_moles_IC[0] << " " << new_moles_IC[1] << " " <<new_moles_IC[2] << " " <<new_moles_IC[3] << " " <<new_moles_IC[4] << " " <<new_moles_IC[5] << " " <<new_moles_IC[6] << " " << std::endl;
         // variant (8c) of GEM_from_MT()
-        NodT[n]->GEM_from_MT( NodeHandle, NEED_GEM_AIA, T_k, P_pa, new_moles_IC, xDC_up, xDC_lo );  // bugfix DK 09.01.2014
+        NodT[n]->GEM_from_MT( NodeHandle, NEED_GEM_AIA, T_k, P_pa, new_moles_IC.get(), xDC_up.get(), xDC_lo.get() );  // bugfix DK 09.01.2014
 
 //        for (unsigned int bi=0; bi < sizeof(new_moles_IC); bi++)
 //        {
@@ -974,21 +963,21 @@ void TGfitTask::setnodes()
 //            }
 //        }
 
-        delete[] new_moles_IC;
-        delete[] xDC_up;
-        delete[] xDC_lo;
-        delete[] Ph_surf;
+        //delete[] new_moles_IC;
+        //delete[] xDC_up;
+        //delete[] xDC_lo;
+        //delete[] Ph_surf;
     }  // for n
 
 #ifdef useomp
     omp_set_num_threads(this->MPI);
-#ifdef buildWIN32
+#ifdef _WIN32
     #pragma omp parallel for schedule(static)
 #else
     #pragma omp parallel for schedule(dynamic)
 #endif
 #endif
-    for (unsigned int n = 0; n<NodT.size(); ++n)
+    for (int n = 0; n<NodT.size(); ++n)
     {
         NodeHandle = n;
         // Calling GEMIPM calculation
@@ -1019,266 +1008,150 @@ void TGfitTask::setnodes()
 
 void TGfitTask::get_DataLogK()
 {
-    std::vector<std::string> out, out2;
-
-    parse_JSON_object(DataLogK, keys::FunList, out);
-    FlogK.resize(out.size());
-    for (unsigned int i = 0 ; i < out.size() ; i++)
-    {
-
-        parse_JSON_object(out[i], keys::Ftype, out2);
-        if (out2.size() == 0) { std::cout << "Ftype has to be specified in DataLogK " << i << std::endl; exit(1);} // ERROR
-        FlogK[i].Ftype = out2[0];
-        out2.clear();
-
-        parse_JSON_object(out[i], keys::Rndx, out2);
-        if (out2.size() == 0) { std::cout << "Rndx has to be specified in DataLogK " << i << std::endl; exit(1);} // ERROR
-        FlogK[i].Rndx = atoi(out2[0].c_str());
-        out2.clear();
-
-        parse_JSON_object(out[i], keys::Fcoef, out2);
-        if (out2.size() != 7) { std::cout << "Fcoef has to be contain 7 coefficients (number or 0 for no coefficient)! " << i << std::endl; exit(1);} // ERROR
-        FlogK[i].Fcoef.resize(7);
-        for (unsigned int j = 0; j < out2.size(); j++)
-        {
-           FlogK[i].Fcoef[j] = atof(out2[j].c_str());
-        }
-
-        out2.clear();
+    common::JsonFree data_logk_object = fromJsonString(DataLogK);
+    if( data_logk_object.contains(keys::FunList) ) {
+        FlogK.resize(data_logk_object[keys::FunList].size());
+        int ii=0;
+        for (const auto& element : data_logk_object[keys::FunList]) {
+            FlogK[ii].Ftype = element->value(keys::Ftype, std::string());
+            if (FlogK[ii].Ftype.empty())
+            { std::cout << "Ftype has to be specified in DataLogK " << ii << std::endl; exit(1); } // ERROR
+            if (!element->contains(keys::Rndx))
+            { std::cout << "Rndx has to be specified in DataLogK " << ii << std::endl; exit(1);} // ERROR
+            if (!element->contains(keys::Fcoef))
+            { std::cout << "Fcoef has to be specified in DataLogK " << ii << std::endl; exit(1);} // ERROR
+            FlogK[ii].Fcoef = element->value(keys::Fcoef, std::vector<double>{});
+            if (FlogK[ii].Fcoef.size() <7 )
+            { std::cout << "Fcoef has to be contain 7 coefficients (number or 0 for no coefficient)! "  << ii << std::endl; exit(1);} // ERROR
+            FlogK[ii].Fcoef.resize(7);
+            ii++;
+            }
     }
-
+    else {
+       FlogK.clear();
+    }
 }
 
 void TGfitTask::get_DataTarget ( )
 {
-    std::vector<std::string> out, out2;
-    parse_JSON_array_object(DataTarget, "OFUN", "OPH", out);
-    out.clear();
+    common::JsonFree data_tar_object = fromJsonString(DataTarget);
 
-    parse_JSON_object(DataTarget, keys::Target, out);
-    if (out.size() == 0)
-    { std::cout << "No Target function defined!! "<< std::endl; exit(1);}
-    Tfun->name = out[0]; // Name of target function
-    out.clear();
+    // not used out
+    //std::vector<std::string> out, out2;
+    //parse_JSON_array_object(DataTarget, "OFUN", "OPH", out);
+    //out.clear();
 
-    parse_JSON_object(DataTarget, keys::TT, out);
-    Tfun->type = out[0]; // Type of the target function
-    out.clear();
-
-    parse_JSON_object(DataTarget, keys::WT, out);
-    Tfun->weight = out[0]; // Weight of target function
-    out.clear();
-
-    parse_JSON_object(DataTarget, keys::OFUN, out);
-    for (unsigned int i = 0 ; i < out.size() ; i++)
-    {
-        TargetFunction::obj_fun objfun;
-        Tfun->objfun.push_back(objfun); // initializing
-        Tfun->objfun[i].exp_phase = "NULL";
-        Tfun->objfun[i].exp_CT = "NULL";
-        Tfun->objfun[i].exp_CN = "NULL";
-        Tfun->objfun[i].exp_unit = "NULL";
-        Tfun->objfun[i].exp_DCP = "NULL";
-        Tfun->objfun[i].expr = "NULL";
-        Tfun->objfun[i].meas_average = 0.0;
-        Tfun->objfun[i].TuWeight = 1;
-        Tfun->objfun[i].weight = 1;
-        Tfun->objfun[i].isComputed = false;
-        Tfun->objfun[i].SumWTFun = 0.0;
-
-        parse_JSON_object(out[i], keys::CT, out2);
-        if (out2.size() == 0) { std::cout << "Type of compared property has to be specified in Data Target->OFUN->CT!"<< std::endl; exit(1);} // ERROR
-        Tfun->objfun[i].exp_CT = out2[0];
-        out2.clear();
-
-        parse_JSON_object(out[i], keys::EPH[mode], out2);
-        if (out2.size() == 0 && Tfun->objfun[i].exp_CT != keys::property) { std::cout << "Phase name has to be specified in Data Target->OFUN->EPH!"<< std::endl; exit(1);} // ERROR
-        Tfun->objfun[i].exp_phase = out2[0];
-        out2.clear();
-
-        parse_JSON_object(out[i], keys::DCP, out2);
-        if ((out2.size() == 0) && (Tfun->objfun[i].exp_CT == keys::DC)) { std::cout << "Name of dependent component compared property has to be specified in Data Target->OFUN->DCP!"<< std::endl; exit(1);} // ERROR
-        if (out2.size() > 0)
-        Tfun->objfun[i].exp_DCP = out2[0];
-        out2.clear();
-
-        parse_JSON_object(out[i], keys::CN, out2);
-        if (out2.size() == 0) { std::cout << "Data Target->OFUN->CN has to be speficied!"<< std::endl; exit(1);} // ERROR
-        Tfun->objfun[i].exp_CN = out2[0];
-        out2.clear();
-
-        parse_JSON_object(out[i], keys::Qunit, out2);
-        if (out2.size() > 0)
-        Tfun->objfun[i].exp_unit = out2[0];
-        out2.clear();
-
-        parse_JSON_object(out[i], keys::expr, out2);
-        if (out2.size() > 0)
-        Tfun->objfun[i].expr = out2[0];
-        out2.clear();
-
-        parse_JSON_object(out[i], keys::WT, out2);
-        if (out2.size() > 0)
-        Tfun->objfun[i].weight = atof(out2[0].c_str());
-        out2.clear();
+    // Name of target function
+    Tfun->name = data_tar_object.value(keys::Target, std::string());
+    if( Tfun->name.empty() ) {
+        std::cout << "No Target function defined!! "<< std::endl; exit(1);
     }
-    out.clear();
+    Tfun->type = data_tar_object.value(keys::TT, std::string());
+    Tfun->weight = data_tar_object.value(keys::WT, std::string());
 
-    // get DFUN
-    parse_JSON_object(DataTarget, keys::NFUN, out);
-    for (unsigned int i = 0 ; i < out.size() ; i++)
-    {
-        Opti->h_optNF = true;
-        TargetFunction::obj_fun objfun;
-        Tfun->nestfun.push_back(objfun); // initializing
-        Tfun->nestfun[i].exp_phase = "NULL";
-        Tfun->nestfun[i].exp_CT = "NULL";
-        Tfun->nestfun[i].exp_CN = "NULL";
-        Tfun->nestfun[i].exp_unit = "NULL";
-        Tfun->nestfun[i].exp_DCP = "NULL";
-        Tfun->nestfun[i].expr = "NULL";
-        Tfun->nestfun[i].Ptype = "NULL";
-        Tfun->nestfun[i].weight = 1;
-        Tfun->nestfun[i].TuWeight = 1;
-        Tfun->nestfun[i].isComputed = false;
+    if( data_tar_object.contains(keys::OFUN) ) {
+        for (const auto& element : data_tar_object[keys::OFUN]) {
+            TargetFunction::obj_fun objfun;
+            Tfun->objfun.push_back(objfun); // initializing
+            Tfun->objfun.back().meas_average = 0.0;
+            Tfun->objfun.back().TuWeight = 1;
+            Tfun->objfun.back().isComputed = false;
+            Tfun->objfun.back().SumWTFun = 0.0;
 
-        parse_JSON_object(out[i], keys::EPH[mode], out2);
-        if (out2.size() == 0) { std::cout << "Phase name has to be specified in Data Target->NFUN->EPH!"<< std::endl; exit(1);} // ERROR
-        Tfun->nestfun[i].exp_phase = out2[0];
-        out2.clear();
+            Tfun->objfun.back().exp_CT = element->value(keys::CT, std::string("NULL"));
+            if (Tfun->objfun.back().exp_CT == "NULL")
+            { std::cout << "Type of compared property has to be specified in Data Target->OFUN->CT!"<< std::endl; exit(1);} // ERROR
+            Tfun->objfun.back().exp_phase = element->value(keys::EPH[mode], std::string("NULL"));
+            if (Tfun->objfun.back().exp_phase == "NULL") {
+                 if( Tfun->objfun.back().exp_CT != keys::property) {
+                     std::cout << "Phase name has to be specified in Data Target->OFUN->EPH!"<< std::endl; exit(1);
+                 } // ERROR
+                 else {
+                   Tfun->objfun.back().exp_phase =  Tfun->objfun.back().exp_CT;
+                 }
+            }
+            Tfun->objfun.back().exp_DCP = element->value(keys::DCP, std::string("NULL"));
+            if (Tfun->objfun.back().exp_DCP == "NULL" && (Tfun->objfun.back().exp_CT == keys::DC))
+            { std::cout << "Name of dependent component compared property has to be specified in Data Target->OFUN->DCP!"<< std::endl; exit(1);} // ERROR
+            Tfun->objfun.back().exp_CN = element->value(keys::CN, std::string("NULL"));
+            if (Tfun->objfun.back().exp_CN == "NULL" )
+            { std::cout << "Data Target->OFUN->CN has to be speficied!"<< std::endl; exit(1);} // ERROR
 
-        parse_JSON_object(out[i], keys::CT, out2);
-        if (out2.size() == 0) { std::cout << "Type of compared property has to be specified in Data Target->NFUN->CT!"<< std::endl; exit(1);} // ERROR
-        Tfun->nestfun[i].exp_CT = out2[0];
-        out2.clear();
-
-        parse_JSON_object(out[i], keys::DCP, out2);
-        if ((out2.size() == 0) && (Tfun->objfun[i].exp_CT == keys::DC)) { std::cout << "Name of dependent component compared property has to be specified in Data Target->NFUN->DCP!"<< std::endl; exit(1);} // ERROR
-        if (out2.size() > 0)
-        Tfun->nestfun[i].exp_DCP = out2[0];
-        out2.clear();
-
-        parse_JSON_object(out[i], keys::CN, out2);
-        if (out2.size() == 0) { std::cout << "Data Target->OFUN->CN has to be speficied!"<< std::endl; exit(1);} // ERROR
-        Tfun->nestfun[i].exp_CN = out2[0];
-        out2.clear();
-
-        parse_JSON_object(out[i], keys::Qunit, out2);
-        if (out2.size() > 0)
-        Tfun->nestfun[i].exp_unit = out2[0];
-        out2.clear();
-
-        parse_JSON_object(out[i], keys::WT, out2);
-        if (out2.size() > 0)
-        Tfun->nestfun[i].weight = atof(out2[0].c_str());
-        out2.clear();
-
-        parse_JSON_object(out[i], keys::expr, out2);
-        if (out2.size() > 0)
-        Tfun->nestfun[i].expr = out2[0];
-        out2.clear();
-
-        parse_JSON_object(out[i], keys::Telem, out2);
-        if (out2.size() > 0)
-        Tfun->nestfun[i].Telem = out2;
-        out2.clear();
-
-        parse_JSON_object(out[i], keys::Tforumla, out2);
-        if (out2.size() > 0)
-        Tfun->nestfun[i].Tformula = out2;
-        out2.clear();
-
-        parse_JSON_object(out[i], keys::sT, out2);
-        if (out2.size() > 0)
-            Tfun->nestfun[i].sT = atof(out2[0].c_str());
-        out2.clear();
-
-        parse_JSON_object(out[i], keys::sP, out2);
-        if (out2.size() > 0)
-            Tfun->nestfun[i].sP = atof(out2[0].c_str());
-        out2.clear();
-//        parse_JSON_object(out[i], keys::PType[mode], out2);
-//        if (out2.size() == 0) { std::cout << "Data Target->NFUN->Ptype has to be speficied!"<< std::endl; exit(1);} // ERROR
-//        Tfun->nestfun[i].Ptype = out2[0];
-//        out2.clear();
+            Tfun->objfun.back().exp_unit = element->value(keys::Qunit, std::string("NULL"));
+            Tfun->objfun.back().expr = element->value(keys::expr, std::string("NULL"));
+            Tfun->objfun.back().weight = element->value(keys::WT, 1.);
+        }
     }
-    out.clear();
 
+    // get NFUN
+    if( data_tar_object.contains(keys::NFUN) ) {
+        for (const auto& element : data_tar_object[keys::NFUN]) {
+            Opti->h_optNF = true;
+            TargetFunction::obj_fun objfun;
+            Tfun->nestfun.push_back(objfun); // initializing
+            Tfun->nestfun.back().Ptype = "NULL";
+            Tfun->nestfun.back().TuWeight = 1;
+            Tfun->nestfun.back().isComputed = false;
 
-    // get DFUN
-    parse_JSON_object(DataTarget, keys::ADDOUT, out);
-    for (unsigned int i = 0 ; i < out.size() ; i++)
-    {
-        TargetFunction::obj_fun addout;
-        Tfun->addout.push_back(addout); // initializing
-        Tfun->addout[i].exp_phase = "NULL";
-        Tfun->addout[i].exp_CT = "NULL";
-        Tfun->addout[i].exp_CN = "NULL";
-        Tfun->addout[i].exp_unit = "NULL";
-        Tfun->addout[i].exp_DCP = "NULL";
-        Tfun->addout[i].Otype = "NULL";
-        Tfun->addout[i].expr = "NULL";
-        Tfun->addout[i].weight = 1;
-        Tfun->addout[i].TuWeight = 1;
-        Tfun->addout[i].isComputed = false;
+            Tfun->nestfun.back().exp_phase = element->value(keys::EPH[mode], std::string("NULL"));
+            if (Tfun->nestfun.back().exp_phase == "NULL")
+            { std::cout << "Phase name has to be specified in Data Target->NFUN->EPH!"<< std::endl; exit(1);} // ERROR
 
-        parse_JSON_object(out[i], keys::CT, out2);
-        if (out2.size() == 0) { std::cout << "Type of compared property has to be specified in Data Target->NFUN->CT!"<< std::endl; exit(1);} // ERROR
-        Tfun->addout[i].exp_CT = out2[0];
-        out2.clear();
+            Tfun->nestfun.back().exp_CT = element->value(keys::CT, std::string("NULL"));
+            if (Tfun->nestfun.back().exp_CT == "NULL")
+            { std::cout << "Type of compared property has to be specified in Data Target->NFUN->CT!"<< std::endl; exit(1);} // ERROR
 
-        parse_JSON_object(out[i], keys::EPH[mode], out2);
-        if (out2.size() == 0) {
-            if (Tfun->addout[i].exp_CT != keys::comp)
-            {std::cout << "Phase name has to be specified in Data Target->NFUN->EPH!"<< std::endl; exit(1);}} // ERROR
-        if (out2.size() > 0)
-            Tfun->addout[i].exp_phase = out2[0];
-        out2.clear();
+            Tfun->nestfun.back().exp_DCP = element->value(keys::DCP, std::string("NULL"));
+            if (Tfun->nestfun.back().exp_DCP == "NULL" && (Tfun->nestfun.back().exp_CT == keys::DC))
+            { std::cout << "Name of dependent component compared property has to be specified in Data Target->NFUN->DCP!"<< std::endl; exit(1);} // ERROR
 
-        parse_JSON_object(out[i], keys::DCP, out2);
-        if ((out2.size() == 0) && (Tfun->addout[i].exp_CT == keys::DC)) { std::cout << "Name of dependent component compared property has to be specified in Data Target->NFUN->DCP!"<< std::endl; exit(1);} // ERROR
-        if (out2.size() > 0)
-        Tfun->addout[i].exp_DCP = out2[0];
-        out2.clear();
+            Tfun->nestfun.back().exp_CN = element->value(keys::CN, std::string("NULL"));
+            if (Tfun->nestfun.back().exp_CN == "NULL")
+            { std::cout << "Data Target->OFUN->CN has to be speficied!"<< std::endl; exit(1);} // ERROR
 
-        parse_JSON_object(out[i], keys::CN, out2);
-        if (out2.size() == 0) { std::cout << "Data Target->OFUN->CN has to be speficied!"<< std::endl; exit(1);} // ERROR
-        Tfun->addout[i].exp_CN = out2[0];
-        out2.clear();
+            Tfun->nestfun.back().exp_unit = element->value(keys::Qunit, std::string("NULL"));
+            Tfun->nestfun.back().weight = element->value(keys::WT, 1.);
+            Tfun->nestfun.back().expr = element->value(keys::expr, std::string("NULL"));
+            Tfun->nestfun.back().Telem = element->value(keys::Telem, std::vector<std::string>{});
+            Tfun->nestfun.back().Tformula = element->value(keys::Tforumla, std::vector<std::string>{});
+            Tfun->nestfun.back().sT = element->value(keys::sT, -1.0);
+            Tfun->nestfun.back().sP = element->value(keys::sP, -1.0);
+            //Tfun->nestfun.back().Ptype = element->value(keys::PType[mode], std::string("NULL"));
+            //if (Tfun->nestfun.back().Ptype == "NULL")
+            //   { std::cout << "Data Target->NFUN->Ptype has to be speficied!"<< std::endl; exit(1);} // ERROR
+        }
+    }
 
-        parse_JSON_object(out[i], keys::Qunit, out2);
-        if (out2.size() > 0)
-        Tfun->addout[i].exp_unit = out2[0];
-        out2.clear();
+    // get ADDOUT
+    if( data_tar_object.contains(keys::ADDOUT) ) {
+        for (const auto& element : data_tar_object[keys::ADDOUT]) {
+            TargetFunction::obj_fun addout;
+            Tfun->addout.push_back(addout); // initializing
+            Tfun->addout.back().TuWeight = 1;
+            Tfun->addout.back().isComputed = false;
 
-        parse_JSON_object(out[i], keys::WT, out2);
-        if (out2.size() > 0)
-        Tfun->addout[i].weight = atof(out2[0].c_str());
-        out2.clear();
+            Tfun->addout.back().exp_CT = element->value(keys::CT, std::string("NULL"));
+            if (Tfun->addout.back().exp_CT == "NULL")
+            { std::cout << "Type of compared property has to be specified in Data Target->NFUN->CT!"<< std::endl; exit(1);} // ERROR
+            Tfun->addout.back().exp_phase = element->value(keys::EPH[mode], std::string("NULL"));
+            if (Tfun->addout.back().exp_phase == "NULL" && Tfun->addout.back().exp_CT != keys::comp)
+            {std::cout << "Phase name has to be specified in Data Target->NFUN->EPH!"<< std::endl; exit(1);} // ERROR
+            Tfun->addout.back().exp_DCP = element->value(keys::DCP, std::string("NULL"));
+            if ((Tfun->addout.back().exp_DCP == "NULL") && ( Tfun->addout.back().exp_CT == keys::DC))
+            { std::cout << "Name of dependent component compared property has to be specified in Data Target->NFUN->DCP!"<< std::endl; exit(1);} // ERROR
+            Tfun->addout.back().exp_CN = element->value(keys::CN, std::string("NULL"));
+            if (Tfun->addout.back().exp_CN == "NULL")
+            { std::cout << "Data Target->OFUN->CN has to be speficied!"<< std::endl; exit(1);} // ERROR
 
-        parse_JSON_object(out[i], keys::Telem, out2);
-        if (out2.size() > 0)
-        Tfun->addout[i].Telem = out2;
-        out2.clear();
-
-        parse_JSON_object(out[i], keys::Tforumla, out2);
-        if (out2.size() > 0)
-        Tfun->addout[i].Tformula = out2;
-        out2.clear();
-
-        parse_JSON_object(out[i], keys::expr, out2);
-        if (out2.size() > 0)
-        Tfun->addout[i].expr = out2[0];
-        out2.clear();
-
-        parse_JSON_object(out[i], keys::SRC, out2);
-        if (out2.size() == 0) {
-            if (Tfun->addout[i].exp_CT != keys::comp)
+            Tfun->addout.back().exp_unit = element->value(keys::Qunit, std::string("NULL"));
+            Tfun->addout.back().weight = element->value(keys::WT, 1.);
+            Tfun->addout.back().Telem = element->value(keys::Telem, std::vector<std::string>{});
+            Tfun->addout.back().Tformula = element->value(keys::Tforumla, std::vector<std::string>{});
+            Tfun->addout.back().expr = element->value(keys::expr, std::string("NULL"));
+            Tfun->addout.back().Otype = element->value(keys::SRC, std::string("NULL"));
+            if (Tfun->addout.back().Otype == "NULL" && Tfun->addout.back().exp_CT != keys::comp)
             {std::cout << "Data Target->ADDOUT->SRC has to be speficied!"<< std::endl; exit(1);}} // ERROR
-        Tfun->addout[i].Otype = out2[0];
-        out2.clear();
     }
-    out.clear();
 #ifdef CHECK_LOAD
     std::fstream test_out("DataTarget.log", std::ios::out);
     test_out << *Tfun << "\n";
@@ -1290,15 +1163,15 @@ void TGfitTask::set_logK_TPpairs()
 {
     for (unsigned i=0; i <Opti->optParam.size(); i++)
     {
-        Opti->optParam[i]->Set_logKTP(this->NodT[0], this->TP_pairs );
+        Opti->optParam[i]->Set_logKTP(this->NodT[0].get(), this->TP_pairs );
     }
 }
 
 void TGfitTask::set_logK_TPpairs(std::vector<std::string> logK)
 {
-    unsigned int size = 0;
+    size_t size = 0;
     int l = 0;
-    for (unsigned e=0; e <Opti->optParam.size(); e++)
+    for (size_t e=0; e <Opti->optParam.size(); e++)
     {
         if (Opti->optParam[e]->Get_optType() == "G0")
         size += Opti->optParam[e]->Get_optRPsize();
@@ -1307,13 +1180,13 @@ void TGfitTask::set_logK_TPpairs(std::vector<std::string> logK)
     if (logK.size() != size)
     { std::cout << "The number of logks is not equal to the number of R parameters * T-P pairs in the system! " << std::endl; exit(1);}
 
-    for (unsigned e=0; e <Opti->optParam.size(); e++)
+    for (size_t e=0; e <Opti->optParam.size(); e++)
     {
         if (Opti->optParam[e]->Get_optType() == "G0")
         {
-            for (unsigned j = 0; j < Opti->optParam[e]->Get_optRPsize(); j++)
+            for (size_t j = 0; j < Opti->optParam[e]->Get_optRPsize(); j++)
             {
-                for (unsigned k = 0; k < TP_pairs[0].size(); k++)
+                for (size_t k = 0; k < TP_pairs[0].size(); k++)
                 {
                     Opti->optParam[e]->Set_logKTP(j, atof(logK[l].c_str()) );
                     l++;
@@ -1329,12 +1202,12 @@ void TGfitTask::get_Lparams_delta()
     {
        for (unsigned i=0; i< Opti->optNFParam.size(); i++)
        {
-           Opti->optNFParam[i]->SetIVvEVvDelta(NodT[e]);
+           Opti->optNFParam[i]->SetIVvEVvDelta(NodT[e].get());
        }
 
        for (unsigned i=0; i< Opti->optParam.size(); i++)
        {
-           Opti->optParam[i]->SetIVvEVvDelta(NodT[e]);
+           Opti->optParam[i]->SetIVvEVvDelta(NodT[e].get());
        }
     }
 }
@@ -1424,7 +1297,7 @@ void TGfitTask::set_DH_Helgeson (int n)
     {
         bgama = 0.0; ao = 0.0;
 
-        bgama = BgammaTP(SaltIndex[j],  NodT[n], Gf, EpsW[0]);
+        bgama = BgammaTP(SaltIndex[j],  NodT[n].get(), Gf, EpsW[0]);
         ao = IonsizeTP(SaltIndex[j], Gf);
 
         Wbgama += bgama * SaltAmount[j];
@@ -1442,10 +1315,10 @@ void TGfitTask::set_DH_Helgeson (int n)
         NodT[n]->Set_PMc(Wao, 1 );
         NodT[n]->Set_PMc(0, 4 );
 
-        TMulti *multi = NodT[n]->pMulti();
+        //TMulti *multi = NodT[n]->pMulti();
 
         // aq_gen has index 0
-        TSolMod *sol = multi->pTSolMod(0);
+        TSolMod *sol = (TSolMod*)(NodT[n]->get_ptrTSolMod(0));
         sol->Set_Felect_bc(0, Wbgama, Wao);
 
     } else
@@ -1650,7 +1523,7 @@ double TGfitTask::calc_logK_dT(std::vector<double> A, double Tk, double P, int R
     std::vector<int> vNdx,vCoef;
 
     Opti->optParam[e]->Get_R_vNdx_vCoef(Rndx, vNdx, vCoef );
-    for (unsigned s = 0; s < vNdx.size(); s++)
+    for (size_t s = 0; s < vNdx.size(); s++)
     {
         dV0 +=   (NodT[0]->DC_V0(vNdx[s], 100000, 298.15))
                * ( vCoef[s] );
@@ -1729,7 +1602,6 @@ void TGfitTask::test()
     mean_reisdulas = mean_reisdulas / residuals_v.size();
 }
 
-
 std::ostream& operator<<(std::ostream& stream, const TGfitTask::TargetFunction::obj_fun& data) {
     stream << data.exp_phase << " " << data.exp_CT << " " << data.exp_CN << " " << data.exp_unit << "\n";
     stream << data.exp_DCP << " " << data.meas_average << " " << data.Ptype << " " << data.Otype << "\n";
@@ -1757,6 +1629,5 @@ std::ostream& operator<<(std::ostream& stream, const TGfitTask::TargetFunction& 
     }
     return stream;
 }
-
 //-----------------------End of gemsfit_task.cpp--------------------------
 

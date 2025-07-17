@@ -54,7 +54,7 @@ public:
 
     SeriesLineData( size_t ndx, size_t maxLines, const std::string& aName = "",
                     int mrkType = 0, int mrkSize = 8,
-                    int lineSize = 2,  int lineStyle = 1, int usespline =0 ):
+                    int lineSize = 0,  int lineStyle = 1, int usespline =0 ):
         name(aName), xcolumn(-1)
     {
         QColor aColor;
@@ -138,14 +138,8 @@ public:
         xcolumn = aNdxX;
     }
 
-#ifndef NO_JSONIO
-    void toJsonNode( jsonio17::JsonBase& object ) const;
-    void fromJsonNode( const jsonio17::JsonBase& object );
-#else
-
-    void toBsonObject( bson *obj ) const;
-    void fromBsonObject( const char *obj );
-#endif
+    common::JsonFree toBsonObject() const;
+    void fromBsonObject( const common::JsonFree& object );
 
     void toJsonObject(QJsonObject& json) const;
     void fromJsonObject(const QJsonObject& json);
@@ -326,14 +320,8 @@ public:
         axisTypeY = axisY;
     }
 
-#ifndef NO_JSONIO
-    void toJsonNode( jsonio17::JsonBase& object ) const;
-    void fromJsonNode( const jsonio17::JsonBase& object );
-#else
-
-    void toBsonObject( bson *obj ) const;
-    void fromBsonObject( const char *obj );
-#endif
+    common::JsonFree toBsonObject() const;
+    void fromBsonObject( const common::JsonFree& object );
 
     void toJsonObject(QJsonObject& json) const;
     void fromJsonObject(const QJsonObject& json);

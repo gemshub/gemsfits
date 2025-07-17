@@ -22,13 +22,9 @@
 #define _gemsfit_iofiles_h_
 
 #include <string>
-#include "node.h"
-//#include "opt_vector.h"
-#include <sys/stat.h>
+#include <fstream>
 #include <ctime>
-
-//using namespace std;
-
+#include <GEMS3K/node.h>
 
 
 /**
@@ -143,7 +139,7 @@ public:
         return gems3LstFilePath;
     }
 
-    void setGEMS3LstFilePath( const char* name)  {
+    void setGEMS3LstFilePath( const std::string name)  {
         gems3LstFilePath = name;
     }
 

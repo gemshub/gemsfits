@@ -22,7 +22,7 @@
 #include <QtSvg/QSvgGenerator>
 #include <QPixmap>
 
-#include "v_detail.h"
+#include <GEMS3K/v_detail.h>
 #include "charts/graph_data.h"
 #include "charts/chart_view.h"
 
@@ -217,7 +217,12 @@ void PlotChartViewPrivate::updateScatterSeries( QScatterSeries* series, const Se
     series->setMarkerShape(QScatterSeries::MarkerShapeRectangle);
     auto msize = linedata.getMarkerSize()+2;
     series->setMarkerSize(msize);
+#if QT_VERSION < QT_VERSION_CHECK(6, 2, 0)
     series->setBrush( markerShapeImage( linedata ).scaled(msize, msize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+#else
+    series->setLightMarker(markerShapeImage(linedata));
+#endif
+
 }
 
 void PlotChartViewPrivate::mapSeriesLine( QXYSeries *series,
@@ -513,7 +518,11 @@ void PlotChartViewPrivate::highlightSeries( size_t line, bool enable )
             auto shsize = linedata.getMarkerSize();
             if( enable )
                 shsize *=2;
+#if QT_VERSION < QT_VERSION_CHECK(6, 2, 0)
             scatterseries->setBrush( markerShapeImage( linedata ).scaled( shsize,shsize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+#else
+            scatterseries->setLightMarker(markerShapeImage(linedata));
+#endif
             scatterseries->setMarkerSize(shsize);
         }
     }
@@ -851,8 +860,11 @@ void PlotChartView::renderDocument( const QString &title, const QString &fileNam
         generator.setFileName( fileName );
         generator.setSize( size() );
         generator.setViewBox( rect() );
-        QPainter p(&generator);
-        render(&p);
+        setCacheMode(QGraphicsView::CacheNone);
+        QPainter painter;
+        painter.begin(&generator);
+        this->render(&painter);
+        painter.end();
     }
     else
     {

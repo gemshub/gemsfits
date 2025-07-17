@@ -37,6 +37,7 @@
 #include <iomanip>
 #include <math.h>
 
+/*
 using namespace std;
 
 ResPrint::ResPrint( optimization *opti)
@@ -104,7 +105,7 @@ void ResPrint::print_result()
     {
         if (what1[i] == "")
         {
-            gpf->fres<<experiment[i]<<","/*<<what1[i]*/<<","<<what2[i]<<","<<unit[i]<<","<<measured[i]<<","<<computed[i]<<","<<Weighted_Tfun_residual[i];
+            gpf->fres<<experiment[i]<<","/*<<what1[i]*<<","<<what2[i]<<","<<unit[i]<<","<<measured[i]<<","<<computed[i]<<","<<Weighted_Tfun_residual[i];
         } else gpf->fres<<experiment[i]<<","<<what1[i]<<","<<what2[i]<<","<<unit[i]<<","<<measured[i]<<","<<computed[i]<<","<<Weighted_Tfun_residual[i];
         sum_res += (measured[i] - computed[i]);
         sum_res_wtfun +=Weighted_Tfun_residual[i];
@@ -160,6 +161,7 @@ void ResPrint::print_result()
 
     gpf->fres<<endl;
 }
+*/
 
 //void ResPrint::print_result(string experiment, string what2, string unit, double measured, double computed, double residual)
 //{

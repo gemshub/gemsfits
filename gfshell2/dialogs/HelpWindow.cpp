@@ -3,8 +3,8 @@
 //
 // Implementation of  HelpWindow, HelpBrowser and  SearchWidget classes
 //
-// Copyright (C) 2012-2014  S.V.Dmytriyeva
-// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+// Copyright (C) 2012-2023  S.V.Dmytriyeva
+// Uses EJDB (https://ejdb.org),
 //    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
 // This file is part of the GEMSFITS GUI, which uses the
@@ -17,56 +17,53 @@
 // E-mail gems2.support@psi.ch
 //-------------------------------------------------------------------
 
+#include <iostream>
+#include <QtHelp/QHelpEngine>
+#include <QtHelp/QHelpContentWidget>
+#include <QtHelp/QHelpIndexWidget>
+#include <QtHelp/QHelpSearchQueryWidget>
+#include <QtHelp/QHelpSearchResultWidget>
 
-#include <QtCore>
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
 #include <QtHelp/QHelpLink>
 #include <QtWidgets>
 #include <QtPrintSupport/QPrintDialog>
 #include <QtPrintSupport/QPrinter>
 #else
+//#include <QtHelp/QHelpSearchEngine>
 #include <QtGui>
 #include <QPrintDialog>
 #include <QPrinter>
 #endif
 
-#include  <iostream>
-#include <string>
-
-#include <QtHelp/QHelpEngine>
-#include <QtHelp/QHelpContentWidget>
-#include <QtHelp/QHelpIndexWidget>
-#include <QFileInfo>
-#include <QMessageBox>
-#include <QtHelp/QHelpSearchEngine>
-#include <QtHelp/QHelpSearchQueryWidget>
-#include <QtHelp/QHelpSearchResultWidget>
 #include "HelpWindow.h"
+#include "ui_HelpWindow4.h"
 #include "FITMainWindow.h"
 
 const char *FIT_HOWHELP_HTML = "gemsfit-techinfo.html";
 const char *FIT_ABOUT_HTML = "gemsfits-about.html";
 
 const char *_FIT_version_stamp = "GEMSFITS v1.3.3";
-extern const char *_GEMIPM_version_stamp;
+////extern const char *_GEMIPM_version_stamp;
 
 HelpWindow* HelpWindow::pDia = 0;
 
-HelpWindow::HelpWindow( QWidget* parent):
-        QMainWindow( parent )
+HelpWindow::HelpWindow(QWidget* parent):
+    QMainWindow(parent),
+    ui(new Ui::HelpWindowData)
 {
-   setupUi(this);
-   std::string titl = _FIT_version_stamp;
-                  titl+= " : Help Viewer ";
-                 setWindowTitle(titl.c_str());
+    ui->setupUi(this);
+    std::string titl = _FIT_version_stamp;
+    titl+= " : Help Viewer ";
+    setWindowTitle(titl.c_str());
 
     pDia = this;
 
-    QSplitter *spl = new QSplitter(Qt::Horizontal,centralwidget );
+    QSplitter *spl = new QSplitter(Qt::Horizontal, ui->centralwidget);
     //gridLayout->addWidget(spl);
 
     // from ui form
-    tab_ = new QTabWidget(centralwidget);
+    tab_ = new QTabWidget(ui->centralwidget);
     tab_->setObjectName(QString::fromUtf8("tab_"));
 
     tabContents = new QWidget();
@@ -91,7 +88,7 @@ HelpWindow::HelpWindow( QWidget* parent):
     verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
     tab_->addTab(tabSearch, QString());
 
-    gridLayout->addWidget(spl/*tab_*/, 0, 0, 1, 1);
+    ui->gridLayout->addWidget(spl/*tab_*/, 0, 0, 1, 1);
     spl->addWidget(tab_);
     tab_->setCurrentIndex(0);
 
@@ -107,28 +104,25 @@ HelpWindow::HelpWindow( QWidget* parent):
     tab_->setTabText(tab_->indexOf(tabIndex), QApplication::translate("HelpWindowData", "Index", 0, QApplication::UnicodeUTF8));
     tab_->setTabText(tab_->indexOf(tabSearch), QApplication::translate("HelpWindowData", "Search", 0, QApplication::UnicodeUTF8));
 #endif
-
-
-
     //End Ui form
 
 
     QString collectionFile = QString( pFitImp->docDir().c_str() )+ QLatin1String("/gfshelp.qhc");
- // "/home/gems/gemworks/gems3/shared/doc/html/gems3help.qhc";
+    // "/home/gems/gemworks/gems3/shared/doc/html/gems3help.qhc";
 
     findLine = 0;
 
 #ifndef GEMS_RELEASE  
-    QLabel *label_2 = new QLabel(toolAddress);
+    QLabel *label_2 = new QLabel(ui->toolAddress);
     label_2->setText("Address:");
-    toolAddress->addWidget( label_2 );
+    ui->toolAddress->addWidget( label_2 );
 
-    adressLine = new QLineEdit( toolAddress );
+    adressLine = new QLineEdit(ui->toolAddress);
     adressLine->setEnabled( true );
     adressLine->setFocusPolicy( Qt::ClickFocus );
     adressLine->setReadOnly( true );
     adressLine->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
-    toolAddress->addWidget( adressLine );
+    ui->toolAddress->addWidget( adressLine );
 #endif  
 
     hEngine = new QHelpEngine(collectionFile, this);
@@ -140,37 +134,36 @@ HelpWindow::HelpWindow( QWidget* parent):
         wContents=0;
     }
     else
-     {
-      //cout << collectionFile.toStdString() << endl;
+    {
+        //cout << collectionFile.toStdString() << endl;
+        // Contents part
+        wContents = hEngine->contentWidget();
+        QVBoxLayout* mainBox = new QVBoxLayout(tabContents );
+        mainBox->addWidget(wContents);
+        connect(wContents, SIGNAL(linkActivated ( const QUrl& ) ),
+                this, SLOT(loadResource( const QUrl& )));
 
-      // Contents part
-      wContents = hEngine->contentWidget();
-      QVBoxLayout* mainBox = new QVBoxLayout(tabContents );
-      mainBox->addWidget(wContents);
-      connect(wContents, SIGNAL(linkActivated ( const QUrl& ) ),
-          this, SLOT(loadResource( const QUrl& )));
+        //Index define part
+        wIndex = hEngine->indexWidget();
+        verticalLayout->addWidget(wIndex);
+        connect(lineIndex, SIGNAL(textChanged(QString)), this,
+                SLOT(filterIndices(QString)));
+        connect(wIndex, SIGNAL(linkActivated( const QUrl &, const QString & ) ),
+                this, SLOT(loadResource( const QUrl& )));
 
-      //Index define part
-      wIndex = hEngine->indexWidget();
-      verticalLayout->addWidget(wIndex);
-      connect(lineIndex, SIGNAL(textChanged(QString)), this,
-              SLOT(filterIndices(QString)));
-      connect(wIndex, SIGNAL(linkActivated( const QUrl &, const QString & ) ),
-          this, SLOT(loadResource( const QUrl& )));
+        // Search part
+        srchWidget = new  SearchWidget(hEngine->searchEngine(), tabSearch );
+        verticalLayout_2->addWidget(srchWidget);
+        hEngine->searchEngine()->reindexDocumentation();
 
-      // Search part
-      srchWidget = new  SearchWidget(hEngine->searchEngine(), tabSearch );
-      verticalLayout_2->addWidget(srchWidget);
-      hEngine->searchEngine()->reindexDocumentation();
+        connect(srchWidget, SIGNAL(requestShowLink(QUrl)), this,
+                SLOT(loadResource(QUrl)));
 
-      connect(srchWidget, SIGNAL(requestShowLink(QUrl)), this,
-          SLOT(loadResource(QUrl)));
+    }
 
-  }
-
-    wBrowser =new HelpBrowser(hEngine,centralwidget);
+    wBrowser =new HelpBrowser(hEngine, ui->centralwidget);
     spl->addWidget(wBrowser);
-  //  gridLayout->addWidget(wBrowser, 0, 1, 1, 1);
+    //  gridLayout->addWidget(wBrowser, 0, 1, 1, 1);
 
     QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Expanding);
     wBrowser->setSizePolicy(sizePolicy2);
@@ -183,82 +176,78 @@ HelpWindow::HelpWindow( QWidget* parent):
     spl->setSizes(lst);
     //tab_->setMaximumWidth(350);
     //tab_->setMinimumWidth(200);
-   //wBrowser->setOpenExternalLinks(true);
+    //wBrowser->setOpenExternalLinks(true);
 
-  setActions();
+    setActions();
 }
 
 void HelpWindow::setActions()
 {
     connect(wBrowser, SIGNAL(sourceChanged ( const QUrl & )   ),
-        this, SLOT(showAddres( const QUrl& )));
+            this, SLOT(showAddres( const QUrl& )));
 
-    connect( actionHome, SIGNAL( triggered()), wBrowser, SLOT(home()));
-    connect( actionBack, SIGNAL( triggered()), wBrowser, SLOT(backward()));
-    connect( actionForward, SIGNAL( triggered()), wBrowser, SLOT(forward()));
-    connect( actionSync_with_Contents, SIGNAL( triggered()), this, SLOT(syncContents()));
+    connect( ui->actionHome, SIGNAL( triggered()), wBrowser, SLOT(home()));
+    connect( ui->actionBack, SIGNAL( triggered()), wBrowser, SLOT(backward()));
+    connect( ui->actionForward, SIGNAL( triggered()), wBrowser, SLOT(forward()));
+    connect( ui->actionSync_with_Contents, SIGNAL( triggered()), this, SLOT(syncContents()));
 
-    connect( action_About, SIGNAL( triggered()), this, SLOT(helpAbout()));
-    connect( actionVersion, SIGNAL( triggered()), this, SLOT(helpVersion()));
-    connect( actionHelp_on_Help, SIGNAL( triggered()), this, SLOT(helpOnHelp()));
-    connect( action_Print, SIGNAL( triggered()), this, SLOT(helpPrint()));
+    connect( ui->action_About, SIGNAL( triggered()), this, SLOT(helpAbout()));
+    connect( ui->actionVersion, SIGNAL( triggered()), this, SLOT(helpVersion()));
+    connect( ui->actionHelp_on_Help, SIGNAL( triggered()), this, SLOT(helpOnHelp()));
+    connect( ui->action_Print, SIGNAL( triggered()), this, SLOT(helpPrint()));
 
-    connect( action_Find, SIGNAL( triggered()), this, SLOT(actionFind()));
-    connect( actionFind_Next, SIGNAL( triggered()), this, SLOT(actionFindNext()));
-    connect( actionFind_Previous, SIGNAL( triggered()), this, SLOT(actionFindPrevious()));
+    connect( ui->action_Find, SIGNAL( triggered()), this, SLOT(actionFind()));
+    connect( ui->actionFind_Next, SIGNAL( triggered()), this, SLOT(actionFindNext()));
+    connect( ui->actionFind_Previous, SIGNAL( triggered()), this, SLOT(actionFindPrevious()));
 
-    connect( actionZoom_In, SIGNAL( triggered()), this, SLOT(actionZoomIn()));
-    connect( actionZoom_Out, SIGNAL( triggered()), this, SLOT(actionZoomOut()));
+    connect( ui->actionZoom_In, SIGNAL( triggered()), this, SLOT(actionZoomIn()));
+    connect( ui->actionZoom_Out, SIGNAL( triggered()), this, SLOT(actionZoomOut()));
 
-    connect( wBrowser, SIGNAL( forwardAvailable(bool)), actionForward, SLOT(setEnabled(bool)));
-    connect( wBrowser, SIGNAL( backwardAvailable(bool)), actionBack, SLOT(setEnabled(bool)));
+    connect( wBrowser, SIGNAL( forwardAvailable(bool)), ui->actionForward, SLOT(setEnabled(bool)));
+    connect( wBrowser, SIGNAL( backwardAvailable(bool)), ui->actionBack, SLOT(setEnabled(bool)));
 
     if( hEngine )
-     connect(hEngine->searchEngine(), SIGNAL(searchingStarted()),
+        connect(hEngine->searchEngine(), SIGNAL(searchingStarted()),
                 this, SLOT(showFind()));
 
-    QLabel *label_2 = new QLabel(toolFind);
+    QLabel *label_2 = new QLabel(ui->toolFind);
     label_2->setText("Find:");
-    toolFind->addWidget( label_2 );
+    ui->toolFind->addWidget( label_2 );
 
-    findLine = new QLineEdit( toolFind );
+    findLine = new QLineEdit( ui->toolFind );
     findLine->setEnabled( true );
     findLine->setFocusPolicy( Qt::ClickFocus );
-    toolFind->addWidget( findLine );
-    toolFind->addAction(actionFind_Previous);
-    toolFind->addAction(actionFind_Next);
+    ui->toolFind->addWidget( findLine );
+    ui->toolFind->addAction(ui->actionFind_Previous);
+    ui->toolFind->addAction(ui->actionFind_Next);
 
-//    actionFind_Next->setEnabled(true);
-//    actionFind_Previous->setEnabled(true);
+    //    actionFind_Next->setEnabled(true);
+    //    actionFind_Previous->setEnabled(true);
 }
 
 
 HelpWindow::~HelpWindow()
 {}
 
-void HelpWindow::languageChange()
-{
-    retranslateUi(this);
-}
 
 void HelpWindow::helpVersion()
 {
     QMessageBox::information(this,
-#ifdef __unix
-#ifdef __APPLE__
-           QString("Title"), QString("GEMSFITS1.0 (MacOS X >10.6 64 clang)\n\n")+
-#else
-           QString("GEMSFITS (Linux 32/64 Qt5)"),
-#endif
-#else
-           QString("GEMSFITS (Windows MinGW Qt5"),
-#endif
-           QString("\nThis is GEMSFITS coupled code\n\n")+
-           QString( _FIT_version_stamp ) + QString(  "\n\nusing " )+
-           QString( _GEMIPM_version_stamp ) +
-           QString( "\n\n\nFor GEMS R&D community\n\n"
-                  "(c) 2014-2022, GEMS Development Team\n\n"
-                  "          PSI-UH-ETHZ" ) );
+                         #ifdef __unix
+                         #ifdef __APPLE__
+                             QString("Title"), QString("GEMSFITS1.0 (MacOS X >10.6 64 clang)\n\n")+
+                         #else
+                             QString("GEMSFITS (Linux 32/64 Qt5)"),
+                         #endif
+                         #else
+                             QString("GEMSFITS (Windows MinGW Qt5"),
+                         #endif
+                             QString("\nThis is GEMSFITS coupled code\n\n")+
+                             QString( _FIT_version_stamp ) + QString(  "\n\nusing " )+
+                             ////QString( _GEMIPM_version_stamp ) +
+                             QString( "\n\n\nFor GEMS R&D community\n\n"
+                                      "(c) 2014-2022, GEMS Development Team\n\n"
+                                      "          PSI-UH-ETHZ" ) );
 }
 
 void HelpWindow::helpAbout()
@@ -269,19 +258,19 @@ void HelpWindow::helpAbout()
 
 void HelpWindow::helpOnHelp()
 {
-   showDocumentation( FIT_HOWHELP_HTML, 0 );
+    showDocumentation( FIT_HOWHELP_HTML, 0 );
 }
 
 void HelpWindow::helpPrint()
 {
-  QPrinter printer;
+    QPrinter printer;
 
-  QPrintDialog dlg(  &printer, this );
-  dlg.setWindowTitle(tr("Print GEMS3 Help Page"));
-  if (wBrowser->textCursor().hasSelection() )
-      dlg.setOption(QAbstractPrintDialog::PrintSelection);
-  if( dlg.exec() )
-    wBrowser->print( &printer ) ;
+    QPrintDialog dlg(  &printer, this );
+    dlg.setWindowTitle(tr("Print GEMS3 Help Page"));
+    if (wBrowser->textCursor().hasSelection() )
+        dlg.setOption(QAbstractPrintDialog::PrintSelection);
+    if( dlg.exec() )
+        wBrowser->print( &printer ) ;
 }
 
 void HelpWindow::loadResource( const QUrl &name )
@@ -312,75 +301,75 @@ void HelpWindow::showFind()
 
 void HelpWindow::actionZoomIn()
 {
-   wBrowser->zoomIn(2);
+    wBrowser->zoomIn(2);
 }
 
 void HelpWindow::actionZoomOut()
 {
-  wBrowser->zoomOut(2);
+    wBrowser->zoomOut(2);
 }
 
 void HelpWindow::syncContents()
 {
-  QUrl url(wBrowser->source()); // adressLine->text()
-  QModelIndex idx = wContents->indexOf( url );
+    QUrl url(wBrowser->source()); // adressLine->text()
+    QModelIndex idx = wContents->indexOf( url );
 
-  if(idx.isValid())
-     wContents->setCurrentIndex(idx);
-  tab_->setCurrentIndex(0);
+    if(idx.isValid())
+        wContents->setCurrentIndex(idx);
+    tab_->setCurrentIndex(0);
 
 }
 
 void HelpWindow::actionFind()
 {
-  if( !findLine )
-  {
-      QLabel *label_2 = new QLabel(toolFind);
-      label_2->setText("Find for:");
-      toolFind->addWidget( label_2 );
+    if( !findLine )
+    {
+        QLabel *label_2 = new QLabel(ui->toolFind);
+        label_2->setText("Find for:");
+        ui->toolFind->addWidget( label_2 );
 
-      findLine = new QLineEdit( toolFind );
-      findLine->setEnabled( true );
-      findLine->setFocusPolicy( Qt::ClickFocus );
-      toolFind->addWidget( findLine );
-      actionFind_Next->setEnabled(true);
-      actionFind_Previous->setEnabled(true);
-  }
-  else
-  {
-      actionFindNext();
-  }
+        findLine = new QLineEdit( ui->toolFind );
+        findLine->setEnabled( true );
+        findLine->setFocusPolicy( Qt::ClickFocus );
+        ui->toolFind->addWidget( findLine );
+        ui->actionFind_Next->setEnabled(true);
+        ui->actionFind_Previous->setEnabled(true);
+    }
+    else
+    {
+        actionFindNext();
+    }
 
 }
 
 void HelpWindow::actionFindNext()
 {
-  if( !findLine )
-   return;
+    if( !findLine )
+        return;
 
-  QTextDocument::FindFlags flg;
-  if(action_Case_sensetiv->isChecked() )
-       flg |=QTextDocument::FindCaseSensitively;
+    QTextDocument::FindFlags flg;
+    if(ui->action_Case_sensetiv->isChecked())
+        flg |=QTextDocument::FindCaseSensitively;
 
-  if(action_Whole_words->isChecked() )
-       flg |=QTextDocument::FindWholeWords;
+    if(ui->action_Whole_words->isChecked())
+        flg |=QTextDocument::FindWholeWords;
 
-  wBrowser->find( findLine->text(), flg );
+    wBrowser->find( findLine->text(), flg );
 }
 
 void HelpWindow::actionFindPrevious()
 {
-  if( !findLine )
-   return;
+    if( !findLine )
+        return;
 
-  QTextDocument::FindFlags flg = QTextDocument::FindBackward;
-  if(action_Case_sensetiv->isChecked() )
-       flg |=QTextDocument::FindCaseSensitively;
+    QTextDocument::FindFlags flg = QTextDocument::FindBackward;
+    if(ui->action_Case_sensetiv->isChecked())
+        flg |=QTextDocument::FindCaseSensitively;
 
-  if(action_Whole_words->isChecked() )
-       flg |=QTextDocument::FindWholeWords;
+    if(ui->action_Whole_words->isChecked())
+        flg |=QTextDocument::FindWholeWords;
 
-  wBrowser->find( findLine->text(), flg );
+    wBrowser->find( findLine->text(), flg );
 }
 
 void HelpWindow::filterIndices(const QString &filter)
@@ -393,15 +382,15 @@ void HelpWindow::filterIndices(const QString &filter)
 
 void HelpWindow::showDocumentation(const char* file, const char* item1)
 {
-   if (!hEngine)
-       return;
+    if (!hEngine)
+        return;
 
     std::string path = "qthelp://gemsfits/help/";
     QUrl path_str;
 
     if( !file/*item1*/ )
     {
-       path_str = showHelpForKeyword( item1 );
+        path_str = showHelpForKeyword( item1 );
     }
     else
     {
@@ -409,17 +398,17 @@ void HelpWindow::showDocumentation(const char* file, const char* item1)
         // adding ".html" if needed
         if( path.rfind( "#" ) == path.npos )
         {   if( std::string(path, path.length()-5, 5) != ".html" )
-              path += ".html";
+                path += ".html";
             if( item1  )
             {  path += "#";
-               path +=item1;
-             }
+                path +=item1;
+            }
         }
         path_str = QUrl(path.c_str());
     }
 
-   std::cout << "showDocumentation " << path_str.toString().toStdString() << std::endl;
-   loadResource(  QUrl(path_str) );
+    std::cout << "showDocumentation " << path_str.toString().toStdString() << std::endl;
+    loadResource(  QUrl(path_str) );
 }
 
 // searches for reference <keyword> in the indexModel
@@ -443,7 +432,7 @@ QUrl HelpWindow::showHelpForKeyword(const QString &keyword)
     int ndx = kwInternal.lastIndexOf('_');
     if(ndx > -1)
     {
-      kwInternal= kwInternal.remove(QRegularExpression("_[0-9]{1,3}")/*ndx*/);
+        kwInternal= kwInternal.remove(QRegularExpression("_[0-9]{1,3}")/*ndx*/);
         // links = hEngine->indexModel()->linksForKeyword( kwInternal );
         links = hEngine->documentsForKeyword( kwInternal );
         if (links.count())
@@ -453,7 +442,7 @@ QUrl HelpWindow::showHelpForKeyword(const QString &keyword)
     // finding full name, not subString
     QMap<QString, QUrl> links = hEngine->indexModel()->linksForKeyword( keyword );
     if (links.count())
-      return links.constBegin().value();
+        return links.constBegin().value();
 
     QString kwInternal = keyword;
     int ndx = kwInternal.lastIndexOf('_');
@@ -540,12 +529,12 @@ SearchWidget::SearchWidget(QHelpSearchEngine *engine, QWidget *parent)
     vLayout->addWidget(rsltWidget);
 
     connect(srchEngine, SIGNAL(searchingStarted()), this,
-        SLOT(searchingStarted()));
+            SLOT(searchingStarted()));
     connect(srchEngine, SIGNAL(searchingFinished(int)), this,
-        SLOT(searchingFinished(int)));
+            SLOT(searchingFinished(int)));
     connect(qWidget, SIGNAL(search()), this, SLOT(search()));
     connect(rsltWidget, SIGNAL(requestShowLink(QUrl)), this,
-        SIGNAL(requestShowLink(QUrl)));
+            SIGNAL(requestShowLink(QUrl)));
 
 }
 

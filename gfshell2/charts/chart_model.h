@@ -2,13 +2,7 @@
 
 #include <QJsonObject>
 #include <QtCore/QAbstractTableModel>
-#include "bson.h"
-
-#ifndef NO_JSONIO
-namespace jsonio17 {
-class JsonBase;
-}
-#endif
+#include "v_json.h"
 
 namespace jsonui17 {
 
@@ -159,15 +153,8 @@ public:
     const std::vector<int>& YColumns() const
     { return ycolumns; }
 
-
-#ifndef NO_JSONIO
-    void toJsonNode( jsonio17::JsonBase& object ) const;
-    void fromJsonNode( const jsonio17::JsonBase& object );
-#else
-
-    void toBsonObject( bson *obj ) const;
-    void fromBsonObject( const char *obj );
-#endif
+    common::JsonFree toBsonObject() const;
+    void fromBsonObject( const common::JsonFree& object );
 
     void toJsonObject( QJsonObject& json ) const;
     void fromJsonObject( const QJsonObject& json );

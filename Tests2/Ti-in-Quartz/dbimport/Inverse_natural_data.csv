@@ -1,0 +1,15 @@
+id,sample,expdataset,comment,type,sT,sP,sV,comp.H2O,error,unit,comp.SiO2,error,unit,comp.TiO2,error,unit,phase.QtzRu.DC.Rutile.Q,error,unit
+1,Tiefengletscher,Klara2013,,,300,3000,,1000,,g,100,,g,100,,g,2.2757E-06,,molfrac
+2,Gauli,Klara2013,,,300,3000,,1000,,g,100,,g,100,,g,0.000001884,,molfrac
+3,Cavagnoli,Klara2013,,,300,3000,,1000,,g,100,,g,100,,g,6.5186E-06,,molfrac
+4,Faido,Klara2013,,,300,3000,,1000,,g,100,,g,100,,g,0.0000068,,molfrac
+5,004/2,Kidder2013,,,300,2600,,1000,,g,100,,g,100,,g,2.38641E-07,,molfrac
+6,004/34_,Kidder2013,,,300,3000,,1000,,g,100,,g,100,,g,6.02882E-07,,molfrac
+7,004/34,Kidder2013,,,300,3100,,1000,,g,100,,g,100,,g,6.53123E-07,,molfrac
+8,123b,Kidder2013,,,300,2800,,1000,,g,100,,g,100,,g,6.78243E-07,,molfrac
+9,5,Kidder2013,,,300,3100,,1000,,g,100,,g,100,,g,3.76802E-07,,molfrac
+11,148j,Kidder2013,,,300,3200,,1000,,g,100,,g,100,,g,9.04323E-07,,molfrac
+12,Bundner,Miron2013,,,300,3000,,1000,,g,100,,g,100,,g,1.2591E-06,,molfrac
+13,Bundner_high,Miron2013,,,300,3000,,1000,,g,100,,g,100,,g,1.46006E-06,,molfrac
+14,Bundner_low,Miron2013,,,300,3000,,1000,,g,100,,g,100,,g,1.05814E-06,,molfrac
+STOP,,,,,,,,,,,,,,,,,,,

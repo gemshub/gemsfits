@@ -33,7 +33,6 @@
 
 #include "statistics.h"
 #include "gemsfit_global_functions.h"
-#include "json_parse.h"
 #include <armadillo>
 #include <boost/math/distributions/students_t.hpp>
 #include <boost/math/distributions/normal.hpp>
@@ -51,6 +50,7 @@ statistics::statistics(TGfitTask *gfittask, double Weighted_Tfun_sum_of_residual
 
 //    gfittask->test();
 
+    Weighted_mean_res = 0.0;
     number_of_measurements = 0;
     number_of_measurements += gfittask->computed_values_v.size();
     Tfun_sum_of_residuals = 0.0;
@@ -92,7 +92,7 @@ std::cout<<" Statistics Constructor: sum of squares: "<<Weighted_Tfun_sum_of_res
 
 std::cout<<" Statistics Constructor: number_of_parameters: "<<number_of_parameters<<std::endl;
 
-    get_stat_param(); // <----------------------------------------------------++++++
+    get_stat_param(gfittask->OptSet); // <----------------------------------------------------++++++
 //stat->set_plotfit_vars_txt();
 
 //    /// Instantiate pointer to PlotFit class to print results
@@ -100,7 +100,6 @@ std::cout<<" Statistics Constructor: number_of_parameters: "<<number_of_paramete
 
     // Degrees of freedom
     degrees_of_freedom = number_of_measurements-number_of_parameters;
-
 
     // Compute standard deviation of residuals
     for (unsigned int i=0; i<number_of_measurements; i++)
@@ -111,6 +110,7 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
             mean_res += gfittask->residuals_v[i];
 
     }
+
 // copute means
  Weighted_TF_mean_res = Weighted_TF_mean_res / number_of_measurements;  // mean of residuals that summ up to give the minimized value
          Abs_mean_res = Abs_mean_res / number_of_measurements;          // mean of the absolute value of residuals
@@ -140,7 +140,7 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
   for (unsigned j = 0; j<gfittask->Tfun->objfun.size(); j++)
   {
       min_res = 0.0; max_res =0.0; int obj_neg_residuals = 0; int obj_pos_residuals = 0;
-      objfun_stat.push_back(new statistics::objfunstat);
+      objfun_stat.push_back(std::make_shared<statistics::objfunstat>());
       objfun_stat[j]->stdev_res = 0.0;
       objfun_stat[j]->mean_res = 0.0;
       objfun_stat[j]->mean_meas = 0.0;
@@ -229,6 +229,7 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
       }
   }
 
+
   for (unsigned j = 0; j<gfittask->Tfun->objfun.size(); j++)
   {
       for (unsigned i=0; i<gfittask->aTfun.size(); i++)
@@ -248,7 +249,6 @@ Weighted_TF_mean_res += gfittask->Weighted_Tfun_residuals_v[i];
       objfun_stat[j]->stdev_res = sqrt(objfun_stat[j]->stdev_res / objfun_stat[j]->nr);
   }
 
-
 }
 
 
@@ -258,39 +258,20 @@ statistics::~statistics()
 
 }
 
-void statistics::get_stat_param()
+void statistics::get_stat_param(const std::string& optset_json)
 {
-    std::string fname, str, data;
-    std::vector<std::string> out, out2;
     int mode = gpf->KeysNdx;
-
-    fname = gpf->OptParamFile();
-
-    std::ifstream file(fname.c_str());
-    std::ostringstream tmp;
-    tmp<<file.rdbuf();
-    std::string s = tmp.str();
-
-    parse_JSON_object(s, keys::OptSet[mode], out);
-
-    parse_JSON_object(out[0], keys::StatMC[mode], out2);
-    MCbool = atoi(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::StatMCr[mode], out2);
-    num_of_MC_runs = atoi(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::StatPer[mode], out2);
-    perturbator = atof(out2[0].c_str());
-    out2.clear();
+    common::JsonFree db_opt_object = fromJsonString(optset_json);
+    MCbool = db_opt_object.value(keys::StatMC[mode], MCbool);
+    num_of_MC_runs = db_opt_object.value(keys::StatMCr[mode], num_of_MC_runs);
+    perturbator = db_opt_object.value(keys::StatPer[mode], perturbator);
 }
 
 // Perform basic statistical analysis
 void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 {
     // Variable declarations
-    unsigned int i;
+    size_t i;
     double mean = 0.;
     double ResSumSquares = 0., TotalSumSquares = 0.;
     bool noqq = false;
@@ -315,17 +296,17 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     if( gpf->fqq.fail() )
     { std::cout<<"QQ plot data fileopen error"<<std::endl; exit(1); }
 
-    int np = optv_.size();
+    size_t np = optv_.size();
 
 //    for(unsigned i=0; i< optv_.size(); i++ ) // cols
 //    {
-    int npx = 0;
-    for (unsigned e =0; e < gfittask->Opti->optParam.size(); e++)
+    size_t npx = 0;
+    for (size_t e =0; e < gfittask->Opti->optParam.size(); e++)
     {
-        for (unsigned i=0; i<gfittask->Opti->optParam[e]->Get_optFPsize(); ++i)
+        for (size_t i=0; i<gfittask->Opti->optParam[e]->Get_optFPsize(); ++i)
         {
             // Print optimized parameter values to file
-            fitparam.push_back(new parameters);
+            fitparam.push_back(std::make_shared<parameters>());
 
             fitparam[i+npx]->Ptype = gfittask->Opti->optParam[e]->Get_optType();
             fitparam[i+npx]->Pfittype = "F";
@@ -342,11 +323,11 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
 
 //    }
 
-    for (unsigned e =0; e < gfittask->Opti->optParam.size(); e++)
+    for (size_t e =0; e < gfittask->Opti->optParam.size(); e++)
     {
         for ( i=0; i<gfittask->Opti->optParam[e]->Get_optRPsize(); ++i)
         {
-            fitparam.push_back(new parameters);
+            fitparam.push_back(std::make_shared<parameters>());
             fitparam[np+i]->Ptype = gfittask->Opti->optParam[e]->Get_optType();
             fitparam[np+i]->Pfittype = "R";
 
@@ -360,11 +341,11 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         }
     }
     np = fitparam.size();
-    for (unsigned e =0; e < gfittask->Opti->optParam.size(); e++)
+    for (size_t e =0; e < gfittask->Opti->optParam.size(); e++)
     {
-        for (unsigned i=0; i<gfittask->Opti->optParam[e]->Get_optLPsize(); ++i)
+        for (size_t i=0; i<gfittask->Opti->optParam[e]->Get_optLPsize(); ++i)
         {
-            fitparam.push_back(new parameters);
+            fitparam.push_back(std::make_shared<parameters>());
             fitparam[np+i]->Ptype = gfittask->Opti->optParam[e]->Get_optType();
             fitparam[np+i]->Pfittype = "L";
 
@@ -378,7 +359,6 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     }
 
 
-
     // Compute R^2: coefficient of determination for all data
         mean = 0;
     for (i=0; i< number_of_measurements; i++)
@@ -388,7 +368,6 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
     mean = mean / gfittask->measured_values_v.size();
 
     assert( gfittask->computed_values_v.size() == gfittask->measured_values_v.size() );
-
 
     for(i=0; i< number_of_measurements; i++ )
     {
@@ -411,7 +390,6 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         }
         objfun_stat[j]->R2 = 1 - ResSumSquares / TotalSumSquares;
     }
-
 
     // Pearson Chi Square test
     Pearsons_chi_square = 0.;
@@ -669,7 +647,6 @@ void statistics::basic_stat( std::vector<double> &optv_, TGfitTask *gfittask )
         gpf->fstat << "Number-of-parameters," << number_of_parameters 	<< std::endl;
         gpf->fstat << "Number-of-runs-needed-for-regression," << num_of_runs 		<< std::endl;
         gpf->fstat << "Degrees-of-freedom," << degrees_of_freedom	 	<< std::endl;
-
 //        gpf->fstat << " - - - - - - - RESIDUAL STATISTICS - - - - - - - " << std::endl;
         gpf->fstat << "Value-of-the-minimized-function-sum," << Weighted_Tfun_sum_of_residuals 		<< std::endl;
 //        gpf->fstat << " Target function sum  :                                                	" << Tfun_sum_of_residuals 		<< std::endl;
@@ -851,8 +828,8 @@ void statistics::sensitivity_correlation( std::vector<double> &optv_, TGfitTask*
 
         gpf->fsens << "sample,";
 
-        int n_Rparam = 0;
-        for (unsigned e = 0; e<gfittask->Opti->optParam.size(); e++)
+        size_t n_Rparam = 0;
+        for (size_t e = 0; e<gfittask->Opti->optParam.size(); e++)
         {
             n_Rparam += gfittask->Opti->optParam[e]->Get_optRPsize();
         }
@@ -1107,7 +1084,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
     for( i=0; i<num_of_MC_runs; i++ )
         MCR_fitted_parameters_all[i] = &MCR_fitted_parameters_all_storage[ i * n_Rparam ];
 
-    double* scatter_all 	  = new double[ number_of_measurements * num_of_MC_runs ];
+    //double* scatter_all 	  = new double[ number_of_measurements * num_of_MC_runs ];
 
     int count = 0;
 
@@ -1298,9 +1275,9 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
         std::string name; double IV, EV;
         j=0;
 
-        for (unsigned e = 0; e<gfittask->Opti->optParam.size(); e++)
+        for (size_t e = 0; e<gfittask->Opti->optParam.size(); e++)
         {
-            for (unsigned r = 0; r< gfittask->Opti->optParam[e]->Get_optRPsize(); r++)
+            for (size_t r = 0; r< gfittask->Opti->optParam[e]->Get_optRPsize(); r++)
             {
                 gfittask->Opti->optParam[e]->Get_Rparam(r, name, IV, EV );
                 MCR_fitted_parameters_all[ id ][ j ] = EV;
@@ -1473,7 +1450,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
     free (MCR_fitted_parameters_all[0]);
     free (MCR_fitted_parameters_all);
 
-    delete[] scatter_all;
+    //delete[] scatter_all;
 
 
 

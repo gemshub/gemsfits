@@ -4,7 +4,7 @@
 // Implementation of ProjectSettingsDialog class
 //
 // Copyright (C) 2014  S.V.Dmytriyeva
-// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+// Uses EJDB (https://ejdb.org),
 //    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
 // This file is part of the GEMSFITS GUI, which uses the
@@ -21,6 +21,7 @@
 #include "ProjectSettingsDialog.h"
 #include "ui_ProjectSettingsDialog.h"
 #include "FITMainWindow.h"
+#include "gui_service.h"
 extern const char *_FIT_version_stamp;
 
 ProjectSettingsDialog::ProjectSettingsDialog( QSettings *aSet, QWidget *parent) :
@@ -32,7 +33,11 @@ ProjectSettingsDialog::ProjectSettingsDialog( QSettings *aSet, QWidget *parent) 
     {
         ui->projDir->setText( settings->value("ProjFolderPath", ".").toString() );
         ui->projName->setText( settings->value("ProjFileName", "myproj1").toString() );
+#ifndef OLD_EJDB
+        ui->ejdbDir->setText( settings->value("ProjDatabasePath", "/EJDB2").toString() );
+#else
         ui->ejdbDir->setText( settings->value("ProjDatabasePath", "/EJDB").toString() );
+#endif
         ui->ejdbName->setText( settings->value("ProjDatabaseName", "myprojdb1").toString() );
         ui->experCollect->setText( settings->value("ExpSamplesDataColl", "experiments").toString() );
         ui->taskCollection->setText( settings->value("TaskCasesDataColl", "tests").toString() );
@@ -78,10 +83,10 @@ void ProjectSettingsDialog::CmSave()
     QDir dir(ui->projDir->text());
     if( dir.mkpath(ui->projDir->text()) )
     {
-       dir.mkpath(ui->projDir->text()+ui->gemsDir->text());
-       dir.mkpath(ui->projDir->text()+ui->ejdbDir->text());
-       dir.mkpath(ui->projDir->text()+"/work");
-       dir.mkpath(ui->projDir->text()+"/dbimport");
+        dir.mkpath(ui->projDir->text()+ui->gemsDir->text());
+        dir.mkpath(ui->projDir->text()+ui->ejdbDir->text());
+        dir.mkpath(ui->projDir->text()+"/work");
+        dir.mkpath(ui->projDir->text()+"/dbimport");
     }
     accept();
 }
@@ -89,21 +94,22 @@ void ProjectSettingsDialog::CmSave()
 void ProjectSettingsDialog::CmProjectDir()
 {
     QString dir = QFileDialog::getExistingDirectory(this, "Select Project Directory",
-    pFitImp->userDir().c_str(),  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
+                                                    pFitImp->userDir().c_str(),
+                                                    QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
     ui->projDir->setText( dir );
 }
 
 void ProjectSettingsDialog::CmEJDBDir()
 {
     QString projDir = ui->projDir->text();
-//    QString dir = QFileDialog::getExistingDirectory(this, "Select EJDB Directory",
-//     projDir,  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
+    //    QString dir = QFileDialog::getExistingDirectory(this, "Select EJDB Directory",
+    //     projDir,  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
     std::string fname = ui->projDir->text().toStdString();
     //Select files
-    TFile file("");
-    if( !file.ChooseFileSave( this, fname, "Select EJDB Directory", "" ))
+    common::TFile file("");
+    if( !ChooseFileSave(&file, this, fname, "Select EJDB Directory", "" ))
         return;
-    QString dir( file.Dir().c_str() );
+    QString dir(file.Dir().c_str());
     dir = dir.remove(projDir);
     ui->ejdbDir->setText( dir );
     ui->ejdbName->setText( file.Name().c_str() );
@@ -113,7 +119,7 @@ void ProjectSettingsDialog::CmGEMSDir()
 {
     QString projDir = ui->projDir->text();
     QString dir = QFileDialog::getExistingDirectory(this, "Select GEMS Directory",
-     projDir,  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
+                                                    projDir,  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
     
     
     dir = dir.remove(projDir);

@@ -1,0 +1,6356 @@
+[
+{
+     "sample" :   "Eu01",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   2.54
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   2.76652135459748,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu02",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   2.55
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   2.76189796005594,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu03",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   2.55
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   2.77622473623073,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu04",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   3.86
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   3.28343548382236,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu05",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   3.87
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   3.28836928507429,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu06",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   3.85
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   3.28716769216466,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu07",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   4.57
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   3.52162657763217,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu08",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   4.58
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   3.51374775617031,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu09",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   4.61
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   3.49989061718215,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu10",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   5.5
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   3.81235356011518,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu11",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   5.48
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   3.8867494191561,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu12",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   5.48
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   3.81411931039355,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu13",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   5.91
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   4.14982177566116,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu14",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   5.92
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   4.09326045630279,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu15",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   5.93
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   4.0490112206265,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu16",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   6.48
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   4.51685841175309,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu17",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   6.46
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   4.46782004586958,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu18",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   6.45
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   4.51319810297559,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu19",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   6.93
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   4.95313702378207,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu20",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   6.92
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   4.89847351066665,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu21",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   6.92
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   4.97448695334721,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu22",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   7.4
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   5.16174284082311,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu23",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   7.39
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   5.0963606086444,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu24",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   7.36
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   5.46499553539705,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu25",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   7.84
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   5.20679067523357,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu26",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   7.82
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   5.52349411832646,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu27",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   7.84
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   5.28197064221495,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu28",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   8.32
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   5.90561046729659,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu29",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   8.32
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   5.36442888297791,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu30",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   8.33
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   5.92680924784048,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu31",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   8.84
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   5.60608175360078,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu32",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   8.85
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   5.41820605906329,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu33",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   9.32
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   5.41785232735667,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu34",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   9.34
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   5.79616221341692,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu35",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   9.34
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   5.58120149789774,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu36",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   10.76
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   5.3843137888863,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu37",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   10.78
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   5.48762325975319,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu38",
+     "comment" :   "no air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   10,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   10.78
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   5.44601503115828,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air01",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   3.85
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   3.33,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air02",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   4.73
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   3.55,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air03",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   5.49
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   3.83,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air04",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   5.92
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   4.04,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air05",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   6.42
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   4.48,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air06",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   6.97
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   4.97,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air07",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   7.4
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   5.26,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air08",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   7.93
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   5.46,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air09",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   8.57
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   5.32,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air10",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   9.18
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   4.47,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air11",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   9.7
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   3.54,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air12",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   10.31
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   2.23,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air13",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   3.84
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   3.32,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air14",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   4.85
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   3.56,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air15",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   5.48
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   3.83,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air16",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   5.93
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   4.04,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air17",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   6.43
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   4.48,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air18",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   6.95
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   4.99,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air19",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   7.41
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   5.23,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air20",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   7.92
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   5.36,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air21",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   8.5
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   5.32,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air22",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   9.19
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   4.48,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air23",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   9.69
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   3.55,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air24",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   10.3
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   2.24,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air25",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   3.86
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   3.32,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air26",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   4.75
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   3.54,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air27",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   5.48
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   3.82,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air28",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   5.93
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   4.04,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air29",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   6.42
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   4.46,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air30",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   6.94
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   4.98,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air31",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   7.41
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   5.19,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air32",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   7.92
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   5.47,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air33",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   8.51
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   5.28,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air34",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   9.18
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   4.47,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air35",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   9.69
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   3.55,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Eu_air36",
+     "comment" :   "air",
+     "sT" :   25,
+     "sP" :   1,
+     "expdataset" :   "Eu_Illite_air",
+     "sbcomp" :   [
+          {
+               "comp" :   "Nit",
+               "Q" :   547.29517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "C",
+               "Q" :   0.12475702,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O",
+               "Q" :   145.79937,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "H2O",
+               "Q" :   992.801,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Eu(OH)3",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.1,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-08,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clai",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Essi",
+               "Q" :   2e-06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esvi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Eswi",
+               "Q" :   4e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Na",
+               "Q" :   0.000225,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   10.29
+                    },
+                    {
+                         "prop" :   "Rd",
+                         "Q" :   2.24,
+                         "error" :   0.2,
+                         "unit" :   "ml/g"
+                    }
+               ]
+          }
+     ]
+}
+]

@@ -4,7 +4,7 @@
 // Declaration of PreferencesDialog class
 //
 // Copyright (C) 2014  S.V.Dmytriyeva
-// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+// Uses EJDB (https://ejdb.org),
 //    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
 // This file is part of the GEMSFITS GUI, which uses the
@@ -46,7 +46,6 @@ public slots:
 public:
     explicit PreferencesDialog(QSettings *aSet=0,QWidget *parent = 0);
     ~PreferencesDialog();
-
 
 };
 

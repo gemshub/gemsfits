@@ -22,7 +22,7 @@ public:
     explicit DialogFindFromPlot(const jsonui17::ChartData* data, QWidget *parent = 0);
     ~DialogFindFromPlot();
 
-    void getData( int *xyndx, double *reg );
+    void getData(int *xyndx, double *reg);
 
 };
 

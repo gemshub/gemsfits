@@ -4,7 +4,7 @@
 // Declaration of GEMSFITS GUI Results Window
 //
 // Copyright (C) 2014  S.V.Dmytriyeva, D.A.Kulik
-// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+// Uses EJDB (https://ejdb.org),
 //    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
 // This file is part of the GEMSFITS GUI, which uses the
@@ -23,7 +23,6 @@
 #include <QMainWindow>
 #include "fmodel.h"
 
-
 namespace Ui {
 class FitResultsWindow;
 }
@@ -33,14 +32,14 @@ class FitResultsWindow : public QMainWindow
     Q_OBJECT
 
     void setActions();
-    void editFiledsFromFile( const QString& dir );
-    void editFiledsToFile( const QString& dir );
+    void editFiledsFromFile(const QString& dir);
+    void editFiledsToFile(const QString& dir);
     void readBsonRecord();
 
     void closeEvent(QCloseEvent* ev);
 
 public slots:
-    void CmOpenFile( const QString& dir_="" );
+    void CmOpenFile(const QString& dir_="");
     void CmSaveFile();
     void CmSaveBsonRecord();
     void CmDeleteRecord();
@@ -54,17 +53,16 @@ public slots:
     void CmPrintTable();
     void CmFindFromPlot();
 
-   void CmCalc();
-   void SelectColumn();
-   void SelectAll();
-   void CutData();
-   void ClearData();
-   void CopyData();
-   void PasteData();
-   void PasteTransposedData();
-   void ToggleX();
-   void ToggleY();
-
+    void CmCalc();
+    void SelectColumn();
+    void SelectAll();
+    void CutData();
+    void ClearData();
+    void CopyData();
+    void PasteData();
+    void PasteTransposedData();
+    void ToggleX();
+    void ToggleY();
 
 public:
     static FitResultsWindow* pDia;
@@ -72,8 +70,8 @@ public:
     explicit FitResultsWindow(QWidget *parent = 0);
     ~FitResultsWindow();
 
-    void ShowResults( const std::string& key );
-    void ShowResults( const std::string& key, const QString& dir );
+    void ShowResults(const std::string& key);
+    void ShowResults(const std::string& key, const QString& dir);
 
 private:
     Ui::FitResultsWindow *ui;
@@ -101,10 +99,10 @@ private:
     TMatrixModel *modelFitStatistics;   // model reading sum-statistics.csv file
     TMatrixTable *tableFitStatistics;
 
-//    QString fFitStatistic;   // name file  FIT_STATISTIC
     QString fFitLogfile;  // name file  FIT_LOGFILE
 
-    //QSet< GraphDialog*> graphList; /// internal list of opened graphics
+    TMatrixTable *current_table() const;
+
 };
 
 #endif // FITRESULTSWINDOW_H

@@ -1,4 +1,3 @@
-#include <iostream>
 #include <QColorDialog>
 #include <QFontDialog>
 #include "ui_LegendDialog4.h"

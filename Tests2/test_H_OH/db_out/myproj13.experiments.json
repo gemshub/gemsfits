@@ -1,0 +1,2558 @@
+[
+{
+     "sample" :   "A10",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.005133,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.18e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   7.1
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   -0.004,
+                         "unit" :   "mol/kg",
+                         "error" :   0.0012
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "A11",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.005133,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.18e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   7.5
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   -0.0072,
+                         "unit" :   "mol/kg",
+                         "error" :   0.00216
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "A12",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.005133,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.18e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   8
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   -0.0147,
+                         "unit" :   "mol/kg",
+                         "error" :   0.00441
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "A13",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.005133,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.18e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   8.2
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   -0.0219,
+                         "unit" :   "mol/kg",
+                         "error" :   0.00657
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "A14",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.005133,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.18e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   9.1
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   -0.0321,
+                         "unit" :   "mol/kg",
+                         "error" :   0.00963
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "A15",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.005133,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.18e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   9.4
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   -0.044,
+                         "unit" :   "mol/kg",
+                         "error" :   0.0132
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "A16",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.005133,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.18e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   9.8
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   -0.0479,
+                         "unit" :   "mol/kg",
+                         "error" :   0.0144
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "A17",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.005133,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.18e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   9.9
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   -0.0483,
+                         "unit" :   "mol/kg",
+                         "error" :   0.0145
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "A18",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.005133,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.18e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   10.2
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   -0.0664,
+                         "unit" :   "mol/kg",
+                         "error" :   0.0199
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "A19",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.005133,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.18e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   10.4
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   -0.0681,
+                         "unit" :   "mol/kg",
+                         "error" :   0.0204
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "A2",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.005133,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.18e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   6.6
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   0.0071,
+                         "unit" :   "mol/kg",
+                         "error" :   0.000355
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "A3",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.005133,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.18e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   6.3
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   0.0153,
+                         "unit" :   "mol/kg",
+                         "error" :   0.00459
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "A4",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.005133,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.18e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   5.9
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   0.0235,
+                         "unit" :   "mol/kg",
+                         "error" :   0.00705
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "A5",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.005133,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.18e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   5
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   0.0378,
+                         "unit" :   "mol/kg",
+                         "error" :   0.0113
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "A6",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.005133,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.18e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   4.3
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   0.0469,
+                         "unit" :   "mol/kg",
+                         "error" :   0.0141
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "A7",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.005133,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.18e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   4
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   0.0505,
+                         "unit" :   "mol/kg",
+                         "error" :   0.0152
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "A8",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.005133,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.18e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   3.9
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   0.0572,
+                         "unit" :   "mol/kg",
+                         "error" :   0.0172
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "A9",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.005133,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.18e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000236,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   3.8
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   0.0601,
+                         "unit" :   "mol/kg",
+                         "error" :   0.018
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "B1",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.0055245,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.27e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   3.3
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   0.068,
+                         "unit" :   "mol/kg",
+                         "error" :   0.0204
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "B2",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.0055245,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.27e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   2.8
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   0.0613,
+                         "unit" :   "mol/kg",
+                         "error" :   0.0184
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "B3",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.0055245,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.27e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   2.6
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   0.0781,
+                         "unit" :   "mol/kg",
+                         "error" :   0.0234
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "B4",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.0055245,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.27e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   2.5
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   0.0543,
+                         "unit" :   "mol/kg",
+                         "error" :   0.0163
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "B5",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.0055245,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.27e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   10.7
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   -0.0886,
+                         "unit" :   "mol/kg",
+                         "error" :   0.0266
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "B6",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.0055245,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.27e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   11.1
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   -0.0854,
+                         "unit" :   "mol/kg",
+                         "error" :   0.0256
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "B7",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.0055245,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.27e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   11.4
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   -0.128,
+                         "unit" :   "mol/kg",
+                         "error" :   0.0384
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "B8",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.0055245,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.27e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   11.5
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   -0.111,
+                         "unit" :   "mol/kg",
+                         "error" :   0.0334
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "C1",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.0055245,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.27e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   6.7
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   0.0189,
+                         "unit" :   "mol/kg",
+                         "error" :   0.00567
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "C10",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.0055245,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.27e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   11.4
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   -0.152,
+                         "unit" :   "mol/kg",
+                         "error" :   0.0456
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "C2",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.0055245,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.27e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   6.4
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   0.0383,
+                         "unit" :   "mol/kg",
+                         "error" :   0.0115
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "C3",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.0055245,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.27e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   4.4
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   0.0674,
+                         "unit" :   "mol/kg",
+                         "error" :   0.0202
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "C4",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.0055245,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.27e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   3.4
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   0.0728,
+                         "unit" :   "mol/kg",
+                         "error" :   0.0218
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "C5",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.0055245,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.27e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   2.6
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   0.0989,
+                         "unit" :   "mol/kg",
+                         "error" :   0.0297
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "C6",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.0055245,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.27e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   7.9
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   -0.017,
+                         "unit" :   "mol/kg",
+                         "error" :   0.0051
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "C7",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.0055245,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.27e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   8.8
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   -0.0323,
+                         "unit" :   "mol/kg",
+                         "error" :   0.00969
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "C8",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.0055245,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.27e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   9.5
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   -0.0531,
+                         "unit" :   "mol/kg",
+                         "error" :   0.0159
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "C9",
+     "comment" :   "Titration Na-Mont 0.5 M NaClO4 ",
+     "expdataset" :   "DS-02-Mt_Titr_05M",
+     "sT" :   25,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O",
+               "Q" :   938.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "NaClO4",
+               "Q" :   0.5,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "HClO4",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "NaOH",
+               "Q" :   1e-09,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Clay",
+               "Q" :   0.0055245,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Ess",
+               "Q" :   1.27e-05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esv",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "Esw",
+               "Q" :   0.000254,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   10.4
+                    }
+               ]
+          },
+          {
+               "phase" :   "MontX",
+               "phprop" :   [
+                    {
+                         "prop" :   "netH_OH",
+                         "Q" :   -0.0898,
+                         "unit" :   "mol/kg",
+                         "error" :   0.0269
+                    }
+               ]
+          }
+     ]
+}
+]

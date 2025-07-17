@@ -28,7 +28,8 @@
 
 #ifdef IPMGEMPLUGIN
 
-#include "m_const.h"
+#include <GEMS3K/m_const_base.h>
+#include <GEMS3K/verror.h>
 #define SHORT_EMPTY 	   -32768
 const unsigned int
     IC_RKLEN = 32,

@@ -2,10 +2,6 @@
 #include <QJsonArray>
 #include "charts/chart_model.h"
 #include "charts/graph_data.h"
-#include "v_json.h"
-#ifndef NO_JSONIO
-#include "jsonio17/jsonbase.h"
-#endif
 
 namespace jsonui17 {
 
@@ -165,79 +161,21 @@ void ChartDataModel::modelSortUpdated()
 
 // ------------------------ work with selection
 
-#ifndef NO_JSONIO
-
-// Writes data to bson
-void ChartDataModel::toJsonNode( jsonio17::JsonBase& object ) const
+common::JsonFree ChartDataModel::toBsonObject() const
 {
-    object.clear();
-    object.set_value_via_path("gxclms", xcolumns);
-    object.set_value_via_path("gyclms", ycolumns);
+    common::JsonFree object;
+    object["gxclms"] = xcolumns;
+    object["gyclms"] = ycolumns;
+    return object;
 }
 
-// Reads data from bson
-void ChartDataModel::fromJsonNode( const jsonio17::JsonBase& object )
+void ChartDataModel::fromBsonObject( const common::JsonFree& object )
 {
-    std::vector<int> columns;
-    object.get_value_via_path( "gxclms", columns, {-1} );
-    setXColumns( columns );
-    object.get_value_via_path( "gyclms", columns, {} );
-    setYColumns( columns, false );
-}
-
-#else
-
-void ChartDataModel::toBsonObject( bson *obj ) const
-{
-    size_t ii;
-
-    bson_append_start_array(obj, "gxclms");
-    for( ii=0; ii<xcolumns.size(); ii++)
-    {
-        bson_append_int( obj, std::to_string(ii).c_str(), xcolumns[ii] );
-    }
-    bson_append_finish_array(obj);
-
-    bson_append_start_array(obj, "gyclms");
-    for( ii=0; ii<ycolumns.size(); ii++)
-    {
-        bson_append_int( obj, std::to_string(ii).c_str(), ycolumns[ii] );
-    }
-    bson_append_finish_array(obj);
-}
-
-void ChartDataModel::fromBsonObject( const char *obj )
-{
-    int ii, val;
-    char buf[100];
-
     xcolumns.clear();
-    auto arr  = bson_find_array(  obj, "gxclms" );
-    bson_iterator iter;
-    bson_iterator_from_buffer(&iter, arr /*bson_iterator_value(it)*/);
-    ii=0;
-    while (bson_iterator_next(&iter))
-    {
-        sprintf(buf, "%d", ii++);
-        bson_find_value_def( arr,  buf, val, 0 );
-        xcolumns.push_back( val );
-    }
-
+    xcolumns = object.value("gxclms", xcolumns);
     ycolumns.clear();
-    arr  = bson_find_array(  obj, "gyclms" );
-    bson_iterator itery;
-    bson_iterator_from_buffer(&itery, arr /*bson_iterator_value(it)*/);
-    ii=0;
-    while (bson_iterator_next(&itery))
-    {
-        sprintf(buf, "%d", ii++);
-        bson_find_value_def( arr,  buf, val, 0 );
-        ycolumns.push_back( val );
-    }
-
+    ycolumns = object.value("gyclms", ycolumns);
 }
-
-#endif
 
 void ChartDataModel::toJsonObject(QJsonObject& json) const
 {

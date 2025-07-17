@@ -3,8 +3,8 @@
 //
 // Read/Write GEMSFIT input configuration file functions
 //
-// Copyright (C) 2015  S.V.Dmytriyeva, G.D.Miron
-// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+// Copyright (C) 2015-2023  S.V.Dmytriyeva, G.D.Miron
+// Uses EJDB (http://ejdb.org),
 //    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
 // This file is part of the GEMSFITS GUI, which uses the
@@ -22,10 +22,9 @@
 #include <sstream>
 #include <algorithm>
 
-#include "node.h"
+#include <GEMS3K/node.h>
 #include "keywords.h"
 #include "v_json.h"
-
 
 //-----------------------------------------------------------------------------------------------------
 // from file # include "csvtoejdb.cpp"
@@ -33,45 +32,41 @@ using namespace keys;
 
 // cuts the csv header into strings from phase.aq_gen.IC.Al.Q to output = [pahse, aq_gen, IC, Al, Q]
 int cut_csv_header (std::string input, std::string delimiter, std::vector<std::string> &output);
-// input an integer output a const char
-std::string int_to_c_str(int in);
 // adds Qunit and Qerror to BSON object
-bool add_unit_and_error(bson * exp, std::vector<std::string> headline, std::vector<std::string> row , unsigned int &position);
+bool add_unit_and_error(common::JsonFree& exp, std::vector<std::string> headline, std::vector<std::string> row , unsigned int &position);
 // checks if the std::string is the name of a possilbe phase property
 bool it_is_phase_property (std::string ph_prop);
 
-bool add_unit_and_error (bson * exp, std::vector<std::string> headline, std::vector<std::string> row, unsigned int &position )
+bool add_unit_and_error (common::JsonFree& exp, std::vector<std::string> headline, std::vector<std::string> row, unsigned int &position )
 {
     double error = 0.0;
-    if (position+1< headline.size())
-        if ((headline[position+1]==Qerror))
+    if (position+1< headline.size() && (headline[position+1]==Qerror))
+    {
+        ++position;
+        error = atof(row[position].c_str());
+        if (error > 0)
+            exp[Qerror] = atof(row[position].c_str());
+        if (position+1< headline.size())
+            if ((headline[position+1]==Qunit) && (!row[position+1].empty()))
+            {
+                ++position;
+                exp[Qunit] = row[position];
+            }
+    }
+    else
+        if (position+1 < headline.size() && (headline[position+1]==Qunit) && (!row[position+1].empty()))
         {
             ++position;
-            error = atof(row[position].c_str());
-            if (error > 0)
-                bson_append_double(exp, Qerror, atof(row[position].c_str()));
+            exp[Qunit] = row[position];
             if (position+1< headline.size())
-                if ((headline[position+1]==Qunit) && (!row[position+1].empty()))
+                if ((headline[position+1]==Qerror)&& (!row[position+1].empty()))
                 {
                     ++position;
-                    bson_append_string(exp, Qunit, row[position].c_str());
+                    error = atof(row[position].c_str());
+                    if (error > 0)
+                        exp[Qerror] = atof(row[position].c_str());
                 }
         }
-        else
-            if (position+1< headline.size())
-                if ((headline[position+1]==Qunit) && (!row[position+1].empty()))
-                {
-                    ++position;
-                    bson_append_string(exp, Qunit, row[position].c_str());
-                    if (position+1< headline.size())
-                        if ((headline[position+1]==Qerror)&& (!row[position+1].empty()))
-                        {
-                            ++position;
-                            error = atof(row[position].c_str());
-                            if (error > 0)
-                                bson_append_double(exp, Qerror, atof(row[position].c_str()));
-                        }
-                }
     return true;
 }
 
@@ -95,13 +90,6 @@ int cut_csv_header (std::string input, std::string delimiter, std::vector<std::s
     return output.size();
 }
 
-std::string  int_to_c_str (int in)
-{
-    std::stringstream ss;
-    ss << in;
-    return ss.str();
-}
-
 bool it_is_phase_property (std::string ph_prop)
 {
     if (((ph_prop == Qnt)   || (ph_prop == pH)     || (ph_prop == pHm)     || (ph_prop == pV)  || (ph_prop == Eh)     ||
@@ -122,24 +110,24 @@ bool iequals(const std::string& a, const std::string& b)
     return true;
 }
 
-void csvToBson( bson *exp, const  std::vector<std::string>& headline, const std::vector<std::string>& row )
+void csvToBson( common::JsonFree& exp, const  std::vector<std::string>& headline, const std::vector<std::string>& row )
 {
-    int ic = 0,      // counts the number of system comp (recipe entries), independent components per pahse, phase properties per pahse, and dependent components properties per dependent component
-        phc = 0,     // counts the number of phases per system/experiment
-        dcc = 0,     // counts the number of dependent components per phase
-        mf = 0;      // counts the number of molar fraction entries per system/exmperiment
-    // the following consts define where are the keys / names expected to be in the string vector resulted form cutting each column header
-
-    const unsigned ndx_comp = 0, ndx_props = 0, ndx_phase = 0, ndx_component_name = 1, ndx_prop_name =1, ndx_phase_name = 1, ndx_phase_property = 2, ndx_IC = 2, ndx_activity_model = 2, ndx_actmod_param = 3,
-                   ndx_MR = 2, ndx_DC = 2, ndx_IC_name = 3, ndx_MR_formula = 3, ndx_DC_name = 3, ndx_DC_prop_name = 4;
+    //int //ic = 0,      // counts the number of system comp (recipe entries), independent components per pahse, phase properties per pahse, and dependent components properties per dependent component
+        //phc = 0,     // counts the number of phases per system/experiment
+        //dcc = 0;     // counts the number of dependent components per phase
+        //mf = 0;      // counts the number of molar fraction entries per system/exmperiment
+    // the following consts define where are the keys / names expected to be in the std::string std::vector resulted form cutting each column header
+    const unsigned ndx_comp = 0, ndx_props = 0, ndx_phase = 0, ndx_component_name = 1, ndx_prop_name =1, ndx_phase_name = 1,
+            ndx_phase_property = 2, ndx_IC = 2,  ndx_activity_model = 2, ndx_actmod_param = 3,
+            ndx_MR = 2, ndx_DC = 2, ndx_IC_name = 3, ndx_MR_formula = 3, ndx_DC_name = 3, ndx_DC_prop_name = 4;
     std::string phase_name, header_delimiter = ".";
     std::vector<std::string> phases, dcomps, header_vector; // keeps the already read phases and dcomps
     bool h_phprop = false, h_phactmod=false, phase_already_added = false, h_phIC = false, dcomp_already_added = false, h_phMR = false, h_phDC = false; // handle that is true if we have the entry in the CSV file
     bool h_phase = false, h_prop=false;
-    
-    // getting the data from CSV line by line and processing it into BSON
-    // the csv header of each column is cut into strings which are separated by the delimiter ".". Based on this std::string and their value the BSON oject is constructed.
-    bson_init(exp);
+
+    // getting the data from CSV line by line and processing it into JSON
+    // the csv header of each column is cut into strings which are separated by the delimiter ".".
+    // Based on this string and their value the JSON oject is constructed.
 
     //first level objects: sample, expdataset, sT, sP.
     for (unsigned int i=0; i<headline.size(); ++i)
@@ -155,7 +143,7 @@ void csvToBson( bson *exp, const  std::vector<std::string>& headline, const std:
         if ((headline[i]==expsample) || (headline[i]==expdataset) || (headline[i]==Tunit) ||
             (headline[i]==Punit)|| (headline[i]==Vunit) || (headline[i]==type) || (headline[i]==comment))
         {
-            bson_append_string(exp, headline[i].c_str(), row[i].c_str());
+            exp[headline[i]] = row[i];
             // for query
             if (headline[i]==expdataset)
             {
@@ -169,89 +157,83 @@ void csvToBson( bson *exp, const  std::vector<std::string>& headline, const std:
         else if  ((headline[i]==sT) || (headline[i]==sP))
         {
             if (row[i].empty()) { Error( "Loading csv file", "Cells of P and/or T columns cannot be empty. Exiting...");}
-            bson_append_double(exp, headline[i].c_str(), atof(row[i].c_str()));
+            exp[headline[i]] = atof(row[i].c_str());
         }
         else if (headline[i]==sV)
         {
-            bson_append_double(exp, headline[i].c_str(), atof(row[i].c_str()));
+            exp[headline[i]] = atof(row[i].c_str());
         }
         else if (headline[i]==type)
         {
-            bson_append_string(exp, headline[i].c_str(), row[i].c_str());
+            exp[headline[i]] = row[i];
         }
         else if (headline[i]==comment)
         {
-            bson_append_string(exp, headline[i].c_str(), row[i].c_str());
+            exp[headline[i]] = row[i];
         }
         else if (headline[i] == Weight)
         {
             if (!row[i].empty())
             {
-                bson_append_double(exp, headline[i].c_str(), atof(row[i].c_str()));
-            } else bson_append_double(exp, headline[i].c_str(), 1.0);
+                exp[headline[i]] = atof(row[i].c_str());
+            }
+            else
+                exp[headline[i]] = 1.0;
         }
      }
 
     // 2nd level - bulk composition of chemical system for the current experiment
     // array of components
     //++ START array sbcomp ++//
-    bson_append_start_array(exp, sbcomp);
+    exp[sbcomp] = common::JsonFree::array();
     for (unsigned int i=0; i<headline.size(); ++i)
     {
         cut_csv_header(headline[i], header_delimiter, header_vector);
         if ((header_vector[ndx_comp] == comp) && (!row[i].empty()))
         {
-            bson_append_start_object(exp, int_to_c_str(ic).c_str());
-            ic++;
-            bson_append_string(exp, comp, header_vector[ndx_component_name].c_str());
-            bson_append_double(exp, Qnt, atof(row[i].c_str()));
-
+            auto obj = common::JsonFree::object();
+            obj[comp] = header_vector[ndx_component_name];
+            obj[Qnt] = atof(row[i].c_str());
             // checking if there are errors and units included in the CSV and adding them in the database
             if (i+1 < headline.size())
             {
-                add_unit_and_error(exp, headline, row, i);
+                add_unit_and_error(obj, headline, row, i);
             }
-            bson_append_finish_object(exp);
+            exp[sbcomp].push_back(std::move(obj));
         }
     }
     //++ END array sbcomp ++//
-    bson_append_finish_array(exp);
-    ic=0;
 
     // 2nd level - properties logQ, logK,... of chemical system for the current experiment
     // array properties
     //++ START array prop ++//
     if (h_prop)
     {
-    bson_append_start_array(exp, props);
+    exp[props] = common::JsonFree::array();
     for (unsigned int i=0; i<headline.size(); ++i)
     {
         cut_csv_header(headline[i], header_delimiter, header_vector);
         if ((header_vector[ndx_props] == property) && (!row[i].empty()))
         {
-            bson_append_start_object(exp, int_to_c_str(ic).c_str());
-            ic++;
-            bson_append_string(exp, property, header_vector[ndx_prop_name].c_str());
-            bson_append_double(exp, Qnt, atof(row[i].c_str()));
-
+            auto obj = common::JsonFree::object();
+            obj[property] = header_vector[ndx_prop_name];
+            obj[Qnt] = atof(row[i].c_str());
             // checking if there are errors and units included in the CSV and adding them in the database
             if (i+1 < headline.size())
             {
-                add_unit_and_error(exp, headline, row, i);
+                add_unit_and_error(obj, headline, row, i);
             }
-            bson_append_finish_object(exp);
+            exp[props].push_back(std::move(obj));
         }
     }
     //++ END array props  ++//
-    bson_append_finish_array(exp);
-    ic=0;
     }
 
     // 2nd level - data for phases charactrised/measured in this experiment
     //++ START array expphases ++//
     if (h_phase)
     {
-    bson_append_start_array(exp, expphases); // going trough the headline and searching for "phase" keyword
+    exp[expphases] = common::JsonFree::array(); // going trough the headline and searching for "phase" keyword
     for (unsigned int i=0; i<headline.size(); ++i)
     {
         cut_csv_header(headline[i], header_delimiter, header_vector);
@@ -272,11 +254,9 @@ void csvToBson( bson *exp, const  std::vector<std::string>& headline, const std:
             if (!phase_already_added) // START if not phase_already_added. Every phase is scaned only once troughout out the headline.
             // The program goes trough this if only at the first enocunter of the phase name and scans the document for recuring of the phase.
             {
-                bson_append_start_object(exp, int_to_c_str(phc).c_str());                   // START phase object
-                phc++;                                                              // phases counter increased by 1
-                bson_append_string(exp, phase, phase_name.c_str());
+                auto obj_phase = common::JsonFree::object();                                                            // phases counter increased by 1
+                obj_phase[phase] = phase_name;
                 phases.push_back(phase_name);                    // std::vector that keeps already present phases
-                ic = 0;
 
                 // going through the header to read the entries related to the phase with phase_name
                 for (unsigned int j=0; j<headline.size(); ++j)
@@ -314,7 +294,7 @@ void csvToBson( bson *exp, const  std::vector<std::string>& headline, const std:
                 //++ START array phprop ++//
                 if (h_phprop)
                 {
-                    bson_append_start_array(exp, phprop);
+                    obj_phase[phprop] = common::JsonFree::array();
                     // get phase properties
                     for (unsigned int j=0; j<headline.size(); ++j)
                     {
@@ -323,31 +303,26 @@ void csvToBson( bson *exp, const  std::vector<std::string>& headline, const std:
                         if ((header_vector[ndx_phase] == phase) && (header_vector[ndx_phase_name] == phase_name) &&
                             (it_is_phase_property(header_vector[ndx_phase_property])) && (!row[j].empty()))
                         {
-                            bson_append_start_object(exp, int_to_c_str(ic).c_str()); // START property object
-                            ic++;                                            // increase the number of phases properties with one
-                            bson_append_string(exp, property, header_vector[ndx_phase_property].c_str());
-                            bson_append_double(exp, Qnt, atof(row[j].c_str()));
-
+                            auto obj = common::JsonFree::object();                                                            // phases counter increased by 1                                      // increase the number of phases properties with one
+                            obj[property] = header_vector[ndx_phase_property];
+                            obj[Qnt] = atof(row[j].c_str());
                             // checking if there are errors and units included in the CSV and adding tem in the database
                             if (j+1 < headline.size())
                             {
-                                add_unit_and_error(exp, headline, row, j);
+                                add_unit_and_error(obj, headline, row, j);
                             }
-                            bson_append_finish_object(exp); // END property object
+
+                            obj_phase[phprop].push_back(std::move(obj)); // END property object
                         }
                     }
                     //++ END array phprop ++//
-                    bson_append_finish_array(exp);
-                    ic =0; // reset counter
                 } h_phprop = false;
 
 
                 //++ START array phactmod ++//
                 if (h_phactmod)
                 {
-//                    //bson_append_start_array(exp, activity_model);
-                    bson_append_start_object(exp, activity_model); // START property object
-
+                    //obj_phase[activity_model] = common::JsonFree::array();
                     // get phase properties
                     for (unsigned int j=0; j<headline.size(); ++j)
                     {
@@ -356,29 +331,29 @@ void csvToBson( bson *exp, const  std::vector<std::string>& headline, const std:
                         if ((header_vector[ndx_phase] == phase) && (header_vector[ndx_phase_name] == phase_name) &&
                             (header_vector[ndx_activity_model] == activity_model) && (!row[j].empty()))
                         {
-
+                            auto obj = common::JsonFree::object();
                             if (header_vector[ndx_actmod_param] == b_gamma)
-                                bson_append_double(exp, b_gamma, atof(row[j].c_str()));
+                                obj[b_gamma] = atof(row[j].c_str());
                             if (header_vector[ndx_actmod_param] == b_gammaT)
-                                bson_append_string(exp, b_gammaT, row[j].c_str());
+                                obj[b_gammaT] = row[j].c_str();
                             if (header_vector[ndx_actmod_param] == a0)
-                                bson_append_double(exp, a0, atof(row[j].c_str()));
+                                obj[a0] = atof(row[j].c_str());
                             if (header_vector[ndx_actmod_param] == gammaN)
-                                bson_append_int(exp, gammaN, atoi(row[j].c_str()));
+                                obj[gammaN] = atoi(row[j].c_str());
                             if (header_vector[ndx_actmod_param] == gammaW)
-                                bson_append_int(exp, gammaW, atoi(row[j].c_str()));
+                                obj[gammaW] = atoi(row[j].c_str());
 
+                            //obj_phase[activity_model].push_back(std::move(obj)); // END property object
+                            obj_phase[activity_model]=std::move(obj);
                         }
                     }
 //                    //++ END array phactmod ++//
-//                    //bson_append_finish_array(exp);
-                    bson_append_finish_object(exp); // END property object
                 } h_phactmod= false;
 
                 //++ START array phcomp IC ++//
                 if (h_phIC)
                 {
-                    bson_append_start_array(exp, phIC);
+                    obj_phase[phIC] = common::JsonFree::array();
                     // get phase comp
                     for (unsigned int j=0; j<headline.size(); ++j)
                     {
@@ -387,29 +362,26 @@ void csvToBson( bson *exp, const  std::vector<std::string>& headline, const std:
                         if ((header_vector[ndx_phase] == phase) && (!row[j].empty()) &&
                             (header_vector[ndx_phase_name] == phase_name) && (header_vector[ndx_IC] == IC ))
                         {
+                            auto obj = common::JsonFree::object();
                             // quantity of this IC in the phase
-                            bson_append_start_object(exp, int_to_c_str(ic).c_str()); // START phase element object
-                            ic++;
-                            bson_append_string(exp, IC, header_vector[ndx_IC_name].c_str());
-                            bson_append_double(exp, Qnt, strtod(row[j].c_str(), NULL));
+                            obj[IC] = header_vector[ndx_IC_name];
+                            obj[Qnt] = strtod(row[j].c_str(), NULL);
 
                             // checking if there are errors and units included in the CSV and adding them in the database
                             if (j+1 < headline.size())
                             {
-                                add_unit_and_error(exp, headline, row, j);
+                                add_unit_and_error(obj, headline, row, j);
                             }
-                            bson_append_finish_object(exp); // END phase element object
+                            obj_phase[phIC].push_back(std::move(obj)); // END phase element object
                         }
                     }
                     //++ END array phcomp IC ++//
-                    bson_append_finish_array(exp);
-                    ic = 0;
                 } h_phIC = false;
 
                 //++ START getting data reported as molar fraction
                 if (h_phMR)
                 {
-                    bson_append_start_array(exp, phMR);
+                    obj_phase[phMR] = common::JsonFree::array();
                     // get phase MR
                     for (unsigned int j=0; j<headline.size(); ++j)
                     {
@@ -418,29 +390,26 @@ void csvToBson( bson *exp, const  std::vector<std::string>& headline, const std:
                         if ((header_vector[ndx_phase] == phase) && (!row[j].empty()) &&
                             (header_vector[ndx_phase_name] == phase_name) && (header_vector[ndx_MR] == MR ))
                         {
-                            bson_append_start_object(exp, int_to_c_str(mf).c_str()); // START phase element object
-                            mf++;
-                            bson_append_string(exp, MR, header_vector[ndx_MR_formula].c_str());
-                            bson_append_double(exp, Qnt, atof(row[j].c_str()));
+                            auto obj = common::JsonFree::object();
+                            obj[MR] = header_vector[ndx_MR_formula];
+                            obj[Qnt] = atof(row[j].c_str());
 
                             // checking if there are errors and units included in the CSV and adding tem in the database
                             if ((j+1) < headline.size())
                             {
-                                add_unit_and_error(exp, headline, row, j);
+                                add_unit_and_error(obj, headline, row, j);
                             }
-                            bson_append_finish_object(exp); // END phase element object
+                            obj_phase[phMR].push_back(std::move(obj)); // END phase element object
                         }
                     }
                     //++ END array phMR ++//
-                    bson_append_finish_array(exp);
-                    mf = 0;
                 } h_phMR = false;
 
                 //++ START array phspecies ++//
                 if (h_phDC) // check if there is species data in the CSV header
                 {
                     std::string dcomp_name;
-                    bson_append_start_array(exp, phDC);
+                    obj_phase[phDC] = common::JsonFree::array();
                     for (unsigned int j=0; j<headline.size(); ++j)
                     {
                         cut_csv_header(headline[j], header_delimiter, header_vector);
@@ -464,53 +433,44 @@ void csvToBson( bson *exp, const  std::vector<std::string>& headline, const std:
                             if (!dcomp_already_added)
                             {
                                 //++ START species object
-                                bson_append_start_object(exp, int_to_c_str(dcc).c_str());
-                                dcc++;
-                                bson_append_string(exp, DC, dcomp_name.c_str());
+                                auto spec_obj = common::JsonFree::object();
+                                spec_obj[DC] = dcomp_name;
                                 dcomps.push_back(dcomp_name);
-                                ic = 0;
 
                                 // loop to get all the properties of current dcomp
-                                bson_append_start_array(exp, DCprop);
+                                spec_obj[DCprop] = common::JsonFree::array();
                                 for (unsigned int k=0; k<headline.size(); ++k)
                                 {
                                     cut_csv_header(headline[k], header_delimiter, header_vector);
                                     if ((header_vector[ndx_DC_name] == dcomp_name) && (header_vector[ndx_phase] == phase) &&
                                         (header_vector[ndx_phase_name] == phase_name) && (header_vector[ndx_DC] == DC ) && (!row[k].empty()))
                                     {
-                                        bson_append_start_object(exp, int_to_c_str(ic).c_str()); // START property object
-                                        ic++;
-                                        bson_append_string(exp, property, header_vector[ndx_DC_prop_name].c_str());
-                                        bson_append_double(exp, Qnt, atof(row[k].c_str())); // quantity of the property
+                                        auto obj = common::JsonFree::object();
+                                        obj[property] = header_vector[ndx_DC_prop_name];
+                                        obj[Qnt] = atof(row[k].c_str()); // quantity of the property
 
                                         // checking if there are errors and units included in the CSV and adding tem in the database
                                         if (k+1 < headline.size())
                                         {
-                                            add_unit_and_error(exp, headline, row, k);
+                                            add_unit_and_error(obj, headline, row, k);
                                         }
                                         //++ END dcomp property object
-                                        bson_append_finish_object(exp);
+                                        spec_obj[DCprop].push_back(std::move(obj));
                                     } // end search for dcomp name in the headline of the csv file
                                 }
                                 //++ END dcompprop array
-                                bson_append_finish_array(exp);
-                                bson_append_finish_object(exp);
+                                obj_phase[phDC].push_back(std::move(spec_obj));
                             } //++ END if h_dcomp // end dcomp onject
-//                            bson_append_finish_array(exp);
                         }
                     } dcomps.clear();
                     //++ END array phspecies ++//
-                    bson_append_finish_array(exp);
                 } h_phDC = false;
                 // end object in the array phases
-                dcc = 0;
-                bson_append_finish_object(exp); //++ END phase object ++
+                exp[expphases].push_back(std::move(obj_phase)); //++ END phase object ++
             } // END if phase_already_added
         } // END check for key phase in the headline
     } phases.clear();
     }
     //++ END array expphases ++//
-    bson_append_finish_array(exp);
-    bson_finish(exp);
 }
 // ----------- End of  gemsfit_iobson.cpp ----------------------------

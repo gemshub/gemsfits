@@ -33,8 +33,8 @@
 
 
 #include "optimization.h"
-#include "json_parse.h"
 #include "keywords.h"
+#include "v_json.h"
 
 std::ostream& operator<<(std::ostream& stream, const optimization& data);
 
@@ -43,7 +43,7 @@ optimization::optimization()
     h_optNF = false;
     mode = gpf->KeysNdx;
 
-    constraint_data = new my_constraint_data;
+    constraint_data = std::make_shared<my_constraint_data>();
 
     OptTuckey = 0;
     OptInitStep = 0;
@@ -71,7 +71,6 @@ optimization::optimization()
 void optimization::get_nlopt_param()
 {
     std::string fname;
-    std::vector<std::string> out, out2;
     int mode = gpf->KeysNdx;
 
     fname = gpf->OptParamFile();
@@ -83,98 +82,43 @@ void optimization::get_nlopt_param()
 
     GEMSsys = gpf->GEMS3LstFilePath();
 
-    parse_JSON_object(s, keys::OptParameters[mode], out);
-    if (out.size() == 0) {std::cout << "Error: No keyword for \""
-                               <<keys::OptParameters[mode]<<"\" found in the task definition"
-                               << std::endl; exit(1);}
-    OptParameters = out;
-    out.clear();
-
-    parse_JSON_object(s, keys::OptNFParameters[mode], out);
-    NFunParameters = out[0];
-    out.clear();
-
-    parse_JSON_object(s, keys::AddOptParameters[mode], out);
-    AddOptParameters = out[0];
-    out.clear();
+    common::JsonFree db_opt_object = fromJsonString(s);
+    OptParameters = db_opt_object.value( keys::OptParameters[mode], std::vector<std::string>{});
+    if (OptParameters.size() == 0) {
+          std::cout << "Error: No keyword for \""
+          << keys::OptParameters[mode] <<"\" found in the task definition" << std::endl;
+          exit(1);
+    }
+    NFunParameters = db_opt_object.value(keys::OptNFParameters[mode], std::string());
+    AddOptParameters = db_opt_object.value(keys::AddOptParameters[mode], std::string());
 
     // Optimization settings and statistics
-    parse_JSON_object(s, keys::OptSet[mode], out);
-
-    parse_JSON_object(out[0], keys::OptDW[mode], out2);
-    OptDoWhat = atoi(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::OptPrcParamDigits[mode], out2);
-    if (out2.size()>0)
-        OptPrcParamDigits = atoi(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::OptEQ[mode], out2);
-    OptEquilibrium = atoi(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::SIA[mode], out2);
-    if (out2.size()>0)
-        OptGemsSIA = atoi(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::OptUW[mode], out2);
-    OptUserWeight = atoi(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::OptMixedResiduals[mode], out2);
-    if (out2.size()>0)
-        OptMixedSumOfResiduals = atoi(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::OptTu[mode], out2);
-    OptTuckey = atoi(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::OptTuVal[mode], out2);
-    OptTuckeyVal = atoi(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::OptAlg[mode], out2);
-     OptAlgo = out2[0].c_str();
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::OptPBP[mode], out2);
-    OptBoundPerc = atof(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::OptTRel[mode], out2);
-    OptTolRel = atof(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::OptTAbs[mode], out2);
-    OptTolAbs = atof(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::OptMEv[mode], out2);
-    OptMaxEval = atoi(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::OptNormP[mode], out2);
-    OptNormParam = atoi(out2[0].c_str());
-    out2.clear();
-
-    parse_JSON_object(out[0], keys::OptPer[mode], out2);
-    OptPerturbator = atof(out2[0].c_str());
-    out2.clear();
-    out.clear();
+    auto& opt_set_object =  db_opt_object[keys::OptSet[mode]];
+    OptDoWhat = opt_set_object.value(keys::OptDW[mode], OptDoWhat);
+    OptPrcParamDigits = opt_set_object.value( keys::OptPrcParamDigits[mode], OptPrcParamDigits);
+    OptEquilibrium = opt_set_object.value(keys::OptEQ[mode], OptEquilibrium);
+    OptGemsSIA = opt_set_object.value(keys::SIA[mode], OptGemsSIA);
+    OptUserWeight = opt_set_object.value(keys::OptUW[mode], OptUserWeight);
+    OptMixedSumOfResiduals = opt_set_object.value(keys::OptMixedResiduals[mode], OptMixedSumOfResiduals);
+    OptTuckey = opt_set_object.value(keys::OptTu[mode], OptTuckey);
+    OptTuckeyVal = opt_set_object.value(keys::OptTuVal[mode], OptTuckeyVal);
+    OptAlgo = opt_set_object.value(keys::OptAlg[mode], OptAlgo);
+    OptBoundPerc = opt_set_object.value(keys::OptPBP[mode], OptBoundPerc);
+    OptTolRel = opt_set_object.value(keys::OptTRel[mode], OptTolRel);
+    OptTolAbs = opt_set_object.value(keys::OptTAbs[mode], OptTolAbs);
+    OptMaxEval = opt_set_object.value(keys::OptMEv[mode], OptMaxEval);
+    OptNormParam = opt_set_object.value(keys::OptNormP[mode], 0);
+    OptPerturbator = opt_set_object.value(keys::OptPer[mode], OptPerturbator);
 }
 
 void optimization::OptParameterCreate ()
 {
     unsigned  p = 0;
-    std::vector<std::string> out, out2, out3, outG0, outPMc, outDMc;
-
+    std::vector<std::string> temp, outG0, outPMc, outDMc;
     OptParameter* myOPT = 0;
 
     // call GEM_init to read GEMS3K input files
-    TNode* node  = new TNode();
+    std::shared_ptr<TNode> node  = std::make_shared<TNode>();
 
     try
     {
@@ -196,128 +140,101 @@ void optimization::OptParameterCreate ()
 
     //OFUN parameters
     // NFUN parameters
-//    parse_JSON_object(OptParameters, keys::G0[mode], out);
-//    if (out.size() > 0)
-//    {
-//        Opt_G0* myPT = new Opt_G0( out, OptBoundPerc, p );
-//        myPT->SetIndex_param(node);
-//        myOPT = (Opt_G0*)myPT;
-//    }
-//    if(myOPT) { optParam.push_back( myOPT ); myOPT = 0; };
-//    out.clear(); p=0;
-
-//    parse_JSON_object(OptParameters, keys::PAM[mode], out);
-
-
-
     if (OptParameters.size() > 0)
     {
         for (unsigned i = 0; i < OptParameters.size(); i++)
         {
+            common::JsonFree object = fromJsonString(OptParameters[i]);
             // G0
-            parse_JSON_object(OptParameters[i], keys::G0[mode], out2);
-            outG0.insert(outG0.end(), out2.begin(), out2.end());
-            out2.clear();
-
+            temp = object.value(keys::G0[mode], std::vector<std::string>{});
+            outG0.insert(outG0.end(), temp.begin(), temp.end());
             // PMc
-            parse_JSON_object(OptParameters[i], keys::PMc[mode], out2);
-            for (unsigned j = 0; j < out2.size(); j++)
-            {
-                parse_JSON_object(out2[j], keys::IPCs[mode], out3);
-                outPMc.insert(outPMc.end(), out3.begin(), out3.end());
-                out3.clear();
+            if( object.contains(keys::PMc[mode]) ) {
+                for (const auto& element : object[keys::PMc[mode]]) {
+                    temp = element->value(keys::IPCs[mode], std::vector<std::string>{});
+                    outPMc.insert(outPMc.end(), temp.begin(), temp.end());
+                }
             }
-            out2.clear();
-
             // DMc
-            parse_JSON_object(OptParameters[i], keys::DMc[mode], out2);
-            for (unsigned j = 0; j < out2.size(); j++)
-            {
-                parse_JSON_object(out2[j], keys::PDCC[mode], out3);
-                outDMc.insert(outDMc.end(), out3.begin(), out3.end());
-                out3.clear();
+            if( object.contains(keys::DMc[mode]) ) {
+                for (const auto& element : object[keys::DMc[mode]]) {
+                    temp = element->value(keys::PDCC[mode], std::vector<std::string>{});
+                    outDMc.insert(outDMc.end(), temp.begin(), temp.end());
+                }
             }
-            out2.clear();
         }
 
-        if (outG0.size() > 0)
-        {
-            Opt_G0* myPT = new Opt_G0( outG0, OptBoundPerc, p );
-            myPT->SetIndex_param(node);
+        if (outG0.size() > 0) {
+            Opt_G0* myPT = new Opt_G0(outG0, OptBoundPerc, p);
+            myPT->SetIndex_param(node.get());
             myOPT = (Opt_G0*)myPT;
         }
-        if(myOPT) { optParam.push_back( myOPT ); myOPT = 0; };
+        if(myOPT) { optParam.push_back( std::shared_ptr<OptParameter>(myOPT) ); myOPT = 0; };
          p=0;
 
         // PMc
-        if (outPMc.size() > 0)
-        {
-            Opt_PMc* myPT = new Opt_PMc( outPMc, OptBoundPerc, p );
+        if (outPMc.size() > 0) {
+            Opt_PMc* myPT = new Opt_PMc(outPMc, OptBoundPerc, p);
 //            myPT->SetIndex_param(node);
             myOPT = (Opt_PMc*)myPT;
         }
-        if(myOPT) { optParam.push_back( myOPT ); myOPT = 0; };
+        if(myOPT) { optParam.push_back( std::shared_ptr<OptParameter>(myOPT) ); myOPT = 0; };
          p=0;
 
         // DMc
-        if (outPMc.size() > 0)
-        {
-            Opt_DMc* myPT = new Opt_DMc( outDMc, OptBoundPerc, p );
+        if (outPMc.size() > 0) {
+            Opt_DMc* myPT = new Opt_DMc(outDMc, OptBoundPerc, p);
 //            myPT->SetIndex_param(node);
             myOPT = (Opt_DMc*)myPT;
         }
-        if(myOPT) { optParam.push_back( myOPT ); myOPT = 0; };
+        if(myOPT) { optParam.push_back( std::shared_ptr<OptParameter>(myOPT) ); myOPT = 0; };
          p=0;
     }
-    out.clear();
 
     // NFUN parameters
     if (NFunParameters != "")
     {
-        parse_JSON_object(NFunParameters, keys::bIC[mode], out);
-        if (out.size() > 0)
-        {
-            Opt_bIC* myPT = new Opt_bIC( out, OptBoundPerc, p );
-            myPT->SetIndex_param(node);
+        common::JsonFree object = fromJsonString(NFunParameters);
+        temp = object.value(keys::bIC[mode], std::vector<std::string>{});
+        if (temp.size() > 0) {
+            Opt_bIC* myPT = new Opt_bIC(temp, OptBoundPerc, p );
+            myPT->SetIndex_param(node.get());
             myOPT = (Opt_bIC*)myPT;
         }
-        if(myOPT) { optNFParam.push_back( myOPT ); myOPT = 0; };
-        out.clear(); p=0;
+        if(myOPT) { optNFParam.push_back( std::shared_ptr<OptParameter>(myOPT) ); myOPT = 0; };
+        p=0;
 
-        parse_JSON_object(NFunParameters, keys::TK[mode], out);
-        if (out.size() > 0)
-        {
-            Opt_Tk* myPT = new Opt_Tk( out, OptBoundPerc, p );
-            myPT->SetIndex_param(node);
+        temp = object.value(keys::TK[mode], std::vector<std::string>{});
+        if (temp.size() > 0) {
+            Opt_Tk* myPT = new Opt_Tk( temp, OptBoundPerc, p );
+            myPT->SetIndex_param(node.get());
             myOPT = (Opt_Tk*)myPT;
         }
-        if(myOPT) { optNFParam.push_back( myOPT ); myOPT = 0; };
-        out.clear(); p=0;
+        if(myOPT) { optNFParam.push_back( std::shared_ptr<OptParameter>(myOPT) ); myOPT = 0; };
+        p=0;
 
-        parse_JSON_object(NFunParameters, keys::Pb[mode], out);
-        if (out.size() > 0)
-        {
-            Opt_P* myPT = new Opt_P( out, OptBoundPerc, p );
-            myPT->SetIndex_param(node);
+        temp = object.value(keys::Pb[mode], std::vector<std::string>{});
+        if (temp.size() > 0) {
+            Opt_P* myPT = new Opt_P(temp, OptBoundPerc, p);
+            myPT->SetIndex_param(node.get());
             myOPT = (Opt_P*)myPT;
         }
-        if(myOPT) { optNFParam.push_back( myOPT ); myOPT = 0; };
-        out.clear(); p=0;
+        if(myOPT) { optNFParam.push_back( std::shared_ptr<OptParameter>(myOPT) ); myOPT = 0; };
+        p=0;
     }
-    out.clear();
 
     // Additional parameters
     if (AddOptParameters != "")
     {
-        parse_JSON_object(AddOptParameters, keys::bIC[mode], out);
-        if (out.size() > 0)
-        {
-            Opt_bIC* myPT = new Opt_bIC( out, OptBoundPerc, p, false );
-            myPT->SetIndex_param(node);
+        common::JsonFree object = fromJsonString(AddOptParameters);
+        temp = object.value(keys::bIC[mode], std::vector<std::string>{});
+        if (temp.size() > 0) {
+            Opt_bIC* myPT = new Opt_bIC(temp, OptBoundPerc, p, false);
+            myPT->SetIndex_param(node.get());
             myOPT = (Opt_bIC*)myPT;
         }
-        if(myOPT) { optParam.push_back( myOPT ); myOPT = 0; };
-        out.clear(); p=0;
+        if(myOPT) { optParam.push_back( std::shared_ptr<OptParameter>(myOPT) ); myOPT = 0; };
+        p=0;
     }
 }
 
@@ -341,8 +258,6 @@ void optimization::GetParameters ()
 
 optimization::~optimization()
 {
-    delete constraint_data;
-
 }
 
 void optimization::normalize_params(const std::vector<double> initguesses , bool NormBounds)

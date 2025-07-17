@@ -42,7 +42,7 @@
 #include <vector>
 #include <iostream>
 #include "gemsfit_task.h"
-#include "node.h"
+#include <GEMS3K/node.h>
 
 // callback function for GEMS3K wrapper
 /**

@@ -3,8 +3,7 @@
 //
 // Implementation of CalcDialog class
 //
-// Copyright (C) 1996-2010  A.Rysin, S.Dmytriyeva
-// Uses  string class (C) A.Rysin 1999
+// Copyright (C) 1996-2023  A.Rysin, S.Dmytriyeva
 //
 // This file is part of the GEM-Selektor GUI library which uses the
 // Qt v.4 cross-platform App & UI framework (http://qt.nokia.com)
@@ -17,12 +16,9 @@
 // E-mail gems2.support@psi.ch
 //-------------------------------------------------------------------
 
-#include <cmath>
-#include <qpushbutton.h>
-#include <qlineedit.h>
-#include <qspinbox.h>
-#include <qgroupbox.h>
-#include <qvariant.h>
+#include "CalcDialog.h"
+#include "ui_CalcDialog4.h"
+#include <GEMS3K/v_detail.h>
 
 const double IPNC_DBL_MAX = 1e37;
 const double IPNC_DBL_MIN = 1e-37;
@@ -31,58 +27,52 @@ const double IPNC_DBL_MIN_10_EXP = -37.;
 const double IPNC_DBL_MAX_EXP = 85.195648;
 const double IPNC_DBL_MIN_EXP = -85.195648;
 
-#include "CalcDialog.h"
-#include "v_detail.h"
-
-CalcDialog::CalcDialog(QWidget* parent ):
-        QDialog( parent )
+CalcDialog::CalcDialog(QWidget* parent):
+    QDialog(parent),
+    ui(new Ui::CalcDialogData)
 {
+    ui->setupUi(this);
     
-    setupUi(this);
-    
-    allButtons = new QButtonGroup( pButtonBox );
-    allButtons->addButton(pAssignBtn, 0);
-    allButtons->addButton(PushButton2, 1);
-    allButtons->addButton(PushButton3, 2);
-    allButtons->addButton(PushButton4, 3);
-    allButtons->addButton(PushButton5, 4);
-    allButtons->addButton(PushButton6, 5);
-    allButtons->addButton(PushButton7, 6);
-    allButtons->addButton(PushButton8, 7);
-    allButtons->addButton(PushButton9, 8);
-    allButtons->addButton(PushButton10, 9);
-    allButtons->addButton(PushButton11, 10);
-    allButtons->addButton(PushButton12, 11);
-    allButtons->addButton(PushButton13, 12);
-    allButtons->addButton(PushButton14, 13);
-    allButtons->addButton(PushButton15, 14);
-    allButtons->addButton(pClearBtn, 15);
-    pAssignBtn->setChecked( true);
+    allButtons = new QButtonGroup( ui->pButtonBox );
+    allButtons->addButton(ui->pAssignBtn, 0);
+    allButtons->addButton(ui->PushButton2, 1);
+    allButtons->addButton(ui->PushButton3, 2);
+    allButtons->addButton(ui->PushButton4, 3);
+    allButtons->addButton(ui->PushButton5, 4);
+    allButtons->addButton(ui->PushButton6, 5);
+    allButtons->addButton(ui->PushButton7, 6);
+    allButtons->addButton(ui->PushButton8, 7);
+    allButtons->addButton(ui->PushButton9, 8);
+    allButtons->addButton(ui->PushButton10, 9);
+    allButtons->addButton(ui->PushButton11, 10);
+    allButtons->addButton(ui->PushButton12, 11);
+    allButtons->addButton(ui->PushButton13, 12);
+    allButtons->addButton(ui->PushButton14, 13);
+    allButtons->addButton(ui->PushButton15, 14);
+    allButtons->addButton(ui->pClearBtn, 15);
+    ui->pAssignBtn->setChecked( true);
 
     QObject::connect( allButtons, SIGNAL(buttonClicked(int)), this, SLOT(setMode(int)));
-    QObject::connect(PushButton1_3, SIGNAL(clicked()), this, SLOT(ok()));
-    QObject::connect(PushButton1_2, SIGNAL(clicked()), this, SLOT(reject()));
+    QObject::connect(ui->PushButton1_3, SIGNAL(clicked()), this, SLOT(ok()));
+    QObject::connect(ui->PushButton1_2, SIGNAL(clicked()), this, SLOT(reject()));
 }
 
 CalcDialog::~CalcDialog()
-{}
-
-void CalcDialog::languageChange()
 {
-    retranslateUi(this);
+    delete ui;
 }
 
 void CalcDialog::unaryMode()
 {
-    pValue->setEnabled(false);
+    ui->pValue->setEnabled(false);
 }
 
 void CalcDialog::setMode( int id )
 {
- if( id <= 5)
-    pValue->setEnabled(true);
- else
-    pValue->setEnabled(false);
+    if( id <= 5)
+        ui->pValue->setEnabled(true);
+    else
+        ui->pValue->setEnabled(false);
 }
 
 void CalcDialog::ok()
@@ -98,15 +88,15 @@ QString CalcDialog::fun(double val)
     ii = allButtons->checkedId();
     double val2=0.;
     if( ii <= 5 )
-    {  
-      QString str = pValue->currentText();
-      pos = str.indexOf('(');
-      if( pos >= 0 )
-       str.truncate(pos);
-      if( (str.indexOf("---") != -1) || str[0] == '`' || str.isEmpty() )
-         val2 = DOUBLE_EMPTY;
-      else
-         val2 = str.toDouble();  /// check for error
+    {
+        QString str = ui->pValue->currentText();
+        pos = str.indexOf('(');
+        if( pos >= 0 )
+            str.truncate(pos);
+        if( (str.indexOf("---") != -1) || str[0] == '`' || str.isEmpty() )
+            val2 = DOUBLE_EMPTY;
+        else
+            val2 = str.toDouble();  /// check for error
     }
     switch( ii )
     {
@@ -124,25 +114,25 @@ QString CalcDialog::fun(double val)
         break;
     case 4:
         if( fabs(val2) >=  IPNC_DBL_MIN ) // Attempt of zerodivide!
-          ret = val / val2;
+            ret = val / val2;
         break;
     case 5:
         if( !(fabs(val)<IPNC_DBL_MIN || fabs(val)>IPNC_DBL_MAX
-                 || fabs(val2) < IPNC_DBL_MIN_10_EXP
-                 || fabs(val2) > IPNC_DBL_MAX_10_EXP) ) // Attempt of pow() argument out of range
+              || fabs(val2) < IPNC_DBL_MIN_10_EXP
+              || fabs(val2) > IPNC_DBL_MAX_10_EXP) ) // Attempt of pow() argument out of range
             ret = pow(val, val2);
         break;
     case 6:
         if( fabs(val) >= IPNC_DBL_MIN ) // Attempt of zerodivide!
-         ret = 1/val;
+            ret = 1/val;
         break;
     case 7:
         if( val >= IPNC_DBL_MIN ) // Attempt of sqrt() argument <= 0
-         ret = sqrt(val);
+            ret = sqrt(val);
         break;
     case 8:
         if( val >= IPNC_DBL_MIN )
-         ret = log10(val);
+            ret = log10(val);
         break;
     case 9:
         if( val >= IPNC_DBL_MIN )
@@ -150,12 +140,12 @@ QString CalcDialog::fun(double val)
         break;
     case 10:
         if( !( fabs(val) < IPNC_DBL_MIN_10_EXP
-             || fabs(val) > IPNC_DBL_MAX_10_EXP) ) // Attempt of pow() argument out of range
+               || fabs(val) > IPNC_DBL_MAX_10_EXP) ) // Attempt of pow() argument out of range
             ret = pow(10.,val);
         break;
     case 11:
         if( !(val < IPNC_DBL_MIN_EXP || val > IPNC_DBL_MAX_EXP) ) // Attempt of exp() argument out of range
-           ret =  exp(val);
+            ret =  exp(val);
         break;
     case 12:
         ret = sin(val);

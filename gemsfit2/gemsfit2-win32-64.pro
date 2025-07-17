@@ -33,19 +33,34 @@ TEMPLATE	= app
 #LANGUAGE        = C++
 TARGET		= gemsfit2
 VERSION         = 2.2.2
-CONFIG          += c++17
+
 
 DEFINES         += IPMGEMPLUGIN
 DEFINES         += useomp
 DEFINES         += _MYNOZLIB
 DEFINES         += HAVE_STDINT_H
 
-QMAKE_LFLAGS  +=
 
 CONFIG -= qt
 CONFIG += warn_on
 CONFIG += console
-#CONFIG += serial release
+#CONFIG += sanitaze sanitaze_thread
+CONFIG += serial release
+CONFIG += c++20
+
+# check settengs
+DEFINES         += useomp
+DEFINES += CHECK_LOAD # to generate print for initial data after read input configuration.
+DEFINES += OLD_EJDB # compile using ejdb1
+#DEFINES += OVERFLOW_EXCEPT  #compile with nan inf exceptions
+#DEFINES         += HAVE_STDINT_H
+
+DEFINES += IPMGEMPLUGIN
+#DEFINES += NODEARRAYLEVEL
+#DEFINES += USE_NLOHMANNJSON
+#DEFINES += USE_THERMOFUN
+#DEFINES += USE_THERMO_LOG
+
 
 #DEFINES += USE_THERMOFUN
 #DEFINES += USE_THERMO_LOG
@@ -104,45 +119,49 @@ QMAKE_LFLAGS += -fopenmp -O3
 }
 
 FIT_CPP      =  ./src-fit
-GEMS3K_CPP   =  ../../standalone/GEMS3K
-KEYS_CPP     =  ../csvtoejdb/src-csvtoejdb
+GEMS3K_CPP   =  ../standalone/GEMS3K
 MUP_CPP      =  ./muparser/src
-JAN_CPP        =  ./jan_win32/src
+COMMON_CPP  =  ../common
 
 FIT_H        =   $$FIT_CPP
 GEMS3K_H     =   $$GEMS3K_CPP
-KEYS_H       =   $$KEYS_CPP
-PLATFORM_H   =   $$PLATFORM_CPP
 MUP_H        =   $$MUP_CPP
-JAN_H          =  $$JAN_CPP
+COMMON_H     =   $$COMMON_CPP
 
 DEPENDPATH   += $$FIT_H
 DEPENDPATH   += $$GEMS3K_H
 DEPENDPATH   += $$KEYS_H
 DEPENDPATH   += $$MUP_H
-DEPENDPATH     += $$JAN_H
+DEPENDPATH   += $$COMMON_H
 
 INCLUDEPATH  += $$FIT_H
-INCLUDEPATH  += $$GEMS3K_H   
+INCLUDEPATH  += $$GEMS3K_H
 INCLUDEPATH  += $$KEYS_H
 INCLUDEPATH  += $$MUP_H
-INCLUDEPATH    += $$JAN_H
+INCLUDEPATH   += $$COMMON_H
 
 INCLUDEPATH += ./boost_win32
 INCLUDEPATH += ./armadillo_win32/include
 
 OBJECTS_DIR       = obj
 
+include($$COMMON_CPP/common.pri)
 include($$FIT_CPP/fit.pri)
 include($$GEMS3K_CPP/gems3k.pri)
 include($$MUP_CPP/muparser.pri)
-include($$JAN_CPP/jan.pri)
 
 #TCEJDB
+contains(DEFINES, OLD_EJDB) {
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/tcejdb_win32-64/bin/ -llibejdb
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/tcejdb_win32-64/bin/ -llibejdb
 INCLUDEPATH += $$PWD/tcejdb_win32-64/include
 DEPENDPATH += $$PWD/tcejdb_win32-64/include
+}
+else
+{
+
+}
+
 
 #NLOPT
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/nlopt_win32-64/bin/ -llibnlopt
@@ -162,8 +181,8 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/armadillo_win32/example
 #DEPENDPATH += $$PWD/armadillo_win32/examples/lib_win64
 
 #BOOST
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/boost_win32-64/lib/ -llibboost_filesystem-mt
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/boost_win32-64/lib/ -llibboost_filesystem-mt
+#win32:CONFIG(release, debug|release): LIBS += -L$$PWD/boost_win32-64/lib/ -llibboost_filesystem-mt
+#else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/boost_win32-64/lib/ -llibboost_filesystem-mt
 #INCLUDEPATH += $$PWD/boost_win32-64/include
 #DEPENDPATH += $$PWD/boost_win32-64/include
 

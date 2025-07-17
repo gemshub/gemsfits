@@ -62,7 +62,7 @@ class statistics
         std::vector<double> correl;
     };
 
-    std::vector<parameters*> fitparam;
+    std::vector<std::shared_ptr<parameters>> fitparam;
 
     struct objfunstat
     {
@@ -96,7 +96,7 @@ class statistics
         std::vector<expdataset> exp_dataset;
     };
 
-    std::vector<objfunstat*> objfun_stat;
+    std::vector<std::shared_ptr<objfunstat>> objfun_stat;
 
     double Weighted_mean_res;
     double means_res;
@@ -162,7 +162,7 @@ class statistics
     * @author SD
     * @date 14.03.2013
     */
-    void get_stat_param( );
+    void get_stat_param(const std::string& optset_json);
 //    void default_stat_param();
 
 

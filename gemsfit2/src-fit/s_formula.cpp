@@ -17,10 +17,9 @@
 // E-mail: gems2.support@psi.ch
 //-------------------------------------------------------------------
 //
-//#include <cstdio>
+
 #include <cmath>
-#include <stdio.h>
-#include <string.h>
+#include <string>
 #include <iostream>
 
 #include "s_formula.h"

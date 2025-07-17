@@ -29,21 +29,16 @@
 //
 
 
-
 #ifndef OPTIMIZATION_H
 #define OPTIMIZATION_H
 
 #include <vector>
-#include <math.h>
 #include <string>
 #include <fstream>
 #include <iostream>
-#include "gemsfit_iofiles.h"
-//#include <jansson.h>
 #include <sstream>
 #include "opt_vector.h"
-//using namespace std;
-
+#include "gemsfit_iofiles.h"
 
 class optimization
 {
@@ -56,7 +51,7 @@ private:
         int id;
         double Constraints;
     } my_constraint_data;
-    my_constraint_data* constraint_data;
+    std::shared_ptr<my_constraint_data> constraint_data;
     std::vector<my_constraint_data> constraint_data_v;
 
 
@@ -111,7 +106,7 @@ public:
     int OptGemsSIA = -1;
     int OptTuckey;
     int OptTuckeyVal;
-    int OptTitration;
+    int OptTitration = 0;
     int OptUserWeight;
     int OptMixedSumOfResiduals = -1;
     double OptInitStep;
@@ -134,8 +129,8 @@ public:
 
 
     long int sizeOPs;     ///
-    std::vector<OptParameter*> optParam; ///
-    std::vector<OptParameter*> optNFParam;
+    std::vector<std::shared_ptr<OptParameter>> optParam; ///
+    std::vector<std::shared_ptr<OptParameter>> optNFParam;
 
     void OptParameterCreate ();
 

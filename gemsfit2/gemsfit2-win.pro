@@ -34,19 +34,25 @@ TEMPLATE	= app
 TARGET		= gemsfit2
 VERSION         = 2.0.0
 
-DEFINES         += IPMGEMPLUGIN
-DEFINES         += useomp
-
-DEFINES         += _MYNOZLIB
-
-DEFINES         += HAVE_STDINT_H
-
-QMAKE_LFLAGS  +=
-
 CONFIG -= qt
 CONFIG += warn_on
 CONFIG += console
+#CONFIG += sanitaze sanitaze_thread
 #CONFIG += serial release
+CONFIG += c++17
+
+# check settengs
+DEFINES         += useomp
+DEFINES += CHECK_LOAD # to generate print for initial data after read input configuration.
+DEFINES += OLD_EJDB # compile using ejdb1
+#DEFINES += OVERFLOW_EXCEPT  #compile with nan inf exceptions
+
+DEFINES += IPMGEMPLUGIN
+#DEFINES += NODEARRAYLEVEL
+#DEFINES += USE_NLOHMANNJSON
+#DEFINES += USE_THERMOFUN
+#DEFINES += USE_THERMO_LOG
+
 
 CONFIG( release,  debug|release ) {
         message( "Configuring for release build ..." )
@@ -103,19 +109,26 @@ QMAKE_LFLAGS *= -fopenmp
 }
 
 FIT_CPP      =  ./src-fit
-GEMS3K_CPP   =  ../../standalone/GEMS3K
-#EJDB_CPP     =  ./tcejdb
-KEYS_CPP     =  ../csvtoejdb/src-csvtoejdb
+GEMS3K_CPP   =  ../standalone/GEMS3K
 MUP_CPP      =  ./muparser/src
-JAN_CPP        =  ./jan_win32/src
+COMMON_CPP  =  ../common
 
 FIT_H        =   $$FIT_CPP
 GEMS3K_H     =   $$GEMS3K_CPP
-#EJDB_H       =   $$EJDB_CPP
-KEYS_H       =   $$KEYS_CPP
-PLATFORM_H   =   $$PLATFORM_CPP
 MUP_H        =   $$MUP_CPP
-JAN_H          =  $$JAN_CPP
+COMMON_H     =   $$COMMON_CPP
+
+DEPENDPATH   += $$FIT_H
+DEPENDPATH   += $$GEMS3K_H
+DEPENDPATH   += $$KEYS_H
+DEPENDPATH   += $$MUP_H
+DEPENDPATH   += $$COMMON_H
+
+INCLUDEPATH  += $$FIT_H
+INCLUDEPATH  += $$GEMS3K_H
+INCLUDEPATH  += $$KEYS_H
+INCLUDEPATH  += $$MUP_H
+INCLUDEPATH   += $$COMMON_H
 
 EJDB_PATH = ../../standalone/EJDB
 
@@ -133,22 +146,6 @@ EJDB_TCUTIL_H = $$EJDB_PATH/src/tcutil
 CONFIG(release, debug|release): EJDB_GENERATED_H = $$EJDB_LIB_PATH/release/src/generated
 CONFIG(debug, debug|release): EJDB_GENERATED_H = $$EJDB_LIB_PATH/debug/src/generated
 
-
-DEPENDPATH   += $$FIT_H
-DEPENDPATH   += $$GEMS3K_H
-#DEPENDPATH   += $$EJDB_H
-DEPENDPATH   += $$KEYS_H
-DEPENDPATH   += $$PLATFORM_H
-DEPENDPATH   += $$MUP_H
-DEPENDPATH     += $$JAN_H
-
-INCLUDEPATH  += $$FIT_H
-INCLUDEPATH  += $$GEMS3K_H   
-#INCLUDEPATH  += $$EJDB_H
-INCLUDEPATH  += $$KEYS_H
-INCLUDEPATH  += $$PLATFORM_H
-INCLUDEPATH  += $$MUP_H
-INCLUDEPATH    += $$JAN_H
 INCLUDEPATH   += $$EJDB_BSON_H
 INCLUDEPATH   += $$EJDB_EJDB_H
 INCLUDEPATH   += $$EJDB_GENERATED_H
@@ -159,18 +156,21 @@ INCLUDEPATH += ./armadillo_win32/include
 
 OBJECTS_DIR       = obj
 
+include($$COMMON_CPP/common.pri)
 include($$FIT_CPP/fit.pri)
 include($$GEMS3K_CPP/gems3k.pri)
-#include($$EJDB_CPP/tcejdb.pri)
 include($$MUP_CPP/muparser.pri)
-include($$JAN_CPP/jan.pri)
-include($$EJDB_PATH/ejdb.pri)
 
 #TCEJDB
+contains(DEFINES, OLD_EJDB) {
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/tcejdb_win32/lib/ -ltcejdbdll
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/tcejdb_win32/lib/ -ltcejdbdll
 INCLUDEPATH += $$PWD/tcejdb_win32/include
 DEPENDPATH += $$PWD/tcejdb_win32/include
+}
+else
+{
+}
 
 #NLOPT
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/nlopt_win32/ -llibnlopt-0
@@ -179,10 +179,10 @@ INCLUDEPATH += $$PWD/nlopt_win32
 DEPENDPATH += $$PWD/nlopt_win32
 
 #BOOST
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/boost_win32/filesystem/build/gcc-mingw-4.8.2/release/link-static/threading-multi/ -lboost_filesystem-mgw48-mt-1_57
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/boost_win32/filesystem/build/gcc-mingw-4.8.2/release/link-static/threading-multi/ -lboost_filesystem-mgw48-mt-1_57
-INCLUDEPATH += $$PWD/boost_win32/filesystem/build/gcc-mingw-4.8.2/release/link-static/threading-multi
-DEPENDPATH += $$PWD/boost_win32/filesystem/build/gcc-mingw-4.8.2/release/link-static/threading-multi
+#win32:CONFIG(release, debug|release): LIBS += -L$$PWD/boost_win32/filesystem/build/gcc-mingw-4.8.2/release/link-static/threading-multi/ -lboost_filesystem-mgw48-mt-1_57
+#else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/boost_win32/filesystem/build/gcc-mingw-4.8.2/release/link-static/threading-multi/ -lboost_filesystem-mgw48-mt-1_57
+#INCLUDEPATH += $$PWD/boost_win32/filesystem/build/gcc-mingw-4.8.2/release/link-static/threading-multi
+#DEPENDPATH += $$PWD/boost_win32/filesystem/build/gcc-mingw-4.8.2/release/link-static/threading-multi
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/boost_win32/system/build/gcc-mingw-4.8.2/release/link-static/threading-multi/ -lboost_system-mgw48-mt-1_57
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/boost_win32/system/build/gcc-mingw-4.8.2/release/link-static/threading-multi/ -lboost_system-mgw48-mt-1_57

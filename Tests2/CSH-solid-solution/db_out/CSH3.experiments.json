@@ -1,0 +1,3938 @@
+[
+{
+     "sample" :   "Cw_01",
+     "expdataset" :   "CH04D",
+     "comment" :   "curve_Cw",
+     "type" :   "double_dec",
+     "sT" :   22,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "SiO2@",
+               "Q" :   10,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Ca(OH)2",
+               "Q" :   18.25,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   12.37,
+                         "error" :   0.03,
+                         "unit" :   "-loga"
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   2e-05,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.01927,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "Q",
+                         "Q" :   1.48,
+                         "unit" :   "mol"
+                    },
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   2.345
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   1.48,
+                         "error" :   0.05,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Cw_02",
+     "expdataset" :   "CH04D",
+     "comment" :   "curve_Cw",
+     "type" :   "double_dec",
+     "sT" :   22,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "SiO2@",
+               "Q" :   10,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Ca(OH)2",
+               "Q" :   17.26,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   1e-05,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.01918,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "Q",
+                         "Q" :   1.4,
+                         "unit" :   "mol"
+                    },
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   2.641
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   1.4,
+                         "error" :   0.05,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Cw_03",
+     "expdataset" :   "CH04D",
+     "comment" :   "curve_Cw",
+     "type" :   "double_dec",
+     "sT" :   22,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "SiO2@",
+               "Q" :   10,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Ca(OH)2",
+               "Q" :   17.76,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   12.16,
+                         "error" :   0.03,
+                         "unit" :   "-loga"
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   2e-05,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.01782,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "Q",
+                         "Q" :   1.44,
+                         "unit" :   "mol"
+                    },
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   2.484
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   1.44,
+                         "error" :   0.05,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Cw_04",
+     "expdataset" :   "CH04D",
+     "comment" :   "curve_Cw",
+     "type" :   "double_dec",
+     "sT" :   22,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "SiO2@",
+               "Q" :   10,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Ca(OH)2",
+               "Q" :   16.15,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   11.88,
+                         "error" :   0.03,
+                         "unit" :   "-loga"
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   2e-05,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00996,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "Q",
+                         "Q" :   1.31,
+                         "unit" :   "mol"
+                    },
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   3.082
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   1.31,
+                         "error" :   0.05,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Cw_05",
+     "expdataset" :   "CH04D",
+     "comment" :   "curve_Cw",
+     "type" :   "double_dec",
+     "sT" :   22,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "SiO2@",
+               "Q" :   10,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Ca(OH)2",
+               "Q" :   14.8,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   11.7,
+                         "error" :   0.03,
+                         "unit" :   "-loga"
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   4e-05,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00508,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "Q",
+                         "Q" :   1.2,
+                         "unit" :   "mol"
+                    },
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   3.863
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   1.2,
+                         "error" :   0.05,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Cw_06",
+     "expdataset" :   "CH04D",
+     "comment" :   "curve_Cw",
+     "type" :   "double_dec",
+     "sT" :   22,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "SiO2@",
+               "Q" :   10,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Ca(OH)2",
+               "Q" :   17.26,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   8e-05,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00313,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "Q",
+                         "Q" :   1.4,
+                         "unit" :   "mol"
+                    },
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   2.641
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   1.4,
+                         "error" :   0.05,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Cw_07",
+     "expdataset" :   "CH04D",
+     "comment" :   "curve_Cw",
+     "type" :   "double_dec",
+     "sT" :   22,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "SiO2@",
+               "Q" :   10,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Ca(OH)2",
+               "Q" :   12.7,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   11.46,
+                         "error" :   0.03,
+                         "unit" :   "-loga"
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   0.0001,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.0027,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "Q",
+                         "Q" :   1.03,
+                         "unit" :   "mol"
+                    },
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   6.159
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   1.03,
+                         "error" :   0.05,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Cw_08",
+     "expdataset" :   "CH04D",
+     "comment" :   "curve_Cw",
+     "type" :   "double_dec",
+     "sT" :   22,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "SiO2@",
+               "Q" :   10,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Ca(OH)2",
+               "Q" :   12.95,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   11.56,
+                         "error" :   0.03,
+                         "unit" :   "-loga"
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   0.00014,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00203,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "Q",
+                         "Q" :   1.05,
+                         "unit" :   "mol"
+                    },
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   5.774
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   1.05,
+                         "error" :   0.05,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Cw_09",
+     "expdataset" :   "CH04D",
+     "comment" :   "curve_Cw",
+     "type" :   "double_dec",
+     "sT" :   22,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "SiO2@",
+               "Q" :   10,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Ca(OH)2",
+               "Q" :   11.34,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   11.16,
+                         "error" :   0.03,
+                         "unit" :   "-loga"
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   0.00042,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00166,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "Q",
+                         "Q" :   0.92,
+                         "unit" :   "mol"
+                    },
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   9.357
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   0.92,
+                         "error" :   0.05,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Cw_10",
+     "expdataset" :   "CH04D",
+     "comment" :   "curve_Cw",
+     "type" :   "double_dec",
+     "sT" :   22,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "SiO2@",
+               "Q" :   10,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Ca(OH)2",
+               "Q" :   12.7,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   0.00022,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00141,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "Q",
+                         "Q" :   1.03,
+                         "unit" :   "mol"
+                    },
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   6.159
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   1.03,
+                         "error" :   0.05,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Cw_11",
+     "expdataset" :   "CH04D",
+     "comment" :   "curve_Cw",
+     "type" :   "double_dec",
+     "sT" :   22,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "SiO2@",
+               "Q" :   10,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Ca(OH)2",
+               "Q" :   17.26,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   0.00054,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00086,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "Q",
+                         "Q" :   1.4,
+                         "unit" :   "mol"
+                    },
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   2.641
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   1.4,
+                         "error" :   0.05,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Cw_12",
+     "expdataset" :   "CH04D",
+     "comment" :   "curve_Cw",
+     "type" :   "double_dec",
+     "sT" :   22,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "SiO2@",
+               "Q" :   10,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Ca(OH)2",
+               "Q" :   17.88,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   2e-05,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.01536,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "Q",
+                         "Q" :   1.45,
+                         "unit" :   "mol"
+                    },
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   2.448
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   1.45,
+                         "error" :   0.05,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Cw_13",
+     "expdataset" :   "CH04D",
+     "comment" :   "curve_Cw",
+     "type" :   "double_dec",
+     "sT" :   22,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "SiO2@",
+               "Q" :   10,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Ca(OH)2",
+               "Q" :   15.54,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   4e-05,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00625,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "Q",
+                         "Q" :   1.26,
+                         "unit" :   "mol"
+                    },
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   3.396
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   1.26,
+                         "error" :   0.05,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Cw_14",
+     "expdataset" :   "CH04D",
+     "comment" :   "curve_Cw",
+     "type" :   "double_dec",
+     "sT" :   22,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "SiO2@",
+               "Q" :   10,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Ca(OH)2",
+               "Q" :   16.65,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   12.33,
+                         "error" :   0.03,
+                         "unit" :   "-loga"
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   2e-05,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.01385,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "Q",
+                         "Q" :   1.35,
+                         "unit" :   "mol"
+                    },
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   2.869
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   1.35,
+                         "error" :   0.05,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Cw_15",
+     "expdataset" :   "CH04D",
+     "comment" :   "curve_Cw",
+     "type" :   "double_dec",
+     "sT" :   22,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "SiO2@",
+               "Q" :   10,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Ca(OH)2",
+               "Q" :   15.78,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   12.07,
+                         "error" :   0.03,
+                         "unit" :   "-loga"
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   3e-05,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00737,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "Q",
+                         "Q" :   1.28,
+                         "unit" :   "mol"
+                    },
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   3.263
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   1.28,
+                         "error" :   0.05,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "sample" :   "Cw_16",
+     "expdataset" :   "CH04D",
+     "comment" :   "curve_Cw",
+     "type" :   "double_dec",
+     "sT" :   22,
+     "sP" :   1,
+     "sbcomp" :   [
+          {
+               "comp" :   "SiO2@",
+               "Q" :   10,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "H2O@",
+               "Q" :   1000,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "Ca(OH)2",
+               "Q" :   15.54,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.008,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   0.002,
+               "unit" :   "g"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   12.03,
+                         "error" :   0.03,
+                         "unit" :   "-loga"
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   4e-05,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00609,
+                         "error" :   1e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "Q",
+                         "Q" :   1.26,
+                         "unit" :   "mol"
+                    },
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   3.396
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   1.26,
+                         "error" :   0.05,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-23",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=0.42",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.06,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.025,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   10.11,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   9.86
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   0.00439,
+                         "error" :   0.000439,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00121,
+                         "error" :   0.000121,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   41,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   0.417
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   0.69,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-24",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=0.66",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.0518,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.0339,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   10.02,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   9.8
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   0.00477,
+                         "error" :   0.000477,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00123,
+                         "error" :   0.000123,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   41,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   0.654
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   0.69,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-25",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=0.66",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.0517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.0339,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   10.15,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   9.91
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   0.0042,
+                         "error" :   0.00042,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00122,
+                         "error" :   0.000122,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   41,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   0.656
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   0.69,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-26",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=0.66",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.0517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.0339,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   10.18,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   9.9
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   0.0043,
+                         "error" :   0.00043,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00124,
+                         "error" :   0.000124,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   41,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   0.656
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   0.69,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-27",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=0.69",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.0517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.0358,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   10.05,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   9.85
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   0.00438,
+                         "error" :   0.000438,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.0012,
+                         "error" :   0.00012,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   37.314,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   0.692
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   0.7,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-28",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=0.72",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.0518,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.0375,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   10.14,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   9.94
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   0.00376,
+                         "error" :   0.000376,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00114,
+                         "error" :   0.000114,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   28.898,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   0.724
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   0.73,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-29",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=0.75",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.05,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.0375,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   10.45,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   10.13
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   0.00295,
+                         "error" :   0.000295,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00108,
+                         "error" :   0.000108,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   22.995,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   0.75
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   0.76,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-30",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=0.76",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.0517,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.0393,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   10.38,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   10.24
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   0.00234,
+                         "error" :   0.000234,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00095,
+                         "error" :   9.5e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   21.422,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   0.76
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   0.77,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-31",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=0.78",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.0483,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.0375,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   10.57,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   10.41
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   0.00205,
+                         "error" :   0.000205,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00096,
+                         "error" :   9.6e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   20.005,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   0.776
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   0.78,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-32",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=0.78",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.0483,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.0376,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   10.49,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   10.4
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   0.00184,
+                         "error" :   0.000184,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00087,
+                         "error" :   8.7e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   20.005,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   0.778
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   0.78,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-33",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=0.79",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.0479,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.038,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   10.56,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   10.45
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   0.00173,
+                         "error" :   0.000173,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00086,
+                         "error" :   8.6e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   17.565,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   0.793
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   0.8,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-34",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=0.79",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.0518,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.0411,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   10.65,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   10.55
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   0.00153,
+                         "error" :   0.000153,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00084,
+                         "error" :   8.4e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   17.565,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   0.793
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   0.8,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-35",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=0.81",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.0475,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.0384,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   10.58,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   10.46
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   0.00155,
+                         "error" :   0.000155,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00079,
+                         "error" :   7.9e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   16.511,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   0.808
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   0.81,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-36",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=0.83",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.0471,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.0389,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   11.02,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   10.99
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   0.00071,
+                         "error" :   7.1e-05,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00087,
+                         "error" :   8.7e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   15.551,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   0.826
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   0.82,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-37",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=0.83",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.0518,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.0429,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   10.9,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   10.86
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   0.00097,
+                         "error" :   9.7e-05,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00084,
+                         "error" :   8.4e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   14.675,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   0.828
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   0.83,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-38",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=0.84",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.0467,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.0393,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   11.27,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   11.06
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   0.00062,
+                         "error" :   6.2e-05,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00091,
+                         "error" :   9.1e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   13.873,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   0.842
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   0.84,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-39",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=0.84",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.0467,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.0393,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   11.25,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   11.12
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   0.00058,
+                         "error" :   5.8e-05,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00099,
+                         "error" :   9.9e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   13.873,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   0.842
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   0.84,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-40",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=0.84",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.0466,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.0394,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   11.16,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   11.13
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   0.0005,
+                         "error" :   5e-05,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.0009,
+                         "error" :   9e-05,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   13.873,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   0.845
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   0.84,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-41",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=0.91",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.045,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.0411,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   11.71,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   11.53
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   0.00015,
+                         "error" :   1.5e-05,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00195,
+                         "error" :   0.000195,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   10.239,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   0.913
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   0.9,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-42",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=0.92",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.0316,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.029,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   11.58,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   11.56
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   0.00014,
+                         "error" :   1.4e-05,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00208,
+                         "error" :   0.000208,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   10.239,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   0.918
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   0.9,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-43",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=0.96",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.0427,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.041,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   11.72,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   11.73
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   8e-05,
+                         "error" :   8e-06,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00312,
+                         "error" :   0.000312,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   8.592,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   0.96
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   0.94,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-44",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=0.99",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.0418,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.0411,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   11.8,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   11.77
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   8e-05,
+                         "error" :   8e-06,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.0034,
+                         "error" :   0.00034,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   7.624,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   0.983
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   0.97,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-45",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=0.99",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.0435,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.0429,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   11.8,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   11.78
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   7e-05,
+                         "error" :   7e-06,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00352,
+                         "error" :   0.000352,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   7.624,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   0.986
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   0.97,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-46",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=0.99",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.0433,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.0429,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   11.89,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   11.74
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   8e-05,
+                         "error" :   8e-06,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00316,
+                         "error" :   0.000316,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   7.624,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   0.991
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   0.97,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-47",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=1.07",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.04,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.0429,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   11.95,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   11.93
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   5e-05,
+                         "error" :   5e-06,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00513,
+                         "error" :   0.000513,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   5.961,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   1.073
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   1.04,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-48",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=1.19",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.0388,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.0461,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   11.91,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   12.03
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   2e-05,
+                         "error" :   2e-06,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.00653,
+                         "error" :   0.000653,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   4.355,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   1.188
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   1.15,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-49",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=1.34",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.0367,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.0493,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   12.15,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   12.28
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   1e-05,
+                         "error" :   1e-06,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.01253,
+                         "error" :   0.00125,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   3.396,
+                         "error" :   1
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   1.343
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   1.26,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-50",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=1.45",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.0355,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.0512,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   12.45,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   12.39
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   1e-05,
+                         "error" :   1e-06,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.01643,
+                         "error" :   0.00164,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   2.869,
+                         "error" :   0.86
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   1.442
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   1.35,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-51",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=1.56",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.0344,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.0536,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   12.35,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   12.45
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   1e-05,
+                         "error" :   1e-06,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.01962,
+                         "error" :   0.00196,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   2.56,
+                         "error" :   0.56
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   1.558
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   1.42,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+},
+{
+     "expdataset" :   "Haas-thesis-CSHeq",
+     "sample" :   "H-52",
+     "sP" :   1,
+     "sT" :   25,
+     "comment" :   "C/S=1.66",
+     "type" :   "A/S=0",
+     "sbcomp" :   [
+          {
+               "comp" :   "H2O@",
+               "Q" :   250,
+               "unit" :   "g"
+          },
+          {
+               "comp" :   "SiO2@",
+               "Q" :   0.0331,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "CaO",
+               "Q" :   0.0548,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "N2",
+               "Q" :   0.0001,
+               "unit" :   "mol"
+          },
+          {
+               "comp" :   "O2",
+               "Q" :   2e-05,
+               "unit" :   "mol"
+          }
+     ],
+     "expphases" :   [
+          {
+               "phase" :   "aq_gen",
+               "phprop" :   [
+                    {
+                         "prop" :   "pH",
+                         "Q" :   12.35,
+                         "error" :   0.1,
+                         "unit" :   "-loga"
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   12.46
+                    }
+               ],
+               "phIC" :   [
+                    {
+                         "IC" :   "Si",
+                         "Q" :   1e-05,
+                         "error" :   1e-06,
+                         "unit" :   "molal"
+                    },
+                    {
+                         "IC" :   "Ca",
+                         "Q" :   0.02013,
+                         "error" :   0.00201,
+                         "unit" :   "molal"
+                    }
+               ]
+          },
+          {
+               "phase" :   "CSH",
+               "phprop" :   [
+                    {
+                         "prop" :   "mChainL",
+                         "Q" :   2.251,
+                         "error" :   0.25
+                    },
+                    {
+                         "prop" :   "Q",
+                         "Q" :   1.656
+                    }
+               ],
+               "phMR" :   [
+                    {
+                         "MR" :   "Ca/Si",
+                         "Q" :   1.51,
+                         "error" :   0.01,
+                         "unit" :   "molratio"
+                    }
+               ]
+          }
+     ]
+}
+]

@@ -61,7 +61,7 @@ protected:
         std::vector<double> correl;
     };
 
-    std::vector<parameters*> fitparam;
+    std::vector<std::shared_ptr<parameters>> fitparam;
 
 private:
 
@@ -137,7 +137,7 @@ public:
 
     void nestedpH();
 
-    optimization *Opti; ///< pointer to optimization
+    std::shared_ptr<optimization> Opti; ///< pointer to optimization
 
     void test();
 
@@ -161,7 +161,7 @@ public:
     {
        std::vector<unsigned int> ndx;
     };
-    std::vector<vect*> vPAndx, vEAndx; // keeps the indexes of the parameters (optPF, optPL, etc) and std::vector optNFParam when paralelized
+    std::vector<std::shared_ptr<vect>> vPAndx, vEAndx; // keeps the indexes of the parameters (optPF, optPL, etc) and std::vector optNFParam when paralelized
 
     // true if gradient method is used
     bool h_grad;
@@ -181,7 +181,7 @@ public:
             std::string exp_CN;
             std::string exp_unit;
             std::string exp_DCP;
-            double meas_average = 0.;
+            double meas_average = 0;
             std::string Ptype;
             std::string Otype;
             std::vector<std::string> Tformula;
@@ -214,7 +214,7 @@ public:
         std::vector<obj_fun> addout;
     };
 
-    TargetFunction* Tfun; /// pointer to target function structure
+    std::shared_ptr<TargetFunction> Tfun; /// pointer to target function structure
 
     std::vector<TargetFunction> aTfun;
 

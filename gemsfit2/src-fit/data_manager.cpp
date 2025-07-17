@@ -27,7 +27,7 @@
 /**
  *	@file data_manager.cpp
  *
- *	@brief this source file contains the implementation of the data manager class,
+ *	@brief this source fout[0].begin(), out[0].end()ile contains the implementation of the data manager class,
  *	which retrieves and stores data from thre GEMSFIT2 input file as well as
  *	the measurement form an EJDB local database.
  *
@@ -37,18 +37,11 @@
  *
  */
 
+#include <fstream>
 #include "data_manager.h"
-#include "gemsfit_iofiles.h"
 #include "keywords.h"
-#include <jansson.h>
-#ifdef buildWIN32
-#include <tcejdb/ejdb.h>
-#else
-#include "ejdb.h"
-#endif
-//#include <sstream>
-#include "json_parse.h"
-#include "fstream"
+#include "f_database.h"
+#include <GEMS3K/v_service.h>
 
 std::ostream& operator<<(std::ostream& stream, const Data_Manager::DataSynonyms& data);
 std::ostream& operator<<(std::ostream& stream, const Data_Manager::PhSyn& data);
@@ -80,93 +73,58 @@ Data_Manager::Data_Manager( )
 Data_Manager::~Data_Manager( )
 {
     // Delete measurement data std::vector of experiments
-    for (unsigned int i=0; i<experiments.size(); ++i)
-    {
-        delete experiments[i];
-        delete bICv[i];
-    }  
+    //for (unsigned int i=0; i<experiments.size(); ++i)
+    //{
+        //delete experiments[i];
+    //    delete bICv[i];
+    //}
 }
 
 void Data_Manager::get_DataSyn()
 {
-    std::vector<std::string> out, out2, out3;
     Data_Manager::DataSynonyms ss;
     Data_Manager::PhSyn sss;
-    parse_JSON_object(DataSyn, keys::PhNames[mode], out);
-    for (unsigned i = 0; i < out.size(); i++)
-    {
+    common::JsonFree data_syn_object = fromJsonString(DataSyn);
 
-        SynPHs.push_back(sss);
-        parse_JSON_object(out[i], keys::NameSys[mode], out2);
-        SynPHs[SynPHs.size()-1].GemsName = out2[0];
-        out2.clear();
-        parse_JSON_object(out[i], keys::Syn[mode], out2);
-        if (out2[0] != "")
-        SynPHs[SynPHs.size()-1].syn = out2;
-        out2.clear();
+    if( data_syn_object.contains(keys::PhNames[mode]) ) {
+        for (const auto& element : data_syn_object[keys::PhNames[mode]]) {
+            SynPHs.push_back(sss);
+            SynPHs.back().GemsName  = element->value(keys::NameSys[mode], std::string());
+            SynPHs.back().syn = element->value(keys::Syn[mode], std::vector<std::string>{});
 
-        parse_JSON_object(out[i], keys::DcNames[mode], out3);
-        for (unsigned i = 0; i < out3.size(); i++)
-        {
-            SynPHs[SynPHs.size()-1].SynDCs.push_back(ss);
-            parse_JSON_object(out3[i], keys::NameSys[mode], out2);
-            SynPHs[SynPHs.size()-1].SynDCs[SynPHs[SynPHs.size()-1].SynDCs.size()-1].GemsName = out2[0];
-            out2.clear();
-            parse_JSON_object(out3[i], keys::Syn[mode], out2);
-            if (out2[0] != "")
-            SynPHs[SynPHs.size()-1].SynDCs[SynPHs[SynPHs.size()-1].SynDCs.size()-1].syn = out2;
-            out2.clear();
+            if( element->contains(keys::DcNames[mode]) ) {
+                for (const auto& sub_element : (*element)[keys::DcNames[mode]]) {
+                    SynPHs.back().SynDCs.push_back(ss);
+                    SynPHs.back().SynDCs.back().GemsName  = sub_element->value(keys::NameSys[mode], std::string());
+                    SynPHs.back().SynDCs.back().syn = sub_element->value(keys::Syn[mode], std::vector<std::string>{});
+                }
+            }
+         }
+    }
+
+    if( data_syn_object.contains(keys::PhPropNames[mode]) ) {
+        for (const auto& element : data_syn_object[keys::PhPropNames[mode]]) {
+            SynPHPs.push_back(ss);
+            SynPHPs.back().GemsName  = element->value(keys::NameSys[mode], std::string());
+            SynPHPs.back().syn = element->value(keys::Syn[mode], std::vector<std::string>{});
         }
-        out3.clear();
     }
-    out.clear();
 
-    parse_JSON_object(DataSyn, keys::PhPropNames[mode], out);
-    for (unsigned i = 0; i < out.size(); i++)
-    {
-
-        SynPHPs.push_back(ss);
-        parse_JSON_object(out[i], keys::NameSys[mode], out2);
-        SynPHPs[SynPHPs.size()-1].GemsName = out2[0];
-        out2.clear();
-        parse_JSON_object(out[i], keys::Syn[mode], out2);
-        if (out2[0] != "")
-        SynPHPs[SynPHPs.size()-1].syn = out2;
-        out2.clear();
-
+    if( data_syn_object.contains(keys::PropertyNames[mode]) ) {
+        for (const auto& element : data_syn_object[keys::PropertyNames[mode]]) {
+            SynProps.push_back(ss);
+            SynProps.back().GemsName  = element->value(keys::NameSys[mode], std::string());
+            SynProps.back().syn = element->value(keys::Syn[mode], std::vector<std::string>{});
+        }
     }
-    out.clear();
 
-    parse_JSON_object(DataSyn, keys::PropertyNames[mode], out);
-    for (unsigned i = 0; i < out.size(); i++)
-    {
-
-        SynProps.push_back(ss);
-        parse_JSON_object(out[i], keys::NameSys[mode], out2);
-        SynProps[SynProps.size()-1].GemsName = out2[0];
-        out2.clear();
-        parse_JSON_object(out[i], keys::Syn[mode], out2);
-        if (out2[0] != "")
-        SynProps[SynProps.size()-1].syn = out2;
-        out2.clear();
+    if( data_syn_object.contains(keys::DcPropNames[mode]) ) {
+        for (const auto& element : data_syn_object[keys::DcPropNames[mode]])  {
+            SynDCPs.push_back(ss);
+            SynDCPs.back().GemsName  = element->value(keys::NameSys[mode], std::string());
+            SynDCPs.back().syn = element->value(keys::Syn[mode], std::vector<std::string>{});
+        }
     }
-    out.clear();
-
-
-    parse_JSON_object(DataSyn, keys::DcPropNames[mode], out);
-    for (unsigned i = 0; i < out.size(); i++)
-    {
-        SynDCPs.push_back(ss);
-        parse_JSON_object(out[i], keys::NameSys[mode], out2);
-        SynDCPs[SynDCPs.size()-1].GemsName = out2[0];
-        out2.clear();
-        parse_JSON_object(out[i], keys::Syn[mode], out2);
-        if (out2[0] != "")
-        SynDCPs[SynDCPs.size()-1].syn = out2;
-        out2.clear();
-    }
-    out.clear();
-
 #ifdef CHECK_LOAD
     std::fstream test_out("datasyn.log", std::ios::out);
     test_out << "SynPHs\n";
@@ -186,7 +144,6 @@ void Data_Manager::get_DataSyn()
            test_out << item << "\n";
     }
 #endif
-
 }
 
 void Data_Manager::check_Syn()
@@ -300,1083 +257,512 @@ void Data_Manager::check_Syn()
 
 void Data_Manager::get_db_specs_txt()
 {
-    std::string fname;
-    std::vector<std::string> out, out2;
     int mode = gpf->KeysNdx;
-
-    fname = gpf->OptParamFile();
-
-    std::ifstream file(fname.c_str());
+    std::string fname = gpf->OptParamFile();
+    std::ifstream file(fname);
     std::ostringstream tmp;
     tmp<<file.rdbuf();
     std::string s = tmp.str();
-//    std::std::cout<<s<<std::std::endl;
+    //    std::std::cout<<s<<std::std::endl;
 
-    parse_JSON_object(s, keys::DBPath[0], out);
-    if (out.size() == 0)
-    {
-        parse_JSON_object(s, keys::DBPath[1], out);
-     mode = 1; gpf->KeysNdx = 1;
+    common::JsonFree db_specs_object = fromJsonString(s);
+    DBname = db_specs_object.value(keys::DBPath[0], std::string());
+    if (DBname.empty()) {
+        DBname = db_specs_object.value(keys::DBPath[1], DBname);
+        mode = 1;
+        gpf->KeysNdx = 1;
     }
-    if (out.size() == 0) {std::cout << "Error: No keyword for \""
-                               <<keys::DBPath[0]<<"\" or \""
-                               <<keys::DBPath[1]<<"\" found in the task definition"
-                               << std::endl; exit(1);}
-    DBname = out[0];
-    out.clear();
+    if (DBname.empty())  {
+        std::cout << "Error: No value for \""
+                  << keys::DBPath[0]<<"\" or \""
+                  << keys::DBPath[1]<<"\" found in the task definition" << std::endl;
+        exit(1);
+    }
+    collection = db_specs_object.value(keys::DBColl[mode], std::string());
+    if (collection.empty()) {
+        std::cout << "Error: No value for \""
+                  << keys::DBColl[mode]<<"\" found in the task definition" << std::endl;
+        exit(1);
+    }
+    DataSelect = db_specs_object[keys::DSelect[mode]].dump();
+    // "DataSelect" :  "", for select all DM 30.04.2024, if no DataSelect is present, the same effect
+    //if (DataSelect.empty()) {
+    //    std::cout << "Error: No value for \""
+    //              <<keys::DSelect[mode]<<"\" found in the task definition"
+    //             << std::endl;
+    //    exit(1);
+    //}
+    DataTarget = db_specs_object[keys::DTarget[mode]].dump();
+    if (DataTarget.empty())  {
+        std::cout << "Error: No value for \""
+                  << keys::DTarget[mode] <<"\" found in the task definition" << std::endl;
+        exit(1);
+    }
+    LogK = db_specs_object.value(keys::LogK[mode], std::vector<std::string>{});
 
-    parse_JSON_object(s, keys::DBColl[mode], out);
-    if (out.size() == 0) {std::cout << "Error: No keyword for \""
-                               <<keys::DBColl[mode]<<"\" found in the task definition"
-                               << std::endl; exit(1);}
-    collection = out[0];
-    out.clear();
-
-    parse_JSON_object(s, keys::DSelect[mode], out);
-    if (out.size() == 0) {std::cout << "Error: No keyword for \""
-                               <<keys::DSelect[mode]<<"\" found in the task definition"
-                               << std::endl; exit(1);}
-    DataSelect = out[0];
-    out.clear();
-
-    parse_JSON_object(s, keys::DTarget[mode], out);
-    if (out.size() == 0) {std::cout << "Error: No keyword for \""
-                               <<keys::DTarget[mode]<<"\" found in the task definition"
-                               << std::endl; exit(1);}
-    DataTarget = out[0];
-    out.clear();
-
-    parse_JSON_object(s, keys::LogK[mode], out);
-    if (out[0] != "") LogK = out;
-    out.clear();
-
-    parse_JSON_object(s, keys::G3Ksys[mode], out);
-    if (out.size() == 0) {std::cout << "Error: No keyword for \""
-                               <<keys::G3Ksys[mode]<<"\" found in the task definition"
-                               << std::endl; exit(1);}
-#ifdef buildWIN32
-    std::replace( out[0].begin(), out[0].end(), '/', '\\');
+    std::string gems_path = db_specs_object.value(keys::G3Ksys[mode], std::string());
+    if (gems_path.empty()) {
+        std::cout << "Error: No value for \""
+                  << keys::G3Ksys[mode]<<"\" found in the task definition" << std::endl;
+        exit(1);
+    }
+#ifdef _WIN32
+    replace_all( gems_path, "/", '\\');
 #endif
-    gpf->setGEMS3LstFilePath(out[0].c_str());
-    out.clear();
+    gpf->setGEMS3LstFilePath(gems_path);
 
-    parse_JSON_object(s, keys::DatLogK[mode], out);
-    DataLogK = out[0];
-    out.clear();
-
-    parse_JSON_object(s, keys::DataSyn[mode], out);
-    DataSyn = out[0];
-    out.clear();
-
-    parse_JSON_object(s, keys::OptSet[mode], out);
-    if (out.size() == 0) {std::cout << "Error: No keyword for \""
-                               <<keys::OptSet[mode]<<"\" found in the task definition"
-                               << std::endl; exit(1);}
-    parse_JSON_object(out[0], keys::MPI[mode], out2);
-    MPI = atoi(out2[0].c_str());
-    out2.clear();
-
+    DataLogK = db_specs_object.value(keys::DatLogK[mode], std::string());
+    DataSyn = db_specs_object[keys::DataSyn[mode]].dump();
+    //OptSet = db_specs_object[keys::OptSet[mode]].dump();
+    OptSet = db_specs_object.value(keys::OptSet[mode], std::string());
+    if (OptSet.empty()) {
+        std::cout << "Error: No value for \""
+                  <<keys::OptSet[mode]<<"\" found in the task definition" << std::endl;
+        exit(1);
+    }
+    common::JsonFree optset_object = fromJsonString(OptSet);
+    MPI = optset_object.value(keys::MPI[mode], MPI);
 }
 
-
 // Reading data from EJDB database
-void Data_Manager::get_EJDB( )
+//"DataSelect" : { "usedatasets" : ["CH04", "CH04D"],
+//                 "skipdatasets" : ["CH03", "CH03D"],
+//                 "usesamples" : [],
+//                 "skipsamples" : [],
+//                 "usepairs" : [],
+//                 "skippairs" : [
+//                       { "dataset": "CHO4", "samples": ["01", "02"]},
+//                       { "dataset": "CHO4D", "samples": ["01", "02"]},
+//                     ],
+//                  "sT" : [0, 1000],
+//                  "sP" : [0, 500]
+//},
+void Data_Manager::get_EJDB()
 {
-//    typedef std::vector<int>     int_v;
     typedef std::vector<double>  double_v;
     typedef std::vector<std::string>  string_v;
-    json_t *root;
-    json_error_t jerror;
-
-    string_v out, out2, usesample, skipsample, usedataset, skipdataset, skippdatasets,skippsamples, usepdatasets, usepsamples, SA, DS ;
+    string_v usesample, skipsample, usedataset, skipdataset, skippdatasets,skippsamples, usepdatasets, usepsamples, SA, DS;
     double_v qsT, qsP, WT;
     unsigned int Nsamples = 0 , Ndatasets = 0;
 
-    std::stringstream ss;
-    std::string sss;
-
-    const char * JSON = DataSelect.c_str();
-    root = json_loads(JSON, 0, &jerror);
-
-    if(root)
+    common::JsonFree data_sel_object = fromJsonString(DataSelect);
     {
         // processing DataSelect
-        parse_JSON_object(DataSelect, keys::usesamples, out);
-        usesample = out; // query for selecting samples
-        out.clear();
+        usesample = data_sel_object.value(keys::usesamples, usesample);
+        skipsample = data_sel_object.value(keys::skipsamples, skipsample);
+        usedataset = data_sel_object.value(keys::usedatasets, usedataset);
+        skipdataset = data_sel_object.value(keys::skipdatasets, skipdataset);
 
-        parse_JSON_object(DataSelect, keys::skipsamples, out);
-        skipsample = out; // query for selecting samples
-        out.clear();
-
-        parse_JSON_object(DataSelect, keys::usedatasets, out);
-        usedataset = out; // query for selecting expdatasets
-        out.clear();
-
-        parse_JSON_object(DataSelect, keys::skipdatasets, out);
-        skipdataset = out; // query for skipping expdatasets
-        out.clear();
-
-        parse_JSON_array_object(DataSelect, keys::usepair, keys::dataset, out);
-        if (out.size() == 0) parse_JSON_array_object(DataSelect, keys::usepair, keys::usedatasets, out);
-        usepdatasets = out; // query for skipping expdatasets
-        out.clear();
-
-        parse_JSON_array_object(DataSelect, keys::usepair, keys::samples, out);
-        usepsamples = out; // query for skipping expdatasets
-        out.clear();
-
-        parse_JSON_array_object(DataSelect, keys::skippair, keys::dataset, out);
-        if (out.size() == 0) parse_JSON_array_object(DataSelect, keys::skippair, keys::skipdatasets, out);
-        skippdatasets = out; // query for skipping expdatasets
-        out.clear();
-
-        parse_JSON_array_object(DataSelect, keys::skippair, keys::samples, out);
-        skippsamples = out; // query for skipping expdatasets
-        out.clear();
-
-        parse_JSON_object(DataSelect, keys::sT, out);
-        for (unsigned int i = 0 ; i < out.size() ; i++)
-        {
-            qsT.push_back( atof(out.at(i).c_str()) ); // query for selecting T
+        if( data_sel_object.contains(keys::usepair) ) {
+            for (const auto& element : data_sel_object[keys::usepair])
+            {
+                string_v templ;
+                templ = element->value(keys::dataset, templ);
+                if(templ.empty())
+                    templ = element->value(keys::usedatasets, templ);
+                usepdatasets.insert(usepdatasets.end(), templ.begin(), templ.end());
+                templ.clear();
+                templ = element->value(keys::samples, templ);
+                usepsamples.insert(usepsamples.end(), templ.begin(), templ.end());
+            }
         }
-        out.clear();
 
-        parse_JSON_object(DataSelect, keys::sP, out);
-        for (unsigned int i = 0 ; i < out.size() ; i++)
-        {
-            qsP.push_back( atof(out.at(i).c_str()) ); // query for selecting P
+        if( data_sel_object.contains(keys::skippair) ) {
+            for (const auto& element : data_sel_object[keys::skippair])
+            {
+                string_v templ;
+                templ = element->value(keys::dataset, templ);
+                if(templ.empty())
+                    templ = element->value(keys::usedatasets, templ);
+                skippdatasets.insert(skippdatasets.end(), templ.begin(), templ.end());
+                templ.clear();
+                templ = element->value(keys::samples, templ);
+                skippsamples.insert(skippsamples.end(), templ.begin(), templ.end());
+                skippsamples.push_back("");
+            }
         }
-        out.clear();
 
-
-        parse_JSON_object(DataSelect, keys::samplelist, out);
-        Nsamples = out.size();
-        for (unsigned int i = 0; i <out.size(); i++)
-        {
-            parse_JSON_object(out[i], keys::SA, out2);
-//            if (out2.size() == 0) { std::cout << "Phase name has to be specified in Data Target->OFUN->EPH!"<< std::endl; exit(1);} // ERROR
-            SA.push_back(out2[0]);
-            out2.clear();
-
-            parse_JSON_object(out[i], keys::DS, out2);
-//            if (out2.size() == 0) { std::cout << "Phase name has to be specified in Data Target->OFUN->EPH!"<< std::endl; exit(1);} // ERROR
-            DS.push_back(out2[0]);
-            out2.clear();
-
-            parse_JSON_object(out[i], keys::WT, out2);
-//            if (out2.size() == 0) { std::cout << "Phase name has to be specified in Data Target->OFUN->EPH!"<< std::endl; exit(1);} // ERROR
-            WT.push_back(atof(out2[0].c_str()));
-            out2.clear();
+        if( data_sel_object.contains(keys::sT) ) {
+            qsT = data_sel_object.value(keys::sT, qsT);
         }
-        out.clear();
-        parse_JSON_object(DataSelect, keys::datasetlist, out);
-        Ndatasets = out.size();
-        if ( (out.size() > 0) && (Nsamples > 0) )
+        if( data_sel_object.contains(keys::sP) ) {
+            qsP = data_sel_object.value(keys::sP, qsP);
+        }
+        if( data_sel_object.contains(keys::samplelist) ) {
+            Nsamples = data_sel_object[keys::samplelist].size();
+            for (const auto& element : data_sel_object[keys::samplelist])
+            {
+                // need test only one element
+                SA.push_back(element->value(keys::SA, std::string()));
+                DS.push_back(element->value(keys::DS, std::string()));
+                WT.push_back(element->value(keys::WT, 0.));
+            }
+        }
+
+        if( data_sel_object.contains(keys::datasetlist) ) {
+            Ndatasets = data_sel_object[keys::datasetlist].size();
+            for (const auto& element : data_sel_object[keys::datasetlist])
+            {
+                // need test only one element
+                DS.push_back(element->value(keys::DS, std::string()));
+                WT.push_back(element->value(keys::WT, 0.));
+            }
+        }
+        if( Ndatasets>0 && Nsamples>0 )
         {
             std::cout << "You can't have samplelist and datasetlist options at the same time. Use only one at a time. " << std::endl;
             exit(1);
         }
-        for (unsigned int i = 0; i <out.size(); i++)
-        {
-
-            parse_JSON_object(out[i], keys::DS, out2);
-//            if (out2.size() == 0) { std::cout << "Phase name has to be specified in Data Target->OFUN->EPH!"<< std::endl; exit(1);} // ERROR
-            DS.push_back(out2[0]);
-            out2.clear();
-
-            parse_JSON_object(out[i], keys::WT, out2);
-//            if (out2.size() == 0) { std::cout << "Phase name has to be specified in Data Target->OFUN->EPH!"<< std::endl; exit(1);} // ERROR
-            WT.push_back(atof(out2[0].c_str()));
-            out2.clear();
-        }
-
     }
 
-    // Build the query in EJDB format
-
-        // create EJDB database object
-        static EJDB *jb;
-        jb = ejdbnew();
-        // open the database file as a writer JBOWRITER, create new is not existent JBOCREAT, and truncate db on open JBOTRUNC
-std::cout << DBname.c_str() << std::endl;
-        if (!ejdbopen(jb, DBname.c_str(), JBOREADER)) {
-            std::cout << "Error opening the database" << std::endl; exit(1);
-        }
-// std::cout << gpf->GEMS3LstFilePath().c_str() << std::endl;
-        //Get or create collection 'experiments'
-        EJCOLL *coll = ejdbcreatecoll(jb, collection.c_str(), NULL);
-
-        // Creat bson query object
-        bson bq2;
-        bson_init_as_query(&bq2);
-
-        if ((Nsamples == 0))
-        {
-            // for selecting expdatasets
-            if  ((usedataset.size() > 0) || (Ndatasets > 0))
-            {
-
-                    bson_append_start_object(&bq2, keys::expdataset);
-                    bson_append_start_array(&bq2, "$in");
-                    if ((usedataset.size() > 0))
-                    if (!usedataset[0].empty())
-                    {
-                        for (unsigned int j=0; j<usedataset.size(); ++j)
-                        {
-                            ss << j;
-                            sss = ss.str();
-                            ss.str("");
-                            bson_append_string(&bq2, sss.c_str(), usedataset[j].c_str());
-                        }
-                    }
-                    // add datasetlist
-                    if (Ndatasets > 0)
-                    {
-                        this->h_datasetlist = true;
-                        for (unsigned int j=usedataset.size(); j<DS.size()+usedataset.size(); ++j)
-                        {
-                            ss << j;
-                            sss = ss.str();
-                            ss.str("");
-                            bson_append_string(&bq2, sss.c_str(), DS[j-usedataset.size()].c_str());
-                        }
-                    }
-
-                    bson_append_finish_array(&bq2);
-                    bson_append_finish_object(&bq2);
-
-            }
-
-            // for skipping expdatasets
-            if (skipdataset.size() > 0)
-            {
-                if (!skipdataset[0].empty())
-                {
-                    bson_append_start_object(&bq2, keys::expdataset);
-                    bson_append_start_array(&bq2, "$nin");
-                    for (unsigned int j=0; j<skipdataset.size(); ++j)
-                    {
-                        ss << j;
-                        sss = ss.str();
-                        ss.str("");
-                        bson_append_string(&bq2, sss.c_str(), skipdataset[j].c_str());
-                    }
-                    bson_append_finish_array(&bq2);
-                    bson_append_finish_object(&bq2);
-                }
-            }
-
-            // for selecting usesamples
-            if (usesample.size() > 0)
-            {
-                if (!usesample[0].empty())
-                {
-                    bson_append_start_object(&bq2, keys::expsample);
-                    bson_append_start_array(&bq2, "$in");
-                    for (unsigned int j=0; j<usesample.size(); ++j)
-                    {
-                        ss << j;
-                        sss = ss.str();
-                        ss.str("");
-                        bson_append_string(&bq2, sss.c_str(), usesample[j].c_str());
-         // std::cout << usesample[j].c_str() <<  std::endl;
-                    }
-                    bson_append_finish_array(&bq2);
-                    bson_append_finish_object(&bq2);
-                }
-            }
-
-            // for skipping skipsamples
-            if (skipsample.size() > 0)
-            {
-                if (!skipsample[0].empty())
-                {
-                    bson_append_start_object(&bq2, keys::expsample);
-                    bson_append_start_array(&bq2, "$nin");
-                    for (unsigned int j=0; j<skipsample.size(); ++j)
-                    {
-                        ss << j;
-                        sss = ss.str();
-                        ss.str("");
-                        bson_append_string(&bq2, sss.c_str(), skipsample[j].c_str());
-         // std::cout << skipsample[j].c_str() <<  std::endl;
-                    }
-                    bson_append_finish_array(&bq2);
-                    bson_append_finish_object(&bq2);
-                }
-            }
-
-            // for selection of temperatures
-            if (qsT.size() > 0)
-            {
-                if ((qsT.size() == 2))
-                {
-                    // for selecting T interval
-                    bson_append_start_object(&bq2, keys::sT);
-                    bson_append_start_array(&bq2, "$bt");
-                    bson_append_double(&bq2, "0", qsT[0]);
-                    bson_append_double(&bq2, "1", qsT[1]);
-                    bson_append_finish_array(&bq2);
-                    bson_append_finish_object(&bq2);
-                } else
-                    if (!(qsT[0] == 0))
-                    {
-                        bson_append_start_object(&bq2, keys::sT);
-                        bson_append_start_array(&bq2, "$in");
-                        for (unsigned int j=0; j<qsT.size(); ++j)
-                        {
-                            ss << j;
-                            sss = ss.str();
-                            ss.str("");
-                            bson_append_int(&bq2, sss.c_str(), qsT[j]);
-                        }
-                        bson_append_finish_array(&bq2);
-                        bson_append_finish_object(&bq2);
-                    }
-            }
-
-            // for selection of pressures
-            if (qsP.size() > 0)
-            {
-                if ((qsP.size() == 2))
-                {
-                    // for selecting P interval
-                    bson_append_start_object(&bq2, keys::sP);
-                    bson_append_start_array(&bq2, "$bt");
-                    bson_append_double(&bq2, "0", qsP[0]);
-                    bson_append_double(&bq2, "1", qsP[1]);
-                    bson_append_finish_array(&bq2);
-                    bson_append_finish_object(&bq2);
-                } else
-                    if (!(qsP[0] == 0))
-                    {
-                        bson_append_start_object(&bq2, keys::sP);
-                        bson_append_start_array(&bq2, "$in");
-                        for (unsigned int j=0; j<qsP.size(); ++j)
-                        {
-                            ss << j;
-                            sss = ss.str();
-                            ss.str("");
-                            bson_append_int(&bq2, sss.c_str(), qsP[j]);
-                        }
-                        bson_append_finish_array(&bq2);
-                        bson_append_finish_object(&bq2);
-                    }
-            }
-
-            // for selecting pairs of datasets-samples
-            if (usepdatasets.size() > 0)
-            {
-                if (!usepdatasets[0].empty())
-                {
-                    bson_append_start_array(&bq2, "$or");
-                    unsigned int k=0; // counts trough the usesamples std::vector
-                    int count = 0;
-                    for (unsigned int j=0; j<usepdatasets.size(); ++j)
-                    {
-    //                    for (k; k<usepsamples.size(); k++)
-                            while (k<usepsamples.size())
-                        {
-                            if (!(usepsamples[k] == ""))
-                            {
-                                ss << count;
-                                sss = ss.str();
-                                ss.str("");
-                                bson_append_start_object(&bq2, sss.c_str());
-
-                                bson_append_start_array(&bq2, "$and");
-
-                                bson_append_start_object(&bq2, "0");
-                                bson_append_string(&bq2, keys::expdataset, usepdatasets[j].c_str());
-                                bson_append_finish_object(&bq2);
-
-                                bson_append_start_object(&bq2, "1");
-                                bson_append_string(&bq2, keys::expsample, usepsamples[k].c_str());
-                                bson_append_finish_object(&bq2);
-
-                                bson_append_finish_array(&bq2);
-                                bson_append_finish_object(&bq2);
-
-                                count++;
-
-                            } else
-                            {
-                                k++;
-                                break;
-                            }
-                            k++;
-                        }
-                    }
-                    bson_append_finish_array(&bq2);
-                }
-            }
-        } else // if we have samples list the search query is bulil as follows
-        {
-            // for selecting pairs of datasets-samples
-            if (Nsamples > 0)
-            {
-                this->h_datasetlist = true;
-            if (DS.size() > 0)
-            {
-                if (!DS[0].empty())
-                {
-                    bson_append_start_array(&bq2, "$or");
-                    for  (unsigned k = 0; k<SA.size(); k++)
-                    {
-                        ss << k;
-                        sss = ss.str();
-                        ss.str("");
-                        bson_append_start_object(&bq2, sss.c_str());
-                        bson_append_start_array(&bq2, "$and");
-
-                        bson_append_start_object(&bq2, "0");
-                        bson_append_string(&bq2, keys::expdataset, DS[k].c_str());
-                        bson_append_finish_object(&bq2);
-
-                        bson_append_start_object(&bq2, "1");
-                        bson_append_string(&bq2, keys::expsample, SA[k].c_str());
-                        bson_append_finish_object(&bq2);
-
-                        bson_append_finish_array(&bq2);
-                        bson_append_finish_object(&bq2);
-                    }
-                    bson_append_finish_array(&bq2);
-                }
-            }
-        }
+    // generate query
+    common::JsonFree query_object;
+    if (Nsamples == 0) {
+        // for selecting expdatasets
+        if(usedataset.size() > 0 || Ndatasets > 0) {
+            auto temp = usedataset;
+            temp.insert(temp.end(), DS.begin(), DS.end());
+            //std::cout << temp[0] << "  " << temp[1] << std::endl;
+            query_object[keys::expdataset]["$in"] = temp;
+            this->h_datasetlist = (Ndatasets > 0);
         }
 
-        // finish creading bson query object
-        bson_finish(&bq2);
+        // for skipping expdatasets
+        if (skipdataset.size() > 0 && !skipdataset[0].empty()) {
+            query_object[keys::expdataset]["$nin"] = skipdataset;
+        }
+
+        // for selecting usesamples
+        if (usesample.size() > 0 && !usesample[0].empty()) {
+            query_object[keys::expsample]["$in"] = usesample;
+        }
+
+        // for skipping skipsamples
+        if (skipsample.size() > 0 && !skipsample[0].empty()) {
+            query_object[keys::expsample]["$nin"] = skipsample;
+        }
+
+        // for selection of temperatures
+        if (qsT.size() > 0) {
+            if ((qsT.size() == 2)) {
+                // for selecting T interval
+                query_object[keys::sT]["$bt"] = qsT;
+            }
+            else if (!(qsT[0] == 0)) {
+                query_object[keys::sT]["$in"] = qsT;
+            }
+        }
+
+        // for selection of pressures
+        if (qsP.size() > 0) {
+            if ((qsP.size() == 2)) {
+                // for selecting P interval
+                query_object[keys::sP]["$bt"] = qsP;
+            }
+            else if (!(qsP[0] == 0)) {
+                query_object[keys::sP]["$in"] = qsP;
+            }
+        }
+
+        // for selecting pairs of datasets-samples
+        if (usepdatasets.size() > 0 && !usepdatasets[0].empty()) {
+            unsigned int k=0; // counts trough the usesamples std::vector
+            auto arr = common::JsonFree::array();
+            for (unsigned int j=0; j<usepdatasets.size(); ++j)  {
+                while (k<usepsamples.size())  {
+                    if (!(usepsamples[k] == "")) {
+                        auto obj = common::JsonFree::object();
+                        obj["$and"].push_back(common::JsonFree::parse(std::string("{\"")+keys::expdataset+"\":\""+usepdatasets[j]+"\"}"));
+                        obj["$and"].push_back(common::JsonFree::parse(std::string("{\"")+keys::expsample+"\":\""+usepsamples[k]+"\"}"));
+                        arr.push_back(std::move(obj));
+                    }
+                    else   {
+                        k++;
+                        break;
+                    }
+                    k++;
+                }
+                query_object["$or"] = arr;
+            }
+        }
+    }
+    else // if we have samples list the search query is bulil as follows
+    {
+        // for selecting pairs of datasets-samples
+        if (Nsamples > 0)  {
+            this->h_datasetlist = true;
+            if(DS.size() > 0 && !DS[0].empty())     {
+                auto arr = common::JsonFree::array();
+                for  (unsigned k = 0; k<SA.size(); k++) {
+                    auto obj = common::JsonFree::object();
+                    obj["$and"].push_back(common::JsonFree::parse(std::string("{\"")+keys::expdataset+"\":\""+DS[k]+"\"}"));
+                    obj["$and"].push_back(common::JsonFree::parse(std::string("{\"")+keys::expsample+"\":\""+SA[k]+"\"}"));
+                    arr.push_back(std::move(obj));
+                }
+                query_object["$or"] = arr;
+            }
+        }
+    }
+
 #ifdef CHECK_LOAD
     std::fstream ff3("DBquery.json", std::ios::out );
-    ff3 << "{\n";
-    bson_print_raw_txt( ff3, bq2.data, 0, BSON_OBJECT);
-    ff3 << "}";
+    ff3 << query_object.dump();
     ff3.close();
 #endif
 
+    // create database connect
+    std::cout << DBname.c_str() << std::endl;
+    TEJDataBase::dbdriver->change_path(DBname);
+    TEJDataBase::dbdriver->connect();
 
-        EJQ *q2 = ejdbcreatequery(jb, &bq2, NULL, 0, NULL);
-
-        uint32_t count;
-        TCLIST *res = ejdbqryexecute(coll, q2, &count, 0, NULL);
-        fprintf(stderr, "Records found: %d\n", count);
-
-         // adding data into Data_manager storage class
-         for (unsigned int j=0; j<count; j++)
-         {
-             experiments.push_back( new samples );
-             // set experiments variables empty
-             experiments[j]->sP = 0.; experiments[j]->sT = 0.; experiments[j]->sV= 0.;
-             experiments[j]->idsample= 0;
-             experiments[j]->weight = 1;
-             // set experiments variables false
-         }
-
-         gpf->flog << "05. data_manager.cpp(365). Adding the data returned by the selection query into the data structure; " << std::endl;
-
-#ifdef useomp
-    omp_set_num_threads(this->MPI);
-#ifdef buildWIN32
-    #pragma omp parallel for schedule(static)
-#else
-    #pragma omp parallel for schedule(dynamic)
-#endif
-#endif
-         for (int i = 0; i < TCLISTNUM(res); ++i) {
-             void *bsdata = TCLISTVALPTR(res, i);
-             char *bsdata_ = static_cast<char*>(bsdata);
-             bson_to_Data_Manager(/*stderr,*/ bsdata_, i); // adding the data returned by the selection query into the data storage class
-         }
-
-        //Dispose result set
-        tclistdel(res);
-
-        //Dispose query
-        ejdbquerydel(q2);
-        bson_destroy(&bq2);
-
-        //Close database
-        ejdbclose(jb);
-        ejdbdel(jb);
-
-// Set weights provided in the sample list
-        if (Nsamples > 0)
+    common::SetReaded_f setfnc = [&](const std::string& json_rec)
+    {
+        int pos = -1;
         {
-            for (unsigned i = 0; i<experiments.size(); i++)
+            std::lock_guard<std::shared_mutex> g(select_query_mutex);
+            experiments.push_back(std::make_shared<samples>());
+            experiments.back()->idsample= 0;
+            pos = experiments.size()-1;
+        }
+        // adding the data returned by the selection query into the data storage class
+        bson_to_Data_Manager(json_rec, pos);
+    };
+
+    gpf->flog << "05. data_manager.cpp(365). Adding the data returned by the selection query into the data structure; " << std::endl;
+    TEJDataBase::dbdriver->select_query_omp(collection, query_object.dump(), setfnc, this->MPI);
+    TEJDataBase::dbdriver->disconnect();
+
+    std::cout <<"experiments from database "<<  experiments.size() <<std::endl;
+    gpf->flog<<"experiments from database "<<  experiments.size() <<std::endl;
+
+    // Set weights provided in the sample list
+    if (Nsamples > 0)
+    {
+        for (unsigned i = 0; i<experiments.size(); i++)
+        {
+            for (unsigned j = 0; j<Nsamples; j++)
             {
-                for (unsigned j = 0; j<Nsamples; j++)
+                if ((experiments[i]->sample == SA[j]) && (experiments[i]->expdataset == DS[j]))
                 {
-                    if ((experiments[i]->sample == SA[j]) && (experiments[i]->expdataset == DS[j]))
-                    {
-                        experiments[i]->weight = experiments[i]->weight * WT[j];
-                    }
+                    experiments[i]->weight = experiments[i]->weight * WT[j];
                 }
             }
         }
-// Set weights provided in the dataset list
-        if (Ndatasets > 0)
+    }
+    // Set weights provided in the dataset list
+    if (Ndatasets > 0)
+    {
+        for (unsigned i = 0; i<experiments.size(); i++)
         {
-            for (unsigned i = 0; i<experiments.size(); i++)
+            for (unsigned j = 0; j<Ndatasets; j++)
             {
-                for (unsigned j = 0; j<Ndatasets; j++)
+                if (experiments[i]->expdataset == DS[j])
                 {
-                    if (experiments[i]->expdataset == DS[j])
-                    {
-                        experiments[i]->weight = experiments[i]->weight * WT[j];
-                    }
+                    experiments[i]->weight = experiments[i]->weight * WT[j];
                 }
             }
         }
+    }
 
-        // for skipping expdataset-expsamples pairs
-        if (skippdatasets.size() > 0)
+    // for skipping expdataset-expsamples pairs
+    if (skippdatasets.size() > 0)
+    {
+        if (!skippdatasets[0].empty())
         {
-            if (!skippdatasets[0].empty())
+            unsigned int k=0; // counts torugh the skippsamples std::vector
+            for (unsigned int j=0; j<skippdatasets.size(); ++j)
             {
-                unsigned int k=0; // counts torugh the skippsamples std::vector
-                for (unsigned int j=0; j<skippdatasets.size(); ++j)
+                while (k<skippsamples.size())
                 {
-//                    for (k; k<skippsamples.size(); k++)
-                    while (k<skippsamples.size())
+                    if (!(skippsamples[k] == ""))
                     {
-                        if (!(skippsamples[k] == ""))
+                        for (unsigned int i = 0; i<this->experiments.size(); i++)
                         {
-                            for (unsigned int i = 0; i<this->experiments.size(); i++)
+                            if ((this->experiments[i]->expdataset == skippdatasets[j]) && (this->experiments[i]->sample == skippsamples[k]))
                             {
-                                if ((this->experiments[i]->expdataset == skippdatasets[j]) && (this->experiments[i]->sample == skippsamples[k]))
-                                {
-                                    this->experiments.erase(this->experiments.begin() + i);
-                                    count--;
-                                }
+                                this->experiments.erase(this->experiments.begin() + i);
                             }
-
-                        } else
-                        {
-                            k++;
-                            break;
                         }
+
+                    } else
+                    {
                         k++;
+                        break;
                     }
+                    k++;
                 }
             }
-            fprintf(stderr, "Records after removing skipped pairs (dataset-samples): %d\n", count);
         }
+        fprintf(stderr, "Records after removing skipped pairs (dataset-samples): %ld\n", experiments.size());
+    }
+
+    std::cout <<"Records after removing skipped pairs "<<  experiments.size() <<std::endl;
+    gpf->flog<<"Records after removing skipped pairs "<<  experiments.size() <<std::endl;
 
 #ifdef CHECK_LOAD
     std::fstream test_out("experiments.log", std::ios::out);
+    std::fstream test_out_name("experiments_name.log", std::ios::out);
+    test_out_name << "skippdatasets ----------------" << "\n";
+    for (auto const& item : skippdatasets) {
+         test_out_name << item << "\n";
+     }
+    test_out_name << "skippsamples ---------------" << "\n";
+    for (auto const& item : skippsamples) {
+        test_out_name << item << "\n";
+     }
+    test_out_name << "experiments ---------------" << "\n";
     for (auto const& item : experiments) {
-           test_out << *item << "\n";
+        test_out << *item << "\n";
+        test_out_name << item->idsample << " " << item->sample << " " << item->expdataset << "\n";
     }
 #endif
 }
 
-void Data_Manager::bson_to_Data_Manager(/* FILE *f, */ const char *data, int pos)
+std::string Data_Manager::default_unit_to_property(const std::string& property_name) const
 {
-    bson_iterator i[1], j[1], k[1], k2[1], d[1], d2[1], d3[1]; // 1st, 2nd, 3rd, 2-1, 3-1 level
-    int ip = -1, ic = -1, sk = -1, ipc, ipp, ips, ipdcp, ipm, ipam;
+    // assigining default values for units
+    std::string def_unit;// = keys::molratio;
+    if (property_name==keys::Qnt) {
+        def_unit = keys::gram;
+    }
+    else if (property_name==keys::RHO) {
+        def_unit = keys::g_cm3;
+    }
+    else if (property_name==keys::Gex) {
+        def_unit = keys::J_mol;
+    }
+    else if (property_name==keys::pV) {
+        def_unit = keys::cm3;
+    }
+    else if (property_name==keys::pH) {
+        def_unit = keys::_loga;
+    }
+    else if (property_name==keys::Eh) {
+        def_unit = keys::Volts;
+    }
+    else if (property_name==keys::pe) {
+        def_unit = keys::_loga;
+    }
+    else if (property_name==keys::oscw) {
+        //def_unit = keys::_loga;
+    }
+    return def_unit;
+}
 
-    bson_iterator_from_buffer(i, data); // getting primary iterator
-    while ( bson_iterator_next(i) != BSON_EOO )
-    {
-        std::string key_ = bson_iterator_key(i);
-//        key_ = key;
+void Data_Manager::bson_to_Data_Manager(const std::string& data, int pos)
+{
+    if(pos<0) {
+        return;
+    }
 
-        if (key_ == keys::expdataset)
-        {
-            // adding expdataset
-            experiments[pos]->expdataset = bson_iterator_string(i);
-        } else
-        if (key_ == keys::expsample)
-        {
-            // adding sample name
-            experiments[pos]->sample = bson_iterator_string(i);
-        } else
-        if (key_ == keys::type)
-        {
-            // adding sample type
-            experiments[pos]->Type = bson_iterator_string(i);
-        } else
-        if (key_ == keys::sT)
-        {
-            // adding temperature
-            experiments[pos]->sT = bson_iterator_double(i);
-        } else
-        if (key_ == keys::sP)
-        {
-            // adding pressure
-            experiments[pos]->sP = bson_iterator_double(i);
-        } else
-        if (key_ == keys::sV)
-        {
-            // adding volume
-            experiments[pos]->sV = bson_iterator_double(i);
-        } else
-        if (key_ == keys::Weight)
-        {
-            // adding weight
-//            if (!h_datasetlist)
-            experiments[pos]->weight = bson_iterator_double(i);
-        } else
+    common::JsonFree data_object = fromJsonString(data);
 
-        // adding experiment components/recipe
-        if ((key_ == keys::sbcomp) ) // && (t == BSON_ARRAY))
-        {
-            bson_iterator_subiterator( i, j );
-            while (bson_iterator_next(j) != BSON_EOO )
-            {
-                experiments[pos]->sbcomp.push_back( new samples::components );
-                ic++; // position of the component in sbcomp std::vector
-                experiments[pos]->sbcomp[ic]->Qnt = 0.;
-                experiments[pos]->sbcomp[ic]->Qerror = 1.;
-                experiments[pos]->sbcomp[ic]->Qunit = keys::gram; // default
+    experiments[pos]->expdataset = data_object.value(keys::expdataset, std::string());
+    experiments[pos]->sample = data_object.value(keys::expsample, std::string());
+    experiments[pos]->Type = data_object.value(keys::type, std::string());
+    experiments[pos]->sT = data_object.value(keys::sT, 0.);
+    experiments[pos]->sP = data_object.value(keys::sP, 0.);
+    experiments[pos]->sV = data_object.value(keys::sV, 0.);
+    experiments[pos]->weight = data_object.value(keys::Weight, 1.);
 
-                bson_iterator_subiterator( j, d );
+    // adding experiment components/recipe
+    if( data_object.contains(keys::sbcomp) ) {
+        for (const auto& element : data_object[keys::sbcomp]) {
+            experiments[pos]->sbcomp.push_back(std::make_shared<samples::components>());
+            experiments[pos]->sbcomp.back()->comp = element->value(keys::comp, std::string());
+            experiments[pos]->sbcomp.back()->Qnt = element->value(keys::Qnt, 0.);
+            experiments[pos]->sbcomp.back()->Qerror = element->value(keys::Qerror, 1.);
+            experiments[pos]->sbcomp.back()->Qunit = element->value(keys::Qunit, keys::gram);
+        }
+    }
 
-                while (bson_iterator_next(d) != BSON_EOO )
-                {
-                    std::string key_ = bson_iterator_key(d);
+    // adding experiment components/recipe
+    if( data_object.contains(keys::props) ) {
+        for (const auto& element : data_object[keys::props]) {
+            experiments[pos]->props.push_back(std::make_shared<samples::properties>());
+            experiments[pos]->props.back()->prop = element->value(keys::property, std::string());
+            experiments[pos]->props.back()->Qnt = element->value(keys::Qnt, 0.);
+            experiments[pos]->props.back()->Qerror = element->value(keys::Qerror, 0.);
+            experiments[pos]->props.back()->Qunit = element->value(keys::Qunit, "NULL");
+        }
+    }
 
-                    if ((key_ == keys::comp))
-                    {
-                        experiments[pos]->sbcomp[ic]->comp =  bson_iterator_string(d) ;
-                    } else
-                    if ((key_ == keys::Qnt))
-                    {
-                        experiments[pos]->sbcomp[ic]->Qnt = bson_iterator_double(d) ;
-                    } else
-                    if ((key_ == keys::Qerror))
-                    {
-                        experiments[pos]->sbcomp[ic]->Qerror = bson_iterator_double(d) ;
-                    } else
-                    if ((key_ == keys::Qunit))
-                    {
-                        experiments[pos]->sbcomp[ic]->Qunit = bson_iterator_string(d) ;
-                    }
+    // adding experiment components/recipe
+    if( data_object.contains(keys::expphases) ) {
+        for (const auto& element : data_object[keys::expphases])  {
+            experiments[pos]->expphases.push_back(std::make_shared<samples::phases>());
+            experiments[pos]->expphases.back()->idphase = 0;
+            experiments[pos]->expphases.back()->phase = element->value(keys::phase, std::string());
+
+            if( element->contains(keys::phIC) ) {
+                for (const auto& sub_el : (*element)[keys::phIC])  {
+                    experiments[pos]->expphases.back()->phIC.push_back(std::make_shared<samples::components>());
+                    std::string def_unit; // =  (experiments[pos]->expphases.back()->phase == keys::aqueous ? keys::molal: keys::molratio);
+                    experiments[pos]->expphases.back()->phIC.back()->comp = sub_el->value(keys::IC, std::string());
+                    experiments[pos]->expphases.back()->phIC.back()->Qnt = sub_el->value(keys::Qnt, 0.);
+                    experiments[pos]->expphases.back()->phIC.back()->Qerror = sub_el->value(keys::Qerror, 1.);
+                    experiments[pos]->expphases.back()->phIC.back()->Qunit = sub_el->value(keys::Qunit, def_unit);
                 }
             }
-        } else
-            // adding experiment properties
-            if ((key_ == keys::props) ) // && (t == BSON_ARRAY))
-            {
-                ic = -1;
-                bson_iterator_subiterator( i, j );
-                while (bson_iterator_next(j) != BSON_EOO )
-                {
-                    experiments[pos]->props.push_back( new samples::properties );
-                    ic++; // position of the component in sbcomp std::vector
-                    experiments[pos]->props[ic]->Qnt = 0.;
-                    experiments[pos]->props[ic]->Qerror = 0.;
-                    experiments[pos]->props[ic]->Qunit = "NULL"; // default
 
-                    bson_iterator_subiterator( j, d );
-
-                    while (bson_iterator_next(d) != BSON_EOO )
-                    {
-                        std::string key_ = bson_iterator_key(d);
-
-                        if ((key_ == keys::property))
-                        {
-                            experiments[pos]->props[ic]->prop =  bson_iterator_string(d) ;
-                        } else
-                        if ((key_ == keys::Qnt))
-                        {
-                            experiments[pos]->props[ic]->Qnt = bson_iterator_double(d) ;
-                        } else
-                        if ((key_ == keys::Qerror))
-                        {
-                            experiments[pos]->props[ic]->Qerror = bson_iterator_double(d) ;
-                        } else
-                        if ((key_ == keys::Qunit))
-                        {
-                            experiments[pos]->props[ic]->Qunit = bson_iterator_string(d) ;
-                        }
-                    }
+            // adding phase IC as mole fractions MR
+            if( element->contains(keys::phMR) ) {
+                for (const auto& sub_el : (*element)[keys::phMR]) {
+                    experiments[pos]->expphases.back()->phMR.push_back(std::make_shared<samples::components>());
+                    std::string def_unit = keys::molratio;
+                    // =  (experiments[pos]->expphases.back()->phase == keys::aqueous ? keys::molal: keys::molratio);
+                    experiments[pos]->expphases.back()->phMR.back()->comp = sub_el->value(keys::MR, std::string());
+                    experiments[pos]->expphases.back()->phMR.back()->Qnt = sub_el->value(keys::Qnt, 0.);
+                    experiments[pos]->expphases.back()->phMR.back()->Qerror = sub_el->value(keys::Qerror, 1.);
+                    experiments[pos]->expphases.back()->phMR.back()->Qunit = sub_el->value(keys::Qunit, def_unit);
                 }
-            } else
+            }
 
-        // adding Upper metastability constraints
-//        if ((key_ == keys::UMC) ) // && (t == BSON_ARRAY))
-//        {
-//            bson_iterator_subiterator( i, j );
-//            while (bson_iterator_next(j) != BSON_EOO )
-//            {
+            // adding phase properties
+            if( element->contains(keys::phprop) ) {
+                for (const auto& sub_el : (*element)[keys::phprop]) {
+                    experiments[pos]->expphases.back()->phprop.push_back(std::make_shared<samples::phases::prop>());
+                    std::string p_name = sub_el->value(keys::property, std::string());
+                    experiments[pos]->expphases.back()->phprop.back()->property = p_name;
+                    std::string def_unit =default_unit_to_property(p_name);
+                    experiments[pos]->expphases.back()->phprop.back()->Qnt = sub_el->value(keys::Qnt, 0.);
+                    experiments[pos]->expphases.back()->phprop.back()->Qerror = sub_el->value(keys::Qerror, 1.);
+                    experiments[pos]->expphases.back()->phprop.back()->Qunit = sub_el->value(keys::Qunit, def_unit);
+                }
+            }
+            // adding phase activity_model
+            if (element->contains(keys::activity_model)) {
+                experiments[pos]->expphases.back()->phactmod.isActMod = true;
+                const auto& sub_el = (*element)[keys::activity_model];
+                experiments[pos]->expphases.back()->phactmod.b_gamma = sub_el.value(keys::b_gamma, -1.);
+                experiments[pos]->expphases.back()->phactmod.b_gammaT = sub_el.value(keys::b_gammaT, std::string());
+                experiments[pos]->expphases.back()->phactmod.a0 = sub_el.value(keys::a0, -1.);
+                experiments[pos]->expphases.back()->phactmod.gammaN = sub_el.value(keys::gammaN, -1);
+                experiments[pos]->expphases.back()->phactmod.gammaW = sub_el.value(keys::gammaW, -1);
+            }
 
-//                experiments[pos]->U_KC.push_back( new samples::Uconstraints );
-//                sk++; // position of the component in U_SK std::vector
-////                experiments.at(pos)->U_KC.at(sk)->dcomp = NULL;
-//                experiments[pos]->U_KC[sk]->Qnt = 1000000.;
-
-//                bson_iterator_subiterator( j, d );
-//                while (bson_iterator_next(d) != BSON_EOO )
-//                {
-//                    std::string key_ = bson_iterator_key(d);
-
-//                    if ((key_ == keys::DC))
-//                    {
-//                        experiments[pos]->U_KC[sk]->type = keys::DC;
-//                        experiments[pos]->U_KC[sk]->name =  bson_iterator_string(d) ;
-
-//                    } else
-//                    if ((key_ == keys::phase))
-//                    {
-//                        experiments[pos]->U_KC[sk]->type = keys::phase;
-//                        experiments[pos]->U_KC[sk]->name = bson_iterator_string(d) ;
-//                    } else
-//                    if ((key_ == keys::Qnt))
-//                    {
-//                        experiments[pos]->U_KC[sk]->Qnt = bson_iterator_double(d) ;
-//                    }
-//                    /*else
-//                    if ((key_ == keys::Qerror))
-//                    {
-//                        experiments.at(pos)->sbcomp.at(ic)->Qerror = bson_iterator_double(d) ;
-//                    } else
-//                    if ((key_ == keys::Qunit))
-//                    {
-//                        experiments.at(pos)->sbcomp.at(ic)->Qunit = bson_iterator_string(d) ;
-//                    }*/
-//                }
-//            }
-//        } else
-
-//        // adding Lower metastability constraints
-//        if ((key_ == keys::LMC) ) // && (t == BSON_ARRAY))
-//        {
-//            bson_iterator_subiterator( i, j );
-//            while (bson_iterator_next(j) != BSON_EOO )
-//            {
-
-//                experiments[pos]->L_KC.push_back( new samples::Lconstraints );
-//                sk++; // position of the component in U_SK std::vector
-//    //            experiments.at(pos)->U_KC.at(sk)->dcomp = NULL;
-//                experiments[pos]->L_KC[sk]->Qnt = 0.;
-
-//                bson_iterator_subiterator( j, d );
-//                while (bson_iterator_next(d) != BSON_EOO )
-//                {
-//                    std::string key_ = bson_iterator_key(d);
-
-//                    if ((key_ == keys::DC))
-//                    {
-//                        experiments[pos]->L_KC[sk]->type = keys::DC;
-//                        experiments[pos]->L_KC[sk]->name =  bson_iterator_string(d) ;
-
-//                    } else
-//                    if ((key_ == keys::phase))
-//                    {
-//                        experiments[pos]->L_KC[sk]->type = keys::phase;
-//                        experiments[pos]->L_KC[sk]->name = bson_iterator_string(d) ;
-//                    } else
-//                    if ((key_ == keys::Qnt))
-//                    {
-//                        experiments[pos]->U_KC[sk]->Qnt = bson_iterator_double(d) ;
-//                    }
-//                     /*else
-//                        if ((key_ == keys::Qerror))
-//                        {
-//                            experiments.at(pos)->sbcomp.at(ic)->Qerror = bson_iterator_double(d) ;
-//                        } else
-//                        if ((key_ == keys::Qunit))
-//                        {
-//                            experiments.at(pos)->sbcomp.at(ic)->Qunit = bson_iterator_string(d) ;
-//                        }*/
-//                }
-//           }
-//        } else
-
-        // adding experimental phases
-        if ((key_ == keys::expphases) ) // && (t == BSON_ARRAY))
-        {
-            bson_iterator_subiterator( i, j );
-            while ( bson_iterator_next(j) != BSON_EOO )
-            {
-
-                experiments[pos]->expphases.push_back( new samples::phases );
-                ip++; // position of the phase in expphases std::vector
-                ipc = -1; // phases components - reset to -1 for every new phase
-                ipm = -1; // molar fractions
-                ipp = -1; // phases properties
-                ipam= -1; // phase act model
-                ips = -1; // phases dcomps
-                experiments[pos]->expphases[ip]->idphase = 0;
-
-                bson_iterator_subiterator( j, d );
-                while (bson_iterator_next(d) != BSON_EOO )
-                {
-                    std::string key_ = bson_iterator_key(d);
-
-                    if ((key_ == keys::phase))
-                    {
-                        experiments[pos]->expphases[ip]->phase =  bson_iterator_string(d) ;
-                    } else
-
-                    // adding phase components
-                    if ((key_ == keys::phIC) ) //  && (t == BSON_ARRAY))
-                    {
-                        bson_iterator_subiterator( d, k );
-                        while ( bson_iterator_next(k) != BSON_EOO )
-                        {
-                            experiments[pos]->expphases[ip]->phIC.push_back( new samples::components );
-                            ipc++; // position of the component in phcomp std::vector
-                            // default values
-                            experiments[pos]->expphases[ip]->phIC[ipc]->Qerror = 1.;
-                            experiments[pos]->expphases[ip]->phIC[ipc]->Qnt   = 0.;
-                            std::string p_name = experiments[pos]->expphases[ip]->phase;
-//                            if (p_name == keys::aqueous)
-//                            {
-//                                experiments[pos]->expphases[ip]->phIC[ipc]->Qunit = keys::molal;
-//                            } else
-//                                experiments[pos]->expphases[ip]->phIC[ipc]->Qunit = keys::molratio;
-
-                            bson_iterator_subiterator( k, d2 );
-                            while ( bson_iterator_next(d2) != BSON_EOO )
-                            {
-                                std::string key_ = bson_iterator_key(d2);
-
-                                if ((key_ == keys::IC))
-                                {
-                                    experiments[pos]->expphases[ip]->phIC[ipc]->comp = bson_iterator_string(d2) ;
-                                } else
-                                if ((key_ == keys::Qnt))
-                                {
-                                    experiments[pos]->expphases[ip]->phIC[ipc]->Qnt = bson_iterator_double(d2) ;
-                                } else
-                                if ((key_ == keys::Qerror))
-                                {
-                                    experiments[pos]->expphases[ip]->phIC[ipc]->Qerror = bson_iterator_double(d2) ;
-                                } else
-                                if ((key_ == keys::Qunit))
-                                {
-                                    experiments[pos]->expphases[ip]->phIC[ipc]->Qunit = bson_iterator_string(d2) ;
-                                }
-                            }
-                        }
-                    } else
-
-                    // adding phase IC as mole fractions MR
-                    if ((key_ == keys::phMR) ) // && (t == BSON_ARRAY))
-                    {
-                        bson_iterator_subiterator( d, k );
-                        while (bson_iterator_next(k) != BSON_EOO )
-                        {
-                            experiments[pos]->expphases[ip]->phMR.push_back( new samples::components );
-                            ipm++; // position of the component in phcomp std::vector
-                            experiments[pos]->expphases[ip]->phMR[ipm]->Qerror = 1.;
-                            experiments[pos]->expphases[ip]->phMR[ipm]->Qnt   = 0.;
-                            std::string p_name = experiments[pos]->expphases[ip]->phase;
-//                            if (p_name == keys::aqueous)
-//                            {
-//                                experiments[pos]->expphases[ip]->phMR[ipm]->Qunit = keys::molratio;
-//                            } else
-                                experiments[pos]->expphases[ip]->phMR[ipm]->Qunit = keys::molratio;
-
-                            bson_iterator_subiterator( k, d2 );
-                            while (bson_iterator_next(d2) != BSON_EOO )
-                            {
-                                std::string key_ = bson_iterator_key(d2);
-
-                                if ((key_ == keys::MR))
-                                {
-                                    experiments[pos]->expphases[ip]->phMR[ipm]->comp = bson_iterator_string(d2) ;
-                                } else
-                                if ((key_ == keys::Qnt))
-                                {
-                                    experiments[pos]->expphases[ip]->phMR[ipm]->Qnt = bson_iterator_double(d2) ;
-                                 } else
-                                 if ((key_ == keys::Qerror))
-                                 {
-                                    experiments[pos]->expphases[ip]->phMR[ipm]->Qerror = bson_iterator_double(d2) ;
-                                 } else
-                                 if ((key_ == keys::Qunit))
-                                 {
-                                    experiments[pos]->expphases[ip]->phMR[ipm]->Qunit = bson_iterator_string(d2) ;
-                                 }
-                             }
-                        }
-                    } else
-
-                    // adding phase properties
-                    if ((key_ == keys::phprop) ) // && (t == BSON_ARRAY))
-                    {
-                        bson_iterator_subiterator( d, k );
-                        while ( bson_iterator_next(k) != BSON_EOO )
-                        {
-                            experiments[pos]->expphases[ip]->phprop.push_back( new samples::phases::prop );
-                            ipp++; // position of the component in phcomp std::vector
-                            experiments[pos]->expphases[ip]->phprop[ipp]->Qerror = 1.;
-                            experiments[pos]->expphases[ip]->phprop[ipp]->Qnt   = 0.;
-//std::cout << "pos: " << pos << " ip: " << ip << " ipp: " << ipp << " :: ";
-                            bson_iterator_subiterator( k, d2 );
-                            while (bson_iterator_next(d2) != BSON_EOO )
-                            {
-                                std::string key_ = bson_iterator_key(d2);
-//std::cout << " " << key_.c_str();
-                                if ((key_ == keys::property))
-                                {
-                                    std::string p_name = bson_iterator_string(d2);
-//std::cout << ": " << p_name;
-                                    experiments[pos]->expphases[ip]->phprop[ipp]->property = p_name; // bson_iterator_string(d2) ;
-                                    // assigining default values for units
-                                    if (p_name==keys::Qnt)
-                                    {
-                                        experiments[pos]->expphases[ip]->phprop[ipp]->Qunit = keys::gram;
-                                    } else
-                                    if (p_name==keys::RHO)
-                                    {
-                                        experiments[pos]->expphases[ip]->phprop[ipp]->Qunit = keys::g_cm3;
-                                    } else
-                                    if (p_name==keys::Gex)
-                                    {
-                                        experiments[pos]->expphases[ip]->phprop[ipp]->Qunit = keys::J_mol;
-                                    } else
-                                    if (p_name==keys::pV)
-                                    {
-                                        experiments[pos]->expphases[ip]->phprop[ipp]->Qunit = keys::cm3;
-                                    } else
-                                    if (p_name==keys::pH)
-                                    {
-                                        experiments[pos]->expphases[ip]->phprop[ipp]->Qunit = keys::_loga;
-                                    }
-                                    if (p_name==keys::Eh)
-                                    {
-                                        experiments[pos]->expphases[ip]->phprop[ipp]->Qunit = keys::Volts;
-                                    } else
-                                    if (p_name==keys::pe)
-                                    {
-                                        experiments[pos]->expphases[ip]->phprop[ipp]->Qunit = keys::_loga;
-                                    } else
-                                    if (p_name==keys::oscw)
-                                    {
-//                                        experiments[pos]->expphases[ip]->phprop[ipp]->Qunit = keys::_loga;
-                                    }
-                                } else
-                                if ((key_ == keys::Qnt))
-                                {
-                                    double qw = bson_iterator_double(d2) ;
-                                    experiments[pos]->expphases[ip]->phprop[ipp]->Qnt = qw;
-//std::cout << ": " << qw;
-                                } else
-                                if ((key_ == keys::Qerror))
-                                {
-                                    double qw = bson_iterator_double(d2) ;
-                                    experiments[pos]->expphases[ip]->phprop[ipp]->Qerror = qw ;
-//std::cout << ": " << qw;
-                                } else
-                                if ((key_ == keys::Qunit))
-                                {
-                                    std::string unit = bson_iterator_string(d2) ;
-                                    experiments[pos]->expphases[ip]->phprop[ipp]->Qunit = unit ;
-//std::cout << ": " << unit;
-                                }
-                            }
-                        }
-//std::cout << std::endl;
-                    } else
-
-                    // adding phase activity_model
-                    if ((key_ == keys::activity_model) ) // && (t == BSON_ARRAY))
-                        {
-                                experiments[pos]->expphases[ip]->phactmod.isActMod = true;
-                                bson_iterator_subiterator( k, d2 );
-                                while (bson_iterator_next(d2) != BSON_EOO )
-                                {
-                                    std::string key_ = bson_iterator_key(d2);
-                                    if ((key_ == keys::b_gamma))
-                                    {
-                                        double qw = bson_iterator_double(d2) ;
-                                        experiments[pos]->expphases[ip]->phactmod.b_gamma = qw;
-                                    } else
-                                    if ((key_ == keys::b_gammaT))
-                                    {
-                                        std::string qw = bson_iterator_string(d2) ;
-                                        experiments[pos]->expphases[ip]->phactmod.b_gammaT = qw ;
-                                    } else
-                                    if ((key_ == keys::a0))
-                                    {
-                                        double qw = bson_iterator_double(d2) ;
-                                        experiments[pos]->expphases[ip]->phactmod.a0 = qw ;
-                                    } else
-                                    if ((key_ == keys::gammaN))
-                                    {
-                                        int qw = bson_iterator_int(d2) ;
-                                        experiments[pos]->expphases[ip]->phactmod.gammaN = qw ;
-                                    } else
-                                    if ((key_ == keys::gammaW))
-                                    {
-                                        int qw = bson_iterator_int(d2) ;
-                                        experiments[pos]->expphases[ip]->phactmod.gammaW = qw ;
-                                    }
-                                }
-//                            }
-    //cout << endl;
-                    } else
-
-                    // adding phase dcomps
-                    if ((key_ == keys::phDC) ) // && (t == BSON_ARRAY))
-                    {
-                        bson_iterator_subiterator( d, k );
-                        while (bson_iterator_next(k) != BSON_EOO )
-                        {
-                            experiments[pos]->expphases[ip]->phDC.push_back( new samples::phases::dcomps );
-                            ips++; // position of the specie in phdcomps std::vector
-                            ipdcp = -1;
-
-                            bson_iterator_subiterator( k, d2 );
-                            while (bson_iterator_next(d2) != BSON_EOO )
-                            {
-                                std::string key_ = bson_iterator_key(d2);
-
-                                if ((key_ == keys::DC)) // adding the name of the specie
-                                {
-                                    experiments[pos]->expphases[ip]->phDC[ips]->DC =  bson_iterator_string(d2) ;
-                                } else
-
-                                // adding dependent compoponents properties
-                                if ((key_ == keys::DCprop) ) // && (t == BSON_ARRAY))
-                                {
-                                    bson_iterator_subiterator( d2, k2 );
-                                    while (bson_iterator_next(k2) != BSON_EOO )
-                                    {
-                                        experiments[pos]->expphases[ip]->phDC[ips]->DCprop.push_back( new samples::phases::dcomps::dcprop );
-                                        ipdcp++; // position of the component in phcomp std::vector
-                                        experiments[pos]->expphases[ip]->phDC[ips]->DCprop[ipdcp]->Qerror = 1.;
-                                        experiments[pos]->expphases[ip]->phDC[ips]->DCprop[ipdcp]->Qnt   = 0.;
-
-                                        bson_iterator_subiterator( k2, d3 );
-                                        while (bson_iterator_next(d3) != BSON_EOO )
-                                        {
-                                            std::string key_ = bson_iterator_key(d3);
-
-                                            if ((key_ == keys::property))
-                                            {
-                                                experiments[pos]->expphases[ip]->phDC[ips]->DCprop[ipdcp]->property = bson_iterator_string(d3);
-                                            } else
-                                            if ((key_ == keys::Qnt))
-                                            {
-                                                experiments[pos]->expphases[ip]->phDC[ips]->DCprop[ipdcp]->Qnt = bson_iterator_double(d3) ;
-                                            } else
-                                            if ((key_ == keys::Qerror))
-                                            {
-                                                experiments[pos]->expphases[ip]->phDC[ips]->DCprop[ipdcp]->Qerror = bson_iterator_double(d3) ;
-                                            } else
-                                            if ((key_ == keys::Qunit))
-                                            {
-                                                experiments[pos]->expphases[ip]->phDC[ips]->DCprop[ipdcp]->Qunit = bson_iterator_string(d3) ;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+            // adding phase dcomps
+            if( element->contains(keys::phDC) ) {
+                for (const auto& sub_el : (*element)[keys::phDC]) {
+                    experiments[pos]->expphases.back()->phDC.push_back(std::make_shared<samples::phases::dcomps>());
+                    experiments[pos]->expphases.back()->phDC.back()->DC = sub_el->value(keys::DC, std::string());
+                    // adding dependent compoponents properties
+                    if( sub_el->contains(keys::DCprop) ) {
+                        for (const auto& sub_el2 : (*sub_el)[keys::DCprop])  {
+                            experiments[pos]->expphases.back()->phDC.back()->DCprop.push_back(std::make_shared<samples::phases::dcomps::dcprop>());
+                            std::string def_unit; // = keys::molratio;
+                            // =  (experiments[pos]->expphases.back()->phase == keys::aqueous ? keys::molal: keys::molratio);
+                            experiments[pos]->expphases.back()->phDC.back()->DCprop.back()->property = sub_el2->value(keys::property, std::string());
+                            experiments[pos]->expphases.back()->phDC.back()->DCprop.back()->Qnt = sub_el2->value(keys::Qnt, 0.);
+                            experiments[pos]->expphases.back()->phDC.back()->DCprop.back()->Qerror = sub_el2->value(keys::Qerror, 1.);
+                            experiments[pos]->expphases.back()->phDC.back()->DCprop.back()->Qunit = sub_el2->value(keys::Qunit, def_unit);
                         }
                     }
                 }
             }
         }
     }
-//std::cout << std::endl;
+
 }
 
 void Data_Manager::get_distinct_TP( )
@@ -1479,5 +865,3 @@ std::ostream& operator<<(std::ostream& stream, const Data_Manager::samples& data
     stream << std::endl;
     return stream;
 }
-
-

@@ -1,0 +1,1290 @@
+13:55:57: Starting /home/sveta/devThermo/gitThermoFun/gemsfits/gemsfit2-build/gemsfit2 -run 1 ./a001-init.json...
+"/home/sveta/devThermo/gitThermoFun/gemsfits/gfshell2-build/Tests/ClaySor-U6-03-2022/work"
+1 arg -run
+2 arg 1
+3 arg ./a001-init.json
+GEMSFIT2: Start
+optParamFile = ./a001-init.json
+fitFile = output/fit-results.csv
+fitLogFile = output/gemsfit2.log
+gems3LstFilePath = 
+[2024-01-09 13:55:57.656] [gems3k] [info] Home directory is /home/sveta
+../EJDB/myprojdb1
+experiments from database 410
+Records after removing skipped pairs 357
+Records after removing skipped pairs (dataset-samples): 357
+Node: 1 Sample: 10A  NodeStatusCH: 2
+Node: 2 Sample: 10A  NodeStatusCH: 2
+Node: 3 Sample: 10A  NodeStatusCH: 2
+Node: 4 Sample: 10A  NodeStatusCH: 2
+Node: 5 Sample: 10A  NodeStatusCH: 2
+Node: 6 Sample: 10B  NodeStatusCH: 2
+Node: 7 Sample: 10B  NodeStatusCH: 2
+Node: 8 Sample: 10B  NodeStatusCH: 2
+Node: 9 Sample: 10B  NodeStatusCH: 2
+Node: 10 Sample: 10B  NodeStatusCH: 2
+Node: 11 Sample: 10C  NodeStatusCH: 2
+Node: 12 Sample: 10a  NodeStatusCH: 2
+Node: 13 Sample: 10a  NodeStatusCH: 2
+Node: 14 Sample: 10a  NodeStatusCH: 2
+Node: 15 Sample: 10a  NodeStatusCH: 2
+Node: 16 Sample: 10b  NodeStatusCH: 2
+Node: 17 Sample: 10b  NodeStatusCH: 2
+Node: 18 Sample: 10b  NodeStatusCH: 2
+Node: 19 Sample: 10b  NodeStatusCH: 2
+Node: 20 Sample: 10c  NodeStatusCH: 2
+Node: 21 Sample: 11A  NodeStatusCH: 2
+Node: 22 Sample: 11A  NodeStatusCH: 2
+Node: 23 Sample: 11A  NodeStatusCH: 2
+Node: 24 Sample: 11A  NodeStatusCH: 2
+Node: 25 Sample: 11A  NodeStatusCH: 2
+Node: 26 Sample: 11B  NodeStatusCH: 2
+Node: 27 Sample: 11B  NodeStatusCH: 2
+Node: 28 Sample: 11B  NodeStatusCH: 2
+Node: 29 Sample: 11B  NodeStatusCH: 2
+Node: 30 Sample: 11B  NodeStatusCH: 2
+Node: 31 Sample: 11C  NodeStatusCH: 2
+Node: 32 Sample: 11a  NodeStatusCH: 2
+Node: 33 Sample: 11a  NodeStatusCH: 2
+Node: 34 Sample: 11a  NodeStatusCH: 2
+Node: 35 Sample: 11a  NodeStatusCH: 2
+Node: 36 Sample: 11b  NodeStatusCH: 2
+Node: 37 Sample: 11b  NodeStatusCH: 2
+Node: 38 Sample: 11b  NodeStatusCH: 2
+Node: 39 Sample: 11b  NodeStatusCH: 2
+Node: 40 Sample: 12A  NodeStatusCH: 2
+Node: 41 Sample: 12A  NodeStatusCH: 2
+Node: 42 Sample: 12A  NodeStatusCH: 2
+Node: 43 Sample: 12A  NodeStatusCH: 2
+Node: 44 Sample: 12A  NodeStatusCH: 2
+Node: 45 Sample: 12B  NodeStatusCH: 2
+Node: 46 Sample: 12B  NodeStatusCH: 2
+Node: 47 Sample: 12B  NodeStatusCH: 2
+Node: 48 Sample: 12B  NodeStatusCH: 2
+Node: 49 Sample: 12B  NodeStatusCH: 2
+Node: 50 Sample: 12C  NodeStatusCH: 2
+Node: 51 Sample: 12a  NodeStatusCH: 2
+Node: 52 Sample: 12a  NodeStatusCH: 2
+Node: 53 Sample: 12a  NodeStatusCH: 2
+Node: 54 Sample: 12a  NodeStatusCH: 2
+Node: 55 Sample: 12b  NodeStatusCH: 2
+Node: 56 Sample: 12b  NodeStatusCH: 2
+Node: 57 Sample: 12b  NodeStatusCH: 2
+Node: 58 Sample: 12b  NodeStatusCH: 2
+Node: 59 Sample: 13A  NodeStatusCH: 2
+Node: 60 Sample: 13A  NodeStatusCH: 2
+Node: 61 Sample: 13B  NodeStatusCH: 2
+Node: 62 Sample: 13B  NodeStatusCH: 2
+Node: 63 Sample: 13a  NodeStatusCH: 2
+Node: 64 Sample: 13b  NodeStatusCH: 2
+Node: 65 Sample: 14A  NodeStatusCH: 2
+Node: 66 Sample: 14A  NodeStatusCH: 2
+Node: 67 Sample: 14B  NodeStatusCH: 2
+Node: 68 Sample: 14B  NodeStatusCH: 2
+Node: 69 Sample: 14a  NodeStatusCH: 2
+Node: 70 Sample: 14b  NodeStatusCH: 2
+Node: 71 Sample: 15A  NodeStatusCH: 2
+Node: 72 Sample: 15A  NodeStatusCH: 2
+Node: 73 Sample: 15B  NodeStatusCH: 2
+Node: 74 Sample: 15B  NodeStatusCH: 2
+Node: 75 Sample: 15a  NodeStatusCH: 2
+Node: 76 Sample: 15b  NodeStatusCH: 2
+Node: 77 Sample: 16A  NodeStatusCH: 2
+Node: 78 Sample: 16A  NodeStatusCH: 2
+Node: 79 Sample: 16B  NodeStatusCH: 2
+Node: 80 Sample: 16B  NodeStatusCH: 2
+Node: 81 Sample: 16a  NodeStatusCH: 2
+Node: 82 Sample: 16b  NodeStatusCH: 2
+Node: 83 Sample: 1A  NodeStatusCH: 2
+Node: 84 Sample: 1A  NodeStatusCH: 2
+Node: 85 Sample: 1A  NodeStatusCH: 2
+Node: 86 Sample: 1A  NodeStatusCH: 2
+Node: 87 Sample: 1A  NodeStatusCH: 2
+Node: 88 Sample: 1A  NodeStatusCH: 2
+Node: 89 Sample: 1B  NodeStatusCH: 2
+Node: 90 Sample: 1B  NodeStatusCH: 2
+Node: 91 Sample: 1B  NodeStatusCH: 2
+Node: 92 Sample: 1B  NodeStatusCH: 2
+Node: 93 Sample: 1B  NodeStatusCH: 2
+Node: 94 Sample: 1B  NodeStatusCH: 2
+Node: 95 Sample: 1C  NodeStatusCH: 2
+Node: 96 Sample: 1C  NodeStatusCH: 2
+Node: 97 Sample: 1a  NodeStatusCH: 2
+Node: 98 Sample: 1a  NodeStatusCH: 2
+Node: 99 Sample: 1a  NodeStatusCH: 2
+Node: 100 Sample: 1a  NodeStatusCH: 2
+Node: 101 Sample: 1a  NodeStatusCH: 2
+Node: 102 Sample: 1a  NodeStatusCH: 2
+Node: 103 Sample: 1b  NodeStatusCH: 2
+Node: 104 Sample: 1b  NodeStatusCH: 2
+Node: 105 Sample: 1b  NodeStatusCH: 2
+Node: 106 Sample: 1b  NodeStatusCH: 2
+Node: 107 Sample: 1b  NodeStatusCH: 2
+Node: 108 Sample: 1b  NodeStatusCH: 2
+Node: 109 Sample: 1c  NodeStatusCH: 2
+Node: 110 Sample: 2A  NodeStatusCH: 2
+Node: 111 Sample: 2A  NodeStatusCH: 2
+Node: 112 Sample: 2A  NodeStatusCH: 2
+Node: 113 Sample: 2A  NodeStatusCH: 2
+Node: 114 Sample: 2A  NodeStatusCH: 2
+Node: 115 Sample: 2A  NodeStatusCH: 2
+Node: 116 Sample: 2A  NodeStatusCH: 2
+Node: 117 Sample: 2B  NodeStatusCH: 2
+Node: 118 Sample: 2B  NodeStatusCH: 2
+Node: 119 Sample: 2B  NodeStatusCH: 2
+Node: 120 Sample: 2B  NodeStatusCH: 2
+Node: 121 Sample: 2B  NodeStatusCH: 2
+Node: 122 Sample: 2B  NodeStatusCH: 2
+Node: 123 Sample: 2B  NodeStatusCH: 2
+Node: 124 Sample: 2C  NodeStatusCH: 2
+Node: 125 Sample: 2C  NodeStatusCH: 2
+Node: 126 Sample: 2C  NodeStatusCH: 2
+Node: 127 Sample: 2a  NodeStatusCH: 2
+Node: 128 Sample: 2a  NodeStatusCH: 2
+Node: 129 Sample: 2a  NodeStatusCH: 2
+Node: 130 Sample: 2a  NodeStatusCH: 2
+Node: 131 Sample: 2a  NodeStatusCH: 2
+Node: 132 Sample: 2b  NodeStatusCH: 2
+Node: 133 Sample: 2b  NodeStatusCH: 2
+Node: 134 Sample: 2b  NodeStatusCH: 2
+Node: 135 Sample: 2b  NodeStatusCH: 2
+Node: 136 Sample: 2b  NodeStatusCH: 2
+Node: 137 Sample: 2c  NodeStatusCH: 2
+Node: 138 Sample: 3A  NodeStatusCH: 2
+Node: 139 Sample: 3A  NodeStatusCH: 2
+Node: 140 Sample: 3A  NodeStatusCH: 2
+Node: 141 Sample: 3A  NodeStatusCH: 2
+Node: 142 Sample: 3A  NodeStatusCH: 2
+Node: 143 Sample: 3A  NodeStatusCH: 2
+Node: 144 Sample: 3A  NodeStatusCH: 2
+Node: 145 Sample: 3B  NodeStatusCH: 2
+Node: 146 Sample: 3B  NodeStatusCH: 2
+Node: 147 Sample: 3B  NodeStatusCH: 2
+Node: 148 Sample: 3B  NodeStatusCH: 2
+Node: 149 Sample: 3B  NodeStatusCH: 2
+Node: 150 Sample: 3B  NodeStatusCH: 2
+Node: 151 Sample: 3B  NodeStatusCH: 2
+Node: 152 Sample: 3C  NodeStatusCH: 2
+Node: 153 Sample: 3C  NodeStatusCH: 2
+Node: 154 Sample: 3C  NodeStatusCH: 2
+Node: 155 Sample: 3a  NodeStatusCH: 2
+Node: 156 Sample: 3a  NodeStatusCH: 2
+Node: 157 Sample: 3a  NodeStatusCH: 2
+Node: 158 Sample: 3a  NodeStatusCH: 2
+Node: 159 Sample: 3a  NodeStatusCH: 2
+Node: 160 Sample: 3b  NodeStatusCH: 2
+Node: 161 Sample: 3b  NodeStatusCH: 2
+Node: 162 Sample: 3b  NodeStatusCH: 2
+Node: 163 Sample: 3b  NodeStatusCH: 2
+Node: 164 Sample: 3c  NodeStatusCH: 2
+Node: 165 Sample: 4A  NodeStatusCH: 2
+Node: 166 Sample: 4A  NodeStatusCH: 2
+Node: 167 Sample: 4A  NodeStatusCH: 2
+Node: 168 Sample: 4A  NodeStatusCH: 2
+Node: 169 Sample: 4A  NodeStatusCH: 2
+Node: 170 Sample: 4A  NodeStatusCH: 2
+Node: 171 Sample: 4A  NodeStatusCH: 2
+Node: 172 Sample: 4B  NodeStatusCH: 2
+Node: 173 Sample: 4B  NodeStatusCH: 2
+Node: 174 Sample: 4B  NodeStatusCH: 2
+Node: 175 Sample: 4B  NodeStatusCH: 2
+Node: 176 Sample: 4B  NodeStatusCH: 2
+Node: 177 Sample: 4B  NodeStatusCH: 2
+Node: 178 Sample: 4B  NodeStatusCH: 2
+Node: 179 Sample: 4C  NodeStatusCH: 2
+Node: 180 Sample: 4C  NodeStatusCH: 2
+Node: 181 Sample: 4C  NodeStatusCH: 2
+Node: 182 Sample: 4a  NodeStatusCH: 2
+Node: 183 Sample: 4a  NodeStatusCH: 2
+Node: 184 Sample: 4a  NodeStatusCH: 2
+Node: 185 Sample: 4a  NodeStatusCH: 2
+Node: 186 Sample: 4a  NodeStatusCH: 2
+Node: 187 Sample: 4b  NodeStatusCH: 2
+Node: 188 Sample: 4b  NodeStatusCH: 2
+Node: 189 Sample: 4b  NodeStatusCH: 2
+Node: 190 Sample: 4b  NodeStatusCH: 2
+Node: 191 Sample: 4b  NodeStatusCH: 2
+Node: 192 Sample: 4c  NodeStatusCH: 2
+Node: 193 Sample: 5A  NodeStatusCH: 2
+Node: 194 Sample: 5A  NodeStatusCH: 2
+Node: 195 Sample: 5A  NodeStatusCH: 2
+Node: 196 Sample: 5A  NodeStatusCH: 2
+Node: 197 Sample: 5A  NodeStatusCH: 2
+Node: 198 Sample: 5A  NodeStatusCH: 2
+Node: 199 Sample: 5A  NodeStatusCH: 2
+Node: 200 Sample: 5B  NodeStatusCH: 2
+Node: 201 Sample: 5B  NodeStatusCH: 2
+Node: 202 Sample: 5B  NodeStatusCH: 2
+Node: 203 Sample: 5B  NodeStatusCH: 2
+Node: 204 Sample: 5B  NodeStatusCH: 2
+Node: 205 Sample: 5B  NodeStatusCH: 2
+Node: 206 Sample: 5B  NodeStatusCH: 2
+Node: 207 Sample: 5C  NodeStatusCH: 2
+Node: 208 Sample: 5C  NodeStatusCH: 2
+Node: 209 Sample: 5C  NodeStatusCH: 2
+Node: 210 Sample: 5a  NodeStatusCH: 2
+Node: 211 Sample: 5a  NodeStatusCH: 2
+Node: 212 Sample: 5b  NodeStatusCH: 2
+Node: 213 Sample: 5b  NodeStatusCH: 2
+Node: 214 Sample: 5c  NodeStatusCH: 2
+Node: 215 Sample: 6A  NodeStatusCH: 2
+Node: 216 Sample: 6A  NodeStatusCH: 2
+Node: 217 Sample: 6A  NodeStatusCH: 2
+Node: 218 Sample: 6A  NodeStatusCH: 2
+Node: 219 Sample: 6A  NodeStatusCH: 2
+Node: 220 Sample: 6A  NodeStatusCH: 2
+Node: 221 Sample: 6A  NodeStatusCH: 2
+Node: 222 Sample: 6B  NodeStatusCH: 2
+Node: 223 Sample: 6B  NodeStatusCH: 2
+Node: 224 Sample: 6B  NodeStatusCH: 2
+Node: 225 Sample: 6B  NodeStatusCH: 2
+Node: 226 Sample: 6B  NodeStatusCH: 2
+Node: 227 Sample: 6B  NodeStatusCH: 2
+Node: 228 Sample: 6B  NodeStatusCH: 2
+Node: 229 Sample: 6C  NodeStatusCH: 2
+Node: 230 Sample: 6C  NodeStatusCH: 2
+Node: 231 Sample: 6C  NodeStatusCH: 2
+Node: 232 Sample: 6a  NodeStatusCH: 2
+Node: 233 Sample: 6a  NodeStatusCH: 2
+Node: 234 Sample: 6b  NodeStatusCH: 2
+Node: 235 Sample: 6b  NodeStatusCH: 2
+Node: 236 Sample: 6c  NodeStatusCH: 2
+Node: 237 Sample: 7A  NodeStatusCH: 2
+Node: 238 Sample: 7A  NodeStatusCH: 2
+Node: 239 Sample: 7A  NodeStatusCH: 2
+Node: 240 Sample: 7A  NodeStatusCH: 2
+Node: 241 Sample: 7A  NodeStatusCH: 2
+Node: 242 Sample: 7A  NodeStatusCH: 2
+Node: 243 Sample: 7A  NodeStatusCH: 2
+Node: 244 Sample: 7B  NodeStatusCH: 2
+Node: 245 Sample: 7B  NodeStatusCH: 2
+Node: 246 Sample: 7B  NodeStatusCH: 2
+Node: 247 Sample: 7B  NodeStatusCH: 2
+Node: 248 Sample: 7B  NodeStatusCH: 2
+Node: 249 Sample: 7B  NodeStatusCH: 2
+Node: 250 Sample: 7B  NodeStatusCH: 2
+Node: 251 Sample: 7C  NodeStatusCH: 2
+Node: 252 Sample: 7C  NodeStatusCH: 2
+Node: 253 Sample: 7C  NodeStatusCH: 2
+Node: 254 Sample: 7a  NodeStatusCH: 2
+Node: 255 Sample: 7a  NodeStatusCH: 2
+Node: 256 Sample: 7b  NodeStatusCH: 2
+Node: 257 Sample: 7b  NodeStatusCH: 2
+Node: 258 Sample: 7c  NodeStatusCH: 2
+Node: 259 Sample: 8A  NodeStatusCH: 2
+Node: 260 Sample: 8A  NodeStatusCH: 2
+Node: 261 Sample: 8A  NodeStatusCH: 2
+Node: 262 Sample: 8A  NodeStatusCH: 2
+Node: 263 Sample: 8A  NodeStatusCH: 2
+Node: 264 Sample: 8A  NodeStatusCH: 2
+Node: 265 Sample: 8A  NodeStatusCH: 2
+Node: 266 Sample: 8B  NodeStatusCH: 2
+Node: 267 Sample: 8B  NodeStatusCH: 2
+Node: 268 Sample: 8B  NodeStatusCH: 2
+Node: 269 Sample: 8B  NodeStatusCH: 2
+Node: 270 Sample: 8B  NodeStatusCH: 2
+Node: 271 Sample: 8B  NodeStatusCH: 2
+Node: 272 Sample: 8B  NodeStatusCH: 2
+Node: 273 Sample: 8C  NodeStatusCH: 2
+Node: 274 Sample: 8C  NodeStatusCH: 2
+Node: 275 Sample: 8C  NodeStatusCH: 2
+Node: 276 Sample: 8a  NodeStatusCH: 2
+Node: 277 Sample: 8a  NodeStatusCH: 2
+Node: 278 Sample: 8a  NodeStatusCH: 2
+Node: 279 Sample: 8b  NodeStatusCH: 2
+Node: 280 Sample: 8b  NodeStatusCH: 2
+Node: 281 Sample: 8b  NodeStatusCH: 2
+Node: 282 Sample: 8c  NodeStatusCH: 2
+Node: 283 Sample: 9A  NodeStatusCH: 2
+Node: 284 Sample: 9A  NodeStatusCH: 2
+Node: 285 Sample: 9A  NodeStatusCH: 2
+Node: 286 Sample: 9A  NodeStatusCH: 2
+Node: 287 Sample: 9A  NodeStatusCH: 2
+Node: 288 Sample: 9B  NodeStatusCH: 2
+Node: 289 Sample: 9B  NodeStatusCH: 2
+Node: 290 Sample: 9B  NodeStatusCH: 2
+Node: 291 Sample: 9B  NodeStatusCH: 2
+Node: 292 Sample: 9B  NodeStatusCH: 2
+Node: 293 Sample: 9C  NodeStatusCH: 2
+Node: 294 Sample: 9a  NodeStatusCH: 2
+Node: 295 Sample: 9a  NodeStatusCH: 2
+Node: 296 Sample: 9a  NodeStatusCH: 2
+Node: 297 Sample: 9a  NodeStatusCH: 2
+Node: 298 Sample: 9b  NodeStatusCH: 2
+Node: 299 Sample: 9b  NodeStatusCH: 2
+Node: 300 Sample: 9b  NodeStatusCH: 2
+Node: 301 Sample: 9b  NodeStatusCH: 2
+Node: 302 Sample: 9c  NodeStatusCH: 2
+Node: 303 Sample: A-1  NodeStatusCH: 2
+Node: 304 Sample: A-10  NodeStatusCH: 2
+Node: 305 Sample: A-11  NodeStatusCH: 2
+Node: 306 Sample: A-12  NodeStatusCH: 2
+Node: 307 Sample: A-13  NodeStatusCH: 2
+Node: 308 Sample: A-2  NodeStatusCH: 2
+Node: 309 Sample: A-3  NodeStatusCH: 2
+Node: 310 Sample: A-4  NodeStatusCH: 2
+Node: 311 Sample: A-5  NodeStatusCH: 2
+Node: 312 Sample: A-6  NodeStatusCH: 2
+Node: 313 Sample: A-7  NodeStatusCH: 2
+Node: 314 Sample: A-8  NodeStatusCH: 2
+Node: 315 Sample: A-9  NodeStatusCH: 2
+Node: 316 Sample: B-1  NodeStatusCH: 2
+Node: 317 Sample: B-10  NodeStatusCH: 2
+Node: 318 Sample: B-11  NodeStatusCH: 2
+Node: 319 Sample: B-12  NodeStatusCH: 2
+Node: 320 Sample: B-13  NodeStatusCH: 2
+Node: 321 Sample: B-2  NodeStatusCH: 2
+Node: 322 Sample: B-3  NodeStatusCH: 2
+Node: 323 Sample: B-4  NodeStatusCH: 2
+Node: 324 Sample: B-5  NodeStatusCH: 2
+Node: 325 Sample: B-6  NodeStatusCH: 2
+Node: 326 Sample: B-7  NodeStatusCH: 2
+Node: 327 Sample: B-8  NodeStatusCH: 2
+Node: 328 Sample: B-9  NodeStatusCH: 2
+Node: 329 Sample: C-1  NodeStatusCH: 2
+Node: 330 Sample: C-10  NodeStatusCH: 2
+Node: 331 Sample: C-11  NodeStatusCH: 2
+Node: 332 Sample: C-12  NodeStatusCH: 2
+Node: 333 Sample: C-13  NodeStatusCH: 2
+Node: 334 Sample: C-2  NodeStatusCH: 2
+Node: 335 Sample: C-3  NodeStatusCH: 2
+Node: 336 Sample: C-4  NodeStatusCH: 2
+Node: 337 Sample: C-5  NodeStatusCH: 2
+Node: 338 Sample: C-6  NodeStatusCH: 2
+Node: 339 Sample: C-7  NodeStatusCH: 2
+Node: 340 Sample: C-8  NodeStatusCH: 2
+Node: 341 Sample: C-9  NodeStatusCH: 2
+Node: 342 Sample: L1-I-3T  NodeStatusCH: 2
+Node: 343 Sample: L10-I-21T  NodeStatusCH: 2
+Node: 344 Sample: L10-I-3T  NodeStatusCH: 2
+Node: 345 Sample: L10-I-60T  NodeStatusCH: 2
+Node: 346 Sample: L11-I-21T  NodeStatusCH: 2
+Node: 347 Sample: L11-I-3T  NodeStatusCH: 2
+Node: 348 Sample: L11-I-60T  NodeStatusCH: 2
+Node: 349 Sample: L12-I-21T  NodeStatusCH: 2
+Node: 350 Sample: L12-I-3T  NodeStatusCH: 2
+Node: 351 Sample: L12-I-60T  NodeStatusCH: 2
+Node: 352 Sample: L2-I-3T  NodeStatusCH: 2
+Node: 353 Sample: L3-I-3T  NodeStatusCH: 2
+Node: 354 Sample: L8-I-3T  NodeStatusCH: 2
+Node: 355 Sample: L9-I-21T  NodeStatusCH: 2
+Node: 356 Sample: L9-I-3T  NodeStatusCH: 2
+Node: 357 Sample: L9-I-60T  NodeStatusCH: 2
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1b
+nlopt roundoff-limited
+NFUN: sample 2a
+nlopt roundoff-limited
+1 iterations, continuing...
+sum of residuals: 79.3189
+parameter 0 : -1.60237e+06
+parameter 1 : -1.79441e+06
+parameter 2 : -1.20115e+06
+parameter 3 : -1.40461e+06
+parameter 4 : -1.5938e+06
+parameter 5 : -1.18973e+06
+parameter 6 : -1.39377e+06
+~ m.count. = 1 sum.res.= 79.3188600092833
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1b
+nlopt roundoff-limited
+NFUN: sample 2a
+nlopt roundoff-limited
+2 iterations, continuing...
+sum of residuals: 79.318425524496
+parameter 0 : -1602366
+parameter 1 : -1794413
+parameter 2 : -1201149
+parameter 3 : -1404612
+parameter 4 : -1593804
+parameter 5 : -1189733
+parameter 6 : -1393766
+~ m.count. = 2 sum.res.= 79.318425524496
+ NLopt return code: 5
+ Optimization stopped because maxeval was reached. 
+found minimum at <<f( -1 -1 -1 -1 -1 -1 -1 ) = 79.3188600092833
+ after 2 evaluations
+ Statistics Constructor: sum of squares: 79.3188600092833
+ Statistics Constructor: number_of_parameters: 7
+NFUN: sample 11A
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1b
+nlopt roundoff-limited
+3 iterations, continuing...
+sum of residuals: 79.8156466910228
+parameter 0 : -1602686.4732
+parameter 1 : -1794413
+parameter 2 : -1201149
+parameter 3 : -1404612
+parameter 4 : -1593804
+parameter 5 : -1189733
+parameter 6 : -1393766
+~ m.count. = 3 sum.res.= 79.8156466910228
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 2a
+nlopt roundoff-limited
+4 iterations, continuing...
+sum of residuals: 78.9175898714186
+parameter 0 : -1602045.5268
+parameter 1 : -1794413
+parameter 2 : -1201149
+parameter 3 : -1404612
+parameter 4 : -1593804
+parameter 5 : -1189733
+parameter 6 : -1393766
+~ m.count. = 4 sum.res.= 78.9175898714186
+NFUN: sample 1a
+nlopt roundoff-limited
+5 iterations, continuing...
+sum of residuals: 82.1616361483416
+parameter 0 : -1602366
+parameter 1 : -1794771.8826
+parameter 2 : -1201149
+parameter 3 : -1404612
+parameter 4 : -1593804
+parameter 5 : -1189733
+parameter 6 : -1393766
+~ m.count. = 5 sum.res.= 82.1616361483416
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+6 iterations, continuing...
+sum of residuals: 76.8720863307175
+parameter 0 : -1602366
+parameter 1 : -1794054.1174
+parameter 2 : -1201149
+parameter 3 : -1404612
+parameter 4 : -1593804
+parameter 5 : -1189733
+parameter 6 : -1393766
+~ m.count. = 6 sum.res.= 76.8720863307175
+NFUN: sample 11A
+nlopt roundoff-limited
+NFUN: sample 11B
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1b
+nlopt roundoff-limited
+NFUN: sample 2a
+nlopt roundoff-limited
+NFUN: sample L1-I-3T
+nlopt roundoff-limited
+7 iterations, continuing...
+sum of residuals: 76.9916415454077
+parameter 0 : -1602366
+parameter 1 : -1794413
+parameter 2 : -1201389.2298
+parameter 3 : -1404612
+parameter 4 : -1593804
+parameter 5 : -1189733
+parameter 6 : -1393766
+~ m.count. = 7 sum.res.= 76.9916415454077
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 2a
+nlopt roundoff-limited
+NFUN: sample L1-I-3T
+nlopt roundoff-limited
+8 iterations, continuing...
+sum of residuals: 81.843225562463
+parameter 0 : -1602366
+parameter 1 : -1794413
+parameter 2 : -1200908.7702
+parameter 3 : -1404612
+parameter 4 : -1593804
+parameter 5 : -1189733
+parameter 6 : -1393766
+~ m.count. = 8 sum.res.= 81.843225562463
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 2a
+nlopt roundoff-limited
+9 iterations, continuing...
+sum of residuals: 79.0426753585835
+parameter 0 : -1602366
+parameter 1 : -1794413
+parameter 2 : -1201149
+parameter 3 : -1404892.9224
+parameter 4 : -1593804
+parameter 5 : -1189733
+parameter 6 : -1393766
+~ m.count. = 9 sum.res.= 79.0426753585835
+NFUN: sample 10A
+nlopt roundoff-limited
+NFUN: sample 10B
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+10 iterations, continuing...
+sum of residuals: 79.5504323458965
+parameter 0 : -1602366
+parameter 1 : -1794413
+parameter 2 : -1201149
+parameter 3 : -1404331.0776
+parameter 4 : -1593804
+parameter 5 : -1189733
+parameter 6 : -1393766
+~ m.count. = 10 sum.res.= 79.5504323458965
+NFUN: sample 11A
+nlopt roundoff-limited
+NFUN: sample 11B
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample L2-I-3T
+nlopt roundoff-limited
+11 iterations, continuing...
+sum of residuals: 79.5485517201051
+parameter 0 : -1602366
+parameter 1 : -1794413
+parameter 2 : -1201149
+parameter 3 : -1404612
+parameter 4 : -1594122.7608
+parameter 5 : -1189733
+parameter 6 : -1393766
+~ m.count. = 11 sum.res.= 79.5485517201051
+NFUN: sample 10A
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 9A
+nlopt roundoff-limited
+NFUN: sample 9B
+nlopt roundoff-limited
+12 iterations, continuing...
+sum of residuals: 79.2169855071404
+parameter 0 : -1602366
+parameter 1 : -1794413
+parameter 2 : -1201149
+parameter 3 : -1404612
+parameter 4 : -1593485.2392
+parameter 5 : -1189733
+parameter 6 : -1393766
+~ m.count. = 12 sum.res.= 79.2169855071404
+NFUN: sample 11A
+nlopt roundoff-limited
+NFUN: sample 11B
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+13 iterations, continuing...
+sum of residuals: 78.8002012559322
+parameter 0 : -1602366
+parameter 1 : -1794413
+parameter 2 : -1201149
+parameter 3 : -1404612
+parameter 4 : -1593804
+parameter 5 : -1189970.9466
+parameter 6 : -1393766
+~ m.count. = 13 sum.res.= 78.8002012559322
+NFUN: sample 10A
+nlopt roundoff-limited
+NFUN: sample 10B
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1b
+nlopt roundoff-limited
+NFUN: sample 1b
+nlopt roundoff-limited
+NFUN: sample 2a
+nlopt roundoff-limited
+NFUN: sample L1-I-3T
+nlopt roundoff-limited
+~ m.count. = 14 sum.res.= 79.85866615104
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 2a
+nlopt roundoff-limited
+NFUN: sample L1-I-3T
+nlopt roundoff-limited
+~ m.count. = 15 sum.res.= 79.0852722941935
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1b
+nlopt roundoff-limited
+NFUN: sample 2a
+nlopt roundoff-limited
+NFUN: sample L1-I-3T
+nlopt roundoff-limited
+NFUN: sample L2-I-3T
+nlopt roundoff-limited
+~ m.count. = 16 sum.res.= 79.5628797766782
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1b
+nlopt roundoff-limited
+NFUN: sample 1b
+nlopt roundoff-limited
+NFUN: sample 2a
+nlopt roundoff-limited
+~ m.count. = 17 sum.res.= 79.321751285012
+192.225219726562 seconds.
+GEMSFITS: End. Bye!
+13:59:09: /home/sveta/devThermo/gitThermoFun/gemsfits/gemsfit2-build/gemsfit2 exited with code 0
+
+14:11:25: Starting /home/sveta/devThermo/gitThermoFun/gemsfits/gemsfit2-build/gemsfit2 -run 1 ./a001-init.json...
+"/home/sveta/devThermo/gitThermoFun/gemsfits/gfshell2-build/Tests/ClaySor-U6-03-2022/work"
+1 arg -run
+2 arg 1
+3 arg ./a001-init.json
+GEMSFIT2: Start
+optParamFile = ./a001-init.json
+fitFile = output/fit-results.csv
+fitLogFile = output/gemsfit2.log
+gems3LstFilePath = 
+[2024-01-09 14:11:25.202] [gems3k] [info] Home directory is /home/sveta
+../EJDB/myprojdb1
+experiments from database 410
+Records after removing skipped pairs 357
+Records after removing skipped pairs (dataset-samples): 357
+Node: 1 Sample: 10A  NodeStatusCH: 2
+Node: 2 Sample: 10A  NodeStatusCH: 2
+Node: 3 Sample: 10A  NodeStatusCH: 2
+Node: 4 Sample: 10A  NodeStatusCH: 2
+Node: 5 Sample: 10A  NodeStatusCH: 2
+Node: 6 Sample: 10B  NodeStatusCH: 2
+Node: 7 Sample: 10B  NodeStatusCH: 2
+Node: 8 Sample: 10B  NodeStatusCH: 2
+Node: 9 Sample: 10B  NodeStatusCH: 2
+Node: 10 Sample: 10B  NodeStatusCH: 2
+Node: 11 Sample: 10C  NodeStatusCH: 2
+Node: 12 Sample: 10a  NodeStatusCH: 2
+Node: 13 Sample: 10a  NodeStatusCH: 2
+Node: 14 Sample: 10a  NodeStatusCH: 2
+Node: 15 Sample: 10a  NodeStatusCH: 2
+Node: 16 Sample: 10b  NodeStatusCH: 2
+Node: 17 Sample: 10b  NodeStatusCH: 2
+Node: 18 Sample: 10b  NodeStatusCH: 2
+Node: 19 Sample: 10b  NodeStatusCH: 2
+Node: 20 Sample: 10c  NodeStatusCH: 2
+Node: 21 Sample: 11A  NodeStatusCH: 2
+Node: 22 Sample: 11A  NodeStatusCH: 2
+Node: 23 Sample: 11A  NodeStatusCH: 2
+Node: 24 Sample: 11A  NodeStatusCH: 2
+Node: 25 Sample: 11A  NodeStatusCH: 2
+Node: 26 Sample: 11B  NodeStatusCH: 2
+Node: 27 Sample: 11B  NodeStatusCH: 2
+Node: 28 Sample: 11B  NodeStatusCH: 2
+Node: 29 Sample: 11B  NodeStatusCH: 2
+Node: 30 Sample: 11B  NodeStatusCH: 2
+Node: 31 Sample: 11C  NodeStatusCH: 2
+Node: 32 Sample: 11a  NodeStatusCH: 2
+Node: 33 Sample: 11a  NodeStatusCH: 2
+Node: 34 Sample: 11a  NodeStatusCH: 2
+Node: 35 Sample: 11a  NodeStatusCH: 2
+Node: 36 Sample: 11b  NodeStatusCH: 2
+Node: 37 Sample: 11b  NodeStatusCH: 2
+Node: 38 Sample: 11b  NodeStatusCH: 2
+Node: 39 Sample: 11b  NodeStatusCH: 2
+Node: 40 Sample: 12A  NodeStatusCH: 2
+Node: 41 Sample: 12A  NodeStatusCH: 2
+Node: 42 Sample: 12A  NodeStatusCH: 2
+Node: 43 Sample: 12A  NodeStatusCH: 2
+Node: 44 Sample: 12A  NodeStatusCH: 2
+Node: 45 Sample: 12B  NodeStatusCH: 2
+Node: 46 Sample: 12B  NodeStatusCH: 2
+Node: 47 Sample: 12B  NodeStatusCH: 2
+Node: 48 Sample: 12B  NodeStatusCH: 2
+Node: 49 Sample: 12B  NodeStatusCH: 2
+Node: 50 Sample: 12C  NodeStatusCH: 2
+Node: 51 Sample: 12a  NodeStatusCH: 2
+Node: 52 Sample: 12a  NodeStatusCH: 2
+Node: 53 Sample: 12a  NodeStatusCH: 2
+Node: 54 Sample: 12a  NodeStatusCH: 2
+Node: 55 Sample: 12b  NodeStatusCH: 2
+Node: 56 Sample: 12b  NodeStatusCH: 2
+Node: 57 Sample: 12b  NodeStatusCH: 2
+Node: 58 Sample: 12b  NodeStatusCH: 2
+Node: 59 Sample: 13A  NodeStatusCH: 2
+Node: 60 Sample: 13A  NodeStatusCH: 2
+Node: 61 Sample: 13B  NodeStatusCH: 2
+Node: 62 Sample: 13B  NodeStatusCH: 2
+Node: 63 Sample: 13a  NodeStatusCH: 2
+Node: 64 Sample: 13b  NodeStatusCH: 2
+Node: 65 Sample: 14A  NodeStatusCH: 2
+Node: 66 Sample: 14A  NodeStatusCH: 2
+Node: 67 Sample: 14B  NodeStatusCH: 2
+Node: 68 Sample: 14B  NodeStatusCH: 2
+Node: 69 Sample: 14a  NodeStatusCH: 2
+Node: 70 Sample: 14b  NodeStatusCH: 2
+Node: 71 Sample: 15A  NodeStatusCH: 2
+Node: 72 Sample: 15A  NodeStatusCH: 2
+Node: 73 Sample: 15B  NodeStatusCH: 2
+Node: 74 Sample: 15B  NodeStatusCH: 2
+Node: 75 Sample: 15a  NodeStatusCH: 2
+Node: 76 Sample: 15b  NodeStatusCH: 2
+Node: 77 Sample: 16A  NodeStatusCH: 2
+Node: 78 Sample: 16A  NodeStatusCH: 2
+Node: 79 Sample: 16B  NodeStatusCH: 2
+Node: 80 Sample: 16B  NodeStatusCH: 2
+Node: 81 Sample: 16a  NodeStatusCH: 2
+Node: 82 Sample: 16b  NodeStatusCH: 2
+Node: 83 Sample: 1A  NodeStatusCH: 2
+Node: 84 Sample: 1A  NodeStatusCH: 2
+Node: 85 Sample: 1A  NodeStatusCH: 2
+Node: 86 Sample: 1A  NodeStatusCH: 2
+Node: 87 Sample: 1A  NodeStatusCH: 2
+Node: 88 Sample: 1A  NodeStatusCH: 2
+Node: 89 Sample: 1B  NodeStatusCH: 2
+Node: 90 Sample: 1B  NodeStatusCH: 2
+Node: 91 Sample: 1B  NodeStatusCH: 2
+Node: 92 Sample: 1B  NodeStatusCH: 2
+Node: 93 Sample: 1B  NodeStatusCH: 2
+Node: 94 Sample: 1B  NodeStatusCH: 2
+Node: 95 Sample: 1C  NodeStatusCH: 2
+Node: 96 Sample: 1C  NodeStatusCH: 2
+Node: 97 Sample: 1a  NodeStatusCH: 2
+Node: 98 Sample: 1a  NodeStatusCH: 2
+Node: 99 Sample: 1a  NodeStatusCH: 2
+Node: 100 Sample: 1a  NodeStatusCH: 2
+Node: 101 Sample: 1a  NodeStatusCH: 2
+Node: 102 Sample: 1a  NodeStatusCH: 2
+Node: 103 Sample: 1b  NodeStatusCH: 2
+Node: 104 Sample: 1b  NodeStatusCH: 2
+Node: 105 Sample: 1b  NodeStatusCH: 2
+Node: 106 Sample: 1b  NodeStatusCH: 2
+Node: 107 Sample: 1b  NodeStatusCH: 2
+Node: 108 Sample: 1b  NodeStatusCH: 2
+Node: 109 Sample: 1c  NodeStatusCH: 2
+Node: 110 Sample: 2A  NodeStatusCH: 2
+Node: 111 Sample: 2A  NodeStatusCH: 2
+Node: 112 Sample: 2A  NodeStatusCH: 2
+Node: 113 Sample: 2A  NodeStatusCH: 2
+Node: 114 Sample: 2A  NodeStatusCH: 2
+Node: 115 Sample: 2A  NodeStatusCH: 2
+Node: 116 Sample: 2A  NodeStatusCH: 2
+Node: 117 Sample: 2B  NodeStatusCH: 2
+Node: 118 Sample: 2B  NodeStatusCH: 2
+Node: 119 Sample: 2B  NodeStatusCH: 2
+Node: 120 Sample: 2B  NodeStatusCH: 2
+Node: 121 Sample: 2B  NodeStatusCH: 2
+Node: 122 Sample: 2B  NodeStatusCH: 2
+Node: 123 Sample: 2B  NodeStatusCH: 2
+Node: 124 Sample: 2C  NodeStatusCH: 2
+Node: 125 Sample: 2C  NodeStatusCH: 2
+Node: 126 Sample: 2C  NodeStatusCH: 2
+Node: 127 Sample: 2a  NodeStatusCH: 2
+Node: 128 Sample: 2a  NodeStatusCH: 2
+Node: 129 Sample: 2a  NodeStatusCH: 2
+Node: 130 Sample: 2a  NodeStatusCH: 2
+Node: 131 Sample: 2a  NodeStatusCH: 2
+Node: 132 Sample: 2b  NodeStatusCH: 2
+Node: 133 Sample: 2b  NodeStatusCH: 2
+Node: 134 Sample: 2b  NodeStatusCH: 2
+Node: 135 Sample: 2b  NodeStatusCH: 2
+Node: 136 Sample: 2b  NodeStatusCH: 2
+Node: 137 Sample: 2c  NodeStatusCH: 2
+Node: 138 Sample: 3A  NodeStatusCH: 2
+Node: 139 Sample: 3A  NodeStatusCH: 2
+Node: 140 Sample: 3A  NodeStatusCH: 2
+Node: 141 Sample: 3A  NodeStatusCH: 2
+Node: 142 Sample: 3A  NodeStatusCH: 2
+Node: 143 Sample: 3A  NodeStatusCH: 2
+Node: 144 Sample: 3A  NodeStatusCH: 2
+Node: 145 Sample: 3B  NodeStatusCH: 2
+Node: 146 Sample: 3B  NodeStatusCH: 2
+Node: 147 Sample: 3B  NodeStatusCH: 2
+Node: 148 Sample: 3B  NodeStatusCH: 2
+Node: 149 Sample: 3B  NodeStatusCH: 2
+Node: 150 Sample: 3B  NodeStatusCH: 2
+Node: 151 Sample: 3B  NodeStatusCH: 2
+Node: 152 Sample: 3C  NodeStatusCH: 2
+Node: 153 Sample: 3C  NodeStatusCH: 2
+Node: 154 Sample: 3C  NodeStatusCH: 2
+Node: 155 Sample: 3a  NodeStatusCH: 2
+Node: 156 Sample: 3a  NodeStatusCH: 2
+Node: 157 Sample: 3a  NodeStatusCH: 2
+Node: 158 Sample: 3a  NodeStatusCH: 2
+Node: 159 Sample: 3a  NodeStatusCH: 2
+Node: 160 Sample: 3b  NodeStatusCH: 2
+Node: 161 Sample: 3b  NodeStatusCH: 2
+Node: 162 Sample: 3b  NodeStatusCH: 2
+Node: 163 Sample: 3b  NodeStatusCH: 2
+Node: 164 Sample: 3c  NodeStatusCH: 2
+Node: 165 Sample: 4A  NodeStatusCH: 2
+Node: 166 Sample: 4A  NodeStatusCH: 2
+Node: 167 Sample: 4A  NodeStatusCH: 2
+Node: 168 Sample: 4A  NodeStatusCH: 2
+Node: 169 Sample: 4A  NodeStatusCH: 2
+Node: 170 Sample: 4A  NodeStatusCH: 2
+Node: 171 Sample: 4A  NodeStatusCH: 2
+Node: 172 Sample: 4B  NodeStatusCH: 2
+Node: 173 Sample: 4B  NodeStatusCH: 2
+Node: 174 Sample: 4B  NodeStatusCH: 2
+Node: 175 Sample: 4B  NodeStatusCH: 2
+Node: 176 Sample: 4B  NodeStatusCH: 2
+Node: 177 Sample: 4B  NodeStatusCH: 2
+Node: 178 Sample: 4B  NodeStatusCH: 2
+Node: 179 Sample: 4C  NodeStatusCH: 2
+Node: 180 Sample: 4C  NodeStatusCH: 2
+Node: 181 Sample: 4C  NodeStatusCH: 2
+Node: 182 Sample: 4a  NodeStatusCH: 2
+Node: 183 Sample: 4a  NodeStatusCH: 2
+Node: 184 Sample: 4a  NodeStatusCH: 2
+Node: 185 Sample: 4a  NodeStatusCH: 2
+Node: 186 Sample: 4a  NodeStatusCH: 2
+Node: 187 Sample: 4b  NodeStatusCH: 2
+Node: 188 Sample: 4b  NodeStatusCH: 2
+Node: 189 Sample: 4b  NodeStatusCH: 2
+Node: 190 Sample: 4b  NodeStatusCH: 2
+Node: 191 Sample: 4b  NodeStatusCH: 2
+Node: 192 Sample: 4c  NodeStatusCH: 2
+Node: 193 Sample: 5A  NodeStatusCH: 2
+Node: 194 Sample: 5A  NodeStatusCH: 2
+Node: 195 Sample: 5A  NodeStatusCH: 2
+Node: 196 Sample: 5A  NodeStatusCH: 2
+Node: 197 Sample: 5A  NodeStatusCH: 2
+Node: 198 Sample: 5A  NodeStatusCH: 2
+Node: 199 Sample: 5A  NodeStatusCH: 2
+Node: 200 Sample: 5B  NodeStatusCH: 2
+Node: 201 Sample: 5B  NodeStatusCH: 2
+Node: 202 Sample: 5B  NodeStatusCH: 2
+Node: 203 Sample: 5B  NodeStatusCH: 2
+Node: 204 Sample: 5B  NodeStatusCH: 2
+Node: 205 Sample: 5B  NodeStatusCH: 2
+Node: 206 Sample: 5B  NodeStatusCH: 2
+Node: 207 Sample: 5C  NodeStatusCH: 2
+Node: 208 Sample: 5C  NodeStatusCH: 2
+Node: 209 Sample: 5C  NodeStatusCH: 2
+Node: 210 Sample: 5a  NodeStatusCH: 2
+Node: 211 Sample: 5a  NodeStatusCH: 2
+Node: 212 Sample: 5b  NodeStatusCH: 2
+Node: 213 Sample: 5b  NodeStatusCH: 2
+Node: 214 Sample: 5c  NodeStatusCH: 2
+Node: 215 Sample: 6A  NodeStatusCH: 2
+Node: 216 Sample: 6A  NodeStatusCH: 2
+Node: 217 Sample: 6A  NodeStatusCH: 2
+Node: 218 Sample: 6A  NodeStatusCH: 2
+Node: 219 Sample: 6A  NodeStatusCH: 2
+Node: 220 Sample: 6A  NodeStatusCH: 2
+Node: 221 Sample: 6A  NodeStatusCH: 2
+Node: 222 Sample: 6B  NodeStatusCH: 2
+Node: 223 Sample: 6B  NodeStatusCH: 2
+Node: 224 Sample: 6B  NodeStatusCH: 2
+Node: 225 Sample: 6B  NodeStatusCH: 2
+Node: 226 Sample: 6B  NodeStatusCH: 2
+Node: 227 Sample: 6B  NodeStatusCH: 2
+Node: 228 Sample: 6B  NodeStatusCH: 2
+Node: 229 Sample: 6C  NodeStatusCH: 2
+Node: 230 Sample: 6C  NodeStatusCH: 2
+Node: 231 Sample: 6C  NodeStatusCH: 2
+Node: 232 Sample: 6a  NodeStatusCH: 2
+Node: 233 Sample: 6a  NodeStatusCH: 2
+Node: 234 Sample: 6b  NodeStatusCH: 2
+Node: 235 Sample: 6b  NodeStatusCH: 2
+Node: 236 Sample: 6c  NodeStatusCH: 2
+Node: 237 Sample: 7A  NodeStatusCH: 2
+Node: 238 Sample: 7A  NodeStatusCH: 2
+Node: 239 Sample: 7A  NodeStatusCH: 2
+Node: 240 Sample: 7A  NodeStatusCH: 2
+Node: 241 Sample: 7A  NodeStatusCH: 2
+Node: 242 Sample: 7A  NodeStatusCH: 2
+Node: 243 Sample: 7A  NodeStatusCH: 2
+Node: 244 Sample: 7B  NodeStatusCH: 2
+Node: 245 Sample: 7B  NodeStatusCH: 2
+Node: 246 Sample: 7B  NodeStatusCH: 2
+Node: 247 Sample: 7B  NodeStatusCH: 2
+Node: 248 Sample: 7B  NodeStatusCH: 2
+Node: 249 Sample: 7B  NodeStatusCH: 2
+Node: 250 Sample: 7B  NodeStatusCH: 2
+Node: 251 Sample: 7C  NodeStatusCH: 2
+Node: 252 Sample: 7C  NodeStatusCH: 2
+Node: 253 Sample: 7C  NodeStatusCH: 2
+Node: 254 Sample: 7a  NodeStatusCH: 2
+Node: 255 Sample: 7a  NodeStatusCH: 2
+Node: 256 Sample: 7b  NodeStatusCH: 2
+Node: 257 Sample: 7b  NodeStatusCH: 2
+Node: 258 Sample: 7c  NodeStatusCH: 2
+Node: 259 Sample: 8A  NodeStatusCH: 2
+Node: 260 Sample: 8A  NodeStatusCH: 2
+Node: 261 Sample: 8A  NodeStatusCH: 2
+Node: 262 Sample: 8A  NodeStatusCH: 2
+Node: 263 Sample: 8A  NodeStatusCH: 2
+Node: 264 Sample: 8A  NodeStatusCH: 2
+Node: 265 Sample: 8A  NodeStatusCH: 2
+Node: 266 Sample: 8B  NodeStatusCH: 2
+Node: 267 Sample: 8B  NodeStatusCH: 2
+Node: 268 Sample: 8B  NodeStatusCH: 2
+Node: 269 Sample: 8B  NodeStatusCH: 2
+Node: 270 Sample: 8B  NodeStatusCH: 2
+Node: 271 Sample: 8B  NodeStatusCH: 2
+Node: 272 Sample: 8B  NodeStatusCH: 2
+Node: 273 Sample: 8C  NodeStatusCH: 2
+Node: 274 Sample: 8C  NodeStatusCH: 2
+Node: 275 Sample: 8C  NodeStatusCH: 2
+Node: 276 Sample: 8a  NodeStatusCH: 2
+Node: 277 Sample: 8a  NodeStatusCH: 2
+Node: 278 Sample: 8a  NodeStatusCH: 2
+Node: 279 Sample: 8b  NodeStatusCH: 2
+Node: 280 Sample: 8b  NodeStatusCH: 2
+Node: 281 Sample: 8b  NodeStatusCH: 2
+Node: 282 Sample: 8c  NodeStatusCH: 2
+Node: 283 Sample: 9A  NodeStatusCH: 2
+Node: 284 Sample: 9A  NodeStatusCH: 2
+Node: 285 Sample: 9A  NodeStatusCH: 2
+Node: 286 Sample: 9A  NodeStatusCH: 2
+Node: 287 Sample: 9A  NodeStatusCH: 2
+Node: 288 Sample: 9B  NodeStatusCH: 2
+Node: 289 Sample: 9B  NodeStatusCH: 2
+Node: 290 Sample: 9B  NodeStatusCH: 2
+Node: 291 Sample: 9B  NodeStatusCH: 2
+Node: 292 Sample: 9B  NodeStatusCH: 2
+Node: 293 Sample: 9C  NodeStatusCH: 2
+Node: 294 Sample: 9a  NodeStatusCH: 2
+Node: 295 Sample: 9a  NodeStatusCH: 2
+Node: 296 Sample: 9a  NodeStatusCH: 2
+Node: 297 Sample: 9a  NodeStatusCH: 2
+Node: 298 Sample: 9b  NodeStatusCH: 2
+Node: 299 Sample: 9b  NodeStatusCH: 2
+Node: 300 Sample: 9b  NodeStatusCH: 2
+Node: 301 Sample: 9b  NodeStatusCH: 2
+Node: 302 Sample: 9c  NodeStatusCH: 2
+Node: 303 Sample: A-1  NodeStatusCH: 2
+Node: 304 Sample: A-10  NodeStatusCH: 2
+Node: 305 Sample: A-11  NodeStatusCH: 2
+Node: 306 Sample: A-12  NodeStatusCH: 2
+Node: 307 Sample: A-13  NodeStatusCH: 2
+Node: 308 Sample: A-2  NodeStatusCH: 2
+Node: 309 Sample: A-3  NodeStatusCH: 2
+Node: 310 Sample: A-4  NodeStatusCH: 2
+Node: 311 Sample: A-5  NodeStatusCH: 2
+Node: 312 Sample: A-6  NodeStatusCH: 2
+Node: 313 Sample: A-7  NodeStatusCH: 2
+Node: 314 Sample: A-8  NodeStatusCH: 2
+Node: 315 Sample: A-9  NodeStatusCH: 2
+Node: 316 Sample: B-1  NodeStatusCH: 2
+Node: 317 Sample: B-10  NodeStatusCH: 2
+Node: 318 Sample: B-11  NodeStatusCH: 2
+Node: 319 Sample: B-12  NodeStatusCH: 2
+Node: 320 Sample: B-13  NodeStatusCH: 2
+Node: 321 Sample: B-2  NodeStatusCH: 2
+Node: 322 Sample: B-3  NodeStatusCH: 2
+Node: 323 Sample: B-4  NodeStatusCH: 2
+Node: 324 Sample: B-5  NodeStatusCH: 2
+Node: 325 Sample: B-6  NodeStatusCH: 2
+Node: 326 Sample: B-7  NodeStatusCH: 2
+Node: 327 Sample: B-8  NodeStatusCH: 2
+Node: 328 Sample: B-9  NodeStatusCH: 2
+Node: 329 Sample: C-1  NodeStatusCH: 2
+Node: 330 Sample: C-10  NodeStatusCH: 2
+Node: 331 Sample: C-11  NodeStatusCH: 2
+Node: 332 Sample: C-12  NodeStatusCH: 2
+Node: 333 Sample: C-13  NodeStatusCH: 2
+Node: 334 Sample: C-2  NodeStatusCH: 2
+Node: 335 Sample: C-3  NodeStatusCH: 2
+Node: 336 Sample: C-4  NodeStatusCH: 2
+Node: 337 Sample: C-5  NodeStatusCH: 2
+Node: 338 Sample: C-6  NodeStatusCH: 2
+Node: 339 Sample: C-7  NodeStatusCH: 2
+Node: 340 Sample: C-8  NodeStatusCH: 2
+Node: 341 Sample: C-9  NodeStatusCH: 2
+Node: 342 Sample: L1-I-3T  NodeStatusCH: 2
+Node: 343 Sample: L10-I-21T  NodeStatusCH: 2
+Node: 344 Sample: L10-I-3T  NodeStatusCH: 2
+Node: 345 Sample: L10-I-60T  NodeStatusCH: 2
+Node: 346 Sample: L11-I-21T  NodeStatusCH: 2
+Node: 347 Sample: L11-I-3T  NodeStatusCH: 2
+Node: 348 Sample: L11-I-60T  NodeStatusCH: 2
+Node: 349 Sample: L12-I-21T  NodeStatusCH: 2
+Node: 350 Sample: L12-I-3T  NodeStatusCH: 2
+Node: 351 Sample: L12-I-60T  NodeStatusCH: 2
+Node: 352 Sample: L2-I-3T  NodeStatusCH: 2
+Node: 353 Sample: L3-I-3T  NodeStatusCH: 2
+Node: 354 Sample: L8-I-3T  NodeStatusCH: 2
+Node: 355 Sample: L9-I-21T  NodeStatusCH: 2
+Node: 356 Sample: L9-I-3T  NodeStatusCH: 2
+Node: 357 Sample: L9-I-60T  NodeStatusCH: 2
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1b
+nlopt roundoff-limited
+NFUN: sample 2a
+nlopt roundoff-limited
+1 iterations, continuing...
+sum of residuals: 79.3189
+parameter 0 : -1.60237e+06
+parameter 1 : -1.79441e+06
+parameter 2 : -1.20115e+06
+parameter 3 : -1.40461e+06
+parameter 4 : -1.5938e+06
+parameter 5 : -1.18973e+06
+parameter 6 : -1.39377e+06
+~ m.count.= 1 sum.res.= 79.3188600092833
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1b
+nlopt roundoff-limited
+NFUN: sample 2a
+nlopt roundoff-limited
+2 iterations, continuing...
+sum of residuals: 79.318425524496
+parameter 0 : -1602366
+parameter 1 : -1794413
+parameter 2 : -1201149
+parameter 3 : -1404612
+parameter 4 : -1593804
+parameter 5 : -1189733
+parameter 6 : -1393766
+~ m.count.= 2 sum.res.= 79.318425524496
+ NLopt return code: 5
+ Optimization stopped because maxeval was reached. 
+found minimum at <<f( -1 -1 -1 -1 -1 -1 -1 ) = 79.3188600092833
+ after 2 evaluations
+ Statistics Constructor: sum of squares: 79.3188600092833
+ Statistics Constructor: number_of_parameters: 7
+NFUN: sample 11A
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1b
+nlopt roundoff-limited
+3 iterations, continuing...
+sum of residuals: 79.8156466910228
+parameter 0 : -1602686.4732
+parameter 1 : -1794413
+parameter 2 : -1201149
+parameter 3 : -1404612
+parameter 4 : -1593804
+parameter 5 : -1189733
+parameter 6 : -1393766
+~ m.count.= 3 sum.res.= 79.8156466910228
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 2a
+nlopt roundoff-limited
+4 iterations, continuing...
+sum of residuals: 78.9175898714186
+parameter 0 : -1602045.5268
+parameter 1 : -1794413
+parameter 2 : -1201149
+parameter 3 : -1404612
+parameter 4 : -1593804
+parameter 5 : -1189733
+parameter 6 : -1393766
+~ m.count.= 4 sum.res.= 78.9175898714186
+NFUN: sample 1a
+nlopt roundoff-limited
+5 iterations, continuing...
+sum of residuals: 82.1616361483416
+parameter 0 : -1602366
+parameter 1 : -1794771.8826
+parameter 2 : -1201149
+parameter 3 : -1404612
+parameter 4 : -1593804
+parameter 5 : -1189733
+parameter 6 : -1393766
+~ m.count.= 5 sum.res.= 82.1616361483416
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+6 iterations, continuing...
+sum of residuals: 76.8720863307175
+parameter 0 : -1602366
+parameter 1 : -1794054.1174
+parameter 2 : -1201149
+parameter 3 : -1404612
+parameter 4 : -1593804
+parameter 5 : -1189733
+parameter 6 : -1393766
+~ m.count.= 6 sum.res.= 76.8720863307175
+NFUN: sample 11A
+nlopt roundoff-limited
+NFUN: sample 11B
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1b
+nlopt roundoff-limited
+NFUN: sample 2a
+nlopt roundoff-limited
+NFUN: sample L1-I-3T
+nlopt roundoff-limited
+7 iterations, continuing...
+sum of residuals: 76.9916415454077
+parameter 0 : -1602366
+parameter 1 : -1794413
+parameter 2 : -1201389.2298
+parameter 3 : -1404612
+parameter 4 : -1593804
+parameter 5 : -1189733
+parameter 6 : -1393766
+~ m.count.= 7 sum.res.= 76.9916415454077
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 2a
+nlopt roundoff-limited
+NFUN: sample L1-I-3T
+nlopt roundoff-limited
+8 iterations, continuing...
+sum of residuals: 81.843225562463
+parameter 0 : -1602366
+parameter 1 : -1794413
+parameter 2 : -1200908.7702
+parameter 3 : -1404612
+parameter 4 : -1593804
+parameter 5 : -1189733
+parameter 6 : -1393766
+~ m.count.= 8 sum.res.= 81.843225562463
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 2a
+nlopt roundoff-limited
+9 iterations, continuing...
+sum of residuals: 79.0426753585835
+parameter 0 : -1602366
+parameter 1 : -1794413
+parameter 2 : -1201149
+parameter 3 : -1404892.9224
+parameter 4 : -1593804
+parameter 5 : -1189733
+parameter 6 : -1393766
+~ m.count.= 9 sum.res.= 79.0426753585835
+NFUN: sample 10A
+nlopt roundoff-limited
+NFUN: sample 10B
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+10 iterations, continuing...
+sum of residuals: 79.5504323458965
+parameter 0 : -1602366
+parameter 1 : -1794413
+parameter 2 : -1201149
+parameter 3 : -1404331.0776
+parameter 4 : -1593804
+parameter 5 : -1189733
+parameter 6 : -1393766
+~ m.count.= 10 sum.res.= 79.5504323458965
+NFUN: sample 11A
+nlopt roundoff-limited
+NFUN: sample 11B
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample L2-I-3T
+nlopt roundoff-limited
+11 iterations, continuing...
+sum of residuals: 79.5485517201051
+parameter 0 : -1602366
+parameter 1 : -1794413
+parameter 2 : -1201149
+parameter 3 : -1404612
+parameter 4 : -1594122.7608
+parameter 5 : -1189733
+parameter 6 : -1393766
+~ m.count.= 11 sum.res.= 79.5485517201051
+NFUN: sample 10A
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 9A
+nlopt roundoff-limited
+NFUN: sample 9B
+nlopt roundoff-limited
+12 iterations, continuing...
+sum of residuals: 79.2169855071404
+parameter 0 : -1602366
+parameter 1 : -1794413
+parameter 2 : -1201149
+parameter 3 : -1404612
+parameter 4 : -1593485.2392
+parameter 5 : -1189733
+parameter 6 : -1393766
+~ m.count.= 12 sum.res.= 79.2169855071404
+NFUN: sample 11A
+nlopt roundoff-limited
+NFUN: sample 11B
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+13 iterations, continuing...
+sum of residuals: 78.8002012559322
+parameter 0 : -1602366
+parameter 1 : -1794413
+parameter 2 : -1201149
+parameter 3 : -1404612
+parameter 4 : -1593804
+parameter 5 : -1189970.9466
+parameter 6 : -1393766
+~ m.count.= 13 sum.res.= 78.8002012559322
+NFUN: sample 10A
+nlopt roundoff-limited
+NFUN: sample 10B
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1b
+nlopt roundoff-limited
+NFUN: sample 1b
+nlopt roundoff-limited
+NFUN: sample 2a
+nlopt roundoff-limited
+NFUN: sample L1-I-3T
+nlopt roundoff-limited
+~ m.count.= 14 sum.res.= 79.85866615104
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 2a
+nlopt roundoff-limited
+NFUN: sample L1-I-3T
+nlopt roundoff-limited
+~ m.count.= 15 sum.res.= 79.0852722941935
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1b
+nlopt roundoff-limited
+NFUN: sample 2a
+nlopt roundoff-limited
+NFUN: sample L1-I-3T
+nlopt roundoff-limited
+NFUN: sample L2-I-3T
+nlopt roundoff-limited
+~ m.count.= 16 sum.res.= 79.5628797766782
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1a
+nlopt roundoff-limited
+NFUN: sample 1b
+nlopt roundoff-limited
+NFUN: sample 1b
+nlopt roundoff-limited
+NFUN: sample 2a
+nlopt roundoff-limited
+~ m.count.= 17 sum.res.= 79.321751285012
+161.850173950195 seconds.
+GEMSFITS: End. Bye!

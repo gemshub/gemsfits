@@ -3,8 +3,8 @@
 //
 // Implementation of GEMSFITS GUI Main Window, function main()
 //
-// Copyright (C) 2014  S.V.Dmytriyeva, G.D.Miron, D.A.Kulik
-// Uses Qwt (http://qwt.sourceforge.net), EJDB (http://ejdb.org),
+// Copyright (C) 2014-2023  S.V.Dmytriyeva, G.D.Miron, D.A.Kulik
+// Uses EJDB (https://ejdb.org),
 //    yaml-cpp (https://code.google.com/p/yaml-cpp/)
 //
 // This file is part of the GEMSFITS GUI, which uses the
@@ -17,31 +17,19 @@
 // E-mail gems2.support@psi.ch
 //-------------------------------------------------------------------
 
-
-#include <QApplication>
-#include <QSqlDatabase>
-
-#if QT_VERSION >= 0x050000
-#include <QtWidgets>
-#else
-#include <QApplication>
-#include <QSqlDatabase>
-#include <QSharedMemory>
-#include <QMainWindow>
-#include <QMessageBox>
-#include <QWindowsStyle>
-#endif
-
 #include <iostream>
+#include <QApplication>
+#include <QSqlDatabase>
+#include <QtWidgets>
 #include "FITMainWindow.h"
 
 class TFITApp:  public QApplication
 {
-  int argc;
-  char** argv;
+    int argc;
+    char** argv;
 
-  bool _isRunning;
-  QSharedMemory shMemory;
+    bool _isRunning;
+    QSharedMemory shMemory;
 
 public:
     TFITApp(int& c, char** v);
@@ -51,12 +39,12 @@ public:
 };
 
 TFITApp::TFITApp(int& c, char** v):
-        QApplication( c, v),
-      argc(c),
-      argv(v)
+    QApplication( c, v),
+    argc(c),
+    argv(v)
 {
     std::cout << "QSqlDatabase: available drivers:" <<
-          QSqlDatabase::drivers().join(QLatin1String(" ")).toLatin1().data() << std::endl;
+                 QSqlDatabase::drivers().join(QLatin1String(" ")).toLatin1().data() << std::endl;
 
     shMemory.setKey("gemsfits");
     if( shMemory.attach())
@@ -64,42 +52,36 @@ TFITApp::TFITApp(int& c, char** v):
         _isRunning = true;
     }
     else
-    {  _isRunning = false;
-       if( !shMemory.create(10))
+    {
+        _isRunning = false;
+        if( !shMemory.create(10))
         {
-           return;
-         }
+            return;
+        }
 
-#if QT_VERSION >= 0x050000
-#include <QtWidgets>
-       setStyle(QStyleFactory::create("windows"));
-#else
-       setStyle( new QWindowsStyle() );
-#endif
-
-       QIcon icon;
-       icon.addFile(QString::fromUtf8(":/modules/Icons/UnSpaceModuleIcon.png"), QSize(), QIcon::Normal, QIcon::Off);
-       setWindowIcon(icon);
-   }
+        setStyle(QStyleFactory::create("windows"));
+        QIcon icon;
+        icon.addFile(QString::fromUtf8(":/modules/Icons/UnSpaceModuleIcon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        setWindowIcon(icon);
+    }
 }
 
 void TFITApp::InitMainWindow()
 {
     pFitImp = new FITMainWindow(argc, argv);
     pFitImp->show();
-// init Help Window
+    // init Help Window
     pFitImp->GetHelp();
 }
 
-int
-main(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
     TFITApp IntegApp(argc, argv);
 
     if(IntegApp.isRunning())
     {
-       std::cerr << "gemsfits: Unable to create second instance." << std::endl;
-       return -2;
+        std::cerr << "gemsfits: Unable to create second instance." << std::endl;
+        return -2;
     }
     try
     {
