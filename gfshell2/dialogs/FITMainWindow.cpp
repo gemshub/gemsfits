@@ -102,7 +102,7 @@ void FITMainWindow::setDefValues(int /*c*/, char** /*v*/)
 #endif
 
     LocalDocDir = SysFITDir + HELP_DB_DIR;
-    GemsSettings::data_logger_directory = UserDir;
+    /// GemsSettings::data_logger_directory = UserDir;
     UserDir += DEFAULT_PR_DIR; // "/Library/GEMSFITS/projects";
 
     // check home dir

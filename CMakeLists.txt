@@ -34,10 +34,10 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 option(USE_THERMOFUN "Use ThermoFun" ON)
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
   option(USE_OLD_EJDB "Compile using ejdb1" ON)
-  option(BUILD_GUI "Build Qt GUI shell" OFF)
+  option(BUILD_GUI "Build Qt GUI shell" ON)
 else()
   option(USE_OLD_EJDB "Compile using ejdb1" ON)
-  option(BUILD_GUI "Build Qt GUI shell" OFF)
+  option(BUILD_GUI "Build Qt GUI shell" ON)
 endif()
 
 # Used into conda only
@@ -73,7 +73,7 @@ include(gemsfitsFindDeps)
 
 # Set the list of compiler flags for GNU compiler
 if(${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
-    add_compile_options( -pthread -Wall -Wno-misleading-indentation -Wno-ignored-attributes -Wno-variadic-macros -Wno-deprecated)
+    add_compile_options( -pthread -Wall -Wno-misleading-indentation -Wno-ignored-attributes -Wno-variadic-macros -Wno-deprecated -Wunused-variable)
 endif()
 
 # Set the list of compiler flags for Clang compiler

@@ -59,6 +59,10 @@ else()
    add_executable(gemsfit3 $<TARGET_OBJECTS:FITS_OBJECT>)
    target_link_libraries(gemsfit3  GEMS3K::GEMS3K nlopt Boost::system armadillo ${EJDB_LIB} yaml-cpp omp Threads::Threads)
 
+  if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
+    target_link_libraries(gemsfit3 omp)
+  endif()
+
   #if(USE_THERMOFUN MATCHES ON)
   #   target_link_libraries(gemsfit3 ThermoFun::ThermoFun)
   #else()
