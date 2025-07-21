@@ -1,0 +1,76 @@
+name: ci-build
+on:
+  push:
+    branches:
+      - deploy_actions
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-13
+        include:
+          - os: ubuntu-latest
+            conda_platform: linux-64
+            artifact_name: gemsfits-linux
+          - os: windows-latest
+            conda_platform: win-64
+            artifact_name: gemsfits-windows
+          - os: macos-13
+            conda_platform: osx-64
+            artifact_name: gemsfits-macos
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Conda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-activate-base: false
+          channels: conda-forge, defaults
+          channel-priority: true
+
+      - name: Configuring Conda Environment
+        run: |
+          conda config --set always_yes yes --set changeps1 no
+          conda config --add channels conda-forge
+          conda install conda-devenv
+          conda devenv
+
+      - name: Building, Testing & Installing gemsfits
+        if: matrix.os != 'windows-latest'
+        shell: bash -l {0}
+        run: |
+          conda activate gemsfits
+          ./conda-install-dependencies.sh OLD_EJDB
+          mkdir .build && cd .build
+          cmake -GNinja .. -DUSE_OLD_EJDB=ON -DCMAKE_BUILD_TYPE=Release
+          ninja
+          ninja install
+
+      - name: Building, Testing & Installing gemsfits (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: cmd
+        run: |
+          call conda activate gemsfits || goto :eof
+          cmake -DUSE_OLD_EJDB=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH="%CONDA_PREFIX%\Library" -A x64 -S . -B build  || goto :eof
+          cmake --build build --target install  --config Release  || goto :eof
+
+      - name: Check conda
+        run: |
+          conda config --show
+          conda list --show-channel-urls
+
