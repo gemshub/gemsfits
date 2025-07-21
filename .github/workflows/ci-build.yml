@@ -55,6 +55,7 @@ jobs:
         shell: bash -l {0}
         run: |
           conda activate gemsfits
+          export CMAKE_POLICY_VERSION_MINIMUM=3.5
           ./conda-install-dependencies.sh OLD_EJDB
           mkdir .build && cd .build
           cmake -GNinja .. -DUSE_OLD_EJDB=ON -DCMAKE_BUILD_TYPE=Release
