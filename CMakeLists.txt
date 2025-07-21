@@ -96,6 +96,7 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
         /permissive-
         /MP4
         /EHsc
+        /utf-8
         /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING
         /DNOMINMAX
     )

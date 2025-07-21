@@ -14,8 +14,8 @@ dependencies:
   - gems3k>=4.4.2
   - yaml-cpp
   - libgomp # [linux]
-  - boost-cpp=1.83.0
-  - armadillo # [unix]
+  - boost-cpp
+  - armadillo
   - nlopt
   - mesa-libgl-devel-cos7-x86_64 # [unix]
   - qt6-main=6.8.2

@@ -46,7 +46,8 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
    #endif()
 
    add_executable(gemsfit3 ${FITS_HEADER_FILES} ${FITS_SOURCE_FILES})
-   target_link_libraries(gemsfit3 gemsfit-static nlopt blas_win64_MT lapack_win64_MT Threads::Threads)
+   #target_link_libraries(gemsfit3 gemsfit-static nlopt blas_win64_MT lapack_win64_MT Threads::Threads)
+   target_link_libraries(gemsfit3 gemsfit-static nlopt armadillo Threads::Threads)
 
 else()
    # Create a library using the collected source files
