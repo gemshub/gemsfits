@@ -34,10 +34,10 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 option(USE_THERMOFUN "Use ThermoFun" ON)
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
   option(USE_OLD_EJDB "Compile using ejdb1" ON)
-  option(BUILD_GUI "Build Qt GUI shell" ON)
+  option(BUILD_GUI "Build Qt GUI shell" OFF)
 else()
   option(USE_OLD_EJDB "Compile using ejdb1" ON)
-  option(BUILD_GUI "Build Qt GUI shell" ON)
+  option(BUILD_GUI "Build Qt GUI shell" OFF)
 endif()
 
 # Used into conda only

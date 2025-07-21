@@ -11,6 +11,7 @@ dependencies:
   - make  # [unix]
   - ninja
   - 7zip  # [win]
+  - zlib
   - gems3k>=4.4.2
   - yaml-cpp
   - libgomp # [linux]
