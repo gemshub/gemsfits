@@ -73,7 +73,7 @@ include(gemsfitsFindDeps)
 
 # Set the list of compiler flags for GNU compiler
 if(${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
-    add_compile_options( -pthread -Wall -Wno-misleading-indentation -Wno-ignored-attributes -Wno-variadic-macros -Wno-deprecated -Wunused-variable)
+    add_compile_options( -pthread -Wall -Wno-misleading-indentation -Wno-ignored-attributes -Wno-variadic-macros -Wno-deprecated -Wno-unused-variable)
 endif()
 
 # Set the list of compiler flags for Clang compiler
