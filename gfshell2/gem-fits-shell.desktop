@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=GEM-Fits
+Comment=GEM-Fits package for GEM Input Parameter Optimization and Inverse Modelling
+Exec="/home/sveta/deploy/bin/gem-fits-shell" %F
+Icon=gem-fits-shell.png
+Terminal=true
+Type=Application
+Categories=Application;Network;

@@ -4,12 +4,12 @@ cmake_minimum_required(VERSION 3.16)
 # Set the name of the project
 project(gemsfits VERSION 2.0.0 LANGUAGES CXX C)
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_MACOSX_RPATH ON)
 
-# Include the cmake variables with values for installation directories
+# Define variables with the GNU standard installation directories
 include(GNUInstallDirs)
 
 # Set the cmake module path of the project
@@ -26,11 +26,11 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# Set libraries to be compiled with position independent code mode (i.e., fPIC option in GNU compilers)
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
 
 # Define which types of libraries to build
+option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+option(BUILD_STATIC_LIBS "Build static libraries" ON)
+option(BUILD_TOOLS "Build tools." OFF)
 option(USE_THERMOFUN "Use ThermoFun" ON)
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
   option(USE_OLD_EJDB "Compile using ejdb1" ON)
@@ -47,34 +47,92 @@ else()
    option(USE_SPDLOG_PRECOMPILED "Use spdlog in compiled version" OFF)
 endif()
 
-if(USE_SPDLOG_PRECOMPILED)
-   if(NOT TARGET spdlog::spdlog)
-       find_package(spdlog CONFIG REQUIRED)
-       if(NOT spdlog_FOUND)
-           message(FATAL_ERROR "spdlog library not found")
-       else()
-           message(STATUS "Found spdlog v${spdlog_VERSION}")
-           if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-                add_definitions(-DSPDLOG_FMT_EXTERNAL)
-           endif()
-       endif()
-   endif()
-endif()
-
 # Set the default build type to Release
 if(NOT CMAKE_BUILD_TYPE)
-    message(STATUS "Setting build type to 'Release' as none was specified.")
-    set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
-    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+    # The build type selection for the project
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the build type for ${PROJECT_NAME}." FORCE)
+    # The build type options for the project
+    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS Debug Release MinSizeRel RelWithDebInfo)
 endif()
+
+# Currently is not setup to produce a dynamic library using MSVC, only static
+if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+    set(BUILD_SHARED_LIBS OFF)
+else()
+#    set(BUILD_STATIC_LIBS OFF)
+endif()
+
+if(BUILD_GUI)
+   set(BUILD_STATIC_LIBS ON)
+endif()
+
+# Set libraries to be compiled with position independent code mode (i.e., fPIC option in GNU compilers)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # Find all gemsfits dependencies
 include(gemsfitsFindDeps)
+
+# Find Qt dependencies
+find_package(Qt6 6.2 COMPONENTS Core Gui Widgets Charts Concurrent PrintSupport Svg Help Sql REQUIRED)
+if(Qt6_FOUND)
+  message(STATUS "Found Qt6 v${Qt6_VERSION}")
+  set(GUI_QT_TARGETS Qt6::Widgets Qt6::Core Qt6::Gui Qt6::PrintSupport Qt6::Charts Qt6::Svg Qt6::Help Qt6::Sql)
+  include_directories(${Qt6Core_INCLUDE_DIRS})
+  include_directories(${Qt6Gui_INCLUDE_DIRS})
+  include_directories(${Qt6Widgets_INCLUDE_DIRS})
+  include_directories(${Qt6PrintSupport_INCLUDE_DIRS})
+  include_directories(${Qt6Svg_INCLUDE_DIRS})
+  include_directories(${Qt6Concurrent_INCLUDE_DIRS})
+  include_directories(${Qt6Help_INCLUDE_DIRS})
+  include_directories(${Qt6Sql_INCLUDE_DIRS})
+endif()
+qt_standard_project_setup(REQUIRES 6.8)
+
+# Versioning
+set(GEMSFITS_VERSION "${PROJECT_VERSION}")
+find_package(Git)
+if(GIT_FOUND)
+  execute_process(
+    COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+    OUTPUT_VARIABLE GEMSFITS_VERSION_HASH
+    ERROR_QUIET
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+  execute_process(
+    COMMAND ${GIT_EXECUTABLE} rev-parse --abbrev-ref HEAD
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+    OUTPUT_VARIABLE GEMSFITS_GIT_BRANCH
+    ERROR_QUIET
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    if(NOT GEMSFITS_VERSION_HASH)
+        set(GEMSFITS_VERSION_HASH "---")
+    endif()
+    if(NOT GEMSFITS_GIT_BRANCH)
+        set(GEMSFITS_GIT_BRANCH "---")
+    endif()
+else()
+  set(GEMSFITS_VERSION_HASH "<unknown>")
+  set(GEMSFITS_GIT_BRANCH "<unknown>")
+endif()
+
 
 # Set the list of compiler flags for GNU compiler
 if(${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
     add_compile_options( -pthread -Wall -Wno-misleading-indentation -Wno-ignored-attributes -Wno-variadic-macros -Wno-deprecated -Wno-unused-variable)
 endif()
+
+set(GEMSFITS_OSX "${CMAKE_SYSTEM_NAME}")
+set(GEMSFITS_COMPILER_ID "${CMAKE_CXX_COMPILER_ID}")
+set(GEMSFITS_COMPILER_VERSION "${CMAKE_CXX_COMPILER_VERSION}")
+set(GEMSFITS_QT_VERSION "${Qt6_VERSION}")
+
+configure_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/gemsfits_version.h.in"
+  "${CMAKE_CURRENT_SOURCE_DIR}/common/gemsfits_version.h"
+  @ONLY
+  )
 
 # Set the list of compiler flags for Clang compiler
 if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
@@ -85,7 +143,6 @@ endif()
 if(${CMAKE_CXX_COMPILER_ID} MATCHES "Intel")
     add_compile_options(-Wall -Wno-variadic-macros -Wno-deprecated)
 endif()
-
 
 # Set the list of compiler flags for MSVC compiler
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
@@ -105,16 +162,13 @@ endif()
 
 # Set the headers directory path
 set(COMMON_DIR "${CMAKE_SOURCE_DIR}/common")
-set(GEMS3K_DIR "${CMAKE_SOURCE_DIR}/standalone/GEMS3K")
 
 # Set the include directories
 include_directories(${COMMON_DIR})
-include_directories(${GEMS3K_DIR})
-include_directories("${CMAKE_SOURCE_DIR}/standalone")
 
 if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
-    include_directories("/usr/local/include")
-    link_directories("/usr/local/lib")
+   include_directories("/usr/local/include")
+   link_directories("/usr/local/lib")
 endif()
 
 # Set some necessary definitions
@@ -152,12 +206,21 @@ if(USE_THERMOFUN MATCHES ON)
 endif()
 
 # Compile gemsfits application
-add_subdirectory(gemsfit2)
+#add_subdirectory(gemsfit2)
 
 # Compile gemsfits-gui application
 if(BUILD_GUI)
     add_subdirectory(gfshell2)
 endif()
 
+# make service tools
+if(BUILD_TOOLS)
+   # use nlohmann/json.hpp
+   add_subdirectory(tools)
+   # Copy Resources folder
+   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Resources
+           DESTINATION ${CMAKE_BINARY_DIR}/tools)
+endif()
+
 include(CPack) #should be last command
-#cmake .. -DCMAKE_PREFIX_PATH=/home/sveta/Qt/6.5.0/gcc_64
+
