@@ -40,6 +40,7 @@
 #include "ui_HelpWindow4.h"
 #include "FITMainWindow.h"
 #include "keywords.h"
+#include <GEMS3K/verror.h>
 
 const char *FIT_HOWHELP_HTML = "gemsfit-techinfo.html";
 const char *FIT_ABOUT_HTML = "gemsfits-about.html";
