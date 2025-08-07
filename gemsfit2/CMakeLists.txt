@@ -34,8 +34,8 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
    include_directories("${ARMADILLO_DIR}/include")
    link_directories("${ARMADILLO_DIR}/examples/lib_win64")
 
-   target_link_libraries(gem-fits nlopt blas_win64_MT lapack_win64_MT Threads::Threads)
-   #target_link_libraries(gem-fits nlopt armadillo Threads::Threads)
+   #target_link_libraries(gem-fits nlopt blas_win64_MT lapack_win64_MT Threads::Threads)
+   target_link_libraries(gem-fits nlopt Threads::Threads)
    target_link_libraries(gem-fits GEMS3K::GEMS3K Boost::system ${EJDB_WIN_LIB} yaml-cpp)
 
 else()
