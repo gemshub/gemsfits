@@ -35,6 +35,7 @@ namespace fs = std::filesystem;
 #include "statistics.h"
 #include "gemsfit_global_functions.h"
 #include <GEMS3K/io_template.h>
+
 //////extern std::vector<io_formats::outField> DataCH_dynamic_fields;
 
 int generateConfig(); // Mode GEMSFIT to generate input configuration file
@@ -51,6 +52,8 @@ int generateJConfig();
 
 int main( int argc, char *argv[] )
 {
+    std::cout << _FITS_version_stamp << std::endl;
+
     int countit = 0;
     // start time
     auto start_time = std::chrono::high_resolution_clock::now();
@@ -95,6 +98,7 @@ int main( int argc, char *argv[] )
     }
 
     // Reading in the data //
+    gpf->flog << _FITS_version_stamp << std::endl;
     gpf->flog << "01. main.cpp(108). Creating new TGfitTask" << std::endl;
     std::shared_ptr<TGfitTask> gfittask = std::make_shared<TGfitTask>();
 

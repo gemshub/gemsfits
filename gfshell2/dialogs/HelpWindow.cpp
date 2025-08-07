@@ -39,12 +39,10 @@
 #include "HelpWindow.h"
 #include "ui_HelpWindow4.h"
 #include "FITMainWindow.h"
+#include "keywords.h"
 
 const char *FIT_HOWHELP_HTML = "gemsfit-techinfo.html";
 const char *FIT_ABOUT_HTML = "gemsfits-about.html";
-
-const char *_FIT_version_stamp = "GEMSFITS v1.3.3";
-////extern const char *_GEMIPM_version_stamp;
 
 HelpWindow* HelpWindow::pDia = 0;
 
@@ -53,7 +51,7 @@ HelpWindow::HelpWindow(QWidget* parent):
     ui(new Ui::HelpWindowData)
 {
     ui->setupUi(this);
-    std::string titl = _FIT_version_stamp;
+    std::string titl = _FITS_version_stamp;
     titl+= " : Help Viewer ";
     setWindowTitle(titl.c_str());
 
@@ -232,22 +230,14 @@ HelpWindow::~HelpWindow()
 
 void HelpWindow::helpVersion()
 {
-    QMessageBox::information(this,
-                         #ifdef __unix
-                         #ifdef __APPLE__
-                             QString("Title"), QString("GEMSFITS1.0 (MacOS X >10.6 64 clang)\n\n")+
-                         #else
-                             QString("GEMSFITS (Linux 32/64 Qt5)"),
-                         #endif
-                         #else
-                             QString("GEMSFITS (Windows MinGW Qt5"),
-                         #endif
-                             QString("\nThis is GEMSFITS coupled code\n\n")+
-                             QString( _FIT_version_stamp ) + QString(  "\n\nusing " )+
-                             ////QString( _GEMIPM_version_stamp ) +
-                             QString( "\n\n\nFor GEMS R&D community\n\n"
-                                      "(c) 2014-2022, GEMS Development Team\n\n"
-                                      "          PSI-UH-ETHZ" ) );
+    QMessageBox::information( this,   QString::fromStdString(_FITS_version_stamp),
+                             QString("\nThis is GEM-Fits-Shell code package\n\n") +
+                                 QString::fromStdString(_FITS_version_stamp) + "\n\n  using \n\n"  +
+                                 QString::fromStdString(_GEMIPM_version_stamp) + "\n\nand  Qt6 framework v." + GEMSFITS_QT_VERSION +
+                                 "\n\n   OS " + GEMSFITS_OSX  + " compiler  " + GEMSFITS_COMPILER_ID + " " + GEMSFITS_COMPILER_VERSION +
+                                 "\n\nFor GEMS R&D community, GPL v.3\n\n"
+                                 "(c) 2025,  GEMS Development Team\n\n"
+                                 "          Paul Scherrer Institute" );
 }
 
 void HelpWindow::helpAbout()

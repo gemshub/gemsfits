@@ -3,7 +3,7 @@
  <class>FITMainWindow</class>
  <widget class="QMainWindow" name="FITMainWindow">
   <property name="windowModality">
-   <enum>Qt::NonModal</enum>
+   <enum>Qt::WindowModality::NonModal</enum>
   </property>
   <property name="geometry">
    <rect>
@@ -14,10 +14,10 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>GEMSFITS v1.3.3: Optimization of GEM Input Parameters</string>
+   <string>GEMSFITS : Optimization of GEM Input Parameters</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../../gems3gui/GUI/GUI.qrc">
+   <iconset resource="../fgui.qrc">
     <normaloff>:/modules/Icons/FitSpaceModuleIcon.png</normaloff>:/modules/Icons/FitSpaceModuleIcon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -40,7 +40,7 @@
     <item>
      <widget class="QSplitter" name="splV">
       <property name="orientation">
-       <enum>Qt::Horizontal</enum>
+       <enum>Qt::Orientation::Horizontal</enum>
       </property>
       <property name="handleWidth">
        <number>1</number>
@@ -68,7 +68,7 @@
         <item>
          <widget class="QSplitter" name="splKey">
           <property name="orientation">
-           <enum>Qt::Vertical</enum>
+           <enum>Qt::Orientation::Vertical</enum>
           </property>
           <property name="childrenCollapsible">
            <bool>false</bool>
@@ -96,7 +96,7 @@
                <string>...</string>
               </property>
               <property name="icon">
-               <iconset resource="../../../gems3gui/GUI/GUI.qrc">
+               <iconset resource="../fgui.qrc">
                 <normaloff>:/menu/Icons/SelectDisplayRecordIcon.png</normaloff>:/menu/Icons/SelectDisplayRecordIcon.png</iconset>
               </property>
              </widget>
@@ -170,7 +170,7 @@
         <item>
          <widget class="QSplitter" name="splRecord">
           <property name="orientation">
-           <enum>Qt::Vertical</enum>
+           <enum>Qt::Orientation::Vertical</enum>
           </property>
           <widget class="QWidget" name="widget" native="true">
            <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -255,7 +255,7 @@
         <item>
          <widget class="QSplitter" name="splGEMS">
           <property name="orientation">
-           <enum>Qt::Vertical</enum>
+           <enum>Qt::Orientation::Vertical</enum>
           </property>
           <property name="childrenCollapsible">
            <bool>false</bool>
@@ -287,19 +287,19 @@
             <item>
              <widget class="QTableWidget" name="tableIComp">
               <property name="sizeAdjustPolicy">
-               <enum>QAbstractScrollArea::AdjustToContents</enum>
+               <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents</enum>
               </property>
               <property name="editTriggers">
-               <set>QAbstractItemView::NoEditTriggers</set>
+               <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
               </property>
               <property name="dragEnabled">
                <bool>true</bool>
               </property>
               <property name="defaultDropAction">
-               <enum>Qt::CopyAction</enum>
+               <enum>Qt::DropAction::CopyAction</enum>
               </property>
               <property name="selectionMode">
-               <enum>QAbstractItemView::SingleSelection</enum>
+               <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
               </property>
               <property name="rowCount">
                <number>2</number>
@@ -360,7 +360,7 @@
             <item>
              <widget class="QTreeWidget" name="listPhases">
               <property name="editTriggers">
-               <set>QAbstractItemView::NoEditTriggers</set>
+               <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
               </property>
               <property name="tabKeyNavigation">
                <bool>true</bool>
@@ -394,7 +394,7 @@
      <x>0</x>
      <y>0</y>
      <width>1113</width>
-     <height>17</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuTask">
@@ -601,7 +601,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../../gems3gui/GUI/GUI.qrc">
+    <iconset resource="../fgui.qrc">
      <normaloff>:/menu/Icons/DatabaseModeIcon.png</normaloff>:/menu/Icons/DatabaseModeIcon.png</iconset>
    </property>
    <property name="text">
@@ -613,7 +613,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../../gems3gui/GUI/GUI.qrc">
+    <iconset resource="../fgui.qrc">
      <normaloff>:/modules/Icons/DualThModuleIcon.png</normaloff>:/modules/Icons/DualThModuleIcon.png</iconset>
    </property>
    <property name="text">
@@ -642,7 +642,7 @@
   </action>
   <action name="actionCreate_New">
    <property name="icon">
-    <iconset resource="../../../gems3gui/GUI/GUI.qrc">
+    <iconset resource="../fgui.qrc">
      <normaloff>:/menu/Icons/NewCreateRecordIcon.png</normaloff>:/menu/Icons/NewCreateRecordIcon.png</iconset>
    </property>
    <property name="text">
@@ -654,7 +654,7 @@
   </action>
   <action name="action_Find_query">
    <property name="icon">
-    <iconset resource="../../../gems3gui/GUI/GUI.qrc">
+    <iconset resource="../fgui.qrc">
      <normaloff>:/menu/Icons/SelectDisplayRecordIcon.png</normaloff>:/menu/Icons/SelectDisplayRecordIcon.png</iconset>
    </property>
    <property name="text">
@@ -666,7 +666,7 @@
   </action>
   <action name="action_Update">
    <property name="icon">
-    <iconset resource="../../../gems3gui/GUI/GUI.qrc">
+    <iconset resource="../fgui.qrc">
      <normaloff>:/menu/Icons/SaveCurrentRecordIcon.png</normaloff>:/menu/Icons/SaveCurrentRecordIcon.png</iconset>
    </property>
    <property name="text">
@@ -681,7 +681,7 @@
   </action>
   <action name="action_Insert">
    <property name="icon">
-    <iconset resource="../../../gems3gui/GUI/GUI.qrc">
+    <iconset resource="../fgui.qrc">
      <normaloff>:/menu/Icons/NewCloneRecordIcon.png</normaloff>:/menu/Icons/NewCloneRecordIcon.png</iconset>
    </property>
    <property name="text">
@@ -696,7 +696,7 @@
   </action>
   <action name="actionDelete">
    <property name="icon">
-    <iconset resource="../../../gems3gui/GUI/GUI.qrc">
+    <iconset resource="../fgui.qrc">
      <normaloff>:/menu/Icons/DeleteCurrentRecordIcon.png</normaloff>:/menu/Icons/DeleteCurrentRecordIcon.png</iconset>
    </property>
    <property name="text">
@@ -711,7 +711,7 @@
   </action>
   <action name="actionUpdate_Test">
    <property name="icon">
-    <iconset resource="../../../gems3gui/GUI/GUI.qrc">
+    <iconset resource="../fgui.qrc">
      <normaloff>:/menu/Icons/CalculateBCCIcon.png</normaloff>:/menu/Icons/CalculateBCCIcon.png</iconset>
    </property>
    <property name="text">
@@ -760,7 +760,7 @@
   </action>
   <action name="action_Run_test">
    <property name="icon">
-    <iconset resource="../../../gems3gui/GUI/GUI.qrc">
+    <iconset resource="../fgui.qrc">
      <normaloff>:/menu/Icons/CalculateRecordDataIcon.png</normaloff>:/menu/Icons/CalculateRecordDataIcon.png</iconset>
    </property>
    <property name="text">
@@ -772,7 +772,7 @@
   </action>
   <action name="action_Show_Results">
    <property name="icon">
-    <iconset resource="../../../gems3gui/GUI/GUI.qrc">
+    <iconset resource="../fgui.qrc">
      <normaloff>:/menu/Icons/ShowGEMResultsIcon.png</normaloff>:/menu/Icons/ShowGEMResultsIcon.png</iconset>
    </property>
    <property name="text">
@@ -784,7 +784,7 @@
   </action>
   <action name="action_Preferences">
    <property name="icon">
-    <iconset resource="../../../gems3gui/GUI/GUI.qrc">
+    <iconset resource="../fgui.qrc">
      <normaloff>:/menu/Icons/RemakeRecordIcon.png</normaloff>:/menu/Icons/RemakeRecordIcon.png</iconset>
    </property>
    <property name="text">
@@ -793,7 +793,7 @@
   </action>
   <action name="actionHelp">
    <property name="icon">
-    <iconset resource="../../../gems3gui/GUI/GUI.qrc">
+    <iconset resource="../fgui.qrc">
      <normaloff>:/menu/Icons/ShowHelpWindowIcon.png</normaloff>:/menu/Icons/ShowHelpWindowIcon.png</iconset>
    </property>
    <property name="text">
@@ -820,7 +820,7 @@
   </action>
   <action name="actionNext">
    <property name="icon">
-    <iconset resource="../../../gems3gui/GUI/GUI.qrc">
+    <iconset resource="../fgui.qrc">
      <normaloff>:/menu/Icons/DisplayNextRecordIcon.png</normaloff>:/menu/Icons/DisplayNextRecordIcon.png</iconset>
    </property>
    <property name="text">
@@ -829,7 +829,7 @@
   </action>
   <action name="actionPrevious">
    <property name="icon">
-    <iconset resource="../../../gems3gui/GUI/GUI.qrc">
+    <iconset resource="../fgui.qrc">
      <normaloff>:/menu/Icons/DisplayPrevRecordIcon.png</normaloff>:/menu/Icons/DisplayPrevRecordIcon.png</iconset>
    </property>
    <property name="text">
@@ -838,7 +838,7 @@
   </action>
   <action name="action_Config_Project">
    <property name="icon">
-    <iconset resource="../../../gems3gui/GUI/GUI.qrc">
+    <iconset resource="../fgui.qrc">
      <normaloff>:/modules/Icons/ModelingProjectIcon.png</normaloff>:/modules/Icons/ModelingProjectIcon.png</iconset>
    </property>
    <property name="text">
@@ -860,7 +860,7 @@
   </action>
   <action name="actionFits_View_Mode">
    <property name="icon">
-    <iconset resource="../../../gems3gui/GUI/GUI.qrc">
+    <iconset resource="../fgui.qrc">
      <normaloff>:/modules/Icons/FitSpaceModuleIcon.png</normaloff>:/modules/Icons/FitSpaceModuleIcon.png</iconset>
    </property>
    <property name="text">
@@ -872,7 +872,7 @@
   </action>
   <action name="actionSave_Results_to_Database">
    <property name="icon">
-    <iconset resource="../../../gems3gui/GUI/GUI.qrc">
+    <iconset resource="../fgui.qrc">
      <normaloff>:/menu/Icons/DatabaseModeIcon.png</normaloff>:/menu/Icons/DatabaseModeIcon.png</iconset>
    </property>
    <property name="text">
@@ -925,7 +925,7 @@
   </action>
   <action name="actionFind_Next">
    <property name="icon">
-    <iconset resource="../../../gems3gui/GUI/GUI.qrc">
+    <iconset resource="../fgui.qrc">
      <normaloff>:/menu/Icons/SearchForwardIcon.png</normaloff>:/menu/Icons/SearchForwardIcon.png</iconset>
    </property>
    <property name="text">
@@ -937,7 +937,7 @@
   </action>
   <action name="actionFind_Previous">
    <property name="icon">
-    <iconset resource="../../../gems3gui/GUI/GUI.qrc">
+    <iconset resource="../fgui.qrc">
      <normaloff>:/menu/Icons/SearchBackwardIcon.png</normaloff>:/menu/Icons/SearchBackwardIcon.png</iconset>
    </property>
    <property name="text">
@@ -1070,6 +1070,8 @@
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="../fgui.qrc"/>
+ </resources>
  <connections/>
 </ui>

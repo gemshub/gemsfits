@@ -2,6 +2,10 @@
 #define KEYWORDS_H
 
 //#pragma GCC diagnostic ignored "-Wunused-variable"
+#include <string>
+#include "gemsfits_version.h"
+
+static const std::string _FITS_version_stamp = std::string("GEM-FITS v.") + GEMSFITS_VERSION + " c." + GEMSFITS_VERSION_HASH;
 
 namespace keys
 { // Keywords for the fitting task definition

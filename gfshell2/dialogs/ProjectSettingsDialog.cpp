@@ -22,7 +22,7 @@
 #include "ui_ProjectSettingsDialog.h"
 #include "FITMainWindow.h"
 #include "gui_service.h"
-extern const char *_FIT_version_stamp;
+#include "keywords.h"
 
 ProjectSettingsDialog::ProjectSettingsDialog( QSettings *aSet, QWidget *parent) :
     QDialog(parent),
@@ -76,7 +76,7 @@ void ProjectSettingsDialog::CmSave()
     settings->setValue("TaskCasesDataColl", ui->taskCollection->text() );
     settings->setValue("FitsCasesDataColl", ui->fitCollection->text() );
     settings->setValue("GEMS3KFilesPath",   ui->gemsDir->text() );
-    settings->setValue("GEMSFITSAPP",       _FIT_version_stamp );
+    settings->setValue("GEMSFITSAPP",       _FITS_version_stamp.c_str() );
     settings->sync();
 
     // create directories, if not exists

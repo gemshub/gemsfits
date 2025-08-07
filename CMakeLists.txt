@@ -34,10 +34,13 @@ option(BUILD_TOOLS "Build tools." OFF)
 option(USE_THERMOFUN "Use ThermoFun" ON)
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
   option(USE_OLD_EJDB "Compile using ejdb1" ON)
-  option(BUILD_GUI "Build Qt GUI shell" OFF)
+  option(BUILD_FIT "Build gem-fits" OFF)
+  option(BUILD_GUI "Build Qt GUI shell" ON)
 else()
   option(USE_OLD_EJDB "Compile using ejdb1" ON)
-  option(BUILD_GUI "Build Qt GUI shell" OFF)
+  option(BUILD_FIT "Build gem-fits" ON)
+  option(BUILD_GUI "Build Qt GUI shell" ON)
+
 endif()
 
 # Used into conda only
@@ -206,7 +209,9 @@ if(USE_THERMOFUN MATCHES ON)
 endif()
 
 # Compile gemsfits application
-add_subdirectory(gemsfit2)
+if(BUILD_FIT)
+    add_subdirectory(gemsfit2)
+endif()
 
 # Compile gemsfits-gui application
 if(BUILD_GUI)
