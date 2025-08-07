@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 # Set the name of the project
-project(gemsfits VERSION 2.0.0 LANGUAGES CXX C)
+project(gemsfits VERSION 2.0.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -152,15 +152,12 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     add_compile_options(
         /D_SCL_SECURE_NO_WARNINGS
         /D_CRT_SECURE_NO_WARNINGS=1
-        /Zc:__cplusplus
-        /permissive-
         /MP4
         /EHsc
         /utf-8
         /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING
         /DNOMINMAX
     )
-    add_definitions(-DbuildWIN32)
 endif()
 
 # Set the headers directory path
