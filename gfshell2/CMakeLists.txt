@@ -21,13 +21,14 @@ file(GLOB QRC_FILES *.qrc)
 qt_add_resources(GEMSFITS_SRCS ${QRC_FILES})
 
 # Create a library using the collected source files
-qt_add_library( GUI_OBJECT OBJECT ${HEADER_FILES} ${SOURCE_FILES} ${GEMSFITS_SRCS}
-             ${COMMON_HEADER_FILES} ${COMMON_SOURCE_FILES} )
+#qt_add_library( GUI_OBJECT OBJECT ${HEADER_FILES} ${SOURCE_FILES} ${GEMSFITS_SRCS}
+#             ${COMMON_HEADER_FILES} ${COMMON_SOURCE_FILES} )
 
 if (WIN32)
 #! [appicon_windows]
     set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/gem-fits-shell.rc")
-    qt_add_executable(gem-fits-shell $<TARGET_OBJECTS:GUI_OBJECT> ${app_icon_resource_windows})
+    qt_add_executable(gem-fits-shell ${HEADER_FILES} ${SOURCE_FILES} ${GEMSFITS_SRCS}
+    ${COMMON_HEADER_FILES} ${COMMON_SOURCE_FILES} ${app_icon_resource_windows})
 #! [appicon_windows]
 elseif (APPLE)
 #! [appicon_macOS]
@@ -41,7 +42,8 @@ elseif (APPLE)
     set_source_files_properties(${app_icon_macos} PROPERTIES
            MACOSX_PACKAGE_LOCATION "Resources")
 
-    qt_add_executable(gem-fits-shell MACOSX_BUNDLE $<TARGET_OBJECTS:GUI_OBJECT> ${app_icon_macos})
+    qt_add_executable(gem-fits-shell MACOSX_BUNDLE ${HEADER_FILES} ${SOURCE_FILES} ${GEMSFITS_SRCS}
+    ${COMMON_HEADER_FILES} ${COMMON_SOURCE_FILES} ${app_icon_macos})
 
     set_target_properties(gem-fits-shell PROPERTIES
         # WIN32_EXECUTABLE TRUE
@@ -56,7 +58,8 @@ elseif (APPLE)
 
 #! [appicon_macOS]
 else()
-    qt_add_executable(gem-fits-shell $<TARGET_OBJECTS:GUI_OBJECT>)
+    qt_add_executable(gem-fits-shell ${HEADER_FILES} ${SOURCE_FILES} ${GEMSFITS_SRCS}
+    ${COMMON_HEADER_FILES} ${COMMON_SOURCE_FILES})
     #install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/gem-fits-shell.desktop DESTINATION share/applications)
     #install(FILES ${PROJECT_SOURCE_DIR}/Resources/gem-fits-shell.png DESTINATION share/icons)
 endif()
@@ -83,13 +86,13 @@ message(STATUS "conda path: $ENV{CONDA_PREFIX}")
 
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 
-    set(dll_path "C:/Miniconda/envs/GEMSGUI/Library/bin")
+    set(dll_path "C:/Miniconda/envs/gemsfits/Library/bin")
     message(STATUS "dll path: ${dll_path}")
     install(FILES "${dll_path}/GEMS3K.dll" DESTINATION bin)
     install(FILES "${dll_path}/ChemicalFun.dll" DESTINATION bin)
     install(FILES "${dll_path}/ThermoFun.dll" DESTINATION bin)
     install(FILES "${dll_path}/fmt.dll" DESTINATION bin)
-    install(FILES "${dll_path}/libzmq-mt-4_3_5.dll" DESTINATION bin)
+    #install(FILES "${dll_path}/libzmq-mt-4_3_5.dll" DESTINATION bin)
     install(FILES "${dll_path}/zlib.dll" DESTINATION bin)
 
     install(FILES "${dll_path}/gssapi64.dll" DESTINATION bin)
