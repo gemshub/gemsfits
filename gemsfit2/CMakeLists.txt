@@ -30,13 +30,13 @@ add_executable(gem-fits ${GEMSFITS_SOURCES})
 
 
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-   #set(ARMADILLO_DIR "${CMAKE_SOURCE_DIR}/gemsfit2/armadillo_win32")
-   #include_directories("${ARMADILLO_DIR}/include")
-   #link_directories("${ARMADILLO_DIR}/examples/lib_win64")
+   set(ARMADILLO_DIR "${CMAKE_SOURCE_DIR}/gemsfit2/armadillo_win32")
+   include_directories("${ARMADILLO_DIR}/include")
+   link_directories("${ARMADILLO_DIR}/examples/lib_win64")
 
+   target_link_libraries(gem-fits nlopt blas_win64_MT lapack_win64_MT Threads::Threads)
+   #target_link_libraries(gem-fits nlopt armadillo Threads::Threads)
    target_link_libraries(gem-fits GEMS3K::GEMS3K Boost::system ${EJDB_WIN_LIB} yaml-cpp)
-   #target_link_libraries(gem-fits nlopt blas_win64_MT lapack_win64_MT Threads::Threads)
-   target_link_libraries(gem-fits nlopt armadillo Threads::Threads)
 
 else()
    target_link_libraries(gem-fits  GEMS3K::GEMS3K nlopt Boost::system armadillo ${EJDB_LIB} yaml-cpp Threads::Threads)
