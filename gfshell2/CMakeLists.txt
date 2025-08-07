@@ -20,14 +20,14 @@ file(GLOB COMMON_SOURCE_FILES ${COMMON_DIR}/*.cpp)
 file(GLOB QRC_FILES *.qrc)
 qt_add_resources(GEMSFITS_SRCS ${QRC_FILES})
 
-set(GEMSFITS_SOURCES
+set(GEMSFITS_SHELL_SOURCES
  ${HEADER_FILES} ${SOURCE_FILES}
  ${GEMSFITS_SRCS}
  ${COMMON_HEADER_FILES} ${COMMON_SOURCE_FILES} )
 
 if (WIN32)
     set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/gem-fits-shell.rc")
-    qt_add_executable(gem-fits-shell ${GEMSFITS_SOURCES} ${app_icon_resource_windows})
+    qt_add_executable(gem-fits-shell ${GEMSFITS_SHELL_SOURCES} ${app_icon_resource_windows})
 
 elseif (APPLE)
     # The MACOSX_BUNDLE_ICON_FILE variable is added to the Info.plist
@@ -40,7 +40,7 @@ elseif (APPLE)
     set_source_files_properties(${app_icon_macos} PROPERTIES
            MACOSX_PACKAGE_LOCATION "Resources")
 
-    qt_add_executable(gem-fits-shell MACOSX_BUNDLE ${GEMSFITS_SOURCES} ${app_icon_macos})
+    qt_add_executable(gem-fits-shell MACOSX_BUNDLE ${GEMSFITS_SHELL_SOURCES} ${app_icon_macos})
 
     set_target_properties(gem-fits-shell PROPERTIES
         MACOSX_BUNDLE_GUI_IDENTIFIER ch.psi.gems-fits
@@ -53,7 +53,7 @@ elseif (APPLE)
     )
 
 else()
-    qt_add_executable(gem-fits-shell ${GEMSFITS_SOURCES})
+    qt_add_executable(gem-fits-shell ${GEMSFITS_SHELL_SOURCES})
     #install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/gem-fits-shell.desktop DESTINATION share/applications)
     #install(FILES ${PROJECT_SOURCE_DIR}/Resources/gem-fits-shell.png DESTINATION share/icons)
 endif()
