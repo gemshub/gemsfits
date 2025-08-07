@@ -59,12 +59,12 @@ else()
 endif()
 
 target_link_libraries(gem-fits-shell PRIVATE Qt6::Widgets Qt6::Core Qt6::Gui Qt6::PrintSupport Qt6::Charts Qt6::Svg Qt6::Help Qt6::Sql)
-target_link_libraries(gem-fits-shell PRIVATE GEMS3K::GEMS3K)
+#target_link_libraries(gem-fits-shell PRIVATE GEMS3K::GEMS3K)
 
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-     target_link_libraries(gem-fits-shell PRIVATE ${EJDB_WIN_LIB} yaml-cpp Threads::Threads)
+     target_link_libraries(gem-fits-shell PRIVATE GEMS3K::GEMS3K-static ${EJDB_WIN_LIB} yaml-cpp Threads::Threads)
 else()
-     target_link_libraries(gem-fits-shell PRIVATE ${EJDB_LIB} yaml-cpp Threads::Threads)
+     target_link_libraries(gem-fits-shell PRIVATE GEMS3K::GEMS3K ${EJDB_LIB} yaml-cpp Threads::Threads)
 endif()
 
 install(TARGETS gem-fits-shell
