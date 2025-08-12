@@ -44,11 +44,12 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
                             PUBLIC GEMS3K::GEMS3K
                             PUBLIC Boost::system
                             PUBLIC ${EJDB_WIN_LIB}
-                            PUBLIC yaml-cpp)
+                            PUBLIC yaml-cpp
+                            PUBLIC liblapack)
 
  add_executable(gem-fits ${FITS_HEADER_FILES} ${FITS_SOURCE_FILES})
  #target_link_libraries(gem-fits gemsfit-static nlopt blas_win64_MT lapack_win64_MT Threads::Threads)
- target_link_libraries(gem-fits gemsfit-static nlopt Armadillo::armadillo Threads::Threads)
+ target_link_libraries(gem-fits gemsfit-static nlopt armadillo Threads::Threads)
 
 else()
    add_executable(gem-fits ${GEMSFITS_SOURCES})

@@ -18,12 +18,12 @@ else()
    endif()
 endif()
 
-#if(NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+if(NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 find_package(Armadillo REQUIRED)
 if(NOT Armadillo_FOUND)
      message(FATAL_ERROR "Armadillo library not found")
 endif()
-#endif()
+endif()
 
 # Find OpenMP
 find_package(OpenMP)
