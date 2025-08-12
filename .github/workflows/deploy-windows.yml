@@ -1,0 +1,87 @@
+name: deploy-windows
+on:
+  push:
+    branches:
+      - deploy_actions
+  release:
+    types:
+      - published
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        os: [ windows-latest ]
+        conda_platform: [ win-64 ]
+        artifact_name: [ gemsgui-windows ]
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get version from CMakeLists.txt
+        id: get_version
+        uses: DarwinInnovation/cmake-project-version-action@v1.0
+
+      - name: Set deploy name
+        id: strings
+        shell: bash
+        run: >
+          echo "deploy-name=GEMFITS${{ steps.get_version.outputs.version }}" >> "$GITHUB_OUTPUT"
+
+      - name: Set deploy dir
+        id: strings2
+        shell: bash
+        run: |
+          echo "deploy-output-dir=${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app" >> "$GITHUB_OUTPUT"
+          echo "deploy-output-name=windows-${{ steps.strings.outputs.deploy-name }}.zip" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Conda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-activate-base: false
+          channels: conda-forge, defaults
+          channel-priority: true
+
+      - name: Configuring Conda Environment
+        run: |
+          conda config --set always_yes yes --set changeps1 no
+          conda config --add channels conda-forge
+          conda install conda-devenv
+          conda devenv
+
+      - name: Building, Testing & Installing gemsfits (Windows)
+        shell: cmd
+        run: |
+          call conda activate gemsfits || goto :eof
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${{ steps.strings2.outputs.deploy-output-dir }} -A x64 -S . -B build  || goto :eof
+          cmake --build build --target install --config Release || goto :eof
+
+      - name: Check deploy
+        run: |
+          cd C:/Miniconda/envs/gemsfits/Library/bin
+          ls
+          cd ${{ github.workspace }}
+          ls
+          cp -r "${{ github.workspace }}/Resources" ${{ steps.strings2.outputs.deploy-output-dir }}
+          cp "${{ github.workspace }}/Resources/runshell-windows.bat" "${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/runshell.bat"
+          cp "${{ github.workspace }}/Resources/README-windows.txt" "${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/README.txt"
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-${{ steps.strings.outputs.deploy-name }}
+          path: ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}
+
+      - name: Create zip archive (Windows)
+        shell: pwsh
+        run: |
+          Compress-Archive -Path "${{ steps.strings.outputs.deploy-name }}" -DestinationPath "windows-${{ steps.strings.outputs.deploy-name }}.zip"
+
+      
+
