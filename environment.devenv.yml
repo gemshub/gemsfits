@@ -19,6 +19,8 @@ dependencies:
   - libgomp # [linux]
   - boost-cpp
   - armadillo
+  - libblas
+  - liblapack
   - nlopt
   - mesa-libgl-devel-conda-x86_64 # [unix]
   - qt6-main=6.8.2
