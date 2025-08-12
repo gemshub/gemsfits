@@ -27,6 +27,9 @@ set(GEMSFITS_SOURCES
 
 
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+
+   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+
    set(ARMADILLO_DIR "${CMAKE_SOURCE_DIR}/gemsfit2/armadillo_win32")
    include_directories("${ARMADILLO_DIR}/include")
    link_directories("${ARMADILLO_DIR}/examples/lib_win64")
