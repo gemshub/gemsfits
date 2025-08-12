@@ -66,6 +66,8 @@ jobs:
         run: |
           cd C:/Miniconda/envs/gemsfits/Library/bin
           ls
+          cd C:/Miniconda/envs/gemsfits/Library/lib
+          ls
           cd ${{ github.workspace }}
           ls
           cp -r "${{ github.workspace }}/Resources" ${{ steps.strings2.outputs.deploy-output-dir }}

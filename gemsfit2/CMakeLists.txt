@@ -26,9 +26,6 @@ set(GEMSFITS_SOURCES
       ${MUPARSER_HEADER_FILES} ${MUPARSER_SOURCE_FILES})
 
 
-add_executable(gem-fits ${GEMSFITS_SOURCES})
-
-
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
    set(ARMADILLO_DIR "${CMAKE_SOURCE_DIR}/gemsfit2/armadillo_win32")
    include_directories("${ARMADILLO_DIR}/include")
