@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>521</width>
-    <height>405</height>
+    <height>433</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,6 +24,46 @@
       <string>Project folders locations</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
+      <item row="2" column="2">
+       <widget class="QToolButton" name="helpButton">
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="gemsfit2Edit"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Help database</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>gemsfit2 code path</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="resourcesEdit"/>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="helpEdit"/>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="usersEdit"/>
+      </item>
+      <item row="3" column="2">
+       <widget class="QToolButton" name="gemsfit2Button">
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="0">
        <widget class="QLabel" name="label">
         <property name="text">
@@ -31,11 +71,8 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="resourcesEdit"/>
-      </item>
-      <item row="0" column="2">
-       <widget class="QToolButton" name="resourcesButton">
+      <item row="1" column="2">
+       <widget class="QToolButton" name="usersButton">
         <property name="text">
          <string>...</string>
         </property>
@@ -48,52 +85,8 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="usersEdit"/>
-      </item>
-      <item row="1" column="2">
-       <widget class="QToolButton" name="usersButton">
-        <property name="text">
-         <string>...</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Help database</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QLineEdit" name="helpEdit"/>
-      </item>
-      <item row="2" column="2">
-       <widget class="QToolButton" name="helpButton">
-        <property name="text">
-         <string>...</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="3">
-       <widget class="QPushButton" name="pushButton">
-        <property name="text">
-         <string>Generate ...</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>gemsfit2 code path</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QLineEdit" name="gemsfit2Edit"/>
-      </item>
-      <item row="3" column="2">
-       <widget class="QToolButton" name="gemsfit2Button">
+      <item row="0" column="2">
+       <widget class="QToolButton" name="resourcesButton">
         <property name="text">
          <string>...</string>
         </property>
@@ -168,10 +161,10 @@
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+      <enum>Qt::Orientation::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Help|QDialogButtonBox::StandardButton::Ok</set>
      </property>
     </widget>
    </item>
