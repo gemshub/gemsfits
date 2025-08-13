@@ -79,33 +79,21 @@ if(DEFINED ENV{CONDA_PREFIX})
 message(STATUS "conda path: $ENV{CONDA_PREFIX}")
 
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-
     set(dll_path "C:/Miniconda/envs/gemsfits/Library/bin")
     message(STATUS "dll path: ${dll_path}")
+
     install(FILES "${dll_path}/GEMS3K.dll" DESTINATION bin)
     install(FILES "${dll_path}/ChemicalFun.dll" DESTINATION bin)
     install(FILES "${dll_path}/ThermoFun.dll" DESTINATION bin)
     install(FILES "${dll_path}/fmt.dll" DESTINATION bin)
     install(FILES "${dll_path}/zlib.dll" DESTINATION bin)
-
-    #install(FILES "${dll_path}/gssapi64.dll" DESTINATION bin)
-    #install(FILES "${dll_path}/libsodium.dll" DESTINATION bin)
     install(FILES "${dll_path}/spdlog.dll" DESTINATION bin)
     install(FILES "${dll_path}/libpng16.dll" DESTINATION bin)
-
     install(FILES "${dll_path}/double-conversion.dll" DESTINATION bin)
     install(FILES "${dll_path}/pcre2-16.dll" DESTINATION bin)
     install(FILES "${dll_path}/freetype.dll" DESTINATION bin)
     install(FILES "${dll_path}/zstd.dll" DESTINATION bin)
-
-    #install(FILES "${dll_path}/krb5_64.dll" DESTINATION bin)
-    #install(FILES "${dll_path}/comerr64.dll" DESTINATION bin)
-    #install(FILES "${dll_path}/k5sprt64.dll" DESTINATION bin)
-
-    #install(FILES "${dll_path}/vcruntime140.dll" DESTINATION bin)
     install(FILES "${dll_path}/msvcp140.dll" DESTINATION bin)
-    #install(FILES "${dll_path}/opengl32sw.dll" DESTINATION bin)
-    #install(FILES "${dll_path}/sqlite3.dll" DESTINATION bin)
 
     install(FILES "${dll_path}/yaml-cpp.dll" DESTINATION bin)
     install(FILES "${EJDB_DIR}/bin/${EJDB_WIN_LIB}.dll" DESTINATION bin)

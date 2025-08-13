@@ -95,10 +95,15 @@ void FITMainWindow::setDefValues(int /*c*/, char** /*v*/)
     // Linux and Windows - in user's home directory
     // By default: /Resources in the same dir as the exe file;
     dirExe = QCoreApplication::applicationDirPath();
+    GemsfitApplication = dirExe + GEMFIT_APP;
+
+    if(dirExe.endsWith("/bin") || dirExe.endsWith("\bin")) { // Try found Resource up level
+        dirExe.chop(4);
+    }
     SysFITDir = dirExe.toStdString() + RESOURCES_DIR;
     WorkDir = dirExe.toStdString();
     UserDir = home_dir() + DEFAULT_USER_DIR;
-    GemsfitApplication = dirExe + GEMFIT_APP;
+
 #endif
 
     LocalDocDir = SysFITDir + HELP_DB_DIR;
