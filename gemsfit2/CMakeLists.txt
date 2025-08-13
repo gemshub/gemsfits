@@ -34,10 +34,6 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
    include_directories("${ARMADILLO_DIR}/include")
    link_directories("${ARMADILLO_DIR}/examples/lib_win64")
 
-   #target_link_libraries(gem-fits nlopt blas_win64_MT lapack_win64_MT Threads::Threads)
-   #target_link_libraries(gem-fits nlopt armadillo libblas liblapack Threads::Threads)
-   #target_link_libraries(gem-fits GEMS3K::GEMS3K-static Boost::system ${EJDB_WIN_LIB} yaml-cpp)
-
    add_library(gemsfit-static STATIC ${COMMON_HEADER_FILES} ${COMMON_SOURCE_FILES}
                                       ${MUPARSER_HEADER_FILES} ${MUPARSER_SOURCE_FILES})
    target_link_libraries(gemsfit-static
@@ -46,26 +42,54 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
                             PUBLIC ${EJDB_WIN_LIB}
                             PUBLIC yaml-cpp)
 
- add_executable(gem-fits ${FITS_HEADER_FILES} ${FITS_SOURCE_FILES})
- target_link_libraries(gem-fits gemsfit-static nlopt blas_win64_MT lapack_win64_MT Threads::Threads)
- #target_link_libraries(gem-fits gemsfit-static nlopt armadillo liblapack libblas Threads::Threads)
+  add_executable(gem-fits ${FITS_HEADER_FILES} ${FITS_SOURCE_FILES})
+  target_link_libraries(gem-fits gemsfit-static nlopt blas_win64_MT lapack_win64_MT Threads::Threads)
+  #target_link_libraries(gem-fits gemsfit-static nlopt armadillo liblapack libblas Threads::Threads)
+
+  install(TARGETS gem-fits
+    BUNDLE  DESTINATION .
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} )
+
+if(DEFINED ENV{CONDA_PREFIX})
+  message(STATUS "conda path: $ENV{CONDA_PREFIX}")
+  set(dll_path2 "C:/Miniconda/envs/gemsfits/Library/bin")
+  message(STATUS "dll path: ${dll_path2}")
+
+  install(FILES "${dll_path}/nlopt.dll" DESTINATION bin)
+  install(FILES "${dll_path}/yaml-cpp.dll" DESTINATION bin)
+
+  install(FILES "${EJDB_DIR}/bin/${EJDB_WIN_LIB}.dll" DESTINATION bin)
+  install(FILES "${ARMADILLO_DIR}/examples/lib_win64/blas_win64_MT.dll" DESTINATION bin)
+  install(FILES "${ARMADILLO_DIR}/examples/lib_win64/lapack_win64_MT.dll" DESTINATION bin)
+endif()
 
 else()
+
    add_executable(gem-fits ${GEMSFITS_SOURCES})
    target_link_libraries(gem-fits  GEMS3K::GEMS3K nlopt Boost::system armadillo ${EJDB_LIB} yaml-cpp Threads::Threads)
    if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
      target_link_libraries(gem-fits omp)
    endif()
-endif()
 
-install(TARGETS gem-fits DESTINATION bin)
+  install(TARGETS gem-fits
+    BUNDLE  DESTINATION .
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} )
 
-qt_generate_deploy_app_script(
+  qt_generate_deploy_app_script(
     TARGET gem-fits
     OUTPUT_SCRIPT deploy_script2
     NO_TRANSLATIONS
     NO_UNSUPPORTED_PLATFORM_ERROR
-)
-install(SCRIPT ${deploy_script2})
+  )
+  install(SCRIPT ${deploy_script2})
+
+endif()
+
+
+
+
+
 
 
