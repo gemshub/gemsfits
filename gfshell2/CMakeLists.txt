@@ -86,7 +86,6 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     install(FILES "${dll_path}/ChemicalFun.dll" DESTINATION bin)
     install(FILES "${dll_path}/ThermoFun.dll" DESTINATION bin)
     install(FILES "${dll_path}/fmt.dll" DESTINATION bin)
-    #install(FILES "${dll_path}/libzmq-mt-4_3_5.dll" DESTINATION bin)
     install(FILES "${dll_path}/zlib.dll" DESTINATION bin)
 
     install(FILES "${dll_path}/gssapi64.dll" DESTINATION bin)
@@ -107,6 +106,9 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     install(FILES "${dll_path}/msvcp140.dll" DESTINATION bin)
     install(FILES "${dll_path}/opengl32sw.dll" DESTINATION bin)
     install(FILES "${dll_path}/sqlite3.dll" DESTINATION bin)
+
+    install(FILES "${dll_path}/yaml-cpp.dll" DESTINATION bin)
+    install(FILES "${EJDB_DIR}/bin/{EJDB_WIN_LIB}.dll" DESTINATION bin)
 endif()
 
 endif()
