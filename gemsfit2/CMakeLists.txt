@@ -56,8 +56,8 @@ if(DEFINED ENV{CONDA_PREFIX})
   set(dll_path2 "C:/Miniconda/envs/gemsfits/Library/bin")
   message(STATUS "dll path: ${dll_path2}")
 
-  install(FILES "${dll_path}/nlopt.dll" DESTINATION bin)
-  install(FILES "${dll_path}/yaml-cpp.dll" DESTINATION bin)
+  install(FILES "${dll_path2}/nlopt.dll" DESTINATION bin)
+  install(FILES "${dll_path2}/yaml-cpp.dll" DESTINATION bin)
 
   install(FILES "${EJDB_DIR}/bin/${EJDB_WIN_LIB}.dll" DESTINATION bin)
   install(FILES "${ARMADILLO_DIR}/examples/lib_win64/blas_win64_MT.dll" DESTINATION bin)
