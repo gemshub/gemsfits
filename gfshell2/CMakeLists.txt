@@ -108,7 +108,7 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     install(FILES "${dll_path}/sqlite3.dll" DESTINATION bin)
 
     install(FILES "${dll_path}/yaml-cpp.dll" DESTINATION bin)
-    install(FILES "${EJDB_DIR}/bin/{EJDB_WIN_LIB}.dll" DESTINATION bin)
+    install(FILES "${EJDB_DIR}/bin/${EJDB_WIN_LIB}.dll" DESTINATION bin)
 endif()
 
 endif()

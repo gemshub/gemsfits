@@ -52,11 +52,20 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 
 else()
    add_executable(gem-fits ${GEMSFITS_SOURCES})
-   target_link_libraries(gem-fits  GEMS3K::GEMS3K nlopt Boost::system Armadillo::armadillo ${EJDB_LIB} yaml-cpp Threads::Threads)
+   target_link_libraries(gem-fits  GEMS3K::GEMS3K nlopt Boost::system armadillo ${EJDB_LIB} yaml-cpp Threads::Threads)
    if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
      target_link_libraries(gem-fits omp)
    endif()
 endif()
 
 install(TARGETS gem-fits DESTINATION bin)
+
+qt_generate_deploy_app_script(
+    TARGET gem-fits
+    OUTPUT_SCRIPT deploy_script2
+    NO_TRANSLATIONS
+    NO_UNSUPPORTED_PLATFORM_ERROR
+)
+install(SCRIPT ${deploy_script2})
+
 
