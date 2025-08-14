@@ -95,12 +95,20 @@ jobs:
           cd ${{ github.workspace }}
           zip -y -r ${{ steps.strings2.outputs.deploy-output-name }} ${{ steps.strings.outputs.deploy-name }}
 
-      - name: Create archive
-        run: tar -czhf linux-${{ steps.strings.outputs.deploy-name }}.tar.gz ${{ steps.strings.outputs.deploy-name }}
-
-      - name: Upload artifact for deployment job
+      - name: Upload zip archive
         uses: actions/upload-artifact@v4
         with:
           name: linux-${{ steps.strings.outputs.deploy-name }}
           path: ${{ github.workspace }}/${{ steps.strings2.outputs.deploy-output-name }}
+
+      - name: Upload release asset
+        if: github.event_name == 'release' && github.event.action == 'published'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ github.workspace }}/${{ steps.strings2.outputs.deploy-output-name }}
+          asset_name: ${{ steps.strings2.outputs.deploy-output-name }}
+          asset_content_type: application/zip
       
