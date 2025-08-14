@@ -70,6 +70,7 @@ jobs:
           ls
           cd ${{ github.workspace }}
           ls
+          cp -r "${{ github.workspace }}/Tests" ${{ steps.strings2.outputs.deploy-output-dir }}
           cp -r "${{ github.workspace }}/Resources" ${{ steps.strings2.outputs.deploy-output-dir }}
           cp "${{ github.workspace }}/Resources/runshell-windows.bat" "${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/runshell.bat"
           cp "${{ github.workspace }}/Resources/README-windows.txt" "${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/README.txt"

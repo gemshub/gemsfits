@@ -41,9 +41,9 @@ const char *HELP_SRC_DIR = "doc/html/";
 const char *DATA_TEMPLATES = "data/";
 const char *SEARCH_TEMPLATES = "search-templates/";
 #ifdef _WIN32
-const char *GEMFIT_APP = "/gemsfit3.exe";
+const char *GEMFIT_APP = "/gem-fits.exe";
 #else
-const char *GEMFIT_APP = "/gemsfit3";
+const char *GEMFIT_APP = "/gem-fits";
 #endif
 
 // User home resource

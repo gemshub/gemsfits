@@ -106,7 +106,7 @@ HelpWindow::HelpWindow(QWidget* parent):
     //End Ui form
 
 
-    QString collectionFile = QString( pFitImp->docDir().c_str() )+ QLatin1String("/gfshelp.qhc");
+    QString collectionFile = QString( pFitImp->docDir().c_str() )+ QLatin1String("gfshelp.qhc");
     // "/home/gems/gemworks/gems3/shared/doc/html/gems3help.qhc";
 
     findLine = 0;
@@ -126,6 +126,7 @@ HelpWindow::HelpWindow(QWidget* parent):
 
     hEngine = new QHelpEngine(collectionFile, this);
     if (!hEngine->setupData()) {
+        std::cout << "Error QHelpEngine " << hEngine->error().toStdString()<< std::endl;
         delete hEngine;
         hEngine = 0;
         srchWidget =0;
@@ -134,7 +135,8 @@ HelpWindow::HelpWindow(QWidget* parent):
     }
     else
     {
-        //cout << collectionFile.toStdString() << endl;
+        std::cout << "HelpWindow collectionFile= " << collectionFile.toStdString() << std::endl;
+
         // Contents part
         wContents = hEngine->contentWidget();
         QVBoxLayout* mainBox = new QVBoxLayout(tabContents );
@@ -147,8 +149,8 @@ HelpWindow::HelpWindow(QWidget* parent):
         verticalLayout->addWidget(wIndex);
         connect(lineIndex, SIGNAL(textChanged(QString)), this,
                 SLOT(filterIndices(QString)));
-        connect(wIndex, SIGNAL(linkActivated( const QUrl &, const QString & ) ),
-                this, SLOT(loadResource( const QUrl& )));
+        connect(wIndex, SIGNAL(linkActivated(QUrl,QString)),
+                this, SLOT(loadResource(QUrl)));
 
         // Search part
         srchWidget = new  SearchWidget(hEngine->searchEngine(), tabSearch );

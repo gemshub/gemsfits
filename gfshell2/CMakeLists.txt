@@ -1,5 +1,5 @@
 message(STATUS "Building gem-fits-shell")
-file(COPY "${CMAKE_SOURCE_DIR}/Resources" DESTINATION "${CMAKE_BINARY_DIR}/bin")
+file(COPY "${CMAKE_SOURCE_DIR}/Resources" DESTINATION "${CMAKE_BINARY_DIR}")
 
 find_package(Threads REQUIRED)
 # Enable automatic creation of a module definition (.def) file for a SHARED library on Windows.
@@ -94,6 +94,7 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     install(FILES "${dll_path}/freetype.dll" DESTINATION bin)
     install(FILES "${dll_path}/zstd.dll" DESTINATION bin)
     install(FILES "${dll_path}/msvcp140.dll" DESTINATION bin)
+    install(FILES "${dll_path}/sqlite3.dll" DESTINATION bin)
 
     install(FILES "${dll_path}/yaml-cpp.dll" DESTINATION bin)
     install(FILES "${EJDB_DIR}/bin/${EJDB_WIN_LIB}.dll" DESTINATION bin)

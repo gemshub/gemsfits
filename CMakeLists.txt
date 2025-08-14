@@ -30,7 +30,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 # Define which types of libraries to build
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 option(BUILD_STATIC_LIBS "Build static libraries" ON)
-option(BUILD_TOOLS "Build tools." OFF)
+option(BUILD_TOOLS "Build tools." ON)
 option(USE_THERMOFUN "Use ThermoFun" ON)
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
   option(USE_OLD_EJDB "Compile using ejdb1" ON)
