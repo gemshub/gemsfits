@@ -54,8 +54,8 @@ elseif (APPLE)
 
 else()
     qt_add_executable(gem-fits-shell ${GEMSFITS_SHELL_SOURCES})
-    #install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/gem-fits-shell.desktop DESTINATION share/applications)
-    #install(FILES ${PROJECT_SOURCE_DIR}/Resources/gem-fits-shell.png DESTINATION share/icons)
+    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/gem-fits-shell.desktop DESTINATION share/applications)
+    install(FILES ${PROJECT_SOURCE_DIR}/Resources/gem-fits-shell.png DESTINATION share/icons)
 endif()
 
 target_link_libraries(gem-fits-shell PRIVATE Qt6::Widgets Qt6::Core Qt6::Gui Qt6::PrintSupport Qt6::Charts Qt6::Svg Qt6::Help Qt6::Sql)

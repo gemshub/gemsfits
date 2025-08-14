@@ -2,7 +2,7 @@ name: deploy-windows
 on:
   push:
     branches:
-      - deploy_actions1
+      - deploy_actions
   release:
     types:
       - published
@@ -75,16 +75,26 @@ jobs:
           cp "${{ github.workspace }}/Resources/runshell-windows.bat" "${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/runshell.bat"
           cp "${{ github.workspace }}/Resources/README-windows.txt" "${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/README.txt"
 
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: windows-${{ steps.strings.outputs.deploy-name }}
-          path: ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}
-
       - name: Create zip archive (Windows)
         shell: pwsh
         run: |
-          Compress-Archive -Path "${{ steps.strings.outputs.deploy-name }}" -DestinationPath "windows-${{ steps.strings.outputs.deploy-name }}.zip"
+          Compress-Archive -Path "${{ steps.strings.outputs.deploy-name }}" -DestinationPath "${{ steps.strings2.outputs.deploy-output-name }}"
 
-      
+      - name: Upload zip archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-${{ steps.strings.outputs.deploy-name }}
+          path: ${{ github.workspace }}/${{ steps.strings2.outputs.deploy-output-name }}
+
+      - name: Upload release asset
+        if: github.event_name == 'release' && github.event.action == 'published'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ github.workspace }}/${{ steps.strings2.outputs.deploy-output-name }}
+          asset_name: ${{ steps.strings2.outputs.deploy-output-name }}
+          asset_content_type: application/zip
+
 
