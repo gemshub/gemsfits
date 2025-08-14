@@ -17,7 +17,7 @@ jobs:
       matrix:
         os: [ windows-latest ]
         conda_platform: [ win-64 ]
-        artifact_name: [ gemsgui-windows ]
+        artifact_name: [ gemsfits-windows ]
 
     steps:
 

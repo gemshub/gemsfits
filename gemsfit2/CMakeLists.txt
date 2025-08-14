@@ -47,7 +47,6 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
   #target_link_libraries(gem-fits gemsfit-static nlopt armadillo liblapack libblas Threads::Threads)
 
   install(TARGETS gem-fits
-    BUNDLE  DESTINATION .
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} )
 

@@ -1,0 +1,99 @@
+name: deploy-linux
+on:
+  push:
+    branches:
+      - deploy_actions
+  release:
+    types:
+      - published
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        os: [ ubuntu-latest ]
+        conda_platform: [ linux-64 ]
+        artifact_name: [ gemsfits-linux ]
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Get version from CMakeLists.txt
+        id: get_version
+        uses: DarwinInnovation/cmake-project-version-action@v1.0
+
+      - name: Set deploy name
+        id: strings
+        shell: bash
+        run: >
+          echo "deploy-name=GEMFITS${{ steps.get_version.outputs.version }}" >> "$GITHUB_OUTPUT"
+
+      - name: Set deploy dir
+        id: strings2
+        shell: bash
+        run: |
+          echo "deploy-output-dir=${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app" >> "$GITHUB_OUTPUT"
+          echo "deploy-output-name=linux-${{ steps.strings.outputs.deploy-name }}.zip" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Conda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-activate-base: false
+          channels: conda-forge, defaults
+          channel-priority: true
+
+      - name: Configuring Conda Environment
+        run: |
+          conda config --set always_yes yes --set changeps1 no
+          conda config --add channels conda-forge
+          conda install conda-devenv
+          conda devenv
+
+      - name: Building, Testing & Installing GEMSGUI
+        if: matrix.os != 'windows-latest'
+        shell: bash -l {0}
+        run: |
+          conda activate gemsfits
+          mkdir .build && cd .build
+          export CC=$CONDA_PREFIX/bin/x86_64-conda-linux-gnu-gcc
+          export CXX=$CONDA_PREFIX/bin/x86_64-conda-linux-gnu-g++
+          export CONDA_BUILD_SYSROOT=$CONDA_PREFIX/x86_64-conda-linux-gnu/sysroot
+          cmake -GNinja .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${{ steps.strings2.outputs.deploy-output-dir }} -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX
+          ninja
+          ninja install
+
+      - name: Check deploy
+        run: |
+          cd ${{ github.workspace }}
+          ls
+          cp -r "${{ github.workspace }}/Tests" ${{ steps.strings2.outputs.deploy-output-dir }}
+          cp -r "${{ github.workspace }}/Resources" "${{ steps.strings2.outputs.deploy-output-dir }}"
+          cp "${{ github.workspace }}/Resources/runshell-linux.sh" "${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/runshell.sh"
+          cp "${{ github.workspace }}/Resources/README-linux.md"  "${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/README.md"
+          ldd "${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app/bin/gem-fits"
+          ldd "${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app/bin/gem-fits-shell"
+
+      - name: Clean up system libraries
+        run: |
+          rm -f ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app/lib/libc.so.6
+          rm -f ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app/lib/libm.so.6
+          rm -f ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app/lib/libdl.so.2
+          rm -f ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app/lib/librt.so.1
+          rm -f ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app/lib/libpthread.so.0
+          
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-${{ steps.strings.outputs.deploy-name }}
+          path: ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}
+      
+      - name: Create zip archive for GitHub release
+        run: |
+          cd ${{ github.workspace }}
+          zip -r ${{ steps.strings2.outputs.deploy-output-name }} ${{ steps.strings.outputs.deploy-name }}
