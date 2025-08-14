@@ -82,6 +82,7 @@ jobs:
 
       - name: Clean up system libraries
         run: |
+          ./cleanup_libs_linux.sh ${{ steps.strings2.outputs.deploy-output-dir }}/lib
           rm -f ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app/lib/libc.so.6
           rm -f ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app/lib/libm.so.6
           rm -f ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app/lib/libdl.so.2
