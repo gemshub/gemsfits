@@ -79,23 +79,25 @@ jobs:
           cp "${{ github.workspace }}/Resources/README-linux.md"  "${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/README.md"
           ldd "${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app/bin/gem-fits"
           ldd "${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app/bin/gem-fits-shell"
+          cd ${{ steps.strings2.outputs.deploy-output-dir }}/lib
+          ls
 
       - name: Clean up system libraries
         run: |
-          ./cleanup_libs_linux.sh ${{ steps.strings2.outputs.deploy-output-dir }}/lib
           rm -f ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app/lib/libc.so.6
           rm -f ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app/lib/libm.so.6
           rm -f ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app/lib/libdl.so.2
           rm -f ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app/lib/librt.so.1
           rm -f ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app/lib/libpthread.so.0
-          
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-${{ steps.strings.outputs.deploy-name }}
-          path: ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}
-      
+
       - name: Create zip archive for GitHub release
         run: |
           cd ${{ github.workspace }}
           zip -r ${{ steps.strings2.outputs.deploy-output-name }} ${{ steps.strings.outputs.deploy-name }}
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-${{ steps.strings.outputs.deploy-name }}
+          path: ${{ github.workspace }}/${{ steps.strings2.outputs.deploy-output-name }}
+      
