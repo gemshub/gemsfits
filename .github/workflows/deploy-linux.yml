@@ -95,9 +95,12 @@ jobs:
           cd ${{ github.workspace }}
           zip -r ${{ steps.strings2.outputs.deploy-output-name }} ${{ steps.strings.outputs.deploy-name }}
 
+      - name: Create archive
+        run: tar -czhf linux-${{ steps.strings.outputs.deploy-name }}.tar.gz ${{ steps.strings.outputs.deploy-name }}
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: linux-${{ steps.strings.outputs.deploy-name }}
-          path: ${{ github.workspace }}/${{ steps.strings2.outputs.deploy-output-name }}
+          path: ${{ github.workspace }}/linux-${{ steps.strings.outputs.deploy-name }}.tar.gz
       
