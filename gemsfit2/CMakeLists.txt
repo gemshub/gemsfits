@@ -76,6 +76,14 @@ else()
    target_link_libraries(gem-fits  GEMS3K::GEMS3K nlopt Boost::system armadillo ${EJDB_LIB} yaml-cpp Threads::Threads)
    if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
      target_link_libraries(gem-fits omp)
+
+     set_target_properties(gem-fits PROPERTIES
+            MACOSX_BUNDLE_COPYRIGHT  "Copyright (c) 2004-2025 GEMS Development Team"
+            MACOSX_BUNDLE_ICON_FILE gems3.icns
+            MACOSX_BUNDLE_INFO_STRING "GEM Input Parameter Optimization and Inverse Modelling"
+            MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+            MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+            MACOSX_BUNDLE TRUE)
    endif()
 
   install(TARGETS gem-fits
