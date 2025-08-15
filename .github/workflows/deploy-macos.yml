@@ -1,0 +1,99 @@
+name: deploy-macos
+on:
+  push:
+    branches:
+      - deploy_actions
+  release:
+    types:
+      - published
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        os: [ macos-13 ]
+        conda_platform: [ osx-64 ]
+        artifact_name: [ gemsfits-macos ]
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get version from CMakeLists.txt
+        id: get_version
+        uses: DarwinInnovation/cmake-project-version-action@v1.0
+
+      - name: Set deploy name
+        id: strings
+        shell: bash
+        run: >
+          echo "deploy-name=GEMFITS${{ steps.get_version.outputs.version }}" >> "$GITHUB_OUTPUT"
+
+      - name: Set deploy dir
+        id: strings2
+        shell: bash
+        run: |
+          echo "deploy-output-dir=${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}" >> "$GITHUB_OUTPUT"
+          echo "deploy-output-name=macos-${{ steps.strings.outputs.deploy-name }}.zip" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Conda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-activate-base: false
+          channels: conda-forge, defaults
+          channel-priority: true
+
+      - name: Configuring Conda Environment
+        run: |
+          conda config --set always_yes yes --set changeps1 no
+          conda config --add channels conda-forge
+          conda install conda-devenv
+          conda devenv
+
+      - name: Building, Testing & Installing gemsfits
+        shell: bash -l {0}
+        run: |
+          conda activate gemsfits
+          export CMAKE_POLICY_VERSION_MINIMUM=3.5
+          ./conda-install-dependencies.sh OLD_EJDB
+          mkdir .build && cd .build
+          cmake -GNinja .. -DUSE_OLD_EJDB=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${{ steps.strings2.outputs.deploy-output-dir }}
+          ninja
+          ninja install
+
+      - name: Check deploy
+        run: |
+          cd ${{ github.workspace }}
+          ls
+          cp -r "${{ github.workspace }}/Resources" "${{ steps.strings2.outputs.deploy-output-dir }}/gem-fits-shell.app/Contents"
+          cp -r "${{ github.workspace }}/Tests" "${{ steps.strings2.outputs.deploy-output-dir }}/gem-fits-shell.app/Contents/Resources"
+          cp "${{ github.workspace }}/Resources/runshell-macos.sh" "${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/runshell.sh"
+          cp "${{ github.workspace }}/Resources/README-macos.txt" "${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/README.txt"
+
+      - name: Create zip archive for GitHub release
+        run: |
+          cd ${{ github.workspace }}
+          zip -r ${{ steps.strings2.outputs.deploy-output-name }} ${{ steps.strings.outputs.deploy-name }}
+
+      - name: Upload artifact zip archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-${{ steps.strings.outputs.deploy-name }}
+          path: ${{ github.workspace }}/${{ steps.strings2.outputs.deploy-output-name }}
+
+      - name: Upload release asset
+        if: github.event_name == 'release' && github.event.action == 'published'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ github.workspace }}/${{ steps.strings2.outputs.deploy-output-name }}
+          asset_name: ${{ steps.strings2.outputs.deploy-output-name }}
+          asset_content_type: application/zip
+
