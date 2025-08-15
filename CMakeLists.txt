@@ -39,7 +39,7 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 else()
   option(USE_OLD_EJDB "Compile using ejdb1" ON)
   option(BUILD_FIT "Build gem-fits" ON)
-  option(BUILD_GUI "Build Qt GUI shell" ON)
+  option(BUILD_GUI "Build Qt GUI shell" OFF)
 
 endif()
 
