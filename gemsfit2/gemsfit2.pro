@@ -31,7 +31,7 @@
 
 TEMPLATE	= app
 #LANGUAGE        = C++
-TARGET		= gemsfit2
+TARGET		= gem-fits
 VERSION         = 2.3.2
 # GEMS3K commit 66761a7
 
@@ -43,15 +43,15 @@ CONFIG += serial release
 CONFIG += c++20
 
 # check settengs
-#DEFINES         += useomp
+DEFINES         += useomp
 DEFINES += CHECK_LOAD # to generate print for initial data after read input configuration.
 DEFINES += OLD_EJDB # compile using ejdb1
-#DEFINES += OVERFLOW_EXCEPT  #compile with nan inf exceptions
+DEFINES += OVERFLOW_EXCEPT  #compile with nan inf exceptions
 
 DEFINES += IPMGEMPLUGIN
 #DEFINES += NODEARRAYLEVEL
 #DEFINES += USE_NLOHMANNJSON
-#DEFINES += USE_THERMOFUN
+DEFINES += USE_THERMOFUN
 #DEFINES += USE_THERMO_LOG
 
 QMAKE_CXXFLAGS += -O3
@@ -103,23 +103,23 @@ CONFIG( serial, serial|mpi ) {
 }
 
 FIT_CPP      =  ./src-fit
-#GEMS3K_CPP   =  ../standalone/GEMS3K
+GEMS3K_CPP   =  ../GEMS3K/GEMS3K
 MUP_CPP      =  ./muparser/src
 COMMON_CPP  =  ../common
 
 FIT_H        =   $$FIT_CPP
-#GEMS3K_H     =   $$GEMS3K_CPP
+GEMS3K_H     =   $$GEMS3K_CPP
 MUP_H        =   $$MUP_CPP
 COMMON_H     =   $$COMMON_CPP
 
 DEPENDPATH   += $$FIT_H
-#DEPENDPATH   += $$GEMS3K_H
+DEPENDPATH   += $$GEMS3K_H
 DEPENDPATH   += $$KEYS_H
 DEPENDPATH   += $$MUP_H
 DEPENDPATH   += $$COMMON_H
 
 INCLUDEPATH  += $$FIT_H
-#INCLUDEPATH  += $$GEMS3K_H
+INCLUDEPATH  += $$GEMS3K_H
 INCLUDEPATH  += $$KEYS_H
 INCLUDEPATH  += $$MUP_H
 INCLUDEPATH   += $$COMMON_H
@@ -128,7 +128,7 @@ OBJECTS_DIR       = obj
 
 include($$COMMON_CPP/common.pri)
 include($$FIT_CPP/fit.pri)
-#include($$GEMS3K_CPP/gems3k.pri)
+include($$GEMS3K_CPP/gems3k.pri)
 include($$MUP_CPP/muparser.pri)
 
 contains(DEFINES, OLD_EJDB) {
@@ -141,7 +141,7 @@ CONFIG(release, debug|release): LIBS += -lejdb2 -lyaml-cpp
 CONFIG(debug, debug|release): LIBS += -lejdb2 -lyaml-cpp
 }
 
-LIBS += -lGEMS3K
+#LIBS += -lGEMS3K
 contains(DEFINES, USE_THERMOFUN) {
   LIBS += -lThermoFun -lChemicalFun
 } ## end USE_THERMOFUN

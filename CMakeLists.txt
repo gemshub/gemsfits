@@ -50,6 +50,20 @@ else()
    option(USE_SPDLOG_PRECOMPILED "Use spdlog in compiled version" OFF)
 endif()
 
+if(USE_SPDLOG_PRECOMPILED)
+   if(NOT TARGET spdlog::spdlog)
+       find_package(spdlog CONFIG REQUIRED)
+       if(NOT spdlog_FOUND)
+           message(FATAL_ERROR "spdlog library not found")
+       else()
+           message(STATUS "Found spdlog v${spdlog_VERSION}")
+           if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+                add_definitions(-DSPDLOG_FMT_EXTERNAL)
+           endif()
+       endif()
+   endif()
+endif()
+
 # Set the default build type to Release
 if(NOT CMAKE_BUILD_TYPE)
     # The build type selection for the project
@@ -162,9 +176,12 @@ endif()
 
 # Set the headers directory path
 set(COMMON_DIR "${CMAKE_SOURCE_DIR}/common")
+set(GEMS3K_DIR "${CMAKE_SOURCE_DIR}/GEMS3K/GEMS3K")
 
 # Set the include directories
 include_directories(${COMMON_DIR})
+include_directories(${GEMS3K_DIR})
+include_directories("${CMAKE_SOURCE_DIR}/GEMS3K")
 
 if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
    include_directories("/usr/local/include")
@@ -221,4 +238,4 @@ if(BUILD_TOOLS)
 endif()
 
 include(CPack) #should be last command
-
+#cmake .. -DCMAKE_PREFIX_PATH=/home/sveta/Qt/6.5.0/gcc_64

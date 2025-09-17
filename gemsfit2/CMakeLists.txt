@@ -12,16 +12,19 @@ find_package(Threads REQUIRED)
 
 # Recursively collect all header files
 file(GLOB COMMON_HEADER_FILES ${COMMON_DIR}/*.h)
+file(GLOB GEMS3K_HEADER_FILES ${GEMS3K_DIR}/*.h)
 file(GLOB FITS_HEADER_FILES  ${CMAKE_CURRENT_SOURCE_DIR}/src-fit/*.h)
 file(GLOB MUPARSER_HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/muparser/src/*.h)
 
 # Recursively collect all source files
 file(GLOB COMMON_SOURCE_FILES ${COMMON_DIR}/*.cpp)
+file(GLOB GEMS3K_SOURCE_FILES ${GEMS3K_DIR}/*.cpp)
 file(GLOB FITS_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src-fit/*.cpp)
 file(GLOB MUPARSER_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/muparser/src/*.cpp)
 
 set(GEMSFITS_SOURCES
       ${COMMON_HEADER_FILES} ${COMMON_SOURCE_FILES}
+      ${GEMS3K_HEADER_FILES} ${GEMS3K_SOURCE_FILES}
       ${FITS_HEADER_FILES} ${FITS_SOURCE_FILES}
       ${MUPARSER_HEADER_FILES} ${MUPARSER_SOURCE_FILES})
 
@@ -35,12 +38,19 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
    link_directories("${ARMADILLO_DIR}/examples/lib_win64")
 
    add_library(gemsfit-static STATIC ${COMMON_HEADER_FILES} ${COMMON_SOURCE_FILES}
+                                      ${GEMS3K_HEADER_FILES} ${GEMS3K_SOURCE_FILES}
                                       ${MUPARSER_HEADER_FILES} ${MUPARSER_SOURCE_FILES})
    target_link_libraries(gemsfit-static
-                            PUBLIC GEMS3K::GEMS3K
                             PUBLIC Boost::system
                             PUBLIC ${EJDB_WIN_LIB}
                             PUBLIC yaml-cpp)
+   if(USE_THERMOFUN MATCHES ON)
+         target_link_libraries(gemsfit-static PUBLIC ThermoFun::ThermoFun)
+   else()
+         if(USE_SPDLOG_PRECOMPILED)
+              target_link_libraries(gemsfit-static PUBLIC spdlog::spdlog)
+         endif()
+   endif()
 
   add_executable(gem-fits ${FITS_HEADER_FILES} ${FITS_SOURCE_FILES})
   target_link_libraries(gem-fits gemsfit-static nlopt blas_win64_MT lapack_win64_MT Threads::Threads)
@@ -73,7 +83,16 @@ endif()
 else()
 
    add_executable(gem-fits ${GEMSFITS_SOURCES})
-   target_link_libraries(gem-fits nlopt Boost::system armadillo ${EJDB_LIB} yaml-cpp GEMS3K::GEMS3K Threads::Threads)
+   target_link_libraries(gem-fits nlopt Boost::system armadillo ${EJDB_LIB} yaml-cpp Threads::Threads)
+   
+    if(USE_THERMOFUN MATCHES ON)
+       target_link_libraries(gem-fits ThermoFun::ThermoFun)
+    else()
+       if(USE_SPDLOG_PRECOMPILED)
+          target_link_libraries(gem-fits spdlog::spdlog)
+       endif()
+    endif()
+
    if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
      target_link_libraries(gem-fits omp)
 
