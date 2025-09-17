@@ -93,7 +93,7 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     set(dll_path "C:/Miniconda/envs/gemsfits/Library/bin")
     message(STATUS "dll path: ${dll_path}")
 
-    install(FILES "${dll_path}/GEMS3K.dll" DESTINATION bin)
+    #install(FILES "${dll_path}/GEMS3K.dll" DESTINATION bin)
     install(FILES "${dll_path}/ChemicalFun.dll" DESTINATION bin)
     install(FILES "${dll_path}/ThermoFun.dll" DESTINATION bin)
     install(FILES "${dll_path}/fmt.dll" DESTINATION bin)

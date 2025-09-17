@@ -65,7 +65,7 @@ if(DEFINED ENV{CONDA_PREFIX})
   set(dll_path2 "C:/Miniconda/envs/gemsfits/Library/bin")
   message(STATUS "dll path: ${dll_path2}")
 
-  install(FILES "${dll_path2}/GEMS3K.dll" DESTINATION bin)
+  #install(FILES "${dll_path2}/GEMS3K.dll" DESTINATION bin)
   install(FILES "${dll_path2}/ChemicalFun.dll" DESTINATION bin)
   install(FILES "${dll_path2}/ThermoFun.dll" DESTINATION bin)
   install(FILES "${dll_path2}/fmt.dll" DESTINATION bin)

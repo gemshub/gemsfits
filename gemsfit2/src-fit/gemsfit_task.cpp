@@ -980,7 +980,7 @@ void TGfitTask::setnodes()
     {
         NodeHandle = n;
         // Calling GEMIPM calculation
-        long int NodeStatusCH2 = NodT[n]->GEM_run( false/*true*/ );
+        long int NodeStatusCH2 = NodT[n]->GEM_run( true );
         std::cout << "Node: " << n+1 << " Sample: " << experiments[n]->sample <<"  NodeStatusCH: " << NodeStatusCH2 << std::endl;
 
         if( ( NodeStatusCH2 == ERR_GEM_AIA || NodeStatusCH2 == ERR_GEM_SIA ||
