@@ -73,7 +73,7 @@ endif()
 else()
 
    add_executable(gem-fits ${GEMSFITS_SOURCES})
-   target_link_libraries(gem-fits  GEMS3K::GEMS3K nlopt Boost::system armadillo ${EJDB_LIB} yaml-cpp Threads::Threads)
+   target_link_libraries(gem-fits nlopt Boost::system armadillo ${EJDB_LIB} yaml-cpp GEMS3K::GEMS3K Threads::Threads)
    if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
      target_link_libraries(gem-fits omp)
 

@@ -43,7 +43,7 @@ CONFIG += serial release
 CONFIG += c++20
 
 # check settengs
-DEFINES         += useomp
+#DEFINES         += useomp
 DEFINES += CHECK_LOAD # to generate print for initial data after read input configuration.
 DEFINES += OLD_EJDB # compile using ejdb1
 #DEFINES += OVERFLOW_EXCEPT  #compile with nan inf exceptions

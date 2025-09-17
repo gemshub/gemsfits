@@ -157,6 +157,13 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         }
     }
 
+    // Set the P in the node->CNode-P as in the experiments to avoid problem due to Psat notation as 0
+    for (unsigned int e=0; e<sys->NodT.size(); ++e)
+    {
+        sys->NodT[e]->Set_TK(273.15 + sys->experiments[e]->sT);
+        sys->NodT[e]->Set_P(100000 * sys->experiments[e]->sP);
+    }
+
 #ifdef useomp
     omp_set_num_threads(sys->MPI);
 #ifdef _WIN32
@@ -172,12 +179,13 @@ void gems3k_wrap( double &residuals_sys, const std::vector<double> &opt, TGfitTa
         dBR.push_back(sys->NodT[i]->pCNode());
         long int NodeStatusCH;
 
-            // Set the P in the node->CNode-P as in the experiments to avoid problem due to Psat notation as 0
-        for (unsigned int e=0; e<sys->experiments.size(); ++e)
-        {
-            sys->NodT[e]->Set_TK(273.15 + sys->experiments[e]->sT);
-            sys->NodT[e]->Set_P(100000 * sys->experiments[e]->sP);
-        }
+        /// SD 17/09/25 - cross changing in different threads (moved up)
+        //     // Set the P in the node->CNode-P as in the experiments to avoid problem due to Psat notation as 0
+        // for (unsigned int e=0; e<sys->experiments.size(); ++e)
+        // {
+        //     sys->NodT[e]->Set_TK(273.15 + sys->experiments[e]->sT);
+        //     sys->NodT[e]->Set_P(100000 * sys->experiments[e]->sP);
+        // }
 
         // Asking GEM to run with automatic initial approximation
         dBR.at(0)->NodeStatusCH = NEED_GEM_AIA;

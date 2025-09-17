@@ -854,6 +854,13 @@ long int Opt_bIC::SetIVvEVvDelta(TNode *node)
         delta = 0.0;
         for (unsigned j=0; j < optLP[i]->L_param.size(); ++j )
         {
+            std::cout << "SetIVvEVvDelta " << i << " " << j << " " << optLP[i]->L_param_ind[j] << std::endl;
+            std::string node_json;
+            node->GEM_write_dbr(node_json);
+            std::cout << node_json << std::endl;
+            std::cout << "Get_TK " << node->Get_TK() << std::endl;
+            std::cout << "Get_bIC " << node->Get_bIC(0) << std::endl;
+
             delta += optLP[i]->L_param_coef[j] * node->Get_bIC(optLP[i]->L_param_ind[j]);
         }
         optLP[i]->delta.push_back(delta);

@@ -560,7 +560,7 @@ void TGfitTask::setnodes()
         xDC_lo.reset(new double[nDC]());  // std::make_shared<double[]>(nDC);  // new double[ nDC ];
         Ph_surf.reset(new double[nPH]());  // = std::make_shared<double[]>(nPH);  // new double[ nPH ];
         new_moles_IC.reset(new double[nIC]());  // = std::make_shared<double[]>(nIC);  // new double[ nIC ]; // vector for holding the moles of independent components for each experiment
-        bICv.push_back(std::shared_ptr<double[]>(new double[nIC]()));
+        ////SD bICv.push_back(std::shared_ptr<double[]>(new double[nIC]()));
 
         // lower and upper bounds for concentration of DC
         for( i=0; i<nDC; i++ )
@@ -904,8 +904,6 @@ void TGfitTask::setnodes()
         }
 
 
-
-
         // for j
 //        if (!salt)
 //        {
@@ -969,6 +967,7 @@ void TGfitTask::setnodes()
         //delete[] Ph_surf;
     }  // for n
 
+
 #ifdef useomp
     omp_set_num_threads(this->MPI);
 #ifdef _WIN32
@@ -981,7 +980,7 @@ void TGfitTask::setnodes()
     {
         NodeHandle = n;
         // Calling GEMIPM calculation
-        long int NodeStatusCH2 = NodT[n]->GEM_run( true );
+        long int NodeStatusCH2 = NodT[n]->GEM_run( false/*true*/ );
         std::cout << "Node: " << n+1 << " Sample: " << experiments[n]->sample <<"  NodeStatusCH: " << NodeStatusCH2 << std::endl;
 
         if( ( NodeStatusCH2 == ERR_GEM_AIA || NodeStatusCH2 == ERR_GEM_SIA ||
