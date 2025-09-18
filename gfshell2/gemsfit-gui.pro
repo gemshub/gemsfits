@@ -7,7 +7,7 @@ VERSION         = 2.0.0
 #CONFIG -= warn_on
 #CONFIG += warn_off
 CONFIG += thread
-CONFIG += c++17
+CONFIG += c++20
 
 QT   += core gui widgets
 QT   += svg printsupport concurrent
@@ -47,7 +47,7 @@ CHARTS_CPP   =  ./charts
 DATAMAN_CPP  =  ./dataman
 DIALOGS_CPP  =  ./dialogs
 COMMON_CPP  =  ../common
-GEMS3K_CPP   =  ../standalone/GEMS3K
+GEMS3K_CPP   =  ../GEMS3K/GEMS3K
 
 CHARTS_H     =  $$CHARTS_CPP
 DATAMAN_H    =  $$DATAMAN_CPP
@@ -93,7 +93,7 @@ CONFIG(release, debug|release): LIBS += -lejdb2 -lyaml-cpp
 CONFIG(debug, debug|release): LIBS += -lejdb2 -lyaml-cpp
 }
 
-LIBS += -lGEMS3K
+#LIBS += -lGEMS3K
 contains(DEFINES, USE_THERMOFUN) {
   LIBS += -lThermoFun -lChemicalFun
 } ## end USE_THERMOFUN

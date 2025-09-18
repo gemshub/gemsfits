@@ -1,7 +1,7 @@
 #pragma once
 
 #define GEMSFITS_VERSION "2.0.0"
-#define GEMSFITS_VERSION_HASH "3b110358"
+#define GEMSFITS_VERSION_HASH "940d6841"
 #define GEMSFITS_GIT_BRANCH "deploy_actions"
 #define GEMSFITS_OSX "Linux"
 #define GEMSFITS_COMPILER_ID "GNU"
