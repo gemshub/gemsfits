@@ -29,10 +29,14 @@ ProjectSettingsDialog::ProjectSettingsDialog( QSettings *aSet, QWidget *parent) 
     ui(new Ui::ProjectSettingsDialog), settings(aSet)
 {
     ui->setupUi(this);
+    auto def_folder = QString::fromStdString(pFitImp->userDir())+ui->projName->text();
+    ui->projDir->setText(def_folder);
+
     if( settings ) //load old settings
     {
-        ui->projDir->setText( settings->value("ProjFolderPath", ".").toString() );
         ui->projName->setText( settings->value("ProjFileName", "myproj1").toString() );
+        def_folder = QString::fromStdString(pFitImp->userDir())+ui->projName->text();
+        ui->projDir->setText( settings->value("ProjFolderPath", def_folder).toString() );
 #ifndef OLD_EJDB
         ui->ejdbDir->setText( settings->value("ProjDatabasePath", "/EJDB2").toString() );
 #else
@@ -53,6 +57,7 @@ ProjectSettingsDialog::ProjectSettingsDialog( QSettings *aSet, QWidget *parent) 
     QObject::connect( ui->projDirButton, SIGNAL(clicked()), this, SLOT(CmProjectDir()));
     QObject::connect( ui->ejdbDirButton, SIGNAL(clicked()), this, SLOT(CmEJDBDir()));
     QObject::connect( ui->gemsDirButton, SIGNAL(clicked()), this, SLOT(CmGEMSDir()));
+    QObject::connect( ui->projName, SIGNAL(editingFinished()), this, SLOT(CmNameChanged()));
 
 }
 
@@ -124,6 +129,17 @@ void ProjectSettingsDialog::CmGEMSDir()
     
     dir = dir.remove(projDir);
     ui->gemsDir->setText( dir );
+}
+
+void ProjectSettingsDialog::CmNameChanged()
+{
+    auto new_name = ui->projName->text();
+    auto old_dir = ui->projDir->text();
+    int pos1 = old_dir.lastIndexOf('/');
+    int pos2 = old_dir.lastIndexOf('\\');
+    old_dir = old_dir.first(std::max(pos1, pos2)+1);
+    old_dir += new_name;
+    ui->projDir->setText(old_dir);
 }
 
 void ProjectSettingsDialog::CmHelp()

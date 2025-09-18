@@ -1,5 +1,3 @@
-
-
 # Generate Qt Help Project File gems3helpconfig.qhp
 message(STATUS "Generate Qt Help Project File gfshelpconfig.qhp")
 

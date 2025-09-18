@@ -39,6 +39,7 @@ public slots:
     void CmProjectDir();
     void CmEJDBDir();
     void CmGEMSDir();
+    void CmNameChanged();
     void CmHelp();
 
 public:

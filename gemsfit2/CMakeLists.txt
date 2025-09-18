@@ -2,9 +2,9 @@
 message(STATUS "Building gem-fits")
 
 if(USE_OLD_EJDB MATCHES ON)
-   file(COPY "${CMAKE_SOURCE_DIR}/Tests" DESTINATION "${CMAKE_BINARY_DIR}/bin")
+   file(COPY "${CMAKE_SOURCE_DIR}/Resources/projects" DESTINATION "${CMAKE_BINARY_DIR}/bin")
 else()
-   file(COPY "${CMAKE_SOURCE_DIR}/Tests2" DESTINATION "${CMAKE_BINARY_DIR}/bin")
+   file(COPY "${CMAKE_SOURCE_DIR}/Resources/projects2" DESTINATION "${CMAKE_BINARY_DIR}/bin")
 endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/muparser/src)

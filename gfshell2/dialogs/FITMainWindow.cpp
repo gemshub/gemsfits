@@ -18,6 +18,9 @@
 //-------------------------------------------------------------------
 
 #include <iostream>
+#include <filesystem>
+namespace fs = std::filesystem;
+
 #include "FITMainWindow.h"
 #include "ui_FITMainWindow.h"
 #include "HelpWindow.h"
@@ -110,19 +113,28 @@ void FITMainWindow::setDefValues(int /*c*/, char** /*v*/)
     /// GemsSettings::data_logger_directory = UserDir;
     UserDir += DEFAULT_PR_DIR; // "/Library/GEMSFITS/projects";
 
+    // load main programm settingth
+    mainSettings = new QSettings(dirExe+"/gemsfits.ini", QSettings::IniFormat);
+    getDataFromPreferences();
+
     // check home dir
     std::string dir = userDir();
     QDir user_fit(dir.c_str());
     bool firstTimeStart = !user_fit.exists();
     if (firstTimeStart) {
-        if( !user_fit.mkpath(userDir().c_str()) )
-            throw TFatalError("gemsfit Init", "Cannot create user directory");
-        // here could be copy default projects
+        // if( !user_fit.mkpath(userDir().c_str()) )
+        //     throw TFatalError("gemsfit Init", "Cannot create user directory");
+
+    // here could be copy default projects
+    std::string from = sysDir()+"projects";
+    std::string to = UserDir;
+    fs::create_directories(UserDir);
+    std::cout << from << std::endl;
+    if( fs::exists(from) ) {
+    std::filesystem::copy(from, to, std::filesystem::copy_options::recursive);
     }
 
-    // load main programm settingth
-    mainSettings = new QSettings(dirExe+"/gemsfits.ini", QSettings::IniFormat);
-    getDataFromPreferences();
+    }
 
 }
 
@@ -180,6 +192,7 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     ui->setupUi(this);
 
     // Some changes in GEMS3k to read CH files without V0
+    // You need add V0 to dch file
     ///// DataCH_dynamic_fields[f_V0].alws = 0;
 
     // setup process
