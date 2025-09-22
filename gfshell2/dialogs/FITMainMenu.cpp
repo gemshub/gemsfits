@@ -200,7 +200,7 @@ void FITMainWindow::CmTaskMode()
     ui->actionExport_TP_pairs_to_CSV_file->setEnabled(false);
     ui->actionBackup_to_TXT->setEnabled(true);
     ui->actionRestore_from_TXT->setEnabled(true);
-    ui->action_Run_test->setEnabled(true);
+    ui->action_Run_test->setEnabled(rtEJ[MDF_DATABASE].recordsCount()>0);
     ui->actionFits_View_Mode->setEnabled(true);
     //   ui->action_Show_Results->setEnabled(true);  // temporary
     ui->action_Show_Results->setEnabled(!lastCalcRecordKey.empty());
