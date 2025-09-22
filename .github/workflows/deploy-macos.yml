@@ -73,7 +73,6 @@ jobs:
           cd ${{ github.workspace }}
           ls
           cp -r "${{ github.workspace }}/Resources" "${{ steps.strings2.outputs.deploy-output-dir }}/gem-fits-shell.app/Contents"
-          cp -r "${{ github.workspace }}/Tests" "${{ steps.strings2.outputs.deploy-output-dir }}/gem-fits-shell.app/Contents/Resources"
           cp "${{ github.workspace }}/Resources/runshell-macos.sh" "${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/runshell.sh"
           cp "${{ github.workspace }}/Resources/README-macos.txt" "${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/README.txt"
 #          otool -L "${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/bin/gem-fits"

@@ -75,7 +75,6 @@ jobs:
         run: |
           cd ${{ github.workspace }}
           ls
-          cp -r "${{ github.workspace }}/Tests" ${{ steps.strings2.outputs.deploy-output-dir }}
           cp -r "${{ github.workspace }}/Resources" "${{ steps.strings2.outputs.deploy-output-dir }}"
           cp "${{ github.workspace }}/Resources/runshell-linux.sh" "${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/runshell.sh"
           cp "${{ github.workspace }}/Resources/README-linux.md"  "${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/README.md"
