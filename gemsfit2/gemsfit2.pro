@@ -38,7 +38,7 @@ VERSION         = 2.3.2
 CONFIG -= qt
 CONFIG += warn_on
 CONFIG += console
-CONFIG += sanitaze sanitaze_thread
+#CONFIG += sanitaze sanitaze_thread
 CONFIG += serial release
 CONFIG += c++20
 
@@ -49,7 +49,7 @@ DEFINES += OLD_EJDB # compile using ejdb1
 DEFINES += OVERFLOW_EXCEPT  #compile with nan inf exceptions
 
 DEFINES += IPMGEMPLUGIN
-#DEFINES += NODEARRAYLEVEL
+DEFINES += NODEARRAYLEVEL
 #DEFINES += USE_NLOHMANNJSON
 DEFINES += USE_THERMOFUN
 #DEFINES += USE_THERMO_LOG
@@ -128,7 +128,7 @@ OBJECTS_DIR       = obj
 
 include($$COMMON_CPP/common.pri)
 include($$FIT_CPP/fit.pri)
-include($$GEMS3K_CPP/gems3k.pri)
+#include($$GEMS3K_CPP/gems3k.pri)
 include($$MUP_CPP/muparser.pri)
 
 contains(DEFINES, OLD_EJDB) {
@@ -141,7 +141,7 @@ CONFIG(release, debug|release): LIBS += -lejdb2 -lyaml-cpp
 CONFIG(debug, debug|release): LIBS += -lejdb2 -lyaml-cpp
 }
 
-#LIBS += -lGEMS3K
+LIBS += -lGEMS3K
 contains(DEFINES, USE_THERMOFUN) {
   LIBS += -lThermoFun -lChemicalFun
 } ## end USE_THERMOFUN
