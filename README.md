@@ -50,10 +50,11 @@ For MacOS, make sure that Homebrew is installed (see [Homebrew web site](http://
 
 In order to build the gemsfits library on Ubuntu Linux or MacOS, first execute the following (may ask your sudo password):
 
-```sh
+`OLD_EJDB` install old ejdb database for compatibility. 
 
+```sh
 cd ~/gemsfits
-./gemsfits-install-dependencies.sh  [ OLD_EJDB ]
+./gemsfits-install-dependencies.sh OLD_EJDB
 
 ```
 
@@ -61,11 +62,13 @@ cd ~/gemsfits
 
 To build gemsfits and install it in your home directory or in the system directory (as in the example below), a typical sequence of commands can be executed in the terminal:
 
+`-DUSE_OLD_EJDB=ON` use old ejdb database for compatibility. 
+
 ```sh
 cd ~/gemsfits
 mkdir build
 cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/home/<you>/Qt/6.5.0/gcc_64  [ -DUSE_OLD_EJDB=ON ]
+cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/home/<you>/Qt/6.5.0/gcc_64 -DUSE_OLD_EJDB=ON
 make -j 4
 ```
 
@@ -107,15 +110,18 @@ conda activate gemsfits
 
 In order to build the 'gemsfits' library on Linux or MacOS, first execute the following:
 
+`OLD_EJDB` install old ejdb database for compatibility. 
+
 ```sh
-./conda-install-dependencies.sh  [ OLD_EJDB ]
+./conda-install-dependencies.sh OLD_EJDB
 ```
 
 Now it's time to use `cmake` to configure and build the C++ applications:
+`-DUSE_OLD_EJDB=ON` use old ejdb database for compatibility. 
 
 ```sh
 
-cmake -S . -B build   [ -DUSE_OLD_EJDB=ON ]
+cmake -S . -B build -DUSE_OLD_EJDB=ON
 cmake --build build --parallel
 ```
 

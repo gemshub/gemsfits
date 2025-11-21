@@ -23,9 +23,9 @@ if [ "$USING_EJDB" == "OLD_EJDB" ];
                   cd ejdb && \
                   mkdir -p build && \
                   cd build && \
-                  cmake .. -DCMAKE_CXX_FLAGS=-fPIC -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${CONDA_PREFIX} && \
+                  cmake .. -DCMAKE_CXX_FLAGS=-fPIC -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_INSTALL_PREFIX=${CONDA_PREFIX} && \
                   make && \
-                  sudo make install
+                  make install
 
           # Removing generated build files
           cd ~ && \
@@ -44,19 +44,19 @@ if [ "$USING_EJDB" == "OLD_EJDB" ];
                 mkdir -p build && \
                 cd build && \
                 cmake ..  -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${CONDA_PREFIX} && \
-                sudo make install && \
+                make install && \
                 git clone https://github.com/Softmotions/iwnet.git && \
                 cd iwnet && \
                 mkdir -p build && \
                 cd build && \
                 cmake ..  -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${CONDA_PREFIX} && \
-                sudo make install && \
+                make install && \
                 git clone https://github.com/Softmotions/ejdb.git  && \
                 cd ejdb && \
                 mkdir -p build && \
                 cd build && \
                 cmake ..  -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${CONDA_PREFIX} && \
-                sudo make install
+                make install
 
         # Removing generated build files
         #cd ~ && \
