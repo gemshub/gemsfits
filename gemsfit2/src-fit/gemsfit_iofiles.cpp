@@ -458,6 +458,7 @@ common::JsonFree generateJson(TNode *node, int mode)
             syn2_arr.push_back(make_syn_object(keys::pV, mode));
             syn2_arr.push_back(make_syn_object(keys::RHO, mode));
             syn2_arr.push_back(make_syn_object(keys::sArea, mode));
+            syn2_arr.push_back(make_syn_object(keys::SSA, mode));
             syn2_arr.push_back(make_syn_object(keys::Gex, mode));
             syn2_arr.push_back(make_syn_object(keys::mChainL, mode));
             syn2_arr.push_back(make_syn_object(keys::expr, mode));
@@ -466,6 +467,7 @@ common::JsonFree generateJson(TNode *node, int mode)
             syn2_arr.push_back(make_syn_object(keys::frAlV, mode));
             syn2_arr.push_back(make_syn_object(keys::frAlVI, mode));
             syn2_arr.push_back(make_syn_object(keys::Rd, mode));
+            syn2_arr.push_back(make_syn_object(keys::sorp, mode));
         }
         DataSyn_obj[keys::PhPropNames[mode]] = syn2_arr;
 

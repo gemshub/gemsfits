@@ -104,23 +104,19 @@ CONFIG( serial, serial|mpi ) {
 }
 
 FIT_CPP      =  ./src-fit
-GEMS3K_CPP   =  ../GEMS3K/GEMS3K
 MUP_CPP      =  ./muparser/src
 COMMON_CPP  =  ../common
 
 FIT_H        =   $$FIT_CPP
-GEMS3K_H     =   $$GEMS3K_CPP
 MUP_H        =   $$MUP_CPP
 COMMON_H     =   $$COMMON_CPP
 
 DEPENDPATH   += $$FIT_H
-DEPENDPATH   += $$GEMS3K_H
 DEPENDPATH   += $$KEYS_H
 DEPENDPATH   += $$MUP_H
 DEPENDPATH   += $$COMMON_H
 
 INCLUDEPATH  += $$FIT_H
-INCLUDEPATH  += $$GEMS3K_H
 INCLUDEPATH  += $$KEYS_H
 INCLUDEPATH  += $$MUP_H
 INCLUDEPATH   += $$COMMON_H
@@ -129,20 +125,34 @@ OBJECTS_DIR       = obj
 
 include($$COMMON_CPP/common.pri)
 include($$FIT_CPP/fit.pri)
-#include($$GEMS3K_CPP/gems3k.pri)
 include($$MUP_CPP/muparser.pri)
 
 contains(DEFINES, OLD_EJDB) {
-CONFIG(release, debug|release): LIBS += -lejdb -lyaml-cpp
-CONFIG(debug, debug|release): LIBS += -lejdb -lyaml-cpp
+    message("OLD_EJDB is defined")
+    CONFIG(release, debug|release): LIBS += -lejdb -lyaml-cpp
+    CONFIG(debug, debug|release): LIBS += -lejdb -lyaml-cpp
 }
-else
-{
-CONFIG(release, debug|release): LIBS += -lejdb2 -lyaml-cpp
-CONFIG(debug, debug|release): LIBS += -lejdb2 -lyaml-cpp
+else {
+    message("OLD_EJDB is NOT defined")
+    CONFIG(release, debug|release): LIBS += -lejdb2 -lyaml-cpp
+    CONFIG(debug, debug|release): LIBS += -lejdb2 -lyaml-cpp
 }
 
-LIBS += -lGEMS3K
+
+contains(DEFINES, USE_GEMS3K_SOURCE) {
+    message("USE_GEMS3K_SOURCE is defined")
+    GEMS3K_CPP     =  ../GEMS3K/GEMS3K
+    GEMS3K_H       =  $$GEMS3K_CPP
+    DEPENDPATH     += $$GEMS3K_H
+    INCLUDEPATH    += $$GEMS3K_H
+    include($$GEMS3K_CPP/gems3k.pri)
+} else {
+    message("USE_GEMS3K_SOURCE is NOT defined")
+    INCLUDEPATH   += "/usr/local/include/GEMS3K"
+    DEPENDPATH    += "/usr/local/include/GEMS3K"
+    LIBS          += -lGEMS3K
+}
+
 contains(DEFINES, USE_THERMOFUN) {
   LIBS += -lThermoFun -lChemicalFun
 } ## end USE_THERMOFUN

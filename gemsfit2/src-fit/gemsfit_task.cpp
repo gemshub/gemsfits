@@ -608,6 +608,23 @@ void TGfitTask::setnodes()
                     }
                 }
             }
+            // specific surface area
+            for (j=0; j<experiments.at(n)->expphases[i]->phprop.size(); j++)
+            {
+                if (experiments.at(n)->expphases[i]->phprop[j]->property == keys::SSA)
+                {
+                    if ( experiments.at(n)->expphases[i]->phprop[j]->Qunit == "m2/g")
+                    {
+                        PHndx = NodT[n]->Ph_name_to_xCH (experiments.at(n)->expphases[i]->phase.c_str());
+                        NodT[n]->Set_aPH(PHndx, experiments.at(n)->expphases[i]->phprop[j]->Qnt*1e3); // from m2/g to m2/kg
+                    } else
+                        if ( experiments.at(n)->expphases[i]->phprop[j]->Qunit == "m2/kg")
+                        {
+                        PHndx = NodT[n]->Ph_name_to_xCH (experiments.at(n)->expphases[i]->phase.c_str());
+                        NodT[n]->Set_aPH(PHndx, experiments.at(n)->expphases[i]->phprop[j]->Qnt); // from m2/g to m2/kg
+                    }
+                }
+            }
         }
 
         // Surface areas of phases -> kinetics
