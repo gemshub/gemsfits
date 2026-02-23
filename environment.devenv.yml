@@ -17,7 +17,6 @@ dependencies:
   - gems3k>=4.5.1
   - yaml-cpp
   - libgomp # [linux]
-  #- boost-cpp
   - armadillo
   - libblas
   - liblapack
@@ -27,5 +26,6 @@ dependencies:
   - qt6-charts=6.10.2 # [not win]
   - qt6-main=6.8.2 # [win]
   - qt6-charts=6.8.2 # [win]
+  - boost-cpp
   - python>=3.10
   - pytest
