@@ -98,7 +98,22 @@ jobs:
           cd ${{ github.workspace }}
           zip -r ${{ steps.strings2.outputs.deploy-output-name }} ${{ steps.strings.outputs.deploy-name }}
 
-      
+      # -------------------------
+      # DMG packaging (system Qt)
+      # -------------------------
+      - name: Clean previous DMG
+        run: |
+          hdiutil detach /Volumes/gem-fits-shell || true
+          rm -f gem-fits-shell.dmg
+
+      - name: Create DMG with macdeployqt
+        shell: bash -l {0}
+        run: |
+          conda activate gemsfits
+          cd "${{ steps.strings2.outputs.deploy-output-dir }}"
+          /Users/runner/miniconda3/envs/GEMSGUI/lib/qt6/bin/macdeployqt gem-fits-shell.app -verbose=2 -dmg
+          mv gem-fits-shell.dmg "${{ github.workspace }}/macos-${{ steps.strings.outputs.deploy-name }}.dmg"
+
       # -------------------------
       # Upload artifacts
       # -------------------------
@@ -107,6 +122,12 @@ jobs:
         with:
           name: macos-${{ steps.strings.outputs.deploy-name }}-zip
           path: ${{ github.workspace }}/${{ steps.strings2.outputs.deploy-output-name }}
+
+      - name: Upload artifact DMG
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-${{ steps.strings.outputs.deploy-name }}-dmg
+          path: ${{ github.workspace }}/macos-${{ steps.strings.outputs.deploy-name }}.dmg
 
       # -------------------------
       # Release assets
@@ -122,3 +143,13 @@ jobs:
           asset_name: ${{ steps.strings2.outputs.deploy-output-name }}
           asset_content_type: application/zip
 
+      - name: Upload DMG release asset
+        if: github.event_name == 'release' && github.event.action == 'published'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ github.workspace }}/macos-${{ steps.strings.outputs.deploy-name }}.dmg
+          asset_name: macos-${{ steps.strings.outputs.deploy-name }}.dmg
+          asset_content_type: application/x-apple-diskimage
