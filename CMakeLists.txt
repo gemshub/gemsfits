@@ -1,5 +1,5 @@
 # Require a certain version of cmake
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.16..4.2)
 
 # Set the name of the project
 project(gemsfits VERSION 2.0.0 LANGUAGES CXX)
@@ -139,7 +139,7 @@ configure_file(
 
 # Set the list of compiler flags for Clang compiler
 if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
-    add_compile_options(-mavx2 -Wall -Wno-ignored-attributes -Wno-pedantic -Wno-variadic-macros -Wno-deprecated)
+    add_compile_options(-Wall -Wno-ignored-attributes -Wno-pedantic -Wno-variadic-macros -Wno-deprecated)
 endif()
 
 # Set the list of compiler flags for Intel compiler
