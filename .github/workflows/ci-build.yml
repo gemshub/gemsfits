@@ -27,7 +27,7 @@ jobs:
           - os: windows-latest
             conda_platform: win-64
             artifact_name: gemsfits-windows
-          - os: macos-13
+          - os: macos-latest
             conda_platform: osx-arm64
             artifact_name: gemsfits-macos
 
