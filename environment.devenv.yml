@@ -17,7 +17,7 @@ dependencies:
   - gems3k>=4.5.1
   - yaml-cpp
   - libgomp # [linux]
-  - boost-cpp
+  #- boost-cpp
   - armadillo
   - libblas
   - liblapack

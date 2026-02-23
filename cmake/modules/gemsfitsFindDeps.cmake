@@ -4,7 +4,7 @@ if(NOT NLOPT_LIB)
 endif()
 
 if(DEFINED ENV{CONDA_PREFIX})
-   find_package(Boost 1.83.0  REQUIRED COMPONENTS system)
+   find_package(Boost REQUIRED COMPONENTS system)
    if (Boost_FOUND)
       INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
       ADD_DEFINITIONS( "-DHAS_BOOST" )
