@@ -9,7 +9,7 @@ GEMSFITS Parameter Optimization and Inverse Modelling
 * To run GEM-Fits appilcation for the first time execute:
 
 ```
-./rungems3.sh
+./runshell.sh
 ```
 
 * To add the icon for the GEM-Fits application to the launcher, edit the desktop entry file `./GemsFits-app/share/applications/gem-fits-shell.desktop` that contains a description of the application that includes information about its icon. Change the path to the actual location of gem-fits-shell executable. The files are typically executable and can be placed in specific directories like  `~/.local/share/applications`. 

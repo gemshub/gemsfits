@@ -2,7 +2,7 @@ name: deploy-windows
 on:
   push:
     branches:
-      - deploy_actions1
+      - deploy_actions
   release:
     types:
       - published
@@ -80,7 +80,7 @@ jobs:
         shell: pwsh
         run: |
           Compress-Archive -Path "${{ steps.strings.outputs.deploy-name }}" -DestinationPath "${{ steps.strings2.outputs.deploy-output-name }}"
-
+      
       - name: Upload zip archive
         uses: actions/upload-artifact@v4
         with:
@@ -97,5 +97,4 @@ jobs:
           asset_path: ${{ github.workspace }}/${{ steps.strings2.outputs.deploy-output-name }}
           asset_name: ${{ steps.strings2.outputs.deploy-output-name }}
           asset_content_type: application/zip
-
 
