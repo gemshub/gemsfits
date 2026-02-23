@@ -76,7 +76,8 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 include(gemsfitsFindDeps)
 
 # Find Qt dependencies
-find_package(Qt6 6.2 COMPONENTS Core Gui Widgets Charts Concurrent PrintSupport Svg Help Sql REQUIRED)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Charts Concurrent PrintSupport Svg Help Sql)
+qt_standard_project_setup()
 if(Qt6_FOUND)
   message(STATUS "Found Qt6 v${Qt6_VERSION}")
   set(GUI_QT_TARGETS Qt6::Widgets Qt6::Core Qt6::Gui Qt6::PrintSupport Qt6::Charts Qt6::Svg Qt6::Help Qt6::Sql)
@@ -89,7 +90,6 @@ if(Qt6_FOUND)
   include_directories(${Qt6Help_INCLUDE_DIRS})
   include_directories(${Qt6Sql_INCLUDE_DIRS})
 endif()
-qt_standard_project_setup(REQUIRES 6.8)
 
 # Versioning
 set(GEMSFITS_VERSION "${PROJECT_VERSION}")

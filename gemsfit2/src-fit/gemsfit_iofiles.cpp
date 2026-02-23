@@ -635,6 +635,7 @@ TGfitPath::TGfitPath(int c, char *v[]):
         }
         else
         {
+            dir = "work/";
             std::string name;
             std::string ext;
             u_splitpath( optParamFile, optParamFilePath, name, ext );

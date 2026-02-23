@@ -50,7 +50,7 @@ const char *GEMFIT_APP = "/gem-fits";
 #endif
 
 // User home resource
-const char *DEFAULT_USER_DIR= "/Library/GEMSFITS/";
+const char *DEFAULT_USER_DIR= "/Library/GemFits/";
 const char *DEFAULT_PR_DIR= "projects/";
 
 //--------------------------------------------------------------------------
@@ -111,10 +111,10 @@ void FITMainWindow::setDefValues(int /*c*/, char** /*v*/)
 
     LocalDocDir = SysFITDir + HELP_DB_DIR;
     /// GemsSettings::data_logger_directory = UserDir;
-    UserDir += DEFAULT_PR_DIR; // "/Library/GEMSFITS/projects";
+    UserDir += DEFAULT_PR_DIR;
 
     // load main programm settingth
-    mainSettings = new QSettings(dirExe+"/gemsfits.ini", QSettings::IniFormat);
+    mainSettings = new QSettings(dirExe+"/gem-fits-shell.ini", QSettings::IniFormat);
     getDataFromPreferences();
 
     // check home dir
@@ -122,17 +122,14 @@ void FITMainWindow::setDefValues(int /*c*/, char** /*v*/)
     QDir user_fit(dir.c_str());
     bool firstTimeStart = !user_fit.exists();
     if (firstTimeStart) {
-        // if( !user_fit.mkpath(userDir().c_str()) )
-        //     throw TFatalError("gemsfit Init", "Cannot create user directory");
-
-    // here could be copy default projects
-    std::string from = sysDir()+"projects";
-    std::string to = UserDir;
-    fs::create_directories(UserDir);
-    std::cout << from << std::endl;
-    if( fs::exists(from) ) {
-    std::filesystem::copy(from, to, std::filesystem::copy_options::recursive);
-    }
+        // here could be copy default projects
+        std::string from = sysDir()+"projects";
+        std::string to = UserDir;
+        fs::create_directories(UserDir);
+        std::cout << from << std::endl;
+        if( fs::exists(from) ) {
+            std::filesystem::copy(from, to, std::filesystem::copy_options::recursive);
+        }
 
     }
 
@@ -145,7 +142,7 @@ void FITMainWindow::getDataFromPreferences()
 
     SysFITDir =  mainSettings->value("ResourcesFolderPath", SysFITDir.c_str()).toString().toStdString();
     if( !SysFITDir.empty() && SysFITDir.back() != '/') {
-       SysFITDir += "/";
+        SysFITDir += "/";
     }
     LocalDocDir =  mainSettings->value("HelpFolderPath", LocalDocDir.c_str()).toString().toStdString();
     UserDir = mainSettings->value("UserFolderPath", UserDir.c_str()).toString().toStdString();
@@ -158,9 +155,9 @@ void FITMainWindow::getDataFromPreferences()
 
     // load experiment template text
     QString fname = sysDir().c_str();
-    fname += DATA_TEMPLATES + mainSettings->value("ExpTemplateFileName", "...").toString();
+    fname += DATA_TEMPLATES + mainSettings->value("ExpTemplateFileName", "template1.dat").toString();
     QFile tmpString(fname);
-    if(tmpString.open( QIODevice::ReadOnly))
+    if(tmpString.open(QIODevice::ReadOnly))
     {
         ExpTemplate = tmpString.readAll();
         tmpString.close();
@@ -168,9 +165,9 @@ void FITMainWindow::getDataFromPreferences()
 
     // load experiment search text
     fname = sysDir().c_str();
-    fname += SEARCH_TEMPLATES + mainSettings->value("TemplateSearchFileName", "...").toString();
+    fname += SEARCH_TEMPLATES + mainSettings->value("TemplateSearchFileName", "search-phase.dat").toString();
     QFile tmpString1(fname);
-    if(tmpString1.open( QIODevice::ReadOnly))
+    if(tmpString1.open(QIODevice::ReadOnly))
     {
         SrchTemplate = tmpString1.readAll();
         tmpString1.close();
@@ -766,7 +763,7 @@ bool FITMainWindow::createTaskTemplate()
     // read "template.dat" to json
     std::string path = fitTaskDir.Dir()+ "/template.json";
 
-    std::ifstream my_file(path.c_str());
+    std::ifstream my_file(path);
     if (!my_file.good())
     {
         std::ofstream outfile (path.c_str());
