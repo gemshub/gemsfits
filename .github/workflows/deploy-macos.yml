@@ -111,7 +111,7 @@ jobs:
         run: |
           conda activate gemsfits
           cd "${{ steps.strings2.outputs.deploy-output-dir }}"
-          /Users/runner/miniconda3/envs/GEMSGUI/lib/qt6/bin/macdeployqt gem-fits-shell.app -verbose=2 -dmg
+          /Users/runner/miniconda3/envs/gemsfits/lib/qt6/bin/macdeployqt gem-fits-shell.app -verbose=2 -dmg
           mv gem-fits-shell.dmg "${{ github.workspace }}/macos-${{ steps.strings.outputs.deploy-name }}.dmg"
 
       # -------------------------
