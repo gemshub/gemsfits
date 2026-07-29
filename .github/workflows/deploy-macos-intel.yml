@@ -114,7 +114,13 @@ jobs:
           conda activate gemsfits
           cd "${{ steps.strings2.outputs.deploy-output-dir }}"
           /Users/runner/miniconda3/envs/gemsfits/lib/qt6/bin/macdeployqt gem-fits-shell.app -executable=gem-fits-shell.app/Contents/MacOS/gem-fits -verbose=2
-          otool -l gem-fits-shell.app/Contents/MacOS/gem-fits | grep -A2 LC_RPATH
+          # Diagnostic only - macdeployqt rewrites gem-fits's @rpath/libGEMS3K.dylib (etc)
+          # references to explicit @executable_path/../Frameworks/... ones directly, so it
+          # legitimately may add no LC_RPATH at all; don't gate the step's exit code on grep's
+          # match/no-match result (this script has no `set -e`, so the last command's exit code
+          # is otherwise the step's exit code).
+          otool -L gem-fits-shell.app/Contents/MacOS/gem-fits
+          otool -l gem-fits-shell.app/Contents/MacOS/gem-fits | grep -A2 LC_RPATH || true
 
       # -------------------------
       # Ad-hoc signing

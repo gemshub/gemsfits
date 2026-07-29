@@ -23,7 +23,7 @@ if [ "$USING_EJDB" == "OLD_EJDB" ];
                   cd ejdb && \
                   mkdir -p build && \
                   cd build && \
-                  cmake .. -DCMAKE_CXX_FLAGS=-fPIC -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_INSTALL_PREFIX=${CONDA_PREFIX} && \
+                  cmake .. -Wno-dev -DCMAKE_C_FLAGS="-fPIC -w" -DCMAKE_CXX_FLAGS="-fPIC -w" -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_INSTALL_PREFIX=${CONDA_PREFIX} && \
                   make && \
                   make install
 
