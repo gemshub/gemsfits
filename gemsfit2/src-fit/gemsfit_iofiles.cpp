@@ -194,7 +194,7 @@ ternary:
 
 }
 
-common::JsonFree make_syn_object(const char* key, int mode)
+common::JsonFree make_syn_object(const std::string& key, int mode)
 {
     common::JsonFree object;
     object[keys::NameSys[mode]] = key;

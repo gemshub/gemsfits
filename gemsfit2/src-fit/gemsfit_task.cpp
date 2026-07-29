@@ -41,6 +41,7 @@
 #include "gemsfit_nested_functions.h"
 #include <GEMS3K/s_solmod.h>
 #include "s_formula.h"
+#include <spdlog/spdlog.h>
 
 int master_counter;
 //int sizeTP;
@@ -492,7 +493,7 @@ void TGfitTask::setnodes()
     std::shared_ptr<double[]> xDC_lo;
     std::shared_ptr<double[]> Ph_surf;
     double h2o_kgamount = 0.0;
-    char (*DCNL)[16];
+    std::vector<std::string> DCNL;
 
 
 #ifdef useomp
@@ -644,9 +645,6 @@ void TGfitTask::setnodes()
 //            ICndx = NodT[n]->IC_name_to_xDB("Nit");
 //            new_moles_IC[ICndx]=2;
 //        }
-
-         DCndx = NodT[n]->DC_name_to_xDB("H2");
-//        NodT[n]->Set_nDC(DCndx, 1e-05);
 
         for (j=0; j<experiments[n]->sbcomp.size(); ++j)
         {
@@ -812,8 +810,15 @@ void TGfitTask::setnodes()
             nICb = dCH->nICb;
             strcpy( cName, experiments[n]->sbcomp[j]->comp.c_str() );
             // or -1 if no such name was found in the DATACH DC name list
+            // Probing for a DC name match here is expected to miss for compositions given as
+            // generic oxide/element formulas (handled by the TFormula fallback below), so the
+            // gems3k logger is muted around this call to avoid two benign warnings per miss.
+            auto gems3k_logger = spdlog::get("gems3k");
+            auto gems3k_prev_level = gems3k_logger ? gems3k_logger->level() : spdlog::level::info;
+            if( gems3k_logger ) gems3k_logger->set_level(spdlog::level::err);
             xDCb = NodT[n]->DC_name_to_xDB( cName ); // Returns DBR index of DC given the DC Name std::string
                                     // or -1 if no such name was found in the DATACH DC name list
+            if( gems3k_logger ) gems3k_logger->set_level(gems3k_prev_level);
             if( xDCb >= 0 )
             { // This is a valid DC name from the system definition and DBR file
                 if (experiments[n]->sbcomp[j]->Qunit == keys::molal)
@@ -856,7 +861,7 @@ void TGfitTask::setnodes()
                 for( i=0; i<nIC; i++ )
                 {
                     memset( cName, ' ', IC_RKLEN );
-                    strncpy( cName, dCH->ICNL[i], strlen(dCH->ICNL[i]) /*MaxICN*/ );
+                    strncpy( cName, dCH->ICNL[i].c_str(), dCH->ICNL[i].length() /*MaxICN*/ );
                     cName[IC_RKLEN] = 0;
                     aFo.fixup_ics( cName );
                     std::memcpy( SB1.get()+i*IC_RKLEN, cName, MAXICNAME+MAXSYMB );
@@ -915,7 +920,7 @@ void TGfitTask::setnodes()
         {
             if (new_moles_IC[i] > 1e-9)
                 new_moles_IC[i]-=1e-9;
-            if (i==nIC-1) {
+            if (dCH->ccIC[i] == IC_CHARGE) {
                 new_moles_IC[i]=0.;
             }
         }

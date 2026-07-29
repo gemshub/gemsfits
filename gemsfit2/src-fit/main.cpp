@@ -35,6 +35,7 @@ namespace fs = std::filesystem;
 #include "statistics.h"
 #include "gemsfit_global_functions.h"
 #include <GEMS3K/io_template.h>
+#include <spdlog/spdlog.h>
 
 ////extern std::vector<io_formats::outField> DataCH_dynamic_fields;
 
@@ -53,6 +54,9 @@ int generateJConfig();
 int main( int argc, char *argv[] )
 {
     std::cout << _FITS_version_stamp << std::endl;
+
+    if( auto tnode_logger = spdlog::get("tnode") )
+        tnode_logger->set_level(spdlog::level::warn);
 
     int countit = 0;
     // start time

@@ -1,11 +1,18 @@
 #ifndef KEYWORDS_H
 #define KEYWORDS_H
 
-//#pragma GCC diagnostic ignored "-Wunused-variable"
 #include <string>
 #include "gemsfits_version.h"
 
 static const std::string _FITS_version_stamp = std::string("GEM-FITS v.") + GEMSFITS_VERSION + " c." + GEMSFITS_VERSION_HASH;
+
+// This header declares a large dictionary of keyword string constants; most
+// translation units that include it only use a handful of them, so silence
+// -Wunused-variable for the whole namespace instead of tagging every entry.
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#endif
 
 namespace keys
 { // Keywords for the fitting task definition
@@ -290,4 +297,9 @@ static const char *url = "url"; ///	                              1		string 		  
 
 
 }
+
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
+
 #endif // KEYWORDS_H

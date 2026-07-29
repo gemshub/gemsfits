@@ -82,16 +82,19 @@ void FITMainWindow::setDefValues(int /*c*/, char** /*v*/)
 // set up default path
 #ifdef __APPLE__
     dirExe = QCoreApplication::applicationDirPath();
-    auto app_index = dirExe.lastIndexOf("/shellfit3.app/Contents", -1, Qt::CaseInsensitive );
+    auto app_index = dirExe.lastIndexOf("/gem-fits-shell.app/Contents", -1, Qt::CaseInsensitive );
 
     if( app_index >= 0 )
     {
-        SysFITDir = dirExe.left(app_index).toStdString() + "/shellfit3.app/Contents/Resources/";
+        SysFITDir = dirExe.left(app_index).toStdString() + "/gem-fits-shell.app/Contents/Resources/";
     }
     else {
         // non-standard executable path, search for resources starting with current dir
-        SysFITDir = dirExe.toStdString() + "/shellfit3.app/Contents/Resources/";
+        SysFITDir = dirExe.toStdString() + "/gem-fits-shell.app/Contents/Resources/";
     }
+    // gem-fits is deployed as a plain executable next to gem-fits-shell inside
+    // Contents/MacOS, so it is found the same way as on Linux/Windows.
+    GemsfitApplication = dirExe + GEMFIT_APP;
     UserDir = home_dir() + DEFAULT_USER_DIR;
 
 #else
@@ -369,7 +372,7 @@ void FITMainWindow::setTableIComp()
 
     for( int ii = 0; ii<dCH->nIC; ii++ )
     {
-        valStr = std::string( dCH->ICNL[ii], 0,MaxICN );
+        valStr = dCH->ICNL[ii];
         item = new QTableWidgetItem(tr("%1").arg( valStr.c_str()));
         ui->tableIComp->setItem(ii/5, ii%5, item );
     }
@@ -385,13 +388,13 @@ void FITMainWindow::setListPhase()
 
     for( ii = 0, jj=0; ii<dCH->nPH; ii++ )
     {
-        valStr = std::string( dCH->PHNL[ii], 0,MaxPHN );
+        valStr = dCH->PHNL[ii];
         QTreeWidgetItem *phase = new QTreeWidgetItem(ui->listPhases);
         phase->setText(0, valStr.c_str());
 
         for( j=0; j<dCH->nDCinPH[ii]; j++, jj++ )
         {
-            valStr = std::string( dCH->DCNL[jj], 0, MaxDCN );
+            valStr = dCH->DCNL[jj];
             QTreeWidgetItem *dcomp = new QTreeWidgetItem(phase);
             dcomp->setText(0, valStr.c_str());
         }

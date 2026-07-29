@@ -77,18 +77,12 @@ else()
    
     if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
      target_link_libraries(gem-fits omp)
-
-     set_target_properties(gem-fits PROPERTIES
-            MACOSX_BUNDLE_COPYRIGHT  "Copyright (c) 2004-2025 GEMS Development Team"
-            MACOSX_BUNDLE_ICON_FILE gems3.icns
-            MACOSX_BUNDLE_INFO_STRING "GEM Input Parameter Optimization and Inverse Modelling"
-            MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-            MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-            MACOSX_BUNDLE TRUE)
    endif()
 
+  # gem-fits is a CLI tool launched by gem-fits-shell via QProcess; it must stay a
+  # plain executable (not a MACOSX_BUNDLE) on macOS too, so it installs to bin/
+  # like on Linux/Windows and can be copied into gem-fits-shell.app/Contents/MacOS/.
   install(TARGETS gem-fits
-    BUNDLE  DESTINATION .
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} )
 
