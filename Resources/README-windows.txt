@@ -14,7 +14,11 @@ runshell.bat
 
 If windows will show you a warning message "Windows protected your PC", click "More info" and "Run anyway" (This will only be asked the first time).
 
-Once GEM-Fits is running you can pin the program to the Task bar by right-clicking on its icon (on the task bar) and chose pin to task bar. After you close GEM-Fits, the script will create a Start Menu and Desktop shortcut. After the first run you can always start gems using its shortcut. 
+Once GEM-Fits is running you can pin the program to the Task bar by right-clicking on its icon (on the task bar) and chose pin to task bar. After you close GEM-Fits, the script will create a Start Menu and Desktop shortcut. After the first run you can always start gems using its shortcut.
+
+## Where are my projects?
+
+Modeling projects (including the test projects bundled with this installation, which are copied there automatically on first start) live in `Library\GemFits\projects` in your user home folder (e.g. `C:\Users\<user>\Library\GemFits\projects`). Unlike on macOS, this `Library` folder is not hidden, so it can be opened directly in File Explorer or via the address bar.
 
 ## Briefly about GEM-Fits v2
 

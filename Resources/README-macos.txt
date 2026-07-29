@@ -28,6 +28,12 @@ The next runs can be started by clicking on gem-selector.app in Finder or its in
 
 * For more details about command line parameters, see into `runshell.sh`. Edit the file `runshell.sh` (with any simple text editor) in order to ensure that GEMFits command line parameters point to correct locations of the program resources and of modeling projects.
 
+## Where are my projects?
+
+Modeling projects (including the test projects bundled with this installation, which are copied there automatically on first start) live in `~/Library/GemFits/projects` in your home folder.
+
+macOS hides the `Library` folder in Finder by default. To see it, open Finder, select your home folder, then go to `View -> Show View Options` and tick `Show Library Folder` (or press `Cmd+Shift+.` in any Finder window to toggle hidden files/folders).
+
 ## Briefly about GEM-Fits v2
 
 Distributed "as is" by the Laboratory for Waste Management (LES) of the Paul Scherrer Institute (PSI) with two purposes:

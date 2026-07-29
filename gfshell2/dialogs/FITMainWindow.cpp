@@ -148,6 +148,9 @@ void FITMainWindow::getDataFromPreferences()
         SysFITDir += "/";
     }
     LocalDocDir =  mainSettings->value("HelpFolderPath", LocalDocDir.c_str()).toString().toStdString();
+    if( !LocalDocDir.empty() && LocalDocDir.back() != '/') {
+        LocalDocDir += "/";
+    }
     UserDir = mainSettings->value("UserFolderPath", UserDir.c_str()).toString().toStdString();
     KeysLength = mainSettings->value("PrintComments", true).toBool();
     JsonDataShow = !mainSettings->value("ViewinYAMLFormat", false).toBool();

@@ -15,6 +15,10 @@ GEMSFITS Parameter Optimization and Inverse Modelling
 * To add the icon for the GEM-Fits application to the launcher, edit the desktop entry file `./GemsFits-app/share/applications/gem-fits-shell.desktop` that contains a description of the application that includes information about its icon. Change the path to the actual location of gem-fits-shell executable. The files are typically executable and can be placed in specific directories like  `~/.local/share/applications`. 
 Then copy folder `./GemsFits-app/share` to  `~/.local`
 
+## Where are my projects?
+
+Modeling projects (including the test projects bundled with this installation, which are copied there automatically on first start) live in `~/Library/GemFits/projects` in your home folder. Unlike on macOS, this `Library` folder is not hidden on Linux, so it can be browsed directly with any file manager or terminal.
+
 ## Briefly about GEM-Fits v2
 
 Distributed "as is" by the Laboratory for Waste Management (LES) of the Paul Scherrer Institute (PSI) with two purposes:

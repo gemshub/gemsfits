@@ -31,6 +31,7 @@ ProjectSettingsDialog::ProjectSettingsDialog( QSettings *aSet, QWidget *parent) 
     ui->setupUi(this);
     auto def_folder = QString::fromStdString(pFitImp->userDir())+ui->projName->text();
     ui->projDir->setText(def_folder);
+    ui->ejdbName->setText(ui->projName->text());
 
     if( settings ) //load old settings
     {
@@ -140,6 +141,7 @@ void ProjectSettingsDialog::CmNameChanged()
     old_dir = old_dir.first(std::max(pos1, pos2)+1);
     old_dir += new_name;
     ui->projDir->setText(old_dir);
+    ui->ejdbName->setText(new_name);
 }
 
 void ProjectSettingsDialog::CmHelp()

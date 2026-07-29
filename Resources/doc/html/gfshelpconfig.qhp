@@ -10,10 +10,10 @@
      	 	<section title="License and terms of use" ref="gemsfits-terms-of-use.html"></section>
    	</section>
    	<section title="How to Use GEMSFITS Shell" ref="gfshell-about.html">
+		<section title="How To Do Parameter optimization / Workflow" ref="gfshell-howto-gemsfit.html"></section>
 		<section title="GEMSFITS Shell Database Mode" ref="gfshell-dbmode.html"></section>
 		<section title="GEMSFITS Shell Fitting Task Mode" ref="gfshell-taskmode.html"></section>
 		<section title="GEMSFITS Shell Fit Results View Mode" ref="gfshell-resultsmode.html"></section>
-		<section title="How To Do Parameter optimization / Workflow" ref="gfshell-howto-gemsfit.html"></section>
     	</section>
    	<section title="GEMSFITS Users Reference / JSON keywords" ref="gemsfit-useref.html">
 		<section title="About JSON" ref="gemsfit-json.html"></section>
@@ -123,8 +123,8 @@
         <keyword name="UDWts" ref="gfshell-taskmode.html#UDWts"/>
         <keyword name="UMC" ref="gemsfit-useref.html#UMC"/>
         <keyword name="Units" ref="gemsfit-useref.html#Units"/>
-        <keyword name="WT" ref="gemsfit-useref.html#WT"/>
         <keyword name="WT" ref="gfshell-taskmode.html#WT"/>
+        <keyword name="WT" ref="gemsfit-useref.html#WT"/>
         <keyword name="WT_" ref="gemsfit-useref.html#WT_"/>
         <keyword name="abs_dif" ref="gemsfit-useref.html#abs_dif"/>
         <keyword name="activity_model" ref="gemsfit-useref.html#activity_model"/>
