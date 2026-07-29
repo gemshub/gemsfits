@@ -151,29 +151,39 @@ jobs:
       # are the largest reclaimable chunks before hdiutil needs scratch space
       # to build the DMG.
       # -------------------------
-      - name: Free disk space before DMG
-        shell: bash -l {0}
-        run: |
-          conda activate gemsfits
-          conda clean --all -y || true
-          rm -rf "${{ github.workspace }}/.build"
-          df -h .
+      # DMG disabled for now (Intel runner keeps hitting "No space left on
+      # device" in hdiutil create) - only the zip is produced below. Re-enable
+      # by uncommenting this and the "Create DMG" / DMG upload steps.
+      # - name: Free disk space before DMG
+      #   shell: bash -l {0}
+      #   run: |
+      #     conda activate gemsfits
+      #     echo "--- before cleanup ---"
+      #     df -h .
+      #     du -sh "${{ github.workspace }}/.build" 2>/dev/null || true
+      #     du -sh "$CONDA_PREFIX/pkgs" 2>/dev/null || true
+      #     du -sh "${{ steps.strings2.outputs.deploy-output-dir }}" 2>/dev/null || true
+      #     du -sh "${{ steps.strings2.outputs.deploy-output-dir }}/gem-fits-shell.app" 2>/dev/null || true
+      #     conda clean --all -y || true
+      #     rm -rf "${{ github.workspace }}/.build"
+      #     echo "--- after cleanup ---"
+      #     df -h .
 
       # -------------------------
       # Create DMG (signed app inside)
       # -------------------------
-      - name: Clean previous DMG
-        run: |
-          hdiutil detach /Volumes/gem-fits-shell -force || true
-          rm -f gem-fits-shell.dmg
+      # - name: Clean previous DMG
+      #   run: |
+      #     hdiutil detach /Volumes/gem-fits-shell -force || true
+      #     rm -f gem-fits-shell.dmg
 
-      - name: Create DMG
-        run: |
-          cd "${{ steps.strings2.outputs.deploy-output-dir }}"
-          hdiutil create -volname gem-fits-shell \
-            -srcfolder gem-fits-shell.app \
-            -ov -format UDZO -imagekey zlib-level=9 gem-fits-shell.dmg
-          mv gem-fits-shell.dmg "${{ github.workspace }}/macos-${{ steps.strings.outputs.deploy-name }}.dmg"
+      # - name: Create DMG
+      #   run: |
+      #     cd "${{ steps.strings2.outputs.deploy-output-dir }}"
+      #     hdiutil create -volname gem-fits-shell \
+      #       -srcfolder gem-fits-shell.app \
+      #       -ov -format UDZO -imagekey zlib-level=9 gem-fits-shell.dmg
+      #     mv gem-fits-shell.dmg "${{ github.workspace }}/macos-${{ steps.strings.outputs.deploy-name }}.dmg"
 
       # -------------------------
       # ZIP packaging
@@ -192,11 +202,11 @@ jobs:
           name: macos-${{ steps.strings.outputs.deploy-name }}-zip
           path: ${{ github.workspace }}/${{ steps.strings2.outputs.deploy-output-name }}
 
-      - name: Upload artifact DMG
-        uses: actions/upload-artifact@v4
-        with:
-          name: macos-${{ steps.strings.outputs.deploy-name }}-dmg
-          path: ${{ github.workspace }}/macos-${{ steps.strings.outputs.deploy-name }}.dmg
+      # - name: Upload artifact DMG
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: macos-${{ steps.strings.outputs.deploy-name }}-dmg
+      #     path: ${{ github.workspace }}/macos-${{ steps.strings.outputs.deploy-name }}.dmg
 
       # -------------------------
       # Release assets
@@ -212,13 +222,13 @@ jobs:
           asset_name: ${{ steps.strings2.outputs.deploy-output-name }}
           asset_content_type: application/zip
 
-      - name: Upload DMG release asset
-        if: github.event_name == 'release' && github.event.action == 'published'
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ${{ github.workspace }}/macos-${{ steps.strings.outputs.deploy-name }}.dmg
-          asset_name: macos-${{ steps.strings.outputs.deploy-name }}.dmg
-          asset_content_type: application/x-apple-diskimage
+      # - name: Upload DMG release asset
+      #   if: github.event_name == 'release' && github.event.action == 'published'
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ github.event.release.upload_url }}
+      #     asset_path: ${{ github.workspace }}/macos-${{ steps.strings.outputs.deploy-name }}.dmg
+      #     asset_name: macos-${{ steps.strings.outputs.deploy-name }}.dmg
+      #     asset_content_type: application/x-apple-diskimage

@@ -78,7 +78,7 @@ jobs:
       - name: Create zip archive (Windows)
         shell: pwsh
         run: |
-          Compress-Archive -Path "${{ steps.strings.outputs.deploy-name }}" -DestinationPath "${{ steps.strings2.outputs.deploy-output-name }}"
+          Compress-Archive -Path "${{ steps.strings.outputs.deploy-name }}/*" -DestinationPath "${{ steps.strings2.outputs.deploy-output-name }}"
       
       - name: Upload zip archive
         uses: actions/upload-artifact@v4

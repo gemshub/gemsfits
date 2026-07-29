@@ -90,8 +90,8 @@ jobs:
 
       - name: Create zip archive for GitHub release
         run: |
-          cd ${{ github.workspace }}
-          zip -y -r ${{ steps.strings2.outputs.deploy-output-name }} ${{ steps.strings.outputs.deploy-name }}
+          cd ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}
+          zip -y -r ${{ github.workspace }}/${{ steps.strings2.outputs.deploy-output-name }} .
 
       - name: Upload zip archive 
         uses: actions/upload-artifact@v4 
