@@ -94,28 +94,67 @@ jobs:
           otool -L "${{ steps.strings2.outputs.deploy-output-dir }}/gem-fits-shell.app/Contents/MacOS/gem-fits"
 
       # -------------------------
-      # ZIP packaging
+      # macdeployqt (NO DMG)
+      #
+      # macdeployqt only fixes up rpaths/bundles dylibs for the app's main
+      # executable by default. gem-fits is a second, separately-copied
+      # executable inside Contents/MacOS/ (launched by gem-fits-shell via
+      # QProcess, and also runnable standalone) that links GEMS3K/ejdb/etc
+      # itself, so it needs -executable= to get the same treatment - otherwise
+      # it ships with no LC_RPATH at all and aborts with
+      # "Library not loaded: @rpath/libGEMS3K.dylib". Run without -dmg here
+      # (matching GEMSGUI's deploy-macos.yml) so the app gets ad-hoc signed
+      # below before being packaged - macdeployqt -dmg alone never signs
+      # anything, and signing after macdeployqt's file copies is required or
+      # any pre-existing signature is invalidated anyway.
       # -------------------------
-      - name: Create zip archive for GitHub release
+      - name: Run macdeployqt (no DMG)
+        shell: bash -l {0}
         run: |
-          cd ${{ github.workspace }}
-          zip -r ${{ steps.strings2.outputs.deploy-output-name }} ${{ steps.strings.outputs.deploy-name }}
+          conda activate gemsfits
+          cd "${{ steps.strings2.outputs.deploy-output-dir }}"
+          /Users/runner/miniconda3/envs/gemsfits/lib/qt6/bin/macdeployqt gem-fits-shell.app -executable=gem-fits-shell.app/Contents/MacOS/gem-fits -verbose=2
+          otool -l gem-fits-shell.app/Contents/MacOS/gem-fits | grep -A2 LC_RPATH
 
       # -------------------------
-      # DMG packaging (system Qt)
+      # Ad-hoc signing
+      #
+      # Without at least an ad-hoc signature, a freshly downloaded/unzipped
+      # app (quarantine bit set by the browser/Finder) tends to fail with
+      # "app is damaged and can't be opened" rather than the milder
+      # "unidentified developer" prompt - a distinct, harder Gatekeeper
+      # failure. Mirrors GEMSGUI's deploy-macos.yml fix for the same issue.
+      # -------------------------
+      - name: Ad-hoc sign .app bundle
+        run: |
+          cd "${{ steps.strings2.outputs.deploy-output-dir }}"
+          xattr -dr com.apple.quarantine gem-fits-shell.app || true
+          codesign --force --deep --sign - gem-fits-shell.app
+          codesign --verify --deep --strict gem-fits-shell.app
+
+      # -------------------------
+      # Create DMG (signed app inside)
       # -------------------------
       - name: Clean previous DMG
         run: |
           hdiutil detach /Volumes/gem-fits-shell || true
           rm -f gem-fits-shell.dmg
 
-      - name: Create DMG with macdeployqt
-        shell: bash -l {0}
+      - name: Create DMG
         run: |
-          conda activate gemsfits
           cd "${{ steps.strings2.outputs.deploy-output-dir }}"
-          /Users/runner/miniconda3/envs/gemsfits/lib/qt6/bin/macdeployqt gem-fits-shell.app -verbose=2 -dmg
+          hdiutil create -volname gem-fits-shell \
+            -srcfolder gem-fits-shell.app \
+            -ov -format UDZO gem-fits-shell.dmg
           mv gem-fits-shell.dmg "${{ github.workspace }}/macos-${{ steps.strings.outputs.deploy-name }}.dmg"
+
+      # -------------------------
+      # ZIP packaging
+      # -------------------------
+      - name: Create zip archive for GitHub release
+        run: |
+          cd ${{ github.workspace }}
+          zip -r ${{ steps.strings2.outputs.deploy-output-name }} ${{ steps.strings.outputs.deploy-name }}
 
       # -------------------------
       # Upload artifacts
