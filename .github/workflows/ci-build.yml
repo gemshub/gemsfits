@@ -20,16 +20,6 @@ jobs:
           - ubuntu-latest
           - windows-latest
           - macos-latest
-        include:
-          - os: ubuntu-latest
-            conda_platform: linux-64
-            artifact_name: gemsfits-linux
-          - os: windows-latest
-            conda_platform: win-64
-            artifact_name: gemsfits-windows
-          - os: macos-latest
-            conda_platform: osx-arm64
-            artifact_name: gemsfits-macos
 
     steps:
 
@@ -39,9 +29,10 @@ jobs:
             submodules: recursive
 
       - name: Setup Conda
-        uses: conda-incubator/setup-miniconda@v3
+        uses: conda-incubator/setup-miniconda@v4
         with:
-          auto-activate-base: false
+          auto-activate: false
+          activate-environment: base
           channels: conda-forge, defaults
           channel-priority: true
 
@@ -50,7 +41,7 @@ jobs:
           conda config --set always_yes yes --set changeps1 no
           conda config --add channels conda-forge
           conda install conda-devenv
-          conda devenv
+          conda run -n base python -m conda_devenv
 
       - name: Building, Testing & Installing gemsfits
         if: matrix.os != 'windows-latest'

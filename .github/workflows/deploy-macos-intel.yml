@@ -1,4 +1,4 @@
-name: deploy-macos
+name: deploy-macos-intel
 
 on:
   push:
@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ macos-15 ]
+        os: [ macos-15-intel ]
 
     steps:
 
@@ -37,7 +37,7 @@ jobs:
       - name: Set deploy name
         id: strings
         shell: bash
-        run: echo "deploy-name=GEMFITS${{ steps.get_version.outputs.version }}" >> "$GITHUB_OUTPUT"
+        run: echo "deploy-name=GEMFITS${{ steps.get_version.outputs.version }}-intel" >> "$GITHUB_OUTPUT"
 
       - name: Set deploy dir
         id: strings2
@@ -77,7 +77,7 @@ jobs:
           export CMAKE_POLICY_VERSION_MINIMUM=3.5
           ./conda-install-dependencies.sh OLD_EJDB
           mkdir .build && cd .build
-          cmake -GNinja .. -DUSE_OLD_EJDB=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_INSTALL_PREFIX=${{ steps.strings2.outputs.deploy-output-dir }}
+          cmake -GNinja .. -DUSE_OLD_EJDB=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${{ steps.strings2.outputs.deploy-output-dir }}
           ninja
           ninja install
 

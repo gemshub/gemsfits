@@ -16,8 +16,6 @@ jobs:
 
       matrix:
         os: [ ubuntu-latest ]
-        conda_platform: [ linux-64 ]
-        artifact_name: [ gemsfits-linux ]
 
     steps:
 
@@ -44,9 +42,10 @@ jobs:
           echo "deploy-output-name=linux-${{ steps.strings.outputs.deploy-name }}.zip" >> "$GITHUB_OUTPUT"
 
       - name: Setup Conda
-        uses: conda-incubator/setup-miniconda@v3
+        uses: conda-incubator/setup-miniconda@v4
         with:
-          auto-activate-base: false
+          auto-activate: false
+          activate-environment: base
           channels: conda-forge, defaults
           channel-priority: true
 
@@ -55,7 +54,7 @@ jobs:
           conda config --set always_yes yes --set changeps1 no
           conda config --add channels conda-forge
           conda install conda-devenv
-          conda devenv
+          conda run -n base python -m conda_devenv
 
       - name: Building, Testing & Installing gemsfits
         shell: bash -l {0}
