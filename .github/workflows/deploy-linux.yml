@@ -99,16 +99,26 @@ jobs:
           cd ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}
           zip -y -r ${{ github.workspace }}/${{ steps.strings2.outputs.deploy-output-name }} .
 
-      # actions/upload-artifact always wraps whatever `path` points to in its
-      # own zip when downloaded from the Actions UI - pointing it at our
-      # already-zipped output would give a zip-inside-a-zip on download, so
-      # upload the raw directory here and let GitHub do the zipping once.
-      # The pre-built zip below is still used as-is for the release asset.
+      # Unlike the other three platforms, Linux's raw install tree is full of
+      # SONAME symlinks (libfoo.so -> libfoo.so.N -> libfoo.so.N.M.P). There
+      # is no way to make actions/upload-artifact@v4 preserve them as
+      # symlinks - its zip step (@actions/artifact's zip.ts) unconditionally
+      # calls realpath() on every symlink and copies the target's full
+      # content into the archive under the symlink's name too, with no input
+      # to opt out. Pointing `path` at the raw directory (as the other three
+      # workflows do, to avoid a zip-inside-a-zip on manual download - see
+      # their own comments) silently duplicated every versioned .so 2-3x and
+      # doubled/tripled this artifact's size (measured: 236MB of exact
+      # duplicate content out of a 449MB lib/ folder). So Linux instead
+      # uploads the pre-built zip below (made with `zip -y -r`, which does
+      # preserve symlinks correctly) - accepting the minor zip-inside-a-zip
+      # inconvenience on manual download in exchange for a correctly sized,
+      # non-duplicated artifact.
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: linux-${{ steps.strings.outputs.deploy-name }}
-          path: ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}
+          path: ${{ github.workspace }}/${{ steps.strings2.outputs.deploy-output-name }}
 
       - name: Upload release asset
         if: github.event_name == 'release' && github.event.action == 'published'

@@ -35,17 +35,21 @@ if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 # Rebuilds gfshelp.qch/gfshelp.qhc from the just-regenerated .qhp. Deliberately
 # no -c (link-check) - see generate_gfshelp.sh for why. Invoked from inside
-# Resources/doc/html with bare filenames (matching GEMSGUI's own invocation)
-# and -platform offscreen (qhelpgenerator links Qt6Widgets/Qt6Gui). Neither
-# of those fixed a real hang seen twice on Windows CI (16+ min, zero output,
-# had to be cancelled both times) - each theory cost a full CI cycle to
-# disprove, so this run is instrumented instead of guessing a third time:
-# stdin is explicitly redirected from NUL (a console app blocking forever
-# reading stdin under a non-interactive CI session is a classic, distinct
-# cause from either theory above) and the process is bounded to 120s, with
-# whatever stdout/stderr it produced dumped either way - if it still times
-# out, the partial output (or continued total silence) tells us whether it
-# started doing real work at all, which neither previous attempt established.
+# Resources/doc/html with bare filenames, matching GEMSGUI's own invocation
+# LITERALLY (no extra flags at all - a prior attempt kept -platform offscreen
+# bolted on here, which GEMSGUI's proven-working call doesn't have, so that
+# was never actually a clean test of "just match GEMSGUI"; it's removed now
+# since it's an unverified addition of our own and could itself be the
+# problem, e.g. if the offscreen plugin isn't actually shipped in the Windows
+# conda-forge Qt6 package). Redirecting stdin from a real empty file (closing
+# it outright ruled out a stdin-block hang - CI run 2026-07-30 killed the
+# process at the 120s bound below with confirmed-empty stdout AND stderr, so
+# it wasn't waiting on input) and dumping the plugins/platforms directory
+# listing below are both kept as standing diagnostics in case this call still
+# hangs, so the next failure carries more evidence than the last one did.
+Get-Item "C:\Miniconda\envs\gemsfits\Library\lib\qt6\plugins\platforms\*.dll" -ErrorAction SilentlyContinue |
+    ForEach-Object { Write-Host "platform plugin: $($_.Name)" }
+
 $qhelpStdout = Join-Path $env:RUNNER_TEMP "qhelpgenerator-stdout.log"
 $qhelpStderr = Join-Path $env:RUNNER_TEMP "qhelpgenerator-stderr.log"
 # PowerShell's -RedirectStandardInput resolves its argument as a real file via
@@ -57,7 +61,7 @@ $qhelpEmptyStdin = Join-Path $env:RUNNER_TEMP "qhelpgenerator-empty-stdin.txt"
 New-Item -ItemType File -Path $qhelpEmptyStdin -Force | Out-Null
 Push-Location Resources/doc/html
 $qhelpProc = Start-Process -FilePath $qhelpGenerator `
-    -ArgumentList @("gfshelpconfig.qhcp", "-o", "gfshelp.qhc", "-platform", "offscreen") `
+    -ArgumentList @("gfshelpconfig.qhcp", "-o", "gfshelp.qhc") `
     -NoNewWindow -PassThru `
     -RedirectStandardInput $qhelpEmptyStdin `
     -RedirectStandardOutput $qhelpStdout -RedirectStandardError $qhelpStderr
