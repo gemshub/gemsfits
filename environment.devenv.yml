@@ -22,8 +22,8 @@ dependencies:
   - liblapack
   - nlopt
   - mesa-libgl-devel-conda-x86_64 # [unix]
-  - qt6-main=6.9.2 # [not win]
-  - qt6-charts=6.9.2 # [not win]
+  - qt6-main=6.10.2 # [not win]
+  - qt6-charts=6.10.2 # [not win]
   - qt6-main=6.10.2 # [win]
   - qt6-charts=6.10.2 # [win]
   - boost-cpp

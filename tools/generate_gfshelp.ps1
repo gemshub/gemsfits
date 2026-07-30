@@ -8,6 +8,12 @@ param(
 )
 $ErrorActionPreference = "Stop"
 
+# This step runs in its own shell process (separate from the build step that
+# does `conda activate gemsfits`), so the conda env's DLL directories aren't
+# on PATH here. Both generator exes are Qt-linked and silently fail to launch
+# (no output, just a nonzero exit code) without Qt6Core.dll etc. resolvable.
+$Env:PATH = "C:\Miniconda\envs\gemsfits\Library\lib\qt6\bin;C:\Miniconda\envs\gemsfits\Library\bin;$Env:PATH"
+
 $qhpGenerator = Get-ChildItem -Path $BuildDir -Recurse -Filter "gfshelpconfig-qhp-generator.exe" -ErrorAction SilentlyContinue | Select-Object -First 1
 if (-not $qhpGenerator) {
     Write-Error "generate_gfshelp.ps1: gfshelpconfig-qhp-generator.exe not found under $BuildDir"
