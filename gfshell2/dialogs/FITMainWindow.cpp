@@ -162,9 +162,15 @@ void FITMainWindow::getDataFromPreferences()
     UserDir = mainSettings->value("UserFolderPath", UserDir.c_str()).toString().toStdString();
     KeysLength = mainSettings->value("PrintComments", true).toBool();
     JsonDataShow = !mainSettings->value("ViewinYAMLFormat", false).toBool();
-    EditorDataShow = mainSettings->value("ViewinModelEditor", true).toBool();
+    EditorDataShow = mainSettings->value("ViewinModelEditor", false).toBool();
 
-    GemsfitApplication = mainSettings->value("Gemsfit2ProgramPath", GemsfitApplication).toString();
+    // Only trust a saved path if it still points at a real file - a stale value (e.g. saved
+    // while the app was running from a now-gone install/DMG-mount location) must not silently
+    // shadow the freshly computed, still-correct default from setDefValues() above.
+    QString savedGemsfitApplication = mainSettings->value("Gemsfit2ProgramPath", GemsfitApplication).toString();
+    if( QFile::exists(savedGemsfitApplication) ) {
+        GemsfitApplication = savedGemsfitApplication;
+    }
     fitProcess->setProgram( GemsfitApplication );
 
     // load experiment template text

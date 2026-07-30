@@ -48,11 +48,18 @@ if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 # started doing real work at all, which neither previous attempt established.
 $qhelpStdout = Join-Path $env:RUNNER_TEMP "qhelpgenerator-stdout.log"
 $qhelpStderr = Join-Path $env:RUNNER_TEMP "qhelpgenerator-stderr.log"
+# PowerShell's -RedirectStandardInput resolves its argument as a real file via
+# the current provider - it does NOT special-case "NUL" as cmd.exe's shell
+# redirection does, so passing the literal string "NUL" tries (and fails) to
+# resolve an actual file by that name relative to the current location. Use a
+# real empty file instead, which gives the same immediate-EOF behavior.
+$qhelpEmptyStdin = Join-Path $env:RUNNER_TEMP "qhelpgenerator-empty-stdin.txt"
+New-Item -ItemType File -Path $qhelpEmptyStdin -Force | Out-Null
 Push-Location Resources/doc/html
 $qhelpProc = Start-Process -FilePath $qhelpGenerator `
     -ArgumentList @("gfshelpconfig.qhcp", "-o", "gfshelp.qhc", "-platform", "offscreen") `
     -NoNewWindow -PassThru `
-    -RedirectStandardInput "NUL" `
+    -RedirectStandardInput $qhelpEmptyStdin `
     -RedirectStandardOutput $qhelpStdout -RedirectStandardError $qhelpStderr
 $qhelpFinished = $qhelpProc.WaitForExit(120000)
 Pop-Location

@@ -37,7 +37,7 @@ PreferencesDialog::PreferencesDialog(QSettings *aSet,  QWidget *parent) :
         ui->commentsBox->setChecked( settings->value("PrintComments", true).toBool() );
         ui->turnoff->setChecked( settings->value("PrintGEMSFITMessages", true).toBool() );
         ui->yamlBox->setChecked( settings->value("ViewinYAMLFormat", false).toBool() );
-        ui->editorBox->setChecked( settings->value("ViewinModelEditor", true).toBool() );
+        ui->editorBox->setChecked( settings->value("ViewinModelEditor", false).toBool() );
 
         // load all template files
         QDir thisDir(ui->resourcesEdit->text()+DATA_TEMPLATES);
