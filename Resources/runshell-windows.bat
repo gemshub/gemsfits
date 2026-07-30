@@ -1,6 +1,14 @@
 rem  Change the path to the actual location of gem-fits-shell executable and Resources
 cd ./GemFits-app/bin
 
+rem Force Qt to use the platform plugin bundled with this app (GemFits-app\plugins\platforms).
+rem Without this, a QT_QPA_PLATFORM_PLUGIN_PATH or QT_PLUGIN_PATH already set on this machine
+rem (e.g. left over from an unrelated Anaconda/PyQt/Qt Creator install) silently overrides Qt's
+rem normal bundled-app lookup, and gem-fits-shell.exe aborts immediately with:
+rem   qt.qpa.plugin: Could not find the Qt platform plugin "windows" in ""
+set "QT_QPA_PLATFORM_PLUGIN_PATH=%CD%\..\plugins\platforms"
+set "QT_PLUGIN_PATH=%CD%\..\plugins"
+
 rem 1. First launch with default location of modeling projects (usually done by the installer)
 rem gem-fits-shell.exe -d > gemsfits.log
 
@@ -22,14 +30,20 @@ rem 5. Create on desktop a shortcut
 @echo off
 setlocal
 set "scriptPath=%~dp0"
-set "targetPath=%scriptPath%GemFits-app\bin\gem-fits-shell.exe"
+rem Shortcuts target runshell.bat itself (not gem-fits-shell.exe directly) so that every
+rem launch - not just the very first one - goes through the QT_QPA_PLATFORM_PLUGIN_PATH fix
+rem above. Pointing a shortcut straight at the exe would skip that fix and could reproduce
+rem the "Could not find the Qt platform plugin" crash on machines with a conflicting Qt env var.
+set "targetPath=%scriptPath%runshell.bat"
+set "workingDir=%scriptPath%"
+set "exePath=%scriptPath%GemFits-app\bin\gem-fits-shell.exe"
 set "iconPath=%scriptPath%GemFits-app\Resources\gemsfits.ico"
 set "startMenuShortcut=%APPDATA%\Microsoft\Windows\Start Menu\Programs\gems-fits-shell.lnk"
 set "desktopShortcut=%USERPROFILE%\Desktop\gems-fits-shell.lnk"
 
 REM Check if required files exist
-IF NOT EXIST "%targetPath%" (
-    echo ERROR: Executable not found: "%targetPath%"
+IF NOT EXIST "%exePath%" (
+    echo ERROR: Executable not found: "%exePath%"
     exit /b
 )
 
@@ -43,6 +57,7 @@ echo Creating Start Menu shortcut...
 echo Set oWS = CreateObject("WScript.Shell") > CreateShortcut.vbs
 echo Set oLink = oWS.CreateShortcut("%startMenuShortcut%") >> CreateShortcut.vbs
 echo oLink.TargetPath = "%targetPath%" >> CreateShortcut.vbs
+echo oLink.WorkingDirectory = "%workingDir%" >> CreateShortcut.vbs
 echo oLink.IconLocation = "%iconPath%" >> CreateShortcut.vbs
 echo oLink.Save >> CreateShortcut.vbs
 cscript //nologo CreateShortcut.vbs
@@ -55,6 +70,7 @@ echo Set oWS = CreateObject("WScript.Shell") > CreateShortcut.vbs
 echo strDesktop = oWS.SpecialFolders("Desktop") >> CreateShortcut.vbs
 echo Set oLink = oWS.CreateShortcut(strDesktop ^& "\gems-fits-shell.lnk") >> CreateShortcut.vbs
 echo oLink.TargetPath = "%targetPath%" >> CreateShortcut.vbs
+echo oLink.WorkingDirectory = "%workingDir%" >> CreateShortcut.vbs
 echo oLink.IconLocation = "%iconPath%" >> CreateShortcut.vbs
 echo oLink.Save >> CreateShortcut.vbs
 cscript //nologo CreateShortcut.vbs

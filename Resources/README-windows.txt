@@ -16,6 +16,14 @@ If windows will show you a warning message "Windows protected your PC", click "M
 
 Once GEM-Fits is running you can pin the program to the Task bar by right-clicking on its icon (on the task bar) and chose pin to task bar. After you close GEM-Fits, the script will create a Start Menu and Desktop shortcut. After the first run you can always start gems using its shortcut.
 
+Always start GEM-Fits via `runshell.bat` or the Start Menu/Desktop shortcut it creates - do not
+double-click `gem-fits-shell.exe` directly inside `GemFits-app\bin`. If you do, and this machine
+already has another Qt installation (Anaconda, Qt Creator, etc.) that sets a
+`QT_QPA_PLATFORM_PLUGIN_PATH` or `QT_PLUGIN_PATH` environment variable, GEM-Fits can fail to start
+with `Could not find the Qt platform plugin "windows"` - `runshell.bat` and its shortcuts point
+these variables at the plugins bundled with this installation before launching, which the raw exe
+does not.
+
 ## Where are my projects?
 
 Modeling projects (including the test projects bundled with this installation, which are copied there automatically on first start) live in `Library\GemFits\projects` in your user home folder (e.g. `C:\Users\<user>\Library\GemFits\projects`). Unlike on macOS, this `Library` folder is not hidden, so it can be opened directly in File Explorer or via the address bar.
