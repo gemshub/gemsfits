@@ -126,8 +126,14 @@ void FITMainWindow::setDefValues(int /*c*/, char** /*v*/)
     // re-executed from a randomized read-only mount under
     // /private/var/folders/.../AppTranslocation/<GUID>/d/, so applicationDirPath()
     // (and thus SysFITDir/LocalDocDir) still look correct while the actual help
-    // collection fails to open. update_existing keeps this cheap copy in sync
-    // across app upgrades without disturbing a user's own newer local copy.
+    // collection fails to open. Runs on every launch and unconditionally
+    // overwrites the cached copy (files are tiny, so the cost is negligible) -
+    // deliberately not update_existing/mtime-based: fs::copy_file stamps the
+    // destination with the copy time rather than preserving the source's
+    // mtime, so after an app upgrade the previously-cached copy's timestamp
+    // can end up later than the freshly-installed bundle's, causing a
+    // mtime-based check to skip the update and leave stale help content in
+    // place even though a newer version is installed.
     {
         std::string bundleHelpDir = SysFITDir + HELP_DB_DIR;
         std::string userHelpDir = GemsSettings::data_logger_directory + HELP_DB_DIR;
@@ -137,7 +143,7 @@ void FITMainWindow::setDefValues(int /*c*/, char** /*v*/)
                 if (entry.is_regular_file()) {
                     std::error_code ec;
                     fs::copy_file(entry.path(), userHelpDir + entry.path().filename().string(),
-                                  fs::copy_options::update_existing, ec);
+                                  fs::copy_options::overwrite_existing, ec);
                 }
             }
         }
