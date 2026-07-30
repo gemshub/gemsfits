@@ -26,6 +26,6 @@ dependencies:
   - qt6-charts=6.10.2 # [not win]
   - qt6-main=6.10.2 # [win]
   - qt6-charts=6.10.2 # [win]
-  - boost-cpp
+  - libboost-devel
   - python>=3.10
   - pytest

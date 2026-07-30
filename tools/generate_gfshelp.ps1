@@ -33,9 +33,12 @@ if (-not (Test-Path $qhelpGenerator)) {
 & $qhpGenerator.FullName "."
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
-# Rebuilds gfshelp.qch/gfshelp.qhc from the just-regenerated .qhp; -c checks
-# for links that don't resolve to a file in the help project.
-& $qhelpGenerator Resources/doc/html/gfshelpconfig.qhcp -o Resources/doc/html/gfshelp.qhc -c
+# Rebuilds gfshelp.qch/gfshelp.qhc from the just-regenerated .qhp. Deliberately
+# no -c (link-check): on this Qt build it surfaces broken-link warnings via a
+# QMessageBox instead of console output, which hangs CI forever with zero
+# output waiting for a click that never comes (GEMSGUI's own qhelpgenerator
+# invocation never uses -c either, for the same reason).
+& $qhelpGenerator Resources/doc/html/gfshelpconfig.qhcp -o Resources/doc/html/gfshelp.qhc
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 Copy-Item Resources/doc/html/gfshelp.qch Resources/help/ -Force

@@ -28,8 +28,12 @@ fi
 # and Resources/doc/html/gfshelpconfig.toc (scans hrefs/keywords).
 "$QHP_GENERATOR" .
 
-# Rebuilds gfshelp.qch/gfshelp.qhc from the just-regenerated .qhp; -c checks
-# for links that don't resolve to a file in the help project.
-"$QHELPGENERATOR" Resources/doc/html/gfshelpconfig.qhcp -o Resources/doc/html/gfshelp.qhc -c
+# Rebuilds gfshelp.qch/gfshelp.qhc from the just-regenerated .qhp. Deliberately
+# no -c (link-check): on Windows CI this surfaced broken-link warnings via a
+# QMessageBox instead of console output, hanging the job forever with zero
+# output waiting for a click that never comes (GEMSGUI's own qhelpgenerator
+# invocation never uses -c either, for the same reason) - dropped here too
+# preemptively since the risk is Qt-build-specific, not platform-specific.
+"$QHELPGENERATOR" Resources/doc/html/gfshelpconfig.qhcp -o Resources/doc/html/gfshelp.qhc
 
 cp Resources/doc/html/gfshelp.qch Resources/doc/html/gfshelp.qhc Resources/help/
