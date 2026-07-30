@@ -44,7 +44,7 @@ elseif (APPLE)
     qt_add_executable(gem-fits-shell MACOSX_BUNDLE ${GEMSFITS_SHELL_SOURCES} ${app_icon_macos})
 
     set_target_properties(gem-fits-shell PROPERTIES
-        MACOSX_BUNDLE_GUI_IDENTIFIER ch.psi.gems-fits
+        MACOSX_BUNDLE_GUI_IDENTIFIER ch.psi.gemsfits
         MACOSX_BUNDLE_COPYRIGHT  "Copyright (c) 2004-2025 GEMS Development Team"
         MACOSX_BUNDLE_ICON_FILE gemsfits.icns
         MACOSX_BUNDLE_INFO_STRING "GEM Input Parameter Optimization and Inverse Modelling"

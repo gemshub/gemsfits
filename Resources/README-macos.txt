@@ -8,7 +8,7 @@ GEMSFITS Parameter Optimization and Inverse Modelling
 
 * To run GEM-Fits application, execute the the gem-fits-shell.app
 
-At the first attempt to start gem-selektor.app results in security alert about "unidentified developer", which requires to go in Settings Privacy & Security and give a special permission to run the program. 
+At the first attempt to start gem-fits-shell.app results in security alert about "unidentified developer", which requires to go in Settings Privacy & Security and give a special permission to run the program.
 Go to Settings / Privacy and Security, scroll down, and confirm to run gem-fits-shell.app 
 
 Another way to open a blocked app is to locate the app in a Finder window. 
@@ -18,7 +18,7 @@ Another way to open a blocked app is to locate the app in a Finder window.
     Ctrl-click or right-click on the app.
     Select Open from the resultant menu and the app will be opened anyway, and an exception will be created for opening it normally (i.e. by double-clicking) in the future.
 
-The next runs can be started by clicking on gem-selector.app in Finder or its index in the dock. It may be necessary to go to Settings / Privacy and Security, scroll down, and confirm to run gem-fits-shell.app once.
+The next runs can be started by clicking on gem-fits-shell.app in Finder or its index in the dock. It may be necessary to go to Settings / Privacy and Security, scroll down, and confirm to run gem-fits-shell.app once.
 
 * Alternatively you can lauch a terminal (In the Finder , open the /Applications/Utilities folder, then double-click Terminal) and execute the following:
 
