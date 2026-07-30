@@ -112,11 +112,37 @@ void FITMainWindow::setDefValues(int /*c*/, char** /*v*/)
 
 #endif
 
-    LocalDocDir = SysFITDir + HELP_DB_DIR;
     GemsSettings::data_logger_directory = UserDir;
     // Make sure the per-user home folder exists before anything tries to write into it
     // (in particular the preferences ini below) - it may not exist yet on first run.
     fs::create_directories(UserDir);
+
+    // Copy the compiled help database (gfshelp.qch/.qhc) out of the bundle/install
+    // folder into the always-writable per-user folder, same as ipmlog.txt and
+    // gem-fits-shell.ini above - QHelpEngine's SQLite-backed collection file can
+    // fail to open ("Cannot open collection file") when Resources/help/ sits on a
+    // read-only mount. This bites specifically on macOS's Gatekeeper "App
+    // Translocation": a freshly downloaded, not-yet-moved .app gets silently
+    // re-executed from a randomized read-only mount under
+    // /private/var/folders/.../AppTranslocation/<GUID>/d/, so applicationDirPath()
+    // (and thus SysFITDir/LocalDocDir) still look correct while the actual help
+    // collection fails to open. update_existing keeps this cheap copy in sync
+    // across app upgrades without disturbing a user's own newer local copy.
+    {
+        std::string bundleHelpDir = SysFITDir + HELP_DB_DIR;
+        std::string userHelpDir = GemsSettings::data_logger_directory + HELP_DB_DIR;
+        fs::create_directories(userHelpDir);
+        if (fs::exists(bundleHelpDir)) {
+            for (const auto& entry : fs::directory_iterator(bundleHelpDir)) {
+                if (entry.is_regular_file()) {
+                    std::error_code ec;
+                    fs::copy_file(entry.path(), userHelpDir + entry.path().filename().string(),
+                                  fs::copy_options::update_existing, ec);
+                }
+            }
+        }
+        LocalDocDir = userHelpDir;
+    }
     UserDir += DEFAULT_PR_DIR;
 
     // load main programm settingth
@@ -155,9 +181,17 @@ void FITMainWindow::getDataFromPreferences()
     if( !SysFITDir.empty() && SysFITDir.back() != '/') {
         SysFITDir += "/";
     }
-    LocalDocDir =  mainSettings->value("HelpFolderPath", LocalDocDir.c_str()).toString().toStdString();
-    if( !LocalDocDir.empty() && LocalDocDir.back() != '/') {
-        LocalDocDir += "/";
+    // Only trust a saved HelpFolderPath if it still points at a real collection file -
+    // a stale value (e.g. saved from a previous macOS App Translocation temp path that
+    // no longer exists) must not silently shadow the freshly computed, always-writable
+    // default from setDefValues() above. Mirrors the same pattern used for
+    // Gemsfit2ProgramPath below.
+    QString savedLocalDocDir = mainSettings->value("HelpFolderPath", LocalDocDir.c_str()).toString();
+    if( !savedLocalDocDir.isEmpty() && !savedLocalDocDir.endsWith('/') ) {
+        savedLocalDocDir += "/";
+    }
+    if( QFile::exists(savedLocalDocDir + "gfshelp.qhc") ) {
+        LocalDocDir = savedLocalDocDir.toStdString();
     }
     UserDir = mainSettings->value("UserFolderPath", UserDir.c_str()).toString().toStdString();
     KeysLength = mainSettings->value("PrintComments", true).toBool();

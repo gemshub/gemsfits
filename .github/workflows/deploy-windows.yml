@@ -64,9 +64,16 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${{ steps.strings2.outputs.deploy-output-dir }} -A x64 -S . -B build  || goto :eof
           cmake --build build --target install --config Release || goto :eof
 
-      - name: Generate help documentation
-        shell: pwsh
-        run: tools/generate_gfshelp.ps1 -BuildDir build
+      # Disabled 2026-07-30: qhelpgenerator.exe hangs forever on this runner with zero
+      # output, cause still unknown after multiple ruled-out theories (see CLAUDE.md,
+      # "qhelpgenerator.exe hangs Windows CI forever with zero output" for the full
+      # investigation). Windows ships whatever Resources/help/gfshelp.qch/.qhc are
+      # already committed instead (same as before this CI step existed) - those are
+      # intentionally not gitignored for exactly this fallback. Re-enable by restoring
+      # this step once the hang is understood.
+      # - name: Generate help documentation
+      #   shell: pwsh
+      #   run: tools/generate_gfshelp.ps1 -BuildDir build
 
       - name: Check deploy
         run: |
