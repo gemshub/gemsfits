@@ -1,28 +1,31 @@
 name: gemsfits
 
+channels:
+  - conda-forge
+  - defaults
+
 dependencies:
-  - cmake>=3.16
-  - ninja
-  - ccache  # [unix]
-  - gxx_linux-64>=9.4.0  # [linux]
-  - clangxx_osx-64  # [osx]
+  - cmake
   - git
-  - nlohmann_json
-  - spdlog=1.11.0
+  - gcc_linux-64  # [linux] 
+  - gxx_linux-64  # [linux] 
+  - sysroot_linux-64 # [linux] 
+  - make  # [unix]
+  - ninja
+  - 7zip  # [win]
+  - zlib
+  - gems3k>=4.5.1
   - yaml-cpp
   - libgomp # [linux]
-  - boost-cpp=1.83.0
-  - armadillo # [unix]
+  - armadillo
+  - libblas
+  - liblapack
   - nlopt
-  - qt6-main=6.6.0
-  - qt6-charts=6.6.0
-  #- qt-main=5.15.8
-  - mesa-libgl-devel-cos7-x86_64 # [unix]
-
-environment:
-
-  LD_LIBRARY_PATH:                                                   # [unix]
-    - {{ root }}/artifacts/lib                                       # [unix]
-
-  PATH:                                                              # [win]
-    - {{ root }}\artifacts\bin                                       # [win]
+  - mesa-libgl-devel-conda-x86_64 # [unix]
+  - qt6-main=6.10.2 # [not win]
+  - qt6-charts=6.10.2 # [not win]
+  - qt6-main=6.10.2 # [win]
+  - qt6-charts=6.10.2 # [win]
+  - libboost-devel
+  - python>=3.10
+  - pytest

@@ -10,6 +10,12 @@
       Optimization</h1>
     <h2>gfshell Database Mode</h2>
     <hr>
+    <p style="text-align: center;">
+      <a href="gfshell-howto-gemsfit.html" style="display: block; background-color: #2e7d32; color: white;
+          font-size: 20px; font-weight: bold; text-decoration: none; padding: 14px; border: 2px solid #1b5e20;">
+        &raquo;&nbsp; How To Do Parameter Optimization &ndash; Step by Step Workflow &nbsp;&laquo;
+      </a>
+    </p>
     <p> The CRUD (Create, Read, Update, Delete) operations can be done directly
       in the database using the EJDB console (http://ejdb.org) or using the
       gfshell GUI menus and the JSON data editor. The latter allows also for
@@ -20,7 +26,7 @@
         href="gemsfit-json.html">JSON format</a> files or imported and exported
       <a title="csvtoejdb" href="howto-database.html">from preformatted
         spreadsheets</a> files previously saved in csv format. The database
-      selection queries can be added and edited in the “Search Query Editor”.
+      selection queries can be added and edited in the ï¿½Search Query Editorï¿½.
       The record (sample) list resulted by executing the search query can be
       then easily exported into the task specification with help of a menu
       command,&nbsp; to be used during the fitting run. </p>
@@ -131,7 +137,7 @@
  *      - $icase Case insensitive string matching:
  *          -    {'fpath' : {'$icase' : 'val1'}} //icase matching
  *          Ignore case matching with '$in' operation:
- *          -    {'name' : {'$icase' : {'$in' : ['tHéâtre - &#1090;&#1077;&#1072;&#1090;&#1088;', 'heLLo WorlD']}}}
+ *          -    {'name' : {'$icase' : {'$in' : ['tHï¿½ï¿½tre - &#1090;&#1077;&#1072;&#1090;&#1088;', 'heLLo WorlD']}}}
  *          For case insensitive matching you can create special index of type: `JBIDXISTR`
  *     - $elemMatch The $elemMatch operator matches more than one component within an array element.
  *          -  { array: { $elemMatch: { value1 : 1, value2 : { $gt: 1 } } } }

@@ -22,17 +22,22 @@
 #include "ui_ProjectSettingsDialog.h"
 #include "FITMainWindow.h"
 #include "gui_service.h"
-extern const char *_FIT_version_stamp;
+#include "keywords.h"
 
 ProjectSettingsDialog::ProjectSettingsDialog( QSettings *aSet, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ProjectSettingsDialog), settings(aSet)
 {
     ui->setupUi(this);
+    auto def_folder = QString::fromStdString(pFitImp->userDir())+ui->projName->text();
+    ui->projDir->setText(def_folder);
+    ui->ejdbName->setText(ui->projName->text());
+
     if( settings ) //load old settings
     {
-        ui->projDir->setText( settings->value("ProjFolderPath", ".").toString() );
         ui->projName->setText( settings->value("ProjFileName", "myproj1").toString() );
+        def_folder = QString::fromStdString(pFitImp->userDir())+ui->projName->text();
+        ui->projDir->setText( settings->value("ProjFolderPath", def_folder).toString() );
 #ifndef OLD_EJDB
         ui->ejdbDir->setText( settings->value("ProjDatabasePath", "/EJDB2").toString() );
 #else
@@ -53,6 +58,7 @@ ProjectSettingsDialog::ProjectSettingsDialog( QSettings *aSet, QWidget *parent) 
     QObject::connect( ui->projDirButton, SIGNAL(clicked()), this, SLOT(CmProjectDir()));
     QObject::connect( ui->ejdbDirButton, SIGNAL(clicked()), this, SLOT(CmEJDBDir()));
     QObject::connect( ui->gemsDirButton, SIGNAL(clicked()), this, SLOT(CmGEMSDir()));
+    QObject::connect( ui->projName, SIGNAL(editingFinished()), this, SLOT(CmNameChanged()));
 
 }
 
@@ -76,7 +82,7 @@ void ProjectSettingsDialog::CmSave()
     settings->setValue("TaskCasesDataColl", ui->taskCollection->text() );
     settings->setValue("FitsCasesDataColl", ui->fitCollection->text() );
     settings->setValue("GEMS3KFilesPath",   ui->gemsDir->text() );
-    settings->setValue("GEMSFITSAPP",       _FIT_version_stamp );
+    settings->setValue("GEMSFITSAPP",       _FITS_version_stamp.c_str() );
     settings->sync();
 
     // create directories, if not exists
@@ -124,6 +130,18 @@ void ProjectSettingsDialog::CmGEMSDir()
     
     dir = dir.remove(projDir);
     ui->gemsDir->setText( dir );
+}
+
+void ProjectSettingsDialog::CmNameChanged()
+{
+    auto new_name = ui->projName->text();
+    auto old_dir = ui->projDir->text();
+    int pos1 = old_dir.lastIndexOf('/');
+    int pos2 = old_dir.lastIndexOf('\\');
+    old_dir = old_dir.first(std::max(pos1, pos2)+1);
+    old_dir += new_name;
+    ui->projDir->setText(old_dir);
+    ui->ejdbName->setText(new_name);
 }
 
 void ProjectSettingsDialog::CmHelp()

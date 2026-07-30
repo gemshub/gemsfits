@@ -68,4 +68,9 @@ build*
 GEMSFITSDEPLOY/
 
 Resources/help/gfshelp.qhc
-
+environment.yml
+*.pro.user
+*.pro.user.*
+gemsfit2-build/gem-fits
+CLAUDE.md
+gfshell2-build/gem-fits-shell.ini

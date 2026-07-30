@@ -1,0 +1,116 @@
+name: deploy-windows
+on:
+  push:
+    branches:
+      - deploy_actions1
+  release:
+    types:
+      - published
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        os: [ windows-latest ]
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+            submodules: recursive
+
+      - name: Get version from CMakeLists.txt
+        id: get_version
+        uses: DarwinInnovation/cmake-project-version-action@v1.0
+
+      - name: Set deploy name
+        id: strings
+        shell: bash
+        run: >
+          echo "deploy-name=GEMFITS${{ steps.get_version.outputs.version }}" >> "$GITHUB_OUTPUT"
+
+      - name: Set deploy dir
+        id: strings2
+        shell: bash
+        run: |
+          echo "deploy-output-dir=${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app" >> "$GITHUB_OUTPUT"
+          echo "deploy-output-name=windows-${{ steps.strings.outputs.deploy-name }}.zip" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Conda
+        uses: conda-incubator/setup-miniconda@v4
+        with:
+          auto-activate: false
+          activate-environment: base
+          channels: conda-forge, defaults
+          channel-priority: true
+
+      - name: Configuring Conda Environment
+        run: |
+          conda config --set always_yes yes --set changeps1 no
+          conda config --add channels conda-forge
+          conda install conda-devenv
+          conda run -n base python -m conda_devenv
+
+      - name: Building, Testing & Installing gemsfits (Windows)
+        shell: cmd
+        run: |
+          call conda activate gemsfits || goto :eof
+          copy "cmake\qt.conf" "C:\Miniconda\envs\gemsfits\Library\lib\qt6\bin" || goto :eof
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${{ steps.strings2.outputs.deploy-output-dir }} -A x64 -S . -B build  || goto :eof
+          cmake --build build --target install --config Release || goto :eof
+
+      # Disabled 2026-07-30: qhelpgenerator.exe hangs forever on this runner with zero
+      # output, cause still unknown after multiple ruled-out theories (see CLAUDE.md,
+      # "qhelpgenerator.exe hangs Windows CI forever with zero output" for the full
+      # investigation). Windows ships whatever Resources/help/gfshelp.qch/.qhc are
+      # already committed instead (same as before this CI step existed) - those are
+      # intentionally not gitignored for exactly this fallback. Re-enable by restoring
+      # this step once the hang is understood.
+      # - name: Generate help documentation
+      #   shell: pwsh
+      #   run: tools/generate_gfshelp.ps1 -BuildDir build
+
+      - name: Check deploy
+        run: |
+          cd C:/Miniconda/envs/gemsfits/Library/bin
+          ls
+          cd C:/Miniconda/envs/gemsfits/Library/lib
+          ls
+          cd ${{ github.workspace }}
+          ls
+          cp -r "${{ github.workspace }}/Resources" ${{ steps.strings2.outputs.deploy-output-dir }}
+          cp "${{ github.workspace }}/Resources/runshell-windows.bat" "${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/runshell.bat"
+          cp "${{ github.workspace }}/Resources/README-windows.txt" "${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/README.txt"
+
+      - name: Create zip archive (Windows)
+        shell: pwsh
+        run: |
+          Compress-Archive -Path "${{ steps.strings.outputs.deploy-name }}/*" -DestinationPath "${{ steps.strings2.outputs.deploy-output-name }}"
+      
+      # actions/upload-artifact always wraps whatever `path` points to in its
+      # own zip when downloaded from the Actions UI - pointing it at our
+      # already-zipped output would give a zip-inside-a-zip on download, so
+      # upload the raw directory here and let GitHub do the zipping once.
+      # The pre-built zip below is still used as-is for the release asset.
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-${{ steps.strings.outputs.deploy-name }}
+          path: ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}
+
+      - name: Upload release asset
+        if: github.event_name == 'release' && github.event.action == 'published'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ github.workspace }}/${{ steps.strings2.outputs.deploy-output-name }}
+          asset_name: ${{ steps.strings2.outputs.deploy-output-name }}
+          asset_content_type: application/zip
+

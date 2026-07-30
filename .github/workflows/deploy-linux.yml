@@ -1,0 +1,133 @@
+name: deploy-linux
+on:
+  push:
+    branches:
+      - deploy_actions1
+  release:
+    types:
+      - published
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        os: [ ubuntu-latest ]
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+            submodules: recursive
+        
+      - name: Get version from CMakeLists.txt
+        id: get_version
+        uses: DarwinInnovation/cmake-project-version-action@v1.0
+
+      - name: Set deploy name
+        id: strings
+        shell: bash
+        run: >
+          echo "deploy-name=GEMFITS${{ steps.get_version.outputs.version }}" >> "$GITHUB_OUTPUT"
+
+      - name: Set deploy dir
+        id: strings2
+        shell: bash
+        run: |
+          echo "deploy-output-dir=${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app" >> "$GITHUB_OUTPUT"
+          echo "deploy-output-name=linux-${{ steps.strings.outputs.deploy-name }}.zip" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Conda
+        uses: conda-incubator/setup-miniconda@v4
+        with:
+          auto-activate: false
+          activate-environment: base
+          channels: conda-forge, defaults
+          channel-priority: true
+
+      - name: Configuring Conda Environment
+        run: |
+          conda config --set always_yes yes --set changeps1 no
+          conda config --add channels conda-forge
+          conda install conda-devenv
+          conda run -n base python -m conda_devenv
+
+      - name: Building, Testing & Installing gemsfits
+        shell: bash -l {0}
+        run: |
+          conda activate gemsfits
+          export CMAKE_POLICY_VERSION_MINIMUM=3.5
+          ./conda-install-dependencies.sh OLD_EJDB
+          mkdir .build && cd .build
+          export CC=$CONDA_PREFIX/bin/x86_64-conda-linux-gnu-gcc
+          export CXX=$CONDA_PREFIX/bin/x86_64-conda-linux-gnu-g++
+          export CONDA_BUILD_SYSROOT=$CONDA_PREFIX/x86_64-conda-linux-gnu/sysroot
+          cmake -GNinja .. -DUSE_OLD_EJDB=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${{ steps.strings2.outputs.deploy-output-dir }} -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX
+          ninja
+          ninja install
+
+      - name: Generate help documentation
+        shell: bash -l {0}
+        run: |
+          conda activate gemsfits
+          tools/generate_gfshelp.sh .build
+
+      - name: Check deploy
+        run: |
+          cd ${{ github.workspace }}
+          ls
+          cp -r "${{ github.workspace }}/Resources" "${{ steps.strings2.outputs.deploy-output-dir }}"
+          cp "${{ github.workspace }}/Resources/runshell-linux.sh" "${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/runshell.sh"
+          cp "${{ github.workspace }}/Resources/README-linux.md"  "${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/README.md"
+          ldd "${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app/bin/gem-fits"
+          ldd "${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app/bin/gem-fits-shell"
+          
+      - name: Clean up system libraries
+        run: |
+          rm -f ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app/lib/libc.so.6
+          rm -f ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app/lib/libm.so.6
+          rm -f ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app/lib/libdl.so.2
+          rm -f ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app/lib/librt.so.1
+          rm -f ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}/GemFits-app/lib/libpthread.so.0
+
+      - name: Create zip archive for GitHub release
+        run: |
+          cd ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}
+          zip -y -r ${{ github.workspace }}/${{ steps.strings2.outputs.deploy-output-name }} .
+
+      # Unlike the other three platforms, Linux's raw install tree is full of
+      # SONAME symlinks (libfoo.so -> libfoo.so.N -> libfoo.so.N.M.P). There
+      # is no way to make actions/upload-artifact@v4 preserve them as
+      # symlinks - its zip step (@actions/artifact's zip.ts) unconditionally
+      # calls realpath() on every symlink and copies the target's full
+      # content into the archive under the symlink's name too, with no input
+      # to opt out. Pointing `path` at the raw directory (as the other three
+      # workflows do, to avoid a zip-inside-a-zip on manual download - see
+      # their own comments) silently duplicated every versioned .so 2-3x and
+      # doubled/tripled this artifact's size (measured: 236MB of exact
+      # duplicate content out of a 449MB lib/ folder). So Linux instead
+      # uploads the pre-built zip below (made with `zip -y -r`, which does
+      # preserve symlinks correctly) - accepting the minor zip-inside-a-zip
+      # inconvenience on manual download in exchange for a correctly sized,
+      # non-duplicated artifact.
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-${{ steps.strings.outputs.deploy-name }}
+          path: ${{ github.workspace }}/${{ steps.strings2.outputs.deploy-output-name }}
+
+      - name: Upload release asset
+        if: github.event_name == 'release' && github.event.action == 'published'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ github.workspace }}/${{ steps.strings2.outputs.deploy-output-name }}
+          asset_name: ${{ steps.strings2.outputs.deploy-output-name }}
+          asset_content_type: application/zip
+      

@@ -1,0 +1,248 @@
+name: deploy-macos
+
+on:
+  push:
+    branches:
+      - deploy_actions1
+  release:
+    types:
+      - published
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ macos-15 ]
+
+    steps:
+
+      # -------------------------
+      # Checkout
+      # -------------------------
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+            submodules: recursive
+
+      # -------------------------
+      # Version extraction
+      # -------------------------
+      - name: Get version from CMakeLists.txt
+        id: get_version
+        uses: DarwinInnovation/cmake-project-version-action@v1.0
+
+      - name: Set deploy name
+        id: strings
+        shell: bash
+        run: echo "deploy-name=GEMFITS${{ steps.get_version.outputs.version }}" >> "$GITHUB_OUTPUT"
+
+      - name: Set deploy dir
+        id: strings2
+        shell: bash
+        run: |
+          echo "deploy-output-dir=${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}" >> "$GITHUB_OUTPUT"
+          echo "deploy-output-name=macos-${{ steps.strings.outputs.deploy-name }}.zip" >> "$GITHUB_OUTPUT"
+
+      # -------------------------
+      # Conda environment
+      # -------------------------
+      - name: Setup Conda
+        uses: conda-incubator/setup-miniconda@v4
+        with:
+          auto-activate: false
+          activate-environment: base
+          channels: conda-forge, defaults
+          channel-priority: true
+
+      - name: Configuring Conda Environment
+        run: |
+          conda config --set always_yes yes --set changeps1 no
+          conda config --add channels conda-forge
+          conda install conda-devenv
+          # Invoke as a module in the base env explicitly - a bare `conda devenv`
+          # resolves to whichever entry-point script is first on PATH, which is
+          # ambiguous right after install; `conda run -n base` pins it.
+          conda run -n base python -m conda_devenv
+
+      # -------------------------
+      # Build & Install
+      # -------------------------
+      - name: Building, Testing & Installing gemsfits
+        shell: bash -l {0}
+        run: |
+          conda activate gemsfits
+          export CMAKE_POLICY_VERSION_MINIMUM=3.5
+          ./conda-install-dependencies.sh OLD_EJDB
+          mkdir .build && cd .build
+          cmake -GNinja .. -DUSE_OLD_EJDB=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_INSTALL_PREFIX=${{ steps.strings2.outputs.deploy-output-dir }}
+          ninja
+          ninja install
+
+      # -------------------------
+      # Help documentation
+      # -------------------------
+      - name: Generate help documentation
+        shell: bash -l {0}
+        run: |
+          conda activate gemsfits
+          tools/generate_gfshelp.sh .build
+
+      # -------------------------
+      # Post-install adjustments
+      # -------------------------
+      - name: Check deploy
+        run: |
+          cd ${{ github.workspace }}
+          cp -r "Resources" "${{ steps.strings2.outputs.deploy-output-dir }}/gem-fits-shell.app/Contents"
+          cp "${{ steps.strings2.outputs.deploy-output-dir }}/bin/gem-fits" "${{ steps.strings2.outputs.deploy-output-dir }}/gem-fits-shell.app/Contents/MacOS/"
+          cp "Resources/runshell-macos.sh" "${{ steps.strings.outputs.deploy-name }}/runshell.sh"
+          cp "Resources/README-macos.txt" "${{ steps.strings.outputs.deploy-name }}/README.txt"
+          otool -L "${{ steps.strings2.outputs.deploy-output-dir }}/gem-fits-shell.app/Contents/MacOS/gem-fits"
+
+      # -------------------------
+      # macdeployqt (NO DMG)
+      #
+      # macdeployqt only fixes up rpaths/bundles dylibs for the app's main
+      # executable by default. gem-fits is a second, separately-copied
+      # executable inside Contents/MacOS/ (launched by gem-fits-shell via
+      # QProcess, and also runnable standalone) that links GEMS3K/ejdb/etc
+      # itself, so it needs -executable= to get the same treatment - otherwise
+      # it ships with no LC_RPATH at all and aborts with
+      # "Library not loaded: @rpath/libGEMS3K.dylib". Run without -dmg here
+      # (matching GEMSGUI's deploy-macos.yml) so the app gets ad-hoc signed
+      # below before being packaged - macdeployqt -dmg alone never signs
+      # anything, and signing after macdeployqt's file copies is required or
+      # any pre-existing signature is invalidated anyway.
+      # -------------------------
+      - name: Run macdeployqt (no DMG)
+        shell: bash -l {0}
+        run: |
+          conda activate gemsfits
+          cd "${{ steps.strings2.outputs.deploy-output-dir }}"
+          /Users/runner/miniconda3/envs/gemsfits/lib/qt6/bin/macdeployqt gem-fits-shell.app -executable=gem-fits-shell.app/Contents/MacOS/gem-fits -verbose=2
+          # Diagnostic only - macdeployqt rewrites gem-fits's @rpath/libGEMS3K.dylib (etc)
+          # references to explicit @executable_path/../Frameworks/... ones directly, so it
+          # legitimately may add no LC_RPATH at all; don't gate the step's exit code on grep's
+          # match/no-match result (this script has no `set -e`, so the last command's exit code
+          # is otherwise the step's exit code).
+          otool -L gem-fits-shell.app/Contents/MacOS/gem-fits
+          otool -l gem-fits-shell.app/Contents/MacOS/gem-fits | grep -A2 LC_RPATH || true
+
+      # -------------------------
+      # Ad-hoc signing
+      #
+      # Without at least an ad-hoc signature, a freshly downloaded/unzipped
+      # app (quarantine bit set by the browser/Finder) tends to fail with
+      # "app is damaged and can't be opened" rather than the milder
+      # "unidentified developer" prompt - a distinct, harder Gatekeeper
+      # failure. Mirrors GEMSGUI's deploy-macos.yml fix for the same issue.
+      #
+      # 2026-07-30 attempt: `codesign --deep` only re-signs nested code it
+      # recognizes as such (frameworks, other .app/.xpc bundles) - gem-fits
+      # is a loose second executable dropped directly in Contents/MacOS/
+      # (not a recognized nested bundle), so `--deep` folds it into the
+      # outer bundle's CodeResources as inert hashed *data* without
+      # re-signing it as code. macdeployqt's earlier install-name rewrite
+      # (changeInstallName, for -executable=.../gem-fits) modifies gem-fits'
+      # load commands after it was originally linked/signed, which
+      # invalidates whatever signature it already had - so gem-fits was
+      # shipping with a broken/stale signature nested inside an otherwise
+      # validly-signed bundle. Explicitly sign gem-fits on its own first, so
+      # by the time the outer --deep sign runs, both Mach-O executables in
+      # the bundle carry valid, current ad-hoc signatures.
+      # -------------------------
+      - name: Ad-hoc sign .app bundle
+        run: |
+          cd "${{ steps.strings2.outputs.deploy-output-dir }}"
+          xattr -dr com.apple.quarantine gem-fits-shell.app || true
+          codesign --force --sign - gem-fits-shell.app/Contents/MacOS/gem-fits
+          codesign --force --deep --sign - gem-fits-shell.app
+          codesign --verify --strict gem-fits-shell.app/Contents/MacOS/gem-fits
+          codesign --verify --deep --strict gem-fits-shell.app
+
+      # -------------------------
+      # Create DMG (signed app inside)
+      # -------------------------
+      - name: Clean previous DMG
+        run: |
+          hdiutil detach /Volumes/gem-fits-shell || true
+          rm -f gem-fits-shell.dmg
+
+      - name: Create DMG
+        run: |
+          cd "${{ steps.strings2.outputs.deploy-output-dir }}"
+          hdiutil create -volname gem-fits-shell \
+            -srcfolder gem-fits-shell.app \
+            -ov -format UDZO gem-fits-shell.dmg
+          mv gem-fits-shell.dmg "${{ github.workspace }}/macos-${{ steps.strings.outputs.deploy-name }}.dmg"
+
+      # -------------------------
+      # ZIP packaging - DISABLED 2026-07-30 (attempt #2 also failed)
+      #
+      # Three things have now been tried for the arm64 zip's "damaged, no
+      # override" Gatekeeper verdict, all unsuccessful: plain `zip -r`,
+      # `ditto -c -k --keepParent` (made it worse - see the revert above),
+      # and this branch's attempt of explicitly codesigning the loose
+      # gem-fits executable before the outer --deep bundle sign (see the
+      # "Ad-hoc signing" step's comment - left in place since it's harmless
+      # and plausibly correct in its own right, it just didn't fix this).
+      # Confirmed on a real Mac 2026-07-30: still "damaged", still no
+      # override. Root cause remains unresolved. DMG is the only
+      # distributable for arm64 macOS for now. Re-enable by uncommenting
+      # this step and the "Upload build artifact" (zip) / "Upload ZIP
+      # release asset" steps below only once a real fix is found and
+      # verified on a real Mac - don't re-try either of the two already-
+      # ruled-out packaging methods without a new theory.
+      # -------------------------
+      # - name: Create zip archive for GitHub release
+      #   run: |
+      #     cd ${{ github.workspace }}
+      #     zip -r ${{ steps.strings2.outputs.deploy-output-name }} ${{ steps.strings.outputs.deploy-name }}
+
+      # -------------------------
+      # Upload artifacts
+      # -------------------------
+      # actions/upload-artifact always wraps whatever `path` points to in its
+      # own zip when downloaded from the Actions UI - pointing it at our
+      # already-zipped output would give a zip-inside-a-zip on download, so
+      # upload the raw directory here and let GitHub do the zipping once.
+      # The pre-built zip below is still used as-is for the release asset.
+      # - name: Upload build artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: macos-${{ steps.strings.outputs.deploy-name }}-zip
+      #     path: ${{ github.workspace }}/${{ steps.strings.outputs.deploy-name }}
+
+      - name: Upload artifact DMG
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-${{ steps.strings.outputs.deploy-name }}-dmg
+          path: ${{ github.workspace }}/macos-${{ steps.strings.outputs.deploy-name }}.dmg
+
+      # -------------------------
+      # Release assets
+      # -------------------------
+      # - name: Upload ZIP release asset
+      #   if: github.event_name == 'release' && github.event.action == 'published'
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ github.event.release.upload_url }}
+      #     asset_path: ${{ github.workspace }}/${{ steps.strings2.outputs.deploy-output-name }}
+      #     asset_name: ${{ steps.strings2.outputs.deploy-output-name }}
+      #     asset_content_type: application/zip
+
+      - name: Upload DMG release asset
+        if: github.event_name == 'release' && github.event.action == 'published'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ github.workspace }}/macos-${{ steps.strings.outputs.deploy-name }}.dmg
+          asset_name: macos-${{ steps.strings.outputs.deploy-name }}.dmg
+          asset_content_type: application/x-apple-diskimage

@@ -854,7 +854,7 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
     } else
     if ( (((objfun.exp_CN == keys::mChainL) ||  (objfun.exp_CN == keys::frAlIV) || (objfun.exp_CN == keys::expr) ||
          (objfun.exp_CN == keys::frAlV) || (objfun.exp_CN == keys::frAlVI) || (objfun.exp_CN == keys::netH_OH) ||
-         (objfun.exp_CN == keys::Rd)) || (objfun.exp_CN == keys::activityRatio) ) && (PHndx >=0))
+         (objfun.exp_CN == keys::Rd) || (objfun.exp_CN == keys::sorp)) || (objfun.exp_CN == keys::activityRatio) ) && (PHndx >=0))
     {
         std::vector<double> varDbl;
 
@@ -918,7 +918,7 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
                 else
                 {
                     double value = sys->NodT[i]->Get_cDC(DCndx); // default mol fraction
-                    if (objfun.exp_CN == keys::Rd || (objfun.exp_CN == keys::netH_OH))
+                    if (objfun.exp_CN == keys::Rd  || (objfun.exp_CN == keys::netH_OH))
                     {
                         //long int xph = sys->NodT[i]->DCtoPh_DBR( DCndx);
                         long int DCxCH = sys->NodT[i]->DC_xDB_to_xCH(DCndx);
@@ -977,6 +977,11 @@ double residual_phase_prop (int i, int p, int pp, TGfitTask::TargetFunction::obj
                         {
                             value = sys->NodT[i]->Get_nDC(DCndx)/(sys->NodT[i]->Ph_Volume(PHndx)*1000);
                         }
+                    } else
+                        if (objfun.exp_CN == keys::sorp)
+                    {
+                        // sorption %
+
                     }
                     varDbl.push_back(value); // default mol fraction
                 }

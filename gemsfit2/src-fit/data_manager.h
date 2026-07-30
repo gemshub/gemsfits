@@ -63,7 +63,7 @@
 
 // The Data_Manager class retrieves and stores optimization-specific data from the GEMSFIT input file
 // as well as measurement data from EJDB local database.
-class Data_Manager : public TNode
+class Data_Manager //: public TNode
 {
     public:
         /**
@@ -101,7 +101,7 @@ class Data_Manager : public TNode
         typedef std::vector<bool>    bool_v;
 
         std::vector<std::shared_ptr<TNode>> NodT;
-        std::vector<std::shared_ptr<double[]>> bICv;
+        ////SD std::vector<std::shared_ptr<double[]>> bICv;
 
         /// JSON object for building the target function
         std::string DataTarget;

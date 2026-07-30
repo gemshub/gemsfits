@@ -1,3 +1,3 @@
-[submodule "standalone"]
-	path = standalone
-	url = https://bitbucket.org/gems4/gems3k.git
+[submodule "GEMS3K"]
+	path = GEMS3K
+	url = https://github.com/gemshub/GEMS3K.git

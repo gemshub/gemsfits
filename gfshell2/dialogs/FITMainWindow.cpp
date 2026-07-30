@@ -18,6 +18,9 @@
 //-------------------------------------------------------------------
 
 #include <iostream>
+#include <filesystem>
+namespace fs = std::filesystem;
+
 #include "FITMainWindow.h"
 #include "ui_FITMainWindow.h"
 #include "HelpWindow.h"
@@ -41,13 +44,13 @@ const char *HELP_SRC_DIR = "doc/html/";
 const char *DATA_TEMPLATES = "data/";
 const char *SEARCH_TEMPLATES = "search-templates/";
 #ifdef _WIN32
-const char *GEMFIT_APP = "/gemsfit3.exe";
+const char *GEMFIT_APP = "/gem-fits.exe";
 #else
-const char *GEMFIT_APP = "/gemsfit3";
+const char *GEMFIT_APP = "/gem-fits";
 #endif
 
 // User home resource
-const char *DEFAULT_USER_DIR= "/Library/GEMSFITS/";
+const char *DEFAULT_USER_DIR= "/Library/GemFits/";
 const char *DEFAULT_PR_DIR= "projects/";
 
 //--------------------------------------------------------------------------
@@ -79,45 +82,99 @@ void FITMainWindow::setDefValues(int /*c*/, char** /*v*/)
 // set up default path
 #ifdef __APPLE__
     dirExe = QCoreApplication::applicationDirPath();
-    auto app_index = dirExe.lastIndexOf("/shellfit3.app/Contents", -1, Qt::CaseInsensitive );
+    auto app_index = dirExe.lastIndexOf("/gem-fits-shell.app/Contents", -1, Qt::CaseInsensitive );
 
     if( app_index >= 0 )
     {
-        SysFITDir = dirExe.left(app_index).toStdString() + "/shellfit3.app/Contents/Resources/";
+        SysFITDir = dirExe.left(app_index).toStdString() + "/gem-fits-shell.app/Contents/Resources/";
     }
     else {
         // non-standard executable path, search for resources starting with current dir
-        SysFITDir = dirExe.toStdString() + "/shellfit3.app/Contents/Resources/";
+        SysFITDir = dirExe.toStdString() + "/gem-fits-shell.app/Contents/Resources/";
     }
+    // gem-fits is deployed as a plain executable next to gem-fits-shell inside
+    // Contents/MacOS, so it is found the same way as on Linux/Windows.
+    GemsfitApplication = dirExe + GEMFIT_APP;
     UserDir = home_dir() + DEFAULT_USER_DIR;
 
 #else
     // Linux and Windows - in user's home directory
     // By default: /Resources in the same dir as the exe file;
     dirExe = QCoreApplication::applicationDirPath();
+    GemsfitApplication = dirExe + GEMFIT_APP;
+
+    if(dirExe.endsWith("/bin") || dirExe.endsWith("\bin")) { // Try found Resource up level
+        dirExe.chop(4);
+    }
     SysFITDir = dirExe.toStdString() + RESOURCES_DIR;
     WorkDir = dirExe.toStdString();
     UserDir = home_dir() + DEFAULT_USER_DIR;
-    GemsfitApplication = dirExe + GEMFIT_APP;
+
 #endif
 
-    LocalDocDir = SysFITDir + HELP_DB_DIR;
     GemsSettings::data_logger_directory = UserDir;
-    UserDir += DEFAULT_PR_DIR; // "/Library/GEMSFITS/projects";
+    // Make sure the per-user home folder exists before anything tries to write into it
+    // (in particular the preferences ini below) - it may not exist yet on first run.
+    fs::create_directories(UserDir);
+
+    // Copy the compiled help database (gfshelp.qch/.qhc) out of the bundle/install
+    // folder into the always-writable per-user folder, same as ipmlog.txt and
+    // gem-fits-shell.ini above - QHelpEngine's SQLite-backed collection file can
+    // fail to open ("Cannot open collection file") when Resources/help/ sits on a
+    // read-only mount. This bites specifically on macOS's Gatekeeper "App
+    // Translocation": a freshly downloaded, not-yet-moved .app gets silently
+    // re-executed from a randomized read-only mount under
+    // /private/var/folders/.../AppTranslocation/<GUID>/d/, so applicationDirPath()
+    // (and thus SysFITDir/LocalDocDir) still look correct while the actual help
+    // collection fails to open. Runs on every launch and unconditionally
+    // overwrites the cached copy (files are tiny, so the cost is negligible) -
+    // deliberately not update_existing/mtime-based: fs::copy_file stamps the
+    // destination with the copy time rather than preserving the source's
+    // mtime, so after an app upgrade the previously-cached copy's timestamp
+    // can end up later than the freshly-installed bundle's, causing a
+    // mtime-based check to skip the update and leave stale help content in
+    // place even though a newer version is installed.
+    {
+        std::string bundleHelpDir = SysFITDir + HELP_DB_DIR;
+        std::string userHelpDir = GemsSettings::data_logger_directory + HELP_DB_DIR;
+        fs::create_directories(userHelpDir);
+        if (fs::exists(bundleHelpDir)) {
+            for (const auto& entry : fs::directory_iterator(bundleHelpDir)) {
+                if (entry.is_regular_file()) {
+                    std::error_code ec;
+                    fs::copy_file(entry.path(), userHelpDir + entry.path().filename().string(),
+                                  fs::copy_options::overwrite_existing, ec);
+                }
+            }
+        }
+        LocalDocDir = userHelpDir;
+    }
+    UserDir += DEFAULT_PR_DIR;
+
+    // load main programm settingth
+    // NB: this must live in a per-user writable folder, not next to the executable -
+    // the install/bundle folder is frequently read-only for a deployed package (e.g. a
+    // macOS .app run straight off a mounted DMG, or an install under Program Files/opt
+    // without admin rights), which made every saved preference silently fail to persist
+    // and reset back to defaults on the next launch.
+    mainSettings = new QSettings((GemsSettings::data_logger_directory + "gem-fits-shell.ini").c_str(), QSettings::IniFormat);
+    getDataFromPreferences();
 
     // check home dir
     std::string dir = userDir();
     QDir user_fit(dir.c_str());
     bool firstTimeStart = !user_fit.exists();
     if (firstTimeStart) {
-        if( !user_fit.mkpath(userDir().c_str()) )
-            throw TFatalError("gemsfit Init", "Cannot create user directory");
         // here could be copy default projects
-    }
+        std::string from = sysDir()+"projects";
+        std::string to = UserDir;
+        fs::create_directories(UserDir);
+        std::cout << from << std::endl;
+        if( fs::exists(from) ) {
+            std::filesystem::copy(from, to, std::filesystem::copy_options::recursive);
+        }
 
-    // load main programm settingth
-    mainSettings = new QSettings(dirExe+"/gemsfits.ini", QSettings::IniFormat);
-    getDataFromPreferences();
+    }
 
 }
 
@@ -128,22 +185,39 @@ void FITMainWindow::getDataFromPreferences()
 
     SysFITDir =  mainSettings->value("ResourcesFolderPath", SysFITDir.c_str()).toString().toStdString();
     if( !SysFITDir.empty() && SysFITDir.back() != '/') {
-       SysFITDir += "/";
+        SysFITDir += "/";
     }
-    LocalDocDir =  mainSettings->value("HelpFolderPath", LocalDocDir.c_str()).toString().toStdString();
+    // Only trust a saved HelpFolderPath if it still points at a real collection file -
+    // a stale value (e.g. saved from a previous macOS App Translocation temp path that
+    // no longer exists) must not silently shadow the freshly computed, always-writable
+    // default from setDefValues() above. Mirrors the same pattern used for
+    // Gemsfit2ProgramPath below.
+    QString savedLocalDocDir = mainSettings->value("HelpFolderPath", LocalDocDir.c_str()).toString();
+    if( !savedLocalDocDir.isEmpty() && !savedLocalDocDir.endsWith('/') ) {
+        savedLocalDocDir += "/";
+    }
+    if( QFile::exists(savedLocalDocDir + "gfshelp.qhc") ) {
+        LocalDocDir = savedLocalDocDir.toStdString();
+    }
     UserDir = mainSettings->value("UserFolderPath", UserDir.c_str()).toString().toStdString();
     KeysLength = mainSettings->value("PrintComments", true).toBool();
     JsonDataShow = !mainSettings->value("ViewinYAMLFormat", false).toBool();
-    EditorDataShow = mainSettings->value("ViewinModelEditor", true).toBool();
+    EditorDataShow = mainSettings->value("ViewinModelEditor", false).toBool();
 
-    GemsfitApplication = mainSettings->value("Gemsfit2ProgramPath", GemsfitApplication).toString();
+    // Only trust a saved path if it still points at a real file - a stale value (e.g. saved
+    // while the app was running from a now-gone install/DMG-mount location) must not silently
+    // shadow the freshly computed, still-correct default from setDefValues() above.
+    QString savedGemsfitApplication = mainSettings->value("Gemsfit2ProgramPath", GemsfitApplication).toString();
+    if( QFile::exists(savedGemsfitApplication) ) {
+        GemsfitApplication = savedGemsfitApplication;
+    }
     fitProcess->setProgram( GemsfitApplication );
 
     // load experiment template text
     QString fname = sysDir().c_str();
-    fname += DATA_TEMPLATES + mainSettings->value("ExpTemplateFileName", "...").toString();
+    fname += DATA_TEMPLATES + mainSettings->value("ExpTemplateFileName", "template1.dat").toString();
     QFile tmpString(fname);
-    if(tmpString.open( QIODevice::ReadOnly))
+    if(tmpString.open(QIODevice::ReadOnly))
     {
         ExpTemplate = tmpString.readAll();
         tmpString.close();
@@ -151,9 +225,9 @@ void FITMainWindow::getDataFromPreferences()
 
     // load experiment search text
     fname = sysDir().c_str();
-    fname += SEARCH_TEMPLATES + mainSettings->value("TemplateSearchFileName", "...").toString();
+    fname += SEARCH_TEMPLATES + mainSettings->value("TemplateSearchFileName", "search-phase.dat").toString();
     QFile tmpString1(fname);
-    if(tmpString1.open( QIODevice::ReadOnly))
+    if(tmpString1.open(QIODevice::ReadOnly))
     {
         SrchTemplate = tmpString1.readAll();
         tmpString1.close();
@@ -175,6 +249,7 @@ FITMainWindow::FITMainWindow(int c, char** v, QWidget *parent):
     ui->setupUi(this);
 
     // Some changes in GEMS3k to read CH files without V0
+    // You need add V0 to dch file
     ///// DataCH_dynamic_fields[f_V0].alws = 0;
 
     // setup process
@@ -354,7 +429,7 @@ void FITMainWindow::setTableIComp()
 
     for( int ii = 0; ii<dCH->nIC; ii++ )
     {
-        valStr = std::string( dCH->ICNL[ii], 0,MaxICN );
+        valStr = dCH->ICNL[ii];
         item = new QTableWidgetItem(tr("%1").arg( valStr.c_str()));
         ui->tableIComp->setItem(ii/5, ii%5, item );
     }
@@ -370,13 +445,13 @@ void FITMainWindow::setListPhase()
 
     for( ii = 0, jj=0; ii<dCH->nPH; ii++ )
     {
-        valStr = std::string( dCH->PHNL[ii], 0,MaxPHN );
+        valStr = dCH->PHNL[ii];
         QTreeWidgetItem *phase = new QTreeWidgetItem(ui->listPhases);
         phase->setText(0, valStr.c_str());
 
         for( j=0; j<dCH->nDCinPH[ii]; j++, jj++ )
         {
-            valStr = std::string( dCH->DCNL[jj], 0, MaxDCN );
+            valStr = dCH->DCNL[jj];
             QTreeWidgetItem *dcomp = new QTreeWidgetItem(phase);
             dcomp->setText(0, valStr.c_str());
         }
@@ -748,7 +823,7 @@ bool FITMainWindow::createTaskTemplate()
     // read "template.dat" to json
     std::string path = fitTaskDir.Dir()+ "/template.json";
 
-    std::ifstream my_file(path.c_str());
+    std::ifstream my_file(path);
     if (!my_file.good())
     {
         std::ofstream outfile (path.c_str());

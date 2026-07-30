@@ -31,14 +31,14 @@
 
 TEMPLATE	= app
 #LANGUAGE        = C++
-TARGET		= gemsfit2
+TARGET		= gem-fits
 VERSION         = 2.3.2
 # GEMS3K commit 66761a7
 
 CONFIG -= qt
 CONFIG += warn_on
 CONFIG += console
-CONFIG += sanitaze sanitaze_thread
+#CONFIG += sanitaze sanitaze_thread
 CONFIG += serial release
 CONFIG += c++20
 
@@ -46,13 +46,14 @@ CONFIG += c++20
 DEFINES         += useomp
 DEFINES += CHECK_LOAD # to generate print for initial data after read input configuration.
 DEFINES += OLD_EJDB # compile using ejdb1
-#DEFINES += OVERFLOW_EXCEPT  #compile with nan inf exceptions
+DEFINES += OVERFLOW_EXCEPT  #compile with nan inf exceptions
 
 DEFINES += IPMGEMPLUGIN
-#DEFINES += NODEARRAYLEVEL
+DEFINES += NODEARRAYLEVEL
 #DEFINES += USE_NLOHMANNJSON
-#DEFINES += USE_THERMOFUN
+DEFINES += USE_THERMOFUN
 #DEFINES += USE_THERMO_LOG
+DEFINES += USE_GEMS3K_SOURCE
 
 QMAKE_CXXFLAGS += -O3
 QMAKE_LFLAGS += -O3
@@ -103,23 +104,23 @@ CONFIG( serial, serial|mpi ) {
 }
 
 FIT_CPP      =  ./src-fit
-#GEMS3K_CPP   =  ../standalone/GEMS3K
+GEMS3K_CPP   =  ../GEMS3K/GEMS3K
 MUP_CPP      =  ./muparser/src
 COMMON_CPP  =  ../common
 
 FIT_H        =   $$FIT_CPP
-#GEMS3K_H     =   $$GEMS3K_CPP
+GEMS3K_H     =   $$GEMS3K_CPP
 MUP_H        =   $$MUP_CPP
 COMMON_H     =   $$COMMON_CPP
 
 DEPENDPATH   += $$FIT_H
-#DEPENDPATH   += $$GEMS3K_H
+DEPENDPATH   += $$GEMS3K_H
 DEPENDPATH   += $$KEYS_H
 DEPENDPATH   += $$MUP_H
 DEPENDPATH   += $$COMMON_H
 
 INCLUDEPATH  += $$FIT_H
-#INCLUDEPATH  += $$GEMS3K_H
+INCLUDEPATH  += $$GEMS3K_H
 INCLUDEPATH  += $$KEYS_H
 INCLUDEPATH  += $$MUP_H
 INCLUDEPATH   += $$COMMON_H

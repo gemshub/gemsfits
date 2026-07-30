@@ -1,7 +1,18 @@
 #ifndef KEYWORDS_H
 #define KEYWORDS_H
 
+#include <string>
+#include "gemsfits_version.h"
+
+static const std::string _FITS_version_stamp = std::string("GEM-FITS v.") + GEMSFITS_VERSION + " c." + GEMSFITS_VERSION_HASH;
+
+// This header declares a large dictionary of keyword string constants; most
+// translation units that include it only use a handful of them, so silence
+// -Wunused-variable for the whole namespace instead of tagging every entry.
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-variable"
+#endif
 
 namespace keys
 { // Keywords for the fitting task definition
@@ -146,7 +157,8 @@ static const char *expphases        = "expphases"; //	               1    array	
         static const char *SI       = "SI"; //                          ->3	 float 		    name of property - Phase saturation index
         static const char *all      = "alk"; //                         ->3	 float		    name of property - Alkalinity (aqueous phase only)
         static const char *pV       = "pV"; //                          ->3	 float		    name of property - volume of phase
-        static const char *sArea    = "sArea"; //                       ->3  float		    name of property - specific surface area of the phase
+        static const char *sArea    = "sArea"; //                       ->3  float		    name of property - surface area of the phase
+        static const char *SSA      = "SSA"; //                         ->3  float		    name of property - specific surface area of the phase in m2/g
         static const char *RHO      = "RHO"; //                         ->3  double         name of property - density of the phase
         static const char *Gex      = "Gex"; //                         ->3  double         name of property - excess Gibbs energy of mixing in the phase
         static const char *oscw     = "oscw"; //
@@ -160,6 +172,7 @@ static const char *frAlIV  = "frAlIV";  //  fraction of Al(IV) relative to total
 static const char *frAlV  = "frAlV";    //  fraction of Al(V) relative to total Al in CASH phases
 static const char *frAlVI  = "frAlVI"; //  fraction of Al(VI) relative to total Al in CASH phases
         static const char *Rd       = "Rd";
+        static const char *sorp       = "sorp"; // sorption %
         static const char *activityRatio = "activityRatio";
 
         // Phase models
@@ -284,4 +297,9 @@ static const char *url = "url"; ///	                              1		string 		  
 
 
 }
+
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
+
 #endif // KEYWORDS_H
