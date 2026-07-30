@@ -61,7 +61,7 @@ jobs:
         run: |
           call conda activate gemsfits || goto :eof
           copy "cmake\qt.conf" "C:\Miniconda\envs\gemsfits\Library\lib\qt6\bin" || goto :eof
-          cmake -DUSE_OLD_EJDB=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH="%CONDA_PREFIX%\Library" -A x64 -S . -B build  || goto :eof
+          cmake -DUSE_OLD_EJDB=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH="%GITHUB_WORKSPACE%\install" -A x64 -S . -B build  || goto :eof
           cmake --build build --target install  --config Release  || goto :eof
 
       - name: Check conda
