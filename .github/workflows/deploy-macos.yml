@@ -139,12 +139,28 @@ jobs:
       # "app is damaged and can't be opened" rather than the milder
       # "unidentified developer" prompt - a distinct, harder Gatekeeper
       # failure. Mirrors GEMSGUI's deploy-macos.yml fix for the same issue.
+      #
+      # 2026-07-30 attempt: `codesign --deep` only re-signs nested code it
+      # recognizes as such (frameworks, other .app/.xpc bundles) - gem-fits
+      # is a loose second executable dropped directly in Contents/MacOS/
+      # (not a recognized nested bundle), so `--deep` folds it into the
+      # outer bundle's CodeResources as inert hashed *data* without
+      # re-signing it as code. macdeployqt's earlier install-name rewrite
+      # (changeInstallName, for -executable=.../gem-fits) modifies gem-fits'
+      # load commands after it was originally linked/signed, which
+      # invalidates whatever signature it already had - so gem-fits was
+      # shipping with a broken/stale signature nested inside an otherwise
+      # validly-signed bundle. Explicitly sign gem-fits on its own first, so
+      # by the time the outer --deep sign runs, both Mach-O executables in
+      # the bundle carry valid, current ad-hoc signatures.
       # -------------------------
       - name: Ad-hoc sign .app bundle
         run: |
           cd "${{ steps.strings2.outputs.deploy-output-dir }}"
           xattr -dr com.apple.quarantine gem-fits-shell.app || true
+          codesign --force --sign - gem-fits-shell.app/Contents/MacOS/gem-fits
           codesign --force --deep --sign - gem-fits-shell.app
+          codesign --verify --strict gem-fits-shell.app/Contents/MacOS/gem-fits
           codesign --verify --deep --strict gem-fits-shell.app
 
       # -------------------------
@@ -164,18 +180,21 @@ jobs:
           mv gem-fits-shell.dmg "${{ github.workspace }}/macos-${{ steps.strings.outputs.deploy-name }}.dmg"
 
       # -------------------------
-      # ZIP packaging
+      # ZIP packaging - RE-ENABLED 2026-07-30 (attempt #2)
       #
-      # Reverted 2026-07-30: tried `ditto -c -k --keepParent` here instead of
-      # `zip -r` to preserve the Qt frameworks' symlinks and keep the ad-hoc
-      # signature intact through the zip/unzip round trip. Real-world test
-      # showed it made things worse, not better: with plain `zip -r`, only
-      # the .app itself showed "damaged" (running the raw executable
-      # directly from Contents/MacOS/ bypassed Gatekeeper and worked, same
-      # unverified-developer prompt as the dmg); with `ditto`, *both* the
-      # .app and the raw executable show "damaged" with no override at all.
-      # Reverted back to `zip -r` pending further investigation - the actual
-      # root cause of the "damaged" verdict is still unresolved.
+      # Previously disabled: the zip (both plain `zip -r` and, worse, the
+      # `ditto` variant tried and reverted earlier) produced a
+      # gem-fits-shell.app that Gatekeeper reported as "damaged" - no "Open
+      # Anyway" override at all, for both the .app itself and the raw
+      # executable run directly from Contents/MacOS/ - while the DMG (built
+      # from the exact same signed app) worked fine. Re-enabling now that
+      # the "Ad-hoc signing" step above explicitly signs gem-fits on its own
+      # before the outer --deep bundle sign (see that step's comment) - if
+      # a stale/invalid signature on the loose gem-fits executable was the
+      # actual root cause, this should fix it. Still unverified on a real
+      # Mac; if the zip is reported "damaged" again after this change,
+      # re-disable by commenting this step and the "Upload build artifact"
+      # (zip) / "Upload ZIP release asset" steps below out again.
       # -------------------------
       - name: Create zip archive for GitHub release
         run: |
