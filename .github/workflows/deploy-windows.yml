@@ -60,6 +60,7 @@ jobs:
         shell: cmd
         run: |
           call conda activate gemsfits || goto :eof
+          copy "cmake\qt.conf" "C:\Miniconda\envs\gemsfits\Library\lib\qt6\bin" || goto :eof
           cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${{ steps.strings2.outputs.deploy-output-dir }} -A x64 -S . -B build  || goto :eof
           cmake --build build --target install --config Release || goto :eof
 
