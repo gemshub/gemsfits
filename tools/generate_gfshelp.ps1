@@ -34,12 +34,23 @@ if (-not (Test-Path $qhelpGenerator)) {
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 # Rebuilds gfshelp.qch/gfshelp.qhc from the just-regenerated .qhp. Deliberately
-# no -c (link-check): on this Qt build it surfaces broken-link warnings via a
-# QMessageBox instead of console output, which hangs CI forever with zero
-# output waiting for a click that never comes (GEMSGUI's own qhelpgenerator
-# invocation never uses -c either, for the same reason).
-& $qhelpGenerator Resources/doc/html/gfshelpconfig.qhcp -o Resources/doc/html/gfshelp.qhc
-if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+# no -c (link-check) - see generate_gfshelp.sh for why.
+#
+# Invoked from inside Resources/doc/html with bare filenames (matching
+# GEMSGUI's own qhelpgenerator invocation exactly), NOT from the repo root
+# with a long relative path: qhelpgenerator hung on Windows CI for 16+
+# minutes with zero output when called from repo root against
+# "Resources/doc/html/gfshelpconfig.qhcp" - the working theory is it did
+# something CWD-relative internally (a scan, temp files, ...) and repo root
+# is orders of magnitude bigger than the small doc/html folder (GEMS3K
+# submodule, build/, .git/ and all). -platform offscreen is kept as a
+# secondary, low-risk safeguard against qhelpgenerator's Qt6Widgets/Qt6Gui
+# linkage needing a headless platform plugin, not the primary fix.
+Push-Location Resources/doc/html
+& $qhelpGenerator gfshelpconfig.qhcp -o gfshelp.qhc -platform offscreen
+$qhelpGeneratorExit = $LASTEXITCODE
+Pop-Location
+if ($qhelpGeneratorExit -ne 0) { exit $qhelpGeneratorExit }
 
 Copy-Item Resources/doc/html/gfshelp.qch Resources/help/ -Force
 Copy-Item Resources/doc/html/gfshelp.qhc Resources/help/ -Force

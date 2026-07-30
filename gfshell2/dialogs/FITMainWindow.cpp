@@ -114,10 +114,18 @@ void FITMainWindow::setDefValues(int /*c*/, char** /*v*/)
 
     LocalDocDir = SysFITDir + HELP_DB_DIR;
     GemsSettings::data_logger_directory = UserDir;
+    // Make sure the per-user home folder exists before anything tries to write into it
+    // (in particular the preferences ini below) - it may not exist yet on first run.
+    fs::create_directories(UserDir);
     UserDir += DEFAULT_PR_DIR;
 
     // load main programm settingth
-    mainSettings = new QSettings(dirExe+"/gem-fits-shell.ini", QSettings::IniFormat);
+    // NB: this must live in a per-user writable folder, not next to the executable -
+    // the install/bundle folder is frequently read-only for a deployed package (e.g. a
+    // macOS .app run straight off a mounted DMG, or an install under Program Files/opt
+    // without admin rights), which made every saved preference silently fail to persist
+    // and reset back to defaults on the next launch.
+    mainSettings = new QSettings((GemsSettings::data_logger_directory + "gem-fits-shell.ini").c_str(), QSettings::IniFormat);
     getDataFromPreferences();
 
     // check home dir
