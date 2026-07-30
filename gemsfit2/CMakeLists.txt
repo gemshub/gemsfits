@@ -38,7 +38,7 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
                                       ${MUPARSER_HEADER_FILES} ${MUPARSER_SOURCE_FILES})
    target_link_libraries(gemsfit-static
                             PUBLIC GEMS3K::GEMS3K
-                            PUBLIC Boost::system
+                            PUBLIC Boost::headers
                             PUBLIC ${EJDB_WIN_LIB}
                             PUBLIC yaml-cpp)
 
@@ -73,7 +73,7 @@ endif()
 else()
 
    add_executable(gem-fits ${GEMSFITS_SOURCES})
-   target_link_libraries(gem-fits GEMS3K::GEMS3K nlopt Boost::system armadillo ${EJDB_LIB} yaml-cpp Threads::Threads)
+   target_link_libraries(gem-fits GEMS3K::GEMS3K nlopt Boost::headers armadillo ${EJDB_LIB} yaml-cpp Threads::Threads)
    
     if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
      target_link_libraries(gem-fits omp)

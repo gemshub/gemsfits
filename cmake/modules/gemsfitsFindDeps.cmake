@@ -1,10 +1,13 @@
+# No COMPONENTS system: Boost.System is header-only as of Boost 1.91 (the
+# conda-forge libboost-devel package no longer ships a boost_system CMake
+# config at all), so requesting it as a component makes find_package fail.
 find_library(NLOPT_LIB nlopt)
 if(NOT NLOPT_LIB)
    message(FATAL_ERROR "nlopt library not found")
 endif()
 
 if(DEFINED ENV{CONDA_PREFIX})
-   find_package(Boost REQUIRED COMPONENTS system)
+   find_package(Boost REQUIRED)
    if (Boost_FOUND)
       INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
       ADD_DEFINITIONS( "-DHAS_BOOST" )
@@ -12,7 +15,7 @@ if(DEFINED ENV{CONDA_PREFIX})
     message(FATAL_ERROR "Boost library not found")
    endif()
 else()
-   find_package(Boost REQUIRED COMPONENTS system)
+   find_package(Boost REQUIRED)
    if (NOT Boost_FOUND)
       message(FATAL_ERROR "Boost library not found")
    endif()
