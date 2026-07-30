@@ -34,23 +34,40 @@ if (-not (Test-Path $qhelpGenerator)) {
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 # Rebuilds gfshelp.qch/gfshelp.qhc from the just-regenerated .qhp. Deliberately
-# no -c (link-check) - see generate_gfshelp.sh for why.
-#
-# Invoked from inside Resources/doc/html with bare filenames (matching
-# GEMSGUI's own qhelpgenerator invocation exactly), NOT from the repo root
-# with a long relative path: qhelpgenerator hung on Windows CI for 16+
-# minutes with zero output when called from repo root against
-# "Resources/doc/html/gfshelpconfig.qhcp" - the working theory is it did
-# something CWD-relative internally (a scan, temp files, ...) and repo root
-# is orders of magnitude bigger than the small doc/html folder (GEMS3K
-# submodule, build/, .git/ and all). -platform offscreen is kept as a
-# secondary, low-risk safeguard against qhelpgenerator's Qt6Widgets/Qt6Gui
-# linkage needing a headless platform plugin, not the primary fix.
+# no -c (link-check) - see generate_gfshelp.sh for why. Invoked from inside
+# Resources/doc/html with bare filenames (matching GEMSGUI's own invocation)
+# and -platform offscreen (qhelpgenerator links Qt6Widgets/Qt6Gui). Neither
+# of those fixed a real hang seen twice on Windows CI (16+ min, zero output,
+# had to be cancelled both times) - each theory cost a full CI cycle to
+# disprove, so this run is instrumented instead of guessing a third time:
+# stdin is explicitly redirected from NUL (a console app blocking forever
+# reading stdin under a non-interactive CI session is a classic, distinct
+# cause from either theory above) and the process is bounded to 120s, with
+# whatever stdout/stderr it produced dumped either way - if it still times
+# out, the partial output (or continued total silence) tells us whether it
+# started doing real work at all, which neither previous attempt established.
+$qhelpStdout = Join-Path $env:RUNNER_TEMP "qhelpgenerator-stdout.log"
+$qhelpStderr = Join-Path $env:RUNNER_TEMP "qhelpgenerator-stderr.log"
 Push-Location Resources/doc/html
-& $qhelpGenerator gfshelpconfig.qhcp -o gfshelp.qhc -platform offscreen
-$qhelpGeneratorExit = $LASTEXITCODE
+$qhelpProc = Start-Process -FilePath $qhelpGenerator `
+    -ArgumentList @("gfshelpconfig.qhcp", "-o", "gfshelp.qhc", "-platform", "offscreen") `
+    -NoNewWindow -PassThru `
+    -RedirectStandardInput "NUL" `
+    -RedirectStandardOutput $qhelpStdout -RedirectStandardError $qhelpStderr
+$qhelpFinished = $qhelpProc.WaitForExit(120000)
 Pop-Location
-if ($qhelpGeneratorExit -ne 0) { exit $qhelpGeneratorExit }
+
+Write-Host "--- qhelpgenerator stdout ---"
+Get-Content $qhelpStdout -ErrorAction SilentlyContinue
+Write-Host "--- qhelpgenerator stderr ---"
+Get-Content $qhelpStderr -ErrorAction SilentlyContinue
+
+if (-not $qhelpFinished) {
+    Write-Error "generate_gfshelp.ps1: qhelpgenerator did not exit within 120s - killing it. See stdout/stderr dumped above for whatever it managed to do before hanging."
+    Stop-Process -Id $qhelpProc.Id -Force -ErrorAction SilentlyContinue
+    exit 1
+}
+if ($qhelpProc.ExitCode -ne 0) { exit $qhelpProc.ExitCode }
 
 Copy-Item Resources/doc/html/gfshelp.qch Resources/help/ -Force
 Copy-Item Resources/doc/html/gfshelp.qhc Resources/help/ -Force
