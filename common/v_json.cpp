@@ -60,7 +60,6 @@ namespace detail {
 
 static const std::string field_path_delimiters =  "./[]\"";
 
-int doublePrecision = 15;
 int floatPrecision = 7;
 const char* infiniteValue = "---"; //"null";
 
@@ -84,7 +83,7 @@ template <> std::string value2string( const double& value )
 {
     if(std::isfinite(value)) {
         std::ostringstream os;
-        os << std::setprecision(doublePrecision) << value;
+        os << std::setprecision(common::JsonFree::doublePrecision) << value;
         return os.str();
     }
     else {
@@ -158,6 +157,9 @@ static std::string decode_string(const std::string &value )
 }
 
 }
+
+
+int JsonFree::doublePrecision = 15;
 
 JsonFree::JsonFree( JsonFree::Type atype, const std::string &akey, const std::string &avalue, JsonFree *aparent ):
     field_type(atype), field_key(akey), field_value(avalue), ndx_in_parent(0), parent_object(aparent), children()
@@ -485,7 +487,7 @@ void JsonFree::dump2stream( std::ostream& os, int depth, bool dense ) const
             os << childobj->field_value;
             break;
         case Double:
-            os << std::setprecision(detail::doublePrecision) << childobj->to_double();
+            os << std::setprecision(doublePrecision) << childobj->to_double();
             break;
         case String:
             os << detail::decode_string( childobj->field_value );

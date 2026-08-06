@@ -62,6 +62,7 @@ class FITMainWindow : public QMainWindow
     Ui::FITMainWindow *ui;
 
     int currentMode;    ///< DataBase or Task mode
+    int colorScheme=0;
 
     std::string SysFITDir;   ///< Path to resources directory
     std::string UserDir;     ///< Path to User directory
@@ -205,6 +206,15 @@ public:
     {  return axisLabelFont; }
     void setAxisLabelFont(const QFont& newAxisLabelFont)
     {  axisLabelFont = newAxisLabelFont;  }
+
+    int getDoubleDigits() const;
+    void setDoubleDigits(int newDoubleDigits);
+
+    int getColorScheme() const
+    {  return colorScheme;  }
+    // void setColorScheme(int newColorScheme)
+    // {  colorScheme = newColorScheme;   }
+
 
     QProcess*  helpProcess;
     void GetHelp();

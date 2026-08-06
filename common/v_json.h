@@ -53,6 +53,8 @@ class JsonFree
 
 public:
 
+    static int doublePrecision;	// precision of double
+
     enum Type {
         Null = 1,
         Bool = 2,    // T_BOOL

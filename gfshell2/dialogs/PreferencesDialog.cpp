@@ -38,6 +38,8 @@ PreferencesDialog::PreferencesDialog(QSettings *aSet,  QWidget *parent) :
         ui->turnoff->setChecked( settings->value("PrintGEMSFITMessages", true).toBool() );
         ui->yamlBox->setChecked( settings->value("ViewinYAMLFormat", false).toBool() );
         ui->editorBox->setChecked( settings->value("ViewinModelEditor", false).toBool() );
+        ui->colorBox->setCurrentIndex(settings->value("ColorScheme", 0).toInt());
+        ui->digitsBox->setValue(settings->value("DoubleDigits", pFitImp->getDoubleDigits()).toInt());
 
         // load all template files
         QDir thisDir(ui->resourcesEdit->text()+DATA_TEMPLATES);
@@ -105,6 +107,9 @@ void PreferencesDialog::CmSave()
     settings->setValue("PrintGEMSFITMessages",  ui->turnoff->isChecked() );
     settings->setValue("ViewinYAMLFormat",  ui->yamlBox->isChecked() );
     settings->setValue("ViewinModelEditor",  ui->editorBox->isChecked() );
+
+    settings->setValue("ColorScheme",  ui->colorBox->currentIndex());
+    settings->setValue("DoubleDigits",  ui->digitsBox->value());
 
     settings->sync();
     accept();

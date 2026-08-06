@@ -203,6 +203,9 @@ void FITMainWindow::getDataFromPreferences()
     KeysLength = mainSettings->value("PrintComments", true).toBool();
     JsonDataShow = !mainSettings->value("ViewinYAMLFormat", false).toBool();
     EditorDataShow = mainSettings->value("ViewinModelEditor", false).toBool();
+    colorScheme = mainSettings->value("ColorScheme", 0).toInt();
+    setDoubleDigits(mainSettings->value("DoubleDigits", getDoubleDigits()).toInt());
+    qApp->styleHints()->setColorScheme(static_cast<Qt::ColorScheme>(getColorScheme()));
 
     // Only trust a saved path if it still points at a real file - a stale value (e.g. saved
     // while the app was running from a now-gone install/DMG-mount location) must not silently
@@ -325,6 +328,12 @@ FITMainWindow::~FITMainWindow()
 {
     delete ui;
 }
+
+void FITMainWindow::setDoubleDigits(int newDoubleDigits)
+{ common::JsonFree::doublePrecision = newDoubleDigits;   }
+
+int FITMainWindow::getDoubleDigits() const
+{  return common::JsonFree::doublePrecision;  }
 
 void FITMainWindow::closeEvent(QCloseEvent* /*e*/)
 {
@@ -713,10 +722,10 @@ void FITMainWindow::set_record_edit(const std::string &json_text)
 {
     std::string current_json;
 
-     if(JsonDataShow) {
-            current_json = json_text;
-        }
-        else{
+    if(JsonDataShow) {
+        current_json = json_text;
+    }
+    else{
         current_json = common::yaml::Json2Yaml(json_text);
     }
     json_tree->updateModelData(json_text);
