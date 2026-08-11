@@ -32,7 +32,7 @@ jobs:
         id: strings
         shell: bash
         run: >
-          echo "deploy-name=GEMFITS${{ steps.get_version.outputs.version }}" >> "$GITHUB_OUTPUT"
+          echo "deploy-name=GEMSFITS${{ steps.get_version.outputs.version }}" >> "$GITHUB_OUTPUT"
 
       - name: Set deploy dir
         id: strings2
