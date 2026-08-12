@@ -37,7 +37,7 @@ jobs:
       - name: Set deploy name
         id: strings
         shell: bash
-        run: echo "deploy-name=GEMFITS${{ steps.get_version.outputs.version }}-intel" >> "$GITHUB_OUTPUT"
+        run: echo "deploy-name=GEMSFITS${{ steps.get_version.outputs.version }}-intel" >> "$GITHUB_OUTPUT"
 
       - name: Set deploy dir
         id: strings2
