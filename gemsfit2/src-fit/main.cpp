@@ -141,7 +141,7 @@ int main( int argc, char *argv[] )
         }
 
         if(stat.MCbool > 0)  stat.MC_confidence_interval( gfittask->Opti->optv, gfittask.get() );
-        stat.print_param();
+        stat.print_param(gfittask->Opti->OptPrecision);
         gfittask->print_global_results( );
     }
     if (gfittask->Opti->h_optNF)

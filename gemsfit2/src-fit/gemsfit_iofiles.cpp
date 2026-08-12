@@ -248,6 +248,7 @@ common::JsonFree generateJson(TNode *node, int mode)
     opt_object[keys::MPI[mode]] = (omp_get_num_threads() * omp_get_num_procs()-1);
     opt_object[keys::OptDW[mode]] = 1;
     opt_object[keys::OptPrcParamDigits[mode]] =  -1;
+    opt_object[keys::OptPrec[mode]] = 12;
     opt_object[keys::OptEQ[mode]] =  1;
     opt_object[keys::SIA[mode]] = -1;
     opt_object[keys::OptUW[mode]] = -1;

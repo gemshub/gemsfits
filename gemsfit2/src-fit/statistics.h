@@ -236,7 +236,7 @@ class statistics
         void sensitivity_correlation(std::vector<double> &optv_, TGfitTask* gfittask );
 
 
-        void print_param ();
+        void print_param (int prec);
 
 //		// Compute Pearson's sample correlation coefficient
 //		//void correlation(  );

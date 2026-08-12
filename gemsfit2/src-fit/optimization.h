@@ -102,6 +102,7 @@ public:
     int OptMaxEval;
     int OptDoWhat;
     int OptPrcParamDigits=-1;
+    int OptPrecision = 12;
     int OptEquilibrium;
     int OptGemsSIA = -1;
     int OptTuckey;

@@ -96,6 +96,7 @@ void optimization::get_nlopt_param()
     auto& opt_set_object =  db_opt_object[keys::OptSet[mode]];
     OptDoWhat = opt_set_object.value(keys::OptDW[mode], OptDoWhat);
     OptPrcParamDigits = opt_set_object.value( keys::OptPrcParamDigits[mode], OptPrcParamDigits);
+    OptPrecision = opt_set_object.value(keys::OptPrec[mode], OptPrecision);
     OptEquilibrium = opt_set_object.value(keys::OptEQ[mode], OptEquilibrium);
     OptGemsSIA = opt_set_object.value(keys::SIA[mode], OptGemsSIA);
     OptUserWeight = opt_set_object.value(keys::OptUW[mode], OptUserWeight);

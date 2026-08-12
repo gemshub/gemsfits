@@ -501,8 +501,8 @@ void TGfitTask::print_param()
         gpf->fparam << "," << fitparam[i]->Pname << ",";
 
 
-        gpf->fparam << std::setprecision(12) << fitparam[i]->Ival << ",";
-        gpf->fparam << std::setprecision(12) <<fitparam[i]->Fval << ",";
+        gpf->fparam << std::setprecision(Opti->OptPrecision) << fitparam[i]->Ival << ",";
+        gpf->fparam << std::setprecision(Opti->OptPrecision) <<fitparam[i]->Fval << ",";
 
         if (fitparam[i]->mcSTDEV != 0)
         {
@@ -566,7 +566,7 @@ void TGfitTask:: print_global_results ()
     if( gpf->fres.fail() )
     { std::cout<<"Results fileopen error"<<std::endl; exit(1); }
 
-    int prec = 12;
+    int prec = Opti->OptPrecision;
     std::setprecision(prec);
     scientific(gpf->fres);
 //    gpf->fres.setf(ios::fixed);
@@ -723,7 +723,7 @@ void TGfitTask:: print_nested_results ()
     }
 
     gpf->fnfres << std::endl;
-    std::setprecision(12);
+    std::setprecision(Opti->OptPrecision);
     scientific(gpf->fnfres);
 
 //    gpf->fnfres.setf(ios::fixed);
