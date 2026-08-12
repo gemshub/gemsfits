@@ -330,10 +330,10 @@ FITMainWindow::~FITMainWindow()
 }
 
 void FITMainWindow::setDoubleDigits(int newDoubleDigits)
-{ common::JsonFree::doublePrecision = newDoubleDigits;   }
+{ TMatrixModel::double_precision = newDoubleDigits;   }
 
 int FITMainWindow::getDoubleDigits() const
-{  return common::JsonFree::doublePrecision;  }
+{  return TMatrixModel::double_precision;  }
 
 void FITMainWindow::closeEvent(QCloseEvent* /*e*/)
 {

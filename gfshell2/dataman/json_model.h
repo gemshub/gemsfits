@@ -19,7 +19,6 @@ class JsonModel: public QAbstractItemModel
     friend class ModelLineDialog;
 
 public:
-
     explicit JsonModel( const std::string& json_string, const QStringList& header_names, QObject* parent = nullptr );
     ~JsonModel() {}
 

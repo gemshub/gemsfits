@@ -2,6 +2,7 @@
 #include <QComboBox>
 #include <QMessageBox>
 #include "json_model.h"
+#include "fmodel.h"
 #include "ModelLineDialog.h"
 
 namespace jsonui17 {
@@ -98,25 +99,32 @@ QVariant JsonModel::headerData( int section, Qt::Orientation orientation, int ro
     return QVariant();
 }
 
-QVariant JsonModel::data( const QModelIndex& index, int role ) const
+QVariant JsonModel::data(const QModelIndex& index, int role) const
 {
-    if( !index.isValid() )
+    if(!index.isValid()) {
         return QVariant();
+    }
 
-    switch( role )  {
+    switch(role)  {
     case Qt::DisplayRole:
     case Qt::EditRole: {
-        auto item = lineFromIndex( index );
-        if( index.column() == 0 )
-            return item->get_key().c_str();
-        else
-            if( index.column() == 1 )
-                return item->get_field_value().c_str();
+        auto item = lineFromIndex(index);
+        if(index.column() == 0) {
+            return QString::fromStdString(item->get_key());
+        }
+        else {
+            if(index.column() == 1) {
+                if(item->type()==common::JsonFree::Double) {
+                    return TMatrixModel::ValToString(item->to_double(), 'g', TMatrixModel::double_precision);
+                }
+                return QString::fromStdString(item->get_field_value());
+            }
+        }
     }
-        break;
+    break;
     case Qt::ForegroundRole:
-        if( index.column() == 0 ) {
-            return QVariant( QColor( Qt::darkCyan ) );
+        if(index.column() == 0) {
+            return QVariant(QColor(Qt::darkCyan));
         }
         break;
     default: break;
