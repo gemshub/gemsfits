@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>521</width>
-    <height>433</height>
+    <width>635</width>
+    <height>537</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,47 +23,7 @@
      <property name="title">
       <string>Project folders locations</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="2" column="2">
-       <widget class="QToolButton" name="helpButton">
-        <property name="text">
-         <string>...</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QLineEdit" name="gemsfit2Edit"/>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Help database</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>gemsfit2 code path</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="resourcesEdit"/>
-      </item>
-      <item row="2" column="1">
-       <widget class="QLineEdit" name="helpEdit"/>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="usersEdit"/>
-      </item>
-      <item row="3" column="2">
-       <widget class="QToolButton" name="gemsfit2Button">
-        <property name="text">
-         <string>...</string>
-        </property>
-       </widget>
-      </item>
+     <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="0">
        <widget class="QLabel" name="label">
         <property name="text">
@@ -71,8 +31,11 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="2">
-       <widget class="QToolButton" name="usersButton">
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="resourcesEdit"/>
+      </item>
+      <item row="0" column="2">
+       <widget class="QToolButton" name="resourcesButton">
         <property name="text">
          <string>...</string>
         </property>
@@ -85,8 +48,45 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
-       <widget class="QToolButton" name="resourcesButton">
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="usersEdit"/>
+      </item>
+      <item row="1" column="2">
+       <widget class="QToolButton" name="usersButton">
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Help database</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="helpEdit"/>
+      </item>
+      <item row="2" column="2">
+       <widget class="QToolButton" name="helpButton">
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>gemsfit2 code path</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="gemsfit2Edit"/>
+      </item>
+      <item row="3" column="2">
+       <widget class="QToolButton" name="gemsfit2Button">
         <property name="text">
          <string>...</string>
         </property>
@@ -103,34 +103,7 @@
      <property name="checkable">
       <bool>false</bool>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <item row="4" column="0">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>Select template file for the experiments record</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0" colspan="2">
-       <widget class="QCheckBox" name="yamlBox">
-        <property name="text">
-         <string>View or edit record data in &amp;YAML format</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="QComboBox" name="searchBox"/>
-      </item>
-      <item row="4" column="1">
-       <widget class="QComboBox" name="experimentsBox"/>
-      </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="label_6">
-        <property name="text">
-         <string>Select template file for database record search</string>
-        </property>
-       </widget>
-      </item>
+     <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0" colspan="2">
        <widget class="QCheckBox" name="commentsBox">
         <property name="text">
@@ -145,12 +118,113 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
+      <item row="2" column="0" colspan="2">
+       <widget class="QCheckBox" name="yamlBox">
+        <property name="text">
+         <string>View or edit record data in &amp;YAML format</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="2">
        <widget class="QCheckBox" name="editorBox">
         <property name="text">
          <string>View or edit record data in json editor</string>
         </property>
         <property name="checked">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="2">
+       <widget class="QLabel" name="label_4">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Select template file for the experiments record</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2">
+       <widget class="QComboBox" name="experimentsBox"/>
+      </item>
+      <item row="5" column="0" colspan="2">
+       <widget class="QLabel" name="label_6">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Select template file for database record search</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="2">
+       <widget class="QComboBox" name="searchBox"/>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>Color Scheme</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1" colspan="2">
+       <widget class="QComboBox" name="colorBox">
+        <item>
+         <property name="text">
+          <string>Auto</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Light</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Dark</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="TextLabel1">
+        <property name="text">
+         <string>&amp;Show</string>
+        </property>
+        <property name="wordWrap">
+         <bool>false</bool>
+        </property>
+        <property name="buddy">
+         <cstring>digitsBox</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QSpinBox" name="digitsBox">
+        <property name="toolTip">
+         <string>Number of decimal digits shown in screenform cells for the real floating-point numbers</string>
+        </property>
+        <property name="maximum">
+         <number>20</number>
+        </property>
+        <property name="value">
+         <number>6</number>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="2">
+       <widget class="QLabel" name="TextLabel1_4">
+        <property name="text">
+         <string>digits in 'real' numbers</string>
+        </property>
+        <property name="wordWrap">
          <bool>false</bool>
         </property>
        </widget>

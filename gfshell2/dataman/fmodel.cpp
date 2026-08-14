@@ -91,26 +91,31 @@ int TMatrixModel::rowCount( const QModelIndex & /*parent*/ ) const
 int TMatrixModel::columnCount( const QModelIndex & /*parent*/ ) const
 {
     return colHeads.size();
-}	
+}
 
-QString TMatrixModel::ValToString( double val, int digits ) const
+int TMatrixModel::double_precision = std::numeric_limits<double>::max_digits10;
+
+QString TMatrixModel::ValToString(double val, char format, int digits)
 {
     QString retstr;
-    if( val == DOUBLE_EMPTY )
+    if(val == DOUBLE_EMPTY) {
         retstr = "";
-    else
-        retstr = QString::number(  val, dbl_format, digits );
-
+    }
+    else {
+        retstr = QString::number(val, format, digits);
+    }
     return  retstr;
 }
 
-double TMatrixModel::ValFromString( const QVariant& strval  )
+double TMatrixModel::ValFromString(const QVariant& strval)
 {
     double val;
-    if( strval.toString().isEmpty() )
+    if(strval.toString().isEmpty()) {
         val = DOUBLE_EMPTY;
-    else
+    }
+    else {
         val = strval.toDouble();
+    }
     return val;
 }
 
@@ -128,8 +133,7 @@ QVariant TMatrixModel::data( const QModelIndex& index, int role ) const
         QVariant val = matrix.at(index.row()).at(index.column());
         if( index.column() >= numberStringColumns )
         {
-            //             return QString::number( val.toDouble(), 'g', 12);
-            return  ValToString(val.toDouble(), 8);
+            return  ValToString(val.toDouble(), dbl_format, double_precision);
         }
         else
             return val;
@@ -286,7 +290,7 @@ QString TMatrixModel::matrixToCsvString( )
         {
             QVariant val = valC.next();
             if( col  >= numberStringColumns )
-                valCsv += ValToString(val.toDouble(), dbl_precision);
+                valCsv += ValToString(val.toDouble(), dbl_format, dbl_precision);
             else
                 valCsv += val.toString();
             if(valC.hasNext() )

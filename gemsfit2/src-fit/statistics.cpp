@@ -725,7 +725,7 @@ void statistics::sensitivity_correlation( std::vector<double> &optv_, TGfitTask*
 //        std::vector<double> ssr_param;
 //        std::vector<double> opt_scan_v;
 
-        int prec = 12;
+        int prec = gfittask->Opti->OptPrecision;
 
         opt_scan.resize( optv_.size() );
 //        ssr_param.resize( sensitivity_points );
@@ -1456,7 +1456,7 @@ void statistics::MC_confidence_interval( std::vector<double> &optv_, TGfitTask* 
 
 }// end of function MC_confidence_interval
 
-void statistics::print_param()
+void statistics::print_param(int prec)
 {
 
     unsigned int nrcor = 0;
@@ -1486,11 +1486,11 @@ void statistics::print_param()
         gpf->fparam << "," << fitparam[i]->Pname << ",";
 
 
-        gpf->fparam << std::setprecision(12) << fitparam[i]->Ival << ",";
+        gpf->fparam << std::setprecision(prec) << fitparam[i]->Ival << ",";
         if (fitparam[i]->Roundval != 0.0)
-            gpf->fparam << std::setprecision(12) <<fitparam[i]->Roundval << ",";
+            gpf->fparam << std::setprecision(prec) <<fitparam[i]->Roundval << ",";
         else
-            gpf->fparam << std::setprecision(12) <<fitparam[i]->Fval << ",";
+            gpf->fparam << std::setprecision(prec) <<fitparam[i]->Fval << ",";
 
         if (fitparam[i]->mcSTDEV != 0)
         {

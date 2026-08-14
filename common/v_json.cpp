@@ -159,6 +159,7 @@ static std::string decode_string(const std::string &value )
 
 }
 
+
 JsonFree::JsonFree( JsonFree::Type atype, const std::string &akey, const std::string &avalue, JsonFree *aparent ):
     field_type(atype), field_key(akey), field_value(avalue), ndx_in_parent(0), parent_object(aparent), children()
 {
@@ -485,7 +486,7 @@ void JsonFree::dump2stream( std::ostream& os, int depth, bool dense ) const
             os << childobj->field_value;
             break;
         case Double:
-            os << std::setprecision(detail::doublePrecision) << childobj->to_double();
+            os << childobj->field_value;;
             break;
         case String:
             os << detail::decode_string( childobj->field_value );

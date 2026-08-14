@@ -107,11 +107,12 @@ class TMatrixModel: public QAbstractTableModel
     char dbl_format;
     int dbl_precision;
 
-    QString ValToString(double val, int digits) const;
-    double ValFromString(const QVariant& strval);
     void setGraphData(QSortFilterProxyModel *pmodel, const std::string& title);
 
 public:
+    static int double_precision;	// precision of double
+    static QString ValToString(double val, char format, int digits);
+    static double ValFromString(const QVariant& strval);
 
     TMatrixModel(const QString& fname, int aNumCol, char format = 'g', int precision = 12, QObject *parent = nullptr);
     ~TMatrixModel();
