@@ -656,8 +656,11 @@ void TGfitTask:: print_global_results ()
     {
         gpf->fres << experiments[i]->sample <<",";
         gpf->fres << experiments[i]->expdataset <<",";
-        gpf->fres << experiments[i]->sT <<",";
-        gpf->fres << experiments[i]->sP <<",";
+        gpf->fres << std::fixed << std::setprecision(1)
+          << experiments[i]->sT << ",";
+
+        gpf->fres << std::scientific << std::setprecision(2)
+          << experiments[i]->sP << ",";
         for (unsigned j=0; j < Tfun->objfun.size(); j++)
         {
             if (aTfun[i].objfun[j].isComputed)
