@@ -1,6 +1,6 @@
 # GEMSFITS 
 Code and Graphical Shell for GEM Input Parameter Optimization and Inverse Modelling
-Linux, OSX, Windows
+Linux, OSX, Windows x
 
 
 ## What GEMSFITS can do? 
